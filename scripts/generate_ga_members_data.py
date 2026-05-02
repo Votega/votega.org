@@ -88,9 +88,19 @@ def normalize_member(raw):
     email   = next((o.get('email', '')   for o in offices if o.get('email')),   '')
 
     links = raw.get('links', [])
-    raw_url = links[0]['url'] if links else ''
-    # Strip stale ?session= parameter — legis.ga.gov defaults to current session without it
-    website = raw_url.split('?')[0] if 'legis.ga.gov' in raw_url else raw_url
+    # Prefer legis.ga.gov (current site); discard stale house.ga.gov / senate.ga.gov URLs
+    website = ''
+    for link in links:
+        url = link.get('url', '')
+        if 'legis.ga.gov' in url:
+            website = url.split('?')[0]
+            break
+    if not website:
+        for link in links:
+            url = link.get('url', '')
+            if 'house.ga.gov' not in url and 'senate.ga.gov' not in url and url:
+                website = url
+                break
 
     birth_date = raw.get('birth_date', '') or ''
     birth_year = int(birth_date[:4]) if len(birth_date) >= 4 else None
