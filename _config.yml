@@ -24,12 +24,13 @@ navbar-links:
   Flock Safety:
     - About Flock: "https://www.votega.org/flock-safety/"
     - Atlanta: "https://deflockatlanta.org/"
-    - Covington: "https://www.votega.org/flock-covington/"
+    - Covington: "flock-covington"
   2026 Election Cycle:
-    - May 2026 - Primary Election: "https://www.votega.org/2026-04-27-2026-primary-election/"
+    - May 2026 - Primary Election: "2026-04-27-2026-primary-election"
+    - Georgia Ballot Measures: "2026-05-02-2026-ga-ballot-measures"
   My Representatives:
-    - Find my Congressional Representative: "https://votega.org/my-representatives.html"
-    - Find my Georgia Legislative Representative: "https://votega.org/ga-representatives.html"
+    - Find my Congressional Representative: "my-representatives"
+    - Find my Georgia Legislative Representative: "ga-representatives"
 
 ################
 # --- Logo --- #
@@ -176,7 +177,7 @@ footer-hover-col: "#0085A1"
 #################################
 
 # Fill in your Google Analytics tag ID (or "Measurement ID") to track your website usage
-gtag: "G-6EB1XGMS2B " #PRODUCTION Google Analytics Measurement ID
+#gtag: "G-6EB1XGMS2B" # GA enabled on main branch only — do not uncomment here
 
 # Fill in your Cloudflare Analytics beacon token to track your website using Cloudflare Analytics
 #cloudflare_analytics: ""
@@ -300,6 +301,7 @@ exclude:
   - README.md
   - screenshot.png
   - docs/
+  - claude.md
 
 plugins:
   - jekyll-paginate

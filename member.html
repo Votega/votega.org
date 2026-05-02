@@ -190,6 +190,19 @@ permalink: /member.html
     document.getElementById('stateSidebar').style.display = 'block';
   }
 
+  function getPartyIconHtml(party) {
+    if (!party) return '';
+    const p = party.toLowerCase();
+    const base = getBasePath();
+    if (p.includes('democrat')) {
+      return `<img width="22" alt="Donkey logo of the Democratic party." src="${base}assets/img/democratic-disc.svg" style="vertical-align:middle;">`;
+    }
+    if (p.includes('republican')) {
+      return `<img width="22" alt="Elephant logo of the Republican Party." src="${base}assets/img/republican-disc.svg" style="vertical-align:middle;">`;
+    }
+    return '';
+  }
+
   function displayMemberDetails(member) {
     const detailsDiv = document.getElementById('memberDetails');
 
@@ -265,7 +278,7 @@ permalink: /member.html
       <h2>${fullName}</h2>
       ${member.birthYear ? `<p style="display:flex;justify-content:space-between;"><span><strong>Birth Year:</strong> ${member.birthYear}</span><span><strong>Age:</strong> ${currentYear - member.birthYear}</span></p>` : ''}
       <p style="display:flex;justify-content:space-between;"><span><strong>First Term (Current Chamber):</strong> ${startYear}</span><span><strong>Years in Office:</strong> ${yearsInOffice}</span></p>
-      <p><strong>Party:</strong> ${party}</p>
+      <p><strong>Party:</strong> ${party} ${getPartyIconHtml(party)}</p>
       <p><strong>State:</strong> ${state}</p>
       <p><strong>District:</strong> ${district}</p>
       <p><strong>Chamber:</strong> ${chamber}</p>

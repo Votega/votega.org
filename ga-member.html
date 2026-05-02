@@ -203,6 +203,19 @@ permalink: /ga-member.html
     }
   }
 
+  function getPartyIconHtml(party) {
+    if (!party) return '';
+    const p = party.toLowerCase();
+    const base = getBasePath();
+    if (p.includes('democrat')) {
+      return `<img width="22" alt="Donkey logo of the Democratic party." src="${base}assets/img/democratic-disc.svg" style="vertical-align:middle;">`;
+    }
+    if (p.includes('republican')) {
+      return `<img width="22" alt="Elephant logo of the Republican Party." src="${base}assets/img/republican-disc.svg" style="vertical-align:middle;">`;
+    }
+    return '';
+  }
+
   function displayMemberDetails(member) {
     const currentYear = new Date().getFullYear();
     const detailsDiv  = document.getElementById('memberDetails');
@@ -229,7 +242,7 @@ permalink: /ga-member.html
            </p>`
         : ''}
       <p><strong>Title:</strong> ${member.title || 'N/A'}</p>
-      <p><strong>Party:</strong> ${member.party || 'N/A'}</p>
+      <p><strong>Party:</strong> ${member.party || 'N/A'} ${getPartyIconHtml(member.party)}</p>
       <p><strong>Chamber:</strong> ${member.chamber || 'N/A'}</p>
       <p><strong>District:</strong> ${member.district ?? 'N/A'}</p>
       ${phoneHtml}

@@ -1,0 +1,42 @@
+name: Sync generated data files on PR
+
+# Automatically resolves conflicts in auto-generated JSON data files by pulling
+# the base branch version onto the PR branch, since these files are regenerated
+# daily by workflows and manual conflict resolution is unnecessary.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  sync-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync generated data files from base branch
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          git checkout origin/${{ github.base_ref }} -- \
+            assets/data/current-members.json \
+            assets/data/ga-members.json
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/current-members.json assets/data/ga-members.json
+          if git diff --cached --quiet; then
+            echo "Generated data already in sync — no commit needed"
+          else
+            git commit -m "chore: sync generated data files from base branch"
+            git push
+          fi
