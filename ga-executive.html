@@ -1,0 +1,217 @@
+---
+layout: default
+title: Georgia Executive Offices
+permalink: /ga-executive.html
+---
+
+<h1>Georgia Executive Offices</h1>
+<p>Statewide elected officials serving the State of Georgia. Executive officials serve 4-year terms and are elected in the same cycle as U.S. midterm elections.</p>
+
+<style>
+  .exec-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+  .exec-card {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 1.25rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .exec-photo {
+    width: 100px;
+    flex-shrink: 0;
+  }
+  .exec-photo img {
+    width: 100px;
+    height: 120px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 6px;
+    display: block;
+  }
+  .exec-photo-placeholder {
+    width: 100px;
+    height: 120px;
+    border-radius: 6px;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+  .exec-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .exec-title {
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #666;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.2rem 0;
+  }
+  .exec-name {
+    font-size: 1.35rem;
+    font-weight: bold;
+    margin: 0 0 0.5rem 0;
+  }
+  .exec-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+  }
+  .exec-meta-item {
+    color: #444;
+  }
+  .exec-term-note {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+  }
+  .exec-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+  }
+  .exec-contact a {
+    text-decoration: none;
+  }
+  .exec-contact a:hover {
+    text-decoration: underline;
+  }
+  .party-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  @media (max-width: 560px) {
+    .exec-card {
+      flex-direction: column;
+    }
+    .exec-photo, .exec-photo img, .exec-photo-placeholder {
+      width: 80px;
+    }
+    .exec-photo img {
+      height: 96px;
+    }
+    .exec-photo-placeholder {
+      height: 96px;
+    }
+  }
+</style>
+
+<div class="exec-grid" id="execGrid">
+  <p id="loadingMsg">Loading…</p>
+</div>
+
+<p style="margin-top:1.5rem;font-size:0.8rem;color:#888;" id="dataSource"></p>
+
+<script>
+  const DATA_URL = 'assets/data/ga-executive.json';
+
+  function getBasePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+
+  function partyIconHtml(party) {
+    if (!party) return '';
+    const base = getBasePath();
+    const p = party.toLowerCase();
+    if (p.includes('democrat')) {
+      return `<img width="18" alt="Democratic Party" src="${base}assets/img/democratic-disc.svg" style="vertical-align:middle;">`;
+    }
+    if (p.includes('republican')) {
+      return `<img width="18" alt="Republican Party" src="${base}assets/img/republican-disc.svg" style="vertical-align:middle;">`;
+    }
+    return '';
+  }
+
+  function renderCard(official) {
+    const currentYear = new Date().getFullYear();
+
+    const photoHtml = official.imageUrl
+      ? `<img src="${official.imageUrl}" alt="${official.name}">`
+      : `<div class="exec-photo-placeholder">No photo</div>`;
+
+    const yearsInOffice = official.termStartYear
+      ? `${currentYear - official.termStartYear} yrs in office`
+      : '';
+
+    const termHtml = official.termStartYear
+      ? `<span class="exec-meta-item">In office since ${official.termStartYear}${yearsInOffice ? ` &nbsp;·&nbsp; ${yearsInOffice}` : ''}</span>`
+      : '';
+
+    const termNoteHtml = official.termNote
+      ? `<div class="exec-term-note">${official.termNote}</div>`
+      : '';
+
+    const phoneHtml = official.phone
+      ? `<a href="tel:${official.phone.replace(/\D/g,'')}">${official.phone}</a>`
+      : '';
+
+    const emailHtml = official.email
+      ? `<a href="mailto:${official.email}">${official.email}</a>`
+      : '';
+
+    const websiteHtml = official.officialWebsiteUrl
+      ? `<a href="${official.officialWebsiteUrl}" target="_blank" rel="noopener">Official website ↗</a>`
+      : '';
+
+    const contactParts = [phoneHtml, emailHtml, websiteHtml].filter(Boolean);
+
+    return `
+      <div class="exec-card">
+        <div class="exec-photo">${photoHtml}</div>
+        <div class="exec-info">
+          <div class="exec-title">${official.title}</div>
+          <div class="exec-name">${official.name}</div>
+          <div class="exec-meta">
+            <span class="exec-meta-item party-label">
+              ${partyIconHtml(official.party)} ${official.party || ''}
+            </span>
+            ${termHtml}
+          </div>
+          ${termNoteHtml}
+          ${contactParts.length ? `<div class="exec-contact">${contactParts.join('')}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  async function loadExecutiveOfficials() {
+    const grid = document.getElementById('execGrid');
+    try {
+      const res = await fetch(DATA_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      const officials = data.officials || [];
+      if (!officials.length) throw new Error('No officials found in data.');
+
+      grid.innerHTML = officials.map(renderCard).join('');
+
+      const src = document.getElementById('dataSource');
+      if (data.metadata?.updatedAt) {
+        src.textContent = `Data last updated: ${data.metadata.updatedAt} · Source: ${data.metadata.source || 'georgia.gov'} · Term cycle: ${data.metadata.termCycle || ''}`;
+      }
+    } catch (err) {
+      console.error(err);
+      grid.innerHTML = `<p style="color:#c00;">Error loading data: ${err.message}</p>`;
+    }
+  }
+
+  loadExecutiveOfficials();
+</script>
