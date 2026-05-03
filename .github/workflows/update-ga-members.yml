@@ -51,3 +51,42 @@ jobs:
             git commit -m "Update Georgia General Assembly member data"
             git push
           fi
+
+      - name: Publish to ga-legislators repo
+        env:
+          GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
+        run: |
+          python3 - <<'EOF'
+          import json, base64, urllib.request, urllib.error, os
+
+          token = os.environ['GA_LEGISLATORS_TOKEN']
+          repo  = 'megamays08/ga-legislators'
+          url   = f'https://api.github.com/repos/{repo}/contents/data/all.json'
+          headers = {
+              'Authorization': f'token {token}',
+              'Accept': 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json',
+          }
+
+          with open('assets/data/ga-members.json', 'rb') as f:
+              content = base64.b64encode(f.read()).decode()
+
+          # Get current file SHA (required by GitHub API to update an existing file)
+          sha = None
+          req = urllib.request.Request(url, headers=headers)
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  sha = json.loads(resp.read())['sha']
+          except urllib.error.HTTPError as e:
+              if e.code != 404:
+                  raise
+
+          payload = {'message': 'Publish GA member data from votega.org', 'content': content}
+          if sha:
+              payload['sha'] = sha
+
+          req = urllib.request.Request(url, data=json.dumps(payload).encode(), method='PUT', headers=headers)
+          with urllib.request.urlopen(req) as resp:
+              result = json.loads(resp.read())
+              print(f"Published to ga-legislators: {result['commit']['sha']}")
+          EOF
