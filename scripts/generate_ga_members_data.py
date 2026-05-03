@@ -77,30 +77,40 @@ def normalize_member(raw):
 
     if org == 'upper':
         chamber = 'Senate'
+        chamber_slug = 'senate'
     elif org == 'lower':
         chamber = 'House of Representatives'
+        chamber_slug = 'house'
     else:
         chamber = org
+        chamber_slug = org.lower()
 
     offices = raw.get('offices', [])
     phone   = next((o.get('voice', '')   for o in offices if o.get('voice')),   '')
     address = next((o.get('address', '') for o in offices if o.get('address')), '')
-    email   = next((o.get('email', '')   for o in offices if o.get('email')),   '')
+    # Use offices email first; fall back to top-level email field
+    email   = next((o.get('email', '')   for o in offices if o.get('email')), '') or raw.get('email', '') or ''
 
-    links = raw.get('links', [])
-    # Prefer legis.ga.gov (current site); discard stale house.ga.gov / senate.ga.gov URLs
-    website = ''
-    for link in links:
-        url = link.get('url', '')
-        if 'legis.ga.gov' in url:
-            website = url.split('?')[0]
-            break
-    if not website:
+    # Construct URL from extras.georgia_id — most reliable source, available on every member
+    extras     = raw.get('extras', {})
+    georgia_id = extras.get('georgia_id')
+    if georgia_id and chamber_slug in ('house', 'senate'):
+        website = f"https://www.legis.ga.gov/members/{chamber_slug}/{georgia_id}"
+    else:
+        # Fall back to links: prefer legis.ga.gov, discard stale house/senate.ga.gov URLs
+        links = raw.get('links', [])
+        website = ''
         for link in links:
             url = link.get('url', '')
-            if 'house.ga.gov' not in url and 'senate.ga.gov' not in url and url:
-                website = url
+            if 'legis.ga.gov' in url:
+                website = url.split('?')[0]
                 break
+        if not website:
+            for link in links:
+                url = link.get('url', '')
+                if 'house.ga.gov' not in url and 'senate.ga.gov' not in url and url:
+                    website = url
+                    break
 
     birth_date = raw.get('birth_date', '') or ''
     birth_year = int(birth_date[:4]) if len(birth_date) >= 4 else None
