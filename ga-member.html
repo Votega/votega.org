@@ -241,16 +241,16 @@ permalink: /ga-member.html
              <span><strong>Age:</strong> ${currentYear - member.birthYear}</span>
            </p>`
         : ''}
+      ${member.termStartYear
+        ? `<p style="display:flex;justify-content:space-between;">
+             <span><strong>First Term (Current Chamber):</strong> ${member.termStartYear}</span>
+             <span><strong>Years in Office:</strong> ${currentYear - member.termStartYear}</span>
+           </p>`
+        : ''}
       <p><strong>Title:</strong> ${member.title || 'N/A'}</p>
       <p><strong>Party:</strong> ${member.party || 'N/A'} ${getPartyIconHtml(member.party)}</p>
       <p><strong>Chamber:</strong> ${member.chamber || 'N/A'}</p>
       <p><strong>District:</strong> ${member.district ?? 'N/A'}</p>
-      ${member.termStartYear
-        ? `<p style="display:flex;justify-content:space-between;">
-             <span><strong>Term Start:</strong> ${member.termStartYear}</span>
-             <span><strong>Years in Office:</strong> ${currentYear - member.termStartYear}</span>
-           </p>`
-        : ''}
       ${phoneHtml}
       ${addressHtml}
       ${emailHtml}
