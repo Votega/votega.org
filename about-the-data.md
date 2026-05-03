@@ -71,7 +71,7 @@ into votega.org on the next daily update.
 
 ## What We Don't Do
 
-- **No real-time API calls from your browser.** All data is pre-fetched and served as static files. This fast page loads for you.
+- **No real-time API calls from your browser.** All data is pre-fetched and served as static files. This means fast page loads for you.
 - **No tracking or analytics beyond standard page metrics.** We do not build profiles of visitors or sell data.
 
 ---
