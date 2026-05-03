@@ -115,6 +115,9 @@ def normalize_member(raw):
     birth_date = raw.get('birth_date', '') or ''
     birth_year = int(birth_date[:4]) if len(birth_date) >= 4 else None
 
+    term_start     = role.get('start_date', '') or ''
+    term_start_year = int(term_start[:4]) if len(term_start) >= 4 else None
+
     district_str = role.get('district', '')
     try:
         district = int(district_str)
@@ -137,6 +140,8 @@ def normalize_member(raw):
         'officialWebsiteUrl': website,
         'birthDate':        birth_date,
         'birthYear':        birth_year,
+        'termStart':        term_start,
+        'termStartYear':    term_start_year,
     }
 
 
