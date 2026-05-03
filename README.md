@@ -1,17 +1,10 @@
-# votega.org-TEST
-Test/Dev Site for votega.org
+# votega.org
+Votega.org a site providing elected official information for citizens of the State of Georgia. 
 
-## Refreshing Congress member data
+## Refreshing Member data
 
-This repo uses a GitHub Actions workflow to generate `assets/data/current-members.json` from the Congress.gov API.
+[![Update Congress.gov current members data](https://github.com/Votega/votega.org/actions/workflows/update-current-members.yml/badge.svg)](https://github.com/Votega/votega.org/actions/workflows/update-current-members.yml)
 
-[![Update Congress.gov current members data](https://github.com/Votega/votega.org-TEST/actions/workflows/update-current-members.yml/badge.svg)](https://github.com/Votega/votega.org-TEST/actions/workflows/update-current-members.yml)
+[![Update Georgia General Assembly member data](https://github.com/Votega/votega.org/actions/workflows/update-ga-members.yml/badge.svg)](https://github.com/Votega/votega.org/actions/workflows/update-ga-members.yml)
 
-To refresh the data manually:
-
-1. Go to the repository on GitHub.
-2. Open the `Actions` tab.
-3. Select the workflow `Update Congress.gov current members data`.
-4. Click `Run workflow`.
-
-The workflow uses the `CONGRESS_API_KEY` secret.
+[![Sync generated data files on PR](https://github.com/Votega/votega.org/actions/workflows/sync-generated-data-on-pr.yml/badge.svg)](https://github.com/Votega/votega.org/actions/workflows/sync-generated-data-on-pr.yml)
