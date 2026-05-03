@@ -160,6 +160,19 @@ def main():
     print(f"Normalizing {len(raw_members)} members...")
     members = [normalize_member(m) for m in raw_members]
 
+    # Apply manual overrides (keyed by OCD member ID)
+    overrides_file = os.path.join(os.path.dirname(OUTPUT_FILE), 'ga-members-overrides.json')
+    if os.path.exists(overrides_file):
+        with open(overrides_file, encoding='utf-8') as f:
+            overrides = json.load(f)
+        applied = 0
+        for member in members:
+            patch = overrides.get(member['id'])
+            if patch:
+                member.update(patch)
+                applied += 1
+        print(f"  Applied overrides to {applied} member(s)")
+
     senate = [m for m in members if m['chamber'] == 'Senate']
     house  = [m for m in members if m['chamber'] == 'House of Representatives']
     print(f"  Senate: {len(senate)}  |  House: {len(house)}  |  Total: {len(members)}")
