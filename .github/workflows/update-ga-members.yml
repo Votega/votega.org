@@ -60,7 +60,7 @@ jobs:
           import json, base64, urllib.request, urllib.error, os
 
           token = os.environ['GA_LEGISLATORS_TOKEN']
-          repo  = 'megamays08/ga-legislators'
+          repo  = 'Votega/ga-legislators'
           url   = f'https://api.github.com/repos/{repo}/contents/data/all.json'
           headers = {
               'Authorization': f'token {token}',
