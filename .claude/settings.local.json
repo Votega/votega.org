@@ -3,7 +3,10 @@
     "allow": [
       "WebFetch(domain:api.congress.gov)",
       "WebFetch(domain:github.com)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "WebFetch(domain:www.legis.ga.gov)",
+      "WebSearch",
+      "WebFetch(domain:webservices.legis.ga.gov)"
     ]
   }
 }
