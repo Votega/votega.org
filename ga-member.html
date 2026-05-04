@@ -225,6 +225,10 @@ permalink: /ga-member.html
       ? `<img src="${member.imageUrl}" alt="${name}" style="max-width:200px;margin-bottom:1rem;border-radius:8px;">`
       : '';
 
+    const leadershipHtml = member.leadershipRole
+      ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;background:#1a1a2e;color:#fff;border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${member.leadershipRole}</div>`
+      : '';
+
     const phoneHtml   = member.phone   ? `<p><strong>Phone:</strong> ${member.phone}</p>`   : '';
     const addressHtml = member.address ? `<p><strong>Address:</strong> ${member.address}</p>` : '';
     const emailHtml   = member.email   ? `<p><strong>Email:</strong> <a href="mailto:${member.email}">${member.email}</a></p>` : '';
@@ -235,6 +239,7 @@ permalink: /ga-member.html
     detailsDiv.innerHTML = `
       ${imageHtml}
       <h2>${name}</h2>
+      ${leadershipHtml}
       ${member.birthYear
         ? `<p style="display:flex;justify-content:space-between;">
              <span><strong>Birth Year:</strong> ${member.birthYear}</span>

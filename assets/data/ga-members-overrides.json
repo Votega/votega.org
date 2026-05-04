@@ -1,121 +1,184 @@
 {
-  "_note": "Manual overrides applied after Open States data generation. Keyed by OCD member ID. Only include fields that need correcting — all other fields remain from Open States.",
+  "_note": "Manual overrides applied after Open States data generation. Keyed by OCD member ID. Only include fields that need correcting — all other fields remain from Open States. Use _name for human-readable identification only; it is stripped before merging.",
   "_example": {
     "ocd-person/REPLACE-WITH-REAL-ID": {
+      "_name": "First Last",
       "phone": "404-555-1234",
       "email": "firstname.lastname@house.ga.gov"
     }
   },
   "ocd-person/e51d36a7-9684-4540-aae7-a5e60e434681": {
+    "_name": "Sharon Henderson",
     "termStart": "2021-01-11",
     "termStartYear": 2021
   },
   "ocd-person/818f1afb-2850-448e-99c1-be63a9acfe95": {
+    "_name": "Doreen Carter",
     "termStart": "2015-11-12",
     "termStartYear": 2015
   },
   "ocd-person/df023a79-0194-4d1a-8755-5dee4053e1cc": {
+    "_name": "Gail Davenport",
     "termStart": "2011-01-10",
     "termStartYear": 2011
-  }, 
+  },
   "ocd-person/d9f1ea57-7b90-484a-9664-927a36c87e0c": {
+    "_name": "Tonya Anderson",
     "termStart": "2017-01-09",
     "termStartYear": 2017
   },
   "ocd-person/adefd0ba-43cd-4aae-9321-12f67e57ac8a": {
+    "_name": "Bill Werkheiser",
     "termStart": "2015-02-19",
     "termStartYear": 2015
   },
   "ocd-person/3194a8e0-aaf8-4686-b2c9-a22521f85fff": {
+    "_name": "Steven Meeks",
     "termStart": "2019-01-14",
     "termStartYear": 2019
   },
   "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": {
+    "_name": "Blake Tillery",
     "termStart": "2017-01-09",
     "termStartYear": 2017
   },
   "ocd-person/dbce462d-74e3-42d3-bd6c-3b9f8eeb69fe": {
+    "_name": "James Burchett",
     "termStart": "2019-03-18",
     "termStartYear": 2019
   },
   "ocd-person/b90b899d-87f0-43a5-9d15-6e310187ac41": {
+    "_name": "Russ Goodman",
     "termStart": "2021-01-11",
     "termStartYear": 2021
   },
   "ocd-person/570a213a-a475-4fd3-ac36-23e1bd1190be": {
+    "_name": "Gerald Greene",
     "termStart": "1983-01-10",
     "termStartYear": 1983
   },
   "ocd-person/8e209d95-2333-4aa2-a628-1bdcec0674f5": {
+    "_name": "Mack Jackson",
     "termStart": "2009-01-12",
     "termStartYear": 2009
   },
   "ocd-person/1a9598cc-056f-4725-a3fb-64c3f0fd26ed": {
+    "_name": "Danny Mathis",
     "termStart": "2019-01-14",
     "termStartYear": 2019
   },
   "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": {
+    "_name": "Rick Williams",
     "termStart": "2023-01-23",
     "termStartYear": 2023
   },
   "ocd-person/d79c3e9b-b73d-416b-9bfd-8a0338d8256c": {
+    "_name": "Chris Erwin",
     "termStart": "2019-04-26",
     "termStartYear": 2019
   },
   "ocd-person/60bb96c4-f20c-4918-b88b-d7857341e5f4": {
+    "_name": "Bo Hatchett",
     "termStart": "2021-01-11",
     "termStartYear": 2021
   },
   "ocd-person/3ff894cb-f2e4-47d0-9f67-b125245a10c3": {
+    "_name": "Chuck Efstration",
     "termStart": "2013-12-13",
-    "termStartYear": 2013
+    "termStartYear": 2013,
+    "leadershipRole": "House Majority Leader"
   },
   "ocd-person/b39e2164-d570-45f2-b271-5e2fbe99c8d6": {
+    "_name": "Holt Persinger",
     "termStart": "2023-03-06",
     "termStartYear": 2023
   },
   "ocd-person/e73cb2a6-bf3e-4211-a386-142c18a4f607": {
+    "_name": "Houston Gaines",
     "termStart": "2019-01-14",
     "termStartYear": 2019
   },
   "ocd-person/17a7e011-73f2-4ac5-8470-3436b47a6744": {
+    "_name": "Clint Dixon",
     "termStart": "2021-01-11",
     "termStartYear": 2021
   },
   "ocd-person/4dc87191-fa52-4c2f-bc9c-8823a8b4c882": {
+    "_name": "Bill Cowsert",
     "termStart": "2007-01-08",
-    "termStartYear": 2007
+    "termStartYear": 2007,
+    "leadershipRole": "Senate President Pro Tempore"
   },
   "ocd-person/9e417b67-da09-4516-b858-6b2458f53633": {
+    "_name": "Frank Ginn",
     "termStart": "2011-01-10",
     "termStartYear": 2011
   },
   "ocd-person/7ac30a66-1649-4a8c-a72f-a4b9a7ab1534": {
+    "_name": "Mitchell Scoggins",
     "termStart": "2019-01-14",
     "termStartYear": 2019
   },
   "ocd-person/909e9026-e549-494b-be99-e8562a389e0c": {
+    "_name": "Matthew Gambill",
     "termStart": "2019-01-14",
     "termStartYear": 2019
   },
   "ocd-person/777f58bb-9d6b-4755-ab7b-b94d11629cb5": {
+    "_name": "Ed Setzler",
     "termStart": "2023-01-09",
     "termStartYear": 2023
   },
   "ocd-person/b11d0191-cd84-4a93-add6-ee65494caff2": {
+    "_name": "Chuck Hufstetler",
     "termStart": "2013-01-14",
     "termStartYear": 2013
   },
   "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded": {
+    "_name": "Noel Williams",
     "termStart": "2019-01-14",
     "termStartYear": 2019
   },
   "ocd-person/df874c28-6403-42c1-9cbb-0855508cda85": {
+    "_name": "Leesa Hagan",
     "termStart": "2021-07-22",
     "termStartYear": 2021
   },
   "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": {
+    "_name": "Carden Summers",
     "termStart": "2020-03-10",
     "termStartYear": 2020
+  },
+  "ocd-person/64012657-d026-411c-9525-3232524a5145": {
+    "_name": "Jon Burns",
+    "leadershipRole": "Speaker of the House"
+  },
+  "ocd-person/85740034-23b0-4001-9190-8948bd9f3b37": {
+    "_name": "Jan Jones",
+    "leadershipRole": "Speaker Pro Tempore"
+  },
+  "ocd-person/6ac8933e-8dde-4902-8eec-61cc5a91c844": {
+    "_name": "Trey Kelley",
+    "leadershipRole": "House Majority Whip"
+  },
+  "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76": {
+    "_name": "Carolyn Hugley",
+    "leadershipRole": "House Minority Leader"
+  },
+  "ocd-person/83a7bbf2-d69c-4813-bbeb-52820e6b9af4": {
+    "_name": "David Wilkerson",
+    "leadershipRole": "House Minority Whip"
+  },
+  "ocd-person/cb7d8c1d-3c26-4f35-8d37-d1cf8a7ce207": {
+    "_name": "Jason Anavitarte",
+    "leadershipRole": "Senate Majority Leader"
+  },
+  "ocd-person/d7bfd125-d343-4acd-a4dc-480daf241af3": {
+    "_name": "Harold Jones",
+    "leadershipRole": "Senate Minority Leader"
+  },
+  "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": {
+    "_name": "Kim Jackson",
+    "leadershipRole": "Senate Minority Whip"
   }
 }

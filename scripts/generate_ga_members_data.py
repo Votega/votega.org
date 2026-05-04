@@ -169,7 +169,7 @@ def main():
         for member in members:
             patch = overrides.get(member['id'])
             if patch:
-                member.update(patch)
+                member.update({k: v for k, v in patch.items() if not k.startswith('_')})
                 applied += 1
         print(f"  Applied overrides to {applied} member(s)")
 
