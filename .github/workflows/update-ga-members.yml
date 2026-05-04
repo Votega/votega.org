@@ -49,6 +49,7 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update Georgia General Assembly member data"
+            git pull --rebase origin main
             git push
           fi
 
