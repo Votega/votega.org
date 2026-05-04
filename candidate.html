@@ -1,0 +1,184 @@
+---
+layout: default
+title: Candidate Profile
+permalink: /candidate.html
+---
+
+<div id="candidateContent"><p>Loading candidate information…</p></div>
+
+<style>
+  .candidate-header {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .candidate-photo {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .candidate-photo-placeholder {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #9ca3af;
+    flex-shrink: 0;
+  }
+  .candidate-header-info h1 { margin: 0 0 0.4rem 0; }
+
+  .party-badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    font-weight: bold;
+    margin-bottom: 0.6rem;
+  }
+  .party-R     { background: #fee2e2; color: #b91c1c; }
+  .party-D     { background: #dbeafe; color: #1d4ed8; }
+  .party-other { background: #f3f4f6; color: #374151; }
+
+  .race-context {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 1rem;
+  }
+
+  .no-record-note {
+    padding: 0.75rem 1rem;
+    background: #f9f9f9;
+    border-left: 3px solid #d1d5db;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.88rem;
+    color: #555;
+    margin: 1.25rem 0;
+  }
+
+  .bio-section { margin: 1.25rem 0; line-height: 1.65; }
+
+  .contact-section { margin: 1.25rem 0; }
+  .contact-section h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+  .contact-section a  { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; }
+
+  .back-link { margin-top: 2rem; font-size: 0.9rem; }
+</style>
+
+<script>
+  const RACES_URL = 'assets/data/races.json';
+
+  const candidateId = new URLSearchParams(window.location.search).get('id');
+
+  function getBasePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+
+  function partyClass(party) {
+    if (!party) return 'party-other';
+    const p = party.toLowerCase();
+    if (p.includes('republican')) return 'party-R';
+    if (p.includes('democrat'))   return 'party-D';
+    return 'party-other';
+  }
+
+  function chamberRecordLabel(chamber) {
+    if (!chamber) return 'legislative';
+    if (chamber.includes('U.S.') || chamber.includes('Congress')) return 'U.S. Congressional';
+    return 'Georgia state legislative';
+  }
+
+  function renderCandidate(candidate, race, phaseName) {
+    const basePath    = getBasePath();
+    const distLabel   = race.district ? ` District ${race.district}` : '';
+    const raceLabel   = `${race.chamber}${distLabel} — ${race.cycle} ${phaseName === 'primary' ? 'Primary' : 'General Election'}`;
+    const raceUrl     = `${basePath}race.html?id=${encodeURIComponent(race.id)}`;
+    const recordLabel = chamberRecordLabel(race.chamber);
+
+    const photoHtml = candidate.imageUrl
+      ? `<img class="candidate-photo" src="${candidate.imageUrl}" alt="${candidate.name}">`
+      : `<div class="candidate-photo-placeholder">👤</div>`;
+
+    const bioHtml = candidate.bio
+      ? `<div class="bio-section"><p>${candidate.bio}</p></div>`
+      : '';
+
+    const websiteHtml = candidate.website
+      ? `<div class="contact-section">
+           <h3>Campaign</h3>
+           <a href="${candidate.website}" target="_blank" rel="noopener">${candidate.website} ↗</a>
+         </div>`
+      : '';
+
+    document.title = `${candidate.name} — Candidate Profile`;
+
+    document.getElementById('candidateContent').innerHTML = `
+      <div class="candidate-header">
+        ${photoHtml}
+        <div class="candidate-header-info">
+          <h1>${candidate.name}</h1>
+          <span class="party-badge ${partyClass(candidate.party)}">${candidate.party || 'Unknown party'}</span>
+          <div class="race-context">Running for: <a href="${raceUrl}">${raceLabel}</a></div>
+        </div>
+      </div>
+
+      <div class="no-record-note">
+        This candidate has no prior ${recordLabel} record on file.
+      </div>
+
+      ${bioHtml}
+      ${websiteHtml}
+
+      <div class="back-link"><a href="${raceUrl}">← Back to ${race.chamber}${distLabel} race</a></div>`;
+  }
+
+  async function init() {
+    if (!candidateId) {
+      document.getElementById('candidateContent').innerHTML =
+        '<p>No candidate specified. <a href="elections.html">View all races</a></p>';
+      return;
+    }
+
+    try {
+      const res = await fetch(RACES_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const races = data.races || [];
+
+      // Search all races and phases for this challenger id
+      let found = null, foundRace = null, foundPhase = null;
+
+      outer: for (const race of races) {
+        for (const phaseName of ['primary', 'general']) {
+          const phase = race.phases?.[phaseName];
+          if (!phase) continue;
+          const match = (phase.candidates || []).find(
+            c => c.type === 'challenger' && c.id === candidateId
+          );
+          if (match) { found = match; foundRace = race; foundPhase = phaseName; break outer; }
+        }
+      }
+
+      if (!found) {
+        document.getElementById('candidateContent').innerHTML =
+          '<p>Candidate not found. <a href="elections.html">View all races</a></p>';
+        return;
+      }
+
+      renderCandidate(found, foundRace, foundPhase);
+    } catch (err) {
+      console.error(err);
+      document.getElementById('candidateContent').innerHTML =
+        `<p>Error loading candidate: ${err.message}. <a href="elections.html">Go back</a></p>`;
+    }
+  }
+
+  init();
+</script>

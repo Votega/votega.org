@@ -1,0 +1,318 @@
+---
+layout: default
+title: Race Details
+permalink: /race.html
+---
+
+<div id="raceContent"><p>Loading race information…</p></div>
+
+<style>
+  .race-header { margin-bottom: 1.5rem; }
+  .race-header h1 { margin-bottom: 0.25rem; }
+  .race-header .meta { font-size: 0.9rem; color: #555; }
+
+  .phase-badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+  .phase-primary { background: #fef9c3; color: #854d0e; }
+  .phase-general { background: #dcfce7; color: #166534; }
+
+  .primary-result-callout {
+    padding: 0.75rem 1rem;
+    background: #f0f4ff;
+    border-left: 4px solid #4f6edb;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+  .primary-result-callout strong { display: block; margin-bottom: 0.2rem; }
+
+  .candidates-grid {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .candidate-card {
+    flex: 1;
+    min-width: 240px;
+    max-width: 360px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1.25rem;
+    position: relative;
+  }
+  .candidate-card.incumbent { border-left: 4px solid #1a56a8; }
+  .candidate-card.challenger { border-left: 4px solid #888; }
+  .candidate-card.withdrawn { opacity: 0.55; }
+
+  .role-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.6rem;
+  }
+  .role-incumbent  { background: #e0f2fe; color: #0369a1; }
+  .role-challenger { background: #f3f4f6; color: #374151; }
+  .role-withdrawn  { background: #fef2f2; color: #991b1b; }
+
+  .candidate-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+  .candidate-photo-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: #9ca3af;
+    margin-bottom: 0.75rem;
+  }
+
+  .candidate-name { font-size: 1.1rem; font-weight: bold; margin: 0 0 0.3rem 0; }
+
+  .party-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+  }
+  .party-R    { background: #fee2e2; color: #b91c1c; }
+  .party-D    { background: #dbeafe; color: #1d4ed8; }
+  .party-other { background: #f3f4f6; color: #374151; }
+
+  .candidate-bio { font-size: 0.88rem; color: #444; margin-bottom: 0.75rem; line-height: 1.5; }
+
+  .candidate-links { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.75rem; }
+  .candidate-links a { font-size: 0.88rem; }
+
+  .no-candidates {
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 6px;
+    border: 1px dashed #ccc;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .back-link { margin-top: 2rem; font-size: 0.9rem; }
+
+  @media (max-width: 600px) {
+    .candidate-card { max-width: 100%; }
+  }
+</style>
+
+<script>
+  const RACES_URL       = 'assets/data/races.json';
+  const GA_MEMBERS_URL  = 'assets/data/ga-members.json';
+  const CONGRESS_URL    = 'assets/data/current-members.json';
+
+  const raceId = new URLSearchParams(window.location.search).get('id');
+
+  function getBasePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function partyClass(party) {
+    if (!party) return 'party-other';
+    const p = party.toLowerCase();
+    if (p.includes('republican')) return 'party-R';
+    if (p.includes('democrat'))   return 'party-D';
+    return 'party-other';
+  }
+
+  function photoEl(url, name) {
+    if (url) return `<img class="candidate-photo" src="${url}" alt="${name}">`;
+    return `<div class="candidate-photo-placeholder">👤</div>`;
+  }
+
+  function renderIncumbentCard(candidate, member, race) {
+    const basePath = getBasePath();
+    const isState  = race.level === 'state';
+
+    if (!member) {
+      return `
+        <div class="candidate-card incumbent">
+          <span class="role-badge role-incumbent">Incumbent</span>
+          <p><em>Member data not found. Check that memberId matches the data file.</em></p>
+        </div>`;
+    }
+
+    const name    = member.name || 'Unknown';
+    const party   = member.party || member.partyName || '';
+    const photo   = member.imageUrl || member.depiction?.imageUrl || '';
+    const chamber = member.chamber || '';
+    const district = member.district ?? '';
+
+    const memberUrl = isState
+      ? `${basePath}ga-member.html?id=${encodeURIComponent(member.id)}`
+      : `${basePath}member.html?id=${encodeURIComponent(member.bioguideId)}`;
+
+    const subtitle = [chamber, district ? `District ${district}` : ''].filter(Boolean).join(' · ');
+
+    return `
+      <div class="candidate-card incumbent">
+        <span class="role-badge role-incumbent">Current Officeholder</span>
+        ${photoEl(photo, name)}
+        <p class="candidate-name">${name}</p>
+        <span class="party-badge ${partyClass(party)}">${party || 'Unknown party'}</span>
+        ${subtitle ? `<p style="font-size:0.85rem;color:#555;margin:0 0 0.75rem 0;">${subtitle}</p>` : ''}
+        <div class="candidate-links">
+          <a href="${memberUrl}">View legislative record →</a>
+        </div>
+      </div>`;
+  }
+
+  function renderChallengerCard(candidate) {
+    const basePath = getBasePath();
+    if (candidate.withdrawn) {
+      return `
+        <div class="candidate-card challenger withdrawn">
+          <span class="role-badge role-withdrawn">Withdrawn</span>
+          <p class="candidate-name">${candidate.name}</p>
+          <span class="party-badge ${partyClass(candidate.party)}">${candidate.party || ''}</span>
+        </div>`;
+    }
+
+    const profileUrl = `${basePath}candidate.html?id=${encodeURIComponent(candidate.id)}`;
+    const websiteHtml = candidate.website
+      ? `<a href="${candidate.website}" target="_blank" rel="noopener">Campaign website ↗</a>`
+      : '';
+
+    return `
+      <div class="candidate-card challenger">
+        <span class="role-badge role-challenger">Candidate</span>
+        ${photoEl(candidate.imageUrl, candidate.name)}
+        <p class="candidate-name">${candidate.name}</p>
+        <span class="party-badge ${partyClass(candidate.party)}">${candidate.party || 'Unknown party'}</span>
+        ${candidate.bio ? `<p class="candidate-bio">${candidate.bio}</p>` : ''}
+        <div class="candidate-links">
+          ${websiteHtml}
+          <a href="${profileUrl}">View candidate profile →</a>
+        </div>
+      </div>`;
+  }
+
+  function renderRace(race, members) {
+    const basePath   = getBasePath();
+    const phase      = race.phases[race.activePhase];
+    const phaseLabel = race.activePhase === 'primary' ? 'Primary' : 'General Election';
+    const phaseClass = race.activePhase === 'primary' ? 'phase-primary' : 'phase-general';
+    const distLabel  = race.district ? ` — District ${race.district}` : '';
+    const dateStr    = phase ? formatDate(phase.electionDate) : '';
+
+    // Primary result callout (shown after switching to general)
+    const showResult = race.activePhase === 'general' && race.phases.primary?.primaryResult;
+    const resultCallout = showResult
+      ? `<div class="primary-result-callout">
+           <strong>Primary Result</strong>
+           ${race.phases.primary.primaryResult}
+         </div>`
+      : '';
+
+    // Candidate cards
+    let cardsHtml = '';
+    const candidates = phase?.candidates || [];
+    const activeCandidates = candidates.filter(c => !c.withdrawn);
+    const withdrawn        = candidates.filter(c => c.withdrawn);
+
+    if (!activeCandidates.length && !withdrawn.length) {
+      cardsHtml = '<p class="no-candidates">Candidate information not yet available for this phase.</p>';
+    } else {
+      const allOrdered = [...activeCandidates, ...withdrawn];
+      cardsHtml = allOrdered.map(c => {
+        if (c.type === 'incumbent') {
+          const member = race.level === 'federal'
+            ? members.find(m => m.bioguideId === c.memberId)
+            : members.find(m => m.id === c.memberId);
+          return renderIncumbentCard(c, member, race);
+        }
+        return renderChallengerCard(c);
+      }).join('');
+    }
+
+    document.title = `${race.chamber}${distLabel} — 2026 Elections`;
+
+    document.getElementById('raceContent').innerHTML = `
+      <div class="race-header">
+        <h1>${race.chamber}${distLabel}</h1>
+        <div class="meta">
+          <span class="phase-badge ${phaseClass}">${phaseLabel}</span>
+          ${dateStr ? `Election date: ${dateStr}` : ''}
+          &nbsp;·&nbsp; ${race.cycle} Election Cycle
+        </div>
+      </div>
+      ${resultCallout}
+      <div class="candidates-grid">${cardsHtml}</div>
+      <div class="back-link"><a href="${basePath}elections.html">← Back to Elections</a></div>`;
+  }
+
+  async function init() {
+    if (!raceId) {
+      document.getElementById('raceContent').innerHTML =
+        '<p>No race specified. <a href="elections.html">View all races</a></p>';
+      return;
+    }
+
+    try {
+      const racesRes = await fetch(RACES_URL);
+      if (!racesRes.ok) throw new Error(`HTTP ${racesRes.status}`);
+      const racesData = await racesRes.json();
+      const race = (racesData.races || []).find(r => r.id === raceId);
+
+      if (!race) {
+        document.getElementById('raceContent').innerHTML =
+          '<p>Race not found. <a href="elections.html">View all races</a></p>';
+        return;
+      }
+
+      // Load member data only if this race has incumbents in the active phase
+      const phase = race.phases[race.activePhase];
+      const hasIncumbent = (phase?.candidates || []).some(c => c.type === 'incumbent');
+
+      let members = [];
+      if (hasIncumbent) {
+        const memberUrl = race.level === 'federal' ? CONGRESS_URL : GA_MEMBERS_URL;
+        const mRes = await fetch(memberUrl);
+        if (mRes.ok) {
+          const mData = await mRes.json();
+          members = mData.members || [];
+        }
+      }
+
+      renderRace(race, members);
+    } catch (err) {
+      console.error(err);
+      document.getElementById('raceContent').innerHTML =
+        `<p>Error loading race: ${err.message}. <a href="elections.html">Go back</a></p>`;
+    }
+  }
+
+  init();
+</script>
