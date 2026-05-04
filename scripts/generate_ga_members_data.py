@@ -7,6 +7,7 @@ Requires OPENSTATES_API_KEY environment variable.
 import json
 import os
 import sys
+import time
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -18,23 +19,33 @@ OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-members.json
 GA_JURISDICTION = "ocd-jurisdiction/country:us/state:ga/government"
 
 
-def fetch_url(url):
-    try:
-        print(f"Fetching: {url[:120]}...")
-        req = urllib.request.Request(url, headers={
-            'X-API-Key': API_KEY,
-            'Accept': 'application/json',
-            'User-Agent': 'votega.org/1.0',
-        })
-        with urllib.request.urlopen(req, timeout=30) as response:
-            return json.loads(response.read().decode('utf-8'))
-    except urllib.error.HTTPError as e:
-        body = e.read().decode('utf-8', errors='replace')
-        print(f"HTTP Error {e.code}: {e.reason} — {body[:300]}")
-        return None
-    except Exception as e:
-        print(f"Error fetching: {e}")
-        return None
+def fetch_url(url, retries=3, backoff=5):
+    print(f"Fetching: {url[:120]}...")
+    for attempt in range(1, retries + 1):
+        try:
+            req = urllib.request.Request(url, headers={
+                'X-API-Key': API_KEY or '',
+                'Accept': 'application/json',
+                'User-Agent': 'votega.org/1.0',
+            })
+            with urllib.request.urlopen(req, timeout=30) as response:
+                return json.loads(response.read().decode('utf-8'))
+        except urllib.error.HTTPError as e:
+            body = e.read().decode('utf-8', errors='replace')
+            print(f"HTTP Error {e.code}: {e.reason} — {body[:300]}")
+            if e.code >= 500 and attempt < retries:
+                print(f"  Retrying in {backoff}s (attempt {attempt}/{retries})...")
+                time.sleep(backoff)
+                continue
+            return None
+        except Exception as e:
+            print(f"Error fetching: {e}")
+            if attempt < retries:
+                print(f"  Retrying in {backoff}s (attempt {attempt}/{retries})...")
+                time.sleep(backoff)
+                continue
+            return None
+    return None
 
 
 def get_all_members():
