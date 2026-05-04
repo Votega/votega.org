@@ -71,6 +71,27 @@ permalink: /member.html
     #pageLayout { flex-direction: column; }
     #stateSidebar { width: auto; position: static; max-height: 300px; display: block !important; }
   }
+
+  .running-badge {
+    padding: 0.6rem 1rem;
+    border-radius: 0 6px 6px 0;
+    border-left: 4px solid;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .running-badge.reelection {
+    background: #f0fdf4;
+    border-color: #16a34a;
+    color: #14532d;
+  }
+  .running-badge.different-office {
+    background: #faf5ff;
+    border-color: #7c3aed;
+    color: #4c1d95;
+  }
+  .running-badge strong { display: block; margin-bottom: 0.25rem; }
+  .running-badge a { color: inherit; }
 </style>
 
 <div id="pageLayout">
@@ -99,14 +120,18 @@ permalink: /member.html
 
   async function loadMemberDetails(bioguideId) {
     const DATA_URL = 'assets/data/current-members.json';
+    const RACES_URL = 'assets/data/races.json';
     const statusLine = document.getElementById('status');
     statusLine.textContent = 'Loading member details…';
 
     try {
-      const res = await fetch(DATA_URL);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const [membersRes, racesRes] = await Promise.all([
+        fetch(DATA_URL),
+        fetch(RACES_URL)
+      ]);
+      if (!membersRes.ok) throw new Error(`HTTP ${membersRes.status}`);
 
-      const data = await res.json();
+      const data = await membersRes.json();
       const allMembers = data.members || [];
       const member = allMembers.find(m => m.bioguideId === bioguideId) || {};
 
@@ -114,11 +139,18 @@ permalink: /member.html
         throw new Error('Member not found in prebuilt data');
       }
 
-      if (DEBUG) {
-        console.log('Member data:', member);
+      let electionInfo = null;
+      if (racesRes.ok) {
+        const racesData = await racesRes.json();
+        electionInfo = findMemberInRaces(bioguideId, racesData.races || []);
       }
 
-      displayMemberDetails(member);
+      if (DEBUG) {
+        console.log('Member data:', member);
+        console.log('Election info:', electionInfo);
+      }
+
+      displayMemberDetails(member, electionInfo);
       displaySidebar(member, allMembers);
       statusLine.textContent = '';
     } catch (err) {
@@ -129,6 +161,33 @@ permalink: /member.html
       statusLine.textContent = message;
       document.getElementById('memberDetails').innerHTML = '<p>Error loading details. <a href="my-representatives.html">Go back</a></p>';
     }
+  }
+
+  // Returns { type: 'reelection'|'different-office', race, challengerEntry } or null
+  function findMemberInRaces(bioguideId, races) {
+    for (const race of races) {
+      for (const phaseName of ['primary', 'general']) {
+        const phase = race.phases?.[phaseName];
+        if (!phase) continue;
+
+        const allCandidates = phase.ballots
+          ? Object.values(phase.ballots).flat()
+          : (phase.candidates || []);
+
+        // Reelection: member is listed as incumbent in this race
+        const asIncumbent = allCandidates.find(
+          c => c.type === 'incumbent' && c.memberId === bioguideId && c.memberSource === 'congress'
+        );
+        if (asIncumbent) return { type: 'reelection', race, phase: phaseName };
+
+        // Different office: member's bioguideId appears as existingMemberId on a challenger entry
+        const asChallenger = allCandidates.find(
+          c => c.type === 'challenger' && c.existingMemberId === bioguideId && c.existingMemberSource === 'congress'
+        );
+        if (asChallenger) return { type: 'different-office', race, phase: phaseName, challenger: asChallenger };
+      }
+    }
+    return null;
   }
 
   function getBasePath() {
@@ -203,7 +262,7 @@ permalink: /member.html
     return '';
   }
 
-  function displayMemberDetails(member) {
+  function displayMemberDetails(member, electionInfo) {
     const detailsDiv = document.getElementById('memberDetails');
 
     const honorific = member.honorificName || '';
@@ -273,9 +332,36 @@ permalink: /member.html
     const websiteHtml = member.officialWebsiteUrl ?
       `<p><strong>Official Website:</strong> <a href="${member.officialWebsiteUrl}" target="_blank">${member.officialWebsiteUrl}</a></p>` : '';
 
+    // Running for office badge
+    let runningBadgeHtml = '';
+    if (electionInfo) {
+      const basePath = getBasePath();
+      const race = electionInfo.race;
+      const distLabel = race.district ? ` District ${race.district}` : '';
+      const raceLabel = `${race.chamber}${distLabel}`;
+      const raceUrl = `${basePath}race.html?id=${encodeURIComponent(race.id)}`;
+
+      if (electionInfo.type === 'reelection') {
+        runningBadgeHtml = `
+          <div class="running-badge reelection">
+            <strong>Running for Re-election</strong>
+            This member is seeking re-election to their current seat.
+            <a href="${raceUrl}">View ${raceLabel} race →</a>
+          </div>`;
+      } else if (electionInfo.type === 'different-office') {
+        runningBadgeHtml = `
+          <div class="running-badge different-office">
+            <strong>Running for a Different Office</strong>
+            This member is seeking election to <strong>${raceLabel}</strong>.
+            <a href="${raceUrl}">View race →</a>
+          </div>`;
+      }
+    }
+
     const html = `
       ${imageHtml}
       <h2>${fullName}</h2>
+      ${runningBadgeHtml}
       ${member.birthYear ? `<p style="display:flex;justify-content:space-between;"><span><strong>Birth Year:</strong> ${member.birthYear}</span><span><strong>Age:</strong> ${currentYear - member.birthYear}</span></p>` : ''}
       <p style="display:flex;justify-content:space-between;"><span><strong>First Term (Current Chamber):</strong> ${startYear}</span><span><strong>Years in Office:</strong> ${yearsInOffice}</span></p>
       <p><strong>Party:</strong> ${party} ${getPartyIconHtml(party)}</p>

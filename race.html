@@ -194,7 +194,7 @@ permalink: /race.html
 
     const memberUrl = isState
       ? `${basePath}ga-member.html?id=${encodeURIComponent(member.id)}`
-      : `${basePath}member.html?id=${encodeURIComponent(member.bioguideId)}`;
+      : `${basePath}member.html?bioguideId=${encodeURIComponent(member.bioguideId)}`;
 
     const subtitle = [chamber, district ? `District ${district}` : ''].filter(Boolean).join(' · ');
 
