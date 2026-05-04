@@ -1,5 +1,5 @@
 {
-  "_note": "Manual overrides applied after Open States data generation. Keys can be either the OCD member ID (ocd-person/...) or the member's full name as it appears in ga-members.json. Only include fields that need correcting — all other fields remain from Open States. Use _name for human-readable identification only; it is stripped before merging.",
+  "_note": "Manual overrides applied after Open States data generation. Keys can be either the OCD member ID (ocd-person/...) or the member's full name as it appears in ga-members.json. Only include fields that need correcting — all other fields remain from Open States. Use _name for human-readable identification only; it is stripped before merging. Departure fields: status (Resigned | Suspended | Removed | Deceased | Vacant), statusDate (YYYY-MM-DD), statusNote (optional free-text detail, e.g. executive order number).",
   "_example_by_id": {
     "ocd-person/REPLACE-WITH-REAL-ID": {
       "_name": "First Last",
@@ -16,7 +16,10 @@
   "ocd-person/e51d36a7-9684-4540-aae7-a5e60e434681": {
     "_name": "Sharon Henderson",
     "termStart": "2021-01-11",
-    "termStartYear": 2021
+    "termStartYear": 2021,
+    "status": "Suspended",
+    "statusDate": "2026-01-22",
+    "statusNote": "Suspended by Executive Order from the Governor of Georgia, effective January 22, 2026. See https://gov.georgia.gov/press-releases/2026-01-22/governor-brian-kemp-suspends-representative-sharon-henderson"
   },
   "ocd-person/818f1afb-2850-448e-99c1-be63a9acfe95": {
     "_name": "Doreen Carter",

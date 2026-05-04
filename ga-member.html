@@ -20,6 +20,49 @@ permalink: /ga-member.html
     border: 1px solid #ccc;
     border-radius: 8px;
   }
+  .status-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    border-left: 4px solid;
+  }
+  .status-banner .status-label {
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  .status-banner .status-note {
+    color: inherit;
+    opacity: 0.85;
+  }
+  .status-banner .status-election {
+    font-size: 0.8rem;
+    font-style: italic;
+    opacity: 0.75;
+  }
+  .status-resigned, .status-removed {
+    background: #fff3cd;
+    border-color: #f0ad00;
+    color: #5a3e00;
+  }
+  .status-suspended {
+    background: #fff8e1;
+    border-color: #ffca28;
+    color: #4a3500;
+  }
+  .status-deceased {
+    background: #f5f5f5;
+    border-color: #999;
+    color: #444;
+  }
+  .status-vacant, .status-other {
+    background: #e8f0fe;
+    border-color: #1a56a8;
+    color: #1a3a6b;
+  }
   #stateSidebar {
     width: 240px;
     flex-shrink: 0;
@@ -229,6 +272,19 @@ permalink: /ga-member.html
       ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;background:#1a1a2e;color:#fff;border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${member.leadershipRole}</div>`
       : '';
 
+    const statusBannerHtml = (() => {
+      if (!member.status) return '';
+      const slug = member.status.toLowerCase().replace(/\s+/g, '-');
+      const knownSlug = ['resigned','removed','suspended','deceased','vacant'].includes(slug) ? slug : 'other';
+      const dateStr = member.statusDate
+        ? new Date(member.statusDate + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})
+        : '';
+      const labelLine = `<span class="status-label">${member.status}${dateStr ? ` &nbsp;·&nbsp; ${dateStr}` : ''}</span>`;
+      const noteLine  = member.statusNote ? `<span class="status-note">${member.statusNote}</span>` : '';
+      const electionLine = `<span class="status-election">This seat may be subject to a special election.</span>`;
+      return `<div class="status-banner status-${knownSlug}">${labelLine}${noteLine}${electionLine}</div>`;
+    })();
+
     const phoneHtml   = member.phone   ? `<p><strong>Phone:</strong> ${member.phone}</p>`   : '';
     const addressHtml = member.address ? `<p><strong>Address:</strong> ${member.address}</p>` : '';
     const emailHtml   = member.email   ? `<p><strong>Email:</strong> <a href="mailto:${member.email}">${member.email}</a></p>` : '';
@@ -237,6 +293,7 @@ permalink: /ga-member.html
       : '';
 
     detailsDiv.innerHTML = `
+      ${statusBannerHtml}
       ${imageHtml}
       <h2>${name}</h2>
       ${leadershipHtml}
