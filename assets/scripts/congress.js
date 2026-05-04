@@ -39,13 +39,14 @@ const memberSel   = document.getElementById('memberSelect');
 const statusLine  = document.getElementById('status');
 const form        = document.getElementById('lookupForm');
 
-// populate state dropdown once
+// populate state dropdown once, defaulting to Georgia
 STATES.forEach(s => {
   const opt=document.createElement('option');
   opt.value=s.code;
   opt.textContent=s.name;
   stateSel.appendChild(opt);
 });
+stateSel.value = 'GA';
 
 chamberSel.addEventListener('change', loadMembers);
 stateSel  .addEventListener('change', loadMembers);
