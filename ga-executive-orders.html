@@ -134,7 +134,10 @@ permalink: /ga-executive-orders.html
 
 <script>
   const DATA_FILES = {
-    2026: 'assets/data/ga-executive-orders-2026.json'
+    2026: 'assets/data/ga-executive-orders-2026.json',
+    2025: 'assets/data/ga-executive-orders-2025.json',
+    2024: 'assets/data/ga-executive-orders-2024.json',
+    2023: 'assets/data/ga-executive-orders-2023.json',
   };
 
   const CATEGORY_BADGE = {
@@ -215,7 +218,7 @@ permalink: /ga-executive-orders.html
 
   function buildYearNav() {
     const nav = document.getElementById('yearNav');
-    nav.innerHTML = Object.keys(DATA_FILES).map(y => `
+    nav.innerHTML = Object.keys(DATA_FILES).sort((a, b) => b - a).map(y => `
       <button class="year-btn${parseInt(y) === activeYear ? ' active' : ''}" data-year="${y}">${y}</button>
     `).join('');
     nav.querySelectorAll('.year-btn').forEach(btn => {
