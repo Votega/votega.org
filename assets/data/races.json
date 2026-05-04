@@ -1,5 +1,68 @@
 {
   "_note": "Manually curated 2026 Georgia election race data. Add one object per contested seat. Set activePhase to 'primary' or 'general' — flip it manually after primary results are confirmed. Populate general.candidates after the primary settles. See ga-elections-design.md for full schema documentation.",
   "_incumbentIds": "GA state member IDs (ocd-person/...) come from ga-members.json. Federal bioguideIds come from current-members.json. Find OCD IDs at openstates.org/ga/people/",
-  "races": []
+  "races": [
+    {
+      "id": "senate-2026",
+      "level": "federal",
+      "chamber": "U.S. Senate",
+      "district": 
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "candidates": [Jon Ossoff]
+            {
+              "type": "incumbent",
+              "memberId": "O000174",
+              "memberSource": "congress"
+            },
+            {
+              "type": "challenger",
+              "id": "challenger-jane-smith-ga-senate-5-2026",
+              "name": "Jane Smith",
+              "party": "Republican",
+              "website": "https://janesmith2026.com",
+              "bio": "Former Newton County Commissioner. Small business owner.",
+              "imageUrl": ""
+            }
+          ]
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-06-2026",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 6,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "candidates": [
+            {
+              "type": "incumbent",
+              "memberId": "A000374",
+              "memberSource": "congress"
+            }
+          ]
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    }
+  ]
 }
+
