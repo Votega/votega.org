@@ -152,16 +152,25 @@ permalink: /candidate.html
       const data = await res.json();
       const races = data.races || [];
 
-      // Search all races and phases for this challenger id
+      // Search all races and phases for this challenger id (flat candidates or ballots)
       let found = null, foundRace = null, foundPhase = null;
 
       outer: for (const race of races) {
         for (const phaseName of ['primary', 'general']) {
           const phase = race.phases?.[phaseName];
           if (!phase) continue;
-          const match = (phase.candidates || []).find(
+
+          let match = (phase.candidates || []).find(
             c => c.type === 'challenger' && c.id === candidateId
           );
+
+          if (!match && phase.ballots) {
+            for (const ballotCandidates of Object.values(phase.ballots)) {
+              match = ballotCandidates.find(c => c.type === 'challenger' && c.id === candidateId);
+              if (match) break;
+            }
+          }
+
           if (match) { found = match; foundRace = race; foundPhase = phaseName; break outer; }
         }
       }
