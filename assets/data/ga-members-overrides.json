@@ -1,8 +1,14 @@
 {
-  "_note": "Manual overrides applied after Open States data generation. Keyed by OCD member ID. Only include fields that need correcting — all other fields remain from Open States. Use _name for human-readable identification only; it is stripped before merging.",
-  "_example": {
+  "_note": "Manual overrides applied after Open States data generation. Keys can be either the OCD member ID (ocd-person/...) or the member's full name as it appears in ga-members.json. Only include fields that need correcting — all other fields remain from Open States. Use _name for human-readable identification only; it is stripped before merging.",
+  "_example_by_id": {
     "ocd-person/REPLACE-WITH-REAL-ID": {
       "_name": "First Last",
+      "termStart": "2021-01-11",
+      "termStartYear": 2021
+    }
+  },
+  "_example_by_name": {
+    "First Last": {
       "phone": "404-555-1234",
       "email": "firstname.lastname@house.ga.gov"
     }
@@ -325,5 +331,114 @@
     "_name": "David Lucas",
     "termStart": "2023-01-23",
     "termStartYear": 2023
+},
+"Floyd Griffin": {
+      "termStartYear": 2025
+},
+"John Corbett": {
+      "termStart": "2015-01-12",
+      "termStartYear": 2015
+},
+"Mike Hodges": {
+      "termStart": "2023-01-09",
+      "termStartYear": 2023
+},
+"John LaHood": {
+      "termStart": "2018-02-19",
+      "termStartYear": 2018
+},
+"Sam Watson": {
+      "termStart": "2023-02-06",
+      "termStartYear": 2023
+},
+"Lehman Franklin": {
+      "termStartYear": 2022
+},
+"Ron Stephens": {
+      "termStart": "1997-07-20",
+      "termStartYear": 1997
+},
+"Jesse Petrea": {
+      "termStart": "2015-01-12",
+      "termStartYear": 2015
+},
+"Ben Watson": {
+      "termStart": "2015-01-12",
+      "termStartYear": 2015
+},
+"Butch Parrish": {
+      "termStart": "1985-01-14",
+      "termStartYear": 1985
+},
+"Billy Hickman": {
+      "termStart": "2020-08-20",
+      "termStartYear": 2020
+},
+"L.C. Myles": {
+      "termStart": "2025-01-13",
+      "termStartYear": 2025
+},
+"Max Burns": { 
+      "termStart": "2021-01-11",
+      "termStartYear": 2021
+},
+"Clint Crowe": {
+      "termStart": "2021-01-11",
+      "termStartYear": 2021
+},
+"Steven Sainz": {
+      "termStart": "2019-01-14",
+      "termStartYear": 2019
+},
+"Tyler Smith": {
+      "termStart": "2021-01-11",
+      "termStartYear": 2021
+},
+"Lynn Smith": {
+      "termStart": "1997-01-13",
+      "termStartYear": 1997
+},
+"Jutt Howard": {
+      "termStartYear": 2024
+},
+"David Huddleston": {
+      "termStartYear": 2022
+},
+"Tim Bearden": {
+      "termStart": "2024-02-20",
+      "termStartYear": 2024
+},
+"Steve Tarvin": {
+      "termStart": "2014-02-11",
+      "termStartYear": 2014
+},
+"Mitchell Horner": {
+      "termStartYear": 2022
+},
+"Lanny Thomas": {
+      "termStartYear": 2026,
+      "phone": "404-657-7716",
+      "email": "Lanny.Thomas@senate.ga.gov",
+      "address": "Room 323-B, Coverdell Legislative Office Building 18 Capitol Square SW, Atlanta, GA 30334",
+      "officialWebsiteUrl": "https://www.legis.ga.gov/members/senate/5094"
+},
+"Bill Hitchens": {
+      "termStart": "2013-01-14",
+      "termStartYear": 2013
+},
+"Carl Gilliard": {
+      "termStart": "2016-05-05",
+      "termStartYear": 2016
+},
+"Anne Westbrook": {
+      "termStartYear": 2023
+},
+"Edna Jackson": {
+      "termStart": "2021-11-10",
+      "termStartYear": 2021
+},
+"Derek Mallow": {
+      "termStart": "2023-01-09",
+      "termStartYear": 2023
 }
-}
+

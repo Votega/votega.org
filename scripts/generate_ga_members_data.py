@@ -171,14 +171,20 @@ def main():
     print(f"Normalizing {len(raw_members)} members...")
     members = [normalize_member(m) for m in raw_members]
 
-    # Apply manual overrides (keyed by OCD member ID)
+    # Apply manual overrides (keyed by OCD member ID or full member name)
     overrides_file = os.path.join(os.path.dirname(OUTPUT_FILE), 'ga-members-overrides.json')
     if os.path.exists(overrides_file):
         with open(overrides_file, encoding='utf-8') as f:
             overrides = json.load(f)
+
+        # Split into ID-keyed (ocd-person/...) and name-keyed entries
+        id_overrides   = {k: v for k, v in overrides.items() if k.startswith('ocd-person/')}
+        name_overrides = {k.lower().strip(): v for k, v in overrides.items()
+                          if not k.startswith('ocd-person/') and not k.startswith('_')}
+
         applied = 0
         for member in members:
-            patch = overrides.get(member['id'])
+            patch = id_overrides.get(member['id']) or name_overrides.get(member['name'].lower().strip())
             if patch:
                 member.update({k: v for k, v in patch.items() if not k.startswith('_')})
                 applied += 1
