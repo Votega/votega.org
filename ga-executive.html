@@ -80,6 +80,13 @@ permalink: /ga-executive.html
     margin-bottom: 0.75rem;
     font-style: italic;
   }
+  .exec-reelection {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #1a56a8;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
   .exec-contact {
     display: flex;
     flex-wrap: wrap;
@@ -174,6 +181,14 @@ permalink: /ga-executive.html
       ? `<a href="${official['Constituent Services']}" target="_blank" rel="noopener">Constituent services ↗</a>`
       : '';
 
+    const reelectionHtml = official['Reelection']
+      ? `<span class="exec-reelection">${official['Reelection']}</span>`
+      : '';
+
+    const campaignHtml = official['Reelection Campaign Website']
+      ? `<a href="${official['Reelection Campaign Website']}" target="_blank" rel="noopener">Campaign website ↗</a>`
+      : '';
+
     const contactParts = [phoneHtml, emailHtml, websiteHtml, constituentHtml].filter(Boolean);
 
     return `
@@ -189,7 +204,8 @@ permalink: /ga-executive.html
             ${termHtml}
           </div>
           ${termNoteHtml}
-          ${contactParts.length ? `<div class="exec-contact">${contactParts.join('')}</div>` : ''}
+          ${reelectionHtml}
+          ${contactParts.length || campaignHtml ? `<div class="exec-contact">${[...contactParts, campaignHtml].filter(Boolean).join('')}</div>` : ''}
         </div>
       </div>
     `;
