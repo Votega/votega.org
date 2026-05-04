@@ -1,6 +1,6 @@
 {
   "_note": "Manually curated 2026 Georgia election race data. Add one object per contested seat. Set activePhase to 'primary' or 'general' — flip it manually after primary results are confirmed. Populate general.candidates after the primary settles. See ga-elections-design.md for full schema documentation.",
-  "_incumbentIds": "GA state member IDs (ocd-person/...) come from ga-members.json. Federal bioguideIds come from current-members.json. Find OCD IDs at openstates.org/ga/people/",
+  "_incumbentIds": "GA state member IDs (ocd-person/...) come from ga-members.json. Federal bioguideIds come from current-members.json. Find OCD IDs at openstates.org/ga/people/ — verify uncertain IDs against current-members.json before publishing.",
   "races": [
     {
       "id": "senate-2026",
@@ -26,7 +26,7 @@
                 "id": "challenger-derek-dooley-senate-2026",
                 "name": "Derek Dooley",
                 "party": "Republican",
-                "bio": "Consultant from Rabun County.",
+                "bio": "Consultant.",
                 "imageUrl": "",
                 "website": "https://dooleyforgeorgia.com"
               },
@@ -37,14 +37,16 @@
                 "party": "Republican",
                 "bio": "Current U.S. Representative for Georgia's 1st Congressional District. Pharmacist.",
                 "imageUrl": "",
-                "website": "https://buddycarter.com"
+                "website": "https://buddycarter.com",
+                "existingMemberId": "C001103",
+                "existingMemberSource": "congress"
               },
               {
                 "type": "challenger",
                 "id": "challenger-john-coyne-senate-2026",
                 "name": "John Francis Coyne III",
                 "party": "Republican",
-                "bio": "CEO from Fulton County.",
+                "bio": "CEO.",
                 "imageUrl": "",
                 "website": ""
               },
@@ -64,7 +66,354 @@
                 "party": "Republican",
                 "bio": "Current U.S. Representative for Georgia's 10th Congressional District.",
                 "imageUrl": "",
-                "website": "https://mikecollinsga.com"
+                "website": "https://mikecollinsga.com",
+                "existingMemberId": "C001120",
+                "existingMemberSource": "congress"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-01-2026",
+      "_note": "Open seat — Buddy Carter (R) vacated to run for U.S. Senate.",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 1,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-amanda-hollowell-ga01-2026",
+                "name": "Amanda Hollowell",
+                "party": "Democrat",
+                "bio": "Chief of Campaigns.",
+                "imageUrl": "",
+                "website": "https://amandaforga.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-defonsio-daniels-ga01-2026",
+                "name": "Defonsio Daniels",
+                "party": "Democrat",
+                "bio": "Retired Marine.",
+                "imageUrl": "",
+                "website": "https://daniels979.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-joey-palimeno-ga01-2026",
+                "name": "Joey Palimeno",
+                "party": "Democrat",
+                "bio": "Veterinary Technician.",
+                "imageUrl": "",
+                "website": "https://joeyforga.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-joyce-griggs-ga01-2026",
+                "name": "Joyce Marie Griggs",
+                "party": "Democrat",
+                "bio": "Retired Military.",
+                "imageUrl": "",
+                "website": "https://griggsforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-michael-mccord-ga01-2026",
+                "name": "Michael McCord",
+                "party": "Democrat",
+                "bio": "Small Business Owner.",
+                "imageUrl": "",
+                "website": "https://mccordforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-patrick-wilver-ga01-2026",
+                "name": "Patrick J. Wilver",
+                "party": "Democrat",
+                "bio": "Self-Employed.",
+                "imageUrl": "",
+                "website": ""
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-randall-zurcher-ga01-2026",
+                "name": "Randall Jay Zurcher",
+                "party": "Democrat",
+                "bio": "Teachers Union Representative.",
+                "imageUrl": "",
+                "website": "https://randy4georgia.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-sharon-stokes-williamson-ga01-2026",
+                "name": "Sharon Stokes Williamson",
+                "party": "Democrat",
+                "bio": "Public Health Professional.",
+                "imageUrl": "",
+                "website": "https://sswilliamsonforcongress.com"
+              }
+            ],
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-brian-montgomery-ga01-2026",
+                "name": "Brian Allen Montgomery",
+                "party": "Republican",
+                "bio": "Retired, United States Army.",
+                "imageUrl": "",
+                "website": "https://brianmontgomery.org"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-eugene-yu-ga01-2026",
+                "name": "Eugene Chin Yu",
+                "party": "Republican",
+                "bio": "Retired.",
+                "imageUrl": "",
+                "website": "https://yuforyou.org"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-jim-kingston-ga01-2026",
+                "name": "Jim Kingston",
+                "party": "Republican",
+                "bio": "Insurance Broker.",
+                "imageUrl": "",
+                "website": "https://jimkingston.org"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-kandiss-taylor-ga01-2026",
+                "name": "Kandiss S. Taylor",
+                "party": "Republican",
+                "bio": "Educator.",
+                "imageUrl": "",
+                "website": "https://kandisstaylor.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-krista-penn-ga01-2026",
+                "name": "Krista Penn",
+                "party": "Republican",
+                "bio": "Healthcare Executive.",
+                "imageUrl": "",
+                "website": "https://karista4congress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-pat-farrell-ga01-2026",
+                "name": "Pat Farrell",
+                "party": "Republican",
+                "bio": "Small Business Owner.",
+                "imageUrl": "",
+                "website": "https://patfarrellforcongress.com"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-02-2026",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 2,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Democrat": [
+              {
+                "type": "incumbent",
+                "memberId": "B000490",
+                "memberSource": "congress"
+              }
+            ],
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-matt-day-ga02-2026",
+                "name": "Benjamin Matthew Day",
+                "party": "Republican",
+                "bio": "CEO & Chairman.",
+                "imageUrl": "",
+                "website": "https://votemattday.com"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-03-2026",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 3,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Republican": [
+              {
+                "type": "incumbent",
+                "memberId": "J000305",
+                "_verifyMemberId": true,
+                "memberSource": "congress"
+              }
+            ],
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-george-johnson-ga03-2026",
+                "name": "George Melville Johnson",
+                "party": "Democrat",
+                "bio": "Attorney.",
+                "imageUrl": "",
+                "website": ""
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-maura-keller-ga03-2026",
+                "name": "Maura Kathleen Keller",
+                "party": "Democrat",
+                "bio": "Retired Army.",
+                "imageUrl": "",
+                "website": "https://maurakeller.com"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-04-2026",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 4,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Democrat": [
+              {
+                "type": "incumbent",
+                "memberId": "J000288",
+                "memberSource": "congress"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-ansel-postell-ga04-2026",
+                "name": "Ansel Postell",
+                "party": "Democrat",
+                "bio": "Entrepreneur.",
+                "imageUrl": "",
+                "website": "https://apostellforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-ben-truman-ga04-2026",
+                "name": "Ben Truman",
+                "party": "Democrat",
+                "bio": "Consultant.",
+                "imageUrl": "",
+                "website": "https://bentrumanforcongress.com"
+              }
+            ],
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-james-duffie-ga04-2026",
+                "name": "James Raymond Duffie",
+                "party": "Republican",
+                "bio": "Retired.",
+                "imageUrl": "",
+                "website": ""
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-05-2026",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 5,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Democrat": [
+              {
+                "type": "incumbent",
+                "memberId": "W000788",
+                "memberSource": "congress"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-arnetress-beatty-ga05-2026",
+                "name": "Arnetress Elaine Beatty",
+                "party": "Democrat",
+                "bio": "Security Professional.",
+                "imageUrl": "",
+                "website": "https://goddown.net"
+              }
+            ],
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-john-salvesen-ga05-2026",
+                "name": "John Oscar Salvesen II",
+                "party": "Republican",
+                "bio": "Handyman.",
+                "imageUrl": "",
+                "website": ""
               }
             ]
           }
@@ -87,13 +436,713 @@
         "primary": {
           "electionDate": "2026-05-19",
           "primaryResult": "",
-          "candidates": [
-            {
-              "type": "incumbent",
-              "memberId": "A000374",
-              "memberSource": "congress"
-            }
-          ]
+          "ballots": {
+            "Democrat": [
+              {
+                "type": "incumbent",
+                "memberId": "M001208",
+                "memberSource": "congress"
+              }
+            ],
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-justin-pinker-ga06-2026",
+                "name": "Justin Lee Pinker",
+                "party": "Republican",
+                "bio": "Pest Control Technician.",
+                "imageUrl": "",
+                "website": "https://justinpinkerforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-kevin-martin-ga06-2026",
+                "name": "Kevin Eugene Martin",
+                "party": "Republican",
+                "bio": "Controller.",
+                "imageUrl": "",
+                "website": ""
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-07-2026",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 7,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Republican": [
+              {
+                "type": "incumbent",
+                "memberId": "M001215",
+                "_verifyMemberId": true,
+                "memberSource": "congress"
+              }
+            ],
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-case-norton-ga07-2026",
+                "name": "Case Norton",
+                "party": "Democrat",
+                "bio": "Camera Technician.",
+                "imageUrl": "",
+                "website": "https://case4congress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-jayson-toweh-ga07-2026",
+                "name": "Jayson Toweh",
+                "party": "Democrat",
+                "bio": "Environmental Health Scientist.",
+                "imageUrl": "",
+                "website": "https://towehforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-larry-long-ga07-2026",
+                "name": "Larry D. Long",
+                "party": "Democrat",
+                "bio": "Retired.",
+                "imageUrl": "",
+                "website": "https://electlarrylong.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-tony-kozycki-ga07-2026",
+                "name": "Tony Kozycki",
+                "party": "Democrat",
+                "bio": "Attorney.",
+                "imageUrl": "",
+                "website": "https://kozyckiforcongress.com"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-08-2026",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 8,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Republican": [
+              {
+                "type": "incumbent",
+                "memberId": "S001189",
+                "memberSource": "congress"
+              }
+            ],
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-justin-lucas-ga08-2026",
+                "name": "Justin M. Lucas",
+                "party": "Democrat",
+                "bio": "Educator.",
+                "imageUrl": "",
+                "website": "https://facebook.com/profile.php?id=61586467530528"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-kelly-esti-ga08-2026",
+                "name": "Kelly Esti",
+                "party": "Democrat",
+                "bio": "Analyst.",
+                "imageUrl": "",
+                "website": "https://kellyesti4congress.com"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-09-2026",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 9,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Republican": [
+              {
+                "type": "incumbent",
+                "memberId": "C001116",
+                "memberSource": "congress"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-joel-poole-ga09-2026",
+                "name": "Joel Gregory Poole",
+                "party": "Republican",
+                "bio": "Electrical and Plumbing Contractor.",
+                "imageUrl": "",
+                "website": ""
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-warren-couvillon-ga09-2026",
+                "name": "Warren Samuel Couvillon",
+                "party": "Republican",
+                "bio": "Insurance Professional.",
+                "imageUrl": "",
+                "website": "https://samforhouse.com"
+              }
+            ],
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-caitlyn-gegen-ga09-2026",
+                "name": "Caitlyn Gegen",
+                "party": "Democrat",
+                "bio": "Barista.",
+                "imageUrl": "",
+                "website": "https://caitlynforgeorgia.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-nick-alex-ga09-2026",
+                "name": "Nick Alex",
+                "party": "Democrat",
+                "bio": "Retired.",
+                "imageUrl": "",
+                "website": "https://nickalex2026.com"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-10-2026",
+      "_note": "Open seat — Michael Collins (R) vacated to run for U.S. Senate.",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 10,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-houston-gaines-ga10-2026",
+                "name": "Houston Gaines",
+                "party": "Republican",
+                "bio": "Small Business Development.",
+                "imageUrl": "",
+                "website": "https://houstongaines.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-jeffrey-baker-ga10-2026",
+                "name": "Jeffrey Dwayne Baker",
+                "party": "Republican",
+                "bio": "Plumber.",
+                "imageUrl": "",
+                "website": "https://jeffbakerforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-ryan-millsap-ga10-2026",
+                "name": "Ryan Christopher Millsap",
+                "party": "Republican",
+                "bio": "Entrepreneur.",
+                "imageUrl": "",
+                "website": "https://ryanmillsapforcongress.com"
+              }
+            ],
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-lexy-doherty-ga10-2026",
+                "name": "Alexandra \"Lexy\" Doherty",
+                "party": "Democrat",
+                "bio": "Candidate.",
+                "imageUrl": "",
+                "website": "https://lexydoherty.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-john-dority-ga10-2026",
+                "name": "John B. Dority",
+                "party": "Democrat",
+                "bio": "Retired Engineer.",
+                "imageUrl": "",
+                "website": ""
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-pam-delancy-ga10-2026",
+                "name": "Pamela \"Pam\" Delancy",
+                "party": "Democrat",
+                "bio": "Military Retiree.",
+                "imageUrl": "",
+                "website": "https://votepamdelancy.com"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-11-2026",
+      "_note": "Open seat — Barry Loudermilk (R) did not file for re-election.",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 11,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-chris-mora-ga11-2026",
+                "name": "Chris Mora",
+                "party": "Republican",
+                "bio": "Telecommunications Professional.",
+                "imageUrl": "",
+                "website": "https://moraforgeorgia.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-john-cowan-ga11-2026",
+                "name": "John A. Cowan Jr.",
+                "party": "Republican",
+                "bio": "Neurosurgeon.",
+                "imageUrl": "",
+                "website": "https://cowanforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-john-hobbs-ga11-2026",
+                "name": "John Hobbs",
+                "party": "Republican",
+                "bio": "CNC Machinist.",
+                "imageUrl": "",
+                "website": "https://johnhobbsforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-lisa-carlquist-ga11-2026",
+                "name": "Lisa Anne Carlquist",
+                "party": "Republican",
+                "bio": "Board Member.",
+                "imageUrl": "",
+                "website": "https://lisacforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-robert-adkerson-ga11-2026",
+                "name": "Robert Allen Adkerson",
+                "party": "Republican",
+                "bio": "Self-Employed.",
+                "imageUrl": "",
+                "website": "https://voterobadkerson.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-tricia-pridemore-ga11-2026",
+                "name": "Tricia R. Pridemore",
+                "party": "Republican",
+                "bio": "Public Service Commissioner.",
+                "imageUrl": "",
+                "website": "https://triciapridemore.org"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-uloma-kama-ga11-2026",
+                "name": "Uloma Stacy Kama",
+                "party": "Republican",
+                "bio": "Physician.",
+                "imageUrl": "",
+                "website": ""
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-william-brown-ga11-2026",
+                "name": "William Brown",
+                "party": "Republican",
+                "bio": "Attorney.",
+                "imageUrl": "",
+                "website": "",
+                "withdrawn": true
+              }
+            ],
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-barry-wolfert-ga11-2026",
+                "name": "Barry Wolfert",
+                "party": "Democrat",
+                "bio": "Real Estate Professional.",
+                "imageUrl": "",
+                "website": "https://barrywolfertforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-chris-harden-ga11-2026",
+                "name": "Chris Harden",
+                "party": "Democrat",
+                "bio": "Attorney.",
+                "imageUrl": "",
+                "website": "https://chrishardenforcongress.com"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-12-2026",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 12,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Republican": [
+              {
+                "type": "incumbent",
+                "memberId": "A000378",
+                "_verifyMemberId": true,
+                "memberSource": "congress"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-tori-branum-ga12-2026",
+                "name": "Tori Brett Branum",
+                "party": "Republican",
+                "bio": "Firearms Trainer.",
+                "imageUrl": "",
+                "website": "https://toriforgeorgia.com"
+              }
+            ],
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-brianna-woodson-ga12-2026",
+                "name": "Brianna Woodson",
+                "party": "Democrat",
+                "bio": "Therapist in Residency.",
+                "imageUrl": "",
+                "website": "https://briwoodsonforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-ceretta-smith-ga12-2026",
+                "name": "Ceretta Smith",
+                "party": "Democrat",
+                "bio": "Retired.",
+                "imageUrl": "",
+                "website": "https://cerettaforgeorgia.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-chris-stephens-ga12-2026",
+                "name": "Chris Stephens",
+                "party": "Democrat",
+                "bio": "Self-Employed.",
+                "imageUrl": "",
+                "website": "https://votechris.org"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-tracell-peace-nichols-ga12-2026",
+                "name": "Tracell Peace-Nichols",
+                "party": "Democrat",
+                "bio": "Criminal and Family Law Attorney.",
+                "imageUrl": "",
+                "website": "https://peacenichols4congress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-traci-george-ga12-2026",
+                "name": "Traci George",
+                "party": "Democrat",
+                "bio": "Educator.",
+                "imageUrl": "",
+                "website": "https://tracigeorge.net"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-13-2026",
+      "_note": "Open seat — David Scott (D) did not file for re-election.",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 13,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-emanuel-jones-ga13-2026",
+                "name": "Emanuel D. Jones",
+                "party": "Democrat",
+                "bio": "Automobile Dealer.",
+                "imageUrl": "",
+                "website": "https://emanuelforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-everton-blair-ga13-2026",
+                "name": "Everton Blair",
+                "party": "Democrat",
+                "bio": "Vice President, School Board Partners.",
+                "imageUrl": "",
+                "website": "https://evertonblair.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-heavenly-kimes-ga13-2026",
+                "name": "Heavenly Elaine Kimes",
+                "party": "Democrat",
+                "bio": "Dentist.",
+                "imageUrl": "",
+                "website": "https://drheavenlyforgeorgia.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-jasmine-clark-ga13-2026",
+                "name": "Jasmine Clark",
+                "party": "Democrat",
+                "bio": "Professor.",
+                "imageUrl": "",
+                "website": "https://jasmine4ga.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-jeffree-fauntleroy-ga13-2026",
+                "name": "Jeffree Monroe Fauntleroy",
+                "party": "Democrat",
+                "bio": "Community Consultant, Retired Law Enforcement.",
+                "imageUrl": "",
+                "website": "https://drjefffordistrict13.org"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-joe-lester-ga13-2026",
+                "name": "Joe N. Lester",
+                "party": "Democrat",
+                "bio": "Dentist.",
+                "imageUrl": "",
+                "website": "https://joenlesterforcongress.com"
+              }
+            ],
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-jonathan-chavez-ga13-2026",
+                "name": "Jonathan James Chavez",
+                "party": "Republican",
+                "bio": "Director of Radiology.",
+                "imageUrl": "",
+                "website": "https://jonathanchavezforcongress.com"
+              }
+            ]
+          }
+        },
+        "general": {
+          "electionDate": "2026-11-03",
+          "primaryResult": "",
+          "candidates": []
+        }
+      }
+    },
+    {
+      "id": "ga-14-2026",
+      "_note": "Open seat — Marjorie Taylor Greene (R) did not file for re-election.",
+      "level": "federal",
+      "chamber": "U.S. House",
+      "district": 14,
+      "cycle": 2026,
+      "activePhase": "primary",
+      "phases": {
+        "primary": {
+          "electionDate": "2026-05-19",
+          "primaryResult": "",
+          "ballots": {
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-brian-stover-ga14-2026",
+                "name": "Brian C. Stover",
+                "party": "Republican",
+                "bio": "Entrepreneur.",
+                "imageUrl": "",
+                "website": "https://brianstoverforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-clay-fuller-ga14-2026",
+                "name": "Clay Fuller",
+                "party": "Republican",
+                "bio": "District Attorney.",
+                "imageUrl": "",
+                "website": "https://clayfullerforgeorgia.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-colton-moore-ga14-2026",
+                "name": "Colton Moore",
+                "party": "Republican",
+                "bio": "Auctioneer and Truck Driver.",
+                "imageUrl": "",
+                "website": "https://coltonmoore.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-eric-cunningham-ga14-2026",
+                "name": "Eric Brad Cunningham",
+                "party": "Republican",
+                "bio": "Railroad Professional.",
+                "imageUrl": "",
+                "website": "https://ericcunninghamforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-nicky-lama-ga14-2026",
+                "name": "Nicky Lama",
+                "party": "Republican",
+                "bio": "Entrepreneur.",
+                "imageUrl": "",
+                "website": "https://nickylama.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-reagan-box-ga14-2026",
+                "name": "Reagan Christane Box",
+                "party": "Republican",
+                "bio": "Self-Employed.",
+                "imageUrl": "",
+                "website": ""
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-star-black-ga14-2026",
+                "name": "Star Black",
+                "party": "Republican",
+                "bio": "Retired Federal Service.",
+                "imageUrl": "",
+                "website": "https://starblackforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-thomas-gray-ga14-2026",
+                "name": "Thomas J. Gray",
+                "party": "Republican",
+                "bio": "Pastor.",
+                "imageUrl": "",
+                "website": "https://tomgray.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-timothy-brown-ga14-2026",
+                "name": "Timothy Beau Brown",
+                "party": "Republican",
+                "bio": "Risk Engineer.",
+                "imageUrl": "",
+                "website": "https://beaubrownforcongress.com"
+              },
+              {
+                "type": "challenger",
+                "id": "challenger-james-tully-ga14-2026",
+                "name": "James Edward Tully Jr.",
+                "party": "Republican",
+                "bio": "Self-Employed.",
+                "imageUrl": "",
+                "website": "https://jimtullyforgeorgia.com",
+                "withdrawn": true
+              }
+            ],
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-shawn-harris-ga14-2026",
+                "name": "Shawn Andre Harris",
+                "party": "Democrat",
+                "bio": "Veteran and Cattle Farmer.",
+                "imageUrl": "",
+                "website": "https://shawnforgeorgia.com"
+              }
+            ]
+          }
         },
         "general": {
           "electionDate": "2026-11-03",
@@ -104,4 +1153,3 @@
     }
   ]
 }
-
