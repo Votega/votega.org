@@ -59,6 +59,34 @@ into votega.org on the next daily update.
 
 ---
 
+## GA Executive Orders — Community Data Repository
+
+We publish Georgia Governor's executive orders to a public community repository:
+
+[GitHub GA Executive Orders Repository](https://github.com/Votega/ga-executive-orders)
+
+Executive orders are sourced from the [Georgia Governor's website](https://gov.georgia.gov/executive-action/executive-orders) and organized as one JSON file per year. Each order includes the date, order number, title, category, and a direct link to the official PDF.
+
+**Coverage:** 2023–present. Earlier years (2022 and prior) used a different URL structure on gov.georgia.gov and are not yet included.
+
+**Categories:** Orders are automatically classified by title keyword into one of seven categories — State of Emergency, Writ of Election, Suspension, Appointment, Authorization, Flag at Half-Staff, or Other.
+
+**Schema:**
+```json
+{
+  "date":     "2024-09-24",
+  "number":   "09.24.24.01",
+  "title":    "Declaring a State of Emergency for Tropical Storm Helene",
+  "category": "State of Emergency",
+  "url":      "https://gov.georgia.gov/document/2024-executive-order/09242401/download"
+}
+```
+
+{: .box-note}
+**Want to contribute?** If an order is missing or miscategorized, open an issue or pull request on the [ga-executive-orders repository](https://github.com/Votega/ga-executive-orders).
+
+---
+
 ## Data Freshness
 
 | Data | Source | Update Schedule |
@@ -66,6 +94,7 @@ into votega.org on the next daily update.
 | Federal Congress members | Congress.gov API | Daily, 06:00 UTC |
 | Georgia state legislators | Open States API | Daily, 07:00 UTC |
 | GA legislators community repo | Published from above | Daily, after GA member update |
+| GA executive orders | gov.georgia.gov | Manually maintained |
 
 ---
 
@@ -80,4 +109,5 @@ into votega.org on the next daily update.
 
 See an error? Have a data question? Feature request? Reach out to us at [admin@votega.org](mailto:admin@votega.org)
 or open an issue on [github.com/Votega/ga-legislators](https://github.com/Votega/ga-legislators)
-for Georgia-specific data corrections.
+for Georgia legislator corrections. 
+Or [github.com/Votega/ga-executive-orders](https://github.com/Votega/ga-executive-orders) for executive order corrections.
