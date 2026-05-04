@@ -1,0 +1,72 @@
+name: Publish GA Executive Orders data
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/ga-executive-orders-*.json'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Publish to ga-executive-orders repo
+        env:
+          GA_EXECUTIVE_ORDERS_TOKEN: ${{ secrets.GA_EXECUTIVE_ORDERS_TOKEN }}
+        run: |
+          python3 - <<'EOF'
+          import json, base64, urllib.request, urllib.error, os, glob
+
+          token = os.environ['GA_EXECUTIVE_ORDERS_TOKEN']
+          repo  = 'Votega/ga-executive-orders'
+          headers = {
+              'Authorization': f'token {token}',
+              'Accept': 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json',
+          }
+
+          files = sorted(glob.glob('assets/data/ga-executive-orders-*.json'))
+          if not files:
+              print('No ga-executive-orders-*.json files found')
+              exit(1)
+
+          for local_path in files:
+              year = local_path.split('-')[-1].replace('.json', '')
+              remote_path = f'data/{year}.json'
+              url = f'https://api.github.com/repos/{repo}/contents/{remote_path}'
+
+              with open(local_path, 'rb') as f:
+                  content = base64.b64encode(f.read()).decode()
+
+              # Get current file SHA if it exists
+              sha = None
+              req = urllib.request.Request(url, headers=headers)
+              try:
+                  with urllib.request.urlopen(req) as resp:
+                      sha = json.loads(resp.read())['sha']
+              except urllib.error.HTTPError as e:
+                  if e.code != 404:
+                      raise
+
+              payload = {
+                  'message': f'Publish GA executive orders {year}',
+                  'content': content,
+              }
+              if sha:
+                  payload['sha'] = sha
+
+              req = urllib.request.Request(url, data=json.dumps(payload).encode(), method='PUT', headers=headers)
+              with urllib.request.urlopen(req) as resp:
+                  result = json.loads(resp.read())
+                  print(f"Published {remote_path}: {result['commit']['sha']}")
+
+          print(f'Done — published {len(files)} file(s)')
+          EOF
