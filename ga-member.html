@@ -320,6 +320,14 @@ permalink: /ga-member.html
       ${addressHtml}
       ${emailHtml}
       ${websiteHtml}
+      ${(member.committees && member.committees.length)
+        ? `<div style="margin-top:1rem;">
+             <strong>Committee Assignments:</strong>
+             <ul style="margin:0.4rem 0 0 1.25rem;padding:0;">
+               ${member.committees.map(c => `<li>${c}</li>`).join('')}
+             </ul>
+           </div>`
+        : ''}
       <p><a href="ga-representatives.html">Search for another member</a></p>
     `;
   }

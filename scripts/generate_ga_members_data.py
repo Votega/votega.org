@@ -60,6 +60,7 @@ def get_all_members():
             ('per_page',     per_page),
             ('include',      'links'),
             ('include',      'offices'),
+            ('include',      'memberships'),
         ])
         url = f"{BASE_URL}/people?{params}"
         data = fetch_url(url)
@@ -123,6 +124,13 @@ def normalize_member(raw):
                     website = url
                     break
 
+    memberships = raw.get('memberships', [])
+    committees = sorted(
+        m['organization']['name']
+        for m in memberships
+        if m.get('organization', {}).get('classification') == 'committee'
+    )
+
     birth_date = raw.get('birth_date', '') or ''
     birth_year = int(birth_date[:4]) if len(birth_date) >= 4 else None
 
@@ -153,6 +161,7 @@ def normalize_member(raw):
         'birthYear':        birth_year,
         'termStart':        term_start,
         'termStartYear':    term_start_year,
+        'committees':       committees,
     }
 
 
