@@ -280,7 +280,10 @@ permalink: /ga-member.html
         ? new Date(member.statusDate + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})
         : '';
       const labelLine = `<span class="status-label">${member.status}${dateStr ? ` &nbsp;·&nbsp; ${dateStr}` : ''}</span>`;
-      const noteLine  = member.statusNote ? `<span class="status-note">${member.statusNote}</span>` : '';
+      const noteText  = member.statusNote
+        ? member.statusNote.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+        : '';
+      const noteLine  = noteText ? `<span class="status-note">${noteText}</span>` : '';
       const electionLine = `<span class="status-election">This seat may be subject to a special election.</span>`;
       return `<div class="status-banner status-${knownSlug}">${labelLine}${noteLine}${electionLine}</div>`;
     })();
