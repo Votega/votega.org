@@ -12,22 +12,16 @@
         "primary": {
           "electionDate": "2026-05-19",
           "primaryResult": "",
-          "candidates": [
-            {
-              "type": "incumbent",
-              "memberId": "O000174",
-              "memberSource": "congress"
-            },
-            {
-              "type": "challenger",
-              "id": "challenger-jane-smith-ga-senate-5-2026",
-              "name": "Jane Smith",
-              "party": "Republican",
-              "website": "https://janesmith2026.com",
-              "bio": "Former Newton County Commissioner. Small business owner.",
-              "imageUrl": ""
-            }
-          ]
+          "ballots": {
+            "Democrat": [
+              {
+                "type": "incumbent",
+                "memberId": "O000174",
+                "memberSource": "congress"
+              }
+            ],
+            "Republican": []
+          }
         },
         "general": {
           "electionDate": "2026-11-03",

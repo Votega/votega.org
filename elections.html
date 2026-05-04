@@ -234,7 +234,21 @@ permalink: /elections.html
   }
 
   function candidateSummary(phase) {
-    if (!phase || !phase.candidates || !phase.candidates.length) return 'No candidates listed yet';
+    if (!phase) return 'No candidates listed yet';
+
+    if (phase.ballots) {
+      // Open primary — summarize each ballot's count
+      const parts = Object.entries(phase.ballots).map(([party, candidates]) => {
+        const count  = candidates.filter(c => !c.withdrawn).length;
+        const abbrev = party.toLowerCase().includes('democrat')   ? 'D'
+                     : party.toLowerCase().includes('republican') ? 'R'
+                     : party[0].toUpperCase();
+        return `${count} ${abbrev}`;
+      });
+      return parts.join(' · ') + (parts.length > 1 ? ' (open primary)' : '');
+    }
+
+    if (!phase.candidates || !phase.candidates.length) return 'No candidates listed yet';
     const names = phase.candidates
       .filter(c => !c.withdrawn)
       .map(c => c.type === 'incumbent' ? 'Incumbent' : c.name)

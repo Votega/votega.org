@@ -115,6 +115,28 @@ permalink: /race.html
     color: #666;
   }
 
+  /* Open primary ballot sections */
+  .ballot-section { margin-bottom: 2rem; }
+  .ballot-header {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+  .ballot-D     { background: #dbeafe; color: #1d4ed8; }
+  .ballot-R     { background: #fee2e2; color: #b91c1c; }
+  .ballot-other { background: #f3f4f6; color: #374151; }
+  .ballot-unopposed {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+
   .back-link { margin-top: 2rem; font-size: 0.9rem; }
 
   @media (max-width: 600px) {
@@ -219,6 +241,37 @@ permalink: /race.html
       </div>`;
   }
 
+  function renderBallotSection(partyName, candidates, members, race) {
+    const active    = candidates.filter(c => !c.withdrawn);
+    const withdrawn = candidates.filter(c => c.withdrawn);
+
+    const ballotClass = partyName.toLowerCase().includes('democrat')   ? 'ballot-D'
+                      : partyName.toLowerCase().includes('republican') ? 'ballot-R'
+                      : 'ballot-other';
+
+    const cardsHtml = [...active, ...withdrawn].map(c => {
+      if (c.type === 'incumbent') {
+        const member = race.level === 'federal'
+          ? members.find(m => m.bioguideId === c.memberId)
+          : members.find(m => m.id === c.memberId);
+        return renderIncumbentCard(c, member, race);
+      }
+      return renderChallengerCard(c);
+    }).join('');
+
+    const emptyHtml    = !active.length && !withdrawn.length
+      ? '<p class="no-candidates">No candidates listed yet for this ballot.</p>' : '';
+    const unopposedHtml = active.length === 1
+      ? '<p class="ballot-unopposed">Running unopposed in this primary</p>' : '';
+
+    return `
+      <div class="ballot-section">
+        <span class="ballot-header ${ballotClass}">${partyName} Ballot</span>
+        <div class="candidates-grid">${cardsHtml}</div>
+        ${emptyHtml}${unopposedHtml}
+      </div>`;
+  }
+
   function renderRace(race, members) {
     const basePath   = getBasePath();
     const phase      = race.phases[race.activePhase];
@@ -236,25 +289,30 @@ permalink: /race.html
          </div>`
       : '';
 
-    // Candidate cards
-    let cardsHtml = '';
-    const candidates = phase?.candidates || [];
-    const activeCandidates = candidates.filter(c => !c.withdrawn);
-    const withdrawn        = candidates.filter(c => c.withdrawn);
-
-    if (!activeCandidates.length && !withdrawn.length) {
-      cardsHtml = '<p class="no-candidates">Candidate information not yet available for this phase.</p>';
+    // Candidate cards — open primary (ballots) or flat list
+    let candidatesHtml = '';
+    if (phase?.ballots) {
+      candidatesHtml = Object.entries(phase.ballots)
+        .map(([partyName, candidates]) => renderBallotSection(partyName, candidates, members, race))
+        .join('');
     } else {
-      const allOrdered = [...activeCandidates, ...withdrawn];
-      cardsHtml = allOrdered.map(c => {
-        if (c.type === 'incumbent') {
-          const member = race.level === 'federal'
-            ? members.find(m => m.bioguideId === c.memberId)
-            : members.find(m => m.id === c.memberId);
-          return renderIncumbentCard(c, member, race);
-        }
-        return renderChallengerCard(c);
-      }).join('');
+      const candidates = phase?.candidates || [];
+      const active     = candidates.filter(c => !c.withdrawn);
+      const withdrawn  = candidates.filter(c => c.withdrawn);
+      if (!active.length && !withdrawn.length) {
+        candidatesHtml = '<p class="no-candidates">Candidate information not yet available for this phase.</p>';
+      } else {
+        candidatesHtml = `<div class="candidates-grid">` +
+          [...active, ...withdrawn].map(c => {
+            if (c.type === 'incumbent') {
+              const member = race.level === 'federal'
+                ? members.find(m => m.bioguideId === c.memberId)
+                : members.find(m => m.id === c.memberId);
+              return renderIncumbentCard(c, member, race);
+            }
+            return renderChallengerCard(c);
+          }).join('') + `</div>`;
+      }
     }
 
     document.title = `${race.chamber}${distLabel} — 2026 Elections`;
@@ -269,7 +327,7 @@ permalink: /race.html
         </div>
       </div>
       ${resultCallout}
-      <div class="candidates-grid">${cardsHtml}</div>
+      ${candidatesHtml}
       <div class="back-link"><a href="${basePath}elections.html">← Back to Elections</a></div>`;
   }
 
@@ -294,7 +352,10 @@ permalink: /race.html
 
       // Load member data only if this race has incumbents in the active phase
       const phase = race.phases[race.activePhase];
-      const hasIncumbent = (phase?.candidates || []).some(c => c.type === 'incumbent');
+      const allPhaseCandidates = phase?.ballots
+        ? Object.values(phase.ballots).flat()
+        : (phase?.candidates || []);
+      const hasIncumbent = allPhaseCandidates.some(c => c.type === 'incumbent');
 
       let members = [];
       if (hasIncumbent) {
