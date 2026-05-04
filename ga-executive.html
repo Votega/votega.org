@@ -170,7 +170,11 @@ permalink: /ga-executive.html
       ? `<a href="${official.officialWebsiteUrl}" target="_blank" rel="noopener">Official website ↗</a>`
       : '';
 
-    const contactParts = [phoneHtml, emailHtml, websiteHtml].filter(Boolean);
+    const constituentHtml = official['Constituent Services']
+      ? `<a href="${official['Constituent Services']}" target="_blank" rel="noopener">Constituent services ↗</a>`
+      : '';
+
+    const contactParts = [phoneHtml, emailHtml, websiteHtml, constituentHtml].filter(Boolean);
 
     return `
       <div class="exec-card">
