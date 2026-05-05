@@ -243,7 +243,8 @@ permalink: /elections.html
 
     if (phase.ballots) {
       // Open primary — summarize each ballot's count
-      const parts = Object.entries(phase.ballots).map(([party, candidates]) => {
+      const partyOrder = p => p.toLowerCase().includes('democrat') ? 0 : p.toLowerCase().includes('republican') ? 1 : 2;
+      const parts = Object.entries(phase.ballots).sort((a, b) => partyOrder(a[0]) - partyOrder(b[0])).map(([party, candidates]) => {
         const count  = candidates.filter(c => !c.withdrawn).length;
         const abbrev = party.toLowerCase().includes('democrat')   ? 'D'
                      : party.toLowerCase().includes('republican') ? 'R'

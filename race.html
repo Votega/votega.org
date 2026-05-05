@@ -292,7 +292,9 @@ permalink: /race.html
     // Candidate cards — open primary (ballots) or flat list
     let candidatesHtml = '';
     if (phase?.ballots) {
+      const partyOrder = p => p.toLowerCase().includes('democrat') ? 0 : p.toLowerCase().includes('republican') ? 1 : 2;
       candidatesHtml = Object.entries(phase.ballots)
+        .sort((a, b) => partyOrder(a[0]) - partyOrder(b[0]))
         .map(([partyName, candidates]) => renderBallotSection(partyName, candidates, members, race))
         .join('');
     } else {
