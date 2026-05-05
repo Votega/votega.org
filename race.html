@@ -241,8 +241,20 @@ permalink: /race.html
       </div>`;
   }
 
+  function candidateLastName(c, members, race) {
+    if (c.type === 'incumbent') {
+      const m = race.level === 'federal'
+        ? members.find(mb => mb.bioguideId === c.memberId)
+        : members.find(mb => mb.id === c.memberId);
+      return m?.lastName || (m?.name || '').split(' ').pop() || '';
+    }
+    return (c.name || '').split(' ').pop();
+  }
+
   function renderBallotSection(partyName, candidates, members, race) {
-    const active    = candidates.filter(c => !c.withdrawn);
+    const active    = candidates.filter(c => !c.withdrawn)
+                                .sort((a, b) => candidateLastName(a, members, race)
+                                                  .localeCompare(candidateLastName(b, members, race)));
     const withdrawn = candidates.filter(c => c.withdrawn);
 
     const ballotClass = partyName.toLowerCase().includes('democrat')   ? 'ballot-D'
