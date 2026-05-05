@@ -207,7 +207,12 @@ permalink: /elections.html
 
   let allRaces = [];
 
-  // Populate county dropdown
+  // Populate county dropdown — "Statewide" first, then all counties
+  const statewideOpt = document.createElement('option');
+  statewideOpt.value = '__statewide__';
+  statewideOpt.textContent = 'Statewide (Executive & U.S. Senate)';
+  countySelect.appendChild(statewideOpt);
+
   Object.keys(COUNTY_HOUSE_DISTRICTS).sort().forEach(county => {
     const opt = document.createElement('option');
     opt.value = county;
@@ -261,13 +266,39 @@ permalink: /elections.html
     const senateDists = COUNTY_SENATE_DISTRICTS[county] || [];
     const usDists     = COUNTY_US_HOUSE_DISTRICTS[county] || [];
 
+    if (county === '__statewide__') {
+      return allRaces.filter(r => r.level === 'state-executive' || r.chamber === 'U.S. Senate');
+    }
+
     return allRaces.filter(r => {
-      if (r.chamber === 'GA House')    return houseDists.includes(r.district);
-      if (r.chamber === 'GA Senate')   return senateDists.includes(r.district);
-      if (r.chamber === 'U.S. House')  return usDists.includes(r.district);
-      if (r.chamber === 'U.S. Senate') return true;
+      if (r.level === 'state-executive') return true;
+      if (r.chamber === 'GA House')      return houseDists.includes(r.district);
+      if (r.chamber === 'GA Senate')     return senateDists.includes(r.district);
+      if (r.chamber === 'U.S. House')    return usDists.includes(r.district);
+      if (r.chamber === 'U.S. Senate')   return true;
       return false;
     });
+  }
+
+  function renderRaceRow(race, basePath) {
+    const phase      = race.phases[race.activePhase];
+    const phaseLabel = race.activePhase === 'primary' ? 'Primary' : 'General';
+    const phaseClass = race.activePhase === 'primary' ? 'phase-primary' : 'phase-general';
+    const distLabel  = race.district ? ` — District ${race.district}` : '';
+    const summary    = candidateSummary(phase);
+    const dateStr    = phase ? formatDate(phase.electionDate) : '';
+    return `
+      <a class="race-row" href="${basePath}race.html?id=${encodeURIComponent(race.id)}">
+        <div class="race-info">
+          <div class="race-title">${race.chamber}${distLabel}</div>
+          <div class="race-candidates">${summary}</div>
+        </div>
+        <div class="race-meta">
+          <span class="phase-badge ${phaseClass}">${phaseLabel}</span>
+          ${dateStr ? `<div class="race-date">${dateStr}</div>` : ''}
+        </div>
+        <span class="view-arrow">›</span>
+      </a>`;
   }
 
   function renderRaces(county) {
@@ -279,43 +310,31 @@ permalink: /elections.html
       return;
     }
 
+    let html = '';
+
+    // State executive offices — always statewide, sorted by chamber name then district
+    const execRaces = races
+      .filter(r => r.level === 'state-executive')
+      .sort((a, b) => a.chamber.localeCompare(b.chamber) || (a.district ?? 0) - (b.district ?? 0));
+    if (execRaces.length) {
+      html += `<div class="chamber-group"><h3>Georgia Statewide — Executive Offices</h3>`;
+      execRaces.forEach(r => { html += renderRaceRow(r, basePath); });
+      html += '</div>';
+    }
+
+    // State legislative and federal races grouped by chamber
     const chamberOrder = ['GA House', 'GA Senate', 'U.S. House', 'U.S. Senate'];
     const groups = {};
-    races.forEach(r => {
+    races.filter(r => r.level !== 'state-executive').forEach(r => {
       if (!groups[r.chamber]) groups[r.chamber] = [];
       groups[r.chamber].push(r);
     });
-
-    let html = '';
     chamberOrder.forEach(chamber => {
       const group = groups[chamber];
       if (!group) return;
-
-      const sorted = group.sort((a, b) => (a.district ?? 0) - (b.district ?? 0));
       html += `<div class="chamber-group"><h3>${chamber}</h3>`;
-
-      sorted.forEach(race => {
-        const phase     = race.phases[race.activePhase];
-        const phaseLabel = race.activePhase === 'primary' ? 'Primary' : 'General';
-        const phaseClass = race.activePhase === 'primary' ? 'phase-primary' : 'phase-general';
-        const distLabel  = race.district ? ` — District ${race.district}` : '';
-        const summary    = candidateSummary(phase);
-        const dateStr    = phase ? formatDate(phase.electionDate) : '';
-
-        html += `
-          <a class="race-row" href="${basePath}race.html?id=${encodeURIComponent(race.id)}">
-            <div class="race-info">
-              <div class="race-title">${race.chamber}${distLabel}</div>
-              <div class="race-candidates">${summary}</div>
-            </div>
-            <div class="race-meta">
-              <span class="phase-badge ${phaseClass}">${phaseLabel}</span>
-              ${dateStr ? `<div class="race-date">${dateStr}</div>` : ''}
-            </div>
-            <span class="view-arrow">›</span>
-          </a>`;
-      });
-
+      group.sort((a, b) => (a.district ?? 0) - (b.district ?? 0))
+           .forEach(r => { html += renderRaceRow(r, basePath); });
       html += '</div>';
     });
 
