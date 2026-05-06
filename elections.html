@@ -273,10 +273,10 @@ permalink: /elections.html
 
     return allRaces.filter(r => {
       if (r.level === 'state-executive') return true;
-      if (r.chamber === 'GA House')      return houseDists.includes(r.district);
-      if (r.chamber === 'GA Senate')     return senateDists.includes(r.district);
-      if (r.chamber === 'U.S. House')    return usDists.includes(r.district);
-      if (r.chamber === 'U.S. Senate')   return true;
+      if (r.chamber === 'Georgia House of Representatives') return houseDists.includes(r.district);
+      if (r.chamber === 'Georgia State Senate')             return senateDists.includes(r.district);
+      if (r.chamber === 'U.S. House')                      return usDists.includes(r.district);
+      if (r.chamber === 'U.S. Senate')                     return true;
       return false;
     });
   }
@@ -334,7 +334,7 @@ permalink: /elections.html
     }
 
     // State legislative and federal races grouped by chamber
-    const chamberOrder = ['GA House', 'GA Senate', 'U.S. House', 'U.S. Senate'];
+    const chamberOrder = ['Georgia House of Representatives', 'Georgia State Senate', 'U.S. House', 'U.S. Senate'];
     const groups = {};
     races.filter(r => r.level !== 'state-executive').forEach(r => {
       if (!groups[r.chamber]) groups[r.chamber] = [];
