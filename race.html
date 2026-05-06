@@ -62,7 +62,7 @@ permalink: /race.html
     letter-spacing: 0.04em;
     margin-bottom: 0.6rem;
   }
-  .role-incumbent  { background: #e0f2fe; color: #0369a1; }
+  .role-incumbent  { background: #1a56a8; color: #fff; box-shadow: 0 1px 3px rgba(26,86,168,0.35); }
   .role-challenger { background: #f3f4f6; color: #374151; }
   .role-withdrawn  { background: #fef2f2; color: #991b1b; }
 
@@ -181,7 +181,7 @@ permalink: /race.html
     if (!member) {
       return `
         <div class="candidate-card incumbent">
-          <span class="role-badge role-incumbent">Incumbent</span>
+          <span class="role-badge role-incumbent">&#9733; Current Officeholder</span>
           <p><em>Member data not found. Check that memberId matches the data file.</em></p>
         </div>`;
     }
@@ -200,7 +200,7 @@ permalink: /race.html
 
     return `
       <div class="candidate-card incumbent">
-        <span class="role-badge role-incumbent">Current Officeholder</span>
+        <span class="role-badge role-incumbent">&#9733; Current Officeholder</span>
         ${photoEl(photo, name)}
         <p class="candidate-name">${name}</p>
         <span class="party-badge ${partyClass(party)}">${party || 'Unknown party'}</span>
