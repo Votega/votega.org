@@ -313,10 +313,20 @@ permalink: /elections.html
 
     let html = '';
 
-    // State executive offices — always statewide, sorted by chamber name then district
+    // State executive offices — always statewide, sorted by prescribed office order then district
+    const execOfficeOrder = [
+      'Governor', 'Lieutenant Governor', 'Secretary of State', 'Attorney General',
+      'Commissioner of Agriculture', 'Insurance & Fire Safety Commissioner',
+      'Labor Commissioner', 'State School Superintendent', 'Public Service Commissioner'
+    ];
     const execRaces = races
       .filter(r => r.level === 'state-executive')
-      .sort((a, b) => a.chamber.localeCompare(b.chamber) || (a.district ?? 0) - (b.district ?? 0));
+      .sort((a, b) => {
+        const ai = execOfficeOrder.indexOf(a.chamber);
+        const bi = execOfficeOrder.indexOf(b.chamber);
+        const order = (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+        return order || (a.district ?? 0) - (b.district ?? 0);
+      });
     if (execRaces.length) {
       html += `<div class="chamber-group"><h3>Georgia Statewide — Executive Offices</h3>`;
       execRaces.forEach(r => { html += renderRaceRow(r, basePath); });
