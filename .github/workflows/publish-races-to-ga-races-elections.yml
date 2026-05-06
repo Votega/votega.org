@@ -1,0 +1,60 @@
+name: Publish races.json to ga-races-elections
+
+# Requires secret: GA_RACES_PUSH_TOKEN
+#   A GitHub Personal Access Token (classic) with repo scope on Votega/ga-races-elections.
+#   Add it at: votega.org repo → Settings → Secrets and variables → Actions → New repository secret
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * *' # daily at 07:00 UTC (after update-current-members at 06:00)
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/races.json'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      - name: Validate races.json
+        run: |
+          python -c "
+          import json, sys
+          with open('assets/data/races.json') as f:
+              data = json.load(f)
+          races = data.get('races', [])
+          print(f'races.json valid: {len(races)} races')
+          "
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: Votega/ga-races-elections
+          token: ${{ secrets.GA_RACES_PUSH_TOKEN }}
+          path: target-repo
+
+      - name: Copy races.json to target repo
+        run: cp assets/data/races.json target-repo/races.json
+
+      - name: Commit and push to ga-races-elections
+        working-directory: target-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add races.json
+          if git diff --cached --quiet; then
+            echo "No changes — races.json is already up to date"
+          else
+            git commit -m "Update races.json ($(date -u '+%Y-%m-%d'))"
+            git push
+          fi
