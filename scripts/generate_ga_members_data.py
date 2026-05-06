@@ -86,7 +86,7 @@ def get_committee_memberships():
     """
     Fetch all GA legislative committees and return a mapping of
     OCD person ID -> sorted list of committee names.
-    Uses GET /v3/organizations?classification=committee.
+    Uses GET /v3/committees (memberships included by default).
     """
     by_person = {}
     page = 1
@@ -94,24 +94,21 @@ def get_committee_memberships():
 
     while True:
         params = urllib.parse.urlencode([
-            ('jurisdiction',    GA_JURISDICTION),
-            ('classification',  'committee'),
-            ('page',            page),
-            ('per_page',        per_page),
-            ('include',         'memberships'),
+            ('jurisdiction', GA_JURISDICTION),
+            ('page',         page),
+            ('per_page',     per_page),
         ])
-        url = f"{BASE_URL}/organizations?{params}"
+        url = f"{BASE_URL}/committees?{params}"
         data = fetch_url(url)
 
         if not data or 'results' not in data:
             print("  Warning: could not fetch committee data — committees will be empty")
             break
 
-        for org in data['results']:
-            name = org.get('name', '')
-            for m in org.get('memberships', []):
-                # person_id is a top-level field on the membership object
-                pid = m.get('person_id') or (m.get('person') or {}).get('id', '')
+        for committee in data['results']:
+            name = committee.get('name', '')
+            for m in committee.get('memberships', []):
+                pid = (m.get('person') or {}).get('id', '')
                 if pid:
                     by_person.setdefault(pid, []).append(name)
 

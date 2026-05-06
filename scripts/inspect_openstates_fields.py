@@ -84,6 +84,72 @@ def main():
 
     print(f"\nDone. Inspected {len(data['results'])} members.")
 
+    # ── Test 1: /organizations endpoint ────────────────────────────────────
+    print("\n" + "="*60)
+    print("Test 1: /organizations?classification=committee&include=memberships")
+
+    org_params = urllib.parse.urlencode([
+        ('jurisdiction',   GA_JURISDICTION),
+        ('classification', 'committee'),
+        ('page',           1),
+        ('per_page',       2),
+        ('include',        'memberships'),
+    ])
+    org_url = f"{BASE_URL}/organizations?{org_params}"
+    print(f"URL: {org_url}\n")
+
+    try:
+        org_data = fetch_url(org_url)
+        orgs = org_data.get('results', [])
+        print(f"Returned {len(orgs)} org(s) on page 1 of {org_data.get('pagination', {}).get('max_page', '?')}")
+        if orgs:
+            print("First org keys:", list(orgs[0].keys()))
+            print(json.dumps(orgs[0], indent=2)[:2000])
+        else:
+            print("No organizations returned.")
+    except Exception as e:
+        print(f"Error: {e}")
+
+    # ── Test 2: /organizations without include ───────────────────────────────
+    print("\n" + "="*60)
+    print("Test 2: /organizations?classification=committee (no include)")
+
+    org_params2 = urllib.parse.urlencode([
+        ('jurisdiction',   GA_JURISDICTION),
+        ('classification', 'committee'),
+        ('page',           1),
+        ('per_page',       1),
+    ])
+    try:
+        org_data2 = fetch_url(f"{BASE_URL}/organizations?{org_params2}")
+        orgs2 = org_data2.get('results', [])
+        if orgs2:
+            print("First org keys:", list(orgs2[0].keys()))
+            print(json.dumps(orgs2[0], indent=2)[:2000])
+        else:
+            print("No organizations returned.")
+    except Exception as e:
+        print(f"Error: {e}")
+
+    # ── Test 3: single person fetch with include=memberships ────────────────
+    print("\n" + "="*60)
+    first_person_id = data['results'][0].get('id', '')
+    print(f"Test 3: /people/{{id}}?include=memberships  (id={first_person_id})")
+
+    try:
+        person_url = f"{BASE_URL}/people/{first_person_id}?include=memberships"
+        print(f"URL: {person_url}\n")
+        person_data = fetch_url(person_url)
+        print("Person keys:", list(person_data.keys()))
+        memberships = person_data.get('memberships', [])
+        print(f"Memberships count: {len(memberships)}")
+        if memberships:
+            print("First membership:", json.dumps(memberships[0], indent=2))
+        else:
+            print("No memberships returned.")
+    except Exception as e:
+        print(f"Error: {e}")
+
 
 if __name__ == '__main__':
     main()
