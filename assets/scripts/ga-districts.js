@@ -1,6 +1,7 @@
 // Single source of truth for Georgia county → legislative district mappings.
 // Loaded by both elections.html and ga-representatives.html.
-// Source: GA General Assembly Office of Legislative & Congressional Reapportionment (2021)
+// Source: GA General Assembly Office of Legislative & Congressional Reapportionment (2023)
+// Georgia Counties in House Districts - 2023 and Georgia Counties in Senate Districts - 2023
 
 const COUNTY_HOUSE_DISTRICTS = {
   'Appling':       [157, 178],
