@@ -55,35 +55,48 @@ class EOPageParser(HTMLParser):
     """
     Parses the GA governor EO listing page.
 
-    Strategy: track <tr> / <li> row boundaries. Within each row, collect all
-    text chunks and find any EO download links. When the row closes, the title
-    is the longest text chunk that isn't a generic download label. The date and
-    order number are derived from the download link URL, which encodes MMDDYYNN.
+    The page is a two-column table:
+      Document (PDF link with order number)  |  Description (title text)
+
+    The Description cell follows the download link in DOM order, so the
+    strategy is: when a download link closes, hold it as "pending" and
+    collect subsequent text chunks. When the next download link opens (or
+    parsing ends), finalise the pending entry using the accumulated text.
+    PDF file-size strings like "(PDF, 98.59 KB)" are stripped from the text.
     """
 
-    _HREF_RE = re.compile(
+    _HREF_RE   = re.compile(
         r'/document/(\d{4})-executive-order/(\d{6,})(/download)?', re.IGNORECASE
     )
+    _PDF_NOISE = re.compile(r'\(PDF[^)]*\)', re.IGNORECASE)
 
     def __init__(self, year):
         super().__init__()
         self.year   = year
-        self.orders = {}   # number -> entry
+        self.orders = {}
 
-        # Row state
-        self._stack     = []   # open tag stack
-        self._row_depth = None # stack length when the current row opened
-        self._texts     = []   # text chunks collected in current row
-        self._links     = []   # (code, full_href) for EO download links in row
+        self._in_link      = False
+        self._pending_code = None   # code of the most-recently-closed EO link
+        self._pending_href = None
+        self._after_buf    = []     # text chunks collected after the link closes
 
-    # ── Helpers ───────────────────────────────────────────────────────────────
+    # ── helpers ──────────────────────────────────────────────────────────────
 
-    @staticmethod
-    def _is_row(tag):
-        return tag in ('tr', 'li')
+    def _flush_pending(self):
+        """Finalise the pending EO entry using text collected after its link."""
+        if not self._pending_code:
+            return
+        raw   = ' '.join(self._after_buf)
+        title = self._PDF_NOISE.sub('', raw).strip()
+        if title:
+            entry = self._parse_entry(self._pending_code, title, self._pending_href)
+            if entry:
+                self.orders[entry['number']] = entry
+        self._pending_code = None
+        self._pending_href = None
+        self._after_buf    = []
 
     def _parse_entry(self, code, title, url):
-        """Convert a URL code segment (MMDDYYNN) into a structured entry."""
         if len(code) < 8:
             return None
         mm, dd, yy = code[:2], code[2:4], code[4:6]
@@ -102,58 +115,38 @@ class EOPageParser(HTMLParser):
             'url':      url,
         }
 
-    def _flush_row(self):
-        """Process the accumulated row state and reset."""
-        if self._links:
-            # Title = longest text chunk that isn't a generic label and is > 10 chars
-            real_texts = [t for t in self._texts
-                          if t.lower() not in _LINK_LABELS and len(t) > 10]
-            title = max(real_texts, key=len, default='').strip()
-
-            for code, href in self._links:
-                entry = self._parse_entry(code, title, href)
-                if entry and entry['title']:
-                    self.orders[entry['number']] = entry
-
-        self._row_depth = None
-        self._texts     = []
-        self._links     = []
-
     # ── HTMLParser callbacks ──────────────────────────────────────────────────
 
     def handle_starttag(self, tag, attrs):
-        self._stack.append(tag)
-        attrs_d = dict(attrs)
-
-        # Start a new row context if we're not already in one
-        if self._is_row(tag) and self._row_depth is None:
-            self._row_depth = len(self._stack)
-            self._texts     = []
-            self._links     = []
-
-        # Detect EO download links
-        if tag == 'a':
-            href = attrs_d.get('href', '')
-            m    = self._HREF_RE.search(href)
-            if m and int(m.group(1)) == self.year:
-                full = href if href.startswith('http') else BASE_URL + href
-                self._links.append((m.group(2), full.split('?')[0]))
+        if tag != 'a':
+            return
+        href = dict(attrs).get('href', '')
+        m    = self._HREF_RE.search(href)
+        if m and int(m.group(1)) == self.year:
+            self._flush_pending()   # finalise the previous entry before starting a new one
+            full = href if href.startswith('http') else BASE_URL + href
+            self._in_link      = True
+            self._pending_code = m.group(2)
+            self._pending_href = full.split('?')[0]
+            self._after_buf    = []
 
     def handle_data(self, data):
-        if self._row_depth is not None:
-            text = ' '.join(data.split())   # normalise whitespace
-            if text:
-                self._texts.append(text)
+        text = ' '.join(data.split())
+        if not text:
+            return
+        if self._in_link:
+            return  # link text is the order number, not the title — ignore it
+        if self._pending_code is not None:
+            self._after_buf.append(text)
 
     def handle_endtag(self, tag):
-        # Close the row context when we return to the depth it opened at
-        if (self._is_row(tag)
-                and self._row_depth is not None
-                and len(self._stack) <= self._row_depth):
-            self._flush_row()
+        if tag == 'a' and self._in_link:
+            self._in_link = False
 
-        if self._stack and self._stack[-1] == tag:
-            self._stack.pop()
+    def close(self):
+        """Flush the last pending entry when parsing completes."""
+        self._flush_pending()
+        super().close()
 
 
 # ── Network ───────────────────────────────────────────────────────────────────
@@ -200,6 +193,7 @@ def scrape_all_pages(year):
 
         parser = EOPageParser(year)
         parser.feed(html)
+        parser.close()
         found = parser.orders
 
         if not found:
@@ -296,7 +290,7 @@ def main():
     data['orders'] = all_orders
 
     path = save(year, data)
-    print(f"Saved {len(all_orders)} orders → {path}")
+    print(f"Saved {len(all_orders)} orders -> {path}")
     if new_count:
         print(f"  {new_count} new order(s) added")
     else:
