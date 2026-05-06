@@ -97,6 +97,7 @@ def get_committee_memberships():
             ('jurisdiction', GA_JURISDICTION),
             ('page',         page),
             ('per_page',     per_page),
+            ('include',      'memberships'),
         ])
         url = f"{BASE_URL}/committees?{params}"
         data = fetch_url(url)
@@ -107,7 +108,10 @@ def get_committee_memberships():
 
         for committee in data['results']:
             name = committee.get('name', '')
-            for m in committee.get('memberships', []):
+            memberships = committee.get('memberships', [])
+            if page == 1 and not by_person:
+                print(f"  Sample committee: {name!r} — {len(memberships)} member(s)")
+            for m in memberships:
                 pid = (m.get('person') or {}).get('id', '')
                 if pid:
                     by_person.setdefault(pid, []).append(name)
