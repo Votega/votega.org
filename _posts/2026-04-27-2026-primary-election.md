@@ -11,14 +11,5 @@ Visit <a href="https://mvp.sos.ga.gov" target="_blank"> the Georgia My Voter Pag
 {: .box-note}
 **Primary Election Date is May 19, 2026**
 
-Statewide Candidates
-United States Senate - Jon Osoff, Democrat (Incumbent)
-Governor
-Lieutenant Governor
-Secretary of State
-Attorney General
-Commissioner of Agriculture
-Commissionmer of Insurance
-State School Superintendent
-Commissioner of Labor
+<a href="https://www.votega.org/elections" target="_blank"> View your 2026 Candidates here! </a>
 
