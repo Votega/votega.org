@@ -106,6 +106,16 @@ permalink: /ga-executive-orders.html
   .badge-flag        { background: #f0f0f0; color: #444; }
   .badge-auth        { background: #e8f5e9; color: #2e7d32; }
   .badge-other       { background: #f5f5f5; color: #555; }
+
+  .cat-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-left: 0.45rem;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
   @media (max-width: 600px) {
     .order-num { display: none; }
     .order-table th:nth-child(2) { display: none; }
@@ -148,6 +158,18 @@ permalink: /ga-executive-orders.html
     'Flag at Half-Staff': 'badge-flag',
     'Authorization':      'badge-auth',
     'Other':              'badge-other',
+  };
+
+  // Saturated dot colors visible on both white and dark (#1a1a2e) button backgrounds
+  const CATEGORY_DOT = {
+    'All':                '#888',
+    'State of Emergency': '#cc0000',
+    'Writ of Election':   '#b45309',
+    'Suspension':         '#9b1c1c',
+    'Appointment':        '#1a56a8',
+    'Flag at Half-Staff': '#6b7280',
+    'Authorization':      '#15803d',
+    'Other':              '#6b7280',
   };
 
   let allOrders = [];
@@ -204,8 +226,9 @@ permalink: /ga-executive-orders.html
     const categories = ['All', ...Object.keys(CATEGORY_BADGE).filter(c => counts[c])];
     const bar = document.getElementById('filterBar');
     bar.innerHTML = categories.map(cat => {
-      const label = cat === 'All' ? `All (${orders.length})` : `${cat} (${counts[cat]})`;
-      return `<button class="filter-btn${cat === activeCategory ? ' active' : ''}" data-cat="${cat}">${label}</button>`;
+      const label    = cat === 'All' ? `All (${orders.length})` : `${cat} (${counts[cat]})`;
+      const dotColor = CATEGORY_DOT[cat] || '#888';
+      return `<button class="filter-btn${cat === activeCategory ? ' active' : ''}" data-cat="${cat}">${label}<span class="cat-dot" style="background:${dotColor}"></span></button>`;
     }).join('');
 
     bar.querySelectorAll('.filter-btn').forEach(btn => {
