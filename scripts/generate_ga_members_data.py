@@ -90,7 +90,7 @@ def get_committee_memberships():
     """
     by_person = {}
     page = 1
-    per_page = 50
+    per_page = 20  # /committees endpoint max is 20
 
     while True:
         params = urllib.parse.urlencode([
