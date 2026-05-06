@@ -334,7 +334,7 @@ permalink: /elections.html
     }
 
     // State legislative and federal races grouped by chamber
-    const chamberOrder = ['Georgia House of Representatives', 'Georgia State Senate', 'U.S. House', 'U.S. Senate'];
+    const chamberOrder = ['U.S. Senate', 'U.S. House', 'Georgia State Senate', 'Georgia House of Representatives'];
     const groups = {};
     races.filter(r => r.level !== 'state-executive').forEach(r => {
       if (!groups[r.chamber]) groups[r.chamber] = [];
