@@ -1,0 +1,40 @@
+name: Update GA Executive Orders
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'  # daily at 08:00 UTC
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Fetch current year executive orders
+        run: python scripts/fetch_ga_executive_orders.py
+
+      - name: Commit if changed
+        run: |
+          YEAR=$(date +%Y)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/ga-executive-orders-${YEAR}.json
+          if git diff --cached --quiet; then
+            echo "No new executive orders"
+          else
+            git commit -m "Update GA executive orders ${YEAR} ($(date -u '+%Y-%m-%d'))"
+            git push
+          fi

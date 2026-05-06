@@ -8,7 +8,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'assets/data/ga-executive-orders-*.json'
+      - 'assets/data/ga-executive-orders-2026.json'  # only current year; 2023-2025 are static
 
 jobs:
   publish:
@@ -33,9 +33,11 @@ jobs:
               'Content-Type': 'application/json',
           }
 
-          files = sorted(glob.glob('assets/data/ga-executive-orders-*.json'))
+          import datetime
+          year  = datetime.datetime.now().year
+          files = sorted(glob.glob(f'assets/data/ga-executive-orders-{year}.json'))
           if not files:
-              print('No ga-executive-orders-*.json files found')
+              print(f'No ga-executive-orders-{year}.json found')
               exit(1)
 
           for local_path in files:
