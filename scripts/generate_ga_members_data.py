@@ -60,7 +60,6 @@ def get_all_members():
             ('per_page',     per_page),
             ('include',      'links'),
             ('include',      'offices'),
-            ('include',      'memberships'),
         ])
         url = f"{BASE_URL}/people?{params}"
         data = fetch_url(url)
@@ -83,7 +82,48 @@ def get_all_members():
     return all_members
 
 
-def normalize_member(raw):
+def get_committee_memberships():
+    """
+    Fetch all GA legislative committees and return a mapping of
+    OCD person ID -> sorted list of committee names.
+    Uses GET /v3/organizations?classification=committee.
+    """
+    by_person = {}
+    page = 1
+    per_page = 50
+
+    while True:
+        params = urllib.parse.urlencode([
+            ('jurisdiction',    GA_JURISDICTION),
+            ('classification',  'committee'),
+            ('page',            page),
+            ('per_page',        per_page),
+            ('include',         'memberships'),
+        ])
+        url = f"{BASE_URL}/organizations?{params}"
+        data = fetch_url(url)
+
+        if not data or 'results' not in data:
+            print("  Warning: could not fetch committee data — committees will be empty")
+            break
+
+        for org in data['results']:
+            name = org.get('name', '')
+            for m in org.get('memberships', []):
+                # person_id is a top-level field on the membership object
+                pid = m.get('person_id') or (m.get('person') or {}).get('id', '')
+                if pid:
+                    by_person.setdefault(pid, []).append(name)
+
+        pagination = data.get('pagination', {})
+        if page >= pagination.get('max_page', 1):
+            break
+        page += 1
+
+    return {pid: sorted(names) for pid, names in by_person.items()}
+
+
+def normalize_member(raw, committees_by_id=None):
     role = raw.get('current_role') or {}
     org = role.get('org_classification', '')
 
@@ -124,13 +164,6 @@ def normalize_member(raw):
                     website = url
                     break
 
-    memberships = raw.get('memberships', [])
-    committees = sorted(
-        m['organization']['name']
-        for m in memberships
-        if m.get('organization', {}).get('classification') == 'committee'
-    )
-
     birth_date = raw.get('birth_date', '') or ''
     birth_year = int(birth_date[:4]) if len(birth_date) >= 4 else None
 
@@ -161,7 +194,7 @@ def normalize_member(raw):
         'birthYear':        birth_year,
         'termStart':        term_start,
         'termStartYear':    term_start_year,
-        'committees':       committees,
+        'committees':       (committees_by_id or {}).get(raw.get('id', ''), []),
     }
 
 
@@ -177,8 +210,12 @@ def main():
         print("Error: No members fetched")
         sys.exit(1)
 
+    print("Fetching committee memberships...")
+    committees_by_id = get_committee_memberships()
+    print(f"  Committee data found for {len(committees_by_id)} members")
+
     print(f"Normalizing {len(raw_members)} members...")
-    members = [normalize_member(m) for m in raw_members]
+    members = [normalize_member(m, committees_by_id) for m in raw_members]
 
     # Apply manual overrides (keyed by OCD member ID or full member name)
     overrides_file = os.path.join(os.path.dirname(OUTPUT_FILE), 'ga-members-overrides.json')
