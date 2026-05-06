@@ -330,15 +330,39 @@ const COUNTY_SENATE_DISTRICTS = {
   'Worth':         [13],
 };
 
-const countySel   = document.getElementById('countySelect');
-const chamberSel  = document.getElementById('chamberSelect');
-const districtSel = document.getElementById('districtSelect');
-const statusLine  = document.getElementById('status');
-const form        = document.getElementById('lookupForm');
+// Build reverse lookup: district number → counties served
+function buildDistrictCounties(countyMap) {
+  const result = {};
+  Object.entries(countyMap).forEach(([county, districts]) => {
+    districts.forEach(d => {
+      if (!result[d]) result[d] = [];
+      result[d].push(county);
+    });
+  });
+  return result;
+}
+const HOUSE_DISTRICT_COUNTIES  = buildDistrictCounties(COUNTY_HOUSE_DISTRICTS);
+const SENATE_DISTRICT_COUNTIES = buildDistrictCounties(COUNTY_SENATE_DISTRICTS);
+
+const countySel      = document.getElementById('countySelect');
+const chamberSel     = document.getElementById('chamberSelect');
+const districtSel    = document.getElementById('districtSelect');
+const statusLine     = document.getElementById('status');
+const form           = document.getElementById('lookupForm');
+const allMembersOut  = document.getElementById('allMembersOutput');
+
+const chamberLabel   = chamberSel.closest('label');
+const districtLabel  = districtSel.closest('label');
+const submitBtn      = form.querySelector('button[type="submit"]');
 
 let allMembers = [];
 
-// Populate county dropdown
+// Populate county dropdown — "All Members" first, then counties
+const allOpt = document.createElement('option');
+allOpt.value = '__all__';
+allOpt.textContent = 'All Members';
+countySel.appendChild(allOpt);
+
 Object.keys(COUNTY_HOUSE_DISTRICTS).sort().forEach(county => {
   const opt = document.createElement('option');
   opt.value = county;
@@ -366,13 +390,65 @@ async function loadData() {
     const data = await res.json();
     allMembers = data.members || [];
     statusLine.textContent = '';
+    if (countySel.value === '__all__') renderAllMembers();
   } catch (err) {
     statusLine.textContent = 'Could not load GA member data: ' + err.message;
   }
 }
 
+function renderAllMembers() {
+  const basePath = getBasePath();
+
+  function memberRow(m, districtCounties) {
+    const abbrev    = partyAbbrev(m.party);
+    const partyClass = abbrev === 'D' ? 'party-d' : abbrev === 'R' ? 'party-r' : '';
+    const counties  = (districtCounties[m.district] || []).join(', ');
+    return `
+      <a class="member-row" href="${basePath}ga-member.html?id=${encodeURIComponent(m.id)}">
+        <span class="member-district">District ${m.district}</span>
+        <span class="member-name">${m.name}${abbrev ? ` <span class="${partyClass}">(${abbrev})</span>` : ''}</span>
+        <span class="member-counties">${counties}</span>
+        <span class="member-arrow">›</span>
+      </a>`;
+  }
+
+  const senate = allMembers
+    .filter(m => m.chamber === 'Senate')
+    .sort((a, b) => (a.district ?? 999) - (b.district ?? 999));
+
+  const house = allMembers
+    .filter(m => m.chamber === 'House of Representatives')
+    .sort((a, b) => (a.district ?? 999) - (b.district ?? 999));
+
+  allMembersOut.innerHTML = `
+    <div class="directory-section">
+      <h3>Senate (${senate.length} members)</h3>
+      ${senate.map(m => memberRow(m, SENATE_DISTRICT_COUNTIES)).join('')}
+    </div>
+    <div class="directory-section">
+      <h3>House of Representatives (${house.length} members)</h3>
+      ${house.map(m => memberRow(m, HOUSE_DISTRICT_COUNTIES)).join('')}
+    </div>`;
+}
+
+function setLookupVisible(visible) {
+  chamberLabel.style.display  = visible ? '' : 'none';
+  districtLabel.style.display = visible ? '' : 'none';
+  submitBtn.style.display     = visible ? '' : 'none';
+  if (!visible) allMembersOut.innerHTML = '';
+}
+
 function updateChamber() {
   const county = countySel.value;
+
+  if (county === '__all__') {
+    setLookupVisible(false);
+    if (allMembers.length) renderAllMembers();
+    return;
+  }
+
+  setLookupVisible(true);
+  allMembersOut.innerHTML = '';
   chamberSel.disabled = !county;
   if (!county) {
     chamberSel.value = '';

@@ -37,6 +37,57 @@ Lookup Form
     select, button {width:100%; padding:8px; box-sizing:border-box;}
     .msg{margin-top:1rem;color:#c00;}
     [disabled]{background:#eee;}
+
+    /* All-members directory */
+    #allMembersOutput { margin-top: 2rem; }
+    .directory-section { margin-bottom: 2.5rem; }
+    .directory-section h3 {
+      font-size: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.75rem;
+    }
+    .member-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 0.9rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin-bottom: 0.4rem;
+      text-decoration: none;
+      color: inherit;
+      background: #fff;
+      transition: background 0.15s;
+    }
+    .member-row:hover { background: #f5f8ff; }
+    .member-district {
+      font-size: 0.78rem;
+      font-weight: bold;
+      color: #777;
+      min-width: 70px;
+    }
+    .member-name {
+      font-weight: bold;
+      font-size: 0.95rem;
+      flex: 1;
+    }
+    .member-counties {
+      font-size: 0.8rem;
+      color: #666;
+      text-align: right;
+      max-width: 220px;
+    }
+    .member-arrow { color: #1a56a8; margin-left: 0.75rem; flex-shrink: 0; }
+    .party-d { color: #1d4ed8; }
+    .party-r { color: #b91c1c; }
+    @media (max-width: 520px) {
+      .member-counties { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -69,6 +120,7 @@ Lookup Form
 <!--end form-->
 
 <div class="msg" id="status"></div>
+<div id="allMembersOutput"></div>
 
 <center><i>Data is sourced from the <a href="https://openstates.org" target="_blank">Open States API</a></i></center>
 
