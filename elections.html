@@ -213,6 +213,7 @@ permalink: /elections.html
   statewideOpt.textContent = 'Statewide (Executive & U.S. Senate)';
   countySelect.appendChild(statewideOpt);
 
+
   Object.keys(COUNTY_HOUSE_DISTRICTS).sort().forEach(county => {
     const opt = document.createElement('option');
     opt.value = county;
@@ -347,6 +348,11 @@ permalink: /elections.html
       group.sort((a, b) => (a.district ?? 0) - (b.district ?? 0))
            .forEach(r => { html += renderRaceRow(r, basePath); });
       html += '</div>';
+      if (chamber === 'U.S. Senate') {
+        html += `
+          <p>Many counties are served by multiple districts, and some districts serve multiple counties.</p>
+          <p class="box-note">If you are unsure which district you're in, you can use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> tool. Enter your information and scroll to the bottom of the page to see your districts (both at the federal and state level). Then, you can identify which member and/or candidate is in your district.</p>`;
+      }
     });
 
     racesOutput.innerHTML = html;
