@@ -109,8 +109,6 @@ def get_committee_memberships():
         for committee in data['results']:
             name = committee.get('name', '')
             memberships = committee.get('memberships', [])
-            if page == 1 and not by_person:
-                print(f"  Sample committee: {name!r} — {len(memberships)} member(s)")
             for m in memberships:
                 pid = (m.get('person') or {}).get('id', '')
                 if pid:
