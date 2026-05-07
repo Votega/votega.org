@@ -84,6 +84,34 @@ permalink: /candidate.html
   }
   .member-record-link:hover { background: #dbeafe; }
 
+  .service-section {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .service-section h3 { font-size: 1rem; margin: 0 0 0.75rem 0; color: #111; }
+  .service-section dl {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 0.5rem 1rem;
+    margin: 0;
+  }
+  .service-section dt {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding-top: 0.15rem;
+  }
+  .service-section dd { margin: 0; font-size: 0.95rem; color: #111; }
+  @media (max-width: 500px) {
+    .service-section dl { grid-template-columns: 1fr; }
+    .service-section dt { margin-top: 0.5rem; }
+  }
+
   .finance-section {
     margin: 1.5rem 0;
     border-top: 1px solid #e5e7eb;
@@ -242,6 +270,8 @@ permalink: /candidate.html
       ? `<a class="member-record-link" href="${memberUrl}">${memberRecordLabel} →</a>`
       : '';
 
+    const serviceHtml = isIncumbent ? serviceHistoryHtml(candidate.serviceHistory) : '';
+
     // For federal candidates with no prior record (and not a known member), show a contextual note
     const noRecordHtml = isFederal && !candidate.bio && !memberUrl ? `
       <div class="no-record-note">
@@ -263,6 +293,7 @@ permalink: /candidate.html
 
       ${detailsHtml}
       ${memberRecordHtml}
+      ${serviceHtml}
       ${noRecordHtml}
       ${bioHtml}
       <div id="campaignFinance" class="finance-section" style="display:none;"></div>
@@ -366,6 +397,89 @@ permalink: /candidate.html
     }
   }
 
+  function buildServiceHistory(member, memberSource) {
+    const currentYear = new Date().getFullYear();
+
+    if (memberSource === 'congress') {
+      const raw = member.terms?.item;
+      const termsArr = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+      if (!termsArr.length) return null;
+
+      const sorted = [...termsArr].sort((a, b) => (a.startYear || 0) - (b.startYear || 0));
+      const currentTerm = sorted[sorted.length - 1];
+      const currentChamber = currentTerm.chamber || '';
+      const currentSince   = currentTerm.startYear;
+
+      // Consolidate prior stints by chamber (terms predating current chamber entry)
+      const priorMap = {};
+      for (const t of sorted.slice(0, -1)) {
+        if (!t.chamber || t.chamber === currentChamber) continue;
+        const ch = t.chamber;
+        if (!priorMap[ch]) {
+          priorMap[ch] = { startYear: t.startYear, endYear: t.endYear || null };
+        } else {
+          if (t.startYear < priorMap[ch].startYear) priorMap[ch].startYear = t.startYear;
+          if (t.endYear && (!priorMap[ch].endYear || t.endYear > priorMap[ch].endYear)) priorMap[ch].endYear = t.endYear;
+        }
+      }
+      const priorStints = Object.entries(priorMap).map(([chamber, r]) => ({ chamber, ...r }));
+      const leadership  = (member.leadership || []).map(l => l.title).filter(Boolean);
+
+      return { source: 'congress', currentChamber, currentSince, priorStints, leadership };
+    }
+
+    if (memberSource === 'state') {
+      if (!member.termStartYear) return null;
+      return {
+        source: 'state',
+        currentChamber: member.chamber || '',
+        currentSince: member.termStartYear,
+        priorStints: [],
+        leadership: [],
+      };
+    }
+
+    return null;
+  }
+
+  function serviceHistoryHtml(sh) {
+    if (!sh) return '';
+    const currentYear = new Date().getFullYear();
+
+    const chamberLabel = ch => {
+      if (!ch) return ch;
+      if (sh.source === 'congress') {
+        if (ch.includes('Senate')) return 'U.S. Senate';
+        if (ch.includes('House'))  return 'U.S. House of Representatives';
+      }
+      return ch;
+    };
+
+    const yearsIn = since => {
+      const n = currentYear - since;
+      return n === 1 ? '1 year' : `${n} years`;
+    };
+
+    const rows = [];
+    rows.push([chamberLabel(sh.currentChamber) || 'Current office',
+               `Since ${sh.currentSince} (${yearsIn(sh.currentSince)})`]);
+
+    for (const p of sh.priorStints) {
+      const range = p.endYear ? `${p.startYear}–${p.endYear}` : `since ${p.startYear}`;
+      rows.push([chamberLabel(p.chamber), range]);
+    }
+
+    if (sh.leadership.length) {
+      rows.push(['Leadership', sh.leadership.join(', ')]);
+    }
+
+    return `
+      <div class="service-section">
+        <h3>Service History</h3>
+        <dl>${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+      </div>`;
+  }
+
   async function initIncumbent(raceId, memberId, memberSource) {
     try {
       const membersUrl = memberSource === 'congress' ? CONGRESS_URL : GA_MEMBERS_URL;
@@ -408,6 +522,7 @@ permalink: /candidate.html
         isIncumbent: true,
         existingMemberId: memberId,
         existingMemberSource: memberSource,
+        serviceHistory: buildServiceHistory(member, memberSource),
       };
 
       renderCandidate(candidate, race, race.activePhase);
