@@ -338,38 +338,56 @@ permalink: /candidate.html
     container.innerHTML = '<h3>Campaign Finance</h3><p style="color:#666;font-size:0.875rem;">Loading FEC data…</p>';
 
     try {
-      // Strip quoted nicknames (e.g. Earl "Buddy" Carter → Earl Carter) before FEC search
-      const fecName = candidate.name.replace(/["'][^"']*["']\s*/g, '').replace(/\s+/g, ' ').trim();
-      const q = encodeURIComponent(fecName || candidate.name);
-      const searchRes = await fetch(
-        `https://api.open.fec.gov/v1/candidates/?q=${q}&state=GA&cycle=2026&sort=-receipts&api_key=${FEC_API_KEY}`
-      );
-      if (!searchRes.ok) throw new Error(`FEC ${searchRes.status}`);
-      const searchData = await searchRes.json();
-      const match = (searchData.results || [])[0];
+      let committeeId = candidate.fecCommitteeId || null;
+      let fecUrl = null;
 
-      if (!match) {
+      if (!committeeId) {
+        // Name search — strip quoted nicknames (e.g. Earl "Buddy" Carter → Earl Carter)
+        const fecName = candidate.name.replace(/["'][^"']*["']\s*/g, '').replace(/\s+/g, ' ').trim();
+        const q = encodeURIComponent(fecName || candidate.name);
+        const searchRes = await fetch(
+          `https://api.open.fec.gov/v1/candidates/?q=${q}&state=GA&cycle=2026&sort=-receipts&api_key=${FEC_API_KEY}`
+        );
+        if (!searchRes.ok) throw new Error(`FEC ${searchRes.status}`);
+        const searchData = await searchRes.json();
+        const match = (searchData.results || [])[0];
+
+        if (!match) {
+          container.innerHTML = `
+            <h3>Campaign Finance</h3>
+            <p style="font-size:0.875rem;color:#666;">
+              No FEC filing found for this candidate.
+              <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
+            </p>`;
+          return;
+        }
+
+        committeeId = match.principal_committees?.[0]?.committee_id;
+        fecUrl = `https://www.fec.gov/data/candidate/${match.candidate_id}/`;
+      }
+
+      // Fetch totals — committee level is preferred for reliable cash on hand
+      const totalsUrl = committeeId
+        ? `https://api.open.fec.gov/v1/committee/${committeeId}/totals/?cycle=2026&api_key=${FEC_API_KEY}`
+        : null;
+
+      if (!totalsUrl) {
         container.innerHTML = `
           <h3>Campaign Finance</h3>
           <p style="font-size:0.875rem;color:#666;">
-            No FEC filing found for this candidate.
+            No FEC committee found for this candidate.
             <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
           </p>`;
         return;
       }
 
-      // Prefer committee-level totals — cash on hand is reliably tracked there
-      const committeeId = match.principal_committees?.[0]?.committee_id;
-      const totalsUrl = committeeId
-        ? `https://api.open.fec.gov/v1/committee/${committeeId}/totals/?cycle=2026&api_key=${FEC_API_KEY}`
-        : `https://api.open.fec.gov/v1/candidate/${match.candidate_id}/totals/?cycle=2026&api_key=${FEC_API_KEY}`;
+      if (!fecUrl) fecUrl = `https://www.fec.gov/data/committee/${committeeId}/`;
 
       const totalsRes = await fetch(totalsUrl);
       if (!totalsRes.ok) throw new Error(`FEC totals ${totalsRes.status}`);
       const totalsData = await totalsRes.json();
       const t = (totalsData.results || [])[0];
 
-      const fecUrl = `https://www.fec.gov/data/candidate/${match.candidate_id}/`;
       const coverageNote = t?.coverage_end_date
         ? `2025–2026 election cycle · Through ${new Date(t.coverage_end_date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
         : '2025–2026 election cycle';
