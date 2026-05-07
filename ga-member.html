@@ -446,8 +446,8 @@ permalink: /ga-member.html
         const caption = meta.motionText || '—';
         const date    = meta.date ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
         // Link to Open States bill page if we have a billId
-        const billLink = meta.billId
-          ? `<a href="https://openstates.org/ga/bills/${meta.billId}/" target="_blank" rel="noopener">${bill}</a>`
+        const billLink = meta.billUrl
+          ? `<a href="${meta.billUrl}" target="_blank" rel="noopener">${bill}</a>`
           : bill;
         return `<tr>
           <td>${date}</td>

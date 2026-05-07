@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
 """
-Generate ga-member-votes.json from the Open States API (Georgia).
-Requires OPENSTATES_API_KEY environment variable.
+Generate ga-member-votes.json from LegiScan API (Georgia).
+Requires LEGISCAN_API_KEY environment variable.
 
-NOTE: legis.ga.gov's own REST API returns 401 on direct calls — it requires
-browser-level authentication that can't be replicated with urllib. Open States
-is the preferred source since we already integrate with it for member data and
-member vote records use OCD person IDs that match ga-members.json directly.
+LegiScan API flow:
+  1. getSessionList(state=GA)     → find current session_id
+  2. getSessionPeople(session_id) → map LegiScan people_id to names
+  3. getMasterListRaw(session_id) → get all bills in one call (with change_hash)
+  4. getBill(bill_id)             → get roll_call_ids (only for bills past introduction)
+  5. getRollCall(roll_call_id)    → full member vote record
 
-Output: assets/data/ga-member-votes.json
-  {
-    "metadata": { generatedAt, session, sessionName, totalVotes },
-    "votes": { "<vote_event_id>": { motionText, date, bill, billId, result } },
-    "memberVotes": { "<ocd-person/...>": [{ "voteId": str, "vote": "Yea"|"Nay"|... }] }
-  }
-
-The memberVotes key is the OCD person ID — matches the id field in ga-members.json.
+ID bridging:
+  LegiScan uses numeric people_id; ga-members.json uses OCD person IDs.
+  We match on normalized full name. memberVotes is keyed by OCD person ID
+  so ga-member.html can look up by member.id without any changes.
 """
 
 import json
 import os
+import re
 import sys
 import time
 import urllib.request
@@ -27,150 +26,218 @@ import urllib.error
 import urllib.parse
 from datetime import datetime
 
-API_KEY         = os.environ.get('OPENSTATES_API_KEY')
-BASE_URL        = "https://v3.openstates.org"
-GA_JURISDICTION = "ocd-jurisdiction/country:us/state:ga/government"
-OUTPUT_FILE     = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-member-votes.json"
+API_KEY      = os.environ.get('LEGISCAN_API_KEY')
+BASE_URL     = "https://api.legiscan.com/"
+OUTPUT_FILE  = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-member-votes.json"
+MEMBERS_FILE = sys.argv[2] if len(sys.argv) > 2 else "assets/data/ga-members.json"
+DELAY        = 0.5  # seconds between calls
 
-VOTE_MAP = {
-    "yes":        "Yea",
-    "no":         "Nay",
-    "other":      "Not Voting",
-    "not voting": "Not Voting",
-    "excused":    "Excused",
-    "absent":     "Excused",
-}
+# LegiScan vote_id codes
+VOTE_TEXT_MAP = {1: "Yea", 2: "Nay", 3: "Not Voting", 4: "Absent", 5: "Excused"}
 
 
-def fetch_url(url, retries=3, backoff=5):
-    print(f"  Fetching: {url[:120]}...")
-    req = urllib.request.Request(url, headers={
-        'X-API-Key':  API_KEY or '',
-        'Accept':     'application/json',
-        'User-Agent': 'votega.org/1.0',
-    })
+def legiscan(op, params=None, retries=3):
+    query = {"key": API_KEY, "op": op}
+    if params:
+        query.update(params)
+    url = BASE_URL + "?" + urllib.parse.urlencode(query)
+    print(f"  {op}({', '.join(f'{k}={v}' for k, v in (params or {}).items())})...")
     for attempt in range(1, retries + 1):
         try:
-            with urllib.request.urlopen(req, timeout=30) as r:
-                return json.loads(r.read().decode('utf-8'))
-        except urllib.error.HTTPError as e:
-            body = e.read().decode('utf-8', errors='replace')
-            print(f"  HTTP {e.code}: {e.reason} — {body[:200]}")
-            if e.code >= 500 and attempt < retries:
-                time.sleep(backoff)
-                continue
-            return None
+            with urllib.request.urlopen(url, timeout=30) as r:
+                data = json.loads(r.read().decode("utf-8"))
+            if data.get("status") == "ERROR":
+                msg = (data.get("alert") or {}).get("message", "unknown error")
+                print(f"  LegiScan API error: {msg}")
+                return None
+            return data
         except Exception as e:
-            print(f"  Error on attempt {attempt}/{retries}: {e}")
+            print(f"  Attempt {attempt}/{retries} failed: {e}")
             if attempt < retries:
-                time.sleep(backoff)
-                continue
-            return None
+                time.sleep(DELAY * attempt)
     return None
 
 
-def get_current_session():
-    """Return (identifier, name) for Georgia's most recent primary session."""
-    data = fetch_url(
-        f"{BASE_URL}/jurisdictions/{GA_JURISDICTION}?include=legislative_sessions"
-    )
+def normalize_name_tokens(name):
+    """Return a frozenset of lowercase alpha tokens from a name string.
+    Handles both 'Last, First' and 'First Last' formats."""
+    name = name.lower()
+    if "," in name:
+        last, first = name.split(",", 1)
+        name = first.strip() + " " + last.strip()
+    return frozenset(re.sub(r"[^a-z\s]", "", name).split())
+
+
+def build_name_index(members):
+    """Map frozenset-of-name-tokens → OCD person ID."""
+    return {normalize_name_tokens(m["name"]): m["id"] for m in members}
+
+
+def match_member(legiscan_name, name_index):
+    tokens = normalize_name_tokens(legiscan_name)
+    # Exact token-set match
+    if tokens in name_index:
+        return name_index[tokens]
+    # Partial: at least 2 tokens overlap (catches middle name / suffix differences)
+    best, best_score = None, 1
+    for indexed_tokens, ocd_id in name_index.items():
+        overlap = len(tokens & indexed_tokens)
+        if overlap > best_score:
+            best, best_score = ocd_id, overlap
+    return best
+
+
+def get_current_session(state="GA"):
+    data = legiscan("getSessionList", {"state": state})
     if not data:
         return None, None
-    sessions = data.get('legislative_sessions', [])
-    # Prefer sessions classified as 'primary'; fall back to all
-    primary = [s for s in sessions if s.get('classification') == 'primary']
-    pool    = primary or sessions
-    pool.sort(key=lambda s: s.get('start_date', ''), reverse=True)
-    s = pool[0]
-    return s.get('identifier'), s.get('name')
+    sessions = data.get("sessions", [])
+    # sine_die == 0 means session is still active
+    current = next((s for s in sessions if s.get("sine_die") == 0), None)
+    if not current:
+        current = max(sessions, key=lambda s: s.get("year_start", 0))
+    return current["session_id"], current.get("session_name", "")
 
 
-def get_all_votes(session_identifier):
-    """Fetch all vote events for the session (paginated), including individual votes."""
-    all_votes = []
-    page      = 1
-    per_page  = 20  # Open States votes endpoint maximum
+def get_session_people(session_id):
+    data = legiscan("getSessionPeople", {"session_id": session_id})
+    if not data:
+        return []
+    return data.get("sessionpeople", {}).get("people", [])
 
-    while True:
-        params = urllib.parse.urlencode([
-            ('jurisdiction', GA_JURISDICTION),
-            ('session',      session_identifier),
-            ('include',      'votes'),
-            ('per_page',     per_page),
-            ('page',         page),
-        ])
-        data = fetch_url(f"{BASE_URL}/votes?{params}")
-        if not data or 'results' not in data:
-            print(f"  Warning: no results on page {page}")
-            break
 
-        results = data['results']
-        all_votes.extend(results)
+def get_master_list(session_id):
+    data = legiscan("getMasterListRaw", {"session_id": session_id})
+    if not data:
+        return []
+    master = data.get("masterlist", {})
+    # Numeric string keys are bills; "0" is session metadata — filter by bill_id presence
+    return [v for k, v in master.items() if k.isdigit() and v.get("bill_id")]
 
-        pagination = data.get('pagination', {})
-        max_page   = pagination.get('max_page', 1)
-        print(f"  Page {page}/{max_page}: {len(results)} vote events ({len(all_votes)} total)")
 
-        if page >= max_page:
-            break
-        page += 1
-        time.sleep(0.3)
+def get_bill(bill_id):
+    data = legiscan("getBill", {"id": bill_id})
+    if not data:
+        return None
+    return data.get("bill")
 
-    return all_votes
+
+def get_roll_call(roll_call_id):
+    data = legiscan("getRollCall", {"id": roll_call_id})
+    if not data:
+        return None
+    return data.get("roll_call")
 
 
 def main():
     if not API_KEY:
-        print("Error: OPENSTATES_API_KEY environment variable not set")
+        print("Error: LEGISCAN_API_KEY environment variable not set")
         sys.exit(1)
 
-    print("Fetching current Georgia legislative session from Open States...")
+    # Load ga-members.json for name → OCD ID bridging
+    if not os.path.exists(MEMBERS_FILE):
+        print(f"Error: {MEMBERS_FILE} not found — run update-ga-members workflow first")
+        sys.exit(1)
+    with open(MEMBERS_FILE, encoding="utf-8") as f:
+        members_data = json.load(f)
+    name_index = build_name_index(members_data.get("members", []))
+    print(f"Loaded {len(name_index)} GA members for name matching")
+
+    print("\nFetching current Georgia session from LegiScan...")
     session_id, session_name = get_current_session()
     if not session_id:
         print("Error: could not determine current session")
         sys.exit(1)
-    print(f"  Session: {session_id} ({session_name})")
+    print(f"  Session {session_id}: {session_name}")
+    time.sleep(DELAY)
 
-    print("Fetching vote events...")
-    vote_events = get_all_votes(session_id)
-    print(f"  {len(vote_events)} total vote events fetched")
+    print("\nFetching session people...")
+    session_people = get_session_people(session_id)
+    # Build LegiScan people_id → OCD person ID via name matching
+    legiscan_to_ocd = {}
+    unmatched = []
+    for person in session_people:
+        lid    = person.get("people_id")
+        name   = person.get("name", "")
+        ocd_id = match_member(name, name_index)
+        if ocd_id:
+            legiscan_to_ocd[lid] = ocd_id
+        else:
+            unmatched.append(name)
+    print(f"  Matched {len(legiscan_to_ocd)}/{len(session_people)} members by name")
+    if unmatched:
+        print(f"  Unmatched ({len(unmatched)}): {', '.join(unmatched)}")
+    time.sleep(DELAY)
 
-    votes_meta   = {}
-    member_votes = {}
+    print("\nFetching master bill list...")
+    bills = get_master_list(session_id)
+    # Only fetch details for bills that have moved past introduction (status > 1)
+    # LegiScan status: 1=Introduced, 2=Engrossed, 3=Enrolled, 4=Passed, 5=Vetoed, 6=Failed
+    actionable = [b for b in bills if b.get("status", 0) > 1]
+    print(f"  {len(bills)} total bills, {len(actionable)} past introduction (will fetch details)")
+    time.sleep(DELAY)
 
-    for event in vote_events:
-        event_id = event.get('id', '')
-        bill     = (event.get('bill') or {})
-        bill_num = bill.get('identifier', '')
-        bill_id  = bill.get('id', '') or event.get('bill_id', '')
+    votes_meta        = {}
+    member_votes      = {}
+    bills_fetched     = 0
+    roll_calls_fetched = 0
 
-        votes_meta[event_id] = {
-            "motionText": event.get('motion_text', ''),
-            "date":       event.get('start_date', ''),
-            "bill":       bill_num,
-            "billId":     bill_id,
-            "result":     event.get('result', ''),
-        }
+    print("\nFetching bill details and roll calls...")
+    for i, bill_summary in enumerate(actionable, 1):
+        bill_id = bill_summary.get("bill_id")
+        if not bill_id:
+            continue
 
-        for v in (event.get('votes') or []):
-            voter_id = v.get('voter_id', '')
-            if not voter_id:
+        time.sleep(DELAY)
+        bill = get_bill(bill_id)
+        bills_fetched += 1
+        if not bill:
+            continue
+
+        bill_number = bill.get("bill_number", "")
+        bill_url    = bill.get("state_link", "")
+
+        for rc_summary in (bill.get("votes") or []):
+            rc_id = rc_summary.get("roll_call_id")
+            if not rc_id or str(rc_id) in votes_meta:
                 continue
-            option     = (v.get('option') or '').lower()
-            vote_label = VOTE_MAP.get(option, 'Other')
-            member_votes.setdefault(voter_id, []).append({
-                "voteId": event_id,
-                "vote":   vote_label,
-            })
 
-    if not votes_meta:
-        print("Warning: no vote data found. Open States may not yet have GA votes for this session.")
+            time.sleep(DELAY)
+            rc = get_roll_call(rc_id)
+            roll_calls_fetched += 1
+            if not rc:
+                continue
+
+            votes_meta[str(rc_id)] = {
+                "bill":       bill_number,
+                "billUrl":    bill_url,
+                "motionText": rc.get("desc", ""),
+                "date":       rc.get("date", ""),
+                "yea":        rc.get("yea", 0),
+                "nay":        rc.get("nay", 0),
+                "result":     "Pass" if rc.get("passed") == 1 else "Fail",
+            }
+
+            for v in (rc.get("votes") or []):
+                lid    = v.get("people_id")
+                ocd_id = legiscan_to_ocd.get(lid)
+                if not ocd_id:
+                    continue
+                vote_label = VOTE_TEXT_MAP.get(v.get("vote_id"), v.get("vote_text", "Other"))
+                member_votes.setdefault(ocd_id, []).append({
+                    "voteId": str(rc_id),
+                    "vote":   vote_label,
+                })
+
+        if i % 25 == 0 or i == len(actionable):
+            print(f"  [{i}/{len(actionable)}] bills · {roll_calls_fetched} roll calls · {len(member_votes)} members with votes")
 
     output = {
         "metadata": {
             "generatedAt": datetime.now().isoformat(),
             "session":     session_id,
             "sessionName": session_name,
+            "source":      "LegiScan",
             "totalVotes":  len(votes_meta),
         },
         "votes":       votes_meta,

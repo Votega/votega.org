@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
   schedule:
     # Weekly on Sundays at 08:00 UTC — vote data changes only during session
-    # Re-run manually at session end to capture final votes
     - cron: '0 8 * * 0'
 
 jobs:
@@ -24,9 +23,9 @@ jobs:
           python-version: '3.x'
 
       - name: Generate GA vote data
-        run: python scripts/generate_ga_votes_data.py assets/data/ga-member-votes.json
+        run: python scripts/generate_ga_votes_data.py assets/data/ga-member-votes.json assets/data/ga-members.json
         env:
-          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
+          LEGISCAN_API_KEY: ${{ secrets.LEGISCAN_API_KEY }}
 
       - name: Validate generated data
         run: |
@@ -41,7 +40,7 @@ jobs:
           members = len(d.get('memberVotes', {}))
           size_kb = os.path.getsize('assets/data/ga-member-votes.json') // 1024
           print(f'Validated: {votes} votes, {members} members, {size_kb} KB')
-          assert votes > 0, 'Expected at least one vote'
+          assert votes > 0, 'Expected at least one vote — check LegiScan API key and session data'
           "
 
       - name: Commit and push generated data
