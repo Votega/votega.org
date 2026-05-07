@@ -157,6 +157,9 @@ def main():
             "title":      get_col(row, "title").strip(),
             "stateLink":  get_col(row, "state_link", "url").strip(),
             "textUrl":    "",  # filled in from documents.csv if present
+            # LegiScan status codes: 1=Introduced 2=Engrossed 3=Enrolled 4=Passed/Signed 5=Vetoed 6=Failed
+            "status":     coerce_int(get_col(row, "status")),
+            "statusDesc": get_col(row, "status_desc", "status_de").strip(),
         }
 
     print(f"  {len(bills)} bills (session IDs: {', '.join(sorted(session_ids))})")
@@ -189,10 +192,18 @@ def main():
     rc_rows    = read_csv(os.path.join(CSV_DIR, "rollcalls.csv"))
     votes_meta = {}
 
+    signed_count  = 0
+    skipped_count = 0
     for row in rc_rows:
         rc_id = get_col(row, "roll_call_id", "roll_call_i").strip()
         bid   = get_col(row, "bill_id").strip()
         bill  = bills.get(bid, {})
+
+        # Only include roll calls for bills that were signed into law (status 4)
+        if bill.get("status") != 4:
+            skipped_count += 1
+            continue
+        signed_count += 1
 
         votes_meta[rc_id] = {
             "bill":       bill.get("billNumber", ""),
@@ -206,7 +217,7 @@ def main():
             "chamber":    get_col(row, "chamber").strip(),
         }
 
-    print(f"  {len(votes_meta)} roll calls")
+    print(f"  {len(votes_meta)} roll calls kept (signed bills only, {skipped_count} skipped — not yet signed or failed)")
 
     # ── votes.csv → member_votes by OCD person ID ───────────────────────────
     print("\nProcessing votes.csv...")
