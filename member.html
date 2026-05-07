@@ -416,7 +416,14 @@ permalink: /member.html
 
     const fmt = d => d ? new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
 
-    const items = bills.map(b => {
+    const validBills = bills.filter(b => b.type && b.number && b.title);
+    if (!validBills.length) {
+      const btn = document.querySelector('[data-tab="sponsoredLegislation"]');
+      if (btn) btn.style.display = 'none';
+      return;
+    }
+
+    const items = validBills.map(b => {
       const policyBadge = b.policyArea
         ? `<span class="bill-policy-area">${b.policyArea}</span>`
         : '';

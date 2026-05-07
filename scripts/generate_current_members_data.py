@@ -114,12 +114,15 @@ def get_sponsored_legislation(bioguideId, current_congress=119, limit=20):
             continue
         bill_type = bill.get('type') or ''
         bill_num  = bill.get('number') or ''
+        title     = bill.get('title') or ''
+        if not bill_type or not bill_num or not title:
+            continue
         slug = BILL_TYPE_SLUG.get(bill_type, bill_type.lower())
         bill_url = f"https://www.congress.gov/bill/{current_congress}th-congress/{slug}/{bill_num}"
         result.append({
             'type':           bill_type,
             'number':         bill_num,
-            'title':          bill.get('title', ''),
+            'title':          title,
             'introducedDate': bill.get('introducedDate', ''),
             'latestAction':   bill.get('latestAction') or {},
             'policyArea':     (bill.get('policyArea') or {}).get('name') or None,
