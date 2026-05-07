@@ -356,9 +356,13 @@ permalink: /candidate.html
         return;
       }
 
-      const totalsRes = await fetch(
-        `https://api.open.fec.gov/v1/candidate/${match.candidate_id}/totals/?cycle=2026&api_key=${FEC_API_KEY}`
-      );
+      // Prefer committee-level totals — cash on hand is reliably tracked there
+      const committeeId = match.principal_committees?.[0]?.committee_id;
+      const totalsUrl = committeeId
+        ? `https://api.open.fec.gov/v1/committee/${committeeId}/totals/?cycle=2026&api_key=${FEC_API_KEY}`
+        : `https://api.open.fec.gov/v1/candidate/${match.candidate_id}/totals/?cycle=2026&api_key=${FEC_API_KEY}`;
+
+      const totalsRes = await fetch(totalsUrl);
       if (!totalsRes.ok) throw new Error(`FEC totals ${totalsRes.status}`);
       const totalsData = await totalsRes.json();
       const t = (totalsData.results || [])[0];
@@ -367,6 +371,9 @@ permalink: /candidate.html
       const through = t?.coverage_end_date
         ? ` · Through ${new Date(t.coverage_end_date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
         : '';
+
+      // Committee totals use last_cash_on_hand_end_period; candidate totals use cash_on_hand_end_period
+      const cashOnHand = t?.last_cash_on_hand_end_period ?? t?.cash_on_hand_end_period;
 
       container.innerHTML = `
         <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h3>
@@ -381,7 +388,7 @@ permalink: /candidate.html
           </div>
           <div class="finance-card cash">
             <div class="finance-card-label">Cash on Hand</div>
-            <div class="finance-card-value">${fmtMoney(t?.cash_on_hand_end_period)}</div>
+            <div class="finance-card-value">${fmtMoney(cashOnHand)}</div>
           </div>
         </div>
         <p class="finance-meta"><a href="${fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a>${through}</p>`;
