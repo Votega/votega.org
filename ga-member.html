@@ -43,6 +43,12 @@ permalink: /ga-member.html
     font-style: italic;
     opacity: 0.75;
   }
+  .status-running {
+    background: #eff6ff;
+    border-color: #2563eb;
+    color: #1e3a8a;
+  }
+  .status-running a { color: inherit; font-weight: 600; }
   .status-resigned, .status-removed {
     background: #fff3cd;
     border-color: #f0ad00;
@@ -147,7 +153,8 @@ permalink: /ga-member.html
 <div class="msg" id="status"></div>
 
 <script>
-  const DATA_URL = 'assets/data/ga-members.json';
+  const DATA_URL  = 'assets/data/ga-members.json';
+  const RACES_URL = 'assets/data/races.json';
 
   // County → House/Senate district lookup (GA General Assembly reapportionment 2021)
   const COUNTY_HOUSE_DISTRICTS = {
@@ -239,12 +246,25 @@ permalink: /ga-member.html
     return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
   }
 
+  function findSeatRace(member, races) {
+    const chamberMap = {
+      'House of Representatives': 'Georgia House of Representatives',
+      'Senate': 'Georgia Senate',
+    };
+    const raceChamber = chamberMap[member.chamber] || member.chamber;
+    return races.find(r =>
+      r.level === 'state' &&
+      r.chamber === raceChamber &&
+      r.district === member.district
+    ) || null;
+  }
+
   async function loadMemberDetails(id) {
     const statusLine = document.getElementById('status');
     statusLine.textContent = 'Loading member details…';
 
     try {
-      const res = await fetch(DATA_URL);
+      const [res, racesRes] = await Promise.all([fetch(DATA_URL), fetch(RACES_URL)]);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data  = await res.json();
@@ -253,7 +273,13 @@ permalink: /ga-member.html
 
       if (!member) throw new Error('Member not found in data.');
 
-      displayMemberDetails(member);
+      let seatRace = null;
+      if (racesRes.ok) {
+        const racesData = await racesRes.json();
+        seatRace = findSeatRace(member, racesData.races || []);
+      }
+
+      displayMemberDetails(member, seatRace);
       displaySidebar(member, all);
       loadVotingHistory(member);
       statusLine.textContent = '';
@@ -280,7 +306,7 @@ permalink: /ga-member.html
     return '';
   }
 
-  function displayMemberDetails(member) {
+  function displayMemberDetails(member, seatRace) {
     const currentYear = new Date().getFullYear();
     const detailsDiv  = document.getElementById('memberDetails');
 
@@ -292,6 +318,17 @@ permalink: /ga-member.html
     const leadershipHtml = member.leadershipRole
       ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;background:#1a1a2e;color:#fff;border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${member.leadershipRole}</div>`
       : '';
+
+    const electionBannerHtml = (() => {
+      if (!seatRace) return '';
+      const basePath  = getBasePath();
+      const raceUrl   = `${basePath}race.html?id=${encodeURIComponent(seatRace.id)}`;
+      const distLabel = seatRace.district ? ` District ${seatRace.district}` : '';
+      return `<div class="status-banner status-running">
+        <span class="status-label">This seat is up for election in ${seatRace.cycle}</span>
+        <a href="${raceUrl}">View ${seatRace.chamber}${distLabel} race →</a>
+      </div>`;
+    })();
 
     const statusBannerHtml = (() => {
       if (!member.status) return '';
@@ -317,6 +354,7 @@ permalink: /ga-member.html
       : '';
 
     detailsDiv.innerHTML = `
+      ${electionBannerHtml}
       ${statusBannerHtml}
       ${imageHtml}
       <h2>${name}</h2>

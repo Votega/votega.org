@@ -90,6 +90,11 @@ permalink: /member.html
     border-color: #7c3aed;
     color: #4c1d95;
   }
+  .running-badge.seat-election {
+    background: #eff6ff;
+    border-color: #2563eb;
+    color: #1e3a8a;
+  }
   .running-badge strong { display: block; margin-bottom: 0.25rem; }
   .running-badge a { color: inherit; }
   #sponsoredLegislation {
@@ -190,9 +195,11 @@ permalink: /member.html
       }
 
       let electionInfo = null;
+      let seatRace = null;
       if (racesRes.ok) {
         const racesData = await racesRes.json();
         electionInfo = findMemberInRaces(bioguideId, racesData.races || []);
+        if (!electionInfo) seatRace = findSeatRace(member, racesData.races || []);
       }
 
       if (DEBUG) {
@@ -200,7 +207,7 @@ permalink: /member.html
         console.log('Election info:', electionInfo);
       }
 
-      displayMemberDetails(member, electionInfo);
+      displayMemberDetails(member, electionInfo, seatRace);
       displaySidebar(member, allMembers);
       loadSponsoredLegislation(member);
       loadVotingHistory(member);
@@ -216,6 +223,20 @@ permalink: /member.html
   }
 
   // Returns { type: 'reelection'|'different-office', race, challengerEntry } or null
+  function findSeatRace(member, races) {
+    if (member.state !== 'Georgia') return null;
+    const currentTerm = member.terms?.item?.slice(-1)[0] || {};
+    const chamber = currentTerm.chamber || '';
+    const isHouse  = chamber.includes('House');
+    const isSenate = chamber.includes('Senate');
+    return races.find(r => {
+      if (r.level !== 'federal') return false;
+      if (isHouse)  return r.chamber === 'U.S. House'  && r.district === member.district;
+      if (isSenate) return r.chamber === 'U.S. Senate';
+      return false;
+    }) || null;
+  }
+
   function findMemberInRaces(bioguideId, races) {
     for (const race of races) {
       for (const phaseName of ['primary', 'general']) {
@@ -475,7 +496,7 @@ permalink: /member.html
     return '';
   }
 
-  function displayMemberDetails(member, electionInfo) {
+  function displayMemberDetails(member, electionInfo, seatRace) {
     const detailsDiv = document.getElementById('memberDetails');
 
     const honorific = member.honorificName || '';
@@ -569,6 +590,15 @@ permalink: /member.html
             <a href="${raceUrl}">View race →</a>
           </div>`;
       }
+    } else if (seatRace) {
+      const basePath  = getBasePath();
+      const distLabel = seatRace.district ? ` District ${seatRace.district}` : '';
+      const raceUrl   = `${basePath}race.html?id=${encodeURIComponent(seatRace.id)}`;
+      runningBadgeHtml = `
+        <div class="running-badge seat-election">
+          <strong>This seat is up for election in ${seatRace.cycle}</strong>
+          <a href="${raceUrl}">View ${seatRace.chamber}${distLabel} race →</a>
+        </div>`;
     }
 
     const html = `
