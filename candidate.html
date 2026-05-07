@@ -69,6 +69,21 @@ permalink: /candidate.html
   .contact-section h3 { font-size: 1rem; margin-bottom: 0.5rem; }
   .contact-section a  { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; }
 
+  .member-record-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    color: #1d4ed8;
+    text-decoration: none;
+    margin: 1rem 0 1.25rem 0;
+  }
+  .member-record-link:hover { background: #dbeafe; }
+
   .back-link { margin-top: 2rem; font-size: 0.9rem; }
 
   .role-badge {
@@ -140,8 +155,19 @@ permalink: /candidate.html
     const isIncumbent = candidate.isIncumbent || candidate.type === 'incumbent';
     const isWithdrawn = !!candidate.withdrawn;
 
-    const photoHtml = candidate.imageUrl
-      ? `<img class="candidate-photo" src="${candidate.imageUrl}" alt="${candidate.name}">`
+    // If this candidate is a current Congress member, link to their member page
+    const existingMemberId = candidate.existingMemberId || '';
+    const memberSource     = candidate.existingMemberSource || '';
+    const memberUrl = existingMemberId && memberSource === 'congress'
+      ? `${basePath}member.html?bioguideId=${encodeURIComponent(existingMemberId)}`
+      : null;
+
+    // Photo: use candidate image if available; fall back to bioguide photo for known members
+    const photoSrc = candidate.imageUrl || (existingMemberId
+      ? `https://bioguide.congress.gov/bioguide/photo/${existingMemberId[0]}/${existingMemberId}.jpg`
+      : '');
+    const photoHtml = photoSrc
+      ? `<img class="candidate-photo" src="${photoSrc}" alt="${candidate.name}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',textContent:'👤'}))">`
       : `<div class="candidate-photo-placeholder">👤</div>`;
 
     // Role and party badges
@@ -167,8 +193,13 @@ permalink: /candidate.html
     const bioHtml = candidate.bio
       ? `<div class="bio-section"><p>${candidate.bio}</p></div>` : '';
 
-    // For federal candidates with no prior record, show a contextual note
-    const noRecordHtml = isFederal && !candidate.bio ? `
+    // Link to Congressional record when candidate is a current/former member
+    const memberRecordHtml = memberUrl
+      ? `<a class="member-record-link" href="${memberUrl}">View Congressional record →</a>`
+      : '';
+
+    // For federal candidates with no prior record (and not a known member), show a contextual note
+    const noRecordHtml = isFederal && !candidate.bio && !memberUrl ? `
       <div class="no-record-note">
         This candidate has no prior U.S. Congressional record on file, or they are running for a different chamber.
       </div>` : '';
@@ -187,6 +218,7 @@ permalink: /candidate.html
       </div>
 
       ${detailsHtml}
+      ${memberRecordHtml}
       ${noRecordHtml}
       ${bioHtml}
 
