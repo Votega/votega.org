@@ -3,6 +3,10 @@
 Generate ga-member-votes.json from the legis.ga.gov public REST API.
 No authentication required — these are public legislative records.
 
+IMPORTANT: legis.ga.gov API endpoints require a browser-like session with cookies.
+Direct API calls time out without first visiting a page to establish that session.
+We use urllib's CookieJar to handle this transparently.
+
 API endpoints discovered via ATLJoeReed/ga-legislation-scraper:
   GET /api/sessions                       → list all sessions, find isCurrent
   GET /api/Vote/list/1/{session}          → house vote summaries for session
@@ -19,6 +23,7 @@ Output: assets/data/ga-member-votes.json
 The memberVotes key is the numeric legis.ga.gov member ID (legisGaGovId field in ga-members.json).
 """
 
+import http.cookiejar
 import json
 import os
 import sys
@@ -33,17 +38,42 @@ DELAY       = 0.5   # seconds between API calls — be respectful to the public 
 
 VOTE_LABELS = {0: "Nay", 1: "Yea", 2: "Not Voting", 3: "Excused"}
 
+# Shared browser-like headers sent with every request
+HEADERS = {
+    "User-Agent":      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+}
+
+# Single opener with cookie persistence — mimics a real browser session
+_cookie_jar = http.cookiejar.CookieJar()
+_opener     = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(_cookie_jar))
+
+
+def establish_session():
+    """Visit the votes index page so the server sets session cookies before any API calls."""
+    print("Establishing browser session with legis.ga.gov...")
+    req = urllib.request.Request(
+        f"{BASE}/votes/house",
+        headers={**HEADERS, "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
+    )
+    try:
+        with _opener.open(req, timeout=30) as r:
+            r.read()  # consume body so connection is kept clean
+        print(f"  Session established ({len(_cookie_jar)} cookie(s) set)")
+    except Exception as e:
+        print(f"  Warning: session page failed ({e}) — API calls may still work")
+
 
 def fetch(url, retries=3):
     print(f"  GET {url[:110]}...")
-    req = urllib.request.Request(url, headers={
-        "Accept":     "application/json",
-        "User-Agent": "Mozilla/5.0 (compatible; votega.org/1.0)",
-        "Referer":    "https://www.legis.ga.gov/",
-    })
+    req = urllib.request.Request(
+        url,
+        headers={**HEADERS, "Accept": "application/json", "Referer": f"{BASE}/votes/house"},
+    )
     for attempt in range(1, retries + 1):
         try:
-            with urllib.request.urlopen(req, timeout=30) as r:
+            with _opener.open(req, timeout=30) as r:
                 return json.loads(r.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             print(f"  HTTP {e.code} on attempt {attempt}/{retries}")
@@ -80,6 +110,10 @@ def get_vote_detail(vote_id):
 
 
 def main():
+    # Must establish a cookie session before any API calls will respond
+    establish_session()
+    time.sleep(DELAY)
+
     print("Fetching current Georgia legislative session...")
     session_id, session_desc = get_current_session()
     print(f"  Session {session_id}: {session_desc}")
@@ -130,8 +164,8 @@ def main():
         }
 
         for record in (detail.get("votes") or []):
-            member     = record.get("member") or {}
-            member_id  = str(member.get("id", ""))
+            member    = record.get("member") or {}
+            member_id = str(member.get("id", ""))
             if not member_id:
                 continue
             vote_label = VOTE_LABELS.get(record.get("memberVoted"), "Unknown")
@@ -157,7 +191,7 @@ def main():
 
     os.makedirs(os.path.dirname(OUTPUT_FILE) or ".", exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        # Use compact separators — this file can get large
+        # Compact separators — this file can get large
         json.dump(output, f, separators=(",", ":"), ensure_ascii=False)
 
     size_kb = os.path.getsize(OUTPUT_FILE) // 1024
