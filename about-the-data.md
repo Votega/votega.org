@@ -124,6 +124,20 @@ Executive orders are sourced from the [Georgia Governor's website](https://gov.g
 
 ---
 
+## Campaign Finance
+
+**Sources:** [Federal Election Commission (FEC)](https://www.fec.gov/) · [Georgia Government Transparency & Campaign Finance Commission](https://ethics.ga.gov/)
+
+Campaign finance figures — total raised, total spent, and cash on hand — are displayed on each candidate profile page.
+
+- **Federal candidates** (U.S. House and Senate): Data is fetched live from the [FEC API](https://api.open.fec.gov/) when you visit a candidate's page. The FEC is the authoritative source for federal campaign finance disclosures. Figures reflect the candidate's most recent filing and are updated as new reports are submitted to the FEC.
+- **Georgia state candidates** (GA House, Senate, and statewide offices): Georgia campaign finance filings are managed by the Georgia Government Transparency & Campaign Finance Commission. We link directly to their search portal since no public API is available.
+
+- **Coverage:** 2026 election cycle.
+- **Freshness:** Federal figures are live — pulled from FEC at page load time. State figures link to the Georgia Ethics Commission search.
+
+---
+
 ## Data Freshness
 
 | Data | Source | Update Schedule |
@@ -134,12 +148,13 @@ Executive orders are sourced from the [Georgia Governor's website](https://gov.g
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
 | GA state legislator voting history | LegiScan bulk dataset | Periodically, when new dataset is available |
 | GA executive orders | gov.georgia.gov | Manually maintained |
+| Federal campaign finance | FEC API (live) | Real-time, fetched on page load |
 
 ---
 
 ## What We Don't Do
 
-- **No real-time API calls from your browser.** All data is pre-fetched and served as static files. This means fast page loads for you.
+- **Minimal real-time API calls from your browser.** Most data is pre-fetched and served as static files for fast page loads. The one exception is campaign finance on candidate profile pages, which is fetched live from the FEC API so figures always reflect the latest filing.
 - **No tracking or analytics beyond standard page metrics.** We do not build profiles of visitors or sell data.
 
 ---
