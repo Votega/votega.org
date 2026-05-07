@@ -23,6 +23,25 @@ district, term dates, and official photo — is pulled from the Congress.gov API
 
 ---
 
+## Federal Legislator Voting History (GA Delegation)
+
+**Sources:** [Congress.gov API](https://api.congress.gov/) · [Clerk of the U.S. House](https://clerk.house.gov/) · [U.S. Senate](https://www.senate.gov/)
+
+Voting history is displayed on each Georgia federal legislator's profile page, showing how they voted on every roll call tied to a bill that was signed into law during the current Congress (119th, 2025–2027).
+
+**How it works:**
+
+1. The Congress.gov API is queried for all public laws enacted during the current Congress.
+2. For each enacted bill, we retrieve the associated roll call vote URLs from the bill's action history via the Congress.gov API.
+3. Roll call XML files are fetched directly from the Clerk of the House (House votes) and Senate.gov (Senate votes) — these are the authoritative, official government sources.
+4. Georgia delegation members are identified by their state attribute in the XML. House XML includes bioguide IDs directly; Senate XML uses LIS senator IDs, which are mapped to bioguide IDs via the [unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators) project.
+
+- **Scope:** Only votes on bills that were signed into law. Votes on bills that failed, were vetoed, or are still pending are not included.
+- **Coverage:** Georgia's 2 U.S. Senators and 14 U.S. Representatives.
+- **Freshness:** Updated weekly via an automated GitHub Actions workflow.
+
+---
+
 ## Georgia General Assembly Legislators
 
 **Primary source:** [Open States API](https://openstates.org/) (Plural Policy)
@@ -34,6 +53,24 @@ committee assignments, and official legislative page — is pulled from the Open
 - **Legislative page URLs:** Constructed from `legis.ga.gov` using the member's official Georgia legislature ID, which is reliably maintained by the Georgia General Assembly.
 - **Term start dates:** Not consistently available from Open States for Georgia. We maintain a manual override file to fill in known values.
 - **Freshness:** Updated daily via an automated GitHub Actions workflow.
+
+---
+
+## Georgia State Legislator Voting History
+
+**Source:** [LegiScan](https://legiscan.com/) (bulk legislative dataset)
+
+Voting history is displayed on each Georgia state legislator's profile page, showing how they voted on every roll call tied to a bill that was signed into law during the current General Assembly session.
+
+**How it works:**
+
+LegiScan aggregates and standardizes legislative data from all 50 states, including full roll call vote records for the Georgia General Assembly. We use LegiScan's bulk dataset — which includes bills, people, roll calls, and individual vote records — and process it locally to build the voting history file.
+
+Georgia legislators are matched between the LegiScan dataset and our member data using their chamber and district (e.g., House District 137, Senate District 24). Member votes are then keyed to each legislator's unique Open States identifier so they can be looked up on their profile page.
+
+- **Scope:** Only votes on bills that were signed into law (enacted). Votes on bills that failed or are still in committee are not included.
+- **Coverage:** All current members of the Georgia House of Representatives and Georgia Senate.
+- **Freshness:** Updated periodically when a new LegiScan dataset is published.
 
 ---
 
@@ -94,6 +131,8 @@ Executive orders are sourced from the [Georgia Governor's website](https://gov.g
 | Federal Congress members | Congress.gov API | Daily, 06:00 UTC |
 | Georgia state legislators | Open States API | Daily, 07:00 UTC |
 | GA legislators community repo | Published from above | Daily, after GA member update |
+| Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
+| GA state legislator voting history | LegiScan bulk dataset | Periodically, when new dataset is available |
 | GA executive orders | gov.georgia.gov | Manually maintained |
 
 ---
