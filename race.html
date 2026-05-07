@@ -137,6 +137,24 @@ permalink: /race.html
     margin-top: 0.5rem;
   }
 
+  .open-seat-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    background: #fff7ed;
+    border-left: 4px solid #ea580c;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+    color: #7c2d12;
+    line-height: 1.5;
+  }
+  .open-seat-banner .open-seat-label {
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
   .back-link { margin-top: 2rem; font-size: 0.9rem; }
 
   @media (max-width: 600px) {
@@ -292,6 +310,14 @@ permalink: /race.html
     const distLabel  = race.district ? ` — District ${race.district}` : '';
     const dateStr    = phase ? formatDate(phase.electionDate) : '';
 
+    // Open seat banner (shown when the previous officeholder is not running)
+    const openSeatHtml = race._note
+      ? `<div class="open-seat-banner">
+           <span class="open-seat-label">Open Seat</span>
+           <span>${race._note}</span>
+         </div>`
+      : '';
+
     // Primary result callout (shown after switching to general)
     const showResult = race.activePhase === 'general' && race.phases.primary?.primaryResult;
     const resultCallout = showResult
@@ -340,6 +366,7 @@ permalink: /race.html
           &nbsp;·&nbsp; ${race.cycle} Election Cycle
         </div>
       </div>
+      ${openSeatHtml}
       ${resultCallout}
       ${candidatesHtml}
       <div class="back-link"><a href="${basePath}elections.html">← Back to Elections</a></div>`;
