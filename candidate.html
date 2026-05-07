@@ -366,22 +366,11 @@ permalink: /candidate.html
         fecUrl = `https://www.fec.gov/data/candidate/${match.candidate_id}/`;
       }
 
-      // Fetch totals — committee level is preferred for reliable cash on hand
+      // Committee totals preferred (reliable cash on hand); fall back to candidate totals
+      if (!fecUrl) fecUrl = `https://www.fec.gov/data/committee/${committeeId}/`;
       const totalsUrl = committeeId
         ? `https://api.open.fec.gov/v1/committee/${committeeId}/totals/?cycle=2026&api_key=${FEC_API_KEY}`
-        : null;
-
-      if (!totalsUrl) {
-        container.innerHTML = `
-          <h3>Campaign Finance</h3>
-          <p style="font-size:0.875rem;color:#666;">
-            No FEC committee found for this candidate.
-            <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
-          </p>`;
-        return;
-      }
-
-      if (!fecUrl) fecUrl = `https://www.fec.gov/data/committee/${committeeId}/`;
+        : `https://api.open.fec.gov/v1/candidate/${match.candidate_id}/totals/?cycle=2026&api_key=${FEC_API_KEY}`;
 
       const totalsRes = await fetch(totalsUrl);
       if (!totalsRes.ok) throw new Error(`FEC totals ${totalsRes.status}`);
