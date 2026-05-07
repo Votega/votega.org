@@ -266,8 +266,11 @@ def parse_house_xml(xml_bytes, bill_label, bill_url, bill_title):
     yea = nay = 0
     for totals in root.findall(".//totals-by-vote"):
         for child in totals:
-            t   = (child.tag or "").lower().replace("-", "_")
-            val = int(child.text or 0)
+            t = (child.tag or "").lower().replace("-", "_")
+            try:
+                val = int(child.text or 0)
+            except (ValueError, TypeError):
+                continue
             if t in ("yea_total", "yes_total", "aye_total"):
                 yea += val
             elif t in ("nay_total", "no_total"):
