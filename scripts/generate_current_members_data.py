@@ -86,6 +86,48 @@ def fetch_yaml(url):
         print(f"Error fetching YAML {url}: {e}")
         return None
 
+BILL_TYPE_SLUG = {
+    'HR':      'house-bill',
+    'S':       'senate-bill',
+    'HRES':    'house-resolution',
+    'SRES':    'senate-resolution',
+    'HJRES':   'house-joint-resolution',
+    'SJRES':   'senate-joint-resolution',
+    'HCONRES': 'house-concurrent-resolution',
+    'SCONRES': 'senate-concurrent-resolution',
+}
+
+def get_sponsored_legislation(bioguideId, current_congress=119, limit=20):
+    """Fetch first page of sponsored legislation for a member, filtered to current Congress."""
+    url = f"{BASE_URL}/member/{bioguideId}/sponsored-legislation?limit={limit}&format=json"
+    data = fetch_url(url)
+    if not data:
+        return []
+
+    bills = data.get('sponsoredLegislation', [])
+    if not isinstance(bills, list):
+        bills = []
+
+    result = []
+    for bill in bills:
+        if bill.get('congress') != current_congress:
+            continue
+        bill_type = bill.get('type', '')
+        bill_num  = bill.get('number', '')
+        slug = BILL_TYPE_SLUG.get(bill_type, bill_type.lower())
+        bill_url = f"https://www.congress.gov/bill/{current_congress}th-congress/{slug}/{bill_num}"
+        result.append({
+            'type':           bill_type,
+            'number':         bill_num,
+            'title':          bill.get('title', ''),
+            'introducedDate': bill.get('introducedDate', ''),
+            'latestAction':   bill.get('latestAction') or {},
+            'policyArea':     (bill.get('policyArea') or {}).get('name') or None,
+            'billUrl':        bill_url,
+        })
+
+    return result
+
 def get_committee_memberships():
     """Fetch committee memberships from unitedstates/congress-legislators.
     Returns a dict keyed by bioguideId -> list of full committee names."""
@@ -153,7 +195,11 @@ def enrich_member_data(bioguideId, basic_member):
     basic_member['sponsoredLegislation'] = member_details.get('sponsoredLegislation', {})
     basic_member['cosponsoredLegislation'] = member_details.get('cosponsoredLegislation', {})
     basic_member['dataUpdatedAt'] = datetime.now().isoformat()
-    
+
+    # Fetch recent sponsored bills only for GA delegation (avoids 500+ extra API calls)
+    if basic_member.get('state') == 'Georgia':
+        basic_member['recentSponsored'] = get_sponsored_legislation(bioguideId)
+
     return basic_member
 
 def get_current_members():

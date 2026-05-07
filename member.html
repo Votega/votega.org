@@ -92,6 +92,36 @@ permalink: /member.html
   }
   .running-badge strong { display: block; margin-bottom: 0.25rem; }
   .running-badge a { color: inherit; }
+  #sponsoredLegislation {
+    margin-top: 2rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1.5rem;
+  }
+  #sponsoredLegislation h3 { margin: 0 0 0.5rem 0; }
+  .bill-list { list-style: none; padding: 0; margin: 0; }
+  .bill-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.875rem;
+  }
+  .bill-item:last-child { border-bottom: none; }
+  .bill-id {
+    display: inline-block;
+    font-weight: 600;
+    margin-right: 0.5rem;
+    color: #1d4ed8;
+  }
+  .bill-title { color: #111; }
+  .bill-meta { color: #6b7280; font-size: 0.8rem; margin-top: 0.25rem; }
+  .bill-policy-area {
+    display: inline-block;
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.75rem;
+    color: #374151;
+    margin-left: 0.4rem;
+  }
   #votingHistory {
     margin-top: 2rem;
     border-top: 1px solid #ddd;
@@ -172,6 +202,7 @@ permalink: /member.html
 
       displayMemberDetails(member, electionInfo);
       displaySidebar(member, allMembers);
+      loadSponsoredLegislation(member);
       loadVotingHistory(member);
       statusLine.textContent = '';
     } catch (err) {
@@ -318,6 +349,40 @@ permalink: /member.html
       <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
       <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
     </div>`;
+  }
+
+  function loadSponsoredLegislation(member) {
+    const container = document.getElementById('sponsoredLegislation');
+    if (!container) return;
+
+    const bills = member.recentSponsored;
+    if (!bills || bills.length === 0) return;
+
+    const totalCount = member.sponsoredLegislation?.count;
+    const countNote = totalCount
+      ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${totalCount.toLocaleString()} total sponsored</small>`
+      : '';
+
+    const fmt = d => d ? new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+
+    const items = bills.map(b => {
+      const policyBadge = b.policyArea
+        ? `<span class="bill-policy-area">${b.policyArea}</span>`
+        : '';
+      const action = b.latestAction?.text
+        ? `<span style="color:#555;">${b.latestAction.text}</span>`
+        : '';
+      return `<li class="bill-item">
+        <a class="bill-id" href="${b.billUrl}" target="_blank" rel="noopener">${b.type} ${b.number}</a>
+        <span class="bill-title">${b.title}</span>${policyBadge}
+        <div class="bill-meta">Introduced ${fmt(b.introducedDate)} · ${action}</div>
+      </li>`;
+    }).join('');
+
+    container.innerHTML = `
+      <h3>Sponsored Legislation${countNote}</h3>
+      <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Most recent bills sponsored during the 119th Congress (2025–2027).</p>
+      <ul class="bill-list">${items}</ul>`;
   }
 
   async function loadVotingHistory(member) {
@@ -522,6 +587,7 @@ permalink: /member.html
       ${websiteHtml}
 
       <p><a href="my-representatives.html">Search for another member</a></p>
+      <div id="sponsoredLegislation"></div>
       <div id="votingHistory"></div>
     `;
     detailsDiv.innerHTML = html;
