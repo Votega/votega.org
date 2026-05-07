@@ -237,7 +237,6 @@ permalink: /member.html
     }
   }
 
-  // Returns { type: 'reelection'|'different-office', race, challengerEntry } or null
   function findSeatRace(member, races) {
     if (member.state !== 'Georgia') return null;
     const currentTerm = member.terms?.item?.slice(-1)[0] || {};
@@ -246,8 +245,20 @@ permalink: /member.html
     const isSenate = chamber.includes('Senate');
     return races.find(r => {
       if (r.level !== 'federal') return false;
-      if (isHouse)  return r.chamber === 'U.S. House'  && r.district === member.district;
-      if (isSenate) return r.chamber === 'U.S. Senate';
+      if (isHouse) return r.chamber === 'U.S. House' && r.district === member.district;
+      if (isSenate) {
+        if (r.chamber !== 'U.S. Senate') return false;
+        // Georgia has two Senate seats in different cycles. Match if this member
+        // is the listed incumbent in the race, OR is the seat holder (open seat case
+        // where the senator isn't running but their seat is still on the ballot).
+        if (r.incumbentBioguideId === member.bioguideId) return true;
+        return ['primary', 'general'].some(phase => {
+          const p = r.phases?.[phase];
+          if (!p) return false;
+          const candidates = p.ballots ? Object.values(p.ballots).flat() : (p.candidates || []);
+          return candidates.some(c => c.type === 'incumbent' && c.memberId === member.bioguideId);
+        });
+      }
       return false;
     }) || null;
   }
