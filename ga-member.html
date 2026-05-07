@@ -44,11 +44,17 @@ permalink: /ga-member.html
     opacity: 0.75;
   }
   .status-running {
+    background: #f0fdf4;
+    border-color: #16a34a;
+    color: #14532d;
+  }
+  .status-running a { color: inherit; font-weight: 600; }
+  .status-candidacy {
     background: #eff6ff;
     border-color: #2563eb;
     color: #1e3a8a;
   }
-  .status-running a { color: inherit; font-weight: 600; }
+  .status-candidacy a { color: inherit; font-weight: 600; }
   .status-resigned, .status-removed {
     background: #fff3cd;
     border-color: #f0ad00;
@@ -357,7 +363,7 @@ permalink: /ga-member.html
       const distLabel = race.district ? ` District ${race.district}` : '';
       const officeLabel = `${race.chamber}${distLabel}`;
       const candidateUrl = `${basePath}candidate.html?id=${encodeURIComponent(challenger.id)}`;
-      return `<div class="status-banner status-running">
+      return `<div class="status-banner status-candidacy">
         <span class="status-label">Running for ${officeLabel} in ${race.cycle}</span>
         <a href="${candidateUrl}">View candidate profile →</a>
       </div>`;
