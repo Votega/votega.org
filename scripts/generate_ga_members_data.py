@@ -194,6 +194,8 @@ def normalize_member(raw, committees_by_id=None):
         'termStart':        term_start,
         'termStartYear':    term_start_year,
         'committees':       (committees_by_id or {}).get(raw.get('id', ''), []),
+        # Numeric ID used by legis.ga.gov — needed to join with ga-member-votes.json
+        'legisGaGovId':     georgia_id,
     }
 
 

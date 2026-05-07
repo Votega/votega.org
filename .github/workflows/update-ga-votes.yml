@@ -1,0 +1,60 @@
+name: Update Georgia legislative vote data
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly on Sundays at 08:00 UTC — vote data changes only during session
+    # Re-run manually at session end to capture final votes
+    - cron: '0 8 * * 0'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate GA vote data
+        # No API key required — legis.ga.gov is a public API
+        run: python scripts/generate_ga_votes_data.py assets/data/ga-member-votes.json
+
+      - name: Validate generated data
+        run: |
+          if [ ! -f assets/data/ga-member-votes.json ]; then
+            echo "Error: ga-member-votes.json was not generated"
+            exit 1
+          fi
+          python -c "
+          import json, os
+          d = json.load(open('assets/data/ga-member-votes.json'))
+          votes   = len(d.get('votes', {}))
+          members = len(d.get('memberVotes', {}))
+          size_kb = os.path.getsize('assets/data/ga-member-votes.json') // 1024
+          print(f'Validated: {votes} votes, {members} members, {size_kb} KB')
+          assert votes > 0, 'Expected at least one vote'
+          "
+
+      - name: Commit and push generated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git stash
+          git fetch origin main
+          git rebase origin/main
+          git stash pop
+          git add -f assets/data/ga-member-votes.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update Georgia legislative vote data"
+            git push
+          fi

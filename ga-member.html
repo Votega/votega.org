@@ -63,6 +63,26 @@ permalink: /ga-member.html
     border-color: #1a56a8;
     color: #1a3a6b;
   }
+  #votingHistory {
+    margin-top: 2rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1.5rem;
+  }
+  #votingHistory h3 { margin: 0 0 0.75rem 0; }
+  .vote-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .vote-table th, .vote-table td {
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid #eee;
+  }
+  .vote-table th { background: #f5f5f5; font-weight: bold; }
+  .vote-yea   { color: #1a7a1a; font-weight: bold; }
+  .vote-nay   { color: #b00020; font-weight: bold; }
+  .vote-other { color: #666; }
   #stateSidebar {
     width: 240px;
     flex-shrink: 0;
@@ -235,6 +255,7 @@ permalink: /ga-member.html
 
       displayMemberDetails(member);
       displaySidebar(member, all);
+      loadVotingHistory(member);
       statusLine.textContent = '';
     } catch (err) {
       console.error(err);
@@ -329,6 +350,7 @@ permalink: /ga-member.html
            </div>`
         : ''}
       <p><a href="ga-representatives.html">Search for another member</a></p>
+      <div id="votingHistory"></div>
     `;
   }
 
@@ -388,5 +410,61 @@ permalink: /ga-member.html
       renderGroup(primaryPeers,   primaryLabel,   current.id, basePath, countyParam) +
       renderGroup(secondaryPeers, secondaryLabel, current.id, basePath, countyParam);
     document.getElementById('stateSidebar').style.display = 'block';
+  }
+
+  async function loadVotingHistory(member) {
+    const legisId = member.legisGaGovId;
+    const container = document.getElementById('votingHistory');
+    if (!legisId || !container) return;
+
+    const VOTES_URL = 'assets/data/ga-member-votes.json';
+    try {
+      const res = await fetch(VOTES_URL);
+      if (!res.ok) return; // silently skip if file not yet generated
+
+      const data       = await res.json();
+      const memberVotes = (data.memberVotes || {})[String(legisId)];
+      if (!memberVotes || memberVotes.length === 0) {
+        container.innerHTML = '<h3>Voting History</h3><p style="color:#666;font-size:0.875rem;">No votes recorded for this session.</p>';
+        return;
+      }
+
+      const votesIndex = data.votes || {};
+      const session    = data.metadata?.sessionDescription || '';
+
+      // Sort most recent first
+      const sorted = [...memberVotes].sort((a, b) => {
+        const da = (votesIndex[a.voteId] || {}).date || '';
+        const db = (votesIndex[b.voteId] || {}).date || '';
+        return db.localeCompare(da);
+      });
+
+      const voteClass = v => v === 'Yea' ? 'vote-yea' : v === 'Nay' ? 'vote-nay' : 'vote-other';
+
+      const rows = sorted.map(({ voteId, vote }) => {
+        const meta    = votesIndex[String(voteId)] || {};
+        const bill    = meta.bill    || '—';
+        const caption = meta.caption || meta.name || '—';
+        const date    = meta.date    ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+        const legLink = meta.legislationId
+          ? `<a href="https://www.legis.ga.gov/legislation/${meta.legislationId}" target="_blank" rel="noopener">${bill}</a>`
+          : bill;
+        return `<tr>
+          <td>${date}</td>
+          <td>${legLink}</td>
+          <td>${caption}</td>
+          <td class="${voteClass(vote)}">${vote}</td>
+        </tr>`;
+      }).join('');
+
+      container.innerHTML = `
+        <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
+        <table class="vote-table">
+          <thead><tr><th>Date</th><th>Bill</th><th>Description</th><th>Vote</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    } catch (err) {
+      console.warn('Could not load voting history:', err);
+    }
   }
 </script>
