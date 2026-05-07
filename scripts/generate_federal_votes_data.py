@@ -260,7 +260,7 @@ def parse_house_xml(xml_bytes, bill_label, bill_url, bill_title):
         return (el.text or "").strip() if el is not None else ""
 
     action_date = txt("action-date")
-    question    = txt("question")
+    question    = txt("vote-question")
     result_text = txt("vote-result")
 
     yea = nay = 0

@@ -289,6 +289,11 @@ permalink: /member.html
       const votesIndex = data.votes || {};
       const session    = data.metadata?.sessionName || '';
 
+      // Determine member chamber to conditionally show Motion column
+      const termsArr  = member.terms?.item || [];
+      const latestTerm = (Array.isArray(termsArr) ? termsArr : [termsArr]).slice(-1)[0] || {};
+      const isHouse   = (latestTerm.chamber || '').includes('House');
+
       // Sort most recent first
       const sorted = [...memberVotes].sort((a, b) => {
         const da = (votesIndex[a.voteId] || {}).date || '';
@@ -310,19 +315,21 @@ permalink: /member.html
         const billCell = title
           ? `${billLink}<br><span style="font-size:0.75rem;color:#555;font-weight:normal;">${title}</span>`
           : billLink;
+        const motionCell = isHouse ? '' : `<td>${caption}</td>`;
         return `<tr>
           <td>${date}</td>
           <td>${billCell}</td>
-          <td>${caption}</td>
+          ${motionCell}
           <td class="${voteClass(vote)}">${vote}</td>
         </tr>`;
       }).join('');
 
+      const motionHeader = isHouse ? '' : '<th>Motion</th>';
       container.innerHTML = `
         <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
         <table class="vote-table">
-          <thead><tr><th>Date</th><th>Bill</th><th>Motion</th><th>Vote</th></tr></thead>
+          <thead><tr><th>Date</th><th>Bill</th>${motionHeader}<th>Vote</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>`;
     } catch (err) {
