@@ -443,15 +443,21 @@ permalink: /ga-member.html
       const rows = sorted.map(({ voteId, vote }) => {
         const meta    = votesIndex[voteId] || {};
         const bill    = meta.bill       || '—';
+        const title   = meta.title      || '';
         const caption = meta.motionText || '—';
         const date    = meta.date ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
-        // Link to Open States bill page if we have a billId
         const billLink = meta.billUrl
           ? `<a href="${meta.billUrl}" target="_blank" rel="noopener">${bill}</a>`
           : bill;
+        const textLink = meta.textUrl
+          ? ` <a href="${meta.textUrl}" target="_blank" rel="noopener" style="font-size:0.7rem;color:#666;white-space:nowrap;">[text]</a>`
+          : '';
+        const billCell = title
+          ? `${billLink}${textLink}<br><span style="font-size:0.75rem;color:#555;font-weight:normal;">${title}</span>`
+          : `${billLink}${textLink}`;
         return `<tr>
           <td>${date}</td>
-          <td>${billLink}</td>
+          <td>${billCell}</td>
           <td>${caption}</td>
           <td class="${voteClass(vote)}">${vote}</td>
         </tr>`;

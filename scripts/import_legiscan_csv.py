@@ -156,9 +156,33 @@ def main():
             "billNumber": get_col(row, "bill_number", "bill_numb", "bill_num").strip(),
             "title":      get_col(row, "title").strip(),
             "stateLink":  get_col(row, "state_link", "url").strip(),
+            "textUrl":    "",  # filled in from documents.csv if present
         }
 
     print(f"  {len(bills)} bills (session IDs: {', '.join(sorted(session_ids))})")
+
+    # ── documents.csv → latest bill text URL per bill (optional) ────────────
+    docs_path = os.path.join(CSV_DIR, "documents.csv")
+    if os.path.exists(docs_path):
+        print("\nProcessing documents.csv...")
+        docs_rows = read_csv(docs_path)
+        # Track highest document_id seen per bill — highest ID = most recent version
+        best_doc = {}  # bill_id → (document_id_int, url)
+        for row in docs_rows:
+            bid    = get_col(row, "bill_id").strip()
+            doc_id = coerce_int(get_col(row, "document_id", "document_i", "doc_id"))
+            url    = get_col(row, "url").strip()
+            if not bid or not url:
+                continue
+            if bid not in best_doc or doc_id > best_doc[bid][0]:
+                best_doc[bid] = (doc_id, url)
+        # Merge into bills dict
+        for bid, (_, url) in best_doc.items():
+            if bid in bills:
+                bills[bid]["textUrl"] = url
+        print(f"  {len(best_doc)} bills with text URLs")
+    else:
+        print("\nNo documents.csv found — skipping bill text URLs")
 
     # ── rollcalls.csv → roll_call_id → vote event metadata ──────────────────
     print("\nProcessing rollcalls.csv...")
@@ -173,6 +197,8 @@ def main():
         votes_meta[rc_id] = {
             "bill":       bill.get("billNumber", ""),
             "billUrl":    bill.get("stateLink", ""),
+            "title":      bill.get("title", ""),
+            "textUrl":    bill.get("textUrl", ""),
             "motionText": get_col(row, "description", "descriptio").strip(),
             "date":       normalize_date(get_col(row, "date")),
             "yea":        coerce_int(get_col(row, "yea")),
