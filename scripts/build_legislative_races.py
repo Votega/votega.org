@@ -5,8 +5,10 @@ for all GA State House and Senate districts.
 import json, re, string
 from pathlib import Path
 
-SRC  = Path("assets/data/ga-legislative-candidates.json")
-DEST = Path("assets/data/races.json")
+SRC       = Path("assets/data/ga-legislative-candidates.json")
+DEST      = Path("assets/data/races.json")
+GA_MEMBERS = Path("assets/data/ga-members.json")
+OVERRIDES  = Path("assets/data/ga-race-candidate-overrides.json")
 
 def title_case(name: str) -> str:
     """Convert ALL CAPS name to Title Case, handling common edge cases."""
@@ -48,6 +50,26 @@ def parse_district(contest_name: str):
     m = re.search(r'District\s+(\d+)', contest_name, re.IGNORECASE)
     return int(m.group(1)) if m else None
 
+def load_member_lookup() -> dict:
+    """Build (chamber_slug, district) -> member dict from ga-members.json."""
+    if not GA_MEMBERS.exists():
+        return {}
+    with open(GA_MEMBERS, encoding="utf-8") as f:
+        data = json.load(f)
+    lookup = {}
+    for m in data.get("members", []):
+        ch = "house" if m.get("chamber") == "House of Representatives" else "senate"
+        lookup[(ch, m["district"])] = m
+    return lookup
+
+def load_candidate_overrides() -> dict:
+    """Load ga-race-candidate-overrides.json, stripping metadata keys."""
+    if not OVERRIDES.exists():
+        return {}
+    with open(OVERRIDES, encoding="utf-8") as f:
+        raw = json.load(f)
+    return {k: v for k, v in raw.items() if not k.startswith("_")}
+
 def candidate_from_row(row: dict, idx: int, chamber_slug: str, district: int, party_slug: str) -> dict:
     name = title_case(row.get("Official_FullName__c") or row.get("Name_on_Ballot__c") or "")
     is_incumbent = bool(row.get("Incumbent__c"))
@@ -76,7 +98,7 @@ def candidate_from_row(row: dict, idx: int, chamber_slug: str, district: int, pa
 
     return c
 
-def build_races(src_data: dict) -> list:
+def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict) -> list:
     """Build list of race dicts from the collected candidate data."""
     races = []
 
@@ -111,10 +133,22 @@ def build_races(src_data: dict) -> list:
             rows = parties[party_label]
             if not rows:
                 continue
-            cands = [
-                candidate_from_row(row, i, chamber_slug, district, party_slug)
-                for i, row in enumerate(rows)
-            ]
+            cands = []
+            for i, row in enumerate(rows):
+                c = candidate_from_row(row, i, chamber_slug, district, party_slug)
+
+                # Auto-enrich incumbents with imageUrl from ga-members.json
+                if c.get("isIncumbent") and not c.get("imageUrl"):
+                    member = member_lookup.get((chamber_slug, district))
+                    if member and member.get("imageUrl"):
+                        c["imageUrl"] = member["imageUrl"]
+
+                # Apply manual overrides (take precedence over auto-enrichment)
+                patch = candidate_overrides.get(c["id"])
+                if patch:
+                    c.update({k: v for k, v in patch.items() if not k.startswith("_")})
+
+                cands.append(c)
             ballots[party_label] = cands
 
         if not ballots:
@@ -146,7 +180,12 @@ def main():
     with open(SRC, encoding="utf-8") as f:
         src = json.load(f)
 
-    new_races = build_races(src)
+    member_lookup      = load_member_lookup()
+    candidate_overrides = load_candidate_overrides()
+    print(f"Loaded {len(member_lookup)} GA members for incumbent enrichment")
+    print(f"Loaded {len(candidate_overrides)} candidate override(s)")
+
+    new_races = build_races(src, member_lookup, candidate_overrides)
     print(f"Built {len(new_races)} legislative race entries")
 
     # Load existing races.json and remove any old ga-house/ga-senate entries
@@ -169,9 +208,15 @@ def main():
         for r in new_races
         for cands in r["phases"]["primary"]["ballots"].values()
     )
+    enriched = sum(
+        1 for r in new_races
+        for cands in r["phases"]["primary"]["ballots"].values()
+        for c in cands if c.get("imageUrl")
+    )
     print(f"  House races:  {len(house)}")
     print(f"  Senate races: {len(senate)}")
     print(f"  Total candidates across all ballots: {total_cands}")
+    print(f"  Candidates with imageUrl: {enriched}")
     print(f"  Total races in races.json: {len(dest['races'])}")
 
 if __name__ == "__main__":

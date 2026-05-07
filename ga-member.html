@@ -259,6 +259,24 @@ permalink: /ga-member.html
     ) || null;
   }
 
+  // Find any race where this member appears as a challenger running for a different office
+  function findMemberInRaces(memberId, races) {
+    for (const race of races) {
+      for (const phaseName of ['primary', 'general']) {
+        const phase = race.phases?.[phaseName];
+        if (!phase) continue;
+        const allCandidates = phase.ballots
+          ? Object.values(phase.ballots).flat()
+          : (phase.candidates || []);
+        const match = allCandidates.find(
+          c => c.existingMemberId === memberId && c.existingMemberSource === 'state'
+        );
+        if (match) return { race, phase: phaseName, challenger: match };
+      }
+    }
+    return null;
+  }
+
   async function loadMemberDetails(id) {
     const statusLine = document.getElementById('status');
     statusLine.textContent = 'Loading member details…';
@@ -274,12 +292,14 @@ permalink: /ga-member.html
       if (!member) throw new Error('Member not found in data.');
 
       let seatRace = null;
+      let otherRaceInfo = null;
       if (racesRes.ok) {
         const racesData = await racesRes.json();
         seatRace = findSeatRace(member, racesData.races || []);
+        otherRaceInfo = findMemberInRaces(member.id, racesData.races || []);
       }
 
-      displayMemberDetails(member, seatRace);
+      displayMemberDetails(member, seatRace, otherRaceInfo);
       displaySidebar(member, all);
       loadVotingHistory(member);
       statusLine.textContent = '';
@@ -306,7 +326,7 @@ permalink: /ga-member.html
     return '';
   }
 
-  function displayMemberDetails(member, seatRace) {
+  function displayMemberDetails(member, seatRace, otherRaceInfo) {
     const currentYear = new Date().getFullYear();
     const detailsDiv  = document.getElementById('memberDetails');
 
@@ -327,6 +347,19 @@ permalink: /ga-member.html
       return `<div class="status-banner status-running">
         <span class="status-label">This seat is up for election in ${seatRace.cycle}</span>
         <a href="${raceUrl}">View ${seatRace.chamber}${distLabel} race →</a>
+      </div>`;
+    })();
+
+    const otherRaceBannerHtml = (() => {
+      if (!otherRaceInfo) return '';
+      const basePath = getBasePath();
+      const { race, challenger } = otherRaceInfo;
+      const distLabel = race.district ? ` District ${race.district}` : '';
+      const officeLabel = `${race.chamber}${distLabel}`;
+      const candidateUrl = `${basePath}candidate.html?id=${encodeURIComponent(challenger.id)}`;
+      return `<div class="status-banner status-running">
+        <span class="status-label">Running for ${officeLabel} in ${race.cycle}</span>
+        <a href="${candidateUrl}">View candidate profile →</a>
       </div>`;
     })();
 
@@ -355,6 +388,7 @@ permalink: /ga-member.html
 
     detailsDiv.innerHTML = `
       ${electionBannerHtml}
+      ${otherRaceBannerHtml}
       ${statusBannerHtml}
       ${imageHtml}
       <h2>${name}</h2>

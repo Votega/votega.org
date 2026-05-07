@@ -1,0 +1,9 @@
+{
+  "_note": "Manual overrides for GA legislative race candidates, applied after build_legislative_races.py generates from source data. Keys are candidate IDs (e.g. 'ga-house-1-2026-r-1'). Use _name for human-readability only — it is stripped before merging. Fields here override the auto-generated values. Incumbents get imageUrl auto-populated from ga-members.json; use this file to correct bad source data or add fields for challengers.",
+  "ga-house-1-2026-r-1": {
+    "_name": "Mike Cameron",
+    "imageUrl": "https://www.legis.ga.gov/api/images/default-source/portraits/cameron-mike-4986.jpg",
+    "website": "http://electmikecameron.com/",
+    "email": "mike.cameron@house.ga.gov"
+  }
+}
