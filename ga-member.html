@@ -413,24 +413,23 @@ permalink: /ga-member.html
   }
 
   async function loadVotingHistory(member) {
-    const legisId = member.legisGaGovId;
     const container = document.getElementById('votingHistory');
-    if (!legisId || !container) return;
+    if (!member.id || !container) return;
 
     const VOTES_URL = 'assets/data/ga-member-votes.json';
     try {
       const res = await fetch(VOTES_URL);
       if (!res.ok) return; // silently skip if file not yet generated
 
-      const data       = await res.json();
-      const memberVotes = (data.memberVotes || {})[String(legisId)];
+      const data        = await res.json();
+      const memberVotes = (data.memberVotes || {})[member.id];
       if (!memberVotes || memberVotes.length === 0) {
         container.innerHTML = '<h3>Voting History</h3><p style="color:#666;font-size:0.875rem;">No votes recorded for this session.</p>';
         return;
       }
 
       const votesIndex = data.votes || {};
-      const session    = data.metadata?.sessionDescription || '';
+      const session    = data.metadata?.sessionName || '';
 
       // Sort most recent first
       const sorted = [...memberVotes].sort((a, b) => {
@@ -442,16 +441,17 @@ permalink: /ga-member.html
       const voteClass = v => v === 'Yea' ? 'vote-yea' : v === 'Nay' ? 'vote-nay' : 'vote-other';
 
       const rows = sorted.map(({ voteId, vote }) => {
-        const meta    = votesIndex[String(voteId)] || {};
-        const bill    = meta.bill    || '—';
-        const caption = meta.caption || meta.name || '—';
-        const date    = meta.date    ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
-        const legLink = meta.legislationId
-          ? `<a href="https://www.legis.ga.gov/legislation/${meta.legislationId}" target="_blank" rel="noopener">${bill}</a>`
+        const meta    = votesIndex[voteId] || {};
+        const bill    = meta.bill       || '—';
+        const caption = meta.motionText || '—';
+        const date    = meta.date ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+        // Link to Open States bill page if we have a billId
+        const billLink = meta.billId
+          ? `<a href="https://openstates.org/ga/bills/${meta.billId}/" target="_blank" rel="noopener">${bill}</a>`
           : bill;
         return `<tr>
           <td>${date}</td>
-          <td>${legLink}</td>
+          <td>${billLink}</td>
           <td>${caption}</td>
           <td class="${voteClass(vote)}">${vote}</td>
         </tr>`;
@@ -460,7 +460,7 @@ permalink: /ga-member.html
       container.innerHTML = `
         <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
         <table class="vote-table">
-          <thead><tr><th>Date</th><th>Bill</th><th>Description</th><th>Vote</th></tr></thead>
+          <thead><tr><th>Date</th><th>Bill</th><th>Motion</th><th>Vote</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>`;
     } catch (err) {

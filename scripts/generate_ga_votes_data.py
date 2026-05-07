@@ -1,189 +1,177 @@
 #!/usr/bin/env python3
 """
-Generate ga-member-votes.json from the legis.ga.gov public REST API.
-No authentication required — these are public legislative records.
+Generate ga-member-votes.json from the Open States API (Georgia).
+Requires OPENSTATES_API_KEY environment variable.
 
-IMPORTANT: legis.ga.gov API endpoints require a browser-like session with cookies.
-Direct API calls time out without first visiting a page to establish that session.
-We use urllib's CookieJar to handle this transparently.
-
-API endpoints discovered via ATLJoeReed/ga-legislation-scraper:
-  GET /api/sessions                       → list all sessions, find isCurrent
-  GET /api/Vote/list/1/{session}          → house vote summaries for session
-  GET /api/Vote/list/2/{session}          → senate vote summaries for session
-  GET /api/Vote/detail/{vote_id}          → full roll call + bill info
+NOTE: legis.ga.gov's own REST API returns 401 on direct calls — it requires
+browser-level authentication that can't be replicated with urllib. Open States
+is the preferred source since we already integrate with it for member data and
+member vote records use OCD person IDs that match ga-members.json directly.
 
 Output: assets/data/ga-member-votes.json
   {
-    "metadata": { generatedAt, sessionId, sessionDescription, totalVotes },
-    "votes": { "<vote_id>": { name, caption, date, bill, legislationId, yea, nay } },
-    "memberVotes": { "<legis_ga_gov_id>": [{ "voteId": int, "vote": "Yea"|"Nay"|... }] }
+    "metadata": { generatedAt, session, sessionName, totalVotes },
+    "votes": { "<vote_event_id>": { motionText, date, bill, billId, result } },
+    "memberVotes": { "<ocd-person/...>": [{ "voteId": str, "vote": "Yea"|"Nay"|... }] }
   }
 
-The memberVotes key is the numeric legis.ga.gov member ID (legisGaGovId field in ga-members.json).
+The memberVotes key is the OCD person ID — matches the id field in ga-members.json.
 """
 
-import http.cookiejar
 import json
 import os
 import sys
 import time
 import urllib.request
 import urllib.error
+import urllib.parse
 from datetime import datetime
 
-BASE        = "https://www.legis.ga.gov"
-OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-member-votes.json"
-DELAY       = 0.5   # seconds between API calls — be respectful to the public server
+API_KEY         = os.environ.get('OPENSTATES_API_KEY')
+BASE_URL        = "https://v3.openstates.org"
+GA_JURISDICTION = "ocd-jurisdiction/country:us/state:ga/government"
+OUTPUT_FILE     = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-member-votes.json"
 
-VOTE_LABELS = {0: "Nay", 1: "Yea", 2: "Not Voting", 3: "Excused"}
-
-# Shared browser-like headers sent with every request
-HEADERS = {
-    "User-Agent":      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
+VOTE_MAP = {
+    "yes":        "Yea",
+    "no":         "Nay",
+    "other":      "Not Voting",
+    "not voting": "Not Voting",
+    "excused":    "Excused",
+    "absent":     "Excused",
 }
 
-# Single opener with cookie persistence — mimics a real browser session
-_cookie_jar = http.cookiejar.CookieJar()
-_opener     = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(_cookie_jar))
 
-
-def establish_session():
-    """Visit the votes index page so the server sets session cookies before any API calls."""
-    print("Establishing browser session with legis.ga.gov...")
-    req = urllib.request.Request(
-        f"{BASE}/votes/house",
-        headers={**HEADERS, "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"},
-    )
-    try:
-        with _opener.open(req, timeout=30) as r:
-            r.read()  # consume body so connection is kept clean
-        print(f"  Session established ({len(_cookie_jar)} cookie(s) set)")
-    except Exception as e:
-        print(f"  Warning: session page failed ({e}) — API calls may still work")
-
-
-def fetch(url, retries=3):
-    print(f"  GET {url[:110]}...")
-    req = urllib.request.Request(
-        url,
-        headers={**HEADERS, "Accept": "application/json", "Referer": f"{BASE}/votes/house"},
-    )
+def fetch_url(url, retries=3, backoff=5):
+    print(f"  Fetching: {url[:120]}...")
+    req = urllib.request.Request(url, headers={
+        'X-API-Key':  API_KEY or '',
+        'Accept':     'application/json',
+        'User-Agent': 'votega.org/1.0',
+    })
     for attempt in range(1, retries + 1):
         try:
-            with _opener.open(req, timeout=30) as r:
-                return json.loads(r.read().decode("utf-8"))
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return json.loads(r.read().decode('utf-8'))
         except urllib.error.HTTPError as e:
-            print(f"  HTTP {e.code} on attempt {attempt}/{retries}")
-            if attempt < retries:
-                time.sleep(DELAY * attempt)
+            body = e.read().decode('utf-8', errors='replace')
+            print(f"  HTTP {e.code}: {e.reason} — {body[:200]}")
+            if e.code >= 500 and attempt < retries:
+                time.sleep(backoff)
+                continue
+            return None
         except Exception as e:
             print(f"  Error on attempt {attempt}/{retries}: {e}")
             if attempt < retries:
-                time.sleep(DELAY * attempt)
+                time.sleep(backoff)
+                continue
+            return None
     return None
 
 
 def get_current_session():
-    sessions = fetch(f"{BASE}/api/sessions")
-    if not sessions:
-        print("Error: could not fetch sessions list")
-        sys.exit(1)
-    for s in sessions:
-        if s.get("isCurrent"):
-            return s["id"], s.get("description", "")
-    # Fallback: use the session with the highest ID
-    s = max(sessions, key=lambda x: x["id"])
-    print(f"  Warning: no current session flagged — using highest ID: {s['id']}")
-    return s["id"], s.get("description", "")
+    """Return (identifier, name) for Georgia's most recent primary session."""
+    data = fetch_url(
+        f"{BASE_URL}/jurisdictions/{GA_JURISDICTION}?include=legislative_sessions"
+    )
+    if not data:
+        return None, None
+    sessions = data.get('legislative_sessions', [])
+    # Prefer sessions classified as 'primary'; fall back to all
+    primary = [s for s in sessions if s.get('classification') == 'primary']
+    pool    = primary or sessions
+    pool.sort(key=lambda s: s.get('start_date', ''), reverse=True)
+    s = pool[0]
+    return s.get('identifier'), s.get('name')
 
 
-def get_vote_list(session_id, chamber_int):
-    result = fetch(f"{BASE}/api/Vote/list/{chamber_int}/{session_id}")
-    return result if isinstance(result, list) else []
+def get_all_votes(session_identifier):
+    """Fetch all vote events for the session (paginated), including individual votes."""
+    all_votes = []
+    page      = 1
+    per_page  = 20  # Open States votes endpoint maximum
 
+    while True:
+        params = urllib.parse.urlencode([
+            ('jurisdiction', GA_JURISDICTION),
+            ('session',      session_identifier),
+            ('include',      'votes'),
+            ('per_page',     per_page),
+            ('page',         page),
+        ])
+        data = fetch_url(f"{BASE_URL}/votes?{params}")
+        if not data or 'results' not in data:
+            print(f"  Warning: no results on page {page}")
+            break
 
-def get_vote_detail(vote_id):
-    return fetch(f"{BASE}/api/Vote/detail/{vote_id}")
+        results = data['results']
+        all_votes.extend(results)
+
+        pagination = data.get('pagination', {})
+        max_page   = pagination.get('max_page', 1)
+        print(f"  Page {page}/{max_page}: {len(results)} vote events ({len(all_votes)} total)")
+
+        if page >= max_page:
+            break
+        page += 1
+        time.sleep(0.3)
+
+    return all_votes
 
 
 def main():
-    # Must establish a cookie session before any API calls will respond
-    establish_session()
-    time.sleep(DELAY)
+    if not API_KEY:
+        print("Error: OPENSTATES_API_KEY environment variable not set")
+        sys.exit(1)
 
-    print("Fetching current Georgia legislative session...")
-    session_id, session_desc = get_current_session()
-    print(f"  Session {session_id}: {session_desc}")
+    print("Fetching current Georgia legislative session from Open States...")
+    session_id, session_name = get_current_session()
+    if not session_id:
+        print("Error: could not determine current session")
+        sys.exit(1)
+    print(f"  Session: {session_id} ({session_name})")
 
-    print("Fetching House vote list...")
-    house_votes = get_vote_list(session_id, 1)
-    time.sleep(DELAY)
-    print(f"  {len(house_votes)} House votes")
+    print("Fetching vote events...")
+    vote_events = get_all_votes(session_id)
+    print(f"  {len(vote_events)} total vote events fetched")
 
-    print("Fetching Senate vote list...")
-    senate_votes = get_vote_list(session_id, 2)
-    time.sleep(DELAY)
-    print(f"  {len(senate_votes)} Senate votes")
+    votes_meta   = {}
+    member_votes = {}
 
-    all_vote_items = house_votes + senate_votes
-    total = len(all_vote_items)
-    print(f"\nFetching {total} vote details (est. {total * DELAY / 60:.1f} min)...")
+    for event in vote_events:
+        event_id = event.get('id', '')
+        bill     = (event.get('bill') or {})
+        bill_num = bill.get('identifier', '')
+        bill_id  = bill.get('id', '') or event.get('bill_id', '')
 
-    votes_meta   = {}   # str(vote_id) -> summary dict
-    member_votes = {}   # str(legis_ga_gov_member_id) -> list of {voteId, vote}
-    skipped      = 0
-
-    for i, vote_summary in enumerate(all_vote_items, 1):
-        vote_id = vote_summary.get("id")
-        if not vote_id:
-            continue
-
-        time.sleep(DELAY)
-        detail = get_vote_detail(vote_id)
-
-        if not detail:
-            print(f"  [{i}/{total}] Skipped vote {vote_id} (no data)")
-            skipped += 1
-            continue
-
-        legislation = detail.get("legislation") or []
-        bill        = legislation[0].get("description", "") if legislation else ""
-        leg_id      = legislation[0].get("legislationId") if legislation else None
-
-        votes_meta[str(vote_id)] = {
-            "name":          vote_summary.get("name", ""),
-            "caption":       vote_summary.get("caption", ""),
-            "date":          vote_summary.get("date", ""),
-            "bill":          bill,
-            "legislationId": leg_id,
-            "yea":           vote_summary.get("yea", 0),
-            "nay":           vote_summary.get("nay", 0),
+        votes_meta[event_id] = {
+            "motionText": event.get('motion_text', ''),
+            "date":       event.get('start_date', ''),
+            "bill":       bill_num,
+            "billId":     bill_id,
+            "result":     event.get('result', ''),
         }
 
-        for record in (detail.get("votes") or []):
-            member    = record.get("member") or {}
-            member_id = str(member.get("id", ""))
-            if not member_id:
+        for v in (event.get('votes') or []):
+            voter_id = v.get('voter_id', '')
+            if not voter_id:
                 continue
-            vote_label = VOTE_LABELS.get(record.get("memberVoted"), "Unknown")
-            member_votes.setdefault(member_id, []).append({
-                "voteId": vote_id,
+            option     = (v.get('option') or '').lower()
+            vote_label = VOTE_MAP.get(option, 'Other')
+            member_votes.setdefault(voter_id, []).append({
+                "voteId": event_id,
                 "vote":   vote_label,
             })
 
-        if i % 50 == 0 or i == total:
-            print(f"  [{i}/{total}] processed, {skipped} skipped so far")
+    if not votes_meta:
+        print("Warning: no vote data found. Open States may not yet have GA votes for this session.")
 
     output = {
         "metadata": {
-            "generatedAt":        datetime.now().isoformat(),
-            "sessionId":          session_id,
-            "sessionDescription": session_desc,
-            "totalVotes":         len(votes_meta),
-            "skipped":            skipped,
+            "generatedAt": datetime.now().isoformat(),
+            "session":     session_id,
+            "sessionName": session_name,
+            "totalVotes":  len(votes_meta),
         },
         "votes":       votes_meta,
         "memberVotes": member_votes,
@@ -191,7 +179,6 @@ def main():
 
     os.makedirs(os.path.dirname(OUTPUT_FILE) or ".", exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        # Compact separators — this file can get large
         json.dump(output, f, separators=(",", ":"), ensure_ascii=False)
 
     size_kb = os.path.getsize(OUTPUT_FILE) // 1024

@@ -24,8 +24,9 @@ jobs:
           python-version: '3.x'
 
       - name: Generate GA vote data
-        # No API key required — legis.ga.gov is a public API
         run: python scripts/generate_ga_votes_data.py assets/data/ga-member-votes.json
+        env:
+          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
 
       - name: Validate generated data
         run: |
