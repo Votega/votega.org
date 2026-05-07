@@ -270,7 +270,7 @@ permalink: /candidate.html
       ? `<a class="member-record-link" href="${memberUrl}">${memberRecordLabel} →</a>`
       : '';
 
-    const serviceHtml = isIncumbent ? serviceHistoryHtml(candidate.serviceHistory) : '';
+    const serviceHtml = candidate.serviceHistory ? serviceHistoryHtml(candidate.serviceHistory) : '';
 
     // For federal candidates with no prior record (and not a known member), show a contextual note
     const noRecordHtml = isFederal && !candidate.bio && !memberUrl ? `
@@ -338,7 +338,9 @@ permalink: /candidate.html
     container.innerHTML = '<h3>Campaign Finance</h3><p style="color:#666;font-size:0.875rem;">Loading FEC data…</p>';
 
     try {
-      const q = encodeURIComponent(candidate.name);
+      // Strip quoted nicknames (e.g. Earl "Buddy" Carter → Earl Carter) before FEC search
+      const fecName = candidate.name.replace(/["'][^"']*["']\s*/g, '').replace(/\s+/g, ' ').trim();
+      const q = encodeURIComponent(fecName || candidate.name);
       const searchRes = await fetch(
         `https://api.open.fec.gov/v1/candidates/?q=${q}&state=GA&cycle=2026&sort=-receipts&api_key=${FEC_API_KEY}`
       );
@@ -588,6 +590,22 @@ permalink: /candidate.html
         document.getElementById('candidateContent').innerHTML =
           '<p>Candidate not found. <a href="elections.html">View all races</a></p>';
         return;
+      }
+
+      // If challenger has prior congressional/state service, fetch member data for service history
+      if (found.existingMemberId) {
+        try {
+          const membersUrl = found.existingMemberSource === 'state' ? GA_MEMBERS_URL : CONGRESS_URL;
+          const membersRes = await fetch(membersUrl);
+          if (membersRes.ok) {
+            const membersData = await membersRes.json();
+            const members = membersData.members || [];
+            const member = found.existingMemberSource === 'state'
+              ? members.find(m => m.id === found.existingMemberId)
+              : members.find(m => m.bioguideId === found.existingMemberId);
+            if (member) found.serviceHistory = buildServiceHistory(member, found.existingMemberSource || 'congress');
+          }
+        } catch (e) { /* non-fatal — render without service history */ }
       }
 
       renderCandidate(found, foundRace, foundPhase);
