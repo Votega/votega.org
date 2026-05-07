@@ -240,14 +240,19 @@ permalink: /race.html
         </div>`;
     }
 
+    const isIncumbent  = !!candidate.isIncumbent;
+    const cardClass    = isIncumbent ? 'candidate-card incumbent' : 'candidate-card challenger';
+    const badgeClass   = isIncumbent ? 'role-badge role-incumbent' : 'role-badge role-challenger';
+    const badgeLabel   = isIncumbent ? '&#9733; Current Officeholder' : 'Candidate';
+
     const profileUrl = `${basePath}candidate.html?id=${encodeURIComponent(candidate.id)}`;
     const websiteHtml = candidate.website
       ? `<a href="${candidate.website}" target="_blank" rel="noopener">Campaign website ↗</a>`
       : '';
 
     return `
-      <div class="candidate-card challenger">
-        <span class="role-badge role-challenger">Candidate</span>
+      <div class="${cardClass}">
+        <span class="${badgeClass}">${badgeLabel}</span>
         ${photoEl(candidate.imageUrl, candidate.name)}
         <p class="candidate-name">${candidate.name}</p>
         <span class="party-badge ${partyClass(candidate.party)}">${candidate.party || 'Unknown party'}</span>
