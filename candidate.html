@@ -84,6 +84,41 @@ permalink: /candidate.html
   }
   .member-record-link:hover { background: #dbeafe; }
 
+  .finance-section {
+    margin: 1.5rem 0;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1.25rem;
+  }
+  .finance-section h3 { margin: 0 0 0.75rem 0; font-size: 1rem; }
+  .finance-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .finance-card {
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+  }
+  .finance-card-label {
+    font-size: 0.68rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+  }
+  .finance-card-value { font-size: 1.05rem; font-weight: bold; }
+  .finance-card.raised  { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .finance-card.raised  .finance-card-label { color: #166534; }
+  .finance-card.raised  .finance-card-value { color: #15803d; }
+  .finance-card.spent   { background: #fef2f2; border: 1px solid #fecaca; }
+  .finance-card.spent   .finance-card-label { color: #991b1b; }
+  .finance-card.spent   .finance-card-value { color: #b91c1c; }
+  .finance-card.cash    { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .finance-card.cash    .finance-card-label { color: #1e40af; }
+  .finance-card.cash    .finance-card-value { color: #1d4ed8; }
+  .finance-meta { font-size: 0.78rem; color: #666; margin: 0; }
+
   .back-link { margin-top: 2rem; font-size: 0.9rem; }
 
   .role-badge {
@@ -221,8 +256,105 @@ permalink: /candidate.html
       ${memberRecordHtml}
       ${noRecordHtml}
       ${bioHtml}
+      <div id="campaignFinance" class="finance-section" style="display:none;"></div>
 
       <div class="back-link"><a href="${raceUrl}">← Back to ${race.chamber}${distLabel} race</a></div>`;
+  }
+
+  // Replace with your FEC API key from api.data.gov — DEMO_KEY is rate-limited to 30 req/hr
+  const FEC_API_KEY = 'JBv4BxbJd3rgRV2X7dwjMMVCUhYtC42cqKEOZF6l';
+
+  function fmtMoney(n) {
+    if (n == null) return '—';
+    if (Math.abs(n) >= 1_000_000) return '$' + (n / 1_000_000).toFixed(1) + 'M';
+    if (Math.abs(n) >= 1_000)     return '$' + Math.round(n / 1_000) + 'K';
+    return '$' + Math.round(n).toLocaleString();
+  }
+
+  async function loadCampaignFinance(candidate, race) {
+    const container = document.getElementById('campaignFinance');
+    if (!container) return;
+    container.style.display = '';
+
+    const level = race.level || '';
+    const isFederal = level === 'federal';
+
+    if (!isFederal) {
+      // State candidates: link to Georgia Ethics Commission search
+      const searchName = encodeURIComponent(candidate.name);
+      container.innerHTML = `
+        <h3>Campaign Finance</h3>
+        <p style="font-size:0.875rem;color:#555;margin:0;">
+          Georgia state campaign finance filings are managed by the
+          <a href="https://media.ethics.ga.gov/search/Campaign/Campaign_ByName.aspx" target="_blank" rel="noopener">
+            Georgia Government Transparency &amp; Campaign Finance Commission ↗
+          </a>.
+          Search for <strong>${candidate.name}</strong> to view their filings.
+        </p>`;
+      return;
+    }
+
+    // Federal: live FEC API lookup
+    container.innerHTML = '<h3>Campaign Finance</h3><p style="color:#666;font-size:0.875rem;">Loading FEC data…</p>';
+
+    try {
+      const q = encodeURIComponent(candidate.name);
+      const searchRes = await fetch(
+        `https://api.open.fec.gov/v1/candidates/?q=${q}&state=GA&cycle=2026&sort=-receipts&api_key=${FEC_API_KEY}`
+      );
+      if (!searchRes.ok) throw new Error(`FEC ${searchRes.status}`);
+      const searchData = await searchRes.json();
+      const match = (searchData.results || [])[0];
+
+      if (!match) {
+        container.innerHTML = `
+          <h3>Campaign Finance</h3>
+          <p style="font-size:0.875rem;color:#666;">
+            No FEC filing found for this candidate.
+            <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
+          </p>`;
+        return;
+      }
+
+      const totalsRes = await fetch(
+        `https://api.open.fec.gov/v1/candidate/${match.candidate_id}/totals/?cycle=2026&api_key=${FEC_API_KEY}`
+      );
+      if (!totalsRes.ok) throw new Error(`FEC totals ${totalsRes.status}`);
+      const totalsData = await totalsRes.json();
+      const t = (totalsData.results || [])[0];
+
+      const fecUrl = `https://www.fec.gov/data/candidate/${match.candidate_id}/`;
+      const through = t?.coverage_end_date
+        ? ` · Through ${new Date(t.coverage_end_date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
+        : '';
+
+      container.innerHTML = `
+        <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h3>
+        <div class="finance-cards">
+          <div class="finance-card raised">
+            <div class="finance-card-label">Total Raised</div>
+            <div class="finance-card-value">${fmtMoney(t?.receipts)}</div>
+          </div>
+          <div class="finance-card spent">
+            <div class="finance-card-label">Total Spent</div>
+            <div class="finance-card-value">${fmtMoney(t?.disbursements)}</div>
+          </div>
+          <div class="finance-card cash">
+            <div class="finance-card-label">Cash on Hand</div>
+            <div class="finance-card-value">${fmtMoney(t?.cash_on_hand_end_period)}</div>
+          </div>
+        </div>
+        <p class="finance-meta"><a href="${fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a>${through}</p>`;
+
+    } catch (err) {
+      console.warn('FEC lookup failed:', err);
+      container.innerHTML = `
+        <h3>Campaign Finance</h3>
+        <p style="font-size:0.875rem;color:#666;">
+          Finance data unavailable.
+          <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
+        </p>`;
+    }
   }
 
   async function init() {
@@ -268,6 +400,7 @@ permalink: /candidate.html
       }
 
       renderCandidate(found, foundRace, foundPhase);
+      loadCampaignFinance(found, foundRace);
     } catch (err) {
       console.error(err);
       document.getElementById('candidateContent').innerHTML =
