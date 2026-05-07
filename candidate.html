@@ -368,9 +368,9 @@ permalink: /candidate.html
       const t = (totalsData.results || [])[0];
 
       const fecUrl = `https://www.fec.gov/data/candidate/${match.candidate_id}/`;
-      const through = t?.coverage_end_date
-        ? ` · Through ${new Date(t.coverage_end_date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
-        : '';
+      const coverageNote = t?.coverage_end_date
+        ? `2025–2026 election cycle · Through ${new Date(t.coverage_end_date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
+        : '2025–2026 election cycle';
 
       // Committee totals use last_cash_on_hand_end_period; candidate totals use cash_on_hand_end_period
       const cashOnHand = t?.last_cash_on_hand_end_period ?? t?.cash_on_hand_end_period;
@@ -391,7 +391,8 @@ permalink: /candidate.html
             <div class="finance-card-value">${fmtMoney(cashOnHand)}</div>
           </div>
         </div>
-        <p class="finance-meta"><a href="${fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a>${through}</p>`;
+        <p class="finance-meta">${coverageNote}</p>
+        <p class="finance-meta"><a href="${fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>`;
 
     } catch (err) {
       console.warn('FEC lookup failed:', err);
