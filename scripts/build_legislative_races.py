@@ -137,11 +137,15 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict) 
             for i, row in enumerate(rows):
                 c = candidate_from_row(row, i, chamber_slug, district, party_slug)
 
-                # Auto-enrich incumbents with imageUrl from ga-members.json
-                if c.get("isIncumbent") and not c.get("imageUrl"):
+                # Auto-enrich incumbents with imageUrl and member link from ga-members.json
+                if c.get("isIncumbent"):
                     member = member_lookup.get((chamber_slug, district))
-                    if member and member.get("imageUrl"):
-                        c["imageUrl"] = member["imageUrl"]
+                    if member:
+                        if member.get("imageUrl") and not c.get("imageUrl"):
+                            c["imageUrl"] = member["imageUrl"]
+                        if member.get("id") and not c.get("existingMemberId"):
+                            c["existingMemberId"] = member["id"]
+                            c["existingMemberSource"] = "state"
 
                 # Apply manual overrides (take precedence over auto-enrichment)
                 patch = candidate_overrides.get(c["id"])
