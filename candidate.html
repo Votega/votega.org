@@ -338,7 +338,8 @@ permalink: /candidate.html
     container.innerHTML = '<h3>Campaign Finance</h3><p style="color:#666;font-size:0.875rem;">Loading FEC data…</p>';
 
     try {
-      let committeeId = candidate.fecCommitteeId || null;
+      let committeeId  = candidate.fecCommitteeId || null;
+      let fecCandidateId = null;
       let fecUrl = null;
 
       if (!committeeId) {
@@ -362,15 +363,16 @@ permalink: /candidate.html
           return;
         }
 
-        committeeId = match.principal_committees?.[0]?.committee_id;
-        fecUrl = `https://www.fec.gov/data/candidate/${match.candidate_id}/`;
+        fecCandidateId = match.candidate_id;
+        committeeId    = match.principal_committees?.[0]?.committee_id;
+        fecUrl = `https://www.fec.gov/data/candidate/${fecCandidateId}/`;
       }
 
       // Committee totals preferred (reliable cash on hand); fall back to candidate totals
       if (!fecUrl) fecUrl = `https://www.fec.gov/data/committee/${committeeId}/`;
       const totalsUrl = committeeId
         ? `https://api.open.fec.gov/v1/committee/${committeeId}/totals/?cycle=2026&api_key=${FEC_API_KEY}`
-        : `https://api.open.fec.gov/v1/candidate/${match.candidate_id}/totals/?cycle=2026&api_key=${FEC_API_KEY}`;
+        : `https://api.open.fec.gov/v1/candidate/${fecCandidateId}/totals/?cycle=2026&api_key=${FEC_API_KEY}`;
 
       const totalsRes = await fetch(totalsUrl);
       if (!totalsRes.ok) throw new Error(`FEC totals ${totalsRes.status}`);
