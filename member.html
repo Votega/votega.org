@@ -310,9 +310,13 @@ permalink: /member.html
       </div>`
     ).join('');
 
+    const footnote = other > 0
+      ? `<p style="font-size:0.72rem;color:#888;margin:0.5rem 0 0 0;">* Other includes Not Voting, Absent, and Excused</p>`
+      : '';
+
     return `<div style="display:flex;align-items:center;gap:1.25rem;margin:0.75rem 0 1.25rem 0;">
       <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
-      <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}</div>
+      <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
     </div>`;
   }
 
