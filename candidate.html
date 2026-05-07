@@ -229,8 +229,8 @@ permalink: /candidate.html
     const memberSource     = candidate.existingMemberSource || '';
     const memberUrl = existingMemberId
       ? memberSource === 'congress'
-        ? `${basePath}member.html?bioguideId=${encodeURIComponent(existingMemberId)}`
-        : `${basePath}ga-member.html?id=${encodeURIComponent(existingMemberId)}`
+        ? `${basePath}member.html?bioguideId=${encodeURIComponent(existingMemberId)}#votingHistory`
+        : `${basePath}ga-member.html?id=${encodeURIComponent(existingMemberId)}#votingHistory`
       : null;
     const memberRecordLabel = memberSource === 'congress' ? 'View Congressional record' : 'View legislative record';
 
