@@ -92,6 +92,26 @@ permalink: /member.html
   }
   .running-badge strong { display: block; margin-bottom: 0.25rem; }
   .running-badge a { color: inherit; }
+  #votingHistory {
+    margin-top: 2rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1.5rem;
+  }
+  #votingHistory h3 { margin: 0 0 0.5rem 0; }
+  .vote-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .vote-table th, .vote-table td {
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid #eee;
+  }
+  .vote-table th { background: #f5f5f5; font-weight: bold; }
+  .vote-yea   { color: #1a7a1a; font-weight: bold; }
+  .vote-nay   { color: #b00020; font-weight: bold; }
+  .vote-other { color: #666; }
 </style>
 
 <div id="pageLayout">
@@ -152,6 +172,7 @@ permalink: /member.html
 
       displayMemberDetails(member, electionInfo);
       displaySidebar(member, allMembers);
+      loadVotingHistory(member);
       statusLine.textContent = '';
     } catch (err) {
       console.error('loadMemberDetails()', err);
@@ -247,6 +268,66 @@ permalink: /member.html
     document.getElementById('sidebarContent').innerHTML =
       renderGroup(senators, 'Senate') + renderGroup(reps, 'House');
     document.getElementById('stateSidebar').style.display = 'block';
+  }
+
+  async function loadVotingHistory(member) {
+    const container = document.getElementById('votingHistory');
+    if (!member.bioguideId || !container) return;
+
+    const VOTES_URL = 'assets/data/federal-member-votes.json';
+    try {
+      const res = await fetch(VOTES_URL);
+      if (!res.ok) return; // silently skip if file not yet generated
+
+      const data        = await res.json();
+      const memberVotes = (data.memberVotes || {})[member.bioguideId];
+      if (!memberVotes || memberVotes.length === 0) {
+        container.innerHTML = '<h3>Voting History</h3><p style="color:#666;font-size:0.875rem;">No votes recorded for this session.</p>';
+        return;
+      }
+
+      const votesIndex = data.votes || {};
+      const session    = data.metadata?.sessionName || '';
+
+      // Sort most recent first
+      const sorted = [...memberVotes].sort((a, b) => {
+        const da = (votesIndex[a.voteId] || {}).date || '';
+        const db = (votesIndex[b.voteId] || {}).date || '';
+        return db.localeCompare(da);
+      });
+
+      const voteClass = v => v === 'Yea' ? 'vote-yea' : v === 'Nay' ? 'vote-nay' : 'vote-other';
+
+      const rows = sorted.map(({ voteId, vote }) => {
+        const meta     = votesIndex[voteId] || {};
+        const bill     = meta.bill      || '—';
+        const title    = meta.title     || '';
+        const caption  = meta.motionText || '—';
+        const date     = meta.date ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+        const billLink = meta.billUrl
+          ? `<a href="${meta.billUrl}" target="_blank" rel="noopener">${bill}</a>`
+          : bill;
+        const billCell = title
+          ? `${billLink}<br><span style="font-size:0.75rem;color:#555;font-weight:normal;">${title}</span>`
+          : billLink;
+        return `<tr>
+          <td>${date}</td>
+          <td>${billCell}</td>
+          <td>${caption}</td>
+          <td class="${voteClass(vote)}">${vote}</td>
+        </tr>`;
+      }).join('');
+
+      container.innerHTML = `
+        <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
+        <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
+        <table class="vote-table">
+          <thead><tr><th>Date</th><th>Bill</th><th>Motion</th><th>Vote</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    } catch (err) {
+      console.warn('Could not load voting history:', err);
+    }
   }
 
   function getPartyIconHtml(party) {
@@ -374,6 +455,7 @@ permalink: /member.html
       ${websiteHtml}
 
       <p><a href="my-representatives.html">Search for another member</a></p>
+      <div id="votingHistory"></div>
     `;
     detailsDiv.innerHTML = html;
   }
