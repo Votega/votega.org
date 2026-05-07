@@ -30,7 +30,7 @@ API_KEY      = os.environ.get('LEGISCAN_API_KEY')
 BASE_URL     = "https://api.legiscan.com/"
 OUTPUT_FILE  = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-member-votes.json"
 MEMBERS_FILE = sys.argv[2] if len(sys.argv) > 2 else "assets/data/ga-members.json"
-DELAY        = 0.5  # seconds between calls
+DELAY        = 2.0  # LegiScan API manual p.7: allow adequate time between requests to avoid cache hits
 
 # LegiScan vote_id codes
 VOTE_TEXT_MAP = {1: "Yea", 2: "Nay", 3: "Not Voting", 4: "Absent", 5: "Excused"}
