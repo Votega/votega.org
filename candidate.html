@@ -165,9 +165,15 @@ permalink: /candidate.html
 </style>
 
 <script>
-  const RACES_URL = 'assets/data/races.json';
+  const RACES_URL       = 'assets/data/races.json';
+  const CONGRESS_URL    = 'assets/data/current-members.json';
+  const GA_MEMBERS_URL  = 'assets/data/ga-members.json';
 
-  const candidateId = new URLSearchParams(window.location.search).get('id');
+  const _params              = new URLSearchParams(window.location.search);
+  const candidateId          = _params.get('id');
+  const incumbentMemberId    = _params.get('memberId');
+  const incumbentMemberSource = _params.get('memberSource') || 'congress';
+  const incumbentRaceId      = _params.get('raceId');
 
   function getBasePath() {
     return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
@@ -190,12 +196,15 @@ permalink: /candidate.html
     const isIncumbent = candidate.isIncumbent || candidate.type === 'incumbent';
     const isWithdrawn = !!candidate.withdrawn;
 
-    // If this candidate is a current Congress member, link to their member page
+    // Link to member profile page when this candidate has a legislative record
     const existingMemberId = candidate.existingMemberId || '';
     const memberSource     = candidate.existingMemberSource || '';
-    const memberUrl = existingMemberId && memberSource === 'congress'
-      ? `${basePath}member.html?bioguideId=${encodeURIComponent(existingMemberId)}`
+    const memberUrl = existingMemberId
+      ? memberSource === 'congress'
+        ? `${basePath}member.html?bioguideId=${encodeURIComponent(existingMemberId)}`
+        : `${basePath}ga-member.html?id=${encodeURIComponent(existingMemberId)}`
       : null;
+    const memberRecordLabel = memberSource === 'congress' ? 'View Congressional record' : 'View legislative record';
 
     // Photo: use candidate image if available; fall back to bioguide photo for known members
     const photoSrc = candidate.imageUrl || (existingMemberId
@@ -228,9 +237,9 @@ permalink: /candidate.html
     const bioHtml = candidate.bio
       ? `<div class="bio-section"><p>${candidate.bio}</p></div>` : '';
 
-    // Link to Congressional record when candidate is a current/former member
+    // Link to legislative record when candidate has a member profile
     const memberRecordHtml = memberUrl
-      ? `<a class="member-record-link" href="${memberUrl}">View Congressional record →</a>`
+      ? `<a class="member-record-link" href="${memberUrl}">${memberRecordLabel} →</a>`
       : '';
 
     // For federal candidates with no prior record (and not a known member), show a contextual note
@@ -357,7 +366,67 @@ permalink: /candidate.html
     }
   }
 
+  async function initIncumbent(raceId, memberId, memberSource) {
+    try {
+      const membersUrl = memberSource === 'congress' ? CONGRESS_URL : GA_MEMBERS_URL;
+      const [racesRes, membersRes] = await Promise.all([fetch(RACES_URL), fetch(membersUrl)]);
+      if (!racesRes.ok) throw new Error(`HTTP ${racesRes.status}`);
+
+      const racesData = await racesRes.json();
+      const race = (racesData.races || []).find(r => r.id === raceId);
+      if (!race) {
+        document.getElementById('candidateContent').innerHTML =
+          '<p>Race not found. <a href="elections.html">View all races</a></p>';
+        return;
+      }
+
+      let member = null;
+      if (membersRes.ok) {
+        const membersData = await membersRes.json();
+        const members = membersData.members || [];
+        member = memberSource === 'congress'
+          ? members.find(m => m.bioguideId === memberId)
+          : members.find(m => m.id === memberId);
+      }
+
+      if (!member) {
+        document.getElementById('candidateContent').innerHTML =
+          '<p>Member not found. <a href="elections.html">View all races</a></p>';
+        return;
+      }
+
+      // Build a candidate-like object from member data
+      const name = memberSource === 'congress'
+        ? [member.honorificName, member.firstName, member.lastName].filter(Boolean).join(' ').trim() || member.name || ''
+        : (member.name || '');
+      const candidate = {
+        name,
+        party: member.partyName || member.party || '',
+        imageUrl: member.depiction?.imageUrl || member.imageUrl || '',
+        bio: '',
+        website: '',
+        isIncumbent: true,
+        existingMemberId: memberId,
+        existingMemberSource: memberSource,
+      };
+
+      renderCandidate(candidate, race, race.activePhase);
+      loadCampaignFinance(candidate, race);
+    } catch (err) {
+      console.error(err);
+      document.getElementById('candidateContent').innerHTML =
+        `<p>Error loading profile: ${err.message}. <a href="elections.html">Go back</a></p>`;
+    }
+  }
+
   async function init() {
+    // Incumbent route: ?raceId=...&memberId=...
+    if (incumbentMemberId && incumbentRaceId) {
+      initIncumbent(incumbentRaceId, incumbentMemberId, incumbentMemberSource);
+      return;
+    }
+
+    // Challenger route: ?id=...
     if (!candidateId) {
       document.getElementById('candidateContent').innerHTML =
         '<p>No candidate specified. <a href="elections.html">View all races</a></p>';
@@ -370,7 +439,6 @@ permalink: /candidate.html
       const data = await res.json();
       const races = data.races || [];
 
-      // Search all races and phases for this challenger id (flat candidates or ballots)
       let found = null, foundRace = null, foundPhase = null;
 
       outer: for (const race of races) {

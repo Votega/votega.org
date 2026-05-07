@@ -225,6 +225,7 @@ permalink: /race.html
         ${subtitle ? `<p style="font-size:0.85rem;color:#555;margin:0 0 0.75rem 0;">${subtitle}</p>` : ''}
         <div class="candidate-links">
           <a href="${memberUrl}">View legislative record →</a>
+          <a href="${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(candidate.memberId)}&memberSource=${encodeURIComponent(candidate.memberSource || 'congress')}">View candidate profile →</a>
         </div>
       </div>`;
   }
