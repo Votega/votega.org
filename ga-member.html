@@ -308,6 +308,10 @@ permalink: /ga-member.html
       displayMemberDetails(member, seatRace, otherRaceInfo);
       displaySidebar(member, all);
       loadVotingHistory(member);
+      if (window.location.hash) {
+        const target = document.getElementById(window.location.hash.slice(1));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }
       statusLine.textContent = '';
     } catch (err) {
       console.error(err);
