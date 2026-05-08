@@ -528,6 +528,16 @@ permalink: /candidate.html
         return;
       }
 
+      // Find the incumbent's ballot entry in races.json for manually-curated fields (bio, website)
+      let incumbentEntry = null;
+      for (const phase of Object.values(race.phases || {})) {
+        for (const candidates of Object.values(phase.ballots || {})) {
+          const match = candidates.find(c => c.memberId === memberId || c.existingMemberId === memberId);
+          if (match) { incumbentEntry = match; break; }
+        }
+        if (incumbentEntry) break;
+      }
+
       // Build a candidate-like object from member data
       const name = memberSource === 'congress'
         ? [member.firstName, member.lastName].filter(Boolean).join(' ').trim() || member.name || ''
@@ -536,8 +546,8 @@ permalink: /candidate.html
         name,
         party: member.partyName || member.party || '',
         imageUrl: member.depiction?.imageUrl || member.imageUrl || '',
-        bio: '',
-        website: '',
+        bio: incumbentEntry?.bio || '',
+        website: incumbentEntry?.website || '',
         isIncumbent: true,
         existingMemberId: memberId,
         existingMemberSource: memberSource,
