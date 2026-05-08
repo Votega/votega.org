@@ -204,7 +204,9 @@ permalink: /race.html
         </div>`;
     }
 
-    const name    = member.name || 'Unknown';
+    const name    = (member.firstName && member.lastName)
+      ? `${member.firstName} ${member.lastName}`.trim()
+      : (member.name || 'Unknown');
     const party   = member.party || member.partyName || '';
     const photo   = member.imageUrl || member.depiction?.imageUrl || '';
     const chamber = member.chamber || '';
