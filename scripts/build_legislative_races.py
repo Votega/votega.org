@@ -98,6 +98,18 @@ def candidate_from_row(row: dict, idx: int, chamber_slug: str, district: int, pa
 
     return c
 
+def names_match(candidate_name: str, member_name: str) -> bool:
+    """Return True if candidate_name likely refers to the same person as member_name.
+    Requires last name match plus first name or first-initial match."""
+    cn = candidate_name.lower().split()
+    mn = member_name.lower().split()
+    if not cn or not mn:
+        return False
+    if cn[-1] != mn[-1]:  # last names must match
+        return False
+    return cn[0] == mn[0] or cn[0][0] == mn[0][0]  # first name or initial
+
+
 def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict) -> list:
     """Build list of race dicts from the collected candidate data."""
     races = []
@@ -157,6 +169,24 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict) 
 
         if not ballots:
             continue
+
+        # If no candidate was flagged as incumbent by source data, try to detect one
+        # by matching the known current member (from ga-members.json) against candidate names.
+        all_cands = [c for party_cands in ballots.values() for c in party_cands]
+        already_flagged = any(c.get("isIncumbent") for c in all_cands)
+        if not already_flagged:
+            member = member_lookup.get((chamber_slug, district))
+            if member:
+                for c in all_cands:
+                    if names_match(c["name"], member["name"]):
+                        c["isIncumbent"] = True
+                        if member.get("imageUrl") and not c.get("imageUrl"):
+                            c["imageUrl"] = member["imageUrl"]
+                        if member.get("id") and not c.get("existingMemberId"):
+                            c["existingMemberId"] = member["id"]
+                            c["existingMemberSource"] = "state"
+                        print(f"  Auto-detected incumbent: {c['name']} ({chamber_slug} {district})")
+                        break
 
         race = {
             "id":          make_race_id(chamber_slug, district),
