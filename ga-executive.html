@@ -86,6 +86,10 @@ permalink: /ga-executive.html
     color: #1a56a8;
     font-weight: 600;
     margin-bottom: 0.75rem;
+    text-decoration: none;
+  }
+  a.exec-reelection:hover {
+    text-decoration: underline;
   }
   .exec-contact {
     display: flex;
@@ -181,9 +185,17 @@ permalink: /ga-executive.html
       ? `<a href="${official['Constituent Services']}" target="_blank" rel="noopener">Constituent services ↗</a>`
       : '';
 
-    const reelectionHtml = official['Reelection']
-      ? `<span class="exec-reelection">${official['Reelection']}</span>`
-      : '';
+    const reelectionText = official['Reelection'];
+    let reelectionHtml = '';
+    if (reelectionText) {
+      const profileId = official['candidateProfileId'];
+      if (profileId) {
+        const profileUrl = `${getBasePath()}candidate.html?id=${encodeURIComponent(profileId)}`;
+        reelectionHtml = `<a class="exec-reelection" href="${profileUrl}">🗳 ${reelectionText} · View candidate profile →</a>`;
+      } else {
+        reelectionHtml = `<span class="exec-reelection">${reelectionText}</span>`;
+      }
+    }
 
     const campaignHtml = official['Reelection Campaign Website']
       ? `<a href="${official['Reelection Campaign Website']}" target="_blank" rel="noopener">Campaign website ↗</a>`
