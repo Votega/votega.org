@@ -5,7 +5,10 @@ permalink: /ga-executive.html
 ---
 
 <h1>Georgia Executive Offices</h1>
-<p>Statewide elected officials serving the State of Georgia. The Governor is the only State Executive Official that is term-limited to two consecutive four-year terms. The Lt. Governor, Secretary of State, Attorney General, and other constitutional officers do not have term limits.</p>
+<p><div class="party-chart">
+  <canvas id="partyChart" width="110" height="110"></canvas>
+  <div class="chart-legend" id="chartLegend"></div>
+</div>Statewide elected officials serving the State of Georgia. The Governor is the only State Executive Official that is term-limited to two consecutive four-year terms. The Lt. Governor, Secretary of State, Attorney General, and other constitutional officers do not have term limits.</p>
 
 <style>
   .exec-grid {
@@ -122,6 +125,30 @@ permalink: /ga-executive.html
       height: 96px;
     }
   }
+
+  .party-chart {
+    float: right;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.75rem 1.25rem;
+  }
+  .party-chart canvas { display: block; }
+  .chart-legend {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: #444;
+  }
+  .legend-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 3px;
+    vertical-align: middle;
+  }
 </style>
 
 <div class="exec-grid" id="execGrid">
@@ -132,6 +159,58 @@ permalink: /ga-executive.html
 
 <script>
   const DATA_URL = 'assets/data/ga-executive.json';
+
+  function drawPartyChart(officials) {
+    const canvas = document.getElementById('partyChart');
+    const legend = document.getElementById('chartLegend');
+    if (!canvas || !legend) return;
+
+    const d = officials.filter(o => (o.party || '').toLowerCase().includes('democrat')).length;
+    const r = officials.filter(o => (o.party || '').toLowerCase().includes('republican')).length;
+    const ot = officials.length - d - r;
+    const total = officials.length;
+
+    const ctx    = canvas.getContext('2d');
+    const cx     = canvas.width / 2;
+    const cy     = canvas.height / 2;
+    const radius = Math.min(cx, cy) - 4;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!total) { legend.innerHTML = ''; return; }
+
+    const segments = [
+      { count: d,  color: '#2563eb', label: 'Democrat' },
+      { count: r,  color: '#dc2626', label: 'Republican' },
+      { count: ot, color: '#9ca3af', label: 'Other' },
+    ].filter(s => s.count > 0);
+
+    let startAngle = -Math.PI / 2;
+    for (const seg of segments) {
+      const sweep = (seg.count / total) * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, radius, startAngle, startAngle + sweep);
+      ctx.closePath();
+      ctx.fillStyle = seg.color;
+      ctx.fill();
+      startAngle += sweep;
+    }
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 0.52, 0, 2 * Math.PI);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+
+    ctx.fillStyle = '#374151';
+    ctx.font = `bold ${Math.round(radius * 0.38)}px system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(total, cx, cy);
+
+    legend.innerHTML = segments.map(s =>
+      `<span><span class="legend-dot" style="background:${s.color}"></span>${s.label} ${Math.round(s.count / total * 100)}%</span>`
+    ).join('');
+  }
 
   function getBasePath() {
     return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
@@ -233,6 +312,7 @@ permalink: /ga-executive.html
       const officials = data.officials || [];
       if (!officials.length) throw new Error('No officials found in data.');
 
+      drawPartyChart(officials);
       grid.innerHTML = officials.map(renderCard).join('');
 
       const src = document.getElementById('dataSource');

@@ -3,10 +3,8 @@ const DATA_URL = 'assets/data/ga-members.json';
 // -------------------------------------------------------------------
 
 // County → district maps (COUNTY_HOUSE_DISTRICTS, COUNTY_SENATE_DISTRICTS,
-// COUNTY_US_HOUSE_DISTRICTS) are defined in ga-districts.js, which must be
-// loaded before this script.
+// COUNTY_US_HOUSE_DISTRICTS) are defined in ga-districts.js, loaded before this.
 
-// Build reverse lookup: district number → counties served
 function buildDistrictCounties(countyMap) {
   const result = {};
   Object.entries(countyMap).forEach(([county, districts]) => {
@@ -20,25 +18,14 @@ function buildDistrictCounties(countyMap) {
 const HOUSE_DISTRICT_COUNTIES  = buildDistrictCounties(COUNTY_HOUSE_DISTRICTS);
 const SENATE_DISTRICT_COUNTIES = buildDistrictCounties(COUNTY_SENATE_DISTRICTS);
 
-const countySel      = document.getElementById('countySelect');
-const chamberSel     = document.getElementById('chamberSelect');
-const districtSel    = document.getElementById('districtSelect');
-const statusLine     = document.getElementById('status');
-const form           = document.getElementById('lookupForm');
-const allMembersOut  = document.getElementById('allMembersOutput');
-
-const chamberLabel   = chamberSel.closest('label');
-const districtLabel  = districtSel.closest('label');
-const submitBtn      = form.querySelector('button[type="submit"]');
+const countySel    = document.getElementById('countySelect');
+const statusLine   = document.getElementById('status');
+const membersOut   = document.getElementById('membersOutput');
 
 let allMembers = [];
+let activeTab  = 'senate';
 
-// Populate county dropdown — "All Members" first, then counties
-const allOpt = document.createElement('option');
-allOpt.value = '__all__';
-allOpt.textContent = 'All Members';
-countySel.appendChild(allOpt);
-
+// Populate county dropdown
 Object.keys(COUNTY_HOUSE_DISTRICTS).sort().forEach(county => {
   const opt = document.createElement('option');
   opt.value = county;
@@ -58,6 +45,112 @@ function getBasePath() {
   return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
 }
 
+function drawPartyChart(members) {
+  const canvas = document.getElementById('partyChart');
+  const legend = document.getElementById('chartLegend');
+  if (!canvas || !legend) return;
+
+  const d = members.filter(m => partyAbbrev(m.party) === 'D').length;
+  const r = members.filter(m => partyAbbrev(m.party) === 'R').length;
+  const o = members.length - d - r;
+  const total = members.length;
+
+  const ctx    = canvas.getContext('2d');
+  const cx     = canvas.width / 2;
+  const cy     = canvas.height / 2;
+  const radius = Math.min(cx, cy) - 4;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (!total) { legend.innerHTML = ''; return; }
+
+  const segments = [
+    { count: d, color: '#2563eb', label: 'Democrat' },
+    { count: r, color: '#dc2626', label: 'Republican' },
+    { count: o, color: '#9ca3af', label: 'Other' },
+  ].filter(s => s.count > 0);
+
+  let startAngle = -Math.PI / 2;
+  for (const seg of segments) {
+    const sweep = (seg.count / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, radius, startAngle, startAngle + sweep);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    startAngle += sweep;
+  }
+
+  // Centre hole for donut effect
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius * 0.52, 0, 2 * Math.PI);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+
+  // Total count in centre
+  ctx.fillStyle = '#374151';
+  ctx.font = `bold ${Math.round(radius * 0.38)}px system-ui, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(total, cx, cy);
+
+  legend.innerHTML = segments.map(s =>
+    `<span><span class="legend-dot" style="background:${s.color}"></span>${s.label} ${Math.round(s.count / total * 100)}%</span>`
+  ).join('');
+}
+
+function renderMembers() {
+  const county = countySel.value;
+  const chamberName      = activeTab === 'senate' ? 'Senate' : 'House of Representatives';
+  const districtCounties = activeTab === 'senate' ? SENATE_DISTRICT_COUNTIES : HOUSE_DISTRICT_COUNTIES;
+  const countyLookup     = activeTab === 'senate' ? COUNTY_SENATE_DISTRICTS  : COUNTY_HOUSE_DISTRICTS;
+  const basePath         = getBasePath();
+
+  let members = allMembers.filter(m => m.chamber === chamberName);
+
+  if (county) {
+    const countyDists = countyLookup[county] || [];
+    members = members.filter(m => countyDists.includes(m.district));
+  }
+
+  members.sort((a, b) => (a.district ?? 999) - (b.district ?? 999));
+
+  drawPartyChart(members);
+
+  if (!members.length) {
+    membersOut.innerHTML = `<p class="empty-note">No members found${county ? ` for ${county} County` : ''}.</p>`;
+    return;
+  }
+
+  membersOut.innerHTML = members.map(m => {
+    const isVacant = m.status === 'Vacant';
+    const abbrev = partyAbbrev(m.party);
+    const pClass = abbrev === 'D' ? 'party-d' : abbrev === 'R' ? 'party-r' : '';
+    const counties = (districtCounties[m.district] || []).join(', ');
+    const nameHtml = isVacant
+      ? `<span style="color:#888;font-style:italic;">Vacant</span>`
+      : `${m.name}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}`;
+    return `<a class="member-row" href="${basePath}ga-member.html?id=${encodeURIComponent(m.id)}">
+      <span class="member-district">District ${m.district}</span>
+      <span class="member-name">${nameHtml}</span>
+      <span class="member-counties">${counties}</span>
+      <span class="member-arrow">›</span>
+    </a>`;
+  }).join('');
+}
+
+document.getElementById('tabBar').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  activeTab = btn.dataset.tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+  countySel.value = '';
+  renderMembers();
+});
+
+countySel.addEventListener('change', renderMembers);
+
 async function loadData() {
   statusLine.textContent = 'Loading member data…';
   try {
@@ -66,117 +159,10 @@ async function loadData() {
     const data = await res.json();
     allMembers = data.members || [];
     statusLine.textContent = '';
-    if (countySel.value === '__all__') renderAllMembers();
+    renderMembers();
   } catch (err) {
     statusLine.textContent = 'Could not load GA member data: ' + err.message;
   }
 }
-
-function renderAllMembers() {
-  const basePath = getBasePath();
-
-  function memberRow(m, districtCounties) {
-    const abbrev    = partyAbbrev(m.party);
-    const partyClass = abbrev === 'D' ? 'party-d' : abbrev === 'R' ? 'party-r' : '';
-    const counties  = (districtCounties[m.district] || []).join(', ');
-    return `
-      <a class="member-row" href="${basePath}ga-member.html?id=${encodeURIComponent(m.id)}">
-        <span class="member-district">District ${m.district}</span>
-        <span class="member-name">${m.name}${abbrev ? ` <span class="${partyClass}">(${abbrev})</span>` : ''}</span>
-        <span class="member-counties">${counties}</span>
-        <span class="member-arrow">›</span>
-      </a>`;
-  }
-
-  const senate = allMembers
-    .filter(m => m.chamber === 'Senate')
-    .sort((a, b) => (a.district ?? 999) - (b.district ?? 999));
-
-  const house = allMembers
-    .filter(m => m.chamber === 'House of Representatives')
-    .sort((a, b) => (a.district ?? 999) - (b.district ?? 999));
-
-  allMembersOut.innerHTML = `
-    <div class="directory-section">
-      <h3>Senate (${senate.length} members)</h3>
-      ${senate.map(m => memberRow(m, SENATE_DISTRICT_COUNTIES)).join('')}
-    </div>
-    <div class="directory-section">
-      <h3>House of Representatives (${house.length} members)</h3>
-      ${house.map(m => memberRow(m, HOUSE_DISTRICT_COUNTIES)).join('')}
-    </div>`;
-}
-
-function setLookupVisible(visible) {
-  chamberLabel.style.display  = visible ? '' : 'none';
-  districtLabel.style.display = visible ? '' : 'none';
-  submitBtn.style.display     = visible ? '' : 'none';
-  if (!visible) allMembersOut.innerHTML = '';
-}
-
-function updateChamber() {
-  const county = countySel.value;
-
-  if (county === '__all__') {
-    setLookupVisible(false);
-    if (allMembers.length) renderAllMembers();
-    return;
-  }
-
-  setLookupVisible(true);
-  allMembersOut.innerHTML = '';
-  chamberSel.disabled = !county;
-  if (!county) {
-    chamberSel.value = '';
-    districtSel.innerHTML = '<option value="">— choose district —</option>';
-    districtSel.disabled = true;
-  } else {
-    updateDistricts();
-  }
-}
-
-function updateDistricts() {
-  const county  = countySel.value;
-  const chamber = chamberSel.value;
-
-  districtSel.innerHTML = '<option value="">— choose district —</option>';
-  districtSel.disabled = true;
-
-  if (!county || !chamber || allMembers.length === 0) return;
-
-  const chamberName = chamber === 'senate' ? 'Senate' : 'House of Representatives';
-  let members = allMembers.filter(m => m.chamber === chamberName);
-
-  const lookup = chamber === 'senate' ? COUNTY_SENATE_DISTRICTS : COUNTY_HOUSE_DISTRICTS;
-  const countyDistricts = lookup[county] || [];
-  members = members.filter(m => countyDistricts.includes(m.district));
-
-  members = members.sort((a, b) => (a.district ?? 999) - (b.district ?? 999));
-
-  members.forEach(m => {
-    const opt = document.createElement('option');
-    opt.value = m.id;
-    const abbrev = partyAbbrev(m.party);
-    opt.textContent = `District ${m.district} — ${m.name}${abbrev ? ` (${abbrev})` : ''}`;
-    districtSel.appendChild(opt);
-  });
-
-  if (members.length > 0) districtSel.disabled = false;
-}
-
-countySel .addEventListener('change', updateChamber);
-chamberSel.addEventListener('change', updateDistricts);
-
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  const id     = districtSel.value;
-  const county = countySel.value;
-  if (!id) {
-    statusLine.textContent = 'Please select a district.';
-    return;
-  }
-  const params = new URLSearchParams({ id, ...(county && { county }) });
-  window.location.href = `${getBasePath()}ga-member.html?${params}`;
-});
 
 loadData();

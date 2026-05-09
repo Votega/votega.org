@@ -5,130 +5,146 @@ permalink: /ga-representatives.html
 ---
 
 <h1>Georgia General Assembly</h1>
-<h2> About the Assembly</h2>
-Georgia's annual legislative session is 40 days at the beginning of the year. During that time, our state Senators and Representatives gather inside the Capitol in Atlanta to discuss bills and vote to create new laws. Together they make up the Georgia General Assembly, which is the legislative branch of our state government. 
+<h2>About the Assembly</h2>
+<p>Georgia's annual legislative session is 40 days at the beginning of the year. During that time, our state Senators and Representatives gather inside the Capitol in Atlanta to discuss bills and vote to create new laws. Together they make up the Georgia General Assembly, which is the legislative branch of our state government.</p>
 
-The General Assembly is made up of two chambers: the Senate and the House of Representatives. There are 56 state Senators and 180 state Representatives, each representing a district of voters across Georgia.
+<p>The General Assembly is made up of two chambers: the Senate and the House of Representatives. There are 56 state Senators and 180 state Representatives, each representing a district of voters across Georgia. Georgia House and Senate members serve two-year terms, with all seats up for election every two years.</p>
 
-Georgia House and Senate Representatives serve two-year terms, with all seats up for election every two years. Georgia holds elections for its legislature in even years. 
+<p class="box-note">Many counties are served by multiple districts. If you are unsure which district you're in, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> and scroll to the bottom to see your districts. Select a member to view details about their time in office.</p>
 
-<h3>Find Your GA State Legislator</h3>
+<style>
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 1.25rem 0 0 0;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  .tab-btn {
+    padding: 0.45rem 1.1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 4px 4px 0 0;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: #1a56a8; }
+  .tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
 
-Select your County and Chamber (Senate or House). The districts serving your county will appear in the list. You may also select "All Members" to see a list of all current members of the General Assembly and their respective districts and counties. 
+  .controls-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin: 1rem 0 0.5rem 0;
+    flex-wrap: wrap;
+  }
+  .county-filter { flex: 1; min-width: 180px; }
+  .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; }
+  .county-filter select { width: 100%; max-width: 400px; padding: 8px; box-sizing: border-box; }
 
- 
+  .party-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+  .party-chart canvas { display: block; }
+  .chart-legend {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: #444;
+  }
+  .legend-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 3px;
+    vertical-align: middle;
+  }
 
-<p class="box-note">Many counties are served by multiple districts, and some districts serve multiple counties. If you are unsure which district you're in, you can use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> tool. Enter your information and scroll to the bottom of the page to see your districts (both at the federal and state level). Then, you can identify which member and/or candidate is in your district.
+  .msg { margin-top: 1rem; color: #c00; }
 
-<br>
+  #membersOutput { margin-top: 1rem; }
 
-<br>Select a member to view details about their time in office.
+  .member-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 0.4rem;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    transition: background 0.15s;
+  }
+  .member-row:hover { background: #f5f8ff; }
+  .member-district {
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: #777;
+    min-width: 70px;
+  }
+  .member-name {
+    font-weight: bold;
+    font-size: 0.95rem;
+    flex: 1;
+  }
+  .member-counties {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: right;
+    max-width: 220px;
+  }
+  .member-arrow { color: #1a56a8; margin-left: 0.75rem; flex-shrink: 0; }
+  .party-d { color: #1d4ed8; }
+  .party-r { color: #b91c1c; }
+  .empty-note {
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 6px;
+    border: 1px dashed #ccc;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  @media (max-width: 520px) {
+    .member-counties { display: none; }
+    .tab-btn { font-size: 0.82rem; padding: 0.4rem 0.75rem; }
+  }
+</style>
 
-<!--
-Lookup Form
- User chooses a county and chamber. For House, districts are filtered by county.
- For Senate, all 56 districts are shown (county-to-senate mapping pending).
- Each district maps to exactly one member. Selecting a district redirects to ga-member.html.
--->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>GA Legislator Lookup</title>
-  <style>
-    body {font-family: system-ui, sans-serif; margin:2rem; max-width:680px;}
-    label {display:block; margin-top:1.2rem;}
-    select, button {width:100%; padding:8px; box-sizing:border-box;}
-    .msg{margin-top:1rem;color:#c00;}
-    [disabled]{background:#eee;}
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" data-tab="senate">GA State Senate</button>
+  <button class="tab-btn" data-tab="house">GA House of Representatives</button>
+</div>
 
-    /* All-members directory */
-    #allMembersOutput { margin-top: 2rem; }
-    .directory-section { margin-bottom: 2.5rem; }
-    .directory-section h3 {
-      font-size: 1rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #555;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 0.4rem;
-      margin-bottom: 0.75rem;
-    }
-    .member-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.65rem 0.9rem;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      margin-bottom: 0.4rem;
-      text-decoration: none;
-      color: inherit;
-      background: #fff;
-      transition: background 0.15s;
-    }
-    .member-row:hover { background: #f5f8ff; }
-    .member-district {
-      font-size: 0.78rem;
-      font-weight: bold;
-      color: #777;
-      min-width: 70px;
-    }
-    .member-name {
-      font-weight: bold;
-      font-size: 0.95rem;
-      flex: 1;
-    }
-    .member-counties {
-      font-size: 0.8rem;
-      color: #666;
-      text-align: right;
-      max-width: 220px;
-    }
-    .member-arrow { color: #1a56a8; margin-left: 0.75rem; flex-shrink: 0; }
-    .party-d { color: #1d4ed8; }
-    .party-r { color: #b91c1c; }
-    @media (max-width: 520px) {
-      .member-counties { display: none; }
-    }
-  </style>
-</head>
-<body>
-
-<!--Start Form-->
-<form id="lookupForm">
-  <label>
-    County
-    <select id="countySelect" required>
-      <option value="">— choose —</option>
+<div class="controls-row">
+  <div class="county-filter">
+    <label for="countySelect">Filter by county</label>
+    <select id="countySelect">
+      <option value="">— all districts —</option>
     </select>
-  </label>
-
-  <label>
-    Chamber
-    <select id="chamberSelect" required disabled>
-      <option value="">— choose —</option>
-      <option value="house">House of Representatives</option>
-      <option value="senate">Senate</option>
-    </select>
-  </label>
-
-  <label>
-    District / Member
-    <select id="districtSelect" required disabled></select>
-  </label>
-
-  <button type="submit">View Profile</button>
-</form>
-<!--end form-->
+  </div>
+  <div class="party-chart">
+    <canvas id="partyChart" width="110" height="110"></canvas>
+    <div class="chart-legend" id="chartLegend"></div>
+  </div>
+</div>
 
 <div class="msg" id="status"></div>
-<div id="allMembersOutput"></div>
+<div id="membersOutput"></div>
 
-<center><i>Data is sourced from the <a href="https://openstates.org" target="_blank">Open States API</a></i></center>
+<p style="margin-top:1.5rem;font-size:0.8rem;color:#888;">Data sourced from the <a href="https://openstates.org" target="_blank">Open States API</a></p>
 
 <script src="assets/scripts/ga-districts.js"></script>
 <script src="assets/scripts/ga.js"></script>
-</body>
-</html>
