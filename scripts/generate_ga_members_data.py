@@ -237,6 +237,16 @@ def main():
                 applied += 1
         print(f"  Applied overrides to {applied} member(s)")
 
+        # Inject entirely new entries (e.g. vacant seats not tracked by Open States)
+        injected = overrides.get('_inject', [])
+        existing_ids = {m['id'] for m in members}
+        for entry in injected:
+            if entry.get('id') and entry['id'] not in existing_ids:
+                members.append(entry)
+                existing_ids.add(entry['id'])
+        if injected:
+            print(f"  Injected {len(injected)} new member(s) from _inject")
+
     senate = [m for m in members if m['chamber'] == 'Senate']
     house  = [m for m in members if m['chamber'] == 'House of Representatives']
     print(f"  Senate: {len(senate)}  |  House: {len(house)}  |  Total: {len(members)}")
