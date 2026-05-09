@@ -225,6 +225,7 @@ permalink: /race.html
         <p class="candidate-name">${name}</p>
         <span class="party-badge ${partyClass(party)}">${party || 'Unknown party'}</span>
         ${subtitle ? `<p style="font-size:0.85rem;color:#555;margin:0 0 0.75rem 0;">${subtitle}</p>` : ''}
+        ${candidate.bio ? `<p class="candidate-bio">${candidate.bio}</p>` : ''}
         <div class="candidate-links">
           <a href="${memberUrl}">View legislative record →</a>
           <a href="${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(candidate.memberId)}&memberSource=${encodeURIComponent(candidate.memberSource || 'congress')}">View candidate profile →</a>
