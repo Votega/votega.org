@@ -57,7 +57,7 @@ async function loadMembers () {
     }
     
     // Filter by state name and chamber since API returns all members regardless of chamber filter
-    const stateName = STATES.find(s => s.code === state)?.name;
+    const stateName = 'Georgia'; // site is GA-only
     const chamberMap = { 'house': 'House of Representatives', 'senate': 'Senate' };
     const expectedChamber = chamberMap[chamber];
     
