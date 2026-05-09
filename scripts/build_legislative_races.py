@@ -70,6 +70,15 @@ def load_candidate_overrides() -> dict:
         raw = json.load(f)
     return {k: v for k, v in raw.items() if not k.startswith("_")}
 
+def load_race_overrides() -> dict:
+    """Load race-level overrides from the _raceOverrides block in ga-race-candidate-overrides.json."""
+    if not OVERRIDES.exists():
+        return {}
+    with open(OVERRIDES, encoding="utf-8") as f:
+        raw = json.load(f)
+    block = raw.get("_raceOverrides", {})
+    return {k: v for k, v in block.items() if not k.startswith("_")}
+
 def candidate_from_row(row: dict, idx: int, chamber_slug: str, district: int, party_slug: str) -> dict:
     name = title_case(row.get("Official_FullName__c") or row.get("Name_on_Ballot__c") or "")
     is_incumbent = bool(row.get("Incumbent__c"))
@@ -110,7 +119,7 @@ def names_match(candidate_name: str, member_name: str) -> bool:
     return cn[0] == mn[0] or cn[0][0] == mn[0][0]  # first name or initial
 
 
-def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict) -> list:
+def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict, race_overrides: dict = None) -> list:
     """Build list of race dicts from the collected candidate data."""
     races = []
 
@@ -188,8 +197,9 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict) 
                         print(f"  Auto-detected incumbent: {c['name']} ({chamber_slug} {district})")
                         break
 
+        race_id = make_race_id(chamber_slug, district)
         race = {
-            "id":          make_race_id(chamber_slug, district),
+            "id":          race_id,
             "level":       "state",
             "chamber":     chamber_name,
             "district":    district,
@@ -206,6 +216,13 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict) 
                 }
             }
         }
+        if race_overrides:
+            patch = race_overrides.get(race_id, {})
+            for k, v in patch.items():
+                if not k.startswith("_"):
+                    race[k] = v
+                elif k == "_note":
+                    race["_note"] = v
         races.append(race)
 
     return races
@@ -214,12 +231,14 @@ def main():
     with open(SRC, encoding="utf-8") as f:
         src = json.load(f)
 
-    member_lookup      = load_member_lookup()
+    member_lookup       = load_member_lookup()
     candidate_overrides = load_candidate_overrides()
+    race_overrides      = load_race_overrides()
     print(f"Loaded {len(member_lookup)} GA members for incumbent enrichment")
     print(f"Loaded {len(candidate_overrides)} candidate override(s)")
+    print(f"Loaded {len(race_overrides)} race override(s)")
 
-    new_races = build_races(src, member_lookup, candidate_overrides)
+    new_races = build_races(src, member_lookup, candidate_overrides, race_overrides)
     print(f"Built {len(new_races)} legislative race entries")
 
     # Load existing races.json and remove any old ga-house/ga-senate entries

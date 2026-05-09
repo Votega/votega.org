@@ -1,5 +1,20 @@
 {
   "_note": "Manual overrides for GA legislative race candidates, applied after build_legislative_races.py generates from source data. Keys are candidate IDs (e.g. 'ga-house-1-2026-r-1'). Use _name for human-readability only — it is stripped before merging. Fields here override the auto-generated values. Incumbents get imageUrl auto-populated from ga-members.json; use this file to correct bad source data or add fields for challengers.",
+  "_raceOverrides": {
+    "_note": "Race-level field overrides keyed by race ID. Applied by build_legislative_races.py after building each race. Use '_note' to set the Open Seat banner text (format: 'Open seat — Reason.').",
+    "ga-senate-7-2026": {
+      "_note": "Open seat — Nabilah Parkes (D) resigned effective March 13, 2026."
+    },
+    "ga-senate-12-2026": {
+      "_note": "Open seat — Freddie Powell Sims (D) resigned effective March 23, 2026."
+    },
+    "ga-senate-19-2026": {
+      "_note": "Open seat — Blake Tillery (R) vacated to run for Lt. Governor."
+    },
+    "ga-house-177-2026": {
+      "_note": "Open seat — Dexter Sharper (D) resigned effective March 9, 2026."
+    }
+  },
   "ga-house-1-2026-r-1": {
     "_name": "Mike Cameron",
     "imageUrl": "https://www.legis.ga.gov/api/images/default-source/portraits/cameron-mike-4986.jpg",
