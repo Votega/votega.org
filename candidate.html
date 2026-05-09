@@ -160,8 +160,9 @@ permalink: /candidate.html
     margin-bottom: 0.6rem;
     margin-right: 0.3rem;
   }
-  .role-incumbent  { background: #e0f2fe; color: #0369a1; }
-  .role-withdrawn  { background: #fef2f2; color: #991b1b; }
+  .role-incumbent      { background: #e0f2fe; color: #0369a1; }
+  .role-withdrawn      { background: #fef2f2; color: #991b1b; }
+  .role-disqualified   { background: #fefce8; color: #854d0e; }
 
   .profile-details {
     background: #f9fafb;
@@ -222,7 +223,8 @@ permalink: /candidate.html
     const raceUrl    = `${basePath}race.html?id=${encodeURIComponent(race.id)}`;
     const isFederal  = race.level === 'federal';
     const isIncumbent = candidate.isIncumbent || candidate.type === 'incumbent';
-    const isWithdrawn = !!candidate.withdrawn;
+    const isWithdrawn     = !!candidate.withdrawn;
+    const isDisqualified  = !!candidate.disqualified;
 
     // Link to member profile page when this candidate has a legislative record
     const existingMemberId = candidate.existingMemberId || '';
@@ -243,11 +245,13 @@ permalink: /candidate.html
       : `<div class="candidate-photo-placeholder">👤</div>`;
 
     // Role and party badges
-    const roleBadge = isWithdrawn
-      ? `<span class="role-badge role-withdrawn">Withdrawn</span>`
-      : isIncumbent
-        ? `<span class="role-badge role-incumbent">Incumbent</span>`
-        : '';
+    const roleBadge = isDisqualified
+      ? `<span class="role-badge role-disqualified">Disqualified</span>`
+      : isWithdrawn
+        ? `<span class="role-badge role-withdrawn">Withdrawn</span>`
+        : isIncumbent
+          ? `<span class="role-badge role-incumbent">Incumbent</span>`
+          : '';
 
     // Detail fields
     const rows = [];

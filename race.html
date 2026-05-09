@@ -50,7 +50,8 @@ permalink: /race.html
   }
   .candidate-card.incumbent { border-left: 4px solid #1a56a8; }
   .candidate-card.challenger { border-left: 4px solid #888; }
-  .candidate-card.withdrawn { opacity: 0.55; }
+  .candidate-card.withdrawn     { opacity: 0.55; }
+  .candidate-card.disqualified  { opacity: 0.55; }
 
   .role-badge {
     display: inline-block;
@@ -64,7 +65,8 @@ permalink: /race.html
   }
   .role-incumbent  { background: #1a56a8; color: #fff; box-shadow: 0 1px 3px rgba(26,86,168,0.35); }
   .role-challenger { background: #f3f4f6; color: #374151; }
-  .role-withdrawn  { background: #fef2f2; color: #991b1b; }
+  .role-withdrawn      { background: #fef2f2; color: #991b1b; }
+  .role-disqualified   { background: #fefce8; color: #854d0e; }
 
   .candidate-photo {
     width: 80px;
@@ -235,6 +237,14 @@ permalink: /race.html
 
   function renderChallengerCard(candidate) {
     const basePath = getBasePath();
+    if (candidate.disqualified) {
+      return `
+        <div class="candidate-card challenger disqualified">
+          <span class="role-badge role-disqualified">Disqualified</span>
+          <p class="candidate-name">${candidate.name}</p>
+          <span class="party-badge ${partyClass(candidate.party)}">${candidate.party || ''}</span>
+        </div>`;
+    }
     if (candidate.withdrawn) {
       return `
         <div class="candidate-card challenger withdrawn">
@@ -279,10 +289,10 @@ permalink: /race.html
   }
 
   function renderBallotSection(partyName, candidates, members, race) {
-    const active    = candidates.filter(c => !c.withdrawn)
+    const active    = candidates.filter(c => !c.withdrawn && !c.disqualified)
                                 .sort((a, b) => candidateLastName(a, members, race)
                                                   .localeCompare(candidateLastName(b, members, race)));
-    const withdrawn = candidates.filter(c => c.withdrawn);
+    const withdrawn = candidates.filter(c => c.withdrawn || c.disqualified);
 
     const ballotClass = partyName.toLowerCase().includes('democrat')   ? 'ballot-D'
                       : partyName.toLowerCase().includes('republican') ? 'ballot-R'
@@ -347,8 +357,8 @@ permalink: /race.html
         .join('');
     } else {
       const candidates = phase?.candidates || [];
-      const active     = candidates.filter(c => !c.withdrawn);
-      const withdrawn  = candidates.filter(c => c.withdrawn);
+      const active     = candidates.filter(c => !c.withdrawn && !c.disqualified);
+      const withdrawn  = candidates.filter(c => c.withdrawn || c.disqualified);
       if (!active.length && !withdrawn.length) {
         candidatesHtml = '<p class="no-candidates">Candidate information not yet available for this phase.</p>';
       } else {
