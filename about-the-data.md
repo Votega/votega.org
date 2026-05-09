@@ -4,9 +4,7 @@ title: About The Data
 subtitle: Where our information comes from and how it's kept current
 ---
 
-VoteGA.org is a static website — there is no server, no database, and no real-time API calls
-from your browser. Instead, automated workflows run daily that pull data from trusted public sources,
-and publish it as static files that power the site. Here's what we use and why.
+VoteGA.org is a static website. We run automated workflows daily that pull data from trusted public sources, and publish it as static files that power the site. Here's what we use and why.
 
 ---
 
@@ -18,7 +16,7 @@ Congress.gov is the official legislative information system of the United States
 maintained by the Library of Congress. Member data — including name, party, state, chamber,
 district, term dates, and official photo — is pulled from the Congress.gov API daily.
 
-- **Contact info:** The Congress.gov API does not provide member contact information (phone, office address). We link directly to each member's official House or Senate website where contact info is maintained by the member's office.
+- **Contact info:** We pull in contact information and link directly to each member's official House or Senate website where contact info is maintained by the member's office.
 - **Freshness:** Updated daily via an automated GitHub Actions workflow.
 
 ---
@@ -124,6 +122,23 @@ Executive orders are sourced from the [Georgia Governor's website](https://gov.g
 
 ---
 
+## 2026 Election Races & Candidates
+
+**Sources:** [Georgia Secretary of State](https://sos.ga.gov/) · Manual curation
+
+Race and candidate information for the 2026 election cycle is maintained in a curated data file (`races.json`) that powers the race pages and candidate profiles on this site.
+
+**Georgia state legislative candidates** (GA House and Senate) are sourced from the Georgia Secretary of State's candidate filing system, which publishes official candidate registration data for each primary and general election. We process that data to build one race entry per district, including candidate names, party affiliation, occupation, and county of residence.
+
+**Federal candidates** (U.S. House and Senate) are manually researched and entered. Incumbents are linked directly to their Congress.gov member record so their photo, party, and legislative history populate automatically. Challengers' bios, photos, and websites are sourced from candidates' official campaign websites and entered manually.
+
+**Incumbent enrichment:** When a candidate is the current officeholder, their profile photo and member record link are automatically pulled from our existing legislator data (Congress.gov for federal, Open States for state) — no duplicate data entry required.
+
+- **Scope:** 2026 primary and general election races for Georgia's federal delegation and all 236 Georgia General Assembly districts.
+- **Freshness:** GA legislative candidate data is updated when the Secretary of State publishes new filing data. Federal challenger data is manually maintained.
+
+---
+
 ## Campaign Finance
 
 **Sources:** [Federal Election Commission (FEC)](https://www.fec.gov/) · [Georgia Government Transparency & Campaign Finance Commission](https://ethics.ga.gov/)
@@ -148,13 +163,14 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
 | GA state legislator voting history | LegiScan bulk dataset | Periodically, when new dataset is available |
 | GA executive orders | gov.georgia.gov | Manually maintained |
+| 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |
+| 2026 federal race/candidate data | Manual curation | Manually maintained |
 | Federal campaign finance | FEC API (live) | Real-time, fetched on page load |
 
 ---
 
 ## What We Don't Do
 
-- **Minimal real-time API calls from your browser.** Most data is pre-fetched and served as static files for fast page loads. The one exception is campaign finance on candidate profile pages, which is fetched live from the FEC API so figures always reflect the latest filing.
 - **No tracking or analytics beyond standard page metrics.** We do not build profiles of visitors or sell data.
 
 ---
