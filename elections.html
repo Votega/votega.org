@@ -70,20 +70,59 @@ permalink: /elections.html
     color: #666;
   }
 
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 1.25rem 0 1rem 0;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0;
+  }
+  .tab-btn {
+    padding: 0.45rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 4px 4px 0 0;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: #1a56a8; }
+  .tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+
+  .county-filter {
+    display: none;
+    margin-bottom: 1rem;
+  }
+  .county-filter.visible { display: block; }
+  .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; }
+
   @media (max-width: 600px) {
     .race-row { flex-wrap: wrap; }
     .race-meta { text-align: left; }
+    .tab-btn { font-size: 0.8rem; padding: 0.4rem 0.65rem; }
   }
 </style>
 
-<form id="lookupForm">
-  <label>
-    County
-    <select id="countySelect">
-      <option value="">— choose your county —</option>
-    </select>
-  </label>
-</form>
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" data-tab="executive">Executive / Statewide</button>
+  <button class="tab-btn" data-tab="us-senate">U.S. Senate</button>
+  <button class="tab-btn" data-tab="us-house">U.S. House</button>
+  <button class="tab-btn" data-tab="ga-senate">GA State Senate</button>
+  <button class="tab-btn" data-tab="ga-house">GA State House</button>
+</div>
+
+<div class="county-filter" id="countyFilter">
+  <label for="countySelect">Filter by county</label>
+  <select id="countySelect">
+    <option value="">— all districts —</option>
+  </select>
+</div>
 
 <div class="msg" id="status"></div>
 <div id="racesOutput"></div>
@@ -92,26 +131,26 @@ permalink: /elections.html
 <script>
   const RACES_URL = 'assets/data/races.json';
 
-  // County → district maps are loaded from ga-districts.js (script tag above).
-
   const countySelect  = document.getElementById('countySelect');
+  const countyFilter  = document.getElementById('countyFilter');
   const statusEl      = document.getElementById('status');
   const racesOutput   = document.getElementById('racesOutput');
 
-  let allRaces = [];
+  let allRaces  = [];
+  let activeTab = 'executive';
 
-  // Populate county dropdown — "All" and "Statewide" first, then counties
-  const allOpt = document.createElement('option');
-  allOpt.value = '__all__';
-  allOpt.textContent = 'All Seats (2026 Cycle)';
-  countySelect.appendChild(allOpt);
+  // Tabs that need the county dropdown
+  const COUNTY_TABS = new Set(['us-house', 'ga-senate', 'ga-house']);
 
-  const statewideOpt = document.createElement('option');
-  statewideOpt.value = '__statewide__';
-  statewideOpt.textContent = 'Statewide (Executive & U.S. Senate)';
-  countySelect.appendChild(statewideOpt);
+  const TAB_FILTER = {
+    'executive': r => r.level === 'state-executive',
+    'us-senate': r => r.chamber === 'U.S. Senate',
+    'us-house':  r => r.chamber === 'U.S. House',
+    'ga-senate': r => r.chamber === 'Georgia State Senate',
+    'ga-house':  r => r.chamber === 'Georgia House of Representatives',
+  };
 
-
+  // Populate county dropdown
   Object.keys(COUNTY_HOUSE_DISTRICTS).sort().forEach(county => {
     const opt = document.createElement('option');
     opt.value = county;
@@ -129,19 +168,9 @@ permalink: /elections.html
     return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   }
 
-  function partyClass(party) {
-    if (!party) return 'party-other';
-    const p = party.toLowerCase();
-    if (p.includes('republican')) return 'party-R';
-    if (p.includes('democrat'))   return 'party-D';
-    return 'party-other';
-  }
-
   function candidateSummary(phase) {
     if (!phase) return 'No candidates listed yet';
-
     if (phase.ballots) {
-      // Open primary — summarize each ballot's count
       const partyOrder = p => p.toLowerCase().includes('democrat') ? 0 : p.toLowerCase().includes('republican') ? 1 : 2;
       const parts = Object.entries(phase.ballots).sort((a, b) => partyOrder(a[0]) - partyOrder(b[0])).map(([party, candidates]) => {
         const count  = candidates.filter(c => !c.withdrawn).length;
@@ -152,33 +181,29 @@ permalink: /elections.html
       });
       return parts.join(' · ') + (parts.length > 1 ? ' (open primary)' : '');
     }
-
     if (!phase.candidates || !phase.candidates.length) return 'No candidates listed yet';
-    const names = phase.candidates
-      .filter(c => !c.withdrawn)
-      .map(c => c.type === 'incumbent' ? 'Incumbent' : c.name)
-      .join(' · ');
+    const names = phase.candidates.filter(c => !c.withdrawn)
+      .map(c => c.type === 'incumbent' ? 'Incumbent' : c.name).join(' · ');
     return names || 'No active candidates';
   }
 
-  function racesForCounty(county) {
-    const houseDists  = COUNTY_HOUSE_DISTRICTS[county]  || [];
-    const senateDists = COUNTY_SENATE_DISTRICTS[county] || [];
-    const usDists     = COUNTY_US_HOUSE_DISTRICTS[county] || [];
+  function racesForTab(tab, county) {
+    let races = allRaces.filter(TAB_FILTER[tab] || (() => false));
 
-    if (county === '__all__')       return allRaces;
-    if (county === '__statewide__') {
-      return allRaces.filter(r => r.level === 'state-executive' || r.chamber === 'U.S. Senate');
+    // For district-based tabs, filter by county if one is selected
+    if (COUNTY_TABS.has(tab) && county) {
+      const houseDists  = COUNTY_HOUSE_DISTRICTS[county]  || [];
+      const senateDists = COUNTY_SENATE_DISTRICTS[county] || [];
+      const usDists     = COUNTY_US_HOUSE_DISTRICTS[county] || [];
+      races = races.filter(r => {
+        if (r.chamber === 'Georgia House of Representatives') return houseDists.includes(r.district);
+        if (r.chamber === 'Georgia State Senate')             return senateDists.includes(r.district);
+        if (r.chamber === 'U.S. House')                      return usDists.includes(r.district);
+        return true;
+      });
     }
 
-    return allRaces.filter(r => {
-      if (r.level === 'state-executive') return true;
-      if (r.chamber === 'Georgia House of Representatives') return houseDists.includes(r.district);
-      if (r.chamber === 'Georgia State Senate')             return senateDists.includes(r.district);
-      if (r.chamber === 'U.S. House')                      return usDists.includes(r.district);
-      if (r.chamber === 'U.S. Senate')                     return true;
-      return false;
-    });
+    return races;
   }
 
   function renderRaceRow(race, basePath) {
@@ -202,64 +227,56 @@ permalink: /elections.html
       </a>`;
   }
 
-  function renderRaces(county) {
-    const races = racesForCounty(county);
+  function renderRaces() {
+    const county  = countySelect.value;
+    const races   = racesForTab(activeTab, county);
     const basePath = getBasePath();
 
     if (!races.length) {
-      racesOutput.innerHTML = '<p class="empty-note">No races on file yet for this county. Check back as 2026 candidate data is added.</p>';
+      const hint = COUNTY_TABS.has(activeTab) && !county
+        ? 'Select a county above to filter by district, or all districts are shown when no county is selected.'
+        : 'No races on file yet for this selection. Check back as 2026 candidate data is added.';
+      racesOutput.innerHTML = `<p class="empty-note">${hint}</p>`;
       return;
     }
 
     let html = '';
 
-    // State executive offices — always statewide, sorted by prescribed office order then district
-    const execOfficeOrder = [
-      'Governor', 'Lieutenant Governor', 'Secretary of State', 'Attorney General',
-      'Commissioner of Agriculture', 'Insurance & Fire Safety Commissioner',
-      'Labor Commissioner', 'State School Superintendent', 'Public Service Commissioner'
-    ];
-    const execRaces = races
-      .filter(r => r.level === 'state-executive')
-      .sort((a, b) => {
+    if (activeTab === 'executive') {
+      const execOfficeOrder = [
+        'Governor', 'Lieutenant Governor', 'Secretary of State', 'Attorney General',
+        'Commissioner of Agriculture', 'Insurance & Fire Safety Commissioner',
+        'Labor Commissioner', 'State School Superintendent', 'Public Service Commissioner'
+      ];
+      races.sort((a, b) => {
         const ai = execOfficeOrder.indexOf(a.chamber);
         const bi = execOfficeOrder.indexOf(b.chamber);
-        const order = (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
-        return order || (a.district ?? 0) - (b.district ?? 0);
-      });
-    if (execRaces.length) {
-      html += `<div class="chamber-group"><h3>Georgia Statewide — Executive Offices</h3>`;
-      execRaces.forEach(r => { html += renderRaceRow(r, basePath); });
-      html += '</div>';
-    }
-
-    // State legislative and federal races grouped by chamber
-    const chamberOrder = ['U.S. Senate', 'U.S. House', 'Georgia State Senate', 'Georgia House of Representatives'];
-    const groups = {};
-    races.filter(r => r.level !== 'state-executive').forEach(r => {
-      if (!groups[r.chamber]) groups[r.chamber] = [];
-      groups[r.chamber].push(r);
-    });
-    chamberOrder.forEach(chamber => {
-      const group = groups[chamber];
-      if (!group) return;
-      html += `<div class="chamber-group"><h3>${chamber}</h3>`;
-      group.sort((a, b) => (a.district ?? 0) - (b.district ?? 0))
+        return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi) || (a.district ?? 0) - (b.district ?? 0);
+      }).forEach(r => { html += renderRaceRow(r, basePath); });
+    } else {
+      races.sort((a, b) => (a.district ?? 0) - (b.district ?? 0))
            .forEach(r => { html += renderRaceRow(r, basePath); });
-      html += '</div>';
-      if (chamber === 'U.S. Senate') {
-        html += `
-                    <p class="box-note">Many counties are served by multiple districts, and some districts serve multiple counties. If you are unsure which district you're in, you can use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> tool. Enter your information and scroll to the bottom of the page to see your districts (both at the federal and state level). Then, you can identify which member and/or candidate is in your district.</p>`;
+
+      if (activeTab === 'us-senate' || COUNTY_TABS.has(activeTab)) {
+        html += `<p class="box-note" style="margin-top:1rem;font-size:0.82rem;color:#555;">Many counties are served by multiple districts. If you are unsure which district you're in, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> and scroll to the bottom to see your districts.</p>`;
       }
-    });
+    }
 
     racesOutput.innerHTML = html;
   }
 
-  countySelect.addEventListener('change', () => {
-    racesOutput.innerHTML = '';
-    if (countySelect.value) renderRaces(countySelect.value);
+  // Tab click handler
+  document.getElementById('tabBar').addEventListener('click', e => {
+    const btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    activeTab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+    countyFilter.classList.toggle('visible', COUNTY_TABS.has(activeTab));
+    countySelect.value = '';
+    renderRaces();
   });
+
+  countySelect.addEventListener('change', renderRaces);
 
   async function loadData() {
     try {
@@ -267,6 +284,7 @@ permalink: /elections.html
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       allRaces = (data.races || []).filter(r => r.cycle === 2026 && !r.id?.startsWith('_'));
+      renderRaces(); // render default tab on load
     } catch (err) {
       statusEl.textContent = 'Could not load race data: ' + err.message;
     }
