@@ -320,10 +320,11 @@ permalink: /race.html
     const dateStr    = phase ? formatDate(phase.electionDate) : '';
 
     // Open seat banner (shown when the previous officeholder is not running)
-    const openSeatHtml = race._note
+    const noteText = race._note ? race._note.replace(/^open seat\s*[—–-]+\s*/i, '') : '';
+    const openSeatHtml = noteText
       ? `<div class="open-seat-banner">
            <span class="open-seat-label">Open Seat</span>
-           <span>${race._note}</span>
+           <span>${noteText}</span>
          </div>`
       : '';
 
