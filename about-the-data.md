@@ -4,7 +4,7 @@ title: About The Data
 subtitle: Where our information comes from and how it's kept current
 ---
 
-VoteGA.org is a static website. We run automated workflows daily that pull data from trusted public sources, and publish it as static files that power the site. Here's what we use and why.
+VoteGA.org is a static website. We run automated workflows daily that pull data from trusted public sources, and publish it as static files that power the site. The only exception is campaign finance data, which is pulled live when a visitor opens the page. Here's what we use and why.
 
 ---
 
