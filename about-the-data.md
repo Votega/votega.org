@@ -74,9 +74,12 @@ Georgia legislators are matched between the LegiScan dataset and our member data
 
 ## GA Legislators — Community Data Repository
 
-We publish a copy of our Georgia legislator data to a public community repository. **NOTE:** Only includes GA Legislators from the 158th (2025-2026) General Assembly. Future legislators will continue to be added, but prior year members will not be added in the immediate future. 
+We publish a copy of our Georgia legislator data to a public community repository. 
 
-[GitHub GA Legislators Repository](https://github.com/Votega/ga-legislators)
+[GitHub GA Legislators Repository](https://github.com/Votega/ga-legislators) <br>
+
+{: .box-note}
+Only includes GA Legislators from the 158th (2025-2026) General Assembly. Future legislators will continue to be added, but prior year members will not be added in the immediate future.
 
 This repository is updated automatically each time our daily workflow runs. It is intended as
 a free, open, machine-readable source of current Georgia General Assembly member data that
