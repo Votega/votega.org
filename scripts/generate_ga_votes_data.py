@@ -108,8 +108,9 @@ def get_session_people(session_id):
 
 
 def get_master_list(state="GA"):
-    # getMasterListRaw takes state=, not session_id=
-    data = legiscan("getMasterListRaw", {"state": state})
+    # getMasterList returns full bill summaries (status, last_action, etc.)
+    # getMasterListRaw is a compact change-detection format with only bill_id/number/change_hash
+    data = legiscan("getMasterList", {"state": state})
     if not data:
         return []
     master = data.get("masterlist", {})
@@ -178,18 +179,10 @@ def main():
 
     print("\nFetching master bill list...")
     bills = get_master_list()
-    # Print a sample bill to see actual field names in the raw format
-    if bills:
-        print(f"  Sample bill keys: {list(bills[0].keys())}")
-        print(f"  Sample bill: {bills[0]}")
-
-    # Filter: prefer status > 1, but fall back to any bill with a last_action
-    # (LegiScan may set status=0 for all bills after session ends)
+    # Only fetch details for bills that have moved past introduction (status > 1)
+    # LegiScan status: 1=Introduced, 2=Engrossed, 3=Enrolled, 4=Passed, 5=Vetoed, 6=Failed
     actionable = [b for b in bills if b.get("status", 0) > 1]
-    if not actionable:
-        print("  No bills with status > 1 — falling back to bills with last_action set")
-        actionable = [b for b in bills if b.get("last_action")]
-    print(f"  {len(bills)} total bills, {len(actionable)} actionable (will fetch details)")
+    print(f"  {len(bills)} total bills, {len(actionable)} past introduction (will fetch details)")
     time.sleep(DELAY)
 
     votes_meta        = {}
