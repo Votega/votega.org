@@ -75,6 +75,20 @@ def get_committee_totals(committee_id):
     return data["results"][0]
 
 
+def get_candidate_totals_aggregates(candidate_id):
+    """Fallback when principal_committees is missing from the candidate list response.
+    Uses /candidates/totals/aggregates which returns total_receipts,
+    total_disbursements, and total_cash_on_hand_end_period without needing a committee ID.
+    """
+    data = fec_get("/candidates/totals/aggregates/", {
+        "candidate_id":  candidate_id,
+        "election_year": CYCLE,
+    })
+    if not data or not data.get("results"):
+        return None
+    return data["results"][0]
+
+
 def get_top_employers(committee_id):
     # schedule_a uses two_year_transaction_period, not cycle
     data = fec_get("/schedules/schedule_a/by_employer/", {
@@ -222,6 +236,14 @@ def main():
             time.sleep(DELAY)
             entry["topEmployers"] = get_top_employers(committee_id)
         else:
+            # principal_committees missing from list response — fall back to aggregates endpoint
+            time.sleep(DELAY)
+            totals = get_candidate_totals_aggregates(cid)
+            if totals:
+                entry["totalRaised"]     = totals.get("total_receipts")
+                entry["totalSpent"]      = totals.get("total_disbursements")
+                entry["cashOnHand"]      = totals.get("total_cash_on_hand_end_period")
+                entry["coverageEndDate"] = totals.get("coverage_end_date", "")
             entry["topEmployers"] = []
 
         output_candidates[cid] = entry
