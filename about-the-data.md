@@ -85,6 +85,8 @@ structured legislator data without the overhead of maintaining their own pipelin
 
 The data is published as `data/all.json` and follows the same schema that we use for votega.org. See the repository README for field definitions.
 
+NOTE: Only includes GA Legislators from the 158th (2025-2026) General Assembly. 
+
 {: .box-note}
 **Want to contribute?** If you spot missing or incorrect information — a wrong phone number,
 a missing email address, or an outdated office — you can open an issue or pull request on
