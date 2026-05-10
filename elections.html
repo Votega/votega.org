@@ -180,7 +180,7 @@ permalink: /elections.html
                      : party[0].toUpperCase();
         return `${count} ${abbrev}`;
       });
-      return parts.join(' · ') + (parts.length > 1 ? ' (open primary)' : '');
+      return parts.join(' · ');
     }
     if (!phase.candidates || !phase.candidates.length) return 'No candidates listed yet';
     const names = phase.candidates.filter(c => !c.withdrawn)
