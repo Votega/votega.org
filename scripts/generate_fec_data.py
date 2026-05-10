@@ -109,14 +109,16 @@ def get_top_employers(committee_id):
     if not data:
         return []
     results = []
-    SKIP_EMPLOYERS = {"NONE", "N/A", "NA", "INFORMATION REQUESTED",
-                      "NOT EMPLOYED", "UNEMPLOYED", "HOMEMAKER",
-                      "SELF", "SELFEMPLOYED", "SELF-EMPLOYED", "SELF EMPLOYED",
-                      "RETIRED", "STUDENT"}
+    # Normalize skip set: remove spaces, hyphens, and punctuation for comparison
+    _SKIP_RAW = {"NONE", "N/A", "NA", "NULL", "INFORMATION REQUESTED", "INFORMATIONREQUESTED",
+                 "NOT EMPLOYED", "NOTEMPLOYED", "UNEMPLOYED", "HOMEMAKER",
+                 "SELF", "SELFEMPLOYED", "SELF-EMPLOYED", "SELF EMPLOYED",
+                 "RETIRED", "STUDENT"}
+    SKIP_EMPLOYERS = {re.sub(r'[\s\-/]', '', s) for s in _SKIP_RAW}
     seen_employers = set()
     for r in data.get("results", []):
         emp = (r.get("employer") or "").strip()
-        emp_key = re.sub(r'[\s\-]', '', emp.upper())   # normalize spaces/hyphens for dedup
+        emp_key = re.sub(r'[\s\-/]', '', emp.upper())
         if not emp or emp_key in SKIP_EMPLOYERS or emp_key in seen_employers:
             continue
         seen_employers.add(emp_key)
@@ -145,11 +147,16 @@ def get_top_donors(committee_id):
     if not data:
         return []
     results = []
+    seen_names = set()
     for r in data.get("results", []):
         name   = (r.get("contributor_name") or "").strip()
         amount = r.get("contribution_receipt_amount") or 0
         if not name or amount <= 0:
             continue
+        name_key = re.sub(r'[^a-z]', '', name.lower())
+        if name_key in seen_names:
+            continue
+        seen_names.add(name_key)
         employer   = (r.get("contributor_employer")   or "").strip()
         occupation = (r.get("contributor_occupation") or "").strip()
         results.append({
