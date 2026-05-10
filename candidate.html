@@ -147,6 +147,29 @@ permalink: /candidate.html
   .finance-card.cash    .finance-card-value { color: #1d4ed8; }
   .finance-meta { font-size: 0.78rem; color: #666; margin: 0; }
 
+  .employers-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+  }
+  .employers-table th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    padding: 0.3rem 0.5rem 0.3rem 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .employers-table td {
+    padding: 0.35rem 0.5rem 0.35rem 0;
+    border-bottom: 1px solid #f3f4f6;
+    color: #111;
+  }
+  .employers-table td:not(:first-child) { text-align: right; color: #374151; }
+
   .back-link { margin-top: 2rem; font-size: 0.9rem; }
 
   .role-badge {
@@ -197,6 +220,7 @@ permalink: /candidate.html
   const RACES_URL       = 'assets/data/races.json';
   const CONGRESS_URL    = 'assets/data/current-members.json';
   const GA_MEMBERS_URL  = 'assets/data/ga-members.json';
+  const FEC_DATA_URL    = 'assets/data/ga-fec-data.json';
 
   const _params              = new URLSearchParams(window.location.search);
   const candidateId          = _params.get('id');
@@ -305,9 +329,6 @@ permalink: /candidate.html
       <div class="back-link"><a href="${raceUrl}">← Back to ${race.chamber}${distLabel} race</a></div>`;
   }
 
-  // Replace with your FEC API key from api.data.gov — DEMO_KEY is rate-limited to 30 req/hr
-  const FEC_API_KEY = 'JBv4BxbJd3rgRV2X7dwjMMVCUhYtC42cqKEOZF6l';
-
   function fmtMoney(n) {
     if (n == null) return '—';
     if (Math.abs(n) >= 1_000_000) return '$' + (n / 1_000_000).toFixed(1) + 'M';
@@ -315,17 +336,41 @@ permalink: /candidate.html
     return '$' + Math.round(n).toLocaleString();
   }
 
+  function normalizeName(name) {
+    // Mirror the Python normalize_name() in generate_fec_data.py:
+    // FEC names: 'LAST, FIRST MIDDLE' → 'first last' (lowercase, no punctuation, no suffixes/nicknames)
+    let n = name.toLowerCase();
+    n = n.replace(/["'].*?["']/g, '');                          // strip quoted nicknames
+    n = n.replace(/\b(jr|sr|ii|iii|iv|esq)\.?\b/g, '');        // strip suffixes
+    n = n.replace(/[^a-z\s,]/g, '').trim();
+    if (n.includes(',')) {
+      const [last, first] = n.split(',', 2);
+      const firstToken = first.trim().split(/\s+/)[0];
+      n = `${firstToken} ${last.trim()}`;
+    }
+    return n.replace(/\s+/g, ' ').trim();
+  }
+
+  let _fecDataCache = null;
+  async function getFecData() {
+    if (_fecDataCache) return _fecDataCache;
+    try {
+      const res = await fetch(FEC_DATA_URL);
+      if (!res.ok) return null;
+      _fecDataCache = await res.json();
+      return _fecDataCache;
+    } catch { return null; }
+  }
+
   async function loadCampaignFinance(candidate, race) {
     const container = document.getElementById('campaignFinance');
     if (!container) return;
     container.style.display = '';
 
-    const level = race.level || '';
-    const isFederal = level === 'federal';
+    const isFederal = (race.level || '') === 'federal';
 
     if (!isFederal) {
       // State candidates: link to Georgia Ethics Commission search
-      const searchName = encodeURIComponent(candidate.name);
       container.innerHTML = `
         <h3>Campaign Finance</h3>
         <p style="font-size:0.875rem;color:#555;margin:0;">
@@ -338,86 +383,74 @@ permalink: /candidate.html
       return;
     }
 
-    // Federal: live FEC API lookup
-    container.innerHTML = '<h3>Campaign Finance</h3><p style="color:#666;font-size:0.875rem;">Loading FEC data…</p>';
-
-    try {
-      let committeeId  = candidate.fecCommitteeId || null;
-      let fecCandidateId = null;
-      let fecUrl = null;
-
-      if (!committeeId) {
-        // Name search — strip quoted nicknames (e.g. Earl "Buddy" Carter → Earl Carter)
-        const fecName = candidate.name.replace(/["'][^"']*["']\s*/g, '').replace(/\s+/g, ' ').trim();
-        const q = encodeURIComponent(fecName || candidate.name);
-        const searchRes = await fetch(
-          `https://api.open.fec.gov/v1/candidates/?q=${q}&state=GA&cycle=2026&sort=-receipts&api_key=${FEC_API_KEY}`
-        );
-        if (!searchRes.ok) throw new Error(`FEC ${searchRes.status}`);
-        const searchData = await searchRes.json();
-        const match = (searchData.results || [])[0];
-
-        if (!match) {
-          container.innerHTML = `
-            <h3>Campaign Finance</h3>
-            <p style="font-size:0.875rem;color:#666;">
-              No FEC filing found for this candidate.
-              <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
-            </p>`;
-          return;
-        }
-
-        fecCandidateId = match.candidate_id;
-        committeeId    = match.principal_committees?.[0]?.committee_id;
-        fecUrl = `https://www.fec.gov/data/candidate/${fecCandidateId}/`;
-      }
-
-      // Committee totals preferred (reliable cash on hand); fall back to candidate totals
-      if (!fecUrl) fecUrl = `https://www.fec.gov/data/committee/${committeeId}/`;
-      const totalsUrl = committeeId
-        ? `https://api.open.fec.gov/v1/committee/${committeeId}/totals/?cycle=2026&api_key=${FEC_API_KEY}`
-        : `https://api.open.fec.gov/v1/candidate/${fecCandidateId}/totals/?cycle=2026&api_key=${FEC_API_KEY}`;
-
-      const totalsRes = await fetch(totalsUrl);
-      if (!totalsRes.ok) throw new Error(`FEC totals ${totalsRes.status}`);
-      const totalsData = await totalsRes.json();
-      const t = (totalsData.results || [])[0];
-
-      const coverageNote = t?.coverage_end_date
-        ? `2025–2026 election cycle · Through ${new Date(t.coverage_end_date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
-        : '2025–2026 election cycle';
-
-      // Committee totals use last_cash_on_hand_end_period; candidate totals use cash_on_hand_end_period
-      const cashOnHand = t?.last_cash_on_hand_end_period ?? t?.cash_on_hand_end_period;
-
-      container.innerHTML = `
-        <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h3>
-        <div class="finance-cards">
-          <div class="finance-card raised">
-            <div class="finance-card-label">Total Raised</div>
-            <div class="finance-card-value">${fmtMoney(t?.receipts)}</div>
-          </div>
-          <div class="finance-card spent">
-            <div class="finance-card-label">Total Spent</div>
-            <div class="finance-card-value">${fmtMoney(t?.disbursements)}</div>
-          </div>
-          <div class="finance-card cash">
-            <div class="finance-card-label">Cash on Hand</div>
-            <div class="finance-card-value">${fmtMoney(cashOnHand)}</div>
-          </div>
-        </div>
-        <p class="finance-meta">${coverageNote}</p>
-        <p class="finance-meta"><a href="${fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>`;
-
-    } catch (err) {
-      console.warn('FEC lookup failed:', err);
+    // Federal: read from pre-fetched static file
+    const fecData = await getFecData();
+    if (!fecData) {
       container.innerHTML = `
         <h3>Campaign Finance</h3>
         <p style="font-size:0.875rem;color:#666;">
           Finance data unavailable.
           <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
         </p>`;
+      return;
     }
+
+    // Look up by bioguide ID first, then by normalized name
+    const bioguide = candidate.existingMemberId || '';
+    let fecId = (bioguide && fecData.byBioguideId?.[bioguide]) || null;
+    if (!fecId) {
+      const key = normalizeName(candidate.name);
+      fecId = fecData.byNormalizedName?.[key] || null;
+    }
+
+    const entry = fecId ? fecData.candidates?.[fecId] : null;
+    if (!entry) {
+      container.innerHTML = `
+        <h3>Campaign Finance</h3>
+        <p style="font-size:0.875rem;color:#666;">
+          No FEC filing found for this candidate.
+          <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
+        </p>`;
+      return;
+    }
+
+    const coverageNote = entry.coverageEndDate
+      ? `2025–2026 election cycle · Through ${new Date(entry.coverageEndDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
+      : '2025–2026 election cycle';
+
+    const employersHtml = (entry.topEmployers || []).length ? `
+      <h4 style="font-size:0.88rem;margin:1rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h4>
+      <table class="employers-table">
+        <thead><tr><th>Employer</th><th>Donors</th><th>Total</th></tr></thead>
+        <tbody>
+          ${entry.topEmployers.map(e => `
+            <tr>
+              <td>${e.employer}</td>
+              <td>${e.count}</td>
+              <td>${fmtMoney(e.total)}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>` : '';
+
+    container.innerHTML = `
+      <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h3>
+      <div class="finance-cards">
+        <div class="finance-card raised">
+          <div class="finance-card-label">Total Raised</div>
+          <div class="finance-card-value">${fmtMoney(entry.totalRaised)}</div>
+        </div>
+        <div class="finance-card spent">
+          <div class="finance-card-label">Total Spent</div>
+          <div class="finance-card-value">${fmtMoney(entry.totalSpent)}</div>
+        </div>
+        <div class="finance-card cash">
+          <div class="finance-card-label">Cash on Hand</div>
+          <div class="finance-card-value">${fmtMoney(entry.cashOnHand)}</div>
+        </div>
+      </div>
+      <p class="finance-meta">${coverageNote}</p>
+      <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
+      ${employersHtml}`;
   }
 
   function buildServiceHistory(member, memberSource) {

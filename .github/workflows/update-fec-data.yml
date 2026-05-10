@@ -1,0 +1,49 @@
+name: Update FEC campaign finance data
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * 0' # weekly on Sunday at 08:00 UTC
+
+jobs:
+  update-fec-data:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Fetch GA FEC data
+        run: python scripts/generate_fec_data.py assets/data/ga-fec-data.json
+        env:
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+
+      - name: Validate generated data
+        run: |
+          if [ ! -f assets/data/ga-fec-data.json ]; then
+            echo "Error: ga-fec-data.json was not generated"
+            exit 1
+          fi
+          python -c "import json; d=json.load(open('assets/data/ga-fec-data.json')); print(f\"{d['metadata']['totalCandidates']} candidates\")"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/ga-fec-data.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update GA FEC campaign finance data"
+            git push
+          fi
