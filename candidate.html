@@ -214,6 +214,29 @@ permalink: /candidate.html
     .profile-details dl { grid-template-columns: 1fr; }
     .profile-details dt { margin-top: 0.5rem; }
   }
+
+  .candidate-tabs {
+    display: flex;
+    border-bottom: 2px solid #e5e7eb;
+    margin: 1.25rem 0 1rem 0;
+  }
+  .candidate-tab-btn {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 4px 4px 0 0;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .candidate-tab-btn:hover { color: #1a56a8; }
+  .candidate-tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+  .candidate-tab-panel { display: none; }
+  .candidate-tab-panel.active { display: block; }
 </style>
 
 <script>
@@ -319,14 +342,31 @@ permalink: /candidate.html
         </div>
       </div>
 
-      ${detailsHtml}
-      ${memberRecordHtml}
-      ${serviceHtml}
-      ${noRecordHtml}
-      ${bioHtml}
-      <div id="campaignFinance" class="finance-section" style="display:none;"></div>
+      <div class="candidate-tabs" id="candidateTabs">
+        <button class="candidate-tab-btn active" data-panel="profile">Profile</button>
+        <button class="candidate-tab-btn" data-panel="finance">Campaign Finance</button>
+      </div>
+
+      <div class="candidate-tab-panel active" id="panel-profile">
+        ${detailsHtml}
+        ${memberRecordHtml}
+        ${serviceHtml}
+        ${noRecordHtml}
+        ${bioHtml}
+      </div>
+
+      <div class="candidate-tab-panel" id="panel-finance">
+        <div id="campaignFinance" class="finance-section"></div>
+      </div>
 
       <div class="back-link"><a href="${raceUrl}">← Back to ${race.chamber}${distLabel} race</a></div>`;
+
+    document.getElementById('candidateTabs').addEventListener('click', e => {
+      const btn = e.target.closest('.candidate-tab-btn');
+      if (!btn) return;
+      document.querySelectorAll('.candidate-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.candidate-tab-panel').forEach(p => p.classList.toggle('active', p.id === `panel-${btn.dataset.panel}`));
+    });
   }
 
   function fmtMoney(n) {
@@ -398,7 +438,6 @@ permalink: /candidate.html
   async function loadCampaignFinance(candidate, race) {
     const container = document.getElementById('campaignFinance');
     if (!container) return;
-    container.style.display = '';
 
     const isFederal = (race.level || '') === 'federal';
 
@@ -446,7 +485,7 @@ permalink: /candidate.html
       : '2025–2026 election cycle';
 
     const employersHtml = (entry.topEmployers || []).length ? `
-      <h4 style="font-size:0.88rem;margin:1rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h4>
+      <h4 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h4>
       <table class="employers-table">
         <thead><tr><th>Employer</th><th>Donors</th><th>Total</th></tr></thead>
         <tbody>
@@ -455,6 +494,20 @@ permalink: /candidate.html
               <td>${e.employer}</td>
               <td>${e.count}</td>
               <td>${fmtMoney(e.total)}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>` : '';
+
+    const donorsHtml = (entry.topDonors || []).length ? `
+      <h4 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Individual Contributions</h4>
+      <table class="employers-table">
+        <thead><tr><th>Contributor</th><th>Employer / Occupation</th><th>Amount</th></tr></thead>
+        <tbody>
+          ${entry.topDonors.map(d => `
+            <tr>
+              <td>${d.name}</td>
+              <td style="color:#555;font-size:0.82rem;">${d.employer || d.occupation || '—'}</td>
+              <td>${fmtMoney(d.amount)}</td>
             </tr>`).join('')}
         </tbody>
       </table>` : '';
@@ -477,7 +530,8 @@ permalink: /candidate.html
       </div>
       <p class="finance-meta">${coverageNote}</p>
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
-      ${employersHtml}`;
+      ${employersHtml}
+      ${donorsHtml}`;
   }
 
   function buildServiceHistory(member, memberSource) {

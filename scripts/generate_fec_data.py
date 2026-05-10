@@ -110,6 +110,40 @@ def get_top_employers(committee_id):
     return results[:TOP_N]
 
 
+SKIP_OCCUPATIONS = {"NONE", "N/A", "NA", "NOT EMPLOYED", "INFORMATION REQUESTED", "HOMEMAKER"}
+
+def get_top_donors(committee_id):
+    """Top individual itemized contributions sorted by amount descending.
+    Uses schedule_a (individual contributions line), sorted by receipt amount.
+    Only available for candidates whose principal_committees were returned by the FEC list endpoint.
+    """
+    data = fec_get("/schedules/schedule_a/", {
+        "committee_id":              committee_id,
+        "two_year_transaction_period": CYCLE,
+        "per_page":                  TOP_N,
+        "sort":                      "-contribution_receipt_amount",
+        "sort_hide_null":            "true",
+        "is_individual":             "true",
+    })
+    if not data:
+        return []
+    results = []
+    for r in data.get("results", []):
+        name   = (r.get("contributor_name") or "").strip()
+        amount = r.get("contribution_receipt_amount") or 0
+        if not name or amount <= 0:
+            continue
+        employer   = (r.get("contributor_employer")   or "").strip()
+        occupation = (r.get("contributor_occupation") or "").strip()
+        results.append({
+            "name":       name.title(),
+            "amount":     round(amount),
+            "employer":   employer.title()   if employer   and employer.upper()   not in SKIP_OCCUPATIONS else "",
+            "occupation": occupation.title() if occupation and occupation.upper() not in SKIP_OCCUPATIONS else "",
+        })
+    return results[:TOP_N]
+
+
 def normalize_name(name):
     """Normalize FEC name to a lookup key matching JS normalizeName() in candidate.html.
     FEC names are typically 'LAST, FIRST MIDDLE' or 'LAST, FIRST "NICK"'.
@@ -232,6 +266,8 @@ def main():
 
             time.sleep(DELAY)
             entry["topEmployers"] = get_top_employers(committee_id)
+            time.sleep(DELAY)
+            entry["topDonors"] = get_top_donors(committee_id)
         else:
             # principal_committees missing from list response — fall back to candidate totals
             time.sleep(DELAY)
@@ -244,6 +280,7 @@ def main():
                                             or totals.get("cash_on_hand_end_period"))
                 entry["coverageEndDate"] = totals.get("coverage_end_date", "")
             entry["topEmployers"] = []
+            entry["topDonors"]    = []
 
         output_candidates[cid] = entry
 
