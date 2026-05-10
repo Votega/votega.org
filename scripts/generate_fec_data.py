@@ -75,15 +75,12 @@ def get_committee_totals(committee_id):
     return data["results"][0]
 
 
-def get_candidate_totals_aggregates(candidate_id):
+def get_candidate_totals(candidate_id):
     """Fallback when principal_committees is missing from the candidate list response.
-    Uses /candidates/totals/aggregates which returns total_receipts,
-    total_disbursements, and total_cash_on_hand_end_period without needing a committee ID.
+    /candidate/{id}/totals/ returns per-cycle financials without needing a committee ID.
+    Field names differ from committee totals (no last_cash_on_hand_end_period).
     """
-    data = fec_get("/candidates/totals/aggregates/", {
-        "candidate_id":  candidate_id,
-        "election_year": CYCLE,
-    })
+    data = fec_get(f"/candidate/{candidate_id}/totals/", {"cycle": CYCLE})
     if not data or not data.get("results"):
         return None
     return data["results"][0]
@@ -236,13 +233,15 @@ def main():
             time.sleep(DELAY)
             entry["topEmployers"] = get_top_employers(committee_id)
         else:
-            # principal_committees missing from list response — fall back to aggregates endpoint
+            # principal_committees missing from list response — fall back to candidate totals
             time.sleep(DELAY)
-            totals = get_candidate_totals_aggregates(cid)
+            totals = get_candidate_totals(cid)
             if totals:
-                entry["totalRaised"]     = totals.get("total_receipts")
-                entry["totalSpent"]      = totals.get("total_disbursements")
-                entry["cashOnHand"]      = totals.get("total_cash_on_hand_end_period")
+                entry["totalRaised"]     = totals.get("receipts")
+                entry["totalSpent"]      = totals.get("disbursements")
+                # candidate totals uses cash_on_hand_end_period; try both field variants
+                entry["cashOnHand"]      = (totals.get("last_cash_on_hand_end_period")
+                                            or totals.get("cash_on_hand_end_period"))
                 entry["coverageEndDate"] = totals.get("coverage_end_date", "")
             entry["topEmployers"] = []
 
