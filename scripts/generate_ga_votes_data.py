@@ -178,16 +178,10 @@ def main():
 
     print("\nFetching master bill list...")
     bills = get_master_list()
-    # Log status distribution to understand what values LegiScan is returning
-    status_dist = {}
-    for b in bills:
-        s = b.get("status", "missing")
-        status_dist[s] = status_dist.get(s, 0) + 1
-    print(f"  Status distribution: {sorted(status_dist.items())}")
-
-    # Sample last_action values to find a usable filter
-    sample_actions = [b.get("last_action", "") for b in bills[:10]]
-    print(f"  Sample last_action values: {sample_actions}")
+    # Print a sample bill to see actual field names in the raw format
+    if bills:
+        print(f"  Sample bill keys: {list(bills[0].keys())}")
+        print(f"  Sample bill: {bills[0]}")
 
     # Filter: prefer status > 1, but fall back to any bill with a last_action
     # (LegiScan may set status=0 for all bills after session ends)
