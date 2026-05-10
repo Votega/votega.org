@@ -5,11 +5,21 @@ Requires FEC_API_KEY environment variable.
 
 Flow:
   1. GET /v1/candidates/ for GA House + Senate, cycle 2026
-  2. GET /v1/committee/{id}/totals/ for each principal committee
-  3. GET /v1/schedules/schedule_a/by_employer/ for top donors by employer
+  2. Cross-reference with current-members.json to enrich bioguide_id
+     (FEC API does not reliably return bioguide_id in candidate list responses)
+  3. GET /v1/committee/{id}/totals/ for each principal committee
+  4. GET /v1/schedules/schedule_a/by_employer/ for top donors by employer
 
 Output: assets/data/ga-fec-data.json
-  Keyed by FEC candidate_id, with lookup indexes by bioguideId and normalized name.
+  - candidates: keyed by FEC candidate_id
+  - byBioguideId: bioguide_id -> candidate_id (for incumbent lookups)
+  - byNormalizedName: normalized "first last" -> candidate_id (name-based fallback)
+  - byDistrict: "H10" or "S" -> [candidate_ids] (district-scoped last-name matching)
+
+Lookup strategy in candidate.html (findFecId):
+  1. bioguide ID (incumbents with enriched data)
+  2. district key + last name match (handles formal vs. nickname mismatches)
+  3. normalized full name (exact FEC name match, last resort)
 """
 
 import json
@@ -34,7 +44,6 @@ def fec_get(path, params=None):
     if params:
         query.update(params)
     url = f"{BASE_URL}{path}?{urllib.parse.urlencode(query)}"
-    safe = url.replace(API_KEY, "***") if API_KEY else url
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "votega.org/1.0"})
         with urllib.request.urlopen(req, timeout=30) as r:
@@ -91,9 +100,11 @@ def get_top_employers(committee_id):
 
 
 def normalize_name(name):
-    """Normalize FEC name to a lookup key matching JS normalization.
+    """Normalize FEC name to a lookup key matching JS normalizeName() in candidate.html.
     FEC names are typically 'LAST, FIRST MIDDLE' or 'LAST, FIRST "NICK"'.
-    Output: 'first last' (lowercase, no punctuation, no suffixes/nicknames).
+    Skips single-char initials (e.g. "OSSOFF, T. JONATHAN" -> "jonathan ossoff").
+    Note: FEC formal names often differ from display names (Michael vs Mike), so
+    byNormalizedName is a last-resort fallback; byBioguideId and byDistrict are preferred.
     """
     n = name.lower()
     n = re.sub(r'["\'].*?["\']', '', n)                  # strip quoted nicknames
@@ -101,8 +112,45 @@ def normalize_name(name):
     n = re.sub(r'[^a-z\s,]', '', n).strip()
     if ',' in n:
         last, first = n.split(',', 1)
-        n = f"{first.strip().split()[0]} {last.strip()}"  # first-token of first + last
+        # Skip single-char initials so "T. JONATHAN" -> "jonathan", not "t"
+        tokens = [t for t in first.strip().split() if len(t) > 1]
+        first_name = tokens[0] if tokens else (first.strip().split() or [''])[0]
+        n = f"{first_name} {last.strip()}"
     return ' '.join(n.split())
+
+
+def normalize_last(name):
+    """Extract normalized last name from FEC 'LAST, FIRST' format.
+    Used for bioguide enrichment and the byDistrict lastName field.
+    """
+    last = name.split(',')[0] if ',' in name else name.split()[-1] if name.split() else ''
+    return re.sub(r'[^a-z]', '', last.lower())
+
+
+def load_bioguide_map():
+    """Build last-name -> bioguide_id map from current-members.json for GA members.
+    The FEC API does not return bioguide_id in candidate list responses, so we cross-
+    reference against our own Congress member data to enrich incumbent candidates.
+    Scoped to GA only to reduce false matches on common last names.
+    """
+    members_path = os.path.join(os.path.dirname(OUTPUT_FILE) or '.', '..', 'assets', 'data', 'current-members.json')
+    for path in [members_path, 'assets/data/current-members.json']:
+        if os.path.exists(path):
+            with open(path, encoding='utf-8') as f:
+                data = json.load(f)
+            result = {}
+            for m in data.get('members', []):
+                # current-members.json stores state as full name ("Georgia"), not abbreviation
+                if m.get('state') not in ('GA', 'Georgia'):
+                    continue
+                last = re.sub(r'[^a-z]', '', (m.get('lastName') or '').lower())
+                bioguide = m.get('bioguideId') or ''
+                if last and bioguide:
+                    result[last] = bioguide
+            print(f"  Loaded bioguide map: {len(result)} GA members from {path}")
+            return result
+    print("  (current-members.json not found -- bioguide enrichment skipped)")
+    return {}
 
 
 def main():
@@ -110,16 +158,24 @@ def main():
         print("Error: FEC_API_KEY environment variable not set")
         sys.exit(1)
 
-    print(f"Fetching GA congressional candidates from FEC (cycle {CYCLE})...")
+    print(f"\nLoading GA member bioguide map...")
+    bioguide_map = load_bioguide_map()
+
+    print(f"\nFetching GA congressional candidates from FEC (cycle {CYCLE})...")
     raw_candidates = get_ga_candidates()
     print(f"  Total: {len(raw_candidates)} candidates found")
     if not raw_candidates:
-        print("Error: no candidates returned — aborting to avoid overwriting good data")
+        print("Error: no candidates returned -- aborting to avoid overwriting good data")
         sys.exit(1)
 
     output_candidates = {}
-    by_bioguide = {}
-    by_name     = {}
+    by_bioguide  = {}
+    by_name      = {}
+    # byDistrict maps "H{n}" or "S" -> [candidate_ids].
+    # District is encoded in chars 4-5 of the FEC candidate_id (e.g. H8GA10071 -> district 10).
+    # candidate.html uses this for district-scoped last-name matching, which handles
+    # formal vs. nickname differences (e.g. FEC "MICHAEL" matching display name "Mike").
+    by_district  = {}
 
     for i, c in enumerate(raw_candidates, 1):
         cid      = c.get("candidate_id")
@@ -127,19 +183,25 @@ def main():
             continue
 
         name       = c.get("name", "")
-        office     = c.get("office", "")
+        office     = c.get("office", "")        # "H" or "S"
         district   = c.get("district", "")
         bioguide   = c.get("bioguide_id") or ""
         committees = c.get("principal_committees") or []
         committee_id = committees[0].get("committee_id") if committees else None
 
-        print(f"  [{i}/{len(raw_candidates)}] {name} ({cid})")
+        # FEC doesn't return bioguide_id in list responses; enrich from current-members.json
+        if not bioguide and bioguide_map:
+            fec_last = normalize_last(name)
+            bioguide = bioguide_map.get(fec_last, "")
+
+        print(f"  [{i}/{len(raw_candidates)}] {name} ({cid}){' -> ' + bioguide if bioguide else ''}")
 
         entry = {
             "candidateId": cid,
             "name":        name,
             "office":      office,
             "district":    district,
+            "lastName":    normalize_last(name),   # stored for district+lastName lookup in candidate.html
             "fecUrl":      f"https://www.fec.gov/data/candidate/{cid}/",
         }
         if bioguide:
@@ -166,9 +228,21 @@ def main():
 
         if bioguide:
             by_bioguide[bioguide] = cid
+
         key = normalize_name(name)
         if key:
             by_name[key] = cid
+
+        # Build district key from candidate_id chars 4-5 ("H8GA10071" -> "H10", "01" -> "H1")
+        if office == "H" and len(cid) >= 6:
+            dist_num = str(int(cid[4:6]))
+            dist_key = f"H{dist_num}"
+        elif office == "S":
+            dist_key = "S"
+        else:
+            dist_key = None
+        if dist_key:
+            by_district.setdefault(dist_key, []).append(cid)
 
     output = {
         "metadata": {
@@ -177,9 +251,10 @@ def main():
             "source":         "FEC API (api.open.fec.gov)",
             "totalCandidates": len(output_candidates),
         },
-        "candidates":      output_candidates,
-        "byBioguideId":    by_bioguide,
+        "candidates":       output_candidates,
+        "byBioguideId":     by_bioguide,
         "byNormalizedName": by_name,
+        "byDistrict":       by_district,
     }
 
     os.makedirs(os.path.dirname(OUTPUT_FILE) or ".", exist_ok=True)
@@ -187,7 +262,7 @@ def main():
         json.dump(output, f, indent=2, ensure_ascii=False)
 
     size_kb = os.path.getsize(OUTPUT_FILE) // 1024
-    print(f"\nDone. {len(output_candidates)} candidates · {size_kb} KB → {OUTPUT_FILE}")
+    print(f"\nDone. {len(output_candidates)} candidates | {size_kb} KB -> {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":

@@ -362,6 +362,39 @@ permalink: /candidate.html
     } catch { return null; }
   }
 
+  function candidateLastName(name) {
+    // Extract last name from "First Last" or "First Middle Last" display name
+    const parts = (name || '').trim().split(/\s+/);
+    return parts[parts.length - 1].toLowerCase().replace(/[^a-z]/g, '');
+  }
+
+  function findFecId(fecData, candidate, race) {
+    // 1. Bioguide ID (most reliable — incumbents with enriched data)
+    const bioguide = candidate.existingMemberId || '';
+    if (bioguide && fecData.byBioguideId?.[bioguide]) {
+      return fecData.byBioguideId[bioguide];
+    }
+
+    // 2. District + last name (handles formal vs. nickname mismatches, e.g. "Michael" vs "Mike")
+    const chamber = race.chamber || '';
+    let distKey = null;
+    if (chamber === 'U.S. Senate') {
+      distKey = 'S';
+    } else if (chamber === 'U.S. House' && race.district != null) {
+      distKey = `H${race.district}`;
+    }
+    if (distKey && fecData.byDistrict?.[distKey]) {
+      const last = candidateLastName(candidate.name);
+      const distCandidates = fecData.byDistrict[distKey];
+      const match = distCandidates.find(cid => fecData.candidates?.[cid]?.lastName === last);
+      if (match) return match;
+    }
+
+    // 3. Normalized full name (exact FEC name match — works when names align)
+    const key = normalizeName(candidate.name);
+    return fecData.byNormalizedName?.[key] || null;
+  }
+
   async function loadCampaignFinance(candidate, race) {
     const container = document.getElementById('campaignFinance');
     if (!container) return;
@@ -395,13 +428,7 @@ permalink: /candidate.html
       return;
     }
 
-    // Look up by bioguide ID first, then by normalized name
-    const bioguide = candidate.existingMemberId || '';
-    let fecId = (bioguide && fecData.byBioguideId?.[bioguide]) || null;
-    if (!fecId) {
-      const key = normalizeName(candidate.name);
-      fecId = fecData.byNormalizedName?.[key] || null;
-    }
+    const fecId = findFecId(fecData, candidate, race);
 
     const entry = fecId ? fecData.candidates?.[fecId] : null;
     if (!entry) {
