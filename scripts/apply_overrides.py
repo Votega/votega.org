@@ -53,21 +53,31 @@ def apply(races_data: dict, overrides: dict) -> tuple[int, int]:
             print(f"  Race {race_id}: {list(patch.keys())}")
             race_count += 1
 
-        for cands in race.get("phases", {}).get("primary", {}).get("ballots", {}).values():
-            for c in cands:
-                if not isinstance(c, dict):
-                    continue
-                cid = c.get("id")
-                if not cid:
-                    continue
-                patch = cand_patches.get(cid)
-                if patch:
-                    for k, v in patch.items():
-                        if not k.startswith("_"):
-                            c[k] = v
-                    applied = [k for k in patch if not k.startswith("_")]
-                    print(f"    Candidate {cid}: {applied}")
-                    cand_count += 1
+        for phase_data in race.get("phases", {}).values():
+            for party, cands in phase_data.get("ballots", {}).items():
+                to_remove = []
+                for c in cands:
+                    if not isinstance(c, dict):
+                        continue
+                    cid = c.get("id")
+                    if not cid:
+                        continue
+                    patch = cand_patches.get(cid)
+                    if not patch:
+                        continue
+                    if patch.get("remove"):
+                        to_remove.append(c)
+                        print(f"    Candidate {cid}: [removed]")
+                        cand_count += 1
+                    else:
+                        for k, v in patch.items():
+                            if not k.startswith("_"):
+                                c[k] = v
+                        applied = [k for k in patch if not k.startswith("_")]
+                        print(f"    Candidate {cid}: {applied}")
+                        cand_count += 1
+                for c in to_remove:
+                    cands.remove(c)
 
     return race_count, cand_count
 
