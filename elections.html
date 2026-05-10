@@ -55,8 +55,9 @@ permalink: /elections.html
     font-size: 0.75rem;
     font-weight: bold;
   }
-  .phase-primary { background: #fef9c3; color: #854d0e; }
+  .phase-primary { background: #dcfce7; color: #166534; }
   .phase-general { background: #dcfce7; color: #166534; }
+  .phase-open-seat { background: #fee2e2; color: #991b1b; }
   .race-date { font-size: 0.8rem; color: #777; margin-top: 0.3rem; }
 
   .view-arrow { color: #1a56a8; font-size: 1.1rem; flex-shrink: 0; }
@@ -221,6 +222,7 @@ permalink: /elections.html
         </div>
         <div class="race-meta">
           <span class="phase-badge ${phaseClass}">${phaseLabel}</span>
+          ${race._note ? `<span class="phase-badge phase-open-seat">Open Seat</span>` : ''}
           ${dateStr ? `<div class="race-date">${dateStr}</div>` : ''}
         </div>
         <span class="view-arrow">›</span>
@@ -254,12 +256,12 @@ permalink: /elections.html
         return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi) || (a.district ?? 0) - (b.district ?? 0);
       }).forEach(r => { html += renderRaceRow(r, basePath); });
     } else {
+      if (activeTab === 'us-senate' || COUNTY_TABS.has(activeTab)) {
+        html += `<p class="box-note" style="margin-bottom:1rem;font-size:0.82rem;color:#555;">Many counties are served by multiple districts. If you are unsure which district you're in, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> and scroll to the bottom to see your districts.</p>`;
+      }
+
       races.sort((a, b) => (a.district ?? 0) - (b.district ?? 0))
            .forEach(r => { html += renderRaceRow(r, basePath); });
-
-      if (activeTab === 'us-senate' || COUNTY_TABS.has(activeTab)) {
-        html += `<p class="box-note" style="margin-top:1rem;font-size:0.82rem;color:#555;">Many counties are served by multiple districts. If you are unsure which district you're in, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> and scroll to the bottom to see your districts.</p>`;
-      }
     }
 
     racesOutput.innerHTML = html;

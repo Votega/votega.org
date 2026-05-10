@@ -100,14 +100,16 @@ def get_current_session(state="GA"):
 
 
 def get_session_people(session_id):
+    # getSessionPeople requires a higher API plan tier — may return "Invalid session id"
     data = legiscan("getSessionPeople", {"session_id": session_id})
     if not data:
         return []
     return data.get("sessionpeople", {}).get("people", [])
 
 
-def get_master_list(session_id):
-    data = legiscan("getMasterListRaw", {"session_id": session_id})
+def get_master_list(state="GA"):
+    # getMasterListRaw takes state=, not session_id=
+    data = legiscan("getMasterListRaw", {"state": state})
     if not data:
         return []
     master = data.get("masterlist", {})
@@ -154,23 +156,28 @@ def main():
     print("\nFetching session people...")
     session_people = get_session_people(session_id)
     # Build LegiScan people_id → OCD person ID via name matching
+    # If getSessionPeople is unavailable (plan restriction), we fall back to
+    # matching names on-the-fly from roll call vote records instead.
     legiscan_to_ocd = {}
-    unmatched = []
-    for person in session_people:
-        lid    = person.get("people_id")
-        name   = person.get("name", "")
-        ocd_id = match_member(name, name_index)
-        if ocd_id:
-            legiscan_to_ocd[lid] = ocd_id
-        else:
-            unmatched.append(name)
-    print(f"  Matched {len(legiscan_to_ocd)}/{len(session_people)} members by name")
-    if unmatched:
-        print(f"  Unmatched ({len(unmatched)}): {', '.join(unmatched)}")
+    if session_people:
+        unmatched = []
+        for person in session_people:
+            lid    = person.get("people_id")
+            name   = person.get("name", "")
+            ocd_id = match_member(name, name_index)
+            if ocd_id:
+                legiscan_to_ocd[lid] = ocd_id
+            else:
+                unmatched.append(name)
+        print(f"  Matched {len(legiscan_to_ocd)}/{len(session_people)} members by name")
+        if unmatched:
+            print(f"  Unmatched ({len(unmatched)}): {', '.join(unmatched)}")
+    else:
+        print("  getSessionPeople unavailable — will match names from roll call records")
     time.sleep(DELAY)
 
     print("\nFetching master bill list...")
-    bills = get_master_list(session_id)
+    bills = get_master_list()
     # Only fetch details for bills that have moved past introduction (status > 1)
     # LegiScan status: 1=Introduced, 2=Engrossed, 3=Enrolled, 4=Passed, 5=Vetoed, 6=Failed
     actionable = [b for b in bills if b.get("status", 0) > 1]
@@ -221,6 +228,13 @@ def main():
             for v in (rc.get("votes") or []):
                 lid    = v.get("people_id")
                 ocd_id = legiscan_to_ocd.get(lid)
+                # Lazy name match if getSessionPeople was unavailable
+                if not ocd_id and lid:
+                    name = v.get("name", "")
+                    if name:
+                        ocd_id = match_member(name, name_index)
+                        if ocd_id:
+                            legiscan_to_ocd[lid] = ocd_id
                 if not ocd_id:
                     continue
                 vote_label = VOTE_TEXT_MAP.get(v.get("vote_id"), v.get("vote_text", "Other"))
