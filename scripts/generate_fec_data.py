@@ -35,8 +35,9 @@ API_KEY     = os.environ.get('FEC_API_KEY')
 BASE_URL    = "https://api.open.fec.gov/v1"
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-fec-data.json"
 CYCLE       = 2026
-DELAY       = 0.5
-TOP_N       = 10   # top employers to store per candidate
+DELAY       = 0.75
+TOP_N       = 10   # top employers/donors to store per candidate
+FETCH_N     = 25   # fetch more from API to allow for filtered-out junk entries
 
 
 def fec_get(path, params=None):
@@ -68,6 +69,16 @@ def get_ga_candidates():
     return candidates
 
 
+def get_principal_committee_id(candidate_id):
+    """The candidates list endpoint omits principal_committees.
+    Use /candidate/{id}/committees/ filtered to designation='P' (principal).
+    """
+    data = fec_get(f"/candidate/{candidate_id}/committees/", {"designation": "P"})
+    if not data or not data.get("results"):
+        return None
+    return data["results"][0].get("committee_id")
+
+
 def get_committee_totals(committee_id):
     data = fec_get(f"/committee/{committee_id}/totals/", {"cycle": CYCLE})
     if not data or not data.get("results"):
@@ -91,17 +102,24 @@ def get_top_employers(committee_id):
     data = fec_get("/schedules/schedule_a/by_employer/", {
         "committee_id":              committee_id,
         "two_year_transaction_period": CYCLE,
-        "per_page":                  TOP_N,
+        "per_page":                  FETCH_N,
         "sort":                      "-total",
         "sort_hide_null":            "true",
     })
     if not data:
         return []
     results = []
+    SKIP_EMPLOYERS = {"NONE", "N/A", "NA", "INFORMATION REQUESTED",
+                      "NOT EMPLOYED", "UNEMPLOYED", "HOMEMAKER",
+                      "SELF", "SELFEMPLOYED", "SELF-EMPLOYED", "SELF EMPLOYED",
+                      "RETIRED", "STUDENT"}
+    seen_employers = set()
     for r in data.get("results", []):
         emp = (r.get("employer") or "").strip()
-        if not emp or emp.upper() in ("NONE", "N/A", "NA", "INFORMATION REQUESTED"):
+        emp_key = re.sub(r'[\s\-]', '', emp.upper())   # normalize spaces/hyphens for dedup
+        if not emp or emp_key in SKIP_EMPLOYERS or emp_key in seen_employers:
             continue
+        seen_employers.add(emp_key)
         results.append({
             "employer": emp.title(),
             "total":    round(r.get("total", 0)),
@@ -114,13 +132,12 @@ SKIP_OCCUPATIONS = {"NONE", "N/A", "NA", "NOT EMPLOYED", "INFORMATION REQUESTED"
 
 def get_top_donors(committee_id):
     """Top individual itemized contributions sorted by amount descending.
-    Uses schedule_a (individual contributions line), sorted by receipt amount.
-    Only available for candidates whose principal_committees were returned by the FEC list endpoint.
+    Uses schedule_a sorted by receipt amount. Requires a committee_id.
     """
     data = fec_get("/schedules/schedule_a/", {
         "committee_id":              committee_id,
         "two_year_transaction_period": CYCLE,
-        "per_page":                  TOP_N,
+        "per_page":                  FETCH_N,
         "sort":                      "-contribution_receipt_amount",
         "sort_hide_null":            "true",
         "is_individual":             "true",
@@ -233,6 +250,11 @@ def main():
         bioguide   = c.get("bioguide_id") or ""
         committees = c.get("principal_committees") or []
         committee_id = committees[0].get("committee_id") if committees else None
+
+        # List endpoint often omits principal_committees — fetch via individual detail endpoint
+        if not committee_id:
+            time.sleep(DELAY)
+            committee_id = get_principal_committee_id(cid)
 
         # FEC doesn't return bioguide_id in list responses; enrich from current-members.json
         if not bioguide and bioguide_map:
