@@ -178,10 +178,24 @@ def main():
 
     print("\nFetching master bill list...")
     bills = get_master_list()
-    # Only fetch details for bills that have moved past introduction (status > 1)
-    # LegiScan status: 1=Introduced, 2=Engrossed, 3=Enrolled, 4=Passed, 5=Vetoed, 6=Failed
+    # Log status distribution to understand what values LegiScan is returning
+    status_dist = {}
+    for b in bills:
+        s = b.get("status", "missing")
+        status_dist[s] = status_dist.get(s, 0) + 1
+    print(f"  Status distribution: {sorted(status_dist.items())}")
+
+    # Sample last_action values to find a usable filter
+    sample_actions = [b.get("last_action", "") for b in bills[:10]]
+    print(f"  Sample last_action values: {sample_actions}")
+
+    # Filter: prefer status > 1, but fall back to any bill with a last_action
+    # (LegiScan may set status=0 for all bills after session ends)
     actionable = [b for b in bills if b.get("status", 0) > 1]
-    print(f"  {len(bills)} total bills, {len(actionable)} past introduction (will fetch details)")
+    if not actionable:
+        print("  No bills with status > 1 — falling back to bills with last_action set")
+        actionable = [b for b in bills if b.get("last_action")]
+    print(f"  {len(bills)} total bills, {len(actionable)} actionable (will fetch details)")
     time.sleep(DELAY)
 
     votes_meta        = {}
