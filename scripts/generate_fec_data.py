@@ -35,23 +35,34 @@ API_KEY     = os.environ.get('FEC_API_KEY')
 BASE_URL    = "https://api.open.fec.gov/v1"
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-fec-data.json"
 CYCLE       = 2026
-DELAY       = 0.75
+DELAY       = 1.0
 TOP_N       = 10   # top employers/donors to store per candidate
 FETCH_N     = 25   # fetch more from API to allow for filtered-out junk entries
 
 
-def fec_get(path, params=None):
+def fec_get(path, params=None, retries=3):
     query = {"api_key": API_KEY, "per_page": 100}
     if params:
         query.update(params)
     url = f"{BASE_URL}{path}?{urllib.parse.urlencode(query)}"
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "votega.org/1.0"})
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read().decode("utf-8"))
-    except Exception as e:
-        print(f"    Error {path}: {e}")
-        return None
+    for attempt in range(1, retries + 1):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "votega.org/1.0"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            if e.code == 429:
+                wait = 60 * attempt  # back off 60s, 120s, 180s
+                print(f"    Rate limited — waiting {wait}s before retry {attempt}/{retries}")
+                time.sleep(wait)
+            else:
+                print(f"    Error {path}: HTTP {e.code}")
+                return None
+        except Exception as e:
+            print(f"    Error {path}: {e}")
+            return None
+    print(f"    Giving up on {path} after {retries} retries")
+    return None
 
 
 def get_ga_candidates():
@@ -130,42 +141,7 @@ def get_top_employers(committee_id):
     return results[:TOP_N]
 
 
-SKIP_OCCUPATIONS = {"NONE", "N/A", "NA", "NOT EMPLOYED", "INFORMATION REQUESTED", "HOMEMAKER"}
 
-def get_top_donors(committee_id):
-    """Top individual itemized contributions sorted by amount descending.
-    Uses schedule_a sorted by receipt amount. Requires a committee_id.
-    """
-    data = fec_get("/schedules/schedule_a/", {
-        "committee_id":              committee_id,
-        "two_year_transaction_period": CYCLE,
-        "per_page":                  FETCH_N,
-        "sort":                      "-contribution_receipt_amount",
-        "sort_hide_null":            "true",
-        "is_individual":             "true",
-    })
-    if not data:
-        return []
-    results = []
-    seen_names = set()
-    for r in data.get("results", []):
-        name   = (r.get("contributor_name") or "").strip()
-        amount = r.get("contribution_receipt_amount") or 0
-        if not name or amount <= 0:
-            continue
-        name_key = re.sub(r'[^a-z]', '', name.lower())
-        if name_key in seen_names:
-            continue
-        seen_names.add(name_key)
-        employer   = (r.get("contributor_employer")   or "").strip()
-        occupation = (r.get("contributor_occupation") or "").strip()
-        results.append({
-            "name":       name.title(),
-            "amount":     round(amount),
-            "employer":   employer.title()   if employer   and employer.upper()   not in SKIP_OCCUPATIONS else "",
-            "occupation": occupation.title() if occupation and occupation.upper() not in SKIP_OCCUPATIONS else "",
-        })
-    return results[:TOP_N]
 
 
 def normalize_name(name):
@@ -287,16 +263,19 @@ def main():
             time.sleep(DELAY)
             totals = get_committee_totals(committee_id)
             if totals:
-                entry["totalRaised"]     = totals.get("receipts")
-                entry["totalSpent"]      = totals.get("disbursements")
-                entry["cashOnHand"]      = (totals.get("last_cash_on_hand_end_period")
-                                            or totals.get("cash_on_hand_end_period"))
-                entry["coverageEndDate"] = totals.get("coverage_end_date", "")
+                entry["totalRaised"]      = totals.get("receipts")
+                entry["totalSpent"]       = totals.get("disbursements")
+                entry["cashOnHand"]       = (totals.get("last_cash_on_hand_end_period")
+                                             or totals.get("cash_on_hand_end_period"))
+                entry["coverageEndDate"]  = totals.get("coverage_end_date", "")
+                # individual_itemized + individual_unitemized = total from individuals
+                itemized   = totals.get("individual_itemized_contributions") or 0
+                unitemized = totals.get("individual_unitemized_contributions") or 0
+                if itemized or unitemized:
+                    entry["totalIndividual"] = round(itemized + unitemized)
 
             time.sleep(DELAY)
             entry["topEmployers"] = get_top_employers(committee_id)
-            time.sleep(DELAY)
-            entry["topDonors"] = get_top_donors(committee_id)
         else:
             # principal_committees missing from list response — fall back to candidate totals
             time.sleep(DELAY)
@@ -309,7 +288,6 @@ def main():
                                             or totals.get("cash_on_hand_end_period"))
                 entry["coverageEndDate"] = totals.get("coverage_end_date", "")
             entry["topEmployers"] = []
-            entry["topDonors"]    = []
 
         output_candidates[cid] = entry
 

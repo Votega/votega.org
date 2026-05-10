@@ -498,19 +498,6 @@ permalink: /candidate.html
         </tbody>
       </table>` : '';
 
-    const donorsHtml = (entry.topDonors || []).length ? `
-      <h4 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Individual Contributions</h4>
-      <table class="employers-table">
-        <thead><tr><th>Contributor</th><th>Employer / Occupation</th><th>Amount</th></tr></thead>
-        <tbody>
-          ${entry.topDonors.map(d => `
-            <tr>
-              <td>${d.name}</td>
-              <td style="color:#555;font-size:0.82rem;">${d.employer || d.occupation || '—'}</td>
-              <td>${fmtMoney(d.amount)}</td>
-            </tr>`).join('')}
-        </tbody>
-      </table>` : '';
 
     container.innerHTML = `
       <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h3>
@@ -527,11 +514,15 @@ permalink: /candidate.html
           <div class="finance-card-label">Cash on Hand</div>
           <div class="finance-card-value">${fmtMoney(entry.cashOnHand)}</div>
         </div>
+        ${entry.totalIndividual != null ? `
+        <div class="finance-card" style="background:#f5f3ff;border:1px solid #ddd6fe;">
+          <div class="finance-card-label" style="color:#5b21b6;">From Individuals</div>
+          <div class="finance-card-value" style="color:#6d28d9;">${fmtMoney(entry.totalIndividual)}</div>
+        </div>` : ''}
       </div>
       <p class="finance-meta">${coverageNote}</p>
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
-      ${employersHtml}
-      ${donorsHtml}`;
+      ${employersHtml}`;
   }
 
   function buildServiceHistory(member, memberSource) {
