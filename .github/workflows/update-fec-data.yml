@@ -34,7 +34,7 @@ jobs:
             echo "Error: ga-fec-data.json was not generated"
             exit 1
           fi
-          python -c "import json; d=json.load(open('assets/data/ga-fec-data.json')); print(f\"{d['metadata']['totalCandidates']} candidates\")"
+          python -c "import json,sys; d=json.load(open('assets/data/ga-fec-data.json')); n=d['metadata']['totalCandidates']; print(f'{n} candidates'); sys.exit(1) if n==0 else None"
 
       - name: Commit and push
         run: |

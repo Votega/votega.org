@@ -49,7 +49,7 @@ def get_ga_candidates():
     for office in ("H", "S"):
         data = fec_get("/candidates/", {
             "state": "GA", "office": office, "cycle": CYCLE,
-            "sort": "-receipts", "per_page": 100
+            "sort": "name", "per_page": 100
         })
         if data:
             results = data.get("results", [])
@@ -113,6 +113,9 @@ def main():
     print(f"Fetching GA congressional candidates from FEC (cycle {CYCLE})...")
     raw_candidates = get_ga_candidates()
     print(f"  Total: {len(raw_candidates)} candidates found")
+    if not raw_candidates:
+        print("Error: no candidates returned — aborting to avoid overwriting good data")
+        sys.exit(1)
 
     output_candidates = {}
     by_bioguide = {}
