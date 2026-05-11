@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Georgia Congressional Stock Trades
+title: Georgia Congressional Stock Trades 
 permalink: /ga-congress-trades.html
 ---
 
@@ -199,6 +199,15 @@ permalink: /ga-congress-trades.html
     color: #78350f;
   }
   #noResults { display: none; padding: 2rem; text-align: center; color: #6b7280; font-size: 0.9rem; }
+  #selectPrompt {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.95rem;
+    border: 2px dashed #e5e7eb;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+  }
 
   @media (max-width: 640px) {
     .member-card { max-width: 100%; }
@@ -239,6 +248,7 @@ permalink: /ga-congress-trades.html
   <button id="clearFilters">Clear filters</button>
 </div>
 
+<div id="selectPrompt">Select a member above to view their trades.</div>
 <div id="tradeCount"></div>
 <div id="tradeTableWrap">
   <table class="trade-table">
@@ -411,9 +421,9 @@ permalink: /ga-congress-trades.html
       });
     });
 
-    // Apply preset member from URL
+    // Apply preset member from URL, otherwise show the prompt
     if (presetMember) applyFilters();
-    else render(allTrades);
+    else showPrompt();
   }
 
   function buildMemberCards(members) {
@@ -523,6 +533,7 @@ permalink: /ga-congress-trades.html
   }
 
   function render(trades) {
+    hidePrompt();
     displayed = 0;
     document.getElementById('tradeBody').innerHTML = '';
     appendRows(trades, PAGE_SIZE);
@@ -615,7 +626,20 @@ permalink: /ga-congress-trades.html
     document.querySelectorAll('.trade-table th[data-col]').forEach(th => {
       th.classList.remove('sort-asc', 'sort-desc');
     });
-    render(allTrades);
+    showPrompt();
+  }
+
+  function showPrompt() {
+    document.getElementById('selectPrompt').style.display = 'block';
+    document.getElementById('tradeTableWrap').style.display = 'none';
+    document.getElementById('tradeCount').textContent = '';
+    document.getElementById('loadMore').style.display = 'none';
+    document.getElementById('noResults').style.display = 'none';
+  }
+
+  function hidePrompt() {
+    document.getElementById('selectPrompt').style.display = 'none';
+    document.getElementById('tradeTableWrap').style.display = '';
   }
 
   init();
