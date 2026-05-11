@@ -1,0 +1,622 @@
+---
+layout: default
+title: Georgia Congressional Stock Trades
+permalink: /ga-congress-trades.html
+---
+
+<h1>Georgia Congressional Stock Trades</h1>
+<p>
+  Federal lawmakers must disclose personal stock trades within 45 days under the STOCK Act.
+  This page tracks trades filed by Georgia's House delegation.
+  Dollar amounts are ranges, not exact figures.
+</p>
+
+<style>
+  /* Summary bar */
+  #summaryBar {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.85rem 1.1rem;
+    margin: 1.25rem 0 1.5rem;
+    font-size: 0.9rem;
+    color: #374151;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  #summaryBar strong { font-size: 1.05rem; }
+  #summaryBar .divider { color: #cbd5e1; }
+
+  /* Member cards */
+  #memberCards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .member-card {
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    min-width: 200px;
+    flex: 1;
+    max-width: 300px;
+  }
+  .member-card:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .member-card.active { border-color: #1d4ed8; background: #eff6ff; }
+  .member-card img {
+    width: 44px; height: 44px; border-radius: 50%;
+    object-fit: cover; flex-shrink: 0; background: #e5e7eb;
+  }
+  .member-card-info { min-width: 0; }
+  .member-card-name { font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .member-card-office { font-size: 0.75rem; color: #6b7280; margin-top: 0.1rem; }
+  .member-card-stats { display: flex; gap: 0.75rem; margin-top: 0.35rem; font-size: 0.75rem; }
+  .stat-trades { color: #1d4ed8; font-weight: 600; }
+  .stat-late { color: #b91c1c; font-weight: 600; }
+  .stat-volume { color: #374151; }
+
+  /* Party badge */
+  .badge-r { background: #fee2e2; color: #991b1b; font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 3px; }
+  .badge-d { background: #dbeafe; color: #1e40af; font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 3px; }
+
+  /* Filters */
+  .filter-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+  }
+  .filter-row label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 0.2rem; }
+  .filter-row select, .filter-row input {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.875rem;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    background: #fff;
+  }
+  #clearFilters {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    background: #fff;
+    cursor: pointer;
+    color: #374151;
+    align-self: flex-end;
+  }
+  #clearFilters:hover { background: #f3f4f6; }
+
+  /* Trade table */
+  #tradeTableWrap { overflow-x: auto; }
+  .trade-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  .trade-table th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    background: #f3f4f6;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 2px solid #e5e7eb;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  .trade-table th:hover { background: #e9eaec; }
+  .trade-table th .sort-icon { color: #9ca3af; margin-left: 0.25rem; font-size: 0.7rem; }
+  .trade-table th.sort-asc .sort-icon::after  { content: ' ▲'; }
+  .trade-table th.sort-desc .sort-icon::after { content: ' ▼'; }
+  .trade-table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+  .trade-table tr:hover td { background: #fafafa; }
+  .trade-table tr.is-late td { background: #fff7ed; }
+  .trade-table tr.is-late:hover td { background: #ffedd5; }
+
+  .type-purchase { color: #15803d; font-weight: 600; }
+  .type-sale     { color: #b91c1c; font-weight: 600; }
+  .ticker-chip {
+    display: inline-block;
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    font-family: monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1d4ed8;
+  }
+  .late-badge {
+    display: inline-block;
+    background: #fee2e2;
+    color: #991b1b;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    margin-left: 0.25rem;
+  }
+  .owner-badge {
+    display: inline-block;
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+  }
+  .asset-type-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    margin-left: 0.3rem;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .asset-CT { background: #fef3c7; color: #92400e; }  /* Crypto */
+  .asset-ST { background: #ede9fe; color: #5b21b6; }  /* Stock */
+  .asset-GS { background: #dcfce7; color: #166534; }  /* Gov Security */
+  .asset-CS { background: #e0f2fe; color: #0c4a6e; }  /* Corporate Security */
+  .asset-OT { background: #f3f4f6; color: #374151; }  /* Other */
+  .asset-HN { background: #fce7f3; color: #9d174d; }  /* Hedge/Note */
+
+  #tradeCount { font-size: 0.85rem; color: #6b7280; margin-bottom: 0.5rem; }
+  #loadMore {
+    display: none;
+    margin: 1rem auto;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.875rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    color: #374151;
+    text-align: center;
+  }
+  #loadMore:hover { background: #f3f4f6; }
+
+  .disclaimer {
+    margin-top: 2rem;
+    padding: 0.85rem 1rem;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: #78350f;
+  }
+  #noResults { display: none; padding: 2rem; text-align: center; color: #6b7280; font-size: 0.9rem; }
+
+  @media (max-width: 640px) {
+    .member-card { max-width: 100%; }
+    .trade-table th:nth-child(4),
+    .trade-table td:nth-child(4),
+    .trade-table th:nth-child(6),
+    .trade-table td:nth-child(6) { display: none; }
+  }
+</style>
+
+<div id="summaryBar">Loading trade data…</div>
+<div id="memberCards"></div>
+
+<div class="filter-row">
+  <div>
+    <label for="memberFilter">Member</label>
+    <select id="memberFilter"><option value="">All members</option></select>
+  </div>
+  <div>
+    <label for="typeFilter">Trade type</label>
+    <select id="typeFilter">
+      <option value="">All types</option>
+      <option value="purchase">Purchases</option>
+      <option value="sale">Sales</option>
+    </select>
+  </div>
+  <div>
+    <label for="tickerFilter">Ticker</label>
+    <input id="tickerFilter" type="text" placeholder="e.g. AAPL" style="width:90px;">
+  </div>
+  <div>
+    <label for="lateFilter">Show</label>
+    <select id="lateFilter">
+      <option value="">All trades</option>
+      <option value="late">Late filings only</option>
+    </select>
+  </div>
+  <button id="clearFilters">Clear filters</button>
+</div>
+
+<div id="tradeCount"></div>
+<div id="tradeTableWrap">
+  <table class="trade-table">
+    <thead>
+      <tr>
+        <th data-col="transaction_date">Date<span class="sort-icon"></span></th>
+        <th data-col="member">Member<span class="sort-icon"></span></th>
+        <th data-col="ticker">Ticker<span class="sort-icon"></span></th>
+        <th data-col="asset_name">Asset<span class="sort-icon"></span></th>
+        <th data-col="transaction_type">Type<span class="sort-icon"></span></th>
+        <th data-col="amount_range_low">Amount<span class="sort-icon"></span></th>
+        <th data-col="days_to_file">Disclosed After<span class="sort-icon"></span></th>
+      </tr>
+    </thead>
+    <tbody id="tradeBody"></tbody>
+  </table>
+</div>
+<div id="noResults">No trades match the current filters.</div>
+<button id="loadMore">Load more</button>
+
+<div class="disclaimer" id="disclaimer" style="display:none;"></div>
+
+<script>
+  const DATA_URL  = 'assets/data/ga-congress-trades.json';
+  const PAGE_SIZE = 50;
+
+  const ASSET_TYPE_LABELS = {
+    CT: 'Crypto',
+    ST: 'Stock',
+    GS: 'Gov. Security',
+    CS: 'Corp. Security',
+    OT: 'Other',
+    HN: 'Note',
+  };
+
+  function assetBadge(code) {
+    return `<span class="asset-type-badge asset-${code}">${ASSET_TYPE_LABELS[code] || code}</span>`;
+  }
+
+  function renderAssetName(raw, ticker) {
+    const lookedUp = ticker && tickerNames[ticker];
+
+    // Code at start: "[ST] F S: New Cisco Systems..."
+    let m = raw && raw.match(/^\[([A-Z]{2,3})\]\s*(?:F S:\s*(?:New\s*)?)?(.+)$/);
+    if (m) {
+      const code = m[1], name = lookedUp || m[2].trim();
+      return `${assetBadge(code)} ${name}`;
+    }
+
+    // Code at end: "Asset Name [CT]" or "F S: New Asset [CT]"
+    m = raw && raw.match(/^(?:F S:\s*(?:New\s*)?)?(.+?)\s*\[([A-Z]{2,3})\]$/);
+    if (m) {
+      const name = lookedUp || m[1].trim(), code = m[2];
+      return `${assetBadge(code)} ${name}`;
+    }
+
+    // Clean the raw name
+    const cleaned = (raw || '').replace(/^F S:\s*(?:New\s*)?/, '').trim();
+    const display = lookedUp || cleaned || '—';
+
+    // Any trade with a ticker is a stock (or stock-like instrument)
+    if (ticker) return `${assetBadge('ST')} ${display}`;
+
+    // No ticker — heuristic: name suggests a company/fund
+    if (cleaned) {
+      const lower = cleaned.toLowerCase();
+      if (lower.includes('common stock') || lower.includes('- common') ||
+          lower.match(/\b(inc|corp|ltd|llc|plc)\b/)) {
+        return `${assetBadge('ST')} ${cleaned}`;
+      }
+    }
+
+    return display;
+  }
+
+  const urlParams    = new URLSearchParams(window.location.search);
+  const presetMember = urlParams.get('member') || '';
+
+  let tickerNames = {};  // ticker -> company name from Yahoo Finance
+  let allTrades  = [];   // flat sorted array of {member, ...tradeFields}
+  let filtered   = [];
+  let displayed  = 0;
+  let sortCol    = 'transaction_date';
+  let sortDir    = 'desc';
+  let activeMemberCard = null;
+
+  function getBasePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+
+  async function init() {
+    let data;
+    try {
+      const res = await fetch(DATA_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      data = await res.json();
+    } catch (err) {
+      document.getElementById('summaryBar').textContent =
+        'Could not load trade data. Run the update-ga-congress-trades workflow to generate it.';
+      return;
+    }
+
+    const meta    = data.metadata || {};
+    const members = data.byMember || {};
+    tickerNames   = data.tickerNames || {};
+
+    // Flatten all trades into one array
+    for (const [name, info] of Object.entries(members)) {
+      for (const t of info.trades) {
+        allTrades.push({
+          member:       name,
+          party:        info.party,
+          office:       info.office,
+          chamber:      info.chamber,
+          ...t,
+        });
+      }
+    }
+
+    // Populate member filter dropdown
+    const memberSel = document.getElementById('memberFilter');
+    for (const name of Object.keys(members).sort()) {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      if (presetMember && name.toLowerCase().includes(presetMember.toLowerCase())) {
+        opt.selected = true;
+      }
+      memberSel.appendChild(opt);
+    }
+
+    // Build member cards
+    buildMemberCards(members);
+
+    // Summary bar
+    const totalLate = Object.values(members).reduce((n, m) => n + (m.lateFilings || 0), 0);
+    const updatedAt = meta.generatedAt
+      ? new Date(meta.generatedAt).toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})
+      : 'unknown';
+    document.getElementById('summaryBar').innerHTML = `
+      <span><strong>${allTrades.length.toLocaleString()}</strong> total trades</span>
+      <span class="divider">|</span>
+      <span><strong>${Object.keys(members).length}</strong> GA members</span>
+      <span class="divider">|</span>
+      <span><strong>${totalLate.toLocaleString()}</strong> late filings</span>
+      <span class="divider">|</span>
+      <span style="color:#6b7280;">Updated ${updatedAt}</span>
+    `;
+
+    document.getElementById('disclaimer').textContent = meta.disclaimer || '';
+    document.getElementById('disclaimer').style.display = 'block';
+
+    // Wire up filters and sorting
+    ['memberFilter','typeFilter','tickerFilter','lateFilter'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', applyFilters);
+    });
+    document.getElementById('clearFilters').addEventListener('click', clearFilters);
+    document.getElementById('loadMore').addEventListener('click', loadMore);
+    document.querySelectorAll('.trade-table th[data-col]').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = th.dataset.col;
+        if (sortCol === col) {
+          sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          sortCol = col;
+          sortDir = col === 'transaction_date' ? 'desc' : 'asc';
+        }
+        applyFilters();
+      });
+    });
+
+    // Apply preset member from URL
+    if (presetMember) applyFilters();
+    else render(allTrades);
+  }
+
+  function buildMemberCards(members) {
+    const basePath    = getBasePath();
+    const container   = document.getElementById('memberCards');
+
+    // Sort by trade count desc
+    const sorted = Object.entries(members).sort((a, b) => b[1].tradeCount - a[1].tradeCount);
+
+    for (const [name, info] of sorted) {
+      const card = document.createElement('div');
+      card.className = 'member-card';
+      card.dataset.member = name;
+
+      const partyBadge = info.party === 'D'
+        ? `<span class="badge-d">D</span>`
+        : `<span class="badge-r">R</span>`;
+
+      const vol = info.estVolume
+        ? `$${(info.estVolume / 1000000).toFixed(1)}M`
+        : '';
+
+      const lateHtml = info.lateFilings > 0
+        ? `<span class="stat-late">${info.lateFilings} late</span>`
+        : '';
+
+      const imgHtml = info.photoUrl
+        ? `<img src="${info.photoUrl}" alt="${name}" loading="lazy">`
+        : `<div style="width:44px;height:44px;border-radius:50%;background:#e5e7eb;flex-shrink:0;"></div>`;
+
+      const district = (info.office || '').split('·')[1]?.trim() || '';
+
+      card.innerHTML = `
+        ${imgHtml}
+        <div class="member-card-info" style="min-width:0;">
+          <div class="member-card-name">${name} ${partyBadge}</div>
+          <div class="member-card-office">${district}</div>
+          <div class="member-card-stats">
+            <span class="stat-trades">${info.tradeCount} trades</span>
+            ${lateHtml}
+            ${vol ? `<span class="stat-volume">${vol}</span>` : ''}
+          </div>
+        </div>`;
+
+      card.addEventListener('click', () => {
+        if (activeMemberCard === name) {
+          // Deselect — show all
+          activeMemberCard = null;
+          card.classList.remove('active');
+          document.getElementById('memberFilter').value = '';
+          applyFilters();
+        } else {
+          activeMemberCard = name;
+          document.querySelectorAll('.member-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          document.getElementById('memberFilter').value = name;
+          applyFilters();
+        }
+      });
+
+      container.appendChild(card);
+    }
+  }
+
+  function applyFilters() {
+    const memberVal = document.getElementById('memberFilter').value;
+    const typeVal   = document.getElementById('typeFilter').value.toLowerCase();
+    const tickerVal = document.getElementById('tickerFilter').value.trim().toUpperCase();
+    const lateVal   = document.getElementById('lateFilter').value;
+
+    // Sync card highlight with dropdown
+    document.querySelectorAll('.member-card').forEach(c => {
+      c.classList.toggle('active', c.dataset.member === memberVal);
+    });
+    activeMemberCard = memberVal || null;
+
+    filtered = allTrades.filter(t => {
+      if (memberVal && t.member !== memberVal) return false;
+      if (typeVal) {
+        const tt = (t.transaction_type || '').toLowerCase();
+        if (typeVal === 'purchase' && !tt.includes('purchase')) return false;
+        if (typeVal === 'sale'     && !tt.includes('sale'))     return false;
+      }
+      if (tickerVal && (t.ticker || '').toUpperCase() !== tickerVal) return false;
+      if (lateVal === 'late' && !t.is_late) return false;
+      return true;
+    });
+
+    // Sort
+    filtered.sort((a, b) => {
+      let av = a[sortCol] ?? '';
+      let bv = b[sortCol] ?? '';
+      if (typeof av === 'string') av = av.toLowerCase();
+      if (typeof bv === 'string') bv = bv.toLowerCase();
+      if (av < bv) return sortDir === 'asc' ? -1 : 1;
+      if (av > bv) return sortDir === 'asc' ?  1 : -1;
+      return 0;
+    });
+
+    // Update sort icons
+    document.querySelectorAll('.trade-table th[data-col]').forEach(th => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (th.dataset.col === sortCol) th.classList.add(`sort-${sortDir}`);
+    });
+
+    render(filtered);
+  }
+
+  function render(trades) {
+    displayed = 0;
+    document.getElementById('tradeBody').innerHTML = '';
+    appendRows(trades, PAGE_SIZE);
+
+    const noResults = document.getElementById('noResults');
+    noResults.style.display = trades.length === 0 ? 'block' : 'none';
+
+    document.getElementById('tradeCount').textContent =
+      trades.length === allTrades.length
+        ? `Showing ${Math.min(displayed, trades.length).toLocaleString()} of ${trades.length.toLocaleString()} trades`
+        : `${trades.length.toLocaleString()} trades match filters`;
+  }
+
+  function appendRows(trades, count) {
+    const tbody    = document.getElementById('tradeBody');
+    const basePath = getBasePath();
+    const end      = Math.min(displayed + count, trades.length);
+
+    const fmt = d => d
+      ? new Date(d + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})
+      : '—';
+
+    for (let i = displayed; i < end; i++) {
+      const t   = trades[i];
+      const row = document.createElement('tr');
+      if (t.is_late) row.classList.add('is-late');
+
+      const tt  = (t.transaction_type || '').toLowerCase();
+      const typeClass = tt.includes('purchase') ? 'type-purchase' : 'type-sale';
+      const typeLabel = t.transaction_type || '—';
+
+      const tickerHtml = t.ticker
+        ? `<span class="ticker-chip">${t.ticker}</span>`
+        : `<span style="color:#9ca3af;font-size:0.8rem;">—</span>`;
+
+      const daysHtml = t.days_to_file != null
+        ? `${t.days_to_file}d${t.is_late ? ' <span class="late-badge">LATE</span>' : ''}`
+        : '—';
+
+      const ownerMap = { 'SP': 'Spouse', 'JT': 'Joint', 'DC': 'Dependent' };
+      const ownerHtml = t.owner && t.owner !== 'None' && ownerMap[t.owner]
+        ? ` <span class="owner-badge">${ownerMap[t.owner]}</span>`
+        : '';
+
+      const partyClass = t.party === 'D' ? 'badge-d' : 'badge-r';
+      const memberHtml = `<span class="${partyClass}" style="margin-right:0.3rem;">${t.party}</span>${t.member}${ownerHtml}`;
+
+      row.innerHTML = `
+        <td>${fmt(t.transaction_date)}</td>
+        <td>${memberHtml}</td>
+        <td>${tickerHtml}</td>
+        <td style="font-size:0.8rem;color:#374151;max-width:200px;" title="${t.asset_name || ''}">${renderAssetName(t.asset_name, t.ticker)}</td>
+        <td class="${typeClass}">${typeLabel}</td>
+        <td>${t.amount_range_label || '—'}</td>
+        <td>${daysHtml}</td>`;
+
+      tbody.appendChild(row);
+    }
+
+    displayed = end;
+    const loadMoreBtn = document.getElementById('loadMore');
+    const remaining   = trades.length - displayed;
+    if (remaining > 0) {
+      loadMoreBtn.style.display = 'block';
+      loadMoreBtn.textContent   = `Load ${Math.min(remaining, PAGE_SIZE)} more (${remaining} remaining)`;
+    } else {
+      loadMoreBtn.style.display = 'none';
+    }
+
+    document.getElementById('tradeCount').textContent =
+      trades === allTrades
+        ? `Showing ${displayed.toLocaleString()} of ${trades.length.toLocaleString()} trades`
+        : `${trades.length.toLocaleString()} trades match filters — showing ${displayed.toLocaleString()}`;
+  }
+
+  function loadMore() {
+    appendRows(filtered.length ? filtered : allTrades, PAGE_SIZE);
+  }
+
+  function clearFilters() {
+    document.getElementById('memberFilter').value  = '';
+    document.getElementById('typeFilter').value    = '';
+    document.getElementById('tickerFilter').value  = '';
+    document.getElementById('lateFilter').value    = '';
+    activeMemberCard = null;
+    document.querySelectorAll('.member-card').forEach(c => c.classList.remove('active'));
+    filtered = [];
+    sortCol = 'transaction_date';
+    sortDir = 'desc';
+    document.querySelectorAll('.trade-table th[data-col]').forEach(th => {
+      th.classList.remove('sort-asc', 'sort-desc');
+    });
+    render(allTrades);
+  }
+
+  init();
+</script>

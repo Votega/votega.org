@@ -1,0 +1,23 @@
+{
+  "_note": "Manual overrides for GA Congress trade data, applied after generate_ga_congress_trades.py fetches from kadoa-org/congress-trading-monitor. Keys are filer IDs from that dataset. Use _exclude to drop a filer entirely, _mergeInto to fold one filer's trades into another (dedup), and any other fields to patch filer-level values.",
+
+  "house_richarddeandr_mccormick": {
+    "_note": "Source dataset incorrectly shows NY-01. McCormick represents GA-07.",
+    "office": "U.S. Representative · GA-07"
+  },
+
+  "house_michaela_collins_jr": {
+    "_note": "Duplicate entry for Michael Collins (GA-10). Merge trades into the primary entry.",
+    "_mergeInto": "house_michaela_collins"
+  },
+
+  "house_michaela_collins": {
+    "_note": "Michael Collins represents GA-10, not GA-08 as shown in source data.",
+    "office": "U.S. Representative · GA-10"
+  },
+
+  "house_tomthomas_graves_jr": {
+    "_note": "Tom Graves left Congress January 3, 2021. No longer a current member.",
+    "_exclude": true
+  }
+}

@@ -1,0 +1,57 @@
+name: Update GA Congress stock trades data
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly on Sundays at 10:00 UTC
+    - cron: '0 10 * * 0'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate GA Congress trades data
+        run: python scripts/generate_ga_congress_trades.py assets/data/ga-congress-trades.json
+
+      - name: Validate generated data
+        run: |
+          if [ ! -f assets/data/ga-congress-trades.json ]; then
+            echo "Error: ga-congress-trades.json was not generated"
+            exit 1
+          fi
+          python -c "
+          import json, os
+          d = json.load(open('assets/data/ga-congress-trades.json'))
+          meta    = d.get('metadata', {})
+          tickers = meta.get('tickersWithTrades', 0)
+          trades  = meta.get('totalTrades', 0)
+          members = len(meta.get('gaMembers', []))
+          size_kb = os.path.getsize('assets/data/ga-congress-trades.json') // 1024
+          print(f'Validated: {tickers} tickers with trades, {trades} total trades, {members} GA members, {size_kb} KB')
+          "
+
+      - name: Commit and push generated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git rebase origin/main
+          git add -f assets/data/ga-congress-trades.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update GA Congress stock trades data"
+            git push
+          fi

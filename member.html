@@ -669,6 +669,7 @@ permalink: /member.html
       ${websiteHtml}
 
       <p><a href="my-representatives.html">Search for another member</a></p>
+      ${state === 'Georgia' ? `<p><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent(fullName)}">View stock trades by ${fullName} →</a></p>` : ''}
       <div class="tab-container">
         <div class="tab-nav">
           <button class="tab-btn active" data-tab="votingHistory">Voting History</button>

@@ -154,7 +154,7 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict, 
             rows = parties[party_label]
             if not rows:
                 continue
-            cands = []
+            candidates = []
             for i, row in enumerate(rows):
                 c = candidate_from_row(row, i, chamber_slug, district, party_slug)
 
@@ -173,20 +173,20 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict, 
                 if patch:
                     c.update({k: v for k, v in patch.items() if not k.startswith("_")})
 
-                cands.append(c)
-            ballots[party_label] = cands
+                candidates.append(c)
+            ballots[party_label] = candidates
 
         if not ballots:
             continue
 
         # If no candidate was flagged as incumbent by source data, try to detect one
         # by matching the known current member (from ga-members.json) against candidate names.
-        all_cands = [c for party_cands in ballots.values() for c in party_cands]
-        already_flagged = any(c.get("isIncumbent") for c in all_cands)
+        all_candidates = [c for party_candidates in ballots.values() for c in party_candidates]
+        already_flagged = any(c.get("isIncumbent") for c in all_candidates)
         if not already_flagged:
             member = member_lookup.get((chamber_slug, district))
             if member:
-                for c in all_cands:
+                for c in all_candidates:
                     if names_match(c["name"], member["name"]):
                         c["isIncumbent"] = True
                         if member.get("imageUrl") and not c.get("imageUrl"):
@@ -257,14 +257,14 @@ def main():
     house  = [r for r in new_races if r["chamber"] == "Georgia House of Representatives"]
     senate = [r for r in new_races if r["chamber"] == "Georgia State Senate"]
     total_cands = sum(
-        len(cands)
+        len(candidates)
         for r in new_races
-        for cands in r["phases"]["primary"]["ballots"].values()
+        for candidates in r["phases"]["primary"]["ballots"].values()
     )
     enriched = sum(
         1 for r in new_races
-        for cands in r["phases"]["primary"]["ballots"].values()
-        for c in cands if c.get("imageUrl")
+        for candidates in r["phases"]["primary"]["ballots"].values()
+        for c in candidates if c.get("imageUrl")
     )
     print(f"  House races:  {len(house)}")
     print(f"  Senate races: {len(senate)}")
