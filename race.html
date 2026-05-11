@@ -327,6 +327,7 @@ permalink: /race.html
     const phaseLabel = race.activePhase === 'primary' ? 'Primary' : 'General Election';
     const phaseClass = race.activePhase === 'primary' ? 'phase-primary' : 'phase-general';
     const distLabel  = race.district ? ` — District ${race.district}` : '';
+    const raceTitle  = race.displayTitle || `${race.chamber}${distLabel}`;
     const dateStr    = phase ? formatDate(phase.electionDate) : '';
 
     // Open seat banner (shown when the previous officeholder is not running)
@@ -375,11 +376,11 @@ permalink: /race.html
       }
     }
 
-    document.title = `${race.chamber}${distLabel} — 2026 Elections`;
+    document.title = `${raceTitle} — 2026 Elections`;
 
     document.getElementById('raceContent').innerHTML = `
       <div class="race-header">
-        <h1>${race.chamber}${distLabel}</h1>
+        <h1>${raceTitle}</h1>
         <div class="meta">
           <span class="phase-badge ${phaseClass}">${phaseLabel}</span>
           ${dateStr ? `Election date: ${dateStr}` : ''}
@@ -390,6 +391,7 @@ permalink: /race.html
       ${resultCallout}
       ${candidatesHtml}
       <div class="back-link"><a href="${basePath}elections.html">← Back to Elections</a></div>`;
+
   }
 
   async function init() {

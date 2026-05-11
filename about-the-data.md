@@ -164,12 +164,14 @@ Race and candidate information for the 2026 election cycle is maintained in a cu
 
 **Georgia state legislative candidates** (GA House and Senate) are sourced from the Georgia Secretary of State's candidate filing system, which publishes official candidate registration data for each primary and general election. We process that data to build one race entry per district, including candidate names, party affiliation, occupation, and county of residence.
 
+**Georgia judicial candidates** (Superior Court, Court of Appeals, and Supreme Court of Georgia) are sourced from the Georgia Secretary of State's candidate qualification data. Races are organized by court and seat. Superior Court races are grouped by judicial circuit. All judicial races in Georgia are non-partisan.
+
 **Federal candidates** (U.S. House and Senate) are manually researched and entered. Incumbents are linked directly to their Congress.gov member record so their photo, party, and legislative history populate automatically. Challengers' bios, photos, and websites are sourced from candidates' official campaign websites and entered manually.
 
-**Incumbent enrichment:** When a candidate is the current officeholder, their profile photo and member record link are automatically pulled from our existing legislator data (Congress.gov for federal, Open States for state) — no duplicate data entry required.
+**Incumbent enrichment:** When a candidate is the current officeholder, their profile photo and member record link are automatically pulled from our existing legislator data (Congress.gov for federal, Open States for state) — no duplicate data entry required. Judicial incumbents are identified from the SOS qualification data but do not link to a separate legislator profile.
 
-- **Scope:** 2026 primary and general election races for Georgia's federal delegation and all 236 Georgia General Assembly districts.
-- **Freshness:** GA legislative candidate data is updated when the Secretary of State publishes new filing data. Federal challenger data is manually maintained.
+- **Scope:** 2026 primary and general election races for Georgia's federal delegation, all 236 Georgia General Assembly districts, and all 2026 Georgia judicial races (84 Superior Court seats across 41 circuits, 5 Court of Appeals seats, and 2 Supreme Court seats).
+- **Freshness:** GA legislative and judicial candidate data is updated when the Secretary of State publishes new filing data. Federal challenger data is manually maintained.
 
 ---
 
@@ -199,6 +201,7 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 | GA executive orders | gov.georgia.gov | Manually maintained |
 | GA congressional stock trades | House/Senate eFD via kadoa-org/congress-trading-monitor | Weekly, Sundays 10:00 UTC |
 | 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |
+| 2026 GA judicial candidates | GA Secretary of State | Updated when SOS publishes new filing data |
 | 2026 federal race/candidate data | Manual curation | Manually maintained |
 | Federal campaign finance | FEC API (live) | Real-time, fetched on page load |
 

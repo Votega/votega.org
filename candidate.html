@@ -266,7 +266,7 @@ permalink: /candidate.html
   function renderCandidate(candidate, race, phaseName) {
     const basePath   = getBasePath();
     const distLabel  = race.district ? ` District ${race.district}` : '';
-    const raceLabel  = `${race.chamber}${distLabel} — ${race.cycle} ${phaseName === 'primary' ? 'Primary' : 'General Election'}`;
+    const raceLabel  = `${race.displayTitle || (race.chamber + distLabel)} — ${race.cycle} ${phaseName === 'primary' ? 'Primary' : 'General Election'}`;
     const raceUrl    = `${basePath}race.html?id=${encodeURIComponent(race.id)}`;
     const isFederal  = race.level === 'federal';
     const isIncumbent = candidate.isIncumbent || candidate.type === 'incumbent';
@@ -359,7 +359,7 @@ permalink: /candidate.html
         <div id="campaignFinance" class="finance-section"></div>
       </div>
 
-      <div class="back-link"><a href="${raceUrl}">← Back to ${race.chamber}${distLabel} race</a></div>`;
+      <div class="back-link"><a href="${raceUrl}">← Back to ${race.displayTitle || (race.chamber + distLabel)} race</a></div>`;
 
     document.getElementById('candidateTabs').addEventListener('click', e => {
       const btn = e.target.closest('.candidate-tab-btn');

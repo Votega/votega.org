@@ -116,6 +116,7 @@ permalink: /elections.html
   <button class="tab-btn" data-tab="us-house">U.S. House</button>
   <button class="tab-btn" data-tab="ga-senate">GA State Senate</button>
   <button class="tab-btn" data-tab="ga-house">GA State House</button>
+  <button class="tab-btn" data-tab="courts">Courts</button>
 </div>
 
 <div class="county-filter" id="countyFilter">
@@ -149,6 +150,7 @@ permalink: /elections.html
     'us-house':  r => r.chamber === 'U.S. House',
     'ga-senate': r => r.chamber === 'Georgia State Senate',
     'ga-house':  r => r.chamber === 'Georgia House of Representatives',
+    'courts':    r => r.level === 'state-judicial',
   };
 
   // Populate county dropdown
@@ -212,12 +214,13 @@ permalink: /elections.html
     const phaseLabel = race.activePhase === 'primary' ? 'Primary' : 'General';
     const phaseClass = race.activePhase === 'primary' ? 'phase-primary' : 'phase-general';
     const distLabel  = race.district ? ` — District ${race.district}` : '';
+    const titleText  = race.displayTitle || `${race.chamber}${distLabel}`;
     const summary    = candidateSummary(phase);
     const dateStr    = phase ? formatDate(phase.electionDate) : '';
     return `
       <a class="race-row" href="${basePath}race.html?id=${encodeURIComponent(race.id)}">
         <div class="race-info">
-          <div class="race-title">${race.chamber}${distLabel}</div>
+          <div class="race-title">${titleText}</div>
           <div class="race-candidates">${summary}</div>
         </div>
         <div class="race-meta">
@@ -244,7 +247,21 @@ permalink: /elections.html
 
     let html = '';
 
-    if (activeTab === 'executive') {
+    if (activeTab === 'courts') {
+      const courtOrder = ['Supreme Court of Georgia', 'Georgia Court of Appeals', 'Superior Court'];
+      const grouped = {};
+      races.forEach(r => {
+        if (!grouped[r.chamber]) grouped[r.chamber] = [];
+        grouped[r.chamber].push(r);
+      });
+      courtOrder.forEach(chamber => {
+        if (!grouped[chamber]) return;
+        grouped[chamber].sort((a, b) => {
+          if (a.circuit && b.circuit && a.circuit !== b.circuit) return a.circuit.localeCompare(b.circuit);
+          return (a.seat || '').localeCompare(b.seat || '');
+        }).forEach(r => { html += renderRaceRow(r, basePath); });
+      });
+    } else if (activeTab === 'executive') {
       const execOfficeOrder = [
         'Governor', 'Lieutenant Governor', 'Secretary of State', 'Attorney General',
         'Commissioner of Agriculture', 'Insurance & Fire Safety Commissioner',
