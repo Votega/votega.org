@@ -75,11 +75,6 @@ permalink: /ga-member.html
     border-color: #1a56a8;
     color: #1a3a6b;
   }
-  #votingHistory {
-    margin-top: 2rem;
-    border-top: 1px solid #ddd;
-    padding-top: 1.5rem;
-  }
   #votingHistory h3 { margin: 0 0 0.75rem 0; }
   .vote-table {
     width: 100%;
@@ -95,6 +90,63 @@ permalink: /ga-member.html
   .vote-yea   { color: #1a7a1a; font-weight: bold; }
   .vote-nay   { color: #b00020; font-weight: bold; }
   .vote-other { color: #666; }
+  /* Tabs */
+  #votesTabs { margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1.25rem; }
+  .tab-bar { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 1.25rem; }
+  .tab-btn {
+    padding: 0.45rem 1.1rem;
+    border: none;
+    background: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+  }
+  .tab-btn:hover { color: #333; }
+  .tab-active { color: #1a56a8; border-bottom-color: #1a56a8; }
+  /* Curated bill cards */
+  #curatedBills h3 { margin: 0 0 0.75rem 0; }
+  .bill-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #fafafa;
+  }
+  .bill-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 0.35rem;
+  }
+  .bill-identifier { font-weight: bold; font-size: 0.95rem; }
+  .bill-status-tag { font-size: 0.75rem; color: #666; }
+  .bill-title { font-size: 0.875rem; color: #444; font-style: italic; margin-bottom: 0.35rem; }
+  .bill-summary { font-size: 0.875rem; color: #333; line-height: 1.5; margin-bottom: 0.75rem; }
+  .bill-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+  .bill-vote-badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .badge-yes   { background: #dcfce7; color: #15803d; }
+  .badge-no    { background: #fee2e2; color: #b91c1c; }
+  .badge-other { background: #f3f4f6; color: #6b7280; }
+  .party-tally { flex: 1; min-width: 180px; }
+  .tally-row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; margin-bottom: 0.25rem; }
+  .tally-label { width: 2.5rem; font-weight: bold; flex-shrink: 0; }
+  .tally-bar-track { flex: 1; background: #e5e7eb; border-radius: 3px; height: 10px; overflow: hidden; }
+  .tally-bar-fill-d { height: 100%; background: #2563eb; border-radius: 3px; }
+  .tally-bar-fill-r { height: 100%; background: #dc2626; border-radius: 3px; }
+  .tally-count { width: 5rem; text-align: right; color: #555; white-space: nowrap; }
+  .bill-text-link { font-size: 0.8rem; white-space: nowrap; }
   #stateSidebar {
     width: 240px;
     flex-shrink: 0;
@@ -307,6 +359,7 @@ permalink: /ga-member.html
 
       displayMemberDetails(member, seatRace, otherRaceInfo);
       displaySidebar(member, all);
+      loadCuratedBills(member);
       loadVotingHistory(member);
       if (window.location.hash) {
         const target = document.getElementById(window.location.hash.slice(1));
@@ -432,7 +485,14 @@ permalink: /ga-member.html
            </div>`
         : ''}
       <p><a href="ga-representatives.html">Search for another member</a></p>
-      <div id="votingHistory"></div>
+      <div id="votesTabs">
+        <div class="tab-bar">
+          <button class="tab-btn tab-active" data-tab="curatedBills" onclick="switchTab('curatedBills')">Key Votes</button>
+          <button class="tab-btn" data-tab="votingHistory" onclick="switchTab('votingHistory')">Voting History</button>
+        </div>
+        <div id="curatedBills" class="tab-panel"></div>
+        <div id="votingHistory" class="tab-panel" style="display:none;"></div>
+      </div>
     `;
   }
 
@@ -541,6 +601,103 @@ permalink: /ga-member.html
       <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
       <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
     </div>`;
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+    document.getElementById(tabId).style.display = '';
+    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('tab-active');
+  }
+
+  const CURATED_BILLS_URL = 'assets/data/curated-ga-bill-votes.json';
+
+  async function loadCuratedBills(member) {
+    const container = document.getElementById('curatedBills');
+    if (!container) return;
+
+    let data;
+    try {
+      const res = await fetch(CURATED_BILLS_URL);
+      if (!res.ok) return; // silently skip if not yet generated
+      data = await res.json();
+    } catch (err) {
+      console.warn('Could not load curated bills:', err);
+      return;
+    }
+
+    const bills = (data.bills || []);
+    if (!bills.length) return;
+
+    const chamberKey = member.chamber === 'Senate' ? 'senate' : 'house';
+
+    const VOTE_DISPLAY = {
+      'yes':     { label: 'Voted Yes',   cls: 'badge-yes'   },
+      'no':      { label: 'Voted No',    cls: 'badge-no'    },
+      'abstain': { label: 'Present',     cls: 'badge-other' },
+      'other':   { label: 'Not Voting',  cls: 'badge-other' },
+    };
+
+    function buildTallyBar(partyTally) {
+      if (!partyTally) return '';
+      const d = partyTally['Democratic'] || {};
+      const r = partyTally['Republican'] || {};
+      const dYea = d.yea || 0, dTotal = (d.yea || 0) + (d.nay || 0) + (d.other || 0);
+      const rYea = r.yea || 0, rTotal = (r.yea || 0) + (r.nay || 0) + (r.other || 0);
+      if (dTotal + rTotal === 0) return '';
+      const dPct = dTotal ? Math.round((dYea / dTotal) * 100) : 0;
+      const rPct = rTotal ? Math.round((rYea / rTotal) * 100) : 0;
+      return `<div class="party-tally">
+        <div style="font-size:0.72rem;color:#666;margin-bottom:0.3rem;">Yea votes by party</div>
+        <div class="tally-row">
+          <span class="tally-label" style="color:#2563eb;">Dem</span>
+          <div class="tally-bar-track"><div class="tally-bar-fill-d" style="width:${dPct}%"></div></div>
+          <span class="tally-count">${dYea}/${dTotal} &nbsp;${dPct}%</span>
+        </div>
+        <div class="tally-row">
+          <span class="tally-label" style="color:#dc2626;">Rep</span>
+          <div class="tally-bar-track"><div class="tally-bar-fill-r" style="width:${rPct}%"></div></div>
+          <span class="tally-count">${rYea}/${rTotal} &nbsp;${rPct}%</span>
+        </div>
+      </div>`;
+    }
+
+    const cards = bills.map(bill => {
+      const voteData = (bill.votes || {})[chamberKey];
+      const myOption = voteData?.memberVotes?.[member.id];
+      const voteInfo = myOption ? VOTE_DISPLAY[myOption] : null;
+      const voteBadge = voteInfo
+        ? `<span class="bill-vote-badge ${voteInfo.cls}">${voteInfo.label}</span>`
+        : `<span class="bill-vote-badge badge-other">No vote recorded</span>`;
+
+      const statusDate = bill.statusDate
+        ? new Date(bill.statusDate + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'})
+        : '';
+      const statusTag = [bill.status, statusDate].filter(Boolean).join(' · ');
+      const summaryHtml = bill.summary ? `<div class="bill-summary">${bill.summary}</div>` : '';
+      const textLink = bill.fullTextUrl
+        ? `<a class="bill-text-link" href="${bill.fullTextUrl}" target="_blank" rel="noopener">Full text (PDF) →</a>`
+        : '';
+
+      return `<div class="bill-card">
+        <div class="bill-card-header">
+          <a class="bill-identifier" href="${bill.openstatesUrl}" target="_blank" rel="noopener">${bill.identifier}</a>
+          ${statusTag ? `<span class="bill-status-tag">${statusTag}</span>` : ''}
+        </div>
+        <div class="bill-title">${bill.title}</div>
+        ${summaryHtml}
+        <div class="bill-footer">
+          ${voteBadge}
+          ${buildTallyBar(voteData?.partyTally)}
+          ${textLink}
+        </div>
+      </div>`;
+    }).join('');
+
+    container.innerHTML = `
+      <h3>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:#666;">curated list</small></h3>
+      <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">This member's votes on a selection of significant Georgia legislation.</p>
+      ${cards}`;
   }
 
   async function loadVotingHistory(member) {

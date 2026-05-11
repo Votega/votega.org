@@ -1,0 +1,43 @@
+name: Update curated GA bill votes
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'  # daily at 08:00 UTC (one hour after GA members workflow)
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate curated bill votes data
+        run: python scripts/generate_curated_ga_bills.py assets/data/curated-ga-bill-votes.json
+        env:
+          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
+
+      - name: Commit and push generated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git stash
+          git fetch origin main
+          git rebase origin/main
+          git stash pop
+          git add -f assets/data/curated-ga-bill-votes.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update curated GA bill votes data"
+            git push
+          fi
