@@ -1,0 +1,62 @@
+{
+  "_note": "Curated list of key GA bills. The workflow fetches vote data for each from Open States. Use summaryOverride when the API abstract is absent or too technical. Use voteOverride to manually pin a roll call number if auto-detection picks the wrong vote. IMPORTANT: session strings must match exactly how they appear in Open States — verify at openstates.org/ga/bills/ before adding a bill.",
+  "ga": [
+
+    {
+      "_name": "FY 2026 State Budget",
+      "session": "2025_26",
+      "identifier": "HB 68",
+      "summaryOverride": "FY 2026 state appropriations budget ($37.7 billion). Funds K–12 education, corrections, healthcare, and Hurricane Helene recovery. Includes $141 million to launch the Georgia Promise Scholarship (school voucher) program."
+    },
+
+    {
+      "_name": "Georgia Promise Scholarship Act (School Vouchers)",
+      "session": "2023_24",
+      "identifier": "SB 233",
+      "summaryOverride": "Georgia Promise Scholarship Act. Allows families of students in the lowest-performing 25% of public schools to receive up to $6,500 in state funds for private school tuition or homeschooling. Passed the House 91–82, largely along party lines. Program launched Fall 2025."
+    },
+
+    {
+      "_name": "Income Tax Rate Reduction",
+      "session": "2025_26",
+      "identifier": "HB 111",
+      "summaryOverride": "Reduces Georgia's flat personal income tax rate from 5.39% to 5.19%, retroactive to January 1, 2025. Sets automatic annual 0.10% cuts until the rate reaches 4.99% — continuing Georgia's multi-year shift to a flat tax structure."
+    },
+
+    {
+      "_name": "Income Tax Rebate ($1 Billion)",
+      "session": "2025_26",
+      "identifier": "HB 112",
+      "summaryOverride": "Authorizes a one-time income tax rebate of approximately $1 billion — up to $500 for married couples filing jointly, $375 for head of household, and $250 for single filers. Georgia's third consecutive year returning surplus funds to taxpayers."
+    },
+
+    {
+      "_name": "Save the Homes Act (Property Tax Freeze)",
+      "session": "2023_24",
+      "identifier": "HB 581",
+      "summaryOverride": "Save the Homes Act. Creates a statewide floating homestead exemption that caps annual property tax assessment increases at the rate of inflation, using 2024 as the base year. Local governments could opt out by March 2025."
+    },
+
+    {
+      "_name": "Bail Reform Expansion",
+      "session": "2025_26",
+      "identifier": "SB 63",
+      "summaryOverride": "Expands the list of misdemeanor offenses that require mandatory cash bail after a second charge — including shoplifting, criminal trespass, and forgery. Also caps the number of times charities or third parties may post cash bail to three times per year."
+    },
+
+    {
+      "_name": "Georgia Survivors Justice Act",
+      "session": "2025_26",
+      "identifier": "HB 582",
+      "summaryOverride": "Allows judges to depart from mandatory minimum sentences when a history of domestic violence or child abuse significantly contributed to the offense. Also allows currently incarcerated survivors to petition for resentencing."
+    },
+
+    {
+      "_name": "Election Law Overhaul (SB 189)",
+      "session": "2023_24",
+      "identifier": "SB 189",
+      "summaryOverride": "Amends Georgia election law: defines grounds for challenging voter eligibility (death, out-of-state registration, non-residential address), requires counties to report absentee ballot results within one hour of polls closing, and restricts non-citizens from employment in county election offices."
+    }
+
+  ]
+}

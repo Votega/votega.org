@@ -60,7 +60,7 @@ def main():
     bill_id = target['id']
     print(f"\nUsing bill: {target.get('identifier')} — {target.get('title', '')[:80]}")
     print(f"  OCD bill ID: {bill_id}")
-    print(f"  Session: {target.get('legislative_session')}")
+    print(f"  Session: {target.get('session')}")
     print(f"  Status: {target.get('latest_action_description')}")
 
     # Step 2 — fetch full bill with all includes
