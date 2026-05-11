@@ -127,6 +127,35 @@ Executive orders are sourced from the [Georgia Governor's website](https://gov.g
 
 ---
 
+## Georgia Congressional Stock Trades
+
+**Source:** [kadoa-org/congress-trading-monitor](https://github.com/kadoa-org/congress-trading-monitor) (open dataset) · [House Clerk eFD system](https://disclosures-clerk.house.gov/) · [Senate eFD system](https://efts.senate.gov/)
+
+Federal lawmakers are required to disclose personal stock trades within 45 days of the transaction under the STOCK Act (Stop Trading on Congressional Knowledge Act). These disclosures — called Periodic Transaction Reports (PTRs) — are filed with the House Clerk (for House members) or the Senate eFD system (for Senators).
+
+We display stock trades filed by Georgia's congressional delegation on the [Georgia Congressional Stock Trades](/ga-congress-trades.html) page.
+
+**How it works:**
+
+The `kadoa-org/congress-trading-monitor` open dataset aggregates STOCK Act PTR disclosures from the official House and Senate filing systems and publishes them in a structured format. We run a weekly GitHub Actions workflow that pulls the latest data for Georgia's House and Senate members and processes it into our static data file.
+
+**What's included:**
+- Ticker symbol and asset name (with asset type: stock, crypto, government security, corporate bond, or other)
+- Transaction type (Purchase or Sale)
+- Transaction date and filing date
+- Amount range (dollar amounts are ranges per the STOCK Act, not exact figures)
+- Days to file, and a late-filing flag for disclosures filed after the 45-day window
+- Ownership type where indicated (member, spouse, joint, or dependent child)
+
+**Coverage:** All current members of Georgia's congressional delegation (House and Senate) who have filed disclosures.
+
+- **Freshness:** Updated weekly via an automated GitHub Actions workflow (Sundays, 10:00 UTC).
+
+{: .box-note}
+Dollar amounts are self-reported ranges, not exact figures. Trades may be filed up to 45 days after the transaction date. Data is sourced from official House and Senate disclosure systems via the kadoa-org/congress-trading-monitor open dataset.
+
+---
+
 ## 2026 Election Races & Candidates
 
 **Sources:** [Georgia Secretary of State](https://sos.ga.gov/) · Manual curation
@@ -168,6 +197,7 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
 | GA state legislator voting history | LegiScan bulk dataset | Periodically, when new dataset is available |
 | GA executive orders | gov.georgia.gov | Manually maintained |
+| GA congressional stock trades | House/Senate eFD via kadoa-org/congress-trading-monitor | Weekly, Sundays 10:00 UTC |
 | 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |
 | 2026 federal race/candidate data | Manual curation | Manually maintained |
 | Federal campaign finance | FEC API (live) | Real-time, fetched on page load |
