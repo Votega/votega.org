@@ -57,7 +57,7 @@ permalink: /ga-congress-trades.html
     object-fit: cover; flex-shrink: 0; background: #e5e7eb;
   }
   .member-card-info { min-width: 0; }
-  .member-card-name { font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .member-card-name { font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .member-card-office { font-size: 0.75rem; color: #6b7280; margin-top: 0.1rem; }
   .member-card-stats { display: flex; gap: 0.75rem; margin-top: 0.35rem; font-size: 0.75rem; }
   .stat-trades { color: #1d4ed8; font-weight: 600; }
@@ -459,7 +459,9 @@ permalink: /ga-congress-trades.html
       card.innerHTML = `
         ${imgHtml}
         <div class="member-card-info" style="min-width:0;">
-          <div class="member-card-name">${name} ${partyBadge}</div>
+          <div style="display:flex;align-items:center;gap:0.35rem;min-width:0;">
+            <span class="member-card-name">${name}</span>${partyBadge}
+          </div>
           <div class="member-card-office">${district}</div>
           <div class="member-card-stats">
             <span class="stat-trades">${info.tradeCount} trades</span>
