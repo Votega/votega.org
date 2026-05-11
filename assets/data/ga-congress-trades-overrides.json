@@ -2,8 +2,9 @@
   "_note": "Manual overrides for GA Congress trade data, applied after generate_ga_congress_trades.py fetches from kadoa-org/congress-trading-monitor. Keys are filer IDs from that dataset. Use _exclude to drop a filer entirely, _mergeInto to fold one filer's trades into another (dedup), and any other fields to patch filer-level values.",
 
   "house_richarddeandr_mccormick": {
-    "_note": "Source dataset incorrectly shows NY-01. McCormick represents GA-07.",
-    "office": "U.S. Representative · GA-07"
+    "_note": "Source dataset incorrectly shows NY-01. McCormick represents GA-07. Photo URL was a 404 — corrected to Congress.gov.",
+    "office": "U.S. Representative · GA-07",
+    "photoUrl": "https://www.congress.gov/img/member/m001218_200.jpg"
   },
 
   "house_michaela_collins_jr": {
@@ -12,8 +13,9 @@
   },
 
   "house_michaela_collins": {
-    "_note": "Michael Collins represents GA-10, not GA-08 as shown in source data.",
-    "office": "U.S. Representative · GA-10"
+    "_note": "Michael Collins represents GA-10, not GA-08 as shown in source data. Photo URL was a 404 — corrected to Congress.gov.",
+    "office": "U.S. Representative · GA-10",
+    "photoUrl": "https://www.congress.gov/img/member/c001129_200.jpg"
   },
 
   "house_tomthomas_graves_jr": {
