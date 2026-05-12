@@ -56,19 +56,17 @@ committee assignments, and official legislative page — is pulled from the Open
 
 ## Georgia State Legislator Voting History
 
-**Source:** [LegiScan](https://legiscan.com/) (bulk legislative dataset)
+**Source:** [Open States API](https://openstates.org/) (Plural Policy)
 
-Voting history is displayed on each Georgia state legislator's profile page, showing how they voted on every roll call tied to a bill that was signed into law during the current General Assembly session.
+Voting history is displayed on each Georgia state legislator's profile page, showing how they voted on passage votes during the current General Assembly session (2025–2026).
 
 **How it works:**
 
-LegiScan aggregates and standardizes legislative data from all 50 states, including full roll call vote records for the Georgia General Assembly. We use LegiScan's bulk dataset — which includes bills, people, roll calls, and individual vote records — and process it locally to build the voting history file.
+We paginate through all Georgia bills in the current session via the Open States API, collecting vote events where the motion classification is `passage` (final up-or-down votes on a bill). For each passage vote, individual member votes are recorded using each legislator's Open States identifier — the same identifier used throughout our member data, so no name matching or bridging is required.
 
-Georgia legislators are matched between the LegiScan dataset and our member data using their chamber and district (e.g., House District 137, Senate District 24). Member votes are then keyed to each legislator's unique Open States identifier so they can be looked up on their profile page.
-
-- **Scope:** Only votes on bills that were signed into law (enacted). Votes on bills that failed or are still in committee are not included.
+- **Scope:** Passage votes only (final floor votes on a bill). Procedural motions, amendments, and committee votes are not included.
 - **Coverage:** All current members of the Georgia House of Representatives and Georgia Senate.
-- **Freshness:** Updated periodically when a new LegiScan dataset is published.
+- **Freshness:** Updated weekly via an automated GitHub Actions workflow.
 
 ---
 
@@ -197,7 +195,7 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 | Georgia state legislators | Open States API | Daily, 07:00 UTC |
 | GA legislators community repo | Published from above | Daily, after GA member update |
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
-| GA state legislator voting history | LegiScan bulk dataset | Periodically, when new dataset is available |
+| GA state legislator voting history | Open States API | Weekly, Sundays 08:00 UTC |
 | GA executive orders | gov.georgia.gov | Manually maintained |
 | GA congressional stock trades | House/Senate eFD via kadoa-org/congress-trading-monitor | Weekly, Sundays 10:00 UTC |
 | 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |
