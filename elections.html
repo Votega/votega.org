@@ -103,6 +103,24 @@ permalink: /elections.html
   .county-filter.visible { display: block; }
   .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; }
 
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .open-seat-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.88rem;
+    color: #444;
+    cursor: pointer;
+    user-select: none;
+  }
+  .open-seat-toggle input[type="checkbox"] { cursor: pointer; width: 1rem; height: 1rem; }
+
   @media (max-width: 600px) {
     .race-row { flex-wrap: wrap; }
     .race-meta { text-align: left; }
@@ -119,11 +137,17 @@ permalink: /elections.html
   <button class="tab-btn" data-tab="courts">Courts</button>
 </div>
 
-<div class="county-filter" id="countyFilter">
-  <label for="countySelect">Filter by county</label>
-  <select id="countySelect">
-    <option value="">— all districts —</option>
-  </select>
+<div class="filter-bar">
+  <div class="county-filter" id="countyFilter">
+    <label for="countySelect">Filter by county</label>
+    <select id="countySelect">
+      <option value="">— all districts —</option>
+    </select>
+  </div>
+  <label class="open-seat-toggle">
+    <input type="checkbox" id="openSeatOnly">
+    Show open seats only
+  </label>
 </div>
 
 <div class="msg" id="status"></div>
@@ -133,13 +157,18 @@ permalink: /elections.html
 <script>
   const RACES_URL = 'assets/data/races.json';
 
-  const countySelect  = document.getElementById('countySelect');
-  const countyFilter  = document.getElementById('countyFilter');
-  const statusEl      = document.getElementById('status');
-  const racesOutput   = document.getElementById('racesOutput');
+  const countySelect   = document.getElementById('countySelect');
+  const countyFilter   = document.getElementById('countyFilter');
+  const openSeatOnly   = document.getElementById('openSeatOnly');
+  const statusEl       = document.getElementById('status');
+  const racesOutput    = document.getElementById('racesOutput');
 
   let allRaces  = [];
   let activeTab = 'executive';
+
+  function isOpenSeat(race) {
+    return race._note && race._note.toLowerCase().startsWith('open seat');
+  }
 
   // Tabs that need the county dropdown
   const COUNTY_TABS = new Set(['us-house', 'ga-senate', 'ga-house']);
@@ -204,6 +233,10 @@ permalink: /elections.html
         if (r.chamber === 'U.S. House')                      return usDists.includes(r.district);
         return true;
       });
+    }
+
+    if (openSeatOnly.checked) {
+      races = races.filter(isOpenSeat);
     }
 
     return races;
@@ -296,6 +329,7 @@ permalink: /elections.html
   });
 
   countySelect.addEventListener('change', renderRaces);
+  openSeatOnly.addEventListener('change', renderRaces);
 
   async function loadData() {
     try {
