@@ -23,9 +23,9 @@ jobs:
           python-version: '3.x'
 
       - name: Generate GA vote data
-        run: python scripts/generate_ga_votes_data.py assets/data/ga-member-votes.json assets/data/ga-members.json
+        run: python scripts/generate_ga_votes_data.py assets/data/ga-member-votes.json
         env:
-          LEGISCAN_API_KEY: ${{ secrets.LEGISCAN_API_KEY }}
+          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
 
       - name: Validate generated data
         run: |
@@ -39,8 +39,9 @@ jobs:
           votes   = len(d.get('votes', {}))
           members = len(d.get('memberVotes', {}))
           size_kb = os.path.getsize('assets/data/ga-member-votes.json') // 1024
-          print(f'Validated: {votes} votes, {members} members, {size_kb} KB')
+          print(f'Validated: {votes} votes, {members} members with vote records, {size_kb} KB')
           assert votes > 0, 'Expected at least one vote — check LegiScan API key and session data'
+          assert members > 0, 'memberVotes is empty — roll call individual votes were not captured. Check LegiScan plan level and debug output above.'
           "
 
       - name: Commit and push generated data
