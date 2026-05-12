@@ -159,6 +159,32 @@ permalink: /race.html
 
   .back-link { margin-top: 2rem; font-size: 0.9rem; }
 
+  .party-tab-bar {
+    display: flex;
+    gap: 0.35rem;
+    margin: 1rem 0 0 0;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  .party-tab-btn {
+    padding: 0.45rem 1.25rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 4px 4px 0 0;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .party-tab-btn:hover { color: #111; }
+  .party-tab-btn.active-D { color: #1d4ed8; border-bottom-color: #1d4ed8; font-weight: 600; }
+  .party-tab-btn.active-R { color: #b91c1c; border-bottom-color: #b91c1c; font-weight: 600; }
+  .party-tab-btn.active-O { color: #374151; border-bottom-color: #374151; font-weight: 600; }
+  .ballot-panel { display: none; margin-top: 1rem; }
+  .ballot-panel.visible { display: block; }
+
   @media (max-width: 600px) {
     .candidate-card { max-width: 100%; }
   }
@@ -350,12 +376,35 @@ permalink: /race.html
 
     // Candidate cards — open primary (ballots) or flat list
     let candidatesHtml = '';
+    let hasBallotTabs = false;
     if (phase?.ballots) {
       const partyOrder = p => p.toLowerCase().includes('democrat') ? 0 : p.toLowerCase().includes('republican') ? 1 : 2;
-      candidatesHtml = Object.entries(phase.ballots)
-        .sort((a, b) => partyOrder(a[0]) - partyOrder(b[0]))
-        .map(([partyName, candidates]) => renderBallotSection(partyName, candidates, members, race))
-        .join('');
+      const partyKey   = p => p.toLowerCase().includes('democrat') ? 'D' : p.toLowerCase().includes('republican') ? 'R' : 'O';
+      const sortedBallots = Object.entries(phase.ballots)
+        .sort((a, b) => partyOrder(a[0]) - partyOrder(b[0]));
+
+      if (sortedBallots.length > 1) {
+        hasBallotTabs = true;
+        const tabBtns = sortedBallots.map(([partyName], i) => {
+          const key    = partyKey(partyName);
+          const label  = partyName.toLowerCase().includes('democrat')   ? 'Democrat'
+                       : partyName.toLowerCase().includes('republican') ? 'Republican'
+                       : partyName;
+          return `<button class="party-tab-btn${i === 0 ? ` active-${key}` : ''}" data-party="${partyName}">${label}</button>`;
+        }).join('');
+
+        const panels = sortedBallots.map(([partyName, candidates], i) =>
+          `<div class="ballot-panel${i === 0 ? ' visible' : ''}" data-party="${partyName}">
+            ${renderBallotSection(partyName, candidates, members, race)}
+           </div>`
+        ).join('');
+
+        candidatesHtml = `<div class="party-tab-bar">${tabBtns}</div><div id="ballotPanels">${panels}</div>`;
+      } else {
+        candidatesHtml = sortedBallots
+          .map(([partyName, candidates]) => renderBallotSection(partyName, candidates, members, race))
+          .join('');
+      }
     } else {
       const candidates = phase?.candidates || [];
       const active     = candidates.filter(c => !c.withdrawn && !c.disqualified);
@@ -392,6 +441,19 @@ permalink: /race.html
       ${candidatesHtml}
       <div class="back-link"><a href="${basePath}elections.html">← Back to Elections</a></div>`;
 
+    if (hasBallotTabs) {
+      const partyKey = p => p.toLowerCase().includes('democrat') ? 'D' : p.toLowerCase().includes('republican') ? 'R' : 'O';
+      document.querySelector('.party-tab-bar').addEventListener('click', e => {
+        const btn = e.target.closest('.party-tab-btn');
+        if (!btn) return;
+        const party = btn.dataset.party;
+        document.querySelectorAll('.party-tab-btn').forEach(b => { b.className = 'party-tab-btn'; });
+        btn.classList.add(`active-${partyKey(party)}`);
+        document.querySelectorAll('.ballot-panel').forEach(p => {
+          p.classList.toggle('visible', p.dataset.party === party);
+        });
+      });
+    }
   }
 
   async function init() {
