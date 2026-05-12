@@ -86,6 +86,7 @@ def main():
             ('jurisdiction', GA_JURISDICTION),
             ('session',      GA_SESSION),
             ('include',      'votes'),
+            ('include',      'sources'),
             ('per_page',     20),
             ('page',         page),
         ])
@@ -103,7 +104,11 @@ def main():
         for bill in results:
             identifier = bill.get('identifier', '')
             title      = bill.get('title', '')
-            bill_url   = f"https://openstates.org/ga/bills/{GA_SESSION}/{identifier.replace(' ', '')}/"
+            # Prefer official legis.ga.gov bill page; fall back to Open States
+            bill_url = next(
+                (s['url'] for s in bill.get('sources', []) if 'legis.ga.gov' in s.get('url', '')),
+                f"https://openstates.org/ga/bills/{GA_SESSION}/{identifier.replace(' ', '')}/"
+            )
 
             passage_events = [
                 ve for ve in bill.get('votes', [])
