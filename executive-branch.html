@@ -33,12 +33,27 @@ permalink: /executive-branch.html
     border-radius: 8px;
     padding: 1.25rem;
     display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
     background: #fff;
     text-decoration: none;
     color: inherit;
     transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .elected-card-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 6px;
+    object-fit: cover;
+    object-position: top;
+    flex-shrink: 0;
+  }
+  .elected-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
   }
   .elected-card:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
@@ -90,6 +105,14 @@ permalink: /executive-branch.html
     text-decoration: none;
     color: inherit;
     transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .cabinet-card-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 5px;
+    object-fit: cover;
+    object-position: top;
+    margin-bottom: 0.4rem;
   }
   .cabinet-card:hover {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -178,18 +201,28 @@ permalink: /executive-branch.html
       // --- Elected officials ---
       const electedCards = elected.map(o => {
         const termEnd = o.termEnd ? `Term ends ${o.termEnd.slice(0,4)}` : '';
+        const photoHtml = o.imageUrl
+          ? `<img class="elected-card-photo" src="${o.imageUrl}" alt="${o.name}">`
+          : '';
         return `<a class="elected-card" href="${base}executive-member.html?id=${encodeURIComponent(o.id)}">
-          <span class="role-label">${o.role}</span>
-          <span class="official-name">${o.name}</span>
-          <span class="official-party">${o.party || ''}${partyIcon(o.party)}</span>
-          ${termEnd ? `<span class="official-term">${termEnd}</span>` : ''}
-          <span class="view-link">View profile →</span>
+          ${photoHtml}
+          <span class="elected-card-body">
+            <span class="role-label">${o.role}</span>
+            <span class="official-name">${o.name}</span>
+            <span class="official-party">${o.party || ''}${partyIcon(o.party)}</span>
+            ${termEnd ? `<span class="official-term">${termEnd}</span>` : ''}
+            <span class="view-link">View profile →</span>
+          </span>
         </a>`;
       }).join('');
 
       // --- Cabinet cards ---
       const cabinetCards = cabinet.map(o => {
+        const photoHtml = o.imageUrl
+          ? `<img class="cabinet-card-photo" src="${o.imageUrl}" alt="${o.name}">`
+          : '';
         return `<a class="cabinet-card" href="${base}executive-member.html?id=${encodeURIComponent(o.id)}">
+          ${photoHtml}
           <span class="dept-label">${o.department || ''}</span>
           <span class="cabinet-name">${o.name}</span>
           <span class="cabinet-role">${o.role}</span>
