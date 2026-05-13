@@ -1,0 +1,406 @@
+---
+layout: default
+title: Supreme Court Justice
+permalink: /justice.html
+---
+
+<style>
+  .justice-profile-card {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .justice-profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #f3f4f6;
+    flex-shrink: 0;
+    border: 2px solid #e5e7eb;
+  }
+  .justice-profile-info { flex: 1; min-width: 220px; }
+  .justice-profile-title {
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3rem;
+  }
+  .justice-profile-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.2;
+    margin-bottom: 0.6rem;
+  }
+  .justice-meta-row {
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 0.3rem;
+    display: flex;
+    gap: 0.4rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .justice-meta-label { color: #9ca3af; font-size: 0.78rem; }
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1.25rem;
+    font-size: 0.875rem;
+    color: #1d4ed8;
+    text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+  }
+  .tab-btn {
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6b7280;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover { color: #374151; }
+  .tab-btn.active { color: #1d4ed8; border-bottom-color: #1d4ed8; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Voting record */
+  .votes-meta { font-size: 0.8rem; color: #6b7280; margin-bottom: 1rem; }
+  .vote-record-list { list-style: none; padding: 0; margin: 0; }
+  .vote-record-item {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  .vote-record-item:last-child { border-bottom: none; }
+  .vr-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.2rem;
+  }
+  .vr-case-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1d4ed8;
+    text-decoration: none;
+  }
+  .vr-case-name:hover { text-decoration: underline; }
+  .vr-docket { font-size: 0.75rem; color: #9ca3af; }
+  .vr-meta { font-size: 0.78rem; color: #9ca3af; margin-bottom: 0.35rem; }
+  .vote-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .badge-majority    { background: #dcfce7; color: #166534; }
+  .badge-minority    { background: #fee2e2; color: #991b1b; }
+  .badge-concurrence { background: #fef9c3; color: #854d0e; }
+  .badge-other       { background: #f3f4f6; color: #6b7280; }
+  .vr-desc { font-size: 0.82rem; color: #444; line-height: 1.5; margin-top: 0.3rem; }
+  .load-more-btn {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: none;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .load-more-btn:hover { background: #f3f4f6; }
+
+  /* Biography */
+  .bio-section { margin-bottom: 1.5rem; }
+  .bio-section-title {
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #9ca3af;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+  }
+  .bio-text {
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.65;
+  }
+  .bio-roles-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    font-size: 0.87rem;
+    color: #374151;
+    line-height: 1.7;
+  }
+  .oyez-link {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-decoration: none;
+  }
+  .oyez-link:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    .justice-profile-card { flex-direction: column; align-items: center; text-align: center; }
+    .justice-meta-row { justify-content: center; }
+  }
+</style>
+
+<a class="back-link" id="backLink" href="supreme-court.html">← Supreme Court</a>
+
+<div id="justiceContent">
+  <p style="color:#777;font-size:0.9rem;">Loading...</p>
+</div>
+
+<script>
+  const COURT_URL     = 'assets/data/supreme-court.json';
+  const DECISIONS_URL = 'assets/data/scotus-decisions.json';
+  const OYEZ_PEOPLE   = 'https://api.oyez.org/people/';
+  const PAGE_SIZE     = 15;
+
+  function getBasePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+
+  function fmt(iso) {
+    if (!iso) return '—';
+    const [y, m, d] = iso.slice(0, 10).split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function fmtYear(iso) {
+    return iso ? iso.slice(0, 4) : '—';
+  }
+
+  function partyColor(party) {
+    if (!party) return '#6b7280';
+    return party.toLowerCase().includes('democrat') ? '#1d4ed8' : '#dc2626';
+  }
+
+  function voteBadge(vote, opinionType) {
+    const v = (vote || '').toLowerCase();
+    const o = (opinionType || '').toLowerCase();
+    if (v === 'majority' && o === 'concurrence') return ['badge-concurrence', 'Concurrence'];
+    if (v === 'majority') return ['badge-majority', 'Majority'];
+    if (v === 'minority') return ['badge-minority', 'Dissent'];
+    return ['badge-other', vote || '?'];
+  }
+
+  function renderVotingRecord(container, justiceId, allCases, offset) {
+    const relevant = allCases.filter(c =>
+      (c.votes || []).some(v => v.justiceId === justiceId)
+    );
+
+    const slice   = relevant.slice(0, offset + PAGE_SIZE);
+    const hasMore = slice.length < relevant.length;
+
+    if (relevant.length === 0) {
+      container.innerHTML = '<p style="color:#777;font-size:0.875rem;">No decisions found for this justice in the current dataset.</p>';
+      return;
+    }
+
+    const items = slice.map(c => {
+      const myVote = (c.votes || []).find(v => v.justiceId === justiceId);
+      const [badgeCls, badgeLabel] = myVote ? voteBadge(myVote.vote, myVote.opinionType) : ['badge-other', '?'];
+      const tally = (c.majorityVote || c.minorityVote)
+        ? `${c.majorityVote}–${c.minorityVote}` : '';
+      return `<li class="vote-record-item">
+        <div class="vr-header">
+          <a class="vr-case-name" href="${c.oyezUrl}" target="_blank" rel="noopener">${c.name}</a>
+          <span class="vr-docket">No. ${c.docketNumber}</span>
+        </div>
+        <div class="vr-meta">
+          ${fmt(c.decidedDate)} · ${c.term} term${tally ? ` · ${tally}` : ''}
+          &nbsp;<span class="vote-badge ${badgeCls}">${badgeLabel}</span>
+        </div>
+        ${c.description ? `<div class="vr-desc">${c.description}</div>` : ''}
+      </li>`;
+    }).join('');
+
+    const loadMoreBtn = hasMore
+      ? `<button class="load-more-btn" id="vrLoadMore">Load more (${relevant.length - slice.length} remaining)</button>`
+      : '';
+
+    const meta = `<p class="votes-meta">${relevant.length} decision${relevant.length !== 1 ? 's' : ''} in current dataset</p>`;
+    container.innerHTML = `${meta}<ul class="vote-record-list">${items}</ul>${loadMoreBtn}`;
+
+    const btn = document.getElementById('vrLoadMore');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        renderVotingRecord(container, justiceId, allCases, offset + PAGE_SIZE);
+      });
+    }
+  }
+
+  async function loadBiography(container, oyezId) {
+    container.innerHTML = '<p style="color:#777;font-size:0.875rem;">Loading biography…</p>';
+    try {
+      const req = await fetch(`${OYEZ_PEOPLE}${oyezId}`);
+      if (!req.ok) throw new Error(`HTTP ${req.status}`);
+      const data = await req.json();
+
+      const bio = (data.description || '').trim();
+
+      const roles = (data.roles || [])
+        .filter(r => r.type === 'scotus_justice' || r.type === 'federal_judicial')
+        .map(r => {
+          const inst  = r.institution_name || r.href || '';
+          const start = r.date_start ? fmtYear(new Date(r.date_start * 1000).toISOString()) : '';
+          const end   = r.date_end   ? fmtYear(new Date(r.date_end   * 1000).toISOString()) : 'present';
+          const title = r.role_title || r.type || '';
+          return `<li>${title}${inst ? ` — ${inst}` : ''}${start ? ` (${start}–${end})` : ''}</li>`;
+        }).join('');
+
+      let html = '';
+      if (bio) {
+        html += `<div class="bio-section">
+          <div class="bio-section-title">Biography</div>
+          <p class="bio-text">${bio}</p>
+        </div>`;
+      }
+      if (roles) {
+        html += `<div class="bio-section">
+          <div class="bio-section-title">Judicial Roles</div>
+          <ul class="bio-roles-list">${roles}</ul>
+        </div>`;
+      }
+      if (!bio && !roles) {
+        html = '<p style="color:#777;font-size:0.875rem;">No biography available from Oyez.</p>';
+      }
+      html += `<a class="oyez-link" href="https://www.oyez.org/justices/${oyezId}" target="_blank" rel="noopener">View full profile on Oyez →</a>`;
+      container.innerHTML = html;
+    } catch (err) {
+      container.innerHTML = `<p style="color:#777;font-size:0.875rem;">Could not load biography. <a href="https://www.oyez.org/justices/${oyezId}" target="_blank" rel="noopener">View on Oyez →</a></p>`;
+    }
+  }
+
+  (async function () {
+    const params  = new URLSearchParams(window.location.search);
+    const id      = params.get('id');
+    const base    = getBasePath();
+    const content = document.getElementById('justiceContent');
+    const backLink = document.getElementById('backLink');
+    backLink.href = `${base}supreme-court.html`;
+
+    if (!id) {
+      content.innerHTML = '<p style="color:#c00;">No justice ID specified.</p>';
+      return;
+    }
+
+    try {
+      const [courtRes, decisionsRes] = await Promise.all([
+        fetch(COURT_URL),
+        fetch(DECISIONS_URL),
+      ]);
+
+      if (!courtRes.ok) throw new Error(`Could not load supreme-court.json (HTTP ${courtRes.status})`);
+      const courtData = await courtRes.json();
+      const justice   = (courtData.justices || []).find(j => j.id === id);
+
+      if (!justice) {
+        content.innerHTML = `<p style="color:#c00;">Justice not found: <code>${id}</code></p>`;
+        return;
+      }
+
+      document.title = `${justice.name} — Supreme Court`;
+
+      const tenureStart = justice.confirmationDate ? fmtYear(justice.confirmationDate) : '—';
+      const tenureLabel = `${tenureStart}–present`;
+
+      const profileHtml = `
+        <div class="justice-profile-card">
+          ${justice.imageUrl
+            ? `<img class="justice-profile-photo" src="${justice.imageUrl}" alt="${justice.name}" onerror="this.style.display='none'">`
+            : ''}
+          <div class="justice-profile-info">
+            <div class="justice-profile-title">${justice.title}</div>
+            <div class="justice-profile-name">${justice.name}</div>
+            <div class="justice-meta-row">
+              <span class="justice-meta-label">Appointed by</span>
+              <span style="color:${partyColor(justice.appointedByParty)};font-weight:600;">${justice.appointedBy}</span>
+            </div>
+            <div class="justice-meta-row">
+              <span class="justice-meta-label">Confirmed</span>
+              <span>${fmt(justice.confirmationDate)}</span>
+              <span style="color:#9ca3af;">·</span>
+              <span>${justice.confirmationVote.yeas}–${justice.confirmationVote.nays}</span>
+            </div>
+            <div class="justice-meta-row">
+              <span class="justice-meta-label">Tenure</span>
+              <span>${tenureLabel}</span>
+            </div>
+            ${justice.lawSchool ? `<div class="justice-meta-row">
+              <span class="justice-meta-label">Law school</span>
+              <span>${justice.lawSchool}</span>
+            </div>` : ''}
+            ${justice.homeState ? `<div class="justice-meta-row">
+              <span class="justice-meta-label">Home state</span>
+              <span>${justice.homeState}</span>
+            </div>` : ''}
+          </div>
+        </div>`;
+
+      const tabBar = `
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="voting">Voting Record</button>
+          <button class="tab-btn"        data-tab="bio">Biography</button>
+        </div>`;
+
+      const panelsHtml = `
+        <div id="tab-voting" class="tab-panel active">
+          <div id="vrContainer"><p style="color:#777;font-size:0.875rem;">Loading…</p></div>
+        </div>
+        <div id="tab-bio" class="tab-panel">
+          <div id="bioContainer"></div>
+        </div>`;
+
+      content.innerHTML = profileHtml + tabBar + panelsHtml;
+
+      // Wire up tabs
+      let bioLoaded = false;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          const panel = document.getElementById(`tab-${btn.dataset.tab}`);
+          if (panel) panel.classList.add('active');
+          if (btn.dataset.tab === 'bio' && !bioLoaded) {
+            bioLoaded = true;
+            loadBiography(document.getElementById('bioContainer'), justice.oyezId);
+          }
+        });
+      });
+
+      // Load voting record
+      const allCases = decisionsRes.ok ? ((await decisionsRes.json()).cases || []) : [];
+      renderVotingRecord(document.getElementById('vrContainer'), justice.id, allCases, 0);
+
+    } catch (err) {
+      console.error('justice:', err);
+      content.innerHTML = `<p style="color:#c00;">${err.message}</p>`;
+    }
+  })();
+</script>

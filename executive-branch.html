@@ -171,7 +171,8 @@ permalink: /executive-branch.html
 
       const officials = data.officials || [];
       const elected  = officials.filter(o => o.tier === 'elected');
-      const cabinet  = officials.filter(o => o.tier === 'cabinet');
+      const cabinet  = officials.filter(o => o.tier === 'cabinet')
+        .sort((a, b) => (a.department || '').localeCompare(b.department || ''));
       const base     = getBasePath();
 
       // --- Elected officials ---

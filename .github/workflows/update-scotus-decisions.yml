@@ -1,0 +1,56 @@
+name: Update SCOTUS decisions data
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly on Sundays at 10:00 UTC (SCOTUS terms run Oct–Jun; low activity in summer)
+    - cron: '0 10 * * 0'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate SCOTUS decisions data
+        run: python scripts/generate_scotus_decisions.py assets/data/scotus-decisions.json
+
+      - name: Validate generated data
+        run: |
+          if [ ! -f assets/data/scotus-decisions.json ]; then
+            echo "Error: scotus-decisions.json was not generated"
+            exit 1
+          fi
+          python -c "
+          import json, os
+          d = json.load(open('assets/data/scotus-decisions.json'))
+          count   = d.get('metadata', {}).get('count', 0)
+          size_kb = os.path.getsize('assets/data/scotus-decisions.json') // 1024
+          print(f'Validated: {count} decisions, {size_kb} KB')
+          "
+
+      - name: Commit and push generated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git stash --include-untracked
+          git rebase origin/main
+          git stash pop
+          git add -f assets/data/scotus-decisions.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update SCOTUS decisions data"
+            git push
+          fi

@@ -1,0 +1,311 @@
+---
+layout: default
+title: Supreme Court of the United States
+permalink: /supreme-court.html
+---
+
+<h1>Supreme Court of the United States</h1>
+
+<p>The Supreme Court is the highest court in the United States. It has nine Justices — one Chief Justice and eight Associate Justices — who are nominated by the President and confirmed by the Senate to serve lifetime appointments.</p>
+
+<style>
+  .sc-section-header {
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #555;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.4rem;
+    margin: 2rem 0 1rem 0;
+  }
+  /* Justice cards */
+  .chief-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .chief-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    border-color: #aaa;
+    text-decoration: none;
+    color: inherit;
+  }
+  .justice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .justice-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.4rem;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .justice-card:hover {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border-color: #bbb;
+    text-decoration: none;
+    color: inherit;
+  }
+  .justice-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #f3f4f6;
+  }
+  .justice-photo-lg {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #f3f4f6;
+    flex-shrink: 0;
+  }
+  .justice-name { font-weight: 700; font-size: 0.95rem; color: #111; line-height: 1.3; }
+  .justice-title { font-size: 0.72rem; font-weight: bold; text-transform: uppercase; color: #888; letter-spacing: 0.04em; }
+  .justice-appt { font-size: 0.78rem; color: #6b7280; }
+  .justice-view { font-size: 0.8rem; color: #1d4ed8; font-weight: 500; margin-top: 0.25rem; }
+  /* Decision cards */
+  .decision-list { list-style: none; padding: 0; margin: 0 0 2rem 0; }
+  .decision-item {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  .decision-item:last-child { border-bottom: none; }
+  .decision-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+  }
+  .decision-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1d4ed8;
+    text-decoration: none;
+  }
+  .decision-name:hover { text-decoration: underline; }
+  .decision-docket { font-size: 0.75rem; color: #9ca3af; }
+  .decision-meta { font-size: 0.78rem; color: #9ca3af; margin-bottom: 0.35rem; }
+  .decision-desc { font-size: 0.82rem; color: #444; line-height: 1.5; margin-bottom: 0.5rem; }
+  .vote-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .vote-chip {
+    display: inline-block;
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .chip-majority    { background: #dcfce7; color: #166534; }
+  .chip-minority    { background: #fee2e2; color: #991b1b; }
+  .chip-concurrence { background: #fef9c3; color: #854d0e; }
+  .chip-recused     { background: #f3f4f6; color: #6b7280; }
+  .tally-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #f3f4f6;
+    color: #374151;
+    margin-right: 0.4rem;
+  }
+  .load-more-btn {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: none;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .load-more-btn:hover { background: #f3f4f6; }
+  @media (max-width: 600px) {
+    .chief-card { flex-direction: column; align-items: center; text-align: center; }
+  }
+</style>
+
+<div id="scotusContent">
+  <p style="color:#777;font-size:0.9rem;">Loading...</p>
+</div>
+
+<script>
+  const COURT_URL     = 'assets/data/supreme-court.json';
+  const DECISIONS_URL = 'assets/data/scotus-decisions.json';
+  const DECISIONS_PAGE_SIZE = 10;
+
+  function getBasePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+
+  function fmt(iso) {
+    if (!iso) return '—';
+    const [y, m, d] = iso.slice(0, 10).split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function apptPartyColor(party) {
+    if (!party) return '#6b7280';
+    return party.toLowerCase().includes('democrat') ? '#1d4ed8' : '#dc2626';
+  }
+
+  function voteChip(v) {
+    const vote = (v.vote || '').toLowerCase();
+    const type = (v.opinionType || '').toLowerCase();
+    let cls, label;
+    if (vote === 'majority') {
+      cls = type === 'concurrence' ? 'chip-concurrence' : 'chip-majority';
+      label = type === 'concurrence' ? `${v.lastName} (concur.)` : v.lastName;
+    } else if (vote === 'minority') {
+      cls = 'chip-minority';
+      label = v.lastName;
+    } else {
+      cls = 'chip-recused';
+      label = `${v.lastName} (${v.vote || '?'})`;
+    }
+    return `<span class="vote-chip ${cls}">${label}</span>`;
+  }
+
+  function renderDecisions(cases, container, offset, allCases) {
+    const slice   = allCases.slice(0, offset + DECISIONS_PAGE_SIZE);
+    const hasMore = slice.length < allCases.length;
+
+    const items = slice.map(c => {
+      const tally = (c.majorityVote || c.minorityVote)
+        ? `<span class="tally-badge">${c.majorityVote}–${c.minorityVote}</span>`
+        : '';
+      const chips = (c.votes || []).map(voteChip).join('');
+      const links = [
+        c.oyezUrl       ? `<a href="${c.oyezUrl}" target="_blank" rel="noopener" style="font-size:0.75rem;color:#6b7280;">Oyez</a>` : '',
+        c.justiaUrl     ? `<a href="${c.justiaUrl}" target="_blank" rel="noopener" style="font-size:0.75rem;color:#6b7280;">Justia</a>` : '',
+        c.courtListenerUrl ? `<a href="${c.courtListenerUrl}" target="_blank" rel="noopener" style="font-size:0.75rem;color:#6b7280;">CourtListener</a>` : '',
+      ].filter(Boolean).join(' · ');
+
+      return `<li class="decision-item">
+        <div class="decision-header">
+          <a class="decision-name" href="${c.oyezUrl}" target="_blank" rel="noopener">${c.name}</a>
+          <span class="decision-docket">No. ${c.docketNumber}</span>
+        </div>
+        <div class="decision-meta">${fmt(c.decidedDate)} · ${c.term} term ${tally}</div>
+        ${c.description ? `<div class="decision-desc">${c.description}</div>` : ''}
+        <div class="vote-chips">${chips}</div>
+        ${links ? `<div style="margin-top:0.4rem;">${links}</div>` : ''}
+      </li>`;
+    }).join('');
+
+    const loadMoreBtn = hasMore
+      ? `<button class="load-more-btn" id="decisionsLoadMore">Load more (${allCases.length - slice.length} remaining)</button>`
+      : '';
+
+    container.innerHTML = `<ul class="decision-list">${items}</ul>${loadMoreBtn}`;
+
+    const btn = document.getElementById('decisionsLoadMore');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        renderDecisions(cases, container, offset + DECISIONS_PAGE_SIZE, allCases);
+      });
+    }
+  }
+
+  (async function () {
+    const container = document.getElementById('scotusContent');
+    const base      = getBasePath();
+
+    try {
+      const [courtRes, decisionsRes] = await Promise.all([
+        fetch(COURT_URL),
+        fetch(DECISIONS_URL),
+      ]);
+
+      if (!courtRes.ok) throw new Error(`Could not load supreme-court.json (HTTP ${courtRes.status})`);
+      const courtData = await courtRes.json();
+      const justices  = courtData.justices || [];
+      const chief     = justices.find(j => j.isChiefJustice);
+      const associates = justices.filter(j => !j.isChiefJustice)
+        .sort((a, b) => a.seniority - b.seniority);
+
+      // Chief Justice card
+      const chiefHtml = chief ? `
+        <a class="chief-card" href="${base}justice.html?id=${chief.id}">
+          ${chief.imageUrl ? `<img class="justice-photo-lg" src="${chief.imageUrl}" alt="${chief.name}" onerror="this.style.display='none'">` : ''}
+          <div>
+            <div class="justice-title">Chief Justice of the United States</div>
+            <div class="justice-name" style="font-size:1.15rem;">${chief.name}</div>
+            <div class="justice-appt" style="margin-top:0.3rem;">
+              Appointed by <span style="color:${apptPartyColor(chief.appointedByParty)};font-weight:600;">${chief.appointedBy}</span>
+              · Confirmed ${fmt(chief.confirmationDate)}
+              · ${chief.confirmationVote.yeas}–${chief.confirmationVote.nays}
+            </div>
+            <div class="justice-view" style="margin-top:0.5rem;">View profile →</div>
+          </div>
+        </a>` : '';
+
+      // Associate cards
+      const assocHtml = associates.map(j => `
+        <a class="justice-card" href="${base}justice.html?id=${j.id}">
+          ${j.imageUrl ? `<img class="justice-photo" src="${j.imageUrl}" alt="${j.name}" onerror="this.style.display='none'">` : ''}
+          <div class="justice-title">Associate Justice</div>
+          <div class="justice-name">${j.name}</div>
+          <div class="justice-appt">Appt. by <span style="color:${apptPartyColor(j.appointedByParty)};font-weight:600;">${j.appointedBy}</span></div>
+          <div class="justice-view">View profile →</div>
+        </a>`).join('');
+
+      // Decisions section
+      let decisionsHtml = `<p style="color:#777;font-size:0.875rem;">Could not load decisions — run the workflow to generate <code>assets/data/scotus-decisions.json</code>.</p>`;
+      let allCases = [];
+
+      if (decisionsRes.ok) {
+        const decisionsData = await decisionsRes.json();
+        allCases = decisionsData.cases || [];
+        const meta  = decisionsData.metadata || {};
+        const terms = (meta.terms || []).join(', ');
+        decisionsHtml = `
+          <p style="font-size:0.8rem;color:#6b7280;margin-bottom:0.75rem;">
+            ${allCases.length} decisions · ${terms} term${meta.terms?.length > 1 ? 's' : ''}
+          </p>
+          <div id="decisionsContainer"></div>`;
+      }
+
+      container.innerHTML = `
+        <div class="sc-section-header">Current Court — ${courtData.metadata?.court || 'Roberts Court'}</div>
+        ${chiefHtml}
+        <div class="justice-grid">${assocHtml}</div>
+        <div class="sc-section-header">Decisions</div>
+        ${decisionsHtml}
+      `;
+
+      if (allCases.length) {
+        renderDecisions(null, document.getElementById('decisionsContainer'), 0, allCases);
+      }
+
+    } catch (err) {
+      console.error('supreme-court:', err);
+      container.innerHTML = `<p style="color:#c00;">${err.message}</p>`;
+    }
+  })();
+</script>
