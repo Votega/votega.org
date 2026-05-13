@@ -256,7 +256,7 @@ permalink: /race.html
         ${candidate.bio ? `<p class="candidate-bio">${candidate.bio}</p>` : ''}
         <div class="candidate-links">
           <a href="${memberUrl}">View legislative record →</a>
-          <a href="${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(candidate.memberId)}&memberSource=${encodeURIComponent(candidate.memberSource || 'congress')}">View candidate profile →</a>
+          <a href="${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(candidate.existingMemberId || candidate.memberId)}&memberSource=${encodeURIComponent(candidate.existingMemberSource || candidate.memberSource || 'congress')}">View candidate profile →</a>
         </div>
       </div>`;
   }
@@ -306,9 +306,10 @@ permalink: /race.html
 
   function candidateLastName(c, members, race) {
     if (c.type === 'incumbent') {
+      const memberId = c.existingMemberId || c.memberId;
       const m = race.level === 'federal'
-        ? members.find(mb => mb.bioguideId === c.memberId)
-        : members.find(mb => mb.id === c.memberId);
+        ? members.find(mb => mb.bioguideId === memberId)
+        : members.find(mb => mb.id === memberId);
       return m?.lastName || (m?.name || '').split(' ').pop() || '';
     }
     return (c.name || '').split(' ').pop();
@@ -326,9 +327,10 @@ permalink: /race.html
 
     const cardsHtml = [...active, ...withdrawn].map(c => {
       if (c.type === 'incumbent') {
+        const cMemberId = c.existingMemberId || c.memberId;
         const member = race.level === 'federal'
-          ? members.find(m => m.bioguideId === c.memberId)
-          : members.find(m => m.id === c.memberId);
+          ? members.find(m => m.bioguideId === cMemberId)
+          : members.find(m => m.id === cMemberId);
         return renderIncumbentCard(c, member, race);
       }
       return renderChallengerCard(c);
@@ -415,9 +417,10 @@ permalink: /race.html
         candidatesHtml = `<div class="candidates-grid">` +
           [...active, ...withdrawn].map(c => {
             if (c.type === 'incumbent') {
+              const cMemberId = c.existingMemberId || c.memberId;
               const member = race.level === 'federal'
-                ? members.find(m => m.bioguideId === c.memberId)
-                : members.find(m => m.id === c.memberId);
+                ? members.find(m => m.bioguideId === cMemberId)
+                : members.find(m => m.id === cMemberId);
               return renderIncumbentCard(c, member, race);
             }
             return renderChallengerCard(c);
