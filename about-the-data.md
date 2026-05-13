@@ -110,9 +110,31 @@ The [Federal Executive Branch](/executive-branch.html) page displays the current
 The Federal Register API is queried at page load time, filtered to executive orders signed on or after the current administration's inauguration date. Results are paginated at 20 per page, ordered newest first. No API key is required — the Federal Register API is free and publicly accessible.
 
 - **Scope:** Executive orders issued during the current presidential term.
+- **Signed legislation:** Laws signed by the President during the current term are pulled from the Congress.gov API and stored in a prebuilt static file. Each law entry includes its public law number, bill label, title, signing date, policy area, and origin chamber.
 - **VP tie-breaking votes:** The Vice President casts a tie-breaking vote when the Senate is deadlocked 50–50. These are recorded in Senate roll call XML files under a `<tie_breaker>` element. We scan the vote list for each session, identify tied tallies, fetch the detail XML for each, and extract VP tie-breaking votes into a prebuilt static file updated weekly.
 - **Cabinet data:** Names, roles, departments, and Senate confirmation dates are manually maintained. Policy tracking per cabinet department is planned for a future update.
-- **Freshness:** Executive order data is live — fetched from the Federal Register API at page load time. VP tie-breaking votes and cabinet membership are updated weekly via GitHub Actions.
+- **Freshness:** Executive order data is live — fetched from the Federal Register API at page load time. VP tie-breaking votes, signed legislation, and cabinet membership are updated weekly via GitHub Actions.
+
+---
+
+## Supreme Court
+
+**Sources:** [Oyez.org API](https://api.oyez.org/) (free, no key required) · [CourtListener](https://www.courtlistener.com/) (Free Law Project) · Manual curation
+
+The [Supreme Court](/supreme-court.html) page displays current justices and recent decisions. Justice profile data (names, titles, appointing president, confirmation dates and votes, law school, home state) is manually maintained. Case decisions and per-justice vote breakdowns are generated weekly from the Oyez API.
+
+**How it works:**
+
+1. The Oyez API is queried for all cases in the current and most recent SCOTUS terms.
+2. Only decided cases (those with a "Decided" event in the timeline) are included.
+3. For each decided case, the full case detail is fetched to retrieve the per-justice vote breakdown — majority, dissent, and concurrence — along with the case description, docket number, decision date, and vote tally.
+4. CourtListener's public search API is queried to cross-reference docket numbers with opinion page URLs, where available.
+
+**Individual justice profiles** show a voting record filtered from the decisions dataset, and a live biography tab fetched from the Oyez API at page load time.
+
+- **Scope:** Current SCOTUS term plus the immediately preceding term.
+- **Vote breakdown:** Majority, dissent, and concurrence positions for each justice on each decided case.
+- **Freshness:** Justice roster is manually maintained. Decision data is updated weekly via GitHub Actions (Sundays, 10:00 UTC).
 
 ---
 
@@ -212,7 +234,10 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 |---|---|---|
 | Federal executive branch (President/VP/Cabinet) | Manual curation | Manually maintained |
 | Federal executive orders | Federal Register API (live) | Real-time, fetched on page load |
+| Presidential signed legislation | Congress.gov API | Weekly, Sundays 09:45 UTC |
 | VP tie-breaking votes | Senate.gov roll call XML | Weekly, Sundays 09:30 UTC |
+| Supreme Court justices | Manual curation | Manually maintained |
+| Supreme Court decisions & votes | Oyez.org API + CourtListener | Weekly, Sundays 10:00 UTC |
 | Federal Congress members | Congress.gov API | Daily, 06:00 UTC |
 | Georgia state legislators | Open States API | Daily, 07:00 UTC |
 | GA legislators community repo | Published from above | Daily, after GA member update |
