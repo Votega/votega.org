@@ -163,6 +163,66 @@ permalink: /executive-member.html
     color: #6b7280;
     margin-bottom: 0.75rem;
   }
+
+  /* Signed legislation list */
+  .law-list { list-style: none; padding: 0; margin: 0; }
+  .law-item {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.875rem;
+  }
+  .law-item:last-child { border-bottom: none; }
+  .law-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.2rem;
+  }
+  .law-id {
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #6b7280;
+    white-space: nowrap;
+  }
+  .law-title {
+    font-weight: 600;
+    color: #1d4ed8;
+    text-decoration: none;
+    line-height: 1.35;
+  }
+  .law-title:hover { text-decoration: underline; }
+  .law-meta { font-size: 0.78rem; color: #9ca3af; margin-top: 0.2rem; }
+  .law-policy {
+    display: inline-block;
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.72rem;
+    color: #374151;
+    margin-left: 0.3rem;
+    vertical-align: middle;
+  }
+  .law-meta-bar {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+  }
+  .law-load-more {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: none;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .law-load-more:hover { background: #f3f4f6; }
+  .law-load-more:disabled { color: #9ca3af; cursor: default; }
 </style>
 
 <div id="pageLayout">
@@ -199,7 +259,11 @@ permalink: /executive-member.html
 
   function fmt(iso) {
     if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    // Parse date components directly to avoid UTC-to-local timezone shift.
+    // new Date('YYYY-MM-DD') treats the string as UTC midnight, which rolls
+    // back to the previous day for US timezones — manual parsing avoids this.
+    const [year, month, day] = iso.slice(0, 10).split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   }
 
   async function loadOfficial(id) {
@@ -217,7 +281,10 @@ permalink: /executive-member.html
 
       renderOfficial(official, detailsDiv);
       initTabs();
-      if (official.id === 'president')      loadExecOrders(official);
+      if (official.id === 'president') {
+        loadExecOrders(official);
+        loadSignedLegislation(official);
+      }
       if (official.id === 'vice-president') loadVpTieVotes();
     } catch (err) {
       console.error('loadOfficial()', err);
@@ -290,12 +357,7 @@ permalink: /executive-member.html
              <button class="tab-btn" data-tab="signedLegislation">Signed Legislation</button>
            </div>
            <div id="execOrders" class="tab-panel active"><p style="color:#777;font-size:0.875rem;">Loading executive orders…</p></div>
-           <div id="signedLegislation" class="tab-panel">
-             <div class="coming-soon-panel">
-               <h3>Signed Legislation — Coming Soon</h3>
-               <p>Bills signed into law will be listed here in a future update.</p>
-             </div>
-           </div>
+           <div id="signedLegislation" class="tab-panel"><p style="color:#777;font-size:0.875rem;">Loading signed legislation…</p></div>
          </div>`;
     }
 
@@ -385,6 +447,83 @@ permalink: /executive-member.html
     } catch (err) {
       console.error('loadVpTieVotes()', err);
       container.innerHTML = `<p style="color:#c00;font-size:0.875rem;">Could not load tie-breaking vote data. Check that <code>assets/data/vp-tie-votes.json</code> exists.</p>`;
+    }
+  }
+
+  async function loadSignedLegislation(official) {
+    const container = document.getElementById('signedLegislation');
+    if (!container) return;
+
+    const LAWS_URL  = 'assets/data/presidential-laws.json';
+    const PAGE_SIZE = 25;
+    let   offset    = 0;
+    let   allLaws   = [];
+
+    try {
+      const res = await fetch(LAWS_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      allLaws = data.laws || [];
+      const meta = data.metadata || {};
+
+      if (!allLaws.length) {
+        container.innerHTML = `<p style="color:#777;font-size:0.875rem;">No signed legislation found for this term.</p>`;
+        return;
+      }
+
+      // Update tab label with total count
+      const tabBtn = document.querySelector('[data-tab="signedLegislation"]');
+      if (tabBtn) tabBtn.textContent = `Signed Legislation (${allLaws.length})`;
+
+      function renderPage() {
+        const slice   = allLaws.slice(0, offset + PAGE_SIZE);
+        const hasMore = slice.length < allLaws.length;
+
+        const items = slice.map(law => {
+          const lawNum   = law.publicLawNumber ? `P.L. ${law.publicLawNumber}` : law.billLabel;
+          const billId   = law.publicLawNumber ? law.billLabel : '';
+          const date     = law.signingDate ? fmt(law.signingDate) : '—';
+          const policy   = law.policyArea
+            ? `<span class="law-policy">${law.policyArea}</span>`
+            : '';
+          const metaParts = [date];
+          if (billId) metaParts.push(billId);
+          return `<li class="law-item">
+            <div class="law-header">
+              <span class="law-id">${lawNum}</span>
+              <a class="law-title" href="${law.congressUrl}" target="_blank" rel="noopener">${law.title}</a>${policy}
+            </div>
+            <div class="law-meta">Signed ${metaParts.join(' · ')}</div>
+          </li>`;
+        }).join('');
+
+        const termStart = meta.termStart || official.termStart || '2025-01-20';
+        const metaBar = `<p class="law-meta-bar">
+          ${allLaws.length} laws signed since ${termStart} ·
+          <a href="https://www.congress.gov/public-laws/${meta.congress || 119}" target="_blank" rel="noopener">View all on Congress.gov →</a>
+        </p>`;
+
+        const loadMoreBtn = hasMore
+          ? `<button class="law-load-more" id="lawLoadMore">Load more (${allLaws.length - slice.length} remaining)</button>`
+          : '';
+
+        container.innerHTML = `${metaBar}<ul class="law-list">${items}</ul>${loadMoreBtn}`;
+
+        const btn = document.getElementById('lawLoadMore');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            offset += PAGE_SIZE;
+            renderPage();
+          });
+        }
+      }
+
+      renderPage();
+
+    } catch (err) {
+      console.error('loadSignedLegislation()', err);
+      container.innerHTML = `<p style="color:#c00;font-size:0.875rem;">Could not load signed legislation. Check that <code>assets/data/presidential-laws.json</code> exists — run the workflow to generate it. <a href="https://www.congress.gov/public-laws/119" target="_blank" rel="noopener">View on Congress.gov →</a></p>`;
     }
   }
 

@@ -1,0 +1,60 @@
+name: Update presidential signed laws data
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly on Sundays at 09:45 UTC (after federal-votes and vp-tie-votes workflows)
+    - cron: '45 9 * * 0'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate presidential signed laws data
+        run: python scripts/generate_presidential_laws.py assets/data/presidential-laws.json
+        env:
+          CONGRESS_API_KEY: ${{ secrets.CONGRESS_API_KEY }}
+
+      - name: Validate generated data
+        run: |
+          if [ ! -f assets/data/presidential-laws.json ]; then
+            echo "Error: presidential-laws.json was not generated"
+            exit 1
+          fi
+          python -c "
+          import json, os
+          d = json.load(open('assets/data/presidential-laws.json'))
+          count   = d.get('metadata', {}).get('count', 0)
+          size_kb = os.path.getsize('assets/data/presidential-laws.json') // 1024
+          print(f'Validated: {count} signed laws, {size_kb} KB')
+          if count == 0:
+              print('Warning: no laws found — Congress.gov API may be unavailable')
+          "
+
+      - name: Commit and push generated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git stash --include-untracked
+          git rebase origin/main
+          git stash pop
+          git add -f assets/data/presidential-laws.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update presidential signed laws data"
+            git push
+          fi
