@@ -1,0 +1,56 @@
+name: Update VP tie-breaking vote data
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly on Sundays at 09:30 UTC (after federal-votes workflow)
+    - cron: '30 9 * * 0'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate VP tie-breaking vote data
+        run: python scripts/generate_vp_tie_votes.py assets/data/vp-tie-votes.json
+
+      - name: Validate generated data
+        run: |
+          if [ ! -f assets/data/vp-tie-votes.json ]; then
+            echo "Error: vp-tie-votes.json was not generated"
+            exit 1
+          fi
+          python -c "
+          import json, os
+          d = json.load(open('assets/data/vp-tie-votes.json'))
+          count   = d.get('metadata', {}).get('count', 0)
+          size_kb = os.path.getsize('assets/data/vp-tie-votes.json') // 1024
+          print(f'Validated: {count} VP tie-breaking votes, {size_kb} KB')
+          "
+
+      - name: Commit and push generated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git stash --include-untracked
+          git rebase origin/main
+          git stash pop
+          git add -f assets/data/vp-tie-votes.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update VP tie-breaking vote data"
+            git push
+          fi

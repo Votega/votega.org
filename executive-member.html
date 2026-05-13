@@ -1,0 +1,497 @@
+---
+layout: default
+title: Executive Branch Official
+permalink: /executive-member.html
+---
+
+<h1 id="pageTitle">Executive Branch Official</h1>
+
+<style>
+  #pageLayout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-top: 1.5rem;
+  }
+  #officialDetails {
+    flex: 1;
+    min-width: 0;
+    padding: 1.25rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  .role-badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    background: #f3f4f6;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+  }
+  .official-photo {
+    max-width: 180px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+  }
+  .detail-row strong { margin-right: 0.4rem; }
+  .coming-soon-panel {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    border: 1px dashed #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+    text-align: center;
+  }
+  .coming-soon-panel h3 { margin: 0 0 0.5rem 0; font-size: 1rem; color: #374151; }
+  .coming-soon-panel p  { margin: 0; font-size: 0.875rem; color: #6b7280; }
+  .tab-container { margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1.5rem; }
+  .tab-nav { display: flex; border-bottom: 2px solid #e5e7eb; margin-bottom: 1.5rem; }
+  .tab-btn {
+    background: none; border: none; border-bottom: 3px solid transparent;
+    margin-bottom: -2px; padding: 0.5rem 1.25rem;
+    font-size: 0.9rem; font-weight: 500; color: #6b7280; cursor: pointer;
+  }
+  .tab-btn:hover { color: #111; }
+  .tab-btn.active { color: #1d4ed8; border-bottom-color: #1d4ed8; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  @media (max-width: 700px) {
+    #pageLayout { flex-direction: column; }
+  }
+
+  /* Executive Order cards */
+  .eo-list { list-style: none; padding: 0; margin: 0; }
+  .eo-item {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.875rem;
+  }
+  .eo-item:last-child { border-bottom: none; }
+  .eo-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+  }
+  .eo-number {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
+    white-space: nowrap;
+  }
+  .eo-title {
+    font-weight: 600;
+    color: #1d4ed8;
+    text-decoration: none;
+    line-height: 1.35;
+  }
+  .eo-title:hover { text-decoration: underline; }
+  .eo-date { font-size: 0.78rem; color: #9ca3af; }
+  .eo-abstract {
+    font-size: 0.8rem;
+    color: #555;
+    margin-top: 0.3rem;
+    line-height: 1.5;
+  }
+  .eo-load-more {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: none;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .eo-load-more:hover { background: #f3f4f6; }
+  .eo-load-more:disabled { color: #9ca3af; cursor: default; }
+  .eo-meta-bar {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+  }
+
+  /* VP tie-breaking vote cards */
+  .tie-list { list-style: none; padding: 0; margin: 0; }
+  .tie-item {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.875rem;
+  }
+  .tie-item:last-child { border-bottom: none; }
+  .tie-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+  }
+  .tie-badge {
+    display: inline-block;
+    border-radius: 4px;
+    padding: 0.15rem 0.55rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .tie-badge-yea { background: #dcfce7; color: #166534; }
+  .tie-badge-nay { background: #fee2e2; color: #991b1b; }
+  .tie-title {
+    font-weight: 600;
+    color: #1d4ed8;
+    text-decoration: none;
+    line-height: 1.35;
+  }
+  .tie-title:hover { text-decoration: underline; }
+  .tie-meta    { font-size: 0.78rem; color: #9ca3af; margin-top: 0.2rem; }
+  .tie-summary { font-size: 0.8rem;  color: #555;   margin-top: 0.3rem; font-style: italic; }
+  .tie-summary-bar {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+  }
+</style>
+
+<div id="pageLayout">
+  <div id="officialDetails">
+    <p>Loading...</p>
+  </div>
+</div>
+
+<script>
+  const DATA_URL = 'assets/data/executive.json';
+
+  const urlParams  = new URLSearchParams(window.location.search);
+  const officialId = urlParams.get('id');
+
+  if (!officialId) {
+    document.getElementById('officialDetails').innerHTML =
+      '<p>No official selected. <a href="executive-branch.html">Go back to Executive Branch</a></p>';
+  } else {
+    loadOfficial(officialId);
+  }
+
+  function getBasePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+
+  function partyIcon(party) {
+    if (!party) return '';
+    const p = party.toLowerCase();
+    const base = getBasePath();
+    if (p.includes('democrat')) return `<img width="20" alt="Democratic party" src="${base}assets/img/democratic-disc.svg" style="vertical-align:middle;margin-left:4px;">`;
+    if (p.includes('republican')) return `<img width="20" alt="Republican party" src="${base}assets/img/republican-disc.svg" style="vertical-align:middle;margin-left:4px;">`;
+    return '';
+  }
+
+  function fmt(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  async function loadOfficial(id) {
+    const detailsDiv = document.getElementById('officialDetails');
+    try {
+      const res = await fetch(DATA_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      const official = (data.officials || []).find(o => o.id === id);
+      if (!official) throw new Error('Official not found');
+
+      document.getElementById('pageTitle').textContent = official.name;
+      document.title = `${official.name} | Vote GA`;
+
+      renderOfficial(official, detailsDiv);
+      initTabs();
+      if (official.id === 'president')      loadExecOrders(official);
+      if (official.id === 'vice-president') loadVpTieVotes();
+    } catch (err) {
+      console.error('loadOfficial()', err);
+      detailsDiv.innerHTML = '<p>Could not load this official\'s details. <a href="executive-branch.html">Go back</a></p>';
+    }
+  }
+
+  function renderOfficial(o, container) {
+    const base       = getBasePath();
+    const isElected  = o.tier === 'elected';
+    const isCabinet  = o.tier === 'cabinet';
+
+    const imageHtml = o.imageUrl
+      ? `<img class="official-photo" src="${o.imageUrl}" alt="${o.name}">`
+      : '';
+
+    const termHtml = isElected && o.termStart
+      ? `<div class="detail-row"><span><strong>Term:</strong> ${o.termStart.slice(0,4)}–${o.termEnd ? o.termEnd.slice(0,4) : 'Present'}</span></div>`
+      : '';
+
+    const confirmedHtml = isCabinet && o.confirmedDate
+      ? `<div class="detail-row"><span><strong>Senate Confirmed:</strong> ${fmt(o.confirmedDate)}</span></div>`
+      : '';
+
+    const deptHtml = o.department
+      ? `<div class="detail-row"><span><strong>Department:</strong> ${o.department}</span></div>`
+      : '';
+
+    const birthHtml = o.birthYear
+      ? `<div class="detail-row">
+           <span><strong>Birth Year:</strong> ${o.birthYear}</span>
+           <span><strong>Age:</strong> ${new Date().getFullYear() - o.birthYear}</span>
+         </div>`
+      : '';
+
+    const websiteHtml = o.officialWebsite
+      ? `<p><strong>Official Website:</strong> <a href="${o.officialWebsite}" target="_blank" rel="noopener">${o.officialWebsite}</a></p>`
+      : '';
+
+    const bioHtml = o.bio
+      ? `<p style="margin-top:1rem;font-size:0.9rem;line-height:1.6;color:#333;">${o.bio}</p>`
+      : '';
+
+    const constitutionalRoleHtml = o.constitutionalRole
+      ? `<div style="margin-top:1rem;padding:0.85rem 1rem;background:#f8f9fa;border-left:3px solid #6b7280;border-radius:0 6px 6px 0;font-size:0.875rem;line-height:1.6;color:#374151;">
+           <strong style="display:block;margin-bottom:0.3rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;">Constitutional Role</strong>
+           ${o.constitutionalRole.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')}
+         </div>`
+      : '';
+
+    // Build tab content based on role
+    let contentHtml;
+    if (isCabinet) {
+      contentHtml = `<div class="coming-soon-panel">
+           <h3>Policy Tracking Coming Soon</h3>
+           <p>We're working on tracking executive orders, agency rules, and policy actions for Cabinet members.<br>
+           Check back for updates, or visit the <a href="${o.officialWebsite || '#'}" target="_blank" rel="noopener">official department website</a>.</p>
+         </div>`;
+    } else if (o.id === 'vice-president') {
+      contentHtml = `<div class="tab-container">
+           <div class="tab-nav">
+             <button class="tab-btn active" data-tab="vpTieVotes">Tie-Breaking Votes</button>
+           </div>
+           <div id="vpTieVotes" class="tab-panel active"><p style="color:#777;font-size:0.875rem;">Loading tie-breaking votes…</p></div>
+         </div>`;
+    } else {
+      contentHtml = `<div class="tab-container">
+           <div class="tab-nav">
+             <button class="tab-btn active" data-tab="execOrders">Executive Orders</button>
+             <button class="tab-btn" data-tab="signedLegislation">Signed Legislation</button>
+           </div>
+           <div id="execOrders" class="tab-panel active"><p style="color:#777;font-size:0.875rem;">Loading executive orders…</p></div>
+           <div id="signedLegislation" class="tab-panel">
+             <div class="coming-soon-panel">
+               <h3>Signed Legislation — Coming Soon</h3>
+               <p>Bills signed into law will be listed here in a future update.</p>
+             </div>
+           </div>
+         </div>`;
+    }
+
+    container.innerHTML = `
+      ${imageHtml}
+      <span class="role-badge">${o.role}</span>
+      <h2 style="margin:0 0 0.75rem 0;">${o.name}</h2>
+      ${o.party ? `<p><strong>Party:</strong> ${o.party} ${partyIcon(o.party)}</p>` : ''}
+      ${deptHtml}
+      ${termHtml}
+      ${confirmedHtml}
+      ${birthHtml}
+      ${websiteHtml}
+      ${bioHtml}
+      ${constitutionalRoleHtml}
+      <p style="margin-top:1.5rem;"><a href="${base}executive-branch.html">← Back to Executive Branch</a></p>
+      ${contentHtml}
+    `;
+  }
+
+  function initTabs() {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+  }
+
+  async function loadVpTieVotes() {
+    const container = document.getElementById('vpTieVotes');
+    if (!container) return;
+
+    const VP_VOTES_URL = 'assets/data/vp-tie-votes.json';
+
+    try {
+      const res = await fetch(VP_VOTES_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      const votes = data.votes || [];
+      const meta  = data.metadata || {};
+
+      if (!votes.length) {
+        container.innerHTML = `<p style="color:#777;font-size:0.875rem;">No tie-breaking votes recorded for this term.</p>`;
+        return;
+      }
+
+      // Show most recent first
+      const sorted = [...votes].sort((a, b) => b.date.localeCompare(a.date));
+
+      const items = sorted.map(v => {
+        const badge     = v.vpVote === 'Yea'
+          ? `<span class="tie-badge tie-badge-yea">Voted Yea</span>`
+          : `<span class="tie-badge tie-badge-nay">Voted Nay</span>`;
+        const title   = v.title || v.question || 'Senate Vote';
+        const date    = v.date ? fmt(v.date) : '—';
+        const meta    = `${date} · ${v.yeas}–${v.nays} (tie) · ${v.result || ''}`.trim().replace(/ · $/, '');
+        const summaryHtml = v.summary
+          ? `<div class="tie-summary">${v.summary}</div>`
+          : '';
+
+        return `<li class="tie-item">
+          <div class="tie-header">
+            ${badge}
+            <a class="tie-title" href="${v.url}" target="_blank" rel="noopener">${title}</a>
+          </div>
+          <div class="tie-meta">${meta}</div>
+          ${summaryHtml}
+        </li>`;
+      }).join('');
+
+      const updatedAt = meta.generatedAt ? fmt(meta.generatedAt.slice(0, 10)) : '';
+      const updatedNote = updatedAt ? ` · Data as of ${updatedAt}` : '';
+
+      container.innerHTML = `
+        <p class="tie-summary-bar">${votes.length} tie-breaking vote${votes.length !== 1 ? 's' : ''} cast this term${updatedNote}</p>
+        <ul class="tie-list">${items}</ul>
+      `;
+
+      // Update the tab button label to show the count
+      const tabBtn = document.querySelector('[data-tab="vpTieVotes"]');
+      if (tabBtn) tabBtn.textContent = `Tie-Breaking Votes (${votes.length})`;
+
+    } catch (err) {
+      console.error('loadVpTieVotes()', err);
+      container.innerHTML = `<p style="color:#c00;font-size:0.875rem;">Could not load tie-breaking vote data. Check that <code>assets/data/vp-tie-votes.json</code> exists.</p>`;
+    }
+  }
+
+  // Fetches executive orders from the Federal Register API (free, no key, CORS-open).
+  // Filters to the current term start date so only this administration's EOs appear.
+  async function loadExecOrders(official) {
+    const container = document.getElementById('execOrders');
+    if (!container) return;
+
+    const FR_BASE = 'https://www.federalregister.gov/api/v1/documents.json';
+    const PER_PAGE = 20;
+    const termStart = (official.termStart || '2025-01-20').slice(0, 10);
+
+    // State shared between initial load and "load more" calls
+    let currentPage = 1;
+    let totalCount  = 0;
+    let totalPages  = 0;
+    const rendered  = [];   // accumulates rendered <li> strings
+
+    function buildUrl(page) {
+      const params = new URLSearchParams({
+        'conditions[type][]':                     'PRESDOCU',
+        'conditions[presidential_document_type][]': 'executive_order',
+        'conditions[signing_date][gte]':          termStart,
+        'per_page':                               PER_PAGE,
+        'page':                                   page,
+        'order':                                  'newest',
+        'fields[]':                               ['document_number', 'executive_order_number', 'title', 'signing_date', 'abstract', 'html_url'].join('&fields[]='),
+      });
+      // URLSearchParams encodes fields[] oddly — build the fields part manually
+      const base = `${FR_BASE}?conditions%5Btype%5D%5B%5D=PRESDOCU` +
+        `&conditions%5Bpresidential_document_type%5D%5B%5D=executive_order` +
+        `&conditions%5Bsigning_date%5D%5Bgte%5D=${termStart}` +
+        `&per_page=${PER_PAGE}&page=${page}&order=newest` +
+        `&fields[]=document_number&fields[]=executive_order_number&fields[]=title&fields[]=signing_date&fields[]=abstract&fields[]=html_url`;
+      return base;
+    }
+
+    function renderItems(results) {
+      return results.map(eo => {
+        const eoNum  = eo.executive_order_number ? `EO ${eo.executive_order_number}` : `Doc ${eo.document_number || ''}`;
+        const date   = eo.signing_date ? fmt(eo.signing_date) : '—';
+        const title  = eo.title || 'Untitled';
+        const url    = eo.html_url || '#';
+        const abs    = eo.abstract
+          ? `<div class="eo-abstract">${eo.abstract}</div>`
+          : '';
+        return `<li class="eo-item">
+          <div class="eo-header">
+            <span class="eo-number">${eoNum}</span>
+            <a class="eo-title" href="${url}" target="_blank" rel="noopener">${title}</a>
+          </div>
+          <div class="eo-date">Signed ${date}</div>
+          ${abs}
+        </li>`;
+      });
+    }
+
+    function rebuildContainer() {
+      const hasMore = currentPage < totalPages;
+      const metaBar = totalCount > 0
+        ? `<p class="eo-meta-bar">Showing ${rendered.length} of ${totalCount} executive orders since ${termStart} · <a href="https://www.federalregister.gov/presidential-documents/executive-orders" target="_blank" rel="noopener">View all on Federal Register →</a></p>`
+        : '';
+      const loadMoreBtn = hasMore
+        ? `<button class="eo-load-more" id="eoLoadMore">Load more</button>`
+        : '';
+
+      container.innerHTML = `
+        ${metaBar}
+        <ul class="eo-list">${rendered.join('')}</ul>
+        ${loadMoreBtn}
+      `;
+
+      const btn = document.getElementById('eoLoadMore');
+      if (btn) {
+        btn.addEventListener('click', async () => {
+          btn.disabled = true;
+          btn.textContent = 'Loading…';
+          currentPage++;
+          await fetchPage(currentPage);
+        });
+      }
+    }
+
+    async function fetchPage(page) {
+      const res = await fetch(buildUrl(page));
+      if (!res.ok) throw new Error(`Federal Register API: HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (page === 1) {
+        totalCount = data.count || 0;
+        totalPages = data.total_pages || 1;
+      }
+
+      const newItems = renderItems(data.results || []);
+      rendered.push(...newItems);
+      rebuildContainer();
+    }
+
+    try {
+      await fetchPage(1);
+      if (rendered.length === 0) {
+        container.innerHTML = `<p style="color:#777;font-size:0.875rem;">No executive orders found for this term.</p>`;
+      }
+    } catch (err) {
+      console.error('loadExecOrders()', err);
+      container.innerHTML = `<p style="color:#c00;font-size:0.875rem;">Could not load executive orders from the Federal Register. <a href="https://www.federalregister.gov/presidential-documents/executive-orders" target="_blank" rel="noopener">View directly on FederalRegister.gov →</a></p>`;
+    }
+  }
+</script>

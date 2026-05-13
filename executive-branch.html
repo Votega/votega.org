@@ -1,0 +1,220 @@
+---
+layout: default
+title: Federal Executive Branch
+permalink: /executive-branch.html
+---
+
+<h1>Federal Executive Branch</h1>
+
+<p>The Executive Branch of the federal government is headed by the President and Vice President, who are elected together every four years. The President's Cabinet consists of the Vice President and the heads of 15 executive departments, each confirmed by the U.S. Senate.</p>
+
+<style>
+  .exec-section-header {
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #555;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.4rem;
+    margin: 2rem 0 1rem 0;
+  }
+  .elected-grid {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .elected-card {
+    flex: 1;
+    min-width: 220px;
+    max-width: 360px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .elected-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    border-color: #aaa;
+    text-decoration: none;
+    color: inherit;
+  }
+  .elected-card .role-label {
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #666;
+    letter-spacing: 0.04em;
+  }
+  .elected-card .official-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111;
+  }
+  .elected-card .official-party {
+    font-size: 0.875rem;
+    color: #555;
+  }
+  .elected-card .official-term {
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 0.25rem;
+  }
+  .elected-card .view-link {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: #1d4ed8;
+    font-weight: 500;
+  }
+  .cabinet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .cabinet-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    background: #fafafa;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .cabinet-card:hover {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border-color: #bbb;
+    text-decoration: none;
+    color: inherit;
+  }
+  .cabinet-card .dept-label {
+    font-size: 0.72rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 0.04em;
+  }
+  .cabinet-card .cabinet-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111;
+  }
+  .cabinet-card .cabinet-role {
+    font-size: 0.8rem;
+    color: #555;
+    line-height: 1.35;
+  }
+  .cabinet-card .coming-soon-badge {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.15rem 0.5rem;
+    background: #f3f4f6;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    color: #6b7280;
+  }
+  .data-note {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 600px) {
+    .elected-grid { flex-direction: column; }
+    .elected-card { max-width: 100%; }
+  }
+</style>
+
+<div id="execContent">
+  <p style="color:#777;font-size:0.9rem;">Loading...</p>
+</div>
+
+<p class="data-note">Cabinet data sourced from Senate confirmation records. Data is manually maintained.</p>
+
+<script>
+  (async function () {
+    const DATA_URL = 'assets/data/executive.json';
+    const container = document.getElementById('execContent');
+
+    function getBasePath() {
+      return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+    }
+
+    function partyIcon(party) {
+      if (!party) return '';
+      const p = party.toLowerCase();
+      const base = getBasePath();
+      if (p.includes('democrat')) return `<img width="18" alt="Democratic party" src="${base}assets/img/democratic-disc.svg" style="vertical-align:middle;margin-left:4px;">`;
+      if (p.includes('republican')) return `<img width="18" alt="Republican party" src="${base}assets/img/republican-disc.svg" style="vertical-align:middle;margin-left:4px;">`;
+      return '';
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    try {
+      const res = await fetch(DATA_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      const officials = data.officials || [];
+      const elected  = officials.filter(o => o.tier === 'elected');
+      const cabinet  = officials.filter(o => o.tier === 'cabinet');
+      const base     = getBasePath();
+
+      // --- Elected officials ---
+      const electedCards = elected.map(o => {
+        const termEnd = o.termEnd ? `Term ends ${o.termEnd.slice(0,4)}` : '';
+        return `<a class="elected-card" href="${base}executive-member.html?id=${encodeURIComponent(o.id)}">
+          <span class="role-label">${o.role}</span>
+          <span class="official-name">${o.name}</span>
+          <span class="official-party">${o.party || ''}${partyIcon(o.party)}</span>
+          ${termEnd ? `<span class="official-term">${termEnd}</span>` : ''}
+          <span class="view-link">View profile →</span>
+        </a>`;
+      }).join('');
+
+      // --- Cabinet cards ---
+      const cabinetCards = cabinet.map(o => {
+        return `<a class="cabinet-card" href="${base}executive-member.html?id=${encodeURIComponent(o.id)}">
+          <span class="dept-label">${o.department || ''}</span>
+          <span class="cabinet-name">${o.name}</span>
+          <span class="cabinet-role">${o.role}</span>
+          <span class="coming-soon-badge">Policy tracking coming soon</span>
+        </a>`;
+      }).join('');
+
+      const meta = data.metadata || {};
+      const termRange = meta.termStart && meta.termEnd
+        ? `${meta.termStart.slice(0,4)}–${meta.termEnd.slice(0,4)}`
+        : '';
+
+      container.innerHTML = `
+        <div class="exec-section-header">Elected Officials ${termRange ? `· ${termRange}` : ''}</div>
+        <div class="elected-grid">${electedCards}</div>
+
+        <div class="exec-section-header">The President's Cabinet</div>
+        <p style="font-size:0.875rem;color:#555;margin-bottom:1rem;">
+          The Cabinet includes the Vice President and the heads of 15 executive departments.
+          All department secretaries are nominated by the President and confirmed by the U.S. Senate.
+        </p>
+        <div class="cabinet-grid">${cabinetCards}</div>
+      `;
+    } catch (err) {
+      console.error('executive-branch:', err);
+      container.innerHTML = `<p style="color:#c00;">Could not load executive branch data. Check that <code>assets/data/executive.json</code> exists.</p>`;
+    }
+  })();
+</script>

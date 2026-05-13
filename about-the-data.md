@@ -97,6 +97,25 @@ into votega.org on the next daily update.
 
 ---
 
+## Federal Executive Branch
+
+**Sources:** Manual curation · [Federal Register API](https://www.federalregister.gov/developers/api/v1) (Office of the Federal Register, National Archives)
+
+The [Federal Executive Branch](/executive-branch.html) page displays the current President, Vice President, and Cabinet. Profile data (names, roles, party, term dates, confirmation dates) is manually maintained in a static data file and verified against official White House and Senate confirmation records.
+
+**Executive Orders** on each official's profile page are fetched live from the Federal Register API when you visit the page. The Federal Register is the official journal of the U.S. federal government, published by the Office of the Federal Register (part of the National Archives). It is the authoritative source for presidential documents, including executive orders, presidential memoranda, and proclamations.
+
+**How it works:**
+
+The Federal Register API is queried at page load time, filtered to executive orders signed on or after the current administration's inauguration date. Results are paginated at 20 per page, ordered newest first. No API key is required — the Federal Register API is free and publicly accessible.
+
+- **Scope:** Executive orders issued during the current presidential term.
+- **VP tie-breaking votes:** The Vice President casts a tie-breaking vote when the Senate is deadlocked 50–50. These are recorded in Senate roll call XML files under a `<tie_breaker>` element. We scan the vote list for each session, identify tied tallies, fetch the detail XML for each, and extract VP tie-breaking votes into a prebuilt static file updated weekly.
+- **Cabinet data:** Names, roles, departments, and Senate confirmation dates are manually maintained. Policy tracking per cabinet department is planned for a future update.
+- **Freshness:** Executive order data is live — fetched from the Federal Register API at page load time. VP tie-breaking votes and cabinet membership are updated weekly via GitHub Actions.
+
+---
+
 ## GA Executive Orders — Community Data Repository
 
 We publish Georgia Governor's executive orders to a public community repository:
@@ -191,6 +210,9 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 
 | Data | Source | Update Schedule |
 |---|---|---|
+| Federal executive branch (President/VP/Cabinet) | Manual curation | Manually maintained |
+| Federal executive orders | Federal Register API (live) | Real-time, fetched on page load |
+| VP tie-breaking votes | Senate.gov roll call XML | Weekly, Sundays 09:30 UTC |
 | Federal Congress members | Congress.gov API | Daily, 06:00 UTC |
 | Georgia state legislators | Open States API | Daily, 07:00 UTC |
 | GA legislators community repo | Published from above | Daily, after GA member update |
