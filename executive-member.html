@@ -305,8 +305,10 @@ permalink: /executive-member.html
       ? `<div class="detail-row"><span><strong>Term:</strong> ${o.termStart.slice(0,4)}–${o.termEnd ? o.termEnd.slice(0,4) : 'Present'}</span></div>`
       : '';
 
+    const isActing = (o.role || '').toLowerCase().startsWith('acting');
+    const confirmedLabel = isActing ? 'Effective' : 'Senate Confirmed';
     const confirmedHtml = isCabinet && o.confirmedDate
-      ? `<div class="detail-row"><span><strong>Senate Confirmed:</strong> ${fmt(o.confirmedDate)}</span></div>`
+      ? `<div class="detail-row"><span><strong>${confirmedLabel}:</strong> ${fmt(o.confirmedDate)}</span></div>`
       : '';
 
     const deptHtml = o.department
