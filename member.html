@@ -161,6 +161,60 @@ permalink: /member.html
   .vote-yea   { color: #1a7a1a; font-weight: bold; }
   .vote-nay   { color: #b00020; font-weight: bold; }
   .vote-other { color: #666; }
+
+  /* Key vote cards */
+  .kv-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  .kv-card-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+    flex-wrap: wrap;
+  }
+  .kv-bill-id {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #1d4ed8;
+    text-decoration: none;
+  }
+  .kv-bill-id:hover { text-decoration: underline; }
+  .kv-bill-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #111;
+  }
+  .kv-summary {
+    font-size: 0.82rem;
+    color: #444;
+    margin: 0.4rem 0 0.75rem 0;
+    line-height: 1.5;
+  }
+  .kv-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .kv-badge {
+    display: inline-block;
+    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .kv-badge-yea   { background: #dcfce7; color: #166534; }
+  .kv-badge-nay   { background: #fee2e2; color: #991b1b; }
+  .kv-badge-other { background: #f3f4f6; color: #374151; }
+  .kv-tally {
+    font-size: 0.78rem;
+    color: #6b7280;
+  }
+  .kv-tally strong { color: #111; }
 </style>
 
 <div id="pageLayout">
@@ -224,6 +278,7 @@ permalink: /member.html
       displayMemberDetails(member, electionInfo, seatRace);
       displaySidebar(member, allMembers);
       initTabs();
+      loadKeyVotes(member);
       loadSponsoredLegislation(member);
       loadVotingHistory(member);
       if (window.location.hash) {
@@ -411,6 +466,82 @@ permalink: /member.html
         document.getElementById(btn.dataset.tab).classList.add('active');
       });
     });
+  }
+
+  async function loadKeyVotes(member) {
+    const container = document.getElementById('keyVotes');
+    if (!container || !member.bioguideId) return;
+
+    const CURATED_URL  = 'assets/data/curated-federal-bills.json';
+    const VOTES_URL    = 'assets/data/federal-member-votes.json';
+
+    let curatedData, votesData;
+    try {
+      const [cRes, vRes] = await Promise.all([fetch(CURATED_URL), fetch(VOTES_URL)]);
+      if (!cRes.ok || !vRes.ok) return;
+      [curatedData, votesData] = await Promise.all([cRes.json(), vRes.json()]);
+    } catch (err) {
+      console.warn('Could not load key votes:', err);
+      return;
+    }
+
+    const bills = curatedData.bills || [];
+    if (!bills.length) return;
+
+    const votesIndex   = votesData.votes || {};
+    const memberVotes  = (votesData.memberVotes || {})[member.bioguideId] || [];
+    // Build quick lookup: voteId -> member's vote string
+    const myVoteMap = {};
+    for (const { voteId, vote } of memberVotes) myVoteMap[voteId] = vote;
+
+    // Determine member chamber key
+    const termsArr   = member.terms?.item || [];
+    const latestTerm = (Array.isArray(termsArr) ? termsArr : [termsArr]).slice(-1)[0] || {};
+    const chamberKey = (latestTerm.chamber || '').includes('House') ? 'House' : 'Senate';
+
+    const VOTE_DISPLAY = {
+      'Yea':        { label: 'Voted Yea',      cls: 'kv-badge-yea'   },
+      'Aye':        { label: 'Voted Yea',      cls: 'kv-badge-yea'   },
+      'Nay':        { label: 'Voted Nay',      cls: 'kv-badge-nay'   },
+      'No':         { label: 'Voted Nay',      cls: 'kv-badge-nay'   },
+      'Not Voting': { label: 'Not Voting',     cls: 'kv-badge-other' },
+      'Present':    { label: 'Voted Present',  cls: 'kv-badge-other' },
+    };
+
+    const cards = bills.map(bill => {
+      const voteId   = (bill.voteIds || {})[chamberKey];
+      const myVote   = voteId ? myVoteMap[voteId] : undefined;
+      const voteInfo = myVote ? (VOTE_DISPLAY[myVote] || { label: myVote, cls: 'kv-badge-other' }) : null;
+      const voteMeta = voteId ? votesIndex[voteId] : null;
+
+      const voteBadge = voteInfo
+        ? `<span class="kv-badge ${voteInfo.cls}">${voteInfo.label}</span>`
+        : `<span class="kv-badge kv-badge-other">${voteId ? 'No record' : `${chamberKey === 'House' ? 'Senate' : 'House'} vote only`}</span>`;
+
+      let tallyHtml = '';
+      if (voteMeta && (voteMeta.yea || voteMeta.nay)) {
+        const total = (voteMeta.yea || 0) + (voteMeta.nay || 0);
+        const result = voteMeta.result || '';
+        tallyHtml = `<span class="kv-tally"><strong>${voteMeta.yea}</strong> Yea · <strong>${voteMeta.nay}</strong> Nay · ${result}</span>`;
+      }
+
+      return `<div class="kv-card">
+        <div class="kv-card-header">
+          <a class="kv-bill-id" href="${bill.billUrl}" target="_blank" rel="noopener">${bill.bill}</a>
+          <span class="kv-bill-title">${bill.title}</span>
+        </div>
+        <div class="kv-summary">${bill.summary}</div>
+        <div class="kv-footer">
+          ${voteBadge}
+          ${tallyHtml}
+        </div>
+      </div>`;
+    }).join('');
+
+    container.innerHTML = `
+      <h3>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:#666;">curated · 119th Congress</small></h3>
+      <p style="font-size:0.8rem;color:#666;margin:0 0 1rem 0;">This member's votes on a selection of significant federal legislation.</p>
+      ${cards}`;
   }
 
   function loadSponsoredLegislation(member) {
@@ -672,10 +803,12 @@ permalink: /member.html
       ${state === 'Georgia' ? `<p><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent(fullName)}">View stock trades by ${fullName} →</a></p>` : ''}
       <div class="tab-container">
         <div class="tab-nav">
-          <button class="tab-btn active" data-tab="votingHistory">Voting History</button>
+          <button class="tab-btn active" data-tab="keyVotes">Key Votes</button>
+          <button class="tab-btn" data-tab="votingHistory">Voting History</button>
           <button class="tab-btn" data-tab="sponsoredLegislation">Sponsored Legislation</button>
         </div>
-        <div id="votingHistory" class="tab-panel active"></div>
+        <div id="keyVotes" class="tab-panel active"></div>
+        <div id="votingHistory" class="tab-panel"></div>
         <div id="sponsoredLegislation" class="tab-panel"></div>
       </div>
     `;
