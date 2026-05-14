@@ -1,0 +1,573 @@
+---
+layout: default
+title: Georgia Legislature Majority Tracker
+permalink: /ga-majority-tracker.html
+---
+
+<h1>Georgia Legislature Majority Tracker</h1>
+<p>How many seats would it take to shift power in the Georgia General Assembly? The majority threshold is <strong>91 seats</strong> in the House and <strong>29 seats</strong> in the Senate.</p>
+
+<style>
+  /* ── Stats banner ─────────────────────────────────────────────────────── */
+  .tracker-banner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .tracker-card {
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+  }
+  .tracker-card h3 {
+    margin: 0 0 1rem 0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #555;
+    font-weight: 600;
+  }
+  .chamber-stats {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .stat-block { flex: 1; }
+  .stat-label {
+    font-size: 0.75rem;
+    color: #777;
+    margin-bottom: 0.2rem;
+  }
+  .stat-num {
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 0.25rem;
+    line-height: 1.3;
+  }
+  .flip-num { color: #1d4ed8; }
+  .hold-num { color: #b91c1c; }
+
+  .seat-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0.85rem 0 0.5rem 0;
+    background: #e5e7eb;
+  }
+  .bar-d { background: #2563eb; }
+  .bar-r { background: #dc2626; }
+  .bar-v { background: #9ca3af; }
+  .seat-bar-legend {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.72rem;
+    color: #555;
+  }
+  .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 3px;
+    vertical-align: middle;
+  }
+
+  /* ── Chamber tabs ─────────────────────────────────────────────────────── */
+  .chamber-tabs {
+    display: flex;
+    gap: 0.35rem;
+    margin: 1.75rem 0 0 0;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  .chamber-tab {
+    padding: 0.45rem 1.1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 4px 4px 0 0;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .chamber-tab:hover { color: #1a56a8; }
+  .chamber-tab.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+
+  /* ── Chamber views ────────────────────────────────────────────────────── */
+  .chamber-view { display: none; margin-top: 1.25rem; }
+  .chamber-view.active { display: block; }
+
+  /* ── Senate grid ──────────────────────────────────────────────────────── */
+  .senate-chamber {
+    position: relative;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.25rem 1rem 1.5rem 1rem;
+    overflow-x: auto;
+  }
+  .senate-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+  }
+  .senate-row {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .senate-aisle {
+    width: 32px;
+    text-align: center;
+    font-size: 0.65rem;
+    color: #bbb;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .senate-seat {
+    width: 56px;
+    height: 46px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform 0.1s, box-shadow 0.1s;
+    position: relative;
+    text-decoration: none;
+  }
+  .senate-seat:hover {
+    transform: scale(1.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    z-index: 10;
+  }
+  .senate-seat.empty {
+    background: transparent;
+    border-color: transparent;
+    cursor: default;
+    pointer-events: none;
+  }
+  .senate-seat.seat-d { background: #dbeafe; border-color: #93c5fd; }
+  .senate-seat.seat-r { background: #fee2e2; border-color: #fca5a5; }
+  .senate-seat.seat-v { background: #f3f4f6; border-color: #d1d5db; }
+  .seat-name {
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    line-height: 1.15;
+    max-width: 52px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .seat-dist {
+    font-size: 0.58rem;
+    color: #777;
+    margin-top: 1px;
+  }
+
+  /* ── House SVG ────────────────────────────────────────────────────────── */
+  .house-chamber {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  .house-svg-wrap {
+    display: flex;
+    justify-content: center;
+  }
+  #houseSvg { display: block; max-width: 100%; }
+
+  /* ── Tooltip ──────────────────────────────────────────────────────────── */
+  #seatTooltip {
+    position: fixed;
+    background: rgba(20,20,30,0.92);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    pointer-events: none;
+    z-index: 1000;
+    display: none;
+    line-height: 1.45;
+    max-width: 200px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  /* ── Legend ───────────────────────────────────────────────────────────── */
+  .chart-legend {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.78rem;
+    color: #555;
+    margin-top: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .loading { color: #888; font-style: italic; padding: 2rem 0; }
+
+  @media (max-width: 560px) {
+    .tracker-banner { grid-template-columns: 1fr; }
+    .chamber-stats { gap: 1rem; }
+    .stat-num { font-size: 1.9rem; }
+  }
+</style>
+
+<!-- Stats banner (populated by JS) -->
+<div class="tracker-banner" id="trackerBanner">
+  <div class="tracker-card" id="houseCard">
+    <h3>House of Representatives</h3>
+    <div class="loading">Loading…</div>
+  </div>
+  <div class="tracker-card" id="senateCard">
+    <h3>Senate</h3>
+    <div class="loading">Loading…</div>
+  </div>
+</div>
+
+<!-- Chamber tabs -->
+<div class="chamber-tabs">
+  <button class="chamber-tab active" data-chamber="senate">Senate Chamber</button>
+  <button class="chamber-tab" data-chamber="house">House Chamber</button>
+</div>
+
+<div class="chamber-view active" id="senateView">
+  <div class="senate-chamber">
+    <div class="senate-grid" id="senateGrid"><div class="loading">Loading…</div></div>
+  </div>
+  <div class="chart-legend" id="senateLegend"></div>
+</div>
+
+<div class="chamber-view" id="houseView">
+  <div class="house-chamber">
+    <div class="house-svg-wrap">
+      <svg id="houseSvg" width="100%" height="300" viewBox="80 158 560 222" aria-label="House of Representatives seating chart"></svg>
+    </div>
+  </div>
+  <div class="chart-legend" id="houseLegend"></div>
+</div>
+
+<div id="seatTooltip"></div>
+
+<p style="margin-top:1.5rem;font-size:0.8rem;color:#888;">
+  Seat counts and party affiliation sourced from the <a href="https://openstates.org" target="_blank">Open States API</a>.
+  Chamber layouts based on official 2026 seating charts.
+  Majority threshold: House 91, Senate 29.
+</p>
+
+<script>
+// ── Constants ──────────────────────────────────────────────────────────────
+
+function getBasePath() {
+  return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+}
+
+function raceUrl(chamber, district) {
+  const slug = chamber === 'Senate' ? 'ga-senate' : 'ga-house';
+  return `${getBasePath()}race.html?id=${slug}-${district}-2026`;
+}
+
+const HOUSE_MAJORITY = 91;
+const SENATE_MAJORITY = 29;
+
+// Senate physical layout from the 2026 Senate Seating Chart (PDF).
+// Rows ordered back→front (row 6 at top, row 1 near the well).
+// Each entry is a district number; null = empty podium-side gap.
+const SENATE_ROWS = [
+  { rowNum: 6, left: [22, 41, 44, null, null], right: [null, null, 55, 54, 53] },
+  { rowNum: 5, left: [34, 17, 43, 45, 46],     right: [28, 47, 48, 49, 52] },
+  { rowNum: 4, left: [40, 39, 38, 37, 36],     right: [35, 33, 32, 27,  6] },
+  { rowNum: 3, left: [42, 19, 18, 21, 23],     right: [24, 25, 26, 30, 51] },
+  { rowNum: 2, left: [29, 50, 56, 16, 14],     right: [10, 13, 12,  9,  8] },
+  { rowNum: 1, left: [20, 31,  1,  4,  3],     right: [15,  2,  5,  7, 11] },
+];
+
+// House hemicycle: 6 concentric arcs totalling 180 seats.
+// Members are sorted by district (1–180) and assigned left→right.
+const HOUSE_ROWS = [
+  { r: 95,  count: 20 },
+  { r: 122, count: 25 },
+  { r: 149, count: 30 },
+  { r: 176, count: 33 },
+  { r: 203, count: 36 },
+  { r: 230, count: 36 },
+];
+
+const COLOR = { D: '#2563eb', R: '#dc2626', V: '#9ca3af' };
+const BG    = { D: '#dbeafe', R: '#fee2e2', V: '#f3f4f6' };
+
+// ── Data loading ───────────────────────────────────────────────────────────
+
+async function loadMembers() {
+  const base = (location.pathname.match(/^\/[^/]+\//) || [''])[0];
+  const res  = await fetch(base + 'assets/data/ga-members.json');
+  return (await res.json()).members;
+}
+
+// ── Shared helpers ─────────────────────────────────────────────────────────
+
+function partyOf(member) {
+  if (!member) return 'V';
+  if (member.status === 'Vacant') return 'V';
+  const p = (member.party || '').toLowerCase();
+  if (p.startsWith('d')) return 'D';
+  if (p.startsWith('r')) return 'R';
+  return 'V';
+}
+
+function legendHtml(d, r, v) {
+  return `
+    <span><span class="dot" style="background:${COLOR.D}"></span>Democrat (${d})</span>
+    <span><span class="dot" style="background:${COLOR.R}"></span>Republican (${r})</span>
+    ${v ? `<span><span class="dot" style="background:${COLOR.V}"></span>Vacant (${v})</span>` : ''}
+  `;
+}
+
+// ── Stats banner ───────────────────────────────────────────────────────────
+
+function renderCard(el, title, dCount, rCount, vCount, majority) {
+  const toFlip  = Math.max(0, majority - dCount);
+  const holdBuf = Math.max(0, rCount - majority);
+  const total   = dCount + rCount + vCount;
+
+  el.innerHTML = `
+    <h3>${title}</h3>
+    <div class="seat-bar">
+      <div class="bar-d" style="width:${(dCount/total*100).toFixed(1)}%"></div>
+      <div class="bar-r" style="width:${(rCount/total*100).toFixed(1)}%"></div>
+      <div class="bar-v" style="width:${(vCount/total*100).toFixed(1)}%"></div>
+    </div>
+    <div class="seat-bar-legend">
+      <span><span class="dot" style="background:${COLOR.D}"></span>D ${dCount}</span>
+      <span><span class="dot" style="background:${COLOR.R}"></span>R ${rCount}</span>
+      ${vCount ? `<span><span class="dot" style="background:${COLOR.V}"></span>Vacant ${vCount}</span>` : ''}
+      <span style="margin-left:auto;color:#888">Majority: ${majority}</span>
+    </div>
+    <div class="chamber-stats" style="margin-top:1rem">
+      <div class="stat-block">
+        <div class="stat-label">Seats to Flip &#x2192; D</div>
+        <div class="stat-num flip-num">${toFlip}</div>
+        <div class="stat-sub">Democrats need ${toFlip} more seat${toFlip !== 1 ? 's' : ''} for a majority</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Republican Safety Margin</div>
+        <div class="stat-num hold-num">${holdBuf}</div>
+        <div class="stat-sub">Republicans can lose ${holdBuf} seat${holdBuf !== 1 ? 's' : ''} and still hold</div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Senate grid ────────────────────────────────────────────────────────────
+
+function renderSenate(byDistrict) {
+  const grid = document.getElementById('senateGrid');
+  grid.innerHTML = '';
+
+  let d = 0, r = 0, v = 0;
+  SENATE_ROWS.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'senate-row';
+
+    [...row.left].reverse().forEach(dist => {
+      rowEl.appendChild(makeSeneateSeat(dist, byDistrict));
+    });
+
+    const aisle = document.createElement('div');
+    aisle.className = 'senate-aisle';
+    aisle.textContent = row.rowNum;
+    rowEl.appendChild(aisle);
+
+    row.right.forEach(dist => {
+      rowEl.appendChild(makeSeneateSeat(dist, byDistrict));
+    });
+
+    grid.appendChild(rowEl);
+  });
+
+  // Tally
+  Object.values(byDistrict).filter(m => m.chamber === 'Senate').forEach(m => {
+    const p = partyOf(m);
+    if (p === 'D') d++; else if (p === 'R') r++; else v++;
+  });
+
+  document.getElementById('senateLegend').innerHTML = legendHtml(d, r, v);
+}
+
+function makeSeneateSeat(dist, byDistrict) {
+  if (dist === null) {
+    const empty = document.createElement('div');
+    empty.className = 'senate-seat empty';
+    return empty;
+  }
+  const el = document.createElement('a');
+  el.href = raceUrl('Senate', dist);
+  const member = byDistrict[dist];
+  const party  = partyOf(member);
+  el.className = `senate-seat seat-${party.toLowerCase()}`;
+
+  const lastName = member
+    ? member.name.split(',')[0].split(' ').pop()
+    : 'Vacant';
+  el.innerHTML = `
+    <div class="seat-name">${lastName}</div>
+    <div class="seat-dist">${dist}</div>
+  `;
+
+  const fullName = member ? member.name : 'Vacant';
+  const partyLabel = party === 'D' ? 'Democrat' : party === 'R' ? 'Republican' : 'Vacant';
+  attachTooltip(el, `District ${dist}\n${fullName}\n${partyLabel}`);
+  return el;
+}
+
+// ── House hemicycle ────────────────────────────────────────────────────────
+
+function renderHouse(members) {
+  const svg = document.getElementById('houseSvg');
+  const W = 720, H = 380;
+  const cx = W / 2, cy = H + 30; // origin well below bottom edge
+
+  // Sort house members by district
+  const house = members
+    .filter(m => m.chamber === 'House of Representatives')
+    .sort((a, b) => a.district - b.district);
+
+  let memberIdx = 0;
+  let d = 0, r = 0, v = 0;
+
+  HOUSE_ROWS.forEach(({ r: radius, count }) => {
+    for (let i = 0; i < count; i++) {
+      // angle: π (left) → 0 (right), adjusted slightly inward so end seats don't clip
+      const margin = 0.12;
+      const angle = Math.PI * (1 - margin) - (i / (count - 1)) * Math.PI * (1 - margin * 2);
+      const x = cx + radius * Math.cos(angle);
+      const y = cy - radius * Math.sin(angle);
+
+      const member = house[memberIdx++] || null;
+      const party  = partyOf(member);
+      if (party === 'D') d++; else if (party === 'R') r++; else v++;
+
+      const seatSize = 9;
+      const circle = svgEl('circle', {
+        cx: x.toFixed(1), cy: y.toFixed(1), r: seatSize / 2,
+        fill: COLOR[party], opacity: '0.85', stroke: '#fff', 'stroke-width': '0.5',
+        style: 'cursor:pointer;transition:r 0.1s,opacity 0.1s',
+      });
+
+      if (member) {
+        const label = `District ${member.district}\n${member.name}\n${
+          party === 'D' ? 'Democrat' : party === 'R' ? 'Republican' : 'Vacant'
+        }`;
+        attachTooltip(circle, label);
+        circle.style.cursor = 'pointer';
+        circle.addEventListener('click', () => {
+          window.location.href = raceUrl('House', member.district);
+        });
+        circle.addEventListener('mouseenter', () => {
+          circle.setAttribute('r', (seatSize / 2 + 2).toString());
+          circle.setAttribute('opacity', '1');
+        });
+        circle.addEventListener('mouseleave', () => {
+          circle.setAttribute('r', (seatSize / 2).toString());
+          circle.setAttribute('opacity', '0.85');
+        });
+      }
+
+      svg.appendChild(circle);
+    }
+  });
+
+  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v);
+}
+
+// ── SVG helper ─────────────────────────────────────────────────────────────
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+  return el;
+}
+
+// ── Tooltip ────────────────────────────────────────────────────────────────
+
+const tooltip = document.getElementById('seatTooltip');
+
+function attachTooltip(el, text) {
+  el.addEventListener('mouseenter', e => {
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = text.replace(/\n/g, '<br>');
+  });
+  el.addEventListener('mousemove', e => {
+    tooltip.style.left = (e.clientX + 14) + 'px';
+    tooltip.style.top  = (e.clientY - 10) + 'px';
+  });
+  el.addEventListener('mouseleave', () => {
+    tooltip.style.display = 'none';
+  });
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────
+
+document.querySelectorAll('.chamber-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chamber-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.chamber-view').forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.chamber + 'View').classList.add('active');
+  });
+});
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────
+
+(async () => {
+  try {
+    const members = await loadMembers();
+
+    // Build district→member lookup per chamber
+    const senateByDist = {}, houseByDist = {};
+    members.forEach(m => {
+      if (m.chamber === 'Senate') senateByDist[m.district] = m;
+      else houseByDist[m.district] = m;
+    });
+
+    // Tally per chamber
+    const tally = (map) => {
+      let d = 0, r = 0, v = 0;
+      Object.values(map).forEach(m => {
+        const p = partyOf(m);
+        if (p === 'D') d++; else if (p === 'R') r++; else v++;
+      });
+      return { d, r, v };
+    };
+
+    const ht = tally(houseByDist);
+    const st = tally(senateByDist);
+
+    renderCard(document.getElementById('houseCard'),  'House of Representatives', ht.d, ht.r, ht.v, HOUSE_MAJORITY);
+    renderCard(document.getElementById('senateCard'), 'Senate',                   st.d, st.r, st.v, SENATE_MAJORITY);
+
+    renderSenate(senateByDist);
+    renderHouse(members);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('trackerBanner').innerHTML =
+      '<p style="color:#c00">Could not load member data. ' + err.message + '</p>';
+  }
+})();
+</script>
