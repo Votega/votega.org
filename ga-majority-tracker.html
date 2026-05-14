@@ -230,12 +230,12 @@ permalink: /ga-majority-tracker.html
 
 <!-- Stats banner (populated by JS) -->
 <div class="tracker-banner" id="trackerBanner">
-  <div class="tracker-card" id="houseCard">
-    <h3>House of Representatives</h3>
-    <div class="loading">Loading…</div>
-  </div>
   <div class="tracker-card" id="senateCard">
     <h3>Senate</h3>
+    <div class="loading">Loading…</div>
+  </div>
+  <div class="tracker-card" id="houseCard">
+    <h3>House of Representatives</h3>
     <div class="loading">Loading…</div>
   </div>
 </div>
@@ -369,6 +369,9 @@ function renderCard(el, title, dCount, rCount, vCount, majority) {
         <div class="stat-num hold-num">${holdBuf}</div>
         <div class="stat-sub">Republicans can lose ${holdBuf} seat${holdBuf !== 1 ? 's' : ''} and still hold</div>
       </div>
+    </div>
+    <div style="text-align:center;margin-top:1rem;padding-top:0.75rem;border-top:1px solid #e0e0e0;font-size:0.78rem;color:#888;">
+      Total in Chamber: <strong style="color:#444">${total}</strong>
     </div>
   `;
 }
@@ -542,7 +545,7 @@ document.querySelectorAll('.chamber-tab').forEach(btn => {
     const senateByDist = {}, houseByDist = {};
     members.forEach(m => {
       if (m.chamber === 'Senate') senateByDist[m.district] = m;
-      else houseByDist[m.district] = m;
+      else if (m.chamber === 'House of Representatives') houseByDist[m.district] = m;
     });
 
     // Tally per chamber
