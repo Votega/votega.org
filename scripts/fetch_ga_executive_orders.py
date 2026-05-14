@@ -25,8 +25,7 @@ OUTPUT_DIR = "assets/data"
 YEAR       = datetime.now().year
 GOVERNOR   = "Brian P. Kemp"
 
-# Text values that appear as download link labels — not real titles
-_LINK_LABELS = {'download', 'pdf', 'view', 'download pdf', 'view pdf', 'open', 'click here'}
+_MAX_TITLE = 300   # titles longer than this are scraper noise, not real text
 
 
 # ── Categorisation ────────────────────────────────────────────────────────────
@@ -142,6 +141,8 @@ class EOPageParser(HTMLParser):
     def handle_endtag(self, tag):
         if tag == 'a' and self._in_link:
             self._in_link = False
+        elif tag == 'tr' and self._pending_code:
+            self._flush_pending()   # row end = description cell is done collecting
 
     def close(self):
         """Flush the last pending entry when parsing completes."""
@@ -246,10 +247,11 @@ def main():
         print("Warning: no orders found — page structure may have changed")
         sys.exit(1)
 
-    # Warn about any entries where the title is still empty/bad
-    bad = [n for n, e in scraped.items() if len(e.get('title', '')) < 15]
+    # Warn about any entries where the title is missing, too short, or suspiciously long
+    bad = [n for n, e in scraped.items()
+           if not (15 <= len(e.get('title', '')) <= _MAX_TITLE)]
     if bad:
-        print(f"Warning: {len(bad)} order(s) have suspiciously short titles: {bad[:5]}")
+        print(f"Warning: {len(bad)} order(s) have bad titles: {bad[:5]}")
 
     print(f"Scraped {len(scraped)} total order(s)")
 
@@ -263,14 +265,14 @@ def main():
     new_count = 0
     for num, entry in scraped.items():
         is_new = num not in existing
-        title_ok = len(entry.get('title', '')) >= 15
+        title_ok = 15 <= len(entry.get('title', '')) <= _MAX_TITLE
 
         if is_new:
             if title_ok:
                 merged[num] = entry
                 new_count += 1
             else:
-                print(f"  Skipping new {num} — title too short: {entry.get('title')!r}")
+                print(f"  Skipping new {num} — bad title ({len(entry.get('title',''))} chars): {entry.get('title','')[:80]!r}")
         else:
             if title_ok:
                 merged[num] = entry   # update with fresh data
