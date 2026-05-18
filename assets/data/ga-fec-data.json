@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-05-11T23:25:59.642247",
+    "generatedAt": "2026-05-18T18:01:30.890524",
     "cycle": 2026,
     "source": "FEC API (api.open.fec.gov)",
     "totalCandidates": 137
@@ -140,10 +140,12 @@
       "lastName": "allen",
       "fecUrl": "https://www.fec.gov/data/candidate/H2GA12121/",
       "bioguideId": "A000372",
+      "committeeId": "C00504019",
       "totalRaised": 856719.61,
       "totalSpent": 753412.91,
       "cashOnHand": 1278263.36,
       "coverageEndDate": "2026-04-29T00:00:00",
+      "totalIndividual": 437072,
       "topEmployers": []
     },
     "H0GA03074": {
@@ -199,6 +201,10 @@
       "lastName": "babbage",
       "fecUrl": "https://www.fec.gov/data/candidate/H0GA07307/",
       "committeeId": "C00775551",
+      "totalRaised": 0.0,
+      "totalSpent": 0.0,
+      "cashOnHand": null,
+      "coverageEndDate": "2025-10-31T00:00:00",
       "topEmployers": [
         {
           "employer": "Mcmullen Cpas",
@@ -417,23 +423,7 @@
       "cashOnHand": 31272.51,
       "coverageEndDate": "2026-04-29T00:00:00",
       "totalIndividual": 4477,
-      "topEmployers": [
-        {
-          "employer": "United Stated Government",
-          "total": 259,
-          "count": 1
-        },
-        {
-          "employer": "White Mountain Oil And Propane",
-          "total": 259,
-          "count": 1
-        },
-        {
-          "employer": "Dhs",
-          "total": 225,
-          "count": 2
-        }
-      ]
+      "topEmployers": []
     },
     "H6GA13062": {
       "candidateId": "H6GA13062",
@@ -455,17 +445,17 @@
           "count": 10
         },
         {
-          "employer": "Benchstrength",
-          "total": 7000,
-          "count": 2
-        },
-        {
           "employer": "Apollo",
           "total": 7000,
           "count": 2
         },
         {
           "employer": "General Catalyst",
+          "total": 7000,
+          "count": 2
+        },
+        {
+          "employer": "Benchstrength",
           "total": 7000,
           "count": 2
         },
@@ -682,12 +672,17 @@
       "lastName": "branum",
       "fecUrl": "https://www.fec.gov/data/candidate/H6GA12049/",
       "committeeId": "C00905109",
-      "totalRaised": 33828.78,
-      "totalSpent": 27007.74,
-      "cashOnHand": 6797.04,
-      "coverageEndDate": "2026-03-31T00:00:00",
-      "totalIndividual": 33829,
+      "totalRaised": 38173.54,
+      "totalSpent": 30379.34,
+      "cashOnHand": 7770.2,
+      "coverageEndDate": "2026-04-29T00:00:00",
+      "totalIndividual": 38174,
       "topEmployers": [
+        {
+          "employer": "Unk",
+          "total": 1252,
+          "count": 5
+        },
         {
           "employer": "Whitetail Country Estates",
           "total": 1000,
@@ -699,12 +694,12 @@
           "count": 1
         },
         {
-          "employer": "Jackson Hewitt",
+          "employer": "Peach County",
           "total": 500,
           "count": 1
         },
         {
-          "employer": "Peach County",
+          "employer": "Jackson Hewitt",
           "total": 500,
           "count": 1
         },
@@ -714,11 +709,6 @@
           "count": 1
         },
         {
-          "employer": "Unk",
-          "total": 152,
-          "count": 2
-        },
-        {
           "employer": "Knight'S Precast",
           "total": 104,
           "count": 1
@@ -726,6 +716,11 @@
         {
           "employer": "Long Foster Realtors",
           "total": 104,
+          "count": 1
+        },
+        {
+          "employer": "Robins Afb",
+          "total": 100,
           "count": 1
         }
       ]
@@ -802,11 +797,19 @@
       "district": "14",
       "lastName": "brown",
       "fecUrl": "https://www.fec.gov/data/candidate/H6GA14177/",
+      "committeeId": "C00928994",
       "totalRaised": 9879.55,
       "totalSpent": 3600.71,
       "cashOnHand": 1492.03,
       "coverageEndDate": "2026-03-07T00:00:00",
-      "topEmployers": []
+      "totalIndividual": 1474,
+      "topEmployers": [
+        {
+          "employer": "Retired- State Farm",
+          "total": 1000,
+          "count": 1
+        }
+      ]
     },
     "H6GA14185": {
       "candidateId": "H6GA14185",
@@ -1317,7 +1320,59 @@
       "district": "07",
       "lastName": "christian",
       "fecUrl": "https://www.fec.gov/data/candidate/H2GA06222/",
-      "topEmployers": []
+      "committeeId": "C00808923",
+      "topEmployers": [
+        {
+          "employer": "Richard Jones Law Firm",
+          "total": 6000,
+          "count": 3
+        },
+        {
+          "employer": "Cdc",
+          "total": 2000,
+          "count": 2
+        },
+        {
+          "employer": "Dekalb Medical Center",
+          "total": 1151,
+          "count": 12
+        },
+        {
+          "employer": "Infraprop.Co",
+          "total": 1006,
+          "count": 1
+        },
+        {
+          "employer": "Synergy Support",
+          "total": 1000,
+          "count": 2
+        },
+        {
+          "employer": "Gold Pac (Greater Opportunities For Le",
+          "total": 1000,
+          "count": 1
+        },
+        {
+          "employer": "Redhorse Inc",
+          "total": 1000,
+          "count": 1
+        },
+        {
+          "employer": "Tmc Group Companies",
+          "total": 950,
+          "count": 4
+        },
+        {
+          "employer": "Proud Smiles Dental",
+          "total": 750,
+          "count": 2
+        },
+        {
+          "employer": "Agcs Marine Insurance Company",
+          "total": 700,
+          "count": 8
+        }
+      ]
     },
     "H6GA13070": {
       "candidateId": "H6GA13070",
@@ -1552,7 +1607,13 @@
       "cashOnHand": 0.96,
       "coverageEndDate": "2026-03-31T00:00:00",
       "totalIndividual": 92,
-      "topEmployers": []
+      "topEmployers": [
+        {
+          "employer": "Ymd Partners Llc",
+          "total": 2640,
+          "count": 1
+        }
+      ]
     },
     "H6GA14136": {
       "candidateId": "H6GA14136",
@@ -1593,6 +1654,11 @@
       "lastName": "couvillon",
       "fecUrl": "https://www.fec.gov/data/candidate/H6GA09250/",
       "committeeId": "C00896423",
+      "totalRaised": 705608.5,
+      "totalSpent": 567426.2,
+      "cashOnHand": 138182.3,
+      "coverageEndDate": "2026-04-29T00:00:00",
+      "totalIndividual": 696608,
       "topEmployers": [
         {
           "employer": "Wilheit Packaging Llc",
@@ -1659,7 +1725,58 @@
       "cashOnHand": 305369.95,
       "coverageEndDate": "2026-04-29T00:00:00",
       "totalIndividual": 345453,
-      "topEmployers": []
+      "topEmployers": [
+        {
+          "employer": "Sunrise Mfg Inc",
+          "total": 10500,
+          "count": 4
+        },
+        {
+          "employer": "Rivers Auto Group",
+          "total": 5205,
+          "count": 3
+        },
+        {
+          "employer": "Wayne Davis Concrete",
+          "total": 5000,
+          "count": 3
+        },
+        {
+          "employer": "Medicraft",
+          "total": 5000,
+          "count": 3
+        },
+        {
+          "employer": "Ledbetter Properties, Llc.",
+          "total": 4812,
+          "count": 3
+        },
+        {
+          "employer": "Emory University",
+          "total": 3644,
+          "count": 3
+        },
+        {
+          "employer": "Csmo",
+          "total": 3644,
+          "count": 3
+        },
+        {
+          "employer": "Ucsf",
+          "total": 3644,
+          "count": 3
+        },
+        {
+          "employer": "Carolina Neurosurgery And Spine Assoc.",
+          "total": 3500,
+          "count": 1
+        },
+        {
+          "employer": "Healthcare",
+          "total": 3500,
+          "count": 2
+        }
+      ]
     },
     "H2GA03179": {
       "candidateId": "H2GA03179",
@@ -1686,14 +1803,24 @@
           "count": 1
         },
         {
+          "employer": "West Side Food Court",
+          "total": 3500,
+          "count": 1
+        },
+        {
           "employer": "The Tax Shop",
-          "total": 1500,
-          "count": 2
+          "total": 1750,
+          "count": 3
         },
         {
           "employer": "Morgan Jewelers",
           "total": 1000,
           "count": 2
+        },
+        {
+          "employer": "Goldin Metals",
+          "total": 500,
+          "count": 1
         },
         {
           "employer": "Kubic Engineering Group",
@@ -2095,6 +2222,11 @@
           "count": 1
         },
         {
+          "employer": "Georgia Conflict Center",
+          "total": 2000,
+          "count": 2
+        },
+        {
           "employer": "Argen Inc",
           "total": 1500,
           "count": 7
@@ -2105,24 +2237,19 @@
           "count": 1
         },
         {
+          "employer": "Labcorp",
+          "total": 1100,
+          "count": 11
+        },
+        {
           "employer": "Heirloom Cafe",
           "total": 1100,
           "count": 2
         },
         {
-          "employer": "University Of Florida",
-          "total": 1000,
-          "count": 1
-        },
-        {
-          "employer": "State Of Georgia",
-          "total": 1000,
-          "count": 2
-        },
-        {
-          "employer": "Hamsterhead, Inc.",
-          "total": 1000,
-          "count": 1
+          "employer": "Emory",
+          "total": 1050,
+          "count": 10
         }
       ]
     },
@@ -2197,6 +2324,54 @@
         }
       ]
     },
+    "H6GA03188": {
+      "candidateId": "H6GA03188",
+      "name": "EKPETE KAMA, ULOMA",
+      "office": "H",
+      "district": "03",
+      "lastName": "ekpetekama",
+      "fecUrl": "https://www.fec.gov/data/candidate/H6GA03188/",
+      "committeeId": "C00846402",
+      "topEmployers": [
+        {
+          "employer": "Peridot Operations Inc",
+          "total": 359,
+          "count": 3
+        }
+      ]
+    },
+    "H6GA03170": {
+      "candidateId": "H6GA03170",
+      "name": "EKPETE KAMA, ULOMA",
+      "office": "H",
+      "district": "11",
+      "lastName": "ekpetekama",
+      "fecUrl": "https://www.fec.gov/data/candidate/H6GA03170/",
+      "committeeId": "C00846402",
+      "topEmployers": [
+        {
+          "employer": "Peridot Operations Inc",
+          "total": 359,
+          "count": 3
+        }
+      ]
+    },
+    "H6GA14052": {
+      "candidateId": "H6GA14052",
+      "name": "EKPETE KAMA, ULOMA",
+      "office": "H",
+      "district": "03",
+      "lastName": "ekpetekama",
+      "fecUrl": "https://www.fec.gov/data/candidate/H6GA14052/",
+      "committeeId": "C00846402",
+      "topEmployers": [
+        {
+          "employer": "Peridot Operations Inc",
+          "total": 359,
+          "count": 3
+        }
+      ]
+    },
     "H6GA11231": {
       "candidateId": "H6GA11231",
       "name": "EKPETE KAMA, ULOMA",
@@ -2215,48 +2390,6 @@
           "employer": "Peridot Operations Inc",
           "total": 11347,
           "count": 2
-        }
-      ]
-    },
-    "H6GA14052": {
-      "candidateId": "H6GA14052",
-      "name": "EKPETE KAMA, ULOMA",
-      "office": "H",
-      "district": "03",
-      "lastName": "ekpetekama",
-      "fecUrl": "https://www.fec.gov/data/candidate/H6GA14052/",
-      "committeeId": "C00846402",
-      "topEmployers": []
-    },
-    "H6GA03170": {
-      "candidateId": "H6GA03170",
-      "name": "EKPETE KAMA, ULOMA",
-      "office": "H",
-      "district": "11",
-      "lastName": "ekpetekama",
-      "fecUrl": "https://www.fec.gov/data/candidate/H6GA03170/",
-      "committeeId": "C00846402",
-      "topEmployers": [
-        {
-          "employer": "Peridot Operations Inc",
-          "total": 359,
-          "count": 3
-        }
-      ]
-    },
-    "H6GA03188": {
-      "candidateId": "H6GA03188",
-      "name": "EKPETE KAMA, ULOMA",
-      "office": "H",
-      "district": "03",
-      "lastName": "ekpetekama",
-      "fecUrl": "https://www.fec.gov/data/candidate/H6GA03188/",
-      "committeeId": "C00846402",
-      "topEmployers": [
-        {
-          "employer": "Peridot Operations Inc",
-          "total": 359,
-          "count": 3
         }
       ]
     },
@@ -2331,28 +2464,28 @@
           "count": 2
         },
         {
+          "employer": "Jit Warehousing $ Logistics Llc",
+          "total": 3000,
+          "count": 1
+        },
+        {
+          "employer": "Ila Local 1475",
+          "total": 2600,
+          "count": 6
+        },
+        {
           "employer": "Atlantic Waste Services",
           "total": 2500,
           "count": 1
         },
         {
+          "employer": "Georgia Ports Authority",
+          "total": 2500,
+          "count": 6
+        },
+        {
           "employer": "Live Oak Restaurants",
           "total": 2000,
-          "count": 1
-        },
-        {
-          "employer": "Kotner Homes",
-          "total": 2000,
-          "count": 2
-        },
-        {
-          "employer": "Remax Savannah",
-          "total": 1500,
-          "count": 1
-        },
-        {
-          "employer": "Konter Homes",
-          "total": 1500,
           "count": 1
         }
       ]
@@ -2547,7 +2680,38 @@
       "cashOnHand": 952.88,
       "coverageEndDate": "2026-04-29T00:00:00",
       "totalIndividual": 14482,
-      "topEmployers": []
+      "topEmployers": [
+        {
+          "employer": "Northside",
+          "total": 510,
+          "count": 1
+        },
+        {
+          "employer": "Consulate General Of Korea",
+          "total": 500,
+          "count": 1
+        },
+        {
+          "employer": "Aousc",
+          "total": 500,
+          "count": 1
+        },
+        {
+          "employer": "Uga",
+          "total": 500,
+          "count": 1
+        },
+        {
+          "employer": "Emory University",
+          "total": 250,
+          "count": 1
+        },
+        {
+          "employer": "Hexaware",
+          "total": 150,
+          "count": 1
+        }
+      ]
     },
     "H6GA12114": {
       "candidateId": "H6GA12114",
@@ -2590,6 +2754,67 @@
         }
       ]
     },
+    "H0GA13149": {
+      "candidateId": "H0GA13149",
+      "name": "GONZALES, CAESAR",
+      "office": "H",
+      "district": "13",
+      "lastName": "gonzales",
+      "fecUrl": "https://www.fec.gov/data/candidate/H0GA13149/",
+      "committeeId": "C00792846",
+      "topEmployers": [
+        {
+          "employer": "International Brokerage Servic",
+          "total": 2900,
+          "count": 1
+        },
+        {
+          "employer": "M&T Entertainment Management",
+          "total": 1500,
+          "count": 1
+        },
+        {
+          "employer": "Black Horse Carriers",
+          "total": 750,
+          "count": 2
+        },
+        {
+          "employer": "Pit Bull",
+          "total": 550,
+          "count": 3
+        },
+        {
+          "employer": "Porsche Financial Services, In",
+          "total": 500,
+          "count": 1
+        },
+        {
+          "employer": "Freewheeling Powersports",
+          "total": 500,
+          "count": 1
+        },
+        {
+          "employer": "Full Circle Electrical",
+          "total": 500,
+          "count": 1
+        },
+        {
+          "employer": "Cleveland Electric",
+          "total": 400,
+          "count": 4
+        },
+        {
+          "employer": "Better Homes And Gardens",
+          "total": 350,
+          "count": 2
+        },
+        {
+          "employer": "Style Financial Acceptance",
+          "total": 250,
+          "count": 1
+        }
+      ]
+    },
     "H6GA14235": {
       "candidateId": "H6GA14235",
       "name": "GRAY, THOMAS JONATHAN JACKSON",
@@ -2615,7 +2840,7 @@
           "count": 3
         },
         {
-          "employer": "C.W. Matthews",
+          "employer": "Broward Health",
           "total": 7000,
           "count": 3
         },
@@ -2625,9 +2850,24 @@
           "count": 3
         },
         {
-          "employer": "Broward Health",
+          "employer": "C.W. Matthews",
           "total": 7000,
           "count": 3
+        },
+        {
+          "employer": "Montgomery Martin Contractors",
+          "total": 3500,
+          "count": 1
+        },
+        {
+          "employer": "Avg Veterinary",
+          "total": 3500,
+          "count": 1
+        },
+        {
+          "employer": "Cornerstone Parking Group",
+          "total": 3500,
+          "count": 2
         },
         {
           "employer": "Tip Top Food Group",
@@ -2635,22 +2875,7 @@
           "count": 2
         },
         {
-          "employer": "Nemt Insurance Llc",
-          "total": 3500,
-          "count": 2
-        },
-        {
-          "employer": "Healthy Steps Pediatrics",
-          "total": 3500,
-          "count": 1
-        },
-        {
-          "employer": "Center For Spine Interventions",
-          "total": 3500,
-          "count": 1
-        },
-        {
-          "employer": "Avg Veterinary",
+          "employer": "Denyse Signs",
           "total": 3500,
           "count": 1
         }
@@ -2719,58 +2944,7 @@
       "lastName": "harbin",
       "fecUrl": "https://www.fec.gov/data/candidate/H0GA06200/",
       "committeeId": "C00783092",
-      "topEmployers": [
-        {
-          "employer": "Internal & Integrative Medicin",
-          "total": 2500,
-          "count": 1
-        },
-        {
-          "employer": "Hasty Pope, Llp",
-          "total": 2000,
-          "count": 1
-        },
-        {
-          "employer": "Ibs",
-          "total": 2000,
-          "count": 1
-        },
-        {
-          "employer": "Business",
-          "total": 1652,
-          "count": 1
-        },
-        {
-          "employer": "Commercial Cleaning",
-          "total": 1400,
-          "count": 2
-        },
-        {
-          "employer": "Speedpro",
-          "total": 1370,
-          "count": 1
-        },
-        {
-          "employer": "Quest",
-          "total": 1000,
-          "count": 1
-        },
-        {
-          "employer": "North Fulton Compounding Pharm",
-          "total": 1000,
-          "count": 1
-        },
-        {
-          "employer": "Cbiz Insurance",
-          "total": 1000,
-          "count": 1
-        },
-        {
-          "employer": "Pwk Group, Llc",
-          "total": 500,
-          "count": 1
-        }
-      ]
+      "topEmployers": []
     },
     "H6GA11116": {
       "candidateId": "H6GA11116",
@@ -2787,13 +2961,28 @@
       "totalIndividual": 53659,
       "topEmployers": [
         {
-          "employer": "Attorney",
-          "total": 3050,
+          "employer": "Psychologist",
+          "total": 6000,
           "count": 3
         },
         {
-          "employer": "Psychologist",
-          "total": 1000,
+          "employer": "Attorney",
+          "total": 4909,
+          "count": 6
+        },
+        {
+          "employer": "Fathom Group Inc",
+          "total": 4627,
+          "count": 6
+        },
+        {
+          "employer": "Not Empoyed",
+          "total": 3400,
+          "count": 2
+        },
+        {
+          "employer": "Gable Homes",
+          "total": 2500,
           "count": 1
         },
         {
@@ -2802,7 +2991,17 @@
           "count": 1
         },
         {
-          "employer": "Candidate",
+          "employer": "Kurle Law, Llc",
+          "total": 500,
+          "count": 1
+        },
+        {
+          "employer": "S Judson Waites Ii Pc",
+          "total": 250,
+          "count": 1
+        },
+        {
+          "employer": "Keller Williams",
           "total": 250,
           "count": 1
         },
@@ -2826,58 +3025,7 @@
       "cashOnHand": 176034.41,
       "coverageEndDate": "2026-03-31T00:00:00",
       "totalIndividual": 151572,
-      "topEmployers": [
-        {
-          "employer": "Gfo",
-          "total": 2000,
-          "count": 1
-        },
-        {
-          "employer": "Ventur Govt Strategies Llc",
-          "total": 1000,
-          "count": 1
-        },
-        {
-          "employer": "Hawthorn Anesthesia",
-          "total": 750,
-          "count": 3
-        },
-        {
-          "employer": "Kmgi",
-          "total": 500,
-          "count": 1
-        },
-        {
-          "employer": "Jl Squared Group",
-          "total": 500,
-          "count": 1
-        },
-        {
-          "employer": "Michale Marcley & Assoc",
-          "total": 500,
-          "count": 1
-        },
-        {
-          "employer": "Roehl Leasing",
-          "total": 500,
-          "count": 1
-        },
-        {
-          "employer": "Frontline Insurance",
-          "total": 250,
-          "count": 1
-        },
-        {
-          "employer": "Curleys House",
-          "total": 250,
-          "count": 1
-        },
-        {
-          "employer": "Pericor",
-          "total": 250,
-          "count": 1
-        }
-      ]
+      "topEmployers": []
     },
     "H4GA14057": {
       "candidateId": "H4GA14057",
@@ -3076,6 +3224,16 @@
       "totalIndividual": 73271,
       "topEmployers": [
         {
+          "employer": "Aasa",
+          "total": 1000,
+          "count": 2
+        },
+        {
+          "employer": "Civic Nation",
+          "total": 550,
+          "count": 4
+        },
+        {
           "employer": "Pro Georgia",
           "total": 500,
           "count": 1
@@ -3086,14 +3244,9 @@
           "count": 1
         },
         {
-          "employer": "Nys",
-          "total": 250,
-          "count": 1
-        },
-        {
-          "employer": "Transport Studio",
-          "total": 250,
-          "count": 1
+          "employer": "St. Joseph'S Candler",
+          "total": 300,
+          "count": 2
         },
         {
           "employer": "Splc",
@@ -3101,7 +3254,7 @@
           "count": 1
         },
         {
-          "employer": "Demos",
+          "employer": "Jet Aviation",
           "total": 250,
           "count": 1
         },
@@ -3111,39 +3264,13 @@
           "count": 1
         },
         {
-          "employer": "St. Joseph'S Candler",
+          "employer": "Transport Studio",
           "total": 250,
           "count": 1
         },
         {
-          "employer": "Civic Nation",
+          "employer": "Noaa",
           "total": 250,
-          "count": 1
-        },
-        {
-          "employer": "Deep Center",
-          "total": 200,
-          "count": 2
-        }
-      ]
-    },
-    "H4GA14081": {
-      "candidateId": "H4GA14081",
-      "name": "HOUSTON, DERIC",
-      "office": "H",
-      "district": "14",
-      "lastName": "houston",
-      "fecUrl": "https://www.fec.gov/data/candidate/H4GA14081/",
-      "committeeId": "C00851865",
-      "topEmployers": [
-        {
-          "employer": "Cphc",
-          "total": 25,
-          "count": 1
-        },
-        {
-          "employer": "Waltham Public Schools",
-          "total": 25,
           "count": 1
         }
       ]
@@ -3328,11 +3455,6 @@
       "lastName": "clement",
       "fecUrl": "https://www.fec.gov/data/candidate/S6GA00366/",
       "committeeId": "C00857128",
-      "totalRaised": 50250930.0,
-      "totalSpent": 2234.41,
-      "cashOnHand": 50248695.59,
-      "coverageEndDate": "2026-03-31T00:00:00",
-      "totalIndividual": 930,
       "topEmployers": []
     },
     "S0GA00567": {
@@ -3449,24 +3571,6 @@
       "fecUrl": "https://www.fec.gov/data/candidate/S2GA00332/",
       "topEmployers": []
     },
-    "S8GA00222": {
-      "candidateId": "S8GA00222",
-      "name": "DAVENPORT, DANIEL",
-      "office": "S",
-      "district": "00",
-      "lastName": "davenport",
-      "fecUrl": "https://www.fec.gov/data/candidate/S8GA00222/",
-      "topEmployers": []
-    },
-    "S8GA00214": {
-      "candidateId": "S8GA00214",
-      "name": "DAVENPORT, DANIEL",
-      "office": "S",
-      "district": "00",
-      "lastName": "davenport",
-      "fecUrl": "https://www.fec.gov/data/candidate/S8GA00214/",
-      "topEmployers": []
-    },
     "S8GA00198": {
       "candidateId": "S8GA00198",
       "name": "DAVENPORT, DANIEL",
@@ -3483,6 +3587,24 @@
       "district": "00",
       "lastName": "davenport",
       "fecUrl": "https://www.fec.gov/data/candidate/S8GA00206/",
+      "topEmployers": []
+    },
+    "S8GA00214": {
+      "candidateId": "S8GA00214",
+      "name": "DAVENPORT, DANIEL",
+      "office": "S",
+      "district": "00",
+      "lastName": "davenport",
+      "fecUrl": "https://www.fec.gov/data/candidate/S8GA00214/",
+      "topEmployers": []
+    },
+    "S8GA00222": {
+      "candidateId": "S8GA00222",
+      "name": "DAVENPORT, DANIEL",
+      "office": "S",
+      "district": "00",
+      "lastName": "davenport",
+      "fecUrl": "https://www.fec.gov/data/candidate/S8GA00222/",
       "topEmployers": []
     },
     "S6GA00408": {
@@ -3515,17 +3637,12 @@
           "count": 14
         },
         {
-          "employer": "Gwinnett Drugs",
-          "total": 28000,
-          "count": 5
-        },
-        {
-          "employer": "Salveo Integrative Pharmacy",
-          "total": 28000,
-          "count": 6
-        },
-        {
           "employer": "Dallas Cowboys",
+          "total": 28000,
+          "count": 8
+        },
+        {
+          "employer": "Gauge Capital",
           "total": 28000,
           "count": 8
         },
@@ -3535,19 +3652,24 @@
           "count": 8
         },
         {
-          "employer": "Us Oncology",
-          "total": 25500,
-          "count": 9
+          "employer": "Salveo Integrative Pharmacy",
+          "total": 28000,
+          "count": 6
         },
         {
-          "employer": "Cimbar Resources Inc",
-          "total": 25000,
+          "employer": "Gwinnett Drugs",
+          "total": 28000,
+          "count": 5
+        },
+        {
+          "employer": "Whitco Roofing, Inc.",
+          "total": 28000,
           "count": 8
         },
         {
-          "employer": "Community Coffee",
-          "total": 21000,
-          "count": 6
+          "employer": "Us Oncology",
+          "total": 25500,
+          "count": 9
         }
       ]
     },
@@ -3788,15 +3910,6 @@
         }
       ]
     },
-    "S6GA00432": {
-      "candidateId": "S6GA00432",
-      "name": "PILE, CHELSAE",
-      "office": "S",
-      "district": "00",
-      "lastName": "pile",
-      "fecUrl": "https://www.fec.gov/data/candidate/S6GA00432/",
-      "topEmployers": []
-    },
     "S6GA00440": {
       "candidateId": "S6GA00440",
       "name": "PILE, CHELSAE",
@@ -3804,6 +3917,15 @@
       "district": "00",
       "lastName": "pile",
       "fecUrl": "https://www.fec.gov/data/candidate/S6GA00440/",
+      "topEmployers": []
+    },
+    "S6GA00432": {
+      "candidateId": "S6GA00432",
+      "name": "PILE, CHELSAE",
+      "office": "S",
+      "district": "00",
+      "lastName": "pile",
+      "fecUrl": "https://www.fec.gov/data/candidate/S6GA00432/",
       "topEmployers": []
     },
     "S6GA00309": {
@@ -3894,7 +4016,6 @@
       "district": "00",
       "lastName": "watkins",
       "fecUrl": "https://www.fec.gov/data/candidate/S6GA00283/",
-      "committeeId": "C00879551",
       "topEmployers": []
     }
   },
@@ -3969,7 +4090,7 @@
     "eric cunningham": "H2GA14119",
     "brandon daley": "H6GA02164",
     "defonsio daniels": "H6GA01125",
-    "daniel davenport": "S8GA00206",
+    "daniel davenport": "S8GA00222",
     "jim davis": "H6GA14300",
     "roman davis": "H6GA08161",
     "matt day": "H6GA01182",
@@ -3980,7 +4101,7 @@
     "alexandra doherty": "H4GA10113",
     "jim duffie": "H6GA04194",
     "john eaves": "H0GA07216",
-    "uloma ekpete kama": "H6GA03188",
+    "uloma ekpete kama": "H6GA11231",
     "uloma ekpete": "H6GA14045",
     "kelly esti": "H6GA08138",
     "patrick farrell": "H6GA01083",
@@ -3992,6 +4113,7 @@
     "caitlyn gegen": "H6GA09284",
     "traci george": "H6GA12114",
     "danny glover": "H6GA02149",
+    "caesar gonzales": "H0GA13149",
     "thomas gray": "H6GA14235",
     "marjorie greene": "H0GA06192",
     "joyce griggs": "H0GA01029",
@@ -4006,7 +4128,6 @@
     "victor hill": "H6GA05316",
     "jonathan hobbs": "H6GA14292",
     "amanda hollowell": "H6GA01158",
-    "deric houston": "H4GA14081",
     "elbert bartell": "S6GA00317",
     "bradley brigman": "S6GA00465",
     "allen buckley": "S4GA11103",
@@ -4024,7 +4145,7 @@
     "starr mabry": "S8GA00297",
     "jonathan mccolumn": "S2GA00282",
     "jonathan ossoff": "S8GA00180",
-    "chelsae pile": "S6GA00440",
+    "chelsae pile": "S6GA00432",
     "rick temple": "S6GA00309",
     "herschel walker": "S2GA00225",
     "raphael warnock": "S0GA00559",
@@ -4085,8 +4206,8 @@
       "H6GA03196",
       "H4GA03134",
       "H2GA03179",
-      "H6GA03170",
       "H6GA03188",
+      "H6GA03170",
       "H6GA03113"
     ],
     "H7": [
@@ -4105,7 +4226,8 @@
       "H6GA13070",
       "H4GA13059",
       "H0GA13032",
-      "H6GA13120"
+      "H6GA13120",
+      "H0GA13149"
     ],
     "H14": [
       "H0GA14089",
@@ -4128,8 +4250,7 @@
       "H6GA14235",
       "H4GA14057",
       "H2GA14135",
-      "H6GA14292",
-      "H4GA14081"
+      "H6GA14292"
     ],
     "H5": [
       "H6GA05324",
@@ -4181,10 +4302,10 @@
       "S2GA00324",
       "S2GA00340",
       "S2GA00332",
-      "S8GA00222",
-      "S8GA00214",
       "S8GA00198",
       "S8GA00206",
+      "S8GA00214",
+      "S8GA00222",
       "S6GA00408",
       "S6GA00275",
       "S6GA00382",
@@ -4193,8 +4314,8 @@
       "S8GA00297",
       "S2GA00282",
       "S8GA00180",
-      "S6GA00432",
       "S6GA00440",
+      "S6GA00432",
       "S6GA00309",
       "S2GA00225",
       "S0GA00559",
