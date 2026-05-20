@@ -4,11 +4,19 @@ from collections import OrderedDict
 script_dir = os.path.dirname(os.path.abspath(__file__))
 repo_root  = os.path.dirname(os.path.dirname(script_dir))  # assets/scripts -> assets -> repo root
 
-# Accept the CSV path as an optional argument; default to same folder as script
+# Accept the CSV path as an optional argument; default to the most recent
+# "Total Votes - *.csv" file in assets/data/
 if len(sys.argv) > 1:
     csv_path = sys.argv[1]
 else:
-    csv_path = os.path.join(script_dir, "Total Votes - 2026.05.19_10pm.csv")
+    import glob
+    data_dir = os.path.join(repo_root, "assets", "data")
+    matches = sorted(glob.glob(os.path.join(data_dir, "Total Votes - *.csv")))
+    if not matches:
+        print(f"ERROR: No 'Total Votes - *.csv' found in {data_dir}")
+        sys.exit(1)
+    csv_path = matches[-1]  # alphabetical sort puts the latest timestamp last
+    print(f"Using CSV: {os.path.basename(csv_path)}")
 
 out_path = os.path.join(repo_root, "ga-primary-results.html")
 
