@@ -62,7 +62,9 @@ statewide_prefixes = ['US Senate', 'Governor', 'Lieutenant Governor', 'Secretary
                       'Attorney General', 'Commissioner of Agriculture', 'Commissioner of Insurance',
                       'State School Superintendent', 'Commissioner of Labor', 'PSC']
 
-raw = {'statewide': [], 'us-house': [], 'state-senate': [], 'state-house': []}
+court_prefixes = ['Justice -', 'Judge -', 'District Attorney -']
+
+raw = {'statewide': [], 'us-house': [], 'state-senate': [], 'state-house': [], 'courts': []}
 for office, cl in by_office.items():
     if any(office.startswith(p) for p in statewide_prefixes):
         raw['statewide'].append((office, cl))
@@ -72,9 +74,25 @@ for office, cl in by_office.items():
         raw['state-senate'].append((office, cl))
     elif office.startswith('State House'):
         raw['state-house'].append((office, cl))
+    elif any(office.startswith(p) for p in court_prefixes):
+        raw['courts'].append((office, cl))
 
 for k in ['us-house', 'state-senate', 'state-house']:
     raw[k].sort(key=lambda x: district_num(x[0]))
+
+# Sort courts: Supreme Court first, then Court of Appeals, then Superior Court by circuit name,
+# then District Attorney by circuit name
+def court_sort_key(x):
+    office = x[0]
+    if office.startswith('Justice'):
+        return (0, office)
+    if office.startswith('Judge - Court of Appeals'):
+        return (1, office)
+    if office.startswith('Judge - Superior'):
+        return (2, office)
+    return (3, office)  # District Attorney
+
+raw['courts'].sort(key=court_sort_key)
 
 def group_district_races(pairs):
     races = OrderedDict()
@@ -103,6 +121,7 @@ sections_data = [
     build_section('us-house',     'U.S. House',                    raw['us-house']),
     build_section('state-senate', 'GA State Senate',               raw['state-senate']),
     build_section('state-house',  'GA State House',                raw['state-house']),
+    build_section('courts',       'Courts',                        raw['courts']),
 ]
 
 sections_json = json.dumps(sections_data, separators=(',', ':'))
@@ -218,6 +237,7 @@ title: Georgia 2026 Primary Results
   <button class="tab-btn" data-tab="us-house">U.S. House</button>
   <button class="tab-btn" data-tab="state-senate">GA State Senate</button>
   <button class="tab-btn" data-tab="state-house">GA State House</button>
+  <button class="tab-btn" data-tab="courts">Courts</button>
 </div>
 
 <div class="pr-filter-bar">
@@ -231,6 +251,7 @@ title: Georgia 2026 Primary Results
 <div id="tab-us-house"     class="tab-panel"></div>
 <div id="tab-state-senate" class="tab-panel"></div>
 <div id="tab-state-house"  class="tab-panel"></div>
+<div id="tab-courts"       class="tab-panel"></div>
 
 <script>
 const SECTIONS={sections_json};
