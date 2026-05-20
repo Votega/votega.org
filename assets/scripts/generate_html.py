@@ -85,16 +85,16 @@ def to_js_contest(c):
     return {'party': p, 'totalVotes': c['totalVotes'],
             'candidates': [{'name': cd['name'], 'votes': cd['votes'], 'incumbent': cd['incumbent']} for cd in cands]}
 
-def build_section(sid, label, pairs, collapsed=True):
+def build_section(sid, label, pairs):
     races = group_district_races(pairs)
-    return {'id': sid, 'label': label, 'collapsed': collapsed,
+    return {'id': sid, 'label': label,
             'races': [{'office': r['office'], 'contests': [to_js_contest(c) for c in r['contests']]} for r in races]}
 
 sections_data = [
-    build_section('statewide', 'Statewide Offices', raw['statewide'], False),
-    build_section('us-house', 'U.S. House of Representatives', raw['us-house']),
-    build_section('state-senate', 'State Senate', raw['state-senate']),
-    build_section('state-house', 'State House of Representatives', raw['state-house']),
+    build_section('statewide',    'Executive / Statewide',         raw['statewide']),
+    build_section('us-house',     'U.S. House',                    raw['us-house']),
+    build_section('state-senate', 'GA State Senate',               raw['state-senate']),
+    build_section('state-house',  'GA State House',                raw['state-house']),
 ]
 
 sections_json = json.dumps(sections_data, separators=(',', ':'))
@@ -112,11 +112,44 @@ title: Georgia 2026 Primary Results
     --border: #ddd; --card-bg: #fff;
     --muted: #777; --neutral: #555;
   }}
-  .pr-page-header {{ margin-bottom: 1.25rem; }}
+
+  /* ── Page header ── */
+  .pr-page-header {{ margin-bottom: 1rem; }}
   .pr-page-header h1 {{ font-size: 1.6rem; font-weight: 700; margin-bottom: .2rem; }}
   .pr-page-header .pr-meta {{ font-size: .82rem; color: #777; }}
-  .pr-notice {{ background: #fff8e1; border: 1px solid #f9a825; border-radius: 6px; padding: .6rem 1rem; font-size: .82rem; color: #5d4037; margin-bottom: 1.25rem; }}
-  .filter-row {{ display: flex; gap: .5rem; margin-bottom: .75rem; flex-wrap: wrap; }}
+
+  /* ── Tab bar — matches elections.html ── */
+  .tab-bar {{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 1.25rem 0 1rem 0;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0;
+  }}
+  .tab-btn {{
+    padding: 0.45rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 4px 4px 0 0;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }}
+  .tab-btn:hover {{ color: #1a56a8; }}
+  .tab-btn.active {{ color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }}
+
+  /* ── Tab panels ── */
+  .tab-panel {{ display: none; }}
+  .tab-panel.active {{ display: block; }}
+
+  /* ── Filter / search bar ── */
+  .pr-filter-bar {{ display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }}
   .filter-btn {{ border: 1px solid var(--border); background: var(--card-bg); padding: .35rem 1rem; border-radius: 20px; cursor: pointer; font-size: .82rem; font-weight: 500; color: var(--neutral); }}
   .filter-btn.active {{ background: #1a1a2e; color: #fff; border-color: #1a1a2e; }}
   .filter-btn.rep.active {{ background: var(--rep); border-color: var(--rep); }}
@@ -124,43 +157,45 @@ title: Georgia 2026 Primary Results
   .search-row {{ margin-bottom: 1.25rem; }}
   .search-row input {{ width: 100%; padding: .45rem .9rem; border: 1px solid var(--border); border-radius: 20px; font-size: .85rem; outline: none; }}
   .search-row input:focus {{ border-color: #999; }}
-  .section-header {{ display: flex; align-items: center; justify-content: space-between; padding: .5rem 0; margin: 1.5rem 0 .75rem; border-bottom: 2px solid var(--border); cursor: pointer; user-select: none; }}
-  .section-header h2 {{ font-size: .95rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--neutral); }}
-  .section-body.collapsed {{ display: none; }}
+
+  /* ── Notice ── */
+  .pr-notice {{ background: #fff8e1; border: 1px solid #f9a825; border-radius: 6px; padding: .6rem 1rem; font-size: .82rem; color: #5d4037; margin-bottom: 1rem; }}
+
+  /* ── Race cards ── */
   .race-card {{ background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: .6rem; overflow: hidden; }}
   .race-card.rep {{ border-top: 3px solid var(--rep); }}
   .race-card.dem {{ border-top: 3px solid var(--dem); }}
-  .race-card.np {{ border-top: 3px solid #888; }}
+  .race-card.np  {{ border-top: 3px solid #888; }}
   .race-card.runoff-race {{ background: #fff8e1; }}
   .race-card.winner-race {{ background: #f0faf0; }}
-  .race-card.no-results {{ opacity: .6; }}
+  .race-card.no-results  {{ opacity: .6; }}
   .race-header {{ display: flex; align-items: center; justify-content: space-between; padding: .6rem 1rem .35rem; flex-wrap: wrap; gap: .25rem; }}
-  .race-title {{ font-weight: 600; font-size: .92rem; }}
-  .race-meta {{ display: flex; gap: .4rem; align-items: center; flex-shrink: 0; }}
+  .race-title  {{ font-weight: 600; font-size: .92rem; }}
+  .race-meta   {{ display: flex; gap: .4rem; align-items: center; flex-shrink: 0; }}
   .party-badge {{ display: inline-block; padding: .1rem .45rem; border-radius: 10px; font-size: .7rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }}
   .party-badge.rep {{ background: var(--rep-light); color: var(--rep); }}
   .party-badge.dem {{ background: var(--dem-light); color: var(--dem); }}
-  .party-badge.np {{ background: #f0f0f0; color: #555; }}
+  .party-badge.np  {{ background: #f0f0f0; color: #555; }}
   .status-badge {{ display: inline-block; padding: .1rem .45rem; border-radius: 10px; font-size: .7rem; font-weight: 600; }}
-  .status-badge.winner {{ background: #e8f8e8; color: #1e7e34; }}
-  .status-badge.runoff {{ background: #fff3cd; color: #856404; }}
+  .status-badge.winner     {{ background: #e8f8e8; color: #1e7e34; }}
+  .status-badge.runoff     {{ background: #fff3cd; color: #856404; }}
   .status-badge.uncontested {{ background: #f0f0f0; color: #555; }}
   .status-badge.no-results {{ background: #f0f0f0; color: #aaa; }}
-  .race-total {{ font-size: .72rem; color: var(--muted); padding: 0 1rem .4rem; }}
-  .candidates {{ padding: 0 1rem .65rem; }}
-  .cand-block {{ margin-bottom: .5rem; }}
+  .race-total  {{ font-size: .72rem; color: var(--muted); padding: 0 1rem .4rem; }}
+  .candidates  {{ padding: 0 1rem .65rem; }}
+  .cand-block  {{ margin-bottom: .5rem; }}
   .cand-top-line {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: .18rem; }}
-  .cand-name {{ font-size: .84rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 62%; }}
+  .cand-name   {{ font-size: .84rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 62%; }}
   .cand-name .inc {{ font-size: .68rem; color: var(--muted); margin-left: .2rem; }}
-  .cand-name .wi {{ color: #27ae60; margin-right: .1rem; }}
-  .cand-votes {{ font-size: .76rem; color: var(--muted); }}
-  .cand-pct {{ font-size: .84rem; font-weight: 600; min-width: 3rem; text-align: right; }}
-  .bar-track {{ height: 7px; background: #eee; border-radius: 4px; overflow: hidden; position: relative; }}
+  .cand-name .wi  {{ color: #27ae60; margin-right: .1rem; }}
+  .cand-votes  {{ font-size: .76rem; color: var(--muted); }}
+  .cand-pct    {{ font-size: .84rem; font-weight: 600; min-width: 3rem; text-align: right; }}
+  .bar-track   {{ height: 7px; background: #eee; border-radius: 4px; overflow: hidden; position: relative; }}
   .bar-track::after {{ content: ''; position: absolute; left: 50%; top: 0; height: 100%; width: 2px; background: rgba(0,0,0,.18); }}
-  .bar-fill {{ height: 100%; border-radius: 4px; }}
+  .bar-fill    {{ height: 100%; border-radius: 4px; }}
   .bar-fill.rep {{ background: var(--rep-bar); }}
   .bar-fill.dem {{ background: var(--dem-bar); }}
-  .bar-fill.np {{ background: #888; }}
+  .bar-fill.np  {{ background: #888; }}
   .bar-fill.trail {{ opacity: .42; }}
 </style>
 
@@ -169,13 +204,26 @@ title: Georgia 2026 Primary Results
   <div class="pr-meta">Tuesday, May 19, 2026 &nbsp;&middot;&nbsp; Last updated: 10:00 PM ET &nbsp;&middot;&nbsp; Preliminary</div>
 </div>
 <div class="pr-notice">&#9888; Preliminary election night results &mdash; unofficial until certified. Georgia law requires a runoff if no candidate receives more than 50% of the vote.</div>
-<div class="filter-row">
+
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" data-tab="statewide">Executive / Statewide</button>
+  <button class="tab-btn" data-tab="us-house">U.S. House</button>
+  <button class="tab-btn" data-tab="state-senate">GA State Senate</button>
+  <button class="tab-btn" data-tab="state-house">GA State House</button>
+</div>
+
+<div class="pr-filter-bar">
   <button class="filter-btn active" data-filter="all">All Races</button>
   <button class="filter-btn rep" data-filter="rep">&#x25A0; Republican</button>
   <button class="filter-btn dem" data-filter="dem">&#x25A0; Democrat</button>
 </div>
 <div class="search-row"><input type="text" id="searchBox" placeholder="Search candidates or races…" /></div>
-<div id="results"></div>
+
+<div id="tab-statewide"    class="tab-panel active"></div>
+<div id="tab-us-house"     class="tab-panel"></div>
+<div id="tab-state-senate" class="tab-panel"></div>
+<div id="tab-state-house"  class="tab-panel"></div>
+
 <script>
 const SECTIONS={sections_json};
 
@@ -189,10 +237,10 @@ function getStatus(c){{
 }}
 
 const STATUS_MAP={{
-  winner:{{cls:'winner',text:'Leads >50%'}},
-  runoff:{{cls:'runoff',text:'Runoff Likely'}},
-  uncontested:{{cls:'uncontested',text:'Uncontested'}},
-  'no-results':{{cls:'no-results',text:'Awaiting Results'}},
+  winner:      {{cls:'winner',     text:'Leads >50%'}},
+  runoff:      {{cls:'runoff',     text:'Runoff Likely'}},
+  uncontested: {{cls:'uncontested',text:'Uncontested'}},
+  'no-results':{{cls:'no-results', text:'Awaiting Results'}},
 }};
 
 function partyLabel(p){{
@@ -206,7 +254,7 @@ function renderContest(c,office){{
   const noRes=c.totalVotes===0;
   const cardCls=status==='runoff'?'runoff-race':status==='winner'?'winner-race':status==='no-results'?'no-results':'';
   const pctColor=p==='rep'?'var(--rep)':p==='dem'?'var(--dem)':'#555';
-  let candsHtml=(c.candidates||[]).map((cd,i)=>{{
+  const candsHtml=(c.candidates||[]).map((cd,i)=>{{
     const pp=pct(cd.votes,c.totalVotes);
     const wi=i===0&&status==='winner'?'<span class="wi">&#10003;</span>':'';
     const inc=cd.incumbent?'<span class="inc">(I)</span>':'';
@@ -237,40 +285,43 @@ function renderContest(c,office){{
   </div>`;
 }}
 
-function renderSection(s){{
-  const body=s.races.map(r=>
+// Render all sections into their tab panels
+SECTIONS.forEach(s=>{{
+  const panel=document.getElementById('tab-'+s.id);
+  if(!panel)return;
+  panel.innerHTML=s.races.map(r=>
     r.contests.length===1
       ?renderContest(r.contests[0],r.office)
       :r.contests.map(c=>renderContest(c,r.office)).join('')
   ).join('');
-  return `<div class="section" data-section="${{s.id}}">
-    <div class="section-header" onclick="toggleSection('${{s.id}}')">
-      <h2>${{s.label}} <span style="font-weight:400;font-size:.8em;color:#aaa">(${{s.races.length}})</span></h2>
-      <span id="icon-${{s.id}}">${{s.collapsed?'&#9654;':'&#9660;'}}</span>
-    </div>
-    <div class="section-body${{s.collapsed?' collapsed':''}}" id="body-${{s.id}}">${{body}}</div>
-  </div>`;
-}}
+}});
 
 let curFilter='all';
 
 function applyFilter(f){{
   curFilter=f;
   const q=(document.getElementById('searchBox').value||'').toLowerCase().trim();
-  document.querySelectorAll('.race-card').forEach(card=>{{
+  const activePanel=document.querySelector('.tab-panel.active');
+  if(!activePanel)return;
+  activePanel.querySelectorAll('.race-card').forEach(card=>{{
     const matchParty=f==='all'||card.dataset.party===f;
     const matchSearch=!q||(card.dataset.office||'').includes(q)||(card.dataset.cands||'').includes(q);
     card.style.display=(matchParty&&matchSearch)?'':'none';
   }});
 }}
 
-function toggleSection(id){{
-  const body=document.getElementById('body-'+id);
-  const icon=document.getElementById('icon-'+id);
-  body.classList.toggle('collapsed');
-  icon.innerHTML=body.classList.contains('collapsed')?'&#9654;':'&#9660;';
-}}
+// Tab switching
+document.getElementById('tabBar').addEventListener('click',e=>{{
+  const btn=e.target.closest('.tab-btn');
+  if(!btn)return;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  applyFilter(curFilter);
+}});
 
+// Party filter buttons
 document.querySelectorAll('.filter-btn').forEach(btn=>{{
   btn.addEventListener('click',()=>{{
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
@@ -281,7 +332,6 @@ document.querySelectorAll('.filter-btn').forEach(btn=>{{
 
 document.getElementById('searchBox').addEventListener('input',()=>applyFilter(curFilter));
 
-document.getElementById('results').innerHTML=SECTIONS.map(renderSection).join('');
 applyFilter('all');
 </script>"""
 
