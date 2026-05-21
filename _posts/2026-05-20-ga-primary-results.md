@@ -38,15 +38,15 @@ When summing *every* race — including hundreds of state House and Senate distr
 
 ---
 
-#### The Enthusiasm Gap: What the Data Actually Suggests
+##### The Enthusiasm Gap: What the Data Actually Suggests
 
-##### Defining the Gap
+#### Defining the Gap
 
 An enthusiasm gap in a primary context doesn't just mean one party's voters are more excited — it means more of them crossed the threshold of participation when participation was optional and low-stakes. Primary turnout is the purest signal of base engagement precisely because there is no pressure to show up. No swing-seat anxiety, no fear of losing to the other party. Voters who participate in a primary are doing so because they want to, not because they feel they have to.
 
 The data here shows that significantly more Democratic voters crossed that threshold in statewide contests — by over 1.9 million votes across 11 races. That is not a marginal difference. It is structural.
 
-##### Why It's Concentrated at the Top of the Ticket
+#### Why It's Concentrated at the Top of the Ticket
 The phrase "concentrated at the top of the ticket" captures something specific and important: the Democratic advantage doesn't appear to be driven by superior local party organization or grassroots district-level mobilization. If it were, you'd expect Democrats to also outperform in aggregate vote totals across all races — and they don't. Republicans average roughly 57,100 votes per candidate versus 42,300 for Democrats.
 
 What this pattern suggests is that Democratic voters are being drawn to the ballot primarily by the high-profile statewide races — Senate, Governor, Attorney General — and that motivation diminishes down the ballot. Republican voters, by contrast, appear to have a more evenly distributed, locally-rooted participation base: they show up for their state house representative, their state senator, their local PSC race at consistent levels, even without the same top-of-ticket energy.
@@ -56,7 +56,7 @@ This is actually a meaningful structural difference. It means:
 - Democratic enthusiasm is candidate- and issue-driven at the macro level. It rises and falls with the prominence and stakes of the race. Jon Ossoff running unopposed still drew over 1,040,000 votes — in a race with no competitive reason to show up. That is a remarkable signal of intentionality. Those voters came out specifically to register their participation, not to pick a winner.
 - Republican strength is institutionally embedded at the local level. Safe legislative districts with loyal, habitual primary voters produce consistent, high-average vote totals regardless of what's happening at the top of the ticket. This is durable but not necessarily elastic — it doesn't necessarily scale up in response to a high-stakes statewide environment.
 
-##### What This Means Structurally
+#### What This Means Structurally
 In a state like Georgia — where recent statewide elections have been decided by razor-thin margins — this pattern has real implications:
 
 1. Democratic organizing capacity may be underestimated. Primary turnout is a leading indicator of volunteer pools, small-dollar donor activity, and field program depth. A larger statewide primary electorate means more people are already in the party's ecosystem heading into the general.
