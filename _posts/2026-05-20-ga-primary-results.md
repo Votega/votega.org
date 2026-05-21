@@ -32,11 +32,13 @@ In **every single statewide contest** — US Senate, Governor, Lt. Governor, Sec
 
 ---
 
-### But the Aggregate Total Across All Races Tells a Different Story
+#### But the Aggregate Total Across All Races Tells a Different Story
 
-When summing *every* race — including hundreds of state House and Senate districts — Republicans show more total raw votes statewide (**19.1M vs. 16.2M**). This is almost certainly because Republicans ran candidates in many local districts where Democrats did not field anyone, contributing pure Republican vote totals with zero Democratic counterpart.
+When summing every race — including hundreds of state House and Senate districts — Republicans show more total raw votes statewide (19.1M vs. 16.2M, 54% to 46%). This is notable because Democrats actually fielded more candidates (383 vs. 334), meaning the Republican vote advantage cannot simply be explained by Republicans contesting more races unopposed.
 
----
+What this likely reflects instead: Republicans are running in higher-turnout local districts — safe, heavily Republican suburban and rural seats where primary participation is historically strong — while Democratic candidates are distributed across a wider mix of districts with lower average turnout. The math bears this out: Republicans averaged roughly 57,100 votes per candidate, compared to 42,300 per candidate for Democrats.
+
+This actually makes the Democratic statewide advantage more notable, not less. It can no longer be chalked up to Democrats simply having a top-of-ticket advantage while Republicans dominated local ballot access. Democrats are running more candidates and still getting outpaced in raw local totals — while simultaneously outperforming by 21% in every statewide race. That points to a genuine enthusiasm gap at the primary level, concentrated at the top of the ticket.
 
 ##### The Enthusiasm Gap: What the Data Actually Suggests
 
