@@ -1,3 +1,8 @@
+---
+layout: post
+title: Analysis of Election Results (Unofficial)
+subtitle: Unoffical election results analysis for GA Primary Races
+---
 
 ---
 
