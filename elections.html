@@ -1,12 +1,11 @@
 ---
 layout: default
-title: 2026 Georgia Primary Runoffs
+title: 2026 Georgia Elections
 permalink: /elections.html
 ---
 
-<h1>2026 Georgia Primary Runoffs</h1>
-
-<p>The May 19 primary is over. These seats are headed to a runoff — select your county to filter by district.</p>
+<h1 id="pageTitle">2026 Georgia Elections</h1>
+<p id="pageDesc"></p>
 
 <style>
   label { display: block; margin-top: 1.2rem; }
@@ -122,12 +121,39 @@ permalink: /elections.html
   }
   .open-seat-toggle input[type="checkbox"] { cursor: pointer; width: 1rem; height: 1rem; }
 
+  .phase-toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .phase-btn {
+    padding: 0.5rem 1.4rem;
+    border-radius: 20px;
+    border: 2px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+  .phase-btn:hover { border-color: #888; color: #222; }
+  .phase-btn.active[data-phase="runoff"]   { background: #fef9c3; border-color: #854d0e; color: #854d0e; font-weight: 700; }
+  .phase-btn.active[data-phase="general"]  { background: #dcfce7; border-color: #166534; color: #166534; font-weight: 700; }
+
   @media (max-width: 600px) {
     .race-row { flex-wrap: wrap; }
     .race-meta { text-align: left; }
     .tab-btn { font-size: 0.8rem; padding: 0.4rem 0.65rem; }
   }
 </style>
+
+<div class="phase-toggle" id="phaseToggle">
+  <button class="phase-btn active" data-phase="runoff">Primary Runoff — Jun 16</button>
+  <button class="phase-btn" data-phase="general">General Election — Nov 3</button>
+</div>
 
 <div class="tab-bar" id="tabBar">
   <button class="tab-btn active" data-tab="executive">Executive / Statewide</button>
@@ -166,9 +192,31 @@ permalink: /elections.html
   const openSeatOnly   = document.getElementById('openSeatOnly');
   const statusEl       = document.getElementById('status');
   const racesOutput    = document.getElementById('racesOutput');
+  const pageTitle      = document.getElementById('pageTitle');
+  const pageDesc       = document.getElementById('pageDesc');
 
-  let allRaces  = [];
-  let activeTab = 'executive';
+  let allRaces    = [];
+  let activeTab   = 'executive';
+  let activePhase = 'runoff';
+
+  const PHASE_CONFIG = {
+    runoff: {
+      title:   '2026 Georgia Primary Runoffs',
+      desc:    'The May 19 primary is over. These seats are headed to a runoff on June 16 — select your county to filter by district.',
+      empty:   'No runoff races on file for this selection. Check back as results are confirmed.',
+    },
+    general: {
+      title:   '2026 Georgia General Election',
+      desc:    'General election matchups for November 3, 2026. Races are added as primary and runoff results are certified.',
+      empty:   'No general election races on file for this selection yet. Check back after runoff results are certified.',
+    },
+  };
+
+  function updatePageHeader() {
+    const cfg = PHASE_CONFIG[activePhase];
+    pageTitle.textContent = cfg.title;
+    pageDesc.textContent  = cfg.desc;
+  }
 
   function isOpenSeat(race) {
     return race._note && race._note.toLowerCase().startsWith('open seat');
@@ -224,7 +272,7 @@ permalink: /elections.html
   }
 
   function racesForTab(tab, county) {
-    let races = allRaces.filter(TAB_FILTER[tab] || (() => false));
+    let races = allRaces.filter(r => r.activePhase === activePhase).filter(TAB_FILTER[tab] || (() => false));
 
     // For district-based tabs, filter by county if one is selected
     if (COUNTY_TABS.has(tab) && county) {
@@ -281,7 +329,7 @@ permalink: /elections.html
     if (!races.length) {
       const hint = COUNTY_TABS.has(activeTab) && !county
         ? 'Select a county above to filter by district, or all districts are shown when no county is selected.'
-        : 'No runoff races on file for this selection. Check back as results are confirmed.';
+        : PHASE_CONFIG[activePhase].empty;
       racesOutput.innerHTML = `<p class="empty-note">${hint}</p>`;
       return;
     }
@@ -325,6 +373,16 @@ permalink: /elections.html
     racesOutput.innerHTML = html;
   }
 
+  // Phase toggle handler
+  document.getElementById('phaseToggle').addEventListener('click', e => {
+    const btn = e.target.closest('.phase-btn');
+    if (!btn || btn.dataset.phase === activePhase) return;
+    activePhase = btn.dataset.phase;
+    document.querySelectorAll('.phase-btn').forEach(b => b.classList.toggle('active', b === btn));
+    updatePageHeader();
+    renderRaces();
+  });
+
   // Tab click handler
   document.getElementById('tabBar').addEventListener('click', e => {
     const btn = e.target.closest('.tab-btn');
@@ -344,8 +402,9 @@ permalink: /elections.html
       const res = await fetch(RACES_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      allRaces = (data.races || []).filter(r => r.cycle === 2026 && !r.id?.startsWith('_') && r.activePhase === 'runoff');
-      renderRaces(); // render default tab on load
+      allRaces = (data.races || []).filter(r => r.cycle === 2026 && !r.id?.startsWith('_'));
+      updatePageHeader();
+      renderRaces();
     } catch (err) {
       statusEl.textContent = 'Could not load race data: ' + err.message;
     }
