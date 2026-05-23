@@ -10999,7 +10999,7 @@
       "chamber": "Georgia State Senate",
       "district": 1,
       "cycle": 2026,
-      "activePhase": "primary",
+      "activePhase": "general",
       "phases": {
         "primary": {
           "electionDate": "2026-05-19",
@@ -11050,7 +11050,38 @@
         },
         "general": {
           "electionDate": "2026-11-03",
-          "candidates": []
+          "ballots": {
+            "Democrat": [
+              {
+                "id": "ga-senate-1-2026-d-2",
+                "type": "challenger",
+                "name": "Corey Foreman",
+                "party": "Democrat",
+                "occupation": "Self Employed",
+                "county": "Bryan",
+                "website": "https://coreyforeman.com",
+                "email": "info@coreyforeman.com",
+                "bio": "Corey currently serves as Chair of the Bryan County Democratic Committee, where he helps organize local engagement and advocate for stronger representation. Both Corey and Morgan are members of the NAACP and stay actively involved in local service, from food drives and back-to-school giveaways to volunteering with Meals on Wheels, Animal Control, the 200 Club of Savannah, and more. He believes real leadership means listening first, speaking up when it counts, and working every day to make government serve the people. Corey is running to bring accountability, vision, and real results to the people of Georgia’s 1st District.",
+                "imageUrl": "https://i0.wp.com/coreyforeman.com/wp-content/uploads/2025/11/52D0C58C-5FA2-4F52-9D4B-F743F17F5796.jpeg?w=640&ssl=1"
+              }
+            ],
+            "Republican": [
+              {
+                "id": "ga-senate-1-2026-r-1",
+                "type": "incumbent",
+                "name": "Ben Watson",
+                "party": "Republican",
+                "occupation": "Medical Doctor",
+                "county": "Chatham",
+                "isIncumbent": true,
+                "website": "https://benwatsonforsenate.com",
+                "imageUrl": "https://www.legis.ga.gov/api/images/default-source/portraits/watson-ben-784.jpg",
+                "existingMemberId": "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c",
+                "existingMemberSource": "state",
+                "bio": "Sen. Watson is Chairman of the Senate Health and Human Services Committee. He also serves as a member of the Appropriations, Public Safety and Transportation Committees, as well as an ex officio on the Insurance and Labor Committee and the Veterans, Military and Homeland Security Committee."
+              }
+            ]
+          }
         }
       }
     },
