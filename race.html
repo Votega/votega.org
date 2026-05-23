@@ -327,8 +327,8 @@ permalink: /race.html
                       : 'ballot-other';
 
     const cardsHtml = [...active, ...withdrawn].map(c => {
-      if (c.type === 'incumbent') {
-        const cMemberId = c.existingMemberId || c.memberId;
+      const cMemberId = c.existingMemberId || c.memberId;
+      if (c.type === 'incumbent' && cMemberId) {
         const member = race.level === 'federal'
           ? members.find(m => m.bioguideId === cMemberId)
           : members.find(m => m.id === cMemberId);
@@ -421,8 +421,8 @@ permalink: /race.html
       } else {
         candidatesHtml = `<div class="candidates-grid">` +
           [...active, ...withdrawn].map(c => {
-            if (c.type === 'incumbent') {
-              const cMemberId = c.existingMemberId || c.memberId;
+            const cMemberId = c.existingMemberId || c.memberId;
+            if (c.type === 'incumbent' && cMemberId) {
               const member = race.level === 'federal'
                 ? members.find(m => m.bioguideId === cMemberId)
                 : members.find(m => m.id === cMemberId);
@@ -488,7 +488,7 @@ permalink: /race.html
       const allPhaseCandidates = phase?.ballots
         ? Object.values(phase.ballots).flat()
         : (phase?.candidates || []);
-      const hasIncumbent = allPhaseCandidates.some(c => c.type === 'incumbent');
+      const hasIncumbent = allPhaseCandidates.some(c => c.type === 'incumbent' && (c.memberId || c.existingMemberId));
 
       let members = [];
       if (hasIncumbent) {
