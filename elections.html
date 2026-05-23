@@ -1,12 +1,12 @@
 ---
 layout: default
-title: 2026 Georgia Elections
+title: 2026 Georgia Primary Runoffs
 permalink: /elections.html
 ---
 
-<h1>2026 Georgia Elections</h1>
+<h1>2026 Georgia Primary Runoffs</h1>
 
-<p>Select your county to see every candidate running for your state and federal seats in the 2026 election cycle — including incumbents' legislative records.</p>
+<p>The May 19 primary is over. These seats are headed to a runoff — select your county to filter by district.</p>
 
 <style>
   label { display: block; margin-top: 1.2rem; }
@@ -57,6 +57,7 @@ permalink: /elections.html
   }
   .phase-primary { background: #dcfce7; color: #166534; }
   .phase-general { background: #dcfce7; color: #166534; }
+  .phase-runoff  { background: #fef9c3; color: #854d0e; }
   .phase-open-seat { background: #fee2e2; color: #991b1b; }
   .race-date { font-size: 0.8rem; color: #777; margin-top: 0.3rem; }
 
@@ -247,8 +248,12 @@ permalink: /elections.html
 
   function renderRaceRow(race, basePath) {
     const phase      = race.phases[race.activePhase];
-    const phaseLabel = race.activePhase === 'primary' ? 'Primary' : 'General';
-    const phaseClass = race.activePhase === 'primary' ? 'phase-primary' : 'phase-general';
+    const phaseLabel = race.activePhase === 'primary' ? 'Primary'
+                     : race.activePhase === 'runoff'  ? 'Runoff'
+                     : 'General';
+    const phaseClass = race.activePhase === 'primary' ? 'phase-primary'
+                     : race.activePhase === 'runoff'  ? 'phase-runoff'
+                     : 'phase-general';
     const distLabel  = race.district ? ` — District ${race.district}` : '';
     const titleText  = race.displayTitle || `${race.chamber}${distLabel}`;
     const summary    = candidateSummary(phase);
@@ -276,7 +281,7 @@ permalink: /elections.html
     if (!races.length) {
       const hint = COUNTY_TABS.has(activeTab) && !county
         ? 'Select a county above to filter by district, or all districts are shown when no county is selected.'
-        : 'No races on file yet for this selection. Check back as 2026 candidate data is added.';
+        : 'No runoff races on file for this selection. Check back as results are confirmed.';
       racesOutput.innerHTML = `<p class="empty-note">${hint}</p>`;
       return;
     }
@@ -339,7 +344,7 @@ permalink: /elections.html
       const res = await fetch(RACES_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      allRaces = (data.races || []).filter(r => r.cycle === 2026 && !r.id?.startsWith('_'));
+      allRaces = (data.races || []).filter(r => r.cycle === 2026 && !r.id?.startsWith('_') && r.activePhase === 'runoff');
       renderRaces(); // render default tab on load
     } catch (err) {
       statusEl.textContent = 'Could not load race data: ' + err.message;
