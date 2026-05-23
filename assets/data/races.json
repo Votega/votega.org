@@ -11091,7 +11091,7 @@
       "chamber": "Georgia State Senate",
       "district": 2,
       "cycle": 2026,
-      "activePhase": "primary",
+      "activePhase": "general",
       "phases": {
         "primary": {
           "electionDate": "2026-05-19",
@@ -11117,7 +11117,25 @@
         },
         "general": {
           "electionDate": "2026-11-03",
-          "candidates": []
+          "ballots": {
+            "Democrat": [
+              {
+                "id": "ga-senate-2-2026-d-1",
+                "type": "incumbent",
+                "name": "Derek J Mallow",
+                "party": "Democrat",
+                "occupation": "Chief Executive Officer",
+                "county": "Chatham",
+                "isIncumbent": true,
+                "website": "https://www.derekforgeorgia.com",
+                "email": "info@www.derekforgeorgia.com",
+                "imageUrl": "https://www.legis.ga.gov/api/images/default-source/portraits/mallow-derek-5007.jpg",
+                "existingMemberId": "ocd-person/73918c45-83c1-4d52-a84d-3ad7ad8de40b",
+                "existingMemberSource": "state",
+                "bio": "In addition to serving in the Georgia House, Derek has served with the Boy Scouts of America for the past 13 years and has created many youth-focused programs throughout the district. He is also a member of Alpha Phi Omega, a national service fraternity; the 100 Black Men of Savannah, and Phi Beta Sigma Fraternity, Inc."
+              }
+            ]
+          }
         }
       }
     },
