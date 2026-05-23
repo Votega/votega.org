@@ -1337,7 +1337,7 @@
       "level": "state-executive",
       "chamber": "Attorney General",
       "cycle": 2026,
-      "activePhase": "primary",
+      "activePhase": "general",
       "phases": {
         "primary": {
           "electionDate": "2026-05-19",
@@ -1400,7 +1400,32 @@
         "general": {
           "electionDate": "2026-11-03",
           "primaryResult": "",
-          "candidates": []
+          "ballots": {
+            "Democrat": [
+              {
+                "type": "challenger",
+                "id": "challenger-tanya-miller-ag-2026",
+                "name": "Tanya Miller",
+                "party": "Democrat",
+                "bio": "Tanya Miller is a respected trial attorney, a proven leader as Chair of the Georgia House Democratic Caucus and a fierce advocate for Georgians. Her career has been defined by one core principle: the law should serve people, not political interests.",
+                "imageUrl": "https://run.imgix.net/5cf8630d-38b5-40f0-b751-4ddd38ca46bf/a94b3c20-bb31-4c64-b3c8-0d2a8323b9c4/a94b3c20-bb31-4c64-b3c8-0d2a8323b9c4.jpeg?ixlib=js-3.8.0&bri=0&con=0&sat=0&high=0&shad=0&usm=0&rect=0%2C349%2C3103%2C2742&auto=compress%2Cformat&fit=fillmax&w=1920&q=75",
+                "website": "https://tanyaforgeorgia.com"
+              }
+            ],
+            "Republican": [
+              {
+                "type": "challenger",
+                "id": "challenger-robert-strickland-ag-2026",
+                "name": "Brian Strickland",
+                "party": "Republican",
+                "bio": "Brian Strickland grew up on a farm in Henry County, where his father still works the same land passed down from his great-grandfather. In high school, Brian watched his dad fight the Henry County Board of Education in a week-long jury trial after the government moved to take 40 acres of their family farm. That experience forged his lifetime commitment to the Republican values of property rights and the rule of law.",
+                "imageUrl": "https://stricklandforgeorgia.com/election-integrity.webp",
+                "website": "https://www.stricklandforgeorgia.com",
+                "existingMemberId": "ocd-person/3a5721a0-d848-40d0-a48a-66b797e7d7d9",
+                "existingMemberSource": "state"
+              }
+            ]
+          }
         }
       }
     },
