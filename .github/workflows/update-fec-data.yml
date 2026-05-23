@@ -45,5 +45,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update GA FEC campaign finance data"
+            git pull --rebase origin main
             git push
           fi

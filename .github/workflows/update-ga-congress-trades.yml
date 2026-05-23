@@ -55,5 +55,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update GA Congress stock trades data"
+            git pull --rebase origin main
             git push
           fi

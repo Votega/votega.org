@@ -52,5 +52,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update VP tie-breaking vote data"
+            git pull --rebase origin main
             git push
           fi

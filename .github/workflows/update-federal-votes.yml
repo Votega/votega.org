@@ -62,5 +62,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update federal legislative vote data (GA delegation)"
+            git pull --rebase origin main
             git push
           fi

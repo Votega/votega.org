@@ -71,5 +71,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update current Congress member data (includes leadership positions)"
+            git pull --rebase origin main
             git push
           fi

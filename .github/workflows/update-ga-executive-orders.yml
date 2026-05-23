@@ -36,5 +36,6 @@ jobs:
             echo "No new executive orders"
           else
             git commit -m "Update GA executive orders ${YEAR} ($(date -u '+%Y-%m-%d'))"
+            git pull --rebase origin main
             git push
           fi

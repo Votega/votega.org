@@ -52,5 +52,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update SCOTUS decisions data"
+            git pull --rebase origin main
             git push
           fi

@@ -57,5 +57,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update Georgia legislative vote data"
+            git pull --rebase origin main
             git push
           fi
