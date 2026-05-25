@@ -295,7 +295,7 @@ permalink: /ga-member.html
 
   if (!memberId) {
     document.getElementById('memberDetails').innerHTML =
-      '<p>No member selected. <a href="ga-representatives.html">Go back</a></p>';
+      '<p>No member selected. <a href="ga-state-reps">Go back</a></p>';
   } else {
     loadMemberDetails(memberId);
   }
@@ -372,7 +372,7 @@ permalink: /ga-member.html
         ? 'Data file missing or inaccessible. Check that assets/data/ga-members.json exists.'
         : err.message;
       document.getElementById('memberDetails').innerHTML =
-        '<p>Error loading details. <a href="ga-representatives.html">Go back</a></p>';
+        '<p>Error loading details. <a href="ga-state-reps">Go back</a></p>';
     }
   }
 
@@ -484,7 +484,7 @@ permalink: /ga-member.html
              </ul>
            </div>`
         : ''}
-      <p><a href="ga-representatives.html">Search for another member</a></p>
+      <p><a href="ga-state-reps">Search for another member</a></p>
       <div id="votesTabs">
         <div class="tab-bar">
           <button class="tab-btn tab-active" data-tab="curatedBills" onclick="switchTab('curatedBills')">Key Votes</button>
