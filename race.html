@@ -339,7 +339,7 @@ permalink: /race.html
 
     const emptyHtml    = !active.length && !withdrawn.length
       ? '<p class="no-candidates">No candidates listed yet for this ballot.</p>' : '';
-    const unopposedHtml = active.length === 1
+    const unopposedHtml = active.length === 1 && race.activePhase !== 'general'
       ? '<p class="ballot-unopposed">Running unopposed in this primary</p>' : '';
 
     return `
