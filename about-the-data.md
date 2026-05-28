@@ -4,7 +4,7 @@ title: About The Data
 subtitle: Where our information comes from and how it's kept current
 ---
 
-VoteGA.org is a static website. We run automated workflows daily that pull data from trusted public sources, and publish it as static files that power the site. The only exception is campaign finance data, which is pulled live when a visitor opens the page. Here's what we use and why.
+VoteGA.org is a static website. We run automated workflows that pull data from trusted public sources and publish it as static files that power the site. A few data sources — federal executive orders, campaign finance figures, and select biography data — are fetched live from public APIs when you visit a page. Here's what we use and why.
 
 ---
 
@@ -140,11 +140,11 @@ The [Supreme Court](/supreme-court.html) page displays current justices and rece
 
 ## GA Executive Orders — Community Data Repository
 
-We publish Georgia Governor's executive orders to a public community repository:
+Georgia Governor's executive orders are displayed on this site and published to a public community repository:
 
 [GitHub GA Executive Orders Repository](https://github.com/Votega/ga-executive-orders)
 
-Executive orders are sourced from the [Georgia Governor's website](https://gov.georgia.gov/executive-action/executive-orders) and organized as one JSON file per year. Each order includes the date, order number, title, category, and a direct link to the official PDF.
+Executive orders are scraped daily from the [Georgia Governor's website](https://gov.georgia.gov/executive-action/executive-orders) via an automated GitHub Actions workflow. New orders are detected and added automatically. Data is organized as one JSON file per year, with each order including the date, order number, title, category, and a direct link to the official PDF.
 
 **Coverage:** 2023–present. Earlier years (2022 and prior) used a different URL structure on gov.georgia.gov and are not yet included.
 
@@ -243,7 +243,7 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 | GA legislators community repo | Published from above | Daily, after GA member update |
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
 | GA state legislator voting history | Open States API | Weekly, Sundays 08:00 UTC |
-| GA executive orders | gov.georgia.gov | Manually maintained |
+| GA executive orders | gov.georgia.gov (scraped) | Daily, 08:00 UTC (committed when new orders are found) |
 | GA congressional stock trades | House/Senate eFD via kadoa-org/congress-trading-monitor | Weekly, Sundays 10:00 UTC |
 | 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |
 | 2026 GA judicial candidates | GA Secretary of State | Updated when SOS publishes new filing data |
