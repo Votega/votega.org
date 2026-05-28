@@ -6,7 +6,7 @@ permissions:
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 8 * * *'  # daily at 08:00 UTC
+    - cron: '15 8 * * *'  # daily at 08:15 UTC (offset from curated-ga-bills at 08:00)
 
 jobs:
   update:
