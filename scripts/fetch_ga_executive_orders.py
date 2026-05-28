@@ -280,6 +280,10 @@ def main():
 
     all_orders = sorted(merged.values(), key=lambda o: o['number'], reverse=True)
 
+    if not new_count:
+        print(f"  No new orders — skipping save (file unchanged)")
+        return
+
     data['_note']    = (f"Auto-updated daily from {source_url}. "
                         f"Years 2023–2025 are static.")
     data['metadata'] = {
@@ -292,11 +296,7 @@ def main():
     data['orders'] = all_orders
 
     path = save(year, data)
-    print(f"Saved {len(all_orders)} orders -> {path}")
-    if new_count:
-        print(f"  {new_count} new order(s) added")
-    else:
-        print("  No new orders")
+    print(f"Saved {len(all_orders)} orders -> {path} ({new_count} new)")
 
 
 if __name__ == '__main__':

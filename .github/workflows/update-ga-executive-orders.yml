@@ -28,6 +28,7 @@ jobs:
 
       - name: Commit if changed
         run: |
+          set -e
           YEAR=$(date +%Y)
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -36,6 +37,9 @@ jobs:
             echo "No new executive orders"
           else
             git commit -m "Update GA executive orders ${YEAR} ($(date -u '+%Y-%m-%d'))"
-            git pull --rebase origin main
-            git push
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
           fi
