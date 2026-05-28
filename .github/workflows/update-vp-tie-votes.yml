@@ -41,17 +41,17 @@ jobs:
 
       - name: Commit and push generated data
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin main
-          git stash --include-untracked
-          git rebase origin/main
-          git stash pop
           git add -f assets/data/vp-tie-votes.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
             git commit -m "Update VP tie-breaking vote data"
-            git pull --rebase origin main
-            git push
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
           fi
