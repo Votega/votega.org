@@ -300,13 +300,19 @@ def update_races(races_data: dict, partisan_winners: dict, judicial_winners: dic
             primary_candidates = primary_ballots.get(party_label, [])
             matched = find_matching_candidate(winner_name, primary_candidates)
             if not matched:
-                skipped.append(f"{race_id} / {party_label}: no match for '{winner_name}'")
-                # Still create a minimal entry
-                matched = {
-                    "type": "challenger",
-                    "name": winner_name,
-                    "party": party_label,
-                }
+                # If there was only one candidate on this ballot (e.g. an incumbent
+                # entry with no name field), use it rather than creating a bare fallback.
+                if len(primary_candidates) == 1:
+                    matched = primary_candidates[0]
+                    print(f"  Note: used sole primary candidate for {race_id} / {party_label} (name field absent)")
+                else:
+                    skipped.append(f"{race_id} / {party_label}: no match for '{winner_name}'")
+                    # Still create a minimal entry
+                    matched = {
+                        "type": "challenger",
+                        "name": winner_name,
+                        "party": party_label,
+                    }
             general_phase["ballots"][party_label] = [matched]
 
         # Remove old "candidates" key if present
