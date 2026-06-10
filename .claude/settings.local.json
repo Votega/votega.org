@@ -19,7 +19,11 @@
       "Bash(Out-String -Width 300)",
       "Bash(Select-Object -First 100)",
       "PowerShell(cd 'C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\votega.org'; \\(Get-Content 'ga-primary-results.html'\\)[126..215] | ForEach-Object { $_.Substring\\(0, [Math]::Min\\($_.Length, 200\\)\\) })",
-      "PowerShell(cd 'C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\votega.org'; \\(Get-Content 'assets/data/Total Votes Results - OFFICIAL.csv'\\)[1350..1383])"
+      "PowerShell(cd 'C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\votega.org'; \\(Get-Content 'assets/data/Total Votes Results - OFFICIAL.csv'\\)[1350..1383])",
+      "Bash(New-Item -ItemType Directory -Path \"C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\flock-wardriver\\\\ble_wifi_mode_v6_2_2\" -Force)",
+      "Bash(Out-Null)",
+      "Bash(Copy-Item \"C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\flock-wardriver\\\\ble_wifi_mode_v6_2_1\\\\ble_wifi_mode_v6_2_1.ino\" \"C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\flock-wardriver\\\\ble_wifi_mode_v6_2_2\\\\ble_wifi_mode_v6_2_2.ino\")",
+      "Bash(Write-Output \"Done\")"
     ]
   }
 }
