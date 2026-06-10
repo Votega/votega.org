@@ -6,12 +6,15 @@ Requires OPENSTATES_API_KEY environment variable.
 
 import json
 import os
+import re
 import sys
 import time
 import urllib.request
 import urllib.error
 import urllib.parse
 from datetime import datetime
+
+OCD_ID_RE = re.compile(r'^ocd-person/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$')
 
 API_KEY = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL = "https://v3.openstates.org"
@@ -104,7 +107,7 @@ def get_committee_memberships():
 
         if not data or 'results' not in data:
             print("  Warning: could not fetch committee data — committees will be empty")
-            break
+            return None  # signals failure to caller
 
         for committee in data['results']:
             name = committee.get('name', '')
@@ -217,6 +220,9 @@ def main():
 
     print("Fetching committee memberships...")
     committees_by_id = get_committee_memberships()
+    committees_available = committees_by_id is not None
+    if not committees_available:
+        committees_by_id = {}
     print(f"  Committee data found for {len(committees_by_id)} members")
 
     print(f"Normalizing {len(raw_members)} members...")
@@ -255,12 +261,17 @@ def main():
     house  = [m for m in members if m['chamber'] == 'House of Representatives']
     print(f"  Senate: {len(senate)}  |  House: {len(house)}  |  Total: {len(members)}")
 
+    non_ocd = [m['id'] for m in members if m['id'] and not OCD_ID_RE.match(m['id'])]
+    if non_ocd:
+        print(f"  Note: {len(non_ocd)} member(s) have non-standard IDs (injected entries): {non_ocd[:5]}")
+
     output_data = {
         'metadata': {
-            'generatedAt': datetime.now().isoformat(),
-            'source':      'Open States API',
-            'jurisdiction': 'Georgia',
-            'count':       len(members),
+            'generatedAt':        datetime.now().isoformat(),
+            'source':             'Open States API',
+            'jurisdiction':       'Georgia',
+            'count':              len(members),
+            'committeesAvailable': committees_available,
         },
         'members': members,
     }

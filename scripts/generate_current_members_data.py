@@ -6,6 +6,7 @@ Generate current-members.json from Congress.gov API
 import json
 import os
 import sys
+import time
 import urllib.request
 import urllib.error
 import yaml
@@ -17,30 +18,40 @@ BASE_URL = "https://api.congress.gov/v3"
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/current-members.json"
 LEGISLATORS_BASE = "https://raw.githubusercontent.com/unitedstates/congress-legislators/main"
 
-def fetch_url(url):
-    """Fetch data from Congress.gov API with error handling"""
-    try:
-        # Add API key as query parameter (required by Congress.gov API)
-        if 'api_key=' not in url:
-            separator = '&' if '?' in url else '?'
-            url = f"{url}{separator}api_key={API_KEY}"
-        
-        safe_url = url.replace(API_KEY, "***") if API_KEY else url
-        print(f"Fetching: {safe_url[:100]}...")
-        
-        req = urllib.request.Request(url, headers={
-            'Accept': 'application/json',
-            'User-Agent': 'votega.org/1.0',
-        })
-        
-        with urllib.request.urlopen(req, timeout=30) as response:
-            return json.loads(response.read().decode('utf-8'))
-    except urllib.error.HTTPError as e:
-        print(f"HTTP Error {e.code}: {e.reason}")
-        return None
-    except Exception as e:
-        print(f"Error fetching {url[:100]}: {e}")
-        return None
+def fetch_url(url, retries=3, backoff=5):
+    """Fetch data from Congress.gov API with error handling.
+    Retries on 429/5xx only — 4xx errors are non-retryable client errors."""
+    if 'api_key=' not in url:
+        separator = '&' if '?' in url else '?'
+        url = f"{url}{separator}api_key={API_KEY}"
+
+    safe_url = url.replace(API_KEY, "***") if API_KEY else url
+    print(f"Fetching: {safe_url[:100]}...")
+
+    for attempt in range(1, retries + 1):
+        try:
+            req = urllib.request.Request(url, headers={
+                'Accept': 'application/json',
+                'User-Agent': 'votega.org/1.0',
+            })
+            with urllib.request.urlopen(req, timeout=30) as response:
+                return json.loads(response.read().decode('utf-8'))
+        except urllib.error.HTTPError as e:
+            print(f"HTTP Error {e.code}: {e.reason}")
+            if (e.code == 429 or e.code >= 500) and attempt < retries:
+                wait = backoff * attempt
+                print(f"  Retrying in {wait}s (attempt {attempt}/{retries})...")
+                time.sleep(wait)
+                continue
+            return None  # 4xx or exhausted retries
+        except Exception as e:
+            print(f"Error fetching {safe_url[:100]}: {e}")
+            if attempt < retries:
+                print(f"  Retrying in {backoff}s (attempt {attempt}/{retries})...")
+                time.sleep(backoff)
+                continue
+            return None
+    return None
 
 def get_member_details(bioguideId):
     """Fetch detailed member data"""
@@ -65,8 +76,8 @@ def extract_leadership(member_data):
     current_leadership = []
     for position in leadership:
         if isinstance(position, dict):
-            # Include if marked as current OR if no 'current' field (assume current)
-            if position.get('current') == True or 'current' not in position:
+            # Only include positions explicitly marked as current
+            if position.get('current') is True:
                 current_leadership.append({
                     'title': position.get('type', position.get('title', 'Unknown')),
                     'congress': position.get('congress', ''),

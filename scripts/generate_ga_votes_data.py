@@ -77,6 +77,7 @@ def main():
     votes_meta   = {}
     member_votes = {}
     page         = 1
+    total_pages  = None
     bills_seen   = 0
 
     print(f"Fetching GA bills for session {GA_SESSION} (passage votes only)...")
@@ -92,7 +93,10 @@ def main():
         ])
         data = fetch(f"{BASE_URL}/bills?{params}")
         if not data:
-            print(f"  Failed on page {page}, stopping.")
+            if total_pages is not None and page < total_pages:
+                print(f"  Warning: early termination on page {page}/{total_pages} — {bills_seen} bills fetched, ~{(total_pages - page) * 20} bills may be missing")
+            else:
+                print(f"  Failed on page {page}, stopping.")
             break
 
         results = data.get('results', [])
@@ -150,7 +154,7 @@ def main():
 
         pagination  = data.get('pagination', {})
         total_pages = pagination.get('max_page', 1)
-        print(f"  Page {page}/{total_pages} — {bills_seen} bills, {len(votes_meta)} passage votes, {len(member_votes)} members")
+        print(f"  Page {page}/{total_pages} — {bills_seen} bills, {len(votes_meta)} passage votes, {len(member_votes)} members with votes")
 
         if page >= total_pages:
             break
@@ -159,11 +163,13 @@ def main():
 
     output = {
         'metadata': {
-            'generatedAt': datetime.now().isoformat(),
-            'session':     GA_SESSION,
-            'sessionName': SESSION_NAME,
-            'source':      'Open States API',
-            'totalVotes':  len(votes_meta),
+            'generatedAt':        datetime.now().isoformat(),
+            'session':            GA_SESSION,
+            'sessionName':        SESSION_NAME,
+            'source':             'Open States API',
+            'totalVotes':         len(votes_meta),
+            'totalBillsSeen':     bills_seen,
+            'paginationComplete': total_pages is None or page >= total_pages,
         },
         'votes':       votes_meta,
         'memberVotes': member_votes,
