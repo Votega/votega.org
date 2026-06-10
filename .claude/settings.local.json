@@ -6,7 +6,10 @@
       "Bash(python3 -c ' *)",
       "WebFetch(domain:www.legis.ga.gov)",
       "WebSearch",
-      "WebFetch(domain:webservices.legis.ga.gov)"
+      "WebFetch(domain:webservices.legis.ga.gov)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\votega.org\" -Recurse -Directory)",
+      "Bash(Select-Object -First 30)",
+      "Bash(python3)"
     ]
   }
 }

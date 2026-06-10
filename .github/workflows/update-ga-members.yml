@@ -35,9 +35,20 @@ jobs:
           python -c "
           import json
           d = json.load(open('assets/data/ga-members.json'))
+          members = d['members']
           count = d['metadata']['count']
           print(f'Validated: {count} GA members')
-          assert count > 200, f'Expected 200+ members, got {count}'
+          assert count >= 200, f'Expected 200+ members, got {count}'
+          assert count == len(members), f'metadata.count {count} != actual member count {len(members)}'
+          senate = [m for m in members if m.get('chamber') == 'Senate']
+          house  = [m for m in members if m.get('chamber') == 'House of Representatives']
+          assert len(senate) >= 50,  f'Expected 50+ senators, got {len(senate)}'
+          assert len(house)  >= 150, f'Expected 150+ representatives, got {len(house)}'
+          required = ['id', 'name', 'chamber', 'district']
+          for m in members[:20]:
+              for field in required:
+                  assert field in m, f'Member {m.get(\"name\",\"?\")} missing required field: {field}'
+          print('All integrity checks passed')
           "
 
       - name: Commit and push generated data

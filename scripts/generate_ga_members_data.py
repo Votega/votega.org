@@ -163,24 +163,24 @@ def normalize_member(raw, committees_by_id=None):
                     website = url
                     break
 
-    birth_date = raw.get('birth_date', '') or ''
-    birth_year = int(birth_date[:4]) if len(birth_date) >= 4 else None
+    birth_date = raw.get('birth_date') or None
+    birth_year = int(birth_date[:4]) if birth_date and len(birth_date) >= 4 else None
 
-    term_start     = role.get('start_date', '') or ''
-    term_start_year = int(term_start[:4]) if len(term_start) >= 4 else None
+    term_start      = role.get('start_date') or None
+    term_start_year = int(term_start[:4]) if term_start and len(term_start) >= 4 else None
 
     district_str = role.get('district', '')
     try:
         district = int(district_str)
     except (ValueError, TypeError):
-        district = district_str
+        district = district_str or None  # empty string → None
 
     return {
         'id':               raw.get('id', ''),
         'name':             raw.get('name', ''),
         'firstName':        raw.get('given_name', ''),
         'lastName':         raw.get('family_name', ''),
-        'party':            raw.get('party', ''),
+        'party':            raw.get('party') or None,  # empty string → None
         'chamber':          chamber,
         'district':         district,
         'title':            role.get('title', ''),
@@ -196,6 +196,10 @@ def normalize_member(raw, committees_by_id=None):
         'committees':       (committees_by_id or {}).get(raw.get('id', ''), []),
         # Numeric ID used by legis.ga.gov — needed to join with ga-member-votes.json
         'legisGaGovId':     georgia_id,
+        # Departure status — set via overrides only; None means active
+        'status':           None,
+        'statusDate':       None,
+        'statusNote':       None,
     }
 
 

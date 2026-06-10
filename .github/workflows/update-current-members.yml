@@ -44,8 +44,20 @@ jobs:
             echo "Error: current-members.json was not generated"
             exit 1
           fi
-          # Check that file is valid JSON
-          python -c "import json; json.load(open('assets/data/current-members.json'))" 
+          python -c "
+          import json, sys
+          d = json.load(open('assets/data/current-members.json'))
+          members = d['members']
+          count = d['metadata']['count']
+          print(f'Validated: {count} Congress members')
+          assert count >= 500, f'Expected 500+ members, got {count}'
+          assert count == len(members), f'metadata.count {count} != actual member count {len(members)}'
+          required = ['bioguideId', 'name', 'partyName', 'state', 'terms']
+          for m in members[:20]:
+              for field in required:
+                  assert field in m, f'Member {m.get(\"name\",\"?\")} missing required field: {field}'
+          print('All integrity checks passed')
+          "
 
       - name: Commit and push generated data
         run: |
