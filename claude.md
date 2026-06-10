@@ -114,7 +114,7 @@ Members are joined by OCD person ID — the same `id` field as in `ga-members.js
 ## Project-Specific Conventions
 - **Never commit secrets** — only generated JSON files go back to the repo via workflows.
 - **OCD IDs**: GA members use `ocd-person/<uuid>` format. Injected entries (vacant seats) use synthetic IDs like `ga-senate-7-vacant` — these won't match OCD format and won't join to vote records.
-- **`legisGaGovId`**: Numeric ID used by legis.ga.gov. Required to join members to vote data. Members without it cannot have vote history looked up. New members from Open States may lack it — add via overrides file.
+- **`legisGaGovId`**: Numeric ID used by legis.ga.gov to construct `officialWebsiteUrl`. Not used for vote joins — those use the OCD person `id`. Members without it get no official website link. New members from Open States may lack it — add via overrides file.
 - **UX**: Show loading states, handle empty/null data gracefully, explain API limitations in UI.
 
 ## Enforcement
