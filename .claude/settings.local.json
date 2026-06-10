@@ -9,7 +9,17 @@
       "WebFetch(domain:webservices.legis.ga.gov)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\votega.org\" -Recurse -Directory)",
       "Bash(Select-Object -First 30)",
-      "Bash(python3)"
+      "Bash(python3)",
+      "Bash(powershell -Command \"Get-Content 'ga-primary-results.html' | Select-Object -Skip 119 -First 30\")",
+      "Bash(powershell -Command \"\\(Get-Content 'assets/data/Total Votes Results - OFFICIAL.csv'\\).Count\")",
+      "Bash(powershell -Command \"Get-Content 'ga-primary-results.html' | Measure-Object -Line\")",
+      "Bash(powershell -Command \"Get-Content 'ga-primary-results.html' | Select-Object -Skip 99 -First 10\")",
+      "Bash(powershell -Command \"Get-Content 'ga-primary-results.html' | Select-Object -Skip 124 -First 5\")",
+      "Bash(powershell -Command \"Get-Content 'ga-primary-results.html' | Select-Object -Skip 126 -First 90\")",
+      "Bash(Out-String -Width 300)",
+      "Bash(Select-Object -First 100)",
+      "PowerShell(cd 'C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\votega.org'; \\(Get-Content 'ga-primary-results.html'\\)[126..215] | ForEach-Object { $_.Substring\\(0, [Math]::Min\\($_.Length, 200\\)\\) })",
+      "PowerShell(cd 'C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\votega.org'; \\(Get-Content 'assets/data/Total Votes Results - OFFICIAL.csv'\\)[1350..1383])"
     ]
   }
 }
