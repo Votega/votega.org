@@ -63,21 +63,25 @@ def get_passage_votes(votes):
 
 
 def slim_bill(b):
-    """Map one raw Open States bill object to the target schema."""
+    """Map one raw Open States bill object to the target schema.
+
+    actions[] is intentionally omitted — the full history is in GA_2025_26_bills.json.
+    status/statusDate (derived from the last action) plus billUrl cover the list-view need.
+    """
     actions     = sorted(b.get('actions', []), key=lambda a: a.get('order', 0))
     last_action = actions[-1] if actions else {}
     abstract    = (b.get('abstracts') or [{}])[0].get('abstract', '')
 
     return {
-        'id':         b['id'],
-        'identifier': b['identifier'],
-        'billType':   (b.get('classification') or ['bill'])[0],
-        'chamber':    b.get('chamber', ''),
-        'title':      b.get('title', ''),
-        'abstract':   abstract[:ABSTRACT_MAX] if abstract else '',
-        'status':     last_action.get('description', ''),
-        'statusDate': last_action.get('date', ''),
-        'subjects':   b.get('subject', []),
+        'id':          b['id'],
+        'identifier':  b['identifier'],
+        'billType':    (b.get('classification') or ['bill'])[0],
+        'chamber':     b.get('chamber', ''),
+        'title':       b.get('title', ''),
+        'abstract':    abstract[:ABSTRACT_MAX] if abstract else '',
+        'status':      last_action.get('description', ''),
+        'statusDate':  last_action.get('date', ''),
+        'subjects':    b.get('subject', []),
         'sponsors': [
             {
                 'name':    s['name'],
@@ -85,17 +89,8 @@ def slim_bill(b):
             }
             for s in b.get('sponsors', [])
         ],
-        'actions': [
-            {
-                'date':           a.get('date', ''),
-                'description':    a.get('description', ''),
-                'chamber':        a.get('organization__name', ''),
-                'classification': (a.get('classification') or [None])[0],
-            }
-            for a in actions
-        ],
-        'billUrl': get_bill_url(b.get('sources', [])),
-        'textUrl': b.get('raw_text_url', ''),
+        'billUrl':     get_bill_url(b.get('sources', [])),
+        'textUrl':     b.get('raw_text_url', ''),
         'passageVotes': get_passage_votes(b.get('votes', [])),
     }
 
