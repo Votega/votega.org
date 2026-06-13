@@ -27,7 +27,8 @@
       "Bash(powershell -Command \"Get-Content 'assets\\\\data\\\\GA_2025_26_bills.json' -TotalCount 3\")",
       "Bash(powershell -Command \"\\(Get-Item 'assets\\\\data\\\\GA_2025_26_bills.json'\\).Length / 1MB\")",
       "Bash(powershell -Command \"Get-Content 'assets\\\\data\\\\GA_2025_26_bills.json' -TotalCount 1 | ConvertFrom-Json | Select-Object -First 2 | ConvertTo-Json -Depth 5\")",
-      "Bash(Select-Object -First 80)"
+      "Bash(Select-Object -First 80)",
+      "mcp__visualize__read_me"
     ]
   }
 }
