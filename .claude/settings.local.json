@@ -23,7 +23,9 @@
       "Bash(New-Item -ItemType Directory -Path \"C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\flock-wardriver\\\\ble_wifi_mode_v6_2_2\" -Force)",
       "Bash(Out-Null)",
       "Bash(Copy-Item \"C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\flock-wardriver\\\\ble_wifi_mode_v6_2_1\\\\ble_wifi_mode_v6_2_1.ino\" \"C:\\\\Users\\\\justi\\\\Documents\\\\GitHub\\\\flock-wardriver\\\\ble_wifi_mode_v6_2_2\\\\ble_wifi_mode_v6_2_2.ino\")",
-      "Bash(Write-Output \"Done\")"
+      "Bash(Write-Output \"Done\")",
+      "Bash(powershell -Command \"Get-Content 'assets\\\\data\\\\GA_2025_26_bills.json' -TotalCount 3\")",
+      "Bash(powershell -Command \"\\(Get-Item 'assets\\\\data\\\\GA_2025_26_bills.json'\\).Length / 1MB\")"
     ]
   }
 }
