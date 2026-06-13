@@ -13,15 +13,19 @@ Usage:
   python scripts/process_ga_bills.py /path/to/input.json /path/to/output.json
 """
 
+import csv
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 
 # --- Defaults (relative to repo root) ---
-REPO_ROOT   = os.path.join(os.path.dirname(__file__), '..')
-INPUT_FILE  = os.path.join(REPO_ROOT, 'GA_2025_26_bills.json')
-OUTPUT_FILE = os.path.join(REPO_ROOT, 'assets', 'data', 'ga-bills.json')
+REPO_ROOT        = os.path.join(os.path.dirname(__file__), '..')
+INPUT_FILE       = os.path.join(REPO_ROOT, 'GA_2025_26_bills.json')
+OUTPUT_FILE      = os.path.join(REPO_ROOT, 'assets', 'data', 'ga-bills.json')
+OVERRIDES_FILE   = os.path.join(REPO_ROOT, 'assets', 'data', 'ga-bills-subjects.json')
+REVIEW_CSV_FILE  = os.path.join(REPO_ROOT, 'scripts', 'ga-bills-review.csv')
 
 SESSION      = '2025_26'
 SESSION_NAME = '2025-2026 Regular Session'
@@ -53,6 +57,21 @@ GA_COUNTIES = {
     'Whitfield','Wilcox','Wilkes','Wilkinson','Worth',
 }
 
+# Regex matching any GA county name as a whole word. Sorted longest-first so
+# multi-word names ("Ben Hill") match before their components ("Hill").
+_COUNTY_RE = re.compile(
+    r'\b(' + '|'.join(re.escape(c) for c in sorted(GA_COUNTIES, key=len, reverse=True)) + r')\b'
+)
+
+# When a GA county name appears in the first title segment alongside one of
+# these keywords, the bill is local/municipal (e.g. "Brooks County Development
+# Authority", "Pickens County Airport Authority", "Cobb Judicial Circuit").
+_LOCAL_ENTITY_KW = {
+    'Authority', 'Airport', 'Commission', 'Development', 'School',
+    'Water', 'Recreation', 'Library', 'Housing', 'Transit',
+    'Utility', 'Utilities', 'Circuit',
+}
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -60,28 +79,54 @@ GA_COUNTIES = {
 
 def infer_local_subject(title):
     """
-    Return ['Local / Municipal'] if the bill title starts with a GA county or
-    major city name, otherwise return [].  Only applied to bills with no Open
-    States subject tags.
+    Return ['Local / Municipal'] if the bill title identifies a GA locality,
+    otherwise return [].  Only applied to bills with no Open States subject tags.
 
     GA bill titles follow the convention 'Subject; detail; verb phrase', so the
     first semicolon-delimited segment reliably identifies the subject area.
     """
     if ';' not in title:
         return []
-    first_seg = title.split(';')[0].strip()
-    # Explicit city/town suffix is sufficient — no name lookup needed.
+    first_seg = title.split(';')[0].strip().strip('"\'')
+
+    # "City of X" / "Town of X" / "County of X" prefix forms.
+    if first_seg.startswith(('City of ', 'Town of ', 'County of ')):
+        return ['Local / Municipal']
+
+    # Explicit suffix forms: "X, City of" / "X, Town of"
     for suffix in (', City of', ', Town of'):
         if first_seg.endswith(suffix):
             return ['Local / Municipal']
-    # Explicit county suffix is also sufficient.
+
+    # Explicit county suffix: "X County" or "X, County"
     for suffix in (', County', ' County'):
         if first_seg.endswith(suffix):
             return ['Local / Municipal']
-    # Bare name (no suffix) — only tag if it's a known GA county to avoid false positives.
+
+    # "X County [local entity]" mid-title pattern, e.g.
+    # "Brooks County Development Authority", "Cobb Judicial Circuit"
+    if _COUNTY_RE.search(first_seg) and any(kw in first_seg for kw in _LOCAL_ENTITY_KW):
+        return ['Local / Municipal']
+
+    # Bare county name (no suffix) — exact match only, to avoid false positives.
     if first_seg in GA_COUNTIES:
         return ['Local / Municipal']
+
     return []
+
+
+def load_subjects_overrides(path):
+    """
+    Load manual subject-tag overrides from ga-bills-subjects.json.
+    Keys are bill identifiers (e.g. 'HB 739'); values are subject lists.
+    Keys beginning with '_' are metadata and are ignored.
+    Returns an empty dict if the file doesn't exist.
+    """
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding='utf-8') as f:
+        data = json.load(f)
+    return {k: v for k, v in data.items() if not k.startswith('_') and v}
 
 
 def get_bill_url(sources):
@@ -153,8 +198,9 @@ def slim_bill(b):
 # ---------------------------------------------------------------------------
 
 def main():
-    input_path  = sys.argv[1] if len(sys.argv) > 1 else INPUT_FILE
-    output_path = sys.argv[2] if len(sys.argv) > 2 else OUTPUT_FILE
+    input_path     = sys.argv[1] if len(sys.argv) > 1 else INPUT_FILE
+    output_path    = sys.argv[2] if len(sys.argv) > 2 else OUTPUT_FILE
+    overrides_path = sys.argv[3] if len(sys.argv) > 3 else OVERRIDES_FILE
 
     if not os.path.exists(input_path):
         print(f'ERROR: Input file not found: {input_path}')
@@ -169,11 +215,24 @@ def main():
         print('ERROR: Expected a JSON array at the top level.')
         sys.exit(1)
 
+    overrides = load_subjects_overrides(overrides_path)
+    if overrides:
+        print(f'Loaded {len(overrides)} manual subject override(s) from {overrides_path}')
+
     print(f'Processing {len(raw):,} bills ...')
     bills = [slim_bill(b) for b in raw]
 
+    # Apply manual subject overrides
+    override_count = 0
+    for bill in bills:
+        if bill['identifier'] in overrides:
+            bill['subjects'] = overrides[bill['identifier']]
+            override_count += 1
+
     # Basic sanity stats
+    bills_only    = [b for b in bills if b['billType'] == 'bill']
     with_subjects = sum(1 for b in bills if b['subjects'])
+    bills_tagged  = sum(1 for b in bills_only if b['subjects'])
     with_votes    = sum(1 for b in bills if b['passageVotes'])
     chambers      = {}
     for b in bills:
@@ -196,14 +255,29 @@ def main():
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, separators=(',', ':'), ensure_ascii=False)
 
+    # Write review CSV for any remaining untagged actual bills
+    untagged_bills = [b for b in bills_only if not b['subjects']]
+    if untagged_bills:
+        with open(REVIEW_CSV_FILE, 'w', newline='', encoding='utf-8') as f:
+            w = csv.writer(f)
+            w.writerow(['identifier', 'chamber', 'title', 'status'])
+            for b in untagged_bills:
+                chamber = 'House' if b['chamber'] == 'lower' else 'Senate'
+                w.writerow([b['identifier'], chamber, b['title'], b['status']])
+        print(f'\n  WARNING: {len(untagged_bills)} bill(s) still lack subject tags.')
+        print(f'     Review CSV written to: {REVIEW_CSV_FILE}')
+        print(f'     Add overrides to:      {overrides_path}')
+
     size_mb = os.path.getsize(output_path) / 1024 / 1024
     print(f'\nDone.')
-    print(f'  Bills:        {len(bills):,}')
-    print(f'  House/lower:  {chambers.get("lower", 0):,}')
-    print(f'  Senate/upper: {chambers.get("upper", 0):,}')
-    print(f'  With subjects: {with_subjects:,} ({with_subjects/len(bills)*100:.0f}%)')
-    print(f'  With votes:    {with_votes:,} ({with_votes/len(bills)*100:.0f}%)')
-    print(f'  Output size:  {size_mb:.1f} MB')
+    print(f'  Bills:              {len(bills):,}')
+    print(f'  House/lower:        {chambers.get("lower", 0):,}')
+    print(f'  Senate/upper:       {chambers.get("upper", 0):,}')
+    print(f'  Tagged (all):       {with_subjects:,} ({with_subjects/len(bills)*100:.0f}%)')
+    print(f'  Tagged (HB/SB):     {bills_tagged:,} / {len(bills_only):,} ({bills_tagged/len(bills_only)*100:.1f}%)')
+    print(f'  Manual overrides:   {override_count}')
+    print(f'  With votes:         {with_votes:,} ({with_votes/len(bills)*100:.0f}%)')
+    print(f'  Output size:        {size_mb:.1f} MB')
 
 
 if __name__ == '__main__':
