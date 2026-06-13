@@ -26,6 +26,7 @@ permalink: /ga-bills.html
   .bills-stat-val.green { color: #2d7a2d; }
   .bills-stat-val.red   { color: #b91c1c; }
   .bills-stat-val.blue  { color: #1a56a8; }
+  .bills-stat-sub   { font-size: 0.68rem; color: #aaa; margin-top: 2px; }
 
   /* ── Filters ── */
   .bills-filter-row {
@@ -599,16 +600,18 @@ permalink: /ga-bills.html
     const failed   = allBills.filter(function (b) { return b._status === 'failed'; }).length;
     elStats.innerHTML = [
       stat('Total bills', (meta.totalBills || allBills.length).toLocaleString(), ''),
-      stat('Signed into law', signed.toLocaleString(), 'green'),
+      stat('Signed into law', signed.toLocaleString(), 'green', 'Effective Date on each card'),
       stat('Failed / vetoed', (failed + vetoed).toLocaleString(), 'red'),
       stat('With vote records', allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length.toLocaleString(), 'blue'),
     ].join('');
     elStats.style.display = '';
   }
 
-  function stat(label, val, cls) {
+  function stat(label, val, cls, sub) {
     return '<div class="bills-stat"><div class="bills-stat-label">' + label + '</div>'
-      + '<div class="bills-stat-val' + (cls ? ' ' + cls : '') + '">' + val + '</div></div>';
+      + '<div class="bills-stat-val' + (cls ? ' ' + cls : '') + '">' + val + '</div>'
+      + (sub ? '<div class="bills-stat-sub">' + sub + '</div>' : '')
+      + '</div>';
   }
 
   // ── Event wiring ──────────────────────────────────────────────────────────
