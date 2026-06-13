@@ -70,12 +70,15 @@ def infer_local_subject(title):
     if ';' not in title:
         return []
     first_seg = title.split(';')[0].strip()
-    # Strip common suffixes like ", City of" / ", Town of" / ", County"
-    # so "Fulton County" and "Savannah, City of" both reduce to the place name.
-    for suffix in (', City of', ', Town of', ', County', ' County'):
+    # Explicit city/town suffix is sufficient — no name lookup needed.
+    for suffix in (', City of', ', Town of'):
         if first_seg.endswith(suffix):
-            first_seg = first_seg[: -len(suffix)].strip()
-            break
+            return ['Local / Municipal']
+    # Explicit county suffix is also sufficient.
+    for suffix in (', County', ' County'):
+        if first_seg.endswith(suffix):
+            return ['Local / Municipal']
+    # Bare name (no suffix) — only tag if it's a known GA county to avoid false positives.
     if first_seg in GA_COUNTIES:
         return ['Local / Municipal']
     return []
