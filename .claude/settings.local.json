@@ -29,7 +29,8 @@
       "Bash(powershell -Command \"Get-Content 'assets\\\\data\\\\GA_2025_26_bills.json' -TotalCount 1 | ConvertFrom-Json | Select-Object -First 2 | ConvertTo-Json -Depth 5\")",
       "Bash(Select-Object -First 80)",
       "mcp__visualize__read_me",
-      "mcp__visualize__show_widget"
+      "mcp__visualize__show_widget",
+      "Bash(python3 scripts/process_ga_bills.py assets/data/GA_2025_26_bills.json assets/data/ga-bills.json)"
     ]
   }
 }
