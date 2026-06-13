@@ -467,7 +467,7 @@ permalink: /ga-bills.html
       + subjectTag
       + '<span class="bill-meta-txt">' + chamberLbl + (isRes ? ' &middot; Resolution' : '') + '</span>'
       + (sponsor ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + escHtml(sponsor) + '</span>' : '')
-      + (bill.statusDate ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + bill.statusDate + '</span>' : '')
+      + (bill.statusDate ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + (sc === 'signed' ? 'Effective ' : '') + bill.statusDate + '</span>' : '')
       + voteInline
       + '</div>'
       + '</div>'
