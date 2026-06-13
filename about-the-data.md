@@ -70,6 +70,52 @@ We paginate through all Georgia bills in the current session via the Open States
 
 ---
 
+## Georgia General Assembly Bills & Resolutions
+
+**Source:** [Open States](https://openstates.org/) (Plural Policy) — bulk export, May 2026
+
+The [GA Bills & Resolutions](/ga-bills.html) tracker covers all 5,480 bills and resolutions introduced during the 2025–26 regular session of the Georgia General Assembly.
+
+**How it works:**
+
+The raw data originates from a bulk Open States export (`GA_2025_26_bills.json`). A build-time Python script (`scripts/process_ga_bills.py`) transforms it into a compact static file (`assets/data/ga-bills.json`) that the browser loads directly. The script:
+
+- Strips the full per-bill action history (too large for client-side use), retaining only the latest action as `status` / `statusDate`.
+- Keeps passage vote counts (yes / no / not voting) and the roll call motion text (e.g. "Senate Vote #148") for each chamber vote.
+- Preserves Open States subject tags where available. For bills with no subject tag — predominantly county-specific local legislation — it auto-assigns a **"Local / Municipal"** tag when the bill title starts with a Georgia county name.
+
+**What's included per bill:**
+
+| Field | Description |
+|---|---|
+| `identifier` | Bill number (e.g. HB 112, SR 23) |
+| `billType` | `bill` or `resolution` |
+| `chamber` | `lower` (House) or `upper` (Senate) |
+| `title` | Official bill title |
+| `abstract` | Bill description (up to 500 characters) |
+| `status` | Last recorded action (e.g. "Effective Date", "Governor Veto") |
+| `statusDate` | Date of last action |
+| `subjects` | Subject tags from Open States, or `["Local / Municipal"]` if auto-tagged |
+| `sponsors` | Array of sponsor names; first entry is the lead/introducing legislator |
+| `passageVotes` | Passage vote counts per chamber, with roll call motion text |
+| `billUrl` | Link to the bill on legis.ga.gov |
+| `textUrl` | Link to the bill text (PDF, where available) |
+
+**Status classification** (derived client-side from the `status` field):
+
+- **Signed** — status is `"Effective Date"` (602 bills)
+- **Vetoed** — status starts with `"Veto"` (19 bills)
+- **Failed** — status contains `"Lost"` (9 bills)
+- **Passed** — passage votes exist for both chambers but not yet signed
+- **In progress** — all other bills
+
+**Subjects:** Open States provides subject tags for approximately 81% of actual bills. The auto-tagger adds "Local / Municipal" for a further 9%, bringing total coverage to around 90% of bills (excluding resolutions, which are separated into their own tab).
+
+- **Scope:** All bills and resolutions from the 2025–26 regular session.
+- **Freshness:** Static — sourced from a May 2026 Open States bulk export. A future update will wire this into a live API workflow matching the existing GA member update cadence.
+
+---
+
 ## GA Legislators — Community Data Repository
 
 We publish a copy of our Georgia legislator data to a public community repository. 
@@ -243,6 +289,7 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 | GA legislators community repo | Published from above | Daily, after GA member update |
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
 | GA state legislator voting history | Open States API | Weekly, Sundays 08:00 UTC |
+| GA bills & resolutions (2025–26 session) | Open States bulk export | Static — May 2026 export; live API workflow planned |
 | GA executive orders | gov.georgia.gov (scraped) | Daily, 08:00 UTC (committed when new orders are found) |
 | GA congressional stock trades | House/Senate eFD via kadoa-org/congress-trading-monitor | Weekly, Sundays 10:00 UTC |
 | 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |

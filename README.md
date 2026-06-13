@@ -12,3 +12,19 @@ Votega.org a site providing elected official information for citizens of the Sta
 scripts/fetch_ga_executive_orders.py — scrapes gov.georgia.gov/executive-action/executive-orders/2026, handles pagination (?page=0, ?page=1, …), extracts order number/date/title/URL from the download link URLs (no fragile HTML parsing), merges with existing JSON so nothing is lost, and categorizes each order
 .github/workflows/update-ga-executive-orders.yml — runs daily at 08:00 UTC, commits only if the current year file changed
 publish-ga-executive-orders.yml — now only watches and publishes the current year file; 2023–2025 are left alone permanently
+
+## GA Bills & Resolutions tracker
+
+`ga-bills.html` — a searchable, filterable tracker for all 5,480 bills and resolutions from the Georgia General Assembly's 2025–26 regular session.
+
+**Data pipeline:**
+
+1. `GA_2025_26_bills.json` — a raw Open States bulk export (~50 MB) committed to the repo. Not served to the browser.
+2. `scripts/process_ga_bills.py` — transforms the bulk export into the compact `assets/data/ga-bills.json` (~5 MB) that the page loads. Run this script locally whenever the source file changes:
+   ```
+   python scripts/process_ga_bills.py
+   ```
+   The script strips the full action history (too large for the browser), keeps passage vote counts with motion text (roll call number), and auto-tags bills as "Local / Municipal" when the title starts with a Georgia county name.
+3. `assets/data/ga-bills.json` — the generated output committed to the repo and served statically.
+
+When a live Open States API workflow is built to replace the bulk export, only `process_ga_bills.py` needs to change — `ga-bills.html` reads the same schema.

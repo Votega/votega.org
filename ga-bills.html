@@ -1,0 +1,688 @@
+---
+layout: default
+title: Georgia General Assembly — Bills & Resolutions
+permalink: /ga-bills.html
+---
+
+<h1>Georgia General Assembly — Bills &amp; Resolutions</h1>
+<p>Browse legislation from the 2025–26 regular session. Data sourced from <a href="https://openstates.org" target="_blank">Open States</a>.</p>
+
+<style>
+  /* ── Stats ── */
+  .bills-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+    margin: 1.25rem 0;
+  }
+  .bills-stat {
+    background: #f9f9f9;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+  }
+  .bills-stat-label { font-size: 0.75rem; color: #666; margin-bottom: 2px; }
+  .bills-stat-val   { font-size: 1.3rem; font-weight: 700; color: #222; }
+  .bills-stat-val.green { color: #2d7a2d; }
+  .bills-stat-val.red   { color: #b91c1c; }
+  .bills-stat-val.blue  { color: #1a56a8; }
+
+  /* ── Filters ── */
+  .bills-filter-row {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0 0.6rem;
+    flex-wrap: wrap;
+  }
+  .bills-filter-row input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.9rem;
+  }
+  .bills-filter-row input:focus { outline: none; border-color: #1a56a8; box-shadow: 0 0 0 2px rgba(26,86,168,0.15); }
+  .bills-filter-row select {
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.88rem;
+    background: #fff;
+  }
+
+  /* ── Chamber tabs ── */
+  .bills-tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-bottom: 2px solid #e5e7eb;
+    margin: 0.75rem 0 0;
+  }
+  .bills-tab {
+    padding: 0.4rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.87rem;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 4px 4px 0 0;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .bills-tab:hover { color: #1a56a8; }
+  .bills-tab.active { color: #1a56a8; border-bottom-color: #1a56a8; }
+
+  /* ── Status pills ── */
+  .bills-status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.75rem 0 0.5rem;
+  }
+  .bills-status-btn {
+    padding: 0.25rem 0.85rem;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    background: #fff;
+    font-size: 0.82rem;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .bills-status-btn:hover { border-color: #1a56a8; color: #1a56a8; }
+  .bills-status-btn.active { background: #1a56a8; border-color: #1a56a8; color: #fff; font-weight: 600; }
+
+  /* ── Results bar ── */
+  .bills-results-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.75rem 0 0.5rem;
+    font-size: 0.85rem;
+    color: #666;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .bills-results-bar select {
+    font-size: 0.85rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0.2rem 0.5rem;
+    background: #fff;
+  }
+
+  /* ── Bill cards ── */
+  .bill-card {
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    margin-bottom: 0.5rem;
+    background: #fff;
+    overflow: hidden;
+  }
+  .bill-card-header {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .bill-card-header:hover { background: #f5f8ff; }
+
+  .bill-top-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .bill-id-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    margin-bottom: 0.3rem;
+  }
+  .bill-id {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1a56a8;
+  }
+  .bill-status-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge-signed   { background: #dcfce7; color: #166534; }
+  .badge-vetoed   { background: #fef3c7; color: #92400e; }
+  .badge-failed   { background: #fee2e2; color: #991b1b; }
+  .badge-passed   { background: #dbeafe; color: #1e40af; }
+  .badge-progress { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+
+  .bill-title {
+    font-size: 0.93rem;
+    line-height: 1.45;
+    color: #111;
+    flex: 1;
+  }
+  .bill-chevron {
+    color: #aaa;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    transition: transform 0.2s;
+  }
+  .bill-card.open .bill-chevron { transform: rotate(180deg); }
+
+  .bill-meta-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.4rem;
+  }
+  .bill-subject-tag {
+    font-size: 0.72rem;
+    background: #f0f4ff;
+    color: #3b5bdb;
+    border-radius: 999px;
+    padding: 1px 8px;
+    font-weight: 500;
+  }
+  .bill-meta-sep { color: #ccc; font-size: 0.75rem; }
+  .bill-meta-txt { font-size: 0.78rem; color: #666; }
+  .bill-vote-inline {
+    font-size: 0.78rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .vote-yes-txt { color: #2d7a2d; font-weight: 600; }
+  .vote-no-txt  { color: #b91c1c; font-weight: 600; }
+
+  /* ── Expanded detail ── */
+  .bill-detail {
+    display: none;
+    padding: 0 1rem 0.9rem;
+    border-top: 1px solid #eee;
+  }
+  .bill-card.open .bill-detail { display: block; }
+
+  .detail-section { margin-top: 0.75rem; }
+  .detail-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .detail-body { font-size: 0.875rem; color: #333; line-height: 1.55; }
+
+  .vote-bar-section { margin-top: 0.75rem; }
+  .vote-bar-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    margin-bottom: 4px;
+  }
+  .vote-bar-track {
+    height: 7px;
+    border-radius: 4px;
+    background: #e5e7eb;
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 2px;
+  }
+  .vb-yes { background: #16a34a; }
+  .vb-oth { background: #9ca3af; }
+  .vb-no  { background: #dc2626; }
+  .vote-bar-sub { font-size: 0.72rem; color: #888; }
+
+  .detail-links {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+    flex-wrap: wrap;
+  }
+  .detail-link {
+    font-size: 0.82rem;
+    color: #1a56a8;
+    text-decoration: none;
+    border: 1px solid #c7d7f5;
+    border-radius: 5px;
+    padding: 3px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s;
+  }
+  .detail-link:hover { background: #f0f4ff; }
+
+  /* ── Pagination ── */
+  .bills-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 1.25rem 0;
+    flex-wrap: wrap;
+  }
+  .page-btn {
+    min-width: 34px;
+    padding: 4px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    background: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.15s;
+  }
+  .page-btn:hover:not(:disabled) { border-color: #1a56a8; color: #1a56a8; }
+  .page-btn.active { background: #1a56a8; border-color: #1a56a8; color: #fff; font-weight: 600; }
+  .page-btn:disabled { opacity: 0.4; cursor: default; }
+  .page-ellipsis { font-size: 0.85rem; color: #aaa; padding: 0 2px; }
+
+  /* ── States ── */
+  .bills-loading { padding: 2rem 0; color: #666; font-size: 0.9rem; }
+  .bills-error   { padding: 1rem; background: #fff5f5; border: 1px solid #fca5a5; border-radius: 6px; color: #991b1b; font-size: 0.9rem; margin: 1rem 0; }
+  .bills-empty   { padding: 2rem 1rem; text-align: center; color: #888; font-size: 0.9rem; border: 1px dashed #ddd; border-radius: 6px; }
+  .data-note     { font-size: 0.78rem; color: #aaa; margin-top: 1.5rem; }
+
+  @media (max-width: 560px) {
+    .bills-stats { grid-template-columns: repeat(2, 1fr); }
+    .bill-title  { font-size: 0.88rem; }
+  }
+</style>
+
+<div id="billsStats" class="bills-stats" style="display:none"></div>
+
+<div id="billsLoading" class="bills-loading">Loading bill data…</div>
+<div id="billsError"  class="bills-error"  style="display:none"></div>
+
+<div id="billsControls" style="display:none">
+  <div class="bills-filter-row">
+    <input type="text" id="billSearch" placeholder="Search by keyword, bill number, or sponsor…" autocomplete="off" />
+    <select id="billSubject">
+      <option value="">All subjects</option>
+    </select>
+    <select id="billSort">
+      <option value="date">Most recent</option>
+      <option value="id">Bill number</option>
+      <option value="alpha">Alphabetical</option>
+    </select>
+  </div>
+
+  <div class="bills-tab-bar" id="chamberTabs">
+    <button class="bills-tab active" data-chamber="">All chambers</button>
+    <button class="bills-tab" data-chamber="lower">House</button>
+    <button class="bills-tab" data-chamber="upper">Senate</button>
+    <button class="bills-tab" data-chamber="res">Resolutions</button>
+  </div>
+
+  <div class="bills-status-bar" id="statusPills">
+    <button class="bills-status-btn active" data-status="">All</button>
+    <button class="bills-status-btn" data-status="signed">Signed</button>
+    <button class="bills-status-btn" data-status="passed">Passed</button>
+    <button class="bills-status-btn" data-status="progress">In progress</button>
+    <button class="bills-status-btn" data-status="failed">Failed</button>
+    <button class="bills-status-btn" data-status="vetoed">Vetoed</button>
+  </div>
+</div>
+
+<div class="bills-results-bar" id="billsResultsBar" style="display:none">
+  <span id="billsCount"></span>
+</div>
+
+<div id="billsList"></div>
+<div class="bills-pagination" id="billsPagination"></div>
+<p class="data-note" id="billsDataNote" style="display:none"></p>
+
+<script>
+(function () {
+  'use strict';
+
+  const DATA_URL  = '/assets/data/ga-bills.json';
+  const PER_PAGE  = 50;
+
+  let allBills     = [];
+  let filtered     = [];
+  let currentPage  = 1;
+  let chamberTab   = '';
+  let statusFilter = '';
+  let searchTimer  = null;
+
+  // ── DOM refs ──────────────────────────────────────────────────────────────
+  const elLoading    = document.getElementById('billsLoading');
+  const elError      = document.getElementById('billsError');
+  const elStats      = document.getElementById('billsStats');
+  const elControls   = document.getElementById('billsControls');
+  const elResultsBar = document.getElementById('billsResultsBar');
+  const elCount      = document.getElementById('billsCount');
+  const elList       = document.getElementById('billsList');
+  const elPagination = document.getElementById('billsPagination');
+  const elDataNote   = document.getElementById('billsDataNote');
+  const elSearch     = document.getElementById('billSearch');
+  const elSubject    = document.getElementById('billSubject');
+  const elSort       = document.getElementById('billSort');
+
+  // ── Status classification ─────────────────────────────────────────────────
+  function classifyStatus(bill) {
+    const s = bill.status || '';
+    if (s === 'Effective Date') return 'signed';
+    if (s.startsWith('Veto'))  return 'vetoed';
+    if (s.includes('Lost'))    return 'failed';
+    const chambers = new Set(bill.passageVotes.map(function (v) { return v.chamber; }));
+    if (chambers.has('lower') && chambers.has('upper')) return 'passed';
+    return 'progress';
+  }
+
+  function badgeHtml(cls) {
+    const labels = { signed: 'Signed', vetoed: 'Vetoed', failed: 'Failed', passed: 'Passed', progress: 'In progress' };
+    return '<span class="bill-status-badge badge-' + cls + '">' + labels[cls] + '</span>';
+  }
+
+  // ── Sponsor display ───────────────────────────────────────────────────────
+  function sponsorLine(sponsors) {
+    if (!sponsors || !sponsors.length) return '';
+    const lead  = sponsors[0].name;
+    const extra = sponsors.length - 1;
+    return extra > 0 ? lead + ' +' + extra + ' others' : lead;
+  }
+
+  // ── Vote bar HTML ─────────────────────────────────────────────────────────
+  function voteBarHtml(v) {
+    const total  = (v.yea + v.nay + v.other) || 1;
+    const pY     = Math.round(v.yea   / total * 100);
+    const pN     = Math.round(v.nay   / total * 100);
+    const pO     = 100 - pY - pN;
+    const ch     = v.chamber === 'lower' ? 'House' : 'Senate';
+    const result = v.result === 'pass' ? 'Passed' : 'Failed';
+    // motionText is e.g. "Senate Vote #148 - 2025-2026 Regular Session"
+    // strip the session suffix to get a concise label like "Senate Vote #148"
+    const motionLabel = v.motionText
+      ? v.motionText.replace(/\s*[-–]\s*\d{4}-\d{4}\s+Regular Session\s*$/i, '').trim()
+      : ch + ' vote';
+    return '<div class="vote-bar-section">'
+      + '<div class="vote-bar-header">'
+      + '<span class="vote-yes-txt">&#10003; ' + v.yea + ' yes</span>'
+      + '<span style="color:#888;font-size:0.78rem">' + escHtml(motionLabel) + ' &middot; ' + result + ' &middot; ' + v.date + '</span>'
+      + '<span class="vote-no-txt">' + v.nay + ' no &#10007;</span>'
+      + '</div>'
+      + '<div class="vote-bar-track">'
+      + '<div class="vb-yes" style="width:' + pY + '%"></div>'
+      + '<div class="vb-oth" style="width:' + pO + '%"></div>'
+      + '<div class="vb-no"  style="width:' + pN + '%"></div>'
+      + '</div>'
+      + '<div class="vote-bar-sub">' + v.yea + ' yes &nbsp;·&nbsp; ' + v.nay + ' no &nbsp;·&nbsp; ' + v.other + ' not voting/absent</div>'
+      + '</div>';
+  }
+
+  // ── Bill card HTML ────────────────────────────────────────────────────────
+  function cardHtml(bill, idx) {
+    const sc        = bill._status;
+    const chamberLbl = bill.chamber === 'lower' ? 'House' : 'Senate';
+    const isRes      = bill.billType === 'resolution';
+    const sponsor    = sponsorLine(bill.sponsors);
+    const subjectTag = bill.subjects && bill.subjects.length
+      ? '<span class="bill-subject-tag">' + escHtml(toTitleCase(bill.subjects[0])) + '</span><span class="bill-meta-sep">&middot;</span>'
+      : '';
+    const voteInline = bill.passageVotes && bill.passageVotes.length
+      ? '<span class="bill-meta-sep">&middot;</span>'
+        + '<span class="bill-vote-inline"><span class="vote-yes-txt">' + bill.passageVotes[0].yea + ' yes</span>'
+        + '&nbsp;&middot;&nbsp;<span class="vote-no-txt">' + bill.passageVotes[0].nay + ' no</span></span>'
+      : '';
+
+    const abstract    = bill.abstract ? '<div class="detail-section"><div class="detail-label">Summary</div><div class="detail-body">' + escHtml(bill.abstract) + '</div></div>' : '';
+    const allSponsors = bill.sponsors && bill.sponsors.length
+      ? '<div class="detail-section"><div class="detail-label">Sponsors</div><div class="detail-body">' + escHtml(bill.sponsors.map(function (s) { return s.name; }).join(' · ')) + '</div></div>'
+      : '';
+    const voteBars = bill.passageVotes && bill.passageVotes.length
+      ? bill.passageVotes.map(voteBarHtml).join('')
+      : '';
+    const links = '<div class="detail-links">'
+      + (bill.billUrl ? '<a class="detail-link" href="' + escHtml(bill.billUrl) + '" target="_blank" rel="noopener">&#128279; legis.ga.gov</a>' : '')
+      + (bill.textUrl ? '<a class="detail-link" href="' + escHtml(bill.textUrl) + '" target="_blank" rel="noopener">&#128196; Bill text</a>' : '')
+      + '</div>';
+
+    return '<div class="bill-card" id="bc' + idx + '">'
+      + '<div class="bill-card-header" onclick="toggleBill(' + idx + ')" aria-expanded="false">'
+      + '<div class="bill-top-row">'
+      + '<div style="flex:1">'
+      + '<div class="bill-id-status">'
+      + '<span class="bill-id">' + escHtml(bill.identifier) + '</span>'
+      + badgeHtml(sc)
+      + '</div>'
+      + '<div class="bill-title">' + escHtml(bill.title) + '</div>'
+      + '</div>'
+      + '<span class="bill-chevron" aria-hidden="true">&#8964;</span>'
+      + '</div>'
+      + '<div class="bill-meta-row">'
+      + subjectTag
+      + '<span class="bill-meta-txt">' + chamberLbl + (isRes ? ' &middot; Resolution' : '') + '</span>'
+      + (sponsor ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + escHtml(sponsor) + '</span>' : '')
+      + (bill.statusDate ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + bill.statusDate + '</span>' : '')
+      + voteInline
+      + '</div>'
+      + '</div>'
+      + '<div class="bill-detail">'
+      + abstract
+      + allSponsors
+      + voteBars
+      + links
+      + '</div>'
+      + '</div>';
+  }
+
+  // ── Toggle card expand ────────────────────────────────────────────────────
+  window.toggleBill = function (idx) {
+    const card = document.getElementById('bc' + idx);
+    if (!card) return;
+    const open = card.classList.toggle('open');
+    const hdr  = card.querySelector('.bill-card-header');
+    if (hdr) hdr.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
+  // ── Filter & sort ─────────────────────────────────────────────────────────
+  function applyFilters() {
+    const q      = elSearch.value.trim().toLowerCase();
+    const subj   = elSubject.value;
+    const sort   = elSort.value;
+
+    filtered = allBills.filter(function (b) {
+      if (chamberTab === 'lower' && b.chamber !== 'lower') return false;
+      if (chamberTab === 'upper' && b.chamber !== 'upper') return false;
+      if (chamberTab === 'res'   && b.billType !== 'resolution') return false;
+      if (statusFilter && b._status !== statusFilter) return false;
+      if (subj && !(b.subjects || []).some(function (s) { return s === subj; })) return false;
+      if (q) {
+        const hay = (b.identifier + ' ' + b.title + ' ' + b.abstract + ' '
+          + (b.sponsors || []).map(function (s) { return s.name; }).join(' ')).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    filtered.sort(function (a, b) {
+      if (sort === 'date')  return (b.statusDate || '').localeCompare(a.statusDate || '');
+      if (sort === 'alpha') return a.title.localeCompare(b.title);
+      // Bill number: sort numerically within type prefix (HB, SB, HR, SR)
+      const parseId = function (id) {
+        const m = id.match(/^([A-Z]+)\s*(\d+)$/);
+        return m ? m[1] + m[2].padStart(6, '0') : id;
+      };
+      return parseId(a.identifier).localeCompare(parseId(b.identifier));
+    });
+
+    currentPage = 1;
+    render();
+  }
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  function render() {
+    const total = filtered.length;
+    const pages = Math.ceil(total / PER_PAGE) || 1;
+    currentPage = Math.min(currentPage, pages);
+    const start = (currentPage - 1) * PER_PAGE;
+    const slice = filtered.slice(start, start + PER_PAGE);
+
+    elCount.textContent = total.toLocaleString() + ' bill' + (total !== 1 ? 's' : '');
+    elResultsBar.style.display = '';
+
+    if (!slice.length) {
+      elList.innerHTML = '<div class="bills-empty">No bills match your filters.</div>';
+    } else {
+      elList.innerHTML = slice.map(function (b, i) { return cardHtml(b, start + i); }).join('');
+    }
+
+    renderPagination(pages);
+  }
+
+  function renderPagination(pages) {
+    if (pages <= 1) { elPagination.innerHTML = ''; return; }
+    const p   = currentPage;
+    let html  = '';
+    html += '<button class="page-btn" onclick="goPage(' + (p - 1) + ')" ' + (p === 1 ? 'disabled' : '') + '>&lsaquo;</button>';
+    const show = pageRange(p, pages);
+    let last   = 0;
+    show.forEach(function (n) {
+      if (n - last > 1) html += '<span class="page-ellipsis">&hellip;</span>';
+      html += '<button class="page-btn' + (n === p ? ' active' : '') + '" onclick="goPage(' + n + ')">' + n + '</button>';
+      last = n;
+    });
+    html += '<button class="page-btn" onclick="goPage(' + (p + 1) + ')" ' + (p === pages ? 'disabled' : '') + '>&rsaquo;</button>';
+    elPagination.innerHTML = html;
+  }
+
+  function pageRange(current, total) {
+    const delta = 2;
+    const range = [];
+    for (let i = Math.max(1, current - delta); i <= Math.min(total, current + delta); i++) range.push(i);
+    if (range[0] > 1) range.unshift(1);
+    if (range[range.length - 1] < total) range.push(total);
+    return range;
+  }
+
+  window.goPage = function (n) {
+    const pages = Math.ceil(filtered.length / PER_PAGE) || 1;
+    if (n < 1 || n > pages) return;
+    currentPage = n;
+    render();
+    window.scrollTo({ top: document.getElementById('billsResultsBar').offsetTop - 20, behavior: 'smooth' });
+  };
+
+  // ── Populate subject dropdown ──────────────────────────────────────────────
+  function buildSubjectDropdown() {
+    const counts = {};
+    allBills.forEach(function (b) {
+      (b.subjects || []).forEach(function (s) { counts[s] = (counts[s] || 0) + 1; });
+    });
+    const sorted = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+    sorted.forEach(function (s) {
+      if (counts[s] < 5) return;
+      const opt = document.createElement('option');
+      opt.value       = s;
+      opt.textContent = toTitleCase(s) + ' (' + counts[s] + ')';
+      elSubject.appendChild(opt);
+    });
+  }
+
+  // ── Stats row ─────────────────────────────────────────────────────────────
+  function buildStats(meta) {
+    const signed   = allBills.filter(function (b) { return b._status === 'signed'; }).length;
+    const vetoed   = allBills.filter(function (b) { return b._status === 'vetoed'; }).length;
+    const failed   = allBills.filter(function (b) { return b._status === 'failed'; }).length;
+    elStats.innerHTML = [
+      stat('Total bills', (meta.totalBills || allBills.length).toLocaleString(), ''),
+      stat('Signed into law', signed.toLocaleString(), 'green'),
+      stat('Failed / vetoed', (failed + vetoed).toLocaleString(), 'red'),
+      stat('With vote records', allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length.toLocaleString(), 'blue'),
+    ].join('');
+    elStats.style.display = '';
+  }
+
+  function stat(label, val, cls) {
+    return '<div class="bills-stat"><div class="bills-stat-label">' + label + '</div>'
+      + '<div class="bills-stat-val' + (cls ? ' ' + cls : '') + '">' + val + '</div></div>';
+  }
+
+  // ── Event wiring ──────────────────────────────────────────────────────────
+  elSearch.addEventListener('input', function () {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(applyFilters, 250);
+  });
+  elSubject.addEventListener('change', applyFilters);
+  elSort.addEventListener('change', applyFilters);
+
+  document.getElementById('chamberTabs').addEventListener('click', function (e) {
+    const btn = e.target.closest('.bills-tab');
+    if (!btn) return;
+    document.querySelectorAll('.bills-tab').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    chamberTab = btn.dataset.chamber;
+    applyFilters();
+  });
+
+  document.getElementById('statusPills').addEventListener('click', function (e) {
+    const btn = e.target.closest('.bills-status-btn');
+    if (!btn) return;
+    document.querySelectorAll('.bills-status-btn').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    statusFilter = btn.dataset.status;
+    applyFilters();
+  });
+
+  // ── Load data ─────────────────────────────────────────────────────────────
+  var SMALL_WORDS = /^(and|or|of|the|by|in|at|to|a|an|for|nor|but|so|yet|from|with|on|as)$/i;
+  function toTitleCase(str) {
+    return str.toLowerCase().replace(/[^()]+/g, function (segment, offset) {
+      return segment.replace(/\S+/g, function (word, wordOffset) {
+        return (wordOffset === 0 && offset === 0) || !SMALL_WORDS.test(word)
+          ? word.charAt(0).toUpperCase() + word.slice(1)
+          : word;
+      });
+    });
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  fetch(DATA_URL)
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function (data) {
+      const meta = data.metadata || {};
+      allBills = (data.bills || []).map(function (b) {
+        b._status = classifyStatus(b);
+        return b;
+      });
+
+      elLoading.style.display = 'none';
+      buildStats(meta);
+      buildSubjectDropdown();
+      elControls.style.display   = '';
+      elDataNote.textContent     = 'Data: Open States bulk export, May 2026. Generated ' + (meta.generatedAt ? meta.generatedAt.slice(0, 10) : '') + '.';
+      elDataNote.style.display   = '';
+
+      applyFilters();
+    })
+    .catch(function (err) {
+      elLoading.style.display = 'none';
+      elError.textContent     = 'Could not load bill data. ' + err.message;
+      elError.style.display   = '';
+      console.error('ga-bills: fetch failed', err);
+    });
+}());
+</script>

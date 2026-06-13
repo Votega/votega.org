@@ -27,10 +27,59 @@ SESSION      = '2025_26'
 SESSION_NAME = '2025-2026 Regular Session'
 ABSTRACT_MAX = 500  # chars — keeps abstract useful without bloating file size
 
+# All 159 Georgia counties (source: GA General Assembly reapportionment data,
+# mirrored in assets/scripts/ga-districts.js).
+GA_COUNTIES = {
+    'Appling','Atkinson','Bacon','Baker','Baldwin','Banks','Barrow','Bartow',
+    'Ben Hill','Berrien','Bibb','Bleckley','Brantley','Brooks','Bryan','Bulloch',
+    'Burke','Butts','Calhoun','Camden','Candler','Carroll','Catoosa','Charlton',
+    'Chatham','Chattahoochee','Chattooga','Cherokee','Clarke','Clay','Clayton',
+    'Clinch','Cobb','Coffee','Colquitt','Columbia','Cook','Coweta','Crawford',
+    'Crisp','Dade','Dawson','Decatur','DeKalb','Dodge','Dooly','Dougherty',
+    'Douglas','Early','Echols','Effingham','Elbert','Emanuel','Evans','Fannin',
+    'Fayette','Floyd','Forsyth','Franklin','Fulton','Gilmer','Glascock','Glynn',
+    'Gordon','Grady','Greene','Gwinnett','Habersham','Hall','Hancock','Haralson',
+    'Harris','Hart','Heard','Henry','Houston','Irwin','Jackson','Jasper',
+    'Jeff Davis','Jefferson','Jenkins','Johnson','Jones','Lamar','Lanier',
+    'Laurens','Lee','Liberty','Lincoln','Long','Lowndes','Lumpkin','Macon',
+    'Madison','Marion','McDuffie','McIntosh','Meriwether','Miller','Mitchell',
+    'Monroe','Montgomery','Morgan','Murray','Muscogee','Newton','Oconee',
+    'Oglethorpe','Paulding','Peach','Pickens','Pierce','Pike','Polk','Pulaski',
+    'Putnam','Quitman','Rabun','Randolph','Richmond','Rockdale','Schley',
+    'Screven','Seminole','Spalding','Stephens','Stewart','Sumter','Talbot',
+    'Taliaferro','Tattnall','Taylor','Telfair','Terrell','Thomas','Tift','Toombs',
+    'Towns','Treutlen','Troup','Turner','Twiggs','Union','Upson','Walker',
+    'Walton','Ware','Warren','Washington','Wayne','Webster','Wheeler','White',
+    'Whitfield','Wilcox','Wilkes','Wilkinson','Worth',
+}
+
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def infer_local_subject(title):
+    """
+    Return ['Local / Municipal'] if the bill title starts with a GA county or
+    major city name, otherwise return [].  Only applied to bills with no Open
+    States subject tags.
+
+    GA bill titles follow the convention 'Subject; detail; verb phrase', so the
+    first semicolon-delimited segment reliably identifies the subject area.
+    """
+    if ';' not in title:
+        return []
+    first_seg = title.split(';')[0].strip()
+    # Strip common suffixes like ", City of" / ", Town of" / ", County"
+    # so "Fulton County" and "Savannah, City of" both reduce to the place name.
+    for suffix in (', City of', ', Town of', ', County', ' County'):
+        if first_seg.endswith(suffix):
+            first_seg = first_seg[: -len(suffix)].strip()
+            break
+    if first_seg in GA_COUNTIES:
+        return ['Local / Municipal']
+    return []
+
 
 def get_bill_url(sources):
     """Prefer legis.ga.gov; fall back to first source URL."""
@@ -52,12 +101,13 @@ def get_passage_votes(votes):
             continue
         counts = {c['option']: c['value'] for c in v.get('counts', [])}
         result.append({
-            'chamber': v.get('organization__classification', ''),
-            'date':    v.get('start_date', ''),
-            'result':  v.get('result', ''),
-            'yea':     counts.get('yes', 0),
-            'nay':     counts.get('no', 0),
-            'other':   counts.get('other', 0),
+            'chamber':    v.get('organization__classification', ''),
+            'date':       v.get('start_date', ''),
+            'result':     v.get('result', ''),
+            'motionText': v.get('motion_text', ''),
+            'yea':        counts.get('yes', 0),
+            'nay':        counts.get('no', 0),
+            'other':      counts.get('other', 0),
         })
     return result
 
@@ -81,7 +131,7 @@ def slim_bill(b):
         'abstract':    abstract[:ABSTRACT_MAX] if abstract else '',
         'status':      last_action.get('description', ''),
         'statusDate':  last_action.get('date', ''),
-        'subjects':    b.get('subject', []),
+        'subjects':    b.get('subject', []) or infer_local_subject(b.get('title', '')),
         'sponsors': [
             {
                 'name':    s['name'],
