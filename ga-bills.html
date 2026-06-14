@@ -11,7 +11,7 @@ permalink: /ga-bills.html
   /* ── Stats ── */
   .bills-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 0.6rem;
     margin: 1.25rem 0;
   }
@@ -23,9 +23,10 @@ permalink: /ga-bills.html
   }
   .bills-stat-label { font-size: 0.75rem; color: #666; margin-bottom: 2px; }
   .bills-stat-val   { font-size: 1.3rem; font-weight: 700; color: #222; }
-  .bills-stat-val.green { color: #2d7a2d; }
-  .bills-stat-val.red   { color: #b91c1c; }
-  .bills-stat-val.blue  { color: #1a56a8; }
+  .bills-stat-val.green  { color: #2d7a2d; }
+  .bills-stat-val.red    { color: #b91c1c; }
+  .bills-stat-val.blue   { color: #1a56a8; }
+  .bills-stat-val.orange { color: #c2410c; }
   .bills-stat-sub   { font-size: 0.68rem; color: #aaa; margin-top: 2px; }
 
   /* ── Filters ── */
@@ -161,6 +162,7 @@ permalink: /ga-bills.html
   .badge-vetoed   { background: #fef3c7; color: #92400e; }
   .badge-failed   { background: #fee2e2; color: #991b1b; }
   .badge-passed   { background: #dbeafe; color: #1e40af; }
+  .badge-stalled  { background: #ffedd5; color: #9a3412; }
   .badge-progress { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
 
   .bill-title {
@@ -295,7 +297,7 @@ permalink: /ga-bills.html
   .bills-empty   { padding: 2rem 1rem; text-align: center; color: #888; font-size: 0.9rem; border: 1px dashed #ddd; border-radius: 6px; }
   .data-note     { font-size: 0.78rem; color: #aaa; margin-top: 1.5rem; }
 
-  @media (max-width: 560px) {
+  @media (max-width: 720px) {
     .bills-stats { grid-template-columns: repeat(2, 1fr); }
     .bill-title  { font-size: 0.88rem; }
   }
@@ -331,6 +333,7 @@ permalink: /ga-bills.html
     <button class="bills-status-btn" data-status="signed">Signed</button>
     <button class="bills-status-btn" data-status="passed">Passed</button>
     <button class="bills-status-btn" data-status="progress">In progress</button>
+    <button class="bills-status-btn" data-status="stalled">Stalled</button>
     <button class="bills-status-btn" data-status="failed">Failed</button>
     <button class="bills-status-btn" data-status="vetoed">Vetoed</button>
   </div>
@@ -378,13 +381,14 @@ permalink: /ga-bills.html
     if (s === 'Effective Date') return 'signed';
     if (s.startsWith('Veto'))  return 'vetoed';
     if (s.includes('Lost'))    return 'failed';
+    if (s.includes('Withdrawn') || s.includes('Recommitted')) return 'stalled';
     const chambers = new Set(bill.passageVotes.map(function (v) { return v.chamber; }));
     if (chambers.has('lower') && chambers.has('upper')) return 'passed';
     return 'progress';
   }
 
   function badgeHtml(cls) {
-    const labels = { signed: 'Signed', vetoed: 'Vetoed', failed: 'Failed', passed: 'Passed', progress: 'In progress' };
+    const labels = { signed: 'Signed', vetoed: 'Vetoed', failed: 'Failed', passed: 'Passed', stalled: 'Stalled', progress: 'In progress' };
     return '<span class="bill-status-badge badge-' + cls + '">' + labels[cls] + '</span>';
   }
 
@@ -598,10 +602,12 @@ permalink: /ga-bills.html
     const signed   = allBills.filter(function (b) { return b._status === 'signed'; }).length;
     const vetoed   = allBills.filter(function (b) { return b._status === 'vetoed'; }).length;
     const failed   = allBills.filter(function (b) { return b._status === 'failed'; }).length;
+    const stalled  = allBills.filter(function (b) { return b._status === 'stalled'; }).length;
     elStats.innerHTML = [
       stat('Total bills', (meta.totalBills || allBills.length).toLocaleString(), ''),
       stat('Signed into law', signed.toLocaleString(), 'green', 'Effective Date on each card'),
       stat('Failed / vetoed', (failed + vetoed).toLocaleString(), 'red'),
+      stat('Stalled', stalled.toLocaleString(), 'orange'),
       stat('With vote records', allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length.toLocaleString(), 'blue'),
     ].join('');
     elStats.style.display = '';
