@@ -583,7 +583,7 @@ permalink: /ga-bills.html
     allBills.forEach(function (b) {
       (b.subjects || []).forEach(function (s) { counts[s] = (counts[s] || 0) + 1; });
     });
-    const sorted = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+    const sorted = Object.keys(counts).sort(function (a, b) { return toTitleCase(a).localeCompare(toTitleCase(b)); });
     sorted.forEach(function (s) {
       if (counts[s] < 5) return;
       const opt = document.createElement('option');
