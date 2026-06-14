@@ -1,12 +1,12 @@
 {
   "metadata": {
-    "generatedAt": "2026-06-07T11:55:23.236880",
+    "generatedAt": "2026-06-14T12:04:34.727799",
     "terms": [
       "2024",
       "2025"
     ],
     "source": "Oyez.org API + CourtListener",
-    "count": 86
+    "count": 89
   },
   "cases": [
     {
@@ -16,18 +16,337 @@
       "term": "2025",
       "decidedDate": "2026-05-28",
       "arguedDate": "2025-11-12",
-      "description": "A case in which the Court will decide whether a combination of “extraordinary and compelling reasons” that may warrant a discretionary sentence reduction under 18 U.S.C. §3582(c)(1)(A) can include reasons that may also be alleged as grounds for vacatur of a sentence under 28 U.S.C. §2255.",
+      "description": "A case in which the Court held that a prisoner who wants to challenge the validity of his conviction after sentencing must use the federal habeas corpus statute, 28 U.S.C. §2255—not the compassionate release statute, 18 U.S.C. §3582",
       "question": "Can a federal prisoner use the compassionate release law to get their sentence reduced based on claims that they might be innocent or that their sentence is unfair, even though these same claims would normally have to be raised through habeas corpus?",
-      "conclusion": "",
-      "winningParty": null,
-      "majorityVote": 0,
-      "minorityVote": 0,
-      "decisionType": null,
-      "decisionDesc": null,
-      "votes": [],
+      "conclusion": "A prisoner who wants to challenge the validity of his conviction after sentencing must use the federal habeas corpus statute, 28 U.S.C. §2255—not the compassionate release statute, 18 U.S.C. §3582—because doubts about a conviction's validity do not qualify as \"extraordinary and compelling reasons\" for early release. Justice Amy Coney Barrett authored the majority opinion of the Court.\nCongress built a strict procedural framework into §2255—the law governing post-conviction (after sentencing) challenges to federal convictions—including a one-year filing deadline, a general rule allowing only one attempt at relief, and a bar on relitigating already-rejected arguments. These constraints reflect a deliberate congressional choice. Permitting prisoners to route the same arguments through the compassionate release statute would let them bypass every one of those limits, filing conviction challenges repeatedly, years after the conviction became final, even on issues courts had already decided. Prior decisions, Preiser v. Rodriguez and Gonzalez v. Crosby, establish the controlling principle: when a claim goes to the heart of whether a prisoner's confinement is lawful, Congress's decision to channel that claim through the specific habeas statute overrides other statutes whose language might literally seem to allow it. Applying that same logic here, §3582 must be read in harmony with §2255, not as a workaround around it.\nThe text and design of §3582 independently confirm this result. Compassionate release—as its name signals—exists to extend mercy based on a prisoner's personal circumstances, not to correct legal errors. Congress calibrated the statute around conditions like terminal illness, advanced age, and rehabilitation: factors the Bureau of Prisons can meaningfully assess from its expertise in daily prison life. It makes no sense for the Bureau to evaluate trial records and legal arguments about wrongful convictions. The word \"compelling\" is also context-dependent: a strong argument for one type of relief is not automatically a strong argument for a different type. Because Congress already created a specific process for conviction challenges, a claim that falls short of §2255's requirements is not \"compelling\" grounds for compassionate release. And the remedy mismatch clinches the point—if a conviction is genuinely invalid, the appropriate fix is to vacate it, as §2255 allows, not to shorten the sentence while leaving the conviction intact.\nJustice Sonia Sotomayor concurred in the judgment (joined by Justice Elena Kagan), agreeing the District Court erred but arguing the majority's habeas-based rule is an atextual overreach that risks blocking meritorious claims; in her view, the correct and far simpler ground for affirmance is that a compassionate release motion cannot succeed when it relies solely on facts a court already considered at sentencing, rather than on changed circumstances that arose afterward.\nJustice Ketanji Brown Jackson dissented, arguing the majority grafts a restriction onto §3582 that appears nowhere in the statute's text or history, misapplies Preiser and Gonzalez (which involved general civil statutes, not a specific criminal sentencing provision), and leaves actually innocent prisoners with no avenue for relief, contradicting Congress's intent to create compassionate release as a flexible safety valve for extraordinary injustice.",
+      "winningParty": "United States",
+      "majorityVote": 8,
+      "minorityVote": 1,
+      "decisionType": "majority opinion",
+      "decisionDesc": "A prisoner who wants to challenge the validity of his conviction after sentencing must use the federal habeas corpus statute, 28 U.S.C. §2255—not the compassionate release statute, 18 U.S.C. §3582.",
+      "votes": [
+        {
+          "justiceId": "amy_coney_barrett",
+          "justiceName": "Amy Coney Barrett",
+          "lastName": "Barrett",
+          "vote": "majority",
+          "opinionType": "majority"
+        },
+        {
+          "justiceId": "john_g_roberts_jr",
+          "justiceName": "John G. Roberts, Jr.",
+          "lastName": "Roberts",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "clarence_thomas",
+          "justiceName": "Clarence Thomas",
+          "lastName": "Thomas",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "samuel_a_alito_jr",
+          "justiceName": "Samuel A. Alito, Jr.",
+          "lastName": "Alito",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "sonia_sotomayor",
+          "justiceName": "Sonia Sotomayor",
+          "lastName": "Sotomayor",
+          "vote": "majority",
+          "opinionType": "special concurrence"
+        },
+        {
+          "justiceId": "elena_kagan",
+          "justiceName": "Elena Kagan",
+          "lastName": "Kagan",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "ketanji_brown_jackson",
+          "justiceName": "Ketanji Brown Jackson",
+          "lastName": "Jackson",
+          "vote": "minority",
+          "opinionType": "dissent"
+        },
+        {
+          "justiceId": "neil_gorsuch",
+          "justiceName": "Neil Gorsuch",
+          "lastName": "Gorsuch",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "brett_m_kavanaugh",
+          "justiceName": "Brett M. Kavanaugh",
+          "lastName": "Kavanaugh",
+          "vote": "majority",
+          "opinionType": "none"
+        }
+      ],
       "opinions": [],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-556",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/24-556/",
+      "courtListenerUrl": ""
+    },
+    {
+      "id": 63804,
+      "name": "Rutherford v. United States",
+      "docketNumber": "24-820",
+      "term": "2025",
+      "decidedDate": "2026-05-28",
+      "arguedDate": "2025-11-12",
+      "description": "A case in which the Court held that when Congress makes a sentencing reduction non-retroactive, the gap between an old sentence and what a defendant would receive under the new law cannot qualify as an \"extraordinary and compelling reason\" to grant compassionate release under 18 U.S.C. §3582(c)(1)(A)(i). ",
+      "question": "May a district court, when evaluating a motion for compassionate release under 18 U.S.C. § 3582(c)(1)(A)(i), consider as an “extraordinary and compelling reason” the fact that a defendant is serving a sentence substantially longer than what would be imposed today due to the First Step Act’s prospective changes to mandatory minimum penalties, particularly where the disparity amounts to decades of additional imprisonment?",
+      "conclusion": "When Congress makes a sentencing reduction non-retroactive—meaning it applies only to future offenders and not to those already sentenced—the gap between an old sentence and what a defendant would receive under the new law cannot qualify as an \"extraordinary and compelling reason\" to grant compassionate release under 18 U.S.C. §3582(c)(1)(A)(i). Justice Amy Coney Barrett authored the 6-3 majority opinion of the Court.\nThe compassionate release statute permits a court to reduce a prison sentence only when \"extraordinary and compelling reasons\" warrant it. \"Extraordinary\" means highly unusual or without precedent; \"compelling\" means convincingly forceful. A sentencing disparity created by a nonretroactive law change satisfies neither definition. Non-retroactivity is the default rule in federal law—changes to criminal penalties ordinarily benefit only future offenders, and any resulting gap between sentences is a routine, expected feature of the system, not something exceptional. Nor can the disparity be \"compelling\": Congress deliberately withheld the reduced penalties from already-sentenced defendants to protect finality and reduce court burdens, so allowing that deliberate choice to serve as a reason to undo a sentence would directly contradict Congress's judgment. The long-established core of compassionate release has always centered on a prisoner's personal circumstances—terminal illness, declining health, age, family emergencies—and a sentencing gap caused by a later law change falls entirely outside that tradition.\nThe Sentencing Commission's 2023 policy statement, which added \"Unusually Long Sentence\" as a potential ground for compassionate release and permitted courts to consider nonretroactive law changes in narrow circumstances, does not alter this result. Congress empowered the Commission to define \"extraordinary and compelling reasons,\" but those definitions must be consistent with the governing statute. Because the statute's plain text forecloses treating a nonretroactive sentencing change—alone or combined with other factors—as a qualifying reason, the Commission's policy statement exceeds its authority and is invalid to that extent. Before a court may consider the broader §3553(a) sentencing factors (a checklist Congress requires courts to weigh when sentencing, covering things like the nature of the offense and the need to avoid disparities), a prisoner must first clear the \"extraordinary and compelling\" eligibility threshold. That gatekeeping step is a distinct, mandatory requirement, not a free-form inquiry, and the disparity at issue here cannot clear it.\nJustice Sonia Sotomayor dissented, joined by Justices Elena Kagan and Ketanji Brown Jackson, arguing that Congress expressly delegated to the Sentencing Commission the authority to define \"extraordinary and compelling reasons,\" the Commission reasonably exercised that authority through its 2023 policy statement by allowing courts to consider sentencing disparities only in narrow, case-by-case circumstances, and the majority improperly substituted its own statutory interpretation for the Commission's reasonable judgment.",
+      "winningParty": "United States",
+      "majorityVote": 6,
+      "minorityVote": 3,
+      "decisionType": "majority opinion",
+      "decisionDesc": "When Congress makes a sentencing reduction non-retroactive, the gap between an old sentence and what a defendant would receive under the new law cannot qualify as an \"extraordinary and compelling reason\" to grant compassionate release under 18 U.S.C. §3582(c)(1)(A)(i). ",
+      "votes": [
+        {
+          "justiceId": "amy_coney_barrett",
+          "justiceName": "Amy Coney Barrett",
+          "lastName": "Barrett",
+          "vote": "majority",
+          "opinionType": "majority"
+        },
+        {
+          "justiceId": "john_g_roberts_jr",
+          "justiceName": "John G. Roberts, Jr.",
+          "lastName": "Roberts",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "clarence_thomas",
+          "justiceName": "Clarence Thomas",
+          "lastName": "Thomas",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "samuel_a_alito_jr",
+          "justiceName": "Samuel A. Alito, Jr.",
+          "lastName": "Alito",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "sonia_sotomayor",
+          "justiceName": "Sonia Sotomayor",
+          "lastName": "Sotomayor",
+          "vote": "minority",
+          "opinionType": "dissent"
+        },
+        {
+          "justiceId": "elena_kagan",
+          "justiceName": "Elena Kagan",
+          "lastName": "Kagan",
+          "vote": "minority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "ketanji_brown_jackson",
+          "justiceName": "Ketanji Brown Jackson",
+          "lastName": "Jackson",
+          "vote": "minority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "neil_gorsuch",
+          "justiceName": "Neil Gorsuch",
+          "lastName": "Gorsuch",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "brett_m_kavanaugh",
+          "justiceName": "Brett M. Kavanaugh",
+          "lastName": "Kavanaugh",
+          "vote": "majority",
+          "opinionType": "none"
+        }
+      ],
+      "opinions": [],
+      "oyezUrl": "https://www.oyez.org/cases/2025/24-820",
+      "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/24-820/",
+      "courtListenerUrl": ""
+    },
+    {
+      "id": 63820,
+      "name": "Flowers Foods, Inc. v. Brock ",
+      "docketNumber": "24-935",
+      "term": "2025",
+      "decidedDate": "2026-05-28",
+      "arguedDate": "2026-03-25",
+      "description": "A case in which the Court held that a worker who handles goods on a purely intrastate (within one state) leg of a broader interstate journey qualifies for the Federal Arbitration Act's (FAA) §1 exemption, even if the worker never personally crosses state lines or loads and unloads vehicles that do.",
+      "question": "Are workers who deliver locally goods that travel in interstate commerce—but who do not transport the goods across borders nor interact with vehicles that cross borders—“transportation workers” “engaged in foreign or interstate commerce” for purposes of the exemption in Section 1 of the Federal Arbitration Act?",
+      "conclusion": "A worker who handles goods on a purely intrastate (within one state) leg of a broader interstate journey qualifies for the Federal Arbitration Act's (FAA) §1 exemption — meaning courts cannot force that worker into arbitration — even if the worker never personally crosses state lines or loads and unloads vehicles that do. Justice Neil Gorsuch authored the unanimous opinion of the Court.\nThe FAA generally requires courts to enforce private arbitration agreements, but §1 carves out an exception for \"contracts of employment\" of workers \"engaged in interstate commerce.\" The plain meaning of those words, drawn from dictionaries in use when Congress enacted the FAA in 1925, resolves the question. To \"engage\" meant to take part in, be employed in, or be involved in something. \"Interstate commerce\" meant the transportation of goods between points in one state and points in another — a definition that inherently includes intrastate stretches of a longer cross-border trip. A continuous delivery that begins in one state and ends in another is interstate commerce the entire way, even along the segments that stay within a single state's borders. A worker who handles goods during any direct, active, and necessary segment of that journey therefore participates in interstate commerce, regardless of whether the worker personally crosses a state line.\nHistorical precedent reinforces this reading. In The Daniel Ball (1871), a steamship operating entirely within Michigan still counted as \"engaged in commerce between the States\" because it carried goods destined for other states. That principle — that multiple independent actors can each participate in a single interstate transaction even if each one stays within one state — maps directly onto the FAA's language. Flowers Foods argued that only workers who physically cross state lines or handle vehicles that do qualify for the exemption, but that bright-line rule finds no support in the statutory text and would produce absurd results, exempting only the driver who briefly crosses a border while excluding every other driver who moved the same shipment before and after that crossing.",
+      "winningParty": "Brock",
+      "majorityVote": 9,
+      "minorityVote": 0,
+      "decisionType": "majority opinion",
+      "decisionDesc": "A worker who transports goods on an intrastate leg of an interstate journey qualifies for the Federal Arbitration Act's Section 1 exemption even if they never cross state lines or interact with vehicles that do.",
+      "votes": [
+        {
+          "justiceId": "neil_gorsuch",
+          "justiceName": "Neil Gorsuch",
+          "lastName": "Gorsuch",
+          "vote": "majority",
+          "opinionType": "majority"
+        },
+        {
+          "justiceId": "john_g_roberts_jr",
+          "justiceName": "John G. Roberts, Jr.",
+          "lastName": "Roberts",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "clarence_thomas",
+          "justiceName": "Clarence Thomas",
+          "lastName": "Thomas",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "samuel_a_alito_jr",
+          "justiceName": "Samuel A. Alito, Jr.",
+          "lastName": "Alito",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "sonia_sotomayor",
+          "justiceName": "Sonia Sotomayor",
+          "lastName": "Sotomayor",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "elena_kagan",
+          "justiceName": "Elena Kagan",
+          "lastName": "Kagan",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "amy_coney_barrett",
+          "justiceName": "Amy Coney Barrett",
+          "lastName": "Barrett",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "brett_m_kavanaugh",
+          "justiceName": "Brett M. Kavanaugh",
+          "lastName": "Kavanaugh",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "ketanji_brown_jackson",
+          "justiceName": "Ketanji Brown Jackson",
+          "lastName": "Jackson",
+          "vote": "majority",
+          "opinionType": "none"
+        }
+      ],
+      "opinions": [],
+      "oyezUrl": "https://www.oyez.org/cases/2025/24-935",
+      "justiaUrl": "",
+      "courtListenerUrl": ""
+    },
+    {
+      "id": 63860,
+      "name": "Pitchford v. Cain",
+      "docketNumber": "24-7351",
+      "term": "2025",
+      "decidedDate": "2026-05-28",
+      "arguedDate": "2026-03-31",
+      "description": "A case in which the Court held that when a trial court prevents a defendant from completing the three-step Batson process for challenging racially discriminatory jury strikes, a state appellate court's subsequent finding that the defendant waived that challenge constitutes an unreasonable application of clearly established federal law under the Antiterrorism and Effective Death Penalty Act (AEDPA), entitling the defendant to federal habeas relief.",
+      "question": "Did the Mississippi Supreme Court unreasonably decide—under the standards set by federal habeas law—that Terry Pitchford gave up his right to argue that the prosecutor’s explanations for striking four Black jurors were false or racially biased?",
+      "conclusion": "When a trial court prevents a defendant from completing the three-step Batson process for challenging racially discriminatory jury strikes, a state appellate court's subsequent finding that the defendant waived that challenge constitutes an unreasonable application of clearly established federal law under the Antiterrorism and Effective Death Penalty Act (AEDPA), entitling the defendant to federal habeas relief. Justice Brett Kavanaugh authored the 5-4 majority opinion of the Court.\nThe Equal Protection Clause bars prosecutors from removing potential jurors based on race through peremptory strikes—tools that allow lawyers to dismiss jurors without giving any reason. Batson v. Kentucky established a mandatory three-step process to police this prohibition: the defense first makes a preliminary showing that race motivated the strikes; the prosecutor then offers race-neutral explanations; and finally, at step three, the defense must have a meaningful opportunity to argue those explanations are pretextual (i.e., fake cover stories for actual racial bias), after which the judge decides the issue. Here, the Mississippi trial court completed only steps one and two, then cut off defense counsel twice when they attempted to reach step three. Because a Batson objection at that stage of proceedings is a pretext argument—the only way to challenge the prosecution's race-neutral explanations is to show they don't hold up—the defense cannot logically preserve a general Batson objection while simultaneously waiving the pretext component. The trial court's explicit assurance that the objection was \"clear in the record\" made the Mississippi Supreme Court's waiver ruling even more unreasonable.\nAEDPA sets a demanding standard for federal courts reviewing state convictions: a state court's decision must represent not just legal error, but an unreasonable application of clearly established Supreme Court precedent, or rest on an unreasonable factual determination. While that standard demands significant deference to state courts, deference does not mean federal courts must rubber-stamp every state ruling. On this record—where the trial court skipped a mandatory step, twice cut off the defense, and then assured counsel the objection was preserved—the Mississippi Supreme Court's waiver finding falls outside the bounds of reasonable disagreement under both prongs of AEDPA.\nJustice Neil Gorsuch dissented, joined by Justices Clarence Thomas, Samuel Alito, and Amy Coney Barrett, arguing that the Mississippi Supreme Court reasonably applied its own permissible preservation rules when it found that Pitchford waived a comparative-juror pretext argument he never actually raised during jury selection, and that the majority failed to meet AEDPA's demanding standard requiring the record to compel the petitioner's reading of events rather than merely permit it.",
+      "winningParty": "Pitchford",
+      "majorityVote": 5,
+      "minorityVote": 4,
+      "decisionType": "majority opinion",
+      "decisionDesc": "The Mississippi Supreme Court unreasonably decided—under the standards set by federal habeas law—that Terry Pitchford gave up his right to argue that the prosecutor’s explanations for striking four Black jurors were false or racially biased.",
+      "votes": [
+        {
+          "justiceId": "brett_m_kavanaugh",
+          "justiceName": "Brett M. Kavanaugh",
+          "lastName": "Kavanaugh",
+          "vote": "majority",
+          "opinionType": "majority"
+        },
+        {
+          "justiceId": "john_g_roberts_jr",
+          "justiceName": "John G. Roberts, Jr.",
+          "lastName": "Roberts",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "sonia_sotomayor",
+          "justiceName": "Sonia Sotomayor",
+          "lastName": "Sotomayor",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "elena_kagan",
+          "justiceName": "Elena Kagan",
+          "lastName": "Kagan",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "ketanji_brown_jackson",
+          "justiceName": "Ketanji Brown Jackson",
+          "lastName": "Jackson",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "neil_gorsuch",
+          "justiceName": "Neil Gorsuch",
+          "lastName": "Gorsuch",
+          "vote": "minority",
+          "opinionType": "dissent"
+        },
+        {
+          "justiceId": "clarence_thomas",
+          "justiceName": "Clarence Thomas",
+          "lastName": "Thomas",
+          "vote": "minority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "samuel_a_alito_jr",
+          "justiceName": "Samuel A. Alito, Jr.",
+          "lastName": "Alito",
+          "vote": "minority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "amy_coney_barrett",
+          "justiceName": "Amy Coney Barrett",
+          "lastName": "Barrett",
+          "vote": "minority",
+          "opinionType": "none"
+        }
+      ],
+      "opinions": [],
+      "oyezUrl": "https://www.oyez.org/cases/2025/24-7351",
+      "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/24-7351/",
       "courtListenerUrl": ""
     },
     {
@@ -1530,7 +1849,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-557",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-557/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10800125/villarreal-v-texas/"
     },
     {
       "id": 63798,
@@ -1640,7 +1959,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-758",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-758/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10800194/geo-group-inc-v-menocal/"
     },
     {
       "id": 63782,
@@ -1744,7 +2063,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-351",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-351/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10799651/postal-service-v-konan/"
     },
     {
       "id": 63786,
@@ -1848,7 +2167,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-724",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-724/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10799652/hain-celestial-group-inc-v-palmquist/"
     },
     {
       "id": 63816,
@@ -1982,7 +2301,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-1287",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-1287/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10796821/learning-resources-inc-v-trump/"
     },
     {
       "id": 63773,
@@ -2086,7 +2405,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-440",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-440/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10776753/berk-v-choy/"
     },
     {
       "id": 63781,
@@ -2190,7 +2509,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-482",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-482/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10776751/ellingburg-v-united-states/"
     },
     {
       "id": 63802,
@@ -2294,7 +2613,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-808",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-808/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10776752/coney-island-auto-parts-unlimited-inc-v-burton/"
     },
     {
       "id": 63775,
@@ -2398,7 +2717,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-5774",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-5774/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10774242/barrett-v-united-states/"
     },
     {
       "id": 63795,
@@ -2508,7 +2827,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-568",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-568/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10774336/bost-v-illinois-bd-of-elections/"
     },
     {
       "id": 63797,
@@ -2618,7 +2937,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-624",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-624/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10774335/case-v-montana/"
     },
     {
       "id": 63752,
@@ -2728,7 +3047,7 @@
       ],
       "oyezUrl": "https://www.oyez.org/cases/2025/24-5438",
       "justiaUrl": "https://supreme.justia.com/cases/federal/us/607/24-5438/",
-      "courtListenerUrl": ""
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/10772450/bowe-v-united-states/"
     },
     {
       "id": 63701,
