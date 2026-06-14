@@ -36,7 +36,8 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(python scripts/process_ga_bills.py)",
       "Bash(python scripts/process_ga_bills.py assets/data/GA_2025_26_bills.json)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(python -c \"import json; data=json.load\\(open\\('assets/data/ga-bills.json'\\)\\); sb513=[b for b in data['bills'] if b['identifier']=='SB 513']; print\\(json.dumps\\(sb513, indent=2\\)\\)\")"
     ]
   }
 }
