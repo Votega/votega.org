@@ -60,3 +60,21 @@ jobs:
               sleep 5
             done
           fi
+
+      - name: Enrich GA bills with party vote tallies
+        run: python scripts/enrich_bills_with_party_votes.py assets/data/ga-bills.json assets/data/ga-member-votes.json assets/data/ga-members.json
+
+      - name: Commit enriched GA bills data
+        run: |
+          set -e
+          git add -f assets/data/ga-bills.json
+          if git diff --cached --quiet; then
+            echo "No changes to ga-bills.json"
+          else
+            git commit -m "Enrich GA bills with party vote tallies"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+          fi

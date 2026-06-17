@@ -245,6 +245,7 @@ permalink: /ga-bills.html
   .vb-oth { background: #9ca3af; }
   .vb-no  { background: #dc2626; }
   .vote-bar-sub { font-size: 0.72rem; color: #888; }
+  .vote-bar-party { font-size: 0.72rem; margin-top: 2px; }
 
   .detail-links {
     display: flex;
@@ -413,6 +414,18 @@ permalink: /ga-bills.html
     const motionLabel = v.motionText
       ? v.motionText.replace(/\s*[-–]\s*\d{4}-\d{4}\s+Regular Session\s*$/i, '').trim()
       : ch + ' vote';
+    let partyLine = '';
+    if (v.partyTally) {
+      const r = v.partyTally.Republican || {};
+      const d = v.partyTally.Democratic || {};
+      const parts = [];
+      if ((r.yea || 0) + (r.nay || 0) + (r.other || 0) > 0)
+        parts.push('<span style="color:#b91c1c">R: ' + (r.yea||0) + ' yes · ' + (r.nay||0) + ' no</span>');
+      if ((d.yea || 0) + (d.nay || 0) + (d.other || 0) > 0)
+        parts.push('<span style="color:#1d4ed8">D: ' + (d.yea||0) + ' yes · ' + (d.nay||0) + ' no</span>');
+      if (parts.length)
+        partyLine = '<div class="vote-bar-party">' + parts.join('<span style="color:#9ca3af"> &nbsp;|&nbsp; </span>') + '</div>';
+    }
     return '<div class="vote-bar-section">'
       + '<div class="vote-bar-header">'
       + '<span class="vote-yes-txt">&#10003; ' + v.yea + ' yes</span>'
@@ -425,6 +438,7 @@ permalink: /ga-bills.html
       + '<div class="vb-no"  style="width:' + pN + '%"></div>'
       + '</div>'
       + '<div class="vote-bar-sub">' + v.yea + ' yes &nbsp;·&nbsp; ' + v.nay + ' no &nbsp;·&nbsp; ' + v.other + ' not voting/absent</div>'
+      + partyLine
       + '</div>';
   }
 
