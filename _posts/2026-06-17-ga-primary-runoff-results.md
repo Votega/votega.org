@@ -11,84 +11,88 @@ subtitle: Unofficial Results from GA Primary Runoff
 
 ## Key Findings
 
-### Statewide Races: Democrats Significantly Outperformed Republicans
+### Statewide Races: Republicans Dominated Turnout — A Complete Reversal from the Primary
 
-In **every single statewide contest**, US Senate, Governor, Lt. Governor, Secretary of State, Attorney General, and 6 other offices, Democratic candidates collectively received more votes than Republican candidates:
+The runoff tells a sharply different story than the May 19 primary. In the Primary Democratic candidates outperformed Republicans in every single statewide race by a combined 1.98 million votes (+21.4%). In the runoff, that advantage vanished entirely. In the two races where both parties held runoffs, Lieutenant Governor and Secretary of State, Republicans outperformed Democrats by roughly 300,000 votes each, a net swing of ~450,000 votes per race toward the GOP.
 
-| Race | REP Total | DEM Total | DEM Advantage |
-|---|---:|---:|---:|
-| US Senate | 912,696 | 1,042,331 | +129,635 |
-| Governor | 933,817 | 1,081,811 | +147,994 |
-| Lieutenant Governor | 889,130 | 1,030,951 | +141,821 |
-| Secretary of State | 851,794 | 1,028,197 | +176,403 |
-| Attorney General | 849,992 | 1,041,373 | +191,381 |
-| Commissioner of Agriculture | 820,825 | 1,011,508 | +190,683 |
-| Commissioner of Insurance | 797,627 | 1,019,057 | +221,430 |
-| State School Superintendent | 859,850 | 1,013,845 | +153,995 |
-| Commissioner of Labor | 775,766 | 1,010,926 | +235,160 |
-| PSC District 3 | 776,489 | 944,474 | +167,985 |
-| PSC District 5 | 777,731 | 1,001,028 | +223,297 |
-| **STATEWIDE TOTAL** | **9,245,717** | **11,225,501** | **+1,979,784 (+21.4%)** |
+Republican statewide runoff participation averaged approximately **677,000 votes per race**. Democrats averaged approximately **381,000** a nearly 2-to-1 Republican advantage.
 
 ---
 
-### Official Outcomes: The Runoff Landscape
+### Runoff Winners
 
-The certified results confirm ten statewide runoffs, with Republicans producing more fractured outcomes than Democrats:
+**Republican nominees:**
 
-**Republican runoffs (6 of 8 contested races):**
-- **US Senate:** Collins (40.5%) vs. Dooley (30.2%)
-- **Governor:** Jones (38.4%) vs. Jackson (32.5%)
-- **Lieutenant Governor:** Kennedy (27.3%) vs. Dolezal (23.1%)
-- **Secretary of State:** Fleming (39.2%) vs. V. Jones (27.3%)
-- **PSC District 5:** Tolbert (47.2%) vs. Mehan (31.1%)
-- **State School Superintendent:** Woods (49.9%) vs. Longgrear (29.1%) — *Richard Woods fell just 1,030 votes short of 50%, narrowly forcing a runoff despite holding a commanding lead*
+| Race | Winner | Votes | Runner-up | Votes | Margin |
+|---|---|---:|---|---:|---:|
+| US Senate | Mike Collins | 389,996 | Derek Dooley | 312,213 | +77,783 (11.1%) |
+| Governor | Rick Jackson | 373,406 | Burt Jones | 335,847 | +37,559 (5.3%) |
+| Lieutenant Governor | Greg Dolezal | 374,852 | John F. Kennedy | 316,772 | +58,080 (8.4%) |
+| Secretary of State | Tim Fleming | 430,283 | Vernon Jones | 236,807 | +193,476 (29.0%) |
+| State School Superintendent | Richard Woods | 344,828 | Fred Longgrear | 324,886 | +19,942 (3.0%) |
+| PSC District 5 | Josh Tolbert | 371,409 | Bobby Mehan | 250,121 | +121,288 (19.5%) |
 
-**Democratic runoffs (4 of 9 contested races):**
-- **Lieutenant Governor:** McLaurin (41.4%) vs. Parkes (39.5%) — *margin of less than 2 percentage points*
-- **Secretary of State:** Reynolds (42.3%) vs. Barrett (35.2%)
-- **Commissioner of Insurance:** Waites (42.0%) vs. Mathis (19.8%)
-- **Commissioner of Labor:** Porcher (30.8%) vs. Sanchez (25.9%)
+**Democratic nominees:**
 
-**Two near-misses worth noting:** Fitz Johnson (R, PSC D3) cleared 50% by just 1,474 votes over the threshold (50.19% of 776,489), avoiding what would have been a seventh Republican runoff. On the Democratic side, Lydia Powell (School Superintendent) cleared 50% by the slimmest Democratic margin of the night at 50.48%.
-
-The six Republican runoffs spanning Senator, Governor, Lt. Governor, Secretary of State, Superintendent, and PSC are not coincidental. They reflect the party's internal fault lines between Trump-aligned insurgents, traditional conservatives, and establishment incumbents, all competing for a nomination in a cycle where no single faction is dominant enough to close the deal outright.
+| Race | Winner | Votes | Runner-up | Votes | Margin |
+|---|---|---:|---|---:|---:|
+| Lieutenant Governor | Josh McLaurin | 210,660 | Nabilah Parkes | 173,185 | +37,475 (9.8%) |
+| Secretary of State | Penny Brown Reynolds | 242,205 | Dana Barrett | 141,625 | +100,580 (26.2%) |
+| Commissioner of Insurance | Keisha Sean Waites | 223,909 | DeAndre Mathis | 157,519 | +66,390 (17.4%) |
+| Commissioner of Labor | Nikki Porcher | 232,297 | Michelle Sanchez | 143,978 | +88,319 (23.5%) |
 
 ---
 
-#### But the Aggregate Total Across All Races Tells a Different Story
+### The Turnout Collapse: Primary vs. Runoff
 
-When summing every race, including hundreds of state House and Senate districts, Republicans show more total raw votes statewide (19.1M vs. 16.2M, 54% to 46%). This is notable because Democrats actually fielded more candidates (383 vs. 334), meaning the Republican vote advantage cannot simply be explained by Republicans contesting more races unopposed.
+In the two races with both-party runoffs, the party advantage completely inverted:
 
-What this likely reflects instead: Republicans are running in higher-turnout local districts... safe, heavily Republican suburban and rural seats where primary participation is historically strong, while Democratic candidates are distributed across a wider mix of districts with lower average turnout. The math bears this out: Republicans averaged roughly 57,100 votes per candidate, compared to 42,300 per candidate for Democrats.
+| Race | Primary REP | Primary DEM | Primary Adv. | Runoff REP | Runoff DEM | Runoff Adv. |
+|---|---:|---:|---|---:|---:|---|
+| Lieutenant Governor | 889,130 | 1,030,951 | **DEM +141,821** | 691,624 | 383,845 | **REP +307,779** |
+| Secretary of State | 851,794 | 1,028,197 | **DEM +176,403** | 667,090 | 383,830 | **REP +283,260** |
 
-This actually makes the Democratic statewide advantage more notable, not less. It can no longer be chalked up to Democrats simply having a top-of-ticket advantage while Republicans dominated local ballot access. Democrats are running more candidates and still getting outpaced in raw local totals while simultaneously outperforming by 21% in every statewide race. That points to a genuine enthusiasm gap at the primary level, concentrated at the top of the ticket.
+The Democratic drop-off was severe: from roughly 1,030,000 primary votes to 384,000 in the runoff, a **63% decline**. Republicans dropped from ~870,000 to ~679,000 roughly **22%**. Republicans retained more than three-quarters of their primary electorate; Democrats retained barely more than a third.
 
-##### The Enthusiasm Gap: What the Data Actually Suggests
+---
 
-#### Defining the Gap
+### Why the Advantage Flipped: Three Compounding Factors
 
-An enthusiasm gap in a primary context doesn't just mean one party's voters are more excited, it means more of them crossed the threshold of participation when participation was optional and low-stakes. Primary turnout is the purest signal of base engagement precisely because there is no pressure to show up. No swing-seat anxiety, no fear of losing to the other party. Voters who participate in a primary are doing so because they want to, not because they feel they have to.
+**1. The races that drove Democratic primary turnout weren't on the runoff ballot.**
+Democrats' statewide primary advantage was powered overwhelmingly by high-profile top-of-ticket races US Senate (Jon Ossoff, 1.04M votes running unopposed), Governor, and Attorney General all of which cleared 50% and required no runoff. The only Democratic runoffs were Lieutenant Governor, Secretary of State, Commissioner of Insurance, and Commissioner of Labor: lower-profile offices with less motivating power for casual voters.
 
-The data here shows that significantly more Democratic voters crossed that threshold in statewide contests by over 1.9 million votes across 11 races. That is not a marginal difference. It is structural.
+**2. Republicans had their highest-stakes races still unresolved.**
+GOP voters faced unfinished business at the very top: Governor and US Senate were both in runoff. Those are precisely the offices that generate media coverage, campaign spending, and mobilization pressure. Republican voters had strong institutional reasons to return; Democratic voters largely did not.
 
-#### Why It's Concentrated at the Top of the Ticket
-The phrase "concentrated at the top of the ticket" captures something specific and important: the Democratic advantage doesn't appear to be driven by superior local party organization or grassroots district-level mobilization. If it were, you'd expect Democrats to also outperform in aggregate vote totals across all races and they don't. Republicans average roughly 57,100 votes per candidate versus 42,300 for Democrats.
+**3. This is exactly what the primary data predicted.**
+The [primary analysis](/2026-06-10-ga-primary-results-official/) concluded that Democratic enthusiasm is *"candidate and issue-driven at the macro level, it rises and falls with the prominence and stakes of the race,"* while Republican strength is *"institutionally embedded at the local level"* with habitual voters who participate consistently regardless of top-of-ticket dynamics. The runoff is the proof of concept: without Governor or Senate on the ballot, Democratic casual voters stayed home. Republican habitual voters showed up anyway.
 
-What this pattern suggests is that Democratic voters are being drawn to the ballot primarily by the high-profile statewide races (Senate, Governor, Attorney General) and that motivation diminishes down the ballot. Republican voters, by contrast, appear to have a more evenly distributed, locally-rooted participation base: they show up for their state house representative, their state senator, their local PSC race at consistent levels, even without the same top-of-ticket energy.
+---
 
-This is actually a meaningful structural difference. It means:
+### Notable Individual Races
 
-- Democratic enthusiasm is candidate and issue-driven at the macro level. It rises and falls with the prominence and stakes of the race. Jon Ossoff running unopposed still drew over 1,042,000 votes in a race with no competitive reason to show up. Those voters came out specifically to register their participation, not to pick a winner.
-- Republican strength is institutionally embedded at the local level. Safe legislative districts with loyal, habitual primary voters produce consistent, high-average vote totals regardless of what's happening at the top of the ticket. This is durable but doesn't necessarily scale up in response to a high-stakes statewide environment.
+**Governor: The frontrunner lost.** Burt Jones entered the runoff as the primary leader (38.4% vs. Jackson's 32.5%), but Rick Jackson reversed that and won by 5.3 points. Jones, the incumbent Lt. Governor, could not consolidate the field.
 
-#### What This Means Structurally
-In a state like Georgia where recent statewide elections have been decided by razor-thin margins, this pattern has real implications:
+**State School Superintendent: The closest call of the night.** Richard Woods won with just 51.5% (344,828 vs. 324,886) a margin of 19,942 votes. Woods had nearly won outright in the primary at 49.9%, missing 50% by 1,030 votes. He survived again, but narrowly.
 
-1. Democratic organizing capacity may be underestimated. Primary turnout is a leading indicator of volunteer pools, small-dollar donor activity, and field program depth. A larger statewide primary electorate means more people are already in the party's ecosystem heading into the general.
-2. Republican legislative dominance may be partially insulated from this trend but not immune. Their local vote strength reflects entrenched advantages (redistricting, incumbency, years of local organizing), but if the top-of-ticket enthusiasm gap persists into November, it could put competitive legislative districts in play as high-turnout Democratic statewide voters pull down the ballot.
-3. The fragmented Republican primary is a confirmed structural problem. Six of eight contested Republican statewide races will go to a runoff. Each runoff extends the period of intra-party division, drains campaign resources, and delays coalition-building. Whether Republican nominees emerge unified enough to compete in November is the central unresolved question for the GOP.
-4. This is a leading indicator, not a guarantee. Primary electorates skew more partisan and more motivated than general electorates. Republican voters who sat out the primary will return in November. The question is whether the Democratic enthusiasm translates, holds, grows, or whether it represents peak engagement that normalizes by fall.
+**Vernon Jones: A decisive loss.** The former Democrat-turned-Republican won just 35.5% in the Secretary of State runoff, losing to Tim Fleming by nearly 200,000 votes. His crossover positioning has not converted into statewide GOP primary viability.
 
-#### Too Long Didn't Read (TL;DR)
-What this data captures is a Democratic base that is more activated right now around statewide offices and leadership races, versus a Republican base that is reliably present at the local level but not generating the same energy at the top. In a state decided multiple times in recent cycles by fewer than 100,000 votes, a **1.98 million vote advantage** to the Democrats in statewide primary elections is telling of an incoming blue wave. The runoff map sharpens that picture: Democrats head into summer with nominees in hand for most major offices; Republicans are still fighting among themselves.
+**State Senate District 14 (Dem):** The tightest race of the entire runoff cycle, Kevin Abel defeated Nathalie Kanani by just **147 votes** (4,317 to 4,170).
+
+---
+
+### What This Means Heading into November
+
+The runoff clarifies something important: the May primary's Democratic statewide advantage represented a ceiling, not a floor. The enthusiasm that drove 1.04 million Georgians to vote for Jon Ossoff in an uncontested race did not carry forward when the ballot offered only down-ballot offices with lower name recognition.
+
+Republicans still have work ahead of them many nominees won with thin margins in fractured fields. The question is whether they can consolidate the party heading into fall. Rick Jackson beat Burt Jones by 5 points; Tim Fleming beat Vernon Jones by 29. Those are very different coalition-building situations.
+
+The Democratic nominees face the more straightforward challenge: can the top-of-ticket energy that materialized in May (Senate, Governor, Attorney General all on the general election ballot) regenerate the 1M+ statewide primary electorate that showed up in May but largely sat out June?
+
+---
+
+### Too Long Didn't Read (TL;DR)
+
+The 1.98 million vote Democratic primary advantage did not survive the runoff. Without Governor and Senate driving Dem turnout, Democratic statewide participation fell 63% while Republican participation fell only 22%, producing a ~300,000 vote Republican advantage in head-to-head runoff races. 
+
+Democratic enthusiasm in Georgia is top-of-ticket driven, not institutionally rooted... November's turnout battle begins in earnest.
