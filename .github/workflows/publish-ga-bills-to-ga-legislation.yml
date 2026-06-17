@@ -1,0 +1,67 @@
+name: Publish ga-bills.json to ga-legislation
+
+# Requires secret: GA_LEGISLATION_PUSH_TOKEN
+#   A GitHub Personal Access Token (classic) with repo scope on Votega/ga-legislation.
+#   Add it at: votega.org repo → Settings → Secrets and variables → Actions → New repository secret
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/ga-bills.json'
+      - 'assets/data/ga-bills-subjects.json'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      - name: Validate ga-bills.json
+        run: |
+          python -c "
+          import json, sys
+          with open('assets/data/ga-bills.json') as f:
+              data = json.load(f)
+          bills = data.get('bills', [])
+          count = data.get('metadata', {}).get('count', len(bills))
+          if len(bills) == 0:
+              print('ERROR: ga-bills.json has no bills', file=sys.stderr)
+              sys.exit(1)
+          print(f'ga-bills.json valid: {len(bills)} bills (metadata.count={count})')
+          "
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: Votega/ga-legislation
+          token: ${{ secrets.GA_LEGISLATION_PUSH_TOKEN }}
+          path: target-repo
+
+      - name: Copy files to target repo
+        run: |
+          cp assets/data/ga-bills.json target-repo/ga-bills.json
+          if [ -f assets/data/ga-bills-subjects.json ]; then
+            cp assets/data/ga-bills-subjects.json target-repo/ga-bills-subjects.json
+          fi
+
+      - name: Commit and push to ga-legislation
+        working-directory: target-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ga-bills.json ga-bills-subjects.json
+          if git diff --cached --quiet; then
+            echo "No changes — files are already up to date"
+          else
+            git commit -m "Update ga-bills data ($(date -u '+%Y-%m-%d'))"
+            git push
+          fi
