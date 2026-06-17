@@ -423,8 +423,16 @@ permalink: /ga-bills.html
         parts.push('<span style="color:#b91c1c">R: ' + (r.yea||0) + ' yes · ' + (r.nay||0) + ' no</span>');
       if ((d.yea || 0) + (d.nay || 0) + (d.other || 0) > 0)
         parts.push('<span style="color:#1d4ed8">D: ' + (d.yea||0) + ' yes · ' + (d.nay||0) + ' no</span>');
-      if (parts.length)
-        partyLine = '<div class="vote-bar-party">' + parts.join('<span style="color:#9ca3af"> &nbsp;|&nbsp; </span>') + '</div>';
+      if (parts.length) {
+        const partyYea   = (r.yea||0) + (d.yea||0) + ((v.partyTally.Independent||{}).yea||0);
+        const partyTotal = Object.values(v.partyTally).reduce(function (s, t) { return s + t.yea + t.nay + t.other; }, 0);
+        const overallTotal = v.yea + v.nay + v.other;
+        const unattributed = overallTotal - partyTotal;
+        const note = unattributed > 0
+          ? ' <span style="color:#9ca3af;font-size:0.68rem" title="' + unattributed + ' vote(s) could not be matched to a party due to voter ID gaps in the source data">(' + unattributed + ' unattributed)</span>'
+          : '';
+        partyLine = '<div class="vote-bar-party">' + parts.join('<span style="color:#9ca3af"> &nbsp;|&nbsp; </span>') + note + '</div>';
+      }
     }
     return '<div class="vote-bar-section">'
       + '<div class="vote-bar-header">'
