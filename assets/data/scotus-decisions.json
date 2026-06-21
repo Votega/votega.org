@@ -1,14 +1,184 @@
 {
   "metadata": {
-    "generatedAt": "2026-06-14T12:04:34.727799",
+    "generatedAt": "2026-06-21T12:14:45.149115",
     "terms": [
       "2024",
       "2025"
     ],
     "source": "Oyez.org API + CourtListener",
-    "count": 89
+    "count": 91
   },
   "cases": [
+    {
+      "id": 63863,
+      "name": "Federal Communications Commission v. AT&T, Inc.",
+      "docketNumber": "25-406",
+      "term": "2025",
+      "decidedDate": "2026-06-04",
+      "arguedDate": "2026-04-21",
+      "description": "A case in which the Court held that the Seventh Amendment's right to a jury trial does not require the FCC to involve a jury when issuing forfeiture orders.",
+      "question": "Are provisions of the Communications Act of 1934 that govern the Federal Communications Commission’s assessment and enforcement of monetary forfeitures consistent with the Seventh Amendment and Article III?",
+      "conclusion": "The Seventh Amendment's right to a jury trial does not require the FCC to involve a jury when issuing forfeiture orders—penalties for rule violations—because those orders do not create a legal obligation to pay and carry no binding factual findings, leaving the ultimate determination of liability to a jury in any subsequent enforcement action. Chief Justice John Roberts authored the 8-1 majority opinion.\nThe Seventh Amendment guarantees the right to a jury in civil lawsuits, but only requires that a jury make the final determination of facts before legal rights are conclusively resolved. Two features of the FCC's enforcement scheme satisfy that requirement. First, an FCC forfeiture order creates no actual obligation to pay: the agency cannot seize assets, penalties do not accrue for nonpayment, and the statute expressly bars the FCC from using an unpaid order against a company in future proceedings. Second, the only way the government can actually collect a penalty is by filing a separate civil lawsuit—a full trial de novo, meaning the case starts from scratch as if the FCC had never made any findings at all. A jury therefore gets the final word on both the facts and the law before any money changes hands. This structure mirrors earlier precedents upholding agency fact-finding that serves merely as a starting point for a later jury trial.\nThe carriers' counterarguments do not change this analysis. The mandatory-sounding statutory language—that the FCC \"determines,\" \"assesses,\" and \"imposes\" penalties—reads differently in context of a scheme where the agency has zero power to enforce its own orders. This distinguishes the case from SEC v. Jarkesy (2024), where SEC penalties were immediately enforceable and no jury was available in any subsequent court proceeding, meaning the agency alone made the final determination. A forfeiture order is simply a prerequisite to filing suit—analogous to a right-to-sue letter—not a determination of legal rights, so the Seventh Amendment does not attach to it. Claims of reputational harm from the order also fail because the Seventh Amendment's text addresses only monetary disputes, and reputational harm is a common feature of preliminary legal proceedings that has never triggered jury-trial rights.\nJustice Clarence Thomas dissented, arguing that because the FCC's orders commanded payment within 30 days, enforcement courts at the time routinely denied full de novo review, and the carriers reasonably believed the orders were binding, the majority's conclusion that the carriers voluntarily paid effectively punishes them for complying in good faith with what appeared to be mandatory government commands.",
+      "winningParty": "FCC",
+      "majorityVote": 8,
+      "minorityVote": 1,
+      "decisionType": "majority opinion",
+      "decisionDesc": "The Seventh Amendment's right to a jury trial does not require the FCC to involve a jury when issuing forfeiture orders.",
+      "votes": [
+        {
+          "justiceId": "john_g_roberts_jr",
+          "justiceName": "John G. Roberts, Jr.",
+          "lastName": "Roberts",
+          "vote": "majority",
+          "opinionType": "majority"
+        },
+        {
+          "justiceId": "clarence_thomas",
+          "justiceName": "Clarence Thomas",
+          "lastName": "Thomas",
+          "vote": "minority",
+          "opinionType": "dissent"
+        },
+        {
+          "justiceId": "samuel_a_alito_jr",
+          "justiceName": "Samuel A. Alito, Jr.",
+          "lastName": "Alito",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "sonia_sotomayor",
+          "justiceName": "Sonia Sotomayor",
+          "lastName": "Sotomayor",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "elena_kagan",
+          "justiceName": "Elena Kagan",
+          "lastName": "Kagan",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "neil_gorsuch",
+          "justiceName": "Neil Gorsuch",
+          "lastName": "Gorsuch",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "brett_m_kavanaugh",
+          "justiceName": "Brett M. Kavanaugh",
+          "lastName": "Kavanaugh",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "amy_coney_barrett",
+          "justiceName": "Amy Coney Barrett",
+          "lastName": "Barrett",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "ketanji_brown_jackson",
+          "justiceName": "Ketanji Brown Jackson",
+          "lastName": "Jackson",
+          "vote": "majority",
+          "opinionType": "none"
+        }
+      ],
+      "opinions": [],
+      "oyezUrl": "https://www.oyez.org/cases/2025/25-406",
+      "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/25-406/",
+      "courtListenerUrl": ""
+    },
+    {
+      "id": 63865,
+      "name": "Sripetch v. SEC",
+      "docketNumber": "25-466",
+      "term": "2025",
+      "decidedDate": "2026-06-04",
+      "arguedDate": "2026-04-20",
+      "description": "A case in which the Court held that the SEC may seek equitable disgorgement under 15 U.S.C. §§ 78u(d)(5) and (d)(7) without showing investors suffered pecuniary harm.",
+      "question": "May the SEC seek equitable disgorgement under 15 U.S.C. §§ 78u(d)(5) and (d)(7) without showing investors suffered pecuniary harm?",
+      "conclusion": "The SEC does not need to prove that investors suffered a financial loss before a court may order a securities fraud defendant to disgorge—that is, hand over—ill-gotten profits to wronged investors. Justice Neil Gorsuch authored the 9-0 majority opinion.\nTwo statutory provisions govern the analysis: 15 U.S.C. §78u(d)(5), which authorizes the SEC to seek \"any equitable relief\" for investors, and §78u(d)(7), added by Congress after Liu v. SEC (2020), which expressly authorizes disgorgement. The Court assumed without deciding that §78u(d)(7) disgorgement remains subject to traditional equitable principles—including Liu's requirement that awards go to victims—and still concluded that no proof of financial loss is required. The Court drew a key distinction between damages, a legal remedy measured by the plaintiff's loss, and disgorgement, an equitable remedy measured by the defendant's gain. Equity's goal in ordering disgorgement is not to compensate a victim for what they lost but to strip the wrongdoer of what they unjustly gained by invading the victim's legally protected interests.\nTraditional equitable principles confirm this conclusion. A person whose legally protected interests a defendant has violated may obtain restitution of the defendant's wrongful gains even when that person suffered \"no measurable loss whatsoever.\" Numerous historical cases illustrate the point: courts ordered defendants to surrender profits from unauthorized use of another's property even where the property owner admitted to suffering no financial harm. Liu's requirement that disgorgement be \"awarded for victims\" draws directly from these same equitable principles, and those principles define a \"victim\" as someone whose legally protected interests were invaded—not as someone who lost money. When a wrongdoer enriches himself without leaving the victim financially worse off, equity faces a choice between two versions of the status quo: strip the wrongdoer of the unjust gain, or let the wrongdoer keep it. Equity traditionally demands the first.\nJustice Clarence Thomas concurred, agreeing with the result but arguing that Congress's decision to enumerate disgorgement as a separate statutory remedy in §78u(d)(7)—with its own distinct limitations period, set apart from the general equitable-relief provision—transformed disgorgement into a legal remedy, meaning the Seventh Amendment's right to a jury trial should apply in a future case presenting that question.",
+      "winningParty": "SEC",
+      "majorityVote": 9,
+      "minorityVote": 0,
+      "decisionType": "majority opinion",
+      "decisionDesc": "The SEC may seek equitable disgorgement under 15 U.S.C. §§ 78u(d)(5) and (d)(7) without showing investors suffered pecuniary harm.",
+      "votes": [
+        {
+          "justiceId": "neil_gorsuch",
+          "justiceName": "Neil Gorsuch",
+          "lastName": "Gorsuch",
+          "vote": "majority",
+          "opinionType": "majority"
+        },
+        {
+          "justiceId": "john_g_roberts_jr",
+          "justiceName": "John G. Roberts, Jr.",
+          "lastName": "Roberts",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "clarence_thomas",
+          "justiceName": "Clarence Thomas",
+          "lastName": "Thomas",
+          "vote": "majority",
+          "opinionType": "concurrence"
+        },
+        {
+          "justiceId": "samuel_a_alito_jr",
+          "justiceName": "Samuel A. Alito, Jr.",
+          "lastName": "Alito",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "sonia_sotomayor",
+          "justiceName": "Sonia Sotomayor",
+          "lastName": "Sotomayor",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "elena_kagan",
+          "justiceName": "Elena Kagan",
+          "lastName": "Kagan",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "brett_m_kavanaugh",
+          "justiceName": "Brett M. Kavanaugh",
+          "lastName": "Kavanaugh",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "amy_coney_barrett",
+          "justiceName": "Amy Coney Barrett",
+          "lastName": "Barrett",
+          "vote": "majority",
+          "opinionType": "none"
+        },
+        {
+          "justiceId": "ketanji_brown_jackson",
+          "justiceName": "Ketanji Brown Jackson",
+          "lastName": "Jackson",
+          "vote": "majority",
+          "opinionType": "none"
+        }
+      ],
+      "opinions": [],
+      "oyezUrl": "https://www.oyez.org/cases/2025/25-466",
+      "justiaUrl": "https://supreme.justia.com/cases/federal/us/608/25-466/",
+      "courtListenerUrl": ""
+    },
     {
       "id": 63794,
       "name": "Fernandez v. United States",
