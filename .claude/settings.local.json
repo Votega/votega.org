@@ -42,7 +42,11 @@
       "WebFetch(domain:v3.openstates.org)",
       "WebFetch(domain:openstates.org)",
       "WebFetch(domain:open.pluralpolicy.com)",
-      "WebFetch(domain:pluralpolicy.com)"
+      "WebFetch(domain:pluralpolicy.com)",
+      "WebFetch(domain:www.votega.org)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://www.votega.org/supreme-court)",
+      "Bash(curl -s https://www.votega.org/assets/data/scotus-decisions.json)",
+      "Bash(curl -sI https://www.votega.org/assets/data/scotus-decisions.json)"
     ]
   }
 }
