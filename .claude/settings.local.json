@@ -46,7 +46,12 @@
       "WebFetch(domain:www.votega.org)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://www.votega.org/supreme-court)",
       "Bash(curl -s https://www.votega.org/assets/data/scotus-decisions.json)",
-      "Bash(curl -sI https://www.votega.org/assets/data/scotus-decisions.json)"
+      "Bash(curl -sI https://www.votega.org/assets/data/scotus-decisions.json)",
+      "Bash(curl -s https://www.supremecourt.gov/opinions/slipopinion/25 -o /tmp/scotus_slip.html -w \"%{http_code}\\\\n\")",
+      "Read(//tmp/**)",
+      "Bash(grep -oE '<tr[^>]*>.*?</tr>' /tmp/scotus_slip.html | head -5; echo ---; grep -oE '[0-9]{2}/[0-9]{2}/[0-9]{2}' /tmp/scotus_slip.html | sort -u | tail -20)",
+      "Bash(curl -s \"https://api.oyez.org/cases/2025/24-43\")",
+      "Bash(curl -s \"https://api.oyez.org/cases?per_page=100&filter=term:2025\")"
     ]
   }
 }
