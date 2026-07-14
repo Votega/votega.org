@@ -51,7 +51,10 @@
       "Read(//tmp/**)",
       "Bash(grep -oE '<tr[^>]*>.*?</tr>' /tmp/scotus_slip.html | head -5; echo ---; grep -oE '[0-9]{2}/[0-9]{2}/[0-9]{2}' /tmp/scotus_slip.html | sort -u | tail -20)",
       "Bash(curl -s \"https://api.oyez.org/cases/2025/24-43\")",
-      "Bash(curl -s \"https://api.oyez.org/cases?per_page=100&filter=term:2025\")"
+      "Bash(curl -s \"https://api.oyez.org/cases?per_page=100&filter=term:2025\")",
+      "Read(//c/Users/justi/Downloads/**)",
+      "Bash(xargs -I{} sh -c 'echo \"{} $\\(stat -c %y \"{}\" 2>/dev/null || stat -f %Sm \"{}\"\\)\"')",
+      "Bash(sort -k2)"
     ]
   }
 }
