@@ -50,10 +50,11 @@ function drawPartyChart(members) {
   const legend = document.getElementById('chartLegend');
   if (!canvas || !legend) return;
 
-  const d = members.filter(m => partyAbbrev(m.party) === 'D').length;
-  const r = members.filter(m => partyAbbrev(m.party) === 'R').length;
-  const o = members.length - d - r;
-  const total = members.length;
+  const represented = members.filter(m => m.status !== 'Vacant');
+  const d = represented.filter(m => partyAbbrev(m.party) === 'D').length;
+  const r = represented.filter(m => partyAbbrev(m.party) === 'R').length;
+  const o = represented.length - d - r;
+  const total = represented.length;
 
   const ctx    = canvas.getContext('2d');
   const cx     = canvas.width / 2;

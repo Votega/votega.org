@@ -186,22 +186,25 @@ def get_committee_memberships():
 
 
 def enrich_member_data(bioguideId, basic_member):
-    """Fetch and enrich member data"""
+    """Fetch and enrich member data. Returns (member, success)."""
     member_details = get_member_details(bioguideId)
-    
+
     if not member_details:
         print(f"Warning: Could not fetch details for {bioguideId}, using basic data")
         basic_member['leadership'] = []
         basic_member['contactInfo'] = {}
-        basic_member['officialWebsiteUrl'] = ''
-        basic_member['birthYear'] = ''
+        basic_member['officialWebsiteUrl'] = None
+        basic_member['birthYear'] = None
+        basic_member['currentMember'] = None
+        basic_member['firstName'] = None
+        basic_member['lastName'] = None
         basic_member['dataUpdatedAt'] = datetime.now().isoformat()
-        return basic_member
-    
+        return basic_member, False
+
     basic_member['leadership'] = extract_leadership(member_details)
     basic_member['contactInfo'] = member_details.get('addressInformation', {})
-    basic_member['officialWebsiteUrl'] = member_details.get('officialWebsiteUrl', '')
-    basic_member['birthYear'] = member_details.get('birthYear', '')
+    basic_member['officialWebsiteUrl'] = member_details.get('officialWebsiteUrl') or None
+    basic_member['birthYear'] = member_details.get('birthYear') or None
     basic_member['currentMember'] = member_details.get('currentMember', False)
     basic_member['honorificName'] = member_details.get('honorificName', '')
     basic_member['firstName'] = member_details.get('firstName', '')
@@ -214,7 +217,7 @@ def enrich_member_data(bioguideId, basic_member):
     if basic_member.get('state') == 'Georgia':
         basic_member['recentSponsored'] = get_sponsored_legislation(bioguideId)
 
-    return basic_member
+    return basic_member, True
 
 def get_current_members():
     """Fetch all current members of Congress using pagination (max limit=250)"""
@@ -279,14 +282,24 @@ def main():
     
     print("Enriching member data with leadership positions...")
     enriched_members = []
+    enrichment_failures = 0
     for i, member in enumerate(members):
         bioguideId = member.get('bioguideId', '')
         print(f"  Processing {i+1}/{len(members)}: {member.get('name', 'Unknown')} ({bioguideId})")
-        enriched_member = enrich_member_data(bioguideId, member)
+        enriched_member, ok = enrich_member_data(bioguideId, member)
         enriched_members.append(enriched_member)
+        if not ok:
+            enrichment_failures += 1
 
         if (i + 1) % 5 == 0:
             print(f"  Progress: {i+1}/{len(members)} members processed")
+
+    if enrichment_failures:
+        print(f"Warning: {enrichment_failures}/{len(members)} member(s) failed detail enrichment (missing name/currentMember data)")
+        failure_rate = enrichment_failures / len(members)
+        if enrichment_failures > 5 and failure_rate > 0.05:
+            print(f"Error: enrichment failure rate too high ({enrichment_failures}/{len(members)}, {failure_rate:.1%}) — likely an API outage. Not committing.")
+            sys.exit(1)
 
     print("Fetching committee memberships...")
     committee_lookup = get_committee_memberships()
@@ -301,7 +314,8 @@ def main():
             'generatedAt': datetime.now().isoformat(),
             'source': 'Congress.gov API',
             'count': len(enriched_members),
-            'apiVersion': 'v3'
+            'apiVersion': 'v3',
+            'enrichmentFailures': enrichment_failures
         },
         'members': enriched_members
     }

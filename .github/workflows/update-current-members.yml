@@ -53,9 +53,14 @@ jobs:
           assert count >= 500, f'Expected 500+ members, got {count}'
           assert count == len(members), f'metadata.count {count} != actual member count {len(members)}'
           required = ['bioguideId', 'name', 'partyName', 'state', 'terms']
-          for m in members[:20]:
+          for m in members:
               for field in required:
                   assert field in m, f'Member {m.get(\"name\",\"?\")} missing required field: {field}'
+
+          failures = d['metadata'].get('enrichmentFailures', 0)
+          print(f'Detail-enrichment failures: {failures}/{count}')
+          assert failures <= max(5, count * 0.05), f'Too many enrichment failures ({failures}/{count}) — indicates a broad API outage'
+
           print('All integrity checks passed')
           "
 

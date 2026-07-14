@@ -33,21 +33,47 @@ jobs:
             exit 1
           fi
           python -c "
-          import json
+          import json, os
+
           d = json.load(open('assets/data/ga-members.json'))
           members = d['members']
           count = d['metadata']['count']
           print(f'Validated: {count} GA members')
-          assert count >= 200, f'Expected 200+ members, got {count}'
           assert count == len(members), f'metadata.count {count} != actual member count {len(members)}'
+
           senate = [m for m in members if m.get('chamber') == 'Senate']
           house  = [m for m in members if m.get('chamber') == 'House of Representatives']
-          assert len(senate) >= 50,  f'Expected 50+ senators, got {len(senate)}'
-          assert len(house)  >= 150, f'Expected 150+ representatives, got {len(house)}'
+          # Georgia's General Assembly has a constitutionally fixed size: 56 Senate seats, 180 House seats.
+          # Vacant seats are injected as placeholder entries, so these should always hold exactly.
+          assert len(senate) == 56,  f'Expected exactly 56 senators, got {len(senate)}'
+          assert len(house)  == 180, f'Expected exactly 180 representatives, got {len(house)}'
+
           required = ['id', 'name', 'chamber', 'district']
-          for m in members[:20]:
+          for m in members:
               for field in required:
                   assert field in m, f'Member {m.get(\"name\",\"?\")} missing required field: {field}'
+
+          def assert_no_duplicate_districts(chamber_members, label):
+              seen = {}
+              for m in chamber_members:
+                  dist = m.get('district')
+                  if dist is None:
+                      continue
+                  seen.setdefault(dist, []).append(m.get('name', '?'))
+              dups = {dist: names for dist, names in seen.items() if len(names) > 1}
+              assert not dups, f'{label}: duplicate district(s) found: {dups}'
+
+          assert_no_duplicate_districts(senate, 'Senate')
+          assert_no_duplicate_districts(house, 'House')
+
+          overrides_path = 'assets/data/ga-members-overrides.json'
+          if os.path.exists(overrides_path):
+              overrides = json.load(open(overrides_path))
+              injected = overrides.get('_inject', [])
+              existing_ids = {m['id'] for m in members}
+              missing = [e['id'] for e in injected if e.get('id') not in existing_ids]
+              assert not missing, f'_inject entries missing from output (failed to apply): {missing}'
+
           print('All integrity checks passed')
           "
 
