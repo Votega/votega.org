@@ -414,7 +414,17 @@ permalink: /ga-bills.html
     const motionLabel = v.motionText
       ? v.motionText.replace(/\s*[-–]\s*\d{4}-\d{4}\s+Regular Session\s*$/i, '').trim()
       : ch + ' vote';
-    const partyLine = '';
+    const partyLine = (function () {
+      if (!v.partyTally) return '';
+      const d = v.partyTally['Democratic'];
+      const r = v.partyTally['Republican'];
+      const parts = [];
+      if (d) parts.push('<span style="color:#2563eb;">Dem ' + d.yea + '-' + d.nay + '</span>');
+      if (r) parts.push('<span style="color:#dc2626;">Rep ' + r.yea + '-' + r.nay + '</span>');
+      if (!parts.length) return '';
+      return '<div class="vote-bar-sub" style="margin-top:0.2rem;">' + parts.join(' &nbsp;&middot;&nbsp; ')
+        + ' <span style="color:#aaa;">(yea-nay by party; may not include every recorded vote)</span></div>';
+    })();
     return '<div class="vote-bar-section">'
       + '<div class="vote-bar-header">'
       + '<span class="vote-yes-txt">&#10003; ' + v.yea + ' yes</span>'

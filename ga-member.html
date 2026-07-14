@@ -640,7 +640,7 @@ permalink: /ga-member.html
       const data        = await res.json();
       const memberVotes = (data.memberVotes || {})[member.id];
       if (!memberVotes || memberVotes.length === 0) {
-        container.innerHTML = '<h3>Voting History</h3><p style="color:#666;font-size:0.875rem;">No votes recorded for this session.</p>';
+        container.innerHTML = '<h3>Voting History</h3><p style="color:#666;font-size:0.875rem;">No voting record found for this member in our data for this session. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';
         return;
       }
 
