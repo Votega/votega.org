@@ -285,7 +285,7 @@ permalink: /ga-member.html
         otherRaceInfo = findMemberInRaces(member.id, racesData.races || []);
       }
 
-      displayMemberDetails(member, seatRace, otherRaceInfo);
+      displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable);
       displaySidebar(member, all);
       loadCuratedBills(member);
       loadVotingHistory(member);
@@ -317,7 +317,7 @@ permalink: /ga-member.html
     return '';
   }
 
-  function displayMemberDetails(member, seatRace, otherRaceInfo) {
+  function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable) {
     const currentYear = new Date().getFullYear();
     const detailsDiv  = document.getElementById('memberDetails');
 
@@ -411,7 +411,9 @@ permalink: /ga-member.html
                ${member.committees.map(c => `<li>${c}</li>`).join('')}
              </ul>
            </div>`
-        : ''}
+        : (committeesAvailable === false
+            ? `<p style="margin-top:1rem;font-size:0.8rem;color:#a35b00;">Committee data is temporarily unavailable (the last data refresh could not fetch it).</p>`
+            : '')}
       <p><a href="ga-state-reps">Search for another member</a></p>
       <div id="votesTabs">
         <div class="tab-bar">
@@ -646,6 +648,9 @@ permalink: /ga-member.html
 
       const votesIndex = data.votes || {};
       const session    = data.metadata?.sessionName || '';
+      const incompleteNote = data.metadata?.paginationComplete === false
+        ? '<p style="font-size:0.75rem;color:#a35b00;margin:0 0 0.75rem 0;">Note: this session\'s vote data may be incomplete — the last data refresh did not finish fetching all bills.</p>'
+        : '';
 
       // Sort most recent first
       const sorted = [...memberVotes].sort((a, b) => {
@@ -690,6 +695,7 @@ permalink: /ga-member.html
       container.innerHTML = `
         <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
+        ${incompleteNote}
         ${chartHtml}
         <table class="vote-table">
           <thead><tr><th>Date</th><th>Bill</th><th>Motion</th><th>Vote</th></tr></thead>

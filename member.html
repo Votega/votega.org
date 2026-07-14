@@ -357,7 +357,7 @@ permalink: /member.html
     const honorific = m.honorificName || '';
     const first = m.firstName || '';
     const last = m.lastName || '';
-    const fallback = m.directOrderName || m.name || 'Unknown';
+    const fallback = m.name || 'Unknown';
     return (first && last) ? `${honorific} ${first} ${last}`.trim() : (honorific ? `${honorific} ${fallback}` : fallback);
   }
 
@@ -371,18 +371,20 @@ permalink: /member.html
 
     if (statemates.length <= 1) return;
 
+    // Only the most recent term counts — a member who switched chambers
+    // (e.g. House then Senate) should only appear under their current chamber.
+    function latestChamber(m) {
+      const terms = m.terms?.item || m.terms || [];
+      const arr = Array.isArray(terms) ? terms : [terms];
+      return arr[arr.length - 1]?.chamber;
+    }
+
     const senators = statemates
-      .filter(m => {
-        const terms = m.terms?.item || m.terms || [];
-        return (Array.isArray(terms) ? terms : [terms]).some(t => t.chamber === 'Senate');
-      })
+      .filter(m => latestChamber(m) === 'Senate')
       .sort((a, b) => getMemberName(a).localeCompare(getMemberName(b)));
 
     const reps = statemates
-      .filter(m => {
-        const terms = m.terms?.item || m.terms || [];
-        return (Array.isArray(terms) ? terms : [terms]).some(t => t.chamber === 'House of Representatives');
-      })
+      .filter(m => latestChamber(m) === 'House of Representatives')
       .sort((a, b) => (a.district ?? 999) - (b.district ?? 999));
 
     const basePath = getBasePath();
@@ -685,7 +687,7 @@ permalink: /member.html
     const honorific = member.honorificName || '';
     const firstName = member.firstName || '';
     const lastName = member.lastName || '';
-    const fallbackName = member.directOrderName || member.name || 'Unknown';
+    const fallbackName = member.name || 'Unknown';
     const fullName = (firstName && lastName)
       ? `${honorific} ${firstName} ${lastName}`.trim()
       : (honorific ? `${honorific} ${fallbackName}` : fallbackName);
@@ -695,7 +697,9 @@ permalink: /member.html
 
     const currentTerm = member.terms?.item?.slice(-1)[0] || {};
     const chamber = currentTerm.chamber || 'N/A';
-    const district = member.district ? `District ${member.district}` : (chamber === 'Senate' || chamber === 'House of Representatives' ? 'U.S. Senator' : 'N/A');
+    const district = (member.district !== null && member.district !== undefined)
+      ? `District ${member.district}`
+      : (chamber === 'Senate' ? 'U.S. Senator' : chamber === 'House of Representatives' ? 'At-Large' : 'N/A');
 
     const termsArr = member.terms?.item || [];
     const terms = Array.isArray(termsArr) ? termsArr : [termsArr];

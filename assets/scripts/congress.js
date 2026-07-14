@@ -7,7 +7,7 @@ function formatMemberName(m) {
   const honorific = m.honorificName || '';
   const firstName = m.firstName || '';
   const lastName = m.lastName || '';
-  const fallback = m.directOrderName || m.name || 'Unknown';
+  const fallback = m.name || 'Unknown';
   return (firstName && lastName)
     ? `${honorific} ${firstName} ${lastName}`.trim()
     : (honorific ? `${honorific} ${fallback}` : fallback);
@@ -82,8 +82,10 @@ async function loadMembers () {
         console.log(`"${m.name}": terms is not an array:`, terms);
         return false;
       }
-      // Check if any term is for the requested chamber
-      const hasMatchingChamber = terms.some(t => t.chamber === expectedChamber);
+      // Check the member's most recent term only — a member who switched chambers
+      // (e.g. House then Senate) should only match their current chamber.
+      const latestTerm = terms[terms.length - 1] || {};
+      const hasMatchingChamber = latestTerm.chamber === expectedChamber;
       if (!hasMatchingChamber) {
         console.log(`Filtered out "${m.name}": chambers=${terms.map(t => t.chamber).join('/')} (want "${expectedChamber}")`);
         return false;
