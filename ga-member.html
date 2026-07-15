@@ -322,7 +322,7 @@ permalink: /ga-member.html
       displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable);
       displaySidebar(member, all);
       loadCuratedBills(member);
-      loadVotingHistory(member);
+      loadVotingHistory(member, all);
       if (window.location.hash) {
         const target = document.getElementById(window.location.hash.slice(1));
         if (target) target.scrollIntoView({ behavior: 'smooth' });
@@ -716,7 +716,89 @@ permalink: /ga-member.html
       </div>`;
   }
 
-  async function loadVotingHistory(member) {
+  // Build a per-roll-call party tally from EVERY member's votes, so we can
+  // later ask "what was this member's own party's majority position on this
+  // roll call?" One linear pass over the already-loaded vote data; no extra
+  // fetch. De-duplicated per member as a defensive measure (the generator
+  // already enforces this, so it's normally a no-op).
+  function buildPartyVoteIndex(allMemberVotes, partyMap) {
+    const index = new Map(); // voteId -> { [party]: { yea, nay } }
+    for (const voterId in allMemberVotes) {
+      const party = partyMap.get(voterId);
+      if (!party) continue;
+      const seen = new Set();
+      for (const { voteId, vote } of allMemberVotes[voterId]) {
+        if (vote !== 'Yea' && vote !== 'Nay') continue;
+        if (seen.has(voteId)) continue;
+        seen.add(voteId);
+        let tally = index.get(voteId);
+        if (!tally) { tally = {}; index.set(voteId, tally); }
+        let pt = tally[party];
+        if (!pt) { pt = { yea: 0, nay: 0 }; tally[party] = pt; }
+        pt[vote === 'Yea' ? 'yea' : 'nay']++;
+      }
+    }
+    return index;
+  }
+
+  // Party voting alignment: share of this member's own recorded Yea/Nay
+  // votes that matched their own party's majority position on that same
+  // roll call. Only counted when the party had a clear (non-tied) majority
+  // and at least one OTHER same-party member also voted — otherwise a
+  // lone party member would trivially "match" their own vote 100% of the
+  // time. Independent of chamber control; a member can have a high loyalty
+  // score whether their party holds the majority or the minority.
+  function buildPartyLoyaltySummary(memberVotes, votesIndex, memberChamber, member, partyVoteIndex) {
+    if (!member.party) return '';
+
+    const seen = new Map();
+    for (const { voteId, vote } of memberVotes) {
+      if (vote !== 'Yea' && vote !== 'Nay') continue;
+      const vc = voteChamber(votesIndex[voteId]);
+      if (memberChamber && vc && vc !== memberChamber) continue;
+      if (!seen.has(voteId)) seen.set(voteId, vote);
+    }
+
+    const otherParty = member.party === 'Democratic' ? 'Republican' : member.party === 'Republican' ? 'Democratic' : null;
+
+    let aligned = 0, considered = 0;
+    for (const [voteId, vote] of seen) {
+      const tally = partyVoteIndex.get(voteId);
+      const own = tally && tally[member.party];
+      const opp = otherParty && tally && tally[otherParty];
+      if (!own || !opp) continue;
+      if (own.yea + own.nay < 2 || own.yea === own.nay) continue; // no other same-party voter, or a tie
+      if (opp.yea + opp.nay === 0 || opp.yea === opp.nay) continue; // opposing caucus has no clear majority
+      const ownDir = own.yea > own.nay ? 'Yea' : 'Nay';
+      const oppDir = opp.yea > opp.nay ? 'Yea' : 'Nay';
+      if (ownDir === oppDir) continue; // both caucuses agreed — not a party-line vote, skip
+
+      considered++;
+      if (vote === ownDir) aligned++;
+    }
+
+    if (considered === 0) return '';
+    const rate = Math.round(aligned / considered * 100);
+    const accent = member.party === 'Democratic' ? '#2563eb' : member.party === 'Republican' ? '#dc2626' : '#1a56a8';
+    const methodology = `Share of this member's votes on <strong>party-line roll calls</strong> — where a majority of ${escHtml(member.party)}s voted opposite a majority of the other party — that matched their own caucus's position. Excludes votes where both parties largely agreed, so this reflects behavior specifically on contested, partisan votes.`;
+
+    return `
+      <div class="participation-box" style="border-left-color:${accent};">
+        <div class="participation-head">Party Voting Alignment</div>
+        <div class="participation-figure">${rate}% <span class="participation-frac">(${aligned} of ${considered} votes)</span></div>
+        <div class="participation-note">${methodology}</div>
+      </div>`;
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  async function loadVotingHistory(member, allMembers) {
     const container = document.getElementById('votingHistory');
     if (!member.id || !container) return;
 
@@ -756,6 +838,10 @@ permalink: /ga-member.html
       const chartHtml = buildVoteChart(yeaCount, nayCount, otherCount, sorted.length);
       const participationHtml = buildParticipationSummary(memberVotes, votesIndex, member.chamber);
 
+      const partyMap = new Map((allMembers || []).filter(m => m.party).map(m => [m.id, m.party]));
+      const partyVoteIndex = buildPartyVoteIndex(data.memberVotes || {}, partyMap);
+      const partyLoyaltyHtml = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex);
+
       const rows = sorted.map(({ voteId, vote }) => {
         const meta    = votesIndex[voteId] || {};
         const bill    = meta.bill       || '—';
@@ -782,7 +868,11 @@ permalink: /ga-member.html
       container.innerHTML = `
         <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
-        ${participationHtml}
+        ${(participationHtml || partyLoyaltyHtml) ? `
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          ${participationHtml ? `<div style="flex:1;min-width:240px;">${participationHtml}</div>` : ''}
+          ${partyLoyaltyHtml  ? `<div style="flex:1;min-width:240px;">${partyLoyaltyHtml}</div>`  : ''}
+        </div>` : ''}
         ${incompleteNote}
         ${chartHtml}
         <table class="vote-table">
