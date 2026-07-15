@@ -160,6 +160,7 @@ permalink: /ga-bills.html
   }
   .badge-signed   { background: #dcfce7; color: #166534; }
   .badge-vetoed   { background: #fef3c7; color: #92400e; }
+  .badge-pending  { background: #ede9fe; color: #5b21b6; }
   .badge-failed   { background: #fee2e2; color: #991b1b; }
   .badge-passed   { background: #dbeafe; color: #1e40af; }
   .badge-stalled  { background: #ffedd5; color: #9a3412; }
@@ -332,11 +333,12 @@ permalink: /ga-bills.html
   <div class="bills-status-bar" id="statusPills">
     <button class="bills-status-btn active" data-status="">All</button>
     <button class="bills-status-btn" data-status="signed">Signed</button>
+    <button class="bills-status-btn" data-status="vetoed">Vetoed</button>
+    <button class="bills-status-btn" data-status="pending">Sent to Governor</button>
     <button class="bills-status-btn" data-status="passed">Passed</button>
     <button class="bills-status-btn" data-status="progress">In progress</button>
     <button class="bills-status-btn" data-status="stalled">Stalled</button>
     <button class="bills-status-btn" data-status="failed">Failed</button>
-    <button class="bills-status-btn" data-status="vetoed">Vetoed</button>
   </div>
 </div>
 
@@ -377,10 +379,16 @@ permalink: /ga-bills.html
   const elSort       = document.getElementById('billSort');
 
   // ── Status classification ─────────────────────────────────────────────────
+  // governorAction (from process_ga_bills.py) is authoritative for the
+  // Governor's disposition — derived from explicit Open States action
+  // classifications, not guessed from the free-text last-action description.
   function classifyStatus(bill) {
+    const gaStatus = (bill.governorAction || {}).status;
+    if (gaStatus === 'Vetoed')          return 'vetoed';
+    if (gaStatus === 'Signed')          return 'signed';
+    if (gaStatus === 'Sent to Governor') return 'pending';
+
     const s = bill.status || '';
-    if (s === 'Effective Date') return 'signed';
-    if (s.startsWith('Veto'))  return 'vetoed';
     if (s.includes('Lost'))    return 'failed';
     if (s.includes('Withdrawn') || s.includes('Recommitted')) return 'stalled';
     const chambers = new Set(bill.passageVotes.map(function (v) { return v.chamber; }));
@@ -389,7 +397,7 @@ permalink: /ga-bills.html
   }
 
   function badgeHtml(cls) {
-    const labels = { signed: 'Signed', vetoed: 'Vetoed', failed: 'Failed', passed: 'Passed', stalled: 'Stalled', progress: 'In progress' };
+    const labels = { signed: 'Signed', vetoed: 'Vetoed', pending: 'Sent to Governor', failed: 'Failed', passed: 'Passed', stalled: 'Stalled', progress: 'In progress' };
     return '<span class="bill-status-badge badge-' + cls + '">' + labels[cls] + '</span>';
   }
 
@@ -441,6 +449,39 @@ permalink: /ga-bills.html
       + '</div>';
   }
 
+  // ── Governor's action meta text (for the collapsed card row) ───────────────
+  function governorMetaHtml(bill) {
+    const ga = bill.governorAction;
+    if (!ga) return bill.statusDate
+      ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + bill.statusDate + '</span>'
+      : '';
+    let text;
+    if (ga.status === 'Signed') {
+      text = 'Signed ' + ga.decisionDate + (ga.actNumber ? ' · Act ' + ga.actNumber : '');
+    } else if (ga.status === 'Vetoed') {
+      text = 'Vetoed ' + ga.decisionDate;
+    } else {
+      text = 'Sent to Governor ' + ga.sentDate;
+    }
+    return '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + escHtml(text) + '</span>';
+  }
+
+  // ── Governor's action detail block (for the expanded card) ─────────────────
+  function governorDetailHtml(bill) {
+    const ga = bill.governorAction;
+    if (!ga) return '';
+    let body;
+    if (ga.status === 'Signed') {
+      body = 'Sent to the Governor ' + (ga.sentDate || '—') + '. Signed into law ' + ga.decisionDate
+        + (ga.actNumber ? ' as <strong>Act ' + ga.actNumber + '</strong>.' : '.');
+    } else if (ga.status === 'Vetoed') {
+      body = 'Sent to the Governor ' + (ga.sentDate || '—') + '. Vetoed ' + ga.decisionDate + '.';
+    } else {
+      body = 'Sent to the Governor ' + ga.sentDate + '. Awaiting the Governor’s signature or veto.';
+    }
+    return '<div class="detail-section"><div class="detail-label">Governor’s Action</div><div class="detail-body">' + body + '</div></div>';
+  }
+
   // ── Bill card HTML ────────────────────────────────────────────────────────
   function cardHtml(bill, idx) {
     const sc        = bill._status;
@@ -463,6 +504,7 @@ permalink: /ga-bills.html
     const voteBars = bill.passageVotes && bill.passageVotes.length
       ? bill.passageVotes.map(voteBarHtml).join('')
       : '';
+    const governorDetail = governorDetailHtml(bill);
     const links = '<div class="detail-links">'
       + (bill.billUrl ? '<a class="detail-link" href="' + escHtml(bill.billUrl) + '" target="_blank" rel="noopener">&#128279; legis.ga.gov</a>' : '')
       + (bill.textUrl ? '<a class="detail-link" href="' + escHtml(bill.textUrl) + '" target="_blank" rel="noopener">&#128196; Bill text</a>' : '')
@@ -484,12 +526,13 @@ permalink: /ga-bills.html
       + subjectTag
       + '<span class="bill-meta-txt">' + chamberLbl + (isRes ? ' &middot; Resolution' : '') + '</span>'
       + (sponsor ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + escHtml(sponsor) + '</span>' : '')
-      + (bill.statusDate ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + (sc === 'signed' ? 'Effective ' : '') + bill.statusDate + '</span>' : '')
+      + governorMetaHtml(bill)
       + voteInline
       + '</div>'
       + '</div>'
       + '<div class="bill-detail">'
       + abstract
+      + governorDetail
       + allSponsors
       + voteBars
       + links
@@ -614,15 +657,18 @@ permalink: /ga-bills.html
   function buildStats(meta) {
     const signed   = allBills.filter(function (b) { return b._status === 'signed'; }).length;
     const vetoed   = allBills.filter(function (b) { return b._status === 'vetoed'; }).length;
+    const pending  = allBills.filter(function (b) { return b._status === 'pending'; }).length;
     const failed   = allBills.filter(function (b) { return b._status === 'failed'; }).length;
     const stalled  = allBills.filter(function (b) { return b._status === 'stalled'; }).length;
-    elStats.innerHTML = [
+    const stats = [
       stat('Total bills', (meta.totalBills || allBills.length).toLocaleString(), ''),
-      stat('Signed into law', signed.toLocaleString(), 'green', 'Effective Date on each card'),
-      stat('Failed / vetoed', (failed + vetoed).toLocaleString(), 'red'),
-      stat('Stalled', stalled.toLocaleString(), 'orange'),
-      stat('With vote records', allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length.toLocaleString(), 'blue'),
-    ].join('');
+      stat('Signed into law', signed.toLocaleString(), 'green'),
+      stat('Vetoed', vetoed.toLocaleString(), 'red'),
+    ];
+    if (pending > 0) stats.push(stat('Sent to Governor', pending.toLocaleString(), 'orange', 'Awaiting signature or veto'));
+    stats.push(stat('Failed / stalled', (failed + stalled).toLocaleString(), 'orange'));
+    stats.push(stat('With vote records', allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length.toLocaleString(), 'blue'));
+    elStats.innerHTML = stats.join('');
     elStats.style.display = '';
   }
 

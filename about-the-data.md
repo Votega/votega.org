@@ -83,6 +83,7 @@ The [GA Bills & Resolutions](/ga-bills.html) tracker covers all 5,480 bills and 
 The raw data originates from a bulk Open States export (`GA_2025_26_bills.json`). A build-time Python script (`scripts/process_ga_bills.py`) transforms it into a compact static file (`assets/data/ga-bills.json`) that the browser loads directly. The script:
 
 - Strips the full per-bill action history (too large for client-side use), retaining only the latest action as `status` / `statusDate`.
+- Derives the Governor's disposition — signed, vetoed, or sent and still pending — as a structured `governorAction` field (see below), read from Open States' explicit action classifications rather than guessed from free text.
 - Keeps passage vote counts (yes / no / not voting) and the roll call motion text (e.g. "Senate Vote #148") for each chamber vote.
 - Preserves Open States subject tags where available. For bills with no subject tag — predominantly county-specific local legislation — it auto-assigns a **"Local / Municipal"** tag when the bill title starts with a Georgia county name.
 
@@ -95,20 +96,33 @@ The raw data originates from a bulk Open States export (`GA_2025_26_bills.json`)
 | `chamber` | `lower` (House) or `upper` (Senate) |
 | `title` | Official bill title |
 | `abstract` | Bill description (up to 500 characters) |
-| `status` | Last recorded action (e.g. "Effective Date", "Governor Veto") |
+| `status` | Last recorded action (free text, e.g. "Effective Date") |
 | `statusDate` | Date of last action |
 | `subjects` | Subject tags from Open States, or `["Local / Municipal"]` if auto-tagged |
 | `sponsors` | Array of sponsor names; first entry is the lead/introducing legislator |
 | `passageVotes` | Passage vote counts per chamber, with roll call motion text |
+| `governorAction` | Governor's disposition — see below. `null` if not yet sent to the Governor |
 | `billUrl` | Link to the bill on legis.ga.gov |
 | `textUrl` | Link to the bill text (PDF, where available) |
 
-**Status classification** (derived client-side from the `status` field):
+**Governor's Action:** Georgia bills that pass both chambers are sent to the Governor, who signs, vetoes, or lets a bill become law without signature. The `governorAction` field is derived from Open States' `executive-receipt`, `executive-signature`, and `executive-veto` action tags — not from matching text like "Effective Date" — and takes the shape:
 
-- **Signed** — status is `"Effective Date"` (602 bills)
-- **Vetoed** — status starts with `"Veto"` (19 bills)
+```
+{ "status": "Signed" | "Vetoed" | "Sent to Governor",
+  "sentDate": "2026-04-07", "decisionDate": "2026-05-11" | null,
+  "actNumber": 484 | null }
+```
+
+A quirk in the source data: a vetoed bill's transmittal record still carries an "executive-signature"-tagged action dated the same day as the veto (an upstream labeling artifact, not a real signature), so a veto always takes precedence when both are present for the same bill.
+
+**Status classification** (derived client-side; `governorAction` takes precedence, with the free-text `status` field as a fallback for bills not yet sent to the Governor):
+
+- **Signed** — `governorAction.status` is `"Signed"` (723 bills)
+- **Vetoed** — `governorAction.status` is `"Vetoed"` (19 bills)
+- **Sent to Governor** — `governorAction.status` is `"Sent to Governor"` and awaiting a decision
 - **Failed** — status contains `"Lost"` (9 bills)
-- **Passed** — passage votes exist for both chambers but not yet signed
+- **Stalled** — status contains `"Withdrawn"` or `"Recommitted"` (155 bills)
+- **Passed** — passage votes exist for both chambers but not yet sent to the Governor (95 bills)
 - **In progress** — all other bills
 
 **Subjects:** Open States provides subject tags for approximately 81% of actual bills. The auto-tagger adds "Local / Municipal" for a further 9%, bringing total coverage to around 90% of bills (excluding resolutions, which are separated into their own tab).
