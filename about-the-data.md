@@ -68,6 +68,8 @@ We paginate through all Georgia bills in the current session via the Open States
 - **Coverage:** All current members of the Georgia House of Representatives and Georgia Senate.
 - **Freshness:** Updated weekly via an automated GitHub Actions workflow.
 
+**Voting participation:** Each profile also shows a voting participation figure — the share of recorded passage-vote roll calls in the member's chamber on which they cast a Yea or Nay. A vote recorded as "Other" (Open States collapses absent, excused, not voting, and present into this category for Georgia) counts against participation. Only the member's own chamber's votes are counted, and duplicate roll-call entries are de-duplicated by vote ID. Because presiding officers (such as the Speaker of the House) vote only to break ties or on select matters by custom, a member who almost never casts a Yea or Nay across a full slate of roll calls is labeled a presiding officer rather than shown a misleadingly low percentage. Participation reflects the passage votes in our data for the current session; if a weekly refresh has not finished fetching every bill, the figure is based on the votes collected so far.
+
 ---
 
 ## Georgia General Assembly Bills & Resolutions
