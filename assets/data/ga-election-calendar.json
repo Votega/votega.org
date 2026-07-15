@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "generatedAt": "2026-07-15",
+    "cycle": "2026",
+    "source": "Georgia Secretary of State (sos.ga.gov)",
+    "note": "Manually curated from the official GA SoS election calendar. \"status\" (upcoming/completed) is computed client-side from the current date, not stored here."
+  },
+  "elections": [
+    {
+      "id": "2026-primary",
+      "name": "General Primary Election",
+      "type": "Primary",
+      "date": "2026-05-19",
+      "earlyVotingStart": "2026-04-27",
+      "earlyVotingEnd": "2026-05-15",
+      "earlyVotingNote": null,
+      "registrationDeadline": null
+    },
+    {
+      "id": "2026-primary-runoff",
+      "name": "General Primary Election Runoff",
+      "type": "Primary Runoff",
+      "date": "2026-06-16",
+      "earlyVotingStart": null,
+      "earlyVotingEnd": null,
+      "earlyVotingNote": "No later than 06/08/26 – 06/12/26 (exact dates set by county)",
+      "registrationDeadline": "2026-04-20"
+    },
+    {
+      "id": "2026-general",
+      "name": "General Election / Special Election",
+      "type": "General",
+      "date": "2026-11-03",
+      "earlyVotingStart": "2026-10-13",
+      "earlyVotingEnd": "2026-10-30",
+      "earlyVotingNote": null,
+      "registrationDeadline": "2026-10-05"
+    },
+    {
+      "id": "2026-general-runoff",
+      "name": "General Election / Special Election Runoff",
+      "type": "General Runoff",
+      "date": "2026-12-01",
+      "earlyVotingStart": null,
+      "earlyVotingEnd": null,
+      "earlyVotingNote": "No later than 11/23/26 – 11/25/26 (exact dates set by county)",
+      "registrationDeadline": "2026-10-05",
+      "contingentNote": "Only held if a statewide runoff is required from the November 3 General Election."
+    }
+  ]
+}

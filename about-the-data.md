@@ -289,6 +289,19 @@ Each measure records a plain-language summary, subject tags, and a link to the e
 
 ---
 
+## Voter Access & Election Calendar
+
+**Sources:** [Georgia Secretary of State](https://sos.ga.gov/) · Manual curation
+
+The [Voter Access & Election Calendar](/ga-voter-access.html) page maintains a curated data file (`assets/data/ga-election-calendar.json`) covering each election in the current cycle: election date, early voting window, and voter registration deadline. The page also links directly to the Georgia Secretary of State's official tools for checking registration status, polling place, and ballot status (My Voter Page), and for registering to vote or updating a registration.
+
+The "Next Election" highlight and each election's Upcoming/Completed status are computed in the browser from the visitor's current date — they are not stored in the data file, so the page stays accurate without a rebuild as elections pass.
+
+- **Coverage:** All elections in the 2026 cycle (primary, primary runoff, general, and general runoff).
+- **Freshness:** Manually updated when the Secretary of State publishes or revises election dates.
+
+---
+
 ## Campaign Finance
 
 **Sources:** [Federal Election Commission (FEC)](https://www.fec.gov/) · [Georgia Government Transparency & Campaign Finance Commission](https://ethics.ga.gov/)

@@ -1,0 +1,283 @@
+---
+layout: default
+title: Georgia Voter Access & Election Calendar
+permalink: /ga-voter-access.html
+---
+
+<h1>Georgia Voter Access &amp; Election Calendar</h1>
+<p>Check your registration, find your polling place, and see key dates for Georgia's 2026 elections — registration deadlines, early voting windows, and election days.</p>
+
+<style>
+  .va-hub {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+  }
+  .va-hub-card {
+    border: 1px solid #ccc;
+    border-left: 5px solid #1a56a8;
+    border-radius: 8px;
+    background: #fff;
+    padding: 1.1rem 1.25rem;
+  }
+  .va-hub-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 0.4rem 0;
+    color: #14213d;
+  }
+  .va-hub-desc {
+    font-size: 0.88rem;
+    color: #444;
+    margin: 0 0 0.7rem 0;
+    line-height: 1.5;
+  }
+  .va-hub-list {
+    font-size: 0.82rem;
+    color: #555;
+    margin: 0 0 0.85rem 1.1rem;
+    padding: 0;
+    line-height: 1.6;
+  }
+  .va-hub-btn {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    background: #1a56a8;
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+    text-decoration: none;
+  }
+  .va-hub-btn:hover { background: #164a90; }
+
+  .va-next {
+    border: 1px solid #bcd4f5;
+    background: #f0f6ff;
+    border-radius: 8px;
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+  .va-next-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1a56a8;
+    margin-bottom: 0.3rem;
+  }
+  .va-next-name { font-size: 1.25rem; font-weight: 700; color: #14213d; margin-bottom: 0.15rem; }
+  .va-next-date { font-size: 0.95rem; color: #333; }
+  .va-next-countdown { font-size: 0.85rem; color: #1a56a8; font-weight: 600; margin-top: 0.3rem; }
+
+  .va-section-heading {
+    margin-top: 1.75rem;
+    font-size: 1.15rem;
+    color: #444;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.3rem;
+  }
+
+  .va-cal-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1rem;
+  }
+  .va-cal-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    padding: 1rem 1.25rem;
+  }
+  .va-cal-card.completed { opacity: 0.68; }
+  .va-cal-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .va-cal-name { font-size: 1.02rem; font-weight: 700; color: #14213d; }
+  .va-cal-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 2px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge-upcoming  { background: #dbeafe; color: #1e40af; }
+  .badge-completed { background: #f3f4f6; color: #6b7280; }
+  .va-cal-date { font-size: 0.92rem; color: #333; margin-top: 0.2rem; font-weight: 600; }
+  .va-cal-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem 1.5rem;
+    margin-top: 0.65rem;
+    font-size: 0.82rem;
+    color: #555;
+  }
+  .va-cal-details dt { font-weight: 600; color: #777; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; margin: 0; }
+  .va-cal-details dd { margin: 0 0 0.5rem 0; }
+  .va-cal-note { font-size: 0.78rem; color: #888; margin-top: 0.5rem; font-style: italic; }
+
+  @media (max-width: 640px) {
+    .va-hub { grid-template-columns: 1fr; }
+    .va-cal-details { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="va-hub">
+  <div class="va-hub-card">
+    <div class="va-hub-title">Check Your Registration &amp; Voting Info</div>
+    <p class="va-hub-desc">Use the Georgia Secretary of State's My Voter Page to check your current status.</p>
+    <ul class="va-hub-list">
+      <li>Confirm your registration is active</li>
+      <li>Find your polling location and hours</li>
+      <li>View a sample ballot for your district</li>
+      <li>Check your absentee ballot status</li>
+    </ul>
+    <a class="va-hub-btn" href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="noopener">My Voter Page ↗</a>
+  </div>
+  <div class="va-hub-card">
+    <div class="va-hub-title">Register to Vote / Update Your Registration</div>
+    <p class="va-hub-desc">Not registered yet, or need to update your address or name after a move? Register or update your registration online through the state's official portal.</p>
+    <ul class="va-hub-list">
+      <li>Register to vote for the first time</li>
+      <li>Update your address or legal name</li>
+      <li>Check eligibility requirements</li>
+    </ul>
+    <a class="va-hub-btn" href="https://mvp.sos.ga.gov/s/olvr-home" target="_blank" rel="noopener">Register / Update Registration ↗</a>
+  </div>
+</div>
+
+<h2 class="va-section-heading">2026 Election Calendar</h2>
+
+<div id="vaLoading" style="padding:1.5rem 0;color:#666;">Loading…</div>
+<div id="vaNext"></div>
+<div id="vaCalendar" class="va-cal-grid"></div>
+
+<p style="margin-top:1.5rem;font-size:0.8rem;color:#888;" id="vaDataSource"></p>
+
+<script>
+  const DATA_URL = 'assets/data/ga-election-calendar.json';
+
+  function escHtml(s) {
+    return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+  }
+
+  function parseLocalDate(iso) {
+    // Parse as local date, not UTC, so day boundaries match the visitor's calendar.
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  function formatDate(iso) {
+    return parseLocalDate(iso).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function formatShortDate(iso) {
+    return parseLocalDate(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function daysUntil(iso) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const target = parseLocalDate(iso);
+    return Math.round((target - today) / (1000 * 60 * 60 * 24));
+  }
+
+  function earlyVotingText(e) {
+    if (e.earlyVotingStart && e.earlyVotingEnd) {
+      return formatShortDate(e.earlyVotingStart) + ' – ' + formatShortDate(e.earlyVotingEnd);
+    }
+    return e.earlyVotingNote || 'Set by county';
+  }
+
+  function renderNext(next) {
+    if (!next) return '';
+    const days = daysUntil(next.date);
+    const countdown = days > 0 ? `In ${days} day${days === 1 ? '' : 's'}` : (days === 0 ? 'Today' : '');
+    return `
+      <div class="va-next">
+        <div class="va-next-label">Next Election</div>
+        <div class="va-next-name">${escHtml(next.name)}</div>
+        <div class="va-next-date">${formatDate(next.date)}</div>
+        ${countdown ? `<div class="va-next-countdown">${countdown}</div>` : ''}
+      </div>`;
+  }
+
+  function renderCard(e, isUpcoming) {
+    const badge = isUpcoming
+      ? '<span class="va-cal-badge badge-upcoming">Upcoming</span>'
+      : '<span class="va-cal-badge badge-completed">Completed</span>';
+
+    const regDeadline = e.registrationDeadline ? formatShortDate(e.registrationDeadline) : 'Same as original primary';
+    const contingentNote = e.contingentNote
+      ? `<div class="va-cal-note">${escHtml(e.contingentNote)}</div>`
+      : '';
+
+    return `
+      <div class="va-cal-card ${isUpcoming ? '' : 'completed'}">
+        <div class="va-cal-top">
+          <div>
+            <div class="va-cal-name">${escHtml(e.name)}</div>
+            <div class="va-cal-date">${formatDate(e.date)}</div>
+          </div>
+          ${badge}
+        </div>
+        <dl class="va-cal-details">
+          <div>
+            <dt>Early Voting</dt>
+            <dd>${escHtml(earlyVotingText(e))}</dd>
+          </div>
+          <div>
+            <dt>Registration Deadline</dt>
+            <dd>${escHtml(regDeadline)}</dd>
+          </div>
+        </dl>
+        ${contingentNote}
+      </div>`;
+  }
+
+  async function loadCalendar() {
+    const loading  = document.getElementById('vaLoading');
+    const nextEl   = document.getElementById('vaNext');
+    const calendar = document.getElementById('vaCalendar');
+    try {
+      const res = await fetch(DATA_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      const elections = (data.elections || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+      if (!elections.length) throw new Error('No elections found in data.');
+
+      loading.style.display = 'none';
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const upcoming = elections.filter(e => parseLocalDate(e.date) >= today);
+      const next = upcoming[0] || null;
+
+      nextEl.innerHTML = renderNext(next);
+      calendar.innerHTML = elections.map(e => renderCard(e, parseLocalDate(e.date) >= today)).join('');
+
+      const src = document.getElementById('vaDataSource');
+      const meta = data.metadata || {};
+      if (meta.generatedAt) {
+        src.textContent = `Data last updated: ${meta.generatedAt}` + (meta.source ? ` · Source: ${meta.source}` : '');
+      }
+    } catch (err) {
+      console.error(err);
+      loading.style.display = 'none';
+      calendar.innerHTML = `<p style="color:#c00;">Error loading election calendar: ${escHtml(err.message)}.</p>`;
+    }
+  }
+
+  loadCalendar();
+</script>
