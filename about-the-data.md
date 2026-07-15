@@ -70,6 +70,8 @@ We paginate through all Georgia bills in the current session via the Open States
 
 **Voting participation:** Each profile also shows a voting participation figure — the share of recorded passage-vote roll calls in the member's chamber on which they cast a Yea or Nay. A vote recorded as "Other" (Open States collapses absent, excused, not voting, and present into this category for Georgia) counts against participation. Only the member's own chamber's votes are counted, and duplicate roll-call entries are de-duplicated by vote ID. Because presiding officers (such as the Speaker of the House) vote only to break ties or on select matters by custom, a member who almost never casts a Yea or Nay across a full slate of roll calls is labeled a presiding officer rather than shown a misleadingly low percentage. Participation reflects the passage votes in our data for the current session; if a weekly refresh has not finished fetching every bill, the figure is based on the votes collected so far.
 
+**Party voting alignment:** Each profile with a known party also shows how often the member voted with their own party's majority — but only on **party-line votes**, roll calls where a majority of Republicans voted opposite a majority of Democrats. Votes where both parties largely agreed are excluded, since counting those would inflate every member's score toward 100% without saying anything about partisanship (most legislation that reaches a floor vote passes with broad, often unanimous, support). This mirrors the standard "party unity score" used in political science and journalism. The party's majority position on each roll call is computed from every member's individual vote (already collected for the voting-history feature above) — no additional API calls or data files are needed.
+
 ---
 
 ## Georgia General Assembly Bills & Resolutions
@@ -126,6 +128,8 @@ A quirk in the source data: a vetoed bill's transmittal record still carries an 
 - **In progress** — all other bills
 
 **Subjects:** Open States provides subject tags for approximately 81% of actual bills. The auto-tagger adds "Local / Municipal" for a further 9%, bringing total coverage to around 90% of bills (excluding resolutions, which are separated into their own tab).
+
+**Party-line classification:** A separate script, `scripts/enrich_bills_with_party_votes.py`, joins each `passageVotes` entry with individual member votes and party affiliation (from `ga-member-votes.json` and `ga-members.json`) to add a `partyTally` — the Yea/Nay count by party — to each recorded vote. The bills tracker uses this to flag **party-line votes**: roll calls where a majority of Republicans voted opposite a majority of Democrats. A bill is tagged "⚡ Party-line" if any of its recorded passage votes met this bar; votes where both parties largely agreed are not flagged, since most legislation that reaches a floor vote passes with broad support and labeling all of it "party-line" would be meaningless. Bills can be filtered to show only those with at least one party-line vote.
 
 - **Scope:** All bills and resolutions from the 2025–26 regular session.
 - **Freshness:** Static — sourced from a May 2026 Open States bulk export. A future update will wire this into a live API workflow matching the existing GA member update cadence.

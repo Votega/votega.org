@@ -247,6 +247,17 @@ permalink: /ga-bills.html
   .vb-no  { background: #dc2626; }
   .vote-bar-sub { font-size: 0.72rem; color: #888; }
   .vote-bar-party { font-size: 0.72rem; margin-top: 2px; }
+  .party-line-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #7c3aed;
+    background: #f3ebff;
+    border-radius: 999px;
+    padding: 1px 7px;
+    margin-left: 2px;
+  }
+  .badge-partyline { background: #f3ebff; color: #6d28d9; }
 
   .detail-links {
     display: flex;
@@ -339,6 +350,7 @@ permalink: /ga-bills.html
     <button class="bills-status-btn" data-status="progress">In progress</button>
     <button class="bills-status-btn" data-status="stalled">Stalled</button>
     <button class="bills-status-btn" data-status="failed">Failed</button>
+    <button class="bills-status-btn" id="partyLineToggle" style="margin-left:auto;">&#9889; Party-line votes only</button>
   </div>
 </div>
 
@@ -360,9 +372,10 @@ permalink: /ga-bills.html
   let allBills     = [];
   let filtered     = [];
   let currentPage  = 1;
-  let chamberTab   = '';
-  let statusFilter = '';
-  let searchTimer  = null;
+  let chamberTab    = '';
+  let statusFilter  = '';
+  let partyLineOnly = false;
+  let searchTimer   = null;
 
   // ── DOM refs ──────────────────────────────────────────────────────────────
   const elLoading    = document.getElementById('billsLoading');
@@ -409,6 +422,30 @@ permalink: /ga-bills.html
     return extra > 0 ? lead + ' +' + extra + ' others' : lead;
   }
 
+  // ── Party-line classification ───────────────────────────────────────────────
+  // A "party-line vote" (a.k.a. party unity vote): a majority of Democrats
+  // voted opposite a majority of Republicans on the same roll call. Uses the
+  // partyTally already computed by enrich_bills_with_party_votes.py. Returns
+  // null when either party has no recorded yea/nay votes, or when a party's
+  // own vote was tied (no clear majority to compare).
+  function computePartyLineInfo(partyTally) {
+    if (!partyTally) return null;
+    const d = partyTally['Democratic'];
+    const r = partyTally['Republican'];
+    if (!d || !r) return null;
+    const dTotal = d.yea + d.nay;
+    const rTotal = r.yea + r.nay;
+    if (!dTotal || !rTotal) return null;
+    const dDir = d.yea === d.nay ? null : (d.yea > d.nay ? 'Yea' : 'Nay');
+    const rDir = r.yea === r.nay ? null : (r.yea > r.nay ? 'Yea' : 'Nay');
+    if (!dDir || !rDir) return null;
+    return {
+      isPartyLine: dDir !== rDir,
+      dPct: Math.round(Math.max(d.yea, d.nay) / dTotal * 100),
+      rPct: Math.round(Math.max(r.yea, r.nay) / rTotal * 100),
+    };
+  }
+
   // ── Vote bar HTML ─────────────────────────────────────────────────────────
   function voteBarHtml(v) {
     const total  = (v.yea + v.nay + v.other) || 1;
@@ -422,6 +459,7 @@ permalink: /ga-bills.html
     const motionLabel = v.motionText
       ? v.motionText.replace(/\s*[-–]\s*\d{4}-\d{4}\s+Regular Session\s*$/i, '').trim()
       : ch + ' vote';
+    const pli = computePartyLineInfo(v.partyTally);
     const partyLine = (function () {
       if (!v.partyTally) return '';
       const d = v.partyTally['Democratic'];
@@ -430,8 +468,11 @@ permalink: /ga-bills.html
       if (d) parts.push('<span style="color:#2563eb;">Dem ' + d.yea + '-' + d.nay + '</span>');
       if (r) parts.push('<span style="color:#dc2626;">Rep ' + r.yea + '-' + r.nay + '</span>');
       if (!parts.length) return '';
+      const tag = pli && pli.isPartyLine
+        ? ' <span class="party-line-tag">&#9889; Party-line vote</span>'
+        : '';
       return '<div class="vote-bar-sub" style="margin-top:0.2rem;">' + parts.join(' &nbsp;&middot;&nbsp; ')
-        + ' <span style="color:#aaa;">(yea-nay by party; may not include every recorded vote)</span></div>';
+        + ' <span style="color:#aaa;">(yea-nay by party; may not include every recorded vote)</span>' + tag + '</div>';
     })();
     return '<div class="vote-bar-section">'
       + '<div class="vote-bar-header">'
@@ -517,6 +558,7 @@ permalink: /ga-bills.html
       + '<div class="bill-id-status">'
       + '<span class="bill-id">' + escHtml(bill.identifier) + '</span>'
       + badgeHtml(sc)
+      + (bill._partyLine ? '<span class="bill-status-badge badge-partyline">&#9889; Party-line</span>' : '')
       + '</div>'
       + '<div class="bill-title">' + escHtml(bill.title) + '</div>'
       + '</div>'
@@ -560,6 +602,7 @@ permalink: /ga-bills.html
       if (chamberTab === 'upper' && b.chamber !== 'upper') return false;
       if (chamberTab === 'res'   && b.billType !== 'resolution') return false;
       if (statusFilter && b._status !== statusFilter) return false;
+      if (partyLineOnly && !b._partyLine) return false;
       if (subj && !(b.subjects || []).some(function (s) { return s === subj; })) return false;
       if (q) {
         const hay = (b.identifier + ' ' + b.title + ' ' + b.abstract + ' '
@@ -699,7 +742,15 @@ permalink: /ga-bills.html
   document.getElementById('statusPills').addEventListener('click', function (e) {
     const btn = e.target.closest('.bills-status-btn');
     if (!btn) return;
-    document.querySelectorAll('.bills-status-btn').forEach(function (b) { b.classList.remove('active'); });
+
+    if (btn.id === 'partyLineToggle') {
+      partyLineOnly = !partyLineOnly;
+      btn.classList.toggle('active', partyLineOnly);
+      applyFilters();
+      return;
+    }
+
+    document.querySelectorAll('#statusPills .bills-status-btn:not(#partyLineToggle)').forEach(function (b) { b.classList.remove('active'); });
     btn.classList.add('active');
     statusFilter = btn.dataset.status;
     applyFilters();
@@ -734,6 +785,10 @@ permalink: /ga-bills.html
       const meta = data.metadata || {};
       allBills = (data.bills || []).map(function (b) {
         b._status = classifyStatus(b);
+        b._partyLine = (b.passageVotes || []).some(function (v) {
+          const pli = computePartyLineInfo(v.partyTally);
+          return pli && pli.isPartyLine;
+        });
         return b;
       });
 
