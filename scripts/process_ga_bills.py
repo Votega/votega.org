@@ -137,6 +137,55 @@ def get_bill_url(sources):
     return sources[0]['url'] if sources else ''
 
 
+_ACT_NUMBER_RE = re.compile(r'^Act (\d+)$')
+
+
+def get_governor_action(actions):
+    """
+    Derive the Governor's disposition of a bill from its action history.
+
+    legis.ga.gov (via Open States) tags actions with 'executive-receipt'
+    (sent to the Governor), 'executive-signature' (signed — this also fires
+    on the 'Act NNN' action that assigns the act number), and
+    'executive-veto'. A vetoed bill's transmittal record still carries an
+    'executive-signature'-tagged "Date Signed by Governor" action dated the
+    same day as the veto — an upstream labeling quirk, not a real signature —
+    so veto is treated as decisive whenever both are present.
+
+    Returns None if the bill has not been sent to the Governor, otherwise:
+      { status: 'Signed' | 'Vetoed' | 'Sent to Governor',
+        sentDate, decisionDate (None if still pending), actNumber (Signed only) }
+    """
+    sent_date  = None
+    veto_date  = None
+    sign_date  = None
+    act_number = None
+
+    for a in sorted(actions, key=lambda x: x.get('order', 0)):
+        classes = a.get('classification') or []
+        date    = a.get('date')
+        desc    = a.get('description', '')
+
+        if 'executive-receipt' in classes and sent_date is None:
+            sent_date = date
+        if 'executive-veto' in classes and veto_date is None:
+            veto_date = date
+        if 'executive-signature' in classes:
+            if sign_date is None:
+                sign_date = date
+            m = _ACT_NUMBER_RE.match(desc)
+            if m and act_number is None:
+                act_number = int(m.group(1))
+
+    if veto_date:
+        return {'status': 'Vetoed', 'sentDate': sent_date, 'decisionDate': veto_date, 'actNumber': None}
+    if sign_date:
+        return {'status': 'Signed', 'sentDate': sent_date, 'decisionDate': sign_date, 'actNumber': act_number}
+    if sent_date:
+        return {'status': 'Sent to Governor', 'sentDate': sent_date, 'decisionDate': None, 'actNumber': None}
+    return None
+
+
 def get_passage_votes(votes):
     """
     Return passage vote counts per chamber.
@@ -190,6 +239,7 @@ def slim_bill(b):
         'billUrl':     get_bill_url(b.get('sources', [])),
         'textUrl':     b.get('raw_text_url', ''),
         'passageVotes': get_passage_votes(b.get('votes', [])),
+        'governorAction': get_governor_action(actions),
     }
 
 
@@ -234,6 +284,9 @@ def main():
     with_subjects = sum(1 for b in bills if b['subjects'])
     bills_tagged  = sum(1 for b in bills_only if b['subjects'])
     with_votes    = sum(1 for b in bills if b['passageVotes'])
+    signed        = sum(1 for b in bills if (b['governorAction'] or {}).get('status') == 'Signed')
+    vetoed        = sum(1 for b in bills if (b['governorAction'] or {}).get('status') == 'Vetoed')
+    pending_gov   = sum(1 for b in bills if (b['governorAction'] or {}).get('status') == 'Sent to Governor')
     chambers      = {}
     for b in bills:
         chambers[b['chamber']] = chambers.get(b['chamber'], 0) + 1
@@ -277,6 +330,9 @@ def main():
     print(f'  Tagged (HB/SB):     {bills_tagged:,} / {len(bills_only):,} ({bills_tagged/len(bills_only)*100:.1f}%)')
     print(f'  Manual overrides:   {override_count}')
     print(f'  With votes:         {with_votes:,} ({with_votes/len(bills)*100:.0f}%)')
+    print(f'  Signed by Governor: {signed:,}')
+    print(f'  Vetoed by Governor: {vetoed:,}')
+    print(f'  Pending w/ Governor:{pending_gov:,}')
     print(f'  Output size:        {size_mb:.1f} MB')
 
 

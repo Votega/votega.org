@@ -1,69 +1,133 @@
 {
-  "_note": "Manual subject overrides applied by process_ga_bills.py. Keys are bill identifiers (e.g. 'HB 739'). Add subject tags and re-run the script to apply. Empty arrays are skipped.",
+  "_note": "Manual subject overrides applied by process_ga_bills.py. Keys are bill identifiers (e.g. 'HB 739'). Add subject tags and re-run the script to apply. Empty arrays are skipped. Subject values must match the canonical Open States taxonomy used elsewhere in ga-bills.json (see about-the-data.md), except 'Local / Municipal' which is this site's own tag for county/city bills with no upstream subject.",
   "_titles": {
     "HB 1532": "Dalton Independent School System; remove the increased millage rate limitation",
     "HB 1533": "Dalton Independent School System; remove the increased millage rate limitation",
     "HB 1462": "Columbus Music Commission Act; enact",
-    "SB 264":  "Emergency Management; creation of the Georgia Resilience Office under the Georgia Emergency Management and Homeland Security Agency; provide",
-    "SB 628":  "Richmond County and City of Augusta; council-manager form of government; provide",
+    "SB 264": "Emergency Management; creation of the Georgia Resilience Office under the Georgia Emergency Management and Homeland Security Agency; provide",
+    "SB 628": "Richmond County and City of Augusta; council-manager form of government; provide",
     "HB 1599": "Sandersville School Building Authority; members; revise qualification",
-    "SB 70":   "\"Conyers Community Improvement Districts Act\"; enact",
-    "SB 329":  "Flint Judicial Circuit; chief judge; annual stipend in addition to county compensation to superior court judges; provide",
-    "SB 240":  "Georgia Native Plant Month; designate April of each year",
-    "SB 30":   "Hospitals and Related Institutions; hormone therapies and puberty-blocking medications for certain purposes to minors; prohibit prescribing or administering",
-    "HB 741":  "Petrea-Stephens-Franklin-Watson Tax Relief Act; enact",
-    "HB 536":  "Public Facilities Authority of the City of Fairburn Act; enact",
-    "SB 254":  "\"Georgia Hemp Farming Act,\"; delta-9-THC in consumable hemp products; provide milligram limits",
+    "SB 70": "\"Conyers Community Improvement Districts Act\"; enact",
+    "SB 329": "Flint Judicial Circuit; chief judge; annual stipend in addition to county compensation to superior court judges; provide",
+    "SB 240": "Georgia Native Plant Month; designate April of each year",
+    "SB 30": "Hospitals and Related Institutions; hormone therapies and puberty-blocking medications for certain purposes to minors; prohibit prescribing or administering",
+    "HB 741": "Petrea-Stephens-Franklin-Watson Tax Relief Act; enact",
+    "HB 536": "Public Facilities Authority of the City of Fairburn Act; enact",
+    "SB 254": "\"Georgia Hemp Farming Act,\"; delta-9-THC in consumable hemp products; provide milligram limits",
     "HB 1092": "Chehaw Park Authority; extend existence of authority",
     "HB 1488": "Hinesville Conference Center and Tourism Authority Act; enact",
     "HB 1186": "Garden City Area Convention and Visitors Bureau Authority; repeal Act",
     "HB 1492": "Hampton City of; ad valorem tax for municipal purposes; provide homestead exemption",
-    "SB 618":  "Municipal Court of the City of Decatur; the assessment and collection of a technology fee; authorize",
-    "HB 685":  "Bartow County Community Improvement Districts Act; enact",
-    "HB 498":  "Garden City Charm and Tourism Act; enact",
-    "SB 260":  "Central State Hospital Redevelopment Authority; create",
-    "HB 476":  "Watson-Stephens-Petrea-Franklin Tax Relief Act; enact",
-    "SB 257":  "Department of Human Services; adopt and implement affordable family housing assistance programs; authorize local governments",
-    "SB 281":  "\"Port Wentworth Convention and Visitors Bureau Authority Act\"; enact",
-    "HB 793":  "Home Ownership Municipal Exemption (H.O.M.E.) Act; enact",
-    "SB 342":  "Emergency Communications Authority; increase in the percentage of all 9-1-1 charges to be remitted to the Peace Officers' Annuity and Benefit Fund; provide",
-    "SB 35":   "Property Insurance Policies; notice required to be given a policyholder before the nonrenewal of his or her homeowners' insurance policy; increase the number of days",
-    "SB 201":  "Consumer Transactions; increased consumer protection for homeowners entering into contracts with contractors following natural disasters; provide",
-    "SB 368":  "\"Northeast Regional Water Authority Act\"; enact",
+    "SB 618": "Municipal Court of the City of Decatur; the assessment and collection of a technology fee; authorize",
+    "HB 685": "Bartow County Community Improvement Districts Act; enact",
+    "HB 498": "Garden City Charm and Tourism Act; enact",
+    "SB 260": "Central State Hospital Redevelopment Authority; create",
+    "HB 476": "Watson-Stephens-Petrea-Franklin Tax Relief Act; enact",
+    "SB 257": "Department of Human Services; adopt and implement affordable family housing assistance programs; authorize local governments",
+    "SB 281": "\"Port Wentworth Convention and Visitors Bureau Authority Act\"; enact",
+    "HB 793": "Home Ownership Municipal Exemption (H.O.M.E.) Act; enact",
+    "SB 342": "Emergency Communications Authority; increase in the percentage of all 9-1-1 charges to be remitted to the Peace Officers' Annuity and Benefit Fund; provide",
+    "SB 35": "Property Insurance Policies; notice required to be given a policyholder before the nonrenewal of his or her homeowners' insurance policy; increase the number of days",
+    "SB 201": "Consumer Transactions; increased consumer protection for homeowners entering into contracts with contractors following natural disasters; provide",
+    "SB 368": "\"Northeast Regional Water Authority Act\"; enact",
     "HB 1519": "Peachtree City Public Facilities Authority; terms of office for certain members; provide",
-    "HB 762":  "Savannah Music Commission Act; enact",
-    "SB 256":  "Electric Membership Corporation; disclose certain acquisitions and other information to its members within a certain time frame; require"
+    "HB 762": "Savannah Music Commission Act; enact",
+    "SB 256": "Electric Membership Corporation; disclose certain acquisitions and other information to its members within a certain time frame; require"
   },
-  "HB 1532": [Local/Muninicipal],
-  "HB 1533": [Local/Muninicipal],
-  "HB 1462": [Local/Muninicipal],
-  "SB 264":  [Military, Emergency Management, and Veteran Affairs],
-  "SB 628":  [Local/Muninicipal],
-  "HB 1599": [Local/Muninicipal],
-  "SB 70":   [Local/Muninicipal],
-  "SB 329":  [Local/Muninicipal],
-  "SB 240":  [State Government],
-  "SB 30":   [Health],
-  "HB 741":  [Local/Muninicipal],
-  "HB 536":  [Local/Muninicipal],
-  "SB 254":  [Agriculture],
-  "HB 1092": [Local/Muninicipal],
-  "HB 1488": [Local/Muninicipal],
-  "HB 1186": [Local/Muninicipal],
-  "HB 1492": [Local/Muninicipal],
-  "SB 618":  [Local/Muninicipal],
-  "HB 685":  [Local/Muninicipal],
-  "HB 498":  [Local/Muninicipal],
-  "SB 260":  [Local/Muninicipal],
-  "HB 476":  [Local/Muninicipal],
-  "SB 257":  [Buildings and Housing],
-  "SB 281":  [Water, Ports, and Watercraft],
-  "HB 793":  [Revenue and Taxation],
-  "SB 342":  [Military, Emergency Management, and Veteran Affairs],
-  "SB 35":   [Insurance],
-  "SB 201":  [Commerce and Trade],
-  "SB 368":  [Water, Ports, and Watercraft],
-  "HB 1519": [Local/Muninicipal],
-  "HB 762":  [Local/Muninicipal],
-  "SB 256":  [Public Utilities and Transportation]
+  "HB 1532": [
+    "Local / Municipal"
+  ],
+  "HB 1533": [
+    "Local / Municipal"
+  ],
+  "HB 1462": [
+    "Local / Municipal"
+  ],
+  "SB 264": [
+    "MILITARY, EMERGENCY MANAGEMENT, AND VETERANS AFFAIRS"
+  ],
+  "SB 628": [
+    "Local / Municipal"
+  ],
+  "HB 1599": [
+    "Local / Municipal"
+  ],
+  "SB 70": [
+    "Local / Municipal"
+  ],
+  "SB 329": [
+    "Local / Municipal"
+  ],
+  "SB 240": [
+    "STATE GOVERNMENT"
+  ],
+  "SB 30": [
+    "HEALTH"
+  ],
+  "HB 741": [
+    "Local / Municipal"
+  ],
+  "HB 536": [
+    "Local / Municipal"
+  ],
+  "SB 254": [
+    "AGRICULTURE"
+  ],
+  "HB 1092": [
+    "Local / Municipal"
+  ],
+  "HB 1488": [
+    "Local / Municipal"
+  ],
+  "HB 1186": [
+    "Local / Municipal"
+  ],
+  "HB 1492": [
+    "Local / Municipal"
+  ],
+  "SB 618": [
+    "Local / Municipal"
+  ],
+  "HB 685": [
+    "Local / Municipal"
+  ],
+  "HB 498": [
+    "Local / Municipal"
+  ],
+  "SB 260": [
+    "Local / Municipal"
+  ],
+  "HB 476": [
+    "Local / Municipal"
+  ],
+  "SB 257": [
+    "BUILDINGS AND HOUSING"
+  ],
+  "SB 281": [
+    "WATERS, PORTS, AND WATERCRAFT"
+  ],
+  "HB 793": [
+    "REVENUE AND TAXATION"
+  ],
+  "SB 342": [
+    "MILITARY, EMERGENCY MANAGEMENT, AND VETERANS AFFAIRS"
+  ],
+  "SB 35": [
+    "INSURANCE"
+  ],
+  "SB 201": [
+    "COMMERCE AND TRADE"
+  ],
+  "SB 368": [
+    "WATERS, PORTS, AND WATERCRAFT"
+  ],
+  "HB 1519": [
+    "Local / Municipal"
+  ],
+  "HB 762": [
+    "Local / Municipal"
+  ],
+  "SB 256": [
+    "PUBLIC UTILITIES AND TRANSPORTATION"
+  ]
 }
