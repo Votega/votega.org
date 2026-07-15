@@ -260,6 +260,19 @@ Race and candidate information for the 2026 election cycle is maintained in a cu
 
 ---
 
+## Georgia Ballot Measures
+
+**Sources:** [Georgia Secretary of State](https://sos.ga.gov/) · [Georgia General Assembly](https://www.legis.ga.gov/) · Manual curation
+
+Statewide ballot measures — constitutional amendments and statewide referendums that Georgia voters decide — are maintained in a curated data file (`assets/data/ga-ballot-measures.json`) that powers the ballot measures page.
+
+Each measure records a plain-language summary, subject tags, and a link to the enabling legislation (the constitutional amendment resolution or referendum bill) on legis.ga.gov. Measures are labeled **Certified** once the Secretary of State certifies them for the ballot, or **Potential** if the enabling legislation has passed the General Assembly but has not yet been certified (for example, a bill awaiting the Governor's signature).
+
+- **Coverage:** Statewide measures on the ballot for the current general election. Vote results are added to each measure after the election is certified.
+- **Freshness:** Manually updated as measures are certified and as results are reported.
+
+---
+
 ## Campaign Finance
 
 **Sources:** [Federal Election Commission (FEC)](https://www.fec.gov/) · [Georgia Government Transparency & Campaign Finance Commission](https://ethics.ga.gov/)
@@ -295,6 +308,7 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 | 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |
 | 2026 GA judicial candidates | GA Secretary of State | Updated when SOS publishes new filing data |
 | 2026 federal race/candidate data | Manual curation | Manually maintained |
+| Georgia ballot measures | GA Secretary of State + legis.ga.gov | Manually maintained; results added after certification |
 | Federal campaign finance | FEC API (live) | Real-time, fetched on page load |
 
 ---
