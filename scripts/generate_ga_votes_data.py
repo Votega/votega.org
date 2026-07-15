@@ -10,6 +10,20 @@ Open States API flow:
      since ga-members.json already uses OCD person IDs.
 
 To update for a new session: change GA_SESSION below.
+
+Data-soundness invariants (enforced on every run and available offline via
+`--sanitize`):
+  - No duplicate roll calls per member (Open States occasionally lists the same
+    voter twice within one vote event).
+  - A member's recorded votes come only from their own chamber. Some member IDs
+    are erroneously attached to the other chamber's roll calls upstream; those
+    cross-chamber entries are dropped for any member whose chamber is known from
+    ga-members.json.
+
+Usage:
+  python generate_ga_votes_data.py                 # fetch + write (needs API key)
+  python generate_ga_votes_data.py --sanitize      # re-clean the existing file
+                                                   # in place, no API key needed
 """
 
 import json
@@ -26,7 +40,11 @@ BASE_URL     = "https://v3.openstates.org"
 GA_JURISDICTION = "ocd-jurisdiction/country:us/state:ga/government"
 GA_SESSION   = "2025_26"
 SESSION_NAME = "2025-2026 Regular Session"
-OUTPUT_FILE  = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-member-votes.json"
+MEMBERS_FILE = "assets/data/ga-members.json"
+
+SANITIZE_ONLY = '--sanitize' in sys.argv
+_positional   = [a for a in sys.argv[1:] if not a.startswith('--')]
+OUTPUT_FILE   = _positional[0] if _positional else "assets/data/ga-member-votes.json"
 
 DELAY = 7  # Open States free tier: 10 req/min — 7s keeps safely under
 
@@ -39,6 +57,100 @@ VOTE_MAP = {
     'excused':    'Excused',
     'other':      'Other',
 }
+
+
+def event_chamber(motion_text, organization=None):
+    """Which chamber held a roll call: 'Senate', 'House of Representatives', or None."""
+    cls = (organization or {}).get('classification')
+    if cls == 'upper':
+        return 'Senate'
+    if cls == 'lower':
+        return 'House of Representatives'
+    mt = motion_text or ''
+    if 'Senate' in mt:
+        return 'Senate'
+    if 'House' in mt:
+        return 'House of Representatives'
+    return None
+
+
+def load_member_chambers(path=MEMBERS_FILE):
+    """Map OCD person ID -> chamber from ga-members.json (ground truth for the
+    chamber-consistency check). Returns {} if the file is missing/unreadable."""
+    try:
+        with open(path, encoding='utf-8') as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return {}
+    return {m['id']: m.get('chamber') for m in data.get('members', []) if m.get('id')}
+
+
+def sanitize_member_votes(member_votes, votes_meta, member_chambers):
+    """Enforce the data-soundness invariants on a memberVotes mapping.
+
+    - De-duplicates roll calls per member (keeps the first-seen entry for each
+      vote ID).
+    - Drops cross-chamber entries for any member whose chamber is known: a
+      Georgia legislator only votes in their own chamber, so a vote recorded in
+      the other chamber is upstream contamination.
+
+    Members whose chamber is unknown (e.g. former members not in ga-members.json)
+    are de-duplicated but not chamber-filtered, since there is no ground truth to
+    check them against. Returns (clean_member_votes, stats)."""
+    clean = {}
+    dup_dropped = 0
+    cross_dropped = 0
+    for voter_id, entries in member_votes.items():
+        known = member_chambers.get(voter_id)
+        seen = set()
+        kept = []
+        for entry in entries:
+            vote_id = entry.get('voteId')
+            if not vote_id or vote_id in seen:
+                dup_dropped += 1
+                continue
+            seen.add(vote_id)
+            if known:
+                ec = event_chamber((votes_meta.get(vote_id) or {}).get('motionText'))
+                if ec and ec != known:
+                    cross_dropped += 1
+                    continue
+            kept.append(entry)
+        if kept:
+            clean[voter_id] = kept
+    return clean, {'duplicateVotesDropped': dup_dropped, 'crossChamberDropped': cross_dropped}
+
+
+def sanitize_existing(path):
+    """Re-apply the soundness invariants to an already-generated file in place,
+    without hitting the API. Used by `--sanitize`."""
+    if not os.path.exists(path):
+        print(f"Error: {path} not found — nothing to sanitize.")
+        sys.exit(1)
+    with open(path, encoding='utf-8') as f:
+        data = json.load(f)
+
+    votes_meta = data.get('votes', {})
+    raw        = data.get('memberVotes', {})
+    if not raw:
+        print("Error: no memberVotes in file — refusing to write.")
+        sys.exit(1)
+
+    member_chambers = load_member_chambers()
+    clean, stats = sanitize_member_votes(raw, votes_meta, member_chambers)
+
+    data['memberVotes'] = clean
+    meta = data.setdefault('metadata', {})
+    meta['sanitizedAt']          = datetime.now().isoformat()
+    meta['duplicateVotesDropped'] = stats['duplicateVotesDropped']
+    meta['crossChamberDropped']   = stats['crossChamberDropped']
+
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, separators=(',', ':'), ensure_ascii=False)
+
+    print(f"Sanitized {path}: dropped {stats['duplicateVotesDropped']} duplicate "
+          f"and {stats['crossChamberDropped']} cross-chamber entries; "
+          f"{len(clean)} members remain.")
 
 
 def fetch(url, retries=3):
@@ -70,6 +182,10 @@ def fetch(url, retries=3):
 
 
 def main():
+    if SANITIZE_ONLY:
+        sanitize_existing(OUTPUT_FILE)
+        return
+
     if not API_KEY:
         print("Error: OPENSTATES_API_KEY environment variable not set")
         sys.exit(1)
@@ -161,15 +277,24 @@ def main():
         page += 1
         time.sleep(DELAY)
 
+    # Enforce data-soundness invariants: de-duplicate roll calls and drop
+    # cross-chamber contamination before writing.
+    member_chambers = load_member_chambers()
+    member_votes, sanitize_stats = sanitize_member_votes(member_votes, votes_meta, member_chambers)
+    print(f"  Sanitized: dropped {sanitize_stats['duplicateVotesDropped']} duplicate "
+          f"and {sanitize_stats['crossChamberDropped']} cross-chamber vote entries")
+
     output = {
         'metadata': {
-            'generatedAt':        datetime.now().isoformat(),
-            'session':            GA_SESSION,
-            'sessionName':        SESSION_NAME,
-            'source':             'Open States API',
-            'totalVotes':         len(votes_meta),
-            'totalBillsSeen':     bills_seen,
-            'paginationComplete': total_pages is None or page >= total_pages,
+            'generatedAt':          datetime.now().isoformat(),
+            'session':              GA_SESSION,
+            'sessionName':          SESSION_NAME,
+            'source':               'Open States API',
+            'totalVotes':           len(votes_meta),
+            'totalBillsSeen':       bills_seen,
+            'paginationComplete':   total_pages is None or page >= total_pages,
+            'duplicateVotesDropped': sanitize_stats['duplicateVotesDropped'],
+            'crossChamberDropped':   sanitize_stats['crossChamberDropped'],
         },
         'votes':       votes_meta,
         'memberVotes': member_votes,

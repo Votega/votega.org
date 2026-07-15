@@ -90,6 +90,40 @@ permalink: /ga-member.html
   .vote-yea   { color: #1a7a1a; font-weight: bold; }
   .vote-nay   { color: #b00020; font-weight: bold; }
   .vote-other { color: #666; }
+  /* Voting participation summary */
+  .participation-box {
+    border: 1px solid #d7dde5;
+    border-left: 4px solid #1a56a8;
+    border-radius: 6px;
+    background: #f7f9fc;
+    padding: 0.75rem 1rem;
+    margin: 0 0 1rem 0;
+  }
+  .participation-head {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #666;
+    margin-bottom: 0.25rem;
+  }
+  .participation-figure {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1a3c6e;
+    line-height: 1.2;
+  }
+  .participation-frac {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #555;
+  }
+  .participation-note {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 0.35rem;
+    line-height: 1.4;
+  }
   /* Tabs */
   #votesTabs { margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1.25rem; }
   .tab-bar { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 1.25rem; }
@@ -630,6 +664,58 @@ permalink: /ga-member.html
       ${cards}`;
   }
 
+  // Chamber a passage vote belongs to, derived from its motion text.
+  function voteChamber(meta) {
+    const mt = (meta && meta.motionText) || '';
+    if (mt.includes('Senate')) return 'Senate';
+    if (mt.includes('House'))  return 'House of Representatives';
+    return '';
+  }
+
+  // Voting participation: share of the member's OWN-chamber passage roll calls
+  // on which they cast a Yea or Nay. "Other" (absent, excused, not voting,
+  // present) counts against participation. Roll calls are de-duplicated by
+  // vote ID so a member with duplicated source rows is not double-counted.
+  // Presiding officers (e.g. the Speaker) vote only to break ties by custom,
+  // so a near-zero rate on a full slate is labeled as such rather than shown
+  // as a misleadingly low percentage.
+  function buildParticipationSummary(memberVotes, votesIndex, memberChamber) {
+    const seen = new Map();
+    for (const { voteId, vote } of memberVotes) {
+      const vc = voteChamber(votesIndex[voteId]);
+      if (memberChamber && vc && vc !== memberChamber) continue; // own chamber only
+      if (!seen.has(voteId)) seen.set(voteId, vote);
+    }
+
+    const total = seen.size;
+    if (total === 0) return '';
+
+    let voted = 0;
+    for (const v of seen.values()) if (v === 'Yea' || v === 'Nay') voted++;
+    const rate = Math.round(voted / total * 100);
+
+    const methodology = 'Share of recorded passage-vote roll calls in this member’s chamber on which they cast a Yea or Nay. “Other” — absences, excused absences, and abstentions — counts against this figure. Excludes committee and procedural votes.';
+
+    // Presiding-officer heuristic: essentially never casts a Yea/Nay despite a
+    // near-full slate of roll calls (the Speaker of the House does not vote on
+    // ordinary passage votes).
+    if (total >= 50 && voted <= 3) {
+      return `
+        <div class="participation-box">
+          <div class="participation-head">Voting Participation</div>
+          <div class="participation-figure">Presiding officer</div>
+          <div class="participation-note">By custom, a presiding officer votes only to break ties or on select matters. This member cast a recorded Yea or Nay on ${voted} of ${total} passage votes — expected for this role, not a measure of attendance.</div>
+        </div>`;
+    }
+
+    return `
+      <div class="participation-box">
+        <div class="participation-head">Voting Participation</div>
+        <div class="participation-figure">${rate}% <span class="participation-frac">(${voted} of ${total} passage votes)</span></div>
+        <div class="participation-note">${methodology}</div>
+      </div>`;
+  }
+
   async function loadVotingHistory(member) {
     const container = document.getElementById('votingHistory');
     if (!member.id || !container) return;
@@ -668,6 +754,7 @@ permalink: /ga-member.html
         else otherCount++;
       }
       const chartHtml = buildVoteChart(yeaCount, nayCount, otherCount, sorted.length);
+      const participationHtml = buildParticipationSummary(memberVotes, votesIndex, member.chamber);
 
       const rows = sorted.map(({ voteId, vote }) => {
         const meta    = votesIndex[voteId] || {};
@@ -695,6 +782,7 @@ permalink: /ga-member.html
       container.innerHTML = `
         <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
+        ${participationHtml}
         ${incompleteNote}
         ${chartHtml}
         <table class="vote-table">
