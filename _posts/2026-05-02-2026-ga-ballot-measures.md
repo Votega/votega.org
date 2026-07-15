@@ -4,6 +4,8 @@ title: 2026 Georgia Ballot Measures
 subtitle: Georgia Amendments on the Ballot
 ---
 
+> **See the live tracker:** For an up-to-date, structured view of Georgia's ballot measures — including enabling legislation and, after the election, results — visit the [Georgia Ballot Measures page]({{ '/ga-ballot-measures.html' | relative_url }}).
+
 As of May 1, 2026, three statewide ballot measures were certified for the ballot in Georgia for the November 3, 2026 General Election.
 
 <table style="width:100%;table-layout:fixed;">
