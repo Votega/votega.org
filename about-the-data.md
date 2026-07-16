@@ -152,6 +152,8 @@ structured legislator data without the overhead of maintaining their own pipelin
 
 The data is published as `data/all.json` and follows the same schema that we use for votega.org. See the repository README for field definitions.
 
+**Voting records:** Each legislator's passage-vote history is published alongside the roster as `data/votes.json`, updated weekly whenever `ga-member-votes.json` refreshes on votega.org (see [Georgia State Legislator Voting History](#georgia-state-legislator-voting-history) above for how it's built and de-duplicated). It follows the same schema as votega.org's copy — `metadata`, `votes` (keyed by Open States vote ID), and `memberVotes` (keyed by the same OCD person ID used in `data/all.json`), so the two files join directly on that ID.
+
  
 
 {: .box-note}
