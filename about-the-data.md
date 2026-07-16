@@ -40,6 +40,21 @@ Voting history is displayed on each Georgia federal legislator's profile page, s
 
 ---
 
+## GA Federal Delegation — Community Data Repository
+
+We publish a copy of Georgia's federal congressional delegation data to a public community repository.
+
+[GitHub GA Federal Legislators Repository](https://github.com/Votega/ga-federal-legislators)
+
+This repository is intended as a free, open, machine-readable source of Georgia's current U.S. House and Senate delegation and their voting record on signed legislation — for civic apps, researchers, journalists, or other organizations that need structured data without maintaining their own Congress.gov / Clerk-of-the-House / Senate.gov pipeline.
+
+Unlike `current-members.json` on votega.org (which covers the full current Congress, all states), the published `data/members.json` is filtered to Georgia's delegation only — the same `state === "Georgia"` filter the site itself uses. `data/votes.json` is Georgia's voting-history data (see [Federal Legislator Voting History](#federal-legislator-voting-history-ga-delegation) above), which is already Georgia-scoped and published as-is.
+
+- **Updated:** `data/members.json` whenever `current-members.json` changes on votega.org (daily); `data/votes.json` whenever `federal-member-votes.json` changes (weekly).
+- **Schema:** Same as votega.org's own copies, documented in the repository README.
+
+---
+
 ## Georgia General Assembly Legislators
 
 **Primary source:** [Open States API](https://openstates.org/) (Plural Policy)
@@ -151,6 +166,8 @@ anyone can use — civic apps, researchers, journalists, or other organizations 
 structured legislator data without the overhead of maintaining their own pipeline.
 
 The data is published as `data/all.json` and follows the same schema that we use for votega.org. See the repository README for field definitions.
+
+**Voting records:** Each legislator's passage-vote history is published alongside the roster as `data/votes.json`, updated weekly whenever `ga-member-votes.json` refreshes on votega.org (see [Georgia State Legislator Voting History](#georgia-state-legislator-voting-history) above for how it's built and de-duplicated). It follows the same schema as votega.org's copy — `metadata`, `votes` (keyed by Open States vote ID), and `memberVotes` (keyed by the same OCD person ID used in `data/all.json`), so the two files join directly on that ID.
 
  
 
