@@ -19,12 +19,12 @@ publish-ga-executive-orders.yml — now only watches and publishes the current y
 
 **Data pipeline:**
 
-1. `GA_2025_26_bills.json` — a raw Open States bulk export (~50 MB) committed to the repo. Not served to the browser.
-2. `scripts/process_ga_bills.py` — transforms the bulk export into the compact `assets/data/ga-bills.json` (~5 MB) that the page loads. Run this script locally whenever the source file changes:
+1. `scripts/generate_ga_bills_data.py` — fetches all bills for the 2025–26 session live from the Open States API and writes the compact `assets/data/ga-bills.json` (~5 MB) that the page loads. Requires `OPENSTATES_API_KEY`:
    ```
-   python scripts/process_ga_bills.py
+   python scripts/generate_ga_bills_data.py
    ```
    The script strips the full action history (too large for the browser), keeps passage vote counts with motion text (roll call number), and auto-tags bills as "Local / Municipal" when the title starts with a Georgia county name.
+2. `.github/workflows/update-ga-bills.yml` — runs the script weekly (Sundays 07:30 UTC), then re-enriches with party vote tallies before committing.
 3. `assets/data/ga-bills.json` — the generated output committed to the repo and served statically.
 
-When a live Open States API workflow is built to replace the bulk export, only `process_ga_bills.py` needs to change — `ga-bills.html` reads the same schema.
+`scripts/process_ga_bills.py` is retired — it only existed to transform the one-time May 2026 bulk export (`GA_2025_26_bills.json`) that `generate_ga_bills_data.py` now replaces. Output schema is unchanged, so `ga-bills.html` needed no changes.

@@ -91,13 +91,13 @@ We paginate through all Georgia bills in the current session via the Open States
 
 ## Georgia General Assembly Bills & Resolutions
 
-**Source:** [Open States](https://openstates.org/) (Plural Policy) — bulk export, May 2026
+**Source:** [Open States](https://openstates.org/) (Plural Policy) — live API
 
-The [GA Bills & Resolutions](/ga-bills.html) tracker covers all 5,480 bills and resolutions introduced during the 2025–26 regular session of the Georgia General Assembly.
+The [GA Bills & Resolutions](/ga-bills.html) tracker covers all 5,480+ bills and resolutions introduced during the 2025–26 regular session of the Georgia General Assembly.
 
 **How it works:**
 
-The raw data originates from a bulk Open States export (`GA_2025_26_bills.json`). A build-time Python script (`scripts/process_ga_bills.py`) transforms it into a compact static file (`assets/data/ga-bills.json`) that the browser loads directly. The script:
+A weekly GitHub Actions workflow (`scripts/generate_ga_bills_data.py`) fetches every bill for the session directly from the Open States API and writes a compact static file (`assets/data/ga-bills.json`) that the browser loads directly. The script:
 
 - Strips the full per-bill action history (too large for client-side use), retaining only the latest action as `status` / `statusDate`.
 - Derives the Governor's disposition — signed, vetoed, or sent and still pending — as a structured `governorAction` field (see below), read from Open States' explicit action classifications rather than guessed from free text.
@@ -147,7 +147,7 @@ A quirk in the source data: a vetoed bill's transmittal record still carries an 
 **Party-line classification:** A separate script, `scripts/enrich_bills_with_party_votes.py`, joins each `passageVotes` entry with individual member votes and party affiliation (from `ga-member-votes.json` and `ga-members.json`) to add a `partyTally` — the Yea/Nay count by party — to each recorded vote. The bills tracker uses this to flag **party-line votes**: roll calls where a majority of Republicans voted opposite a majority of Democrats. A bill is tagged "⚡ Party-line" if any of its recorded passage votes met this bar; votes where both parties largely agreed are not flagged, since most legislation that reaches a floor vote passes with broad support and labeling all of it "party-line" would be meaningless. Bills can be filtered to show only those with at least one party-line vote.
 
 - **Scope:** All bills and resolutions from the 2025–26 regular session.
-- **Freshness:** Static — sourced from a May 2026 Open States bulk export. A future update will wire this into a live API workflow matching the existing GA member update cadence.
+- **Freshness:** Live — refetched weekly from the Open States API (Sundays 07:30 UTC), matching the existing GA member/vote update cadence.
 
 ---
 
@@ -353,7 +353,7 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 | GA legislators community repo | Published from above | Daily, after GA member update |
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
 | GA state legislator voting history | Open States API | Weekly, Sundays 08:00 UTC |
-| GA bills & resolutions (2025–26 session) | Open States bulk export | Static — May 2026 export; live API workflow planned |
+| GA bills & resolutions (2025–26 session) | Open States API | Weekly, Sundays 07:30 UTC |
 | GA executive orders | gov.georgia.gov (scraped) | Daily, 08:00 UTC (committed when new orders are found) |
 | GA congressional stock trades | House/Senate eFD via kadoa-org/congress-trading-monitor | Weekly, Sundays 10:00 UTC |
 | 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |

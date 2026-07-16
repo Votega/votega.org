@@ -1,0 +1,71 @@
+name: Update Georgia legislative bill data (weekly, Sun 07:30 UTC)
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly on Sundays at 07:30 UTC — 30 min before update-ga-votes.yml,
+    # which re-enriches ga-bills.json with that day's freshest vote data.
+    - cron: '30 7 * * 0'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate GA bills data
+        run: python scripts/generate_ga_bills_data.py assets/data/ga-bills.json
+        env:
+          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
+
+      - name: Validate generated data
+        run: |
+          if [ ! -f assets/data/ga-bills.json ]; then
+            echo "Error: ga-bills.json was not generated"
+            exit 1
+          fi
+          python -c "
+          import json
+          d = json.load(open('assets/data/ga-bills.json'))
+          bills = d.get('bills', [])
+          meta  = d.get('metadata', {})
+          print(f'Validated: {len(bills)} bills (metadata.totalBills={meta.get(\"totalBills\")})')
+          assert len(bills) >= 5000, f'Expected 5000+ bills for the 2025-26 session, got {len(bills)}'
+          assert meta.get('totalBills') == len(bills), 'metadata.totalBills does not match actual bill count'
+          assert meta.get('paginationComplete') is True, 'Pagination did not complete — refusing stale/partial data'
+          required = ['id', 'identifier', 'chamber', 'title', 'billUrl']
+          for b in bills:
+              for field in required:
+                  assert field in b, f'Bill {b.get(\"identifier\",\"?\")} missing required field: {field}'
+          print('All integrity checks passed')
+          "
+
+      - name: Enrich GA bills with party vote tallies
+        run: python scripts/enrich_bills_with_party_votes.py assets/data/ga-bills.json assets/data/ga-member-votes.json assets/data/ga-members.json
+
+      - name: Commit and push generated data
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/ga-bills.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update Georgia legislative bill data"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+          fi
