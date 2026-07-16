@@ -120,9 +120,9 @@ def fetch(url, retries=3):
 
 def get_all_bills():
     """Paginate GET /bills for the configured GA session, with the relation
-    includes slim_bill() needs (abstracts, actions, sponsors, sources, votes,
-    versions). subject/classification/identifier/title/chamber are core
-    fields returned without an include."""
+    includes slim_bill() needs (abstracts, actions, sponsorships, sources,
+    votes, versions). subject/classification/identifier/title/chamber are
+    core fields returned without an include."""
     all_bills   = []
     page        = 1
     total_pages = None
@@ -135,7 +135,7 @@ def get_all_bills():
             ('page',         page),
             ('include',      'abstracts'),
             ('include',      'actions'),
-            ('include',      'sponsors'),
+            ('include',      'sponsorships'),
             ('include',      'sources'),
             ('include',      'versions'),
             ('include',      'votes'),
@@ -350,7 +350,7 @@ def slim_bill(b):
                 'name':    s['name'],
                 'primary': s.get('primary', False),
             }
-            for s in b.get('sponsors', [])
+            for s in b.get('sponsorships', [])
         ],
         'billUrl':     get_bill_url(b.get('sources', [])),
         'textUrl':     get_text_url(b.get('versions', [])),
