@@ -137,14 +137,15 @@ permalink: /executive-branch.html
     color: #555;
     line-height: 1.35;
   }
-  .cabinet-card .coming-soon-badge {
+  .cabinet-card .policy-badge {
     display: inline-block;
     margin-top: 0.5rem;
     padding: 0.15rem 0.5rem;
-    background: #f3f4f6;
+    background: #eef2ff;
     border-radius: 4px;
     font-size: 0.7rem;
-    color: #6b7280;
+    color: #4338ca;
+    font-weight: 600;
   }
   .data-note {
     font-size: 0.8rem;
@@ -217,16 +218,24 @@ permalink: /executive-branch.html
       }).join('');
 
       // --- Cabinet cards ---
+      // The Office of the Director of National Intelligence coordinates the
+      // intelligence community rather than issuing its own regulations, so
+      // it has no Federal Register agency listing — its card links out to
+      // the official site instead of promising rule tracking it can't offer.
+      const NO_AGENCY_RULES = new Set(['Office of the Director of National Intelligence']);
       const cabinetCards = cabinet.map(o => {
         const photoHtml = o.imageUrl
           ? `<img class="cabinet-card-photo" src="${o.imageUrl}" alt="${o.name}">`
           : '';
+        const policyBadge = NO_AGENCY_RULES.has(o.department)
+          ? '<span class="policy-badge" style="background:#f3f4f6;color:#6b7280;">Visit official website →</span>'
+          : '<span class="policy-badge">View agency rules &amp; regulations →</span>';
         return `<a class="cabinet-card" href="${base}executive-member.html?id=${encodeURIComponent(o.id)}">
           ${photoHtml}
           <span class="dept-label">${o.department || ''}</span>
           <span class="cabinet-name">${o.name}</span>
           <span class="cabinet-role">${o.role}</span>
-          <span class="coming-soon-badge">Policy tracking coming soon</span>
+          ${policyBadge}
         </a>`;
       }).join('');
 
