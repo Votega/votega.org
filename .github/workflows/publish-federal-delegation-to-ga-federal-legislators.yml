@@ -1,0 +1,105 @@
+name: Publish GA federal delegation to ga-federal-legislators
+
+# Requires secret: GA_FEDERAL_LEGISLATORS
+#   A GitHub Personal Access Token (fine-grained, Contents: Read and write on
+#   Votega/ga-federal-legislators only, or classic with repo scope).
+#   Add it at: votega.org repo → Settings → Secrets and variables → Actions → New repository secret
+#
+# current-members.json covers the full current Congress (all states), unlike
+# ga-members.json/races.json/ga-bills.json which are already Georgia-scoped —
+# so this workflow filters it down to Georgia's delegation before publishing,
+# matching the same state === 'Georgia' filter congress.js uses on the site.
+# federal-member-votes.json is already Georgia-scoped and is published as-is.
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/current-members.json'      # updated daily by update-current-members.yml
+      - 'assets/data/federal-member-votes.json'  # updated weekly by update-federal-votes.yml
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      - name: Validate source data
+        run: |
+          python3 -c "
+          import json
+
+          members = json.load(open('assets/data/current-members.json'))['members']
+          ga = [m for m in members if m.get('state') == 'Georgia']
+          assert ga, 'No Georgia members found in current-members.json — filter or source data may be broken'
+          print(f'current-members.json valid: {len(members)} total, {len(ga)} in Georgia')
+
+          votes = json.load(open('assets/data/federal-member-votes.json'))
+          member_votes = votes.get('memberVotes', {})
+          assert member_votes, 'federal-member-votes.json has no memberVotes'
+          print(f'federal-member-votes.json valid: {len(member_votes)} members with vote records')
+          "
+
+      - name: Publish to ga-federal-legislators repo
+        env:
+          GA_FEDERAL_LEGISLATORS: ${{ secrets.GA_FEDERAL_LEGISLATORS }}
+        run: |
+          python3 - <<'EOF'
+          import json, base64, urllib.request, urllib.error, os
+          from datetime import datetime, timezone
+
+          token = os.environ['GA_FEDERAL_LEGISLATORS']
+          repo  = 'Votega/ga-federal-legislators'
+          headers = {
+              'Authorization': f'token {token}',
+              'Accept': 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json',
+          }
+
+          def publish_file(remote_path, payload_obj, commit_message):
+              content = base64.b64encode(json.dumps(payload_obj, ensure_ascii=False).encode()).decode()
+              url = f'https://api.github.com/repos/{repo}/contents/{remote_path}'
+
+              # Get current file SHA (required by GitHub API to update an existing file)
+              sha = None
+              req = urllib.request.Request(url, headers=headers)
+              try:
+                  with urllib.request.urlopen(req) as resp:
+                      sha = json.loads(resp.read())['sha']
+              except urllib.error.HTTPError as e:
+                  if e.code != 404:
+                      raise
+
+              body = {'message': commit_message, 'content': content}
+              if sha:
+                  body['sha'] = sha
+
+              req = urllib.request.Request(url, data=json.dumps(body).encode(), method='PUT', headers=headers)
+              with urllib.request.urlopen(req) as resp:
+                  result = json.loads(resp.read())
+                  print(f"Published {remote_path}: {result['commit']['sha']}")
+
+          # --- members.json: filter the full Congress roster down to Georgia ---
+          src = json.load(open('assets/data/current-members.json'))
+          ga_members = [m for m in src.get('members', []) if m.get('state') == 'Georgia']
+          members_payload = {
+              'metadata': {
+                  'generatedAt': datetime.now(timezone.utc).isoformat(),
+                  'source': 'Congress.gov API, filtered to Georgia from votega.org current-members.json',
+                  'sourceGeneratedAt': src.get('metadata', {}).get('generatedAt'),
+                  'count': len(ga_members),
+              },
+              'members': ga_members,
+          }
+          publish_file('data/members.json', members_payload, 'Publish GA federal delegation from votega.org')
+
+          # --- votes.json: already Georgia-scoped, publish as-is ---
+          votes_payload = json.load(open('assets/data/federal-member-votes.json'))
+          publish_file('data/votes.json', votes_payload, 'Publish GA federal delegation vote data from votega.org')
+          EOF
