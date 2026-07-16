@@ -286,6 +286,7 @@ permalink: /executive-member.html
         loadSignedLegislation(official);
       }
       if (official.id === 'vice-president') loadVpTieVotes();
+      if (official.tier === 'cabinet') loadAgencyActions(official);
     } catch (err) {
       console.error('loadOfficial()', err);
       detailsDiv.innerHTML = '<p>Could not load this official\'s details. <a href="executive-branch.html">Go back</a></p>';
@@ -340,10 +341,11 @@ permalink: /executive-member.html
     // Build tab content based on role
     let contentHtml;
     if (isCabinet) {
-      contentHtml = `<div class="coming-soon-panel">
-           <h3>Policy Tracking Coming Soon</h3>
-           <p>We're working on tracking executive orders, agency rules, and policy actions for Cabinet members.<br>
-           Check back for updates, or visit the <a href="${o.officialWebsite || '#'}" target="_blank" rel="noopener">official department website</a>.</p>
+      contentHtml = `<div class="tab-container">
+           <div class="tab-nav">
+             <button class="tab-btn active" data-tab="agencyActions">Agency Rules &amp; Regulations</button>
+           </div>
+           <div id="agencyActions" class="tab-panel active"><p style="color:#777;font-size:0.875rem;">Loading agency actions…</p></div>
          </div>`;
     } else if (o.id === 'vice-president') {
       contentHtml = `<div class="tab-container">
@@ -633,6 +635,135 @@ permalink: /executive-member.html
     } catch (err) {
       console.error('loadExecOrders()', err);
       container.innerHTML = `<p style="color:#c00;font-size:0.875rem;">Could not load executive orders from the Federal Register. <a href="https://www.federalregister.gov/presidential-documents/executive-orders" target="_blank" rel="noopener">View directly on FederalRegister.gov →</a></p>`;
+    }
+  }
+
+  // Federal Register numeric agency IDs for each Cabinet department, resolved
+  // from https://www.federalregister.gov/api/v1/agencies.json (id field).
+  // The Office of the Director of National Intelligence has no entry there —
+  // it coordinates the intelligence community rather than issuing its own
+  // regulations — so it's intentionally omitted; loadAgencyActions() falls
+  // back to the department's official website for that case.
+  const AGENCY_IDS = {
+    'Department of State':                         { id: 476, slug: 'state-department' },
+    'Department of the Treasury':                  { id: 497, slug: 'treasury-department' },
+    'Department of Defense':                       { id: 103, slug: 'defense-department' },
+    'Department of Justice':                       { id: 268, slug: 'justice-department' },
+    'Department of the Interior':                  { id: 253, slug: 'interior-department' },
+    'Department of Agriculture':                   { id: 12,  slug: 'agriculture-department' },
+    'Department of Commerce':                      { id: 54,  slug: 'commerce-department' },
+    'Department of Labor':                         { id: 271, slug: 'labor-department' },
+    'Department of Health and Human Services':     { id: 221, slug: 'health-and-human-services-department' },
+    'Department of Housing and Urban Development': { id: 228, slug: 'housing-and-urban-development-department' },
+    'Department of Transportation':                { id: 492, slug: 'transportation-department' },
+    'Department of Energy':                        { id: 136, slug: 'energy-department' },
+    'Department of Education':                     { id: 126, slug: 'education-department' },
+    'Department of Veterans Affairs':              { id: 520, slug: 'veterans-affairs-department' },
+    'Office of Management and Budget':             { id: 280, slug: 'management-and-budget-office' },
+    'Department of Homeland Security':              { id: 227, slug: 'homeland-security-department' },
+  };
+
+  // Fetches recent final and proposed rules for a Cabinet member's department
+  // from the Federal Register API (free, no key, CORS-open) — the same
+  // pattern loadExecOrders() uses above, filtered by agency instead of by
+  // presidential document type.
+  async function loadAgencyActions(official) {
+    const container = document.getElementById('agencyActions');
+    if (!container) return;
+
+    const agency = AGENCY_IDS[official.department];
+    if (!agency) {
+      container.innerHTML = `<p style="color:#777;font-size:0.875rem;">Agency rule tracking isn't available for this office.<br>
+        Visit the <a href="${official.officialWebsite || '#'}" target="_blank" rel="noopener">official website</a> for policy updates.</p>`;
+      return;
+    }
+
+    const FR_BASE  = 'https://www.federalregister.gov/api/v1/documents.json';
+    const PER_PAGE = 20;
+
+    let currentPage = 1;
+    let totalCount  = 0;
+    let totalPages  = 0;
+    const rendered  = [];
+
+    function buildUrl(page) {
+      return `${FR_BASE}?conditions%5Bagency_ids%5D%5B%5D=${agency.id}` +
+        `&conditions%5Btype%5D%5B%5D=RULE&conditions%5Btype%5D%5B%5D=PRORULE` +
+        `&per_page=${PER_PAGE}&page=${page}&order=newest` +
+        `&fields[]=document_number&fields[]=title&fields[]=type&fields[]=publication_date&fields[]=html_url&fields[]=abstract`;
+    }
+
+    function renderItems(results) {
+      return results.map(doc => {
+        const typeLabel = doc.type === 'Proposed Rule' ? 'PROPOSED RULE' : 'RULE';
+        const date      = doc.publication_date ? fmt(doc.publication_date) : '—';
+        const title     = doc.title || 'Untitled';
+        const url       = doc.html_url || '#';
+        const abs       = doc.abstract
+          ? `<div class="eo-abstract">${doc.abstract}</div>`
+          : '';
+        return `<li class="eo-item">
+          <div class="eo-header">
+            <span class="eo-number">${typeLabel}</span>
+            <a class="eo-title" href="${url}" target="_blank" rel="noopener">${title}</a>
+          </div>
+          <div class="eo-date">Published ${date}</div>
+          ${abs}
+        </li>`;
+      });
+    }
+
+    function rebuildContainer() {
+      const hasMore = currentPage < totalPages;
+      const metaBar = totalCount > 0
+        ? `<p class="eo-meta-bar">Showing ${rendered.length} of ${totalCount} rules and proposed rules · <a href="https://www.federalregister.gov/agencies/${agency.slug}" target="_blank" rel="noopener">View all on Federal Register →</a></p>`
+        : '';
+      const loadMoreBtn = hasMore
+        ? `<button class="eo-load-more" id="agencyLoadMore">Load more</button>`
+        : '';
+
+      container.innerHTML = `
+        ${metaBar}
+        <ul class="eo-list">${rendered.join('')}</ul>
+        ${loadMoreBtn}
+      `;
+
+      const btn = document.getElementById('agencyLoadMore');
+      if (btn) {
+        btn.addEventListener('click', async () => {
+          btn.disabled = true;
+          btn.textContent = 'Loading…';
+          currentPage++;
+          await fetchPage(currentPage);
+        });
+      }
+    }
+
+    async function fetchPage(page) {
+      const res = await fetch(buildUrl(page));
+      if (!res.ok) throw new Error(`Federal Register API: HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (page === 1) {
+        totalCount = data.count || 0;
+        totalPages = data.total_pages || 1;
+      }
+
+      const newItems = renderItems(data.results || []);
+      rendered.push(...newItems);
+      rebuildContainer();
+    }
+
+    try {
+      await fetchPage(1);
+      if (rendered.length === 0) {
+        container.innerHTML = `<p style="color:#777;font-size:0.875rem;">No recent rules or proposed rules found for this department.<br>
+          Visit the <a href="${official.officialWebsite || '#'}" target="_blank" rel="noopener">official department website</a> for other policy updates.</p>`;
+      }
+    } catch (err) {
+      console.error('loadAgencyActions()', err);
+      container.innerHTML = `<p style="color:#c00;font-size:0.875rem;">Could not load agency actions from the Federal Register.<br>
+        Visit the <a href="${official.officialWebsite || '#'}" target="_blank" rel="noopener">official department website</a> for policy updates.</p>`;
     }
   }
 </script>

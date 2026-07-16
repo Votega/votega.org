@@ -178,8 +178,9 @@ The Federal Register API is queried at page load time, filtered to executive ord
 - **Scope:** Executive orders issued during the current presidential term.
 - **Signed legislation:** Laws signed by the President during the current term are pulled from the Congress.gov API and stored in a prebuilt static file. Each law entry includes its public law number, bill label, title, signing date, policy area, and origin chamber.
 - **VP tie-breaking votes:** The Vice President casts a tie-breaking vote when the Senate is deadlocked 50–50. These are recorded in Senate roll call XML files under a `<tie_breaker>` element. We scan the vote list for each session, identify tied tallies, fetch the detail XML for each, and extract VP tie-breaking votes into a prebuilt static file updated weekly.
-- **Cabinet data:** Names, roles, departments, and Senate confirmation dates are manually maintained. Policy tracking per cabinet department is planned for a future update.
-- **Freshness:** Executive order data is live — fetched from the Federal Register API at page load time. VP tie-breaking votes, signed legislation, and cabinet membership are updated weekly via GitHub Actions.
+- **Cabinet data:** Names, roles, departments, and Senate confirmation dates are manually maintained.
+- **Agency rules & regulations:** Each Cabinet member's profile shows recent final and proposed rules from their department, fetched live from the Federal Register API and filtered to that department's agency ID (`conditions[agency_ids][]`) and document type (`RULE` and `PRORULE`, i.e. final and proposed rules — routine notices are excluded to keep the list focused on substantive regulatory actions). Agency IDs were resolved from the Federal Register's `/agencies.json` endpoint and are hardcoded per department in `executive-member.html`, the same way executive orders are already fetched for the President. The Office of the Director of National Intelligence has no Federal Register agency listing — it coordinates the intelligence community rather than issuing its own regulations — so its profile links to the official website instead.
+- **Freshness:** Executive orders and agency rules are live — fetched from the Federal Register API at page load time. VP tie-breaking votes, signed legislation, and cabinet membership are updated weekly via GitHub Actions.
 
 ---
 
