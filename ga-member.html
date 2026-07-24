@@ -867,7 +867,7 @@ permalink: /ga-member.html
 
       container.innerHTML = `
         <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
-        <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
+        <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing recorded passage votes from this session — the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
         ${(participationHtml || partyLoyaltyHtml) ? `
         <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
           ${participationHtml ? `<div style="flex:1;min-width:240px;">${participationHtml}</div>` : ''}

@@ -368,13 +368,33 @@ permalink: /ga-congress-trades.html
       }
     }
 
+    // Match a ?member= preset against a trade-data name. Trade data uses full
+    // legal names ("Earl Leroy Carter", "Richard W. Allen") while links pass
+    // "First Last" — sometimes with a nickname ("Rick Allen"). Match if every
+    // preset word (minus honorifics) appears in the trade-data name, or fall
+    // back to surname + first-initial (covers Mike/Michael, Rick/Richard
+    // without cross-matching e.g. David Scott to Austin Scott).
+    function matchesPreset(name) {
+      if (!presetMember) return false;
+      const HONORIFICS = new Set(['mr', 'mrs', 'ms', 'dr', 'rep', 'sen', 'hon']);
+      const clean = s => s.toLowerCase().split(/\s+/).map(t => t.replace(/\./g, '')).filter(Boolean);
+      const nameTokens   = clean(name);
+      const presetTokens = clean(presetMember).filter(t => !HONORIFICS.has(t));
+      if (!presetTokens.length) return false;
+      const nameSet = new Set(nameTokens);
+      if (presetTokens.every(t => nameSet.has(t))) return true;
+      return presetTokens.length >= 2 && nameTokens.length >= 2 &&
+        presetTokens[presetTokens.length - 1] === nameTokens[nameTokens.length - 1] &&
+        presetTokens[0][0] === nameTokens[0][0];
+    }
+
     // Populate member filter dropdown
     const memberSel = document.getElementById('memberFilter');
     for (const name of Object.keys(members).sort()) {
       const opt = document.createElement('option');
       opt.value = name;
       opt.textContent = name;
-      if (presetMember && name.toLowerCase().includes(presetMember.toLowerCase())) {
+      if (matchesPreset(name)) {
         opt.selected = true;
       }
       memberSel.appendChild(opt);

@@ -403,9 +403,18 @@ permalink: /ga-bills.html
 
     const s = bill.status || '';
     if (s.includes('Lost'))    return 'failed';
-    if (s.includes('Withdrawn') || s.includes('Recommitted')) return 'stalled';
-    const chambers = new Set(bill.passageVotes.map(function (v) { return v.chamber; }));
-    if (chambers.has('lower') && chambers.has('upper')) return 'passed';
+    if (s.includes('Withdrawn') || s.includes('Recommitted') || s.includes('Tabled')) return 'stalled';
+    // "Passed" requires the most recent passage vote in EACH chamber to have
+    // passed — a bill can be re-voted, so earlier failed attempts don't count
+    // against it, but a chamber whose latest vote failed hasn't passed it.
+    const latestByChamber = {};
+    (bill.passageVotes || []).forEach(function (v) {
+      const prev = latestByChamber[v.chamber];
+      if (!prev || (v.date || '') >= (prev.date || '')) latestByChamber[v.chamber] = v;
+    });
+    const lower = latestByChamber['lower'];
+    const upper = latestByChamber['upper'];
+    if (lower && upper && lower.result === 'pass' && upper.result === 'pass') return 'passed';
     return 'progress';
   }
 
