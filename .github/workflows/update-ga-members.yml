@@ -41,8 +41,14 @@ jobs:
           print(f'Validated: {count} GA members')
           assert count == len(members), f'metadata.count {count} != actual member count {len(members)}'
 
-          senate = [m for m in members if m.get('chamber') == 'Senate']
-          house  = [m for m in members if m.get('chamber') == 'House of Representatives']
+          # Resigned/Removed/Deceased entries are historical records injected purely so
+          # ga-member-votes.json can still join their earlier votes by OCD id — the seat
+          # itself is already reflected by a successor or a separate Vacant entry, so
+          # these must not count as an extra current seat.
+          DEPARTED_STATUSES = {'Resigned', 'Removed', 'Deceased'}
+          current_seat = lambda m: m.get('status') not in DEPARTED_STATUSES
+          senate = [m for m in members if m.get('chamber') == 'Senate' and current_seat(m)]
+          house  = [m for m in members if m.get('chamber') == 'House of Representatives' and current_seat(m)]
           # Georgia's General Assembly has a constitutionally fixed size: 56 Senate seats, 180 House seats.
           # Vacant seats are injected as placeholder entries, so these should always hold exactly.
           assert len(senate) == 56,  f'Expected exactly 56 senators, got {len(senate)}'

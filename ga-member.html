@@ -320,7 +320,13 @@ permalink: /ga-member.html
       }
 
       displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable);
-      displaySidebar(member, all);
+      // Resigned/Removed/Deceased entries are historical records kept only so
+      // ga-member-votes.json can still join their earlier votes by OCD id —
+      // exclude them from the sidebar's "current occupants" peer list, but
+      // keep them in `all` (passed to loadVotingHistory below) since their
+      // party still needs to count toward other members' loyalty stats.
+      const currentPeers = all.filter(m => !['Resigned', 'Removed', 'Deceased'].includes(m.status));
+      displaySidebar(member, currentPeers);
       loadCuratedBills(member);
       loadVotingHistory(member, all);
       if (window.location.hash) {

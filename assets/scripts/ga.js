@@ -158,7 +158,11 @@ async function loadData() {
     const res = await fetch(DATA_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    allMembers = data.members || [];
+    // Resigned/Removed/Deceased entries are historical records kept only so
+    // ga-member-votes.json can still join their earlier votes by OCD id — the
+    // seat itself is already reflected by a successor or a separate Vacant
+    // entry, so these must not appear as an extra current member here.
+    allMembers = (data.members || []).filter(m => !['Resigned', 'Removed', 'Deceased'].includes(m.status));
     statusLine.textContent = '';
     renderMembers();
   } catch (err) {

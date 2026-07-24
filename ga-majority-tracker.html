@@ -313,7 +313,12 @@ const BG    = { D: '#dbeafe', R: '#fee2e2', V: '#f3f4f6' };
 async function loadMembers() {
   const base = (location.pathname.match(/^\/[^/]+\//) || [''])[0];
   const res  = await fetch(base + 'assets/data/ga-members.json');
-  return (await res.json()).members;
+  const members = (await res.json()).members || [];
+  // Resigned/Removed/Deceased entries are historical records kept only so
+  // ga-member-votes.json can still join their earlier votes by OCD id — the
+  // seat itself is already reflected by a successor or a separate Vacant
+  // entry, so these must not appear as an extra current seat here.
+  return members.filter(m => !['Resigned', 'Removed', 'Deceased'].includes(m.status));
 }
 
 // ── Shared helpers ─────────────────────────────────────────────────────────
