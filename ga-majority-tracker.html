@@ -50,9 +50,6 @@ permalink: /ga-majority-tracker.html
     margin-top: 0.25rem;
     line-height: 1.3;
   }
-  .flip-num { color: #1d4ed8; }
-  .hold-num { color: #b91c1c; }
-
   .seat-bar {
     display: flex;
     height: 8px;
@@ -341,9 +338,16 @@ function legendHtml(d, r, v) {
 // ── Stats banner ───────────────────────────────────────────────────────────
 
 function renderCard(el, title, dCount, rCount, vCount, majority) {
-  const toFlip  = Math.max(0, majority - dCount);
-  const holdBuf = Math.max(0, rCount - majority);
-  const total   = dCount + rCount + vCount;
+  const total  = dCount + rCount + vCount;
+  const dShort = Math.max(0, majority - dCount);
+  const rShort = Math.max(0, majority - rCount);
+
+  const dSub = dShort === 0
+    ? `Democrats hold the majority by ${dCount - majority} seat${(dCount - majority) !== 1 ? 's' : ''}`
+    : `Democrats need ${dShort} more seat${dShort !== 1 ? 's' : ''} for a majority`;
+  const rSub = rShort === 0
+    ? `Republicans hold the majority by ${rCount - majority} seat${(rCount - majority) !== 1 ? 's' : ''}`
+    : `Republicans need ${rShort} more seat${rShort !== 1 ? 's' : ''} for a majority`;
 
   el.innerHTML = `
     <h3>${title}</h3>
@@ -360,14 +364,14 @@ function renderCard(el, title, dCount, rCount, vCount, majority) {
     </div>
     <div class="chamber-stats" style="margin-top:1rem">
       <div class="stat-block">
-        <div class="stat-label">Seats to Flip &#x2192; D</div>
-        <div class="stat-num flip-num">${toFlip}</div>
-        <div class="stat-sub">Democrats need ${toFlip} more seat${toFlip !== 1 ? 's' : ''} for a majority</div>
+        <div class="stat-label">Democrats — Seats Short of Majority</div>
+        <div class="stat-num" style="color:${COLOR.D}">${dShort}</div>
+        <div class="stat-sub">${dSub}</div>
       </div>
       <div class="stat-block">
-        <div class="stat-label">Republican Safety Margin</div>
-        <div class="stat-num hold-num">${holdBuf}</div>
-        <div class="stat-sub">Republicans can lose ${holdBuf} seat${holdBuf !== 1 ? 's' : ''} and still hold</div>
+        <div class="stat-label">Republicans — Seats Short of Majority</div>
+        <div class="stat-num" style="color:${COLOR.R}">${rShort}</div>
+        <div class="stat-sub">${rSub}</div>
       </div>
     </div>
     <div style="text-align:center;margin-top:1rem;padding-top:0.75rem;border-top:1px solid #e0e0e0;font-size:0.78rem;color:#888;">

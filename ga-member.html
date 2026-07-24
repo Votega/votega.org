@@ -351,17 +351,39 @@ permalink: /ga-member.html
     return '';
   }
 
+  // Exact age from birthDate when available (accounts for whether this
+  // year's birthday has passed); falls back to a birthYear-only estimate
+  // that's labeled "as of <year>" rather than shown as a precise age.
+  function computeAge(member) {
+    if (member.birthDate) {
+      const bd = new Date(member.birthDate + 'T00:00:00');
+      const today = new Date();
+      let age = today.getFullYear() - bd.getFullYear();
+      const hadBirthdayThisYear =
+        today.getMonth() > bd.getMonth() ||
+        (today.getMonth() === bd.getMonth() && today.getDate() >= bd.getDate());
+      if (!hadBirthdayThisYear) age--;
+      return { value: age, exact: true };
+    }
+    if (member.birthYear) {
+      return { value: new Date().getFullYear() - member.birthYear, exact: false };
+    }
+    return null;
+  }
+
   function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable) {
     const currentYear = new Date().getFullYear();
     const detailsDiv  = document.getElementById('memberDetails');
+    const age = computeAge(member);
+    const ageLabel = age && !age.exact ? `Age (as of ${currentYear})` : 'Age';
 
     const name    = member.name || 'Unknown';
     const imageHtml = member.imageUrl
-      ? `<img src="${member.imageUrl}" alt="${name}" style="max-width:200px;margin-bottom:1rem;border-radius:8px;">`
+      ? `<img src="${escHtml(member.imageUrl)}" alt="${escHtml(name)}" style="max-width:200px;margin-bottom:1rem;border-radius:8px;">`
       : '';
 
     const leadershipHtml = member.leadershipRole
-      ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;background:#1a1a2e;color:#fff;border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${member.leadershipRole}</div>`
+      ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;background:#1a1a2e;color:#fff;border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${escHtml(member.leadershipRole)}</div>`
       : '';
 
     const electionBannerHtml = (() => {
@@ -370,8 +392,8 @@ permalink: /ga-member.html
       const raceUrl   = `${basePath}race.html?id=${encodeURIComponent(seatRace.id)}`;
       const distLabel = seatRace.district ? ` District ${seatRace.district}` : '';
       return `<div class="status-banner status-running">
-        <span class="status-label">This seat is up for election in ${seatRace.cycle}</span>
-        <a href="${raceUrl}">View ${seatRace.chamber}${distLabel} race →</a>
+        <span class="status-label">This seat is up for election in ${escHtml(seatRace.cycle)}</span>
+        <a href="${escHtml(raceUrl)}">View ${escHtml(seatRace.chamber)}${escHtml(distLabel)} race →</a>
       </div>`;
     })();
 
@@ -380,11 +402,11 @@ permalink: /ga-member.html
       const basePath = getBasePath();
       const { race, challenger } = otherRaceInfo;
       const distLabel = race.district ? ` District ${race.district}` : '';
-      const officeLabel = `${race.chamber}${distLabel}`;
+      const officeLabel = escHtml(`${race.chamber}${distLabel}`);
       const candidateUrl = `${basePath}candidate.html?id=${encodeURIComponent(challenger.id)}`;
       return `<div class="status-banner status-candidacy">
-        <span class="status-label">Running for ${officeLabel} in ${race.cycle}</span>
-        <a href="${candidateUrl}">View candidate profile →</a>
+        <span class="status-label">Running for ${officeLabel} in ${escHtml(race.cycle)}</span>
+        <a href="${escHtml(candidateUrl)}">View candidate profile →</a>
       </div>`;
     })();
 
@@ -395,33 +417,33 @@ permalink: /ga-member.html
       const dateStr = member.statusDate
         ? new Date(member.statusDate + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})
         : '';
-      const labelLine = `<span class="status-label">${member.status}${dateStr ? ` &nbsp;·&nbsp; ${dateStr}` : ''}</span>`;
+      const labelLine = `<span class="status-label">${escHtml(member.status)}${dateStr ? ` &nbsp;·&nbsp; ${escHtml(dateStr)}` : ''}</span>`;
       const noteText  = member.statusNote
-        ? member.statusNote.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+        ? escHtml(member.statusNote).replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
         : '';
       const noteLine  = noteText ? `<span class="status-note">${noteText}</span>` : '';
       const electionLine = `<span class="status-election">This seat may be subject to a special election.</span>`;
       return `<div class="status-banner status-${knownSlug}">${labelLine}${noteLine}${electionLine}</div>`;
     })();
 
-    const phoneHtml   = member.phone   ? `<p><strong>Phone:</strong> ${member.phone}</p>`   : '';
-    const addressHtml = member.address ? `<p><strong>Address:</strong> ${member.address}</p>` : '';
-    const emailHtml   = member.email   ? `<p><strong>Email:</strong> <a href="mailto:${member.email}">${member.email}</a></p>` : '';
+    const phoneHtml   = member.phone   ? `<p><strong>Phone:</strong> ${escHtml(member.phone)}</p>`   : '';
+    const addressHtml = member.address ? `<p><strong>Address:</strong> ${escHtml(member.address)}</p>` : '';
+    const emailHtml   = member.email   ? `<p><strong>Email:</strong> <a href="mailto:${encodeURIComponent(member.email)}">${escHtml(member.email)}</a></p>` : '';
     const websiteHtml = member.officialWebsiteUrl
-      ? `<p><strong>Official Website:</strong> <a href="${member.officialWebsiteUrl}" target="_blank">${member.officialWebsiteUrl}</a></p>`
+      ? `<p><strong>Official Website:</strong> <a href="${escHtml(member.officialWebsiteUrl)}" target="_blank">${escHtml(member.officialWebsiteUrl)}</a></p>`
       : '';
 
     detailsDiv.innerHTML = `
       ${electionBannerHtml}
       ${statusBannerHtml}
       ${imageHtml}
-      <h2>${name}</h2>
+      <h2>${escHtml(name)}</h2>
       ${otherRaceBannerHtml}
       ${leadershipHtml}
       ${member.birthYear
         ? `<p style="display:flex;justify-content:space-between;">
              <span><strong>Birth Year:</strong> ${member.birthYear}</span>
-             <span><strong>Age:</strong> ${currentYear - member.birthYear}</span>
+             <span><strong>${ageLabel}:</strong> ${age.value}</span>
            </p>`
         : ''}
       ${member.termStartYear
@@ -431,8 +453,8 @@ permalink: /ga-member.html
            </p>`
         : ''}
 
-      <p><strong>Party:</strong> ${member.party || 'N/A'} ${getPartyIconHtml(member.party)}</p>
-      <p><strong>Chamber:</strong> ${member.chamber || 'N/A'}</p>
+      <p><strong>Party:</strong> ${escHtml(member.party || 'N/A')} ${getPartyIconHtml(member.party)}</p>
+      <p><strong>Chamber:</strong> ${escHtml(member.chamber || 'N/A')}</p>
       <p><strong>District:</strong> ${member.district ?? 'N/A'}</p>
       ${phoneHtml}
       ${addressHtml}
@@ -442,7 +464,7 @@ permalink: /ga-member.html
         ? `<div style="margin-top:1rem;">
              <strong>Committee Assignments:</strong>
              <ul style="margin:0.4rem 0 0 1.25rem;padding:0;">
-               ${member.committees.map(c => `<li>${c}</li>`).join('')}
+               ${member.committees.map(c => `<li>${escHtml(c)}</li>`).join('')}
              </ul>
            </div>`
         : (committeesAvailable === false
@@ -464,13 +486,14 @@ permalink: /ga-member.html
     if (!members.length) return '';
     const items = members.map(m => {
       const isCurrent = m.id === currentId;
-      const sub = `District ${m.district} · ${m.party || ''}`;
+      const name = escHtml(m.name);
+      const sub = escHtml(`District ${m.district} · ${m.party || ''}`);
       if (isCurrent) {
-        return `<span class="sidebar-member current">${m.name}<br><span class="sidebar-member-sub">${sub}</span></span>`;
+        return `<span class="sidebar-member current">${name}<br><span class="sidebar-member-sub">${sub}</span></span>`;
       }
-      return `<a class="sidebar-member" href="${basePath}ga-member.html?id=${encodeURIComponent(m.id)}${countyParam}">${m.name}<br><span class="sidebar-member-sub">${sub}</span></a>`;
+      return `<a class="sidebar-member" href="${basePath}ga-member.html?id=${encodeURIComponent(m.id)}${countyParam}">${name}<br><span class="sidebar-member-sub">${sub}</span></a>`;
     }).join('');
-    return `<div class="sidebar-group-label">${label}</div>${items}`;
+    return `<div class="sidebar-group-label">${escHtml(label)}</div>${items}`;
   }
 
   function displaySidebar(current, all) {
@@ -561,9 +584,12 @@ permalink: /ga-member.html
       ? `<p style="font-size:0.72rem;color:#888;margin:0.5rem 0 0 0;">* Other includes Not Voting, Absent, and Excused</p>`
       : '';
 
-    return `<div style="display:flex;align-items:center;gap:1.25rem;margin:0.75rem 0 1.25rem 0;">
-      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
-      <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
+    return `<div>
+      <div style="display:flex;align-items:center;gap:1.25rem;margin:0.75rem 0 0.4rem 0;">
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
+        <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
+      </div>
+      <p style="font-size:0.72rem;color:#888;margin:0 0 1.25rem 0;max-width:32rem;">Most bills that reach a floor vote pass, so a chart weighted toward “Yea” is typical here and on other members' pages — it reflects which bills got a recorded vote, not this member's overall independence or party loyalty.</p>
     </div>`;
   }
 
@@ -637,18 +663,18 @@ permalink: /ga-member.html
       const statusDate = bill.statusDate
         ? new Date(bill.statusDate + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'})
         : '';
-      const statusTag = [bill.status, statusDate].filter(Boolean).join(' · ');
-      const summaryHtml = bill.summary ? `<div class="bill-summary">${bill.summary}</div>` : '';
+      const statusTag = escHtml([bill.status, statusDate].filter(Boolean).join(' · '));
+      const summaryHtml = bill.summary ? `<div class="bill-summary">${escHtml(bill.summary)}</div>` : '';
       const textLink = bill.fullTextUrl
-        ? `<a class="bill-text-link" href="${bill.fullTextUrl}" target="_blank" rel="noopener">Full text (PDF) →</a>`
+        ? `<a class="bill-text-link" href="${escHtml(bill.fullTextUrl)}" target="_blank" rel="noopener">Full text (PDF) →</a>`
         : '';
 
       return `<div class="bill-card">
         <div class="bill-card-header">
-          <a class="bill-identifier" href="${bill.openstatesUrl}" target="_blank" rel="noopener">${bill.identifier}</a>
+          <a class="bill-identifier" href="${escHtml(bill.openstatesUrl)}" target="_blank" rel="noopener">${escHtml(bill.identifier)}</a>
           ${statusTag ? `<span class="bill-status-tag">${statusTag}</span>` : ''}
         </div>
-        <div class="bill-title">${bill.title}</div>
+        <div class="bill-title">${escHtml(bill.title)}</div>
         ${summaryHtml}
         <div class="bill-footer">
           ${voteBadge}
@@ -679,7 +705,7 @@ permalink: /ga-member.html
   // Presiding officers (e.g. the Speaker) vote only to break ties by custom,
   // so a near-zero rate on a full slate is labeled as such rather than shown
   // as a misleadingly low percentage.
-  function buildParticipationSummary(memberVotes, votesIndex, memberChamber) {
+  function buildParticipationSummary(memberVotes, votesIndex, memberChamber, incomplete) {
     const seen = new Map();
     for (const { voteId, vote } of memberVotes) {
       const vc = voteChamber(votesIndex[voteId]);
@@ -694,7 +720,8 @@ permalink: /ga-member.html
     for (const v of seen.values()) if (v === 'Yea' || v === 'Nay') voted++;
     const rate = Math.round(voted / total * 100);
 
-    const methodology = 'Share of recorded passage-vote roll calls in this member’s chamber on which they cast a Yea or Nay. “Other” — absences, excused absences, and abstentions — counts against this figure. Excludes committee and procedural votes.';
+    const methodology = 'Share of recorded passage-vote roll calls in this member’s chamber on which they cast a Yea or Nay. “Other” — absences, excused absences, and abstentions — counts against this figure. Excludes committee and procedural votes.'
+      + (incomplete ? ' Based on the partial session data noted above, so this figure may shift as more bills are fetched.' : '');
 
     // Presiding-officer heuristic: essentially never casts a Yea/Nay despite a
     // near-full slate of roll calls (the Speaker of the House does not vote on
@@ -748,7 +775,7 @@ permalink: /ga-member.html
   // lone party member would trivially "match" their own vote 100% of the
   // time. Independent of chamber control; a member can have a high loyalty
   // score whether their party holds the majority or the minority.
-  function buildPartyLoyaltySummary(memberVotes, votesIndex, memberChamber, member, partyVoteIndex) {
+  function buildPartyLoyaltySummary(memberVotes, votesIndex, memberChamber, member, partyVoteIndex, incomplete) {
     if (!member.party) return '';
 
     const seen = new Map();
@@ -780,7 +807,8 @@ permalink: /ga-member.html
     if (considered === 0) return '';
     const rate = Math.round(aligned / considered * 100);
     const accent = member.party === 'Democratic' ? '#2563eb' : member.party === 'Republican' ? '#dc2626' : '#1a56a8';
-    const methodology = `Share of this member's votes on <strong>party-line roll calls</strong> — where a majority of ${escHtml(member.party)}s voted opposite a majority of the other party — that matched their own caucus's position. Excludes votes where both parties largely agreed, so this reflects behavior specifically on contested, partisan votes.`;
+    const methodology = `Share of this member's votes on <strong>party-line roll calls</strong> — where a majority of ${escHtml(member.party)}s voted opposite a majority of the other party — that matched their own caucus's position. Excludes votes where both parties largely agreed, so this reflects behavior specifically on contested, partisan votes.`
+      + (incomplete ? ' Based on the partial session data noted above, so this figure may shift as more bills are fetched.' : '');
 
     return `
       <div class="participation-box" style="border-left-color:${accent};">
@@ -816,8 +844,12 @@ permalink: /ga-member.html
 
       const votesIndex = data.votes || {};
       const session    = data.metadata?.sessionName || '';
-      const incompleteNote = data.metadata?.paginationComplete === false
-        ? '<p style="font-size:0.75rem;color:#a35b00;margin:0 0 0.75rem 0;">Note: this session\'s vote data may be incomplete — the last data refresh did not finish fetching all bills.</p>'
+      const incomplete = data.metadata?.paginationComplete === false;
+      const seenNote   = (incomplete && data.metadata?.totalBillsSeen)
+        ? ' (' + data.metadata.totalBillsSeen.toLocaleString() + ' bills processed so far this session)'
+        : '';
+      const incompleteNote = incomplete
+        ? '<p style="font-size:0.78rem;color:#a35b00;background:#fff8ec;border:1px solid #fde7c2;border-radius:6px;padding:0.5rem 0.75rem;margin:0 0 0.75rem 0;">Note: this session\'s vote data is still being backfilled' + seenNote + ' — the participation, party-alignment, and chart figures below reflect only what has been fetched so far and may shift.</p>'
         : '';
 
       // Sort most recent first
@@ -836,23 +868,23 @@ permalink: /ga-member.html
         else otherCount++;
       }
       const chartHtml = buildVoteChart(yeaCount, nayCount, otherCount, sorted.length);
-      const participationHtml = buildParticipationSummary(memberVotes, votesIndex, member.chamber);
+      const participationHtml = buildParticipationSummary(memberVotes, votesIndex, member.chamber, incomplete);
 
       const partyMap = new Map((allMembers || []).filter(m => m.party).map(m => [m.id, m.party]));
       const partyVoteIndex = buildPartyVoteIndex(data.memberVotes || {}, partyMap);
-      const partyLoyaltyHtml = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex);
+      const partyLoyaltyHtml = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex, incomplete);
 
       const rows = sorted.map(({ voteId, vote }) => {
         const meta    = votesIndex[voteId] || {};
-        const bill    = meta.bill       || '—';
-        const title   = meta.title      || '';
-        const caption = meta.motionText || '—';
+        const bill    = escHtml(meta.bill || '—');
+        const title   = meta.title ? escHtml(meta.title) : '';
+        const caption = escHtml(meta.motionText || '—');
         const date    = meta.date ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
         const billLink = meta.billUrl
-          ? `<a href="${meta.billUrl}" target="_blank" rel="noopener">${bill}</a>`
+          ? `<a href="${escHtml(meta.billUrl)}" target="_blank" rel="noopener">${bill}</a>`
           : bill;
         const textLink = meta.textUrl
-          ? ` <a href="${meta.textUrl}" target="_blank" rel="noopener" style="font-size:0.7rem;color:#666;white-space:nowrap;">[text]</a>`
+          ? ` <a href="${escHtml(meta.textUrl)}" target="_blank" rel="noopener" style="font-size:0.7rem;color:#666;white-space:nowrap;">[text]</a>`
           : '';
         const billCell = title
           ? `${billLink}${textLink}<br><span style="font-size:0.75rem;color:#555;font-weight:normal;">${title}</span>`
@@ -861,19 +893,19 @@ permalink: /ga-member.html
           <td>${date}</td>
           <td>${billCell}</td>
           <td>${caption}</td>
-          <td class="${voteClass(vote)}">${vote}</td>
+          <td class="${voteClass(vote)}">${escHtml(vote)}</td>
         </tr>`;
       }).join('');
 
       container.innerHTML = `
         <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing recorded passage votes from this session — the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
+        ${incompleteNote}
         ${(participationHtml || partyLoyaltyHtml) ? `
         <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
           ${participationHtml ? `<div style="flex:1;min-width:240px;">${participationHtml}</div>` : ''}
           ${partyLoyaltyHtml  ? `<div style="flex:1;min-width:240px;">${partyLoyaltyHtml}</div>`  : ''}
         </div>` : ''}
-        ${incompleteNote}
         ${chartHtml}
         <table class="vote-table">
           <thead><tr><th>Date</th><th>Bill</th><th>Motion</th><th>Vote</th></tr></thead>

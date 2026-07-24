@@ -6,6 +6,7 @@ permalink: /ga-bills.html
 
 <h1>Georgia General Assembly — Bills &amp; Resolutions</h1>
 <p>Browse legislation from the 2025–26 regular session. Data sourced from <a href="https://openstates.org" target="_blank">Open States</a>.</p>
+<p class="data-note" id="billsDataNote" style="display:none"></p>
 
 <style>
   /* ── Stats ── */
@@ -308,7 +309,15 @@ permalink: /ga-bills.html
   .bills-loading { padding: 2rem 0; color: #666; font-size: 0.9rem; }
   .bills-error   { padding: 1rem; background: #fff5f5; border: 1px solid #fca5a5; border-radius: 6px; color: #991b1b; font-size: 0.9rem; margin: 1rem 0; }
   .bills-empty   { padding: 2rem 1rem; text-align: center; color: #888; font-size: 0.9rem; border: 1px dashed #ddd; border-radius: 6px; }
-  .data-note     { font-size: 0.78rem; color: #aaa; margin-top: 1.5rem; }
+  .data-note     {
+    font-size: 0.8rem;
+    color: #555;
+    background: #f5f7fb;
+    border: 1px solid #e0e6f0;
+    border-radius: 6px;
+    padding: 0.5rem 0.85rem;
+    margin: 0.75rem 0 0.5rem;
+  }
 
   @media (max-width: 720px) {
     .bills-stats { grid-template-columns: repeat(2, 1fr); }
@@ -360,7 +369,6 @@ permalink: /ga-bills.html
 
 <div id="billsList"></div>
 <div class="bills-pagination" id="billsPagination"></div>
-<p class="data-note" id="billsDataNote" style="display:none"></p>
 
 <script>
 (function () {
@@ -460,7 +468,7 @@ permalink: /ga-bills.html
     const total  = (v.yea + v.nay + v.other) || 1;
     const pY     = Math.round(v.yea   / total * 100);
     const pN     = Math.round(v.nay   / total * 100);
-    const pO     = 100 - pY - pN;
+    const pO     = Math.max(0, 100 - pY - pN);
     const ch     = v.chamber === 'lower' ? 'House' : 'Senate';
     const result = v.result === 'pass' ? 'Passed' : 'Failed';
     // motionText is e.g. "Senate Vote #148 - 2025-2026 Regular Session"
@@ -719,7 +727,12 @@ permalink: /ga-bills.html
     ];
     if (pending > 0) stats.push(stat('Sent to Governor', pending.toLocaleString(), 'orange', 'Awaiting signature or veto'));
     stats.push(stat('Failed / stalled', (failed + stalled).toLocaleString(), 'orange'));
-    stats.push(stat('With vote records', allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length.toLocaleString(), 'blue'));
+    const withVotes = allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;
+    const withParty = allBills.filter(function (b) {
+      return (b.passageVotes || []).some(function (v) { return v.partyTally; });
+    }).length;
+    stats.push(stat('With vote records', withVotes.toLocaleString(), 'blue',
+      withVotes ? ('Party breakdown available for ' + withParty.toLocaleString() + ' of these') : ''));
     elStats.innerHTML = stats.join('');
     elStats.style.display = '';
   }
@@ -805,7 +818,15 @@ permalink: /ga-bills.html
       buildStats(meta);
       buildSubjectDropdown();
       elControls.style.display   = '';
-      elDataNote.textContent     = 'Data: Open States bulk export, May 2026. Generated ' + (meta.generatedAt ? meta.generatedAt.slice(0, 10) : '') + '.';
+
+      const withVotes = allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;
+      const withParty = allBills.filter(function (b) {
+        return (b.passageVotes || []).some(function (v) { return v.partyTally; });
+      }).length;
+      const coverageNote = withVotes && withParty < withVotes
+        ? ' Party-line tags and Democrat/Republican vote tallies are still being backfilled — available for ' + withParty.toLocaleString() + ' of ' + withVotes.toLocaleString() + ' bills with recorded votes, so some party-line votes may not yet be flagged.'
+        : '';
+      elDataNote.innerHTML = 'Data snapshot: Open States bulk export, May 2026 (generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) : '') + '). Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote);
       elDataNote.style.display   = '';
 
       applyFilters();

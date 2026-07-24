@@ -353,6 +353,14 @@ permalink: /member.html
     return pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
   }
 
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
   function getMemberName(m) {
     const honorific = m.honorificName || '';
     const first = m.firstName || '';
@@ -392,15 +400,15 @@ permalink: /member.html
     function renderGroup(members, label) {
       if (!members.length) return '';
       const items = members.map(m => {
-        const name = getMemberName(m);
+        const name = escHtml(getMemberName(m));
         const isCurrent = m.bioguideId === currentMember.bioguideId;
-        const sub = m.district != null ? `District ${m.district} · ${m.partyName || ''}` : (m.partyName || '');
+        const sub = escHtml(m.district != null ? `District ${m.district} · ${m.partyName || ''}` : (m.partyName || ''));
         if (isCurrent) {
           return `<span class="sidebar-member current">${name}<br><span class="sidebar-member-sub">${sub}</span></span>`;
         }
-        return `<a class="sidebar-member" href="${basePath}member.html?bioguideId=${m.bioguideId}">${name}<br><span class="sidebar-member-sub">${sub}</span></a>`;
+        return `<a class="sidebar-member" href="${basePath}member.html?bioguideId=${encodeURIComponent(m.bioguideId)}">${name}<br><span class="sidebar-member-sub">${sub}</span></a>`;
       }).join('');
-      return `<div class="sidebar-group-label">${label}</div>${items}`;
+      return `<div class="sidebar-group-label">${escHtml(label)}</div>${items}`;
     }
 
     document.getElementById('sidebarTitle').textContent = `${state} Delegation`;
@@ -453,9 +461,12 @@ permalink: /member.html
       ? `<p style="font-size:0.72rem;color:#888;margin:0.5rem 0 0 0;">* Other includes Not Voting, Absent, and Excused</p>`
       : '';
 
-    return `<div style="display:flex;align-items:center;gap:1.25rem;margin:0.75rem 0 1.25rem 0;">
-      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
-      <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
+    return `<div>
+      <div style="display:flex;align-items:center;gap:1.25rem;margin:0.75rem 0 0.4rem 0;">
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
+        <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
+      </div>
+      <p style="font-size:0.72rem;color:#888;margin:0 0 1.25rem 0;max-width:32rem;">Most bills that reach a floor vote pass, so a chart weighted toward “Yea” is typical here and on other members' pages — it reflects which bills got a recorded vote, not this member's overall independence or party loyalty.</p>
     </div>`;
   }
 
@@ -522,17 +533,16 @@ permalink: /member.html
 
       let tallyHtml = '';
       if (voteMeta && (voteMeta.yea || voteMeta.nay)) {
-        const total = (voteMeta.yea || 0) + (voteMeta.nay || 0);
         const result = voteMeta.result || '';
-        tallyHtml = `<span class="kv-tally"><strong>${voteMeta.yea}</strong> Yea · <strong>${voteMeta.nay}</strong> Nay · ${result}</span>`;
+        tallyHtml = `<span class="kv-tally"><strong>${voteMeta.yea}</strong> Yea · <strong>${voteMeta.nay}</strong> Nay · ${escHtml(result)}</span>`;
       }
 
       return `<div class="kv-card">
         <div class="kv-card-header">
-          <a class="kv-bill-id" href="${bill.billUrl}" target="_blank" rel="noopener">${bill.bill}</a>
-          <span class="kv-bill-title">${bill.title}</span>
+          <a class="kv-bill-id" href="${escHtml(bill.billUrl)}" target="_blank" rel="noopener">${escHtml(bill.bill)}</a>
+          <span class="kv-bill-title">${escHtml(bill.title)}</span>
         </div>
-        <div class="kv-summary">${bill.summary}</div>
+        <div class="kv-summary">${escHtml(bill.summary)}</div>
         <div class="kv-footer">
           ${voteBadge}
           ${tallyHtml}
@@ -573,14 +583,14 @@ permalink: /member.html
 
     const items = validBills.map(b => {
       const policyBadge = b.policyArea
-        ? `<span class="bill-policy-area">${b.policyArea}</span>`
+        ? `<span class="bill-policy-area">${escHtml(b.policyArea)}</span>`
         : '';
       const action = b.latestAction?.text
-        ? `<span style="color:#555;">${b.latestAction.text}</span>`
+        ? `<span style="color:#555;">${escHtml(b.latestAction.text)}</span>`
         : '';
       return `<li class="bill-item">
-        <a class="bill-id" href="${b.billUrl}" target="_blank" rel="noopener">${b.type} ${b.number}</a>
-        <span class="bill-title">${b.title}</span>${policyBadge}
+        <a class="bill-id" href="${escHtml(b.billUrl)}" target="_blank" rel="noopener">${escHtml(b.type)} ${escHtml(b.number)}</a>
+        <span class="bill-title">${escHtml(b.title)}</span>${policyBadge}
         <div class="bill-meta">Introduced ${fmt(b.introducedDate)} · ${action}</div>
       </li>`;
     }).join('');
@@ -635,12 +645,12 @@ permalink: /member.html
 
       const rows = sorted.map(({ voteId, vote }) => {
         const meta     = votesIndex[voteId] || {};
-        const bill     = meta.bill      || '—';
-        const title    = meta.title     || '';
-        const caption  = meta.motionText || '—';
+        const bill     = escHtml(meta.bill || '—');
+        const title    = meta.title ? escHtml(meta.title) : '';
+        const caption  = escHtml(meta.motionText || '—');
         const date     = meta.date ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
         const billLink = meta.billUrl
-          ? `<a href="${meta.billUrl}" target="_blank" rel="noopener">${bill}</a>`
+          ? `<a href="${escHtml(meta.billUrl)}" target="_blank" rel="noopener">${bill}</a>`
           : bill;
         const billCell = title
           ? `${billLink}<br><span style="font-size:0.75rem;color:#555;font-weight:normal;">${title}</span>`
@@ -650,7 +660,7 @@ permalink: /member.html
           <td>${date}</td>
           <td>${billCell}</td>
           ${motionCell}
-          <td class="${voteClass(vote)}">${vote}</td>
+          <td class="${voteClass(vote)}">${escHtml(vote)}</td>
         </tr>`;
       }).join('');
 
@@ -709,7 +719,7 @@ permalink: /member.html
     const yearsInOffice = startYear ? (currentYear - startYear) : 'N/A';
 
     const imageUrl = member.depiction?.imageUrl;
-    const imageHtml = imageUrl ? `<img src="${imageUrl}" alt="${fullName}" style="max-width: 200px; margin-bottom: 1rem; border-radius: 8px;">` : '';
+    const imageHtml = imageUrl ? `<img src="${escHtml(imageUrl)}" alt="${escHtml(fullName)}" style="max-width: 200px; margin-bottom: 1rem; border-radius: 8px;">` : '';
 
     // Leadership positions
     const leadership = member.leadership || [];
@@ -718,7 +728,7 @@ permalink: /member.html
       const leadershipTitles = leadership.map(l => {
         const title = l.title || l.type || 'Unknown Position';
         const congress = l.congress ? ` (${l.congress}${l.current === true ? ', Current' : ''})` : '';
-        return `${title}${congress}`;
+        return escHtml(`${title}${congress}`);
       }).join(', ');
       leadershipHtml = `<p><strong>Leadership Position(s):</strong> ${leadershipTitles}</p>`;
     }
@@ -727,7 +737,7 @@ permalink: /member.html
     const committees = member.committees || [];
     let committeesHtml = '';
     if (committees.length > 0) {
-      const committeeItems = committees.map(c => `<li>${c}</li>`).join('');
+      const committeeItems = committees.map(c => `<li>${escHtml(c)}</li>`).join('');
       committeesHtml = `<p><strong>Committees:</strong></p><ul>${committeeItems}</ul>`;
     }
 
@@ -735,7 +745,7 @@ permalink: /member.html
     const contactInfo = member.contactInfo || {};
     let contactHtml = '';
     if (contactInfo.phoneNumber || contactInfo.officeAddress) {
-      const phone = contactInfo.phoneNumber ? `<br>📞 ${contactInfo.phoneNumber}` : '';
+      const phone = contactInfo.phoneNumber ? `<br>📞 ${escHtml(contactInfo.phoneNumber)}` : '';
       let addressStr = contactInfo.officeAddress || '';
       if (addressStr) {
         const zip = contactInfo.zipCode ? String(contactInfo.zipCode) : '';
@@ -745,13 +755,13 @@ permalink: /member.html
           addressStr = [addressStr, city, region, zip].filter(Boolean).join(', ').replace(/, (\d{5})$/, ' $1');
         }
       }
-      const address = addressStr ? `<br>📍 ${addressStr}` : '';
+      const address = addressStr ? `<br>📍 ${escHtml(addressStr)}` : '';
       contactHtml = `<p><strong>Office Contact:</strong>${address}${phone}</p>`;
     }
 
     // Official website
     const websiteHtml = member.officialWebsiteUrl ?
-      `<p><strong>Official Website:</strong> <a href="${member.officialWebsiteUrl}" target="_blank">${member.officialWebsiteUrl}</a></p>` : '';
+      `<p><strong>Official Website:</strong> <a href="${escHtml(member.officialWebsiteUrl)}" target="_blank">${escHtml(member.officialWebsiteUrl)}</a></p>` : '';
 
     // Running for office badge
     let runningBadgeHtml = '';
@@ -759,7 +769,7 @@ permalink: /member.html
       const basePath = getBasePath();
       const race = electionInfo.race;
       const distLabel = race.district ? ` District ${race.district}` : '';
-      const raceLabel = `${race.chamber}${distLabel}`;
+      const raceLabel = escHtml(`${race.chamber}${distLabel}`);
       const raceUrl = `${basePath}race.html?id=${encodeURIComponent(race.id)}`;
 
       if (electionInfo.type === 'reelection') {
@@ -767,14 +777,14 @@ permalink: /member.html
           <div class="running-badge reelection">
             <strong>Running for Re-election</strong>
             This member is seeking re-election to their current seat.
-            <a href="${raceUrl}">View ${raceLabel} race →</a>
+            <a href="${escHtml(raceUrl)}">View ${raceLabel} race →</a>
           </div>`;
       } else if (electionInfo.type === 'different-office') {
         runningBadgeHtml = `
           <div class="running-badge different-office">
             <strong>Running for a Different Office</strong>
             This member is seeking election to <strong>${raceLabel}</strong>.
-            <a href="${raceUrl}">View race →</a>
+            <a href="${escHtml(raceUrl)}">View race →</a>
           </div>`;
       }
     } else if (seatRace) {
@@ -783,28 +793,28 @@ permalink: /member.html
       const raceUrl   = `${basePath}race.html?id=${encodeURIComponent(seatRace.id)}`;
       runningBadgeHtml = `
         <div class="running-badge seat-election">
-          <strong>This seat is up for election in ${seatRace.cycle}</strong>
-          <a href="${raceUrl}">View ${seatRace.chamber}${distLabel} race →</a>
+          <strong>This seat is up for election in ${escHtml(seatRace.cycle)}</strong>
+          <a href="${escHtml(raceUrl)}">View ${escHtml(seatRace.chamber)}${escHtml(distLabel)} race →</a>
         </div>`;
     }
 
     const html = `
       ${imageHtml}
-      <h2>${fullName}</h2>
+      <h2>${escHtml(fullName)}</h2>
       ${runningBadgeHtml}
-      ${member.birthYear ? `<p style="display:flex;justify-content:space-between;"><span><strong>Birth Year:</strong> ${member.birthYear}</span><span><strong>Age:</strong> ${currentYear - member.birthYear}</span></p>` : ''}
+      ${member.birthYear ? `<p style="display:flex;justify-content:space-between;"><span><strong>Birth Year:</strong> ${member.birthYear}</span><span><strong>Age (as of ${currentYear}):</strong> ${currentYear - member.birthYear}</span></p>` : ''}
       <p style="display:flex;justify-content:space-between;"><span><strong>First Term (Current Chamber):</strong> ${startYear}</span><span><strong>Years in Office:</strong> ${yearsInOffice}</span></p>
-      <p><strong>Party:</strong> ${party} ${getPartyIconHtml(party)}</p>
-      <p><strong>State:</strong> ${state}</p>
-      <p><strong>District:</strong> ${district}</p>
-      <p><strong>Chamber:</strong> ${chamber}</p>
+      <p><strong>Party:</strong> ${escHtml(party)} ${getPartyIconHtml(party)}</p>
+      <p><strong>State:</strong> ${escHtml(state)}</p>
+      <p><strong>District:</strong> ${escHtml(district)}</p>
+      <p><strong>Chamber:</strong> ${escHtml(chamber)}</p>
       ${leadershipHtml}
       ${committeesHtml}
       ${contactHtml}
       ${websiteHtml}
 
       <p><a href="my-representatives.html">Search for another member</a></p>
-      ${state === 'Georgia' ? `<p><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${fullName} →</a></p>` : ''}
+      ${state === 'Georgia' ? `<p><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${escHtml(fullName)} →</a></p>` : ''}
       <div class="tab-container">
         <div class="tab-nav">
           <button class="tab-btn active" data-tab="keyVotes">Key Votes</button>

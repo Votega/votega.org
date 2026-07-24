@@ -15,6 +15,8 @@ Congress.gov API → GitHub Actions → Python script → assets/data/*.json →
 
 ## Project Structure
 
+This map shows categories and representative examples, not an exhaustive file list — run `ls` / `Glob` for the current full set. As of 2026-07, the repo has ~26 top-level HTML pages, ~26 tracked scripts, and 21 GitHub Actions workflows.
+
 ```
 votega.org/
 ├── _config.yml                          # Jekyll + Beautiful Jekyll theme config
@@ -22,17 +24,16 @@ votega.org/
 ├── README.md / CHANGELOG.md / LICENSE
 ├── Gemfile / Gemfile.lock               # Ruby dependencies
 │
-├── 📄 Pages (HTML/Markdown)
-│   ├── index.html                       # Homepage (layout: home)
-│   ├── about.md
-│   ├── 404.html
-│   ├── tags.html
-│   ├── my-representatives.html          # Federal legislator lookup
-│   ├── member.html                      # Federal legislator detail
-│   ├── ga-representatives.html          # Georgia state legislator lookup
-│   ├── ga-member.html                   # Georgia legislator detail
-│   ├── flock-safety.md                  # Flock Safety surveillance info
-│   └── flock-covington.md               # Covington PD/Flock Safety contract
+├── 📄 Pages (HTML/Markdown, ~26 top-level)
+│   ├── index.html, about.md, 404.html, tags.html, about-the-data.md
+│   ├── Federal: my-representatives.html, member.html, federal-reps.html, find-my-reps.html
+│   ├── GA Legislature: ga-representatives.html, ga-state-reps.html, ga-member.html,
+│   │   ga-bills.html, ga-majority-tracker.html, ga-congress-trades.html
+│   ├── Elections/Races: elections.html, race.html, candidate.html, ga-ballot-measures.html,
+│   │   ga-primary-results.html, ga-primary-runoff-results.html, ga-voter-access.html
+│   ├── Executive/Judicial: executive-branch.html, executive-member.html, ga-executive.html,
+│   │   ga-executive-orders.html, justice.html, supreme-court.html
+│   └── Topics: flock-safety.md, flock-covington.md
 │
 ├── _layouts/                            # Jekyll page templates (base, default, home, page, post, minimal)
 ├── _includes/                           # Reusable components (header, footer, nav, analytics, comments, search)
@@ -41,13 +42,19 @@ votega.org/
 │   └── ui-text.yml                      # UI text / localization
 │
 ├── assets/
-│   ├── data/                            # Generated JSON data (committed via GitHub Actions)
+│   ├── data/                            # Generated JSON/CSV data (committed via GitHub Actions)
 │   │   ├── current-members.json         # Federal Congress members (daily, from Congress.gov API)
 │   │   ├── ga-members.json              # Georgia state legislators (from Open States API)
 │   │   ├── ga-members-overrides.json    # Manual patches/injections applied after Open States fetch
 │   │   ├── ga-member-votes.json         # GA passage votes keyed by OCD person ID
+│   │   ├── ga-bills.json                # GA bills/resolutions (Open States), enriched with party vote tallies
+│   │   ├── curated-ga-bill-votes.json / curated-federal-bills.json  # Editorial "key votes" picks
+│   │   ├── races.json / ga-election-calendar.json / ga-ballot-measures.json
+│   │   ├── ga-executive-orders-*.json / ga-executive.json / executive.json
+│   │   ├── scotus-decisions.json / supreme-court.json / presidential-laws.json / vp-tie-votes.json
+│   │   ├── ga-congress-trades.json      # Stock trade disclosures for GA federal delegation
 │   │   └── searchcorpus.json            # Site search index
-│   ├── scripts/                         # Client-side JS (loaded by HTML pages)
+│   ├── scripts/                         # Client-side JS (loaded by HTML pages) + a few standalone Python utilities
 │   │   ├── congress.js                  # Federal lookup: reads current-members.json, filters by state/chamber
 │   │   └── ga.js                        # GA lookup: county→district mapping, reads ga-members.json
 │   ├── css/                             # Theme stylesheets (beautifuljekyll.css, bootstrap-social.css, etc.)
@@ -55,15 +62,26 @@ votega.org/
 │   ├── img/                             # Images (logo.png, avatar-icon.png, bgimage.png, etc.)
 │   └── docs/                            # PDFs (flock_safety_covington_pd_contract.pdf)
 │
-├── scripts/                             # Build-time data generation (run by GitHub Actions)
+├── scripts/                             # Build-time data generation (run by GitHub Actions), ~26 tracked
 │   ├── generate_current_members_data.py # Congress.gov API → assets/data/current-members.json
 │   ├── generate_ga_members_data.py      # Open States API → assets/data/ga-members.json
-│   └── generate_ga_votes_data.py        # Open States API → assets/data/ga-member-votes.json
+│   ├── generate_ga_votes_data.py        # Open States API → assets/data/ga-member-votes.json
+│   ├── generate_ga_bills_data.py / enrich_bills_with_party_votes.py / generate_curated_ga_bills.py
+│   ├── generate_federal_votes_data.py / generate_fec_data.py / generate_ga_congress_trades.py
+│   ├── generate_ga_executive_orders.py / generate_scotus_decisions.py / generate_presidential_laws.py / generate_vp_tie_votes.py
+│   ├── build_legislative_races.py / build_primary_results_from_csv.py / build_primary_runoff_results_from_csv.py
+│   ├── apply_overrides.py / validate_ga_overrides.py / import_legiscan_csv.py / fix_general_fallbacks.py
+│   ├── inspect_ga_bill_votes.py / inspect_openstates_fields.py  # diagnostics, each backed by its own workflow
+│   └── (one-off/local-machine scripts — e.g. debug_*.py, watch_downloads.py — are gitignored, not tracked)
 │
-├── .github/workflows/
-│   ├── update-current-members.yml       # Daily 06:00 UTC: runs generate_current_members_data.py, commits JSON
-│   └── update-ga-members.yml            # Daily 07:00 UTC: runs generate_ga_members_data.py, commits JSON
+├── .github/workflows/                   # 21 workflows: deploy, per-dataset daily/scheduled updates
+│   │                                     # (update-*.yml), and publish-*-to-<sibling-repo>.yml syncs
+│   ├── deploy-pages.yml
+│   ├── update-current-members.yml       # Daily: runs generate_current_members_data.py, commits JSON
+│   ├── update-ga-members.yml            # Daily: runs generate_ga_members_data.py, commits JSON
+│   └── sync-generated-data-on-pr.yml
 │
+├── tools/                                # Standalone override-editing HTML utilities (not part of the Jekyll site)
 ├── .claude/settings.local.json          # Tool permissions (Congress.gov, GitHub, Python)
 ├── .vscode/settings.json
 └── not in use/                          # Archived/unused files
