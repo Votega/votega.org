@@ -252,7 +252,8 @@ def main():
         existing_ids = {m['id'] for m in members}
         for entry in injected:
             if entry.get('id') and entry['id'] not in existing_ids:
-                members.append(entry)
+                clean_entry = {k: v for k, v in entry.items() if not k.startswith('_')}
+                members.append(clean_entry)
                 existing_ids.add(entry['id'])
         if injected:
             print(f"  Injected {len(injected)} new member(s) from _inject")

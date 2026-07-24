@@ -58,6 +58,26 @@ VOTE_MAP = {
     'other':      'Other',
 }
 
+# Open States occasionally re-issues a person a new OCD id mid-session, leaving
+# their earlier votes stranded under the old id (which then never appears in
+# ga-members.json and shows up as an unattributed "ghost" voter). Map old -> new
+# here to fold them back into the current id. Identified 2026-07-24 via LegiScan
+# roll-call cross-reference: identical Yea/Nay/Other pattern across every roll
+# call shared with the current id (both are Speaker Jon Burns; by House custom
+# a presiding officer votes only to break ties, so both ids show ~100% "Other").
+LEGACY_PERSON_ID_MAP = {
+    'ocd-person/4161e949-6ea2-4df9-8248-cabcf40286ae': 'ocd-person/64012657-d026-411c-9525-3232524a5145',  # Jon Burns
+}
+
+
+def remap_legacy_ids(member_votes):
+    """Fold any LEGACY_PERSON_ID_MAP entries into their current id in place."""
+    for old_id, current_id in LEGACY_PERSON_ID_MAP.items():
+        if old_id not in member_votes:
+            continue
+        member_votes.setdefault(current_id, []).extend(member_votes.pop(old_id))
+    return member_votes
+
 
 def event_chamber(motion_text, organization=None):
     """Which chamber held a roll call: 'Senate', 'House of Representatives', or None."""
@@ -137,6 +157,7 @@ def sanitize_existing(path):
         sys.exit(1)
 
     member_chambers = load_member_chambers()
+    raw = remap_legacy_ids(raw)
     clean, stats = sanitize_member_votes(raw, votes_meta, member_chambers)
 
     data['memberVotes'] = clean
@@ -277,9 +298,11 @@ def main():
         page += 1
         time.sleep(DELAY)
 
-    # Enforce data-soundness invariants: de-duplicate roll calls and drop
-    # cross-chamber contamination before writing.
+    # Enforce data-soundness invariants: fold deprecated OCD ids into their
+    # current id, de-duplicate roll calls, and drop cross-chamber contamination
+    # before writing.
     member_chambers = load_member_chambers()
+    member_votes = remap_legacy_ids(member_votes)
     member_votes, sanitize_stats = sanitize_member_votes(member_votes, votes_meta, member_chambers)
     print(f"  Sanitized: dropped {sanitize_stats['duplicateVotesDropped']} duplicate "
           f"and {sanitize_stats['crossChamberDropped']} cross-chamber vote entries")
