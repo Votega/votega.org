@@ -182,7 +182,7 @@ def fetch(url, retries=3):
     })
     for attempt in range(1, retries + 1):
         try:
-            with urllib.request.urlopen(req, timeout=30) as r:
+            with urllib.request.urlopen(req, timeout=45) as r:
                 return json.loads(r.read().decode('utf-8'))
         except urllib.error.HTTPError as e:
             body = e.read().decode('utf-8', errors='replace')
@@ -194,9 +194,15 @@ def fetch(url, retries=3):
                 continue
             return None
         except Exception as e:
+            # Includes socket/read timeouts — treat like a 429/5xx (the API is
+            # likely overloaded or degraded) rather than a quick flat-interval
+            # retry, since a bare 7s wait wasn't enough to ride out the two
+            # consecutive full-timeout outages seen in production.
             print(f"  Error: {e}")
             if attempt < retries:
-                time.sleep(DELAY)
+                wait = DELAY * attempt * 2
+                print(f"  Retrying in {wait}s ({attempt}/{retries})...")
+                time.sleep(wait)
                 continue
             return None
     return None
@@ -297,6 +303,17 @@ def main():
             break
         page += 1
         time.sleep(DELAY)
+
+    # Refuse to write (and let the workflow commit) an empty dataset. A total
+    # API failure on page 1 previously fell through silently — the script
+    # would print "Done. 0 passage votes..." and exit 0, overwriting nothing
+    # locally only because a separate validation step downstream happened to
+    # catch it. That's a fragile safety net; fail here directly so this script
+    # is correct on its own regardless of how it's invoked.
+    if bills_seen == 0:
+        print("Error: fetched zero bills — the Open States API may be down or "
+              "unreachable. Refusing to write an empty output file.")
+        sys.exit(1)
 
     # Enforce data-soundness invariants: fold deprecated OCD ids into their
     # current id, de-duplicate roll calls, and drop cross-chamber contamination
