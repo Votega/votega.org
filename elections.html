@@ -140,8 +140,12 @@ permalink: /elections.html
     white-space: nowrap;
   }
   .phase-btn:hover { border-color: #888; color: #222; }
-  .phase-btn.active[data-phase="runoff"]   { background: #fef9c3; border-color: #854d0e; color: #854d0e; font-weight: 700; }
-  .phase-btn.active[data-phase="general"]  { background: #dcfce7; border-color: #166534; color: #166534; font-weight: 700; }
+  .phase-btn.active[data-phase="primary"] { background: #dcfce7; border-color: #166534; color: #166534; font-weight: 700; }
+  .phase-btn.active[data-phase="runoff"]  { background: #fef9c3; border-color: #854d0e; color: #854d0e; font-weight: 700; }
+  .phase-btn.active[data-phase="general"] { background: #dcfce7; border-color: #166534; color: #166534; font-weight: 700; }
+  /* When only one phase is in play the button is a status label, not a control. */
+  .phase-toggle.single .phase-btn { cursor: default; }
+  .phase-toggle.single .phase-btn:hover { border-color: #166534; color: #166534; }
 
   @media (max-width: 600px) {
     .race-row { flex-wrap: wrap; }
@@ -150,10 +154,8 @@ permalink: /elections.html
   }
 </style>
 
-<div class="phase-toggle" id="phaseToggle">
-  <button class="phase-btn active" data-phase="runoff">Primary Runoff — Jun 16</button>
-  <button class="phase-btn" data-phase="general">General Election — Nov 3</button>
-</div>
+<!-- Buttons are built from races.json by buildPhaseToggle() — one per activePhase in use. -->
+<div class="phase-toggle" id="phaseToggle"></div>
 
 <div class="tab-bar" id="tabBar">
   <button class="tab-btn active" data-tab="executive">Executive / Statewide</button>
@@ -194,28 +196,99 @@ permalink: /elections.html
   const racesOutput    = document.getElementById('racesOutput');
   const pageTitle      = document.getElementById('pageTitle');
   const pageDesc       = document.getElementById('pageDesc');
+  const phaseToggle    = document.getElementById('phaseToggle');
 
   let allRaces    = [];
   let activeTab   = 'executive';
-  let activePhase = 'runoff';
+  let activePhase = null;   // set by buildPhaseToggle() from the data
 
-  const PHASE_CONFIG = {
+  // Copy per phase. {date} and {year} are filled from the phase's electionDate in
+  // races.json, so dates are never hardcoded here — a new cycle just works.
+  // Note "Runoff" is deliberately generic: Georgia holds both primary runoffs and
+  // general-election runoffs, and both use the same `runoff` phase key.
+  const PHASE_META = {
+    primary: {
+      label: 'Primary',
+      title: '{year} Georgia Primary',
+      desc:  'Primary matchups for {date} — select your county to filter by district.',
+      empty: 'No primary races on file for this selection yet.',
+    },
     runoff: {
-      title:   '2026 Georgia Primary Runoffs',
-      desc:    'The May 19 primary is over. These seats are headed to a runoff on June 16 — select your county to filter by district.',
-      empty:   'No runoff races on file for this selection. Check back as results are confirmed.',
+      label: 'Runoff',
+      title: '{year} Georgia Runoffs',
+      desc:  'Runoff matchups for {date} — select your county to filter by district.',
+      empty: 'No runoff races on file for this selection yet.',
     },
     general: {
-      title:   '2026 Georgia General Election',
-      desc:    'General election matchups for November 3, 2026. Races are added as primary and runoff results are certified.',
-      empty:   'No general election races on file for this selection yet. Check back after runoff results are certified.',
+      label: 'General Election',
+      title: '{year} Georgia General Election',
+      desc:  'General election matchups for {date} — select your county to filter by district.',
+      empty: 'No general election races on file for this selection yet.',
     },
   };
 
+  function phaseMeta(phase) {
+    return PHASE_META[phase] || {
+      label: phase ? phase[0].toUpperCase() + phase.slice(1) : 'Races',
+      title: '{year} Georgia Elections',
+      desc:  'Races on the ballot for {date} — select your county to filter by district.',
+      empty: 'No races on file for this selection yet.',
+    };
+  }
+
+  // The election date shown for a phase: the most common electionDate among the
+  // races currently in that phase, so a handful of special elections on their own
+  // dates don't relabel the main one.
+  function phaseDate(phase) {
+    const counts = {};
+    allRaces.forEach(r => {
+      if (r.activePhase !== phase) return;
+      const d = r.phases?.[phase]?.electionDate;
+      if (d) counts[d] = (counts[d] || 0) + 1;
+    });
+    const dates = Object.keys(counts);
+    if (!dates.length) return null;
+    return dates.sort((a, b) => counts[b] - counts[a] || a.localeCompare(b))[0];
+  }
+
+  function fillTemplate(str, iso) {
+    return str
+      .replace('{date}', iso ? formatDate(iso) : 'a date to be announced')
+      .replace('{year}', iso ? iso.slice(0, 4) : '');
+  }
+
+  function buildPhaseToggle() {
+    // One button per phase actually in use, ordered by election date.
+    const phases = [...new Set(allRaces.map(r => r.activePhase).filter(Boolean))]
+      .map(phase => ({ phase, date: phaseDate(phase) }))
+      .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
+
+    if (!phases.length) {
+      phaseToggle.innerHTML = '';
+      return;
+    }
+
+    // Default to the next election that hasn't happened yet; if they're all past,
+    // fall back to the most recent one.
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const upcoming = phases.find(p => p.date && parseLocalDate(p.date) >= today);
+    activePhase = (upcoming || phases[phases.length - 1]).phase;
+
+    phaseToggle.innerHTML = phases.map(({ phase, date }) => {
+      const label = phaseMeta(phase).label + (date ? ` — ${formatShortDate(date)}` : '');
+      return `<button class="phase-btn${phase === activePhase ? ' active' : ''}" data-phase="${phase}">${label}</button>`;
+    }).join('');
+
+    // A lone button is a status label, not a choice — nothing to toggle between.
+    phaseToggle.classList.toggle('single', phases.length === 1);
+  }
+
   function updatePageHeader() {
-    const cfg = PHASE_CONFIG[activePhase];
-    pageTitle.textContent = cfg.title;
-    pageDesc.textContent  = cfg.desc;
+    const meta = phaseMeta(activePhase);
+    const iso  = phaseDate(activePhase);
+    pageTitle.textContent = fillTemplate(meta.title, iso);
+    pageDesc.textContent  = fillTemplate(meta.desc, iso);
   }
 
   function isOpenSeat(race) {
@@ -246,10 +319,20 @@ permalink: /elections.html
     return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
   }
 
+  function parseLocalDate(iso) {
+    // Parse as a local date, not UTC, so day boundaries match the visitor's calendar.
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
   function formatDate(iso) {
     if (!iso) return '';
-    const [y, m, d] = iso.split('-').map(Number);
-    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    return parseLocalDate(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function formatShortDate(iso) {
+    if (!iso) return '';
+    return parseLocalDate(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
   function candidateSummary(phase) {
@@ -329,7 +412,7 @@ permalink: /elections.html
     if (!races.length) {
       const hint = COUNTY_TABS.has(activeTab) && !county
         ? 'Select a county above to filter by district, or all districts are shown when no county is selected.'
-        : PHASE_CONFIG[activePhase].empty;
+        : phaseMeta(activePhase).empty;
       racesOutput.innerHTML = `<p class="empty-note">${hint}</p>`;
       return;
     }
@@ -403,6 +486,7 @@ permalink: /elections.html
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       allRaces = (data.races || []).filter(r => r.cycle === 2026 && !r.id?.startsWith('_'));
+      buildPhaseToggle();
       updatePageHeader();
       renderRaces();
     } catch (err) {
