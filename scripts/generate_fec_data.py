@@ -259,11 +259,12 @@ def main():
     output_candidates = {}
     by_bioguide  = {}
     by_name      = {}
-    # byDistrict maps "H{n}" or "S" -> [candidate_ids].
-    # District is encoded in chars 4-5 of the FEC candidate_id (e.g. H8GA10071 -> district 10).
-    # candidate.html uses this for district-scoped last-name matching, which handles
-    # formal vs. nickname differences (e.g. FEC "MICHAEL" matching display name "Mike").
+    # byDistrict maps "H{n}" or "S" -> [candidate_ids], keyed off the API's `district`
+    # field so a candidate who changed districts lands in the seat they now contest.
+    # candidate.html and member.html use this for district-scoped last-name matching, which
+    # handles formal vs. nickname differences (e.g. FEC "MICHAEL" matching display name "Mike").
     by_district  = {}
+    unbucketed   = []   # House candidates the FEC gives no district for
 
     for i, c in enumerate(raw_candidates, 1):
         cid      = c.get("candidate_id")
@@ -342,14 +343,22 @@ def main():
         if key:
             by_name[key] = cid
 
-        # Build district key from candidate_id chars 4-5 ("H8GA10071" -> "H10", "01" -> "H1")
-        if office == "H" and len(cid) >= 6:
-            dist_num = str(int(cid[4:6]))
-            dist_key = f"H{dist_num}"
-        elif office == "S":
+        # Bucket by the seat the candidate is actually contesting, taken from the API's
+        # `district` field. The FEC candidate ID encodes a district too, but it is the seat
+        # they first filed under and does not change when they switch districts — e.g.
+        # Marjorie Taylor Greene's ID encodes 06 while she sat for GA-14, which filed her in
+        # the wrong bucket and broke the district+surname fallback in candidate.html.
+        o, dnum = district_key(office, district)
+        if o == "S":
             dist_key = "S"
+        elif o == "H" and dnum:
+            dist_key = f"H{dnum}"
         else:
+            # No usable district (FEC reports "00" for filings without one). Leaving them
+            # out is deliberate: the old ID-derived key put them in a real district's
+            # bucket, where a surname match could attribute them to someone else's seat.
             dist_key = None
+            unbucketed.append(f"{name} ({cid}, district={district!r})")
         if dist_key:
             by_district.setdefault(dist_key, []).append(cid)
 
@@ -365,6 +374,12 @@ def main():
         "byNormalizedName": by_name,
         "byDistrict":       by_district,
     }
+
+    if unbucketed:
+        print(f"\n{len(unbucketed)} House candidate(s) had no usable district and are absent "
+              f"from byDistrict (name lookup still finds them):")
+        for u in unbucketed:
+            print(f"  - {u}")
 
     os.makedirs(os.path.dirname(OUTPUT_FILE) or ".", exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
