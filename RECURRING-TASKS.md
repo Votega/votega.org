@@ -106,15 +106,15 @@ and re-run both workflows so the new session's data lands before the pages refer
 - [ ] **Re-run `update-fec-data.yml`** after the bioguide-map fix. The map was keyed by
       surname alone, so Georgia's two Representatives named Scott collided and David Scott's
       page showed a challenger's fundraising totals. Now keyed by seat + surname.
-- [ ] **Re-run `update-current-members.yml`** after the departed-member fix. Congress.gov
-      flags 8 members as `currentMember: false` — including David Scott and Marjorie Taylor
-      Greene — but the generator filtered only on term end year, so they were published as
-      sitting members.
-- [ ] **Handle the GA-13 vacancy.** Once the above runs, GA-13 has no sitting representative.
-      `assets/scripts/congress.js` currently throws a developer-facing "run the GitHub Actions
-      workflow" message on an empty district lookup. Federal members have no override
-      mechanism (`ga-members-overrides.json` is state-legislature only), so a vacancy needs
-      either a UI empty state or a federal equivalent of the overrides file.
+- [x] ~~Re-run `update-current-members.yml` after the departed-member fix.~~ Ran 2026-08-08:
+      545 → 537 members, all 8 `currentMember: false` records removed, GA delegation 17 → 15.
+- [x] ~~Handle the GA-13 vacancy.~~ `assets/scripts/congress.js` now takes the seat list from
+      `COUNTY_US_HOUSE_DISTRICTS` rather than from whoever is in the member data, so a vacated
+      seat renders as "District N - Vacant (no sitting representative)" instead of vanishing
+      from the dropdown. Verified against live data 2026-08-08.
+      **Still true:** federal members have no override mechanism (`ga-members-overrides.json`
+      is state-legislature only). If a vacancy ever needs context — successor, special
+      election date — that needs a federal equivalent of the overrides file.
 - [ ] **Certify the June 16 primary runoff.** `_data/election_archive.yml` still lists it as
       `unofficial`, and `ga-primary-runoff-results.html` carries the unofficial notice.
 - [ ] **Replace `assets/img/avatar-icon.png`.** Still the stock Beautiful Jekyll Octocat
