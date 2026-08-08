@@ -103,9 +103,14 @@ and re-run both workflows so the new session's data lands before the pages refer
 
 - [x] ~~Regenerate FEC data after the pagination fix.~~ Ran 2026-08-08: 252 candidates
       (was 138), House 214 (was capped at 100), 16 of 17 GA members now resolve.
-- [ ] **Re-run `update-fec-data.yml`** after the bioguide-map fix. The map was keyed by
-      surname alone, so Georgia's two Representatives named Scott collided and David Scott's
-      page showed a challenger's fundraising totals. Now keyed by seat + surname.
+- [x] ~~Re-run `update-fec-data.yml` after the bioguide-map fix.~~ Ran 2026-08-08: all 15
+      current GA members resolve to their own FEC record via bioguide, zero district
+      mismatches. The Scott collision is gone.
+- [ ] **Latent:** `generate_fec_data.py` builds its `byDistrict` buckets from characters 4–5
+      of the FEC candidate ID rather than the API's `district` field, so a candidate who
+      changed districts is filed under their old seat. Harmless while every incumbent
+      resolves via bioguide (the first lookup tier), but it would misfile the district
+      fallback. Fix by reading the `district` field, as `district_key()` already does.
 - [x] ~~Re-run `update-current-members.yml` after the departed-member fix.~~ Ran 2026-08-08:
       545 → 537 members, all 8 `currentMember: false` records removed, GA delegation 17 → 15.
 - [x] ~~Handle the GA-13 vacancy.~~ `assets/scripts/congress.js` now takes the seat list from
