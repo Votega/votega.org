@@ -1,4 +1,144 @@
+# robots.txt for votega.org
+#
+# Policy: search engines and user-initiated AI retrieval are welcome.
+# Crawling to build AI *training* corpora is not.
+#
+# Several AI companies run separate crawlers for separate purposes. Blocking a
+# training crawler does not block that company's search crawler, so the rules
+# below refuse training while keeping VoteGA citable in AI search results —
+# which is a source of traffic, not a leak of it.
+#
+# NOTE: robots.txt is advisory. Major operators honor it; bad actors ignore it.
+# Enforcement requires blocking at the edge (Cloudflare AI Crawl Control / WAF).
+
+# Cloudflare/IETF content-signal declaration. Advisory, mirrors the rules below.
+# search    = may index for search results
+# ai-input  = may retrieve at query time to answer a user and cite the source
+# ai-train  = may use to train or fine-tune a model
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
 User-agent: *
+Allow: /
+
+# ─────────────────────────────────────────────────────────────────────
+# Blocked: crawlers that collect content for model training
+# ─────────────────────────────────────────────────────────────────────
+
+# OpenAI — training crawler (ChatGPT-User and OAI-SearchBot allowed below)
+User-agent: GPTBot
+Disallow: /
+
+# Anthropic — training crawler (Claude-User and Claude-SearchBot allowed below)
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+# Google — Gemini training and AI grounding.
+# This token does NOT affect Googlebot or Google Search rankings.
+User-agent: Google-Extended
+Disallow: /
+
+# Apple — AI training. Plain "Applebot" (Siri/Spotlight search) stays allowed.
+User-agent: Applebot-Extended
+Disallow: /
+
+# Meta
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+# Common Crawl — feeds a large share of public training datasets
+User-agent: CCBot
+Disallow: /
+
+# ByteDance
+User-agent: Bytespider
+Disallow: /
+
+# Amazon
+User-agent: Amazonbot
+Disallow: /
+
+# Cohere
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: cohere-training-data-crawler
+Disallow: /
+
+# Other dataset and training crawlers
+User-agent: AI2Bot
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: Omgili
+Disallow: /
+
+User-agent: Webzio-Extended
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+User-agent: Timpibot
+Disallow: /
+
+User-agent: PanguBot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
+User-agent: VelenPublicWebCrawler
+Disallow: /
+
+User-agent: Scrapy
+Disallow: /
+
+# ─────────────────────────────────────────────────────────────────────
+# Explicitly allowed: search indexing and user-initiated retrieval.
+# These send readers to the site rather than absorbing it.
+# ─────────────────────────────────────────────────────────────────────
+
+# Conventional search
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# AI search and citation — retrieval at query time, not training
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
 Allow: /
 
 Sitemap: https://www.votega.org/sitemap.xml
