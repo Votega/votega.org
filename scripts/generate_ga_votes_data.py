@@ -324,6 +324,22 @@ def main():
     print(f"  Sanitized: dropped {sanitize_stats['duplicateVotesDropped']} duplicate "
           f"and {sanitize_stats['crossChamberDropped']} cross-chamber vote entries")
 
+    # Fail here rather than writing an empty file and letting the workflow's validation
+    # catch it later. A failed first page breaks out of the fetch loop above, and without
+    # this guard the script exits 0 — so the job failed several steps downstream with the
+    # actual HTTP error scrolled far off the top of the log.
+    if not votes_meta:
+        print(f"\nError: no passage votes collected for session {GA_SESSION} after "
+              f"{bills_seen} bills. See the HTTP status printed above — a 401/403 means "
+              f"the OPENSTATES_API_KEY secret, and a 400/404 usually means the session "
+              f"identifier '{GA_SESSION}' is no longer accepted by /bills.", file=sys.stderr)
+        sys.exit(1)
+
+    if not member_votes:
+        print(f"\nError: {len(votes_meta)} votes collected but no individual member votes. "
+              f"Open States returned roll calls without per-legislator detail.", file=sys.stderr)
+        sys.exit(1)
+
     output = {
         'metadata': {
             'generatedAt':          datetime.now().isoformat(),

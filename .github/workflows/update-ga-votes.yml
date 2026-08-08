@@ -40,8 +40,8 @@ jobs:
           members = len(d.get('memberVotes', {}))
           size_kb = os.path.getsize('assets/data/ga-member-votes.json') // 1024
           print(f'Validated: {votes} votes, {members} members with vote records, {size_kb} KB')
-          assert votes > 0, 'Expected at least one vote — check LegiScan API key and session data'
-          assert members > 0, 'memberVotes is empty — roll call individual votes were not captured. Check LegiScan plan level and debug output above.'
+          assert votes > 0, 'Expected at least one vote — this data comes from the Open States API (/bills). Check the OPENSTATES_API_KEY secret and the GA_SESSION identifier in generate_ga_votes_data.py, and see the HTTP status in the generate step above.'
+          assert members > 0, 'memberVotes is empty — Open States returned roll calls without per-legislator detail. See the generate step output above.'
           "
 
       - name: Commit and push generated data
