@@ -1,5 +1,11 @@
 {
   "_comment": "Manual resolutions for GA state campaign finance matching. Keys are the candidate id (or memberId) from races.json. Set filerEntityId to pin a filing, or noFiling:true to suppress the section. Regenerate the review queue with scripts/report_ga_finance_matches.py.",
+  "challenger-rick-jackson-gov-2026": {
+    "filerEntityId": "103524",
+    "_name": "Rick Jackson",
+    "_race": "ga-governor-2026",
+    "_note": "Rick = Richard L. Jackson (Jackson for Governor, Inc.); the other Jackson in this race is Derrick L."
+  },
   "ga-house-101-2026-r-1": {
     "noFiling": true,
     "_name": "Jennifer Bowers Hutchison",

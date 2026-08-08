@@ -33,6 +33,20 @@ CHAMBER_MAP = {
     'Georgia State Senate':             'Senate',
 }
 
+# Statewide races have no district to scope by, so they join on office instead.
+# races.json and PeachFile disagree on three labels, hence the explicit map.
+OFFICE_MAP = {
+    'Governor':                             'Governor',
+    'Lieutenant Governor':                  'Lieutenant Governor',
+    'Secretary of State':                   'Secretary of State',
+    'Attorney General':                     'Attorney General',
+    'Commissioner of Agriculture':          'Commissioner of Agriculture',
+    'Insurance & Fire Safety Commissioner': 'Commissioner of Insurance',
+    'Labor Commissioner':                   'Commissioner of Labor',
+    'State School Superintendent':          'State School Superintendent',
+    'Public Service Commissioner':          'Public Service Commissioner',
+}
+
 SUFFIXES = r'\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b'
 
 
@@ -67,7 +81,28 @@ def first_name_ok(cand_firsts, filer_firsts):
     return False
 
 
-def find_filers(name, chamber, district, filers, by_seat):
+def candidate_pool(chamber, district, by_seat, by_office, filers):
+    """Filer ids to consider for a candidate: their seat, or their statewide office.
+
+    Public Service Commissioner is the one statewide office with districts, so it is
+    narrowed by district when the filers carry one — otherwise every PSC candidate
+    would collide with every other.
+    """
+    ch = CHAMBER_MAP.get(chamber)
+    if ch and district is not None:
+        return by_seat.get(f"{ch}-{district}", [])
+    office = OFFICE_MAP.get(chamber)
+    if not office:
+        return []
+    ids = by_office.get(office, [])
+    if district is not None:
+        scoped = [i for i in ids if str(filers[i].get('district') or '') == str(district)]
+        if scoped:
+            return scoped
+    return ids
+
+
+def find_filers(name, chamber, district, filers, by_seat, by_office=None):
     """Filers in the candidate's seat that plausibly are this candidate. Mirrors the JS.
 
     Seat + surname is the match; the given name is only a tiebreaker.
@@ -82,14 +117,14 @@ def find_filers(name, chamber, district, filers, by_seat):
     Returning more than one hit means "ambiguous"; the caller shows no figures and the
     case goes to the review report rather than being guessed at.
     """
-    ch = CHAMBER_MAP.get(chamber)
-    if not ch or district is None:
+    pool = candidate_pool(chamber, district, by_seat, by_office or {}, filers)
+    if not pool:
         return []
     cand = toks(name)
     nicks = nicknames(name)
 
     surname_hits = []
-    for fid in by_seat.get(f"{ch}-{district}", []):
+    for fid in pool:
         f = filers.get(fid) or {}
         fl = toks(f.get('lastName'))
         if not fl or len(fl) > len(cand):
@@ -119,7 +154,7 @@ def main():
     show_all = '--all' in sys.argv
 
     cf = json.load(open(FINANCE_FILE, encoding='utf-8'))
-    filers, by_seat = cf['filers'], cf['bySeat']
+    filers, by_seat, by_office = cf['filers'], cf['bySeat'], cf.get('byOffice', {})
     races = json.load(open(RACES_FILE, encoding='utf-8'))['races']
 
     overrides = {}
@@ -139,7 +174,7 @@ def main():
     ambiguous, unmatched_same_seat, unmatched_similar, unmatched_none, resolved = [], [], [], [], 0
 
     for r in races:
-        if r.get('level') != 'state':
+        if r.get('level') not in ('state', 'state-executive'):
             continue
         for phase in (r.get('phases') or {}).values():
             for ballot in (phase.get('ballots') or {}).values():
@@ -154,7 +189,7 @@ def main():
                         resolved += 1
                         continue
 
-                    hits = find_filers(name, r.get('chamber'), r.get('district'), filers, by_seat)
+                    hits = find_filers(name, r.get('chamber'), r.get('district'), filers, by_seat, by_office)
                     if len(hits) == 1:
                         continue
                     if len(hits) > 1:
@@ -170,8 +205,8 @@ def main():
                     # handful that matter under dozens that don't.
                     surname = ''.join(toks(name)[-1:])
                     elsewhere = list(by_surname.get(surname, []))
-                    ch = CHAMBER_MAP.get(r.get('chamber'))
-                    seat_ids = set(by_seat.get(f"{ch}-{r.get('district')}", [])) if ch else set()
+                    seat_ids = set(candidate_pool(r.get('chamber'), r.get('district'),
+                                                  by_seat, by_office, filers))
                     same_seat = [i for i in elsewhere if i in seat_ids]
                     if same_seat:
                         unmatched_same_seat.append((cid, name, r['id'], same_seat))

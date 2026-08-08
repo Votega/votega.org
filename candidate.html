@@ -379,6 +379,19 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     'Georgia House of Representatives': 'House of Representatives',
     'Georgia State Senate': 'Senate',
   };
+  // Statewide races have no district to scope by, so they join on office. races.json
+  // and PeachFile disagree on three labels, hence the explicit map.
+  const GA_OFFICE_MAP = {
+    'Governor': 'Governor',
+    'Lieutenant Governor': 'Lieutenant Governor',
+    'Secretary of State': 'Secretary of State',
+    'Attorney General': 'Attorney General',
+    'Commissioner of Agriculture': 'Commissioner of Agriculture',
+    'Insurance & Fire Safety Commissioner': 'Commissioner of Insurance',
+    'Labor Commissioner': 'Commissioner of Labor',
+    'State School Superintendent': 'State School Superintendent',
+    'Public Service Commissioner': 'Public Service Commissioner',
+  };
   const GA_SUFFIX_RE = /\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b/g;
 
   let _gaFinanceCache;
@@ -421,15 +434,31 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     return false;
   }
 
+  function gaCandidatePool(chamber, district, data) {
+    // Public Service Commissioner is the one statewide office with districts, so it is
+    // narrowed by district when the filers carry one — otherwise every PSC candidate
+    // would collide with every other.
+    const ch = GA_CHAMBER_MAP[chamber];
+    if (ch && district != null) return data.bySeat?.[`${ch}-${district}`] || [];
+    const office = GA_OFFICE_MAP[chamber];
+    if (!office) return [];
+    const ids = data.byOffice?.[office] || [];
+    if (district != null) {
+      const scoped = ids.filter(i => String(data.filers?.[i]?.district ?? '') === String(district));
+      if (scoped.length) return scoped;
+    }
+    return ids;
+  }
+
   function findGaFilers(name, chamber, district, data) {
     // Seat + surname is the match; the given name only breaks ties. Requiring the
     // given name up front rejected ~50 correct matches (Bill/William, Beth/Elizabeth)
     // to prevent one wrong one that the ambiguity check already catches.
-    const ch = GA_CHAMBER_MAP[chamber];
-    if (!ch || district == null) return [];
+    const pool = gaCandidatePool(chamber, district, data);
+    if (!pool.length) return [];
     const cand = gaToks(name), nicks = gaNicknames(name);
     const hits = [];
-    for (const fid of (data.bySeat?.[`${ch}-${district}`] || [])) {
+    for (const fid of pool) {
       const f = data.filers?.[fid];
       if (!f) continue;
       const fl = gaToks(f.lastName);
@@ -492,6 +521,17 @@ share-description: "Profile of a candidate running for office in Georgia: the of
           Source: <a href="https://peachfile.ethics.ga.gov/public/cf/publiccandidate" target="_blank" rel="noopener">Georgia Ethics Commission ↗</a>
           &nbsp;·&nbsp; Covers filings from Jan 1, 2026 onward; for earlier records use the
           <a href="https://ethics.ga.gov/records-search-all/" target="_blank" rel="noopener">legacy records search ↗</a>.
+        </p>`;
+      // Shown only alongside actual figures. The three totals frequently do not net
+      // (about a quarter reconcile exactly, and some committees report spending far
+      // more than they raised), because PeachFile launched Jan 1 2026 and committees
+      // carried balances in from the previous system. Presenting them as a clean
+      // single-cycle ledger without saying so would overstate what they mean.
+      const reconcileNote = `
+        <p class="finance-meta" style="margin-top:0.35rem;">
+          These are committee totals as reported to the Commission. Balances can carry over
+          from before PeachFile launched on January 1, 2026, so raised, spent, and cash on
+          hand may not net exactly.
         </p>`;
 
       const data = await getGaFinanceData();
@@ -557,7 +597,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
           </div>
         </div>
         <p class="finance-meta">${escHtmlGa(filer.electionCycle || '')}${filer.office ? ' · ' + escHtmlGa(filer.office) : ''}</p>
-        ${footer}`;
+        ${footer}${reconcileNote}`;
       return;
     }
 

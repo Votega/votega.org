@@ -106,6 +106,30 @@ const CHAMBER_MAP = {
   'Georgia House of Representatives': 'House of Representatives',
   'Georgia State Senate': 'Senate',
 };
+// Statewide races join on office; races.json and PeachFile disagree on three labels.
+const OFFICE_MAP = {
+  'Governor': 'Governor',
+  'Lieutenant Governor': 'Lieutenant Governor',
+  'Secretary of State': 'Secretary of State',
+  'Attorney General': 'Attorney General',
+  'Commissioner of Agriculture': 'Commissioner of Agriculture',
+  'Insurance & Fire Safety Commissioner': 'Commissioner of Insurance',
+  'Labor Commissioner': 'Commissioner of Labor',
+  'State School Superintendent': 'State School Superintendent',
+  'Public Service Commissioner': 'Public Service Commissioner',
+};
+function candidatePool(chamber, district, data) {
+  const ch = CHAMBER_MAP[chamber];
+  if (ch && district != null) return data.bySeat?.[`${ch}-${district}`] || [];
+  const office = OFFICE_MAP[chamber];
+  if (!office) return [];
+  const ids = data.byOffice?.[office] || [];
+  if (district != null) {
+    const scoped = ids.filter(i => String(data.filers?.[i]?.district ?? '') === String(district));
+    if (scoped.length) return scoped;
+  }
+  return ids;
+}
 const SUFFIX_RE = /\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b/g;
 
 function toks(s) {
@@ -127,12 +151,12 @@ function firstNameOk(a, b) {
   }
   return false;
 }
-function findFilers(name, chamber, district, filers, bySeat) {
-  const ch = CHAMBER_MAP[chamber];
-  if (!ch || district == null) return [];
+function findFilers(name, chamber, district, filers, bySeat, byOffice) {
+  const pool = candidatePool(chamber, district, { bySeat, byOffice, filers });
+  if (!pool.length) return [];
   const cand = toks(name), nicks = nicknames(name);
   const hits = [];
-  for (const fid of (bySeat[`${ch}-${district}`] || [])) {
+  for (const fid of pool) {
     const f = filers[fid] || {};
     const fl = toks(f.lastName);
     if (!fl.length || fl.length > cand.length) continue;
@@ -283,7 +307,7 @@ function build() {
   const seen = new Set();
   queue = [];
   for (const r of races) {
-    if (r.level !== 'state') continue;
+    if (r.level !== 'state' && r.level !== 'state-executive') continue;
     for (const ph of Object.values(r.phases || {})) {
       for (const ballot of Object.values(ph.ballots || {})) {
         for (const c of ballot) {
@@ -291,14 +315,13 @@ function build() {
           if (!cid || !name || seen.has(cid)) continue;
           seen.add(cid);
 
-          const hits = findFilers(name, r.chamber, r.district, filers, bySeat);
+          const hits = findFilers(name, r.chamber, r.district, filers, bySeat, finance.byOffice || {});
           if (hits.length === 1) continue;               // resolved automatically
 
           let tier, options = hits;
           if (hits.length > 1) tier = 'ambiguous';
           else {
-            const ch = CHAMBER_MAP[r.chamber];
-            const seat = new Set(bySeat[`${ch}-${r.district}`] || []);
+            const seat = new Set(candidatePool(r.chamber, r.district, { bySeat, byOffice: finance.byOffice || {}, filers }));
             const same = (bySurname[toks(name).slice(-1).join('')] || []).filter(i => seat.has(i));
             if (same.length) { tier = 'sameSeat'; options = same; }
             else { tier = 'unmatched'; options = []; }
