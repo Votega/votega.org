@@ -1,4 +1,4 @@
-name: Update Georgia legislative vote data (weekly, Sun 08:00 UTC)
+name: Update Georgia legislative vote data (weekly, Mon 07:30 UTC)
 
 permissions:
   contents: write
@@ -6,8 +6,10 @@ permissions:
 on:
   workflow_dispatch:
   schedule:
-    # Weekly on Sundays at 08:00 UTC — vote data changes only during session
-    - cron: '0 8 * * 0'
+    # Monday, not Sunday: this paginates the same Open States /bills endpoint as
+    # update-ga-bills, and the 250 requests/day quota is shared across every job
+    # using the key. Running both on Sunday starved this one to zero results.
+    - cron: '30 7 * * 1'
 
 jobs:
   update-data:

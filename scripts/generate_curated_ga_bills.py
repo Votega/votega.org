@@ -220,8 +220,22 @@ def main():
     print("Loading member party data...")
     party_lookup = build_party_lookup()
 
-    results = []
-    failed  = []
+    # Prior records, so a bill that times out keeps its last-known data instead of
+    # vanishing from the site. Keyed by (session, identifier) because the curated list
+    # spans sessions and identifiers repeat across them (e.g. "SB 233" in 2023_24).
+    prior = {}
+    if os.path.exists(OUTPUT_FILE):
+        try:
+            with open(OUTPUT_FILE, encoding='utf-8') as f:
+                for b in json.load(f).get('bills', []):
+                    prior[(b.get('session'), b.get('identifier'))] = b
+            print(f"Loaded {len(prior)} previously published record(s) as fallback.")
+        except Exception as e:
+            print(f"  Could not read existing {OUTPUT_FILE}: {e}")
+
+    results  = []
+    failed   = []
+    retained = []
     for entry in bill_list:
         label = entry.get('_name') or entry['identifier']
         print(f"\n--- {label} ({entry['identifier']}, {entry['session']}) ---")
@@ -229,7 +243,13 @@ def main():
         if record:
             results.append(record)
         else:
-            failed.append(entry['identifier'])
+            fallback = prior.get((entry.get('session'), entry['identifier']))
+            if fallback:
+                results.append(fallback)
+                retained.append(entry['identifier'])
+                print(f"  Kept previously published record for {entry['identifier']}")
+            else:
+                failed.append(entry['identifier'])
         time.sleep(7)  # Open States rate limit is 10 req/min — 7s keeps well under it
 
     output = {
@@ -246,8 +266,29 @@ def main():
         json.dump(output, f, indent=2, ensure_ascii=False)
 
     print(f"\nWrote {len(results)} bill records to {OUTPUT_FILE}")
+
+    # Tolerate the odd transient miss, fail on a real outage.
+    #
+    # Open States read timeouts are frequent enough that failing the whole daily job
+    # over one slow request threw away the other bills' fresh data too. A bill that
+    # times out now keeps its previously published record, so the site never loses a
+    # curated bill — but a run that can't fetch most of the list still fails, so stale
+    # data is never quietly presented as current.
+    if retained:
+        print(f"NOTE: {len(retained)} bill(s) served from previously published data: "
+              f"{', '.join(retained)}")
+        print("  If the same bill is retained run after run, check that its session and "
+              "identifier in curated-ga-bills.json still match Open States.")
+
     if failed:
-        print(f"WARNING: {len(failed)} bill(s) not fetched: {', '.join(failed)}")
+        print(f"WARNING: {len(failed)} of {len(bill_list)} bill(s) could not be fetched "
+              f"and have no previous record: {', '.join(failed)}")
+        sys.exit(1)
+
+    if len(retained) > len(bill_list) // 2:
+        print(f"\nERROR: more than half the curated list ({len(retained)}/{len(bill_list)}) "
+              f"came from cache — treating this as an API outage rather than publishing "
+              f"a mostly-stale file.")
         sys.exit(1)
 
 

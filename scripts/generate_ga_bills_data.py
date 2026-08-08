@@ -25,7 +25,7 @@ import time
 import urllib.request
 import urllib.error
 import urllib.parse
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 API_KEY  = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL = "https://v3.openstates.org"
@@ -40,6 +40,13 @@ REVIEW_CSV_FILE = os.path.join('scripts', 'ga-bills-review.csv')
 ABSTRACT_MAX = 500  # chars — keeps abstract useful without bloating file size
 PER_PAGE     = 20   # /bills max per_page when using multiple `include`s
 DELAY        = 7    # Open States free tier: 10 req/min — 7s keeps safely under
+
+# Open States also enforces a 250 request/day cap. A full 2025-26 pull is ~274
+# pages, so an unfiltered fetch can never finish; runs are incremental by default
+# and re-fetch only bills changed since the last run. Set FULL_REFRESH=1 to force
+# a complete rebuild (expect it to need more than one day's quota).
+FULL_REFRESH  = os.environ.get('FULL_REFRESH', '').strip().lower() in ('1', 'true', 'yes')
+OVERLAP_DAYS  = 3   # re-window a few days each run to absorb clock skew / late indexing
 
 # All 159 Georgia counties (source: GA General Assembly reapportionment data,
 # mirrored in assets/scripts/ga-districts.js).
@@ -118,17 +125,23 @@ def fetch(url, retries=3):
     return None
 
 
-def get_all_bills():
+def get_all_bills(updated_since=None):
     """Paginate GET /bills for the configured GA session, with the relation
     includes slim_bill() needs (abstracts, actions, sponsorships, sources,
     votes, versions). subject/classification/identifier/title/chamber are
-    core fields returned without an include."""
+    core fields returned without an include.
+
+    `updated_since` limits the pull to bills changed on or after that date. A full
+    session is ~274 pages and the Open States free tier allows 250 requests/day, so
+    an unfiltered pull cannot complete — see main() for how the incremental path is
+    chosen.
+    """
     all_bills   = []
     page        = 1
     total_pages = None
 
     while True:
-        params = urllib.parse.urlencode([
+        query = [
             ('jurisdiction', GA_JURISDICTION),
             ('session',      GA_SESSION),
             ('per_page',     PER_PAGE),
@@ -139,7 +152,10 @@ def get_all_bills():
             ('include',      'sources'),
             ('include',      'versions'),
             ('include',      'votes'),
-        ])
+        ]
+        if updated_since:
+            query.append(('updated_since', updated_since))
+        params = urllib.parse.urlencode(query)
         data = fetch(f"{BASE_URL}/bills?{params}")
 
         if not data:
@@ -363,24 +379,90 @@ def slim_bill(b):
 # Main
 # ---------------------------------------------------------------------------
 
+def load_existing(path):
+    """Previously published bills, as a merge baseline. Returns (bills, metadata)."""
+    if not os.path.exists(path):
+        return [], {}
+    try:
+        with open(path, encoding='utf-8') as f:
+            d = json.load(f)
+        return d.get('bills') or [], d.get('metadata') or {}
+    except Exception as e:
+        print(f"  Could not read existing {path}: {e}")
+        return [], {}
+
+
+def incremental_since(meta):
+    """Date to pass as updated_since, with a few days of overlap.
+
+    Re-fetching a small window that was already covered is cheap and guards against
+    clock skew and bills indexed by Open States after our run. Returns None when the
+    baseline is unusable, which forces a full pull.
+    """
+    if not meta.get('generatedAt'):
+        return None
+    # Only build on a baseline that was itself complete.
+    if meta.get('paginationComplete') is False:
+        return None
+    try:
+        ts = meta['generatedAt'].replace('Z', '+00:00')
+        dt = datetime.fromisoformat(ts)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return (dt - timedelta(days=OVERLAP_DAYS)).date().isoformat()
+    except Exception:
+        return None
+
+
 def main():
     if not API_KEY:
         print("Error: OPENSTATES_API_KEY environment variable not set")
         sys.exit(1)
 
-    print(f"Fetching GA bills for session {GA_SESSION} from Open States API...")
-    raw_bills, pagination_complete = get_all_bills()
+    existing_bills, existing_meta = load_existing(OUTPUT_FILE)
+    since = None if FULL_REFRESH else incremental_since(existing_meta)
 
-    if not raw_bills:
-        print("Error: no bills fetched")
-        sys.exit(1)
+    if FULL_REFRESH:
+        print(f"Full refresh requested — fetching every bill for session {GA_SESSION}.")
+        print(f"  Note: a full session is ~{-(-len(existing_bills) // PER_PAGE) or '?'} requests "
+              f"against a 250/day quota; this may not complete in one run.")
+    elif since and existing_bills:
+        print(f"Incremental update: {len(existing_bills):,} bills already on file; "
+              f"fetching only those updated since {since}.")
+    else:
+        print(f"No usable baseline — falling back to a full fetch for session {GA_SESSION}.")
+
+    raw_bills, pagination_complete = get_all_bills(updated_since=since)
+
+    if since and existing_bills:
+        # Merge the changed bills over the baseline, keyed by OCD bill id.
+        fetched = {b['id']: b for b in (slim_bill(x) for x in raw_bills) if b.get('id')}
+        merged  = {b['id']: b for b in existing_bills if b.get('id')}
+        added   = len(set(fetched) - set(merged))
+        merged.update(fetched)
+        bills = list(merged.values())
+        print(f"  Merged {len(fetched)} changed bill(s) ({added} new) into "
+              f"{len(existing_bills):,} existing -> {len(bills):,} total")
+        raw_bills = None   # already slimmed
+    else:
+        if not raw_bills:
+            print("Error: no bills fetched")
+            sys.exit(1)
+        bills = None       # slimmed below
 
     overrides = load_subjects_overrides(OVERRIDES_FILE)
     if overrides:
         print(f'Loaded {len(overrides)} manual subject override(s) from {OVERRIDES_FILE}')
 
-    print(f'Processing {len(raw_bills):,} bills ...')
-    bills = [slim_bill(b) for b in raw_bills]
+    if bills is None:
+        print(f'Processing {len(raw_bills):,} bills ...')
+        bills = [slim_bill(b) for b in raw_bills]
+    else:
+        print(f'Processing {len(bills):,} bills (merged set) ...')
+
+    # Keep a stable order so a merge doesn't reshuffle the file and produce a
+    # misleadingly large diff on every run.
+    bills.sort(key=lambda b: (b.get('chamber') or '', b.get('identifier') or ''))
 
     override_count = 0
     for bill in bills:
@@ -399,6 +481,7 @@ def main():
     for b in bills:
         chambers[b['chamber']] = chambers.get(b['chamber'], 0) + 1
 
+    was_incremental = bool(since and existing_bills)
     output = {
         'metadata': {
             'generatedAt':        datetime.now(timezone.utc).isoformat(),
@@ -407,6 +490,12 @@ def main():
             'source':             'Open States API',
             'totalBills':         len(bills),
             'paginationComplete': pagination_complete,
+            'updateMode':         'incremental' if was_incremental else 'full',
+            # Provenance of the underlying baseline: incremental runs build on it and
+            # never re-verify the untouched bills, so it's worth knowing how old it is.
+            'lastFullRefresh':    (existing_meta.get('lastFullRefresh')
+                                   if was_incremental
+                                   else datetime.now(timezone.utc).isoformat()),
         },
         'bills': bills,
     }
@@ -442,11 +531,20 @@ def main():
     print(f'  Signed by Governor: {signed:,}')
     print(f'  Vetoed by Governor: {vetoed:,}')
     print(f'  Pending w/ Governor:{pending_gov:,}')
+    print(f'  Update mode:        {"incremental" if was_incremental else "full"}')
     print(f'  Pagination complete:{pagination_complete}')
+    print(f'  Last full refresh:  {output["metadata"]["lastFullRefresh"] or "unknown"}')
     print(f'  Output size:        {size_mb:.1f} MB')
 
     if not pagination_complete:
-        print('\nERROR: pagination did not complete — refusing to treat this as a full dataset.')
+        if was_incremental:
+            # A half-applied update is worse than none: generatedAt would advance past
+            # changes we never fetched, and the next run's updated_since window would
+            # start after them, so they'd be skipped permanently.
+            print('\nERROR: incremental fetch did not finish (likely the 250/day quota). '
+                  'Not publishing a partially applied update.')
+        else:
+            print('\nERROR: pagination did not complete — refusing to treat this as a full dataset.')
         sys.exit(1)
 
 
