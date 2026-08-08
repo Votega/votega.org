@@ -371,6 +371,83 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     return parts[parts.length - 1].toLowerCase().replace(/[^a-z]/g, '');
   }
 
+  // ── GA state campaign finance (PeachFile) ──────────────────────────────────
+  // Matching mirrors find_filers() in scripts/report_ga_finance_matches.py and the
+  // same function in tools/ga-finance-overrides-editor.html. Keep all three in step.
+  const GA_FINANCE_URL = 'assets/data/ga-campaign-finance.json';
+  const GA_CHAMBER_MAP = {
+    'Georgia House of Representatives': 'House of Representatives',
+    'Georgia State Senate': 'Senate',
+  };
+  const GA_SUFFIX_RE = /\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b/g;
+
+  let _gaFinanceCache;
+  async function getGaFinanceData() {
+    if (_gaFinanceCache !== undefined) return _gaFinanceCache;
+    try {
+      const res = await fetch(GA_FINANCE_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      _gaFinanceCache = await res.json();
+    } catch (err) {
+      console.error('getGaFinanceData()', err);
+      _gaFinanceCache = null;
+    }
+    return _gaFinanceCache;
+  }
+
+  // This page renders most values unescaped via template literals; these finance
+  // strings come from an external API, so escape them at the point of use.
+  function escHtmlGa(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+  }
+
+  function gaToks(s) {
+    // Apostrophes are intra-word, not separators (O'Steen vs Osteen).
+    return String(s || '').toLowerCase().replace(GA_SUFFIX_RE, '')
+      .replace(/['’]/g, '').replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);
+  }
+  function gaNicknames(s) {
+    return [...String(s || '').matchAll(/["“']([A-Za-z]+)["”']/g)].map(m => m[1].toLowerCase());
+  }
+  function gaFirstNameOk(a, b) {
+    for (const x of a) for (const y of b) {
+      if (x === y) return true;
+      if (x.length >= 3 && y.length >= 3 && (x.startsWith(y) || y.startsWith(x))) return true;
+      if (x.length === 1 && y.startsWith(x)) return true;
+      if (y.length === 1 && x.startsWith(y)) return true;
+    }
+    return false;
+  }
+
+  function findGaFilers(name, chamber, district, data) {
+    // Seat + surname is the match; the given name only breaks ties. Requiring the
+    // given name up front rejected ~50 correct matches (Bill/William, Beth/Elizabeth)
+    // to prevent one wrong one that the ambiguity check already catches.
+    const ch = GA_CHAMBER_MAP[chamber];
+    if (!ch || district == null) return [];
+    const cand = gaToks(name), nicks = gaNicknames(name);
+    const hits = [];
+    for (const fid of (data.bySeat?.[`${ch}-${district}`] || [])) {
+      const f = data.filers?.[fid];
+      if (!f) continue;
+      const fl = gaToks(f.lastName);
+      if (!fl.length || fl.length > cand.length) continue;
+      if (cand.slice(-fl.length).join(' ') !== fl.join(' ')) continue;
+      hits.push(fid);
+    }
+    const uniq = [...new Set(hits)];
+    if (uniq.length <= 1) return uniq;
+    const narrowed = uniq.filter(fid => {
+      const f = data.filers[fid];
+      const fl = gaToks(f.lastName), ff = gaToks(f.firstName);
+      const cf = cand.slice(0, cand.length - fl.length).concat(nicks);
+      return cf.length && ff.length && gaFirstNameOk(cf, ff);
+    });
+    return narrowed.length === 1 ? narrowed : uniq;
+  }
+
   function findFecId(fecData, candidate, race) {
     // 1. Bioguide ID (most reliable — incumbents with enriched data)
     const bioguide = candidate.existingMemberId || '';
@@ -405,22 +482,82 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     const isFederal = (race.level || '') === 'federal';
 
     if (!isFederal) {
-      // State candidates: link to the Georgia Ethics Commission's PeachFile system.
-      // PeachFile replaced the old eFile system on Jan 1, 2026 and holds only records
-      // from that date forward — anything earlier stays on the legacy records search.
-      container.innerHTML = `
-        <h3>Campaign Finance</h3>
-        <p style="font-size:0.875rem;color:#555;margin:0 0 0.5rem 0;">
-          Georgia state campaign finance filings are managed by the
-          <a href="https://peachfile.ethics.ga.gov/public/cf/publiccandidate" target="_blank" rel="noopener">
-            Georgia Government Transparency &amp; Campaign Finance Commission ↗
-          </a>.
-          Search PeachFile for <strong>${candidate.name}</strong> to view their filings.
-        </p>
+      // State candidates: figures come from the Georgia Ethics Commission's PeachFile
+      // system, collected at build time (the API is CORS origin-locked). PeachFile
+      // replaced the old eFile system on Jan 1, 2026 and holds only records from that
+      // date forward — anything earlier stays on the legacy records search.
+      const searchLink = `<a href="https://peachfile.ethics.ga.gov/public/cf/publiccandidate" target="_blank" rel="noopener">Search PeachFile ↗</a>`;
+      const footer = `
         <p class="finance-meta">
-          PeachFile covers filings from January 1, 2026 onward. For earlier records, use the
+          Source: <a href="https://peachfile.ethics.ga.gov/public/cf/publiccandidate" target="_blank" rel="noopener">Georgia Ethics Commission ↗</a>
+          &nbsp;·&nbsp; Covers filings from Jan 1, 2026 onward; for earlier records use the
           <a href="https://ethics.ga.gov/records-search-all/" target="_blank" rel="noopener">legacy records search ↗</a>.
         </p>`;
+
+      const data = await getGaFinanceData();
+      if (!data) {
+        container.innerHTML = `
+          <h3>Campaign Finance</h3>
+          <p class="finance-meta">Finance data unavailable. ${searchLink}</p>`;
+        return;
+      }
+
+      // A reviewed decision always wins over the automatic match.
+      const key = candidate.id || candidate.existingMemberId || '';
+      const override = data.candidateOverrides?.[key];
+
+      let filer = null, ambiguous = false;
+      if (override?.noFiling) {
+        filer = null;
+      } else if (override?.filerEntityId) {
+        filer = data.filers?.[override.filerEntityId] || null;
+      } else {
+        const hits = findGaFilers(candidate.name, race.chamber, race.district, data);
+        if (hits.length === 1) filer = data.filers[hits[0]];
+        else if (hits.length > 1) ambiguous = true;
+      }
+
+      if (ambiguous) {
+        // Several filings match and no one has picked between them. Showing one would
+        // risk understating a candidate whose money sits in another committee.
+        container.innerHTML = `
+          <h3>Campaign Finance</h3>
+          <p class="finance-meta">
+            More than one campaign filing matches this candidate, so no totals are shown
+            here. ${searchLink} to view them.
+          </p>${footer}`;
+        return;
+      }
+
+      if (!filer) {
+        container.innerHTML = `
+          <h3>Campaign Finance</h3>
+          <p class="finance-meta">
+            No campaign finance filing found for this candidate in the
+            ${escHtmlGa(String(data.metadata?.cycle ?? ''))} cycle — they may not have filed,
+            or may be running for another office. ${searchLink}
+          </p>${footer}`;
+        return;
+      }
+
+      container.innerHTML = `
+        <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: GA Ethics Commission</small></h3>
+        <div class="finance-cards">
+          <div class="finance-card raised">
+            <div class="finance-card-label">Total Raised</div>
+            <div class="finance-card-value">${fmtMoney(filer.totalRaised)}</div>
+          </div>
+          <div class="finance-card spent">
+            <div class="finance-card-label">Total Spent</div>
+            <div class="finance-card-value">${fmtMoney(filer.totalSpent)}</div>
+          </div>
+          <div class="finance-card cash">
+            <div class="finance-card-label">Cash on Hand</div>
+            <div class="finance-card-value">${fmtMoney(filer.cashOnHand)}</div>
+          </div>
+        </div>
+        <p class="finance-meta">${escHtmlGa(filer.electionCycle || '')}${filer.office ? ' · ' + escHtmlGa(filer.office) : ''}</p>
+        ${footer}`;
       return;
     }
 
@@ -668,13 +805,17 @@ share-description: "Profile of a candidate running for office in Georgia: the of
           const phase = race.phases?.[phaseName];
           if (!phase) continue;
 
-          let match = (phase.candidates || []).find(
-            c => c.type === 'challenger' && c.id === candidateId
-          );
+          // Match on id alone. Requiring type === 'challenger' made every incumbent
+          // that carries an `id` instead of a `memberId` unreachable — 213 of them,
+          // all state and state-executive seats. race.html links those through
+          // renderChallengerCard() (it falls back whenever an incumbent has no
+          // memberId), so the link existed and the profile always said "not found".
+          // `id` is unique per candidate, so the type filter only ever excluded.
+          let match = (phase.candidates || []).find(c => c.id === candidateId);
 
           if (!match && phase.ballots) {
             for (const ballotCandidates of Object.values(phase.ballots)) {
-              match = ballotCandidates.find(c => c.type === 'challenger' && c.id === candidateId);
+              match = ballotCandidates.find(c => c.id === candidateId);
               if (match) break;
             }
           }

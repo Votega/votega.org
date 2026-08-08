@@ -41,6 +41,7 @@ from datetime import datetime
 
 API_BASE    = "https://api-peachfile.ethics.ga.gov/api"
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-campaign-finance.json"
+OVERRIDES_FILE = "assets/data/ga-campaign-finance-overrides.json"
 RACES_FILE  = "assets/data/races.json"
 PAGE_SIZE   = 100          # anything much larger is rejected by the WAF
 DELAY       = 1.0
@@ -225,6 +226,39 @@ def main():
         print("Error: no filers collected — aborting rather than overwriting good data")
         sys.exit(1)
 
+    # Manual resolutions for candidates the automatic join can't settle — ambiguous
+    # filings, or ballot names that don't resemble the filing name. Emitted into the
+    # data file so the pages need one fetch rather than two, and so a bad candidate id
+    # or filer id fails the build here instead of silently doing nothing in the browser.
+    overrides = {}
+    if os.path.exists(OVERRIDES_FILE):
+        with open(OVERRIDES_FILE, encoding="utf-8") as f:
+            raw = json.load(f)
+        unknown = []
+        for key, val in raw.items():
+            if key.startswith("_"):
+                continue
+            fid = val.get("filerEntityId")
+            if fid and str(fid) not in filers:
+                unknown.append(f"{key} -> filerEntityId {fid}")
+                continue
+            entry = {}
+            if fid:
+                entry["filerEntityId"] = str(fid)
+            if val.get("noFiling"):
+                entry["noFiling"] = True
+            if entry:
+                overrides[key] = entry
+        print(f"\nLoaded {len(overrides)} manual override(s) from {OVERRIDES_FILE}")
+        if unknown:
+            print("Error: overrides reference filers that no longer exist:", file=sys.stderr)
+            for u in unknown:
+                print(f"  - {u}", file=sys.stderr)
+            print("  Re-run scripts/report_ga_finance_matches.py and re-resolve those "
+                  "candidates; a filer id can disappear when a committee is terminated.",
+                  file=sys.stderr)
+            sys.exit(1)
+
     output = {
         "metadata": {
             "generatedAt": datetime.now().isoformat(),
@@ -235,6 +269,7 @@ def main():
             "count":       len(filers),
         },
         "filers":           filers,
+        "candidateOverrides": overrides,
         "bySeat":           by_seat,
         "byNormalizedName": by_name,
         "byOffice":         by_office,
@@ -247,7 +282,8 @@ def main():
     size_kb = os.path.getsize(OUTPUT_FILE) // 1024
     print(f"\nDone. {len(filers)} filers for cycle {cycle} "
           f"({skipped_other_cycle} skipped from other cycles) | {size_kb} KB -> {OUTPUT_FILE}")
-    print(f"  seats covered: {len(by_seat)} | statewide offices: {len(by_office)}")
+    print(f"  seats covered: {len(by_seat)} | statewide offices: {len(by_office)} "
+          f"| manual overrides: {len(overrides)}")
 
 
 if __name__ == "__main__":

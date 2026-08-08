@@ -39,6 +39,10 @@ SUFFIXES = r'\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b'
 def toks(s):
     s = (s or '').lower()
     s = re.sub(SUFFIXES, '', s)
+    # Apostrophes are intra-word, not separators: replacing them with a space turned
+    # O'Steen into ["o","steen"], which then failed to match a ballot spelling it
+    # "Osteen". Drop them so both sides normalise to the same single token.
+    s = s.replace("'", "").replace("’", "")
     s = re.sub(r'[^a-z\s]', ' ', s)
     return [t for t in s.split() if t]
 
@@ -178,7 +182,8 @@ def main():
 
     total = len(seen)
     print(f"GA state candidates on race ballots: {total}")
-    print(f"  matched automatically : {total - len(ambiguous) - len(unmatched_similar) - len(unmatched_none) - resolved}")
+    unresolved = len(ambiguous) + len(unmatched_same_seat) + len(unmatched_similar) + len(unmatched_none)
+    print(f"  matched automatically : {total - unresolved - resolved}")
     print(f"  resolved by override  : {resolved}")
     print(f"  AMBIGUOUS (review)                    : {len(ambiguous)}")
     print(f"  surname matches in THIS seat (review)  : {len(unmatched_same_seat)}")

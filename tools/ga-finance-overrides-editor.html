@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GA Campaign Finance Overrides Editor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; font-size: 14px; background: #f5f5f5; color: #222; }
+  header { background: #1e3a5f; color: #fff; padding: 0.65rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  header h1 { font-size: 1rem; font-weight: 600; }
+  .file-status { font-size: 0.75rem; opacity: 0.7; margin-left: auto; }
+  button { font: inherit; cursor: pointer; border-radius: 4px; padding: 0.35rem 0.7rem; border: 1px solid #ccc; background: #fff; }
+  header button { background: #2c5282; color: #fff; border-color: #2c5282; font-size: 12px; }
+  header button:hover { background: #3a6ba5; }
+  header button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .layout { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 46px); }
+  .sidebar { background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; overflow: hidden; }
+  .sidebar-top { padding: 0.6rem; border-bottom: 1px solid #eee; }
+  .sidebar-top input { width: 100%; padding: 0.38rem 0.55rem; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+  .counts { display: flex; gap: 0.35rem; margin-top: 0.5rem; flex-wrap: wrap; }
+  .count-chip { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 700; }
+  .c-amb  { background: #fee2e2; color: #991b1b; }
+  .c-seat { background: #fef9c3; color: #854d0e; }
+  .c-none { background: #e0e7ff; color: #3730a3; }
+  .c-done { background: #dcfce7; color: #166534; }
+
+  .list { flex: 1; overflow-y: auto; }
+  .group-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; padding: 0.55rem 0.7rem 0.25rem; background: #f8fafc; position: sticky; top: 0; }
+  .item { padding: 0.45rem 0.7rem; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 13px; }
+  .item:hover { background: #f1f5f9; }
+  .item.active { background: #dbeafe; border-left: 3px solid #1d4ed8; padding-left: calc(0.7rem - 3px); }
+  .item.resolved .item-name::after { content: ' ✓'; color: #16a34a; font-weight: 700; }
+  .item-name { font-weight: 600; }
+  .item-sub { font-size: 11px; color: #64748b; }
+
+  .main { overflow-y: auto; padding: 1.1rem 1.4rem; }
+  .empty { color: #94a3b8; margin-top: 3rem; text-align: center; }
+  .cand-head { border-bottom: 1px solid #e2e8f0; padding-bottom: 0.6rem; margin-bottom: 1rem; }
+  .cand-head h2 { font-size: 1.15rem; }
+  .cand-head .meta { font-size: 12px; color: #64748b; margin-top: 0.2rem; }
+  .tier { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 0.4rem; vertical-align: middle; }
+
+  .opt { border: 1px solid #ddd; border-radius: 6px; padding: 0.7rem 0.85rem; margin-bottom: 0.6rem; cursor: pointer; display: block; }
+  .opt:hover { border-color: #94a3b8; }
+  .opt.sel { border-color: #1d4ed8; background: #eff6ff; box-shadow: inset 0 0 0 1px #1d4ed8; }
+  .opt-top { display: flex; align-items: baseline; gap: 0.5rem; }
+  .opt-name { font-weight: 700; }
+  .opt-id { font-size: 11px; color: #64748b; font-family: ui-monospace, monospace; }
+  .figs { display: flex; gap: 1.1rem; margin-top: 0.4rem; font-size: 12px; }
+  .figs b { display: block; font-size: 13px; }
+  .f-raised b { color: #15803d; } .f-spent b { color: #b91c1c; } .f-cash b { color: #1d4ed8; }
+  .opt-cycle { font-size: 11px; color: #64748b; margin-top: 0.35rem; }
+
+  .note-row { margin-top: 0.9rem; }
+  .note-row label { display: block; font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.25rem; }
+  .note-row input { width: 100%; padding: 0.4rem 0.55rem; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+  .actions { margin-top: 1rem; display: flex; gap: 0.5rem; }
+  .btn-primary { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+  .btn-danger { background: #fff; color: #991b1b; border-color: #fca5a5; }
+
+  .hint { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.7rem 0.85rem; font-size: 12px; color: #475569; margin-bottom: 1rem; line-height: 1.5; }
+  #toast { display: none; position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: #14213d; color: #fff; padding: 0.5rem 1.1rem; border-radius: 6px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GA Campaign Finance Overrides</h1>
+  <button id="btnFinance">1. Load ga-campaign-finance.json</button>
+  <button id="btnRaces" disabled>2. Load races.json</button>
+  <button id="btnOpen" disabled title="Optional — skip this to start a new overrides file">3. Open existing overrides (optional)</button>
+  <button id="btnSave" disabled title="In-place save — Chromium only">Save in place</button>
+  <button id="btnDownload" disabled>Download</button>
+  <span class="file-status" id="fileStatus">No files loaded</span>
+</header>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <input id="search" placeholder="Filter by name or race…" disabled>
+      <div class="counts" id="counts"></div>
+    </div>
+    <div class="list" id="list"></div>
+  </div>
+  <div class="main" id="main">
+    <p class="empty">
+      Load <code>assets/data/ga-campaign-finance.json</code> and <code>assets/data/races.json</code> to begin.<br><br>
+      Step 3 is optional — skip it to start a fresh overrides file.<br>
+      When you're done, <strong>Download</strong> writes
+      <code>ga-campaign-finance-overrides.json</code>; move it into <code>assets/data/</code>.<br>
+      <span id="fsNote"></span>
+    </p>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// Matching logic — mirrors find_filers() in scripts/report_ga_finance_matches.py
+// and findFiler() in candidate.html. Keep all three in step.
+// ─────────────────────────────────────────────────────────────────────────────
+const CHAMBER_MAP = {
+  'Georgia House of Representatives': 'House of Representatives',
+  'Georgia State Senate': 'Senate',
+};
+const SUFFIX_RE = /\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b/g;
+
+function toks(s) {
+  // Apostrophes are intra-word, not separators — see the matching note in
+  // scripts/report_ga_finance_matches.py (O'Steen vs Osteen).
+  return String(s || '').toLowerCase().replace(SUFFIX_RE, '')
+    .replace(/['’]/g, '')
+    .replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);
+}
+function nicknames(s) {
+  return [...String(s || '').matchAll(/["“']([A-Za-z]+)["”']/g)].map(m => m[1].toLowerCase());
+}
+function firstNameOk(a, b) {
+  for (const x of a) for (const y of b) {
+    if (x === y) return true;
+    if (x.length >= 3 && y.length >= 3 && (x.startsWith(y) || y.startsWith(x))) return true;
+    if (x.length === 1 && y.startsWith(x)) return true;
+    if (y.length === 1 && x.startsWith(y)) return true;
+  }
+  return false;
+}
+function findFilers(name, chamber, district, filers, bySeat) {
+  const ch = CHAMBER_MAP[chamber];
+  if (!ch || district == null) return [];
+  const cand = toks(name), nicks = nicknames(name);
+  const hits = [];
+  for (const fid of (bySeat[`${ch}-${district}`] || [])) {
+    const f = filers[fid] || {};
+    const fl = toks(f.lastName);
+    if (!fl.length || fl.length > cand.length) continue;
+    if (cand.slice(-fl.length).join(' ') !== fl.join(' ')) continue;
+    hits.push(fid);
+  }
+  const uniq = [...new Set(hits)];
+  if (uniq.length <= 1) return uniq;
+  // Two filers share this surname in this seat — try the given name to separate them.
+  const narrowed = uniq.filter(fid => {
+    const f = filers[fid];
+    const fl = toks(f.lastName), ff = toks(f.firstName);
+    const cf = cand.slice(0, cand.length - fl.length).concat(nicks);
+    return cf.length && ff.length && firstNameOk(cf, ff);
+  });
+  return narrowed.length === 1 ? narrowed : uniq;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+let finance = null, races = null, overrides = {}, fileHandle = null;
+let queue = [], selected = null;
+
+const $ = id => document.getElementById(id);
+
+// Tell the user up front which save path they have, rather than letting them
+// discover it when "Save in place" stays greyed out.
+window.addEventListener('DOMContentLoaded', () => {
+  const note = $('fsNote');
+  if (note && !HAS_FS_API) {
+    note.innerHTML = '<em>This browser has no in-place file saving — “Save in place” stays disabled and Download is the way out.</em>';
+  }
+});
+
+$('btnFinance').addEventListener('click', () => pick(data => {
+  if (!data.filers || !data.bySeat) throw new Error('Not a ga-campaign-finance.json file');
+  finance = data;
+  $('btnRaces').disabled = false;
+  toast(`Loaded ${Object.keys(data.filers).length} filers`);
+  status();
+}));
+
+$('btnRaces').addEventListener('click', () => pick(data => {
+  if (!Array.isArray(data.races)) throw new Error('Not a races.json file');
+  races = data.races;
+  $('btnOpen').disabled = false;
+  $('btnDownload').disabled = false;
+  $('search').disabled = false;
+  toast(`Loaded ${races.length} races`);
+  build();
+}));
+
+$('btnOpen').addEventListener('click', () => pick((data, handle) => {
+  const keys = Object.keys(data).filter(k => !k.startsWith('_'));
+  // Guard against loading the wrong file: overrides are keyed by candidate id.
+  if (keys.length && !keys.some(k => /^(ga-house-|ga-senate-|ocd-person\/)/.test(k))) {
+    throw new Error('That does not look like ga-campaign-finance-overrides.json');
+  }
+  overrides = data;
+  fileHandle = handle || null;
+  $('btnSave').disabled = !fileHandle;
+  toast(`Loaded ${keys.length} override(s)` + (fileHandle ? '' : ' — use Download to save'));
+  build();
+}));
+
+$('btnSave').addEventListener('click', async () => {
+  if (!fileHandle) return;
+  try {
+    const w = await fileHandle.createWritable();
+    await w.write(serialize());
+    await w.close();
+    toast('File saved ✓');
+  } catch (e) { alert('Save failed: ' + e.message); }
+});
+
+// Firefox and Safari have no File System Access API — fall back to a download.
+$('btnDownload').addEventListener('click', () => {
+  const blob = new Blob([serialize()], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ga-campaign-finance-overrides.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Downloaded — move it to assets/data/');
+});
+
+function serialize() {
+  const out = {
+    _comment: 'Manual resolutions for GA state campaign finance matching. Keys are the candidate id (or memberId) from races.json. Set filerEntityId to pin a filing, or noFiling:true to suppress the section. Regenerate the review queue with scripts/report_ga_finance_matches.py.',
+  };
+  for (const k of Object.keys(overrides).filter(k => !k.startsWith('_')).sort()) out[k] = overrides[k];
+  return JSON.stringify(out, null, 2);
+}
+
+// File System Access API is Chromium-only and is not exposed on file:// origins even
+// there, so it can only ever be a progressive enhancement — it buys in-place Save.
+// Everything else falls back to a plain file input plus a Blob download, which work
+// in every browser and from file://.
+const HAS_FS_API = typeof window.showOpenFilePicker === 'function';
+
+async function pick(fn) {
+  if (HAS_FS_API) {
+    try {
+      const [h] = await window.showOpenFilePicker({
+        types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+      });
+      fn(JSON.parse(await (await h.getFile()).text()), h);
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+      // SecurityError etc. — fall through to the input-based picker.
+      if (e.name !== 'SecurityError' && e.name !== 'NotAllowedError') {
+        alert('Error: ' + e.message);
+        return;
+      }
+    }
+  }
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json,application/json';
+  input.addEventListener('change', async () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    try {
+      fn(JSON.parse(await file.text()), null);
+    } catch (e) { alert('Error: ' + e.message); }
+  });
+  input.click();
+}
+
+function status() {
+  $('fileStatus').textContent =
+    [finance && 'finance ✓', races && 'races ✓', fileHandle && 'overrides ✓']
+      .filter(Boolean).join(' · ') || 'No files loaded';
+}
+
+// ── Build the review queue ───────────────────────────────────────────────────
+function build() {
+  if (!finance || !races) return;
+  const { filers, bySeat } = finance;
+
+  // Surname index, used only to classify unmatched candidates — never to match.
+  const bySurname = {};
+  for (const [fid, f] of Object.entries(filers)) {
+    const k = toks(f.lastName).join('');
+    if (k) (bySurname[k] = bySurname[k] || []).push(fid);
+  }
+
+  const seen = new Set();
+  queue = [];
+  for (const r of races) {
+    if (r.level !== 'state') continue;
+    for (const ph of Object.values(r.phases || {})) {
+      for (const ballot of Object.values(ph.ballots || {})) {
+        for (const c of ballot) {
+          const cid = c.id || c.memberId, name = c.name;
+          if (!cid || !name || seen.has(cid)) continue;
+          seen.add(cid);
+
+          const hits = findFilers(name, r.chamber, r.district, filers, bySeat);
+          if (hits.length === 1) continue;               // resolved automatically
+
+          let tier, options = hits;
+          if (hits.length > 1) tier = 'ambiguous';
+          else {
+            const ch = CHAMBER_MAP[r.chamber];
+            const seat = new Set(bySeat[`${ch}-${r.district}`] || []);
+            const same = (bySurname[toks(name).slice(-1).join('')] || []).filter(i => seat.has(i));
+            if (same.length) { tier = 'sameSeat'; options = same; }
+            else { tier = 'unmatched'; options = []; }
+          }
+          queue.push({ cid, name, raceId: r.id, chamber: r.chamber, district: r.district, tier, options });
+        }
+      }
+    }
+  }
+  render();
+  status();
+}
+
+const TIERS = {
+  ambiguous: { label: 'Ambiguous — more than one filing', cls: 'c-amb',  color: '#fee2e2', text: '#991b1b' },
+  sameSeat:  { label: 'Name differs, same seat',          cls: 'c-seat', color: '#fef9c3', text: '#854d0e' },
+  unmatched: { label: 'No filing found',                  cls: 'c-none', color: '#e0e7ff', text: '#3730a3' },
+};
+
+function render() {
+  const q = ($('search').value || '').toLowerCase();
+  const shown = queue.filter(x => !q || x.name.toLowerCase().includes(q) || x.raceId.includes(q));
+  const done = queue.filter(x => overrides[x.cid]).length;
+
+  $('counts').innerHTML =
+    Object.entries(TIERS).map(([k, t]) => {
+      const n = queue.filter(x => x.tier === k && !overrides[x.cid]).length;
+      return `<span class="count-chip ${t.cls}">${n} ${k}</span>`;
+    }).join('') + `<span class="count-chip c-done">${done} resolved</span>`;
+
+  let html = '';
+  for (const [tier, meta] of Object.entries(TIERS)) {
+    const items = shown.filter(x => x.tier === tier);
+    if (!items.length) continue;
+    html += `<div class="group-label">${meta.label} (${items.length})</div>`;
+    for (const it of items) {
+      html += `<div class="item ${selected === it.cid ? 'active' : ''} ${overrides[it.cid] ? 'resolved' : ''}" data-cid="${esc(it.cid)}">
+        <div class="item-name">${esc(it.name)}</div>
+        <div class="item-sub">${esc(it.raceId)}</div>
+      </div>`;
+    }
+  }
+  $('list').innerHTML = html || '<div class="group-label">Nothing to review 🎉</div>';
+  $('list').querySelectorAll('.item').forEach(el =>
+    el.addEventListener('click', () => { selected = el.dataset.cid; render(); detail(); }));
+  detail();
+}
+
+function detail() {
+  const it = queue.find(x => x.cid === selected);
+  if (!it) { $('main').innerHTML = '<p class="empty">Select a candidate from the list.</p>'; return; }
+  const { filers } = finance;
+  const cur = overrides[it.cid] || {};
+  const t = TIERS[it.tier];
+
+  const hint = it.tier === 'ambiguous'
+    ? 'More than one filing matches this candidate in this seat. Usually one person with several committees — pick the one that represents their current campaign. Until resolved, the site shows no figures.'
+    : it.tier === 'sameSeat'
+      ? 'No automatic match, but a filer with this surname sits in the same seat. Often the same person under a legal name the ballot does not use. Confirm before pinning.'
+      : 'No filer with this surname was found in this seat. Usually means the candidate has not filed. Mark “no filing” to record that you checked.';
+
+  const opts = it.options.map(fid => {
+    const f = filers[fid];
+    const sel = cur.filerEntityId === fid ? ' sel' : '';
+    return `<label class="opt${sel}">
+      <input type="radio" name="pick" value="${esc(fid)}" ${sel ? 'checked' : ''} style="display:none">
+      <div class="opt-top"><span class="opt-name">${esc(f.filerName)}</span><span class="opt-id">id ${esc(fid)}</span></div>
+      <div class="figs">
+        <span class="f-raised">Raised<b>${money(f.totalRaised)}</b></span>
+        <span class="f-spent">Spent<b>${money(f.totalSpent)}</b></span>
+        <span class="f-cash">Cash<b>${money(f.cashOnHand)}</b></span>
+      </div>
+      <div class="opt-cycle">${esc(f.electionCycle || '')}${f.office ? ' · ' + esc(f.office) : ''}</div>
+    </label>`;
+  }).join('');
+
+  const noneSel = cur.noFiling ? ' sel' : '';
+  $('main').innerHTML = `
+    <div class="cand-head">
+      <h2>${esc(it.name)}<span class="tier" style="background:${t.color};color:${t.text}">${esc(it.tier)}</span></h2>
+      <div class="meta">${esc(it.raceId)} · ${esc(it.chamber || '')} district ${esc(String(it.district))} · candidate id <code>${esc(it.cid)}</code></div>
+    </div>
+    <div class="hint">${esc(hint)}</div>
+    ${opts}
+    <label class="opt${noneSel}">
+      <input type="radio" name="pick" value="__none__" ${noneSel ? 'checked' : ''} style="display:none">
+      <div class="opt-top"><span class="opt-name">No filing on record</span></div>
+      <div class="opt-cycle">Records that this was checked. The page shows the “no filing found” message.</div>
+    </label>
+    <div class="note-row">
+      <label for="note">Note (optional — why this choice)</label>
+      <input id="note" value="${esc(cur._note || '')}" placeholder="e.g. general-election committee, not the special">
+    </div>
+    <div class="actions">
+      <button class="btn-primary" id="btnApply">Save choice</button>
+      <button class="btn-danger" id="btnClear" ${overrides[it.cid] ? '' : 'disabled'}>Clear override</button>
+    </div>`;
+
+  $('main').querySelectorAll('.opt').forEach(el => el.addEventListener('click', () => {
+    $('main').querySelectorAll('.opt').forEach(o => o.classList.remove('sel'));
+    el.classList.add('sel');
+    el.querySelector('input').checked = true;
+  }));
+
+  $('btnApply').addEventListener('click', () => {
+    const picked = $('main').querySelector('input[name=pick]:checked');
+    if (!picked) { alert('Choose a filing, or “No filing on record”.'); return; }
+    const note = $('note').value.trim();
+    const entry = picked.value === '__none__'
+      ? { noFiling: true }
+      : { filerEntityId: picked.value };
+    entry._name = it.name;
+    entry._race = it.raceId;
+    if (note) entry._note = note;
+    overrides[it.cid] = entry;
+    toast(fileHandle ? 'Recorded — remember to Save' : 'Recorded — use Download when finished');
+    render();
+  });
+
+  $('btnClear').addEventListener('click', () => {
+    delete overrides[it.cid];
+    toast('Override cleared');
+    render();
+  });
+}
+
+$('search').addEventListener('input', render);
+
+function money(n) {
+  if (n == null) return '—';
+  return '$' + Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
+}
+function esc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+function toast(msg) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.style.display = 'none', 2800);
+}
+</script>
+</body>
+</html>
