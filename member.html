@@ -123,6 +123,69 @@ permalink: /member.html
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
   .tab-panel h3 { margin: 0 0 0.5rem 0; }
+
+  /* Campaign finance (FEC) — mirrors the cards on candidate.html */
+  .finance-section {
+    margin-top: 2rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1.25rem;
+  }
+  /* ga-fec-data.json only covers Georgia, so the section stays empty for members
+     of other states — collapse it so no stray rule or spacing is left behind. */
+  .finance-section:empty { display: none; }
+  .finance-section h3 { margin: 0 0 0.75rem 0; font-size: 1rem; }
+  .finance-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .finance-card {
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+  }
+  .finance-card-label {
+    font-size: 0.68rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+  }
+  .finance-card-value { font-size: 1.05rem; font-weight: bold; }
+  .finance-card.raised  { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .finance-card.raised  .finance-card-label { color: #166534; }
+  .finance-card.raised  .finance-card-value { color: #15803d; }
+  .finance-card.spent   { background: #fef2f2; border: 1px solid #fecaca; }
+  .finance-card.spent   .finance-card-label { color: #991b1b; }
+  .finance-card.spent   .finance-card-value { color: #b91c1c; }
+  .finance-card.cash    { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .finance-card.cash    .finance-card-label { color: #1e40af; }
+  .finance-card.cash    .finance-card-value { color: #1d4ed8; }
+  .finance-meta { font-size: 0.78rem; color: #666; margin: 0; }
+
+  .employers-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+  }
+  .employers-table th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    padding: 0.3rem 0.5rem 0.3rem 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .employers-table td {
+    padding: 0.35rem 0.5rem 0.35rem 0;
+    border-bottom: 1px solid #f3f4f6;
+    color: #111;
+  }
+  .employers-table td:not(:first-child) { text-align: right; color: #374151; }
+
   .bill-list { list-style: none; padding: 0; margin: 0; }
   .bill-item {
     padding: 0.75rem 0;
@@ -278,6 +341,7 @@ permalink: /member.html
       displayMemberDetails(member, electionInfo, seatRace);
       displaySidebar(member, allMembers);
       initTabs();
+      loadCampaignFinance(member);
       loadKeyVotes(member);
       loadSponsoredLegislation(member);
       loadVotingHistory(member);
@@ -479,6 +543,115 @@ permalink: /member.html
         document.getElementById(btn.dataset.tab).classList.add('active');
       });
     });
+  }
+
+  function fmtMoney(n) {
+    if (n == null) return '—';
+    if (Math.abs(n) >= 1_000_000) return '$' + (n / 1_000_000).toFixed(1) + 'M';
+    if (Math.abs(n) >= 1_000)     return '$' + Math.round(n / 1_000) + 'K';
+    return '$' + Math.round(n).toLocaleString();
+  }
+
+  function memberLastName(member) {
+    const raw = member.lastName || (member.name || '').split(',')[0] || '';
+    return raw.toLowerCase().replace(/[^a-z]/g, '');
+  }
+
+  function findFecEntry(fecData, member) {
+    // Same three-tier ladder as findFecId() in candidate.html.
+    // 1. Bioguide ID — most reliable, but only present on enriched incumbents.
+    const byBio = fecData.byBioguideId?.[member.bioguideId];
+    if (byBio) return fecData.candidates?.[byBio] || null;
+
+    // 2. District + last name — handles formal vs. nickname mismatches ("Michael" vs "Mike").
+    const terms = Array.isArray(member.terms?.item) ? member.terms.item : [];
+    const chamber = (terms.length ? terms[terms.length - 1].chamber : '') || '';
+    let distKey = null;
+    if (/senate/i.test(chamber))        distKey = 'S';
+    else if (member.district != null)   distKey = `H${member.district}`;
+    if (distKey && fecData.byDistrict?.[distKey]) {
+      const last = memberLastName(member);
+      const match = fecData.byDistrict[distKey].find(
+        cid => fecData.candidates?.[cid]?.lastName === last
+      );
+      if (match) return fecData.candidates[match];
+    }
+    return null;
+  }
+
+  async function loadCampaignFinance(member) {
+    const container = document.getElementById('campaignFinance');
+    if (!container || !member.bioguideId) return;
+
+    // ga-fec-data.json only covers the Georgia delegation. For members of other
+    // states there is nothing to show, so leave the section out entirely rather
+    // than rendering a misleading "no filing found" message.
+    if (member.state !== 'Georgia' && member.state !== 'GA') return;
+
+    const FEC_DATA_URL = 'assets/data/ga-fec-data.json';
+    let fecData;
+    try {
+      const res = await fetch(FEC_DATA_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      fecData = await res.json();
+    } catch (err) {
+      console.error('loadCampaignFinance()', err);
+      return;
+    }
+
+    const entry = findFecEntry(fecData, member);
+    if (!entry || entry.totalRaised == null) {
+      container.innerHTML = `
+        <h3>Campaign Finance</h3>
+        <p class="finance-meta">
+          No current FEC filing found for this member.
+          <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
+        </p>`;
+      return;
+    }
+
+    const coverageNote = entry.coverageEndDate
+      ? `2025–2026 election cycle · Through ${new Date(entry.coverageEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+      : '2025–2026 election cycle';
+
+    const employersHtml = (entry.topEmployers || []).length ? `
+      <h4 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h4>
+      <table class="employers-table">
+        <thead><tr><th>Employer</th><th>Donors</th><th>Total</th></tr></thead>
+        <tbody>
+          ${entry.topEmployers.map(e => `
+            <tr>
+              <td>${escHtml(e.employer)}</td>
+              <td>${e.count}</td>
+              <td>${fmtMoney(e.total)}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>` : '';
+
+    container.innerHTML = `
+      <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h3>
+      <div class="finance-cards">
+        <div class="finance-card raised">
+          <div class="finance-card-label">Total Raised</div>
+          <div class="finance-card-value">${fmtMoney(entry.totalRaised)}</div>
+        </div>
+        <div class="finance-card spent">
+          <div class="finance-card-label">Total Spent</div>
+          <div class="finance-card-value">${fmtMoney(entry.totalSpent)}</div>
+        </div>
+        <div class="finance-card cash">
+          <div class="finance-card-label">Cash on Hand</div>
+          <div class="finance-card-value">${fmtMoney(entry.cashOnHand)}</div>
+        </div>
+        ${entry.totalIndividual != null ? `
+        <div class="finance-card" style="background:#f5f3ff;border:1px solid #ddd6fe;">
+          <div class="finance-card-label" style="color:#5b21b6;">From Individuals</div>
+          <div class="finance-card-value" style="color:#6d28d9;">${fmtMoney(entry.totalIndividual)}</div>
+        </div>` : ''}
+      </div>
+      <p class="finance-meta">${coverageNote}</p>
+      <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
+      ${employersHtml}`;
   }
 
   async function loadKeyVotes(member) {
@@ -815,6 +988,7 @@ permalink: /member.html
 
       <p><a href="my-representatives.html">Search for another member</a></p>
       ${state === 'Georgia' ? `<p><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${escHtml(fullName)} →</a></p>` : ''}
+      <div id="campaignFinance" class="finance-section"></div>
       <div class="tab-container">
         <div class="tab-nav">
           <button class="tab-btn active" data-tab="keyVotes">Key Votes</button>

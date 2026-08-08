@@ -215,28 +215,6 @@ permalink: /candidate.html
     .profile-details dt { margin-top: 0.5rem; }
   }
 
-  .candidate-tabs {
-    display: flex;
-    border-bottom: 2px solid #e5e7eb;
-    margin: 1.25rem 0 1rem 0;
-  }
-  .candidate-tab-btn {
-    padding: 0.5rem 1.25rem;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #555;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    border-radius: 4px 4px 0 0;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .candidate-tab-btn:hover { color: #1a56a8; }
-  .candidate-tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
-  .candidate-tab-panel { display: none; }
-  .candidate-tab-panel.active { display: block; }
 </style>
 
 <script>
@@ -342,31 +320,15 @@ permalink: /candidate.html
         </div>
       </div>
 
-      <div class="candidate-tabs" id="candidateTabs">
-        <button class="candidate-tab-btn active" data-panel="profile">Profile</button>
-        <button class="candidate-tab-btn" data-panel="finance">Campaign Finance</button>
-      </div>
+      ${detailsHtml}
+      ${memberRecordHtml}
+      ${serviceHtml}
+      ${noRecordHtml}
+      ${bioHtml}
 
-      <div class="candidate-tab-panel active" id="panel-profile">
-        ${detailsHtml}
-        ${memberRecordHtml}
-        ${serviceHtml}
-        ${noRecordHtml}
-        ${bioHtml}
-      </div>
-
-      <div class="candidate-tab-panel" id="panel-finance">
-        <div id="campaignFinance" class="finance-section"></div>
-      </div>
+      <div id="campaignFinance" class="finance-section"></div>
 
       <div class="back-link"><a href="${raceUrl}">← Back to ${race.displayTitle || (race.chamber + distLabel)} race</a></div>`;
-
-    document.getElementById('candidateTabs').addEventListener('click', e => {
-      const btn = e.target.closest('.candidate-tab-btn');
-      if (!btn) return;
-      document.querySelectorAll('.candidate-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
-      document.querySelectorAll('.candidate-tab-panel').forEach(p => p.classList.toggle('active', p.id === `panel-${btn.dataset.panel}`));
-    });
   }
 
   function fmtMoney(n) {
@@ -442,15 +404,21 @@ permalink: /candidate.html
     const isFederal = (race.level || '') === 'federal';
 
     if (!isFederal) {
-      // State candidates: link to Georgia Ethics Commission search
+      // State candidates: link to the Georgia Ethics Commission's PeachFile system.
+      // PeachFile replaced the old eFile system on Jan 1, 2026 and holds only records
+      // from that date forward — anything earlier stays on the legacy records search.
       container.innerHTML = `
         <h3>Campaign Finance</h3>
-        <p style="font-size:0.875rem;color:#555;margin:0;">
+        <p style="font-size:0.875rem;color:#555;margin:0 0 0.5rem 0;">
           Georgia state campaign finance filings are managed by the
-          <a href="https://media.ethics.ga.gov/search/Campaign/Campaign_ByName.aspx" target="_blank" rel="noopener">
+          <a href="https://peachfile.ethics.ga.gov/public/cf/publiccandidate" target="_blank" rel="noopener">
             Georgia Government Transparency &amp; Campaign Finance Commission ↗
           </a>.
-          Search for <strong>${candidate.name}</strong> to view their filings.
+          Search PeachFile for <strong>${candidate.name}</strong> to view their filings.
+        </p>
+        <p class="finance-meta">
+          PeachFile covers filings from January 1, 2026 onward. For earlier records, use the
+          <a href="https://ethics.ga.gov/records-search-all/" target="_blank" rel="noopener">legacy records search ↗</a>.
         </p>`;
       return;
     }

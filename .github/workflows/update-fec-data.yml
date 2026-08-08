@@ -34,7 +34,36 @@ jobs:
             echo "Error: ga-fec-data.json was not generated"
             exit 1
           fi
-          python -c "import json,sys; d=json.load(open('assets/data/ga-fec-data.json')); n=d['metadata']['totalCandidates']; print(f'{n} candidates'); sys.exit(1) if n==0 else None"
+          python - <<'PY'
+          import json, sys
+
+          d = json.load(open('assets/data/ga-fec-data.json'))
+          candidates = d.get('candidates', {})
+          n          = d['metadata']['totalCandidates']
+          by_bio     = d.get('byBioguideId', {})
+          house      = [c for c in candidates.values() if c.get('office') == 'H']
+
+          print(f"{n} candidates ({len(house)} House) | {len(by_bio)} mapped to incumbents")
+
+          errors = []
+          if n == 0:
+              errors.append("no candidates returned")
+          if n != len(candidates):
+              errors.append(f"metadata.totalCandidates ({n}) != len(candidates) ({len(candidates)})")
+          # A House count of exactly 100 means the paginated fetch silently stopped at
+          # the FEC's per_page cap and the list is truncated alphabetically.
+          if len(house) == 100:
+              errors.append("House count is exactly 100 - pagination likely truncated")
+          # Incumbents are spread across the alphabet, so a truncated pull drops most of
+          # them. GA seats 16 members; require the majority to resolve.
+          if len(by_bio) < 12:
+              errors.append(f"only {len(by_bio)} incumbents mapped to a bioguide ID (expected >= 12)")
+
+          if errors:
+              for e in errors:
+                  print(f"Error: {e}", file=sys.stderr)
+              sys.exit(1)
+          PY
 
       - name: Commit and push
         run: |

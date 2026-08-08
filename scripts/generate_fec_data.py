@@ -66,16 +66,37 @@ def fec_get(path, params=None, retries=3):
 
 
 def get_ga_candidates():
+    """Fetch every GA House and Senate candidate for the cycle.
+
+    The FEC list endpoint caps per_page at 100, so this must paginate — without it
+    the results are silently truncated to the first 100 names alphabetically,
+    dropping most incumbents (everything past ~'H') from the dataset.
+    """
     candidates = []
     for office in ("H", "S"):
-        data = fec_get("/candidates/", {
-            "state": "GA", "office": office, "cycle": CYCLE,
-            "sort": "name", "per_page": 100
-        })
-        if data:
+        office_total = 0
+        page = 1
+        while True:
+            data = fec_get("/candidates/", {
+                "state": "GA", "office": office, "cycle": CYCLE,
+                "sort": "name", "per_page": 100, "page": page
+            })
+            if not data:
+                print(f"    Warning: GA {office} page {page} failed — results may be incomplete")
+                break
+
             results = data.get("results", [])
             candidates.extend(results)
-            print(f"  GA {office}: {len(results)} candidates")
+            office_total += len(results)
+
+            pagination  = data.get("pagination") or {}
+            total_pages = pagination.get("pages") or 1
+            if page >= total_pages or not results:
+                break
+            page += 1
+            time.sleep(DELAY)
+
+        print(f"  GA {office}: {office_total} candidates ({page} page{'s' if page != 1 else ''})")
         time.sleep(DELAY)
     return candidates
 
