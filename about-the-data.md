@@ -4,7 +4,7 @@ title: About The Data
 subtitle: Where our information comes from and how it's kept current
 ---
 
-VoteGA.org is a static website. We run automated workflows that pull data from trusted public sources and publish it as static files that power the site. A few data sources — federal executive orders, campaign finance figures, and select biography data — are fetched live from public APIs when you visit a page. Here's what we use and why.
+VoteGA.org is a static website. We run automated workflows that pull data from trusted public sources and publish it as static files that power the site. A few data sources — federal executive orders and select biography data — are fetched live from public APIs when you visit a page. Here's what we use and why.
 
 ---
 
@@ -91,7 +91,7 @@ We paginate through all Georgia bills in the current session via the Open States
 
 ## Georgia General Assembly Bills & Resolutions
 
-**Source:** [Open States](https://openstates.org/) (Plural Policy) — live API
+**Source:** [Open States](https://openstates.org/) (Plural Policy)
 
 The [GA Bills & Resolutions](/ga-bills.html) tracker covers all 5,480+ bills and resolutions introduced during the 2025–26 regular session of the Georgia General Assembly.
 
@@ -147,7 +147,7 @@ A quirk in the source data: a vetoed bill's transmittal record still carries an 
 **Party-line classification:** A separate script, `scripts/enrich_bills_with_party_votes.py`, joins each `passageVotes` entry with individual member votes and party affiliation (from `ga-member-votes.json` and `ga-members.json`) to add a `partyTally` — the Yea/Nay count by party — to each recorded vote. The bills tracker uses this to flag **party-line votes**: roll calls where a majority of Republicans voted opposite a majority of Democrats. A bill is tagged "⚡ Party-line" if any of its recorded passage votes met this bar; votes where both parties largely agreed are not flagged, since most legislation that reaches a floor vote passes with broad support and labeling all of it "party-line" would be meaningless. Bills can be filtered to show only those with at least one party-line vote.
 
 - **Scope:** All bills and resolutions from the 2025–26 regular session.
-- **Freshness:** Live — refetched weekly from the Open States API (Sundays 07:30 UTC), matching the existing GA member/vote update cadence.
+- **Freshness:** Refetched weekly from the Open States API (Sundays 07:30 UTC), matching the existing GA member/vote update cadence.
 
 ---
 
@@ -326,15 +326,20 @@ The "Next Election" highlight and each election's Upcoming/Completed status are 
 
 ## Campaign Finance
 
-**Sources:** [Federal Election Commission (FEC)](https://www.fec.gov/) · [Georgia Government Transparency & Campaign Finance Commission](https://ethics.ga.gov/)
+**Sources:** [Federal Election Commission (FEC)](https://www.fec.gov/) · [Georgia Government Transparency & Campaign Finance Commission](https://ethics.ga.gov/) (PeachFile)
 
-Campaign finance figures — total raised, total spent, and cash on hand — are displayed on each candidate profile page.
+Campaign finance figures — total raised, total spent, and cash on hand — appear on candidate profiles and on member pages for sitting legislators.
 
-- **Federal candidates** (U.S. House and Senate): Data is fetched live from the [FEC API](https://api.open.fec.gov/) when you visit a candidate's page. The FEC is the authoritative source for federal campaign finance disclosures. Figures reflect the candidate's most recent filing and are updated as new reports are submitted to the FEC.
-- **Georgia state candidates** (GA House, Senate, and statewide offices): Georgia campaign finance filings are managed by the Georgia Government Transparency & Campaign Finance Commission. We link directly to their search portal since no public API is available.
+- **Federal candidates and members** (U.S. House and Senate): Sourced from the [FEC API](https://api.open.fec.gov/), the authoritative record for federal campaign finance disclosures. We fetch it on a schedule and publish it as a static file rather than calling the API from your browser, so no API key is ever exposed in the page. Federal profiles also show the top donors grouped by employer.
+- **Georgia state candidates and legislators** (GA House, Senate, and statewide offices): Sourced from [PeachFile](https://peachfile.ethics.ga.gov/public/cf/publiccandidate), the Georgia Ethics Commission's disclosure system, using its public endpoints. Collected on a schedule and published as a static file for the same reason.
 
-- **Coverage:** 2026 election cycle.
-- **Freshness:** Federal figures are live — pulled from FEC at page load time. State figures link to the Georgia Ethics Commission search.
+**Coverage:** 2026 election cycle.
+
+**A note on Georgia state figures.** PeachFile replaced Georgia's previous eFile system on January 1, 2026 and holds filings from that date forward. For earlier records, use the Commission's [historical records search](https://ethics.ga.gov/records-search-all/).
+
+**Why a legislator may show no filing.** We match a legislator to a filing by their seat — chamber and district — and then by surname. We deliberately do not match on name alone across the whole state, because Georgia seats several unrelated legislators who share a surname, and a looser match would attribute one person's fundraising to another. So "no filing found" means exactly that, and usually has an ordinary explanation: the legislator is not seeking re-election, has not filed yet, or is running for a different office (in which case their committee is registered under that office instead of their current seat). When in doubt, search PeachFile directly.
+
+**Figures are summary totals only.** We show what each committee reported raising, spending, and holding. We do not publish individual donor records or contributor personal information from the state system.
 
 ---
 
@@ -354,13 +359,15 @@ Campaign finance figures — total raised, total spent, and cash on hand — are
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
 | GA state legislator voting history | Open States API | Weekly, Sundays 08:00 UTC |
 | GA bills & resolutions (2025–26 session) | Open States API | Weekly, Sundays 07:30 UTC |
-| GA executive orders | gov.georgia.gov (scraped) | Daily, 08:00 UTC (committed when new orders are found) |
+| GA curated bills (Key Votes) | Open States API | Daily, 08:00 UTC |
+| GA executive orders | gov.georgia.gov (scraped) | Daily, 08:15 UTC (committed when new orders are found) |
 | GA congressional stock trades | House/Senate eFD via kadoa-org/congress-trading-monitor | Weekly, Sundays 10:00 UTC |
 | 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |
 | 2026 GA judicial candidates | GA Secretary of State | Updated when SOS publishes new filing data |
 | 2026 federal race/candidate data | Manual curation | Manually maintained |
 | Georgia ballot measures | GA Secretary of State + legis.ga.gov | Manually maintained; results added after certification |
-| Federal campaign finance | FEC API (live) | Real-time, fetched on page load |
+| Federal campaign finance | FEC API | Weekly, Sundays 08:00 UTC |
+| Georgia state campaign finance | GA Ethics Commission (PeachFile) | Weekly, Sundays 08:30 UTC |
 
 ---
 
