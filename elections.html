@@ -200,6 +200,7 @@ permalink: /elections.html
 
   let allRaces    = [];
   let activeTab   = 'executive';
+  let activeCycle = null;   // newest cycle present in races.json, set by loadData()
   let activePhase = null;   // set by buildPhaseToggle() from the data
 
   // Copy per phase. {date} and {year} are filled from the phase's electionDate in
@@ -485,7 +486,16 @@ permalink: /elections.html
       const res = await fetch(RACES_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      allRaces = (data.races || []).filter(r => r.cycle === 2026 && !r.id?.startsWith('_'));
+      const races = (data.races || []).filter(r => !r.id?.startsWith('_'));
+
+      // Show the newest cycle present rather than a hardcoded year, so adding a
+      // future cycle to races.json is a data change, not a code change. When past
+      // cycles are kept in the file this is the hook a cycle selector would use —
+      // same shape as buildPhaseToggle() below.
+      const cycles = [...new Set(races.map(r => r.cycle).filter(Boolean))].sort((a, b) => b - a);
+      activeCycle = cycles[0] ?? null;
+
+      allRaces = races.filter(r => r.cycle === activeCycle);
       buildPhaseToggle();
       updatePageHeader();
       renderRaces();

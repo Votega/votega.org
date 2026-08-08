@@ -1,0 +1,51 @@
+# Editorial index of Georgia election results, rendered by results.html.
+#
+# Scope: this file owns which results PAGES exist and how they should be
+# described. races.json owns which races and candidates exist. They join on
+# `cycle` + `phase` and deliberately do not duplicate each other — a cycle can
+# have races but no results yet (the 2026 general), or results but no race data
+# (a historical cycle imported later).
+#
+# Vocabulary is shared with races.json so the two stay cross-referenceable:
+#   phase   primary | runoff | general
+#   status  upcoming    — election has not happened yet
+#           unofficial  — results reported but not yet certified by the SOS
+#           certified   — official certified results
+#
+# Order does not matter; results.html sorts cycles and events newest-first.
+
+- cycle: 2026
+  label: 2026 Election Cycle
+  events:
+    - phase: general
+      date: 2026-11-03
+      name: General Election
+      status: upcoming
+      url: /elections
+      summary: >-
+        General election matchups for every federal, state, and judicial seat on
+        the Georgia ballot. Results will be posted here after Election Day.
+
+    - phase: runoff
+      date: 2026-06-16
+      name: Primary Runoff
+      status: unofficial
+      url: /ga-primary-runoff-results/
+      summary: >-
+        Runoff contests for primary races where no candidate cleared 50 percent
+        on May 19.
+      analysis:
+        url: /2026-06-17-ga-primary-runoff-results/
+        title: GA Primary Runoff Results
+
+    - phase: primary
+      date: 2026-05-19
+      name: Primary Election
+      status: certified
+      url: /ga-primary-results/
+      summary: >-
+        Official certified results from the Georgia Secretary of State for every
+        contested primary race, by county and district.
+      analysis:
+        url: /2026-06-10-ga-primary-results-official/
+        title: Analysis of Election Results (Official)
