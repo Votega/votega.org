@@ -262,10 +262,12 @@ permalink: /ga-voter-access.html
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const upcoming = elections.filter(e => parseLocalDate(e.date) >= today);
+      const completed = elections.filter(e => parseLocalDate(e.date) < today);
       const next = upcoming[0] || null;
+      const ordered = upcoming.concat(completed);
 
       nextEl.innerHTML = renderNext(next);
-      calendar.innerHTML = elections.map(e => renderCard(e, parseLocalDate(e.date) >= today)).join('');
+      calendar.innerHTML = ordered.map(e => renderCard(e, parseLocalDate(e.date) >= today)).join('');
 
       const src = document.getElementById('vaDataSource');
       const meta = data.metadata || {};
