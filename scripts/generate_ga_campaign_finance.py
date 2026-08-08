@@ -203,10 +203,16 @@ def main():
             filers[fid] = entry
             kept += 1
 
+            # Dedupe on insert: the API returns the same filerEntityId on several rows
+            # (one per associated election), so appending blindly put one filer in a
+            # bucket up to eight times and made a single candidate look like a seat full
+            # of same-named filers to any consumer checking for ambiguity.
             if chamber and entry["district"]:
-                by_seat.setdefault(f"{chamber}-{entry['district']}", []).append(fid)
+                bucket = by_seat.setdefault(f"{chamber}-{entry['district']}", [])
             else:
-                by_office.setdefault(label, []).append(fid)
+                bucket = by_office.setdefault(label, [])
+            if fid not in bucket:
+                bucket.append(fid)
 
             key = norm_name(entry["firstName"], entry["lastName"], entry["filerName"])
             if key:
