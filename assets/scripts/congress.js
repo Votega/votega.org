@@ -53,9 +53,10 @@ async function loadMembers () {
     console.log(`Got ${results.length} prebuilt members`);
 
     if (results.length === 0) {
-      throw new Error('No prebuilt member data found. Run the GitHub Actions workflow to generate assets/data/current-members.json.');
+      console.error('current-members.json contained no members — run the update-current-members workflow.');
+      throw new Error('Legislator data is temporarily unavailable. Please try again later.');
     }
-    
+
     // Filter by state name and chamber since API returns all members regardless of chamber filter
     const stateName = 'Georgia'; // site is GA-only
     const chamberMap = { 'house': 'House of Representatives', 'senate': 'Senate' };
@@ -96,7 +97,8 @@ async function loadMembers () {
     console.log(`After filtering: ${results.length} members`);
 
     if (results.length === 0) {
-      throw new Error(`No members returned for ${stateName} ${expectedChamber} – check API data.`);
+      console.error(`No members matched ${stateName} ${expectedChamber} in current-members.json.`);
+      throw new Error('Legislator data is temporarily unavailable. Please try again later.');
     }
 
     let optionsHtml;
@@ -109,18 +111,33 @@ async function loadMembers () {
         districtMap.get(dist).push(m);
       });
 
-      optionsHtml = [...districtMap.entries()]
-        .sort(([a], [b]) => {
-          if (a === 'At-Large') return 1;
-          if (b === 'At-Large') return -1;
-          return Number(a) - Number(b);
-        })
-        .map(([district, members]) => {
+      // A seat vacated by death, resignation, or expulsion has no member in
+      // current-members.json at all, so grouping the member list alone would silently
+      // drop the district. Take the seat list from the county→district map when it is
+      // loaded, and otherwise infer it as 1..highest-seen, so a vacancy shows up as a
+      // vacancy rather than disappearing.
+      const seats = new Set(
+        typeof COUNTY_US_HOUSE_DISTRICTS !== 'undefined'
+          ? Object.values(COUNTY_US_HOUSE_DISTRICTS).flat()
+          : []
+      );
+      const numbered = [...districtMap.keys()].filter(d => d !== 'At-Large').map(Number);
+      if (!seats.size && numbered.length) {
+        for (let i = 1; i <= Math.max(...numbered); i++) seats.add(i);
+      }
+      numbered.forEach(d => seats.add(d));
+
+      const ordered = [...seats].sort((a, b) => a - b);
+      if (districtMap.has('At-Large')) ordered.push('At-Large');
+
+      optionsHtml = ordered
+        .map(district => {
+          const members = districtMap.get(district) || districtMap.get(String(district)) || [];
           const current = members.find(m => m.currentMember !== false);
           if (current) {
             return `<option value="${current.bioguideId}">District ${district} - ${formatMemberName(current)} (${current.partyName})</option>`;
           }
-          return `<option value="" disabled>District ${district} - Vacant</option>`;
+          return `<option value="" disabled>District ${district} - Vacant (no sitting representative)</option>`;
         }).join('');
     } else {
       // Senate: only show current members, sorted alphabetically

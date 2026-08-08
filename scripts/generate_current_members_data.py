@@ -301,6 +301,26 @@ def main():
             print(f"Error: enrichment failure rate too high ({enrichment_failures}/{len(members)}, {failure_rate:.1%}) — likely an API outage. Not committing.")
             sys.exit(1)
 
+    # Drop members Congress.gov reports as no longer serving.
+    #
+    # get_current_members() filters on term endYear >= current year, which correctly
+    # keeps everyone whose term runs through this year but cannot catch a seat vacated
+    # mid-term by death, resignation, or expulsion — those members keep an endYear of
+    # the current year and were being published as sitting members.
+    #
+    # Only `is False` is dropped: enrich_member_data() sets currentMember to None when
+    # the detail lookup fails, and an API hiccup must not silently delete a member.
+    departed = [m for m in enriched_members if m.get('currentMember') is False]
+    if departed:
+        print(f"Removing {len(departed)} member(s) Congress.gov reports as no longer serving:")
+        for m in departed:
+            print(f"  - {m.get('name', 'Unknown')} ({m.get('state')}, {m.get('bioguideId')})")
+        # A large jump means the flag or the API changed, not that Congress emptied out.
+        if len(departed) > 25:
+            print(f"Error: {len(departed)} members flagged as departed — implausible. Not committing.")
+            sys.exit(1)
+        enriched_members = [m for m in enriched_members if m.get('currentMember') is not False]
+
     print("Fetching committee memberships...")
     committee_lookup = get_committee_memberships()
     for member in enriched_members:

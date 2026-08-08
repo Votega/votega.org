@@ -193,11 +193,28 @@ def normalize_last(name):
     return re.sub(r'[^a-z]', '', last.lower())
 
 
+def district_key(office, district):
+    """Normalize a seat to ('H', '13') / ('S', '') so member and FEC records compare.
+    FEC returns districts zero-padded ('08') and uses '00'/'' for Senate seats.
+    """
+    office = (office or '').upper()[:1]
+    d = str(district if district is not None else '').strip().lstrip('0')
+    if office == 'S':
+        d = ''
+    return (office, d)
+
+
 def load_bioguide_map():
-    """Build last-name -> bioguide_id map from current-members.json for GA members.
+    """Build (office, district, last-name) -> bioguide_id map for GA members.
+
     The FEC API does not return bioguide_id in candidate list responses, so we cross-
     reference against our own Congress member data to enrich incumbent candidates.
-    Scoped to GA only to reduce false matches on common last names.
+
+    Keyed by seat as well as surname: Georgia currently seats two Representatives
+    named Scott (Austin, GA-8 and David, GA-13). A surname-only map collapsed them,
+    stamped one bioguide onto every "Scott" in the FEC file — including challengers —
+    and left the last one written wins, so David Scott's page showed a challenger's
+    fundraising totals.
     """
     members_path = os.path.join(os.path.dirname(OUTPUT_FILE) or '.', '..', 'assets', 'data', 'current-members.json')
     for path in [members_path, 'assets/data/current-members.json']:
@@ -211,8 +228,13 @@ def load_bioguide_map():
                     continue
                 last = re.sub(r'[^a-z]', '', (m.get('lastName') or '').lower())
                 bioguide = m.get('bioguideId') or ''
-                if last and bioguide:
-                    result[last] = bioguide
+                if not (last and bioguide):
+                    continue
+                terms   = (m.get('terms') or {}).get('item') or []
+                chamber = (terms[-1].get('chamber') if terms else '') or ''
+                office  = 'S' if 'senate' in chamber.lower() else 'H'
+                o, d = district_key(office, m.get('district'))
+                result[(o, d, last)] = bioguide
             print(f"  Loaded bioguide map: {len(result)} GA members from {path}")
             return result
     print("  (current-members.json not found -- bioguide enrichment skipped)")
@@ -260,10 +282,11 @@ def main():
             time.sleep(DELAY)
             committee_id = get_principal_committee_id(cid)
 
-        # FEC doesn't return bioguide_id in list responses; enrich from current-members.json
+        # FEC doesn't return bioguide_id in list responses; enrich from current-members.json.
+        # Matched on seat + surname so same-surname members aren't conflated.
         if not bioguide and bioguide_map:
-            fec_last = normalize_last(name)
-            bioguide = bioguide_map.get(fec_last, "")
+            o, dnum = district_key(office, district)
+            bioguide = bioguide_map.get((o, dnum, normalize_last(name)), "")
 
         print(f"  [{i}/{len(raw_candidates)}] {name} ({cid}){' -> ' + bioguide if bioguide else ''}")
 
