@@ -1,0 +1,24 @@
+name: Inspect GA Legislative Sessions (diagnostic)
+
+# Run at a biennium changeover to get the exact Open States session identifier
+# before bumping GA_SESSION in the generators. Costs one API request.
+on:
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: List GA legislative sessions
+        env:
+          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
+        run: python scripts/inspect_ga_sessions.py

@@ -240,6 +240,13 @@ def incremental_since(meta):
     """
     if not meta.get('generatedAt'):
         return None
+    # A baseline from a different session is not a baseline — see the matching guard
+    # in generate_ga_bills_data.py. Forces a full pull at the biennium changeover so
+    # two sessions never end up merged into one file.
+    if meta.get('session') and meta['session'] != GA_SESSION:
+        print(f"  Baseline is session {meta['session']}, now building {GA_SESSION} "
+              f"— starting a fresh full fetch.")
+        return None
     try:
         ts = meta['generatedAt'].replace('Z', '+00:00')
         dt = datetime.fromisoformat(ts)

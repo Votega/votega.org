@@ -401,6 +401,15 @@ def incremental_since(meta):
     """
     if not meta.get('generatedAt'):
         return None
+    # A baseline from a different session is not a baseline. Without this, bumping
+    # GA_SESSION at the biennium changeover would take the incremental path and merge
+    # the new session's bills on top of the old ones, leaving one file holding two
+    # sessions while metadata claimed only the new one. A full pull is the right
+    # behaviour here and it is cheap: a session opens with a handful of bills.
+    if meta.get('session') and meta['session'] != GA_SESSION:
+        print(f"  Baseline is session {meta['session']}, now building {GA_SESSION} "
+              f"— starting a fresh full fetch.")
+        return None
     # Only build on a baseline that was itself complete.
     if meta.get('paginationComplete') is False:
         return None

@@ -85,6 +85,24 @@ Triggered by: the biennium rolling over (2025–2026 → 2027–2028).
 Then follow *Maintenance — Curated GA Bills → Session changeover* in [TO-DO.md](TO-DO.md),
 and re-run both workflows so the new session's data lands before the pages reference it.
 
+**Get the identifier from the API, don't guess it.** Run the `inspect-ga-sessions`
+workflow (dispatch-only, one API request). It lists every GA session Open States knows
+about with its exact `identifier`, flags which one the generators are pinned to, and
+names the next upcoming session. Guessing a session string produces failures that look
+identical to an expired key or an outage.
+
+**Bump these early in the session.** Both generators fetch incrementally and detect the
+session change automatically, forcing one fresh full pull — which is only a few pages
+when a session has just opened. Flip the constants once the session is thousands of
+bills deep and that same full pull becomes ~100+ pages against Open States' 250/day
+cap, which then needs a day when no other job is using the key.
+
+**Known gap:** `ga-member-votes.json` covers ~4,280 of the 2025–26 session's ~5,480
+bills (`paginationComplete: false`). A full pass needs ~274 requests against the
+250/day cap and the scripts can't resume mid-pagination, so the remaining votes can
+only be recovered by adding resume-from-page support or a paid API tier. The session
+is closed, so the gap is frozen rather than growing.
+
 ---
 
 ## 4. Periodic checks
