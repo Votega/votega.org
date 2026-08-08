@@ -522,16 +522,26 @@ share-description: "Profile of a candidate running for office in Georgia: the of
           &nbsp;·&nbsp; Covers filings from Jan 1, 2026 onward; for earlier records use the
           <a href="https://ethics.ga.gov/records-search-all/" target="_blank" rel="noopener">legacy records search ↗</a>.
         </p>`;
-      // Shown only alongside actual figures. The three totals frequently do not net
-      // (about a quarter reconcile exactly, and some committees report spending far
-      // more than they raised), because PeachFile launched Jan 1 2026 and committees
-      // carried balances in from the previous system. Presenting them as a clean
-      // single-cycle ledger without saying so would overstate what they mean.
+      // Shown only alongside actual figures. The three totals are not expected to net,
+      // and that is by statute rather than a data problem: O.C.G.A. 21-5-34(b)(1)(D)
+      // totals contributions and expenditures per ELECTION CYCLE, while "net balance on
+      // hand" is carried forward from the previous cycle. An election cycle runs from
+      // the day after one election to the next election for that same office
+      // (21-5-3(10)) — so this is permanent, not an artifact of the Jan 1 2026 PeachFile
+      // migration, which is what an earlier version of this note incorrectly blamed.
+      // Measured: only ~36% of filers have raised - spent == cash on hand.
+      //
+      // The staleness line matters too: 21-5-34(c) sets reports at Jan 31 / Apr 30 /
+      // Jul 31 / Oct 20 with a five-day grace period, so figures can be ~3 months old.
+      // Without saying so, a stale $0 next to a fundraising story reads as a site bug.
       const reconcileNote = `
         <p class="finance-meta" style="margin-top:0.35rem;">
-          These are committee totals as reported to the Commission. Balances can carry over
-          from before PeachFile launched on January 1, 2026, so raised, spent, and cash on
-          hand may not net exactly.
+          These are committee totals as reported to the Commission, current as of each
+          committee's most recent required report — reports are due in January, April,
+          July, and October, so figures may be several months old. Under state law
+          contributions and expenditures are totaled for each election cycle while cash
+          on hand carries forward from the previous cycle, so the three figures are not
+          expected to net.
         </p>`;
 
       const data = await getGaFinanceData();

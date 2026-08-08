@@ -503,13 +503,22 @@ share-description: "Profile of a Georgia General Assembly member: district, part
         <a href="${escHtml(searchUrl)}" target="_blank" rel="noopener">View filings on PeachFile ↗</a>
         &nbsp;·&nbsp; Covers filings from Jan 1, 2026 onward.
       </p>
-      <!-- The three totals frequently do not net: PeachFile launched Jan 1 2026 and
-           committees carried balances in from the previous system, so only about a
-           quarter reconcile exactly. Say so rather than implying a clean ledger. -->
+      <!-- The three totals are not expected to net, by statute rather than by defect:
+           O.C.G.A. 21-5-34(b)(1)(D) totals contributions and expenditures per ELECTION
+           CYCLE while "net balance on hand" carries forward from the previous cycle.
+           A cycle runs election-to-election for that office (21-5-3(10)), so this is
+           permanent — not an artifact of the Jan 1 2026 PeachFile migration, which an
+           earlier version of this note incorrectly blamed. Measured: only ~36% of
+           filers have raised - spent == cash on hand.
+           Reports are due Jan 31 / Apr 30 / Jul 31 / Oct 20 with a five-day grace
+           period (21-5-34(c)), hence the staleness wording. -->
       <p class="finance-meta" style="margin-top:0.35rem;">
-        These are committee totals as reported to the Commission. Balances can carry over
-        from before PeachFile launched on January 1, 2026, so raised, spent, and cash on
-        hand may not net exactly.
+        These are committee totals as reported to the Commission, current as of each
+        committee's most recent required report — reports are due in January, April,
+        July, and October, so figures may be several months old. Under state law
+        contributions and expenditures are totaled for each election cycle while cash
+        on hand carries forward from the previous cycle, so the three figures are not
+        expected to net.
       </p>`;
   }
 

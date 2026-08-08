@@ -1,0 +1,92 @@
+name: Update GA campaign finance history (legacy records)
+
+# Source: api-recordsearch.ethics.ga.gov — the Ethics Commission's LEGACY system,
+# holding filings through 2025-12-31. It is a frozen archive, not a live feed, so
+# this runs on demand plus quarterly in case the Commission backfills a record.
+# The live 2026-onward data comes from update-ga-campaign-finance.yml (PeachFile).
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 9 1 1,4,7,10 *'   # 09:30 UTC on the 1st, quarterly
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate campaign finance history
+        run: python scripts/generate_ga_campaign_finance_history.py
+
+      - name: Validate output
+        run: |
+          python -c "
+          import json, sys
+
+          d = json.load(open('assets/data/ga-campaign-finance-history.json'))
+          filers = d['filers']
+          meta   = d['metadata']
+
+          # Count threshold: a healthy run returns ~1,500 records across the state
+          # offices. A large drop means an office silently returned nothing rather
+          # than erroring, which is the failure mode the generator cannot see.
+          if len(filers) < 1200:
+              print(f'ERROR: only {len(filers)} records (expected ~1500)', file=sys.stderr)
+              sys.exit(1)
+          if meta.get('count') != len(filers):
+              print('ERROR: metadata.count does not match len(filers)', file=sys.stderr)
+              sys.exit(1)
+
+          # Records are keyed '<filerEntityId>:<electionCycleId>'. If that ever
+          # collapses back to a bare filer id, per-cycle rows are being overwritten
+          # and roughly a quarter of the dataset disappears silently.
+          if not any(':' in k for k in filers):
+              print('ERROR: no composite recordId keys — per-cycle rows are being lost',
+                    file=sys.stderr)
+              sys.exit(1)
+
+          # The historical span is the whole point; a run that only returns the
+          # current cycle has lost the archive.
+          years = [int(y) for y in meta.get('cycleYears', [])]
+          if not years or min(years) > 2020:
+              print(f'ERROR: history looks truncated — cycle years {years}', file=sys.stderr)
+              sys.exit(1)
+
+          required = ('filerEntityId', 'office', 'totalRaised', 'cycleYear', 'source')
+          sample = next(iter(filers.values()))
+          missing = [f for f in required if f not in sample]
+          if missing:
+              print(f'ERROR: records missing fields: {missing}', file=sys.stderr)
+              sys.exit(1)
+
+          # Guard the join hazard: these ids share a numeric range with PeachFile
+          # but are a different id space entirely.
+          if sample.get('source') != 'legacy':
+              print('ERROR: records not tagged source=legacy', file=sys.stderr)
+              sys.exit(1)
+
+          print(f'Valid: {len(filers)} records, cycle years {min(years)}-{max(years)}')
+          "
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/ga-campaign-finance-history.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update GA campaign finance history (legacy records)"
+            git push
+          fi

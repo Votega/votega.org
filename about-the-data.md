@@ -339,6 +339,10 @@ Campaign finance figures — total raised, total spent, and cash on hand — app
 
 **Why a legislator may show no filing.** We match a legislator to a filing by their seat — chamber and district — and then by surname. We deliberately do not match on name alone across the whole state, because Georgia seats several unrelated legislators who share a surname, and a looser match would attribute one person's fundraising to another. So "no filing found" means exactly that, and usually has an ordinary explanation: the legislator is not seeking re-election, has not filed yet, or is running for a different office (in which case their committee is registered under that office instead of their current seat). When in doubt, search PeachFile directly.
 
+**Why the three figures may not add up.** Raised minus spent will often not equal cash on hand, and that is how the law defines the report rather than an error. Under [O.C.G.A. § 21-5-34(b)(1)(D)](https://ethics.ga.gov/), contributions and expenditures are totaled for a single *election cycle*, while "net balance on hand" is carried forward from the previous cycle. An election cycle runs from the day after one election to the next election for that same office (§ 21-5-3(10)), so a long-serving legislator's cash on hand can reflect years of accumulated funds while the raised and spent figures cover only the current cycle.
+
+**How current the figures are.** State disclosure reports are due January 31, April 30, July 31, and October 20, with a five-day grace period, plus additional reports before runoffs and near elections (§ 21-5-34(c)). Figures therefore reflect each committee's most recent required report and can be several months old — a candidate who raised money last week will not show it until their next report is due.
+
 **Figures are summary totals only.** We show what each committee reported raising, spending, and holding. We do not publish individual donor records or contributor personal information from the state system.
 
 ---
