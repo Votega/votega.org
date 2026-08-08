@@ -230,6 +230,42 @@ permalink: /ga-member.html
     #pageLayout { flex-direction: column; }
     #stateSidebar { width: auto; position: static; max-height: 300px; display: block !important; }
   }
+
+  /* Campaign finance (PeachFile) — same card treatment as the federal member page */
+  .finance-section {
+    margin-top: 2rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1.25rem;
+  }
+  /* Not every legislator has a filing, and the state data covers GA only — collapse
+     the section rather than leaving a stray rule behind. */
+  .finance-section:empty { display: none; }
+  .finance-section h3 { margin: 0 0 0.75rem 0; font-size: 1rem; }
+  .finance-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .finance-card { border-radius: 6px; padding: 0.6rem 0.75rem; }
+  .finance-card-label {
+    font-size: 0.68rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+  }
+  .finance-card-value { font-size: 1.05rem; font-weight: bold; }
+  .finance-card.raised { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .finance-card.raised .finance-card-label { color: #166534; }
+  .finance-card.raised .finance-card-value { color: #15803d; }
+  .finance-card.spent  { background: #fef2f2; border: 1px solid #fecaca; }
+  .finance-card.spent  .finance-card-label { color: #991b1b; }
+  .finance-card.spent  .finance-card-value { color: #b91c1c; }
+  .finance-card.cash   { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .finance-card.cash   .finance-card-label { color: #1e40af; }
+  .finance-card.cash   .finance-card-value { color: #1d4ed8; }
+  .finance-meta { font-size: 0.78rem; color: #666; margin: 0; }
 </style>
 
 <div id="pageLayout">
@@ -327,6 +363,7 @@ permalink: /ga-member.html
       // party still needs to count toward other members' loyalty stats.
       const currentPeers = all.filter(m => !['Resigned', 'Removed', 'Deceased'].includes(m.status));
       displaySidebar(member, currentPeers);
+      loadCampaignFinance(member);
       loadCuratedBills(member);
       loadVotingHistory(member, all);
       if (window.location.hash) {
@@ -375,6 +412,96 @@ permalink: /ga-member.html
       return { value: new Date().getFullYear() - member.birthYear, exact: false };
     }
     return null;
+  }
+
+  function fmtMoney(n) {
+    if (n == null) return '—';
+    if (Math.abs(n) >= 1_000_000) return '$' + (n / 1_000_000).toFixed(1) + 'M';
+    if (Math.abs(n) >= 1_000)     return '$' + Math.round(n / 1_000) + 'K';
+    return '$' + Math.round(n).toLocaleString();
+  }
+
+  function financeLastName(member) {
+    const raw = member.lastName || (member.name || '').trim().split(/\s+/).pop() || '';
+    return raw.toLowerCase().replace(/[^a-z]/g, '');
+  }
+
+  function financeNormalizeName(name) {
+    // Mirrors norm_name() in scripts/generate_ga_campaign_finance.py
+    let n = (name || '').toLowerCase();
+    n = n.replace(/["'].*?["']/g, '');
+    n = n.replace(/\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b/g, '');
+    n = n.replace(/[^a-z\s]/g, '');
+    return n.split(/\s+/).filter(Boolean).join(' ');
+  }
+
+  function findFilerId(data, member) {
+    // Seat-scoped surname match first. Matching on surname alone across the whole
+    // state would be actively wrong — there are several unrelated legislators and
+    // candidates sharing surnames (Jackson, Howard, Bell, Martin), so a statewide
+    // surname lookup attributes one person's fundraising to another.
+    const seatKey = `${member.chamber}-${member.district}`;
+    const ids = (data.bySeat || {})[seatKey] || [];
+    const last = financeLastName(member);
+    const hit = ids.find(id => {
+      const f = data.filers?.[id];
+      return f && (f.lastName || '').toLowerCase().replace(/[^a-z]/g, '') === last;
+    });
+    if (hit) return hit;
+    return (data.byNormalizedName || {})[financeNormalizeName(member.name)] || null;
+  }
+
+  async function loadCampaignFinance(member) {
+    const container = document.getElementById('campaignFinance');
+    if (!container || !member || !member.chamber) return;
+
+    const FINANCE_URL = 'assets/data/ga-campaign-finance.json';
+    let data;
+    try {
+      const res = await fetch(FINANCE_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      data = await res.json();
+    } catch (err) {
+      console.error('loadCampaignFinance()', err);
+      return;   // leave the section collapsed rather than showing an error box
+    }
+
+    const searchUrl = data.metadata?.sourceUrl || 'https://peachfile.ethics.ga.gov/public/cf/publiccandidate';
+    const entry = findFilerId(data, member);
+    const f = entry ? data.filers[entry] : null;
+
+    if (!f) {
+      container.innerHTML = `
+        <h3>Campaign Finance</h3>
+        <p class="finance-meta">
+          No campaign finance filing found for this legislator in the ${escHtml(String(data.metadata?.cycle ?? ''))} cycle —
+          they may not be seeking re-election, or may be running for another office.
+          <a href="${escHtml(searchUrl)}" target="_blank" rel="noopener">Search PeachFile ↗</a>
+        </p>`;
+      return;
+    }
+
+    container.innerHTML = `
+      <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: GA Ethics Commission</small></h3>
+      <div class="finance-cards">
+        <div class="finance-card raised">
+          <div class="finance-card-label">Total Raised</div>
+          <div class="finance-card-value">${fmtMoney(f.totalRaised)}</div>
+        </div>
+        <div class="finance-card spent">
+          <div class="finance-card-label">Total Spent</div>
+          <div class="finance-card-value">${fmtMoney(f.totalSpent)}</div>
+        </div>
+        <div class="finance-card cash">
+          <div class="finance-card-label">Cash on Hand</div>
+          <div class="finance-card-value">${fmtMoney(f.cashOnHand)}</div>
+        </div>
+      </div>
+      <p class="finance-meta">${escHtml(f.electionCycle || '')}${f.office ? ` · ${escHtml(f.office)}` : ''}</p>
+      <p class="finance-meta">
+        <a href="${escHtml(searchUrl)}" target="_blank" rel="noopener">View filings on PeachFile ↗</a>
+        &nbsp;·&nbsp; Covers filings from Jan 1, 2026 onward.
+      </p>`;
   }
 
   function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable) {
@@ -477,6 +604,7 @@ permalink: /ga-member.html
             ? `<p style="margin-top:1rem;font-size:0.8rem;color:#a35b00;">Committee data is temporarily unavailable (the last data refresh could not fetch it).</p>`
             : '')}
       <p><a href="ga-state-reps">Search for another member</a></p>
+      <div id="campaignFinance" class="finance-section"></div>
       <div id="votesTabs">
         <div class="tab-bar">
           <button class="tab-btn tab-active" data-tab="curatedBills" onclick="switchTab('curatedBills')">Key Votes</button>

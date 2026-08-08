@@ -18,7 +18,7 @@ before editing any JSON by hand; a hand edit will be overwritten on the next run
 | Cadence | Workflows |
 |---|---|
 | Daily | `update-current-members` (06:00), `update-ga-members` (07:00), `publish-races-to-ga-races-elections` (07:00), `update-curated-ga-bills` (08:00), `update-ga-executive-orders` (08:15) |
-| Weekly (Sun) | `update-ga-bills` (07:30), `update-fec-data` (08:00), `update-ga-votes` (08:00), `update-federal-votes` (09:00), `update-presidential-laws` (09:45), `update-scotus-decisions` (10:00), `update-ga-congress-trades` (10:00), `update-vp-tie-votes` (09:30) |
+| Weekly (Sun) | `update-ga-bills` (07:30), `update-fec-data` (08:00), `update-ga-votes` (08:00), `update-ga-campaign-finance` (08:30), `update-federal-votes` (09:00), `update-presidential-laws` (09:45), `update-scotus-decisions` (10:00), `update-ga-congress-trades` (10:00), `update-vp-tie-votes` (09:30) |
 | Manual dispatch only | `deploy-pages`, `validate-ga-overrides`, `sync-generated-data-on-pr`, the `inspect-*` diagnostics, and the `publish-*` repo syncs |
 
 All times UTC.
@@ -96,6 +96,11 @@ and re-run both workflows so the new session's data lands before the pages refer
   `status`, `statusDate`, `statusNote` in the overrides file.
 - **Election calendar** — `assets/data/ga-election-calendar.json` needs new dates each cycle.
 - **Ballot measures** — `assets/data/ga-ballot-measures.json` is curated by hand.
+- **State campaign finance coverage** — `update-ga-campaign-finance` pulls only the cycle
+  matching the newest `cycle` in `races.json`. After an election, check that sitting
+  legislators still resolve: a member with no filing shows "no filing found", which is
+  correct for someone not seeking re-election but also what a broken join looks like.
+  `scripts/generate_ga_campaign_finance.py` prints the per-office kept/skipped counts.
 
 ---
 

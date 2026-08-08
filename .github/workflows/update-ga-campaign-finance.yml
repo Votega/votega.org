@@ -1,0 +1,89 @@
+name: Update GA campaign finance data (weekly, Sun 08:30 UTC)
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 8 * * 0' # weekly on Sunday at 08:30 UTC
+
+jobs:
+  update-ga-campaign-finance:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # No API key: the PeachFile public endpoints are unauthenticated. They are
+      # CORS origin-locked, which is why this runs at build time rather than in the page.
+      - name: Generate GA campaign finance data
+        run: python scripts/generate_ga_campaign_finance.py assets/data/ga-campaign-finance.json
+
+      - name: Validate generated data
+        run: |
+          if [ ! -f assets/data/ga-campaign-finance.json ]; then
+            echo "Error: ga-campaign-finance.json was not generated"
+            exit 1
+          fi
+          python - <<'PY'
+          import json, sys
+
+          d       = json.load(open('assets/data/ga-campaign-finance.json'))
+          filers  = d.get('filers', {})
+          by_seat = d.get('bySeat', {})
+          n       = d['metadata']['count']
+
+          legislative = [f for f in filers.values()
+                         if f.get('office') in ('State Representative', 'State Senator')]
+
+          print(f"{n} filers | {len(legislative)} legislative | {len(by_seat)} seats covered")
+
+          errors = []
+          if n == 0:
+              errors.append("no filers returned")
+          if n != len(filers):
+              errors.append(f"metadata.count ({n}) != len(filers) ({len(filers)})")
+          # Georgia has 180 House and 56 Senate seats. A partial pull (a dropped page, a
+          # WAF rejection) shows up as a collapse in seat coverage, which a plain
+          # "is this valid JSON" check would happily commit.
+          if len(by_seat) < 150:
+              errors.append(f"only {len(by_seat)} seats covered (expected >= 150) - likely a partial fetch")
+          if len(legislative) < 400:
+              errors.append(f"only {len(legislative)} legislative filers (expected >= 400)")
+          # Every filer needs the fields the member pages read.
+          missing = [k for k, f in filers.items()
+                     if 'totalRaised' not in f or 'office' not in f][:5]
+          if missing:
+              errors.append(f"filers missing required fields: {missing}")
+
+          if errors:
+              for e in errors:
+                  print(f"Error: {e}", file=sys.stderr)
+              sys.exit(1)
+          PY
+
+      - name: Commit and push
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/ga-campaign-finance.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update GA campaign finance data"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+          fi
