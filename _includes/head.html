@@ -54,6 +54,18 @@
   <meta name="keywords" content="{{ site.keywords }}">
   {% endif %}
 
+  {%- comment -%}
+    An empty string is truthy in Liquid, so compare against "" explicitly —
+    otherwise an unset token renders a blank verification tag on every page.
+  {%- endcomment -%}
+  {% if site.google_site_verification and site.google_site_verification != "" %}
+  <meta name="google-site-verification" content="{{ site.google_site_verification }}">
+  {% endif %}
+
+  {% if site.bing_site_verification and site.bing_site_verification != "" %}
+  <meta name="msvalidate.01" content="{{ site.bing_site_verification }}">
+  {% endif %}
+
   {% if site.rss-description %}
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}">
   {% endif %}

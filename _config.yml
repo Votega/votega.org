@@ -12,6 +12,10 @@
 # Name of website
 title: Vote GA
 
+# Canonical base URL. Without this, Jekyll falls back to an http:// origin, which
+# puts http:// URLs in sitemap.xml and og:url while the site is served over https.
+url: "https://www.votega.org"
+
 # Your name to show in the footer
 author: Concerned Citizens of Georgia
 
@@ -145,7 +149,14 @@ edit_page_button: false
 navbar-var-length: true
 
 # The keywords to associate with your website, for SEO purposes
+# (Note: Google has ignored the keywords meta tag for years; harmless but inert.)
 keywords: "voting, georgia, elections, politics, flock safety"
+
+# Search engine verification tokens. Paste the content value from the "HTML tag"
+# verification method in Google Search Console / Bing Webmaster Tools — just the
+# token, not the whole <meta> tag. Leave blank until verified.
+google_site_verification: ""
+bing_site_verification: ""
 
 ######################################
 # --- Colours / background image --- #
@@ -302,7 +313,9 @@ defaults:
     values:
       layout: "page"
 
-# Exclude these files from production site
+# Exclude these files from production site.
+# Anything left in here is served publicly and can be crawled, so internal notes,
+# build scripts, and theme scaffolding all need to be listed.
 exclude:
   - CHANGELOG.md
   - CNAME
@@ -313,6 +326,27 @@ exclude:
   - screenshot.png
   - docs/
   - claude.md
+  - CLAUDE.md
+  # Internal working notes — not for public consumption or indexing
+  - RECURRING-TASKS.md
+  - TO-DO.md
+  - "01-Recommendations for votega.md"
+  - "Site feature survey review.md"
+  - "General Election Transition Plan.md"
+  - "GA Bill Party Vote Breakdown.md"
+  - "*-design.md"
+  - "*-README.md"
+  # Archived sample content — was being published and listed in sitemap.xml
+  - "not in use/"
+  # Build-time data generation; has no place in the served site
+  - scripts/
+  - tools/
+  # Theme/gem scaffolding inherited from Beautiful Jekyll
+  - Appraisals
+  - beautiful-jekyll-theme.gemspec
+  - staticman.yml
+  - .continue/
+  - .vscode/
 
 plugins:
   - jekyll-paginate
