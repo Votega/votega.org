@@ -90,6 +90,8 @@ Front-matter contract
   .bar-fill.np  { background: #888; }
   .bar-fill.trail { opacity: .42; }
   .pr-crosslink { font-size: .83rem; margin-bottom: .75rem; }
+  .pr-related { background: #eef4fb; border: 1px solid #b8d0ea; border-left: 4px solid #1a56a8; border-radius: 6px; padding: .6rem 1rem; font-size: .82rem; color: #22364d; margin-bottom: 1rem; }
+  .pr-related .pr-related-link { display: inline-block; margin-top: .3rem; font-weight: 600; }
 </style>
 
 <div class="pr-page-header">
@@ -112,6 +114,13 @@ Front-matter contract
   <div class="pr-notice pr-notice-certified">&#10003; Official certified results from the Georgia Secretary of State.</div>
 {% else %}
   <div class="pr-notice">&#9888; Unofficial results. Official certified results will be available after the Secretary of State certifies the election.</div>
+{% endif %}
+
+{% if page.related %}
+  <div class="pr-related">
+    {% if page.related.text %}<span class="pr-related-text">{{ page.related.text }}</span>{% endif %}
+    {% if page.related.url %} <a class="pr-related-link" href="{{ page.related.url }}">{{ page.related.label | default: 'Learn more' }} &rarr;</a>{% endif %}
+  </div>
 {% endif %}
 
 <div class="tab-bar" id="tabBar">
