@@ -53,6 +53,96 @@ meta:
 
 jurisdictions:
   # ==========================================================================
+  # CITY OF CARROLLTON  (municipal — nonpartisan)
+  # ==========================================================================
+  - id: carrollton
+    name: City of Carrollton
+    type: city                      # city | county
+    county: Carroll                 # home county — powers county cross-linking
+    body: City Council
+    partisan: false                 # municipal seats are nonpartisan -> party chip hidden
+    official_url: https://carrolltonga.com/our-officials/
+    related_pages:                  # cross-links to existing VoteGA content
+      - { title: "", url: }
+    notes: ""
+  
+  # ---- PHASE 1 — ROSTER --------------------------------------------------
+    # next_election / term_end assume 4-year staggered terms (last_elected + 4).
+    # VERIFY against the source and correct where a member was re-elected since.
+    members:
+      - name: Betty B. Cason
+        role: Mayor
+        seat: At-large              # mayor is elected citywide, not by ward
+        party: Nonpartisan
+        email: ""
+        phone: ""
+        last_elected: 2019
+        term_end: 2027              # assumed: 2023 + 4
+        next_election:         
+        voting: false               # mayor presides — verify vote/tie-break rules
+        tie_break_only: true
+        photo: ""
+        source: "https://carrolltonga.com/carrollton-mayor/"                  # add the city-council page / minutes URL
+        notes: ""
+
+      - name: Don North
+        role: Council Member
+        seat: Ward 1 (NW)                  # West ward — verify exact ward/post label
+        party: Nonpartisan
+        email: "dnorth@carrollton-ga.gov"
+        phone: ""
+        last_elected: 2025
+        term_end: 2029              
+        next_election: 2029         
+        voting: true
+        tie_break_only: false
+        photo: ""
+        source: "https://carrolltonga.com/council-member-ward-1/"
+        notes: ""
+      - name: Brett Ledbetter
+        role: Council Member
+        seat: Ward 2 (N)                  # West ward — verify exact ward/post label
+        party: Nonpartisan
+        email: "bledbetter@carrollton-ga.gov"
+        phone: ""
+        last_elected: 2019
+        term_end: 2029              
+        next_election: 2029         
+        voting: true
+        tie_break_only: false
+        photo: ""
+        source: "https://carrolltonga.com/council-member-ward-2/"
+        notes: ""
+      - name: Stacie Gibbs
+        role: Council Member
+        seat: Ward 3 (SE)                  # West ward — verify exact ward/post label
+        party: Nonpartisan
+        email: "sgibbs@carrollton-ga.gov"
+        phone: ""
+        last_elected: 2019
+        term_end: 2027              
+        next_election: 2026         
+        voting: true
+        tie_break_only: false
+        photo: ""
+        source: "https://carrolltonga.com/council-member-ward-3/"
+        notes: ""
+      - name: Bob Uglum
+        role: Council Member
+        seat: Ward 4 (SW)                  # West ward — verify exact ward/post label
+        party: Nonpartisan
+        email: "buglum@carrollton-ga.gov
+        phone: ""
+        last_elected: 2019
+        term_end: 2027              
+        next_election: 2026         
+        voting: true
+        tie_break_only: false
+        photo: ""
+        source: "https://carrolltonga.com/council-member-ward-4/"
+        notes: ""
+
+  # ==========================================================================
   # CITY OF COVINGTON  (municipal — nonpartisan)
   # ==========================================================================
   - id: covington

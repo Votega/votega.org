@@ -1,0 +1,249 @@
+---
+layout: default
+title: Georgia 2026 Special Election Results — U.S. House District 13
+permalink: /ga-special-2026-results/
+share-description: "Results from the July 28, 2026 special election for Georgia's U.S. House District 13."
+---
+<style>
+  :root {
+    --rep: #c0392b; --rep-light: #fdf0ef; --rep-bar: #e74c3c;
+    --dem: #2471a3; --dem-light: #eaf4fb; --dem-bar: #3498db;
+    --border: #ddd; --card-bg: #fff;
+    --muted: #777; --neutral: #555;
+  }
+
+  /* ── Page header ── */
+  .pr-page-header { margin-bottom: 1rem; }
+  .pr-page-header h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: .2rem; }
+  .pr-page-header .pr-meta { font-size: .82rem; color: #777; }
+
+  /* ── Tab bar ── */
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 1.25rem 0 1rem 0;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0;
+  }
+  .tab-btn {
+    padding: 0.45rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 4px 4px 0 0;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: #1a56a8; }
+  .tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+
+  /* ── Tab panels ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Filter / search bar ── */
+  .pr-filter-bar { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .75rem; }
+  .filter-btn { border: 1px solid var(--border); background: var(--card-bg); padding: .35rem 1rem; border-radius: 20px; cursor: pointer; font-size: .82rem; font-weight: 500; color: var(--neutral); }
+  .filter-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+  .filter-btn.rep.active { background: var(--rep); border-color: var(--rep); }
+  .filter-btn.dem.active { background: var(--dem); border-color: var(--dem); }
+  .search-row { margin-bottom: 1.25rem; }
+  .search-row input { width: 100%; padding: .45rem .9rem; border: 1px solid var(--border); border-radius: 20px; font-size: .85rem; outline: none; }
+  .search-row input:focus { border-color: #999; }
+
+  /* ── Notice ── */
+  .pr-notice { background: #fff8e1; border: 1px solid #f9a825; border-radius: 6px; padding: .6rem 1rem; font-size: .82rem; color: #5d4037; margin-bottom: 1rem; }
+
+  /* ── Race cards ── */
+  .race-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: .6rem; overflow: hidden; }
+  .race-card.rep { border-top: 3px solid var(--rep); }
+  .race-card.dem { border-top: 3px solid var(--dem); }
+  .race-card.np  { border-top: 3px solid #888; }
+  .race-card.winner-race { background: #f0faf0; }
+  .race-card.no-results  { opacity: .6; }
+  .race-header { display: flex; align-items: center; justify-content: space-between; padding: .6rem 1rem .35rem; flex-wrap: wrap; gap: .25rem; }
+  .race-title  { font-weight: 600; font-size: .92rem; }
+  .race-meta   { display: flex; gap: .4rem; align-items: center; flex-shrink: 0; }
+  .party-badge { display: inline-block; padding: .1rem .45rem; border-radius: 10px; font-size: .7rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+  .party-badge.rep { background: var(--rep-light); color: var(--rep); }
+  .party-badge.dem { background: var(--dem-light); color: var(--dem); }
+  .party-badge.np  { background: #f0f0f0; color: #555; }
+  .status-badge { display: inline-block; padding: .1rem .45rem; border-radius: 10px; font-size: .7rem; font-weight: 600; }
+  .status-badge.winner      { background: #e8f8e8; color: #1e7e34; }
+  .status-badge.no-results  { background: #f0f0f0; color: #aaa; }
+  .race-total  { font-size: .72rem; color: var(--muted); padding: 0 1rem .4rem; }
+  .candidates  { padding: 0 1rem .65rem; }
+  .cand-block  { margin-bottom: .5rem; }
+  .cand-top-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: .18rem; }
+  .cand-name   { font-size: .84rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 62%; }
+  .cand-name .inc { font-size: .68rem; color: var(--muted); margin-left: .2rem; }
+  .cand-name .wi  { color: #27ae60; margin-right: .1rem; }
+  .cand-votes  { font-size: .76rem; color: var(--muted); }
+  .cand-pct    { font-size: .84rem; font-weight: 600; min-width: 3rem; text-align: right; }
+  .bar-track   { height: 7px; background: #eee; border-radius: 4px; overflow: hidden; position: relative; }
+  .bar-track::after { content: ''; position: absolute; left: 50%; top: 0; height: 100%; width: 2px; background: rgba(0,0,0,.18); }
+  .bar-fill    { height: 100%; border-radius: 4px; }
+  .bar-fill.rep { background: var(--rep-bar); }
+  .bar-fill.dem { background: var(--dem-bar); }
+  .bar-fill.np  { background: #888; }
+  .bar-fill.trail { opacity: .42; }
+
+  /* ── Cross-link ── */
+  .pr-crosslink { font-size: .83rem; margin-bottom: .75rem; }
+</style>
+
+<div class="pr-page-header">
+  <h1>Georgia 2026 Special Election Results</h1>
+  <div class="pr-meta">U.S. House District 13 &nbsp;&middot;&nbsp; Election Date: July 28, 2026 &nbsp;&middot;&nbsp; Unofficial Results</div>
+</div>
+
+<div class="pr-crosslink">&#8592; <a href="/results/">All Georgia election results</a></div>
+
+<div class="pr-notice">
+  &#9888; Unofficial results for the July 28, 2026 special election to fill the U.S. House District 13
+  seat left vacant by the death of Rep. David Scott. No candidate cleared 50 percent, so the top two
+  finishers &mdash; Marcye Scott and Everton &ldquo;EJ&rdquo; Blair &mdash; advance to a runoff on
+  <strong>August 25, 2026</strong>. Official certified results will be available after the Secretary of State certifies the election.
+</div>
+
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" data-tab="statewide">Executive / Statewide</button>
+  <button class="tab-btn" data-tab="us-house">U.S. House</button>
+  <button class="tab-btn" data-tab="state-senate">GA State Senate</button>
+  <button class="tab-btn" data-tab="state-house">GA State House</button>
+  <button class="tab-btn" data-tab="courts">Courts</button>
+</div>
+
+<div class="pr-filter-bar">
+  <button class="filter-btn active" data-filter="all">All Races</button>
+  <button class="filter-btn rep" data-filter="rep">&#x25A0; Republican</button>
+  <button class="filter-btn dem" data-filter="dem">&#x25A0; Democrat</button>
+</div>
+<div class="search-row"><input type="text" id="searchBox" placeholder="Search candidates or races…" /></div>
+
+<div id="tab-statewide"    class="tab-panel active"></div>
+<div id="tab-us-house"     class="tab-panel"></div>
+<div id="tab-state-senate" class="tab-panel"></div>
+<div id="tab-state-house"  class="tab-panel"></div>
+<div id="tab-courts"       class="tab-panel"></div>
+
+<script>
+const SECTIONS=[];
+
+function pct(v,t){return t?((v/t)*100):0;}
+
+function raceStatus(c){
+  if(!c.totalVotes) return 'no-results';
+  return 'winner';
+}
+
+const STATUS_MAP={
+  winner:     {cls:'winner',     text:'Leads'},
+  'no-results':{cls:'no-results', text:'No Results'},
+};
+
+function renderContest(c,office){
+  const status=raceStatus(c);
+  const sl=STATUS_MAP[status]||STATUS_MAP['no-results'];
+  const p=c.party;
+  const noRes=status==='no-results';
+  const cardCls=status==='winner'?'winner-race':status==='no-results'?'no-results':'';
+  const cands=c.candidates.map((cd,i)=>{
+    const pp=pct(cd.votes,c.totalVotes);
+    const wi=i===0&&status==='winner'?'<span class="wi">&#10003;</span>':'';
+    const votes=noRes?'—':`${cd.votes.toLocaleString()} votes`;
+    return `<div class="cand-block">
+      <div class="cand-top-line">
+        <div class="cand-name">${wi}${cd.name}${cd.incumbent?' <span class="inc">(I)</span>':''}</div>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <span class="cand-votes">${votes}</span>
+          <span class="cand-pct">${noRes?'—':pp.toFixed(1)+'%'}</span>
+        </div>
+      </div>
+      <div class="bar-track"><div class="bar-fill ${p}${i>0?' trail':''}" style="width:${noRes?0:Math.min(pp,100)}%"></div></div>
+    </div>`;
+  }).join('');
+  const total=noRes?'No results yet':`Total votes: ${c.totalVotes.toLocaleString()}`;
+  return `<div class="race-card ${p} ${cardCls}" data-party="${p}" data-office="${office.toLowerCase()}">
+    <div class="race-header">
+      <div class="race-title">${office}</div>
+      <div class="race-meta">
+        <span class="party-badge ${p}">${p==='rep'?'Rep':p==='dem'?'Dem':'NP'}</span>
+        <span class="status-badge ${sl.cls}">${sl.text}</span>
+      </div>
+    </div>
+    <div class="race-total">${total}</div>
+    <div class="candidates">${cands}</div>
+  </div>`;
+}
+
+SECTIONS.forEach(s=>{
+  const panel=document.getElementById('tab-'+s.id);
+  if(!panel) return;
+  panel.innerHTML=s.races.length===0
+    ?'<p style="color:#999;font-size:.85rem;padding:.5rem 0">No races in this section.</p>'
+    :s.races.map(r=>
+        r.contests.length===1
+          ?renderContest(r.contests[0],r.office)
+          :r.contests.map(c=>renderContest(c,r.office)).join('')
+      ).join('');
+});
+
+// Activate the first tab that actually has results; hide empty tabs
+let firstWithContent=null;
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  const panel=document.getElementById('tab-'+btn.dataset.tab);
+  if(panel&&panel.querySelectorAll('.race-card').length===0){
+    btn.style.display='none';
+    panel.classList.remove('active');
+  }else if(!firstWithContent){
+    firstWithContent=btn;
+  }
+});
+if(firstWithContent){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  firstWithContent.classList.add('active');
+  document.getElementById('tab-'+firstWithContent.dataset.tab).classList.add('active');
+}
+
+let curFilter='all';
+function applyFilter(f){
+  curFilter=f;
+  const q=(document.getElementById('searchBox').value||'').toLowerCase().trim();
+  const activePanel=document.querySelector('.tab-panel.active');
+  if(!activePanel) return;
+  activePanel.querySelectorAll('.race-card').forEach(card=>{
+    const partyOk=f==='all'||card.dataset.party===f;
+    const textOk=!q||(card.dataset.office||'').includes(q)||card.textContent.toLowerCase().includes(q);
+    card.style.display=(partyOk&&textOk)?'':'none';
+  });
+}
+
+document.getElementById('tabBar').addEventListener('click',e=>{
+  const btn=e.target.closest('.tab-btn');
+  if(!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel=document.getElementById('tab-'+btn.dataset.tab);
+  if(panel) panel.classList.add('active');
+  applyFilter(curFilter);
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter(btn.dataset.filter);
+  });
+});
+
+document.getElementById('searchBox').addEventListener('input',()=>applyFilter(curFilter));
+</script>
