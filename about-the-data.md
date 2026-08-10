@@ -6,6 +6,9 @@ subtitle: Where our information comes from and how it's kept current
 
 VoteGA.org is a static website. We run automated workflows that pull data from trusted public sources and publish it as static files that power the site. A few data sources — federal executive orders and select biography data — are fetched live from public APIs when you visit a page. Here's what we use and why.
 
+{: .box-note}
+**Looking to _reuse_ our data?** Our machine-readable datasets — for civic apps, researchers, and journalists — are catalogued on the **[Open Data](/open-data)** page. This page explains how each one is built and kept current.
+
 ---
 
 ## Federal Legislators
@@ -40,18 +43,11 @@ Voting history is displayed on each Georgia federal legislator's profile page, s
 
 ---
 
-## GA Federal Delegation — Community Data Repository
+## GA Federal Delegation — Published for Reuse
 
-We publish a copy of Georgia's federal congressional delegation data to a public community repository.
+Georgia's federal delegation roster (`data/members.json`, filtered to Georgia's delegation rather than the full Congress covered by the site's own `current-members.json`) and its voting record on signed legislation (`data/votes.json`) are published as an open, machine-readable dataset. How both are built is documented under [Federal Legislators](#federal-legislators) and [Federal Legislator Voting History](#federal-legislator-voting-history-ga-delegation) above.
 
-[GitHub GA Federal Legislators Repository](https://github.com/Votega/ga-federal-legislators)
-
-This repository is intended as a free, open, machine-readable source of Georgia's current U.S. House and Senate delegation and their voting record on signed legislation — for civic apps, researchers, journalists, or other organizations that need structured data without maintaining their own Congress.gov / Clerk-of-the-House / Senate.gov pipeline.
-
-Unlike `current-members.json` on votega.org (which covers the full current Congress, all states), the published `data/members.json` is filtered to Georgia's delegation only — the same `state === "Georgia"` filter the site itself uses. `data/votes.json` is Georgia's voting-history data (see [Federal Legislator Voting History](#federal-legislator-voting-history-ga-delegation) above), which is already Georgia-scoped and published as-is.
-
-- **Updated:** `data/members.json` whenever `current-members.json` changes on votega.org (daily); `data/votes.json` whenever `federal-member-votes.json` changes (weekly).
-- **Schema:** Same as votega.org's own copies, documented in the repository README.
+See **[Open Data](/open-data)** for the repository, file links, and update cadence.
 
 ---
 
@@ -151,32 +147,14 @@ A quirk in the source data: a vetoed bill's transmittal record still carries an 
 
 ---
 
-## GA Legislators — Community Data Repository
+## GA Legislators — Published for Reuse
 
-We publish a copy of our Georgia legislator data to a public community repository. 
+Our Georgia General Assembly roster (`data/all.json`) and each legislator's passage-vote history (`data/votes.json`) are published as an open, machine-readable dataset covering the 158th (2025–2026) General Assembly. How the roster and votes are built — including the shared OCD person ID that joins the two files — is documented under [Georgia General Assembly Legislators](#georgia-general-assembly-legislators) and [Georgia State Legislator Voting History](#georgia-state-legislator-voting-history) above.
 
-[GitHub GA Legislators Repository](https://github.com/Votega/ga-legislators) <br>
-
-{: .box-note}
-Only includes GA Legislators from the 158th (2025-2026) General Assembly. Future legislators will continue to be added, but prior year members will not be added in the immediate future.
-
-This repository is updated automatically each time our daily workflow runs. It is intended as
-a free, open, machine-readable source of current Georgia General Assembly member data that
-anyone can use — civic apps, researchers, journalists, or other organizations that need
-structured legislator data without the overhead of maintaining their own pipeline.
-
-The data is published as `data/all.json` and follows the same schema that we use for votega.org. See the repository README for field definitions.
-
-**Voting records:** Each legislator's passage-vote history is published alongside the roster as `data/votes.json`, updated weekly whenever `ga-member-votes.json` refreshes on votega.org (see [Georgia State Legislator Voting History](#georgia-state-legislator-voting-history) above for how it's built and de-duplicated). It follows the same schema as votega.org's copy — `metadata`, `votes` (keyed by Open States vote ID), and `memberVotes` (keyed by the same OCD person ID used in `data/all.json`), so the two files join directly on that ID.
-
- 
+See **[Open Data](/open-data)** for the repository, file links, and update cadence.
 
 {: .box-note}
-**Want to contribute?** If you spot missing or incorrect information — a wrong phone number,
-a missing email address, or an outdated office — you can open an issue or pull request on
-the [ga-legislators repository](https://github.com/Votega/ga-legislators). Corrections
-submitted there are reviewed and incorporated into our manual overrides, so they flow back
-into votega.org on the next daily update.
+**Spot an error?** A wrong phone number, a missing email, an outdated office — open an issue or pull request on the [ga-legislators repository](https://github.com/Votega/ga-legislators). Corrections are reviewed, incorporated into our manual overrides, and flow back into votega.org on the next daily update.
 
 ---
 
@@ -222,13 +200,9 @@ The [Supreme Court](/supreme-court.html) page displays current justices and rece
 
 ---
 
-## GA Executive Orders — Community Data Repository
+## Georgia Executive Orders
 
-Georgia Governor's executive orders are displayed on this site and published to a public community repository:
-
-[GitHub GA Executive Orders Repository](https://github.com/Votega/ga-executive-orders)
-
-Executive orders are scraped daily from the [Georgia Governor's website](https://gov.georgia.gov/executive-action/executive-orders) via an automated GitHub Actions workflow. New orders are detected and added automatically. Data is organized as one JSON file per year, with each order including the date, order number, title, category, and a direct link to the official PDF.
+Georgia Governor's executive orders are scraped daily from the [Georgia Governor's website](https://gov.georgia.gov/executive-action/executive-orders) via an automated GitHub Actions workflow. New orders are detected and added automatically. Data is organized as one JSON file per year, with each order including the date, order number, title, category, and a direct link to the official PDF.
 
 **Coverage:** 2023–present. Earlier years (2022 and prior) used a different URL structure on gov.georgia.gov and are not yet included.
 
@@ -244,6 +218,8 @@ Executive orders are scraped daily from the [Georgia Governor's website](https:/
   "url":      "https://gov.georgia.gov/document/2024-executive-order/09242401/download"
 }
 ```
+
+Published for reuse — see **[Open Data](/open-data)** for the repository and downloads.
 
 {: .box-note}
 **Want to contribute?** If an order is missing or miscategorized, open an issue or pull request on the [ga-executive-orders repository](https://github.com/Votega/ga-executive-orders).
