@@ -1,0 +1,43 @@
+---
+layout: default
+title: Latest Georgia Election Results
+permalink: /results/latest/
+sitemap: false
+share-description: "The most recent Georgia election results VoteGA.org has posted."
+---
+{%- comment -%}
+  Always points at the most recently held election in _data/election_archive.yml
+  (newest event whose status is not "upcoming"). No hand-editing: adding the next
+  election's archive entry moves this pointer automatically. Dates are compared as
+  integers (YYYYMMDD) for reliability.
+{%- endcomment -%}
+{% assign latest = nil %}
+{% assign latest_d = 0 %}
+{% for cyc in site.data.election_archive %}
+  {% for e in cyc.events %}
+    {% unless e.status == 'upcoming' %}
+      {% assign ed = e.date | date: '%Y%m%d' | plus: 0 %}
+      {% if ed > latest_d %}
+        {% assign latest = e %}
+        {% assign latest_d = ed %}
+      {% endif %}
+    {% endunless %}
+  {% endfor %}
+{% endfor %}
+
+{% if latest %}
+<meta http-equiv="refresh" content="0; url={{ latest.url | relative_url }}">
+<link rel="canonical" href="{{ latest.url | relative_url }}">
+<script>window.location.replace({{ latest.url | relative_url | jsonify }});</script>
+<p style="font-size:.95rem;">
+  Taking you to the most recent results &mdash;
+  <a href="{{ latest.url | relative_url }}">{{ latest.name }}</a>
+  ({{ latest.date | date: "%B %-d, %Y" }})&hellip;
+</p>
+<p style="font-size:.85rem;color:#777;">
+  Not redirected? <a href="{{ latest.url | relative_url }}">View the latest results</a>
+  or see <a href="{{ '/results/' | relative_url }}">all Georgia election results</a>.
+</p>
+{% else %}
+<p>No results have been posted yet. See <a href="{{ '/results/' | relative_url }}">all Georgia election results</a>.</p>
+{% endif %}
