@@ -140,8 +140,8 @@ jurisdictions:
     type: county
     county: Newton
     body: Board of Commissioners
-    partisan: true                  # county commission races ARE partisan in GA
-    official_url: https://www.newtoncountyga.gov
+    partisan: false                 # county commission races ARE partisan in GA
+    official_url: https://www.newtoncountyga.gov/157/Board-of-Commissioners
     related_pages:
       - { title: "Flock Safety in Newton County", url: /flock-covington }
     notes: ""
@@ -163,31 +163,45 @@ jurisdictions:
 
     # ---- PHASE 1 — ROSTER --------------------------------------------------
     members:
-      - name: ""
+      - name: "Marcello Banes"
         role: Chair                 # countywide-elected board chair
         seat: At-large
         party: ""                   # Republican | Democratic
         email: ""
-        phone: ""
-        last_elected:
+        phone: "678-625-1201"
+        last_elected: 2016
         term_end:
         next_election:
         voting: false               # verify: many GA chairs vote only to break ties
         tie_break_only: true
         photo: ""
-        source: ""
+        source: "https://www.newtoncountyga.gov/158/Marcello-Banes"
         notes: ""
-      - name: ""
+      - name: "Stan Edwards"
         role: Commissioner
-        seat: ""                    # e.g. "District 1"
+        seat: "District 1"                    # e.g. "District 1"
         party: ""
-        email: ""
-        phone: ""
-        last_elected:
+        email: "asedwards@co.newton.ga.us"
+        phone: "678-625-1372"
+        last_elected: 2016
         term_end:
         next_election:
         voting: true
         tie_break_only: false
         photo: ""
-        source: ""
+        source: "https://www.newtoncountyga.gov/159/Stan-Edwards"
+        notes: ""
+      - name: "T. Demond Mason"
+        role: Commissioner
+        seat: "District 2"                    # e.g. "District 1"
+        party: ""
+        email: "dmason@co.newton.ga.us"
+        phone: "678-625-1372"
+        last_elected: 2016
+        term_end:
+        next_election:
+        voting: true
+        tie_break_only: false
+        photo: ""
+        source: "https://www.newtoncountyga.gov/386/Demond-Mason"
         notes: ""
