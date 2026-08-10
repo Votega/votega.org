@@ -38,6 +38,12 @@ Triggered by: election night, then again at certification.
       and defaults to the next election that hasn't happened yet. No code change needed.
 - [ ] If a general-election runoff is required (Georgia holds these when no candidate clears 50%),
       set those races to `activePhase: runoff` with the runoff date.
+- [ ] **Ballot measures:** once results certify, set each measure's `status` to `passed` or
+      `failed` and add its `results` object (`yesPercent`, `passed`, …) in
+      [`assets/data/ga-ballot-measures.json`](assets/data/ga-ballot-measures.json). A terminal
+      status **must** carry a `results` object (the schema and the publish workflow both enforce
+      this). Measures are never deleted — they stay as a permanent record and drop off the page
+      only when the next cycle is introduced (see §2).
 
 > **Do not** update a results CSV from an unofficial export once certified numbers exist —
 > replace it wholesale with the certified file instead.
@@ -65,6 +71,11 @@ Each of these still hardcodes the year:
 - `elections.html` derives the active cycle from the newest `cycle` present in `races.json`,
   and builds the phase toggle from the phases actually in use.
 - `/results/` renders whatever cycles exist in `election_archive.yml`, newest first.
+- `/ga-ballot-measures` shows the **focal election** — the nearest upcoming `electionDate` in
+  `ga-ballot-measures.json` (or the most recent if none upcoming). Introducing the next cycle's
+  measures with the new `electionDate` archives the prior cycle from display automatically; the
+  old measures stay in the file. **The one manual step:** add the new proposals (each with its
+  `electionDate`) as they're introduced — do not delete the previous cycle's entries.
 
 **Optional at this point:** once a *past* cycle's races are retained in `races.json`, add a
 cycle selector to `elections.html`. The pattern is already written — mirror `buildPhaseToggle()`
@@ -113,7 +124,11 @@ is closed, so the gap is frozen rather than growing.
 - **Vacancies / departures** — resignations and deaths are not tracked by Open States. Set
   `status`, `statusDate`, `statusNote` in the overrides file.
 - **Election calendar** — `assets/data/ga-election-calendar.json` needs new dates each cycle.
-- **Ballot measures** — `assets/data/ga-ballot-measures.json` is curated by hand.
+- **Ballot measures** — `assets/data/ga-ballot-measures.json` is curated by hand; conforms to
+  [`ga-ballot-measures.schema.json`](assets/data/ga-ballot-measures.schema.json) and syncs to
+  `Votega/ga-legislation` via `publish-ga-ballot-measures-to-ga-legislation` on push. Per-measure
+  lifecycle: `potential → certified → passed/failed`. See §1 (record results at certification)
+  and §2 (introduce the next cycle to archive the last one).
 - **State campaign finance coverage** — `update-ga-campaign-finance` pulls only the cycle
   matching the newest `cycle` in `races.json`. After an election, check that sitting
   legislators still resolve: a member with no filing shows "no filing found", which is
