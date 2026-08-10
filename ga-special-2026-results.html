@@ -134,17 +134,20 @@ share-description: "Results from the July 28, 2026 special election for Georgia'
 <div id="tab-courts"       class="tab-panel"></div>
 
 <script>
-const SECTIONS=[];
+const SECTIONS=[{"id":"statewide","label":"Executive / Statewide","races":[]},{"id":"us-house","label":"U.S. House","races":[{"office":"District 13","contests":[{"party":"np","totalVotes":20510,"candidates":[{"name":"Marcye Scott (Dem)","votes":9441,"incumbent":false},{"name":"Everton \"EJ\" Blair (Dem)","votes":7680,"incumbent":false},{"name":"Caesar Gonzales (Rep)","votes":1778,"incumbent":false},{"name":"Fayth Park (Rep)","votes":972,"incumbent":false},{"name":"Carlos Moore (Dem)","votes":639,"incumbent":false}]}]}]},{"id":"state-senate","label":"GA State Senate","races":[]},{"id":"state-house","label":"GA State House","races":[]},{"id":"courts","label":"Courts","races":[]}];
 
 function pct(v,t){return t?((v/t)*100):0;}
 
+// Top two finishers advance to the Aug 25 runoff (no one cleared 50%).
+const ADVANCE_COUNT=2;
+
 function raceStatus(c){
   if(!c.totalVotes) return 'no-results';
-  return 'winner';
+  return 'runoff';
 }
 
 const STATUS_MAP={
-  winner:     {cls:'winner',     text:'Leads'},
+  runoff:     {cls:'winner',     text:'Runoff'},
   'no-results':{cls:'no-results', text:'No Results'},
 };
 
@@ -153,10 +156,10 @@ function renderContest(c,office){
   const sl=STATUS_MAP[status]||STATUS_MAP['no-results'];
   const p=c.party;
   const noRes=status==='no-results';
-  const cardCls=status==='winner'?'winner-race':status==='no-results'?'no-results':'';
+  const cardCls=status==='no-results'?'no-results':'';
   const cands=c.candidates.map((cd,i)=>{
     const pp=pct(cd.votes,c.totalVotes);
-    const wi=i===0&&status==='winner'?'<span class="wi">&#10003;</span>':'';
+    const wi=!noRes&&i<ADVANCE_COUNT?'<span class="wi" title="Advances to Aug 25 runoff">&#10003;</span>':'';
     const votes=noRes?'—':`${cd.votes.toLocaleString()} votes`;
     return `<div class="cand-block">
       <div class="cand-top-line">
