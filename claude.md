@@ -27,7 +27,7 @@ votega.org/
 ├── 📄 Pages (HTML/Markdown, ~26 top-level)
 │   ├── index.html, about.md, 404.html, tags.html, about-the-data.md
 │   ├── Federal: my-representatives.html, member.html, federal-reps.html, find-my-reps.html
-│   ├── GA Legislature: ga-representatives.html, ga-state-reps.html, ga-member.html,
+│   ├── GA Legislature: ga-state-reps.html, ga-member.html,
 │   │   ga-bills.html, ga-majority-tracker.html, ga-congress-trades.html
 │   ├── Elections/Races: elections.html, race.html, candidate.html, ga-ballot-measures.html,
 │   │   ga-primary-results.html, ga-primary-runoff-results.html, ga-voter-access.html
