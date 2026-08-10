@@ -1,0 +1,162 @@
+# ============================================================================
+# LOCAL OFFICIALS — city councils & county commissions
+# ============================================================================
+# Hand-curated. There is NO upstream API for municipal/county officials (unlike
+# the state/federal rosters), so every field is entered by a human and MUST be
+# verified against a primary source — the city/county site, a meeting agenda or
+# minutes, or the SoS qualifying list. Record that source in each member's
+# `source` field so the roster stays auditable.
+#
+# Rendered server-side by Jekyll from site.data.local_officials, so edits go
+# live on the next deploy. Run scripts/validate_local_officials.py after editing
+# (or let the validate workflow catch it) before pushing.
+#
+# ----------------------------------------------------------------------------
+# CONTROLLED VOCABULARIES  (the validator enforces these — do not free-type)
+# ----------------------------------------------------------------------------
+#   type   : city | county
+#   role   : Mayor | Mayor Pro Tem | Chair | Vice Chair | Council Member | Commissioner
+#   party  : Republican | Democratic | Nonpartisan
+#            (use Nonpartisan for municipal seats; set jurisdiction.partisan:false)
+#
+# ----------------------------------------------------------------------------
+# PHASING
+# ----------------------------------------------------------------------------
+#   PHASE 1 (now)  : roster + last_elected / next_election / term_end per member.
+#   PHASE 2 (later): fill the `meetings:` and `participate:` blocks and build the
+#                    "how to participate" view. The blocks are reserved below so
+#                    no records get reshaped when we get there.
+#   PHASE 3 (maybe): tie named members to specific local votes (e.g. the Flock
+#                    contract). The `voting` / `tie_break_only` flags exist now so
+#                    that view can trust who actually casts a vote.
+#
+# Adding a jurisdiction = copy a block below, keep the field order, fill Phase 1,
+# leave Phase 2 blocks empty ("").
+# ============================================================================
+
+meta:
+  last_reviewed: 2026-08-09
+  review_after_elections: true      # re-check every roster after each municipal cycle
+
+jurisdictions:
+  # ==========================================================================
+  # CITY OF COVINGTON  (municipal — nonpartisan)
+  # ==========================================================================
+  - id: covington
+    name: City of Covington
+    type: city                      # city | county
+    county: Newton                  # home county — powers county cross-linking
+    body: City Council
+    partisan: false                 # municipal seats are nonpartisan → party chip hidden
+    official_url: https://cityofcovington.org
+    related_pages:                  # cross-links to existing VoteGA content
+      - { title: "Flock Safety in Covington", url: /flock-covington }
+    notes: ""                       # free-text escape hatch for one-offs (optional)
+
+    # ---- PHASE 2 — RESERVED. Leave blank until we build the participate view. --
+    meetings:
+      schedule: ""                  # e.g. "1st & 3rd Monday, 6:30 PM"
+      location_name: ""             # e.g. "Covington City Hall, Council Chambers"
+      location_address: ""
+      livestream_url: ""
+      agendas_url: ""
+      minutes_url: ""
+    participate:
+      public_comment: ""            # how to sign up / rules / deadline
+      clerk_name: ""
+      clerk_email: ""
+      clerk_phone: ""
+      open_records_url: ""          # reuse the FOIA-machine link you already have
+
+    # ---- PHASE 1 — ROSTER --------------------------------------------------
+    # Order doesn't matter here; the template sorts by role (Mayor/Chair first).
+    # Verify seat labels (posts/wards) against the source — placeholders below.
+    members:
+      - name: ""
+        role: Mayor
+        seat: At-large
+        party: Nonpartisan
+        email: ""
+        phone: ""
+        last_elected:               # year, e.g. 2023
+        term_end:                   # year, e.g. 2027
+        next_election:              # year — per-seat, terms stagger
+        voting: false               # Covington: mayor presides; verify vote rules
+        tie_break_only: true        # only votes to break ties (verify)
+        photo: ""
+        source: ""                  # URL where this row was verified
+        notes: ""
+      - name: ""
+        role: Council Member
+        seat: ""                    # e.g. "Post 1 East" — verify against source
+        party: Nonpartisan
+        email: ""
+        phone: ""
+        last_elected:
+        term_end:
+        next_election:
+        voting: true
+        tie_break_only: false
+        photo: ""
+        source: ""
+        notes: ""
+
+  # ==========================================================================
+  # NEWTON COUNTY  (county — partisan)
+  # ==========================================================================
+  - id: newton-county
+    name: Newton County
+    type: county
+    county: Newton
+    body: Board of Commissioners
+    partisan: true                  # county commission races ARE partisan in GA
+    official_url: https://www.newtoncountyga.gov
+    related_pages:
+      - { title: "Flock Safety in Newton County", url: /flock-covington }
+    notes: ""
+
+    # ---- PHASE 2 — RESERVED ------------------------------------------------
+    meetings:
+      schedule: ""
+      location_name: ""
+      location_address: ""
+      livestream_url: ""
+      agendas_url: ""
+      minutes_url: ""
+    participate:
+      public_comment: ""
+      clerk_name: ""
+      clerk_email: ""
+      clerk_phone: ""
+      open_records_url: ""
+
+    # ---- PHASE 1 — ROSTER --------------------------------------------------
+    members:
+      - name: ""
+        role: Chair                 # countywide-elected board chair
+        seat: At-large
+        party: ""                   # Republican | Democratic
+        email: ""
+        phone: ""
+        last_elected:
+        term_end:
+        next_election:
+        voting: false               # verify: many GA chairs vote only to break ties
+        tie_break_only: true
+        photo: ""
+        source: ""
+        notes: ""
+      - name: ""
+        role: Commissioner
+        seat: ""                    # e.g. "District 1"
+        party: ""
+        email: ""
+        phone: ""
+        last_elected:
+        term_end:
+        next_election:
+        voting: true
+        tie_break_only: false
+        photo: ""
+        source: ""
+        notes: ""
