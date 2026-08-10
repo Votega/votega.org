@@ -42,16 +42,38 @@ jurisdictions:
   # ==========================================================================
   # CITY OF COVINGTON  (municipal — nonpartisan)
   # ==========================================================================
-  - id: covington
-    name: City of Covington
+  - id: covfbaggett
+    name: Fleeta Baggett, Mayor
     type: city                      # city | county
     county: Newton                  # home county — powers county cross-linking
     body: City Council
     partisan: false                 # municipal seats are nonpartisan → party chip hidden
-    official_url: https://cityofcovington.org
+    official_url: https://www.cityofcovington.org/index.php?section=city-council 
     related_pages:                  # cross-links to existing VoteGA content
       - { title: "Flock Safety in Covington", url: /flock-covington }
-    notes: ""                       # free-text escape hatch for one-offs (optional)
+    notes: "Elected in 2023"                       # free-text escape hatch for one-offs (optional)
+  
+  - id: covcdavis
+    name: Charika Davis, Council Member (West COC Council)
+    type: city                      # city | county
+    county: Newton                  # home county — powers county cross-linking
+    body: City Council
+    partisan: false                 # municipal seats are nonpartisan → party chip hidden
+    official_url: https://www.cityofcovington.org/index.php?section=city-council 
+    related_pages:                  # cross-links to existing VoteGA content
+      - { title: "Flock Safety in Covington", url: /flock-covington }
+    notes: "Elected in 2021"                       # free-text escape hatch for one-offs (optional)
+  
+  - id: covington
+    name: Anthony Henderson, Council Member (West COC Council)
+    type: city                      # city | county
+    county: Newton                  # home county — powers county cross-linking
+    body: City Council
+    partisan: false                 # municipal seats are nonpartisan → party chip hidden
+    official_url: https://www.cityofcovington.org/index.php?section=city-council 
+    related_pages:                  # cross-links to existing VoteGA content
+      - { title: "Flock Safety in Covington", url: /flock-covington }
+    notes: "Elected in 2018"                       # free-text escape hatch for one-offs (optional)
 
     # ---- PHASE 2 — RESERVED. Leave blank until we build the participate view. --
     meetings:
