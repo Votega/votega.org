@@ -1,0 +1,132 @@
+# ============================================================================
+# OPEN DATA CATALOG  →  rendered by /open-data
+# ============================================================================
+# One entry per shareable dataset. The page groups entries by `hosting`:
+#   repo  — published to a dedicated public GitHub repo (contribution-friendly)
+#   site  — served directly from votega.org/assets/data (no dedicated repo yet)
+#
+# Keep claims accurate: `source` names the authoritative upstream; do not assert
+# a specific software license here — the page carries one shared reuse/attribution
+# section, and upstream terms (e.g. Oyez) should be verified before promoting a
+# dataset. `docs` links into /about-the-data for the full methodology.
+#
+# To add a dataset: copy a block, keep the field order, fill what applies.
+# ============================================================================
+
+meta:
+  last_reviewed: 2026-08-10
+  intro: >
+    Structured, machine-readable civic data we already maintain for VoteGA.org,
+    published for anyone to reuse — civic apps, researchers, journalists, or
+    organizations that need clean data without building their own pipeline.
+
+datasets:
+  # --------------------------------------------------------------------------
+  # COMMUNITY REPOSITORIES (dedicated repos, open to contributions)
+  # --------------------------------------------------------------------------
+  - id: ga-legislators
+    title: Georgia General Assembly Legislators
+    hosting: repo
+    summary: >
+      Current Georgia state senators and representatives — roster with district,
+      party, committees, and contact — plus each member's passage-vote history,
+      joined on the same Open States person ID.
+    source: Open States API (Plural Policy)
+    scope: 158th General Assembly (2025–2026)
+    cadence: Roster daily · votes weekly
+    repo_url: https://github.com/Votega/ga-legislators
+    files:
+      - { name: "data/all.json",   desc: "Member roster", url: "https://github.com/Votega/ga-legislators/blob/main/data/all.json" }
+      - { name: "data/votes.json", desc: "Passage-vote history (keyed by OCD person ID)", url: "https://github.com/Votega/ga-legislators/blob/main/data/votes.json" }
+    docs: /about-the-data#georgia-general-assembly-legislators
+    contribute: https://github.com/Votega/ga-legislators/issues
+
+  - id: ga-federal-legislators
+    title: Georgia Federal Delegation
+    hosting: repo
+    summary: >
+      Georgia's U.S. House and Senate delegation and their voting record on
+      signed legislation — assembled from Congress.gov plus authoritative
+      Clerk-of-the-House and Senate.gov roll-call XML.
+    source: Congress.gov API · Clerk of the U.S. House · U.S. Senate
+    scope: Current Congress, Georgia delegation only
+    cadence: Members daily · votes weekly
+    repo_url: https://github.com/Votega/ga-federal-legislators
+    files:
+      - { name: "data/members.json", desc: "GA delegation roster", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/members.json" }
+      - { name: "data/votes.json",   desc: "Voting history on signed legislation", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/votes.json" }
+    docs: /about-the-data#ga-federal-delegation--community-data-repository
+    contribute: https://github.com/Votega/ga-federal-legislators/issues
+
+  - id: ga-legislation
+    title: Georgia Bills & Resolutions
+    hosting: repo
+    summary: >
+      Every bill and resolution for the current Georgia legislative session —
+      sponsors, subjects, status, and action history — as a compact static file.
+    source: Open States (Plural Policy)
+    scope: 2025–2026 session
+    cadence: Weekly
+    repo_url: https://github.com/Votega/ga-legislation
+    files:
+      - { name: "ga-bills.json",          desc: "All bills & resolutions", url: "https://github.com/Votega/ga-legislation/blob/main/ga-bills.json" }
+      - { name: "ga-bills-subjects.json", desc: "Subject index", url: "https://github.com/Votega/ga-legislation/blob/main/ga-bills-subjects.json" }
+    docs: /about-the-data#georgia-general-assembly-bills--resolutions
+    contribute: https://github.com/Votega/ga-legislation/issues
+
+  - id: ga-executive-orders
+    title: Georgia Governor's Executive Orders
+    hosting: repo
+    summary: >
+      Executive orders issued by the Governor of Georgia — date, order number,
+      title, auto-classified category, and a direct link to the official PDF.
+      One JSON file per year.
+    source: Georgia Governor's website (gov.georgia.gov)
+    scope: 2023–present
+    cadence: Daily
+    repo_url: https://github.com/Votega/ga-executive-orders
+    files:
+      - { name: "per-year JSON", desc: "One file per year (2023–present)", url: "https://github.com/Votega/ga-executive-orders" }
+    docs: /about-the-data#ga-executive-orders--community-data-repository
+    contribute: https://github.com/Votega/ga-executive-orders/issues
+
+  - id: ga-races-elections
+    title: Georgia 2026 Races & Candidates
+    hosting: repo
+    summary: >
+      One race entry per district for the 2026 cycle — candidates with party,
+      occupation, and county of residence — built from Georgia Secretary of
+      State candidate filings.
+    source: Georgia Secretary of State · manual curation
+    scope: 2026 election cycle
+    cadence: Daily
+    repo_url: https://github.com/Votega/ga-races-elections
+    files:
+      - { name: "races.json", desc: "Races and candidates", url: "https://github.com/Votega/ga-races-elections/blob/main/races.json" }
+    docs: /about-the-data#2026-election-races--candidates
+    contribute: https://github.com/Votega/ga-races-elections/issues
+
+  # --------------------------------------------------------------------------
+  # ON VOTEGA.ORG (direct JSON — no dedicated repo yet)
+  # --------------------------------------------------------------------------
+  - id: scotus
+    title: U.S. Supreme Court — Justices & Decisions
+    hosting: site
+    featured: true
+    summary: >
+      Current justice biographies joined to per-justice vote alignments for
+      recent terms, keyed on a stable Oyez person ID — so "who the justice is"
+      and "how they voted in every case" link directly, with no name matching.
+      Not Georgia-specific, but a join that isn't handed to you pre-done
+      elsewhere.
+    source: Oyez.org API (bios + per-justice votes) · CourtListener / Free Law Project (opinion links)
+    scope: Current & most recent terms (2024, 2025)
+    cadence: Weekly
+    coverage: >
+      Vote alignments are present for the 57 of 111 cases where Oyez has
+      published a decision breakdown; the rest are undecided-at-scrape,
+      per curiam, or orders. See each file's `metadata` block.
+    files:
+      - { name: "supreme-court.json",   desc: "Justice bios (join key: oyezId)", url: "/assets/data/supreme-court.json" }
+      - { name: "scotus-decisions.json", desc: "Cases + per-justice votes (join key: justiceId)", url: "/assets/data/scotus-decisions.json" }
+    docs: /about-the-data#supreme-court

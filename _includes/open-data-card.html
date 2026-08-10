@@ -1,0 +1,39 @@
+{% comment %}
+  Renders one open-data dataset card. Expects: include.d = a dataset entry
+  from _data/open_data.yml. Used by /open-data for both repo- and site-hosted
+  datasets.
+{% endcomment %}
+<div class="od-card{% if include.d.featured %} is-featured{% endif %}">
+  <div class="od-card-head">
+    <h3>{{ include.d.title }}</h3>
+    {% if include.d.hosting == "repo" %}
+      <span class="od-badge repo">GitHub repo</span>
+    {% else %}
+      <span class="od-badge site">Direct JSON</span>
+    {% endif %}
+  </div>
+
+  <p class="od-summary">{{ include.d.summary }}</p>
+
+  <dl class="od-meta">
+    {% if include.d.source %}<dt>Source</dt><dd>{{ include.d.source }}</dd>{% endif %}
+    {% if include.d.scope %}<dt>Scope</dt><dd>{{ include.d.scope }}</dd>{% endif %}
+    {% if include.d.cadence %}<dt>Updated</dt><dd>{{ include.d.cadence }}</dd>{% endif %}
+  </dl>
+
+  {% if include.d.coverage %}<p class="od-coverage">{{ include.d.coverage }}</p>{% endif %}
+
+  {% if include.d.files %}
+  <ul class="od-files">
+    {% for f in include.d.files %}
+      <li><a href="{{ f.url }}"{% if f.url contains "http" %} target="_blank" rel="noopener"{% endif %}>{{ f.name }}</a> <span class="od-file-desc">— {{ f.desc }}</span></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <div class="od-links">
+    {% if include.d.repo_url %}<a href="{{ include.d.repo_url }}" target="_blank" rel="noopener">Repository ↗</a>{% endif %}
+    {% if include.d.docs %}<a href="{{ include.d.docs }}">Methodology →</a>{% endif %}
+    {% if include.d.contribute %}<a href="{{ include.d.contribute }}" target="_blank" rel="noopener">Contribute ↗</a>{% endif %}
+  </div>
+</div>
