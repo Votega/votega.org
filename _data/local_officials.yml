@@ -12,6 +12,22 @@
 # (or let the validate workflow catch it) before pushing.
 #
 # ----------------------------------------------------------------------------
+# STRUCTURE — READ THIS BEFORE ADDING PEOPLE
+# ----------------------------------------------------------------------------
+#   jurisdictions:            <- top level = a CITY or COUNTY (not a person)
+#     - id: covington         <- one entry per government body
+#       name: City of Covington
+#       ... body-level fields ...
+#       members:              <- PEOPLE GO HERE, one row each
+#         - name: Jane Doe    <- name and role are SEPARATE fields
+#           role: Mayor
+#           last_elected: 2023
+#
+#   A common mistake: adding a person as a new top-level jurisdiction. Don't —
+#   people are rows in a jurisdiction's `members:` list. The validator rejects
+#   any jurisdiction with no members.
+#
+# ----------------------------------------------------------------------------
 # CONTROLLED VOCABULARIES  (the validator enforces these — do not free-type)
 # ----------------------------------------------------------------------------
 #   type   : city | county
@@ -29,51 +45,26 @@
 #   PHASE 3 (maybe): tie named members to specific local votes (e.g. the Flock
 #                    contract). The `voting` / `tie_break_only` flags exist now so
 #                    that view can trust who actually casts a vote.
-#
-# Adding a jurisdiction = copy a block below, keep the field order, fill Phase 1,
-# leave Phase 2 blocks empty ("").
 # ============================================================================
 
 meta:
-  last_reviewed: 2026-08-09
+  last_reviewed: 2026-08-10
   review_after_elections: true      # re-check every roster after each municipal cycle
 
 jurisdictions:
   # ==========================================================================
   # CITY OF COVINGTON  (municipal — nonpartisan)
   # ==========================================================================
-  - id: covfbaggett
-    name: Fleeta Baggett, Mayor
-    type: city                      # city | county
-    county: Newton                  # home county — powers county cross-linking
-    body: City Council
-    partisan: false                 # municipal seats are nonpartisan → party chip hidden
-    official_url: https://www.cityofcovington.org/index.php?section=city-council 
-    related_pages:                  # cross-links to existing VoteGA content
-      - { title: "Flock Safety in Covington", url: /flock-covington }
-    notes: "Elected in 2023"                       # free-text escape hatch for one-offs (optional)
-  
-  - id: covcdavis
-    name: Charika Davis, Council Member (West COC Council)
-    type: city                      # city | county
-    county: Newton                  # home county — powers county cross-linking
-    body: City Council
-    partisan: false                 # municipal seats are nonpartisan → party chip hidden
-    official_url: https://www.cityofcovington.org/index.php?section=city-council 
-    related_pages:                  # cross-links to existing VoteGA content
-      - { title: "Flock Safety in Covington", url: /flock-covington }
-    notes: "Elected in 2021"                       # free-text escape hatch for one-offs (optional)
-  
   - id: covington
-    name: Anthony Henderson, Council Member (West COC Council)
+    name: City of Covington
     type: city                      # city | county
     county: Newton                  # home county — powers county cross-linking
     body: City Council
-    partisan: false                 # municipal seats are nonpartisan → party chip hidden
-    official_url: https://www.cityofcovington.org/index.php?section=city-council 
+    partisan: false                 # municipal seats are nonpartisan -> party chip hidden
+    official_url: https://www.cityofcovington.org/index.php?section=city-council
     related_pages:                  # cross-links to existing VoteGA content
       - { title: "Flock Safety in Covington", url: /flock-covington }
-    notes: "Elected in 2018"                       # free-text escape hatch for one-offs (optional)
+    notes: ""
 
     # ---- PHASE 2 — RESERVED. Leave blank until we build the participate view. --
     meetings:
@@ -91,32 +82,50 @@ jurisdictions:
       open_records_url: ""          # reuse the FOIA-machine link you already have
 
     # ---- PHASE 1 — ROSTER --------------------------------------------------
-    # Order doesn't matter here; the template sorts by role (Mayor/Chair first).
-    # Verify seat labels (posts/wards) against the source — placeholders below.
+    # next_election / term_end assume 4-year staggered terms (last_elected + 4).
+    # VERIFY against the source and correct where a member was re-elected since.
     members:
-      - name: ""
+      - name: Fleeta Baggett
         role: Mayor
-        seat: At-large
+        seat: At-large              # mayor is elected citywide, not by ward
         party: Nonpartisan
         email: ""
         phone: ""
-        last_elected:               # year, e.g. 2023
-        term_end:                   # year, e.g. 2027
-        next_election:              # year — per-seat, terms stagger
-        voting: false               # Covington: mayor presides; verify vote rules
-        tie_break_only: true        # only votes to break ties (verify)
+        last_elected: 2023
+        term_end: 2027              # assumed: 2023 + 4
+        next_election: 2027         # assumed: 2023 + 4
+        voting: false               # mayor presides — verify vote/tie-break rules
+        tie_break_only: true
         photo: ""
-        source: ""                  # URL where this row was verified
+        source: ""                  # add the city-council page / minutes URL
         notes: ""
-      - name: ""
+
+      - name: Charika Davis
         role: Council Member
-        seat: ""                    # e.g. "Post 1 East" — verify against source
+        seat: West                  # West ward — verify exact ward/post label
         party: Nonpartisan
         email: ""
         phone: ""
-        last_elected:
-        term_end:
-        next_election:
+        last_elected: 2021
+        term_end: 2025              # assumed: 2021 + 4
+        next_election: 2025         # assumed: 2021 + 4
+        voting: true
+        tie_break_only: false
+        photo: ""
+        source: ""
+        notes: ""
+
+      - name: Anthony Henderson
+        role: Council Member
+        seat: West                  # West ward — verify exact ward/post label
+        party: Nonpartisan
+        email: ""
+        phone: ""
+        last_elected: 2018
+        term_end: 2022              # assumed: 2018 + 4
+        next_election: 2022         # assumed: 2018 + 4 — NOTE: already past; if still
+                                    # serving he was likely re-elected in 2022 (next 2026).
+                                    # Verify and update last_elected/next_election.
         voting: true
         tie_break_only: false
         photo: ""
@@ -124,7 +133,7 @@ jurisdictions:
         notes: ""
 
   # ==========================================================================
-  # NEWTON COUNTY  (county — partisan)
+  # NEWTON COUNTY  (county — partisan)  — SKELETON, fill in members
   # ==========================================================================
   - id: newton-county
     name: Newton County
