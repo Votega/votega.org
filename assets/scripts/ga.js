@@ -126,12 +126,21 @@ function renderMembers() {
 
   membersOut.innerHTML = members.map(m => {
     const isVacant = m.status === 'Vacant';
+    const isSuspended = m.status === 'Suspended';
     const abbrev = partyAbbrev(m.party);
     const pClass = abbrev === 'D' ? 'party-d' : abbrev === 'R' ? 'party-r' : '';
     const counties = (districtCounties[m.district] || []).join(', ');
+    // A suspended member keeps their seat (a suspension can be lifted and there
+    // is no successor/Vacant entry), so they stay in the list — but with a badge
+    // and muted name so they read as not-normally-seated, matching the amber
+    // status banner on their ga-member.html detail page. Resigned/Removed/
+    // Deceased are filtered out upstream in loadData().
+    const suspendedPill = isSuspended
+      ? ` <span style="display:inline-block;font-size:0.72em;font-weight:600;text-transform:uppercase;letter-spacing:0.03em;color:#8a6100;background:#fff3cd;border:1px solid #f0ad00;border-radius:3px;padding:0.05em 0.4em;vertical-align:middle;">Suspended</span>`
+      : '';
     const nameHtml = isVacant
       ? `<span style="color:#888;font-style:italic;">Vacant</span>`
-      : `${m.name}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}`;
+      : `<span${isSuspended ? ' style="color:#888;"' : ''}>${m.name}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}</span>${suspendedPill}`;
     return `<a class="member-row" href="${basePath}ga-member.html?id=${encodeURIComponent(m.id)}">
       <span class="member-district">District ${m.district}</span>
       <span class="member-name">${nameHtml}</span>
