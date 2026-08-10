@@ -1,0 +1,96 @@
+name: Publish ga-ballot-measures.json to ga-legislation
+
+# Requires secret: GA_LEGISLATION_PUSH_TOKEN
+#   A GitHub Personal Access Token (classic) with repo scope on Votega/ga-legislation.
+#   Add it at: votega.org repo → Settings → Secrets and variables → Actions → New repository secret
+#   (Same secret already used by publish-ga-bills-to-ga-legislation.yml.)
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/ga-ballot-measures.json'
+      - 'assets/data/ga-ballot-measures.schema.json'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      - name: Validate ga-ballot-measures.json
+        run: |
+          python -c "
+          import json, sys
+          with open('assets/data/ga-ballot-measures.json') as f:
+              data = json.load(f)
+          measures = data.get('measures', [])
+          if len(measures) == 0:
+              print('ERROR: ga-ballot-measures.json has no measures', file=sys.stderr)
+              sys.exit(1)
+          allowed_status = {'potential', 'certified', 'passed', 'failed'}
+          allowed_type   = {'Constitutional Amendment', 'Statewide Referendum'}
+          required = ('id', 'status', 'type', 'title', 'summary')
+          seen_ids = set()
+          for i, m in enumerate(measures):
+              for field in required:
+                  if not m.get(field):
+                      print(f'ERROR: measure #{i} missing required field {field!r}', file=sys.stderr)
+                      sys.exit(1)
+              if m['status'] not in allowed_status:
+                  print(f'ERROR: measure {m[\"id\"]!r} has invalid status {m[\"status\"]!r}', file=sys.stderr)
+                  sys.exit(1)
+              if m['type'] not in allowed_type:
+                  print(f'ERROR: measure {m[\"id\"]!r} has invalid type {m[\"type\"]!r}', file=sys.stderr)
+                  sys.exit(1)
+              if m['id'] in seen_ids:
+                  print(f'ERROR: duplicate measure id {m[\"id\"]!r}', file=sys.stderr)
+                  sys.exit(1)
+              seen_ids.add(m['id'])
+              # A terminal status must carry a results object, and vice versa.
+              terminal = m['status'] in ('passed', 'failed')
+              has_results = isinstance(m.get('results'), dict)
+              if terminal and not has_results:
+                  print(f'ERROR: measure {m[\"id\"]!r} is {m[\"status\"]} but has no results object', file=sys.stderr)
+                  sys.exit(1)
+              if has_results and not terminal:
+                  print(f'ERROR: measure {m[\"id\"]!r} has results but status is {m[\"status\"]!r} (expected passed/failed)', file=sys.stderr)
+                  sys.exit(1)
+          print(f'ga-ballot-measures.json valid: {len(measures)} measures')
+          "
+
+      - name: Validate schema file is parseable JSON
+        run: python -c "import json; json.load(open('assets/data/ga-ballot-measures.schema.json')); print('schema OK')"
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: Votega/ga-legislation
+          token: ${{ secrets.GA_LEGISLATION_PUSH_TOKEN }}
+          path: target-repo
+
+      - name: Copy files to target repo
+        run: |
+          cp assets/data/ga-ballot-measures.json target-repo/ga-ballot-measures.json
+          cp assets/data/ga-ballot-measures.schema.json target-repo/ga-ballot-measures.schema.json
+
+      - name: Commit and push to ga-legislation
+        working-directory: target-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ga-ballot-measures.json ga-ballot-measures.schema.json
+          if git diff --cached --quiet; then
+            echo "No changes — files are already up to date"
+          else
+            git commit -m "Update ga-ballot-measures data ($(date -u '+%Y-%m-%d'))"
+            git push
+          fi

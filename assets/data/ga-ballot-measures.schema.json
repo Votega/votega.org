@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.votega.org/assets/data/ga-ballot-measures.schema.json",
+  "title": "Georgia Statewide Ballot Measures",
+  "description": "Curated statewide ballot measures (constitutional amendments and statewide referenda) for Georgia. One file spans multiple election cycles; consumers select measures by electionDate. Measures are never deleted after an election -- they are retained as a historical record and their outcome is captured via the terminal `passed`/`failed` status and the `results` object.",
+  "type": "object",
+  "required": ["metadata", "measures"],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["generatedAt", "source"],
+      "additionalProperties": true,
+      "properties": {
+        "generatedAt": {
+          "type": "string",
+          "description": "ISO date (YYYY-MM-DD) or ISO timestamp the file was last curated.",
+          "examples": ["2026-07-15"]
+        },
+        "election": {
+          "type": "string",
+          "description": "Human-readable name of the focal election, e.g. 'November 3, 2026 General Election'. When the file spans multiple elections this describes the current/upcoming one.",
+          "examples": ["November 3, 2026 General Election"]
+        },
+        "electionDate": {
+          "type": ["string", "null"],
+          "format": "date",
+          "description": "Default election date (YYYY-MM-DD) applied to any measure that omits its own electionDate.",
+          "examples": ["2026-11-03"]
+        },
+        "source": {
+          "type": "string",
+          "description": "Attribution for the underlying data."
+        },
+        "note": {
+          "type": "string",
+          "description": "Free-text curation notes / caveats."
+        },
+        "schemaVersion": {
+          "type": "string",
+          "description": "Version of this schema the file targets.",
+          "examples": ["1.0.0"]
+        },
+        "certifiedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Optional convenience count of certified measures for the focal election."
+        },
+        "potentialCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Optional convenience count of potential measures for the focal election."
+        }
+      }
+    },
+    "measures": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/measure" }
+    }
+  },
+  "$defs": {
+    "measure": {
+      "type": "object",
+      "required": ["id", "status", "type", "title", "summary"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Stable slug identifier, conventionally 'ga-<year>-<topic>'.",
+          "examples": ["ga-2026-ng911-fund"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["potential", "certified", "passed", "failed"],
+          "description": "Lifecycle stage. 'potential' = passed the General Assembly but not yet certified for the ballot. 'certified' = certified by the Secretary of State and on the ballot. 'passed'/'failed' = terminal outcome recorded after the election is certified; these serve as the authoritative pass/fail tag and drive the 'Ballot measure passed/failed' label in the UI."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["Constitutional Amendment", "Statewide Referendum"],
+          "description": "Kind of statewide measure."
+        },
+        "title": {
+          "type": "string",
+          "description": "Full descriptive title of the measure."
+        },
+        "summary": {
+          "type": "string",
+          "description": "Plain-language summary of what the measure does."
+        },
+        "subjects": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Topic tags for grouping/filtering.",
+          "default": []
+        },
+        "statusNote": {
+          "type": ["string", "null"],
+          "description": "Optional note about the measure's current lifecycle position (e.g. what still has to happen for a 'potential' measure to reach the ballot)."
+        },
+        "electionDate": {
+          "type": ["string", "null"],
+          "format": "date",
+          "description": "Election date (YYYY-MM-DD) this measure appears on. Falls back to metadata.electionDate when absent. Consumers use this to select the focal election and to archive past-cycle measures from active display without deleting them.",
+          "examples": ["2026-11-03"]
+        },
+        "enablingLegislation": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": ["identifier"],
+              "additionalProperties": false,
+              "properties": {
+                "identifier": {
+                  "type": "string",
+                  "description": "Bill/resolution number that referred the measure to the ballot.",
+                  "examples": ["HR 1243", "HB 52"]
+                },
+                "title": {
+                  "type": ["string", "null"],
+                  "description": "Title of the enabling bill/resolution."
+                },
+                "url": {
+                  "type": ["string", "null"],
+                  "format": "uri",
+                  "description": "Link to the enabling legislation on legis.ga.gov."
+                }
+              }
+            }
+          ],
+          "description": "The General Assembly bill/resolution that placed the measure on the ballot."
+        },
+        "fullText": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "URL to the full amendment/referendum text, or null if unavailable."
+        },
+        "results": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": ["yesPercent", "passed"],
+              "additionalProperties": false,
+              "properties": {
+                "yesPercent": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Percent voting yes."
+                },
+                "noPercent": {
+                  "type": ["number", "null"],
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Percent voting no. If omitted, consumers derive it as 100 - yesPercent."
+                },
+                "passed": {
+                  "type": "boolean",
+                  "description": "Whether the measure was approved by voters. Should agree with the terminal `status` (passed/failed)."
+                },
+                "totalVotes": {
+                  "type": ["integer", "null"],
+                  "minimum": 0,
+                  "description": "Total votes cast on the measure, if reported."
+                },
+                "source": {
+                  "type": ["string", "null"],
+                  "description": "Attribution for the certified results."
+                }
+              }
+            }
+          ],
+          "description": "Certified vote outcome. Null until results are certified after the election."
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "A terminal status must carry a results object, and a results object implies a terminal status -- the two must not disagree.",
+          "if": {
+            "properties": { "status": { "enum": ["passed", "failed"] } }
+          },
+          "then": {
+            "properties": { "results": { "type": "object" } },
+            "required": ["results"]
+          }
+        }
+      ]
+    }
+  }
+}

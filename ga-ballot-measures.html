@@ -44,6 +44,8 @@ share-description: "Georgia ballot measures and constitutional amendments - what
   .badge-certified { background: #e3f0e4; color: #1e6b2b; }
   .badge-potential { background: #fbeccb; color: #8a5a00; }
   .badge-type { background: #e7eef8; color: #1a4d94; }
+  .badge-passed { background: #d7efd8; color: #1b5e20; }
+  .badge-failed { background: #f6dcdc; color: #a02121; }
   .measure-title {
     font-size: 1.2rem;
     font-weight: bold;
@@ -144,7 +146,11 @@ share-description: "Georgia ballot measures and constitutional amendments - what
     const isPotential = m.status === 'potential';
     const statusBadge = isPotential
       ? `<span class="badge badge-potential">Potential — Not Yet Certified</span>`
-      : `<span class="badge badge-certified">Certified for Ballot</span>`;
+      : m.status === 'passed'
+        ? `<span class="badge badge-passed">Ballot measure passed</span>`
+        : m.status === 'failed'
+          ? `<span class="badge badge-failed">Ballot measure failed</span>`
+          : `<span class="badge badge-certified">Certified for Ballot</span>`;
 
     const typeBadge = m.type ? `<span class="badge badge-type">${escHtml(m.type)}</span>` : '';
 
@@ -186,8 +192,22 @@ share-description: "Georgia ballot measures and constitutional amendments - what
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
-      const measures = data.measures || [];
-      if (!measures.length) throw new Error('No ballot measures found in data.');
+      const allMeasures = data.measures || [];
+      if (!allMeasures.length) throw new Error('No ballot measures found in data.');
+
+      // Data-derived display: this page shows only the measures for the "focal"
+      // election — the nearest upcoming election date present in the file, or
+      // the most recent one if none are upcoming. Past-cycle measures stay in
+      // the JSON as a historical record but drop off the page automatically once
+      // a newer election's measures are introduced. No manual per-cycle flag.
+      const today = new Date().toISOString().slice(0, 10);
+      const measureDate = m => m.electionDate || data.metadata?.electionDate || null;
+      const dates = [...new Set(allMeasures.map(measureDate).filter(Boolean))].sort();
+      const upcoming = dates.filter(d => d >= today);
+      const focalDate = upcoming.length ? upcoming[0] : (dates[dates.length - 1] || null);
+      const measures = focalDate
+        ? allMeasures.filter(m => measureDate(m) === focalDate)
+        : allMeasures;
 
       const certified = measures.filter(m => m.status !== 'potential');
       const potential = measures.filter(m => m.status === 'potential');
