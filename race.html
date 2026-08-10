@@ -34,6 +34,17 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   }
   .primary-result-callout strong { display: block; margin-bottom: 0.2rem; }
 
+  .race-related {
+    padding: 0.75rem 1rem;
+    background: #eef4fb;
+    border-left: 4px solid #1a56a8;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #22364d;
+  }
+  .race-related .race-related-link { display: inline-block; margin-top: 0.3rem; font-weight: 600; }
+
   .candidates-grid {
     display: flex;
     gap: 1.25rem;
@@ -382,6 +393,16 @@ share-description: "Details for a Georgia race: the candidates running, the incu
          </div>`
       : '';
 
+    // Related-contest cross-link (e.g. a concurrent special election for the same seat)
+    const rel = race.relatedNote;
+    const relatedHtml = rel && rel.text
+      ? `<div class="race-related">
+           <span>${rel.text}</span>${rel.url
+             ? ` <a class="race-related-link" href="${rel.url}">${rel.label || 'Learn more'} &rarr;</a>`
+             : ''}
+         </div>`
+      : '';
+
     // Candidate cards — open primary (ballots) or flat list
     let candidatesHtml = '';
     let hasBallotTabs = false;
@@ -447,6 +468,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       </div>
       ${openSeatHtml}
       ${resultCallout}
+      ${relatedHtml}
       ${candidatesHtml}
       <div class="back-link"><a href="${basePath}elections.html">← Back to Elections</a></div>`;
 
