@@ -59,6 +59,7 @@ share-description: "Find your local elected officials in Georgia — city counci
 
   .lo-contact { display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:0.25rem; font-size:0.85rem; }
   .lo-contact a { color:#008AFF; font-weight:600; }
+  .lo-phone-label { color:#777; font-weight:600; }
 
   .lo-source { font-size:0.75rem; margin-top:auto; }
   .lo-source a { color:#888; }
@@ -123,7 +124,7 @@ share-description: "Find your local elected officials in Georgia — city counci
           {% if m.email != "" or m.phone != "" %}
           <div class="lo-contact">
             {% if m.email != "" %}<a href="mailto:{{ m.email }}">Email</a>{% endif %}
-            {% if m.phone != "" %}<a href="tel:{{ m.phone }}">{{ m.phone }}</a>{% endif %}
+            {% if m.phone != "" %}<span class="lo-phone"><span class="lo-phone-label">Office:</span> <a href="tel:{{ m.phone }}">{{ m.phone }}</a></span>{% endif %}
           </div>
           {% endif %}
 
