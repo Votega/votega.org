@@ -5,14 +5,81 @@
   <div id="nav-search-exit" title="Exit search">✕</div>
   <input type="text" id="nav-search-input" placeholder="Search">
   <ul id="search-results-container"></ul>
-  
+
+  <style>
+    #search-results-container .search-cat {
+      display: inline-block;
+      font-size: 0.7em;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      opacity: 0.65;
+      margin-right: 0.5em;
+      vertical-align: middle;
+    }
+  </style>
+
   <script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
   <script>
-    SimpleJekyllSearch({
-      searchInput: document.getElementById('nav-search-input'),
-      resultsContainer: document.getElementById('search-results-container'),
-      json: '{{ site.baseurl }}/assets/data/searchcorpus.json' 
-    });
+    // The posts/pages corpus (searchcorpus.json) is rendered by Jekyll and only
+    // knows about blog posts and static pages. The site's real content --
+    // legislators, races, candidates, executives, justices -- lives in
+    // separately-generated data files that Jekyll never sees. We build a slim
+    // entity index (search-entities.json, via scripts/generate_search_corpus.py)
+    // and merge the two here so all of it is searchable. Both are fetched lazily
+    // on first focus of the search box to keep normal page loads fast.
+    (function () {
+      var input = document.getElementById('nav-search-input');
+      if (!input) { return; }
+      var base = '{{ site.baseurl }}';
+      var initialized = false;
+
+      function initSearch() {
+        if (initialized) { return; }
+        initialized = true;
+
+        var loadPagesPosts = fetch(base + '/assets/data/searchcorpus.json')
+          .then(function (r) { return r.ok ? r.json() : []; })
+          .catch(function () { return []; });
+        var loadEntities = fetch(base + '/assets/data/search-entities.json')
+          .then(function (r) { return r.ok ? r.json() : { records: [] }; })
+          .catch(function () { return { records: [] }; });
+
+        Promise.all([loadPagesPosts, loadEntities]).then(function (results) {
+          var pagesPosts = Array.isArray(results[0]) ? results[0] : [];
+          var entities = (results[1] && results[1].records) ? results[1].records : [];
+          // Entity URLs are stored relative (e.g. "member.html?bioguideId=...");
+          // the posts/pages corpus already bakes in site.baseurl. Normalize
+          // entities to match so one result template works for both.
+          entities = entities.map(function (rec) {
+            return {
+              title: rec.title,
+              desc: rec.desc,
+              category: rec.category,
+              url: base + '/' + rec.url
+            };
+          });
+
+          SimpleJekyllSearch({
+            searchInput: input,
+            resultsContainer: document.getElementById('search-results-container'),
+            json: pagesPosts.concat(entities),
+            searchResultTemplate:
+              '<li><a href="{url}"><span class="search-cat">{category}</span>{title}</a></li>',
+            noResultsText: 'No results found',
+            limit: 20,
+            fuzzy: false
+          });
+
+          // The index may have finished loading after the user started typing;
+          // re-fire so any existing query renders results now.
+          if (input.value) {
+            input.dispatchEvent(new Event('input'));
+          }
+        });
+      }
+
+      input.addEventListener('focus', initSearch, { once: true });
+    })();
   </script>
 </div>
 

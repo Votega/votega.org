@@ -1,0 +1,63 @@
+name: Update site search index (daily, 12:00 UTC)
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily at 12:00 UTC, after the member/race/bill data workflows run so the
+    # index reflects the freshest entity data. Reads committed JSON only -- no
+    # external API calls, so it does not consume any API quota.
+    - cron: '0 12 * * *'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate search entity index
+        run: python scripts/generate_search_corpus.py
+
+      - name: Validate generated data
+        run: |
+          if [ ! -f assets/data/search-entities.json ]; then
+            echo "Error: search-entities.json was not generated"
+            exit 1
+          fi
+          python -c "
+          import json, os
+          d = json.load(open('assets/data/search-entities.json'))
+          meta  = d.get('metadata', {})
+          count = meta.get('count', 0)
+          cats  = meta.get('categories', {})
+          size_kb = os.path.getsize('assets/data/search-entities.json') // 1024
+          assert count == len(d.get('records', [])), 'metadata.count != len(records)'
+          assert count >= 200, f'suspiciously few records: {count}'
+          print(f'Validated: {count} records, {size_kb} KB, categories={cats}')
+          "
+
+      - name: Commit and push generated data
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/search-entities.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update site search index"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+          fi
