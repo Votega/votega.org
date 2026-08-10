@@ -1,0 +1,88 @@
+---
+layout: default
+title: Open Data
+permalink: /open-data
+share-description: "Free, machine-readable civic datasets from VoteGA.org — Georgia legislators, bills, elections, executive orders, and U.S. Supreme Court decisions — for civic apps, researchers, and journalists."
+---
+
+<!--
+  Renders _data/open_data.yml server-side. Datasets are grouped by `hosting`:
+  repo = dedicated community GitHub repo, site = direct JSON on votega.org.
+  Not in the navbar yet (see _config.yml) while the hub is being built out.
+-->
+
+<h1>Open Data</h1>
+<p>{{ site.data.open_data.meta.intro }}</p>
+
+<style>
+  .od-section-title { margin:2.5rem 0 0.25rem; }
+  .od-section-sub { color:#666; font-size:0.95rem; margin:0 0 1.25rem; }
+
+  .od-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:1.25rem; }
+
+  .od-card {
+    border:1px solid #ddd; border-radius:10px; padding:1.4rem; background:#fff;
+    display:flex; flex-direction:column; gap:0.65rem;
+  }
+  .od-card.is-featured { border-color:#008AFF; box-shadow:0 2px 12px rgba(0,138,255,0.10); }
+
+  .od-card-head { display:flex; align-items:baseline; justify-content:space-between; gap:0.5rem; flex-wrap:wrap; }
+  .od-card h3 { margin:0; font-size:1.12rem; color:#1a56a8; }
+  .od-badge { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; border-radius:20px; padding:0.15rem 0.6rem; white-space:nowrap; }
+  .od-badge.repo { background:#e8f0fe; color:#1a56a8; }
+  .od-badge.site { background:#eef7ee; color:#2f7a34; }
+
+  .od-summary { font-size:0.9rem; color:#444; line-height:1.55; margin:0; }
+
+  .od-meta { display:grid; grid-template-columns:auto 1fr; gap:0.2rem 0.75rem; font-size:0.8rem; color:#555; margin:0.25rem 0; }
+  .od-meta dt { font-weight:600; color:#666; }
+  .od-meta dd { margin:0; }
+
+  .od-coverage { font-size:0.78rem; color:#7a5; background:#fbfdf9; border-left:3px solid #cfe3c0; padding:0.4rem 0.65rem; border-radius:0 5px 5px 0; margin:0; }
+
+  .od-files { list-style:none; padding:0; margin:0.25rem 0 0; display:flex; flex-direction:column; gap:0.35rem; }
+  .od-files li { font-size:0.85rem; }
+  .od-files a { font-weight:600; color:#008AFF; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .od-files .od-file-desc { color:#777; font-family:inherit; font-weight:400; }
+
+  .od-links { display:flex; flex-wrap:wrap; gap:0.5rem 1rem; margin-top:auto; padding-top:0.5rem; font-size:0.85rem; }
+  .od-links a { font-weight:600; }
+
+  .od-reuse { margin-top:3rem; border:1px solid #e5e7eb; border-radius:10px; background:#fafbfc; padding:1.5rem; }
+  .od-reuse h2 { margin-top:0; }
+  .od-reuse ul { margin:0.5rem 0 0; padding-left:1.2rem; }
+  .od-reuse li { margin:0.3rem 0; font-size:0.92rem; }
+</style>
+
+{% assign repos = site.data.open_data.datasets | where: "hosting", "repo" %}
+{% assign files = site.data.open_data.datasets | where: "hosting", "site" %}
+
+<h2 class="od-section-title">Community data repositories</h2>
+<p class="od-section-sub">Published to dedicated public GitHub repositories, updated automatically, and open to corrections via issue or pull request.</p>
+
+<div class="od-grid">
+  {% for d in repos %}
+  {% include open-data-card.html d=d %}
+  {% endfor %}
+</div>
+
+<h2 class="od-section-title">Datasets on VoteGA.org</h2>
+<p class="od-section-sub">Served directly as JSON from votega.org. Reusable today; a dedicated repository may follow.</p>
+
+<div class="od-grid">
+  {% for d in files %}
+  {% include open-data-card.html d=d %}
+  {% endfor %}
+</div>
+
+<div class="od-reuse">
+  <h2>Using this data</h2>
+  <p>These datasets are provided free for public reuse. The underlying facts come from public and government sources, cleaned and joined into machine-readable files.</p>
+  <ul>
+    <li><strong>Attribution:</strong> please credit both <em>VoteGA.org</em> and the original source named on each dataset (e.g. Open States, Congress.gov, Oyez, the Georgia Secretary of State).</li>
+    <li><strong>Verify upstream terms</strong> for anything you redistribute — some sources (e.g. Oyez) set their own reuse conditions that flow through to derived data.</li>
+    <li><strong>Freshness &amp; schema:</strong> each dataset lists its update cadence above; field definitions and methodology live in <a href="/about-the-data">About the Data</a> and each repository's README.</li>
+    <li><strong>No warranty:</strong> data is provided as-is. Spotted an error? Open an issue on the relevant repository, or email <a href="mailto:admin@votega.org">admin@votega.org</a>.</li>
+  </ul>
+  <p style="margin-bottom:0;"><strong>Have a dataset you'd like to see here?</strong> Let us know at <a href="mailto:admin@votega.org">admin@votega.org</a>.</p>
+</div>
