@@ -172,18 +172,24 @@ share-description: "Details for a Georgia race: the candidates running, the incu
 
   .back-link { margin-top: 2rem; font-size: 0.9rem; }
 
-  .party-tab-bar {
+  @media (max-width: 600px) {
+    .candidate-card { max-width: 100%; }
+  }
+
+  /* Unified race tab bar: party ballots and Campaign Finance as peer tabs */
+  .race-tab-bar {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.35rem;
-    margin: 1rem 0 0 0;
+    margin: 0.5rem 0 1.25rem 0;
     border-bottom: 2px solid #e5e7eb;
   }
-  .party-tab-btn {
-    padding: 0.45rem 1.25rem;
+  .race-tab-btn {
+    padding: 0.5rem 1.25rem;
     border: none;
     background: none;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     font-weight: 500;
     color: #555;
     border-bottom: 3px solid transparent;
@@ -191,22 +197,182 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     border-radius: 4px 4px 0 0;
     transition: color 0.15s, border-color 0.15s;
   }
-  .party-tab-btn:hover { color: #111; }
-  .party-tab-btn.active-D { color: #1d4ed8; border-bottom-color: #1d4ed8; font-weight: 600; }
-  .party-tab-btn.active-R { color: #b91c1c; border-bottom-color: #b91c1c; font-weight: 600; }
-  .party-tab-btn.active-O { color: #374151; border-bottom-color: #374151; font-weight: 600; }
-  .ballot-panel { display: none; margin-top: 1rem; }
-  .ballot-panel.visible { display: block; }
+  .race-tab-btn:hover { color: #111; }
+  .race-tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+  .race-panel[hidden] { display: none; }
+  .cand-finance-load { font-size: 0.85rem; color: #9aa0a6; }
 
-  @media (max-width: 600px) {
-    .candidate-card { max-width: 100%; }
+  /* Campaign finance comparison table */
+  .finance-table-wrap { overflow-x: auto; }
+  .finance-compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  .finance-compare thead th {
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    font-weight: 600;
+    padding: 0.4rem 0.75rem;
+    border-bottom: 2px solid #e5e7eb;
+    white-space: nowrap;
+  }
+  .finance-compare thead th:not(:first-child) { text-align: right; }
+  .finance-compare tbody tr { border-bottom: 1px solid #f0f1f3; }
+  .fin-name {
+    text-align: left;
+    font-weight: 600;
+    padding: 0.7rem 0.75rem;
+    vertical-align: middle;
+    min-width: 150px;
+  }
+  .fin-name-main { display: block; }
+  .fin-name .party-badge { margin: 0.2rem 0 0 0; font-size: 0.68rem; }
+  .fin-asof { display: block; font-size: 0.68rem; color: #9aa0a6; font-weight: 400; margin-top: 0.2rem; }
+  .fin-cell { padding: 0.7rem 0.75rem; vertical-align: middle; min-width: 120px; }
+  .fin-bar-track {
+    background: #f1f2f4;
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 0.25rem;
+  }
+  .fin-bar { height: 100%; border-radius: 4px; }
+  .fin-bar-raised { background: #16a34a; }
+  .fin-bar-spent  { background: #dc2626; }
+  .fin-bar-cash   { background: #2563eb; }
+  .fin-bar-value { font-size: 0.9rem; font-weight: 700; }
+  .fin-cell.fin-empty { color: #b6bcc2; font-weight: 400; text-align: left; }
+  .fin-note { color: #8a8f94; font-size: 0.82rem; }
+  .fin-note a { font-size: inherit; }
+  .fin-row-none .fin-name-main { color: #6b7280; }
+
+  .finance-disclaimer {
+    font-size: 0.78rem;
+    color: #666;
+    background: #f9fafb;
+    border: 1px solid #eef0f2;
+    border-radius: 6px;
+    padding: 0.6rem 0.85rem;
+    margin: 1.25rem 0 0 0;
+    line-height: 1.5;
   }
 </style>
 
+<script src="assets/scripts/campaign-finance.js"></script>
 <script>
   const RACES_URL       = 'assets/data/races.json';
   const GA_MEMBERS_URL  = 'assets/data/ga-members.json';
   const CONGRESS_URL    = 'assets/data/current-members.json';
+
+  // ── Campaign Finance comparison tab ─────────────────────────────────────────
+  // Gather every active candidate in the active phase (across party ballots or
+  // the flat list), resolving incumbent names from member data, into a shape the
+  // shared CampaignFinance module can look up.
+  function collectFinanceCandidates(race, members) {
+    const phase = race.phases[race.activePhase];
+    const raw = phase?.ballots ? Object.values(phase.ballots).flat() : (phase?.candidates || []);
+    return raw
+      .filter(c => !c.withdrawn && !c.disqualified)
+      .map(c => {
+        let displayName = c.name, party = c.party;
+        if (c.type === 'incumbent' && (c.memberId || c.existingMemberId)) {
+          const mid = c.existingMemberId || c.memberId;
+          const m = race.level === 'federal'
+            ? members.find(mb => mb.bioguideId === mid)
+            : members.find(mb => mb.id === mid);
+          if (m) {
+            displayName = (m.firstName && m.lastName) ? `${m.firstName} ${m.lastName}`.trim() : (m.name || displayName);
+            party = party || m.party || m.partyName;
+          }
+        }
+        return {
+          displayName,
+          party,
+          // For a federal incumbent the bioguide sits in memberId; findFecId and
+          // the GA override key both read existingMemberId, so normalize it.
+          lookup: { ...c, name: displayName, existingMemberId: c.existingMemberId || c.memberId },
+        };
+      });
+  }
+
+  // Build one horizontal comparison bar cell scaled to the column max.
+  function finBarCell(value, max, cls) {
+    if (value == null) return `<td class="fin-cell fin-empty">—</td>`;
+    const pct = max > 0 ? Math.max(2, Math.round((value / max) * 100)) : 0;
+    return `<td class="fin-cell">
+      <div class="fin-bar-track"><div class="fin-bar ${cls}" style="width:${pct}%"></div></div>
+      <span class="fin-bar-value">${CampaignFinance.fmtMoney(value)}</span>
+    </td>`;
+  }
+
+  function finNoteRow(cand, s, span) {
+    const msg = s.status === 'ambiguous'
+      ? `Multiple filings match — <a href="${s.searchUrl}" target="_blank" rel="noopener">search ${s.sourceShort} ↗</a>`
+      : s.status === 'unavailable'
+        ? 'Finance data unavailable'
+        : `No ${s.sourceShort} filing on record — <a href="${s.searchUrl}" target="_blank" rel="noopener">search ↗</a>`;
+    return `<td class="fin-cell fin-note" colspan="${span}">${msg}</td>`;
+  }
+
+  async function buildFinanceTable(race, members, container) {
+    const cands = collectFinanceCandidates(race, members);
+    if (!cands.length) {
+      container.innerHTML = `<p class="no-candidates">No candidates to compare yet for this phase.</p>`;
+      return;
+    }
+
+    // Resolve every candidate's finance summary in parallel.
+    const rows = await Promise.all(cands.map(async c => ({ ...c, s: await CampaignFinance.summary(c.lookup, race) })));
+
+    const maxRaised = Math.max(0, ...rows.map(r => r.s.raised || 0));
+    const maxSpent  = Math.max(0, ...rows.map(r => r.s.spent || 0));
+    const maxCash   = Math.max(0, ...rows.map(r => r.s.cashOnHand || 0));
+
+    // Sort by raised desc; candidates with no figures sink to the bottom.
+    rows.sort((a, b) => (b.s.raised || -1) - (a.s.raised || -1));
+
+    const sourceName = race.level === 'federal' ? 'the Federal Election Commission (FEC)' : 'the Georgia Ethics Commission (PeachFile)';
+
+    const bodyRows = rows.map(r => {
+      const pc = partyClass(r.party);
+      const asOf = r.s.asOf ? `as of ${r.s.asOf}` : (r.s.status === 'ok' ? 'latest report' : '');
+      const nameCell = `<th scope="row" class="fin-name">
+          <span class="fin-name-main">${r.displayName || 'Unknown'}</span>
+          <span class="party-badge ${pc}">${r.party || '—'}</span>
+          ${asOf ? `<span class="fin-asof">${asOf}</span>` : ''}
+        </th>`;
+      if (r.s.status === 'ok') {
+        return `<tr>${nameCell}
+          ${finBarCell(r.s.raised, maxRaised, 'fin-bar-raised')}
+          ${finBarCell(r.s.spent, maxSpent, 'fin-bar-spent')}
+          ${finBarCell(r.s.cashOnHand, maxCash, 'fin-bar-cash')}
+        </tr>`;
+      }
+      return `<tr class="fin-row-none">${nameCell}${finNoteRow(r, r.s, 3)}</tr>`;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="finance-table-wrap">
+        <table class="finance-compare">
+          <thead>
+            <tr>
+              <th scope="col">Candidate</th>
+              <th scope="col">Raised</th>
+              <th scope="col">Spent</th>
+              <th scope="col">Cash on Hand</th>
+            </tr>
+          </thead>
+          <tbody>${bodyRows}</tbody>
+        </table>
+      </div>
+      <p class="finance-disclaimer">
+        Figures come from ${sourceName} and reflect each committee's most recent required report, so they may be several months old. Bars are scaled to the highest figure in each column. <strong>“No filing on record” means no report has been filed — not $0</strong>, and often reflects a candidate who hasn't begun formal fundraising${race.level === 'federal' ? '' : ' or filed before the 2026 PeachFile records begin'}.
+      </p>`;
+  }
 
   const raceId = new URLSearchParams(window.location.search).get('id');
 
@@ -403,59 +569,61 @@ share-description: "Details for a Georgia race: the candidates running, the incu
          </div>`
       : '';
 
-    // Candidate cards — open primary (ballots) or flat list
-    let candidatesHtml = '';
-    let hasBallotTabs = false;
+    // Build the tab panels. For an open primary these are the party ballots
+    // (Democrat, Republican, …); otherwise a single "Candidates" list. The
+    // Campaign Finance comparison is appended as one more peer tab — a single
+    // unified tab bar, never a bar stacked on another bar.
+    const panels = [];
     if (phase?.ballots) {
       const partyOrder = p => p.toLowerCase().includes('democrat') ? 0 : p.toLowerCase().includes('republican') ? 1 : 2;
-      const partyKey   = p => p.toLowerCase().includes('democrat') ? 'D' : p.toLowerCase().includes('republican') ? 'R' : 'O';
-      const sortedBallots = Object.entries(phase.ballots)
-        .sort((a, b) => partyOrder(a[0]) - partyOrder(b[0]));
-
+      const sortedBallots = Object.entries(phase.ballots).sort((a, b) => partyOrder(a[0]) - partyOrder(b[0]));
       if (sortedBallots.length > 1) {
-        hasBallotTabs = true;
-        const tabBtns = sortedBallots.map(([partyName], i) => {
-          const key    = partyKey(partyName);
-          const label  = partyName.toLowerCase().includes('democrat')   ? 'Democrat'
-                       : partyName.toLowerCase().includes('republican') ? 'Republican'
-                       : partyName;
-          return `<button class="party-tab-btn${i === 0 ? ` active-${key}` : ''}" data-party="${partyName}">${label}</button>`;
-        }).join('');
-
-        const panels = sortedBallots.map(([partyName, candidates], i) =>
-          `<div class="ballot-panel${i === 0 ? ' visible' : ''}" data-party="${partyName}">
-            ${renderBallotSection(partyName, candidates, members, race)}
-           </div>`
-        ).join('');
-
-        candidatesHtml = `<div class="party-tab-bar">${tabBtns}</div><div id="ballotPanels">${panels}</div>`;
+        sortedBallots.forEach(([partyName, candidates], i) => {
+          const label = partyName.toLowerCase().includes('democrat')   ? 'Democrat'
+                      : partyName.toLowerCase().includes('republican') ? 'Republican'
+                      : partyName;
+          panels.push({ id: `panel-p${i}`, label, html: renderBallotSection(partyName, candidates, members, race) });
+        });
       } else {
-        candidatesHtml = sortedBallots
-          .map(([partyName, candidates]) => renderBallotSection(partyName, candidates, members, race))
-          .join('');
+        const [partyName, candidates] = sortedBallots[0] || ['', []];
+        panels.push({ id: 'panel-cands', label: 'Candidates', html: renderBallotSection(partyName, candidates, members, race) });
       }
     } else {
       const candidates = phase?.candidates || [];
       const active     = candidates.filter(c => !c.withdrawn && !c.disqualified);
       const withdrawn  = candidates.filter(c => c.withdrawn || c.disqualified);
-      if (!active.length && !withdrawn.length) {
-        candidatesHtml = '<p class="no-candidates">Candidate information not yet available for this phase.</p>';
-      } else {
-        candidatesHtml = `<div class="candidates-grid">` +
-          [...active, ...withdrawn].map(c => {
-            const cMemberId = c.existingMemberId || c.memberId;
-            if (c.type === 'incumbent' && cMemberId) {
-              const member = race.level === 'federal'
-                ? members.find(m => m.bioguideId === cMemberId)
-                : members.find(m => m.id === cMemberId);
-              return renderIncumbentCard(c, member, race);
-            }
-            return renderChallengerCard(c);
-          }).join('') + `</div>`;
-      }
+      const gridHtml = (!active.length && !withdrawn.length)
+        ? '<p class="no-candidates">Candidate information not yet available for this phase.</p>'
+        : `<div class="candidates-grid">` +
+            [...active, ...withdrawn].map(c => {
+              const cMemberId = c.existingMemberId || c.memberId;
+              if (c.type === 'incumbent' && cMemberId) {
+                const member = race.level === 'federal'
+                  ? members.find(m => m.bioguideId === cMemberId)
+                  : members.find(m => m.id === cMemberId);
+                return renderIncumbentCard(c, member, race);
+              }
+              return renderChallengerCard(c);
+            }).join('') + `</div>`;
+      panels.push({ id: 'panel-cands', label: 'Candidates', html: gridHtml });
+    }
+
+    // Campaign Finance as a peer tab, lazily built on first open.
+    if (collectFinanceCandidates(race, members).length) {
+      panels.push({ id: 'panel-finance', label: 'Campaign Finance', kind: 'finance',
+        html: '<p class="cand-finance-load">Loading campaign finance…</p>' });
     }
 
     document.title = `${raceTitle} — 2026 Elections`;
+
+    const tabBar = panels.length > 1
+      ? `<div class="race-tab-bar">` + panels.map((p, i) =>
+          `<button class="race-tab-btn${i === 0 ? ' active' : ''}" data-panel="${p.id}"${p.kind ? ` data-kind="${p.kind}"` : ''}>${p.label}</button>`
+        ).join('') + `</div>`
+      : '';
+    const panelsHtml = panels.map((p, i) =>
+      `<div class="race-panel" id="${p.id}"${i === 0 ? '' : ' hidden'}>${p.html}</div>`
+    ).join('');
 
     document.getElementById('raceContent').innerHTML = `
       <div class="race-header">
@@ -469,20 +637,23 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       ${openSeatHtml}
       ${resultCallout}
       ${relatedHtml}
-      ${candidatesHtml}
+      ${tabBar}
+      ${panelsHtml}
       <div class="back-link"><a href="${basePath}elections.html">← Back to Elections</a></div>`;
 
-    if (hasBallotTabs) {
-      const partyKey = p => p.toLowerCase().includes('democrat') ? 'D' : p.toLowerCase().includes('republican') ? 'R' : 'O';
-      document.querySelector('.party-tab-bar').addEventListener('click', e => {
-        const btn = e.target.closest('.party-tab-btn');
+    // One unified tab handler for party ballots and Campaign Finance alike.
+    if (panels.length > 1) {
+      let financeBuilt = false;
+      document.querySelector('.race-tab-bar').addEventListener('click', e => {
+        const btn = e.target.closest('.race-tab-btn');
         if (!btn) return;
-        const party = btn.dataset.party;
-        document.querySelectorAll('.party-tab-btn').forEach(b => { b.className = 'party-tab-btn'; });
-        btn.classList.add(`active-${partyKey(party)}`);
-        document.querySelectorAll('.ballot-panel').forEach(p => {
-          p.classList.toggle('visible', p.dataset.party === party);
-        });
+        document.querySelectorAll('.race-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+        const targetId = btn.dataset.panel;
+        document.querySelectorAll('.race-panel').forEach(p => { p.hidden = p.id !== targetId; });
+        if (btn.dataset.kind === 'finance' && !financeBuilt) {
+          financeBuilt = true;
+          buildFinanceTable(race, members, document.getElementById('panel-finance'));
+        }
       });
     }
   }
