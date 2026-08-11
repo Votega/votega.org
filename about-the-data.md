@@ -304,7 +304,7 @@ The "Next Election" highlight and each election's Upcoming/Completed status are 
 
 **Sources:** [Federal Election Commission (FEC)](https://www.fec.gov/) · [Georgia Government Transparency & Campaign Finance Commission](https://ethics.ga.gov/) (PeachFile)
 
-Campaign finance figures — total raised, total spent, and cash on hand — appear on candidate profiles and on member pages for sitting legislators.
+Campaign finance figures — total raised, total spent, and cash on hand — appear on candidate profiles and on member pages for sitting legislators. On each race page, a **Campaign Finance** tab lays every candidate in the race side by side so you can compare their fundraising and spending directly, with bars scaled to the highest figure in each column.
 
 - **Federal candidates and members** (U.S. House and Senate): Sourced from the [FEC API](https://api.open.fec.gov/), the authoritative record for federal campaign finance disclosures. We fetch it on a schedule and publish it as a static file rather than calling the API from your browser, so no API key is ever exposed in the page. Federal profiles also show the top donors grouped by employer.
 - **Georgia state candidates and legislators** (GA House, Senate, and statewide offices): Sourced from [PeachFile](https://peachfile.ethics.ga.gov/public/cf/publiccandidate), the Georgia Ethics Commission's disclosure system, using its public endpoints. Collected on a schedule and published as a static file for the same reason.

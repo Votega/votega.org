@@ -29,7 +29,8 @@ votega.org/
 │   ├── Federal: my-representatives.html, member.html, federal-reps.html, find-my-reps.html
 │   ├── GA Legislature: ga-state-reps.html, ga-member.html,
 │   │   ga-bills.html, ga-majority-tracker.html, ga-congress-trades.html
-│   ├── Elections/Races: elections.html, race.html, candidate.html, ga-ballot-measures.html,
+│   ├── Elections/Races: elections-hub.html (/elections nav hub), elections.html (candidate finder),
+│   │   race.html (incl. Campaign Finance comparison tab), candidate.html, ga-ballot-measures.html,
 │   │   ga-primary-results.html, ga-primary-runoff-results.html, ga-voter-access.html
 │   ├── Executive/Judicial: executive-branch.html, executive-member.html, ga-executive.html,
 │   │   ga-executive-orders.html, justice.html, supreme-court.html
@@ -49,14 +50,16 @@ votega.org/
 │   │   ├── ga-member-votes.json         # GA passage votes keyed by OCD person ID
 │   │   ├── ga-bills.json                # GA bills/resolutions (Open States), enriched with party vote tallies
 │   │   ├── curated-ga-bill-votes.json / curated-federal-bills.json  # Editorial "key votes" picks
-│   │   ├── races.json / ga-election-calendar.json / ga-ballot-measures.json
+│   │   ├── races.json / ga-election-calendar.json / ga-ballot-measures.json (+ ga-ballot-measures.schema.json; lifecycle potential→certified→passed/failed, published to Votega/ga-legislation)
 │   │   ├── ga-executive-orders-*.json / ga-executive.json / executive.json
 │   │   ├── scotus-decisions.json / supreme-court.json / presidential-laws.json / vp-tie-votes.json
 │   │   ├── ga-congress-trades.json      # Stock trade disclosures for GA federal delegation
-│   │   └── searchcorpus.json            # Site search index
+│   │   ├── searchcorpus.json            # Site search index (Jekyll-rendered: posts + static pages)
+│   │   └── search-entities.json         # Site search index (entities: members, races, candidates, etc. — built by generate_search_corpus.py)
 │   ├── scripts/                         # Client-side JS (loaded by HTML pages) + a few standalone Python utilities
 │   │   ├── congress.js                  # Federal lookup: reads current-members.json, filters by state/chamber
-│   │   └── ga.js                        # GA lookup: county→district mapping, reads ga-members.json
+│   │   ├── ga.js                        # GA lookup: county→district mapping, reads ga-members.json
+│   │   └── campaign-finance.js          # Shared FEC + PeachFile finance lookup/matching (used by race.html + candidate.html; single source of truth for the JS match logic — mirrors report_ga_finance_matches.py & tools/ga-finance-overrides-editor.html)
 │   ├── css/                             # Theme stylesheets (beautifuljekyll.css, bootstrap-social.css, etc.)
 │   ├── js/                              # Theme JS (beautifuljekyll.js, staticman.js)
 │   ├── img/                             # Images (logo.png, avatar-icon.png, bgimage.png, etc.)
@@ -70,6 +73,7 @@ votega.org/
 │   ├── generate_federal_votes_data.py / generate_fec_data.py / generate_ga_congress_trades.py
 │   ├── generate_ga_executive_orders.py / generate_scotus_decisions.py / generate_presidential_laws.py / generate_vp_tie_votes.py
 │   ├── build_legislative_races.py / build_results_json.py (CSV → _data/election_results/*.json, shared by all results pages)
+│   ├── generate_search_corpus.py (entity JSONs → assets/data/search-entities.json for site search)
 │   ├── apply_overrides.py / validate_ga_overrides.py / import_legiscan_csv.py / fix_general_fallbacks.py
 │   ├── inspect_ga_bill_votes.py / inspect_openstates_fields.py  # diagnostics, each backed by its own workflow
 │   └── (one-off/local-machine scripts — e.g. debug_*.py, watch_downloads.py — are gitignored, not tracked)
