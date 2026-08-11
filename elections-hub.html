@@ -1,0 +1,130 @@
+---
+layout: default
+title: Georgia Elections
+permalink: /elections/
+share-description: "Georgia elections hub — find candidates, voter access and the election calendar, statewide ballot measures, and certified results, all in one place."
+---
+
+<h1>Georgia Elections</h1>
+<p>Everything you need for Georgia's upcoming and recent elections — who's running, how and when to vote, what's on the ballot, and how it turned out.</p>
+
+<style>
+  .elections-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  @media (max-width: 600px) {
+    .elections-grid { grid-template-columns: 1fr; }
+  }
+  .election-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1.75rem 1.5rem;
+    background: #fff;
+    text-decoration: none;
+    color: #404040;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .election-card:hover {
+    box-shadow: 0 4px 16px rgba(0,138,255,0.12);
+    border-color: #008AFF;
+    text-decoration: none;
+    color: #404040;
+  }
+  .election-card-icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+  .election-card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #008AFF;
+    margin: 0;
+  }
+  .election-card-desc {
+    font-size: 0.92rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+  .election-card-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+  }
+  .election-card-topic {
+    font-size: 0.75rem;
+    background: #f0f4ff;
+    color: #1a56a8;
+    border-radius: 20px;
+    padding: 0.2rem 0.65rem;
+    white-space: nowrap;
+  }
+  .election-card-cta {
+    display: inline-block;
+    margin-top: 0.25rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #008AFF;
+  }
+</style>
+
+<div class="elections-grid">
+  <a class="election-card" href="/elections.html">
+    <div class="election-card-icon">🗳️</div>
+    <p class="election-card-title">Find Candidates</p>
+    <p class="election-card-desc">See who's running for every office on your ballot — statewide constitutional offices, U.S. Congress, and the Georgia General Assembly — browsable by race and by district.</p>
+    <div class="election-card-topics">
+      <span class="election-card-topic">Statewide offices</span>
+      <span class="election-card-topic">Congress</span>
+      <span class="election-card-topic">General Assembly</span>
+      <span class="election-card-topic">By district</span>
+    </div>
+    <span class="election-card-cta">Find candidates →</span>
+  </a>
+
+  <a class="election-card" href="/ga-voter-access.html">
+    <div class="election-card-icon">📅</div>
+    <p class="election-card-title">Voter Access &amp; Calendar</p>
+    <p class="election-card-desc">The next election date, registration deadlines, and early-voting windows — plus quick links to check your registration status and find your polling place through the Secretary of State.</p>
+    <div class="election-card-topics">
+      <span class="election-card-topic">Next election</span>
+      <span class="election-card-topic">Register to vote</span>
+      <span class="election-card-topic">Early voting</span>
+      <span class="election-card-topic">Polling place</span>
+    </div>
+    <span class="election-card-cta">Voter access &amp; dates →</span>
+  </a>
+
+  <a class="election-card" href="/ga-ballot-measures.html">
+    <div class="election-card-icon">📜</div>
+    <p class="election-card-title">Ballot Measures</p>
+    <p class="election-card-desc">The statewide constitutional amendments and referenda on the ballot — a plain-language summary of what each one does, the legislation that referred it, and the result once votes are certified.</p>
+    <div class="election-card-topics">
+      <span class="election-card-topic">Constitutional amendments</span>
+      <span class="election-card-topic">Statewide referenda</span>
+      <span class="election-card-topic">Plain-language</span>
+    </div>
+    <span class="election-card-cta">See what's on the ballot →</span>
+  </a>
+
+  <a class="election-card" href="/results/">
+    <div class="election-card-icon">📊</div>
+    <p class="election-card-title">Election Results</p>
+    <p class="election-card-desc">Unofficial and certified results for Georgia's recent primaries, runoffs, and special elections — broken down by race, with a clear label for whether the numbers are official yet.</p>
+    <div class="election-card-topics">
+      <span class="election-card-topic">Primaries</span>
+      <span class="election-card-topic">Runoffs</span>
+      <span class="election-card-topic">Special elections</span>
+      <span class="election-card-topic">Certified &amp; unofficial</span>
+    </div>
+    <span class="election-card-cta">View results →</span>
+  </a>
+</div>
