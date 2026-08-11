@@ -218,11 +218,11 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
 </style>
 
+<script src="assets/scripts/campaign-finance.js"></script>
 <script>
   const RACES_URL       = 'assets/data/races.json';
   const CONGRESS_URL    = 'assets/data/current-members.json';
   const GA_MEMBERS_URL  = 'assets/data/ga-members.json';
-  const FEC_DATA_URL    = 'assets/data/ga-fec-data.json';
 
   const _params              = new URLSearchParams(window.location.search);
   const candidateId          = _params.get('id');
@@ -332,81 +332,9 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       <div class="back-link"><a href="${raceUrl}">← Back to ${race.displayTitle || (race.chamber + distLabel)} race</a></div>`;
   }
 
-  function fmtMoney(n) {
-    if (n == null) return '—';
-    if (Math.abs(n) >= 1_000_000) return '$' + (n / 1_000_000).toFixed(1) + 'M';
-    if (Math.abs(n) >= 1_000)     return '$' + Math.round(n / 1_000) + 'K';
-    return '$' + Math.round(n).toLocaleString();
-  }
-
-  function normalizeName(name) {
-    // Mirror the Python normalize_name() in generate_fec_data.py:
-    // FEC names: 'LAST, FIRST MIDDLE' → 'first last' (lowercase, no punctuation, no suffixes/nicknames)
-    let n = name.toLowerCase();
-    n = n.replace(/["'].*?["']/g, '');                          // strip quoted nicknames
-    n = n.replace(/\b(jr|sr|ii|iii|iv|esq)\.?\b/g, '');        // strip suffixes
-    n = n.replace(/[^a-z\s,]/g, '').trim();
-    if (n.includes(',')) {
-      const [last, first] = n.split(',', 2);
-      const firstToken = first.trim().split(/\s+/)[0];
-      n = `${firstToken} ${last.trim()}`;
-    }
-    return n.replace(/\s+/g, ' ').trim();
-  }
-
-  let _fecDataCache = null;
-  async function getFecData() {
-    if (_fecDataCache) return _fecDataCache;
-    try {
-      const res = await fetch(FEC_DATA_URL);
-      if (!res.ok) return null;
-      _fecDataCache = await res.json();
-      return _fecDataCache;
-    } catch { return null; }
-  }
-
-  function candidateLastName(name) {
-    // Extract last name from "First Last" or "First Middle Last" display name
-    const parts = (name || '').trim().split(/\s+/);
-    return parts[parts.length - 1].toLowerCase().replace(/[^a-z]/g, '');
-  }
-
-  // ── GA state campaign finance (PeachFile) ──────────────────────────────────
-  // Matching mirrors find_filers() in scripts/report_ga_finance_matches.py and the
-  // same function in tools/ga-finance-overrides-editor.html. Keep all three in step.
-  const GA_FINANCE_URL = 'assets/data/ga-campaign-finance.json';
-  const GA_CHAMBER_MAP = {
-    'Georgia House of Representatives': 'House of Representatives',
-    'Georgia State Senate': 'Senate',
-  };
-  // Statewide races have no district to scope by, so they join on office. races.json
-  // and PeachFile disagree on three labels, hence the explicit map.
-  const GA_OFFICE_MAP = {
-    'Governor': 'Governor',
-    'Lieutenant Governor': 'Lieutenant Governor',
-    'Secretary of State': 'Secretary of State',
-    'Attorney General': 'Attorney General',
-    'Commissioner of Agriculture': 'Commissioner of Agriculture',
-    'Insurance & Fire Safety Commissioner': 'Commissioner of Insurance',
-    'Labor Commissioner': 'Commissioner of Labor',
-    'State School Superintendent': 'State School Superintendent',
-    'Public Service Commissioner': 'Public Service Commissioner',
-  };
-  const GA_SUFFIX_RE = /\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b/g;
-
-  let _gaFinanceCache;
-  async function getGaFinanceData() {
-    if (_gaFinanceCache !== undefined) return _gaFinanceCache;
-    try {
-      const res = await fetch(GA_FINANCE_URL);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      _gaFinanceCache = await res.json();
-    } catch (err) {
-      console.error('getGaFinanceData()', err);
-      _gaFinanceCache = null;
-    }
-    return _gaFinanceCache;
-  }
+  // Money formatting and all FEC/PeachFile candidate matching live in the shared
+  // assets/scripts/campaign-finance.js module (also used by race.html).
+  const fmtMoney = CampaignFinance.fmtMoney;
 
   // This page renders most values unescaped via template literals; these finance
   // strings come from an external API, so escape them at the point of use.
@@ -414,94 +342,6 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     return String(s ?? '').replace(/[&<>"']/g, c => (
       { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
     ));
-  }
-
-  function gaToks(s) {
-    // Apostrophes are intra-word, not separators (O'Steen vs Osteen).
-    return String(s || '').toLowerCase().replace(GA_SUFFIX_RE, '')
-      .replace(/['’]/g, '').replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);
-  }
-  function gaNicknames(s) {
-    return [...String(s || '').matchAll(/["“']([A-Za-z]+)["”']/g)].map(m => m[1].toLowerCase());
-  }
-  function gaFirstNameOk(a, b) {
-    for (const x of a) for (const y of b) {
-      if (x === y) return true;
-      if (x.length >= 3 && y.length >= 3 && (x.startsWith(y) || y.startsWith(x))) return true;
-      if (x.length === 1 && y.startsWith(x)) return true;
-      if (y.length === 1 && x.startsWith(y)) return true;
-    }
-    return false;
-  }
-
-  function gaCandidatePool(chamber, district, data) {
-    // Public Service Commissioner is the one statewide office with districts, so it is
-    // narrowed by district when the filers carry one — otherwise every PSC candidate
-    // would collide with every other.
-    const ch = GA_CHAMBER_MAP[chamber];
-    if (ch && district != null) return data.bySeat?.[`${ch}-${district}`] || [];
-    const office = GA_OFFICE_MAP[chamber];
-    if (!office) return [];
-    const ids = data.byOffice?.[office] || [];
-    if (district != null) {
-      const scoped = ids.filter(i => String(data.filers?.[i]?.district ?? '') === String(district));
-      if (scoped.length) return scoped;
-    }
-    return ids;
-  }
-
-  function findGaFilers(name, chamber, district, data) {
-    // Seat + surname is the match; the given name only breaks ties. Requiring the
-    // given name up front rejected ~50 correct matches (Bill/William, Beth/Elizabeth)
-    // to prevent one wrong one that the ambiguity check already catches.
-    const pool = gaCandidatePool(chamber, district, data);
-    if (!pool.length) return [];
-    const cand = gaToks(name), nicks = gaNicknames(name);
-    const hits = [];
-    for (const fid of pool) {
-      const f = data.filers?.[fid];
-      if (!f) continue;
-      const fl = gaToks(f.lastName);
-      if (!fl.length || fl.length > cand.length) continue;
-      if (cand.slice(-fl.length).join(' ') !== fl.join(' ')) continue;
-      hits.push(fid);
-    }
-    const uniq = [...new Set(hits)];
-    if (uniq.length <= 1) return uniq;
-    const narrowed = uniq.filter(fid => {
-      const f = data.filers[fid];
-      const fl = gaToks(f.lastName), ff = gaToks(f.firstName);
-      const cf = cand.slice(0, cand.length - fl.length).concat(nicks);
-      return cf.length && ff.length && gaFirstNameOk(cf, ff);
-    });
-    return narrowed.length === 1 ? narrowed : uniq;
-  }
-
-  function findFecId(fecData, candidate, race) {
-    // 1. Bioguide ID (most reliable — incumbents with enriched data)
-    const bioguide = candidate.existingMemberId || '';
-    if (bioguide && fecData.byBioguideId?.[bioguide]) {
-      return fecData.byBioguideId[bioguide];
-    }
-
-    // 2. District + last name (handles formal vs. nickname mismatches, e.g. "Michael" vs "Mike")
-    const chamber = race.chamber || '';
-    let distKey = null;
-    if (chamber === 'U.S. Senate') {
-      distKey = 'S';
-    } else if (chamber === 'U.S. House' && race.district != null) {
-      distKey = `H${race.district}`;
-    }
-    if (distKey && fecData.byDistrict?.[distKey]) {
-      const last = candidateLastName(candidate.name);
-      const distCandidates = fecData.byDistrict[distKey];
-      const match = distCandidates.find(cid => fecData.candidates?.[cid]?.lastName === last);
-      if (match) return match;
-    }
-
-    // 3. Normalized full name (exact FEC name match — works when names align)
-    const key = normalizeName(candidate.name);
-    return fecData.byNormalizedName?.[key] || null;
   }
 
   async function loadCampaignFinance(candidate, race) {
@@ -544,7 +384,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
           expected to net.
         </p>`;
 
-      const data = await getGaFinanceData();
+      const data = await CampaignFinance.getGaFinanceData();
       if (!data) {
         container.innerHTML = `
           <h3>Campaign Finance</h3>
@@ -562,7 +402,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       } else if (override?.filerEntityId) {
         filer = data.filers?.[override.filerEntityId] || null;
       } else {
-        const hits = findGaFilers(candidate.name, race.chamber, race.district, data);
+        const hits = CampaignFinance.findGaFilers(candidate.name, race.chamber, race.district, data);
         if (hits.length === 1) filer = data.filers[hits[0]];
         else if (hits.length > 1) ambiguous = true;
       }
@@ -612,7 +452,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     }
 
     // Federal: read from pre-fetched static file
-    const fecData = await getFecData();
+    const fecData = await CampaignFinance.getFecData();
     if (!fecData) {
       container.innerHTML = `
         <h3>Campaign Finance</h3>
@@ -623,7 +463,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       return;
     }
 
-    const fecId = findFecId(fecData, candidate, race);
+    const fecId = CampaignFinance.findFecId(fecData, candidate, race);
 
     const entry = fecId ? fecData.candidates?.[fecId] : null;
     if (!entry) {
