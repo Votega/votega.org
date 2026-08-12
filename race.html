@@ -328,9 +328,11 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     // Resolve every candidate's finance summary in parallel.
     const rows = await Promise.all(cands.map(async c => ({ ...c, s: await CampaignFinance.summary(c.lookup, race) })));
 
-    const maxRaised = Math.max(0, ...rows.map(r => r.s.raised || 0));
-    const maxSpent  = Math.max(0, ...rows.map(r => r.s.spent || 0));
-    const maxCash   = Math.max(0, ...rows.map(r => r.s.cashOnHand || 0));
+    // One shared scale across every candidate AND all three metrics, so a bar's
+    // width always means the same number of dollars — a wider bar is always more
+    // money, whether it's in the Raised, Spent, or Cash column. (Per-column
+    // scaling made a small Cash bar look wider than a larger Raised bar.)
+    const maxAll = Math.max(0, ...rows.flatMap(r => [r.s.raised || 0, r.s.spent || 0, r.s.cashOnHand || 0]));
 
     // Sort by raised desc; candidates with no figures sink to the bottom.
     rows.sort((a, b) => (b.s.raised || -1) - (a.s.raised || -1));
@@ -347,9 +349,9 @@ share-description: "Details for a Georgia race: the candidates running, the incu
         </th>`;
       if (r.s.status === 'ok') {
         return `<tr>${nameCell}
-          ${finBarCell(r.s.raised, maxRaised, 'fin-bar-raised')}
-          ${finBarCell(r.s.spent, maxSpent, 'fin-bar-spent')}
-          ${finBarCell(r.s.cashOnHand, maxCash, 'fin-bar-cash')}
+          ${finBarCell(r.s.raised, maxAll, 'fin-bar-raised')}
+          ${finBarCell(r.s.spent, maxAll, 'fin-bar-spent')}
+          ${finBarCell(r.s.cashOnHand, maxAll, 'fin-bar-cash')}
         </tr>`;
       }
       return `<tr class="fin-row-none">${nameCell}${finNoteRow(r, r.s, 3)}</tr>`;
@@ -370,7 +372,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
         </table>
       </div>
       <p class="finance-disclaimer">
-        Figures come from ${sourceName} and reflect each committee's most recent required report, so they may be several months old. Bars are scaled to the highest figure in each column. <strong>“No filing on record” means no report has been filed — not $0</strong>, and often reflects a candidate who hasn't begun formal fundraising${race.level === 'federal' ? '' : ' or filed before the 2026 PeachFile records begin'}.
+        Figures come from ${sourceName} and reflect each committee's most recent required report, so they may be several months old. All bars share one scale — the largest single figure in the table — so a wider bar always means more dollars. <strong>“No filing on record” means no report has been filed — not $0</strong>, and often reflects a candidate who hasn't begun formal fundraising${race.level === 'federal' ? '' : ' or filed before the 2026 PeachFile records begin'}.
       </p>`;
   }
 
