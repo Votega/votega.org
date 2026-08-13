@@ -298,7 +298,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
   const bioguideId = urlParams.get('bioguideId');
 
   if (!bioguideId) {
-    document.getElementById('memberDetails').innerHTML = '<p>No member selected. <a href="my-representatives.html">Go back</a></p>';
+    document.getElementById('memberDetails').innerHTML = `<p>No member selected. <a href="${getBasePath()}federal-reps">Go back</a></p>`;
   } else {
     loadMemberDetails(bioguideId);
   }
@@ -355,7 +355,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
         'Data file missing or inaccessible. Check that assets/data/current-members.json exists.' :
         err.message;
       statusLine.textContent = message;
-      document.getElementById('memberDetails').innerHTML = '<p>Error loading details. <a href="my-representatives.html">Go back</a></p>';
+      document.getElementById('memberDetails').innerHTML = `<p>Error loading details. <a href="${getBasePath()}federal-reps">Go back</a></p>`;
     }
   }
 
@@ -987,7 +987,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       ${contactHtml}
       ${websiteHtml}
 
-      <p><a href="my-representatives.html">Search for another member</a></p>
+      <p><a href="${getBasePath()}federal-reps">Search for another member</a></p>
       ${state === 'Georgia' ? `<p><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${escHtml(fullName)} →</a></p>` : ''}
       <div id="campaignFinance" class="finance-section"></div>
       <div class="tab-container">
