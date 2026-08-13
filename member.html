@@ -5,8 +5,6 @@ permalink: /member.html
 share-description: "Profile of a member of the U.S. Congress: district, party, committee assignments, sponsored legislation, and contact information."
 ---
 
-<h1>Legislative Member Details</h1>
-
 <style>
   #pageLayout {
     display: flex;
@@ -881,6 +879,8 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
     const currentTerm = member.terms?.item?.slice(-1)[0] || {};
     const chamber = currentTerm.chamber || 'N/A';
+
+    document.title = `${fullName} — ${chamber === 'Senate' ? 'U.S. Senator' : 'U.S. Representative'}`;
     const district = (member.district !== null && member.district !== undefined)
       ? `District ${member.district}`
       : (chamber === 'Senate' ? 'U.S. Senator' : chamber === 'House of Representatives' ? 'At-Large' : 'N/A');
@@ -974,7 +974,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
     const html = `
       ${imageHtml}
-      <h2>${escHtml(fullName)}</h2>
+      <h1>${escHtml(fullName)}</h1>
       ${runningBadgeHtml}
       ${member.birthYear ? `<p style="display:flex;justify-content:space-between;"><span><strong>Birth Year:</strong> ${member.birthYear}</span><span><strong>Age (as of ${currentYear}):</strong> ${currentYear - member.birthYear}</span></p>` : ''}
       <p style="display:flex;justify-content:space-between;"><span><strong>First Term (Current Chamber):</strong> ${startYear}</span><span><strong>Years in Office:</strong> ${yearsInOffice}</span></p>

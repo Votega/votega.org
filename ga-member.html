@@ -5,8 +5,6 @@ permalink: /ga-member.html
 share-description: "Profile of a Georgia General Assembly member: district, party, committee assignments, voting record, campaign finance, and contact information."
 ---
 
-<h1>Georgia Legislator Details</h1>
-
 <style>
   #pageLayout {
     display: flex;
@@ -529,6 +527,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     const ageLabel = age && !age.exact ? `Age (as of ${currentYear})` : 'Age';
 
     const name    = member.name || 'Unknown';
+    document.title = `${name} — ${member.title || (member.chamber === 'Senate' ? 'State Senator' : 'State Representative')}`;
     const imageHtml = member.imageUrl
       ? `<img src="${escHtml(member.imageUrl)}" alt="${escHtml(name)}" style="max-width:200px;margin-bottom:1rem;border-radius:8px;">`
       : '';
@@ -588,7 +587,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       ${electionBannerHtml}
       ${statusBannerHtml}
       ${imageHtml}
-      <h2>${escHtml(name)}</h2>
+      <h1>${escHtml(name)}</h1>
       ${otherRaceBannerHtml}
       ${leadershipHtml}
       ${member.birthYear
