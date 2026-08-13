@@ -230,6 +230,7 @@ applies to the **real** `<body>`. The site's primary federal-lookup page therefo
 ---
 
 #### 3.3 The home page has no presence for the site's core journey
+#### [X - 8/13/26] 
 
 `index.html` is 8 lines of front matter with `layout: home`, which renders nothing but the paginated blog feed (`_layouts/home.html`). A Georgia voter arriving at votega.org sees ten blog posts and must find "Find My Reps" in the navbar.
 
