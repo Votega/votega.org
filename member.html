@@ -544,15 +544,33 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     </div>`;
   }
 
+  const DEFAULT_TAB = 'keyVotes';
+
+  // Syncs the active tab to location.hash (pushHistory on a real user click,
+  // not on hash-driven restores) so browser Back steps through tab switches
+  // instead of always landing back on the default tab.
+  function activateTab(tabId, pushHistory) {
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    const panel = document.getElementById(tabId);
+    if (!btn || !panel) return false;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    panel.classList.add('active');
+    if (pushHistory && window.location.hash.slice(1) !== tabId) {
+      history.pushState(null, '', '#' + tabId);
+    }
+    return true;
+  }
+
   function initTabs() {
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.tab).classList.add('active');
-      });
+      btn.addEventListener('click', () => activateTab(btn.dataset.tab, true));
     });
+    window.addEventListener('popstate', () => {
+      activateTab(window.location.hash.slice(1) || DEFAULT_TAB, false);
+    });
+    if (window.location.hash) activateTab(window.location.hash.slice(1), false);
   }
 
   function fmtMoney(n) {

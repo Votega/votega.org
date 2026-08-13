@@ -376,6 +376,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       loadCuratedBills(member);
       loadVotingHistory(member, all);
       if (window.location.hash) {
+        switchTab(window.location.hash.slice(1), false);
         const target = document.getElementById(window.location.hash.slice(1));
         if (target) target.scrollIntoView({ behavior: 'smooth' });
       }
@@ -754,12 +755,28 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     </div>`;
   }
 
-  function switchTab(tabId) {
+  const DEFAULT_TAB = 'curatedBills';
+
+  // Syncs the active tab to location.hash (pushHistory on a real user click,
+  // not on hash-driven restores) so browser Back steps through tab switches
+  // instead of always landing back on the default tab.
+  function switchTab(tabId, pushHistory = true) {
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    const panel = document.getElementById(tabId);
+    if (!btn || !panel) return false;
     document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
-    document.getElementById(tabId).style.display = '';
-    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('tab-active');
+    panel.style.display = '';
+    btn.classList.add('tab-active');
+    if (pushHistory && window.location.hash.slice(1) !== tabId) {
+      history.pushState(null, '', '#' + tabId);
+    }
+    return true;
   }
+
+  window.addEventListener('popstate', () => {
+    switchTab(window.location.hash.slice(1) || DEFAULT_TAB, false);
+  });
 
   const CURATED_BILLS_URL = 'assets/data/curated-ga-bill-votes.json';
 

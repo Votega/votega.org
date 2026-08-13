@@ -227,7 +227,7 @@ SECTIONS.forEach(s=>{
       ).join('');
 });
 
-// Hide empty tabs; activate the first tab that actually has races.
+// Hide empty tabs; determine the default (first tab that actually has races).
 let firstWithContent = null;
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   const panel = document.getElementById('tab-'+btn.dataset.tab);
@@ -235,12 +235,6 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   if(!has){ btn.style.display='none'; panel && panel.classList.remove('active'); }
   else if(!firstWithContent){ firstWithContent = btn; }
 });
-if(firstWithContent){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  firstWithContent.classList.add('active');
-  document.getElementById('tab-'+firstWithContent.dataset.tab).classList.add('active');
-}
 
 let curFilter='all';
 function applyFilter(f){
@@ -255,15 +249,36 @@ function applyFilter(f){
   });
 }
 
-document.getElementById('tabBar').addEventListener('click',e=>{
-  const btn=e.target.closest('.tab-btn');
-  if(!btn) return;
+// Syncs the active tab to location.hash (pushHistory on a real user click,
+// not on hash-driven restores) so browser Back steps through tab switches
+// instead of always landing back on the default tab. Refuses tabs hidden by
+// the empty-tab pass above rather than activating a blank panel.
+function activateTab(tabName, pushHistory){
+  const btn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+  const panel = document.getElementById('tab-'+tabName);
+  if(!btn || !panel || btn.style.display==='none') return false;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
-  const panel=document.getElementById('tab-'+btn.dataset.tab);
-  if(panel) panel.classList.add('active');
+  panel.classList.add('active');
   applyFilter(curFilter);
+  if (pushHistory && window.location.hash.slice(1) !== tabName) {
+    history.pushState(null, '', '#' + tabName);
+  }
+  return true;
+}
+
+if (firstWithContent) activateTab(firstWithContent.dataset.tab, false);
+if (window.location.hash) activateTab(window.location.hash.slice(1), false);
+
+document.getElementById('tabBar').addEventListener('click',e=>{
+  const btn=e.target.closest('.tab-btn');
+  if(!btn) return;
+  activateTab(btn.dataset.tab, true);
+});
+
+window.addEventListener('popstate', () => {
+  activateTab(window.location.hash.slice(1) || (firstWithContent && firstWithContent.dataset.tab), false);
 });
 
 document.querySelectorAll('.filter-btn').forEach(btn=>{
