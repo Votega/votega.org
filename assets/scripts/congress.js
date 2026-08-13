@@ -13,17 +13,32 @@ function formatMemberName(m) {
     : (honorific ? `${honorific} ${fallback}` : fallback);
 }
 
+// Handles both votega.github.io/votega.org-TEST/ and votega.github.io/.
+function getBasePath() {
+  return window.location.pathname.includes('/votega.org-TEST/')
+    ? '/votega.org-TEST/'
+    : '/';
+}
+
 const stateSel    = document.getElementById('stateSelect');
 const chamberSel  = document.getElementById('chamberSelect');
 const memberSel   = document.getElementById('memberSelect');
 const statusLine  = document.getElementById('status');
 const form        = document.getElementById('lookupForm');
 
+// Populated per chamber load. Keyed by the vacant `<option value>` so the
+// notice only appears once the user actually picks that district, not for
+// every vacancy in the chamber up front.
+const vacancyMessages = new Map();
+
 // Georgia-only — site scope is limited to GA federal delegation
 stateSel.innerHTML = '<option value="GA">Georgia</option>';
 
 chamberSel.addEventListener('change', loadMembers);
 stateSel  .addEventListener('change', loadMembers);
+memberSel .addEventListener('change', () => {
+  statusLine.innerHTML = vacancyMessages.get(memberSel.value) || '';
+});
 
 // Load members
 
@@ -130,6 +145,7 @@ async function loadMembers () {
       const ordered = [...seats].sort((a, b) => a - b);
       if (districtMap.has('At-Large')) ordered.push('At-Large');
 
+      vacancyMessages.clear();
       optionsHtml = ordered
         .map(district => {
           const members = districtMap.get(district) || districtMap.get(String(district)) || [];
@@ -137,10 +153,17 @@ async function loadMembers () {
           if (current) {
             return `<option value="${current.bioguideId}">District ${district} - ${formatMemberName(current)} (${current.partyName})</option>`;
           }
-          return `<option value="" disabled>District ${district} - Vacant (no sitting representative)</option>`;
+          // Selectable rather than disabled, so choosing it is what reveals
+          // the explanation instead of it appearing for every vacancy up front.
+          const value = `vacant-${district}`;
+          vacancyMessages.set(value, district === 13
+            ? `District 13 is vacant following Rep. David Scott's death. See the <a href="${getBasePath()}ga-special-2026-runoff-results/">2026 special election runoff results</a>.`
+            : `District ${district} is currently vacant.`);
+          return `<option value="${value}">District ${district} - Vacant (no sitting representative)</option>`;
         }).join('');
     } else {
       // Senate: only show current members, sorted alphabetically
+      vacancyMessages.clear();
       optionsHtml = results
         .filter(m => m.currentMember !== false)
         .sort((a, b) => a.name.localeCompare(b.name))
@@ -150,7 +173,7 @@ async function loadMembers () {
 
     memberSel.innerHTML = '<option value="">— choose —</option>' + optionsHtml;
     memberSel.disabled = false;
-    statusLine.textContent = '';
+    statusLine.innerHTML = '';
 
   } catch (err) {
     console.error('loadMembers()', err);
@@ -167,12 +190,11 @@ form.addEventListener('submit',e=>{
     statusLine.textContent = 'Please select a member.';
     return;
   }
+  if (vacancyMessages.has(bioguideId)) {
+    // No member page to send them to — the notice is already showing.
+    return;
+  }
   // Redirect to the member details page
-  // Get the base path (handles both votega.github.io/votega.org-TEST/ and votega.github.io/)
-  const pathname = window.location.pathname;
-  const basePath = pathname.includes('/votega.org-TEST/') 
-    ? '/votega.org-TEST/' 
-    : '/';
-  window.location.href = `${basePath}member.html?bioguideId=${bioguideId}`;
+  window.location.href = `${getBasePath()}member.html?bioguideId=${bioguideId}`;
 });
 
