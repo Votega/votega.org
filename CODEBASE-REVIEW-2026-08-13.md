@@ -704,13 +704,13 @@ Verified against the current codebase: `01-Recommendations for votega.md`, `Site
 
 ## Suggested sequencing
 
-**First commit — small, high-confidence, user-visible:**
+[COMPLETE] **First commit — small, high-confidence, user-visible:**
 1. `1.1` WSDL bill links (one line + regeneration)
 2. `1.5` resigned legislators in search index
 3. `3.1` nested HTML document in `federal-reps.html` / `my-representatives.html` (largely a deletion)
 4. `3.2` three dead links in `member.html`
 
-**Second — date bombs, before they fire:**
+[COMPLETE] **Second — date bombs, before they fire:**
 5. `2.1` executive-orders year map
 6. `2.2` hardcoded finance cycle
 7. `2.3` `races.json` timestamp stamping
@@ -721,9 +721,9 @@ Verified against the current codebase: `01-Recommendations for votega.md`, `Site
 10. `1.4` reconcile `TO-DO.md`
 
 **Fourth — IA and cross-linking, mostly additive:**
-11. `3.7` footer sitemap, `3.9` 404 links, `3.5` `local-officials` noindex
+11. `3.7` footer sitemap, [X] `3.9` 404 links, `3.5` `local-officials` noindex
 12. `3.17` sponsor links (needs the build-time `ocdId` join, which also unblocks `4.2`)
-13. `3.4` federal county filter, `3.3` home page entry point
+13. [X] `3.4` federal county filter, [X] `3.3` home page entry point
 
 **Fifth — new surfaces:**
 14. `4.1` fundraising history chart
