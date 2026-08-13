@@ -372,7 +372,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
         </table>
       </div>
       <p class="finance-disclaimer">
-        Figures come from ${sourceName} and reflect each committee's most recent required report, so they may be several months old. All bars share one scale — the largest single figure in the table — so a wider bar always means more dollars. <strong>“No filing on record” means no report has been filed — not $0</strong>, and often reflects a candidate who hasn't begun formal fundraising${race.level === 'federal' ? '' : ' or filed before the 2026 PeachFile records begin'}.
+        Figures come from ${sourceName} and reflect each committee's most recent required report, so they may be several months old. All bars share one scale (the largest single figure in the table) so a wider bar always means more dollars. <strong>“No filing on record” means no report has been filed, not $0</strong>, and often reflects a candidate who hasn't begun formal fundraising${race.level === 'federal' ? '' : ' or filed before the 2026 PeachFile records begin'}.
       </p>`;
   }
 
@@ -644,19 +644,39 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       <div class="back-link"><a href="${basePath}elections.html">← Back to Elections</a></div>`;
 
     // One unified tab handler for party ballots and Campaign Finance alike.
+    // Syncs the active panel to location.hash (pushHistory on a real user
+    // click, not on hash-driven restores) so browser Back steps through tab
+    // switches instead of always landing back on the first panel.
     if (panels.length > 1) {
       let financeBuilt = false;
-      document.querySelector('.race-tab-bar').addEventListener('click', e => {
-        const btn = e.target.closest('.race-tab-btn');
-        if (!btn) return;
+      const defaultPanelId = panels[0].id;
+
+      const activatePanel = (panelId, pushHistory) => {
+        const btn = document.querySelector(`.race-tab-btn[data-panel="${panelId}"]`);
+        if (!btn) return false;
         document.querySelectorAll('.race-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
-        const targetId = btn.dataset.panel;
-        document.querySelectorAll('.race-panel').forEach(p => { p.hidden = p.id !== targetId; });
+        document.querySelectorAll('.race-panel').forEach(p => { p.hidden = p.id !== panelId; });
         if (btn.dataset.kind === 'finance' && !financeBuilt) {
           financeBuilt = true;
           buildFinanceTable(race, members, document.getElementById('panel-finance'));
         }
+        if (pushHistory && window.location.hash.slice(1) !== panelId) {
+          history.pushState(null, '', '#' + panelId);
+        }
+        return true;
+      };
+
+      document.querySelector('.race-tab-bar').addEventListener('click', e => {
+        const btn = e.target.closest('.race-tab-btn');
+        if (!btn) return;
+        activatePanel(btn.dataset.panel, true);
       });
+
+      window.addEventListener('popstate', () => {
+        activatePanel(window.location.hash.slice(1) || defaultPanelId, false);
+      });
+
+      if (window.location.hash) activatePanel(window.location.hash.slice(1), false);
     }
   }
 
