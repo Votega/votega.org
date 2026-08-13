@@ -86,6 +86,10 @@ def build_ga_legislators(records, seen):
         if not oid or not oid.startswith("ocd-person/"):
             # Synthetic/vacant IDs have no detail page to link to.
             continue
+        if m.get("status") in ("Resigned", "Removed", "Deceased"):
+            # Same filter as ga.js and ga-majority-tracker.html -- don't index
+            # former members as if they were sitting legislators.
+            continue
         chamber = clean(m.get("chamber"))
         district = m.get("district")
         title_word = clean(m.get("title")) or (
