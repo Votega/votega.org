@@ -92,6 +92,20 @@ def main():
                 p: counts for p, counts in tally.items()
                 if counts['yea'] + counts['nay'] + counts['other'] > 0
             }
+
+            # voter.id resolution failures in generate_ga_votes_data.py (common on
+            # surname collisions) mean the roster this tally is built from can be
+            # short of the official yea/nay/other totals reported alongside it.
+            # Surface that gap explicitly so the UI can hedge or suppress the
+            # party-line badge instead of presenting a partial count as complete.
+            official_total = pv.get('yea', 0) + pv.get('nay', 0) + pv.get('other', 0)
+            tallied_total = sum(
+                counts['yea'] + counts['nay'] + counts['other']
+                for counts in tally.values()
+            )
+            pv['partyTallyCoverage'] = (
+                round(tallied_total / official_total, 4) if official_total else None
+            )
             matched += 1
 
     # Update metadata timestamp

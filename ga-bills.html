@@ -464,6 +464,20 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     };
   }
 
+  // Coverage currently sits in a narrow ~79-85% band on essentially every
+  // roll call — the same ~39 legislators (mostly surname collisions Open
+  // States can't resolve a voter.id for) are missing from every roster, so
+  // the gap is systemic rather than a few bad votes. A threshold near that
+  // band would suppress the party-line tag almost everywhere, which trades
+  // one misleading signal (an unqualified tag) for another (the feature
+  // silently vanishing). Set it low enough to only catch a roster that's
+  // actually broken (e.g. a future matching bug), and disclose the real
+  // percentage on every vote instead of a threshold cutoff doing that work.
+  const COVERAGE_WARN_THRESHOLD = 0.5;
+  function hasLowCoverage(v) {
+    return v.partyTallyCoverage != null && v.partyTallyCoverage < COVERAGE_WARN_THRESHOLD;
+  }
+
   // ── Vote bar HTML ─────────────────────────────────────────────────────────
   function voteBarHtml(v) {
     const total  = (v.yea + v.nay + v.other) || 1;
@@ -478,6 +492,9 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       ? v.motionText.replace(/\s*[-–]\s*\d{4}-\d{4}\s+Regular Session\s*$/i, '').trim()
       : ch + ' vote';
     const pli = computePartyLineInfo(v.partyTally);
+    const coverage = v.partyTallyCoverage;
+    const coveragePct = coverage != null ? Math.round(coverage * 100) : null;
+    const lowCoverage = hasLowCoverage(v);
     const partyLine = (function () {
       if (!v.partyTally) return '';
       const d = v.partyTally['Democratic'];
@@ -486,11 +503,16 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       if (d) parts.push('<span style="color:#2563eb;">Dem ' + d.yea + '-' + d.nay + '</span>');
       if (r) parts.push('<span style="color:#dc2626;">Rep ' + r.yea + '-' + r.nay + '</span>');
       if (!parts.length) return '';
-      const tag = pli && pli.isPartyLine
+      const tag = pli && pli.isPartyLine && !lowCoverage
         ? ' <span class="party-line-tag">&#9889; Party-line vote</span>'
         : '';
+      const caveat = coveragePct == null
+        ? ' <span style="color:#aaa;">(yea-nay by party; may not include every recorded vote)</span>'
+        : lowCoverage
+          ? ' <span style="color:#c00;">(yea-nay by party; only ' + coveragePct + '% of the official tally matched — too incomplete for a party-line call)</span>'
+          : ' <span style="color:#aaa;">(yea-nay by party; ' + coveragePct + '% of the official tally)</span>';
       return '<div class="vote-bar-sub" style="margin-top:0.2rem;">' + parts.join(' &nbsp;&middot;&nbsp; ')
-        + ' <span style="color:#aaa;">(yea-nay by party; may not include every recorded vote)</span>' + tag + '</div>';
+        + caveat + tag + '</div>';
     })();
     return '<div class="vote-bar-section">'
       + '<div class="vote-bar-header">'
@@ -810,7 +832,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
         b._status = classifyStatus(b);
         b._partyLine = (b.passageVotes || []).some(function (v) {
           const pli = computePartyLineInfo(v.partyTally);
-          return pli && pli.isPartyLine;
+          return pli && pli.isPartyLine && !hasLowCoverage(v);
         });
         return b;
       });
