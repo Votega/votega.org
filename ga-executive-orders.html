@@ -144,12 +144,17 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
 <p style="margin-top:1rem;font-size:0.8rem;color:#888;" id="dataSource"></p>
 
 <script>
-  const DATA_FILES = {
-    2026: 'assets/data/ga-executive-orders-2026.json',
-    2025: 'assets/data/ga-executive-orders-2025.json',
-    2024: 'assets/data/ga-executive-orders-2024.json',
-    2023: 'assets/data/ga-executive-orders-2023.json',
-  };
+  // update-ga-executive-orders.yml writes assets/data/ga-executive-orders-$(date +%Y).json
+  // every year, so derive the map from the current year rather than hardcoding it --
+  // otherwise each new year's already-generated file has no button to reach it.
+  // 2023 is a real floor, not a moving one: pre-2023 orders use a different
+  // gov.georgia.gov URL structure and were deliberately not backfilled (see TO-DO.md).
+  const CURRENT_YEAR  = new Date().getFullYear();
+  const EARLIEST_YEAR = 2023;
+  const DATA_FILES = {};
+  for (let y = CURRENT_YEAR; y >= EARLIEST_YEAR; y--) {
+    DATA_FILES[y] = `assets/data/ga-executive-orders-${y}.json`;
+  }
 
   const CATEGORY_BADGE = {
     'State of Emergency': 'badge-emergency',
@@ -174,7 +179,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
   };
 
   let allOrders = [];
-  let activeYear = 2026;
+  let activeYear = CURRENT_YEAR;
   let activeCategory = 'All';
 
   function formatDate(iso) {
