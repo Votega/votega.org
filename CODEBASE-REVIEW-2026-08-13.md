@@ -143,6 +143,7 @@ The workflow writes `ga-executive-orders-$(date +%Y).json` (`update-ga-executive
 ---
 
 ### 2.2 Hardcoded election cycle in the shared finance code and its consumers
+#### [X - 8/13/26]
 
 | File | Line | Hardcoded value |
 |---|---|---|
@@ -239,6 +240,7 @@ applies to the **real** `<body>`. The site's primary federal-lookup page therefo
 ---
 
 #### 3.4 Federal lookup has no county filter; state lookup does
+#### [X - 8/13/26] 
 
 `ga-state-reps.html:134` offers "Filter by county." `federal-reps.html` offers only Chamber → a dropdown of 14 names, forcing the user to already know their congressional district.
 
@@ -318,6 +320,7 @@ The nav (`_config.yml:26-46`) exposes 14 destinations across 1 hub + 2 direct li
 **Fix:** make the elections-hub "Election Results" card CTA `/results/latest/`, keep the archive as a secondary link inside the card.
 
 #### 3.9 `404.html` is a total dead end
+#### [X - 8/13/26] 
 
 `404.html:8-13` is an `<h1>`, a joke, and an image — no link home, no search prompt, no nav. On a site with several `?param=`-driven detail pages that 404 on a mistyped ID, this is the highest-traffic failure surface.
 
@@ -375,10 +378,12 @@ Both lookups punt to the SoS My Voter Page (`federal-reps.html:24`, `ga-state-re
 - `ga-bills.html` — add `?bill=HB111` and a per-card anchor. **There is currently no way to link to a specific bill at all.**
 
 #### 3.15 Back-navigation is inconsistent
+#### [X - 8/13/26] 
 
 `candidate.html:332` and `race.html:644` have styled `.back-link` blocks; `justice.html:172` has a top-of-page link; `executive-member.html:381` has a bottom paragraph link; `member.html` and `ga-member.html` have **neither** — only an inline "Search for another member" buried after the contact block (`member.html:990`), and nothing at all on `ga-member.html`.
 
 #### 3.16 Tab state is lost on browser Back
+#### [X - 8/13/26] 
 
 `member.html:996-1004`, `ga-member.html`, `race.html:626`, and `_layouts/election_results.html:212` all use in-page tabs with no hash/history sync. Open Voting History → click a bill → hit Back → land on Key Votes.
 
