@@ -6,6 +6,14 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 ---
 
 <style>
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1.25rem;
+    font-size: 0.875rem;
+    color: #1d4ed8;
+    text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
   #pageLayout {
     display: flex;
     gap: 1.5rem;
@@ -278,6 +286,8 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
   }
   .kv-tally strong { color: #111; }
 </style>
+
+<a class="back-link" href="{{ '/federal-reps' | relative_url }}">← Find My Reps</a>
 
 <div id="pageLayout">
   <div id="memberDetails">
