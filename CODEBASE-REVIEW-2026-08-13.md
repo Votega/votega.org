@@ -23,6 +23,7 @@ Two findings were **disproven during cross-check** and are excluded from the bod
 ## Tier 1 — Data is wrong or misleading in the UI right now
 
 ### 1.1 Every bill link in every legislator's voting history points at a SOAP WSDL endpoint
+#### [X - 8/13/26] 
 
 **Where:** `scripts/generate_ga_votes_data.py:341-345` → rendered at `ga-member.html:1035`
 
@@ -43,6 +44,7 @@ next(s['url'] for s in sources if 'legis.ga.gov' in s['url'])
 ---
 
 ### 1.2 GA per-legislator vote rosters are ~15% incomplete; 39 sitting legislators have zero votes
+#### [X - 8/13/26] 
 
 **Where:** `scripts/generate_ga_votes_data.py:378-381` — `if not voter_id: continue`, silently, with no counter.
 
@@ -68,6 +70,7 @@ Colliding surnames include Jones (×5), Smith (×5), Jackson (×4), Williams (×
 ---
 
 ### 1.3 Party tallies and the ⚡ party-line badge are computed on that 85% roster and shown beside official totals
+#### [X - 8/13/26]
 
 **Where:** `scripts/enrich_bills_with_party_votes.py:80-92` → `ga-bills.html:486-493`; `computePartyLineInfo()` at `ga-bills.html:449-465`
 
@@ -83,7 +86,8 @@ There *is* a caveat string ("may not include every recorded vote"), which is why
 
 ---
 
-### 1.4 `TO-DO.md`'s "ghost OCD IDs" entry is stale in a user-facing direction
+ ### 1.4 `TO-DO.md`'s "ghost OCD IDs" entry is stale in a user-facing direction
+ #### [X - 8/13/26] 
 
 `TO-DO.md` states the party breakdown is "currently hidden." **It is not hidden** — `ga-bills.html:481-506` ships it behind a gray parenthetical hedge. Known-incomplete numbers are being published while the tracking doc says they aren't.
 
@@ -96,6 +100,7 @@ The 11 ghost OCD IDs themselves **are fixed**: 0 of 204 vote-member IDs are now 
 ---
 
 ### 1.5 Ten resigned legislators are indexed as sitting members in site search
+#### [X - 8/13/26] 
 
 **Where:** `scripts/generate_search_corpus.py:82-105` — no `status` filter in `build_ga_legislators()`.
 
@@ -110,6 +115,7 @@ Every other consumer filters these correctly: `ga.js:174`, `ga-majority-tracker.
 ---
 
 ### 1.6 GA-13 has no federal representative record, and no page explains why
+#### [X - 8/13/26] 
 
 **Evidence:** `current-members.json` (generated 2026-08-12) contains 15 Georgia members covering districts 1–12 and 14. **District 13 is absent** — Rep. David Scott died; the special election was 2026-07-28 with a runoff 2026-08-25.
 
@@ -124,6 +130,7 @@ Every other consumer filters these correctly: `ga.js:174`, `ga-majority-tracker.
 ## Tier 2 — Will break on a date
 
 ### 2.1 `ga-executive-orders.html` will silently hide all 2027 executive orders on Jan 1
+#### [X - 8/13/26]
 
 **Where:** `ga-executive-orders.html:147-152` (the `DATA_FILES` map) and `:177` (`let activeYear = 2026`)
 
@@ -155,6 +162,7 @@ The workflow writes `ga-executive-orders-$(date +%Y).json` (`update-ga-executive
 ---
 
 ### 2.3 `races.json.updatedAt` is three months stale relative to file content
+#### [X - 8/13/26] 
 
 `assets/data/races.json` carries `updatedAt: "2026-05-11T00:00:00Z"`, but `git log` shows the file was last written **2026-08-09**. The general-election ballots *were* resolved post-primary (0 of 441 party-ballots has more than one candidate, vs. 140 contested primary ballots) — the data is current, the timestamp is not.
 
@@ -191,6 +199,7 @@ The workflow writes `ga-executive-orders-$(date +%Y).json` (`update-ga-executive
 ### Top priorities
 
 #### 3.1 `federal-reps.html` and `my-representatives.html` embed a nested full HTML document
+#### [X - 8/13/26]
 
 **Where:** `federal-reps.html:28-48`, `my-representatives.html:35-48`
 
@@ -209,6 +218,7 @@ applies to the **real** `<body>`. The site's primary federal-lookup page therefo
 ---
 
 #### 3.2 `member.html` sends users to a deprecated page in three places
+#### [X - 8/13/26]
 
 `member.html:303`, `:360`, and `:990` all link to `my-representatives.html`, which is now a stub whose entire content is a "This page has moved" banner. Every federal member profile's "Search for another member" link is a bounce.
 
@@ -251,6 +261,7 @@ The page documents its own intent at `local-officials.html:8-13` ("Intentionally
 ---
 
 #### 3.6 Member detail pages have generic `<h1>`s and never set `document.title`
+#### [X - 8/13/26]
 
 `member.html:7` = "Legislative Member Details"; `ga-member.html:8` = "Georgia Legislator Details". The actual person is an `<h2>`. Neither calls `document.title = …`.
 
