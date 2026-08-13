@@ -10,4 +10,22 @@ permalink: /404.html
   <br/>
 
   <img src="{{ 'assets/img/404-southpark.jpg' | relative_url }}" alt="Not found" />
+
+  <p style="margin-top:2rem;">
+    <a href="{{ '/' | relative_url }}">Go back home</a>
+    &nbsp;·&nbsp;
+    <a href="{{ '/find-my-reps' | relative_url }}">Find my representatives</a>
+    &nbsp;·&nbsp;
+    <a href="{{ '/elections' | relative_url }}">Elections</a>
+    &nbsp;·&nbsp;
+    <a href="#" id="notfound-search-link">Search the site</a>
+  </p>
 </div>
+
+<script>
+  document.getElementById('notfound-search-link').addEventListener('click', function (e) {
+    e.preventDefault();
+    var navSearchLink = document.getElementById('nav-search-link');
+    if (navSearchLink) navSearchLink.click();
+  });
+</script>
