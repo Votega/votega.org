@@ -12,6 +12,7 @@ import json
 import os
 import re
 import unicodedata
+from datetime import datetime, timezone
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CSV_PATH = os.path.join(BASE, "assets", "data", "Total Votes - 2026.05.23_8am.csv")
@@ -368,6 +369,8 @@ def main():
         print(f"\nWarnings ({len(skipped)} name match issues — used fallback):")
         for s in skipped:
             print(f"  - {s}")
+
+    races_data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     with open(RACES_PATH, "w", encoding="utf-8") as f:
         json.dump(races_data, f, ensure_ascii=False, indent=2)

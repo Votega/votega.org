@@ -11,6 +11,7 @@ Run once after update_general_from_primary.py.
 
 import json
 import os
+from datetime import datetime, timezone
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RACES_PATH = os.path.join(BASE, "assets", "data", "races.json")
@@ -138,6 +139,8 @@ def main():
         races_data = json.load(f)
 
     fixes = fix(races_data)
+
+    races_data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     with open(RACES_PATH, "w", encoding="utf-8") as f:
         json.dump(races_data, f, ensure_ascii=False, indent=2)

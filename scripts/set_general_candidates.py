@@ -27,6 +27,7 @@ pass their full JSON on stdin instead — see --help for details.
 import json
 import sys
 import os
+from datetime import datetime, timezone
 
 RACES_PATH = os.path.join(os.path.dirname(__file__), '..', 'assets', 'data', 'races.json')
 
@@ -100,6 +101,8 @@ def main():
     race['phases']['general']['ballots'] = ballots
     # Remove the old empty candidates list if present
     race['phases']['general'].pop('candidates', None)
+
+    data['updatedAt'] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     with open(RACES_PATH, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
