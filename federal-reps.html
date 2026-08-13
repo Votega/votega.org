@@ -25,49 +25,42 @@ Many counties are served by multiple districts, and some districts serve multipl
 Lookup Form
  States are hardcoded, user chooses a state and chamber. Form returns a list of members based on selection. Member lookup uses prebuilt current-members.JSON instead of calling the Congress.gov API directly from the browser. Returned members are placed in the last dropdown list.
  -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Legislator Lookup (api.congress.gov)</title>
-  <style>
-    body {font-family: system-ui, sans-serif; margin:2rem; max-width:680px;}
-    label {display:block; margin-top:1.2rem;}
-    select, button {width:100%; padding:8px; box-sizing:border-box;}
-    .msg{margin-top:1rem;color:#c00;}
-    [disabled]{background:#eee;}
-  </style>
-</head>
-<body>
+<style>
+  .lookup-widget { font-family: system-ui, sans-serif; max-width: 680px; }
+  .lookup-widget label { display: block; margin-top: 1.2rem; }
+  .lookup-widget select, .lookup-widget button { width: 100%; padding: 8px; box-sizing: border-box; }
+  .lookup-widget [disabled] { background: #eee; }
+  .lookup-widget .msg { margin-top: 1rem; color: #c00; }
+</style>
 
-<!--Start Form-->
-<form id="lookupForm">
-  <select id="stateSelect" style="display:none;" required disabled></select>
+<div class="lookup-widget">
+  <!--Start Form-->
+  <form id="lookupForm">
+    <select id="stateSelect" style="display:none;" required disabled></select>
 
-  <label>
-    Chamber
-    <select id="chamberSelect" required>
-      <option value="">— choose —</option>
-      <option value="house">House</option>
-      <option value="senate">Senate</option>
-    </select>
-  </label>
+    <label>
+      Chamber
+      <select id="chamberSelect" required>
+        <option value="">— choose —</option>
+        <option value="house">House</option>
+        <option value="senate">Senate</option>
+      </select>
+    </label>
 
-  <label>
-    Representative / Senator
-    <select id="memberSelect" required disabled></select>
-  </label>
+    <label>
+      Representative / Senator
+      <select id="memberSelect" required disabled></select>
+    </label>
 
-  <button type="submit">Select</button>
-</form>
-<!--end form -->
+    <button type="submit">Select</button>
+  </form>
+  <!--end form -->
 
-<div class="msg" id="status"></div>
+  <div class="msg" id="status"></div>
+</div>
 
 <center><i>Data is sourced from the <a href="https://api.congress.gov" target="_blank">Congress.gov API</a></i></center>
 
 <!-- ga-districts.js supplies the full GA seat list so vacant districts still render -->
 <script src="assets/scripts/ga-districts.js"></script>
 <script src="assets/scripts/congress.js"></script> <!-- Call congress.js script-->
-</body>
-</html>
