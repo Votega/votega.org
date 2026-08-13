@@ -6,8 +6,14 @@ Requires OPENSTATES_API_KEY environment variable.
 Open States API flow:
   1. Paginate GET /bills?jurisdiction=GA&session=2025_26&include=votes
   2. For each bill, collect vote events where motion_classification == ['passage']
-  3. Each vote event's votes[] has voter.id (OCD person ID) — no name matching needed
-     since ga-members.json already uses OCD person IDs.
+  3. Each vote event's votes[] normally has voter.id (an OCD person ID matching
+     ga-members.json directly). Open States sometimes fails to resolve it —
+     most often on a surname shared by several members — in which case
+     voter_name (the raw name string) is matched against ga-members.json
+     instead, scoped to the roll call's own chamber. See
+     normalize_voter_name()/build_member_name_index(). A row with neither a
+     usable id nor a resolvable name is dropped and counted in
+     metadata.unresolvedVoterRows.
 
 To update for a new session: change GA_SESSION below.
 
@@ -28,6 +34,7 @@ Usage:
 
 import json
 import os
+import re
 import sys
 import time
 import urllib.request
@@ -110,6 +117,55 @@ def load_member_chambers(path=MEMBERS_FILE):
     except (FileNotFoundError, json.JSONDecodeError, OSError):
         return {}
     return {m['id']: m.get('chamber') for m in data.get('members', []) if m.get('id')}
+
+
+_TITLE_PREFIX_RE = re.compile(
+    r'^(rep(resentative)?|sen(ator)?|mr|mrs|ms|dr)\.?\s+', re.IGNORECASE
+)
+
+
+def normalize_voter_name(name):
+    """Fold a name to a loose comparison key: strip a leading title, reorder a
+    "Last, First" string to "First Last", drop punctuation and extra
+    whitespace, lowercase the rest. Open States' voter_name is a raw string
+    from the legislature's site and its convention isn't guaranteed to match
+    ga-members.json's "First Last" (no title, no comma)."""
+    if not name:
+        return ''
+    name = _TITLE_PREFIX_RE.sub('', name.strip())
+    if ',' in name:
+        last, _, first = name.partition(',')
+        name = f'{first.strip()} {last.strip()}'
+    name = re.sub(r"[.,]", '', name)
+    name = re.sub(r'\s+', ' ', name).strip().lower()
+    return name
+
+
+def build_member_name_index(path=MEMBERS_FILE):
+    """Map (chamber, normalized name) -> OCD person id, for the voter_name
+    fallback used when Open States fails to resolve voter.id (the surname-
+    collision case: Open States can disambiguate the vote's chamber and the
+    name string, but not always which same-surnamed member cast it via id).
+
+    A (chamber, name) pair that matches more than one member is mapped to
+    None rather than guessed — an ambiguous name isn't safe to attribute
+    either way, so it's counted as unresolved like a missing id would be.
+    """
+    try:
+        with open(path, encoding='utf-8') as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return {}
+    index = {}
+    for m in data.get('members', []):
+        chamber = m.get('chamber')
+        mid = m.get('id')
+        name = normalize_voter_name(m.get('name'))
+        if not chamber or not mid or not name:
+            continue
+        key = (chamber, name)
+        index[key] = None if key in index else mid
+    return index
 
 
 def sanitize_member_votes(member_votes, votes_meta, member_chambers):
@@ -300,6 +356,10 @@ def main():
     else:
         print("No usable baseline — falling back to a full fetch.")
 
+    member_name_index    = build_member_name_index()
+    unresolved_voter_rows = 0
+    name_fallback_resolved = 0
+
     votes_meta   = {}
     member_votes = {}
     page         = 1
@@ -369,11 +429,24 @@ def main():
                     'result':     result,
                 }
 
+                ve_chamber = event_chamber(ve.get('motion_text'), ve.get('organization'))
+
                 for pv in ve.get('votes', []):
                     voter    = pv.get('voter') or {}
                     voter_id = voter.get('id')
                     if not voter_id:
-                        continue
+                        # Open States most often fails to resolve voter.id on a
+                        # surname collision (e.g. one of 5 Joneses); voter_name
+                        # is still the raw name string, so fall back to matching
+                        # it against ga-members.json within the roll call's own
+                        # chamber. A miss (no chamber, no name, or an ambiguous
+                        # match) is counted rather than silently dropped.
+                        fallback_key = (ve_chamber, normalize_voter_name(pv.get('voter_name')))
+                        voter_id = member_name_index.get(fallback_key) if ve_chamber else None
+                        if not voter_id:
+                            unresolved_voter_rows += 1
+                            continue
+                        name_fallback_resolved += 1
                     option     = pv.get('option', '').lower()
                     vote_label = VOTE_MAP.get(option, 'Other')
                     member_votes.setdefault(voter_id, []).append({
@@ -470,6 +543,13 @@ def main():
                                      else datetime.now().isoformat()),
             'duplicateVotesDropped': sanitize_stats['duplicateVotesDropped'],
             'crossChamberDropped':   sanitize_stats['crossChamberDropped'],
+            # This run's fetch only — like duplicateVotesDropped/crossChamberDropped
+            # above, an incremental run doesn't re-derive these for bills it didn't
+            # refetch. nameFallbackResolved is how many of those unresolved rows the
+            # voter_name fallback recovered; unresolvedVoterRows is what's left after
+            # it — no id, no usable name match, or an ambiguous chamber+name pair.
+            'nameFallbackResolved':  name_fallback_resolved,
+            'unresolvedVoterRows':   unresolved_voter_rows,
         },
         'votes':       votes_meta,
         'memberVotes': member_votes,
