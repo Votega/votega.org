@@ -339,7 +339,7 @@ def main():
             title      = bill.get('title', '')
             # Prefer official legis.ga.gov bill page; fall back to Open States
             bill_url = next(
-                (s['url'] for s in bill.get('sources', []) if 'legis.ga.gov' in s.get('url', '')),
+                (s['url'] for s in bill.get('sources', []) if 'www.legis.ga.gov/legislation/' in s.get('url', '')),
                 f"https://openstates.org/ga/bills/{GA_SESSION}/{identifier.replace(' ', '')}/"
             )
 
