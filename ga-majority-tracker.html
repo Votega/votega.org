@@ -275,9 +275,26 @@ function getBasePath() {
   return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
 }
 
+// Newest cycle present in races.json, so a new cycle is a data change not a
+// code one — mirrors target_cycle() in generate_ga_campaign_finance.py.
+// FALLBACK_CYCLE is only used if races.json can't be read.
+const FALLBACK_CYCLE = 2026;
+let raceCycle = FALLBACK_CYCLE;
+
+async function loadRaceCycle() {
+  try {
+    const res = await fetch(getBasePath() + 'assets/data/races.json');
+    const cycles = ((await res.json()).races || []).map(r => r.cycle).filter(Boolean);
+    if (cycles.length) return Math.max(...cycles);
+  } catch (err) {
+    console.error('loadRaceCycle()', err);
+  }
+  return FALLBACK_CYCLE;
+}
+
 function raceUrl(chamber, district) {
   const slug = chamber === 'Senate' ? 'ga-senate' : 'ga-house';
-  return `${getBasePath()}race.html?id=${slug}-${district}-2026`;
+  return `${getBasePath()}race.html?id=${slug}-${district}-${raceCycle}`;
 }
 
 const HOUSE_MAJORITY = 91;
@@ -549,7 +566,10 @@ document.querySelectorAll('.chamber-tab').forEach(btn => {
 
 (async () => {
   try {
-    const members = await loadMembers();
+    const [members] = await Promise.all([
+      loadMembers(),
+      loadRaceCycle().then(c => { raceCycle = c; }),
+    ]);
 
     // Build district→member lookup per chamber
     const senateByDist = {}, houseByDist = {};

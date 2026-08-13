@@ -458,11 +458,12 @@ share-description: "Profile of a candidate running for office in Georgia: the of
         <h3>Campaign Finance</h3>
         <p style="font-size:0.875rem;color:#666;">
           Finance data unavailable.
-          <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
+          <a href="${CampaignFinance.fecSearchUrl()}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
         </p>`;
       return;
     }
 
+    const fecCycle = fecData.metadata?.cycle ?? null;
     const fecId = CampaignFinance.findFecId(fecData, candidate, race);
 
     const entry = fecId ? fecData.candidates?.[fecId] : null;
@@ -471,14 +472,15 @@ share-description: "Profile of a candidate running for office in Georgia: the of
         <h3>Campaign Finance</h3>
         <p style="font-size:0.875rem;color:#666;">
           No FEC filing found for this candidate.
-          <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
+          <a href="${CampaignFinance.fecSearchUrl(fecCycle)}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
         </p>`;
       return;
     }
 
+    const cycleLabel = CampaignFinance.cycleLabelFor(fecCycle) || 'election cycle';
     const coverageNote = entry.coverageEndDate
-      ? `2025–2026 election cycle · Through ${new Date(entry.coverageEndDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
-      : '2025–2026 election cycle';
+      ? `${cycleLabel} · Through ${new Date(entry.coverageEndDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
+      : cycleLabel;
 
     const employersHtml = (entry.topEmployers || []).length ? `
       <h4 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h4>

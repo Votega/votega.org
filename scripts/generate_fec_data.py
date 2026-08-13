@@ -34,10 +34,28 @@ from datetime import datetime
 API_KEY     = os.environ.get('FEC_API_KEY')
 BASE_URL    = "https://api.open.fec.gov/v1"
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-fec-data.json"
-CYCLE       = 2026
+RACES_FILE  = "assets/data/races.json"
+FALLBACK_CYCLE = 2026  # only used if races.json can't be read
 DELAY       = 1.0
 TOP_N       = 10   # top employers/donors to store per candidate
 FETCH_N     = 25   # fetch more from API to allow for filtered-out junk entries
+
+
+def target_cycle():
+    """Newest cycle present in races.json, so a new cycle is a data change not a code one.
+    Mirrors generate_ga_campaign_finance.py's target_cycle() — same source of truth,
+    kept in sync so the state and federal finance data never disagree on the cycle."""
+    try:
+        with open(RACES_FILE, encoding="utf-8") as f:
+            cycles = [r.get("cycle") for r in json.load(f).get("races", []) if r.get("cycle")]
+        if cycles:
+            return max(cycles)
+    except Exception as e:
+        print(f"  (could not read {RACES_FILE}: {e})")
+    return FALLBACK_CYCLE
+
+
+CYCLE = target_cycle()
 
 
 def fec_get(path, params=None, retries=3):

@@ -18,7 +18,21 @@ window.CampaignFinance = (function () {
   const GA_FINANCE_URL = 'assets/data/ga-campaign-finance.json';
 
   const PEACHFILE_SEARCH = 'https://peachfile.ethics.ga.gov/public/cf/publiccandidate';
-  const FEC_SEARCH       = 'https://www.fec.gov/data/candidates/?state=GA&election_year=2026';
+
+  // FEC cycle comes from ga-fec-data.json's own metadata.cycle (set by
+  // generate_fec_data.py from races.json) rather than a hardcoded year, so a
+  // new cycle is a data change, not a code one — same principle as the GA/
+  // PeachFile branch below, which already reads data.metadata.cycle. Falls
+  // back to an unfiltered search link when the cycle isn't known yet (e.g.
+  // ga-fec-data.json failed to load).
+  function fecSearchUrl(cycle) {
+    return cycle
+      ? `https://www.fec.gov/data/candidates/?state=GA&election_year=${cycle}`
+      : 'https://www.fec.gov/data/candidates/?state=GA';
+  }
+  function cycleLabelFor(cycle) {
+    return cycle ? `${cycle - 1}–${cycle} cycle` : null;
+  }
 
   // ── loaders (cached) ───────────────────────────────────────────────────────
   let _fecCache;   // undefined = unfetched, null = failed
@@ -176,12 +190,13 @@ window.CampaignFinance = (function () {
     if (isFederal) {
       const fecData = await getFecData();
       if (!fecData) {
-        return { status: 'unavailable', source: 'FEC', sourceShort: 'FEC', searchUrl: FEC_SEARCH };
+        return { status: 'unavailable', source: 'FEC', sourceShort: 'FEC', searchUrl: fecSearchUrl() };
       }
+      const fecCycle = fecData.metadata?.cycle ?? null;
       const fecId = findFecId(fecData, candidate, race);
       const e = fecId ? fecData.candidates?.[fecId] : null;
       if (!e) {
-        return { status: 'none', source: 'FEC', sourceShort: 'FEC', searchUrl: FEC_SEARCH };
+        return { status: 'none', source: 'FEC', sourceShort: 'FEC', searchUrl: fecSearchUrl(fecCycle) };
       }
       return {
         status: 'ok',
@@ -191,12 +206,12 @@ window.CampaignFinance = (function () {
         spent: e.totalSpent ?? null,
         cashOnHand: e.cashOnHand ?? null,
         totalIndividual: e.totalIndividual ?? null,
-        cycleLabel: '2025–2026 cycle',
+        cycleLabel: cycleLabelFor(fecCycle),
         asOf: e.coverageEndDate
           ? new Date(e.coverageEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
           : null,
         detailUrl: e.fecUrl || null,
-        searchUrl: FEC_SEARCH,
+        searchUrl: fecSearchUrl(fecCycle),
         raw: e,
       };
     }
@@ -251,6 +266,7 @@ window.CampaignFinance = (function () {
     normalizeName, candidateLastName, findFecId,
     gaCandidatePool, findGaFilers,
     GA_CHAMBER_MAP, GA_OFFICE_MAP,
+    fecSearchUrl, cycleLabelFor,
     summary,
   };
 })();

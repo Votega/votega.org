@@ -291,6 +291,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
 <div class="msg" id="status"></div>
 
+<script src="assets/scripts/campaign-finance.js"></script>
 <script>
   const DEBUG = false;
 
@@ -598,20 +599,22 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       return;
     }
 
+    const fecCycle = fecData.metadata?.cycle ?? null;
     const entry = findFecEntry(fecData, member);
     if (!entry || entry.totalRaised == null) {
       container.innerHTML = `
         <h3>Campaign Finance</h3>
         <p class="finance-meta">
           No current FEC filing found for this member.
-          <a href="https://www.fec.gov/data/candidates/?state=GA&election_year=2026" target="_blank" rel="noopener">Search FEC.gov ↗</a>
+          <a href="${CampaignFinance.fecSearchUrl(fecCycle)}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
         </p>`;
       return;
     }
 
+    const cycleLabel = CampaignFinance.cycleLabelFor(fecCycle) || 'election cycle';
     const coverageNote = entry.coverageEndDate
-      ? `2025–2026 election cycle · Through ${new Date(entry.coverageEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
-      : '2025–2026 election cycle';
+      ? `${cycleLabel} · Through ${new Date(entry.coverageEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+      : cycleLabel;
 
     const employersHtml = (entry.topEmployers || []).length ? `
       <h4 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h4>
