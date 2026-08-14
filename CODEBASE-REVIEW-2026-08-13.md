@@ -360,6 +360,7 @@ State: tabs + county filter + clickable rows, live-filtering, no submit. Federal
 Both lookups punt to the SoS My Voter Page (`federal-reps.html:24`, `ga-state-reps.html:15`, `elections.html:454`). The address-based lookup recommended in `01-Recommendations for votega.md` item 8 (Census Geocoder — free, keyless, CORS-friendly) would eliminate this friction across `find-my-reps`, `ga-state-reps`, `federal-reps`, and `elections.html` at once.
 
 #### 3.14 Deep-link behavior is uneven
+#### [X - 8/14/26] 
 
 | Page | Param | Missing param | Bad param |
 |---|---|---|---|
