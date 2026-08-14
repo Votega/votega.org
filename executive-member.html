@@ -275,7 +275,10 @@ share-description: "Profile of a federal executive branch official: office held,
       const data = await res.json();
 
       const official = (data.officials || []).find(o => o.id === id);
-      if (!official) throw new Error('Official not found');
+      if (!official) {
+        detailsDiv.innerHTML = '<p>Official not found. <a href="executive-branch.html">Go back to Executive Branch</a></p>';
+        return;
+      }
 
       document.getElementById('pageTitle').textContent = official.name;
       document.title = `${official.name} | Vote GA`;

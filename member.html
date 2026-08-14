@@ -329,10 +329,13 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
       const data = await membersRes.json();
       const allMembers = data.members || [];
-      const member = allMembers.find(m => m.bioguideId === bioguideId) || {};
+      const member = allMembers.find(m => m.bioguideId === bioguideId);
 
-      if (!member.bioguideId) {
-        throw new Error('Member not found in prebuilt data');
+      if (!member) {
+        statusLine.textContent = '';
+        document.getElementById('memberDetails').innerHTML =
+          `<p>Member not found. <a href="${getBasePath()}federal-reps">Go back</a></p>`;
+        return;
       }
 
       let electionInfo = null;

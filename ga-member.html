@@ -354,7 +354,12 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       const all   = data.members || [];
       const member = all.find(m => m.id === id);
 
-      if (!member) throw new Error('Member not found in data.');
+      if (!member) {
+        statusLine.textContent = '';
+        document.getElementById('memberDetails').innerHTML =
+          '<p>Member not found. <a href="ga-state-reps">Go back</a></p>';
+        return;
+      }
 
       let seatRace = null;
       let otherRaceInfo = null;

@@ -458,6 +458,18 @@ share-description: "Find candidates running in Georgia's 2026 elections - statew
     racesOutput.innerHTML = html;
   }
 
+  // Reflects the current tab/phase/county selection into the URL so a voter can
+  // share (or bookmark) this exact filtered view. Uses replaceState, not
+  // pushState, since these are filter widgets rather than distinct pages —
+  // every click shouldn't add a Back-button stop.
+  function syncURL() {
+    const params = new URLSearchParams();
+    params.set('tab', activeTab);
+    if (activePhase) params.set('phase', activePhase);
+    if (countySelect.value) params.set('county', countySelect.value);
+    history.replaceState(null, '', '?' + params.toString());
+  }
+
   // Phase toggle handler
   document.getElementById('phaseToggle').addEventListener('click', e => {
     const btn = e.target.closest('.phase-btn');
@@ -466,6 +478,7 @@ share-description: "Find candidates running in Georgia's 2026 elections - statew
     document.querySelectorAll('.phase-btn').forEach(b => b.classList.toggle('active', b === btn));
     updatePageHeader();
     renderRaces();
+    syncURL();
   });
 
   // Tab click handler
@@ -477,10 +490,36 @@ share-description: "Find candidates running in Georgia's 2026 elections - statew
     countyFilter.classList.toggle('visible', COUNTY_TABS.has(activeTab));
     countySelect.value = '';
     renderRaces();
+    syncURL();
   });
 
-  countySelect.addEventListener('change', renderRaces);
+  countySelect.addEventListener('change', () => { renderRaces(); syncURL(); });
   openSeatOnly.addEventListener('change', renderRaces);
+
+  // Apply tab/phase/county from the query string (if present and valid) after
+  // the data-driven defaults have been computed, so a shared link reproduces
+  // the exact filtered view instead of always landing on the defaults.
+  function applyURLParams() {
+    const params = new URLSearchParams(window.location.search);
+
+    const tab = params.get('tab');
+    if (tab && TAB_FILTER[tab]) {
+      activeTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      countyFilter.classList.toggle('visible', COUNTY_TABS.has(activeTab));
+    }
+
+    const phase = params.get('phase');
+    if (phase && document.querySelector(`.phase-btn[data-phase="${phase}"]`)) {
+      activePhase = phase;
+      document.querySelectorAll('.phase-btn').forEach(b => b.classList.toggle('active', b.dataset.phase === phase));
+    }
+
+    const county = params.get('county');
+    if (county && COUNTY_TABS.has(activeTab) && [...countySelect.options].some(o => o.value === county)) {
+      countySelect.value = county;
+    }
+  }
 
   async function loadData() {
     try {
@@ -498,6 +537,7 @@ share-description: "Find candidates running in Georgia's 2026 elections - statew
 
       allRaces = races.filter(r => r.cycle === activeCycle);
       buildPhaseToggle();
+      applyURLParams();
       updatePageHeader();
       renderRaces();
     } catch (err) {

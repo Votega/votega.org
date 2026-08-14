@@ -563,6 +563,13 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     return '<div class="detail-section"><div class="detail-label">Governor’s Action</div><div class="detail-body">' + body + '</div></div>';
   }
 
+  // ── Stable per-bill anchor ────────────────────────────────────────────────
+  // Keyed by identifier (e.g. "HB 111" -> "bill-HB111") rather than list index,
+  // so a link to a specific bill survives filtering/sorting/pagination changes.
+  function billAnchorId(identifier) {
+    return 'bill-' + String(identifier).replace(/\s+/g, '');
+  }
+
   // ── Bill card HTML ────────────────────────────────────────────────────────
   function cardHtml(bill, idx) {
     const sc        = bill._status;
@@ -591,8 +598,9 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       + (bill.textUrl ? '<a class="detail-link" href="' + escHtml(bill.textUrl) + '" target="_blank" rel="noopener">&#128196; Bill text</a>' : '')
       + '</div>';
 
-    return '<div class="bill-card" id="bc' + idx + '">'
-      + '<div class="bill-card-header" onclick="toggleBill(' + idx + ')" aria-expanded="false">'
+    const anchorId = billAnchorId(bill.identifier);
+    return '<div class="bill-card" id="' + anchorId + '">'
+      + '<div class="bill-card-header" onclick="toggleBill(\'' + anchorId + '\')" aria-expanded="false">'
       + '<div class="bill-top-row">'
       + '<div style="flex:1">'
       + '<div class="bill-id-status">'
@@ -623,8 +631,8 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
   }
 
   // ── Toggle card expand ────────────────────────────────────────────────────
-  window.toggleBill = function (idx) {
-    const card = document.getElementById('bc' + idx);
+  window.toggleBill = function (anchorId) {
+    const card = document.getElementById(anchorId);
     if (!card) return;
     const open = card.classList.toggle('open');
     const hdr  = card.querySelector('.bill-card-header');
@@ -821,6 +829,55 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       .replace(/"/g, '&quot;');
   }
 
+  // ── Deep-link to a specific bill via ?bill=HB111 ────────────────────────────
+  function normalizeIdentifier(s) {
+    return String(s).replace(/\s+/g, '').toUpperCase();
+  }
+
+  function jumpToBillFromURL() {
+    const billParam = new URLSearchParams(window.location.search).get('bill');
+    if (!billParam) { applyFilters(); return; }
+
+    const target = normalizeIdentifier(billParam);
+    const bill = allBills.find(function (b) { return normalizeIdentifier(b.identifier) === target; });
+
+    if (!bill) {
+      // No exact match — fall back to a search for the requested identifier so
+      // the visitor lands somewhere useful instead of a silent no-op.
+      elSearch.value = billParam;
+      applyFilters();
+      return;
+    }
+
+    // Reset filters so the linked bill isn't hidden by whatever filter/tab
+    // happens to be active by default.
+    elSearch.value = '';
+    elSubject.value = '';
+    chamberTab = '';
+    statusFilter = '';
+    partyLineOnly = false;
+    document.querySelectorAll('.bills-tab').forEach(function (b) { b.classList.toggle('active', b.dataset.chamber === ''); });
+    document.querySelectorAll('#statusPills .bills-status-btn:not(#partyLineToggle)').forEach(function (b) { b.classList.toggle('active', b.dataset.status === ''); });
+    document.getElementById('partyLineToggle').classList.remove('active');
+
+    applyFilters();
+
+    const idx = filtered.indexOf(bill);
+    if (idx === -1) return;
+    currentPage = Math.floor(idx / PER_PAGE) + 1;
+    render();
+
+    const anchorId = billAnchorId(bill.identifier);
+    requestAnimationFrame(function () {
+      const card = document.getElementById(anchorId);
+      if (!card) return;
+      card.classList.add('open');
+      const hdr = card.querySelector('.bill-card-header');
+      if (hdr) hdr.setAttribute('aria-expanded', 'true');
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
   fetch(DATA_URL)
     .then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -852,7 +909,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       elDataNote.innerHTML = 'Data snapshot: Open States bulk export, May 2026 (generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) : '') + '). Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote);
       elDataNote.style.display   = '';
 
-      applyFilters();
+      jumpToBillFromURL();
     })
     .catch(function (err) {
       elLoading.style.display = 'none';
