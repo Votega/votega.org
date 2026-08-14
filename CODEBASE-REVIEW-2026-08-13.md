@@ -174,6 +174,7 @@ The workflow writes `ga-executive-orders-$(date +%Y).json` (`update-ga-executive
 ---
 
 ### 2.4 `primaryResult` is empty on all 352 races, so a UI branch is dead
+#### [X - 8/14/26] 
 
 `race.html:556-561` gates on `race.phases.primary?.primaryResult`. All 352 races have `primaryResult: ""` despite the primary (2026-05-19) and runoff (2026-06-16) being complete, with certified results sitting in `_data/election_results/ga-primary-results.json`.
 
