@@ -24,16 +24,6 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   .phase-runoff  { background: #fef9c3; color: #854d0e; }
   .phase-general { background: #dcfce7; color: #166534; }
 
-  .primary-result-callout {
-    padding: 0.75rem 1rem;
-    background: #f0f4ff;
-    border-left: 4px solid #4f6edb;
-    border-radius: 0 6px 6px 0;
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-  }
-  .primary-result-callout strong { display: block; margin-bottom: 0.2rem; }
-
   .race-related {
     padding: 0.75rem 1rem;
     background: #eef4fb;
@@ -552,15 +542,6 @@ share-description: "Details for a Georgia race: the candidates running, the incu
          </div>`
       : '';
 
-    // Primary result callout (shown after switching to general)
-    const showResult = race.activePhase === 'general' && race.phases.primary?.primaryResult;
-    const resultCallout = showResult
-      ? `<div class="primary-result-callout">
-           <strong>Primary Result</strong>
-           ${race.phases.primary.primaryResult}
-         </div>`
-      : '';
-
     // Related-contest cross-link (e.g. a concurrent special election for the same seat)
     const rel = race.relatedNote;
     const relatedHtml = rel && rel.text
@@ -637,7 +618,6 @@ share-description: "Details for a Georgia race: the candidates running, the incu
         </div>
       </div>
       ${openSeatHtml}
-      ${resultCallout}
       ${relatedHtml}
       ${tabBar}
       ${panelsHtml}
