@@ -5,7 +5,7 @@ permalink: /ga-bills.html
 share-description: "Track bills and resolutions in the Georgia General Assembly. Search legislation by keyword, chamber, and status, and see how each party voted."
 ---
 
-<h1>Georgia General Assembly — Bills &amp; Resolutions</h1>
+<h1>Georgia General Assembly: Bills &amp; Resolutions</h1>
 <p>Browse legislation from the 2025–26 regular session. Data sourced from <a href="https://openstates.org" target="_blank">Open States</a>.</p>
 <p class="data-note" id="billsDataNote" style="display:none"></p>
 
@@ -904,7 +904,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
         return (b.passageVotes || []).some(function (v) { return v.partyTally; });
       }).length;
       const coverageNote = withVotes && withParty < withVotes
-        ? ' Party-line tags and Democrat/Republican vote tallies are still being backfilled — available for ' + withParty.toLocaleString() + ' of ' + withVotes.toLocaleString() + ' bills with recorded votes, so some party-line votes may not yet be flagged.'
+        ? ' Party-line tags and Democrat/Republican vote tallies are still being backfilled. Available for ' + withParty.toLocaleString() + ' of ' + withVotes.toLocaleString() + ' bills with recorded votes, so some party-line votes may not yet be flagged.'
         : '';
       elDataNote.innerHTML = 'Data snapshot: Open States bulk export, May 2026 (generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) : '') + '). Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote);
       elDataNote.style.display   = '';
