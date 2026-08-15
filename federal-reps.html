@@ -11,9 +11,9 @@ Georgia is represented in Congress by 2 U.S. Senators and 14 U.S. Representative
 
 <h3>Find Your U.S. Legislator</h3>
 
-Select a Chamber (House or Senate). A list of your Representatives or Senators will appear in the drop-down list.
+Select a Chamber (House or Senate) and, for the House, optionally a county to narrow the list to your district.
 
-Many counties are served by multiple districts, and some districts serve multiple counties. 
+Many counties are served by multiple districts, and some districts serve multiple counties.
 
 <p class="box-note">If you are unsure which district you're in, you can use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> tool. Enter your information and scroll to the bottom of the page to see your districts (both at the federal and state level). Then, you can identify which member and/or candidate is in your district.
 
@@ -21,52 +21,95 @@ Many counties are served by multiple districts, and some districts serve multipl
 
 <br>Select a member to view details about their term(s) in office.
 
-<!--
-Lookup Form
- States are hardcoded, user chooses a state and chamber. Form returns a list of members based on selection. Member lookup uses prebuilt current-members.JSON instead of calling the Congress.gov API directly from the browser. Returned members are placed in the last dropdown list.
- -->
 <style>
-  .lookup-widget { font-family: system-ui, sans-serif; max-width: 680px; }
-  .lookup-widget label { display: block; margin-top: 1.2rem; }
-  .lookup-widget select, .lookup-widget button { width: 100%; padding: 8px; box-sizing: border-box; }
-  .lookup-widget [disabled] { background: #eee; }
-  .lookup-widget .msg { margin-top: 1rem; color: #c00; }
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 1.25rem 0 0 0;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  .tab-btn {
+    padding: 0.45rem 1.1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    border-radius: 4px 4px 0 0;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: #1a56a8; }
+  .tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+
+  .county-filter { margin: 1rem 0 0.5rem 0; max-width: 400px; }
+  .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; }
+  .county-filter select { width: 100%; padding: 8px; box-sizing: border-box; }
+
+  .msg { margin-top: 1rem; color: #c00; }
+
+  #membersOutput { margin-top: 1rem; }
+
+  .member-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 0.4rem;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    transition: background 0.15s;
+  }
+  .member-row:hover { background: #f5f8ff; }
+  .member-row-vacant { color: #666; }
+  .member-district {
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: #777;
+    min-width: 90px;
+  }
+  .member-name {
+    font-weight: bold;
+    font-size: 0.95rem;
+    flex: 1;
+  }
+  .member-arrow { color: #1a56a8; margin-left: 0.75rem; flex-shrink: 0; }
+  .party-d { color: #1d4ed8; }
+  .party-r { color: #b91c1c; }
+  .empty-note {
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 6px;
+    border: 1px dashed #ccc;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  @media (max-width: 520px) {
+    .tab-btn { font-size: 0.82rem; padding: 0.4rem 0.75rem; }
+  }
 </style>
 
-<div class="lookup-widget">
-  <!--Start Form-->
-  <form id="lookupForm">
-    <select id="stateSelect" style="display:none;" required disabled></select>
-
-    <label>
-      Chamber
-      <select id="chamberSelect" required>
-        <option value="">— choose —</option>
-        <option value="house">House</option>
-        <option value="senate">Senate</option>
-      </select>
-    </label>
-
-    <div id="countyFilterWrap" style="display:none;">
-      <label>
-        Filter by county
-        <select id="countySelect">
-          <option value="">— all districts —</option>
-        </select>
-      </label>
-    </div>
-
-    <label>
-      Representative / Senator
-      <select id="memberSelect" required disabled></select>
-    </label>
-
-    <button type="submit">Select</button>
-  </form>
-  <!--end form -->
-
-  <div class="msg" id="status"></div>
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" data-tab="house">U.S. House</button>
+  <button class="tab-btn" data-tab="senate">U.S. Senate</button>
 </div>
+
+<div class="county-filter" id="countyFilterWrap">
+  <label for="countySelect">Filter by county</label>
+  <select id="countySelect">
+    <option value="">— all districts —</option>
+  </select>
+</div>
+
+<div class="msg" id="status"></div>
+<div id="membersOutput"></div>
 
 <center><i>Data is sourced from the <a href="https://api.congress.gov" target="_blank">Congress.gov API</a></i></center>
 
