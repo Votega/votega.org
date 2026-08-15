@@ -258,6 +258,11 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   const GA_MEMBERS_URL  = 'assets/data/ga-members.json';
   const CONGRESS_URL    = 'assets/data/current-members.json';
 
+  // Set when the member-data fetch itself fails (network/HTTP error), as
+  // opposed to a memberId that's simply missing from a successfully-loaded
+  // dataset — the two need different messaging on the incumbent card.
+  let membersFetchFailed = false;
+
   // ── Campaign Finance comparison tab ─────────────────────────────────────────
   // Gather every active candidate in the active phase (across party ballots or
   // the flat list), resolving incumbent names from member data, into a shape the
@@ -396,10 +401,13 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     const isState  = race.level === 'state';
 
     if (!member) {
+      const message = membersFetchFailed
+        ? 'Officeholder details are temporarily unavailable.'
+        : 'Officeholder details are not available for this candidate.';
       return `
         <div class="candidate-card incumbent">
           <span class="role-badge role-incumbent">&#9733; Current Officeholder</span>
-          <p><em>Member data not found. Check that memberId matches the data file.</em></p>
+          <p><em>${message}</em></p>
         </div>`;
     }
 
@@ -689,10 +697,17 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       let members = [];
       if (hasIncumbent) {
         const memberUrl = race.level === 'federal' ? CONGRESS_URL : GA_MEMBERS_URL;
-        const mRes = await fetch(memberUrl);
-        if (mRes.ok) {
-          const mData = await mRes.json();
-          members = mData.members || [];
+        try {
+          const mRes = await fetch(memberUrl);
+          if (mRes.ok) {
+            const mData = await mRes.json();
+            members = mData.members || [];
+          } else {
+            membersFetchFailed = true;
+          }
+        } catch (mErr) {
+          console.error('race.html: member fetch failed', mErr);
+          membersFetchFailed = true;
         }
       }
 

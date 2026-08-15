@@ -541,7 +541,8 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
       updatePageHeader();
       renderRaces();
     } catch (err) {
-      statusEl.textContent = 'Could not load race data: ' + err.message;
+      console.error('elections.html: loadData()', err);
+      racesOutput.innerHTML = `<p class="empty-note" role="alert">Could not load race data. Please try again later.</p>`;
     }
   }
 

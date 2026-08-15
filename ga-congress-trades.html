@@ -228,57 +228,61 @@ share-description: "Stock trades disclosed by Georgia's congressional delegation
 </style>
 
 <div id="summaryBar">Loading trade data…</div>
-<div id="memberCards"></div>
+<div id="loadError" role="alert" style="display:none;padding:1rem;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;color:#991b1b;font-size:0.9rem;"></div>
 
-<div class="filter-row">
-  <div>
-    <label for="memberFilter">Member</label>
-    <select id="memberFilter"><option value="">All members</option></select>
+<div id="tradesApp">
+  <div id="memberCards"></div>
+
+  <div class="filter-row">
+    <div>
+      <label for="memberFilter">Member</label>
+      <select id="memberFilter"><option value="">All members</option></select>
+    </div>
+    <div>
+      <label for="typeFilter">Trade type</label>
+      <select id="typeFilter">
+        <option value="">All types</option>
+        <option value="purchase">Purchases</option>
+        <option value="sale">Sales</option>
+      </select>
+    </div>
+    <div>
+      <label for="tickerFilter">Ticker</label>
+      <input id="tickerFilter" type="text" placeholder="e.g. AAPL" style="width:90px;">
+    </div>
+    <div>
+      <label for="lateFilter">Show</label>
+      <select id="lateFilter">
+        <option value="">All trades</option>
+        <option value="late">Late filings only</option>
+      </select>
+    </div>
+    <button id="clearFilters">Clear filters</button>
   </div>
-  <div>
-    <label for="typeFilter">Trade type</label>
-    <select id="typeFilter">
-      <option value="">All types</option>
-      <option value="purchase">Purchases</option>
-      <option value="sale">Sales</option>
-    </select>
+
+  <div id="selectPrompt">Select a member above to view their trades.</div>
+  <div id="tradeCount"></div>
+  <div id="tradeTableWrap">
+    <table class="trade-table">
+      <thead>
+        <tr>
+          <th data-col="transaction_date">Date<span class="sort-icon"></span></th>
+          <th data-col="member">Member<span class="sort-icon"></span></th>
+          <th data-col="ticker">Ticker<span class="sort-icon"></span></th>
+          <th data-col="asset_name">Asset<span class="sort-icon"></span></th>
+          <th data-col="transaction_type">Type<span class="sort-icon"></span></th>
+          <th data-col="amount_range_low">Amount<span class="sort-icon"></span></th>
+          <th data-col="days_to_file">Disclosed After<span class="sort-icon"></span></th>
+        </tr>
+      </thead>
+      <tbody id="tradeBody"></tbody>
+    </table>
   </div>
-  <div>
-    <label for="tickerFilter">Ticker</label>
-    <input id="tickerFilter" type="text" placeholder="e.g. AAPL" style="width:90px;">
-  </div>
-  <div>
-    <label for="lateFilter">Show</label>
-    <select id="lateFilter">
-      <option value="">All trades</option>
-      <option value="late">Late filings only</option>
-    </select>
-  </div>
-  <button id="clearFilters">Clear filters</button>
+  <div id="noResults">No trades match the current filters.</div>
+  <button id="loadMore">Load more</button>
+
+  <div class="disclaimer" id="disclaimer" style="display:none;"></div>
 </div>
-
-<div id="selectPrompt">Select a member above to view their trades.</div>
-<div id="tradeCount"></div>
-<div id="tradeTableWrap">
-  <table class="trade-table">
-    <thead>
-      <tr>
-        <th data-col="transaction_date">Date<span class="sort-icon"></span></th>
-        <th data-col="member">Member<span class="sort-icon"></span></th>
-        <th data-col="ticker">Ticker<span class="sort-icon"></span></th>
-        <th data-col="asset_name">Asset<span class="sort-icon"></span></th>
-        <th data-col="transaction_type">Type<span class="sort-icon"></span></th>
-        <th data-col="amount_range_low">Amount<span class="sort-icon"></span></th>
-        <th data-col="days_to_file">Disclosed After<span class="sort-icon"></span></th>
-      </tr>
-    </thead>
-    <tbody id="tradeBody"></tbody>
-  </table>
-</div>
-<div id="noResults">No trades match the current filters.</div>
-<button id="loadMore">Load more</button>
-
-<div class="disclaimer" id="disclaimer" style="display:none;"></div>
 
 <script>
   const DATA_URL  = 'assets/data/ga-congress-trades.json';
@@ -355,8 +359,12 @@ share-description: "Stock trades disclosed by Georgia's congressional delegation
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       data = await res.json();
     } catch (err) {
-      document.getElementById('summaryBar').textContent =
-        'Could not load trade data. Run the update-ga-congress-trades workflow to generate it.';
+      console.error('ga-congress-trades: fetch failed', err);
+      document.getElementById('summaryBar').style.display = 'none';
+      document.getElementById('tradesApp').style.display = 'none';
+      const errEl = document.getElementById('loadError');
+      errEl.style.display = 'block';
+      errEl.textContent = 'Trade data isn’t available right now. Please check back later.';
       return;
     }
 

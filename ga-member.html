@@ -363,13 +363,17 @@ share-description: "Profile of a Georgia General Assembly member: district, part
 
       let seatRace = null;
       let otherRaceInfo = null;
+      let electionDataUnavailable = false;
       if (racesRes.ok) {
         const racesData = await racesRes.json();
         seatRace = findSeatRace(member, racesData.races || []);
         otherRaceInfo = findMemberInRaces(member.id, racesData.races || []);
+      } else {
+        console.error('ga-member.html: races fetch failed', racesRes.status);
+        electionDataUnavailable = true;
       }
 
-      displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable);
+      displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable, electionDataUnavailable);
       // Resigned/Removed/Deceased entries are historical records kept only so
       // ga-member-votes.json can still join their earlier votes by OCD id —
       // exclude them from the sidebar's "current occupants" peer list, but
@@ -536,7 +540,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       </p>`;
   }
 
-  function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable) {
+  function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable, electionDataUnavailable) {
     const currentYear = new Date().getFullYear();
     const detailsDiv  = document.getElementById('memberDetails');
     const age = computeAge(member);
@@ -550,6 +554,13 @@ share-description: "Profile of a Georgia General Assembly member: district, part
 
     const leadershipHtml = member.leadershipRole
       ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;background:#1a1a2e;color:#fff;border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${escHtml(member.leadershipRole)}</div>`
+      : '';
+
+    // Distinct from "not up for election" (the common case, no banner needed)
+    // — this only shows when the races fetch itself failed, so a visitor
+    // isn't left wondering whether the absence of a banner is meaningful.
+    const electionDataUnavailableHtml = electionDataUnavailable
+      ? `<div class="status-banner"><span class="status-label">Election status is temporarily unavailable.</span></div>`
       : '';
 
     const electionBannerHtml = (() => {
@@ -600,6 +611,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       : '';
 
     detailsDiv.innerHTML = `
+      ${electionDataUnavailableHtml}
       ${electionBannerHtml}
       ${statusBannerHtml}
       ${imageHtml}
