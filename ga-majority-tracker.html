@@ -198,13 +198,15 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 0.78rem;
-    pointer-events: none;
+    /* auto (not none) so the "View race" link inside is actually clickable */
+    pointer-events: auto;
     z-index: 1000;
     display: none;
     line-height: 1.45;
     max-width: 200px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
+  #seatTooltip a { color: #93c5fd; }
 
   /* ── Legend ───────────────────────────────────────────────────────────── */
   .chart-legend {
@@ -295,6 +297,18 @@ async function loadRaceCycle() {
 function raceUrl(chamber, district) {
   const slug = chamber === 'Senate' ? 'ga-senate' : 'ga-house';
   return `${getBasePath()}race.html?id=${slug}-${district}-${raceCycle}`;
+}
+
+function memberUrl(id) {
+  return `${getBasePath()}ga-member.html?id=${encodeURIComponent(id)}`;
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 const HOUSE_MAJORITY = 91;
@@ -446,12 +460,17 @@ function makeSeneateSeat(dist, byDistrict) {
     return empty;
   }
   const el = document.createElement('a');
-  el.href = raceUrl('Senate', dist);
   const member = byDistrict[dist];
   const party  = partyOf(member);
+  // A seat is "filled" if it has a member record whose status isn't Vacant —
+  // ga-members.json injects a placeholder record (with a real id/district but
+  // status: "Vacant") for vacant seats via overrides, so `member` being
+  // truthy doesn't by itself mean there's a legislator to link to.
+  const isVacant = party === 'V';
+  el.href = (member && !isVacant) ? memberUrl(member.id) : raceUrl('Senate', dist);
   el.className = `senate-seat seat-${party.toLowerCase()}`;
 
-  const lastName = member
+  const lastName = (member && !isVacant)
     ? member.name.split(',')[0].split(' ').pop()
     : 'Vacant';
   el.innerHTML = `
@@ -459,9 +478,14 @@ function makeSeneateSeat(dist, byDistrict) {
     <div class="seat-dist">${dist}</div>
   `;
 
-  const fullName = member ? member.name : 'Vacant';
+  const fullName = (member && !isVacant) ? member.name : 'Vacant';
   const partyLabel = party === 'D' ? 'Democrat' : party === 'R' ? 'Republican' : 'Vacant';
-  attachTooltip(el, `District ${dist}\n${fullName}\n${partyLabel}`);
+  // Filled seats link straight to the legislator; the 2026 race is a
+  // secondary line in the tooltip rather than the primary click target.
+  const raceLine = (member && !isVacant)
+    ? `<br><a href="${raceUrl('Senate', dist)}">View 2026 race →</a>`
+    : '';
+  attachTooltip(el, `District ${dist}<br>${escHtml(fullName)}<br>${partyLabel}${raceLine}`);
   return el;
 }
 
@@ -499,15 +523,35 @@ function renderHouse(members) {
         style: 'cursor:pointer;transition:r 0.1s,opacity 0.1s',
       });
 
-      if (member) {
-        const label = `District ${member.district}\n${member.name}\n${
-          party === 'D' ? 'Democrat' : party === 'R' ? 'Republican' : 'Vacant'
-        }`;
+      // A seat is "filled" if it has a member record whose status isn't
+      // Vacant — ga-members.json injects a placeholder record (with a real
+      // district but status: "Vacant") for vacant seats via overrides, so
+      // `member` being truthy doesn't by itself mean there's a legislator.
+      const isVacant = party === 'V';
+      const district  = member ? member.district : null;
+
+      if (member && !isVacant) {
+        // Filled seats link straight to the legislator; the 2026 race is a
+        // secondary line in the tooltip rather than the primary click target.
+        const partyLabel = party === 'D' ? 'Democrat' : 'Republican';
+        const label = `District ${district}<br>${escHtml(member.name)}<br>${partyLabel}`
+          + `<br><a href="${raceUrl('House', district)}">View 2026 race →</a>`;
         attachTooltip(circle, label);
         circle.style.cursor = 'pointer';
         circle.addEventListener('click', () => {
-          window.location.href = raceUrl('House', member.district);
+          window.location.href = memberUrl(member.id);
         });
+      } else if (district != null) {
+        // Vacant seat — no member page to link to, so fall back to the race,
+        // matching how the Senate grid already treats vacancies.
+        attachTooltip(circle, `District ${district}<br>Vacant`);
+        circle.style.cursor = 'pointer';
+        circle.addEventListener('click', () => {
+          window.location.href = raceUrl('House', district);
+        });
+      }
+
+      if (member) {
         circle.addEventListener('mouseenter', () => {
           circle.setAttribute('r', (seatSize / 2 + 2).toString());
           circle.setAttribute('opacity', '1');
@@ -537,17 +581,27 @@ function svgEl(tag, attrs) {
 
 const tooltip = document.getElementById('seatTooltip');
 
-function attachTooltip(el, text) {
+// A short grace period before hiding, and a cancel-on-enter on the tooltip
+// itself, so a visitor can move the mouse off the (tiny) seat and onto the
+// tooltip's "View race" link without it disappearing first.
+let tooltipHideTimer = null;
+tooltip.addEventListener('mouseenter', () => clearTimeout(tooltipHideTimer));
+tooltip.addEventListener('mouseleave', () => {
+  tooltipHideTimer = setTimeout(() => { tooltip.style.display = 'none'; }, 200);
+});
+
+function attachTooltip(el, html) {
   el.addEventListener('mouseenter', e => {
+    clearTimeout(tooltipHideTimer);
     tooltip.style.display = 'block';
-    tooltip.innerHTML = text.replace(/\n/g, '<br>');
+    tooltip.innerHTML = html;
   });
   el.addEventListener('mousemove', e => {
     tooltip.style.left = (e.clientX + 14) + 'px';
     tooltip.style.top  = (e.clientY - 10) + 'px';
   });
   el.addEventListener('mouseleave', () => {
-    tooltip.style.display = 'none';
+    tooltipHideTimer = setTimeout(() => { tooltip.style.display = 'none'; }, 200);
   });
 }
 
