@@ -64,6 +64,14 @@ share-description: "Stock trades disclosed by Georgia's congressional delegation
   .stat-trades { color: #1d4ed8; font-weight: 600; }
   .stat-late { color: #b91c1c; font-weight: 600; }
   .stat-volume { color: #374151; }
+  .member-card-profile-link {
+    display: inline-block;
+    font-size: 0.72rem;
+    color: #1a56a8;
+    text-decoration: none;
+    margin-top: 0.3rem;
+  }
+  .member-card-profile-link:hover { text-decoration: underline; }
 
   /* Party badge */
   .badge-r { background: #fee2e2; color: #991b1b; font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 3px; }
@@ -477,6 +485,10 @@ share-description: "Stock trades disclosed by Georgia's congressional delegation
 
       const district = (info.office || '').split('·')[1]?.trim() || '';
 
+      const profileLinkHtml = info.bioguideId
+        ? `<a class="member-card-profile-link" href="${basePath}member.html?bioguideId=${encodeURIComponent(info.bioguideId)}">View profile →</a>`
+        : '';
+
       card.innerHTML = `
         ${imgHtml}
         <div class="member-card-info" style="min-width:0;">
@@ -489,7 +501,13 @@ share-description: "Stock trades disclosed by Georgia's congressional delegation
             ${lateHtml}
             ${vol ? `<span class="stat-volume">${vol}</span>` : ''}
           </div>
+          ${profileLinkHtml}
         </div>`;
+
+      // The profile link navigates away, so it must not also trigger the
+      // card's own click-to-filter behavior below.
+      const profileLink = card.querySelector('.member-card-profile-link');
+      if (profileLink) profileLink.addEventListener('click', e => e.stopPropagation());
 
       card.addEventListener('click', () => {
         if (activeMemberCard === name) {

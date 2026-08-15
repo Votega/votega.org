@@ -20,6 +20,25 @@ BASE_RAW        = "https://raw.githubusercontent.com/kadoa-org/congress-trading-
 FILERS_URL      = f"{BASE_RAW}/filers.json"
 OUTPUT_FILE     = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-congress-trades.json"
 OVERRIDES_FILE  = sys.argv[2] if len(sys.argv) > 2 else "assets/data/ga-congress-trades-overrides.json"
+CURRENT_MEMBERS_FILE = os.path.join(os.path.dirname(OUTPUT_FILE), "current-members.json")
+
+
+def load_bioguide_by_last_name():
+    """Maps last name (lowercase) -> bioguideId for GA's current federal delegation,
+    so trade-data entries (which carry no bioguideId of their own) can link out to
+    member.html. Last names are unique across the 15-member GA delegation, so this
+    is a safe join key without needing full-name fuzzy matching."""
+    if not os.path.exists(CURRENT_MEMBERS_FILE):
+        print(f"Warning: {CURRENT_MEMBERS_FILE} not found, trade cards won't link to member profiles")
+        return {}
+    with open(CURRENT_MEMBERS_FILE, encoding='utf-8') as f:
+        data = json.load(f)
+    result = {}
+    for m in data.get('members', []):
+        if m.get('state') != 'Georgia' or not m.get('lastName') or not m.get('bioguideId'):
+            continue
+        result[m['lastName'].strip().lower()] = m['bioguideId']
+    return result
 
 
 def fetch_json(url):
@@ -94,6 +113,8 @@ def main():
     for f in ga_filers:
         print(f"  {f['full_name']} ({f['office']}) — {f['trade_count']} trades, ${f.get('est_volume', 0):,.2f} est. volume")
 
+    bioguide_by_last_name = load_bioguide_by_last_name()
+
     by_member = {}
     total_trades = 0
 
@@ -131,8 +152,12 @@ def main():
         # Sort most-recent first
         trades.sort(key=lambda t: t.get('transaction_date', ''), reverse=True)
 
+        last_name = name.split()[-1] if name.split() else ''
+        bioguide_id = bioguide_by_last_name.get(last_name.lower())
+
         by_member[name] = {
             'filerId':      filer_id,
+            'bioguideId':   bioguide_id,
             'party':        filer.get('party', ''),
             'chamber':      filer.get('chamber', ''),
             'office':       filer.get('office', ''),
