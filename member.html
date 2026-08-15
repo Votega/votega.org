@@ -988,11 +988,12 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
             <a href="${escHtml(raceUrl)}">View ${raceLabel} race →</a>
           </div>`;
       } else if (electionInfo.type === 'different-office') {
+        const candidateUrl = `${basePath}candidate.html?id=${encodeURIComponent(electionInfo.challenger.id)}`;
         runningBadgeHtml = `
           <div class="running-badge different-office">
             <strong>Running for a Different Office</strong>
             This member is seeking election to <strong>${raceLabel}</strong>.
-            <a href="${escHtml(raceUrl)}">View race →</a>
+            <a href="${escHtml(candidateUrl)}">View candidate profile →</a>
           </div>`;
       }
     } else if (seatRace) {

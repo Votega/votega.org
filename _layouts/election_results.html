@@ -159,6 +159,94 @@ const CFG = {
   emptyText: {{ page.empty_section_text | default: 'No races in this section.' | jsonify }},
 };
 
+function getBasePath() {
+  return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+}
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Results data (built from CSVs) carries no candidate id — races.json is the
+// only place that has one, joined here by normalized full name rather than
+// office/district, since results' office labels ("US Senate", "GA House
+// District 5") don't map cleanly onto races.json race ids without a large
+// hand-built table. A name collision just falls back to plain text (no
+// worse than today), so this stays best-effort rather than exact.
+function normName(s) {
+  return String(s || '')
+    .toLowerCase()
+    .replace(/["“”'']/g, '')
+    .replace(/\b(jr|sr|ii|iii|iv)\.?\b/g, '')
+    .replace(/[^a-z\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function buildCandidateIndex() {
+  const index = new Map(); // normalized name -> candidate.html URL, or false if ambiguous
+  const basePath = getBasePath();
+
+  function add(name, url) {
+    const key = normName(name);
+    if (!key) return;
+    if (index.has(key) && index.get(key) !== url) {
+      index.set(key, false);
+    } else {
+      index.set(key, url);
+    }
+  }
+
+  try {
+    const [racesRes, congressRes, gaRes] = await Promise.all([
+      fetch(basePath + 'assets/data/races.json'),
+      fetch(basePath + 'assets/data/current-members.json'),
+      fetch(basePath + 'assets/data/ga-members.json'),
+    ]);
+
+    const congressNameById = new Map();
+    if (congressRes.ok) {
+      const d = await congressRes.json();
+      (d.members || []).forEach(m => {
+        if (m.bioguideId) congressNameById.set(m.bioguideId, `${m.firstName || ''} ${m.lastName || ''}`.trim() || m.name);
+      });
+    }
+    const gaNameById = new Map();
+    if (gaRes.ok) {
+      const d = await gaRes.json();
+      (d.members || []).forEach(m => { if (m.id) gaNameById.set(m.id, m.name); });
+    }
+
+    if (racesRes.ok) {
+      const racesData = await racesRes.json();
+      (racesData.races || []).forEach(race => {
+        Object.values(race.phases || {}).forEach(phase => {
+          const groups = phase.ballots ? Object.values(phase.ballots) : (phase.candidates ? [phase.candidates] : []);
+          groups.forEach(cands => (cands || []).forEach(c => {
+            if (c.type === 'incumbent') {
+              const src  = c.memberSource || 'congress';
+              const name = src === 'congress' ? congressNameById.get(c.memberId) : gaNameById.get(c.memberId);
+              if (name) {
+                add(name, `${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(c.memberId)}&memberSource=${encodeURIComponent(src)}`);
+              }
+            } else if (c.id && c.name) {
+              add(c.name, `${basePath}candidate.html?id=${encodeURIComponent(c.id)}`);
+            }
+          }));
+        });
+      });
+    }
+  } catch (err) {
+    console.error('buildCandidateIndex()', err);
+  }
+
+  return index;
+}
+
 function pct(v,t){ return t ? (v/t)*100 : 0; }
 function fmt(n){ return (n||0).toLocaleString(); }
 function partyLabel(p){ return p==='rep'?'Republican':p==='dem'?'Democrat':'Nonpartisan'; }
@@ -178,7 +266,7 @@ function getStatus(c){
   return pct(c.candidates[0].votes, c.totalVotes) > 50 ? 'winner' : 'runoff';
 }
 
-function renderContest(c, office){
+function renderContest(c, office, candidateIndex){
   const status = getStatus(c);
   const p = c.party || 'np';
   const noRes = status==='no-results';
@@ -189,9 +277,11 @@ function renderContest(c, office){
     const pp = pct(cd.votes, c.totalVotes);
     const wi = i<marks ? `<span class="wi" title="${advanceTip}">&#10003;</span>` : '';
     const inc = cd.incumbent ? ' <span class="inc">(I)</span>' : '';
+    const link = candidateIndex.get(normName(cd.name));
+    const nameHtml = link ? `<a href="${link}">${escHtml(cd.name)}</a>` : escHtml(cd.name);
     return `<div class="cand-block">
       <div class="cand-top-line">
-        <span class="cand-name">${wi}${cd.name}${inc}</span>
+        <span class="cand-name">${wi}${nameHtml}${inc}</span>
         <span style="display:flex;gap:.5rem;align-items:center">
           ${noRes?'':`<span class="cand-votes">${fmt(cd.votes)} votes</span>`}
           <span class="cand-pct">${noRes?'&mdash;':pp.toFixed(1)+'%'}</span>
@@ -215,6 +305,8 @@ function renderContest(c, office){
   </div>`;
 }
 
+buildCandidateIndex().then(candidateIndex => {
+
 SECTIONS.forEach(s=>{
   const panel = document.getElementById('tab-'+s.id);
   if(!panel) return;
@@ -222,8 +314,8 @@ SECTIONS.forEach(s=>{
     ? `<p style="color:#999;font-size:.85rem;padding:.5rem 0">${CFG.emptyText}</p>`
     : s.races.map(r =>
         r.contests.length===1
-          ? renderContest(r.contests[0], r.office)
-          : r.contests.map(c => renderContest(c, r.office)).join('')
+          ? renderContest(r.contests[0], r.office, candidateIndex)
+          : r.contests.map(c => renderContest(c, r.office, candidateIndex)).join('')
       ).join('');
 });
 
@@ -290,4 +382,6 @@ document.querySelectorAll('.filter-btn').forEach(btn=>{
 });
 
 document.getElementById('searchBox').addEventListener('input',()=>applyFilter(curFilter));
+
+}); // buildCandidateIndex().then(...)
 </script>

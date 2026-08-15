@@ -116,8 +116,18 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
 
 <p style="margin-top:1.5rem;font-size:0.8rem;color:#888;" id="dataSource"></p>
 
+<p style="margin-top:2rem;font-size:0.82rem;color:#777;">
+  See who's on your ballot in the <a href="{{ '/elections' | relative_url }}">election guide</a>,
+  find registration and polling info on the <a href="{{ '/ga-voter-access' | relative_url }}">voter access &amp; calendar</a> page,
+  or check <a href="{{ '/results' | relative_url }}">election results</a>.
+</p>
+
 <script>
   const DATA_URL = 'assets/data/ga-ballot-measures.json';
+
+  function getBasePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
 
   function escHtml(s) {
     return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
@@ -163,8 +173,8 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       : '';
 
     const leg = m.enablingLegislation;
-    const legHtml = leg && leg.url
-      ? `<a href="${escHtml(leg.url)}" target="_blank" rel="noopener">Enabling legislation: ${escHtml(leg.identifier)} ↗</a>`
+    const legHtml = leg && leg.identifier
+      ? `<a href="${getBasePath()}ga-bills.html?bill=${encodeURIComponent(leg.identifier)}">Enabling legislation: ${escHtml(leg.identifier)} →</a>`
       : '';
 
     const fullTextHtml = m.fullText
