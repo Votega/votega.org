@@ -352,6 +352,7 @@ Core journey: *"I'm a Georgia voter — who represents me and how do they vote?"
 | **Federal** | `/` → nav *Find My Reps* (1) → *Federal Representatives* card (2) → Chamber `<select>` (3) → Member `<select>` (4) → **Submit** (5) |
 
 #### 3.12 Two different interaction models for the same task
+#### [X - 8/14/26] 
 
 State: tabs + county filter + clickable rows, live-filtering, no submit. Federal: two dependent dropdowns + an explicit Submit. Users who do one and then the other have to relearn. **The state pattern is better; port it.**
 
@@ -399,16 +400,22 @@ Ranked by cost to the user.
 **3.17 — bill ↔ sponsor (missing both directions).** `ga-bills.html:560-562` renders `bill.sponsors.map(s => s.name).join(' · ')` inside `escHtml` — dead text. `ga-member.html`'s curated-bill cards link out to `openstatesUrl`/`fullTextUrl` (external), never to the site's own bill tracker. **The two flagship datasets — 5,480 bills and 236 legislators — do not touch each other in the UI.**
 Fix: match `sponsors[].name` against `ga-members.json` at build time (add an `ocdId` field per sponsor in the bills generator), render as links, and add a per-bill anchor so `ga-member.html` can link back in. See also 4.2.
 
+#### [X - 8/15/26] 
 **3.18 — trades → member.** `ga-congress-trades.html:463-511` renders name, party badge, photo, district, and trade count — everything needed for a profile link — and links nowhere. `member.html:991` links *into* trades; nothing links back out. The page has no outbound site links at all.
 
+#### [X - 8/15/26]
 **3.19 — majority tracker → member.** `ga-majority-tracker.html:432` and `:492` route every seat click to `race.html?…`. A user clicking "Newton, D-113" in a seating chart almost certainly wants the legislator, not their 2026 race. Link seats to `ga-member.html?id=…`; put the race link in the tooltip or a secondary line.
 
+#### [X - 8/15/26]
 **3.20 — ballot measure → enabling bill.** `ga-ballot-measures.html:166-167` links enabling legislation to an external `leg.url`. That bill is in `ga-bills.json`. Link internally.
 
+#### [X - 8/15/26]
 **3.21 — election results → candidate/race.** `_layouts/election_results.html:renderContest()` renders `cd.name` as bare text on every results page. `_data/election_archive.yml` already joins to `races.json` on cycle+phase per its own header comment, so candidate names could link to `candidate.html?id=`. A voter reading results has no path to the candidate's finance or bio.
 
+#### [X - 8/15/26]
 **3.22 — voter access & ballot measures are dead ends.** `ga-voter-access.html` links only to `mvp.sos.ga.gov` (`:144`, `:154`); `ga-ballot-measures.html` links only to external bill text. Both should carry elections-hub sibling links the way `results.html:113-116` does.
 
+#### [X - 8/15/26]
 **3.23 — `member.html` has no candidate-profile link.** `ga-member.html:557` builds `candidate.html?id=…` for state members running for another office; `member.html:945-976` only ever links to `race.html`. Federal members running for re-election should get the same "View candidate profile →".
 
 ---
@@ -417,14 +424,19 @@ Fix: match `sponsors[].name` against `ga-members.json` at build time (add an `oc
 
 This is the **strongest area of the site** — nearly every fetch has all three states. Exceptions:
 
+#### [X - 8/15/26]
 **3.24** — `ga-congress-trades.html:348-352`: failure message is workflow jargon — *"Could not load trade data. Run the update-ga-congress-trades workflow to generate it."* — an instruction only the maintainer can act on. `init()` also returns early, leaving the filter bar, table headers, and member-card container rendered and empty.
 
+#### [X - 8/15/26]
 **3.25** — `elections.html:504-506`: the error renders into a `.msg` div *above* `#racesOutput`, which is left blank. With `.msg { color:#c00 }` and no `role="alert"`, a failure looks like an empty page with small red text far above the fold. Render the error inside `#racesOutput`.
 
+#### [X - 8/15/26]
 **3.26** — `ga-congress-trades.html` has no empty state distinct from error. Filtering to a ticker with no matches produces an empty `<tbody>` with no message. (Contrast `ga-bills.html:311` `.bills-empty`, which is done well.)
 
+#### [X - 8/15/26]
 **3.27** — Cascading fetches fail silently with developer-facing copy. `race.html:690-696` — if the members fetch fails, `members` stays `[]` and every incumbent card renders *"Member data not found. Check that memberId matches the data file."* (`race.html:412`). `ga-member.html:341` — if `racesRes` fails, election banners silently vanish with no note.
 
+#### [X - 8/15/26]
 **3.28** — Debug logging ships to production. `assets/scripts/congress.js` logs on every filtered-out member (`:70`, `:76`, `:88`) — roughly 500 console lines per lookup. `member.html:281` has a `DEBUG` flag; `congress.js` has none.
 
 ---
