@@ -1,0 +1,31 @@
+---
+layout: null
+permalink: /.well-known/api-catalog
+---
+{%- comment -%}
+  RFC 9727 API catalog (linkset format, RFC 9264). Generated from
+  _data/open_data.yml so it stays in sync with /open-data automatically —
+  edit that file to add/remove datasets, not this one.
+{%- endcomment -%}
+{
+  "linkset": [
+    {
+      "anchor": "{{ site.url }}/",
+      "service-doc": [
+        { "href": "{{ site.url }}/open-data", "type": "text/html", "title": "VoteGA.org Open Data" },
+        { "href": "{{ site.url }}/about-the-data", "type": "text/html", "title": "About the Data" }
+      ]
+    }{% for d in site.data.open_data.datasets %},
+    {
+      "anchor": "{{ site.url }}{{ d.docs | default: '/about-the-data' }}",
+      "title": "{{ d.title | replace: '"', '\"' }}",
+      "item": [
+        {% for f in d.files %}{ "href": "{% if f.url contains '://' %}{{ f.url }}{% else %}{{ site.url }}{{ f.url }}{% endif %}", "title": "{{ f.desc | default: f.name | replace: '"', '\"' }}" }{% unless forloop.last %},
+        {% endunless %}{% endfor %}
+      ],
+      "service-doc": [
+        { "href": "{{ site.url }}{{ d.docs | default: '/about-the-data' }}", "type": "text/html" }
+      ]
+    }{% endfor %}
+  ]
+}

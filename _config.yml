@@ -292,6 +292,10 @@ highlighter: rouge
 permalink: /:year-:month-:day-:title/
 paginate: 5
 
+# Jekyll excludes dotfiles by default; .well-known must be processed to serve
+# /.well-known/api-catalog (RFC 9727 agent-discovery resource).
+include: [".well-known"]
+
 kramdown:
   input: GFM
 
