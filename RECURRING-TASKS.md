@@ -160,5 +160,16 @@ is closed, so the gap is frozen rather than growing.
       election date — that needs a federal equivalent of the overrides file.
 - [ ] **Certify the June 16 primary runoff.** `_data/election_archive.yml` still lists it as
       `unofficial`, and `ga-primary-runoff-results.html` carries the unofficial notice.
+- [ ] **Nov 3 General Election — replace the placeholder with real results.**
+      `ga-general-2026-results.html` currently shows every candidate at 0 votes, built by
+      `scripts/build_general_placeholder.py` from `races.json`. Once official results are
+      available as a Georgia SoS "Total Votes Results" CSV, run the real builder instead:
+      `python scripts/build_results_json.py <official_csv> ga-general-2026-results`
+      (see §1 above for the full election-night checklist — archive status, certification, etc.).
+      If any candidates change on `races.json` before election night, re-run
+      `python scripts/build_general_placeholder.py` to refresh the preview in the meantime.
+      **If a Dec 1 runoff is triggered:** add `resultsUrl: /ga-general-2026-runoff-results/` to
+      that event in `ga-election-calendar.json` (deliberately left unset since the runoff may
+      not happen), and populate `ga-general-2026-runoff-results.html` the same way.
 - [ ] **Replace `assets/img/avatar-icon.png`.** Still the stock Beautiful Jekyll Octocat
       placeholder, referenced as `avatar:` in `_config.yml`.

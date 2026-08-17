@@ -124,6 +124,15 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
   .va-cal-details dt { font-weight: 600; color: #777; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; margin: 0; }
   .va-cal-details dd { margin: 0 0 0.5rem 0; }
   .va-cal-note { font-size: 0.78rem; color: #888; margin-top: 0.5rem; font-style: italic; }
+  .va-cal-results { margin-top: 0.65rem; }
+  .va-cal-results a {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1a56a8;
+    text-decoration: none;
+  }
+  .va-cal-results a:hover { text-decoration: underline; }
 
   @media (max-width: 640px) {
     .va-hub { grid-template-columns: 1fr; }
@@ -228,6 +237,9 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
     const contingentNote = e.contingentNote
       ? `<div class="va-cal-note">${escHtml(e.contingentNote)}</div>`
       : '';
+    const resultsLink = (!isUpcoming && e.resultsUrl)
+      ? `<div class="va-cal-results"><a href="${escHtml(e.resultsUrl)}">View Results &rarr;</a></div>`
+      : '';
 
     return `
       <div class="va-cal-card ${isUpcoming ? '' : 'completed'}">
@@ -249,6 +261,7 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
           </div>
         </dl>
         ${contingentNote}
+        ${resultsLink}
       </div>`;
   }
 
