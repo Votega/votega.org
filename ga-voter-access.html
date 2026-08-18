@@ -124,6 +124,7 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
   .va-cal-details dt { font-weight: 600; color: #777; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; margin: 0; }
   .va-cal-details dd { margin: 0 0 0.5rem 0; }
   .va-cal-note { font-size: 0.78rem; color: #888; margin-top: 0.5rem; font-style: italic; }
+  .va-cal-qualifier { display: block; font-size: 0.74rem; color: #888; font-style: italic; margin-top: 0.1rem; }
   .va-cal-results { margin-top: 0.65rem; }
   .va-cal-results a {
     display: inline-block;
@@ -208,9 +209,15 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
     return Math.round((target - today) / (1000 * 60 * 60 * 24));
   }
 
+  // A known start with no published end is common for runoffs — the SoS posts the
+  // first day and leaves the last to each county. Show the real date rather than
+  // falling through to the note and losing it.
   function earlyVotingText(e) {
     if (e.earlyVotingStart && e.earlyVotingEnd) {
       return formatShortDate(e.earlyVotingStart) + ' – ' + formatShortDate(e.earlyVotingEnd);
+    }
+    if (e.earlyVotingStart) {
+      return 'Begins ' + formatShortDate(e.earlyVotingStart);
     }
     return e.earlyVotingNote || 'Set by county';
   }
@@ -240,6 +247,16 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
     const resultsLink = (!isUpcoming && e.resultsUrl)
       ? `<div class="va-cal-results"><a href="${escHtml(e.resultsUrl)}">View Results &rarr;</a></div>`
       : '';
+    // Shown only when it adds something the date line doesn't already say.
+    const evQualifier = (e.earlyVotingStart && !e.earlyVotingEnd && e.earlyVotingNote)
+      ? `<span class="va-cal-qualifier">${escHtml(e.earlyVotingNote)}</span>`
+      : '';
+    const absentee = e.absenteeApplicationDeadline
+      ? `<div>
+            <dt>Absentee Ballot Request Deadline</dt>
+            <dd>${escHtml(formatShortDate(e.absenteeApplicationDeadline))}</dd>
+          </div>`
+      : '';
 
     return `
       <div class="va-cal-card ${isUpcoming ? '' : 'completed'}">
@@ -253,12 +270,13 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
         <dl class="va-cal-details">
           <div>
             <dt>Early Voting</dt>
-            <dd>${escHtml(earlyVotingText(e))}</dd>
+            <dd>${escHtml(earlyVotingText(e))}${evQualifier}</dd>
           </div>
           <div>
             <dt>Registration Deadline</dt>
             <dd>${escHtml(regDeadline)}</dd>
           </div>
+          ${absentee}
         </dl>
         ${contingentNote}
         ${resultsLink}
