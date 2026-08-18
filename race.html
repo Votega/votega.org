@@ -192,6 +192,57 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   .race-panel[hidden] { display: none; }
   .cand-finance-load { font-size: 0.85rem; color: #9aa0a6; }
 
+  /* Earlier-this-cycle results */
+  .prior-round { margin-bottom: 1.6rem; }
+  .prior-round-head { margin-bottom: 0.6rem; }
+  .prior-round-head h3 { font-size: 1rem; font-weight: 700; color: #14213d; margin: 0 0 0.15rem; }
+  .prior-round-meta { font-size: 0.78rem; color: #777; }
+  .prior-status { font-weight: 600; color: #856404; }
+  .prior-status.certified { color: #1e7e34; }
+  .prior-contest {
+    border: 1px solid #e3e3e3;
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 0.6rem;
+    background: #fff;
+  }
+  .prior-contest-head {
+    display: flex; align-items: center; gap: 0.5rem;
+    flex-wrap: wrap; margin-bottom: 0.55rem;
+  }
+  .party-pill {
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; padding: 0.1rem 0.45rem; border-radius: 10px;
+    background: #f0f0f0; color: #555;
+  }
+  .party-pill.rep { background: #fdf0ef; color: #c0392b; }
+  .party-pill.dem { background: #eaf4fb; color: #2471a3; }
+  .prior-uncontested {
+    font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.03em; color: #6b7280; background: #f3f4f6;
+    padding: 0.1rem 0.45rem; border-radius: 10px;
+  }
+  .prior-total { font-size: 0.72rem; color: #888; margin-left: auto; }
+  .prior-cand { margin-bottom: 0.5rem; }
+  .prior-cand:last-child { margin-bottom: 0; }
+  .prior-cand-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 0.75rem; margin-bottom: 0.2rem;
+  }
+  .prior-name { font-size: 0.85rem; color: #222; }
+  .prior-lead { color: #27ae60; margin-right: 0.15rem; }
+  .prior-inc { font-size: 0.7rem; color: #888; }
+  .prior-figures { display: flex; gap: 0.6rem; align-items: baseline; white-space: nowrap; }
+  .prior-votes { font-size: 0.76rem; color: #777; }
+  .prior-pct { font-size: 0.85rem; font-weight: 600; min-width: 3.1rem; text-align: right; }
+  .prior-bar { height: 6px; background: #eee; border-radius: 4px; overflow: hidden; }
+  .prior-bar-fill { height: 100%; border-radius: 4px; background: #888; }
+  .prior-bar-fill.rep { background: #e74c3c; }
+  .prior-bar-fill.dem { background: #3498db; }
+  .prior-link { font-size: 0.8rem; }
+  .prior-link a { color: #1a56a8; font-weight: 600; text-decoration: none; }
+  .prior-link a:hover { text-decoration: underline; }
+
   /* Campaign finance comparison table */
   .finance-table-wrap { overflow-x: auto; }
   .finance-compare {
@@ -257,6 +308,19 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   const RACES_URL       = 'assets/data/races.json';
   const GA_MEMBERS_URL  = 'assets/data/ga-members.json';
   const CONGRESS_URL    = 'assets/data/current-members.json';
+  const PRIOR_URL       = 'assets/data/race-results-index.json';
+
+  // Results carry candidate names straight from the SoS export, so escape them
+  // rather than interpolating source data into markup verbatim.
+  function escapeHtml(s) {
+    return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+  }
+
+  // race id -> earlier elections this cycle; filled by init(), empty if the
+  // index is missing so the tab simply doesn't appear.
+  let PRIOR_RESULTS = {};
 
   // Set when the member-data fetch itself fails (network/HTTP error), as
   // opposed to a memberId that's simply missing from a successfully-loaded
@@ -528,6 +592,61 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       </div>`;
   }
 
+  // ── Earlier-this-cycle results ──────────────────────────────────────────────
+  // Rendered from assets/data/race-results-index.json. Percentages are computed
+  // here rather than stored so they always agree with the vote counts shown.
+  function renderPriorResults(rounds) {
+    const partyLabel = p => p === 'rep' ? 'Republican' : p === 'dem' ? 'Democrat' : 'Nonpartisan';
+
+    return rounds.map(round => {
+      const statusNote = round.status === 'certified'
+        ? '<span class="prior-status certified">Certified</span>'
+        : '<span class="prior-status">Unofficial</span>';
+
+      const contests = round.contests.map(contest => {
+        const total = contest.totalVotes || 0;
+        // A lone candidate at 100% is an unopposed ballot line, not a landslide —
+        // label it so the number isn't read as a margin.
+        const uncontested = contest.candidates.length === 1;
+        const rows = contest.candidates.map((c, i) => {
+          const pct = total ? (c.votes / total) * 100 : 0;
+          return `
+            <div class="prior-cand">
+              <div class="prior-cand-top">
+                <span class="prior-name">${i === 0 && !uncontested ? '<span class="prior-lead">✓</span>' : ''}${escapeHtml(c.name)}${c.incumbent ? ' <span class="prior-inc">(I)</span>' : ''}</span>
+                <span class="prior-figures">
+                  <span class="prior-votes">${c.votes.toLocaleString()}</span>
+                  <span class="prior-pct">${uncontested ? '—' : pct.toFixed(1) + '%'}</span>
+                </span>
+              </div>
+              <div class="prior-bar"><div class="prior-bar-fill ${contest.party}" style="width:${uncontested ? 100 : Math.min(pct, 100)}%"></div></div>
+            </div>`;
+        }).join('');
+
+        return `
+          <div class="prior-contest">
+            <div class="prior-contest-head">
+              <span class="party-pill ${contest.party}">${partyLabel(contest.party)}</span>
+              ${uncontested ? '<span class="prior-uncontested">Unopposed</span>' : ''}
+              <span class="prior-total">${total.toLocaleString()} votes</span>
+            </div>
+            ${rows}
+          </div>`;
+      }).join('');
+
+      const dateStr = round.date ? formatDate(round.date) : '';
+      return `
+        <section class="prior-round">
+          <div class="prior-round-head">
+            <h3>${escapeHtml(round.label)}</h3>
+            <div class="prior-round-meta">${dateStr}${dateStr ? ' &nbsp;·&nbsp; ' : ''}${statusNote}</div>
+          </div>
+          ${contests}
+          ${round.url ? `<div class="prior-link"><a href="${round.url}">Full results for this election →</a></div>` : ''}
+        </section>`;
+    }).join('');
+  }
+
   function renderRace(race, members) {
     const basePath   = getBasePath();
     const phase      = race.phases[race.activePhase];
@@ -607,6 +726,15 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     if (collectFinanceCandidates(race, members).length) {
       panels.push({ id: 'panel-finance', label: 'Campaign Finance', kind: 'finance',
         html: '<p class="cand-finance-load">Loading campaign finance…</p>' });
+    }
+
+    // How this race got here: results from earlier elections this cycle. The
+    // race→contest join is done at build time by scripts/build_race_results_index.py,
+    // so a race with no reliable match simply has no entry and no tab.
+    const priorRounds = PRIOR_RESULTS[race.id];
+    if (priorRounds && priorRounds.length) {
+      panels.push({ id: 'panel-prior', label: 'Earlier This Cycle',
+        html: renderPriorResults(priorRounds) });
     }
 
     document.title = `${raceTitle} — 2026 Elections`;
@@ -713,6 +841,14 @@ share-description: "Details for a Georgia race: the candidates running, the incu
           console.error('race.html: member fetch failed', mErr);
           membersFetchFailed = true;
         }
+      }
+
+      // Non-fatal: a missing or stale index just means no "Earlier This Cycle" tab.
+      try {
+        const pRes = await fetch(PRIOR_URL);
+        if (pRes.ok) PRIOR_RESULTS = (await pRes.json()).races || {};
+      } catch (pErr) {
+        console.error('race.html: prior-results index unavailable', pErr);
       }
 
       renderRace(race, members);

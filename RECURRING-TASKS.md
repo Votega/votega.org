@@ -30,6 +30,13 @@ All times UTC.
 Triggered by: election night, then again at certification.
 
 - [ ] Build the results page from the SOS export CSV — see *Maintenance — Updating Candidate Pages* in [TO-DO.md](TO-DO.md).
+- [ ] Re-run `python scripts/build_race_results_index.py` and commit
+      `assets/data/race-results-index.json`. This feeds the **Earlier This Cycle** tab on
+      `race.html`; without it that tab keeps showing the previous election set. The script
+      discovers elections from the results page stubs' front matter, so a newly added
+      election is picked up automatically — but it only includes elections that already
+      have votes, so it must be re-run *after* the results JSON is built. Check its output:
+      it prints how many races matched and lists any that didn't.
 - [ ] Add an entry for the election to [`_data/election_archive.yml`](_data/election_archive.yml) so it appears on `/results/`.
 - [ ] Set that entry's `status` to `unofficial` while results are preliminary.
 - [ ] **On certification:** flip `status` to `certified` and update the "Last updated" line on the results page.
