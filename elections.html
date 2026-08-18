@@ -7,11 +7,22 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
 
 <h1 id="pageTitle">2026 Georgia Elections</h1>
 <p id="pageDesc"></p>
+<p id="phaseNote" class="phase-note" style="display:none"></p>
 
 <style>
   label { display: block; margin-top: 1.2rem; }
   select { width: 100%; max-width: 400px; padding: 8px; box-sizing: border-box; }
   .msg { margin-top: 1rem; color: #c00; }
+
+  .phase-note {
+    margin-top: 0.6rem;
+    padding: 0.5rem 0.8rem;
+    background: #fffbeb;
+    border-left: 3px solid #f59e0b;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.9rem;
+    color: #7c5b12;
+  }
 
   #racesOutput { margin-top: 2rem; }
 
@@ -291,6 +302,34 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     const iso  = phaseDate(activePhase);
     pageTitle.textContent = fillTemplate(meta.title, iso);
     pageDesc.textContent  = fillTemplate(meta.desc, iso);
+    updatePhaseNote();
+  }
+
+  // A runoff phase often holds only a stray special-election contest — showing "US
+  // House" + "Runoff" then surfaces a single district, which looks like a bug unless
+  // we say so. Derived from the data (which races are in runoff, and whether they
+  // carry a `special` phase) rather than naming a district, so it stays correct as
+  // the runoff set changes cycle to cycle. Shown on every tab: it also explains why
+  // the other tabs read "No runoff races on file."
+  function raceLabel(r) {
+    return r.displayTitle || (r.chamber + (r.district != null ? ` District ${r.district}` : ''));
+  }
+  function updatePhaseNote() {
+    const el = document.getElementById('phaseNote');
+    if (!el) return;
+    let note = '';
+    if (activePhase === 'runoff') {
+      const runoffs = allRaces.filter(r => r.activePhase === 'runoff');
+      if (runoffs.length === 1) {
+        const r = runoffs[0];
+        const kind = r.phases && r.phases.special ? 'special election runoff' : 'runoff';
+        note = `Only ${raceLabel(r)} is in the ${kind}.`;
+      } else if (runoffs.length > 1) {
+        note = `In a runoff: ${runoffs.map(raceLabel).join(', ')}.`;
+      }
+    }
+    el.textContent = note;
+    el.style.display = note ? '' : 'none';
   }
 
   function isOpenSeat(race) {
