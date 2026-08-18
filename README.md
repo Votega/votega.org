@@ -26,7 +26,7 @@ Data sources, methodology, and update schedules for all of the above: [about-the
 _data/           Jekyll site data
 _layouts/        Page templates (Beautiful Jekyll)
 _posts/          Analysis and election-results posts
-tools/           Standalone admin pages for editing override files
+tools/           Standalone admin pages for editing override files and candidate profiles (most are gitignored, local-only)
 assets/
   data/          Generated JSON consumed by page scripts
   scripts/       Client-side JS

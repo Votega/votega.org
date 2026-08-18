@@ -43,6 +43,12 @@ Triggered by: election night, then again at certification.
 - [ ] Advance `activePhase` on affected races in `assets/data/races.json`. The phase toggle on
       `/elections` builds itself from this — a phase appears or disappears based on the data,
       and defaults to the next election that hasn't happened yet. No code change needed.
+- [ ] Curate the surviving candidates' profiles (bio, photo, website, withdrawn/disqualified) for the
+      next phase. **Federal & other non-regenerated races:** `tools/race-candidate-editor.html`
+      (edits `races.json` in place; syncs edits across every phase a candidate appears in).
+      **GA state legislative (`ga-house-*`/`ga-senate-*`):** `ga-race-candidate-overrides.json` via
+      `ga-overrides-editor.html`, then `python scripts/apply_overrides.py`. See *Maintenance — Updating
+      Candidate Pages* in [TO-DO.md](TO-DO.md).
 - [ ] If a general-election runoff is required (Georgia holds these when no candidate clears 50%),
       set those races to `activePhase: runoff` with the runoff date.
 - [ ] **Ballot measures:** once results certify, set each measure's `status` to `passed` or

@@ -85,7 +85,11 @@ votega.org/
 │   ├── update-ga-members.yml            # Daily: runs generate_ga_members_data.py, commits JSON
 │   └── sync-generated-data-on-pr.yml
 │
-├── tools/                                # Standalone override-editing HTML utilities (not part of the Jekyll site)
+├── tools/                                # Standalone editing HTML utilities (not part of the Jekyll site; open locally in a Chromium browser, use the File System Access API to read/write a data file in place)
+│   ├── ga-overrides-editor.html          # Two override-file modes: Members (ga-members-overrides.json) + Race candidates (ga-race-candidate-overrides.json, GA state legislative → applied by apply_overrides.py). Its old "Federal challengers" mode is retired — direct races.json editing moved to race-candidate-editor.html
+│   ├── ga-member-overrides-editor.html   # Simpler per-field member overrides editor (loads ga-members.json for context)
+│   ├── ga-finance-overrides-editor.html  # Resolve ambiguous/no-filing PeachFile finance matches → candidate finance overrides
+│   └── race-candidate-editor.html        # Curate candidate profiles directly in races.json (federal & other non-regenerated races have no override layer — edited in place). Syncs a candidate's edits across every phase they appear in (e.g. special + runoff); warns off ga-house-*/ga-senate-* (regenerated — use the overrides file); preserves CRLF/2-space/no-trailing-newline for byte-identical diffs
 ├── .claude/settings.local.json          # Tool permissions (Congress.gov, GitHub, Python)
 ├── .vscode/settings.json
 └── not in use/                          # Archived/unused files
