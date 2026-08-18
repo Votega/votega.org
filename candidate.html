@@ -216,9 +216,85 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     .profile-details dt { margin-top: 0.5rem; }
   }
 
+  /* Campaign-submitted content — the claim "firewall". Visually distinct from
+     the public-record profile above it. Styles shared conceptually with
+     assets/scripts/candidate-claims.js output. */
+  .claim-block {
+    border: 1px solid #bfdbef;
+    border-left: 4px solid #008AFF;
+    background: #f7fbff;
+    border-radius: 0 8px 8px 0;
+    padding: 1.1rem 1.35rem;
+    margin: 1.5rem 0;
+  }
+  .claim-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.85rem;
+    flex-wrap: wrap;
+  }
+  .claim-label-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #0a5aa8;
+    background: #dceefb;
+    border-radius: 20px;
+    padding: 0.2rem 0.7rem;
+  }
+  .claim-label-date { font-size: 0.8rem; color: #6b7280; }
+  .claim-bio { line-height: 1.65; margin-bottom: 0.5rem; }
+  .claim-bio p { margin: 0; }
+  .claim-subhead {
+    font-size: 0.98rem;
+    color: #1a2733;
+    margin: 1.1rem 0 0.5rem;
+  }
+  .claim-qa { margin-bottom: 0.75rem; }
+  .claim-q { font-weight: 600; color: #1a2733; margin: 0 0 0.15rem; font-size: 0.9rem; }
+  .claim-a { margin: 0; line-height: 1.55; color: #333; font-size: 0.92rem; }
+  .claim-votes ul, .claim-endorsements ul { margin: 0.25rem 0 0; padding-left: 1.15rem; }
+  .claim-votes li, .claim-endorsements li { line-height: 1.6; }
+  .claim-vote-bill { font-weight: 600; }
+  .claim-vote-pos {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; color: #0a5aa8; margin-left: 0.4rem;
+  }
+  .claim-vote-note { display: block; font-size: 0.85rem; color: #555; }
+  .claim-unverified { font-size: 0.82rem; color: #6b7280; font-style: italic; margin: 0 0 0.35rem; }
+  .claim-links {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1rem;
+    margin-top: 0.9rem; padding-top: 0.75rem; border-top: 1px solid #dbeafe;
+    font-size: 0.88rem;
+  }
+
+  /* "Are you this candidate?" claim CTA (shown when unclaimed) */
+  .claim-cta {
+    border: 1px dashed #c7ccd4;
+    background: #fafbfc;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+  }
+  .claim-cta-text { font-size: 0.9rem; color: #555; line-height: 1.55; margin: 0 0 0.75rem; }
+  .claim-cta-btn {
+    display: inline-block;
+    padding: 0.55rem 1.1rem;
+    background: #1a56a8;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+  .claim-cta-btn:hover { background: #164a90; color: #fff; text-decoration: none; }
+
 </style>
 
 <script src="assets/scripts/campaign-finance.js"></script>
+<script src="assets/scripts/candidate-claims.js"></script>
 <script>
   const RACES_URL       = 'assets/data/races.json';
   const CONGRESS_URL    = 'assets/data/current-members.json';
@@ -244,6 +320,9 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
   function renderCandidate(candidate, race, phaseName) {
     const basePath   = getBasePath();
+    const claim      = candidate._claim || null;
+    // Campaign-submitted photo supersedes the placeholder/bioguide fallback.
+    if (claim && claim.imageUrl && !candidate.imageUrl) candidate.imageUrl = claim.imageUrl;
     const distLabel  = race.district ? ` District ${race.district}` : '';
     // Phase names are data, so map them rather than assuming anything that isn't
     // a primary is the general — that mislabeled runoff and special-election
@@ -298,8 +377,26 @@ share-description: "Profile of a candidate running for office in Georgia: the of
         <dl>${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
       </div>` : '';
 
-    const bioHtml = candidate.bio
+    // Suppress the public-record bio when the campaign has submitted its own —
+    // the claimed bio renders in the labeled block below to avoid duplication.
+    const bioHtml = (candidate.bio && !(claim && claim.bio))
       ? `<div class="bio-section"><p>${candidate.bio}</p></div>` : '';
+
+    // Campaign-submitted content block, or the claim CTA when unclaimed.
+    const claimBlockHtml = claim ? CandidateClaims.profileBlockHtml(claim) : '';
+    const claimCtaHtml = (!claim && !isWithdrawn && !isDisqualified && candidate._claimKey)
+      ? CandidateClaims.claimCtaHtml({
+          key: candidate._claimKey,
+          keyType: candidate._claimKeyType,
+          memberSource: candidate.existingMemberSource || candidate._claimMemberSource || '',
+          raceId: race.id,
+          name: candidate.name,
+          raceLabel: race.chamber || '',
+          level: race.level,
+          email: candidate._claimEmail || '',
+          src: 'candidate_page',
+        })
+      : '';
 
     // Link to legislative record when candidate has a member profile
     const memberRecordHtml = memberUrl
@@ -332,6 +429,8 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       ${serviceHtml}
       ${noRecordHtml}
       ${bioHtml}
+      ${claimBlockHtml}
+      ${claimCtaHtml}
 
       <div id="campaignFinance" class="finance-section"></div>
 
@@ -667,6 +766,14 @@ share-description: "Profile of a candidate running for office in Georgia: the of
         serviceHistory: buildServiceHistory(member, memberSource),
       };
 
+      // Merge campaign-submitted content (keyed by the incumbent's memberId).
+      const claims = await CandidateClaims.fetchClaims(getBasePath());
+      candidate._claim = CandidateClaims.getClaim(claims, memberId);
+      candidate._claimKey = memberId;
+      candidate._claimKeyType = 'memberId';
+      candidate._claimMemberSource = memberSource;
+      candidate._claimEmail = incumbentEntry?.email || '';
+
       renderCandidate(candidate, race, race.activePhase);
       loadCampaignFinance(candidate, race);
     } catch (err) {
@@ -752,6 +859,13 @@ share-description: "Profile of a candidate running for office in Georgia: the of
           }
         } catch (e) { /* non-fatal — render without service history */ }
       }
+
+      // Merge campaign-submitted content (keyed by the challenger's id).
+      const claims = await CandidateClaims.fetchClaims(getBasePath());
+      found._claim = CandidateClaims.getClaim(claims, found.id);
+      found._claimKey = found.id;
+      found._claimKeyType = 'id';
+      found._claimEmail = found.email || '';
 
       renderCandidate(found, foundRace, foundPhase);
       loadCampaignFinance(found, foundRace);

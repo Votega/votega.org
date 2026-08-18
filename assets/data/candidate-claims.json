@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "generatedAt": "2026-08-18T00:00:00Z",
+    "source": "Candidate-submitted via VoteGA claim form (Tally), verified against on-file contact",
+    "count": 0,
+    "note": "Campaign-submitted profile content. Keyed by candidate_key (a challenger's races.json `id` or an incumbent's `memberId`). Rendered by assets/scripts/candidate-claims.js inside a labeled, dated block, never mixed with public-record fields. Keys beginning with `_` are templates ignored by the loader."
+  },
+  "claims": {
+    "_example-challenger-key": {
+      "claimedAt": "2026-08-19",
+      "verifiedVia": "on-file-email",
+      "verifiedBy": "votega",
+      "tier": "B",
+      "displayName": "Jane Q. Candidate",
+      "imageUrl": "https://example.com/photo.jpg",
+      "imageCredit": "Campaign photo",
+      "bio": "Two or three short paragraphs, in the campaign's own words.\n\nLine breaks are preserved.",
+      "questionnaire": {
+        "q_why_running": "\u2026",
+        "q_priority_1": "\u2026",
+        "q_priority_2": "\u2026",
+        "q_priority_3": "\u2026",
+        "q_background": "\u2026",
+        "q_first_year": "\u2026",
+        "q_overlooked": "\u2026",
+        "q_party_disagreement": "\u2026",
+        "q_bill_intro": "\u2026",
+        "q_spend_more": "\u2026",
+        "q_spend_less": "\u2026"
+      },
+      "votes": {
+        "HB-1105": {
+          "label": "HB 1105 \u2014 short neutral description",
+          "position": "No",
+          "note": "Optional 200-char explanation."
+        }
+      },
+      "endorsements": [
+        "Organization or person, as claimed"
+      ],
+      "endorsementsUrl": "https://example.com/endorsements",
+      "links": {
+        "website": "https://example.com",
+        "donate": "https://example.com/donate",
+        "volunteer": "https://example.com/volunteer",
+        "events": "https://example.com/events",
+        "facebook": "https://facebook.com/example",
+        "x": "https://x.com/example",
+        "instagram": "https://instagram.com/example",
+        "youtube": "https://youtube.com/@example",
+        "tiktok": "https://tiktok.com/@example",
+        "linkedin": "https://linkedin.com/in/example"
+      }
+    }
+  }
+}
