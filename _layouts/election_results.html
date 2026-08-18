@@ -172,33 +172,70 @@ function escHtml(s) {
 }
 
 // Results data (built from CSVs) carries no candidate id — races.json is the
-// only place that has one, joined here by normalized full name rather than
+// only place that has one, joined here by normalized name rather than
 // office/district, since results' office labels ("US Senate", "GA House
 // District 5") don't map cleanly onto races.json race ids without a large
 // hand-built table. A name collision just falls back to plain text (no
 // worse than today), so this stays best-effort rather than exact.
-function normName(s) {
-  return String(s || '')
+//
+// SoS ballot names and races.json names disagree constantly — a middle name
+// used as the called name ("Thomas Stephen Tarvin" / "Steve Tarvin"), a
+// parenthetical nickname, an accent, a diminutive. So each candidate is
+// indexed under several key forms and a lookup succeeds only when every key
+// that hits agrees on one destination; anything ambiguous renders unlinked.
+const DIMINUTIVES = {
+  mike:'michael', steve:'stephen', bill:'william', bob:'robert', jim:'james',
+  randy:'randall', matt:'matthew', tom:'thomas', rob:'robert', greg:'gregory',
+  tim:'timothy', josh:'joshua', chris:'christopher', dan:'daniel', dave:'david',
+  joe:'joseph', ed:'edward', ted:'edward', rick:'richard', nick:'nicholas',
+  pat:'patrick', sam:'samuel', ben:'benjamin', andy:'andrew', tony:'anthony',
+  ken:'kenneth', ron:'ronald', don:'donald', jerry:'gerald', larry:'lawrence',
+  fred:'frederick', gabe:'gabriel', charlie:'charles', liz:'elizabeth',
+  beth:'elizabeth', kathy:'katherine', sue:'susan', maggie:'margaret',
+  debbie:'deborah', jen:'jennifer', becky:'rebecca', tricia:'patricia',
+};
+
+// Every key form a name should be findable under. Returns [] for anything
+// that isn't at least "first last" — a lone token is too collision-prone.
+function nameKeys(raw) {
+  const src = String(raw || '').normalize('NFKD').replace(/[̀-ͯ]/g, '');
+  const nicks = [];
+  src.replace(/["“”‘’]([^"“”‘’]+)["“”‘’]/g, (_, m) => { nicks.push(m.toLowerCase()); return ''; });
+
+  const toks = src
     .toLowerCase()
-    .replace(/["“”'']/g, '')
-    .replace(/\b(jr|sr|ii|iii|iv)\.?\b/g, '')
+    .replace(/\((?:dem|rep|democrat|republican|ind|i)\)\s*$/, ' ')
+    .replace(/["“”‘’]/g, ' ')
+    .replace(/\b(?:jr|sr|ii|iii|iv|dr|mr|mrs|ms)\.?\b/g, ' ')
     .replace(/[^a-z\s]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+    .split(/\s+/)
+    .filter(Boolean);
+  if (toks.length < 2) return [];
+
+  const last = toks[toks.length - 1];
+  const firsts = new Set(toks.slice(0, -1));
+  nicks.forEach(n => n.split(/\s+/).filter(Boolean).forEach(t => firsts.add(t)));
+
+  const keys = new Set([toks.join(' ')]);
+  firsts.forEach(f => {
+    keys.add(`${f} ${last}`);
+    keys.add(`${DIMINUTIVES[f] || f} ${last}`);
+  });
+  return [...keys];
 }
 
 async function buildCandidateIndex() {
-  const index = new Map(); // normalized name -> candidate.html URL, or false if ambiguous
+  const index = new Map(); // name key -> candidate.html URL, or false if ambiguous
   const basePath = getBasePath();
 
   function add(name, url) {
-    const key = normName(name);
-    if (!key) return;
-    if (index.has(key) && index.get(key) !== url) {
-      index.set(key, false);
-    } else {
-      index.set(key, url);
-    }
+    nameKeys(name).forEach(key => {
+      if (index.has(key) && index.get(key) !== url) {
+        index.set(key, false);
+      } else {
+        index.set(key, url);
+      }
+    });
   }
 
   try {
@@ -226,15 +263,21 @@ async function buildCandidateIndex() {
       (racesData.races || []).forEach(race => {
         Object.values(race.phases || {}).forEach(phase => {
           const groups = phase.ballots ? Object.values(phase.ballots) : (phase.candidates ? [phase.candidates] : []);
+          // Order matters: a candidate carrying its own `id` is reachable via
+          // candidate.html?id= regardless of type. Testing `type === 'incumbent'`
+          // first stranded every state and state-executive incumbent, which
+          // identify their member record as `existingMemberId` rather than the
+          // `memberId` the incumbent route reads — ~400 candidates that silently
+          // went unlinked. Only federal incumbents (no `id`) need that route.
           groups.forEach(cands => (cands || []).forEach(c => {
-            if (c.type === 'incumbent') {
+            if (c.id && c.name) {
+              add(c.name, `${basePath}candidate.html?id=${encodeURIComponent(c.id)}`);
+            } else if (c.type === 'incumbent' && c.memberId) {
               const src  = c.memberSource || 'congress';
               const name = src === 'congress' ? congressNameById.get(c.memberId) : gaNameById.get(c.memberId);
               if (name) {
                 add(name, `${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(c.memberId)}&memberSource=${encodeURIComponent(src)}`);
               }
-            } else if (c.id && c.name) {
-              add(c.name, `${basePath}candidate.html?id=${encodeURIComponent(c.id)}`);
             }
           }));
         });
@@ -245,6 +288,14 @@ async function buildCandidateIndex() {
   }
 
   return index;
+}
+
+// A hit only counts if every key form that resolves points at the same
+// candidate — two different people sharing a key form yields no link.
+function lookupCandidate(index, name) {
+  const hits = new Set();
+  nameKeys(name).forEach(k => { const v = index.get(k); if (v) hits.add(v); });
+  return hits.size === 1 ? [...hits][0] : null;
 }
 
 function pct(v,t){ return t ? (v/t)*100 : 0; }
@@ -277,7 +328,7 @@ function renderContest(c, office, candidateIndex){
     const pp = pct(cd.votes, c.totalVotes);
     const wi = i<marks ? `<span class="wi" title="${advanceTip}">&#10003;</span>` : '';
     const inc = cd.incumbent ? ' <span class="inc">(I)</span>' : '';
-    const link = candidateIndex.get(normName(cd.name));
+    const link = lookupCandidate(candidateIndex, cd.name);
     const nameHtml = link ? `<a href="${link}">${escHtml(cd.name)}</a>` : escHtml(cd.name);
     return `<div class="cand-block">
       <div class="cand-top-line">
