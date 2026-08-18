@@ -86,13 +86,31 @@ window.CampaignFinance = (function () {
   }
 
   function findFecId(fecData, candidate, race) {
+    const chamber = race.chamber || '';
+    const wantOffice = chamber === 'U.S. Senate' ? 'S'
+                     : chamber === 'U.S. House'  ? 'H' : null;
+
+    // 0. Explicit editorial pin. An FEC candidate id set on the entry always wins —
+    //    the escape hatch for cases the heuristics below can't get right (e.g. two
+    //    same-surname candidates in one race).
+    if (candidate.fecCandidateId && fecData.candidates?.[candidate.fecCandidateId]) {
+      return candidate.fecCandidateId;
+    }
+
     // 1. Bioguide id (most reliable). A federal incumbent reference carries the
     //    bioguide in memberId; an enriched challenger carries it in existingMemberId.
+    //    But only trust it when the matched filing is for the office actually being
+    //    sought: a sitting House member running for Senate still has a bioguide that
+    //    maps to their House candidacy, so an unqualified match links the wrong race.
     const bioguide = candidate.existingMemberId || candidate.memberId || '';
-    if (bioguide && fecData.byBioguideId?.[bioguide]) return fecData.byBioguideId[bioguide];
+    const bioMatch = bioguide && fecData.byBioguideId?.[bioguide];
+    if (bioMatch) {
+      const gotOffice = fecData.candidates?.[bioMatch]?.office;
+      if (!wantOffice || !gotOffice || gotOffice === wantOffice) return bioMatch;
+      // office mismatch → fall through to district/name matching for the new office
+    }
 
     // 2. District + last name (handles formal vs. nickname mismatches)
-    const chamber = race.chamber || '';
     let distKey = null;
     if (chamber === 'U.S. Senate') distKey = 'S';
     else if (chamber === 'U.S. House' && race.district != null) distKey = `H${race.district}`;
