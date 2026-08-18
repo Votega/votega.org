@@ -24,6 +24,8 @@ import urllib.error
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
+from lib.http import fetch_bytes
+
 CURRENT_CONGRESS = 119
 SESSIONS         = [1, 2]   # Check both sessions; missing ones are skipped gracefully
 XML_DELAY        = 0.3      # seconds between requests
@@ -86,18 +88,13 @@ MONTH_MAP = {
 
 
 def fetch_raw(url, label=""):
-    """Fetch bytes from URL. Returns None on 404 or error."""
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "votega.org/1.0"})
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return r.read()
-    except urllib.error.HTTPError as e:
-        if e.code != 404:
-            print(f"  HTTP {e.code} fetching {label or url[:80]}")
-        return None
-    except Exception as e:
-        print(f"  Error fetching {label or url[:80]}: {e}")
-        return None
+    """Fetch bytes from URL. Returns None on 404 or error.
+
+    Delegates to lib.http; previously a single attempt with no retry against
+    Senate.gov. A 404 stays unlogged (an expected miss for a roll-call file
+    that does not exist). See CODEBASE-REVIEW-2026-08-18.md 2.4.
+    """
+    return fetch_bytes(url, label=label or url[:80], quiet_statuses=(404,))
 
 
 def normalize_date(raw):

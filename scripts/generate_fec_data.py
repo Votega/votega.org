@@ -31,6 +31,8 @@ import urllib.request
 import urllib.parse
 from datetime import datetime
 
+from lib.http import fetch_json
+
 API_KEY     = os.environ.get('FEC_API_KEY')
 BASE_URL    = "https://api.open.fec.gov/v1"
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-fec-data.json"
@@ -63,24 +65,18 @@ def fec_get(path, params=None, retries=3):
     if params:
         query.update(params)
     url = f"{BASE_URL}{path}?{urllib.parse.urlencode(query)}"
-    for attempt in range(1, retries + 1):
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": "votega.org/1.0"})
-            with urllib.request.urlopen(req, timeout=30) as r:
-                return json.loads(r.read().decode("utf-8"))
-        except urllib.error.HTTPError as e:
-            if e.code == 429:
-                wait = 60 * attempt  # back off 60s, 120s, 180s
-                print(f"    Rate limited — waiting {wait}s before retry {attempt}/{retries}")
-                time.sleep(wait)
-            else:
-                print(f"    Error {path}: HTTP {e.code}")
-                return None
-        except Exception as e:
-            print(f"    Error {path}: {e}")
-            return None
-    print(f"    Giving up on {path} after {retries} retries")
-    return None
+    # Delegates to lib.http. rate_limit_backoff=60 preserves this endpoint's
+    # 60s/120s/180s ramp on 429 — the FEC rate limits per hour, so the generic
+    # 5s ramp would be useless here. The gain is that 5xx and network errors are
+    # now retried too; previously any non-429 error returned None on the first
+    # attempt. See CODEBASE-REVIEW-2026-08-18.md 2.4.
+    return fetch_json(
+        url,
+        retries=retries,
+        rate_limit_backoff=60,
+        redact=API_KEY,
+        label=path,
+    )
 
 
 def get_ga_candidates():

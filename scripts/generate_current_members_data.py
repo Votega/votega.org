@@ -12,6 +12,8 @@ import urllib.error
 import yaml
 from datetime import datetime
 
+from lib.http import fetch_bytes, fetch_json
+
 # Configuration
 API_KEY = os.environ.get('CONGRESS_API_KEY')
 BASE_URL = "https://api.congress.gov/v3"
@@ -20,7 +22,13 @@ LEGISLATORS_BASE = "https://raw.githubusercontent.com/unitedstates/congress-legi
 
 def fetch_url(url, retries=3, backoff=5):
     """Fetch data from Congress.gov API with error handling.
-    Retries on 429/5xx only — 4xx errors are non-retryable client errors."""
+    Retries on 429/5xx only — 4xx errors are non-retryable client errors.
+
+    The retry logic that used to live here is now lib.http.fetch_json, which
+    was promoted from this function: it was the one implementation in the repo
+    that already matched the policy in CLAUDE.md. See
+    CODEBASE-REVIEW-2026-08-18.md 2.4.
+    """
     if 'api_key=' not in url:
         separator = '&' if '?' in url else '?'
         url = f"{url}{separator}api_key={API_KEY}"
@@ -28,30 +36,9 @@ def fetch_url(url, retries=3, backoff=5):
     safe_url = url.replace(API_KEY, "***") if API_KEY else url
     print(f"Fetching: {safe_url[:100]}...")
 
-    for attempt in range(1, retries + 1):
-        try:
-            req = urllib.request.Request(url, headers={
-                'Accept': 'application/json',
-                'User-Agent': 'votega.org/1.0',
-            })
-            with urllib.request.urlopen(req, timeout=30) as response:
-                return json.loads(response.read().decode('utf-8'))
-        except urllib.error.HTTPError as e:
-            print(f"HTTP Error {e.code}: {e.reason}")
-            if (e.code == 429 or e.code >= 500) and attempt < retries:
-                wait = backoff * attempt
-                print(f"  Retrying in {wait}s (attempt {attempt}/{retries})...")
-                time.sleep(wait)
-                continue
-            return None  # 4xx or exhausted retries
-        except Exception as e:
-            print(f"Error fetching {safe_url[:100]}: {e}")
-            if attempt < retries:
-                print(f"  Retrying in {backoff}s (attempt {attempt}/{retries})...")
-                time.sleep(backoff)
-                continue
-            return None
-    return None
+    return fetch_json(url, headers={'Accept': 'application/json'},
+                      retries=retries, backoff=backoff,
+                      redact=API_KEY, label=safe_url)
 
 def get_member_details(bioguideId):
     """Fetch detailed member data"""
@@ -87,14 +74,19 @@ def extract_leadership(member_data):
     return current_leadership
 
 def fetch_yaml(url):
-    """Fetch and parse a YAML file from a URL (no API key needed)."""
+    """Fetch and parse a YAML file from a URL (no API key needed).
+
+    Now retries via lib.http; previously a single transient failure fetching
+    the congress-legislators YAML silently dropped that enrichment source.
+    """
+    print(f"Fetching YAML: {url}...")
+    raw = fetch_bytes(url, label=url)
+    if raw is None:
+        return None
     try:
-        print(f"Fetching YAML: {url}...")
-        req = urllib.request.Request(url, headers={'User-Agent': 'votega.org/1.0'})
-        with urllib.request.urlopen(req, timeout=30) as response:
-            return yaml.safe_load(response.read().decode('utf-8'))
+        return yaml.safe_load(raw.decode('utf-8'))
     except Exception as e:
-        print(f"Error fetching YAML {url}: {e}")
+        print(f"Error parsing YAML {url}: {e}")
         return None
 
 BILL_TYPE_SLUG = {

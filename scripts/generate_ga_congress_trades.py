@@ -16,6 +16,8 @@ import urllib.request
 import urllib.error
 from datetime import datetime
 
+from lib.http import fetch_json as http_fetch_json
+
 BASE_RAW        = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data"
 FILERS_URL      = f"{BASE_RAW}/filers.json"
 OUTPUT_FILE     = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-congress-trades.json"
@@ -42,16 +44,13 @@ def load_bioguide_by_last_name():
 
 
 def fetch_json(url):
-    req = urllib.request.Request(url, headers={'User-Agent': 'votega.org/1.0'})
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            return json.loads(resp.read().decode('utf-8'))
-    except urllib.error.HTTPError as e:
-        print(f"  HTTP {e.code} for {url}")
-        return None
-    except Exception as e:
-        print(f"  Error fetching {url}: {e}")
-        return None
+    """Fetch JSON. Returns None on failure.
+
+    Delegates to lib.http. This previously made a single attempt with no retry
+    at all, so one transient 5xx produced a truncated trades file that the
+    workflow then committed. See CODEBASE-REVIEW-2026-08-18.md 2.4.
+    """
+    return http_fetch_json(url)
 
 
 def fetch_ticker_names(tickers):

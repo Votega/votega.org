@@ -22,6 +22,8 @@ import urllib.error
 import urllib.parse
 from datetime import datetime
 
+from lib.http import fetch_json as http_fetch_json
+
 TERMS       = ["2024", "2025"]   # Terms to include; add new term each October
 API_DELAY   = 0.25
 
@@ -32,18 +34,18 @@ CL_SEARCH = "https://www.courtlistener.com/api/rest/v4/search/"
 
 
 def fetch_json(url, label=""):
-    """Fetch and parse JSON from a URL. Returns None on error."""
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "votega.org/1.0", "Accept": "application/json"})
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        if e.code != 404:
-            print(f"  HTTP {e.code}: {label or url[:80]}")
-        return None
-    except Exception as e:
-        print(f"  Error fetching {label or url[:80]}: {e}")
-        return None
+    """Fetch and parse JSON from a URL. Returns None on error.
+
+    Delegates to lib.http; previously a single attempt with no retry against
+    Oyez/CourtListener. A 404 stays unlogged (an expected miss for a case with
+    no Oyez record). See CODEBASE-REVIEW-2026-08-18.md 2.4.
+    """
+    return http_fetch_json(
+        url,
+        headers={"Accept": "application/json"},
+        label=label or url[:80],
+        quiet_statuses=(404,),
+    )
 
 
 def unix_to_date(ts):

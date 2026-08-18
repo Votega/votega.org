@@ -27,6 +27,8 @@ import urllib.error
 import urllib.parse
 from datetime import datetime, timedelta, timezone
 
+from lib.http import fetch_json
+
 API_KEY  = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL = "https://v3.openstates.org"
 GA_JURISDICTION = "ocd-jurisdiction/country:us/state:ga/government"
@@ -97,32 +99,16 @@ _ACT_NUMBER_RE = re.compile(r'^Act (\d+)$')
 # ---------------------------------------------------------------------------
 
 def fetch(url, retries=3):
-    req = urllib.request.Request(url, headers={
-        'X-API-Key':  API_KEY or '',
-        'Accept':     'application/json',
-        'User-Agent': 'votega.org/1.0',
-    })
-    for attempt in range(1, retries + 1):
-        try:
-            with urllib.request.urlopen(req, timeout=60) as r:
-                return json.loads(r.read().decode('utf-8'))
-        except urllib.error.HTTPError as e:
-            body = e.read().decode('utf-8', errors='replace')
-            print(f"  HTTP {e.code}: {body[:200]}")
-            if e.code == 429 or e.code >= 500:
-                if attempt < retries:
-                    wait = DELAY * attempt * 2
-                    print(f"  Retrying in {wait}s ({attempt}/{retries})...")
-                    time.sleep(wait)
-                    continue
-            return None
-        except Exception as e:
-            print(f"  Error: {e}")
-            if attempt < retries:
-                time.sleep(DELAY)
-                continue
-            return None
-    return None
+    """Fetch JSON from Open States. Returns None on failure.
+
+    Delegates to lib.http; this was already policy-compliant, so the move is
+    about having one implementation rather than five. backoff=DELAY*2 keeps the
+    original 14s/28s/42s ramp. See CODEBASE-REVIEW-2026-08-18.md 2.4.
+    """
+    return fetch_json(url, headers={
+        'X-API-Key': API_KEY or '',
+        'Accept':    'application/json',
+    }, retries=retries, backoff=DELAY * 2, timeout=60, redact=API_KEY)
 
 
 def get_all_bills(updated_since=None):

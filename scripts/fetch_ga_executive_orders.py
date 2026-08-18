@@ -18,6 +18,8 @@ import time
 import urllib.request
 import urllib.error
 from datetime import datetime
+
+from lib.http import fetch_bytes
 from html.parser import HTMLParser
 
 BASE_URL   = "https://gov.georgia.gov"
@@ -153,25 +155,26 @@ class EOPageParser(HTMLParser):
 # ── Network ───────────────────────────────────────────────────────────────────
 
 def fetch_page(url, retries=3, delay=5):
-    for attempt in range(1, retries + 1):
-        try:
-            req = urllib.request.Request(url, headers={
-                'User-Agent': 'votega.org/1.0 (executive-orders-updater)',
-                'Accept':     'text/html,application/xhtml+xml',
-            })
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                return resp.read().decode('utf-8', errors='replace')
-        except urllib.error.HTTPError as e:
-            print(f"  HTTP {e.code} on {url}")
-            if e.code == 404:
-                return None
-            if attempt < retries:
-                time.sleep(delay)
-        except Exception as e:
-            print(f"  Error: {e}")
-            if attempt < retries:
-                time.sleep(delay)
-    return None
+    """Fetch an HTML listing page as text. Returns None on failure.
+
+    Delegates to lib.http. This previously retried every status except 404 —
+    including 4xx, which fail identically on retry. It now follows the
+    documented 429/5xx-only policy. A 404 is an expected end-of-pagination
+    signal here, so it stays unlogged.
+    See CODEBASE-REVIEW-2026-08-18.md 2.4.
+    """
+    raw = fetch_bytes(
+        url,
+        headers={
+            'User-Agent': 'votega.org/1.0 (executive-orders-updater)',
+            'Accept':     'text/html,application/xhtml+xml',
+        },
+        retries=retries,
+        backoff=delay,
+        quiet_statuses=(404,),
+        label=url,
+    )
+    return raw.decode('utf-8', errors='replace') if raw is not None else None
 
 
 def scrape_all_pages(year):

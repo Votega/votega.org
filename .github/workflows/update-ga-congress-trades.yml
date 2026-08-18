@@ -27,20 +27,12 @@ jobs:
 
       - name: Validate generated data
         run: |
-          if [ ! -f assets/data/ga-congress-trades.json ]; then
-            echo "Error: ga-congress-trades.json was not generated"
-            exit 1
-          fi
-          python -c "
-          import json, os
-          d = json.load(open('assets/data/ga-congress-trades.json'))
-          meta    = d.get('metadata', {})
-          tickers = meta.get('tickersWithTrades', 0)
-          trades  = meta.get('totalTrades', 0)
-          members = len(meta.get('gaMembers', []))
-          size_kb = os.path.getsize('assets/data/ga-congress-trades.json') // 1024
-          print(f'Validated: {tickers} tickers with trades, {trades} total trades, {members} GA members, {size_kb} KB')
-          "
+          python scripts/validate_data_update.py assets/data/ga-congress-trades.json \
+            --metric trades=metadata.totalTrades \
+            --metric members=len:byMember \
+            --metric tickers=len:tickerNames \
+            --min trades=1 \
+            --min members=1
 
       - name: Commit and push generated data
         run: |
@@ -52,9 +44,14 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update GA Congress stock trades data"
+            pushed=0
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
           fi

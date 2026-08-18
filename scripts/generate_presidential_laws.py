@@ -17,6 +17,8 @@ import urllib.error
 import urllib.parse
 from datetime import datetime
 
+from lib.http import fetch_json
+
 CONGRESS_API_KEY  = os.environ.get('CONGRESS_API_KEY')
 CONGRESS_API_BASE = "https://api.congress.gov/v3"
 
@@ -59,18 +61,16 @@ def congress_api(path, params=None):
     url = f"{CONGRESS_API_BASE}{path}?{urllib.parse.urlencode(query)}"
     safe = url.replace(CONGRESS_API_KEY, "***") if CONGRESS_API_KEY else url
     print(f"  API: {safe[:120]}...")
-    try:
-        req = urllib.request.Request(
-            url, headers={"User-Agent": "votega.org/1.0", "Accept": "application/json"}
-        )
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        print(f"  HTTP {e.code}: {e.reason}")
-        return None
-    except Exception as e:
-        print(f"  Error: {e}")
-        return None
+    # Delegates to lib.http: previously a single attempt with no retry, so one
+    # transient Congress.gov 5xx emptied the laws file. Paired with the delta
+    # check now guarding this workflow, an outage can no longer be committed.
+    # See CODEBASE-REVIEW-2026-08-18.md 2.4.
+    return fetch_json(
+        url,
+        headers={"Accept": "application/json"},
+        redact=CONGRESS_API_KEY,
+        label=safe,
+    )
 
 
 def build_congress_url(bill_type, bill_number):

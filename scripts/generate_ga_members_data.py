@@ -14,6 +14,8 @@ import urllib.error
 import urllib.parse
 from datetime import datetime
 
+from lib.http import fetch_json
+
 OCD_ID_RE = re.compile(r'^ocd-person/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$')
 
 API_KEY = os.environ.get('OPENSTATES_API_KEY')
@@ -23,32 +25,18 @@ GA_JURISDICTION = "ocd-jurisdiction/country:us/state:ga/government"
 
 
 def fetch_url(url, retries=3, backoff=5):
+    """Fetch JSON from Open States. Returns None on failure.
+
+    Delegates to lib.http. Like generate_curated_ga_bills.py, this retried 5xx
+    only — so the daily members job would give up immediately on the HTTP 429
+    that Open States returns when the shared 250 req/day quota is exhausted.
+    See CODEBASE-REVIEW-2026-08-18.md 2.4.
+    """
     print(f"Fetching: {url[:120]}...")
-    for attempt in range(1, retries + 1):
-        try:
-            req = urllib.request.Request(url, headers={
-                'X-API-Key': API_KEY or '',
-                'Accept': 'application/json',
-                'User-Agent': 'votega.org/1.0',
-            })
-            with urllib.request.urlopen(req, timeout=30) as response:
-                return json.loads(response.read().decode('utf-8'))
-        except urllib.error.HTTPError as e:
-            body = e.read().decode('utf-8', errors='replace')
-            print(f"HTTP Error {e.code}: {e.reason} — {body[:300]}")
-            if e.code >= 500 and attempt < retries:
-                print(f"  Retrying in {backoff}s (attempt {attempt}/{retries})...")
-                time.sleep(backoff)
-                continue
-            return None
-        except Exception as e:
-            print(f"Error fetching: {e}")
-            if attempt < retries:
-                print(f"  Retrying in {backoff}s (attempt {attempt}/{retries})...")
-                time.sleep(backoff)
-                continue
-            return None
-    return None
+    return fetch_json(url, headers={
+        'X-API-Key': API_KEY or '',
+        'Accept': 'application/json',
+    }, retries=retries, backoff=backoff, redact=API_KEY)
 
 
 def get_all_members():

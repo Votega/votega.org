@@ -29,19 +29,10 @@ jobs:
 
       - name: Validate generated data
         run: |
-          if [ ! -f assets/data/presidential-laws.json ]; then
-            echo "Error: presidential-laws.json was not generated"
-            exit 1
-          fi
-          python -c "
-          import json, os
-          d = json.load(open('assets/data/presidential-laws.json'))
-          count   = d.get('metadata', {}).get('count', 0)
-          size_kb = os.path.getsize('assets/data/presidential-laws.json') // 1024
-          print(f'Validated: {count} signed laws, {size_kb} KB')
-          if count == 0:
-              print('Warning: no laws found — Congress.gov API may be unavailable')
-          "
+          python scripts/validate_data_update.py assets/data/presidential-laws.json \
+            --metric laws=metadata.count \
+            --metric records=len:laws \
+            --scope-key metadata.congress
 
       - name: Commit and push generated data
         run: |
@@ -53,9 +44,14 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update presidential signed laws data"
+            pushed=0
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
           fi

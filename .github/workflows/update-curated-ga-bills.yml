@@ -1,4 +1,4 @@
-name: Update curated GA bill votes (daily, 08:00 UTC)
+name: Update curated GA bill votes (Tue/Thu, 08:00 UTC)
 
 permissions:
   contents: write
@@ -6,7 +6,9 @@ permissions:
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 8 * * *'  # daily at 08:00 UTC (one hour after GA members workflow)
+    - cron: '0 8 * * 2,4'  # Tue/Thu 08:00 UTC - kept off Sun/Mon so the Open States
+                           # daily quota is not shared with update-ga-bills (Sun) or
+                           # update-ga-votes (Mon). See CODEBASE-REVIEW-2026-08-18.md 2.5.
 
 jobs:
   update-data:
@@ -36,9 +38,14 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update curated GA bill votes data"
+            pushed=0
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
           fi

@@ -27,17 +27,10 @@ jobs:
 
       - name: Validate generated data
         run: |
-          if [ ! -f assets/data/vp-tie-votes.json ]; then
-            echo "Error: vp-tie-votes.json was not generated"
-            exit 1
-          fi
-          python -c "
-          import json, os
-          d = json.load(open('assets/data/vp-tie-votes.json'))
-          count   = d.get('metadata', {}).get('count', 0)
-          size_kb = os.path.getsize('assets/data/vp-tie-votes.json') // 1024
-          print(f'Validated: {count} VP tie-breaking votes, {size_kb} KB')
-          "
+          python scripts/validate_data_update.py assets/data/vp-tie-votes.json \
+            --metric votes=metadata.count \
+            --metric records=len:votes \
+            --scope-key metadata.congress
 
       - name: Commit and push generated data
         run: |
@@ -49,9 +42,14 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update VP tie-breaking vote data"
+            pushed=0
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
           fi

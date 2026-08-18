@@ -1,0 +1,100 @@
+name: Notify on data workflow failure
+
+# Single listener for every scheduled data workflow. Rather than pasting an
+# `if: failure()` step into ~20 workflows, this fires on workflow_run and opens
+# (or comments on) a deduplicated GitHub issue so a broken generator is visible
+# without anyone watching the Actions tab.
+#
+# Addresses CODEBASE-REVIEW-2026-08-18.md finding 2.2.
+#
+# NOTE: `workflows:` matches on the workflow's `name:` field, not its filename.
+# If you rename a workflow, update the matching entry here or its failures go
+# unreported. Several names embed their schedule, so a cron change means a name
+# change means an edit here.
+
+on:
+  workflow_run:
+    types: [completed]
+    workflows:
+      - Update curated GA bill votes (Tue/Thu, 08:00 UTC)
+      - Update Congress.gov current members data (daily, 06:00 UTC)
+      - Update FEC campaign finance data (weekly, Sun 08:00 UTC)
+      - Update federal legislative vote data — GA delegation (weekly, Sun 09:00 UTC)
+      - Update Georgia legislative bill data (weekly, Sun 07:30 UTC)
+      - Update GA campaign finance history (legacy records)
+      - Update GA campaign finance data (weekly, Sun 08:30 UTC)
+      - Update GA Congress stock trades data (weekly, Sun 10:00 UTC)
+      - Update GA Executive Orders (daily, 08:15 UTC)
+      - Update Georgia General Assembly member data (daily, 07:00 UTC)
+      - Update Georgia legislative vote data (weekly, Mon 07:30 UTC)
+      - Update presidential signed laws data (weekly, Sun 09:45 UTC)
+      - Update SCOTUS decisions data (weekly, Sun 10:00 UTC)
+      - Update site search index (daily, 12:00 UTC)
+      - Update VP tie-breaking vote data (weekly, Sun 09:30 UTC)
+      - Publish GA federal delegation to ga-federal-legislators
+      - Publish ga-ballot-measures.json to ga-legislation
+      - Publish ga-bills.json to ga-legislation
+      - Publish GA Executive Orders data
+      - Publish races.json to ga-races-elections (daily, 07:00 UTC)
+      - Build and deploy Jekyll site to Pages
+
+permissions:
+  issues: write
+
+jobs:
+  open-or-update-issue:
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Open or update a deduplicated failure issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          WF_NAME: ${{ github.event.workflow_run.name }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          RUN_NUM: ${{ github.event.workflow_run.run_number }}
+          STARTED: ${{ github.event.workflow_run.run_started_at }}
+        run: |
+          set -euo pipefail
+
+          LABEL="workflow-failure"
+          TITLE="Data workflow failing: ${WF_NAME}"
+
+          # Idempotent: succeeds silently if the label already exists.
+          gh label create "$LABEL" \
+            --color B60205 \
+            --description "A scheduled data workflow failed" 2>/dev/null || true
+
+          # Built with printf rather than a heredoc: this is a YAML block scalar, so
+          # heredoc content cannot start at column 0 and would carry its indentation
+          # into the issue body (rendering the whole thing as a code block).
+          BODY=$(printf '%s\n' \
+            "**\`${WF_NAME}\`** failed on run #${RUN_NUM} (started \`${STARTED}\`)." \
+            "" \
+            "- Run log: ${RUN_URL}" \
+            "" \
+            "The site is still serving the last-good JSON for this dataset, so nothing" \
+            "is broken for visitors yet — but this data is frozen until a run succeeds." \
+            "" \
+            "This issue is reused for repeat failures of the same workflow; each new" \
+            "failure adds a comment. Close it once the workflow is green again.")
+
+          # Exact-title match via jq. The label filter alone is the prefilter -- the
+          # titles contain ':' and '()', which the issue search syntax mangles.
+          # `gh --jq` uses gh's embedded gojq (which supports `env`), so this needs no
+          # external jq binary on the runner.
+          EXISTING=$(TITLE="$TITLE" gh issue list \
+            --state open \
+            --label "$LABEL" \
+            --limit 100 \
+            --json number,title \
+            --jq '[.[] | select(.title == env.TITLE)] | .[0].number // empty')
+
+          if [ -n "$EXISTING" ]; then
+            echo "Existing issue #${EXISTING} found - adding a comment."
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            echo "No open issue for this workflow - creating one."
+            gh issue create --title "$TITLE" --label "$LABEL" --body "$BODY"
+          fi

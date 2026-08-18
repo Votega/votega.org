@@ -16,6 +16,8 @@ import urllib.error
 import urllib.parse
 from datetime import datetime
 
+from lib.http import fetch_json
+
 API_KEY = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL = "https://v3.openstates.org"
 GA_JURISDICTION = "ocd-jurisdiction/country:us/state:ga/government"
@@ -26,32 +28,18 @@ OUTPUT_FILE        = sys.argv[1] if len(sys.argv) > 1 else "assets/data/curated-
 
 
 def fetch_url(url, retries=3, backoff=5):
+    """Fetch JSON from Open States. Returns None on failure.
+
+    Delegates to lib.http so the 429/5xx retry policy lives in one place. This
+    function previously retried 5xx only — and since Open States signals quota
+    exhaustion with 429, the one status it refused to retry was the one this
+    daily job was most likely to hit. See CODEBASE-REVIEW-2026-08-18.md 2.4.
+    """
     print(f"  GET {url[:120]}")
-    for attempt in range(1, retries + 1):
-        try:
-            req = urllib.request.Request(url, headers={
-                'X-API-Key': API_KEY or '',
-                'Accept': 'application/json',
-                'User-Agent': 'votega.org/1.0',
-            })
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                return json.loads(resp.read().decode('utf-8'))
-        except urllib.error.HTTPError as e:
-            body = e.read().decode('utf-8', errors='replace')
-            print(f"  HTTP {e.code}: {e.reason} — {body[:300]}")
-            if e.code >= 500 and attempt < retries:
-                print(f"  Retrying in {backoff}s ({attempt}/{retries})...")
-                time.sleep(backoff)
-                continue
-            return None
-        except Exception as e:
-            print(f"  Error: {e}")
-            if attempt < retries:
-                print(f"  Retrying in {backoff}s ({attempt}/{retries})...")
-                time.sleep(backoff)
-                continue
-            return None
-    return None
+    return fetch_json(url, headers={
+        'X-API-Key': API_KEY or '',
+        'Accept': 'application/json',
+    }, retries=retries, backoff=backoff, redact=API_KEY)
 
 
 def build_party_lookup():

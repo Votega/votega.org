@@ -34,13 +34,23 @@ jobs:
             echo "Error: ga-bills.json was not generated"
             exit 1
           fi
+          # Relative floor + structural checks. The absolute `len(bills) >= 5000`
+          # assert that used to live below was pinned to the 2025-26 session and
+          # would have failed every run for roughly the first year of the next
+          # biennium; --scope-key lets the check reset itself when the session
+          # rolls over. See CODEBASE-REVIEW-2026-08-18.md findings 2.3 and 5.1.
+          python scripts/validate_data_update.py assets/data/ga-bills.json \
+            --metric bills=len:bills \
+            --metric totalBills=metadata.totalBills \
+            --scope-key metadata.session \
+            --min bills=1
+
           python -c "
           import json
           d = json.load(open('assets/data/ga-bills.json'))
           bills = d.get('bills', [])
           meta  = d.get('metadata', {})
           print(f'Validated: {len(bills)} bills (metadata.totalBills={meta.get(\"totalBills\")})')
-          assert len(bills) >= 5000, f'Expected 5000+ bills for the 2025-26 session, got {len(bills)}'
           assert meta.get('totalBills') == len(bills), 'metadata.totalBills does not match actual bill count'
           assert meta.get('paginationComplete') is True, 'Pagination did not complete — refusing stale/partial data'
           required = ['id', 'identifier', 'chamber', 'title', 'billUrl']
@@ -63,9 +73,14 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update Georgia legislative bill data"
+            pushed=0
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
           fi

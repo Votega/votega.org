@@ -56,11 +56,16 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update Georgia legislative vote data"
+            pushed=0
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
           fi
 
       - name: Enrich GA bills with party vote tallies
@@ -74,11 +79,16 @@ jobs:
             echo "No changes to ga-bills.json"
           else
             git commit -m "Enrich GA bills with party vote tallies"
+            pushed=0
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
           fi
 
       # Reuses the existing GA_LEGISLATORS_TOKEN secret — same target repo as

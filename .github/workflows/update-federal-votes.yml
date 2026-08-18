@@ -34,20 +34,10 @@ jobs:
 
       - name: Validate generated data
         run: |
-          if [ ! -f assets/data/federal-member-votes.json ]; then
-            echo "Error: federal-member-votes.json was not generated"
-            exit 1
-          fi
-          python -c "
-          import json, os
-          d = json.load(open('assets/data/federal-member-votes.json'))
-          votes   = len(d.get('votes', {}))
-          members = len(d.get('memberVotes', {}))
-          size_kb = os.path.getsize('assets/data/federal-member-votes.json') // 1024
-          print(f'Validated: {votes} roll calls, {members} GA members, {size_kb} KB')
-          if votes == 0:
-              print('Warning: No votes found — Congress.gov API may have no enacted bills yet or /law endpoint unavailable')
-          "
+          python scripts/validate_data_update.py assets/data/federal-member-votes.json \
+            --metric rollcalls=len:votes \
+            --metric members=len:memberVotes \
+            --scope-key metadata.congress
 
       - name: Commit and push generated data
         run: |
@@ -59,9 +49,14 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update federal legislative vote data (GA delegation)"
+            pushed=0
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push && break
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
           fi
