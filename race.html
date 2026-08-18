@@ -531,8 +531,12 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   function renderRace(race, members) {
     const basePath   = getBasePath();
     const phase      = race.phases[race.activePhase];
+    // "Runoff" stays generic — Georgia holds primary, general, and special-election
+    // runoffs, and all three use the same `runoff` phase key. Labeling it
+    // "Primary Runoff" mislabeled the GA-13 special-election runoff. Matches the
+    // PHASE_META convention in elections.html.
     const phaseLabel = race.activePhase === 'primary' ? 'Primary'
-                     : race.activePhase === 'runoff'  ? 'Primary Runoff'
+                     : race.activePhase === 'runoff'  ? 'Runoff'
                      : 'General Election';
     const phaseClass = race.activePhase === 'primary' ? 'phase-primary'
                      : race.activePhase === 'runoff'  ? 'phase-runoff'
