@@ -71,6 +71,14 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
   .va-next-name { font-size: 1.25rem; font-weight: 700; color: #14213d; margin-bottom: 0.15rem; }
   .va-next-date { font-size: 0.95rem; color: #333; }
   .va-next-countdown { font-size: 0.85rem; color: #1a56a8; font-weight: 600; margin-top: 0.3rem; }
+  /* Details promoted from the duplicate list card — separated from the countdown
+     so the hero still reads headline-first. */
+  .va-next .va-cal-details {
+    margin-top: 0.8rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #cfe0f7;
+  }
+  .va-next .va-cal-details dt { color: #5a7396; }
 
   .va-section-heading {
     margin-top: 1.75rem;
@@ -222,31 +230,12 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
     return e.earlyVotingNote || 'Set by county';
   }
 
-  function renderNext(next) {
-    if (!next) return '';
-    const days = daysUntil(next.date);
-    const countdown = days > 0 ? `In ${days} day${days === 1 ? '' : 's'}` : (days === 0 ? 'Today' : '');
-    return `
-      <div class="va-next">
-        <div class="va-next-label">Next Election</div>
-        <div class="va-next-name">${escHtml(next.name)}</div>
-        <div class="va-next-date">${formatDate(next.date)}</div>
-        ${countdown ? `<div class="va-next-countdown">${countdown}</div>` : ''}
-      </div>`;
-  }
-
-  function renderCard(e, isUpcoming) {
-    const badge = isUpcoming
-      ? '<span class="va-cal-badge badge-upcoming">Upcoming</span>'
-      : '<span class="va-cal-badge badge-completed">Completed</span>';
-
+  // Shared by the "Next Election" hero and the calendar cards. The next election
+  // renders only in the hero (it used to repeat as the first list item), so the
+  // hero has to carry the same dates or they'd be lost for the one election a
+  // visitor most likely came here for.
+  function detailsHtml(e) {
     const regDeadline = e.registrationDeadline ? formatShortDate(e.registrationDeadline) : 'Same as original primary';
-    const contingentNote = e.contingentNote
-      ? `<div class="va-cal-note">${escHtml(e.contingentNote)}</div>`
-      : '';
-    const resultsLink = (!isUpcoming && e.resultsUrl)
-      ? `<div class="va-cal-results"><a href="${escHtml(e.resultsUrl)}">View Results &rarr;</a></div>`
-      : '';
     // Shown only when it adds something the date line doesn't already say.
     const evQualifier = (e.earlyVotingStart && !e.earlyVotingEnd && e.earlyVotingNote)
       ? `<span class="va-cal-qualifier">${escHtml(e.earlyVotingNote)}</span>`
@@ -256,6 +245,49 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
             <dt>Absentee Ballot Request Deadline</dt>
             <dd>${escHtml(formatShortDate(e.absenteeApplicationDeadline))}</dd>
           </div>`
+      : '';
+    return `
+        <dl class="va-cal-details">
+          <div>
+            <dt>Early Voting</dt>
+            <dd>${escHtml(earlyVotingText(e))}${evQualifier}</dd>
+          </div>
+          <div>
+            <dt>Registration Deadline</dt>
+            <dd>${escHtml(regDeadline)}</dd>
+          </div>
+          ${absentee}
+        </dl>`;
+  }
+
+  function renderNext(next) {
+    if (!next) return '';
+    const days = daysUntil(next.date);
+    const countdown = days > 0 ? `In ${days} day${days === 1 ? '' : 's'}` : (days === 0 ? 'Today' : '');
+    const contingentNote = next.contingentNote
+      ? `<div class="va-cal-note">${escHtml(next.contingentNote)}</div>`
+      : '';
+    return `
+      <div class="va-next">
+        <div class="va-next-label">Next Election</div>
+        <div class="va-next-name">${escHtml(next.name)}</div>
+        <div class="va-next-date">${formatDate(next.date)}</div>
+        ${countdown ? `<div class="va-next-countdown">${countdown}</div>` : ''}
+        ${detailsHtml(next)}
+        ${contingentNote}
+      </div>`;
+  }
+
+  function renderCard(e, isUpcoming) {
+    const badge = isUpcoming
+      ? '<span class="va-cal-badge badge-upcoming">Upcoming</span>'
+      : '<span class="va-cal-badge badge-completed">Completed</span>';
+
+    const contingentNote = e.contingentNote
+      ? `<div class="va-cal-note">${escHtml(e.contingentNote)}</div>`
+      : '';
+    const resultsLink = (!isUpcoming && e.resultsUrl)
+      ? `<div class="va-cal-results"><a href="${escHtml(e.resultsUrl)}">View Results &rarr;</a></div>`
       : '';
 
     return `
@@ -267,17 +299,7 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
           </div>
           ${badge}
         </div>
-        <dl class="va-cal-details">
-          <div>
-            <dt>Early Voting</dt>
-            <dd>${escHtml(earlyVotingText(e))}${evQualifier}</dd>
-          </div>
-          <div>
-            <dt>Registration Deadline</dt>
-            <dd>${escHtml(regDeadline)}</dd>
-          </div>
-          ${absentee}
-        </dl>
+        ${detailsHtml(e)}
         ${contingentNote}
         ${resultsLink}
       </div>`;
@@ -302,7 +324,9 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
       const upcoming = elections.filter(e => parseLocalDate(e.date) >= today);
       const completed = elections.filter(e => parseLocalDate(e.date) < today);
       const next = upcoming[0] || null;
-      const ordered = upcoming.concat(completed);
+      // The next election is promoted to the hero card above, so drop it here
+      // rather than showing it twice in a row.
+      const ordered = upcoming.slice(1).concat(completed);
 
       nextEl.innerHTML = renderNext(next);
       calendar.innerHTML = ordered.map(e => renderCard(e, parseLocalDate(e.date) >= today)).join('');
