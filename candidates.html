@@ -1,0 +1,205 @@
+---
+layout: default
+title: Claim Your Candidate Profile
+permalink: /candidates/
+share-description: "Candidates on Georgia's 2026 general election ballot can add a biography, photo, and answers to a shared questionnaire to their VoteGA profile. Free, nonpartisan, and clearly labeled."
+---
+
+<h1>Claim your candidate profile</h1>
+<p class="cc-lede">VoteGA.org already has a page for every candidate on Georgia's 2026 general election ballot, built from public records. If you're a candidate — or you work for one — this is how you fill in the part only you can write.</p>
+
+<style>
+  .cc-lede {
+    font-size: 1.08rem;
+    color: #444;
+    line-height: 1.65;
+    max-width: 42rem;
+  }
+  .cc-section { margin: 2.5rem 0; }
+  .cc-section h2 {
+    font-size: 1.35rem;
+    color: #008AFF;
+    margin-bottom: 0.75rem;
+  }
+  .cc-section p { line-height: 1.65; color: #404040; }
+
+  /* What you can add / can't change — the firewall */
+  .cc-firewall {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+  @media (max-width: 600px) { .cc-firewall { grid-template-columns: 1fr; } }
+  .cc-panel {
+    border-radius: 10px;
+    padding: 1.4rem 1.5rem;
+    border: 1px solid #ddd;
+    background: #fff;
+  }
+  .cc-panel h3 {
+    font-size: 1.05rem;
+    margin: 0 0 0.85rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .cc-panel.can-add   { border-color: #bfdbef; background: #f0f6ff; }
+  .cc-panel.cant      { border-color: #e2e5ea; background: #f7f8fa; }
+  .cc-panel ul { margin: 0; padding-left: 1.15rem; }
+  .cc-panel li { line-height: 1.7; color: #333; }
+
+  /* How it works — numbered steps */
+  .cc-steps {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+    margin: 1.25rem 0 0 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .cc-steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 3rem;
+    line-height: 1.6;
+    color: #404040;
+    min-height: 2.1rem;
+  }
+  .cc-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2.1rem;
+    height: 2.1rem;
+    background: #008AFF;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .cc-steps li strong { color: #1a2733; }
+
+  /* Callout box */
+  .cc-callout {
+    border-left: 4px solid #008AFF;
+    background: #f0f6ff;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    line-height: 1.6;
+  }
+  .cc-callout.plain { border-left-color: #9ca3af; background: #f7f8fa; }
+
+  /* CTA */
+  .cc-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin: 1.5rem 0 0.5rem;
+  }
+  .cc-btn {
+    display: inline-block;
+    padding: 0.7rem 1.4rem;
+    background: #1a56a8;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+  .cc-btn:hover { background: #164a90; color: #fff; text-decoration: none; }
+  .cc-btn.secondary {
+    background: #fff;
+    color: #1a56a8;
+    border: 1px solid #1a56a8;
+  }
+  .cc-btn.secondary:hover { background: #f0f6ff; color: #1a56a8; }
+
+  .cc-policy dt { font-weight: 700; color: #1a2733; margin-top: 1rem; }
+  .cc-policy dd { margin: 0.25rem 0 0 0; line-height: 1.65; color: #404040; }
+</style>
+
+<!-- Firewall: the trust core — first thing a campaign reads -->
+<div class="cc-section">
+  <div class="cc-firewall">
+    <div class="cc-panel can-add">
+      <h3>✅ What you can add</h3>
+      <ul>
+        <li>A biography, in your own words</li>
+        <li>A photo</li>
+        <li>Campaign, donation, volunteer, and social links</li>
+        <li>Endorsements, labeled as claimed by your campaign</li>
+        <li>Answers to the questionnaire everyone in your race gets</li>
+      </ul>
+    </div>
+    <div class="cc-panel cant">
+      <h3>🔒 What you can't change</h3>
+      <ul>
+        <li>Your name, party, and office on the ballot</li>
+        <li>Whether you're the incumbent</li>
+        <li>Your voting record, if you've held office</li>
+        <li>Your campaign finance data</li>
+      </ul>
+      <p style="font-size:0.88rem;color:#555;margin:0.85rem 0 0;">These come from public records and stay as they are. If something in the public-record part is wrong, we'll correct it — see below.</p>
+    </div>
+  </div>
+</div>
+
+<div class="cc-section">
+  <h2>How it works</h2>
+  <ol class="cc-steps">
+    <li><strong>Find your profile.</strong> Every general-election candidate already has one. If you received an email from us, the link in it opens your profile's claim form directly.</li>
+    <li><strong>Fill it in.</strong> A biography, a photo, and the questionnaire — about five minutes. Everything except the first section is optional.</li>
+    <li><strong>We confirm it's really you.</strong> We reach out using contact information already on file for your campaign, from your qualifying paperwork or your campaign website. Nothing publishes until you confirm.</li>
+    <li><strong>It goes live.</strong> Your submission appears on your profile, labeled as submitted by your campaign and dated. Need to change it later? Submit again.</li>
+  </ol>
+</div>
+
+<div class="cc-section">
+  <h2>The questionnaire</h2>
+  <p>Every candidate in a race gets the same questions, and we publish the answers side by side so voters can compare. Answers are capped in length so the comparison stays readable — the limits apply to everyone equally. Every question is optional, and a skipped question shows as "No response," the same for every candidate.</p>
+  <div class="cc-callout">
+    <strong>Judicial candidates</strong> get a different, restricted set of questions. We've written them to avoid pledges or commitments about issues that could come before your court, consistent with Rule 4.1 of the Georgia Code of Judicial Conduct.
+  </div>
+</div>
+
+<div class="cc-section">
+  <h2>What this costs: nothing</h2>
+  <p>VoteGA is a nonpartisan Georgia voter information site. We charge candidates nothing, and we don't accept payment from candidates, campaigns, or committees for anything — not for a profile, not for placement, not for a feature. Claiming your profile gives you no advantage over a candidate who doesn't. Your page stays up either way.</p>
+</div>
+
+<div class="cc-section">
+  <h2>How we handle what you submit</h2>
+  <dl class="cc-policy">
+    <dt>We label it.</dt>
+    <dd>Everything you submit is published as campaign-submitted content, clearly distinguished from the public-record parts of your profile, and dated.</dd>
+
+    <dt>We don't verify your claims — and we say so.</dt>
+    <dd>Endorsements and biographical statements are published as you submit them, under a note saying VoteGA has not independently verified them.</dd>
+
+    <dt>We may decline some content.</dt>
+    <dd>We may decline or remove material that is defamatory, that targets an opponent by name, or that isn't about the office you're seeking. If we do, we'll tell you why.</dd>
+
+    <dt>What we don't ask for.</dt>
+    <dd>We don't collect your date of birth, home address, any government ID number, donor information, or anything about your opponents.</dd>
+  </dl>
+</div>
+
+<div class="cc-section">
+  <h2>Ready to claim yours?</h2>
+  <p>If you got an email from us, use the link inside — it opens your profile's form directly. Otherwise, find your profile in the candidate directory and open it from there.</p>
+  <div class="cc-cta-row">
+    <a class="cc-btn" href="/elections.html">Find my profile →</a>
+    <a class="cc-btn secondary" href="mailto:admin@votega.org?subject=Candidate%20profile%20claim">Email us for your link</a>
+  </div>
+</div>
+
+<div class="cc-section">
+  <div class="cc-callout plain">
+    <strong>Something wrong in the public-record part of your profile?</strong> That's a correction, not a claim — and we take it seriously. Email <a href="mailto:admin@votega.org">admin@votega.org</a> with your name, your office, and what's incorrect, and we'll trace how we displayed it and fix it.
+  </div>
+</div>
