@@ -1,14 +1,92 @@
 """
 Convert ga-legislative-candidates.json into races.json entries
 for all GA State House and Senate districts.
+
+This script owns the *primary* ballot for every ga-house-* / ga-senate-* race and
+rebuilds it from source on each run. Everything downstream of the primary —
+`activePhase`, `phases.general`, `phases.runoff`, `primaryResult` — exists only
+in races.json (set_general_candidates.py writes the general ballots) and is
+carried forward on merge, never regenerated.
+
+That merge is the point. This script previously replaced every legislative race
+wholesale, which on 2026-08-17 wiped 391 promoted general-election candidates
+across 236 races; it was restored from git. A run now refuses to complete if it
+would reduce the post-primary candidate count.
+See CODEBASE-REVIEW-2026-08-18.md finding 1.1.
+
+Usage:
+  python scripts/build_legislative_races.py
+  python scripts/build_legislative_races.py --allow-loss    # accept a reduction
+  python scripts/build_legislative_races.py --force-reset --allow-loss
+                                                            # old behaviour:
+                                                            # reset every race
+                                                            # back to the primary
 """
-import json, re, string
+import json, re, string, sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 SRC       = Path("assets/data/ga-legislative-candidates.json")
 DEST      = Path("assets/data/races.json")
 GA_MEMBERS = Path("assets/data/ga-members.json")
 OVERRIDES  = Path("assets/data/ga-race-candidate-overrides.json")
+
+FORCE_RESET = "--force-reset" in sys.argv
+ALLOW_LOSS  = "--allow-loss" in sys.argv
+
+# Keys this script derives from source on every run. Anything else found on an
+# existing race is downstream state and is carried forward untouched.
+BUILDER_OWNED = {"id", "level", "chamber", "district", "cycle", "phases",
+                 "activePhase", "_note"}
+
+
+def is_legislative(race_id: str) -> bool:
+    return race_id.startswith("ga-house-") or race_id.startswith("ga-senate-")
+
+
+def count_candidates(phase: dict) -> int:
+    """Candidates in a phase, across both shapes (`ballots` dict / `candidates` list)."""
+    if not isinstance(phase, dict):
+        return 0
+    total = 0
+    ballots = phase.get("ballots")
+    if isinstance(ballots, dict):
+        total += sum(len(v) for v in ballots.values() if isinstance(v, list))
+    cands = phase.get("candidates")
+    if isinstance(cands, list):
+        total += len(cands)
+    return total
+
+
+def merge_race(existing: dict | None, fresh: dict) -> dict:
+    """Freshly built primary + everything downstream preserved from `existing`."""
+    if not existing:
+        return fresh
+
+    merged = dict(fresh)
+
+    # Phase progression is downstream state, not something source can tell us.
+    merged["activePhase"] = existing.get("activePhase", fresh["activePhase"])
+
+    phases = dict(fresh.get("phases", {}))
+    for name, prior in (existing.get("phases") or {}).items():
+        if name == "primary":
+            # Keep the rebuilt ballots; retain any other keys set on the phase.
+            combined = dict(prior)
+            combined.update(fresh["phases"]["primary"])
+            phases["primary"] = combined
+        elif count_candidates(prior) or name not in phases:
+            # A populated general/runoff always wins over the empty stub the
+            # builder emits — this is the data that used to be destroyed.
+            phases[name] = prior
+    merged["phases"] = phases
+
+    # Race-level keys the builder does not produce (e.g. primaryResult).
+    for k, v in existing.items():
+        if k not in merged and k not in BUILDER_OWNED:
+            merged[k] = v
+
+    return merged
 
 def title_case(name: str) -> str:
     """Convert ALL CAPS name to Title Case, handling common edge cases."""
@@ -107,6 +185,22 @@ def candidate_from_row(row: dict, idx: int, chamber_slug: str, district: int, pa
 
     return c
 
+# Populated during build_races(); inspected by main().
+REMOVED_IDS = []
+REMOVAL_MISMATCHES = []
+
+
+def override_target_name(patch: dict) -> str:
+    """The candidate name a `remove: true` override says it targets.
+
+    `_name` is documentation, written as e.g.
+    "Brian Lamar Prince (duplicate of d-1)" — the parenthetical is the reason,
+    not part of the name.
+    """
+    raw = (patch.get("_name") or "").strip()
+    return raw.split(" (")[0].strip()
+
+
 def names_match(candidate_name: str, member_name: str) -> bool:
     """Return True if candidate_name likely refers to the same person as member_name.
     Requires last name match plus first name or first-initial match."""
@@ -170,6 +264,20 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict, 
 
                 # Apply manual overrides (take precedence over auto-enrichment)
                 patch = candidate_overrides.get(c["id"])
+                if patch and patch.get("remove"):
+                    # Candidate ids are positional (row index into the source
+                    # export), so a re-ordered or shortened source row list makes
+                    # `ga-house-15-2026-d-3` point at a different person. Verify
+                    # the recorded name before deleting anyone.
+                    # See CODEBASE-REVIEW-2026-08-18.md finding 5.2.
+                    expected = override_target_name(patch)
+                    if expected and not names_match(expected, c["name"]):
+                        REMOVAL_MISMATCHES.append((c["id"], expected, c["name"]))
+                        candidates.append(c)          # keep — do not guess
+                    else:
+                        REMOVED_IDS.append(c["id"])
+                    continue
+
                 if patch:
                     c.update({k: v for k, v in patch.items() if not k.startswith("_")})
 
@@ -241,14 +349,84 @@ def main():
     new_races = build_races(src, member_lookup, candidate_overrides, race_overrides)
     print(f"Built {len(new_races)} legislative race entries")
 
-    # Load existing races.json and remove any old ga-house/ga-senate entries
+    removal_keys = {k for k, v in candidate_overrides.items()
+                    if isinstance(v, dict) and v.get("remove")}
+    print(f"Applied {len(REMOVED_IDS)} of {len(removal_keys)} 'remove' override(s)")
+
+    unused = sorted(removal_keys - set(REMOVED_IDS)
+                    - {cid for cid, _, _ in REMOVAL_MISMATCHES})
+    if unused:
+        print(f"  note: {len(unused)} 'remove' override(s) matched no candidate "
+              f"(source no longer emits that row): {', '.join(unused[:6])}"
+              + (" ..." if len(unused) > 6 else ""))
+
+    if REMOVAL_MISMATCHES:
+        print("\nERROR: 'remove' override(s) point at a different candidate than "
+              "recorded.\nCandidate ids are positional, so the source export has "
+              "almost certainly\nre-ordered. Nobody was deleted. Re-check these "
+              "against the source and\nupdate ga-race-candidate-overrides.json:\n",
+              file=sys.stderr)
+        for cid, expected, actual in REMOVAL_MISMATCHES:
+            print(f"  {cid}: expected {expected!r}, found {actual!r}", file=sys.stderr)
+        sys.exit(1)
+
     with open(DEST, encoding="utf-8") as f:
         dest = json.load(f)
 
-    existing = [r for r in dest.get("races", [])
-                if not r["id"].startswith("ga-house-") and not r["id"].startswith("ga-senate-")]
-    dest["races"] = existing + new_races
-    dest["updatedAt"] = src.get("updatedAt", "")
+    dest_races = dest.get("races", [])
+    existing_by_id = {r["id"]: r for r in dest_races if is_legislative(r["id"])}
+
+    before = sum(count_candidates(r.get("phases", {}).get(p, {}))
+                 for r in existing_by_id.values()
+                 for p in r.get("phases", {}) if p != "primary")
+
+    if FORCE_RESET:
+        print("\n!! --force-reset: rebuilding from source, discarding downstream phases")
+        merged_by_id = {r["id"]: r for r in new_races}
+    else:
+        merged_by_id = {r["id"]: merge_race(existing_by_id.get(r["id"]), r)
+                        for r in new_races}
+
+    after = sum(count_candidates(m.get("phases", {}).get(p, {}))
+                for m in merged_by_id.values()
+                for p in m.get("phases", {}) if p != "primary")
+
+    carried = sum(1 for rid, m in merged_by_id.items()
+                  if existing_by_id.get(rid, {}).get("activePhase") == m.get("activePhase") != "primary")
+
+    print(f"\nPost-primary candidate entries: {before} before -> {after} after")
+    print(f"Races keeping a non-primary activePhase: {carried}")
+
+    if after < before and not ALLOW_LOSS:
+        print(
+            f"\nERROR: this run would destroy {before - after} post-primary candidate "
+            f"entries.\n"
+            f"General-election ballots exist only in races.json (set_general_candidates.py\n"
+            f"puts them there), so they cannot be rebuilt from "
+            f"{SRC.name}.\n\n"
+            f"If the loss is intended, re-run with --allow-loss. To deliberately reset\n"
+            f"every legislative race back to the primary, use --force-reset --allow-loss.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    # Rebuild the list in place so unrelated races keep their original position
+    # and the diff stays readable.
+    out_races, seen = [], set()
+    for r in dest_races:
+        if is_legislative(r["id"]):
+            if r["id"] in merged_by_id:
+                out_races.append(merged_by_id[r["id"]])
+                seen.add(r["id"])
+            # a legislative race no longer in source is dropped, as before
+        else:
+            out_races.append(r)
+    for r in new_races:                      # districts that are new this run
+        if r["id"] not in seen:
+            out_races.append(merged_by_id[r["id"]])
+
+    dest["races"] = out_races
+    dest["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     with open(DEST, "w", encoding="utf-8") as f:
         json.dump(dest, f, indent=2, ensure_ascii=False)

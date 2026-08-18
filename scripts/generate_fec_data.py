@@ -189,6 +189,7 @@ def normalize_name(name):
     n = name.lower()
     n = re.sub(r'["\'].*?["\']', '', n)                  # strip quoted nicknames
     n = re.sub(r'\b(jr|sr|ii|iii|iv|esq)\.?\b', '', n)   # strip suffixes
+    n = re.sub(r'\b(dr|mr|mrs|ms)\.?\b', '', n)          # strip honorifics
     n = re.sub(r'[^a-z\s,]', '', n).strip()
     if ',' in n:
         last, first = n.split(',', 1)
@@ -196,6 +197,16 @@ def normalize_name(name):
         tokens = [t for t in first.strip().split() if len(t) > 1]
         first_name = tokens[0] if tokens else (first.strip().split() or [''])[0]
         n = f"{first_name} {last.strip()}"
+    else:
+        # "First Middle Last" -> "first last". Without this the two sides of the
+        # mirror disagree on every display-style name: races.json carries
+        # "Tricia R. Pridemore", which used to normalize to a three-token key
+        # that no two-token index entry could ever match.
+        # See CODEBASE-REVIEW-2026-08-18.md finding 1.3.
+        tokens = n.split()
+        if len(tokens) > 2:
+            named = [t for t in tokens if len(t) > 1] or tokens
+            n = f"{named[0]} {named[-1]}" if len(named) > 1 else (named[0] if named else '')
     return ' '.join(n.split())
 
 

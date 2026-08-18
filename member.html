@@ -602,10 +602,18 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     else if (member.district != null)   distKey = `H${member.district}`;
     if (distKey && fecData.byDistrict?.[distKey]) {
       const last = memberLastName(member);
-      const match = fecData.byDistrict[distKey].find(
+      const hits = fecData.byDistrict[distKey].filter(
         cid => fecData.candidates?.[cid]?.lastName === last
       );
-      if (match) return fecData.candidates[match];
+      // Collect every hit and let the shared rule pick — .find() took the first,
+      // resolving a same-surname collision by array order. Currently unreachable
+      // (all 15 GA members resolve at step 1), but it is the same defect that put
+      // another man's money on a candidate page.
+      // See CODEBASE-REVIEW-2026-08-18.md finding 1.2.
+      const narrowed = window.CampaignFinance?.narrowFecMatches
+        ? window.CampaignFinance.narrowFecMatches(fecData, hits, member.name || '')
+        : { id: hits.length === 1 ? hits[0] : null };
+      if (narrowed.id) return fecData.candidates[narrowed.id];
     }
     return null;
   }

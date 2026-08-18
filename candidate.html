@@ -569,14 +569,20 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     }
 
     const fecCycle = fecData.metadata?.cycle ?? null;
-    const fecId = CampaignFinance.findFecId(fecData, candidate, race);
+    const fecMatch = CampaignFinance.findFecMatch(fecData, candidate, race);
 
-    const entry = fecId ? fecData.candidates?.[fecId] : null;
+    const entry = fecMatch.id ? fecData.candidates?.[fecMatch.id] : null;
     if (!entry) {
+      // Several filings share this candidate's surname and district and none could
+      // be told apart — say so, rather than claiming no filing exists or, worse,
+      // showing one of them. Matches how race.html words the same case.
+      const msg = fecMatch.status === 'ambiguous'
+        ? 'Multiple FEC filings match this name — we can’t tell which is this candidate.'
+        : 'No FEC filing found for this candidate.';
       container.innerHTML = `
         <h3>Campaign Finance</h3>
         <p style="font-size:0.875rem;color:#666;">
-          No FEC filing found for this candidate.
+          ${msg}
           <a href="${CampaignFinance.fecSearchUrl(fecCycle)}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
         </p>`;
       return;

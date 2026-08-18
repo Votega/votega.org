@@ -65,17 +65,40 @@ window.CampaignFinance = (function () {
   }
 
   // ── FEC name matching ──────────────────────────────────────────────────────
+  // Mirrors normalize_name() in generate_fec_data.py. Both sides reduce a name to
+  // 'first last', lowercase, without punctuation, suffixes, honorifics, quoted
+  // nicknames, middle names, or bare initials.
+  //
+  // The two sides see different input shapes, which is the whole difficulty:
+  // FEC names arrive as 'LAST, FIRST MIDDLE' while races.json carries display
+  // names like 'Tricia R. Pridemore'. Reducing only the comma form (as this did
+  // previously) left 44 of 91 federal candidates producing three-token keys that
+  // could never match a two-token index entry, which made the name fallback dead
+  // for most of the field. See CODEBASE-REVIEW-2026-08-18.md finding 1.3.
   function normalizeName(name) {
-    // Mirror normalize_name() in generate_fec_data.py:
-    // 'LAST, FIRST MIDDLE' → 'first last' (lowercase, no punctuation/suffixes/nicknames)
     let n = String(name || '').toLowerCase();
-    n = n.replace(/["'].*?["']/g, '');
-    n = n.replace(/\b(jr|sr|ii|iii|iv|esq)\.?\b/g, '');
+    n = n.replace(/["'].*?["']/g, '');                  // quoted nicknames
+    n = n.replace(/\b(jr|sr|ii|iii|iv|esq)\.?\b/g, ''); // suffixes
+    n = n.replace(/\b(dr|mr|mrs|ms)\.?\b/g, '');        // honorifics
     n = n.replace(/[^a-z\s,]/g, '').trim();
-    if (n.includes(',')) {
-      const [last, first] = n.split(',', 2);
-      const firstToken = first.trim().split(/\s+/)[0];
-      n = `${firstToken} ${last.trim()}`;
+
+    const comma = n.indexOf(',');
+    if (comma !== -1) {
+      // 'LAST, FIRST MIDDLE' → 'first last'. Skip single-char initials so
+      // 'OSSOFF, T. JONATHAN' yields 'jonathan ossoff', not 't ossoff'.
+      const last = n.slice(0, comma).trim();
+      const rest = n.slice(comma + 1).trim().split(/\s+/).filter(Boolean);
+      const named = rest.filter(t => t.length > 1);
+      const first = (named.length ? named : rest)[0] || '';
+      n = `${first} ${last}`;
+    } else {
+      // 'First Middle Last' → 'first last'.
+      const toks = n.split(/\s+/).filter(Boolean);
+      if (toks.length > 2) {
+        const named = toks.filter(t => t.length > 1);
+        const use = named.length ? named : toks;
+        n = use.length > 1 ? `${use[0]} ${use[use.length - 1]}` : (use[0] || '');
+      }
     }
     return n.replace(/\s+/g, ' ').trim();
   }
@@ -85,7 +108,67 @@ window.CampaignFinance = (function () {
     return parts[parts.length - 1].toLowerCase().replace(/[^a-z]/g, '');
   }
 
-  function findFecId(fecData, candidate, race) {
+  // A filing with money or a coverage date is a live candidacy; one with neither
+  // is typically a stale prior-cycle registration under the same name.
+  function fecHasActivity(entry) {
+    return !!entry && (entry.totalRaised != null || entry.coverageEndDate != null);
+  }
+
+  // Normalized-name → [candidateId, ...], built from fecData.candidates rather
+  // than read from fecData.byNormalizedName, because that index keeps only one id
+  // per key and so cannot express a collision. Fourteen normalized names in the
+  // current FEC data map to more than one filing.
+  let _nameIndex = null, _nameIndexFor = null;
+  function fecNameIndex(fecData) {
+    if (_nameIndexFor === fecData && _nameIndex) return _nameIndex;
+    const idx = Object.create(null);
+    const all = (fecData && fecData.candidates) || {};
+    for (const cid of Object.keys(all)) {
+      const key = normalizeName(all[cid] && all[cid].name);
+      if (!key) continue;
+      (idx[key] || (idx[key] = [])).push(cid);
+    }
+    _nameIndex = idx;
+    _nameIndexFor = fecData;
+    return idx;
+  }
+
+  // Reduce several candidate FEC filings to one, or report ambiguity rather than
+  // guessing — the rule findGaFilers() already follows on the GA side. Picking
+  // blindly is what put another man's money on a candidate page.
+  // See CODEBASE-REVIEW-2026-08-18.md finding 1.2.
+  function narrowFecMatches(fecData, ids, wantName) {
+    const C = (fecData && fecData.candidates) || {};
+    if (!ids || !ids.length) return { id: null, status: 'none' };
+    if (ids.length === 1) return { id: ids[0], status: 'ok' };
+
+    // a. Exact full-name agreement separates two different people who merely
+    //    share a surname and a district (BROWN, JAMES M vs BROWN, TIMOTHY BEAU).
+    const key = normalizeName(wantName);
+    const named = ids.filter(cid => normalizeName(C[cid] && C[cid].name) === key);
+    if (named.length === 1) return { id: named[0], status: 'ok' };
+    let pool = named.length ? named : ids;
+
+    // b. One live filing beats any number of dormant ones — this is what tells a
+    //    2026 campaign apart from the same person's 2014 candidacy.
+    const active = pool.filter(cid => fecHasActivity(C[cid]));
+    if (active.length === 1) return { id: active[0], status: 'ok' };
+    pool = active.length ? active : pool;
+
+    // c. One committee across all remaining ids means duplicate FEC records for a
+    //    single filer, so either is correct; prefer whichever carries totals.
+    const committees = new Set(pool.map(cid => C[cid] && C[cid].committeeId));
+    if (committees.size === 1 && !committees.has(null) && !committees.has(undefined)) {
+      const withData = pool.filter(cid => fecHasActivity(C[cid]));
+      return { id: (withData.length ? withData : pool)[0], status: 'ok' };
+    }
+
+    return { id: null, status: 'ambiguous' };
+  }
+
+  // Resolve a candidate to one FEC filing.
+  // Returns { id, status } where status ∈ 'ok' | 'none' | 'ambiguous'.
+  function findFecMatch(fecData, candidate, race) {
     const chamber = race.chamber || '';
     const wantOffice = chamber === 'U.S. Senate' ? 'S'
                      : chamber === 'U.S. House'  ? 'H' : null;
@@ -94,7 +177,7 @@ window.CampaignFinance = (function () {
     //    the escape hatch for cases the heuristics below can't get right (e.g. two
     //    same-surname candidates in one race).
     if (candidate.fecCandidateId && fecData.candidates?.[candidate.fecCandidateId]) {
-      return candidate.fecCandidateId;
+      return { id: candidate.fecCandidateId, status: 'ok' };
     }
 
     // 1. Bioguide id (most reliable). A federal incumbent reference carries the
@@ -106,22 +189,43 @@ window.CampaignFinance = (function () {
     const bioMatch = bioguide && fecData.byBioguideId?.[bioguide];
     if (bioMatch) {
       const gotOffice = fecData.candidates?.[bioMatch]?.office;
-      if (!wantOffice || !gotOffice || gotOffice === wantOffice) return bioMatch;
+      if (!wantOffice || !gotOffice || gotOffice === wantOffice) {
+        return { id: bioMatch, status: 'ok' };
+      }
       // office mismatch → fall through to district/name matching for the new office
     }
 
-    // 2. District + last name (handles formal vs. nickname mismatches)
+    // 2. District + last name (handles formal vs. nickname mismatches).
+    //    Collect *every* hit: .find() used to take the first, which silently
+    //    resolved a same-surname collision by array order.
     let distKey = null;
     if (chamber === 'U.S. Senate') distKey = 'S';
     else if (chamber === 'U.S. House' && race.district != null) distKey = `H${race.district}`;
     if (distKey && fecData.byDistrict?.[distKey]) {
       const last = candidateLastName(candidate.name);
-      const match = fecData.byDistrict[distKey].find(cid => fecData.candidates?.[cid]?.lastName === last);
-      if (match) return match;
+      const hits = fecData.byDistrict[distKey]
+        .filter(cid => fecData.candidates?.[cid]?.lastName === last);
+      if (hits.length) {
+        const narrowed = narrowFecMatches(fecData, hits, candidate.name);
+        if (narrowed.id) return { id: narrowed.id, status: 'ok' };
+        return { id: null, status: 'ambiguous' };
+      }
     }
 
-    // 3. Normalized full-name exact match
-    return fecData.byNormalizedName?.[normalizeName(candidate.name)] || null;
+    // 3. Normalized full-name match, likewise collision-aware.
+    let byName = fecNameIndex(fecData)[normalizeName(candidate.name)] || [];
+    if (wantOffice && byName.length > 1) {
+      const sameOffice = byName.filter(cid => fecData.candidates?.[cid]?.office === wantOffice);
+      if (sameOffice.length) byName = sameOffice;
+    }
+    return narrowFecMatches(fecData, byName, candidate.name);
+  }
+
+  // Back-compat wrapper: returns the id or null, discarding the reason. Callers
+  // that want to distinguish "no filing" from "several filings" should use
+  // findFecMatch() so they can render the ambiguous case honestly.
+  function findFecId(fecData, candidate, race) {
+    return findFecMatch(fecData, candidate, race).id;
   }
 
   // ── GA PeachFile name matching ─────────────────────────────────────────────
@@ -211,10 +315,15 @@ window.CampaignFinance = (function () {
         return { status: 'unavailable', source: 'FEC', sourceShort: 'FEC', searchUrl: fecSearchUrl() };
       }
       const fecCycle = fecData.metadata?.cycle ?? null;
-      const fecId = findFecId(fecData, candidate, race);
-      const e = fecId ? fecData.candidates?.[fecId] : null;
+      const match = findFecMatch(fecData, candidate, race);
+      const e = match.id ? fecData.candidates?.[match.id] : null;
       if (!e) {
-        return { status: 'none', source: 'FEC', sourceShort: 'FEC', searchUrl: fecSearchUrl(fecCycle) };
+        // 'ambiguous' renders as "Multiple filings match — search FEC" rather than
+        // "no filing on record", and never as one of the candidates' figures.
+        return {
+          status: match.status === 'ambiguous' ? 'ambiguous' : 'none',
+          source: 'FEC', sourceShort: 'FEC', searchUrl: fecSearchUrl(fecCycle),
+        };
       }
       return {
         status: 'ok',
@@ -281,7 +390,8 @@ window.CampaignFinance = (function () {
 
   return {
     getFecData, getGaFinanceData, fmtMoney,
-    normalizeName, candidateLastName, findFecId,
+    normalizeName, candidateLastName, findFecId, findFecMatch,
+    narrowFecMatches, fecHasActivity,
     gaCandidatePool, findGaFilers,
     GA_CHAMBER_MAP, GA_OFFICE_MAP,
     fecSearchUrl, cycleLabelFor,
