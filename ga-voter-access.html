@@ -133,15 +133,15 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
   .va-cal-details dd { margin: 0 0 0.5rem 0; }
   .va-cal-note { font-size: 0.78rem; color: #888; margin-top: 0.5rem; font-style: italic; }
   .va-cal-qualifier { display: block; font-size: 0.74rem; color: #888; font-style: italic; margin-top: 0.1rem; }
-  .va-cal-results { margin-top: 0.65rem; }
-  .va-cal-results a {
+  .va-cal-cta { margin-top: 0.65rem; }
+  .va-cal-cta a {
     display: inline-block;
     font-size: 0.8rem;
     font-weight: 600;
     color: #1a56a8;
     text-decoration: none;
   }
-  .va-cal-results a:hover { text-decoration: underline; }
+  .va-cal-cta a:hover { text-decoration: underline; }
 
   @media (max-width: 640px) {
     .va-hub { grid-template-columns: 1fr; }
@@ -260,6 +260,21 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
         </dl>`;
   }
 
+  // One call-to-action per card: before an election, point at who is on the
+  // ballot; after it, point at the results. An election missing the relevant
+  // URL simply gets no link (e.g. the contingent December runoff, which has no
+  // races on file unless it is actually triggered).
+  function ctaHtml(e, isUpcoming) {
+    if (isUpcoming) {
+      return e.racesUrl
+        ? `<div class="va-cal-cta"><a href="${escHtml(e.racesUrl)}">View races &amp; candidates &rarr;</a></div>`
+        : '';
+    }
+    return e.resultsUrl
+      ? `<div class="va-cal-cta"><a href="${escHtml(e.resultsUrl)}">View Results &rarr;</a></div>`
+      : '';
+  }
+
   function renderNext(next) {
     if (!next) return '';
     const days = daysUntil(next.date);
@@ -275,6 +290,7 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
         ${countdown ? `<div class="va-next-countdown">${countdown}</div>` : ''}
         ${detailsHtml(next)}
         ${contingentNote}
+        ${ctaHtml(next, true)}
       </div>`;
   }
 
@@ -285,9 +301,6 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
 
     const contingentNote = e.contingentNote
       ? `<div class="va-cal-note">${escHtml(e.contingentNote)}</div>`
-      : '';
-    const resultsLink = (!isUpcoming && e.resultsUrl)
-      ? `<div class="va-cal-results"><a href="${escHtml(e.resultsUrl)}">View Results &rarr;</a></div>`
       : '';
 
     return `
@@ -301,7 +314,7 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
         </div>
         ${detailsHtml(e)}
         ${contingentNote}
-        ${resultsLink}
+        ${ctaHtml(e, isUpcoming)}
       </div>`;
   }
 
