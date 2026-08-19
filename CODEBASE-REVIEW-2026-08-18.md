@@ -31,7 +31,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
-| Tier 4 — UX / IA / a11y | 15 | **4.1, 4.2, 4.3, 4.5, 4.6, 4.7, 4.8, 4.9** | 4.4, 4.10 – 4.15 |
+| Tier 4 — UX / IA / a11y | 15 | **4.1 – 4.3, 4.5 – 4.9** | 4.10 – 4.15 |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
@@ -1220,6 +1220,33 @@ else depends on a single inbound link — and these have none:
 **Fix:** three-column footer sitemap (Representatives / Elections / Government / About). Point the elections-hub
 "Election Results" CTA (`elections-hub.html:118`) at `/results/latest/` with `/results/` secondary. Add
 `sitemap: false` + `<meta name="robots" content="noindex">` to `local-officials.html` until it launches.
+
+#### ✅ FIXED — 2026-08-19 · two of the three sub-fixes, per owner direction
+
+**Footer sitemap — built.** New `_includes/footer-sitemap.html`, rendered above the social icons in
+`_includes/footer.html`, so every page now links to every primary destination. Four columns
+(Representatives / Elections / Government / About), **21 links**, wrapped in `<nav aria-label="Site map">` with an
+`<h2>` per column. All internal links go through `relative_url` (finding 4.9). Styled with the theme's existing
+footer colour tokens; **4 columns ≥768px, 2 on mobile**, no horizontal overflow.
+
+Verified in-browser: all 21 links resolve **200** (fetched each), grid collapses 4→2 at the mobile breakpoint, and
+the include renders on ordinary pages *and* on the results pages via the shared layout.
+
+**The `results-latest` orphan — fixed, by a different route than proposed.** The finding suggested repointing the
+elections-hub "Election Results" CTA at `/results/latest/`. Instead the footer now carries a **"Latest Results"**
+link (→ `/results/latest/`) on *every* page, which reaches the pointer from everywhere rather than from one card,
+and leaves the hub CTA pointing at `/results/` (the full index) where "browse all results" is the better landing.
+Confirmed `/results/latest/` still redirects to the newest archived election — today
+`/ga-special-2026-results/` — and that its `sitemap: false` is intact (absent from the built `sitemap.xml`), so it
+stays crawler-invisible while being user-reachable.
+
+**`local-officials.html` — left exactly as-is, per owner.** The page is unlisted on purpose while its candidate
+data is built out. Per direction, no `noindex` / `sitemap: false` was added and it is **not** linked from the
+footer — so the "publishes it to the sitemap / indexes it" observation stands by choice, not oversight. When it
+launches, add its footer link (and drop any interim `noindex` if one is later chosen).
+
+**`ga-general-2026-*-results` — already handled under [1.4](#14--ga-general-2026-results-is-live-and-reports-every-candidate-at-0-votes)**
+(preview status + `noindex`), so untouched here.
 
 ---
 

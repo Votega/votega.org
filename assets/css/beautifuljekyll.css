@@ -461,6 +461,46 @@ footer .footer-custom-content {
   font-family: var(--header-font);
 }
 
+/* Footer site map (finding 4.4) — one inbound link to every primary
+   destination from every page. Uses the theme footer colour tokens. */
+.footer-sitemap {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+  text-align: left;
+}
+.footer-sitemap-head {
+  font-family: var(--header-font);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--footer-text-col);
+  margin: 0 0 0.5rem;
+}
+.footer-sitemap ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-sitemap li {
+  margin-bottom: 0.3rem;
+}
+.footer-sitemap a {
+  color: var(--footer-link-col);
+  font-size: 0.85rem;
+}
+.footer-sitemap a:hover,
+.footer-sitemap a:focus {
+  color: var(--footer-hover-col);
+}
+@media (min-width: 768px) {
+  .footer-sitemap {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 @media (min-width: 768px) {
   footer {
     padding: 3.125rem 0;

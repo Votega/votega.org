@@ -1,0 +1,56 @@
+{%- comment -%}
+  Footer site map. With ~14 navbar destinations against ~35 pages, most pages
+  depended on a single inbound link and several had none. This gives every
+  primary destination a link from every page. See CODEBASE-REVIEW-2026-08-18.md
+  finding 4.4.
+
+  Internal links go through relative_url so a non-root deployment resolves them
+  (finding 4.9). local-officials.html is deliberately omitted — it is unlisted
+  on purpose while its data is built out.
+{%- endcomment -%}
+<nav class="footer-sitemap" aria-label="Site map">
+  <div class="footer-sitemap-col">
+    <h2 class="footer-sitemap-head">Representatives</h2>
+    <ul>
+      <li><a href="{{ '/find-my-reps' | relative_url }}">Find My Reps</a></li>
+      <li><a href="{{ '/federal-reps' | relative_url }}">U.S. Representatives</a></li>
+      <li><a href="{{ '/ga-state-reps' | relative_url }}">GA State Legislators</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-sitemap-col">
+    <h2 class="footer-sitemap-head">Elections</h2>
+    <ul>
+      <li><a href="{{ '/elections/' | relative_url }}">Elections Hub</a></li>
+      <li><a href="{{ '/elections.html' | relative_url }}">Candidate Finder</a></li>
+      <li><a href="{{ '/ga-ballot-measures.html' | relative_url }}">Ballot Measures</a></li>
+      <li><a href="{{ '/ga-voter-access.html' | relative_url }}">Voter Access &amp; Calendar</a></li>
+      <li><a href="{{ '/results/latest/' | relative_url }}">Latest Results</a></li>
+      <li><a href="{{ '/results/' | relative_url }}">All Results</a></li>
+      <li><a href="{{ '/candidates/' | relative_url }}">For Candidates</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-sitemap-col">
+    <h2 class="footer-sitemap-head">Government</h2>
+    <ul>
+      <li><a href="{{ '/ga-bills' | relative_url }}">GA Bill Tracker</a></li>
+      <li><a href="{{ '/ga-majority-tracker' | relative_url }}">Majority Tracker</a></li>
+      <li><a href="{{ '/ga-executive' | relative_url }}">GA Executive Offices</a></li>
+      <li><a href="{{ '/ga-executive-orders' | relative_url }}">GA Executive Orders</a></li>
+      <li><a href="{{ '/ga-congress-trades' | relative_url }}">Congressional Stock Trades</a></li>
+      <li><a href="{{ '/executive-branch' | relative_url }}">Federal Executive Branch</a></li>
+      <li><a href="{{ '/supreme-court' | relative_url }}">U.S. Supreme Court</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-sitemap-col">
+    <h2 class="footer-sitemap-head">About</h2>
+    <ul>
+      <li><a href="{{ '/about' | relative_url }}">About the Site</a></li>
+      <li><a href="{{ '/about-the-data' | relative_url }}">About the Data</a></li>
+      <li><a href="{{ '/open-data' | relative_url }}">Open Data</a></li>
+      <li><a href="{{ '/flock-safety/' | relative_url }}">Flock Safety</a></li>
+    </ul>
+  </div>
+</nav>
