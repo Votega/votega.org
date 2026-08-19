@@ -30,7 +30,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 |---|---|---|---|
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
-| Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.5** | 3.3, 3.4, 3.6 |
+| Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.5** | 3.4, 3.6 |
 | Tier 4 — UX / IA / a11y | 15 | — | all |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
@@ -658,7 +658,7 @@ than half-fetching.
 
 > **STATUS: 3.5 fixed on 2026-08-18** as a necessary part of
 > [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote) — the tally is now
-> derived from the de-duplicated roster. **3.1 and 3.2 fixed 2026-08-19.** 3.3, 3.4 and 3.6 remain open.
+> derived from the de-duplicated roster. **3.1, 3.2 and 3.3 fixed 2026-08-19.** 3.4 and 3.6 remain open.
 
 ### 3.1 — Superior Court results: one race shows five other judges' totals; four show none
 
@@ -800,6 +800,37 @@ trades beside a volume figure omitting 19 of them. The other four members reconc
 
 **Fix:** recompute all counters from the merged `trades[]` after merging; move the `total_trades` subtraction
 before the `del`; key the bioguide map on `(state, district, lastName)` as the FEC generator does.
+
+#### ✅ FIXED — 2026-08-19 · one sub-claim corrected, one hazard found in the fix
+
+`derive_counters()` computes `tradeCount`, `purchases`, `sales`, `lateFilings` and `estVolume` from the trade list
+at build time and again after any merge, so every number on a card describes the trades published beside it.
+Michael Collins: **purchases 18 → 34, sales 5 → 8, estVolume $306,511.50 → $458,521.00**; his card now reads
+"42 trades · 2 late · $0.5M".
+
+Deriving is verified, not assumed: against the four unmerged members, `purchases`, `lateFilings` and `estVolume`
+reproduce the upstream figures **exactly**. `sales` does not — upstream reports 8 for Earl Carter against 14 sale
+transactions, 48 for Austin Scott against 54, 130 for Richard Allen against 131. That field was unreliable
+upstream and is now computed here; `report_counter_drift()` logs each divergence on every run rather than hiding it.
+
+**Sub-claim corrected — the `total_trades` bug is dead code, not an over-count.** The subtraction does run after
+the `del`, but `total_trades` is *recomputed* from `by_member` immediately after the override loop
+(`total_trades = sum(len(m['trades']) ...)`), so the stale line never reached the output. `metadata.totalTrades`
+was already correct. The line is removed and the recompute documented in its place.
+
+**The bioguide fix went the opposite way from the recommendation, and the data is why.** Keying on district
+looked stronger, so I built it that way first — and it linked Collins' trades to **Austin Scott's** profile. The
+upstream filer index is wrong about office: it lists Richard McCormick (GA-07) as **"NY-01"** and Michael Collins
+(GA-10) as **"GA-08"**, which is Scott's seat. Surname is now primary, with every match retained so an ambiguous
+surname is *detected*; district is consulted only to break a tie among same-surname members. A wrong `office` can
+now only fail to disambiguate, never mis-resolve. `filer_surname()` also strips generational suffixes — the old
+`name.split()[-1]` returned `"jr"` for the very filer being merged, `Michael A. Collins Jr`.
+
+**Verified:** `scripts/test_ga_congress_trades.py`, 52 assertions — every published member self-consistent with
+its own trades, every bioguide link resolving to the matching surname, and explicit cases for the wrong-office
+strings above. Regenerated live: all five links unchanged and correct, `metadata.totalTrades` equal to the summed
+trade lists. In the browser, all five profile links point at the right member and there are no console errors.
+(McCormick's larger swing — 87 → 113 trades — is fresh upstream data from the same run, not this change.)
 
 ---
 

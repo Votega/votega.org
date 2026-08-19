@@ -10,6 +10,7 @@ No API key required.
 
 import json
 import os
+import re
 import sys
 import time
 import urllib.request
@@ -25,22 +26,123 @@ OVERRIDES_FILE  = sys.argv[2] if len(sys.argv) > 2 else "assets/data/ga-congress
 CURRENT_MEMBERS_FILE = os.path.join(os.path.dirname(OUTPUT_FILE), "current-members.json")
 
 
-def load_bioguide_by_last_name():
-    """Maps last name (lowercase) -> bioguideId for GA's current federal delegation,
-    so trade-data entries (which carry no bioguideId of their own) can link out to
-    member.html. Last names are unique across the 15-member GA delegation, so this
-    is a safe join key without needing full-name fuzzy matching."""
+_SUFFIX_RE = re.compile(r'\b(jr|sr|ii|iii|iv)\b\.?$', re.IGNORECASE)
+_DISTRICT_RE = re.compile(r'GA[-\s]?(\d+)', re.IGNORECASE)
+
+
+def filer_surname(name):
+    """Surname of a filer, ignoring a generational suffix.
+
+    `name.split()[-1]` returns 'Jr' for 'Michael A. Collins Jr' — which is
+    exactly the filer this file has to merge — so the surname join silently
+    looked up a member named "jr".
+    """
+    cleaned = _SUFFIX_RE.sub('', (name or '').strip()).strip()
+    parts = cleaned.split()
+    return parts[-1].lower() if parts else ''
+
+
+def filer_district(office):
+    """District number from a filer's office string ('U.S. Representative — GA-12')."""
+    m = _DISTRICT_RE.search(office or '')
+    return int(m.group(1)) if m else None
+
+
+def load_bioguide_index():
+    """surname -> [(district, bioguideId), ...] for GA's federal delegation.
+
+    Trade data carries no bioguideId, so the join is inferred from the name. The
+    old map was surname -> bioguideId with last-write-wins, which is the bug
+    generate_fec_data.py:227-234 documents having already fixed on the FEC side
+    ("two Representatives named Scott… stamped one bioguide onto every Scott").
+    Keeping every match instead lets an ambiguous surname be detected rather than
+    silently resolved. See CODEBASE-REVIEW-2026-08-18.md finding 3.3.
+    """
     if not os.path.exists(CURRENT_MEMBERS_FILE):
         print(f"Warning: {CURRENT_MEMBERS_FILE} not found, trade cards won't link to member profiles")
         return {}
     with open(CURRENT_MEMBERS_FILE, encoding='utf-8') as f:
         data = json.load(f)
-    result = {}
+
+    by_surname = {}
     for m in data.get('members', []):
-        if m.get('state') != 'Georgia' or not m.get('lastName') or not m.get('bioguideId'):
+        if m.get('state') != 'Georgia' or not m.get('bioguideId'):
             continue
-        result[m['lastName'].strip().lower()] = m['bioguideId']
-    return result
+        surname = (m.get('lastName') or '').strip().lower()
+        if not surname:
+            continue
+        district = m.get('district')
+        by_surname.setdefault(surname, []).append(
+            (int(district) if district is not None else None, m['bioguideId']))
+    return by_surname
+
+
+def resolve_bioguide(name, office, by_surname):
+    """bioguideId for a filer: surname first, district only to break a tie.
+
+    District is deliberately *not* the primary key even though it looks like the
+    stronger one. The upstream filer index is unreliable about office: it has
+    listed Richard McCormick (GA-07) as "NY-01" and Michael Collins (GA-10) as
+    "GA-08" — and GA-08 is Austin Scott, so trusting district first linked
+    Collins' trades to Scott's profile. Surname cannot make that mistake: a wrong
+    office can now only fail to disambiguate, never mis-resolve.
+    """
+    candidates = by_surname.get(filer_surname(name), [])
+    if not candidates:
+        return None
+    if len(candidates) == 1:
+        return candidates[0][1]
+
+    district = filer_district(office)
+    narrowed = [b for d, b in candidates if district is not None and d == district]
+    if len(narrowed) == 1:
+        return narrowed[0]
+
+    print(f"  Warning: surname '{filer_surname(name)}' matches {len(candidates)} GA "
+          f"members and {office!r} does not disambiguate — no profile link for {name}")
+    return None
+
+
+def derive_counters(trades):
+    """Counters describing exactly the trades this file publishes.
+
+    The upstream filer record carries its own `purchases`/`sales`/`late_filings`/
+    `est_volume`, but those describe *that filer*, and this script merges two
+    filers for one member. Copying them across a merge left Michael Collins'
+    card showing 42 trades beside a volume covering 23 of them.
+
+    Deriving instead keeps every published number consistent with the published
+    trade list. Verified against the four unmerged members: `purchases`,
+    `lateFilings` and `estVolume` reproduce the upstream values exactly.
+    `sales` does not — upstream reports 8 for Earl Carter against 14 actual sale
+    transactions, and disagrees for two others — so that field is recomputed here
+    rather than trusted. See CODEBASE-REVIEW-2026-08-18.md finding 3.3.
+    """
+    def midpoint(t):
+        return ((t.get('amount_range_low') or 0) + (t.get('amount_range_high') or 0)) / 2
+
+    return {
+        'tradeCount':  len(trades),
+        'purchases':   sum(1 for t in trades if t.get('transaction_type') == 'Purchase'),
+        'sales':       sum(1 for t in trades
+                           if str(t.get('transaction_type') or '').startswith('Sale')),
+        'lateFilings': sum(1 for t in trades if t.get('is_late')),
+        'estVolume':   sum(midpoint(t) for t in trades),
+    }
+
+
+def report_counter_drift(name, derived, filer):
+    """Log where the upstream filer record disagrees with its own trade list."""
+    upstream = {
+        'tradeCount': filer.get('trade_count'), 'purchases': filer.get('purchases'),
+        'sales': filer.get('sales'), 'lateFilings': filer.get('late_filings'),
+        'estVolume': filer.get('est_volume'),
+    }
+    drift = [f"{k}: upstream {upstream[k]} vs {derived[k]} in trades"
+             for k, v in upstream.items()
+             if v is not None and abs((v or 0) - derived[k]) > 0.01]
+    if drift:
+        print(f"  Note: {name} — {'; '.join(drift)}")
 
 
 def fetch_json(url):
@@ -112,7 +214,7 @@ def main():
     for f in ga_filers:
         print(f"  {f['full_name']} ({f['office']}) — {f['trade_count']} trades, ${f.get('est_volume', 0):,.2f} est. volume")
 
-    bioguide_by_last_name = load_bioguide_by_last_name()
+    bioguide_by_surname = load_bioguide_index()
 
     by_member = {}
     total_trades = 0
@@ -151,8 +253,11 @@ def main():
         # Sort most-recent first
         trades.sort(key=lambda t: t.get('transaction_date', ''), reverse=True)
 
-        last_name = name.split()[-1] if name.split() else ''
-        bioguide_id = bioguide_by_last_name.get(last_name.lower())
+        bioguide_id = resolve_bioguide(name, filer.get('office', ''),
+                                      bioguide_by_surname)
+
+        counters = derive_counters(trades)
+        report_counter_drift(name, counters, filer)
 
         by_member[name] = {
             'filerId':      filer_id,
@@ -162,12 +267,8 @@ def main():
             'office':       filer.get('office', ''),
             'state':        'GA',
             'photoUrl':     filer.get('photo_url', ''),
-            'tradeCount':   filer.get('trade_count', len(trades)),
-            'purchases':    filer.get('purchases', 0),
-            'sales':        filer.get('sales', 0),
-            'lateFilings':  filer.get('late_filings', 0),
-            'estVolume':    filer.get('est_volume', 0),
             'trades':       trades,
+            **counters,
         }
         total_trades += len(trades)
         print(f"  -> {len(trades)} trades loaded")
@@ -190,7 +291,10 @@ def main():
         if patch.get('_exclude'):
             print(f"  Excluding {member_name}")
             del by_member[member_name]
-            total_trades -= by_member.get(member_name, {}).get('tradeCount', 0)
+            # No running-total bookkeeping here: `total_trades` is recomputed
+            # from by_member after this loop. The subtraction that used to sit on
+            # this line read the entry *after* deleting it, so it always
+            # subtracted 0 -- dead code rather than an over-count, but confusing.
             continue
 
         merge_into_id = patch.get('_mergeInto')
@@ -202,8 +306,15 @@ def main():
                 by_member[target_name]['trades'].sort(
                     key=lambda t: t.get('transaction_date', ''), reverse=True
                 )
-                by_member[target_name]['tradeCount'] = len(by_member[target_name]['trades'])
-                print(f"  Merged {member_name} ({len(extra_trades)} trades) into {target_name}")
+                # Re-derive *all* counters, not just tradeCount: purchases,
+                # sales, lateFilings and estVolume still described the target
+                # filer alone, so the card showed the merged trade count beside
+                # the unmerged volume.
+                by_member[target_name].update(
+                    derive_counters(by_member[target_name]['trades']))
+                print(f"  Merged {member_name} ({len(extra_trades)} trades) into "
+                      f"{target_name} -> {by_member[target_name]['tradeCount']} trades, "
+                      f"${by_member[target_name]['estVolume']:,.2f} est. volume")
                 del by_member[member_name]
             else:
                 print(f"  Merge target {merge_into_id} not found, skipping merge of {member_name}")
