@@ -119,8 +119,12 @@ For GA delegation only: `recentSponsored[]`.
 
 ### `ga-members.json`
 Top-level: `{ metadata: { generatedAt, source, jurisdiction, count, committeesAvailable }, members: [...] }`
-Each member: `id` (OCD `ocd-person/<uuid>`), `name`, `firstName`, `lastName`, `party` (null if unknown), `chamber` (`"Senate"` or `"House of Representatives"`), `district` (int or null), `title`, `imageUrl`, `phone`, `address`, `email`, `officialWebsiteUrl`, `birthDate`, `birthYear`, `termStart` (ISO date or null), `termStartYear`, `committees[]`, `legisGaGovId` (int or null — needed to join with vote data), `status` (null = active; `"Vacant"` | `"Suspended"` | `"Resigned"` | `"Removed"` | `"Deceased"` if set via overrides), `statusDate`, `statusNote`.
+Each member: `id` (OCD `ocd-person/<uuid>`), `name`, `firstName`, `lastName`, `party` (null if unknown), `chamber` (`"Senate"` | `"House of Representatives"` | `"executive"` — see below), `district` (int or null), `title`, `imageUrl`, `phone`, `address`, `email`, `officialWebsiteUrl`, `birthDate`, `birthYear`, `termStart` (ISO date or null), `termStartYear`, `committees[]`, `legisGaGovId` (int or null — needed to join with vote data), `status` (null = active; `"Vacant"` | `"Suspended"` | `"Resigned"` | `"Removed"` | `"Deceased"` if set via overrides), `statusDate`, `statusNote`.
 Optional override-only fields: `leadershipRole`, `statusNote`.
+
+**⚠ Not every member is a legislator.** Four statewide executives (Governor, Lt. Governor, Attorney General, Secretary of State) sit in this file under `chamber: "executive"`, with a raw-enum `title` (`"Lt_Governor"`). Anything that means "a member of the General Assembly" must filter on chamber — use `VOTING_CHAMBERS` from `scripts/lib/ga_voters.py` server-side, or an exact chamber-string check client-side (as `ga.js` and `ga-majority-tracker.html` do). Omitting that filter put the Governor in site search as a "GA Legislator" (see CODEBASE-REVIEW-2026-08-18.md 3.2). Executives are surfaced from `ga-executive.json`, not this file.
+
+**`status`** is `null` for a sitting member. `"Resigned"`/`"Removed"`/`"Deceased"` are historical records to filter out; `"Suspended"` members still hold the seat and should stay listed (badged), and `"Vacant"` entries are injected placeholders with synthetic non-OCD ids.
 
 ### `ga-members-overrides.json`
 Manual patches applied after Open States fetch. Keys are OCD person IDs (`ocd-person/...`) or member full names. Use `_inject` array for entirely new entries (vacant seats). Departure fields: `status`, `statusDate`, `statusNote`. Fields prefixed `_` are stripped before merging.

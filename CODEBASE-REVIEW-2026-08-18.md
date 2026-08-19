@@ -30,7 +30,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 |---|---|---|---|
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
-| Tier 3 — wrong joins | 6 | **3.1, 3.5** | 3.2, 3.3, 3.4, 3.6 |
+| Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.5** | 3.3, 3.4, 3.6 |
 | Tier 4 — UX / IA / a11y | 15 | — | all |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
@@ -658,7 +658,7 @@ than half-fetching.
 
 > **STATUS: 3.5 fixed on 2026-08-18** as a necessary part of
 > [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote) — the tally is now
-> derived from the de-duplicated roster. **3.1 fixed 2026-08-19.** 3.2, 3.3, 3.4 and 3.6 remain open.
+> derived from the de-duplicated roster. **3.1 and 3.2 fixed 2026-08-19.** 3.3, 3.4 and 3.6 remain open.
 
 ### 3.1 — Superior Court results: one race shows five other judges' totals; four show none
 
@@ -741,6 +741,29 @@ under the wrong category pointing at a legislator detail page. `metadata.categor
 
 **Fix:** `if chamber not in ("Senate", "House of Representatives"): continue` at :93. Add `"executive"` to the
 documented chamber enum in CLAUDE.md.
+
+#### ✅ FIXED — 2026-08-19
+
+`build_ga_legislators()` now skips any member whose chamber is not in `VOTING_CHAMBERS`, imported from
+`scripts/lib/ga_voters.py` so "is a legislator" has one definition rather than a fourth copy.
+
+`search-entities.json` regenerated: **1,381 → 1,377 records, GA Legislator 237 → 233.** The diff is exactly the
+four executives removed and nothing added. All four remain findable under `GA Executive` (and as `Candidate`
+where they are on a 2026 ballot), and `Lt_Governor` no longer appears anywhere in the index.
+
+**The count discrepancy had a second, benign half.** 233 is not 232: Sharon Henderson (House 113) carries
+`status: "Suspended"`, and `ga.js:136-139` and `ga-majority-tracker.html:353` both keep suspended members and
+badge them, because they still hold the seat. Indexing her is correct, and the generator's claim to use "the same
+filter as ga.js" holds. Only the executives were wrong.
+
+**Verified in the browser:** searching "kemp" now returns RaShaun Kemp — a genuinely different sitting senator —
+as the only `GA Legislator`, with Brian Kemp appearing solely as `GA Executive`. Burt Jones returns Candidate +
+GA Executive; Chris Carr returns GA Executive only. Jan Jones and the suspended Sharon Henderson are still
+indexed as legislators. No console errors.
+
+CLAUDE.md's `ga-members.json` schema now documents `"executive"` as a fifth chamber value, with a warning that
+anything meaning "member of the General Assembly" must filter on chamber, plus the `status` semantics that
+distinguish a historical record (`Resigned`/`Removed`/`Deceased`) from a seated-but-suspended member.
 
 ---
 

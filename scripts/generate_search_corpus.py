@@ -25,6 +25,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
+# The two chambers of the General Assembly. Shared so the definition of "is a
+# legislator" lives in one place -- ga-members.json also carries statewide
+# executives, and every consumer has to exclude them the same way.
+from lib.ga_voters import VOTING_CHAMBERS
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "assets" / "data"
 OUTPUT_PATH = DATA_DIR / "search-entities.json"
@@ -91,6 +96,16 @@ def build_ga_legislators(records, seen):
             # former members as if they were sitting legislators.
             continue
         chamber = clean(m.get("chamber"))
+        if chamber not in VOTING_CHAMBERS:
+            # ga-members.json also carries the four statewide executives under a
+            # fifth chamber, "executive" (Governor, Lt. Governor, AG, SoS). They
+            # have no ga-member.html page worth linking, they are already indexed
+            # from ga-executive.json under "GA Executive", and their `title` is a
+            # raw enum -- Burt Jones surfaced in search as a "GA Legislator"
+            # described as "Lt_Governor". ga.js and ga-majority-tracker.html
+            # filter on the exact chamber string, so only this index leaked them.
+            # See CODEBASE-REVIEW-2026-08-18.md finding 3.2.
+            continue
         district = m.get("district")
         title_word = clean(m.get("title")) or (
             "Senator" if chamber == "Senate" else "Representative"
