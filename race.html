@@ -224,7 +224,8 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   /* Earlier-this-cycle results */
   .prior-round { margin-bottom: 1.6rem; }
   .prior-round-head { margin-bottom: 0.6rem; }
-  .prior-round-head h3 { font-size: 1rem; font-weight: 700; color: #14213d; margin: 0 0 0.15rem; }
+  /* Promoted from <h3> so the outline has no h1->h3 skip (finding 4.15). */
+  .prior-round-head h2 { font-size: 1rem; font-weight: 700; color: #14213d; margin: 0 0 0.15rem; }
   .prior-round-meta { font-size: 0.78rem; color: #777; }
   .prior-status { font-weight: 600; color: #856404; }
   .prior-status.certified { color: #1e7e34; }
@@ -650,13 +651,16 @@ share-description: "Details for a Georgia race: the candidates running, the incu
         // label it so the number isn't read as a margin.
         const uncontested = contest.candidates.length === 1;
         const rows = contest.candidates.map((c, i) => {
-          const pct = total ? (c.votes / total) * 100 : 0;
+          // A row with no `votes` used to throw on .toLocaleString() and blank
+          // the entire "Earlier This Cycle" panel. See CODEBASE-REVIEW-2026-08-18.md 4.15.
+          const votes = Number(c.votes) || 0;
+          const pct = total ? (votes / total) * 100 : 0;
           return `
             <div class="prior-cand">
               <div class="prior-cand-top">
                 <span class="prior-name">${i === 0 && !uncontested ? '<span class="prior-lead">✓</span>' : ''}${escapeHtml(c.name)}${c.incumbent ? ' <span class="prior-inc">(I)</span>' : ''}</span>
                 <span class="prior-figures">
-                  <span class="prior-votes">${c.votes.toLocaleString()}</span>
+                  <span class="prior-votes">${votes.toLocaleString()}</span>
                   <span class="prior-pct">${uncontested ? '—' : pct.toFixed(1) + '%'}</span>
                 </span>
               </div>
@@ -679,7 +683,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       return `
         <section class="prior-round">
           <div class="prior-round-head">
-            <h3>${escapeHtml(round.label)}</h3>
+            <h2>${escapeHtml(round.label)}</h2>
             <div class="prior-round-meta">${dateStr}${dateStr ? ' &nbsp;·&nbsp; ' : ''}${statusNote}</div>
           </div>
           ${contests}

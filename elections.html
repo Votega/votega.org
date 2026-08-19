@@ -382,6 +382,13 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     return parseLocalDate(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
+  // races.json is curated, but candidate names still reach innerHTML — escape
+  // them like every other page does. See CODEBASE-REVIEW-2026-08-18.md 4.15.
+  function escHtml(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
   function candidateSummary(phase) {
     if (!phase) return 'No candidates listed yet';
     if (phase.ballots) {
@@ -397,7 +404,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     }
     if (!phase.candidates || !phase.candidates.length) return 'No candidates listed yet';
     const names = phase.candidates.filter(c => !c.withdrawn)
-      .map(c => c.type === 'incumbent' ? 'Incumbent' : c.name).join(' · ');
+      .map(c => c.type === 'incumbent' ? 'Incumbent' : escHtml(c.name)).join(' · ');
     return names || 'No active candidates';
   }
 
@@ -439,7 +446,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     return `
       <a class="race-row" href="${basePath}race.html?id=${encodeURIComponent(race.id)}">
         <div class="race-info">
-          <div class="race-title">${titleText}</div>
+          <div class="race-title">${escHtml(titleText)}</div>
           <div class="race-candidates">${summary}</div>
         </div>
         <div class="race-meta">

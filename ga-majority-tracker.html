@@ -22,7 +22,8 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     background: #f8f8f8;
     border: 1px solid #e0e0e0;
   }
-  .tracker-card h3 {
+  /* Promoted from <h3> so the outline has no h1->h3 skip (finding 4.15). */
+  .tracker-card h2 {
     margin: 0 0 1rem 0;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -243,11 +244,11 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
 <!-- Stats banner (populated by JS) -->
 <div class="tracker-banner" id="trackerBanner">
   <div class="tracker-card" id="senateCard">
-    <h3>Senate</h3>
+    <h2>Senate</h2>
     <div class="loading">Loading…</div>
   </div>
   <div class="tracker-card" id="houseCard">
-    <h3>House of Representatives</h3>
+    <h2>House of Representatives</h2>
     <div class="loading">Loading…</div>
   </div>
 </div>
@@ -401,7 +402,7 @@ function renderCard(el, title, dCount, rCount, vCount, majority) {
     : `Republicans need ${rShort} more seat${rShort !== 1 ? 's' : ''} for a majority`;
 
   el.innerHTML = `
-    <h3>${title}</h3>
+    <h2>${title}</h2>
     <div class="seat-bar">
       <div class="bar-d" style="width:${(dCount/total*100).toFixed(1)}%"></div>
       <div class="bar-r" style="width:${(rCount/total*100).toFixed(1)}%"></div>

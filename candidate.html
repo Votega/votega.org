@@ -71,7 +71,8 @@ share-description: "Profile of a candidate running for office in Georgia: the of
   .bio-section { margin: 1.25rem 0; line-height: 1.65; }
 
   .contact-section { margin: 1.25rem 0; }
-  .contact-section h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+  /* Promoted from <h2> so the outline has no h1->h3 skip (finding 4.15). */
+  .contact-section h2 { font-size: 1rem; margin-bottom: 0.5rem; }
   .contact-section a  { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; }
 
   .member-record-link {
@@ -96,7 +97,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     padding: 1.25rem 1.5rem;
     margin-bottom: 1.5rem;
   }
-  .service-section h3 { font-size: 1rem; margin: 0 0 0.75rem 0; color: #111; }
+  .service-section h2 { font-size: 1rem; margin: 0 0 0.75rem 0; color: #111; }
   .service-section dl {
     display: grid;
     grid-template-columns: 180px 1fr;
@@ -122,7 +123,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     border-top: 1px solid #e5e7eb;
     padding-top: 1.25rem;
   }
-  .finance-section h3 { margin: 0 0 0.75rem 0; font-size: 1rem; }
+  .finance-section h2 { margin: 0 0 0.75rem 0; font-size: 1rem; }
   .finance-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -502,7 +503,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       const data = await CampaignFinance.getGaFinanceData();
       if (!data) {
         container.innerHTML = `
-          <h3>Campaign Finance</h3>
+          <h2>Campaign Finance</h2>
           <p class="finance-meta">Finance data unavailable. ${searchLink}</p>`;
         return;
       }
@@ -526,7 +527,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
         // Several filings match and no one has picked between them. Showing one would
         // risk understating a candidate whose money sits in another committee.
         container.innerHTML = `
-          <h3>Campaign Finance</h3>
+          <h2>Campaign Finance</h2>
           <p class="finance-meta">
             More than one campaign filing matches this candidate, so no totals are shown
             here. ${searchLink} to view them.
@@ -536,7 +537,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
       if (!filer) {
         container.innerHTML = `
-          <h3>Campaign Finance</h3>
+          <h2>Campaign Finance</h2>
           <p class="finance-meta">
             No campaign finance filing found for this candidate in the
             ${escHtmlGa(String(data.metadata?.cycle ?? ''))} cycle — they may not have filed,
@@ -546,7 +547,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       }
 
       container.innerHTML = `
-        <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: GA Ethics Commission</small></h3>
+        <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: GA Ethics Commission</small></h2>
         <div class="finance-cards">
           <div class="finance-card raised">
             <div class="finance-card-label">Total Raised</div>
@@ -570,7 +571,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     const fecData = await CampaignFinance.getFecData();
     if (!fecData) {
       container.innerHTML = `
-        <h3>Campaign Finance</h3>
+        <h2>Campaign Finance</h2>
         <p style="font-size:0.875rem;color:#666;">
           Finance data unavailable.
           <a href="${CampaignFinance.fecSearchUrl()}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
@@ -590,7 +591,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
         ? 'Multiple FEC filings match this name — we can’t tell which is this candidate.'
         : 'No FEC filing found for this candidate.';
       container.innerHTML = `
-        <h3>Campaign Finance</h3>
+        <h2>Campaign Finance</h2>
         <p style="font-size:0.875rem;color:#666;">
           ${msg}
           <a href="${CampaignFinance.fecSearchUrl(fecCycle)}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
@@ -604,7 +605,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       : cycleLabel;
 
     const employersHtml = (entry.topEmployers || []).length ? `
-      <h4 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h4>
+      <h3 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h3>
       <table class="employers-table">
         <thead><tr><th>Employer</th><th>Donors</th><th>Total</th></tr></thead>
         <tbody>
@@ -619,7 +620,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
 
     container.innerHTML = `
-      <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h3>
+      <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h2>
       <div class="finance-cards">
         <div class="finance-card raised">
           <div class="finance-card-label">Total Raised</div>
@@ -722,7 +723,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
     return `
       <div class="service-section">
-        <h3>Service History</h3>
+        <h2>Service History</h2>
         <dl>${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
       </div>`;
   }

@@ -42,7 +42,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     overflow-y: auto;
     display: none;
   }
-  #stateSidebar h3 {
+  #stateSidebar h2 {
     margin: 0 0 0.75rem 0;
     font-size: 0.95rem;
     border-bottom: 1px solid #ccc;
@@ -136,7 +136,9 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
   .tab-btn.active { color: #1d4ed8; border-bottom-color: #1d4ed8; }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
-  .tab-panel h3 { margin: 0 0 0.5rem 0; }
+  /* Promoted from <h3> so the page's heading outline has no h1->h3 skip;
+     font-size pinned to keep the previous visual level. Finding 4.15. */
+  .tab-panel h2 { margin: 0 0 0.5rem 0; font-size: 1.5rem; }
 
   /* Campaign finance (FEC) — mirrors the cards on candidate.html */
   .finance-section {
@@ -147,7 +149,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
   /* ga-fec-data.json only covers Georgia, so the section stays empty for members
      of other states — collapse it so no stray rule or spacing is left behind. */
   .finance-section:empty { display: none; }
-  .finance-section h3 { margin: 0 0 0.75rem 0; font-size: 1rem; }
+  .finance-section h2 { margin: 0 0 0.75rem 0; font-size: 1rem; }
   .finance-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -301,7 +303,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     <p>Loading member information...</p>
   </div>
   <div id="stateSidebar">
-    <h3 id="sidebarTitle">State Delegation</h3>
+    <h2 id="sidebarTitle">State Delegation</h2>
     <div id="sidebarContent"></div>
   </div>
 </div>
@@ -659,7 +661,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     const entry = findFecEntry(fecData, member);
     if (!entry || entry.totalRaised == null) {
       container.innerHTML = `
-        <h3>Campaign Finance</h3>
+        <h2>Campaign Finance</h2>
         <p class="finance-meta">
           No current FEC filing found for this member.
           <a href="${CampaignFinance.fecSearchUrl(fecCycle)}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
@@ -673,7 +675,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       : cycleLabel;
 
     const employersHtml = (entry.topEmployers || []).length ? `
-      <h4 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h4>
+      <h3 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h3>
       <table class="employers-table">
         <thead><tr><th>Employer</th><th>Donors</th><th>Total</th></tr></thead>
         <tbody>
@@ -687,7 +689,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       </table>` : '';
 
     container.innerHTML = `
-      <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h3>
+      <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h2>
       <div class="finance-cards">
         <div class="finance-card raised">
           <div class="finance-card-label">Total Raised</div>
@@ -782,7 +784,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     }).join('');
 
     container.innerHTML = `
-      <h3>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:#666;">curated · 119th Congress</small></h3>
+      <h2>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:#666;">curated · 119th Congress</small></h2>
       <p style="font-size:0.8rem;color:#666;margin:0 0 1rem 0;">This member's votes on a selection of significant federal legislation.</p>
       ${cards}`;
   }
@@ -827,7 +829,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     }).join('');
 
     container.innerHTML = `
-      <h3>Sponsored Legislation${countNote}</h3>
+      <h2>Sponsored Legislation${countNote}</h2>
       <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Most recent bills sponsored during the 119th Congress (2025–2027).</p>
       <ul class="bill-list">${items}</ul>`;
   }
@@ -844,7 +846,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       const data        = await res.json();
       const memberVotes = (data.memberVotes || {})[member.bioguideId];
       if (!memberVotes || memberVotes.length === 0) {
-        container.innerHTML = '<h3>Voting History</h3><p style="color:#666;font-size:0.875rem;">No votes recorded for this session.</p>';
+        container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No votes recorded for this session.</p>';
         return;
       }
 
@@ -897,7 +899,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
       const motionHeader = isHouse ? '' : '<th>Motion</th>';
       container.innerHTML = `
-        <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
+        <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
         ${chartHtml}
         <table class="vote-table">

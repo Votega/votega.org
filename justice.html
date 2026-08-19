@@ -180,6 +180,7 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
   const COURT_URL     = 'assets/data/supreme-court.json';
   const DECISIONS_URL = 'assets/data/scotus-decisions.json';
   const OYEZ_PEOPLE   = 'https://api.oyez.org/people/';
+  const OYEZ_TIMEOUT_MS = 8000;   // bound the third-party wait (finding 4.15)
   const PAGE_SIZE     = 15;
 
   function getBasePath() {
@@ -258,8 +259,12 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
 
   async function loadBiography(container, oyezId) {
     container.innerHTML = '<p style="color:#777;font-size:0.875rem;">Loading biography…</p>';
+    // Bound the wait on Oyez so a slow third party degrades to the fallback in
+    // seconds instead of hanging on "Loading biography…" for the browser default.
+    const timeout = new AbortController();
+    const timer = setTimeout(() => timeout.abort(), OYEZ_TIMEOUT_MS);
     try {
-      const req = await fetch(`${OYEZ_PEOPLE}${oyezId}`);
+      const req = await fetch(`${OYEZ_PEOPLE}${oyezId}`, { signal: timeout.signal });
       if (!req.ok) throw new Error(`HTTP ${req.status}`);
       const data = await req.json();
 
@@ -295,6 +300,8 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
       container.innerHTML = html;
     } catch (err) {
       container.innerHTML = `<p style="color:#777;font-size:0.875rem;">Could not load biography. <a href="https://www.oyez.org/justices/${oyezId}" target="_blank" rel="noopener">View on Oyez →</a></p>`;
+    } finally {
+      clearTimeout(timer);
     }
   }
 

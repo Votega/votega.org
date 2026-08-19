@@ -4,80 +4,15 @@ title: Vote GA
 subtitle: Informing the electorate
 share-title: "Georgia Voter Information: Find Your Representatives, Bills & Elections"
 share-description: "Nonpartisan Georgia voter information. Look up your state and federal representatives, track bills in the General Assembly, check voter registration deadlines, and see election results."
+css:
+  - /assets/css/cards.css
 ---
+
+{% include next-election-strip.html %}
 
 <p>Georgia voters are represented at two levels of government. Find and learn about the officials who represent you.</p>
 
-<style>
-  .reps-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-    margin-bottom: 2.5rem;
-  }
-  @media (max-width: 600px) {
-    .reps-grid { grid-template-columns: 1fr; }
-  }
-  .rep-card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 1.75rem 1.5rem;
-    background: #fff;
-    text-decoration: none;
-    color: #404040;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    transition: box-shadow 0.15s, border-color 0.15s;
-  }
-  .rep-card:hover {
-    box-shadow: 0 4px 16px rgba(0,138,255,0.12);
-    border-color: #008AFF;
-    text-decoration: none;
-    color: #404040;
-  }
-  .rep-card-icon {
-    font-size: 2rem;
-    line-height: 1;
-  }
-  .rep-card-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #008AFF;
-    margin: 0;
-  }
-  .rep-card-desc {
-    font-size: 0.92rem;
-    color: #555;
-    line-height: 1.6;
-    margin: 0;
-    flex: 1;
-  }
-  .rep-card-topics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin: 0;
-  }
-  .rep-card-topic {
-    font-size: 0.75rem;
-    background: #f0f4ff;
-    color: #1a56a8;
-    border-radius: 20px;
-    padding: 0.2rem 0.65rem;
-    white-space: nowrap;
-  }
-  .rep-card-cta {
-    display: inline-block;
-    margin-top: 0.25rem;
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: #008AFF;
-  }
-</style>
-
-<div class="reps-grid">
+<div class="reps-grid reps-grid-home">
   <a class="rep-card" href="{{ '/federal-reps' | relative_url }}">
     <div class="rep-card-icon">🏛️</div>
     <p class="rep-card-title">Federal Representatives</p>

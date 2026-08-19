@@ -1,0 +1,87 @@
+{%- comment -%}
+  "What's on my ballot" entry point. The home page previously went straight from
+  the two rep-lookup cards to "Latest Updates", so the elections journey — half
+  the site — was reachable only from a navbar dropdown.
+
+  Dates come from ga-election-calendar.json, so this never needs hand-editing as
+  a cycle advances; the strip hides itself once no upcoming election remains.
+  See CODEBASE-REVIEW-2026-08-18.md finding 4.10.
+{%- endcomment -%}
+<section id="nextElectionStrip" class="next-election" hidden aria-labelledby="nextElectionHeading">
+  <div class="next-election-main">
+    <p class="next-election-label" id="nextElectionHeading">Next Election</p>
+    <p class="next-election-name" id="nextElectionName"></p>
+    <p class="next-election-date" id="nextElectionDate"></p>
+  </div>
+  <dl class="next-election-facts" id="nextElectionFacts"></dl>
+  <div class="next-election-actions">
+    <a class="next-election-btn" href="{{ '/elections/' | relative_url }}">See what's on my ballot &rarr;</a>
+    <a class="next-election-link" href="{{ '/ga-voter-access' | relative_url }}">Voter access &amp; deadlines</a>
+  </div>
+</section>
+
+<script>
+(function () {
+  const EL = document.getElementById('nextElectionStrip');
+  if (!EL) return;
+
+  function basePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+  // Parse as a local date so day boundaries match the visitor's calendar —
+  // same convention as ga-voter-access.html.
+  function parseLocalDate(iso) {
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+  function fmtLong(iso) {
+    return parseLocalDate(iso).toLocaleDateString('en-US',
+      { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  }
+  function fmtShort(iso) {
+    return parseLocalDate(iso).toLocaleDateString('en-US',
+      { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  function daysUntil(iso) {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    return Math.round((parseLocalDate(iso) - today) / 86400000);
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  fetch(basePath() + 'assets/data/ga-election-calendar.json')
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+    .then(data => {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const next = (data.elections || [])
+        .filter(e => e.date && parseLocalDate(e.date) >= today)
+        .sort((a, b) => a.date.localeCompare(b.date))[0];
+      // No upcoming election on file — stay hidden rather than show a stale one.
+      if (!next) return;
+
+      const days = daysUntil(next.date);
+      const when = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `${days} days away`;
+
+      document.getElementById('nextElectionName').textContent = next.name;
+      document.getElementById('nextElectionDate').innerHTML =
+        `${esc(fmtLong(next.date))} <span class="next-election-countdown">&middot; ${esc(when)}</span>`;
+
+      const facts = [];
+      if (next.registrationDeadline) {
+        facts.push(['Register by', fmtShort(next.registrationDeadline)]);
+      }
+      if (next.earlyVotingStart) {
+        facts.push(['Early voting', next.earlyVotingEnd
+          ? fmtShort(next.earlyVotingStart) + ' – ' + fmtShort(next.earlyVotingEnd)
+          : 'Begins ' + fmtShort(next.earlyVotingStart)]);
+      }
+      document.getElementById('nextElectionFacts').innerHTML = facts
+        .map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('');
+
+      EL.hidden = false;
+    })
+    .catch(err => console.warn('next-election strip:', err));
+})();
+</script>

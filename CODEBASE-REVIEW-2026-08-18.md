@@ -31,7 +31,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
-| Tier 4 — UX / IA / a11y | 15 | **4.1 – 4.3, 4.5 – 4.9, 4.11 – 4.14** | 4.10, 4.15 |
+| Tier 4 — UX / IA / a11y | 15 | **all fifteen** | — |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
@@ -1509,6 +1509,27 @@ only via a navbar dropdown.
 **Fix:** a third card (or a full-width strip above the two) linking `/elections/`, with the next election date
 pulled from `ga-election-calendar.json`.
 
+#### ✅ FIXED — 2026-08-19
+
+Built as the strip option, in `_includes/next-election-strip.html`, placed above the two rep cards. It reads
+`ga-election-calendar.json` at runtime and shows the next election's name, full date, a countdown, and the two
+deadlines a voter actually needs — with a primary **"See what's on my ballot →"** to `/elections/` and a secondary
+link to the voter-access page.
+
+Verified live on the home page:
+
+```
+Next Election
+Special Election Runoff — U.S. House District 13
+Tuesday, August 25, 2026 · 6 days away
+Register by  Jul 27, 2026     Early voting  Begins Aug 18, 2026
+```
+
+**Cycle-agnostic by construction.** The next election is picked as the earliest calendar entry on or after today,
+so this never needs hand-editing as the cycle advances. The strip starts `hidden` and only unhides once it has a
+real upcoming election — if the calendar runs out, or the fetch fails, the page silently returns to its previous
+layout rather than showing a stale or empty box. Dates parse as *local* dates, matching `ga-voter-access.html`.
+
 ---
 
 ### 4.11 — `/elections/` and `/elections.html` remain two distinct pages
@@ -1689,6 +1710,56 @@ Verified rendering at `/candidates/` with the primary CTA unchanged.
   page hangs on "Loading biography…" for the full timeout when Oyez is slow.
 - Card CSS duplicated byte-for-byte across `index.html:11-77`, `find-my-reps.html:14-80`, and
   `elections-hub.html:11-77` — **three** copies now, up from two at the last review.
+
+#### ✅ FIXED — 2026-08-19 · all six
+
+**Two were genuine bugs, and both are now proven fixed rather than assumed:**
+
+- **`race.html` prior-results crash.** `c.votes.toLocaleString()` had no guard, and `pct` divided by an undefined
+  `votes`. Now `const votes = Number(c.votes) || 0`. Demonstrated the exact failure in the live page: the old
+  expression **throws `TypeError`** on a row with no `votes` (blanking the whole "Earlier This Cycle" panel), the
+  new one returns `"0"`. (`total` was already guarded by `contest.totalVotes || 0`, so only the per-candidate
+  value was at risk.) Panel re-verified rendering with real figures — 9,441 / 7,680 / 1,778.
+- **`elections.html` unescaped candidate names.** Confirmed: the page had **no `escHtml` at all**, and both
+  `titleText` and the candidate names in `candidateSummary()` reached `innerHTML` raw. Added the helper and applied
+  it to both. Verified the escape renders `<img src=x onerror=alert(1)>` as literal text with **0 `<img>` elements
+  created**; 180 races still render normally.
+
+**`404.html`** — the second sibling `<h1>` is now a `<p class="h1-sub">`, and the decorative joke image takes
+`alt=""` so a screen reader skips it instead of announcing "Not found" twice. The sub-line is styled to the same
+36px/800 weight, so the two-line gag looks **pixel-identical** to before — confirmed h1 and sub both compute to
+`36px` / `800`.
+
+**Heading-level skips** — fixed on all five pages, and this was the one with real regression risk: the theme sets
+`h2` at 1.875rem against `h3` at 1.5rem, so a naive tag swap would have enlarged every section heading. Each
+scoped rule (`.finance-section h3`, `#stateSidebar h3`, `.tracker-card h3`, …) was moved to `h2` with the
+font-size pinned. Baseline sizes were captured *before* the change and compared after:
+
+| Page | Before | After |
+|---|---|---|
+| `ga-member.html` | 16 / 24 / 24 / 15.2 px | **identical** |
+| `member.html` | — | 16 / 24 / 24 / 24 / 15.2 px, 0 skips |
+| `ga-majority-tracker.html` | — | 13.6 px preserved, 0 skips |
+| `race.html`, `candidate.html` | — | 16 px + 14.08 px, 0 skips |
+
+The two `<h4>` "Top Donors by Employer" headings became `<h3>` so they nest correctly under the promoted `<h2>`.
+Every page now reports **zero `h(n) -> h(n+2)` skips** when walked programmatically.
+
+**`justice.html` Oyez dependency** — kept (the data genuinely lives there and the fallback was already correct),
+but the wait is now bounded: an `AbortController` with an 8s timeout, cleared in a `finally`. A slow Oyez now
+degrades to the "Could not load biography · View on Oyez →" fallback in seconds instead of leaving
+"Loading biography…" on screen for the browser's default timeout.
+
+**Card CSS triplication** — extracted to `assets/css/cards.css`, linked from all three pages via the theme's
+existing `page.css` front-matter hook. **202 duplicated lines removed** (68 + 67 + 67). Selectors are *grouped*
+(`.reps-grid, .elections-grid`) rather than renamed, so no page markup changed; the home page's different margins
+are preserved by a `.reps-grid-home` modifier.
+
+> **A trap worth recording:** `_config.yml`'s `defaults` gives every non-post file `layout: page`, so a stylesheet
+> with *empty* front matter gets wrapped in the site's full HTML layout and served as a web page — the browser
+> then silently drops every rule. Caught it when the grid rendered as one column: the CSS request returned
+> `<!DOCTYPE html>`. `beautifuljekyll.css` already uses `layout: null` for exactly this reason; `cards.css` now
+> does too. Re-verified all three pages render `543px 543px` / `353px 353px` two-column grids with card styling intact.
 
 ---
 

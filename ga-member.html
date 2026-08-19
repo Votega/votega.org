@@ -85,7 +85,9 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     border-color: #1a56a8;
     color: #1a3a6b;
   }
-  #votingHistory h3 { margin: 0 0 0.75rem 0; }
+  /* Promoted from <h3> so the page's heading outline has no h1->h3 skip;
+     font-size pinned to keep the previous visual level. Finding 4.15. */
+  #votingHistory h2 { margin: 0 0 0.75rem 0; font-size: 1.5rem; }
   .vote-table {
     width: 100%;
     border-collapse: collapse;
@@ -151,7 +153,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
   .tab-btn:hover { color: #333; }
   .tab-active { color: #1a56a8; border-bottom-color: #1a56a8; }
   /* Curated bill cards */
-  #curatedBills h3 { margin: 0 0 0.75rem 0; }
+  #curatedBills h2 { margin: 0 0 0.75rem 0; font-size: 1.5rem; }
   .bill-card {
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -203,7 +205,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     overflow-y: auto;
     display: none;
   }
-  #stateSidebar h3 {
+  #stateSidebar h2 {
     margin: 0 0 0.75rem 0;
     font-size: 0.95rem;
     border-bottom: 1px solid #ccc;
@@ -254,7 +256,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
   /* Not every legislator has a filing, and the state data covers GA only — collapse
      the section rather than leaving a stray rule behind. */
   .finance-section:empty { display: none; }
-  .finance-section h3 { margin: 0 0 0.75rem 0; font-size: 1rem; }
+  .finance-section h2 { margin: 0 0 0.75rem 0; font-size: 1rem; }
   .finance-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -289,7 +291,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     <p>Loading member information...</p>
   </div>
   <div id="stateSidebar">
-    <h3 id="sidebarTitle">Nearby Districts</h3>
+    <h2 id="sidebarTitle">Nearby Districts</h2>
     <div id="sidebarContent"></div>
   </div>
 </div>
@@ -508,7 +510,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
 
     if (!f) {
       container.innerHTML = `
-        <h3>Campaign Finance</h3>
+        <h2>Campaign Finance</h2>
         <p class="finance-meta">
           No campaign finance filing found for this legislator in the ${escHtml(String(data.metadata?.cycle ?? ''))} cycle —
           they may not be seeking re-election, or may be running for another office.
@@ -518,7 +520,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     }
 
     container.innerHTML = `
-      <h3>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: GA Ethics Commission</small></h3>
+      <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: GA Ethics Commission</small></h2>
       <div class="finance-cards">
         <div class="finance-card raised">
           <div class="finance-card-label">Total Raised</div>
@@ -900,7 +902,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     }).join('');
 
     container.innerHTML = `
-      <h3>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:#666;">curated list</small></h3>
+      <h2>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:#666;">curated list</small></h2>
       <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">This member's votes on a selection of significant Georgia legislation.</p>
       ${cards}`;
   }
@@ -1053,7 +1055,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       const data        = await res.json();
       const memberVotes = (data.memberVotes || {})[member.id];
       if (!memberVotes || memberVotes.length === 0) {
-        container.innerHTML = '<h3>Voting History</h3><p style="color:#666;font-size:0.875rem;">No voting record found for this member in our data for this session. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';
+        container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No voting record found for this member in our data for this session. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';
         return;
       }
 
@@ -1113,7 +1115,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       }).join('');
 
       container.innerHTML = `
-        <h3>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h3>
+        <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing recorded passage votes from this session — the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
         ${incompleteNote}
         ${(participationHtml || partyLoyaltyHtml) ? `

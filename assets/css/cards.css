@@ -1,0 +1,180 @@
+---
+layout: null
+---
+/*
+ * cards.css — the landing-card grid shared by index.html, find-my-reps.html and
+ * elections-hub.html, plus the home page's next-election strip.
+ *
+ * These rules previously existed as three byte-for-byte copies of the same
+ * ~65 lines, differing only in class name (.reps-grid/.rep-card vs
+ * .elections-grid/.election-card). Selectors are grouped rather than renamed so
+ * the pages' existing markup is untouched.
+ * See CODEBASE-REVIEW-2026-08-18.md finding 4.15.
+ */
+
+.reps-grid,
+.elections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+/* The home page sits these directly above "Latest Updates". */
+.reps-grid.reps-grid-home {
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 600px) {
+  .reps-grid,
+  .elections-grid { grid-template-columns: 1fr; }
+}
+
+.rep-card,
+.election-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1.75rem 1.5rem;
+  background: #fff;
+  text-decoration: none;
+  color: #404040;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+.rep-card:hover,
+.election-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 138, 255, 0.12);
+  border-color: #008AFF;
+  text-decoration: none;
+  color: #404040;
+}
+.rep-card-icon,
+.election-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+.rep-card-title,
+.election-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #008AFF;
+  margin: 0;
+}
+.rep-card-desc,
+.election-card-desc {
+  font-size: 0.92rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+.rep-card-topics,
+.election-card-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+}
+.rep-card-topic,
+.election-card-topic {
+  font-size: 0.75rem;
+  background: #f0f4ff;
+  color: #1a56a8;
+  border-radius: 20px;
+  padding: 0.2rem 0.65rem;
+  white-space: nowrap;
+}
+.rep-card-cta,
+.election-card-cta {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #008AFF;
+}
+
+/* --- Next-election strip (finding 4.10) ------------------------------------ */
+
+.next-election {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+  border: 1px solid #bcd4f5;
+  background: #f0f6ff;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+}
+.next-election-main { flex: 1 1 15rem; }
+.next-election-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #1a56a8;
+  margin: 0 0 0.3rem;
+}
+.next-election-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #14213d;
+  margin: 0 0 0.15rem;
+  line-height: 1.25;
+}
+.next-election-date {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0;
+}
+.next-election-countdown { color: #1a56a8; font-weight: 600; }
+
+.next-election-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin: 0;
+}
+.next-election-facts dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5a7396;
+  margin: 0;
+}
+.next-election-facts dd {
+  font-size: 0.88rem;
+  color: #14213d;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.next-election-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+}
+.next-election-btn {
+  display: inline-block;
+  padding: 0.6rem 1.15rem;
+  background: #1a56a8;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+}
+.next-election-btn:hover,
+.next-election-btn:focus { background: #164a90; color: #fff; text-decoration: none; }
+.next-election-link { font-size: 0.82rem; color: #1a56a8; text-align: center; }
+
+@media (max-width: 600px) {
+  .next-election { padding: 1.1rem 1.15rem; }
+  .next-election-actions { width: 100%; }
+  .next-election-facts dd { white-space: normal; }
+}
