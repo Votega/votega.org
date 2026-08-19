@@ -31,7 +31,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
-| Tier 4 — UX / IA / a11y | 15 | — | all |
+| Tier 4 — UX / IA / a11y | 15 | **4.1** | 4.2 – 4.15 |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
@@ -1049,6 +1049,88 @@ At 375px the vote tables force the **whole page body** to scroll horizontally, d
 element sideways. These sit on the two most-visited detail pages on the site.
 
 **Fix:** `<div class="table-wrap">` with `overflow-x:auto` around each, matching `race.html:261`.
+
+#### 🔁 SYMPTOM REAL, CAUSE WRONG — FIXED 2026-08-19
+
+The sideways-scrolling page is real, but **the tables are not causing it, and they are not unwrapped.** Both halves
+of the diagnosis were wrong, and the proposed fix would have changed nothing.
+
+**The tables already have an overflow container.** The theme sets it globally, on the bare element:
+
+```css
+/* assets/css/beautifuljekyll.css:835-838 */
+table { padding: 0; overflow-x: auto; display: block; }
+```
+
+`display:block` + `overflow-x:auto` is the standard way to make a table its own scroll container, and none of the
+four page-level rules (`.vote-table`, `.employers-table`, `.order-table`) override `display` or `overflow`. Measured
+in the browser at 375 px, with the tab panels opened so the tables actually lay out:
+
+| Table | clientW | scrollW | Behaviour |
+|---|---|---|---|
+| `ga-member.html` `.vote-table` (1,219 rows) | 311 | 314 | scrolls internally ✅ |
+| `member.html` `.vote-table` (70 rows) | 311 | 311 | fits ✅ |
+| `member.html` `.employers-table` | 311 | 311 | fits ✅ |
+| `ga-executive-orders.html` `.order-table` (221 rows) | 345 | 382 | scrolls internally ✅ |
+
+`ga-executive-orders.html` and `candidate.html` never overflowed the body at all (`documentElement.scrollWidth`
+== `clientWidth` == 375 on both, before any change).
+
+**`member.html` did not overflow either** — contradicting "these sit on the two most-visited detail pages". Only
+`ga-member.html` did: body `scrollWidth` **454** against a 375 viewport.
+
+**The actual cause.** `#pageLayout` sets `align-items: flex-start`, and the mobile media query only flipped the
+direction:
+
+```css
+#pageLayout { display: flex; gap: 1.5rem; align-items: flex-start; }
+@media (max-width: 700px) { #pageLayout { flex-direction: column; } }   /* align-items still flex-start */
+```
+
+In a **column** flex container, `align-items: flex-start` sizes children to their *content* width instead of
+stretching them to the container. So `#memberDetails` sized to its **min-content** — the widest unbreakable token
+in it. That token is the official-website link, which renders the raw URL as its own link text:
+
+```
+https://www.legis.ga.gov/members/senate/754     → 439 px, unbreakable
+```
+
+Isolated in the live page: forcing that one link to wrap dropped `#memberDetails` from **439 px → 348 px**, and
+setting `align-items: stretch` alone dropped `documentElement.scrollWidth` from **454 → 375**. Both confirm the
+flex/URL pair, not the tables.
+
+Why `member.html` escaped: federal website URLs are short (`https://mccormick.house.gov`, 27 chars) and fit. The
+same latent bug is in that file verbatim — it just has no long enough URL to trip it yet.
+
+**The fix**, applied to `ga-member.html` and `member.html`:
+
+```css
+.url-text { overflow-wrap: anywhere; }              /* the raw-URL link, new class */
+#memberDetails { … overflow-wrap: break-word; }     /* last-resort guard for any long token */
+@media (max-width: 700px) {
+  #pageLayout { flex-direction: column; align-items: stretch; }
+}
+```
+
+`align-items: stretch` is the structural half — it clamps the stacked column to the viewport, so *any* future wide
+child scrolls or wraps inside instead of widening the page. The wrap rules are the content half.
+
+**Verified after the change**, at 375 px with the voting-history tab open:
+
+| | `ga-member.html` | `member.html` |
+|---|---|---|
+| body overflows | **no** (375 == 375) | no |
+| `#memberDetails` | 345 px (was 439) | 345 px |
+| URL link | wraps to 2 lines | 1 line, unchanged |
+| `.vote-table` | 311 / 314, scrolls internally | 311 / 311, fits |
+
+**Desktop regression check at 1280 px:** `flex-direction: row`, `align-items: flex-start` still in force, sidebar
+still top-aligned rather than stretched to the full column height, URL on one line, no overflow. The media query
+scopes the change to ≤700 px, so nothing above the breakpoint moved.
+
+Side benefit: `#stateSidebar` now stretches to the full 345 px on mobile instead of shrink-fitting to 207 px.
+
+**No `table-wrap` divs were added** — they would have been redundant with the theme rule.
 
 ---
 

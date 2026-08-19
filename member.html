@@ -14,6 +14,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     text-decoration: none;
   }
   .back-link:hover { text-decoration: underline; }
+  .url-text { overflow-wrap: anywhere; }
   #pageLayout {
     display: flex;
     gap: 1.5rem;
@@ -23,6 +24,8 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
   #memberDetails {
     flex: 1;
     min-width: 0;
+    /* Last-resort break for unbreakable tokens such as the raw official-website URL. */
+    overflow-wrap: break-word;
     padding: 1rem;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -75,7 +78,11 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     color: #666;
   }
   @media (max-width: 700px) {
-    #pageLayout { flex-direction: column; }
+    /* align-items:flex-start above sizes children to min-content; once stacked that
+       lets one long unbreakable token (e.g. a full legis.ga.gov URL) widen the column
+       past the viewport and scroll the whole page sideways. Stretch clamps it.
+       See CODEBASE-REVIEW-2026-08-18.md finding 4.1. */
+    #pageLayout { flex-direction: column; align-items: stretch; }
     #stateSidebar { width: auto; position: static; max-height: 300px; display: block !important; }
   }
 
@@ -977,7 +984,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
     // Official website
     const websiteHtml = member.officialWebsiteUrl ?
-      `<p><strong>Official Website:</strong> <a href="${escHtml(member.officialWebsiteUrl)}" target="_blank">${escHtml(member.officialWebsiteUrl)}</a></p>` : '';
+      `<p><strong>Official Website:</strong> <a class="url-text" href="${escHtml(member.officialWebsiteUrl)}" target="_blank">${escHtml(member.officialWebsiteUrl)}</a></p>` : '';
 
     // Running for office badge
     let runningBadgeHtml = '';
