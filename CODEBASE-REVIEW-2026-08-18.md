@@ -32,7 +32,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
 | Tier 4 — UX / IA / a11y | 15 | **all fifteen** | — |
-| Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
+| Tier 5 — hygiene, docs, traps | 12 | **5.1, 5.6, 5.7**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
 - **2026-08-18, `11af8df` "Tier 1 - Data Fixes"** — findings 1.1, 1.2, 1.3, plus the
@@ -1897,6 +1897,34 @@ largest tracked file) has **22 commits** and grows by a near-full copy each time
 stops the growth. Higher-effort half — a `git filter-repo` pass dropping the two dead `GA_2025_26_bills.json`
 blobs; that rewrites history and needs a deliberate decision.
 
+#### ✅ LOW-RISK HALF DONE — 2026-08-19 · history rewrite awaiting your go-ahead
+
+**The growth is stopped.** New `scripts/only_keys_changed.py` compares a staged JSON file against `HEAD` with the
+named keys blanked, and exits 0 only when *nothing but those keys* moved. `update-ga-votes` now calls it before
+committing: if only `metadata.generatedAt` changed on `ga-member-votes.json`, it reverts the file and skips the
+commit instead of adding a near-full ~15 MB revision.
+
+Applied to **both** large per-run files, not just the one named — `ga-bills.json` (~9 MB) carries the same
+per-run `partyTallyEnrichedAt` stamp and had the identical problem. The helper fails safe: a new file, unreadable
+file, non-JSON, or any real content change all exit 1 (commit). Verified both directions on a real data file —
+timestamp-only bump → skip, a changed member name → commit — and confirmed the workflow YAML still parses.
+
+Net effect: on a week when no vote or tally actually changed, `update-ga-votes` now commits **nothing** rather than
+~24 MB across the two files.
+
+**Higher-effort half — NOT done, needs your decision.** Dropping the two dead 52 MB `GA_2025_26_bills.json` blobs
+(and optionally squashing the ~22 historical `ga-member-votes.json` revisions) requires `git filter-repo`, which
+**rewrites every commit hash and force-pushes**. That breaks existing clones and forks and would need the
+`publish-*-to-<sibling-repo>` syncs re-based. That is an outward-facing, hard-to-reverse operation, so I have not
+run it. When you want it, the dead-blob pass is:
+
+```bash
+git filter-repo --path "assets/data/GA_2025_26_bills.json" --invert-paths
+git push --force-with-lease origin main   # then re-sync the sibling repos
+```
+
+This reclaims ~105 MB from history; the low-risk fix above ensures it does not simply re-accumulate.
+
 ---
 
 ### 5.7 — Nine stray CSVs tracked in `assets/data/`
@@ -1921,6 +1949,42 @@ publicly from `assets/`.
 
 **Fix:** move source CSVs to `_sources/election_results/` (outside the published tree), keep only the certified
 file per election, and adopt the `ga-<election>-results-official.csv` convention the newer files already use.
+
+#### ✅ FIXED — 2026-08-19 · plus a 10th CSV the audit missed
+
+Confirmed the setup was exactly the wrong-file trap described, and found the ambiguity live: the two special-election
+CSVs (`ga-special-2026-results.csv` and `…-official.csv`) **differ** in row order and name quoting, and
+`build_results_json.py`'s own docstring pointed at the *non-official* one. Building from each produced
+**byte-identical** JSON, so there was no data bug — but it is precisely the "which file is real?" hazard the finding
+warns about.
+
+**Zero source CSVs remain in the published tree.** All results-source CSVs now live in
+`_sources/election_results/`, which Jekyll excludes from `_site` (underscore-prefixed dirs are not copied) — verified
+the built site contains **no `_sources/` and no tracked CSV under `assets/data/`**.
+
+| Was (`assets/data/`) | Now |
+|---|---|
+| `Total Votes - 2026.05.19_11pm.csv`, `…05.20…`, `…05.23…` | **deleted** — unofficial primary snapshots, superseded by the certified export |
+| `ga-special-2026-results.csv` | **deleted** — builds identically to the `-official` file |
+| `Total Votes Results - OFFICIAL.csv` | `_sources/election_results/ga-primary-results-official.csv` (renamed — drops the space hazard) |
+| `ga-primary-runoff-results.csv` | `_sources/election_results/` (name kept — already clean) |
+| `ga-special-2026-results-official.csv`, `…-runoff-results.csv` | `_sources/election_results/` |
+| `ga.csv` (**10th** — a stale Open States member dump, in the list but not the fix; referenced by nothing) | `_sources/openstates/ga-members-export.csv` |
+
+**Every reference repointed** — the three consuming scripts (`build_results_json.py` docstring,
+`update_general_from_primary.py`, `update_general_from_runoff.py`), the legacy `generate_html.py` default path, and
+the workflow docs that describe the per-cycle "drop the CSV" step (`TO-DO.md`, `General Election Transition Plan.md`).
+`update_general_from_primary.py` had pointed at the *unofficial* `05.23_8am` snapshot; it now reads the certified
+export, matching RECURRING-TASKS §1's "replace wholesale once certified numbers exist."
+
+**Reproducibility proven, not assumed.** Rebuilt all four results JSONs from the moved CSVs and diffed against the
+committed `_data/election_results/*.json`: **byte-identical on all four.** A `README.md` in the new directory records
+the convention and the CSV → JSON → served mapping.
+
+> **One workflow change to note:** the per-cycle "drop the SoS export" target moved from `assets/data/` to
+> `_sources/election_results/`. The docs are updated to say so. Left the already-clean runoff filenames as-is rather
+> than force an `-official` suffix on them (that would ripple through more docs for little gain) — say the word if you
+> want full standardization.
 
 ---
 

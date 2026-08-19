@@ -66,6 +66,13 @@ jobs:
           git add -f assets/data/ga-member-votes.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
+          elif python scripts/only_keys_changed.py assets/data/ga-member-votes.json metadata.generatedAt; then
+            # Only the generatedAt timestamp moved — committing would add a
+            # near-full ~15 MB revision for no real change. Revert and skip.
+            # See CODEBASE-REVIEW-2026-08-18.md finding 5.6.
+            echo "Only metadata.generatedAt changed — skipping redundant commit"
+            git restore --staged assets/data/ga-member-votes.json
+            git checkout -- assets/data/ga-member-votes.json
           else
             git commit -m "Update Georgia legislative vote data"
             pushed=0
@@ -89,6 +96,12 @@ jobs:
           git add -f assets/data/ga-bills.json
           if git diff --cached --quiet; then
             echo "No changes to ga-bills.json"
+          elif python scripts/only_keys_changed.py assets/data/ga-bills.json metadata.partyTallyEnrichedAt; then
+            # Same guard as the votes file above: this ~9 MB file also carries a
+            # per-run timestamp (partyTallyEnrichedAt). See finding 5.6.
+            echo "Only partyTallyEnrichedAt changed — skipping redundant commit"
+            git restore --staged assets/data/ga-bills.json
+            git checkout -- assets/data/ga-bills.json
           else
             git commit -m "Enrich GA bills with party vote tallies"
             pushed=0

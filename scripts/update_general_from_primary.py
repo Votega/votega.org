@@ -15,7 +15,7 @@ import unicodedata
 from datetime import datetime, timezone
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CSV_PATH = os.path.join(BASE, "assets", "data", "Total Votes - 2026.05.23_8am.csv")
+CSV_PATH = os.path.join(BASE, "_sources", "election_results", "ga-primary-results-official.csv")
 RACES_PATH = os.path.join(BASE, "assets", "data", "races.json")
 
 # ---------------------------------------------------------------------------

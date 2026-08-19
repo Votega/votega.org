@@ -15,9 +15,9 @@ Usage:
     and referenced by a page's `results_data:` front matter.
 
 Examples:
-    python scripts/build_results_json.py "assets/data/Total Votes Results - OFFICIAL.csv" ga-primary-results
-    python scripts/build_results_json.py assets/data/ga-primary-runoff-results.csv    ga-primary-runoff-results
-    python scripts/build_results_json.py assets/data/ga-special-2026-results.csv       ga-special-2026-results
+    python scripts/build_results_json.py _sources/election_results/ga-primary-results-official.csv ga-primary-results
+    python scripts/build_results_json.py _sources/election_results/ga-primary-runoff-results.csv ga-primary-runoff-results
+    python scripts/build_results_json.py _sources/election_results/ga-special-2026-results-official.csv ga-special-2026-results
 
 CSV columns: Office Name, Contest ID, Ballot Name, Choice ID, Party, Total.
 Jungle/nonpartisan special contests: leave the Party column blank and keep the

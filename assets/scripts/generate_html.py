@@ -4,18 +4,19 @@ from collections import OrderedDict
 script_dir = os.path.dirname(os.path.abspath(__file__))
 repo_root  = os.path.dirname(os.path.dirname(script_dir))  # assets/scripts -> assets -> repo root
 
-# Accept the CSV path as an optional argument; default to the most recent
-# "Total Votes - *.csv" file in assets/data/
+# Accept the CSV path as an optional argument. Source result CSVs now live under
+# _sources/election_results/ (moved out of the published assets/ tree — see
+# CODEBASE-REVIEW-2026-08-18.md finding 5.7); the certified primary export is the
+# default. NOTE: this is the legacy single-page generator — the current pipeline
+# is scripts/build_results_json.py, which RECURRING-TASKS.md section 1 points to.
 if len(sys.argv) > 1:
     csv_path = sys.argv[1]
 else:
-    import glob
-    data_dir = os.path.join(repo_root, "assets", "data")
-    matches = sorted(glob.glob(os.path.join(data_dir, "Total Votes - *.csv")))
-    if not matches:
-        print(f"ERROR: No 'Total Votes - *.csv' found in {data_dir}")
+    csv_path = os.path.join(repo_root, "_sources", "election_results",
+                            "ga-primary-results-official.csv")
+    if not os.path.exists(csv_path):
+        print(f"ERROR: {csv_path} not found. Pass a CSV path explicitly.")
         sys.exit(1)
-    csv_path = matches[-1]  # alphabetical sort puts the latest timestamp last
     print(f"Using CSV: {os.path.basename(csv_path)}")
 
 out_path = os.path.join(repo_root, "ga-primary-results.html")
