@@ -30,7 +30,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 |---|---|---|---|
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
-| Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.5** | 3.4, 3.6 |
+| Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5** | 3.6 |
 | Tier 4 — UX / IA / a11y | 15 | — | all |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
@@ -658,7 +658,7 @@ than half-fetching.
 
 > **STATUS: 3.5 fixed on 2026-08-18** as a necessary part of
 > [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote) — the tally is now
-> derived from the de-duplicated roster. **3.1, 3.2 and 3.3 fixed 2026-08-19.** 3.4 and 3.6 remain open.
+> derived from the de-duplicated roster. **3.1, 3.2, 3.3 and 3.4 fixed 2026-08-19.** Only 3.6 remains open.
 
 ### 3.1 — Superior Court results: one race shows five other judges' totals; four show none
 
@@ -853,6 +853,54 @@ Contributing: `ga-members.json` has 3 members with `party: null`, whose votes ar
 
 **Fix:** raise the threshold to ~0.9 (or suppress the ⚡ badge whenever coverage < 0.95) — which, given the
 measured distribution, effectively means "suppress until [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote) is fixed and the data regenerated."
+
+#### ✅ FIXED — 2026-08-19 · a threshold was the wrong instrument
+
+**Coverage can never reach 100%, so no threshold is safe.** Votes cast by members who have since left the
+legislature sit in the roll call but carry no party in `ga-members.json`, so they can never be tallied. Measured
+ceiling after the 1.5 regeneration: **max 0.9889, median 0.9107, and 0 of 2,145 votes at 1.0.** A 0.95 cutoff
+would suppress **80.7%** of votes and a 0.90 cutoff 36.2% — deleting the feature rather than qualifying it, which
+is precisely what the existing code comment warned about when it chose 0.5.
+
+**What matters is whether the missing votes could change the answer.** `computePartyLineInfo()` calls a vote
+party-line when the two parties' *majorities* went opposite ways, so a party's direction only flips if the
+unaccounted votes outnumber its margin. `partyLineIsSound()` now tests exactly that: the tag is shown only when
+both `|yea − nay|` margins strictly exceed the unaccounted count.
+
+Measured over the real data — **390** votes whose parties split opposite ways:
+
+| Rule | Tag kept | Tag withheld |
+|---|---|---|
+| Old (`coverage < 0.5`) | 390 | 0 |
+| Flat 0.95 threshold | ~74 | ~316 |
+| **Margin-aware** | **366** | **24** |
+
+The 24 withheld are the genuinely uncertain ones, and the page now says why instead of showing a bare percentage:
+`Dem 4-5 · Rep 25-0 (yea-nay by party; 89% of the official tally — 6 unmatched votes, too close to call
+party-line)` — a Democratic margin of 1 against 6 unattributed votes. `Dem 22-0 · Rep 13-16` is withheld on a
+Republican margin of 3 against 5. Both previously carried a confident ⚡.
+
+`enrich_bills_with_party_votes.py` now emits `partyTallyTallied` and `partyTallyOfficial` alongside the ratio,
+since reconstructing the gap from a rounded coverage loses the precision the comparison depends on. The old
+threshold survives at **0.75** for its stated purpose only — catching a roster that is actually broken by a future
+matching regression. It fires on 0 votes today.
+
+**One sub-claim corrected:** the 3 members with `party: null` are all `status: "Vacant"` placeholder entries with
+synthetic non-OCD ids. Vacant seats cast no votes, so they never appear in a roster and contribute nothing to the
+shortfall.
+
+**Verified:** 10 assertions running the page's own extracted functions over the real `ga-bills.json`, including
+the boundary cases (margin equal to unmatched → withheld; margin one greater → shown) and the fallback for older
+records lacking exact counts. In the browser, 10 tags shown and 3 withheld with the explanatory wording on the
+first screen; no console errors.
+
+**⚠ Left for you — the full refresh did not finish.** `ga-member-votes.json` now reports
+`fetchComplete: false, paginationComplete: false` and **2,145 roll calls, down from 2,223**, so the run exhausted
+the Open States quota partway. Two consequences: **78** `passageVotes` in `ga-bills.json` still carry a tally from
+the previous enrichment because their roll call is missing from the current file, and `unresolvedVoterRows` is
+8,918. Re-running `update-ga-votes` with `full_refresh=true` on a quiet day should complete the pull and clear
+both. The 1.5 gain is already banked regardless: `surnameResolved: 22,722`, `ghostVoterIds: 0`, and legislators
+with no voting history **39 → 8**.
 
 ---
 

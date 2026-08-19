@@ -464,18 +464,46 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     };
   }
 
-  // Coverage currently sits in a narrow ~79-85% band on essentially every
-  // roll call — the same ~39 legislators (mostly surname collisions Open
-  // States can't resolve a voter.id for) are missing from every roster, so
-  // the gap is systemic rather than a few bad votes. A threshold near that
-  // band would suppress the party-line tag almost everywhere, which trades
-  // one misleading signal (an unqualified tag) for another (the feature
-  // silently vanishing). Set it low enough to only catch a roster that's
-  // actually broken (e.g. a future matching bug), and disclose the real
-  // percentage on every vote instead of a threshold cutoff doing that work.
-  const COVERAGE_WARN_THRESHOLD = 0.5;
+  // A party-line tag is only as good as the roster behind it, but a flat
+  // coverage threshold is the wrong instrument. Coverage never reaches 100% —
+  // votes cast by members who have since left the legislature are in the roll
+  // call yet carry no party in ga-members.json, so they can't be tallied. The
+  // measured ceiling is ~99% and the median ~91%; a 95% cutoff would suppress
+  // four out of five tags and effectively delete the feature.
+  //
+  // What actually matters is whether the votes we couldn't attribute could
+  // change the answer. computePartyLineInfo() calls a vote party-line when the
+  // two parties' majorities went opposite ways, so a party's direction only
+  // flips if the unaccounted votes outnumber its margin. Testing that directly
+  // suppresses the 24 tags that are genuinely uncertain and keeps the 366 that
+  // are provably safe. See CODEBASE-REVIEW-2026-08-18.md finding 3.4.
+  function unaccountedVotes(v) {
+    if (v.partyTallyOfficial != null && v.partyTallyTallied != null) {
+      return Math.max(0, v.partyTallyOfficial - v.partyTallyTallied);
+    }
+    // Older records predate the exact counts; fall back to the ratio.
+    if (v.partyTallyCoverage == null) return null;
+    const official = (v.yea || 0) + (v.nay || 0) + (v.other || 0);
+    return Math.max(0, official - Math.round(v.partyTallyCoverage * official));
+  }
+
+  // True when no distribution of the unaccounted votes could reverse either
+  // party's direction, so the party-line call holds regardless of what's missing.
+  function partyLineIsSound(v) {
+    const t = v.partyTally;
+    if (!t || !t['Democratic'] || !t['Republican']) return false;
+    const missing = unaccountedVotes(v);
+    if (missing == null) return false;
+    const dMargin = Math.abs(t['Democratic'].yea - t['Democratic'].nay);
+    const rMargin = Math.abs(t['Republican'].yea - t['Republican'].nay);
+    return dMargin > missing && rMargin > missing;
+  }
+
+  // Separate, much lower bar: a roster this short means the join itself broke
+  // (a future matching regression), not the ordinary former-member shortfall.
+  const COVERAGE_BROKEN_THRESHOLD = 0.75;
   function hasLowCoverage(v) {
-    return v.partyTallyCoverage != null && v.partyTallyCoverage < COVERAGE_WARN_THRESHOLD;
+    return v.partyTallyCoverage != null && v.partyTallyCoverage < COVERAGE_BROKEN_THRESHOLD;
   }
 
   // ── Vote bar HTML ─────────────────────────────────────────────────────────
@@ -503,14 +531,22 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       if (d) parts.push('<span style="color:#2563eb;">Dem ' + d.yea + '-' + d.nay + '</span>');
       if (r) parts.push('<span style="color:#dc2626;">Rep ' + r.yea + '-' + r.nay + '</span>');
       if (!parts.length) return '';
-      const tag = pli && pli.isPartyLine && !lowCoverage
+      const sound = partyLineIsSound(v);
+      const missing = unaccountedVotes(v);
+      const tag = pli && pli.isPartyLine && sound && !lowCoverage
         ? ' <span class="party-line-tag">&#9889; Party-line vote</span>'
         : '';
       const caveat = coveragePct == null
         ? ' <span style="color:#aaa;">(yea-nay by party; may not include every recorded vote)</span>'
         : lowCoverage
           ? ' <span style="color:#c00;">(yea-nay by party; only ' + coveragePct + '% of the official tally matched — too incomplete for a party-line call)</span>'
-          : ' <span style="color:#aaa;">(yea-nay by party; ' + coveragePct + '% of the official tally)</span>';
+          : (pli && pli.isPartyLine && !sound)
+            // The parties did split in this tally, but not by enough to survive
+            // the votes we could not attribute — so the claim is withheld and
+            // the reason is stated rather than left to a bare percentage.
+            ? ' <span style="color:#aaa;">(yea-nay by party; ' + coveragePct + '% of the official tally — '
+              + missing + ' unmatched vote' + (missing === 1 ? '' : 's') + ', too close to call party-line)</span>'
+            : ' <span style="color:#aaa;">(yea-nay by party; ' + coveragePct + '% of the official tally)</span>';
       return '<div class="vote-bar-sub" style="margin-top:0.2rem;">' + parts.join(' &nbsp;&middot;&nbsp; ')
         + caveat + tag + '</div>';
     })();

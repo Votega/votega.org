@@ -106,6 +106,14 @@ def main():
             pv['partyTallyCoverage'] = (
                 round(tallied_total / official_total, 4) if official_total else None
             )
+            # Exact counts as well as the ratio. The UI needs to know how many
+            # votes are *unaccounted for* to decide whether a party-line call is
+            # safe -- a party's direction only flips if the missing votes could
+            # outweigh its margin -- and reconstructing that from a rounded
+            # coverage ratio loses the precision the comparison depends on.
+            # See CODEBASE-REVIEW-2026-08-18.md finding 3.4.
+            pv['partyTallyTallied'] = tallied_total
+            pv['partyTallyOfficial'] = official_total
             matched += 1
 
     # Update metadata timestamp
