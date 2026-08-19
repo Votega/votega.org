@@ -32,11 +32,12 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
     margin-bottom: 0.3rem;
   }
   .justice-profile-name {
+    /* Reset the <h1> defaults — this is a card title, not a page banner. */
+    margin: 0 0 0.6rem 0;
     font-size: 1.6rem;
     font-weight: 700;
     color: #111;
     line-height: 1.2;
-    margin-bottom: 0.6rem;
   }
   .justice-meta-row {
     font-size: 0.85rem;
@@ -297,6 +298,12 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
     }
   }
 
+  function escHtml(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
   (async function () {
     const params  = new URLSearchParams(window.location.search);
     const id      = params.get('id');
@@ -305,8 +312,17 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
     const backLink = document.getElementById('backLink');
     backLink.href = `${base}supreme-court.html`;
 
+    // Failure states are the only thing on the page when they fire, so each
+    // needs its own heading and a route back. See CODEBASE-REVIEW-2026-08-18.md 4.3.
+    function showError(message) {
+      content.innerHTML =
+        `<h1>Justice unavailable</h1>` +
+        `<p role="alert" style="color:#c00;">${escHtml(message)}</p>` +
+        `<p><a href="${base}supreme-court.html">&larr; Back to the Supreme Court</a></p>`;
+    }
+
     if (!id) {
-      content.innerHTML = '<p style="color:#c00;">No justice ID specified.</p>';
+      showError('No justice was specified in the link you followed.');
       return;
     }
 
@@ -321,7 +337,7 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
       const justice   = (courtData.justices || []).find(j => j.id === id);
 
       if (!justice) {
-        content.innerHTML = `<p style="color:#c00;">Justice not found: <code>${id}</code></p>`;
+        showError('We could not find that justice in our records.');
         return;
       }
 
@@ -333,14 +349,14 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
       const profileHtml = `
         <div class="justice-profile-card">
           ${justice.imageUrl
-            ? `<img class="justice-profile-photo" src="${justice.imageUrl}" alt="${justice.name}" onerror="this.style.display='none'">`
+            ? `<img class="justice-profile-photo" src="${justice.imageUrl}" alt="${escHtml(justice.name)}" onerror="this.style.display='none'">`
             : ''}
           <div class="justice-profile-info">
-            <div class="justice-profile-title">${justice.title}</div>
-            <div class="justice-profile-name">${justice.name}</div>
+            <div class="justice-profile-title">${escHtml(justice.title)}</div>
+            <h1 class="justice-profile-name">${escHtml(justice.name)}</h1>
             <div class="justice-meta-row">
               <span class="justice-meta-label">Appointed by</span>
-              <span style="color:${partyColor(justice.appointedByParty)};font-weight:600;">${justice.appointedBy}</span>
+              <span style="color:${partyColor(justice.appointedByParty)};font-weight:600;">${escHtml(justice.appointedBy)}</span>
             </div>
             <div class="justice-meta-row">
               <span class="justice-meta-label">Confirmed</span>
@@ -354,30 +370,35 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
             </div>
             ${justice.lawSchool ? `<div class="justice-meta-row">
               <span class="justice-meta-label">Law school</span>
-              <span>${justice.lawSchool}</span>
+              <span>${escHtml(justice.lawSchool)}</span>
             </div>` : ''}
             ${justice.homeState ? `<div class="justice-meta-row">
               <span class="justice-meta-label">Home state</span>
-              <span>${justice.homeState}</span>
+              <span>${escHtml(justice.homeState)}</span>
             </div>` : ''}
           </div>
         </div>`;
 
       const tabBar = `
-        <div class="tab-bar">
+        <div class="tab-bar" role="tablist" aria-label="Justice details"
+             data-tabs data-tab-panel-prefix="tab-">
           <button class="tab-btn active" data-tab="voting">Voting Record</button>
           <button class="tab-btn"        data-tab="bio">Biography</button>
         </div>`;
 
       const panelsHtml = `
         <div id="tab-voting" class="tab-panel active">
+          <h2 class="sr-only">Voting Record</h2>
           <div id="vrContainer"><p style="color:#777;font-size:0.875rem;">Loading…</p></div>
         </div>
         <div id="tab-bio" class="tab-panel">
+          <h2 class="sr-only">Biography</h2>
           <div id="bioContainer"></div>
         </div>`;
 
       content.innerHTML = profileHtml + tabBar + panelsHtml;
+      // Tabs are built here, after load — wire their ARIA now.
+      if (window.a11yTabs) window.a11yTabs.scan(content);
 
       // Wire up tabs
       let bioLoaded = false;
@@ -401,7 +422,9 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
 
     } catch (err) {
       console.error('justice:', err);
-      content.innerHTML = `<p style="color:#c00;">${err.message}</p>`;
+      showError('We could not load this justice profile right now. Please try again later.');
     }
   })();
 </script>
+
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>

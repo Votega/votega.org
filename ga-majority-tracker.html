@@ -75,6 +75,9 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     margin-right: 3px;
     vertical-align: middle;
   }
+  /* Legend marks mirror the hemicycle seat shapes. */
+  .dot-square { border-radius: 1px; }
+  .dot-hollow { background: #fff !important; border: 1.5px solid; border-radius: 50%; }
 
   /* ── Chamber tabs ─────────────────────────────────────────────────────── */
   .chamber-tabs {
@@ -175,6 +178,15 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     color: #777;
     margin-top: 1px;
   }
+  /* Party as a glyph, so the seat is not colour-only. */
+  .seat-party {
+    position: absolute;
+    top: 2px; left: 4px;
+    font-size: 0.55rem;
+    font-weight: 700;
+    color: #6b7280;
+    line-height: 1;
+  }
 
   /* ── House SVG ────────────────────────────────────────────────────────── */
   .house-chamber {
@@ -241,7 +253,8 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
 </div>
 
 <!-- Chamber tabs -->
-<div class="chamber-tabs">
+<div class="chamber-tabs" role="tablist" aria-label="Chamber"
+     data-tabs data-tab-attr="data-chamber" data-tab-panel-suffix="View">
   <button class="chamber-tab active" data-chamber="senate">Senate Chamber</button>
   <button class="chamber-tab" data-chamber="house">House Chamber</button>
 </div>
@@ -365,10 +378,11 @@ function partyOf(member) {
 }
 
 function legendHtml(d, r, v) {
+  // Marks mirror the seat shapes so the non-colour cue is decodable.
   return `
     <span><span class="dot" style="background:${COLOR.D}"></span>Democrat (${d})</span>
-    <span><span class="dot" style="background:${COLOR.R}"></span>Republican (${r})</span>
-    ${v ? `<span><span class="dot" style="background:${COLOR.V}"></span>Vacant (${v})</span>` : ''}
+    <span><span class="dot dot-square" style="background:${COLOR.R}"></span>Republican (${r})</span>
+    ${v ? `<span><span class="dot dot-hollow" style="border-color:${COLOR.V}"></span>Vacant (${v})</span>` : ''}
   `;
 }
 
@@ -473,19 +487,24 @@ function makeSeneateSeat(dist, byDistrict) {
   const lastName = (member && !isVacant)
     ? member.name.split(',')[0].split(' ').pop()
     : 'Vacant';
-  el.innerHTML = `
-    <div class="seat-name">${lastName}</div>
-    <div class="seat-dist">${dist}</div>
-  `;
-
   const fullName = (member && !isVacant) ? member.name : 'Vacant';
   const partyLabel = party === 'D' ? 'Democrat' : party === 'R' ? 'Republican' : 'Vacant';
-  // Filled seats link straight to the legislator; the 2026 race is a
-  // secondary line in the tooltip rather than the primary click target.
-  const raceLine = (member && !isVacant)
-    ? `<br><a href="${raceUrl('Senate', dist)}">View 2026 race →</a>`
-    : '';
-  attachTooltip(el, `District ${dist}<br>${escHtml(fullName)}<br>${partyLabel}${raceLine}`);
+  const partyMark  = party === 'V' ? '—' : party;
+
+  // The party letter means the seat does not rely on its background colour
+  // alone (WCAG 1.4.1), and the aria-label gives the link a real name instead
+  // of a bare surname. See CODEBASE-REVIEW-2026-08-18.md finding 4.2.
+  el.innerHTML = `
+    <div class="seat-party" aria-hidden="true">${partyMark}</div>
+    <div class="seat-name">${escHtml(lastName)}</div>
+    <div class="seat-dist">${dist}</div>
+  `;
+  el.setAttribute('aria-label', `District ${dist}, ${fullName}, ${partyLabel}`);
+
+  // The "View 2026 race" link used to live inside the hover tooltip, where it
+  // was unreachable by keyboard or touch. A filled seat leads to the member
+  // page, which already surfaces that race; a vacancy links to the race direct.
+  attachTooltip(el, `District ${dist}<br>${escHtml(fullName)}<br>${partyLabel}`);
   return el;
 }
 
@@ -517,11 +536,11 @@ function renderHouse(members) {
       if (party === 'D') d++; else if (party === 'R') r++; else v++;
 
       const seatSize = 9;
-      const circle = svgEl('circle', {
-        cx: x.toFixed(1), cy: y.toFixed(1), r: seatSize / 2,
-        fill: COLOR[party], opacity: '0.85', stroke: '#fff', 'stroke-width': '0.5',
-        style: 'cursor:pointer;transition:r 0.1s,opacity 0.1s',
-      });
+      // Party must not be colour-only (WCAG 1.4.1), and a 9px seat is too small
+      // for hatching to read, so the shape carries it: Democrats are circles,
+      // Republicans squares, vacancies hollow. The legend shows the same marks.
+      // See CODEBASE-REVIEW-2026-08-18.md finding 4.2.
+      const circle = seatShape(party, x, y, seatSize);
 
       // A seat is "filled" if it has a member record whose status isn't
       // Vacant — ga-members.json injects a placeholder record (with a real
@@ -530,43 +549,77 @@ function renderHouse(members) {
       const isVacant = party === 'V';
       const district  = member ? member.district : null;
 
-      if (member && !isVacant) {
-        // Filled seats link straight to the legislator; the 2026 race is a
-        // secondary line in the tooltip rather than the primary click target.
-        const partyLabel = party === 'D' ? 'Democrat' : 'Republican';
-        const label = `District ${district}<br>${escHtml(member.name)}<br>${partyLabel}`
-          + `<br><a href="${raceUrl('House', district)}">View 2026 race →</a>`;
-        attachTooltip(circle, label);
-        circle.style.cursor = 'pointer';
-        circle.addEventListener('click', () => {
-          window.location.href = memberUrl(member.id);
+      // Seats used to be bare <circle>s with a click listener, so they were
+      // unreachable by keyboard and the "View 2026 race" link lived inside a
+      // hover tooltip — unreachable by keyboard *or* touch. Each seat is now an
+      // SVG <a> (focusable, same as the Senate grid's real <a>), and the race
+      // link is dropped: a filled seat leads to the member page, which already
+      // carries a "View … race" banner for seats up this cycle.
+      let seatNode = circle;
+      if (district != null) {
+        const partyLabel = party === 'D' ? 'Democrat'
+                         : party === 'R' ? 'Republican' : 'Vacant';
+        const who = (member && !isVacant) ? member.name : 'Vacant';
+        const link = svgEl('a', {
+          href: (member && !isVacant) ? memberUrl(member.id) : raceUrl('House', district),
+          style: 'cursor:pointer',
         });
-      } else if (district != null) {
-        // Vacant seat — no member page to link to, so fall back to the race,
-        // matching how the Senate grid already treats vacancies.
-        attachTooltip(circle, `District ${district}<br>Vacant`);
-        circle.style.cursor = 'pointer';
-        circle.addEventListener('click', () => {
-          window.location.href = raceUrl('House', district);
-        });
+        // <title> is the accessible name of an SVG node — this is what makes
+        // all 180 seats readable instead of one chart-level aria-label.
+        const title = svgEl('title', {});
+        title.textContent = `District ${district}, ${who}, ${partyLabel}`;
+        link.appendChild(title);
+        link.appendChild(circle);
+        attachTooltip(link, `District ${district}<br>${escHtml(who)}<br>${partyLabel}`);
+        seatNode = link;
       }
 
       if (member) {
-        circle.addEventListener('mouseenter', () => {
-          circle.setAttribute('r', (seatSize / 2 + 2).toString());
-          circle.setAttribute('opacity', '1');
-        });
-        circle.addEventListener('mouseleave', () => {
-          circle.setAttribute('r', (seatSize / 2).toString());
-          circle.setAttribute('opacity', '0.85');
-        });
+        // Grow on hover *and* on keyboard focus, so tabbing through the
+        // chamber gives the same visual feedback a mouse does.
+        const grow   = () => { circle.setAttribute('opacity', '1'); circle.setAttribute('transform', growTransform(x, y)); };
+        const shrink = () => { circle.setAttribute('opacity', '0.85'); circle.removeAttribute('transform'); };
+        ['mouseenter', 'focusin'].forEach(ev => seatNode.addEventListener(ev, grow));
+        ['mouseleave', 'focusout'].forEach(ev => seatNode.addEventListener(ev, shrink));
       }
 
-      svg.appendChild(circle);
+      svg.appendChild(seatNode);
     }
   });
 
   document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v);
+}
+
+// ── Seat marks ─────────────────────────────────────────────────────────────
+
+// Shape, not just colour, distinguishes the parties. Kept the same visual
+// weight so the hemicycle still reads as a seating chart.
+function seatShape(party, x, y, size) {
+  const common = {
+    fill: COLOR[party], opacity: '0.85', stroke: '#fff', 'stroke-width': '0.5',
+    style: 'cursor:pointer;transition:opacity 0.1s,transform 0.1s',
+  };
+  if (party === 'R') {
+    return svgEl('rect', Object.assign({
+      x: (x - size / 2).toFixed(1), y: (y - size / 2).toFixed(1),
+      width: size, height: size, rx: 1.5,
+    }, common));
+  }
+  if (party === 'V') {
+    // Hollow, so a vacancy is not just "a grey one".
+    return svgEl('circle', Object.assign({}, common, {
+      cx: x.toFixed(1), cy: y.toFixed(1), r: size / 2,
+      fill: '#fff', stroke: COLOR.V, 'stroke-width': '1.5',
+    }));
+  }
+  return svgEl('circle', Object.assign({
+    cx: x.toFixed(1), cy: y.toFixed(1), r: size / 2,
+  }, common));
+}
+
+// Scale about the seat's own centre — works for both <circle> and <rect>.
+function growTransform(x, y) {
+  return `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(1.5) translate(${(-x).toFixed(1)} ${(-y).toFixed(1)})`;
 }
 
 // ── SVG helper ─────────────────────────────────────────────────────────────
@@ -658,3 +711,5 @@ document.querySelectorAll('.chamber-tab').forEach(btn => {
   }
 })();
 </script>
+
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>

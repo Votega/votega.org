@@ -96,7 +96,8 @@ Many counties are served by multiple districts, and some districts serve multipl
   }
 </style>
 
-<div class="tab-bar" id="tabBar">
+<div class="tab-bar" id="tabBar" role="tablist" aria-label="Chamber"
+     data-tabs data-tab-panel="#membersOutput">
   <button class="tab-btn active" data-tab="house">U.S. House</button>
   <button class="tab-btn" data-tab="senate">U.S. Senate</button>
 </div>
@@ -108,7 +109,7 @@ Many counties are served by multiple districts, and some districts serve multipl
   </select>
 </div>
 
-<div class="msg" id="status"></div>
+<div class="msg" id="status" role="alert"></div>
 <div id="membersOutput"></div>
 
 <center><i>Data is sourced from the <a href="https://api.congress.gov" target="_blank">Congress.gov API</a></i></center>
@@ -116,3 +117,5 @@ Many counties are served by multiple districts, and some districts serve multipl
 <!-- ga-districts.js supplies the full GA seat list so vacant districts still render -->
 <script src="assets/scripts/ga-districts.js"></script>
 <script src="assets/scripts/congress.js"></script> <!-- Call congress.js script-->
+
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>

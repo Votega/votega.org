@@ -329,14 +329,17 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
 <div id="billsStats" class="bills-stats" style="display:none"></div>
 
 <div id="billsLoading" class="bills-loading">Loading bill data…</div>
-<div id="billsError"  class="bills-error"  style="display:none"></div>
+<div id="billsError"  class="bills-error"  style="display:none" role="alert"></div>
 
 <div id="billsControls" style="display:none">
   <div class="bills-filter-row">
+    <label class="sr-only" for="billSearch">Search bills</label>
     <input type="text" id="billSearch" placeholder="Search by keyword, bill number, or sponsor…" autocomplete="off" />
+    <label class="sr-only" for="billSubject">Filter by subject</label>
     <select id="billSubject">
       <option value="">All subjects</option>
     </select>
+    <label class="sr-only" for="billSort">Sort bills</label>
     <select id="billSort">
       <option value="date">Most recent</option>
       <option value="id">Bill number</option>
@@ -344,7 +347,8 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     </select>
   </div>
 
-  <div class="bills-tab-bar" id="chamberTabs">
+  <div class="bills-tab-bar" id="chamberTabs" role="tablist" aria-label="Chamber"
+       data-tabs data-tab-attr="data-chamber" data-tab-panel="#billsList">
     <button class="bills-tab active" data-chamber="">All chambers</button>
     <button class="bills-tab" data-chamber="lower">House</button>
     <button class="bills-tab" data-chamber="upper">Senate</button>
@@ -955,3 +959,5 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     });
 }());
 </script>
+
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>

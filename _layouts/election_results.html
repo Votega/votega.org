@@ -133,7 +133,8 @@ Front-matter contract
   </div>
 {% endif %}
 
-<div class="tab-bar" id="tabBar">
+<div class="tab-bar" id="tabBar" role="tablist" aria-label="Office"
+     data-tabs data-tab-panel-prefix="tab-">
   <button class="tab-btn active" data-tab="statewide">Executive / Statewide</button>
   <button class="tab-btn" data-tab="us-house">U.S. House</button>
   <button class="tab-btn" data-tab="state-senate">GA State Senate</button>
@@ -146,7 +147,10 @@ Front-matter contract
   <button class="filter-btn rep" data-filter="rep">&#x25A0; Republican</button>
   <button class="filter-btn dem" data-filter="dem">&#x25A0; Democrat</button>
 </div>
-<div class="search-row"><input type="text" id="searchBox" placeholder="Search candidates or races…" /></div>
+<div class="search-row">
+  <label class="sr-only" for="searchBox">Search candidates or races</label>
+  <input type="text" id="searchBox" placeholder="Search candidates or races…" />
+</div>
 
 <div id="tab-statewide"    class="tab-panel active"></div>
 <div id="tab-us-house"     class="tab-panel"></div>
@@ -446,3 +450,5 @@ document.getElementById('searchBox').addEventListener('input',()=>applyFilter(cu
 
 }); // buildCandidateIndex().then(...)
 </script>
+
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>

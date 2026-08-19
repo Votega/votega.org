@@ -294,7 +294,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
   </div>
 </div>
 
-<div class="msg" id="status"></div>
+<div class="msg" id="status" role="alert"></div>
 
 <script src="assets/scripts/ga-districts.js"></script>
 <script>
@@ -658,7 +658,8 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       <p><a href="ga-state-reps">Search for another member</a></p>
       <div id="campaignFinance" class="finance-section"></div>
       <div id="votesTabs">
-        <div class="tab-bar">
+        <div class="tab-bar" role="tablist" aria-label="Voting record"
+             data-tabs data-tab-active="tab-active">
           <button class="tab-btn tab-active" data-tab="curatedBills" onclick="switchTab('curatedBills')">Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory" onclick="switchTab('votingHistory')">Voting History</button>
         </div>
@@ -666,6 +667,8 @@ share-description: "Profile of a Georgia General Assembly member: district, part
         <div id="votingHistory" class="tab-panel" style="display:none;"></div>
       </div>
     `;
+    // Tab bar is built here, after load — re-run the ARIA enhancer over it.
+    if (window.a11yTabs) window.a11yTabs.scan(detailsDiv);
   }
 
   function renderGroup(members, label, currentId, basePath, countyParam) {
@@ -1118,3 +1121,5 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     }
   }
 </script>
+
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>

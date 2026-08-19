@@ -306,7 +306,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
   </div>
 </div>
 
-<div class="msg" id="status"></div>
+<div class="msg" id="status" role="alert"></div>
 
 <script src="assets/scripts/campaign-finance.js"></script>
 <script>
@@ -1041,7 +1041,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       ${state === 'Georgia' ? `<p><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${escHtml(fullName)} →</a></p>` : ''}
       <div id="campaignFinance" class="finance-section"></div>
       <div class="tab-container">
-        <div class="tab-nav">
+        <div class="tab-nav" role="tablist" aria-label="Voting record" data-tabs>
           <button class="tab-btn active" data-tab="keyVotes">Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory">Voting History</button>
           <button class="tab-btn" data-tab="sponsoredLegislation">Sponsored Legislation</button>
@@ -1052,5 +1052,9 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       </div>
     `;
     detailsDiv.innerHTML = html;
+    // Tab bar is built here, after load — re-run the ARIA enhancer over it.
+    if (window.a11yTabs) window.a11yTabs.scan(detailsDiv);
   }
 </script>
+
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>

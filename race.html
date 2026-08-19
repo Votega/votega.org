@@ -785,7 +785,8 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     document.title = `${raceTitle} — ${race.cycle} Elections`;
 
     const tabBar = panels.length > 1
-      ? `<div class="race-tab-bar">` + panels.map((p, i) =>
+      ? `<div class="race-tab-bar" role="tablist" aria-label="Race details"
+              data-tabs data-tab-attr="data-panel">` + panels.map((p, i) =>
           `<button class="race-tab-btn${i === 0 ? ' active' : ''}" data-panel="${p.id}"${p.kind ? ` data-kind="${p.kind}"` : ''}>${p.label}</button>`
         ).join('') + `</div>`
       : '';
@@ -812,6 +813,9 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     // Syncs the active panel to location.hash (pushHistory on a real user
     // click, not on hash-driven restores) so browser Back steps through tab
     // switches instead of always landing back on the first panel.
+    // Tab bar is built above, after the race data loads — wire its ARIA now.
+    if (window.a11yTabs) window.a11yTabs.scan(document.getElementById('raceContent'));
+
     if (panels.length > 1) {
       let financeBuilt = false;
       const defaultPanelId = panels[0].id;
@@ -908,3 +912,5 @@ share-description: "Details for a Georgia race: the candidates running, the incu
 
   init();
 </script>
+
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>

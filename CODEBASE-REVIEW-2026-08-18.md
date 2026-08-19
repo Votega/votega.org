@@ -31,7 +31,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
-| Tier 4 — UX / IA / a11y | 15 | **4.1, 4.5, 4.6, 4.9** | 4.2 – 4.4, 4.7, 4.8, 4.10 – 4.15 |
+| Tier 4 — UX / IA / a11y | 15 | **4.1, 4.2, 4.3, 4.5, 4.6, 4.7, 4.8, 4.9** | 4.4, 4.10 – 4.15 |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
@@ -1148,6 +1148,26 @@ describes the chart but exposes none of the 180 seats.
 give the circle a `<title>` child naming the member *and party word*, add a shape or hatch difference between D
 and R, and move the race link out of the tooltip.
 
+#### ✅ FIXED — 2026-08-19 · both chambers, both failure modes
+
+Applied as prescribed for the House hemicycle, and the same fixes carried to the Senate grid, which had the
+identical color-only problem (the finding only named the hemicycle).
+
+**Keyboard + the trapped link (WCAG 2.1.1).** Each of the 180 hemicycle seats is now an SVG `<a>` with a `<title>`
+child — focusable, and named `District 1, Mike Cameron, Republican` rather than exposing nothing. The
+`View 2026 race →` link that lived *inside the hover tooltip* (unreachable by keyboard or touch) is gone: a
+filled seat links to the member page, which already carries a "View … race" banner for seats up this cycle, and a
+vacancy links straight to the race. Verified in-browser: **180 seat links, tooltip HTML contains no `<a>`**, focus
+grows the seat the same way hover does (`focusin`/`focusout` added alongside the mouse handlers).
+
+**Color-only (WCAG 1.4.1).** Party is now carried by **shape, not just fill**: Democrats are circles, Republicans
+squares, vacancies hollow. Measured on the live chart: **81 circles + 99 rects = 180**, one hollow vacancy, and the
+counts reconcile (80 D + 99 R + 1 V). The Senate grid gets a party glyph (`D`/`R`/`—`) in the seat corner plus a
+real `aria-label`, so it no longer leans on its background color or a bare surname. The legend marks mirror the seat
+shapes (`.dot-square`, `.dot-hollow`).
+
+The chamber-switch bar was the tenth tab UI on the site; it is wired through the shared enhancer from 4.7.
+
 ---
 
 ### 4.3 — `justice.html` contains zero heading elements
@@ -1163,6 +1183,24 @@ unescaped as the only failure state.
 
 **Fix:** wrap the profile name in `<h1>`, section titles in `<h2>`; replace `err.message` with a user-facing
 string plus a "← Supreme Court" link.
+
+#### ✅ FIXED — 2026-08-19 · and an unescaped-injection sink closed with it
+
+Done as prescribed, plus the security half the "Also at :404" note pointed at turned out to be two sinks, not one.
+
+**Headings.** The justice name is now an `<h1>`; each tab panel opens with an `sr-only` `<h2>` (Voting Record /
+Biography) so the structure exists for a screen reader without visually duplicating the tab labels. `grep -c "<h[1-6]"
+justice.html` went **0 → 5**; in-browser the outline reads H1 → two H2s, exactly one H1.
+
+**The error path was an XSS sink, in two places.** `content.innerHTML = \`<p>${err.message}</p>\`` was the one the
+finding named, but the not-found branch was worse: `Justice not found: <code>${id}</code>` reflected the **raw URL
+`id` parameter** unescaped. A single shared `showError()` now renders a fixed heading, a static message, a
+`role="alert"`, and a "← Back to the Supreme Court" link — no interpolation of `err.message` or `id`. Verified by
+loading `?id=<img src=x onerror=alert(1)>`: **0 `<img>` elements injected**, message is the static string. The page
+had no `escHtml` helper at all; added one and applied it to every interpolated profile field (name, title,
+appointed-by, law school, home state, image alt) while there.
+
+The Voting Record / Biography tab bar is wired through the shared enhancer from 4.7.
 
 ---
 
@@ -1299,6 +1337,34 @@ announces six unlabeled buttons and never says which is selected or what it cont
 **Fix:** `role="tablist"` on the bar; `role="tab" aria-selected aria-controls` on the buttons; `role="tabpanel"
 aria-labelledby` on the panels. Best done once in a shared component.
 
+#### ✅ FIXED — 2026-08-19 · shared enhancer, and it was ten bars, not six
+
+Done as the "shared component" the fix suggested — `assets/scripts/a11y-tabs.js`. The count was higher than the six
+listed: `justice.html` (missed — see 4.3) and `ga-majority-tracker.html`'s chamber switch (missed — see 4.2) bring it
+to **ten**, and two of the six (`member.html`, `race.html`) build their bars *at runtime* from data, so a static
+`role="tab"` in the source would not have covered them.
+
+**Why an enhancer, not hand-edited attributes.** The ten bars use five different class conventions
+(`tab-btn`/`active`, `bills-tab`/`active`, `tab-btn`/`tab-active`, `race-tab-btn`/`active`, `chamber-tab`/`active`)
+and five different activation handlers. The enhancer **observes** each page's own active class via a
+`MutationObserver` and mirrors it into `aria-selected` + a roving `tabindex`, so every page keeps its existing
+switch code untouched and the ARIA stays correct no matter how the class gets toggled. A small markup contract on
+the bar (`data-tabs`, `aria-label`, and a panel-locator attribute) drives the wiring; runtime-built bars call
+`window.a11yTabs.scan(container)` after they render.
+
+Delivered behaviour, verified in-browser on every bar:
+
+- `role="tablist"` + `aria-label` on the bar; `role="tab"` + `aria-selected` + `aria-controls` on each button;
+  `role="tabpanel"` + `aria-labelledby` on each panel (a shared output region relabels to follow the selection).
+- **`aria-selected` tracks a real switch** — confirmed it flips on both a mouse click and an ArrowRight, on
+  `ga-bills` (shared panel), `member`/`race` (runtime-built, per-tab panels), `ga-member` (non-standard
+  `tab-active` class, exercised through the `data-tab-active` override), and the results layout.
+- **Full keyboard model**: roving tabindex (one tab stop for the whole bar), Arrow/Home/End move focus *and*
+  activate, delegating the switch back to the page via `.click()`.
+
+Loads once per page (`defer`), initialises on all 15 built pages (9 source pages + the 6 results pages via the
+shared layout).
+
 ---
 
 ### 4.8 — Unlabeled form controls on the bill tracker and all six results pages
@@ -1315,6 +1381,20 @@ Related: async-populated error regions still lack `role="alert"` on `member.html
 `federal-reps.html`, and `justice.html`. Only `elections.html:584` and `ga-congress-trades.html:231` have it.
 
 **Fix:** visually-hidden `<label for>` on each; add `role="alert"` to the `.msg` containers.
+
+#### ✅ FIXED — 2026-08-19
+
+Both parts applied. Bootstrap already ships the `.sr-only` utility (confirmed it computes to the standard
+1×1px clip), so the labels reuse it rather than adding a new class.
+
+**Labels.** `sr-only` `<label for>` on `ga-bills.html`'s `#billSearch` / `#billSubject` / `#billSort`, and on the
+`#searchBox` in `_layouts/election_results.html` — the latter inherited by all six results pages from one edit.
+Verified each `<label>`'s `for` resolves to its control and the label is visually hidden.
+
+**Live regions.** `role="alert"` added to the async-populated `.msg#status` on `member.html`, `ga-member.html`,
+`federal-reps.html`, and `elections.html`, to `#billsError` on the bill tracker, and — as part of 4.3 — to the
+`justice.html` error paragraph. So a load failure or "no results" that appears after the page settles is now
+announced instead of landing silently.
 
 ---
 
