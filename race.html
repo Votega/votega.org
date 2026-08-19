@@ -34,6 +34,17 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     color: #22364d;
   }
   .race-related .race-related-link { display: inline-block; margin-top: 0.3rem; font-weight: 600; }
+  /* A `_note` that is not an open-seat note -- neutral, no "Open Seat" label. */
+  .race-note {
+    padding: 0.75rem 1rem;
+    background: #f4f5f7;
+    border-left: 4px solid #6b7280;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.5;
+  }
 
   .candidates-grid {
     display: flex;
@@ -450,7 +461,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
         </table>
       </div>
       <p class="finance-disclaimer">
-        Figures come from ${sourceName} and reflect each committee's most recent required report, so they may be several months old. All bars share one scale (the largest single figure in the table) so a wider bar always means more dollars. <strong>“No filing on record” means no report has been filed, not $0</strong>, and often reflects a candidate who hasn't begun formal fundraising${race.level === 'federal' ? '' : ' or filed before the 2026 PeachFile records begin'}.
+        Figures come from ${sourceName} and reflect each committee's most recent required report, so they may be several months old. All bars share one scale (the largest single figure in the table) so a wider bar always means more dollars. <strong>“No filing on record” means no report has been filed, not $0</strong>, and often reflects a candidate who hasn't begun formal fundraising${race.level === 'federal' ? '' : ' or filed before the ${race.cycle} PeachFile records begin'}.
       </p>`;
   }
 
@@ -690,14 +701,22 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     const raceTitle  = race.displayTitle || `${race.chamber}${distLabel}`;
     const dateStr    = phase ? formatDate(phase.electionDate) : '';
 
-    // Open seat banner (shown when the previous officeholder is not running)
-    const noteText = race._note ? race._note.replace(/^open seat\s*[—–-]+\s*/i, '') : '';
-    const openSeatHtml = noteText
-      ? `<div class="open-seat-banner">
+    // Open seat banner (shown when the previous officeholder is not running).
+    // `_note` is a free-text field and does not always describe an open seat --
+    // ga-14-2026's note says the opposite ("...is the incumbent running for a full
+    // term"). Match the same prefix test elections.html uses so the two pages agree,
+    // and render any other note as a neutral aside rather than mislabelling it.
+    // See CODEBASE-REVIEW-2026-08-18.md finding 4.5.
+    const rawNote    = race._note || '';
+    const isOpenSeat = rawNote.toLowerCase().startsWith('open seat');
+    const noteText   = rawNote.replace(/^open seat\s*[—–-]+\s*/i, '');
+    const openSeatHtml = !noteText ? ''
+      : isOpenSeat
+        ? `<div class="open-seat-banner">
            <span class="open-seat-label">Open Seat</span>
            <span>${noteText}</span>
          </div>`
-      : '';
+        : `<div class="race-note">${noteText}</div>`;
 
     // Related-contest cross-link (e.g. a concurrent special election for the same seat)
     const rel = race.relatedNote;
@@ -763,7 +782,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
         html: renderPriorResults(priorRounds) });
     }
 
-    document.title = `${raceTitle} — 2026 Elections`;
+    document.title = `${raceTitle} — ${race.cycle} Elections`;
 
     const tabBar = panels.length > 1
       ? `<div class="race-tab-bar">` + panels.map((p, i) =>

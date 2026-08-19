@@ -438,7 +438,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
         </div>
         <div class="race-meta">
           <span class="phase-badge ${phaseClass}">${phaseLabel}</span>
-          ${race._note ? `<span class="phase-badge phase-open-seat">Open Seat</span>` : ''}
+          ${isOpenSeat(race) ? `<span class="phase-badge phase-open-seat">Open Seat</span>` : ''}
           ${dateStr ? `<div class="race-date">${dateStr}</div>` : ''}
         </div>
         <span class="view-arrow">›</span>

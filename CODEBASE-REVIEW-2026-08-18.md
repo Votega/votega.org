@@ -31,7 +31,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
-| Tier 4 — UX / IA / a11y | 15 | **4.1** | 4.2 – 4.15 |
+| Tier 4 — UX / IA / a11y | 15 | **4.1, 4.5, 4.6** | 4.2 – 4.4, 4.7 – 4.15 |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
@@ -1201,6 +1201,46 @@ and factually wrong about an incumbent.
 
 **Fix:** use `isOpenSeat(race)` at `:441`.
 
+#### ✅ FIXED — 2026-08-19 · and the same bug found on `race.html`
+
+Confirmed exactly as described, and the audit missed the worse instance: **`race.html:694` has the identical loose
+test**, and it renders a full banner rather than a small badge. Before the fix, `race.html?id=ga-14-2026` read:
+
+> **Open Seat** — Clay Fuller (R) won the April 2026 special election and is the incumbent running for a full term.
+
+A single sentence contradicting its own label, on the race's own detail page.
+
+Reproduced in the browser before the fix, U.S. House tab under the General phase: **5 rows badged "Open Seat", but
+"show open seats only" returned 4** — District 14 carried the badge and was dropped by the filter.
+
+**Both fixed, plus the data that was being thrown away.** `elections.html:441` now calls the existing
+`isOpenSeat(race)`. `race.html` gets the same prefix test — but rather than simply suppressing a non-open-seat note
+(which would have silently discarded a true and useful fact about the race), it renders it as a neutral aside:
+
+```js
+const rawNote    = race._note || '';
+const isOpenSeat = rawNote.toLowerCase().startsWith('open seat');
+const noteText   = rawNote.replace(/^open seat\s*[—–-]+\s*/i, '');
+const openSeatHtml = !noteText ? ''
+  : isOpenSeat
+    ? `<div class="open-seat-banner"><span class="open-seat-label">Open Seat</span><span>${noteText}</span></div>`
+    : `<div class="race-note">${noteText}</div>`;
+```
+
+`.race-note` is a new neutral grey variant of the existing orange `.open-seat-banner`, with no label.
+
+**Verified after the fix:**
+
+| Check | Result |
+|---|---|
+| `race.html?id=ga-14-2026` | no open-seat banner; note shown as a neutral aside ✅ |
+| `race.html?id=ga-01-2026` (a real open seat) | orange banner intact, "Open seat — " prefix still stripped ✅ |
+| badge count vs filter count, all 6 office tabs | agree on every tab (5/5, 0/0, 4/4, 7/7, 19/19, 6/6) ✅ |
+| every row surviving the filter | badged ✅ |
+
+Badge total reconciles exactly against the data: **41 badged under the General phase + 1 (`ga-13-special-2026`)
+under the Runoff phase = 42**, matching the 42 `_note` values that begin "open seat" out of 43 total.
+
 ---
 
 ### 4.6 — `race.html` hardcodes the cycle in the page title
@@ -1215,6 +1255,31 @@ Two lines later at `:783` the template already renders `${race.cycle} Election C
 race link and browser tab will say "2026" through 2028.
 
 **Fix:** `— ${race.cycle} Elections`.
+
+#### ✅ FIXED — 2026-08-19 · plus one more hardcoded cycle in the same file
+
+Confirmed and applied verbatim. Then swept the file for the same class of defect and found a second one the audit
+missed — `race.html:464`, in the campaign-finance disclaimer:
+
+```js
+${race.level === 'federal' ? '' : ' or filed before the 2026 PeachFile records begin'}
+```
+
+Same failure mode, and `race.cycle` was already in scope at that line. This one also contradicted the module it
+describes: `assets/scripts/campaign-finance.js:373,383` already derives its cycle label from
+`data.metadata.cycle` rather than hardcoding. Both now read from the data.
+
+`race.html` no longer contains a hardcoded cycle anywhere — the only remaining `2026` strings in it are inside the
+comments added by [4.5](#45--electionshtml-shows-a-false-open-seat-badge).
+
+**Not changed, and why:** `elections.html:8` `<h1 id="pageTitle">2026 Georgia Elections</h1>` is only the pre-JS
+placeholder — `:303` overwrites it with `fillTemplate(meta.title, iso)` from the data on load. The Jekyll front
+matter `title:` / `share-description:` at `:3,5` genuinely are hardcoded, but those are page metadata rather than
+render logic and belong with the other per-cycle items in `RECURRING-TASKS.md`.
+
+Because every race in `races.json` is cycle 2026 today, this fix is invisible in the current output by design —
+verified instead by reading `race.cycle` (int `2026`) through to the rendered title on `ga-14-2026` and
+`ga-01-2026`, and by confirming no literal cycle remains in the file.
 
 ---
 
