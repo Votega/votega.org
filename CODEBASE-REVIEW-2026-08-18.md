@@ -30,7 +30,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 |---|---|---|---|
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
-| Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5** | 3.6 |
+| Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
 | Tier 4 — UX / IA / a11y | 15 | — | all |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
@@ -658,7 +658,7 @@ than half-fetching.
 
 > **STATUS: 3.5 fixed on 2026-08-18** as a necessary part of
 > [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote) — the tally is now
-> derived from the de-duplicated roster. **3.1, 3.2, 3.3 and 3.4 fixed 2026-08-19.** Only 3.6 remains open.
+> derived from the de-duplicated roster. **All six fixed 2026-08-19.**
 
 ### 3.1 — Superior Court results: one race shows five other judges' totals; four show none
 
@@ -989,6 +989,45 @@ generator that does this. Downstream JS testing `if (m.imageUrl)` still works, b
 JSON-schema validation would not.
 
 **Fix:** replace the trailing `or ''` with `or None` at both lines.
+
+#### ✅ FIXED — 2026-08-19
+
+Fixed, and widened slightly: the same defect sits on **five** optional fields, not two. `phone`, `address` and
+`officialWebsiteUrl` were written the same way — they just happen to be populated for all 250 current members, so
+the audit that counted committed values couldn't see them. Leaving them would have made this recur the first time
+a member arrived without a phone number.
+
+`scripts/generate_ga_members_data.py` now emits `None` for all five:
+
+```python
+phone   = next((o.get('voice')   for o in offices if o.get('voice')),   None)
+address = next((o.get('address') for o in offices if o.get('address')), None)
+email   = next((o.get('email')   for o in offices if o.get('email')), None) or raw.get('email') or None
+website = None                                    # link-fallback initialiser
+'imageUrl': raw.get('image') or None,
+```
+
+The `next(...)` calls already guarded on truthiness (`if o.get('voice')`), so an office carrying a blank string is
+skipped rather than selected — verified against a synthetic record whose first office has `voice`/`address`/`email`
+all `''`: phone correctly falls through to the second office, address and email come back `None`.
+
+**Committed data normalised to match.** The generator needs an API key, so rather than leave the file disagreeing
+with the code until the next scheduled run, the 9 affected values were converted in place. The diff is exactly
+9 lines, all `""` → `null`. The next workflow run is now a no-op on these fields instead of an unexplained diff.
+
+**Verified no consumer breaks.** Every reader of these five fields tests truthiness, which treats `''` and `null`
+identically:
+
+| Consumer | Pattern |
+|---|---|
+| `ga-member.html:551,606-610` | `member.imageUrl ? … : ''` — all five fields |
+| `scripts/build_legislative_races.py:259,300,445` | `if member.get("imageUrl")` |
+| `scripts/build_candidate_claim_links.py:126` | `cand.get("email") or ""` |
+| `.github/workflows/update-ga-members.yml:57` | checks `field in m`, not the value |
+
+`scripts/inspect_openstates_fields.py:61` also reads `email`, but from the raw API response, not from our JSON.
+
+Post-fix scan of `ga-members.json`: **no empty-string value on any field, on any of the 250 members.**
 
 ---
 

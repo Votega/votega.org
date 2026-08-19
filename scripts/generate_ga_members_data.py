@@ -128,10 +128,10 @@ def normalize_member(raw, committees_by_id=None):
         chamber_slug = org.lower()
 
     offices = raw.get('offices', [])
-    phone   = next((o.get('voice', '')   for o in offices if o.get('voice')),   '')
-    address = next((o.get('address', '') for o in offices if o.get('address')), '')
+    phone   = next((o.get('voice')   for o in offices if o.get('voice')),   None)
+    address = next((o.get('address') for o in offices if o.get('address')), None)
     # Use offices email first; fall back to top-level email field
-    email   = next((o.get('email', '')   for o in offices if o.get('email')), '') or raw.get('email', '') or ''
+    email   = next((o.get('email')   for o in offices if o.get('email')), None) or raw.get('email') or None
 
     # Construct URL from extras.georgia_id — most reliable source, available on every member
     extras     = raw.get('extras', {})
@@ -141,7 +141,7 @@ def normalize_member(raw, committees_by_id=None):
     else:
         # Fall back to links: prefer legis.ga.gov, discard stale house/senate.ga.gov URLs
         links = raw.get('links', [])
-        website = ''
+        website = None
         for link in links:
             url = link.get('url', '')
             if 'legis.ga.gov' in url:
@@ -175,7 +175,7 @@ def normalize_member(raw, committees_by_id=None):
         'chamber':          chamber,
         'district':         district,
         'title':            role.get('title', ''),
-        'imageUrl':         raw.get('image') or '',
+        'imageUrl':         raw.get('image') or None,
         'phone':            phone,
         'address':          address,
         'email':            email,
