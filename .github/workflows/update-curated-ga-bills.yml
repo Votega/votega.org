@@ -28,6 +28,40 @@ jobs:
         env:
           OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
 
+      - name: Validate generated data
+        run: |
+          # Relative floors: a session rollover or an edit to the curated list
+          # changes these counts legitimately, so absolute thresholds would go
+          # stale. legislatorsWithVotes is the metric a reader actually feels --
+          # a legislator missing from every key vote reads as one who never voted.
+          # See CODEBASE-REVIEW-2026-08-18.md 1.5.
+          python scripts/validate_data_update.py assets/data/curated-ga-bill-votes.json             --metric bills=metadata.count             --metric records=len:bills             --metric coverage=metadata.legislatorsWithVotes             --min bills=1
+
+          python -c "
+          import json, sys
+          d = json.load(open('assets/data/curated-ga-bill-votes.json'))
+          m = d['metadata']
+          sitting = m.get('sittingLegislators', 0)
+          covered = m.get('legislatorsWithVotes', 0)
+          ghosts  = m.get('ghostVoterIds', 0)
+          unres   = m.get('unresolvedVoterRows', 0)
+          print(f'Coverage: {covered}/{sitting} sitting legislators have a key vote')
+          print(f'Unresolved: {ghosts} ghost id(s), {unres} row(s) with no usable id or name')
+          if ghosts or unres:
+              print('::warning::' + str(ghosts + unres) + ' roll-call row(s) could not be '
+                    'attributed to a legislator; their votes are missing from the site.')
+          # Every roll call should tally exactly the members it recorded.
+          for b in d['bills']:
+              for chamber, v in b['votes'].items():
+                  roster = len(v['memberVotes'])
+                  tally  = sum(x['yea'] + x['nay'] + x['other'] for x in v['partyTally'].values())
+                  known  = sum(1 for _ in v['memberVotes'])
+                  assert tally <= roster, (
+                      f'{b[\"identifier\"]} {chamber}: partyTally {tally} exceeds the '
+                      f'{roster}-member roster - the tally is double-counting rows')
+          print('All integrity checks passed')
+          "
+
       - name: Commit and push generated data
         run: |
           set -e

@@ -28,16 +28,19 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 
 | Tier | Findings | Fixed | Remaining |
 |---|---|---|---|
-| Tier 1 — wrong data reaching users | 5 | **1.1, 1.2, 1.3, 1.4** | 1.5 |
+| Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
-| Tier 3 — wrong joins | 6 | — | all |
+| Tier 3 — wrong joins | 6 | **3.5** (via 1.5) | 3.1, 3.2, 3.3, 3.4, 3.6 |
 | Tier 4 — UX / IA / a11y | 15 | — | all |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
 - **2026-08-18, `11af8df` "Tier 1 - Data Fixes"** — findings 1.1, 1.2, 1.3, plus the
   `remove: true` half of 5.2 (a prerequisite for 1.1 — see below).
-- **2026-08-18, working tree** — finding 1.4, staged as a reusable `preview` status.
+- **2026-08-18, `a34b7ac` "General Election Results Page"** — finding 1.4, as a
+  reusable `preview` status.
+- **2026-08-18, working tree** — finding 1.5 (shared `lib/ga_voters.py`), which also
+  fixes 3.5. **Tier 1 is complete.**
 
 Each fixed finding keeps its original text and gains a **FIXED** note recording what
 changed, what was verified, and — where the original diagnosis was wrong — what the
@@ -74,12 +77,13 @@ push loop. Most Tier 2 findings are one fact wearing six costumes.
 
 ## Tier 1 — Wrong data reaching users, or one command away
 
-> **STATUS: 1.1, 1.2, 1.3 and 1.4 fixed on 2026-08-18. Only 1.5 remains open.**
+> **STATUS: all five Tier 1 findings fixed on 2026-08-18.**
 >
 > | # | Fix |
 > |---|---|
 > | 1.1 | `build_legislative_races.py` merges instead of replacing, and refuses to write when the post-primary candidate count would drop. A full rebuild is now content-idempotent against `races.json`. **Required fixing the `remove: true` half of [5.2](#52--remove-true-candidate-overrides-are-positional-and-can-delete-the-wrong-person) as a prerequisite** — see the note on that finding. |
 > | 1.2 | `findFecId` collects every district+surname hit and narrows on full name → filing activity → shared committee, reporting `ambiguous` rather than guessing. All three misresolved candidates now resolve correctly; **0 ambiguous across 136 federal entries**, so the editorial pins the finding recommended proved unnecessary. |
+> | 1.5 | Voter identity resolution extracted to `scripts/lib/ga_voters.py`; the name fallback now fires on an *unresolvable* id, not merely a missing one. Code fixed and tested; **the data corrects itself on the next scheduled run** — offline repair was shown to be indeterminate (0 of 21 ghosts uniquely identifiable). Also fixes [3.5](#35--curated-ga-bill-votesjson-party-tallies-double-count-a-duplicate-voter-row). |
 > | 1.4 | Both general-results pages are staged behind a new `status: preview` + `noindex`/`sitemap: false`/`search: false`, removing them from the sitemap and site search until election night. **Two of the finding's claims did not hold** — the zeroed cards and the calendar link — see the note on that finding. |
 > | 1.3 | Both normalizers reduce to `first last` and strip honorifics. New `scripts/test_fec_name_parity.py` runs the real JS (via node) against the real Python over 329 names. **The finding's stated cause was wrong** — see the note on that finding. |
 
@@ -374,6 +378,58 @@ after regeneration.
 voter.name)` — move the fallback trigger from "id missing" to "id unresolvable". Emit a `ghostVoterIds` count in
 metadata so it can't regress silently. Add ghost→canonical aliases to `ga-members-overrides.json`.
 
+#### ✅ FIXED IN CODE — 2026-08-18 · data pending the next scheduled run
+
+Every number in the finding checks out: **226** distinct voter ids, **21** ghosts, **38** orphaned legislators.
+Two small refinements — the raw orphan count is 42, of which 4 are `executive`-chamber members (Governor, Lt.
+Governor, AG, SoS) who never cast roll-call votes, giving 38 actual legislators; and of those 38, **35** share a
+surname rather than all of them (Sheila Nelson, Sylvia Wayfer and Venola Mason have unique surnames and are
+missing for some other reason).
+
+**The committed data cannot be repaired offline, and should not be.** `memberVotes` stores only
+`{ocd-person-id: vote}` — no names — so nothing in the file identifies who a ghost was. I tested whether roll-call
+signatures could identify them (which members are absent from exactly the roll calls a ghost appears in):
+**0 of 21** are uniquely determined; each has 17–48 candidates. Any offline repair would be guesswork, and
+guessing here publishes a false claim about how a named legislator voted. The fix is therefore in the generator,
+and the data corrects itself on the next run.
+
+**Implementation** — extracted `scripts/lib/ga_voters.py`, since this was another copy-paste fork:
+`generate_ga_votes_data.py` had the name index, chamber inference and legacy-id map; `generate_curated_ga_bills.py`
+had none of them and keyed `memberVotes` on the raw `voter.id`.
+
+- `resolve_voter()` returns `(member_id, how)` with `how ∈ id | alias | name | ghost | unresolved`. The fallback
+  now fires when the id is **unresolvable**, not merely missing — the actual defect.
+- Ambiguity is never guessed: a `(chamber, name)` pair matching two members maps to `None`, and the fallback is
+  chamber-scoped, so a House "Jones" can never absorb a Senate "Jones".
+- `LEGACY_PERSON_ID_MAP` moved to the shared module. **The stranded Jon Burns id is one of the 21 ghosts** — the
+  votes generator had an alias for it; the curated generator had no such concept.
+- Both generators now emit `ghostVoterIds`, `unresolvedVoterRows` and `nameFallbackResolved`; the curated file
+  also records `sittingLegislators` / `legislatorsWithVotes`, so coverage is a delta-checkable metric rather than
+  something a reader has to notice.
+- `update-curated-ga-bills.yml` gained its first validation step: the delta validator plus an assertion that no
+  roll call's `partyTally` exceeds its own roster.
+
+**This also fixes [3.5](#35--curated-ga-bill-votesjson-party-tallies-double-count-a-duplicate-voter-row), necessarily.**
+The tally is now derived from the de-duplicated `memberVotes` instead of counted per row. That was not optional:
+resolving a ghost onto a member already present would have double-counted them, so per-row counting became wrong
+in a second way. The new workflow assertion detects **7** over-tallied Senate roll calls in the current data and
+will read 0 after regeneration.
+
+**Verified:**
+
+| Check | Result |
+|---|---|
+| `scripts/test_ga_voter_resolution.py` | **27/27** — ghost recovery, chamber scoping, ambiguity refusal, alias folding, `"Last, First"` and title forms, empty-index fallback |
+| End-to-end against the real generator with a mocked Open States response | 3 real House members named Jones, given ghost ids, **all recovered by name**; an unrecoverable ghost correctly dropped; `partyTally` 7 = roster 7 |
+| Workflow validation on a simulated post-fix file | passes, and reports coverage `230/232` |
+| `--sanitize` offline path, all generators, all 27 workflow YAMLs | unchanged and green |
+
+**What is not yet true:** `curated-ga-bill-votes.json` still contains the 21 ghosts, because regenerating needs
+`OPENSTATES_API_KEY`, which is not available locally. The data corrects itself when `update-curated-ga-bills`
+next runs (Tue/Thu). Whether all 21 recover depends on Open States populating `voter_name` on those rows — it is
+a documented field the pipeline already reads, but that cannot be confirmed without the API. Any that do not
+recover will now be counted in `ghostVoterIds` and named in the run log instead of vanishing silently.
+
 ---
 
 ## Tier 2 — Silent-failure machinery
@@ -537,6 +593,10 @@ than half-fetching.
 
 ## Tier 3 — Wrong joins, narrower blast radius
 
+> **STATUS: 3.5 fixed on 2026-08-18** as a necessary part of
+> [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote) — the tally is now
+> derived from the de-duplicated roster. 3.1, 3.2, 3.3, 3.4 and 3.6 remain open.
+
 ### 3.1 — Superior Court results: one race shows five other judges' totals; four show none
 
 **Severity: Med** · `scripts/build_race_results_index.py:187-226` (`find_contests` candidate-name-overlap fallback)
@@ -664,6 +724,18 @@ The House rows also show the [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legisl
 SB 233 house roster 151 → tally 134 (17 ghost/no-party voters); SB 189 house 152 → 135.
 
 **Fix:** build the tally from `member_votes` after the loop, not inside it.
+
+#### ✅ FIXED — 2026-08-18 (with [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote))
+
+`build_vote_record()` now derives `partyTally` from the de-duplicated `member_votes` mapping after the
+loop. This came along with 1.5 out of necessity rather than convenience: once a ghost id can resolve onto
+a member who is already in the roster, per-row counting is wrong in a second, worse way.
+
+`update-curated-ga-bills.yml` now asserts no roll call's tally exceeds its own roster. Run against the
+current data that assertion flags **7** Senate roll calls (SB 443, SB 116, HB 1009, HB 1193, HB 68,
+HB 111, HB 112), each exactly one over — the signature of the duplicated voter row. It reads 0 once the
+file is regenerated. Unit-covered by `scripts/test_ga_voter_resolution.py` (duplicate row collapses;
+tally equals roster, not row count).
 
 ---
 
@@ -1290,7 +1362,7 @@ All of [2.2](#22--no-failure-notification-anywhere), [2.3](#23--five-workflows-c
 [2.5](#25--open-states-quota-stacks-three-jobs-into-one-sunday-morning-window). Note 2.4 migrated **12** fetchers,
 not the 7 the finding counted.
 
-**3 — The GA vote-identity cluster · now the largest open block**
+**~~3 — The GA vote-identity cluster~~ · code done 2026-08-18**
 
 [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote) is the root cause;
 [3.4](#34--party-line-badges-run-on-an-82-complete-roster-and-never-trip-their-own-warning) and

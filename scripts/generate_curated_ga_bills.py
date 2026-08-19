@@ -17,6 +17,8 @@ import urllib.parse
 from datetime import datetime
 
 from lib.http import fetch_json
+from lib.ga_voters import (VOTING_CHAMBERS, MemberIndex, event_chamber, new_stats,
+                           resolve_voter, summarize)
 
 API_KEY = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL = "https://v3.openstates.org"
@@ -103,29 +105,52 @@ def pick_full_text_url(versions):
     return ''
 
 
-def build_vote_record(vote_event, party_lookup):
+def build_vote_record(vote_event, party_lookup, member_index=None, stats=None):
     """
     Build the standardized vote record for one chamber from a raw Open States vote event.
-    Derives partyTally by joining each voter.id against ga-members.json party data.
+
+    Each roll-call row is resolved to a member id via lib.ga_voters.resolve_voter,
+    which validates `voter.id` against ga-members.json and falls back to matching
+    (chamber, name) when the id is missing *or* unresolvable. Keying on the raw
+    `voter.id` with no validation is what let 21 deprecated ids orphan 38 sitting
+    legislators from every key vote. See CODEBASE-REVIEW-2026-08-18.md 1.5.
     """
+    member_votes = {}
+    chamber = event_chamber(vote_event.get('motion_text'),
+                            vote_event.get('organization'))
+
+    for pv in vote_event.get('votes', []):
+        voter  = pv.get('voter') or {}
+        option = pv.get('option', '')  # 'yes', 'no', 'abstain', 'other'
+
+        member_id, how = resolve_voter(
+            voter.get('id'),
+            pv.get('voter_name') or voter.get('name'),
+            chamber,
+            member_index,
+        )
+        if stats is not None:
+            stats[how] += 1
+        if member_id:
+            member_votes[member_id] = option
+
+    # Tally from the de-duplicated roster, not per row. Open States occasionally
+    # lists the same voter twice in one event, and `member_votes` collapses that
+    # while a per-row counter did not — every one of the 9 curated Senate roll
+    # calls published `sum(partyTally) == roster + 1`. Resolving ghost ids onto
+    # members who are already present makes counting per row wrong in a second
+    # way, so this has to be derived from the final mapping either way.
+    # See CODEBASE-REVIEW-2026-08-18.md 3.5.
     party_tally = {
         'Democratic':  {'yea': 0, 'nay': 0, 'other': 0},
         'Republican':  {'yea': 0, 'nay': 0, 'other': 0},
         'Independent': {'yea': 0, 'nay': 0, 'other': 0},
     }
-    member_votes = {}
-
-    for pv in vote_event.get('votes', []):
-        voter    = pv.get('voter') or {}
-        voter_id = voter.get('id')
-        option   = pv.get('option', '')  # 'yes', 'no', 'abstain', 'other'
-
-        if voter_id:
-            member_votes[voter_id] = option
-            party = party_lookup.get(voter_id)
-            if party and party in party_tally:
-                bucket = 'yea' if option == 'yes' else ('nay' if option == 'no' else 'other')
-                party_tally[party][bucket] += 1
+    for member_id, option in member_votes.items():
+        party = party_lookup.get(member_id)
+        if party and party in party_tally:
+            bucket = 'yea' if option == 'yes' else ('nay' if option == 'no' else 'other')
+            party_tally[party][bucket] += 1
 
     return {
         'rollNumber':  extract_roll_number(vote_event.get('motion_text')),
@@ -137,7 +162,7 @@ def build_vote_record(vote_event, party_lookup):
     }
 
 
-def fetch_bill(entry, party_lookup):
+def fetch_bill(entry, party_lookup, member_index=None, stats=None):
     """Fetch and process one curated bill entry. Returns a bill record dict or None."""
     session    = entry['session']
     identifier = entry['identifier']
@@ -166,9 +191,9 @@ def fetch_bill(entry, party_lookup):
 
     votes = {}
     if house_event:
-        votes['house']  = build_vote_record(house_event,  party_lookup)
+        votes['house']  = build_vote_record(house_event,  party_lookup, member_index, stats)
     if senate_event:
-        votes['senate'] = build_vote_record(senate_event, party_lookup)
+        votes['senate'] = build_vote_record(senate_event, party_lookup, member_index, stats)
 
     if not votes:
         print(f"  WARNING: No passage votes found for {identifier} ({session})")
@@ -221,13 +246,17 @@ def main():
         except Exception as e:
             print(f"  Could not read existing {OUTPUT_FILE}: {e}")
 
+    member_index = MemberIndex(GA_MEMBERS_FILE)
+    print(f"  Loaded {len(member_index)} members for voter-id validation")
+    voter_stats = new_stats()
+
     results  = []
     failed   = []
     retained = []
     for entry in bill_list:
         label = entry.get('_name') or entry['identifier']
         print(f"\n--- {label} ({entry['identifier']}, {entry['session']}) ---")
-        record = fetch_bill(entry, party_lookup)
+        record = fetch_bill(entry, party_lookup, member_index, voter_stats)
         if record:
             results.append(record)
         else:
@@ -240,11 +269,32 @@ def main():
                 failed.append(entry['identifier'])
         time.sleep(7)  # Open States rate limit is 10 req/min — 7s keeps well under it
 
+    # Coverage is the metric that actually matters to a reader: a legislator with
+    # no key votes looks like someone who never voted. Recording it in metadata
+    # lets validate_data_update.py catch a regression as a delta, instead of
+    # needing a hardcoded floor that goes stale every session.
+    voted = {mid for rec in results for v in rec.get('votes', {}).values()
+             for mid in (v.get('memberVotes') or {})}
+    sitting = [m for m in member_index.by_id.values()
+               if not m.get('status') and m.get('chamber') in VOTING_CHAMBERS]
+    silent = sorted(m['name'] for m in sitting if m['id'] not in voted)
+
     output = {
         'metadata': {
             'generatedAt': datetime.now().isoformat(),
             'source':      'Open States API',
             'count':       len(results),
+            'sittingLegislators':    len(sitting),
+            'legislatorsWithVotes':  len(sitting) - len(silent),
+            # Voter-resolution outcomes, so a regression is visible in the data
+            # rather than showing up as legislators quietly missing key votes.
+            # ghostVoterIds > 0 means an id was present, absent from
+            # ga-members.json, and not recoverable by name — those votes are
+            # dropped. See CODEBASE-REVIEW-2026-08-18.md 1.5.
+            'voterResolution':     dict(voter_stats),
+            'ghostVoterIds':       voter_stats['ghost'],
+            'unresolvedVoterRows': voter_stats['unresolved'],
+            'nameFallbackResolved': voter_stats['name'],
         },
         'bills': results,
     }
@@ -254,6 +304,21 @@ def main():
         json.dump(output, f, indent=2, ensure_ascii=False)
 
     print(f"\nWrote {len(results)} bill records to {OUTPUT_FILE}")
+    print(f"Voter resolution: {summarize(voter_stats)}")
+    print(f"Coverage: {len(sitting) - len(silent)}/{len(sitting)} sitting legislators "
+          f"have at least one curated vote")
+    if silent:
+        print(f"  {len(silent)} with none: {', '.join(silent[:10])}"
+              + (' ...' if len(silent) > 10 else ''))
+
+    if voter_stats['ghost'] or voter_stats['unresolved']:
+        print(f"WARNING: {voter_stats['ghost']} row(s) carried an OCD person id that is not "
+              f"in {GA_MEMBERS_FILE} and could not be matched by name, and "
+              f"{voter_stats['unresolved']} row(s) had no usable id or name. "
+              f"Those votes are omitted, so the affected legislators will show no key "
+              f"votes.\n"
+              f"  Fix by adding the member to ga-members.json (or an alias to "
+              f"LEGACY_PERSON_ID_MAP in scripts/lib/ga_voters.py) and re-running.")
 
     # Tolerate the odd transient miss, fail on a real outage.
     #

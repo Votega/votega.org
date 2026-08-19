@@ -43,6 +43,8 @@ import urllib.parse
 from datetime import datetime, timedelta, timezone
 
 from lib.http import fetch_json
+from lib.ga_voters import (LEGACY_PERSON_ID_MAP, MemberIndex, event_chamber,
+                           normalize_voter_name, resolve_voter)
 
 API_KEY      = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL     = "https://v3.openstates.org"
@@ -74,18 +76,10 @@ VOTE_MAP = {
     'other':      'Other',
 }
 
-# Open States occasionally re-issues a person a new OCD id mid-session, leaving
-# their earlier votes stranded under the old id (which then never appears in
-# ga-members.json and shows up as an unattributed "ghost" voter). Map old -> new
-# here to fold them back into the current id. Identified 2026-07-24 via LegiScan
-# roll-call cross-reference: identical Yea/Nay/Other pattern across every roll
-# call shared with the current id (both are Speaker Jon Burns; by House custom
-# a presiding officer votes only to break ties, so both ids show ~100% "Other").
-LEGACY_PERSON_ID_MAP = {
-    'ocd-person/4161e949-6ea2-4df9-8248-cabcf40286ae': 'ocd-person/64012657-d026-411c-9525-3232524a5145',  # Jon Burns
-}
-
-
+# LEGACY_PERSON_ID_MAP now lives in lib.ga_voters, shared with
+# generate_curated_ga_bills.py — which had no equivalent, and so published the
+# stranded Jon Burns id as one of 21 unattributed "ghost" voters. Add new aliases
+# there; the evidence bar for one is documented alongside it.
 def remap_legacy_ids(member_votes):
     """Fold any LEGACY_PERSON_ID_MAP entries into their current id in place."""
     for old_id, current_id in LEGACY_PERSON_ID_MAP.items():
@@ -95,79 +89,18 @@ def remap_legacy_ids(member_votes):
     return member_votes
 
 
-def event_chamber(motion_text, organization=None):
-    """Which chamber held a roll call: 'Senate', 'House of Representatives', or None."""
-    cls = (organization or {}).get('classification')
-    if cls == 'upper':
-        return 'Senate'
-    if cls == 'lower':
-        return 'House of Representatives'
-    mt = motion_text or ''
-    if 'Senate' in mt:
-        return 'Senate'
-    if 'House' in mt:
-        return 'House of Representatives'
-    return None
-
-
 def load_member_chambers(path=MEMBERS_FILE):
     """Map OCD person ID -> chamber from ga-members.json (ground truth for the
     chamber-consistency check). Returns {} if the file is missing/unreadable."""
-    try:
-        with open(path, encoding='utf-8') as f:
-            data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError, OSError):
-        return {}
-    return {m['id']: m.get('chamber') for m in data.get('members', []) if m.get('id')}
-
-
-_TITLE_PREFIX_RE = re.compile(
-    r'^(rep(resentative)?|sen(ator)?|mr|mrs|ms|dr)\.?\s+', re.IGNORECASE
-)
-
-
-def normalize_voter_name(name):
-    """Fold a name to a loose comparison key: strip a leading title, reorder a
-    "Last, First" string to "First Last", drop punctuation and extra
-    whitespace, lowercase the rest. Open States' voter_name is a raw string
-    from the legislature's site and its convention isn't guaranteed to match
-    ga-members.json's "First Last" (no title, no comma)."""
-    if not name:
-        return ''
-    name = _TITLE_PREFIX_RE.sub('', name.strip())
-    if ',' in name:
-        last, _, first = name.partition(',')
-        name = f'{first.strip()} {last.strip()}'
-    name = re.sub(r"[.,]", '', name)
-    name = re.sub(r'\s+', ' ', name).strip().lower()
-    return name
+    return MemberIndex(path).chambers
 
 
 def build_member_name_index(path=MEMBERS_FILE):
     """Map (chamber, normalized name) -> OCD person id, for the voter_name
-    fallback used when Open States fails to resolve voter.id (the surname-
-    collision case: Open States can disambiguate the vote's chamber and the
-    name string, but not always which same-surnamed member cast it via id).
-
-    A (chamber, name) pair that matches more than one member is mapped to
-    None rather than guessed — an ambiguous name isn't safe to attribute
-    either way, so it's counted as unresolved like a missing id would be.
+    fallback. A pair matching more than one member maps to None rather than
+    being guessed. Lives in lib.ga_voters so both GA vote generators share it.
     """
-    try:
-        with open(path, encoding='utf-8') as f:
-            data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError, OSError):
-        return {}
-    index = {}
-    for m in data.get('members', []):
-        chamber = m.get('chamber')
-        mid = m.get('id')
-        name = normalize_voter_name(m.get('name'))
-        if not chamber or not mid or not name:
-            continue
-        key = (chamber, name)
-        index[key] = None if key in index else mid
-    return index
+    return MemberIndex(path).by_name
 
 
 def sanitize_member_votes(member_votes, votes_meta, member_chambers):
@@ -340,9 +273,11 @@ def main():
     else:
         print("No usable baseline — falling back to a full fetch.")
 
-    member_name_index    = build_member_name_index()
-    unresolved_voter_rows = 0
+    member_index = MemberIndex()
+    print(f"  Loaded {len(member_index)} members for voter-id validation")
+    unresolved_voter_rows  = 0
     name_fallback_resolved = 0
+    ghost_voter_ids        = 0
 
     votes_meta   = {}
     member_votes = {}
@@ -416,21 +351,28 @@ def main():
                 ve_chamber = event_chamber(ve.get('motion_text'), ve.get('organization'))
 
                 for pv in ve.get('votes', []):
-                    voter    = pv.get('voter') or {}
-                    voter_id = voter.get('id')
-                    if not voter_id:
-                        # Open States most often fails to resolve voter.id on a
-                        # surname collision (e.g. one of 5 Joneses); voter_name
-                        # is still the raw name string, so fall back to matching
-                        # it against ga-members.json within the roll call's own
-                        # chamber. A miss (no chamber, no name, or an ambiguous
-                        # match) is counted rather than silently dropped.
-                        fallback_key = (ve_chamber, normalize_voter_name(pv.get('voter_name')))
-                        voter_id = member_name_index.get(fallback_key) if ve_chamber else None
-                        if not voter_id:
-                            unresolved_voter_rows += 1
-                            continue
+                    voter = pv.get('voter') or {}
+
+                    # Resolve by id, then fall back to (chamber, name) when the
+                    # id is missing *or* points at a person ga-members.json does
+                    # not know. The fallback used to be gated on `if not
+                    # voter_id`, so a stale-but-present id skipped it entirely —
+                    # which is how 21 deprecated ids orphaned 38 sitting
+                    # legislators in the curated dataset built the same way.
+                    # See CODEBASE-REVIEW-2026-08-18.md 1.5.
+                    voter_id, how = resolve_voter(
+                        voter.get('id'),
+                        pv.get('voter_name') or voter.get('name'),
+                        ve_chamber,
+                        member_index,
+                    )
+                    if how == 'name':
                         name_fallback_resolved += 1
+                    elif how == 'ghost':
+                        ghost_voter_ids += 1
+                    if not voter_id:
+                        unresolved_voter_rows += 1
+                        continue
                     option     = pv.get('option', '').lower()
                     vote_label = VOTE_MAP.get(option, 'Other')
                     member_votes.setdefault(voter_id, []).append({
@@ -534,6 +476,11 @@ def main():
             # it — no id, no usable name match, or an ambiguous chamber+name pair.
             'nameFallbackResolved':  name_fallback_resolved,
             'unresolvedVoterRows':   unresolved_voter_rows,
+            # Rows whose OCD person id was present but absent from
+            # ga-members.json and unrecoverable by name. Non-zero means some
+            # legislator is missing votes they actually cast.
+            # See CODEBASE-REVIEW-2026-08-18.md 1.5.
+            'ghostVoterIds':         ghost_voter_ids,
         },
         'votes':       votes_meta,
         'memberVotes': member_votes,
