@@ -90,7 +90,7 @@ share-description: "Find your local elected officials in Georgia — city counci
     <div class="lo-juris-meta">
       <span>{{ j.county }} County{% if j.partisan == false %} · Nonpartisan{% endif %}</span>
       {% if j.official_url != "" %}<a href="{{ j.official_url }}" target="_blank" rel="noopener">Official site ↗</a>{% endif %}
-      {% for rp in j.related_pages %}<a href="{{ rp.url }}">{{ rp.title }} →</a>{% endfor %}
+      {% for rp in j.related_pages %}<a href="{{ rp.url | relative_url }}">{{ rp.title }} →</a>{% endfor %}
     </div>
   </div>
 

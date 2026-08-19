@@ -22,4 +22,4 @@ Here's a snapshot of what Georgia's delegation has been trading:
 
 Whether any of these trades constitute a conflict of interest is a judgment call — but the disclosures are public record, and you have every right to look. VoteGA makes it easy to browse the full trading history for Georgia's delegation in one place.
 
-<a href="/ga-congress-trades.html">See the full trade history for Georgia's congressional delegation →</a>
+<a href="{{ '/ga-congress-trades.html' | relative_url }}">See the full trade history for Georgia's congressional delegation →</a>

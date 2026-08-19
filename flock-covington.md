@@ -15,7 +15,7 @@ The City Council in Covington, GA voted unanimously to approve a 3-year contract
  - <a href="https://cityofcovington.org/ckeditorfiles/files/2025_CityCouncil_1215_Minutes.pdf" target="_blank"> December 15, 2025 - City Council Meeting Minutes, Item #11</a>
 ### Open Records
 - <a href="https://www.foiamachine.org/foi/city-of-covington-flock-contract-12983/?sharing=SPVLSTR44AWP" target="_blank"> City of Covington Open Records Request</a>
-    - <a href="/assets/docs/flock_safety_covington_pd_contract.pdf" target="_blank"> City of Covington Flock Contract</a>
+    - <a href="{{ '/assets/docs/flock_safety_covington_pd_contract.pdf' | relative_url }}" target="_blank"> City of Covington Flock Contract</a>
 
 ## <center>Newton County, GA</center>
 The Newton County Sheriff's Office has implemented Flock cameras in the county (and very likely using other vendors as well). So far, we've found references to purchasing/installation of flock cameras in the following:

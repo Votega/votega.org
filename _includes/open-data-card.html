@@ -26,14 +26,18 @@
   {% if include.d.files %}
   <ul class="od-files">
     {% for f in include.d.files %}
-      <li><a href="{{ f.url }}"{% if f.url contains "http" %} target="_blank" rel="noopener"{% endif %}>{{ f.name }}</a> <span class="od-file-desc">— {{ f.desc }}</span></li>
+      {%- comment -%}Site-relative paths from _data/open_data.yml must go through relative_url so a
+      non-root deployment (e.g. /votega.org-TEST/) resolves them. External URLs must not.
+      See CODEBASE-REVIEW-2026-08-18.md finding 4.9.{%- endcomment -%}
+      {% assign f_href = f.url %}{% unless f.url contains "http" %}{% assign f_href = f.url | relative_url %}{% endunless %}
+      <li><a href="{{ f_href }}"{% if f.url contains "http" %} target="_blank" rel="noopener"{% endif %}>{{ f.name }}</a> <span class="od-file-desc">— {{ f.desc }}</span></li>
     {% endfor %}
   </ul>
   {% endif %}
 
   <div class="od-links">
     {% if include.d.repo_url %}<a href="{{ include.d.repo_url }}" target="_blank" rel="noopener">Repository ↗</a>{% endif %}
-    {% if include.d.docs %}<a href="{{ include.d.docs }}">Methodology →</a>{% endif %}
+    {% if include.d.docs %}<a href="{{ include.d.docs | relative_url }}">Methodology →</a>{% endif %}
     {% if include.d.contribute %}<a href="{{ include.d.contribute }}" target="_blank" rel="noopener">Contribute ↗</a>{% endif %}
   </div>
 </div>

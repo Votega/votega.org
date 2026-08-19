@@ -31,7 +31,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
-| Tier 4 — UX / IA / a11y | 15 | **4.1, 4.5, 4.6** | 4.2 – 4.4, 4.7 – 4.15 |
+| Tier 4 — UX / IA / a11y | 15 | **4.1, 4.5, 4.6, 4.9** | 4.2 – 4.4, 4.7, 4.8, 4.10 – 4.15 |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
@@ -1329,6 +1329,65 @@ copies), so a non-root deployment is an expected configuration — under which a
 elections landing page break.
 
 **Fix:** `{{ '/elections.html' | relative_url }}` on all four.
+
+#### ✅ FIXED — 2026-08-19 · the defect is 5× wider than the four links reported
+
+Confirmed exactly, including the cited contrast (`results.html:115-116` and `ga-voter-access.html:185-187` do use
+`relative_url`, and the site already uses it in 44 places). But `elections-hub.html` is not the only offender —
+sweeping the whole source tree found **16 root-absolute references across 12 files**, and building under a
+non-root baseurl exposed **21 more** that no source-level `href="/…"` grep can see.
+
+**Round 1 — literal `href="/…"` / `src="/…"` in source (16):**
+
+| File | Refs |
+|---|---|
+| `elections-hub.html` | 4 (the reported ones) |
+| `index.html` | 2 — **both home-page rep cards**, the site's primary journey |
+| `find-my-reps.html` | 2 |
+| `open-data.html` | 2 |
+| `candidates.html`, `_layouts/election_results.html`, `flock-covington.md` | 1 each |
+| `_posts/` (3 files) | 3, incl. one `<img src>` |
+
+`index.html` matters more than the reported page: those two cards are the entry point to the whole
+representative-lookup flow.
+
+**Round 2 — found only by building with a baseurl (21).** These are invisible to a source grep because the path
+never appears next to an `href` in a page file:
+
+| Source | Refs | Why the grep missed it |
+|---|---|---|
+| `about-the-data.md` | 9 | kramdown `[text](/path)` syntax, not an `href` attribute |
+| `_data/election_archive` → `results.html:99,104` | 7 | path lives in a data file, emitted as `{{ event.url }}` |
+| `_data/open_data.yml` → `_includes/open-data-card.html:36` | 8 | `docs:` / `files[].url:` emitted raw |
+| front matter `related.url` → `_layouts/election_results.html` | 2 | path lives in page front matter |
+| `_data/local_officials.yml` → `local-officials.html:93` | 2 | `related_pages[].url` emitted raw |
+| `_posts/2026-06-17-…md` | 1 | kramdown link syntax |
+
+Fixes at each render site rather than in the data, and the file loop keeps its existing external-URL branch:
+
+```liquid
+{% assign f_href = f.url %}{% unless f.url contains "http" %}{% assign f_href = f.url | relative_url %}{% endunless %}
+```
+
+**Verified two ways.**
+
+*Does it work?* A full `jekyll build --baseurl "/votega.org-TEST"` — the exact prefix `getBasePath()` sniffs for —
+then a regex sweep of every built page for `href`/`src` starting `/` but **not** `/votega.org-TEST/`:
+
+```
+UNPREFIXED INTERNAL REFS REMAINING: 0        (was 21 after round 1, and 37 before any fix)
+```
+
+*Does it change production?* `baseurl` is unset in `_config.yml`, so `relative_url` should be an identity today.
+Confirmed by building the repo at `HEAD` in a detached git worktree and diffing against a post-fix root build:
+
+```
+rendered HTML pages compared: 51
+HTML pages differing between HEAD and post-fix root builds: 0
+```
+
+**Byte-identical output on all 51 pages.** The change is pure latent-defect removal — zero production risk, and
+the whole class is now closed rather than the four links that happened to be greppable.
 
 ---
 

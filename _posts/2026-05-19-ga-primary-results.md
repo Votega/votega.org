@@ -19,5 +19,5 @@ Our results page covers all 262 races on the ballot, including:
 Under Georgia law, a candidate must receive more than 50% of the vote to win outright. If no candidate clears that threshold, the top two finishers advance to a **runoff election**.
 
 <div style="text-align: center; margin: 1.5rem 0;">
-  <a href="/ga-primary-results" style="display:inline-block; background:#1a1a2e; color:#fff; padding:.6rem 1.6rem; border-radius:6px; font-weight:600; text-decoration:none;">View Primary Results &rarr;</a>
+  <a href="{{ '/ga-primary-results' | relative_url }}" style="display:inline-block; background:#1a1a2e; color:#fff; padding:.6rem 1.6rem; border-radius:6px; font-weight:600; text-decoration:none;">View Primary Results &rarr;</a>
 </div>

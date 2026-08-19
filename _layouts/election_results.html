@@ -112,7 +112,7 @@ Front-matter contract
   </div>
 </div>
 
-<div class="pr-crosslink">&#8592; <a href="/results/">All Georgia election results</a></div>
+<div class="pr-crosslink">&#8592; <a href="{{ '/results/' | relative_url }}">All Georgia election results</a></div>
 
 {{ content }}
 
@@ -129,7 +129,7 @@ Front-matter contract
 {% if page.related %}
   <div class="pr-related">
     {% if page.related.text %}<span class="pr-related-text">{{ page.related.text }}</span>{% endif %}
-    {% if page.related.url %} <a class="pr-related-link" href="{{ page.related.url }}">{{ page.related.label | default: 'Learn more' }} &rarr;</a>{% endif %}
+    {% if page.related.url %} <a class="pr-related-link" href="{{ page.related.url | relative_url }}">{{ page.related.label | default: 'Learn more' }} &rarr;</a>{% endif %}
   </div>
 {% endif %}
 

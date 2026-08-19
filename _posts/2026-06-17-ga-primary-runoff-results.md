@@ -65,7 +65,7 @@ Democrats' statewide primary advantage was powered overwhelmingly by high-profil
 GOP voters faced unfinished business at the very top: Governor and US Senate were both in runoff. Those are precisely the offices that generate media coverage, campaign spending, and mobilization pressure. Republican voters had strong institutional reasons to return; Democratic voters largely did not.
 
 **3. This is exactly what the primary data predicted.**
-The [primary analysis](/2026-06-10-ga-primary-results-official/) concluded that Democratic enthusiasm is *"candidate and issue-driven at the macro level, it rises and falls with the prominence and stakes of the race,"* while Republican strength is *"institutionally embedded at the local level"* with habitual voters who participate consistently regardless of top-of-ticket dynamics. The runoff is the proof of concept: without Governor or Senate on the ballot, Democratic casual voters stayed home. Republican habitual voters showed up anyway.
+The [primary analysis]({{ '/2026-06-10-ga-primary-results-official/' | relative_url }}) concluded that Democratic enthusiasm is *"candidate and issue-driven at the macro level, it rises and falls with the prominence and stakes of the race,"* while Republican strength is *"institutionally embedded at the local level"* with habitual voters who participate consistently regardless of top-of-ticket dynamics. The runoff is the proof of concept: without Governor or Senate on the ballot, Democratic casual voters stayed home. Republican habitual voters showed up anyway.
 
 ---
 

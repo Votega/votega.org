@@ -96,12 +96,12 @@ share-description: "Georgia election results - certified results from the Georgi
 
             <div class="er-links">
               {% if event.url %}
-                <a href="{{ event.url }}">
+                <a href="{{ event.url | relative_url }}">
                   {% if event.status == 'upcoming' %}View the races &rarr;{% else %}View results &rarr;{% endif %}
                 </a>
               {% endif %}
               {% if event.analysis %}
-                <a class="er-analysis" href="{{ event.analysis.url }}">Analysis: {{ event.analysis.title }} &rarr;</a>
+                <a class="er-analysis" href="{{ event.analysis.url | relative_url }}">Analysis: {{ event.analysis.title }} &rarr;</a>
               {% endif %}
             </div>
           </div>

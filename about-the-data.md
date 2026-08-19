@@ -7,7 +7,7 @@ subtitle: Where our information comes from and how it's kept current
 VoteGA.org is a static website. We run automated workflows that pull data from trusted public sources and publish it as static files that power the site. A few data sources — federal executive orders and select biography data — are fetched live from public APIs when you visit a page. Here's what we use and why.
 
 {: .box-note}
-**Looking to _reuse_ our data?** Our machine-readable datasets — for civic apps, researchers, and journalists — are catalogued on the **[Open Data](/open-data)** page. This page explains how each one is built and kept current.
+**Looking to _reuse_ our data?** Our machine-readable datasets — for civic apps, researchers, and journalists — are catalogued on the **[Open Data]({{ '/open-data' | relative_url }})** page. This page explains how each one is built and kept current.
 
 ---
 
@@ -47,7 +47,7 @@ Voting history is displayed on each Georgia federal legislator's profile page, s
 
 Georgia's federal delegation roster (`data/members.json`, filtered to Georgia's delegation rather than the full Congress covered by the site's own `current-members.json`) and its voting record on signed legislation (`data/votes.json`) are published as an open, machine-readable dataset. How both are built is documented under [Federal Legislators](#federal-legislators) and [Federal Legislator Voting History](#federal-legislator-voting-history-ga-delegation) above.
 
-See **[Open Data](/open-data)** for the repository, file links, and update cadence.
+See **[Open Data]({{ '/open-data' | relative_url }})** for the repository, file links, and update cadence.
 
 ---
 
@@ -89,7 +89,7 @@ We paginate through all Georgia bills in the current session via the Open States
 
 **Source:** [Open States](https://openstates.org/) (Plural Policy)
 
-The [GA Bills & Resolutions](/ga-bills.html) tracker covers all 5,480+ bills and resolutions introduced during the 2025–26 regular session of the Georgia General Assembly.
+The [GA Bills & Resolutions]({{ '/ga-bills.html' | relative_url }}) tracker covers all 5,480+ bills and resolutions introduced during the 2025–26 regular session of the Georgia General Assembly.
 
 **How it works:**
 
@@ -151,7 +151,7 @@ A quirk in the source data: a vetoed bill's transmittal record still carries an 
 
 Our Georgia General Assembly roster (`data/all.json`) and each legislator's passage-vote history (`data/votes.json`) are published as an open, machine-readable dataset covering the 158th (2025–2026) General Assembly. How the roster and votes are built — including the shared OCD person ID that joins the two files — is documented under [Georgia General Assembly Legislators](#georgia-general-assembly-legislators) and [Georgia State Legislator Voting History](#georgia-state-legislator-voting-history) above.
 
-See **[Open Data](/open-data)** for the repository, file links, and update cadence.
+See **[Open Data]({{ '/open-data' | relative_url }})** for the repository, file links, and update cadence.
 
 {: .box-note}
 **Spot an error?** A wrong phone number, a missing email, an outdated office — open an issue or pull request on the [ga-legislators repository](https://github.com/Votega/ga-legislators). Corrections are reviewed, incorporated into our manual overrides, and flow back into votega.org on the next daily update.
@@ -162,7 +162,7 @@ See **[Open Data](/open-data)** for the repository, file links, and update caden
 
 **Sources:** Manual curation · [Federal Register API](https://www.federalregister.gov/developers/api/v1) (Office of the Federal Register, National Archives)
 
-The [Federal Executive Branch](/executive-branch.html) page displays the current President, Vice President, and Cabinet. Profile data (names, roles, party, term dates, confirmation dates) is manually maintained in a static data file and verified against official White House and Senate confirmation records.
+The [Federal Executive Branch]({{ '/executive-branch.html' | relative_url }}) page displays the current President, Vice President, and Cabinet. Profile data (names, roles, party, term dates, confirmation dates) is manually maintained in a static data file and verified against official White House and Senate confirmation records.
 
 **Executive Orders** on each official's profile page are fetched live from the Federal Register API when you visit the page. The Federal Register is the official journal of the U.S. federal government, published by the Office of the Federal Register (part of the National Archives). It is the authoritative source for presidential documents, including executive orders, presidential memoranda, and proclamations.
 
@@ -183,7 +183,7 @@ The Federal Register API is queried at page load time, filtered to executive ord
 
 **Sources:** [Oyez.org API](https://api.oyez.org/) (free, no key required) · [CourtListener](https://www.courtlistener.com/) (Free Law Project) · Manual curation
 
-The [Supreme Court](/supreme-court.html) page displays current justices and recent decisions. Justice profile data (names, titles, appointing president, confirmation dates and votes, law school, home state) is manually maintained. Case decisions and per-justice vote breakdowns are generated weekly from the Oyez API.
+The [Supreme Court]({{ '/supreme-court.html' | relative_url }}) page displays current justices and recent decisions. Justice profile data (names, titles, appointing president, confirmation dates and votes, law school, home state) is manually maintained. Case decisions and per-justice vote breakdowns are generated weekly from the Oyez API.
 
 **How it works:**
 
@@ -219,7 +219,7 @@ Georgia Governor's executive orders are scraped daily from the [Georgia Governor
 }
 ```
 
-Published for reuse — see **[Open Data](/open-data)** for the repository and downloads.
+Published for reuse — see **[Open Data]({{ '/open-data' | relative_url }})** for the repository and downloads.
 
 {: .box-note}
 **Want to contribute?** If an order is missing or miscategorized, open an issue or pull request on the [ga-executive-orders repository](https://github.com/Votega/ga-executive-orders).
@@ -232,7 +232,7 @@ Published for reuse — see **[Open Data](/open-data)** for the repository and d
 
 Federal lawmakers are required to disclose personal stock trades within 45 days of the transaction under the STOCK Act (Stop Trading on Congressional Knowledge Act). These disclosures — called Periodic Transaction Reports (PTRs) — are filed with the House Clerk (for House members) or the Senate eFD system (for Senators).
 
-We display stock trades filed by Georgia's congressional delegation on the [Georgia Congressional Stock Trades](/ga-congress-trades.html) page.
+We display stock trades filed by Georgia's congressional delegation on the [Georgia Congressional Stock Trades]({{ '/ga-congress-trades.html' | relative_url }}) page.
 
 **How it works:**
 
@@ -291,7 +291,7 @@ Each measure records a plain-language summary, subject tags, and a link to the e
 
 **Sources:** [Georgia Secretary of State](https://sos.ga.gov/) · Manual curation
 
-The [Voter Access & Election Calendar](/ga-voter-access.html) page maintains a curated data file (`assets/data/ga-election-calendar.json`) covering each election in the current cycle: election date, early voting window, and voter registration deadline. The page also links directly to the Georgia Secretary of State's official tools for checking registration status, polling place, and ballot status (My Voter Page), and for registering to vote or updating a registration.
+The [Voter Access & Election Calendar]({{ '/ga-voter-access.html' | relative_url }}) page maintains a curated data file (`assets/data/ga-election-calendar.json`) covering each election in the current cycle: election date, early voting window, and voter registration deadline. The page also links directly to the Georgia Secretary of State's official tools for checking registration status, polling place, and ballot status (My Voter Page), and for registering to vote or updating a registration.
 
 The "Next Election" highlight and each election's Upcoming/Completed status are computed in the browser from the visitor's current date — they are not stored in the data file, so the page stays accurate without a rebuild as elections pass.
 
