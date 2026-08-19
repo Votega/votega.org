@@ -161,13 +161,80 @@ def resolve_voter(voter_id, voter_name, chamber, index):
     return None, ('ghost' if voter_id else 'unresolved')
 
 
+_SUFFIX_RE = re.compile(r'\b(jr|sr|ii|iii|iv|v)\b\.?$', re.IGNORECASE)
+
+
+def surname_key(name):
+    """Last name of a person, folded for comparison.
+
+    Georgia roll calls identify voters by surname alone ("JONES"), while
+    ga-members.json carries full names ("Jan Jones"), so this is the only field
+    the two share.
+    """
+    n = normalize_voter_name(name)
+    n = _SUFFIX_RE.sub('', n).strip()
+    parts = n.split()
+    return parts[-1] if parts else ''
+
+
+def assign_remaining_by_surname(pending, resolved_ids, chamber, index):
+    """Resolve surname-only rows by elimination against the chamber's roster.
+
+    Open States supplies `voter_name` as a bare surname and omits `voter.id`
+    exactly when that surname is shared — so the rows that need help are the ones
+    a name lookup can never settle on its own. What makes them recoverable is
+    that a roll call lists **every seat**: a 2025-26 House vote has 180 rows, of
+    which 154 resolve by id, leaving 26 rows that must be the 26 sitting members
+    not yet accounted for.
+
+    Two conditions must both hold before anything is attributed, because the cost
+    of being wrong is publishing a false voting record for a named legislator:
+
+      1. The number of unresolved rows carrying a surname equals the number of
+         still-unassigned sitting members with that surname. Any imbalance means
+         someone in the group is unaccounted for, so the pairing is guesswork.
+      2. Every one of those rows recorded the *same* option. Then it does not
+         matter which row belongs to which member — they all voted alike, so the
+         result is identical under any pairing. If they split, the data cannot say
+         who voted which way and the whole group is left unresolved.
+
+    `pending` is a list of `(row_key, voter_name, option)`. Returns
+    `(assignments, unresolved_keys)` where assignments maps row_key -> member id.
+    """
+    assignments, unresolved = {}, []
+    if not index or not chamber:
+        return assignments, [k for k, _, _ in pending]
+
+    seated = [m for m in index.by_id.values()
+              if m.get('chamber') == chamber and not m.get('status')]
+    available = {}
+    for m in seated:
+        if m['id'] not in resolved_ids:
+            available.setdefault(surname_key(m.get('name')), []).append(m['id'])
+
+    groups = {}
+    for key, name, option in pending:
+        groups.setdefault(surname_key(name), []).append((key, option))
+
+    for sn, rows in groups.items():
+        candidates = available.get(sn, [])
+        options = {opt for _, opt in rows}
+        if candidates and len(candidates) == len(rows) and len(options) == 1:
+            for (key, _), member_id in zip(rows, candidates):
+                assignments[key] = member_id
+        else:
+            unresolved.extend(key for key, _ in rows)
+
+    return assignments, unresolved
+
+
 def new_stats():
     """Counter dict for the outcomes of resolve_voter()."""
-    return {'id': 0, 'alias': 0, 'name': 0, 'ghost': 0, 'unresolved': 0}
+    return {'id': 0, 'alias': 0, 'name': 0, 'surname': 0, 'ghost': 0, 'unresolved': 0}
 
 
 def summarize(stats):
     """One-line human summary of a stats dict."""
     return (f"resolved {stats['id']} by id, {stats['alias']} via alias, "
-            f"{stats['name']} by name fallback; "
+            f"{stats['name']} by name, {stats.get('surname', 0)} by surname elimination; "
             f"{stats['ghost']} ghost id(s), {stats['unresolved']} unresolved row(s)")

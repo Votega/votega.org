@@ -424,11 +424,50 @@ will read 0 after regeneration.
 | Workflow validation on a simulated post-fix file | passes, and reports coverage `230/232` |
 | `--sanitize` offline path, all generators, all 27 workflow YAMLs | unchanged and green |
 
-**What is not yet true:** `curated-ga-bill-votes.json` still contains the 21 ghosts, because regenerating needs
-`OPENSTATES_API_KEY`, which is not available locally. The data corrects itself when `update-curated-ga-bills`
-next runs (Tue/Thu). Whether all 21 recover depends on Open States populating `voter_name` on those rows — it is
-a documented field the pipeline already reads, but that cannot be confirmed without the API. Any that do not
-recover will now be counted in `ghostVoterIds` and named in the run log instead of vanishing silently.
+#### 🔁 ROOT CAUSE CORRECTED — 2026-08-19, after running the pipeline
+
+The first regeneration fixed [3.5](#35--curated-ga-bill-votesjson-party-tallies-double-count-a-duplicate-voter-row)
+(0 over-tallied roll calls, from 7) but left coverage at **194/232** — the name fallback recovered 3 of 299 rows.
+A diagnostic run (`scripts/inspect_ga_voter_resolution.py`) against the live API shows the finding's diagnosis was
+wrong in both halves.
+
+**The 21 ghost ids are former legislators, not deprecated ids for sitting members.** They appear in exactly two
+roll calls — SB 233 and SB 189, which `curated-ga-bills.json` deliberately pins to `session: 2023_24` (school
+vouchers, election-law overhaul). **Every 2025-26 roll call has `ghost=0`.** Looking the ids up via `/people`
+returns `current_role: null` for each: David Knight, Gloria Frazier, Gregg Kennard, James Beverly, Jodi Lott,
+Lauren Daniel, Penny Houston, Roger Bruce, Teri Anulewicz, Mike Dugan… all people who served in 2023-24 and have
+since left. Their votes *cannot* be attributed to sitting members, and dropping them is correct. **The ghosts
+orphan nobody.**
+
+**What actually orphans the 38 is the `unresolved` population, and the cause is the data format.** Georgia roll
+calls identify voters by **bare surname** — `voter_name` is `'JONES'`, `'WATSON'`, `'ANULEWICZ'`; the diagnostic
+reports **120/120** failed rows as a single token — and Open States omits `voter.id` *precisely when that surname
+is shared*. So the rows needing help are exactly the ones a name lookup can never settle, and the existing
+fallback (which compares against full names) could never match even an unambiguous surname.
+
+The arithmetic is exact:
+
+| Chamber | Sitting | Members sharing a surname | `unresolved` per roll call in the log |
+|---|---|---|---|
+| House | 178 | **26** | **26** |
+| Senate | 54 | **6** | 5–6 |
+
+**Fix: elimination against the roster.** A roll call lists every seat (a House vote has 180 rows), so the
+unresolved rows must be the members not otherwise accounted for. `assign_remaining_by_surname()` assigns them, but
+only when both conditions hold: the number of rows carrying a surname equals the number of still-unassigned
+sitting members with that surname, **and** every one of those rows recorded the same option — in which case the
+pairing is irrelevant because they all voted alike. A split vote within a surname group is refused outright, since
+the data cannot say who voted which way.
+
+**Verified:** 42 unit tests, including the adversarial cases — a split Jones group attributes **nobody**, a count
+imbalance refuses, a Senate member never fills a House row, and former members are never invented into the
+roster. End-to-end on a synthetic full 178-row House roll call built from the real member list: all 26
+shared-surname members resolved, **0 misattributed**, tally equal to roster.
+
+**Still pending:** the next `update-curated-ga-bills` run. Expect `surnameResolved ≈ 26` per House roll call and
+coverage at or near 232/232, with `ghostVoterIds` holding at ~40 rows for the two 2023-24 bills — which is the
+correct outcome, not a defect. Those two bills will always under-report, because a third of that chamber no
+longer serves.
 
 ---
 

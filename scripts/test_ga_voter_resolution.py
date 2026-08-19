@@ -152,6 +152,65 @@ check('stats counted every row', sum(stats.values()), 5)
 check('  ghost counted', stats['ghost'], 1)
 check('  name fallback counted', stats['name'], 1)
 
+print('\n=== assign_remaining_by_surname: elimination against the roster ===')
+from lib.ga_voters import assign_remaining_by_surname, surname_key  # noqa: E402
+
+SUR = FakeIndex([
+    {'id': 'h/jones-a', 'name': 'Jan Jones', 'chamber': HOUSE, 'party': 'Republican'},
+    {'id': 'h/jones-b', 'name': 'Todd Jones', 'chamber': HOUSE, 'party': 'Republican'},
+    {'id': 'h/jones-c', 'name': 'Sheila Jones', 'chamber': HOUSE, 'party': 'Democratic'},
+    {'id': 'h/solo', 'name': 'Teri Anulewicz', 'chamber': HOUSE, 'party': 'Democratic'},
+    {'id': 's/jones-d', 'name': 'Emanuel Jones', 'chamber': SENATE, 'party': 'Democratic'},
+])
+
+check('surname_key strips suffixes', surname_key('Floyd L Griffin Jr'), 'griffin')
+check('surname_key of a bare surname', surname_key('JONES'), 'jones')
+
+# Unique surname, nothing else needed.
+a, u = assign_remaining_by_surname([(0, 'ANULEWICZ', 'yes')], set(), HOUSE, SUR)
+check('unique surname resolves', a, {0: 'h/solo'})
+
+# All three Joneses unresolved and all voted the same way -> determinate as a set.
+rows = [(0, 'JONES', 'no'), (1, 'JONES', 'no'), (2, 'JONES', 'no')]
+a, u = assign_remaining_by_surname(rows, set(), HOUSE, SUR)
+check('3 rows / 3 members / same option -> all assigned', len(a), 3)
+check('  assigned to the three distinct Joneses', sorted(a.values()),
+      ['h/jones-a', 'h/jones-b', 'h/jones-c'])
+
+# Split vote within the group: who voted which way is unknowable. Refuse.
+rows = [(0, 'JONES', 'yes'), (1, 'JONES', 'no'), (2, 'JONES', 'no')]
+a, u = assign_remaining_by_surname(rows, set(), HOUSE, SUR)
+check('3 rows / 3 members / SPLIT option -> refuses', a, {})
+check('  and reports all three unresolved', sorted(u), [0, 1, 2])
+
+# Count mismatch: 2 rows but 3 candidates -> someone is unaccounted for. Refuse.
+rows = [(0, 'JONES', 'no'), (1, 'JONES', 'no')]
+a, u = assign_remaining_by_surname(rows, set(), HOUSE, SUR)
+check('2 rows / 3 members -> refuses', a, {})
+
+# ...unless the third is already resolved by id, which restores the balance.
+a, u = assign_remaining_by_surname(rows, {'h/jones-c'}, HOUSE, SUR)
+check('2 rows / 3 members, 1 already resolved -> assigns the other 2', len(a), 2)
+check('  never reassigns the already-resolved member', 'h/jones-c' in a.values(), False)
+
+# Chamber scoping: the Senate Jones is not a candidate for a House row.
+rows = [(0, 'JONES', 'no'), (1, 'JONES', 'no'), (2, 'JONES', 'no')]
+a, u = assign_remaining_by_surname(rows, set(), HOUSE, SUR)
+check('Senate member never fills a House row', 's/jones-d' in a.values(), False)
+
+# A surname nobody in the chamber has.
+a, u = assign_remaining_by_surname([(0, 'NOBODY', 'yes')], set(), HOUSE, SUR)
+check('unknown surname -> unresolved', (a, u), ({}, [0]))
+
+# Departed members (the 2023-24 bills): rows outnumber the sitting roster.
+rows = [(0, 'ANULEWICZ', 'yes'), (1, 'LOTT', 'yes'), (2, 'BEVERLY', 'no')]
+a, u = assign_remaining_by_surname(rows, set(), HOUSE, SUR)
+check('former members are not invented into the roster', sorted(a.values()), ['h/solo'])
+check('  the rest stay unresolved', sorted(u), [1, 2])
+
+check('no chamber -> refuses everything',
+      assign_remaining_by_surname([(0, 'JONES', 'no')], set(), None, SUR), ({}, [0]))
+
 print(f'\n{len(PASS)} passed, {len(FAIL)} failed')
 if FAIL:
     for f in FAIL:

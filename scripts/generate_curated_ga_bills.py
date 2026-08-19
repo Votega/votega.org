@@ -17,8 +17,8 @@ import urllib.parse
 from datetime import datetime
 
 from lib.http import fetch_json
-from lib.ga_voters import (VOTING_CHAMBERS, MemberIndex, event_chamber, new_stats,
-                           resolve_voter, summarize)
+from lib.ga_voters import (VOTING_CHAMBERS, MemberIndex, assign_remaining_by_surname,
+                           event_chamber, new_stats, resolve_voter, summarize)
 
 API_KEY = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL = "https://v3.openstates.org"
@@ -119,20 +119,36 @@ def build_vote_record(vote_event, party_lookup, member_index=None, stats=None):
     chamber = event_chamber(vote_event.get('motion_text'),
                             vote_event.get('organization'))
 
-    for pv in vote_event.get('votes', []):
+    # Pass 1 — resolve by id, alias, or full name.
+    pending, pending_how = [], {}
+    for i, pv in enumerate(vote_event.get('votes', [])):
         voter  = pv.get('voter') or {}
         option = pv.get('option', '')  # 'yes', 'no', 'abstain', 'other'
+        name   = pv.get('voter_name') or voter.get('name')
 
-        member_id, how = resolve_voter(
-            voter.get('id'),
-            pv.get('voter_name') or voter.get('name'),
-            chamber,
-            member_index,
-        )
-        if stats is not None:
-            stats[how] += 1
+        member_id, how = resolve_voter(voter.get('id'), name, chamber, member_index)
         if member_id:
             member_votes[member_id] = option
+            if stats is not None:
+                stats[how] += 1
+        else:
+            # Georgia roll calls give a bare surname and drop voter.id precisely
+            # when that surname is shared, so these are exactly the rows a name
+            # lookup cannot settle. Defer them to elimination against the roster.
+            pending.append((i, name, option))
+            pending_how[i] = how
+
+    # Pass 2 — assign the remainder by surname, but only where the roster leaves
+    # no choice. See assign_remaining_by_surname for the two conditions.
+    assigned, still_unresolved = assign_remaining_by_surname(
+        pending, set(member_votes), chamber, member_index)
+    options_by_row = {i: opt for i, _, opt in pending}
+    for row, member_id in assigned.items():
+        member_votes[member_id] = options_by_row[row]
+    if stats is not None:
+        stats['surname'] += len(assigned)
+        for row in still_unresolved:
+            stats[pending_how[row]] += 1
 
     # Tally from the de-duplicated roster, not per row. Open States occasionally
     # lists the same voter twice in one event, and `member_votes` collapses that
@@ -295,6 +311,7 @@ def main():
             'ghostVoterIds':       voter_stats['ghost'],
             'unresolvedVoterRows': voter_stats['unresolved'],
             'nameFallbackResolved': voter_stats['name'],
+            'surnameResolved':      voter_stats['surname'],
         },
         'bills': results,
     }

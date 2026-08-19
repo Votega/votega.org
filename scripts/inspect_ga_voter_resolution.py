@@ -22,6 +22,7 @@ Usage:
 import json
 import os
 import sys
+import time
 import urllib.parse
 from collections import Counter
 
@@ -159,6 +160,11 @@ def main():
         print(f"\n=== looking up {len(ghost_ids)} ghost id(s) via /people ===")
         ids = list(ghost_ids)
         for i in range(0, len(ids), 10):          # the endpoint takes repeated id params
+            if i:
+                # Open States allows 10 requests/minute; the bill fetches above
+                # already spent most of that budget, so pace the person lookups
+                # rather than burning retries on 429s.
+                time.sleep(7)
             batch = ids[i:i + 10]
             q = urllib.parse.urlencode([('id', g) for g in batch] + [('per_page', 50)])
             data = fetch_json(f"{BASE_URL}/people?{q}",
