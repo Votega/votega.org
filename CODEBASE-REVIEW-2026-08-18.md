@@ -32,7 +32,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
 | Tier 4 — UX / IA / a11y | 15 | **all fifteen** | — |
-| Tier 5 — hygiene, docs, traps | 12 | **5.1, 5.6 – 5.9, 5.11, 5.12**; 5.2 in part | 5.3, 5.4, 5.5, 5.10 |
+| Tier 5 — hygiene, docs, traps | 12 | **5.1 – 5.9, 5.11, 5.12** | 5.10 |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
 - **2026-08-18, `11af8df` "Tier 1 - Data Fixes"** — findings 1.1, 1.2, 1.3, plus the
@@ -1823,9 +1823,21 @@ deletions already took effect — but all 14 match live rows in the *source expo
 one of them. They are load-bearing, not vestigial: deleting them would have silently reintroduced 14 duplicate
 candidates on the next run. The evidence that they were dead was an artefact of measuring against the wrong file.
 
-**Still open:** the durable dedupe inside `build_legislative_races.py` (TO-DO.md:45) that would let these 14
-entries be retired, and the warn-on-unmatched-key pass in `apply_overrides.py` (also wanted by
-[5.4](#54--a-financebio-override-keyed-on-an-ocd-id-can-never-fire)).
+#### ✅ NOW COMPLETE — 2026-08-19
+
+The two open pieces are done, and the "retire the 14 entries" idea is confirmed wrong:
+
+- **`apply_overrides.py` now has the same name guard.** Its removal path — which ran with *no* name check — now
+  compares `_name` before deleting and, on a mismatch, keeps the candidate, records it, and `sys.exit(1)`s rather
+  than deleting the wrong person. Verified on a synthetic re-ordered ballot: the matching-name target is removed,
+  the mismatched one is kept and reported.
+- **Unmatched keys are surfaced, split by kind.** A `remove` key that matches nothing here is expected (the source
+  dedupe already ran upstream) and prints as a quiet note; a *patch* key that matches nothing is a real defect and
+  prints to stderr — which is exactly how [5.4](#54--a-financebio-override-keyed-on-an-ocd-id-can-never-fire)'s
+  mis-keyed override would now announce itself.
+- **The 14 `remove` entries stay.** Ran the builder against a redirected output and it reported **"Applied 14 of 14
+  'remove' override(s)"** — the source export still contains all 14 duplicate rows, so the keys are load-bearing.
+  Deleting them (the finding's suggested endpoint) would reintroduce 14 duplicate candidates on the next build.
 
 ---
 
@@ -1839,6 +1851,14 @@ judicial/PSC races) is a silent no-op. `find_candidate()` in `set_general_candid
 both shapes, so the two scripts disagree. Currently zero override keys target those races, so impact is latent.
 
 **Fix:** iterate `list(phase_data.get("ballots", {}).values()) + [phase_data.get("candidates", [])]`.
+
+#### ✅ FIXED — 2026-08-19
+
+`apply_overrides.py` now walks both shapes via a `phase_candidate_lists()` helper (ballots' value-lists **plus** the
+flat `candidates` array). Re-measured against the current file: **533 ballots-shape phases and 184 candidates-shape**
+— the flat shape was a quarter of all phases, every judicial/PSC race among them, silently unreachable. Verified with
+a synthetic candidates-shape race: the patch now applies where it previously no-op'd. Still zero override keys target
+those races today, so no committed data changed — this closes the latent gap before it bites.
 
 ---
 
@@ -1862,6 +1882,23 @@ Note that `||` also means `existingMemberId` is unreachable for *any* GA state c
 **Fix:** re-key the override to `challenger-timothy-fleming-sos-2026`; add the warn-on-unmatched-key pass from
 [5.2](#52--remove-true-candidate-overrides-are-positional-and-can-delete-the-wrong-person).
 
+#### ✅ FIXED — 2026-08-19 · one sub-claim corrected
+
+Re-keyed the override from the OCD id to `challenger-timothy-fleming-sos-2026`, and aligned its stray `name` field to
+the file's own `_name` convention so the re-key adds the missing member link **without** also renaming him
+("Timothy Kyle Fleming" is preserved). Ran the hardened `apply_overrides.py`: the diff is exactly
+`existingMemberId` + `existingMemberSource` added across his three phases (plus a canonical trailing slash on the
+website) — no unmatched-patch warning now that the key resolves.
+
+**Verified in the browser**, not just the data: Fleming's candidate page now renders **"View legislative record →"**
+→ `ga-member.html?id=ocd-person/cf955c60…#votingHistory`, and that id resolves to his real sitting record —
+*Tim Fleming, House of Representatives District 114*.
+
+**One claim corrected.** The finding blamed `campaign-finance.js`'s `candidate.id || candidate.existingMemberId`
+for the broken link. That `||` is in the *finance-override* lookup (correctly keyed by candidate id) and is not the
+cause. The actual consumer is `candidate.html:352-357`, which builds the legislative-record link straight from
+`existingMemberId` / `existingMemberSource`; supplying those fields is the whole fix, and no JS change was needed.
+
 ---
 
 ### 5.5 — Two federal vote records reference departed members
@@ -1874,6 +1911,19 @@ are simply unreachable.
 
 **Fix:** a metadata counter, so a *real* drop (a sitting member losing their votes) isn't indistinguishable from
 this benign case.
+
+#### ✅ FIXED IN CODE — 2026-08-19 · data updates on the next scheduled run
+
+`generate_federal_votes_data.py` never actually loaded the `MEMBERS_FILE` it declared. It now reads the sitting GA
+delegation from `current-members.json` and writes four reconciling fields into `metadata`: `memberCount`,
+`sittingDelegation`, `sittingMembersWithVotes`, `staleVoteRecords` — plus a stderr warning and a
+`sittingMembersMissingVotes` list if a *sitting* member ever has no votes (the real-drop case the benign stale
+records currently mask). It fails safe: if the members file can't be read, the counters are skipped rather than
+emitted wrong.
+
+Validated offline against the committed data (the generator itself needs `CONGRESS_API_KEY`): **15 sitting, 17
+records, 2 stale (`G000596`, `S001157`), 0 real drops** — matching the finding exactly. The committed
+`federal-member-votes.json` gains the metadata on the next `update-federal-votes` run (weekly, Sunday 09:00).
 
 ---
 

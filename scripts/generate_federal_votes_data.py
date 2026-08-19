@@ -92,6 +92,22 @@ def fetch_raw(url, label=""):
     return fetch_bytes(url, label=label or url[:80], quiet_statuses=(404,))
 
 
+def sitting_ga_bioguides(members_file):
+    """Set of bioguideIds for the current GA delegation, from current-members.json.
+    Used to tell a benign stale vote record (a member who left mid-Congress but
+    whose recorded votes remain) apart from a real drop — a *sitting* member with
+    no votes. See CODEBASE-REVIEW-2026-08-18.md finding 5.5."""
+    try:
+        with open(members_file, encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, ValueError):
+        return None  # unknown -> skip the check rather than emit a wrong count
+    return {
+        m["bioguideId"] for m in data.get("members", [])
+        if m.get("state") == "Georgia" and m.get("bioguideId")
+    }
+
+
 def build_lis_to_bioguide():
     """Return {lis_id: bioguideId} from congress-legislators YAML (senators only)."""
     raw = fetch_raw(f"{LEGISLATORS_BASE}/legislators-current.yaml", "legislators-current.yaml")
@@ -427,6 +443,25 @@ def main():
                     "vote":   vote_label,
                 })
 
+    # Reconcile vote records against the sitting delegation so a real drop is
+    # visible in metadata rather than blending into the benign stale case.
+    with_votes = set(member_votes)
+    sitting = sitting_ga_bioguides(MEMBERS_FILE)
+    vote_stats = {}
+    if sitting is not None:
+        sitting_with_votes = sitting & with_votes
+        stale = with_votes - sitting          # departed members, votes linger
+        missing = sitting - with_votes        # sitting members with NO votes = a real drop
+        vote_stats = {
+            "sittingDelegation":       len(sitting),
+            "sittingMembersWithVotes": len(sitting_with_votes),
+            "staleVoteRecords":        len(stale),
+        }
+        if missing:
+            print(f"  WARNING: {len(missing)} sitting GA member(s) have no vote records: "
+                  f"{sorted(missing)}", file=sys.stderr)
+            vote_stats["sittingMembersMissingVotes"] = sorted(missing)
+
     output = {
         "metadata": {
             "generatedAt": datetime.now().isoformat(),
@@ -434,6 +469,8 @@ def main():
             "sessionName": f"{CURRENT_CONGRESS}th Congress",
             "source":      "Congress.gov API + Clerk of House + Senate.gov",
             "totalVotes":  len(votes_meta),
+            "memberCount": len(member_votes),
+            **vote_stats,
         },
         "votes":       votes_meta,
         "memberVotes": member_votes,
