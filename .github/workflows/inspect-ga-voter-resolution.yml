@@ -1,0 +1,30 @@
+name: Inspect GA voter resolution (diagnostic)
+
+# Read-only. Reports why roll-call rows fail to resolve to a legislator, with the
+# actual voter_name values Open States returns. Costs ~1 request per curated bill.
+# See CODEBASE-REVIEW-2026-08-18.md finding 1.5.
+
+on:
+  workflow_dispatch:
+    inputs:
+      bill:
+        description: 'Single bill identifier to inspect (e.g. "SB 233"). Blank = all curated bills.'
+        required: false
+        default: ''
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run voter-resolution inspector
+        env:
+          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
+          BILL: ${{ inputs.bill }}
+        run: python scripts/inspect_ga_voter_resolution.py "$BILL"
