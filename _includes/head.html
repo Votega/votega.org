@@ -46,6 +46,16 @@
 
   <meta name="description" content="{{ description }}">
 
+  {% if page.noindex %}
+  {%- comment -%}
+    Keeps a page out of search engines while it is staged but not yet meaningful
+    — e.g. a results page built ahead of election day that has no results yet.
+    Pair with `sitemap: false` (stops it being advertised) and `search: false`
+    (stops on-site search surfacing it). Remove all three when the page goes live.
+  {%- endcomment -%}
+  <meta name="robots" content="noindex, follow">
+  {% endif %}
+
   {% if site.mobile-theme-col %}
   <meta name="theme-color" content="{{ site.mobile-theme-col }}">
   {% endif %}

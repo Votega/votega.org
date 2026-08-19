@@ -5,7 +5,7 @@ permalink: /ga-general-2026-runoff-results/
 share-description: "Results from Georgia's December 1, 2026 general election runoff, if one is required."
 heading: Georgia 2026 General Election Runoff Results
 election_date: 2026-12-01
-status: unofficial
+status: preview
 results_mode: final
 results_data: ga-general-2026-runoff-results
 notice: >-
@@ -13,4 +13,14 @@ notice: >-
   General Election fails to produce a majority winner. Races and candidates
   will be added here if a runoff is triggered, and results will appear after
   polls close on December 1, 2026.
+# --- Staged ahead of election day -------------------------------------------
+# No votes exist yet, so this page is deliberately undiscoverable: not in the
+# sitemap, not indexable, not in on-site search. `status: preview` also stops the
+# header claiming "Unofficial Results" when there are none.
+#
+# TO GO LIVE on election night: set `status: unofficial` and delete the three
+# flags below. Nothing else needs to change.
+noindex: true
+sitemap: false
+search: false
 ---

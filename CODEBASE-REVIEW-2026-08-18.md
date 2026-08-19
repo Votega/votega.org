@@ -28,15 +28,16 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 
 | Tier | Findings | Fixed | Remaining |
 |---|---|---|---|
-| Tier 1 — wrong data reaching users | 5 | **1.1, 1.2, 1.3** | 1.4, 1.5 |
+| Tier 1 — wrong data reaching users | 5 | **1.1, 1.2, 1.3, 1.4** | 1.5 |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | — | all |
 | Tier 4 — UX / IA / a11y | 15 | — | all |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
-- **2026-08-18, working tree** — Tier 1 findings 1.1, 1.2, 1.3, plus the `remove: true`
-  half of 5.2 (which turned out to be a prerequisite for 1.1 — see below).
+- **2026-08-18, `11af8df` "Tier 1 - Data Fixes"** — findings 1.1, 1.2, 1.3, plus the
+  `remove: true` half of 5.2 (a prerequisite for 1.1 — see below).
+- **2026-08-18, working tree** — finding 1.4, staged as a reusable `preview` status.
 
 Each fixed finding keeps its original text and gains a **FIXED** note recording what
 changed, what was verified, and — where the original diagnosis was wrong — what the
@@ -46,8 +47,7 @@ cause actually was.
 
 ## Executive summary
 
-Four things stand out above the rest of the list. **Three of the four are now fixed**
-(items 1–3); item 4 is open.
+Four things stand out above the rest of the list. **All four are now fixed.**
 
 1. **`build_legislative_races.py` is an armed trap.** Running it today destroys 391 general-election candidate
    entries across all 236 GA legislative races. It already fired once on 2026-08-17. The only guard is a prose
@@ -74,12 +74,13 @@ push loop. Most Tier 2 findings are one fact wearing six costumes.
 
 ## Tier 1 — Wrong data reaching users, or one command away
 
-> **STATUS: 1.1, 1.2 and 1.3 fixed on 2026-08-18. 1.4 and 1.5 remain open.**
+> **STATUS: 1.1, 1.2, 1.3 and 1.4 fixed on 2026-08-18. Only 1.5 remains open.**
 >
 > | # | Fix |
 > |---|---|
 > | 1.1 | `build_legislative_races.py` merges instead of replacing, and refuses to write when the post-primary candidate count would drop. A full rebuild is now content-idempotent against `races.json`. **Required fixing the `remove: true` half of [5.2](#52--remove-true-candidate-overrides-are-positional-and-can-delete-the-wrong-person) as a prerequisite** — see the note on that finding. |
 > | 1.2 | `findFecId` collects every district+surname hit and narrows on full name → filing activity → shared committee, reporting `ambiguous` rather than guessing. All three misresolved candidates now resolve correctly; **0 ambiguous across 136 federal entries**, so the editorial pins the finding recommended proved unnecessary. |
+> | 1.4 | Both general-results pages are staged behind a new `status: preview` + `noindex`/`sitemap: false`/`search: false`, removing them from the sitemap and site search until election night. **Two of the finding's claims did not hold** — the zeroed cards and the calendar link — see the note on that finding. |
 > | 1.3 | Both normalizers reduce to `first last` and strip honorifics. New `scripts/test_fec_name_parity.py` runs the real JS (via node) against the real Python over 329 names. **The finding's stated cause was wrong** — see the note on that finding. |
 
 ### 1.1 — `build_legislative_races.py` destroys 391 general-election candidates on every run
@@ -298,6 +299,54 @@ that may never occur.
 **Fix:** add `status: upcoming` handling to the layout (suppress the "Unofficial Results" label and the zeroed
 cards, render the notice first), or gate both pages behind `published: false` / `sitemap: false` + `noindex`
 until polls close, and drop `resultsUrl` from the calendar until then.
+
+#### ✅ FIXED — 2026-08-18 · two claims corrected, and the page's purpose clarified
+
+**Context the review lacked:** both pages exist deliberately, staged so the foundation is ready as the general
+approaches. The goal was therefore to make them undiscoverable and honest until election night, *not* to remove
+them.
+
+**Correction 1 — the zeroed cards do not exist.** The layout already handles this: `getStatus()` returns
+`no-results` when `totalVotes` is falsy, so every race renders **"Awaiting Results" / "No results reported" / "—"**.
+Verified on the rendered page: **532** `no-results` badges, and **0** occurrences of `0 votes` or `0.0%` anywhere
+in the DOM. The claim of "0 votes and 0.0% bars" was read from the front matter's own `notice` text rather than
+from the page.
+
+**Correction 2 — the calendar CTA does not link here.** `ga-voter-access.html:267` gates the CTA on
+`isUpcoming` (`parseLocalDate(e.date) >= today`, line 345): an upcoming election renders `racesUrl`
+("View races & candidates"), and only a past one renders `resultsUrl`. The finding quoted lines 273-274 without
+the branch above them. The `resultsUrl` in `ga-election-calendar.json` is correct and deliberate — it activates
+by itself once the date passes.
+
+**What was actually wrong** — two real discovery paths, both confirmed against the built `_site`:
+
+| Path | Before | After |
+|---|---|---|
+| `sitemap.xml` | both pages listed | removed (48 URLs, was 50) |
+| On-site search corpus | both indexed | removed (49 entries, was 51) |
+| `<meta name="robots">` | absent | `noindex, follow` |
+| Header label | "Unofficial Results" | "Ballot preview — results post after polls close" |
+
+**Implementation** — a reusable `preview` status rather than a one-off patch:
+
+- `_layouts/election_results.html` gains `status: preview`, which replaces the "Unofficial Results" label and
+  renders an informational blue notice (`.pr-notice-preview`) instead of the amber "unofficial" warning — nothing
+  is provisional when nothing has been counted. The front-matter contract documents it.
+- `_includes/head.html` honours a `noindex` front-matter flag (none existed before).
+- `assets/data/searchcorpus.json` skips pages with `search: false`.
+- Both pages carry `status: preview` + `noindex` / `sitemap: false` / `search: false`, above a comment stating
+  the go-live step: **set `status: unofficial` and delete the three flags.** Nothing else changes.
+- The `notice` on the general page was reworded — it claimed "All candidates currently show 0 votes", which is
+  not what the page renders.
+
+**Regression-checked:** the four live results pages are untouched (no robots meta, labels unchanged), the
+certified primary page still reads "Official Certified Results" with `.pr-notice-certified`, only 2 pages
+site-wide carry a robots meta, and the Jekyll build logs and browser console are clean.
+
+**One timing edge, left as-is:** `isUpcoming` uses `>=`, so on election day itself (Nov 3) the calendar still
+shows "View races & candidates"; the results CTA appears Nov 4. If you want the link live on election night, the
+comparison needs to become "strictly after the close of polls" rather than a date compare — a deliberate change,
+not a bug fix, so it is flagged rather than made.
 
 ---
 
@@ -1224,14 +1273,14 @@ new, so it cannot truncate.
 
 ## Suggested sequencing
 
-**~~1 — Stop the bleeding~~ · done 2026-08-18**
+**~~1 — Stop the bleeding~~ · complete, 2026-08-18**
 
 | # | Item | Outcome |
 |---|---|---|
 | ~~1.1~~ | `build_legislative_races.py` merge guard | ✅ Rebuild is content-idempotent; loss guard refuses to write |
 | ~~2.1~~ | `\|\| exit 1` on the push loop | ✅ 15 occurrences across 14 workflows |
 | ~~1.2~~ | FEC first-hit-wins | ✅ Fixed in code; the 3 editorial pins proved unnecessary (0 ambiguous) |
-| [1.4](#14--ga-general-2026-results-is-live-and-reports-every-candidate-at-0-votes) | Gate the zeroed general-results pages | ⬜ **Still open — now the top item.** The only finding that can actively misinform a voter |
+| ~~1.4~~ | Gate the staged general-results pages | ✅ Out of the sitemap and site search; header no longer claims "Unofficial Results". The zeroed-cards and calendar-link claims proved incorrect |
 
 **~~2 — Close the silent-failure loop~~ · done 2026-08-18 (`4573e63`)**
 

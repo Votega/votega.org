@@ -5,16 +5,26 @@ permalink: /ga-general-2026-results/
 share-description: "Results from Georgia's November 3, 2026 general election, by race and county."
 heading: Georgia 2026 General Election Results
 election_date: 2026-11-03
-status: unofficial
+status: preview
 results_mode: round
 label_winner: Elected
 runoff_advances: 2
 results_data: ga-general-2026-results
 notice: >-
   Preview of the November 3, 2026 General Election ballot, built from every
-  federal, state legislative, statewide, and judicial race on file. All
-  candidates currently show 0 votes &mdash; live results will replace this
-  once polls close and continue updating as votes are counted. A small
-  number of statewide races could go to a December 1 runoff if no candidate
-  wins a majority.
+  federal, state legislative, statewide, and judicial race on file. No votes
+  have been cast yet, so every race reads &ldquo;Awaiting Results&rdquo;
+  &mdash; live counts will replace this once polls close and will keep
+  updating as votes are tallied. A small number of statewide races could go
+  to a December 1 runoff if no candidate wins a majority.
+# --- Staged ahead of election day -------------------------------------------
+# No votes exist yet, so this page is deliberately undiscoverable: not in the
+# sitemap, not indexable, not in on-site search. `status: preview` also stops the
+# header claiming "Unofficial Results" when there are none.
+#
+# TO GO LIVE on election night: set `status: unofficial` and delete the three
+# flags below. Nothing else needs to change.
+noindex: true
+sitemap: false
+search: false
 ---
