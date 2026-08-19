@@ -1,20 +1,22 @@
 {
   "metadata": {
-    "generatedAt": "2026-08-19T02:20:39.515876",
+    "generatedAt": "2026-08-19T02:42:05.068752",
     "source": "Open States API",
     "count": 9,
     "sittingLegislators": 232,
-    "legislatorsWithVotes": 194,
+    "legislatorsWithVotes": 224,
     "voterResolution": {
       "id": 1620,
       "alias": 5,
       "name": 3,
-      "ghost": 40,
-      "unresolved": 259
+      "surname": 141,
+      "ghost": 38,
+      "unresolved": 120
     },
-    "ghostVoterIds": 40,
-    "unresolvedVoterRows": 259,
-    "nameFallbackResolved": 3
+    "ghostVoterIds": 38,
+    "unresolvedVoterRows": 120,
+    "nameFallbackResolved": 3,
+    "surnameResolved": 141
   },
   "bills": [
     {
@@ -36,11 +38,11 @@
           "partyTally": {
             "Democratic": {
               "yea": 0,
-              "nay": 58,
+              "nay": 60,
               "other": 5
             },
             "Republican": {
-              "yea": 83,
+              "yea": 85,
               "nay": 0,
               "other": 4
             },
@@ -200,7 +202,11 @@
             "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded": "yes",
             "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6": "other",
             "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc": "no",
-            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes"
+            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes",
+            "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220": "yes",
+            "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359": "yes",
+            "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77": "no",
+            "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa": "no"
           }
         },
         "senate": {
@@ -211,11 +217,11 @@
           "partyTally": {
             "Democratic": {
               "yea": 4,
-              "nay": 14,
-              "other": 1
+              "nay": 16,
+              "other": 2
             },
             "Republican": {
-              "yea": 27,
+              "yea": 30,
               "nay": 1,
               "other": 1
             },
@@ -273,7 +279,13 @@
             "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": "yes",
             "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": "yes",
             "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "other",
-            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes"
+            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes",
+            "ocd-person/fcd57129-480c-4fba-a0d1-7fb369706611": "no",
+            "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": "other",
+            "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef": "no",
+            "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c": "yes",
+            "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf": "yes",
+            "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": "yes"
           }
         }
       }
@@ -297,11 +309,11 @@
           "partyTally": {
             "Democratic": {
               "yea": 1,
-              "nay": 17,
+              "nay": 20,
               "other": 1
             },
             "Republican": {
-              "yea": 28,
+              "yea": 31,
               "nay": 0,
               "other": 1
             },
@@ -359,7 +371,13 @@
             "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": "yes",
             "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": "yes",
             "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes",
-            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "no"
+            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "no",
+            "ocd-person/fcd57129-480c-4fba-a0d1-7fb369706611": "no",
+            "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": "no",
+            "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef": "no",
+            "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c": "yes",
+            "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf": "yes",
+            "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": "yes"
           }
         }
       }
@@ -382,13 +400,13 @@
           "result": "pass",
           "partyTally": {
             "Democratic": {
-              "yea": 46,
+              "yea": 50,
               "nay": 12,
               "other": 6
             },
             "Republican": {
-              "yea": 82,
-              "nay": 2,
+              "yea": 84,
+              "nay": 4,
               "other": 3
             },
             "Independent": {
@@ -548,7 +566,15 @@
             "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded": "yes",
             "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6": "yes",
             "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc": "yes",
-            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes"
+            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes",
+            "ocd-person/c862c17f-ed00-41d7-97e5-1138f451a96c": "yes",
+            "ocd-person/3a23acfd-5ce6-4e47-b641-1efdab05bdca": "yes",
+            "ocd-person/8b62e64b-bf80-4967-832b-8fb92cd6c4b3": "yes",
+            "ocd-person/4b3fdb35-d3fb-40aa-843e-d3900df37ce4": "yes",
+            "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220": "no",
+            "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359": "no",
+            "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77": "yes",
+            "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa": "yes"
           }
         },
         "senate": {
@@ -558,12 +584,12 @@
           "result": "pass",
           "partyTally": {
             "Democratic": {
-              "yea": 16,
+              "yea": 19,
               "nay": 0,
               "other": 2
             },
             "Republican": {
-              "yea": 29,
+              "yea": 32,
               "nay": 0,
               "other": 0
             },
@@ -620,7 +646,13 @@
             "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": "yes",
             "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": "yes",
             "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes",
-            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes"
+            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes",
+            "ocd-person/fcd57129-480c-4fba-a0d1-7fb369706611": "yes",
+            "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": "yes",
+            "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef": "yes",
+            "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c": "yes",
+            "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf": "yes",
+            "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": "yes"
           }
         }
       }
@@ -643,12 +675,12 @@
           "result": "pass",
           "partyTally": {
             "Democratic": {
-              "yea": 58,
+              "yea": 67,
               "nay": 0,
               "other": 5
             },
             "Republican": {
-              "yea": 86,
+              "yea": 95,
               "nay": 0,
               "other": 1
             },
@@ -808,7 +840,25 @@
             "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded": "yes",
             "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6": "yes",
             "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc": "yes",
-            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes"
+            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes",
+            "ocd-person/c862c17f-ed00-41d7-97e5-1138f451a96c": "yes",
+            "ocd-person/3a23acfd-5ce6-4e47-b641-1efdab05bdca": "yes",
+            "ocd-person/cba2f06c-773c-49d3-949c-b1a2db377c21": "yes",
+            "ocd-person/5c5ab5cb-54f6-4218-8d1d-a99d36bca436": "yes",
+            "ocd-person/ad18dba4-9247-4542-95b1-2ccef815dbc7": "yes",
+            "ocd-person/0461f02b-df18-4984-8b3b-ada287879d0a": "yes",
+            "ocd-person/8b62e64b-bf80-4967-832b-8fb92cd6c4b3": "yes",
+            "ocd-person/4b3fdb35-d3fb-40aa-843e-d3900df37ce4": "yes",
+            "ocd-person/85740034-23b0-4001-9190-8948bd9f3b37": "yes",
+            "ocd-person/55074030-4d64-4da0-b68a-5e3945d00f25": "yes",
+            "ocd-person/b278b399-5ca3-4cd7-bc19-4053166577a2": "yes",
+            "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c": "yes",
+            "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220": "yes",
+            "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359": "yes",
+            "ocd-person/d00eb950-0fb6-41ab-ae22-8e9ce84d7cf0": "yes",
+            "ocd-person/bc40f904-9c20-41d0-80d5-e5645d3e6935": "yes",
+            "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77": "yes",
+            "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa": "yes"
           }
         },
         "senate": {
@@ -818,12 +868,12 @@
           "result": "pass",
           "partyTally": {
             "Democratic": {
-              "yea": 13,
+              "yea": 16,
               "nay": 0,
               "other": 5
             },
             "Republican": {
-              "yea": 29,
+              "yea": 32,
               "nay": 0,
               "other": 0
             },
@@ -880,7 +930,13 @@
             "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": "yes",
             "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": "yes",
             "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes",
-            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes"
+            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes",
+            "ocd-person/fcd57129-480c-4fba-a0d1-7fb369706611": "yes",
+            "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": "yes",
+            "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef": "yes",
+            "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c": "yes",
+            "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf": "yes",
+            "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": "yes"
           }
         }
       }
@@ -903,12 +959,12 @@
           "result": "pass",
           "partyTally": {
             "Democratic": {
-              "yea": 62,
+              "yea": 71,
               "nay": 2,
               "other": 1
             },
             "Republican": {
-              "yea": 85,
+              "yea": 96,
               "nay": 2,
               "other": 1
             },
@@ -1071,7 +1127,27 @@
             "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded": "yes",
             "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6": "yes",
             "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc": "yes",
-            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes"
+            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes",
+            "ocd-person/c862c17f-ed00-41d7-97e5-1138f451a96c": "yes",
+            "ocd-person/3a23acfd-5ce6-4e47-b641-1efdab05bdca": "yes",
+            "ocd-person/ad18dba4-9247-4542-95b1-2ccef815dbc7": "yes",
+            "ocd-person/0461f02b-df18-4984-8b3b-ada287879d0a": "yes",
+            "ocd-person/8b62e64b-bf80-4967-832b-8fb92cd6c4b3": "yes",
+            "ocd-person/4b3fdb35-d3fb-40aa-843e-d3900df37ce4": "yes",
+            "ocd-person/85740034-23b0-4001-9190-8948bd9f3b37": "yes",
+            "ocd-person/55074030-4d64-4da0-b68a-5e3945d00f25": "yes",
+            "ocd-person/b278b399-5ca3-4cd7-bc19-4053166577a2": "yes",
+            "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c": "yes",
+            "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220": "yes",
+            "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359": "yes",
+            "ocd-person/945875f7-f3c5-4c75-acd6-a195a0f76b12": "yes",
+            "ocd-person/68185f1d-fa54-4571-b305-fcd6c7dc024e": "yes",
+            "ocd-person/4b162447-89a7-4ffc-acbf-617e1ad87e2a": "yes",
+            "ocd-person/9deeb60b-4d1e-42b8-8052-d2808a30ea9a": "yes",
+            "ocd-person/d00eb950-0fb6-41ab-ae22-8e9ce84d7cf0": "yes",
+            "ocd-person/bc40f904-9c20-41d0-80d5-e5645d3e6935": "yes",
+            "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77": "yes",
+            "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa": "yes"
           }
         },
         "senate": {
@@ -1081,12 +1157,12 @@
           "result": "pass",
           "partyTally": {
             "Democratic": {
-              "yea": 20,
+              "yea": 22,
               "nay": 1,
               "other": 0
             },
             "Republican": {
-              "yea": 28,
+              "yea": 31,
               "nay": 0,
               "other": 1
             },
@@ -1146,7 +1222,12 @@
             "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": "yes",
             "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": "yes",
             "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes",
-            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes"
+            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes",
+            "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": "yes",
+            "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef": "yes",
+            "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c": "yes",
+            "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf": "yes",
+            "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": "yes"
           }
         }
       }
@@ -1170,11 +1251,11 @@
           "partyTally": {
             "Democratic": {
               "yea": 1,
-              "nay": 52,
+              "nay": 57,
               "other": 1
             },
             "Republican": {
-              "yea": 72,
+              "yea": 74,
               "nay": 6,
               "other": 2
             },
@@ -1319,7 +1400,14 @@
             "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded": "yes",
             "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6": "yes",
             "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc": "no",
-            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes"
+            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes",
+            "ocd-person/9046fcb2-f3eb-4233-bd92-32c94e60f9df": "no",
+            "ocd-person/18427775-e3e7-4730-bb6f-722616e6aebe": "no",
+            "ocd-person/8e209d95-2333-4aa2-a628-1bdcec0674f5": "no",
+            "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220": "yes",
+            "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359": "yes",
+            "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77": "no",
+            "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa": "no"
           }
         },
         "senate": {
@@ -1330,11 +1418,11 @@
           "partyTally": {
             "Democratic": {
               "yea": 1,
-              "nay": 17,
-              "other": 0
+              "nay": 18,
+              "other": 1
             },
             "Republican": {
-              "yea": 27,
+              "yea": 31,
               "nay": 1,
               "other": 0
             },
@@ -1390,7 +1478,13 @@
             "ocd-person/3a5721a0-d848-40d0-a48a-66b797e7d7d9": "yes",
             "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": "yes",
             "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": "yes",
-            "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes"
+            "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes",
+            "ocd-person/6be704ef-6250-4e08-86d3-f5fa2e1eebf3": "yes",
+            "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": "no",
+            "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef": "other",
+            "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c": "yes",
+            "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf": "yes",
+            "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": "yes"
           }
         }
       }
@@ -1414,11 +1508,11 @@
           "partyTally": {
             "Democratic": {
               "yea": 10,
-              "nay": 48,
+              "nay": 50,
               "other": 7
             },
             "Republican": {
-              "yea": 87,
+              "yea": 89,
               "nay": 0,
               "other": 1
             },
@@ -1581,7 +1675,11 @@
             "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded": "yes",
             "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6": "yes",
             "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc": "no",
-            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes"
+            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes",
+            "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220": "yes",
+            "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359": "yes",
+            "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77": "no",
+            "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa": "no"
           }
         },
         "senate": {
@@ -1592,11 +1690,11 @@
           "partyTally": {
             "Democratic": {
               "yea": 1,
-              "nay": 19,
-              "other": 1
+              "nay": 20,
+              "other": 2
             },
             "Republican": {
-              "yea": 25,
+              "yea": 28,
               "nay": 3,
               "other": 1
             },
@@ -1656,7 +1754,12 @@
             "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": "yes",
             "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": "yes",
             "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes",
-            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "no"
+            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "no",
+            "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": "no",
+            "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef": "other",
+            "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c": "yes",
+            "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf": "yes",
+            "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": "yes"
           }
         }
       }
@@ -1679,12 +1782,12 @@
           "result": "pass",
           "partyTally": {
             "Democratic": {
-              "yea": 64,
+              "yea": 74,
               "nay": 0,
               "other": 1
             },
             "Republican": {
-              "yea": 86,
+              "yea": 98,
               "nay": 0,
               "other": 2
             },
@@ -1847,7 +1950,29 @@
             "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded": "yes",
             "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6": "yes",
             "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc": "yes",
-            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes"
+            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes",
+            "ocd-person/c862c17f-ed00-41d7-97e5-1138f451a96c": "yes",
+            "ocd-person/3a23acfd-5ce6-4e47-b641-1efdab05bdca": "yes",
+            "ocd-person/cba2f06c-773c-49d3-949c-b1a2db377c21": "yes",
+            "ocd-person/5c5ab5cb-54f6-4218-8d1d-a99d36bca436": "yes",
+            "ocd-person/ad18dba4-9247-4542-95b1-2ccef815dbc7": "yes",
+            "ocd-person/0461f02b-df18-4984-8b3b-ada287879d0a": "yes",
+            "ocd-person/8b62e64b-bf80-4967-832b-8fb92cd6c4b3": "yes",
+            "ocd-person/4b3fdb35-d3fb-40aa-843e-d3900df37ce4": "yes",
+            "ocd-person/85740034-23b0-4001-9190-8948bd9f3b37": "yes",
+            "ocd-person/55074030-4d64-4da0-b68a-5e3945d00f25": "yes",
+            "ocd-person/b278b399-5ca3-4cd7-bc19-4053166577a2": "yes",
+            "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c": "yes",
+            "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220": "yes",
+            "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359": "yes",
+            "ocd-person/945875f7-f3c5-4c75-acd6-a195a0f76b12": "yes",
+            "ocd-person/68185f1d-fa54-4571-b305-fcd6c7dc024e": "yes",
+            "ocd-person/4b162447-89a7-4ffc-acbf-617e1ad87e2a": "yes",
+            "ocd-person/9deeb60b-4d1e-42b8-8052-d2808a30ea9a": "yes",
+            "ocd-person/d00eb950-0fb6-41ab-ae22-8e9ce84d7cf0": "yes",
+            "ocd-person/bc40f904-9c20-41d0-80d5-e5645d3e6935": "yes",
+            "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77": "yes",
+            "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa": "yes"
           }
         },
         "senate": {
@@ -1857,12 +1982,12 @@
           "result": "pass",
           "partyTally": {
             "Democratic": {
-              "yea": 17,
+              "yea": 19,
               "nay": 0,
               "other": 4
             },
             "Republican": {
-              "yea": 29,
+              "yea": 32,
               "nay": 0,
               "other": 0
             },
@@ -1922,7 +2047,12 @@
             "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": "yes",
             "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": "yes",
             "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes",
-            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes"
+            "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b": "yes",
+            "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": "yes",
+            "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef": "yes",
+            "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c": "yes",
+            "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf": "yes",
+            "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": "yes"
           }
         }
       }
@@ -1946,11 +2076,11 @@
           "partyTally": {
             "Democratic": {
               "yea": 1,
-              "nay": 50,
+              "nay": 55,
               "other": 3
             },
             "Republican": {
-              "yea": 80,
+              "yea": 82,
               "nay": 1,
               "other": 0
             },
@@ -2096,7 +2226,14 @@
             "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded": "yes",
             "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6": "yes",
             "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc": "no",
-            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes"
+            "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84": "yes",
+            "ocd-person/9046fcb2-f3eb-4233-bd92-32c94e60f9df": "no",
+            "ocd-person/18427775-e3e7-4730-bb6f-722616e6aebe": "no",
+            "ocd-person/8e209d95-2333-4aa2-a628-1bdcec0674f5": "no",
+            "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220": "yes",
+            "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359": "yes",
+            "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77": "no",
+            "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa": "no"
           }
         },
         "senate": {
@@ -2107,11 +2244,11 @@
           "partyTally": {
             "Democratic": {
               "yea": 1,
-              "nay": 17,
+              "nay": 19,
               "other": 0
             },
             "Republican": {
-              "yea": 27,
+              "yea": 31,
               "nay": 1,
               "other": 0
             },
@@ -2167,7 +2304,13 @@
             "ocd-person/3a5721a0-d848-40d0-a48a-66b797e7d7d9": "yes",
             "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4": "yes",
             "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7": "yes",
-            "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes"
+            "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994": "yes",
+            "ocd-person/6be704ef-6250-4e08-86d3-f5fa2e1eebf3": "yes",
+            "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe": "no",
+            "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef": "no",
+            "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c": "yes",
+            "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf": "yes",
+            "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac": "yes"
           }
         }
       }
