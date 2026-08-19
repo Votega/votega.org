@@ -104,10 +104,11 @@ def has_votes(sections):
 
 
 def index_contests(sections):
-    """(section_id, office) -> contests, plus a name-key -> entries fallback."""
+    """(section_id, office) -> contests, plus name-key and surname fallbacks."""
     by_office = {}
     by_name = {}
     by_office_norm = {}
+    by_surname = {}
     for sec in sections:
         for race in sec.get('races', []):
             entry = (sec['id'], race['office'], race['contests'])
@@ -119,7 +120,11 @@ def index_contests(sections):
                     k = name_key(cand.get('name'))
                     if k:
                         by_name.setdefault(k, []).append(entry)
-    return by_office, by_name, by_office_norm
+                        # Surname alone, at contest granularity — the last resort
+                        # when the first initial itself drifts.
+                        by_surname.setdefault(k[0], []).append(
+                            (sec['id'], race['office'], contest))
+    return by_office, by_name, by_office_norm, by_surname
 
 
 # ── race → results office label ────────────────────────────────────────────────
@@ -184,8 +189,37 @@ def norm_office(label):
     return re.sub(r'\s+', ' ', s).strip()
 
 
-def find_contests(race, by_office, by_name, by_office_norm):
+def contest_names(contest):
+    return {name_key(c.get('name')) for c in contest.get('candidates', [])}
+
+
+def narrow_group(contests, my_keys):
+    """Drop contests in a group that share no candidate with this race.
+
+    A group is normally the party primaries for a single seat, and a race's
+    candidates appear across all of them, so nothing is dropped. Gwinnett files
+    all five of its Superior Court seats under one office label with no seat
+    suffix, though, so that 'group' is five unrelated judges. Without this,
+    whichever race matched inherited the other four judges' vote totals — one
+    Gwinnett race rendered 130,118 votes for Tracie Cason as its own.
+    See CODEBASE-REVIEW-2026-08-18.md finding 3.1.
+    """
+    if not my_keys or len(contests) <= 1:
+        return contests
+    hits = [c for c in contests if my_keys & contest_names(c)]
+    # No overlap at all: leave the group alone rather than emit nothing — the
+    # race may legitimately have a different ballot than the contest recorded.
+    return hits or contests
+
+
+def find_contests(race, by_office, by_name, by_office_norm, by_surname, report=None):
     """Structural match first; fall back to candidate-name overlap."""
+    my_keys = race_name_keys(race)
+
+    # An exact office label identifies the seat, so its group is authoritative:
+    # every contest in it belongs to this race even when a candidate's name
+    # drifts between sources (races.json 'James E Lumsden' vs the state's
+    # 'Eddie Lumsden'). Narrowing here would silently drop that party's result.
     for key in office_keys(race):
         if key in by_office:
             return by_office[key], 'office'
@@ -198,15 +232,14 @@ def find_contests(race, by_office, by_name, by_office_norm):
         if len(hits) == 1:
             return hits[0], 'office~'
 
-    # Fallback: the office label drifted (e.g. judicial seat suffixes). Pick the
-    # contest group sharing the most candidates with this race, requiring a real
-    # overlap so unrelated races never borrow each other's numbers.
-    my_keys = race_name_keys(race)
+    # Fallback: the office label drifted (e.g. judicial seat suffixes, or a
+    # circuit that files every seat under one heading). Score each candidate
+    # group *after* narrowing it to the contests this race actually appears in,
+    # so a five-seat group competes on the one seat that matches.
     if not my_keys:
         return None, None
     wanted_sections = {s for s, _ in office_keys(race)} or None
-    best, best_score = None, 0
-    seen = set()
+    scored, seen = [], set()
     for k in my_keys:
         for sec_id, office, contests in by_name.get(k, []):
             if wanted_sections and sec_id not in wanted_sections:
@@ -215,14 +248,82 @@ def find_contests(race, by_office, by_name, by_office_norm):
             if ident in seen:
                 continue
             seen.add(ident)
-            names = {name_key(c.get('name'))
-                     for con in contests for c in con.get('candidates', [])}
+            narrowed = narrow_group(contests, my_keys)
+            names = set().union(*(contest_names(c) for c in narrowed)) if narrowed else set()
             score = len(my_keys & names)
-            if score > best_score:
-                best, best_score = contests, score
-    if best and best_score >= 2:
-        return best, 'name'
-    return None, None
+            if score:
+                scored.append((score, ident, narrowed))
+
+    if not scored:
+        return find_by_surname(race, by_surname, report)
+
+    scored.sort(key=lambda t: -t[0])
+    top = scored[0][0]
+    contenders = [s for s in scored if s[0] == top]
+
+    # A tie means two offices fit this race equally well — (surname, initial) is
+    # not unique across a section (courts has a Robert Lane and a Roger Lane).
+    # Report it rather than taking whichever sorted first.
+    if len(contenders) > 1:
+        if report is not None:
+            report.append((race['id'], 'ambiguous',
+                           f"{top} name(s) matched {len(contenders)} offices equally: "
+                           + ', '.join(o for _, (_, o), _ in contenders[:3])))
+        return None, None
+
+    # Accept a strong overlap, or a weak one that accounts for the race's whole
+    # ballot — an uncontested judicial seat has exactly one name to match on, and
+    # requiring two would leave every such race with no results at all.
+    if top >= 2 or top == len(my_keys):
+        return contenders[0][2], 'name'
+
+    if report is not None:
+        report.append((race['id'], 'weak',
+                       f"best office '{contenders[0][1][1]}' matched {top} of "
+                       f"{len(my_keys)} candidate(s) — below the bar"))
+    return find_by_surname(race, by_surname, report)
+
+
+def find_by_surname(race, by_surname, report=None):
+    """Last resort: surname alone, for a one-candidate seat.
+
+    `name_key` is surname plus first initial, which absorbs middle-name drift but
+    not a different given name — Gwinnett's `Richard Timothy Hamil` is filed by
+    the state as `Tim Hamil`, so the initials disagree (r vs t) and every tier
+    above fails.
+
+    Only attempted for a race with a single candidate surname, and only accepted
+    when exactly one contest in the expected section carries that surname and
+    that contest is itself uncontested. A section can hold two different people
+    who share a surname (courts has a Robert Lane and a Roger Lane), so anything
+    less strict would trade a missing result for a wrong one.
+    """
+    my_keys = race_name_keys(race)
+    surnames = {k[0] for k in my_keys}
+    if len(surnames) != 1:
+        return None, None
+    wanted_sections = {s for s, _ in office_keys(race)}
+    if not wanted_sections:
+        return None, None
+
+    hits = [(sec_id, office, contest)
+            for sec_id, office, contest in by_surname.get(next(iter(surnames)), [])
+            if sec_id in wanted_sections]
+    if len(hits) != 1:
+        if hits and report is not None:
+            report.append((race['id'], 'surname-ambiguous',
+                           f"surname '{next(iter(surnames))}' appears in "
+                           f"{len(hits)} contests — not attributable"))
+        return None, None
+
+    sec_id, office, contest = hits[0]
+    if len(contest.get('candidates', [])) != 1:
+        if report is not None:
+            report.append((race['id'], 'surname-contested',
+                           f"only a surname matched '{office}', which is contested "
+                           f"— cannot tell which candidate"))
+        return None, None
+    return [contest], 'surname'
 
 
 def slim(contests):
@@ -252,7 +353,8 @@ def main():
         sys.exit('No elections with results found.')
 
     for e in live:
-        e['by_office'], e['by_name'], e['by_office_norm'] = index_contests(e['sections'])
+        (e['by_office'], e['by_name'],
+         e['by_office_norm'], e['by_surname']) = index_contests(e['sections'])
 
     # Two races can share an office label — GA-13's full-term seat and the
     # special election filling the remainder of the same seat both resolve to
@@ -271,8 +373,9 @@ def main():
               + ', '.join(f'{o}' for _, o in sorted(contested_keys)))
 
     index = {}
-    stats = {'office': 0, 'office~': 0, 'name': 0}
+    stats = {'office': 0, 'office~': 0, 'name': 0, 'surname': 0}
     unmatched = []
+    near_misses = []
     for race in races:
         ambiguous = any(k in contested_keys for k in office_keys(race))
         phase_dates = {str(p.get('electionDate') or '')
@@ -281,7 +384,9 @@ def main():
         for e in live:
             if ambiguous and e['date'] not in phase_dates:
                 continue
-            contests, how = find_contests(race, e['by_office'], e['by_name'], e['by_office_norm'])
+            contests, how = find_contests(race, e['by_office'], e['by_name'],
+                                          e['by_office_norm'], e['by_surname'],
+                                          near_misses)
             if not contests:
                 continue
             trimmed = slim(contests)
@@ -311,8 +416,19 @@ def main():
         json.dump(out, f, ensure_ascii=False, separators=(',', ':'))
 
     print(f"\nMatched — exact office: {stats['office']}, "
-          f"normalized office: {stats['office~']}, candidate names: {stats['name']}")
+          f"normalized office: {stats['office~']}, candidate names: {stats['name']}, "
+          f"surname only: {stats['surname']}")
     print(f"Races with results: {len(index)} of {len(races)}")
+    if near_misses:
+        # A rejected match is a decision worth seeing: it is the difference
+        # between a race showing nothing and a race showing someone else's
+        # numbers. See CODEBASE-REVIEW-2026-08-18.md finding 3.1.
+        print(f"\nNear-misses rejected ({len(near_misses)}):")
+        for rid, kind, detail in near_misses[:15]:
+            print(f"    [{kind}] {rid}: {detail}")
+        if len(near_misses) > 15:
+            print(f"    ... and {len(near_misses) - 15} more")
+
     print(f"Races with none: {len(unmatched)}")
     for rid in unmatched[:15]:
         print(f"    {rid}")

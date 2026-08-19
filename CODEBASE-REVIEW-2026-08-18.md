@@ -30,7 +30,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 |---|---|---|---|
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
-| Tier 3 — wrong joins | 6 | **3.5** (via 1.5) | 3.1, 3.2, 3.3, 3.4, 3.6 |
+| Tier 3 — wrong joins | 6 | **3.1, 3.5** | 3.2, 3.3, 3.4, 3.6 |
 | Tier 4 — UX / IA / a11y | 15 | — | all |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
@@ -658,7 +658,7 @@ than half-fetching.
 
 > **STATUS: 3.5 fixed on 2026-08-18** as a necessary part of
 > [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote) — the tally is now
-> derived from the de-duplicated roster. 3.1, 3.2, 3.3, 3.4 and 3.6 remain open.
+> derived from the de-duplicated roster. **3.1 fixed 2026-08-19.** 3.2, 3.3, 3.4 and 3.6 remain open.
 
 ### 3.1 — Superior Court results: one race shows five other judges' totals; four show none
 
@@ -680,6 +680,42 @@ Re-running the builder: 347/353 races matched, 6 unmatched.
 contest whose candidate set actually overlaps rather than attaching the group; require the winning overlap to
 exceed the runner-up by a margin instead of accepting `best_score` ties; report near-misses rather than silently
 emitting the mis-join.
+
+#### ✅ FIXED — 2026-08-19
+
+`race-results-index.json` regenerated: **347 → 353 of 353 races matched, 0 lost.** Exactly one previously-matched
+race changed, and that is the mis-join itself.
+
+| Race | Before | After |
+|---|---|---|
+| `superior-court-gwinnett-hutchinson-2026` | 7 candidates across 5 seats, incl. Cason's 130,118 | its own contest only: Matthews 74,667 / Parker 38,695 / Toole 20,906 |
+| `-cason` / `-duncan` / `-hamil` / `-mason` | no results | 130,118 / 130,666 / 128,268 / 129,755 |
+| `-dekalb-jackson-asha` / `-latisha` | no results | 143,551 / 143,736 |
+
+Four changes:
+
+1. **`narrow_group()`** drops contests in a group sharing no candidate with the race, so Gwinnett's five-seat
+   group competes on the one seat that matches.
+2. **The name fallback scores narrowed groups and requires a unique winner.** A tie is reported, not resolved by
+   sort order — `(surname, initial)` is not unique within a section (courts holds a Robert Lane and a Roger Lane).
+3. **The `best_score >= 2` bar now also accepts a match covering the race's whole ballot.** An uncontested
+   judicial seat has one name to match on, so requiring two guaranteed those races could never match — which is
+   why all four uncontested Gwinnett seats showed nothing.
+4. **A surname-only tier** for `Richard Timothy Hamil` (races.json) vs `Tim Hamil` (state results), where even the
+   first initial drifts. Restricted to a single-candidate race whose surname appears in exactly one contest in the
+   expected section, and where that contest is itself uncontested.
+
+Near-misses are now printed. Two are currently rejected, both correctly: `ga-14-2026` matching 1 of 10 candidates
+against District 13, and `ga-house-41-2026` matching a bare surname into a contested District 117 race.
+
+**One design correction during the work.** Narrowing was first applied to exact-office matches too, which silently
+dropped legitimate results from 22 races — `ga-house-12-2026` lost its Republican primary entirely because
+races.json carries `James E Lumsden` while the state reports `Eddie Lumsden`. An exact office label identifies the
+seat, so its group is authoritative regardless of name drift; narrowing is now confined to the name fallback,
+where group membership is genuinely in doubt. The before/after diff is what caught it.
+
+**Verified in the browser:** the Hutchinson page's "Earlier This Cycle" tab renders only its own three candidates
+and mentions none of the other four judges; Cason's renders 130,118 unopposed. No console errors.
 
 ---
 
