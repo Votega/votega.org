@@ -43,7 +43,8 @@ import urllib.parse
 from datetime import datetime, timedelta, timezone
 
 from lib.http import fetch_json
-from lib.ga_voters import (LEGACY_PERSON_ID_MAP, MemberIndex, event_chamber,
+from lib.ga_voters import (LEGACY_PERSON_ID_MAP, MemberIndex,
+                           assign_remaining_by_surname, event_chamber,
                            normalize_voter_name, resolve_voter)
 
 API_KEY      = os.environ.get('OPENSTATES_API_KEY')
@@ -278,6 +279,7 @@ def main():
     unresolved_voter_rows  = 0
     name_fallback_resolved = 0
     ghost_voter_ids        = 0
+    surname_resolved       = 0
 
     votes_meta   = {}
     member_votes = {}
@@ -350,34 +352,45 @@ def main():
 
                 ve_chamber = event_chamber(ve.get('motion_text'), ve.get('organization'))
 
-                for pv in ve.get('votes', []):
-                    voter = pv.get('voter') or {}
+                # Pass 1 — resolve by id, alias, or full name.
+                # Georgia roll calls name voters by bare surname and omit
+                # voter.id exactly when that surname is shared, so the rows
+                # needing help are the ones a name lookup can never settle.
+                # See CODEBASE-REVIEW-2026-08-18.md 1.5.
+                event_resolved, pending, pending_how = {}, [], {}
+                for row, pv in enumerate(ve.get('votes', [])):
+                    voter  = pv.get('voter') or {}
+                    option = pv.get('option', '').lower()
+                    name   = pv.get('voter_name') or voter.get('name')
 
-                    # Resolve by id, then fall back to (chamber, name) when the
-                    # id is missing *or* points at a person ga-members.json does
-                    # not know. The fallback used to be gated on `if not
-                    # voter_id`, so a stale-but-present id skipped it entirely —
-                    # which is how 21 deprecated ids orphaned 38 sitting
-                    # legislators in the curated dataset built the same way.
-                    # See CODEBASE-REVIEW-2026-08-18.md 1.5.
-                    voter_id, how = resolve_voter(
-                        voter.get('id'),
-                        pv.get('voter_name') or voter.get('name'),
-                        ve_chamber,
-                        member_index,
-                    )
-                    if how == 'name':
-                        name_fallback_resolved += 1
-                    elif how == 'ghost':
+                    voter_id, how = resolve_voter(voter.get('id'), name,
+                                                  ve_chamber, member_index)
+                    if voter_id:
+                        if how == 'name':
+                            name_fallback_resolved += 1
+                        event_resolved[voter_id] = option
+                    else:
+                        pending.append((row, name, option))
+                        pending_how[row] = how
+
+                # Pass 2 — assign the rest by elimination against the chamber
+                # roster, only where the counts and the recorded options leave
+                # no choice.
+                assigned, still_unresolved = assign_remaining_by_surname(
+                    pending, set(event_resolved), ve_chamber, member_index)
+                options_by_row = {r: opt for r, _, opt in pending}
+                for row, member_id in assigned.items():
+                    event_resolved[member_id] = options_by_row[row]
+                surname_resolved += len(assigned)
+                for row in still_unresolved:
+                    if pending_how[row] == 'ghost':
                         ghost_voter_ids += 1
-                    if not voter_id:
-                        unresolved_voter_rows += 1
-                        continue
-                    option     = pv.get('option', '').lower()
-                    vote_label = VOTE_MAP.get(option, 'Other')
+                    unresolved_voter_rows += 1
+
+                for voter_id, option in event_resolved.items():
                     member_votes.setdefault(voter_id, []).append({
                         'voteId': ve_id,
-                        'vote':   vote_label,
+                        'vote':   VOTE_MAP.get(option, 'Other'),
                     })
 
         pagination  = data.get('pagination', {})
@@ -481,6 +494,9 @@ def main():
             # legislator is missing votes they actually cast.
             # See CODEBASE-REVIEW-2026-08-18.md 1.5.
             'ghostVoterIds':         ghost_voter_ids,
+            # Rows recovered by elimination against the chamber roster, the
+            # only way to attribute a bare-surname row shared by several members.
+            'surnameResolved':       surname_resolved,
         },
         'votes':       votes_meta,
         'memberVotes': member_votes,

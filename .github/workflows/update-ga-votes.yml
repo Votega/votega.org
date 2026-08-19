@@ -5,6 +5,17 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      full_refresh:
+        description: >-
+          Rebuild every roll call from scratch instead of only those changed since
+          the last run. Needed to backfill members whose votes were previously
+          dropped (see CODEBASE-REVIEW-2026-08-18.md 1.5). Costs more than one
+          day of the 250-request Open States quota, so run it on a day nothing
+          else uses the key; partial progress is merged and resumes next run.
+        type: boolean
+        required: false
+        default: false
   schedule:
     # Monday, not Sunday: this paginates the same Open States /bills endpoint as
     # update-ga-bills, and the 250 requests/day quota is shared across every job
@@ -28,6 +39,7 @@ jobs:
         run: python scripts/generate_ga_votes_data.py assets/data/ga-member-votes.json
         env:
           OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
+          FULL_REFRESH: ${{ inputs.full_refresh && '1' || '' }}
 
       - name: Validate generated data
         run: |

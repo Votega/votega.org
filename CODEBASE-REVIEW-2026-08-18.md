@@ -464,10 +464,34 @@ imbalance refuses, a Senate member never fills a House row, and former members a
 roster. End-to-end on a synthetic full 178-row House roll call built from the real member list: all 26
 shared-surname members resolved, **0 misattributed**, tally equal to roster.
 
-**Still pending:** the next `update-curated-ga-bills` run. Expect `surnameResolved ≈ 26` per House roll call and
-coverage at or near 232/232, with `ghostVoterIds` holding at ~40 rows for the two 2023-24 bills — which is the
-correct outcome, not a defect. Those two bills will always under-report, because a third of that chamber no
-longer serves.
+#### ✅ CONFIRMED IN DATA — 2026-08-19
+
+The regenerated `curated-ga-bill-votes.json` reports **coverage 194 -> 224 of 232 (+15.5%)**, with **141** rows
+recovered by surname elimination. The remaining 8 are all explained, and none is a defect:
+
+| Members | Why they have no key votes |
+|---|---|
+| Lee Anderson (R), Tonya Anderson (D) | The only shared-surname pair that splits its vote. Elimination refuses rather than guess who voted which way — working as designed. Watson (2 R) and Jones (2 D) vote alike and resolved in all 9 bills. |
+| Venola Mason | Seated 2026-04-18, after the last curated roll call (2026-03-31). |
+| Sheila Nelson | Seated 2026-03-15; only 2 of 17 roll calls postdate that. |
+| Bo Hatchett, Lanny Thomas, Max Burns, Sylvia Wayfer | Absent from every curated roll call. Ordinary absence, not a resolution failure. |
+
+Resolving the Andersons would need district-level data, which Georgia roll calls do not carry. Closing that gap
+means an editorial override, not a code change.
+
+#### ⚠️ THE SAME DEFECT IS LARGER IN `ga-member-votes.json`
+
+Cross-checking the curated result against `ga-member-votes.json` exposed the real scope. That file — which powers
+the voting-history tab on every legislator page — records **no votes at all for 39 of 232 sitting legislators**,
+and **92% of them share a surname**: Jan/Nissa/Sheila/Todd Jones, all four Smiths, four Jacksons, both Watsons,
+both Cannons, both Campbells, both Ridleys, three Howards. Ben Watson and Emanuel Jones are absent there while
+resolving cleanly in the curated file, which is what gave it away.
+
+`generate_ga_votes_data.py` now runs the same two-pass resolution. **But it is incremental by default**: a normal
+run only re-fetches bills changed since the last one, so the 39 members' back history stays missing. Backfilling
+needs a full rebuild, so `update-ga-votes.yml` gained a `full_refresh` dispatch input. That costs more than one
+day of the 250-request Open States quota — partial progress is merged and resumes on the next run, so it may take
+two passes on days when nothing else uses the key.
 
 ---
 
