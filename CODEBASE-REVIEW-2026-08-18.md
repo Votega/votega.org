@@ -894,13 +894,39 @@ the boundary cases (margin equal to unmatched → withheld; margin one greater �
 records lacking exact counts. In the browser, 10 tags shown and 3 withheld with the explanatory wording on the
 first screen; no console errors.
 
-**⚠ Left for you — the full refresh did not finish.** `ga-member-votes.json` now reports
-`fetchComplete: false, paginationComplete: false` and **2,145 roll calls, down from 2,223**, so the run exhausted
-the Open States quota partway. Two consequences: **78** `passageVotes` in `ga-bills.json` still carry a tally from
-the previous enrichment because their roll call is missing from the current file, and `unresolvedVoterRows` is
-8,918. Re-running `update-ga-votes` with `full_refresh=true` on a quiet day should complete the pull and clear
-both. The 1.5 gain is already banked regardless: `surnameResolved: 22,722`, `ghostVoterIds: 0`, and legislators
-with no voting history **39 → 8**.
+#### 🐞 A DEFECT FOUND WHILE VERIFYING — full refresh replaced instead of merging
+
+The 2026-08-19 `FULL_REFRESH=1` run left `ga-member-votes.json` at **2,145 roll calls, down from 2,223**. That is
+not quota truncation being carried forward honestly — it is data loss, and the advice to "re-run full_refresh
+until it completes" was wrong on both counts:
+
+- **A full refresh cannot complete.** `incremental_since()`'s own docstring says so: the session is ~274 pages
+  against a 250/day quota shared with every other Open States job. Every run ends early by design.
+- **It did not merge.** `was_incremental = bool(since and prior_votes)`, and `FULL_REFRESH` sets `since = None`,
+  so `merge_votes()` was skipped entirely. One day's quota therefore *replaced* the accumulated baseline with
+  whatever it reached — discarding 78 roll calls and leaving 78 `passageVotes` in `ga-bills.json` carrying
+  tallies from the previous enrichment.
+
+Repeating the run would not have recovered them; it would have re-fetched the same leading pages and truncated
+again. Adding the `full_refresh` input to the workflow put that one click away.
+
+**Fixed:** the merge now runs whenever a baseline exists **for the same session**, full refresh included, so a
+partial full refresh is additive — old roll calls are re-processed under current resolution logic and anything the
+run did not reach is retained. A session changeover still bypasses the merge, which is the one case where the
+prior file genuinely must not be carried forward.
+
+**Recovered:** the pre-refresh file was still in git at `10e5ae5~1`. Merging the current data over it — using the
+generator's own `merge_votes` + `sanitize_member_votes`, offline — restores **2,223 roll calls while keeping the
+improved 235-member resolution**. Re-running the enrichment then produced **2,223 enriched votes with 0 stale
+records**, up from 2,145 enriched + 78 stale.
+
+The 1.5 gain is intact throughout: `surnameResolved: 22,722`, `ghostVoterIds: 0`, legislators with no voting
+history **39 → 8** (the same 8 identified in 1.5: the split-voting Andersons, two members seated after the votes,
+and four absentees).
+
+**Still worth doing, but not urgent:** `paginationComplete` remains false, which is the normal steady state for
+this dataset and is reported honestly in metadata. Ordinary weekly incremental runs keep it fresh; a full refresh
+is only worth running after a *resolution-logic* change, and now that it merges, running one is safe.
 
 ---
 

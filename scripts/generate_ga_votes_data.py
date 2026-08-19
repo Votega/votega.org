@@ -426,15 +426,39 @@ def main():
     # dataset is complete — a run can succeed fully while the baseline stays partial.
     fetch_complete = total_pages is None or page >= total_pages
 
-    was_incremental = bool(since and prior_votes)
-    if was_incremental:
+    # Merge whenever there is a baseline for *this* session — including a full
+    # refresh. A full refresh cannot finish in one run (the session is ~274 pages
+    # against a 250/day quota shared with every other job, which is why
+    # incremental_since() refuses to demand a complete baseline), so treating it
+    # as a wholesale replacement meant one day's quota silently truncated the
+    # dataset: a FULL_REFRESH=1 run on 2026-08-19 fetched 208 pages and replaced
+    # 2,223 accumulated roll calls with its own 2,145, discarding 78.
+    #
+    # Merging makes a partial full refresh additive instead: old roll calls are
+    # re-processed under current resolution logic, and anything this run did not
+    # reach is retained rather than dropped.
+    #
+    # The one case that must NOT merge is a session changeover, where the prior
+    # file describes a different biennium — incremental_since() already forces a
+    # full pull there, and this keeps the two sessions from being merged into one
+    # file. See CODEBASE-REVIEW-2026-08-18.md finding 3.4.
+    prior_session  = (prior_meta or {}).get('session')
+    session_changed = bool(prior_session) and prior_session != GA_SESSION
+    should_merge = bool(prior_votes) and not session_changed
+
+    if session_changed:
+        print(f"  Baseline is session {prior_session}, building {GA_SESSION} — "
+              f"not merging; this run's data stands alone.")
+
+    if should_merge:
         fetched_votes, fetched_members = len(votes_meta), len(member_votes)
         votes_meta, member_votes = merge_votes(
             prior_votes, prior_member_votes, votes_meta, member_votes
         )
+        retained = len(votes_meta) - fetched_votes
         print(f"  Merged {fetched_votes} refetched vote(s) across {fetched_members} member(s) "
               f"into {len(prior_votes)} existing -> {len(votes_meta)} votes, "
-              f"{len(member_votes)} members")
+              f"{len(member_votes)} members ({retained} retained from the baseline)")
 
     # Fail here rather than writing an empty file and letting the workflow's validation
     # catch it later. A failed first page breaks out of the fetch loop above, and without
