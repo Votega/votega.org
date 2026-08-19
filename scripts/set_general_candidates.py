@@ -29,6 +29,10 @@ import sys
 import os
 from datetime import datetime, timezone
 
+# Cycle whose races this helper lists/promotes — change at a rollover (finding 5.9).
+CYCLE = 2026
+GENERAL_DATE = "2026-11-03"
+
 RACES_PATH = os.path.join(os.path.dirname(__file__), '..', 'assets', 'data', 'races.json')
 
 
@@ -72,7 +76,7 @@ def main():
     race = next((r for r in data['races'] if r['id'] == race_id), None)
     if not race:
         print(f"ERROR: race '{race_id}' not found in races.json")
-        print("Available IDs:", [r['id'] for r in data['races'] if r.get('cycle') == 2026])
+        print("Available IDs:", [r['id'] for r in data['races'] if r.get('cycle') == CYCLE])
         sys.exit(1)
 
     # Resolve each candidate
@@ -97,7 +101,7 @@ def main():
 
     # Update the race
     race['activePhase'] = 'general'
-    race['phases'].setdefault('general', {})['electionDate'] = race['phases'].get('general', {}).get('electionDate', '2026-11-03')
+    race['phases'].setdefault('general', {})['electionDate'] = race['phases'].get('general', {}).get('electionDate', GENERAL_DATE)
     race['phases']['general']['ballots'] = ballots
     # Remove the old empty candidates list if present
     race['phases']['general'].pop('candidates', None)

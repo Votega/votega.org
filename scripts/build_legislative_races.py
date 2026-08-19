@@ -34,6 +34,14 @@ OVERRIDES  = Path("assets/data/ga-race-candidate-overrides.json")
 FORCE_RESET = "--force-reset" in sys.argv
 ALLOW_LOSS  = "--allow-loss" in sys.argv
 
+# --- Cycle parameters: the one place to change at a cycle rollover (2026 -> 2028).
+# Race IDs, the `cycle` field, and the phase election dates all derive from these,
+# so a rollover is a three-line edit here rather than scattered literals. Mirrors
+# GA_SESSION in the GA data generators. See CODEBASE-REVIEW-2026-08-18.md finding 5.9.
+CYCLE        = 2026
+PRIMARY_DATE = "2026-05-19"
+GENERAL_DATE = "2026-11-03"
+
 # Keys this script derives from source on every run. Anything else found on an
 # existing race is downstream state and is carried forward untouched.
 BUILDER_OWNED = {"id", "level", "chamber", "district", "cycle", "phases",
@@ -118,10 +126,10 @@ def normalize_website(url: str) -> str:
     return url
 
 def make_candidate_id(chamber_slug: str, district: int, party_slug: str, idx: int) -> str:
-    return f"ga-{chamber_slug}-{district}-2026-{party_slug}-{idx+1}"
+    return f"ga-{chamber_slug}-{district}-{CYCLE}-{party_slug}-{idx+1}"
 
 def make_race_id(chamber_slug: str, district: int) -> str:
-    return f"ga-{chamber_slug}-{district}-2026"
+    return f"ga-{chamber_slug}-{district}-{CYCLE}"
 
 def parse_district(contest_name: str):
     """Extract district number from 'State House, District 12 (D)' -> 12"""
@@ -311,15 +319,15 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict, 
             "level":       "state",
             "chamber":     chamber_name,
             "district":    district,
-            "cycle":       2026,
+            "cycle":       CYCLE,
             "activePhase": "primary",
             "phases": {
                 "primary": {
-                    "electionDate": "2026-05-19",
+                    "electionDate": PRIMARY_DATE,
                     "ballots": ballots
                 },
                 "general": {
-                    "electionDate": "2026-11-03",
+                    "electionDate": GENERAL_DATE,
                     "candidates": []
                 }
             }

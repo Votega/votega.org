@@ -17,11 +17,14 @@ before editing any JSON by hand; a hand edit will be overwritten on the next run
 
 | Cadence | Workflows |
 |---|---|
-| Daily | `update-current-members` (06:00), `update-ga-members` (07:00), `publish-races-to-ga-races-elections` (07:00), `update-curated-ga-bills` (08:00), `update-ga-executive-orders` (08:15) |
-| Weekly (Sun) | `update-ga-bills` (07:30), `update-fec-data` (08:00), `update-ga-votes` (08:00), `update-ga-campaign-finance` (08:30), `update-federal-votes` (09:00), `update-presidential-laws` (09:45), `update-scotus-decisions` (10:00), `update-ga-congress-trades` (10:00), `update-vp-tie-votes` (09:30) |
-| Manual dispatch only | `deploy-pages`, `validate-ga-overrides`, `sync-generated-data-on-pr`, the `inspect-*` diagnostics, and the `publish-*` repo syncs |
+| Daily | `update-current-members` (06:00), `update-ga-members` (07:00), `publish-races-to-ga-races-elections` (07:00), `update-ga-executive-orders` (08:15) |
+| Tue & Thu | `update-curated-ga-bills` (08:00) &mdash; cron `0 8 * * 2,4`, **not** daily |
+| Weekly (Sun) | `update-ga-bills` (07:30), `update-fec-data` (08:00), `update-ga-campaign-finance` (08:30), `update-federal-votes` (09:00), `update-vp-tie-votes` (09:30), `update-presidential-laws` (09:45), `update-scotus-decisions` (10:00), `update-ga-congress-trades` (10:00) |
+| Weekly (Mon) | `update-ga-votes` (07:30) &mdash; cron `30 7 * * 1`, deliberately off the Sunday cluster |
+| On push to `main` | The five `publish-*` syncs each fire when the `assets/data/*.json` they mirror changes (and are also `workflow_dispatch`-able). `publish-races-to-ga-races-elections` additionally runs on the daily schedule above. |
+| Manual dispatch only | `deploy-pages`, `validate-ga-overrides`, `sync-generated-data-on-pr`, the `inspect-*` diagnostics |
 
-All times UTC.
+All times UTC. Verified against the workflow crons 2026-08-19.
 
 ---
 
@@ -67,23 +70,35 @@ Triggered by: election night, then again at certification.
 
 Triggered by: qualifying opening for the next cycle.
 
-Each of these still hardcodes the year:
+Each of these still hardcodes the year. Line numbers drift — the entries name a
+constant, so `grep` for that rather than trusting the line. Verified 2026-08-19.
 
 | File | What to change |
 |---|---|
-| [`scripts/generate_fec_data.py`](scripts/generate_fec_data.py) L37 | `CYCLE = 2026` |
-| [`candidate.html`](candidate.html) L433, L446 | FEC fallback links: `election_year=2026` |
-| [`member.html`](member.html) L608 | FEC fallback link: `election_year=2026` |
-| [`scripts/set_general_candidates.py`](scripts/set_general_candidates.py) L74 | cycle filter in the helper's error output |
-| [`_config.yml`](_config.yml) L30 | nav section label `2026 Election Cycle:` |
+| [`scripts/build_legislative_races.py`](scripts/build_legislative_races.py) | `CYCLE`, `PRIMARY_DATE`, `GENERAL_DATE` constants near the top — race IDs, the `cycle` field, and both phase dates all derive from these |
+| [`scripts/build_general_placeholder.py`](scripts/build_general_placeholder.py) | `CYCLE` constant (drives the cycle filter and the output filename) |
+| [`scripts/set_general_candidates.py`](scripts/set_general_candidates.py) | `CYCLE` / `GENERAL_DATE` constants |
 | [`_data/election_archive.yml`](_data/election_archive.yml) | add a new `- cycle:` block for the new year |
-| `assets/data/races.json` | add races carrying the new `cycle` value |
+| `assets/data/races.json` | add races carrying the new `cycle` value (`build_legislative_races.py` writes these) |
+
+> **Corrected 2026-08-19.** This table previously listed four files that are no longer
+> hardcoded — `generate_fec_data.py` (now derives the cycle via `target_cycle()` from
+> `races.json`), the `election_year=2026` FEC links in `candidate.html` / `member.html`
+> (moved into `assets/scripts/campaign-finance.js`, which reads `metadata.cycle`), and a
+> `_config.yml` nav label that no longer exists. They are gone from the checklist. The
+> two `build_*` generators and the `GENERAL_DATE`/`CYCLE` scattered literals were the
+> ones actually missing — hoisted into labeled constants on 2026-08-19 (finding 5.9) so
+> each rollover is a one-line edit rather than a hunt. **GA legislative session** hardcodes
+> (`GA_SESSION`) are a separate axis — see section 3.
 
 **Already cycle-agnostic — no action needed:**
 
 - `elections.html` derives the active cycle from the newest `cycle` present in `races.json`,
   and builds the phase toggle from the phases actually in use.
 - `/results/` renders whatever cycles exist in `election_archive.yml`, newest first.
+- **FEC + PeachFile campaign finance** derives its cycle from the data: `generate_fec_data.py`
+  reads `target_cycle()` off `races.json`, and `campaign-finance.js` builds the FEC "election_year"
+  search link from `metadata.cycle`. No FEC year is hardcoded in a page anymore.
 - `/ga-ballot-measures` shows the **focal election** — the nearest upcoming `electionDate` in
   `ga-ballot-measures.json` (or the most recent if none upcoming). Introducing the next cycle's
   measures with the new `electionDate` archives the prior cycle from display automatically; the

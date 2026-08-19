@@ -32,7 +32,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
 | Tier 4 — UX / IA / a11y | 15 | **all fifteen** | — |
-| Tier 5 — hygiene, docs, traps | 12 | **5.1, 5.6, 5.7**; 5.2 in part | rest |
+| Tier 5 — hygiene, docs, traps | 12 | **5.1, 5.6, 5.7, 5.8, 5.9**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
 - **2026-08-18, `11af8df` "Tier 1 - Data Fixes"** — findings 1.1, 1.2, 1.3, plus the
@@ -2011,6 +2011,26 @@ recorded it.
 **Monday 07:30**. And "Manual dispatch only … the `publish-*` repo syncs" understates it: `publish-ga-bills`,
 `publish-ga-ballot-measures`, and `publish-federal-delegation` all also fire on `push:`.
 
+#### ✅ FIXED — 2026-08-19 · re-verified, and §0 was wronger than the finding said
+
+Re-checked all seven §2 rows and both §0 claims against the current tree (line numbers had drifted again from this
+session's edits — e.g. `generate_ga_votes_data.py`'s `GA_SESSION` is now L53, not the finding's L48). The finding's
+core verdict held: `generate_fec_data.py` (cycle now via `target_cycle()`), the `election_year=2026` links in
+`candidate.html` / `member.html` (0 matches — moved to `campaign-finance.js`, reads `metadata.cycle`), and the
+`_config.yml` nav label (0 matches) are all stale. Those four rows are **removed** from the §2 checklist and their
+now-agnostic status recorded in the "Already cycle-agnostic" list, so no one re-adds them.
+
+**§0 had a third error the finding didn't catch.** `update-curated-ga-bills` was listed under **Daily**, but its
+cron is `0 8 * * 2,4` — **Tuesday & Thursday only**. Fixed alongside the two the finding did flag:
+
+- `update-ga-votes` moved from the (wrong) "Weekly (Sun) 08:00" to its real **Monday 07:30** slot.
+- The `publish-*` line was worse than stated: **all five** fire on `push` (four are push+dispatch only; the fifth,
+  `publish-races`, is scheduled + push + dispatch), so "manual dispatch only" was flatly wrong. Rewrote that row to
+  say they fire on a push that changes the data file each mirrors.
+
+Every cron in the table was verified against the workflow files, not transcribed — the table now carries a
+"Verified 2026-08-19" stamp so the next reader knows when it was last trued up.
+
 ---
 
 ### 5.9 — Genuinely hardcoded 2026 that §2 does *not* list
@@ -2028,6 +2048,35 @@ Race IDs, cycle, and both election dates are literals in the generator that rebu
 Same in `scripts/build_general_placeholder.py:168,200`. Neither file is in the §2 changeover table, so a 2028
 rollover would regenerate 2026-branded IDs. This compounds the positional-ID fragility in
 [5.2](#52--remove-true-candidate-overrides-are-positional-and-can-delete-the-wrong-person).
+
+#### ✅ FIXED — 2026-08-19 · hoisted to constants, not left as scattered literals
+
+Confirmed all five sites in `build_legislative_races.py` plus the two in `build_general_placeholder.py`, and found a
+third file in the same class: `set_general_candidates.py` had a bare `== 2026` cycle filter **and** a `2026-11-03`
+fallback date.
+
+Each is now a **labeled constant at the top of its file**, matching the `GA_SESSION` pattern the GA data generators
+already use — a cycle rollover is a one-line-per-file edit instead of a hunt through embedded f-strings:
+
+```python
+# build_legislative_races.py
+CYCLE        = 2026
+PRIMARY_DATE = "2026-05-19"
+GENERAL_DATE = "2026-11-03"
+```
+
+Race IDs (`ga-{chamber}-{district}-{CYCLE}`), the `cycle` field, and both phase dates now derive from these.
+
+**Proven value-preserving.** I did not run the generators (they overwrite `races.json` and the placeholder, and
+`build_legislative_races` carries the loss-guard from [1.1](#11--build_legislative_racespy-destroys-391-general-election-candidates-on-every-run)).
+Instead, imported the refactored module and asserted the ID/date builders emit the exact old strings:
+`make_race_id('house', 15)` → `ga-house-15-2026`, `make_candidate_id('senate', 7, 'd', 2)` → `ga-senate-7-2026-d-3`.
+Since `CYCLE == 2026`, the output is identical by construction. A grep confirms **no bare `2026` literal survives**
+in any of the three generators outside the constant block and comments.
+
+The full picture — including [5.10](#510--session-identifiers-hardcoded-in-the-two-ga-generators)'s `GA_SESSION` —
+is now consolidated into the [5.8](#58--recurring-tasksmd-2s-hardcoded-year-table-is-3-of-7-wrong) rollover
+checklist, which is the doc someone actually opens at changeover.
 
 ---
 

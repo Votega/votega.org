@@ -24,6 +24,9 @@ import re
 from collections import OrderedDict
 
 HERE = os.path.dirname(__file__)
+
+# Cycle to build the placeholder for — change at a rollover. See finding 5.9.
+CYCLE = 2026
 ROOT = os.path.join(HERE, '..')
 OUT_DIR = os.path.join(ROOT, '_data', 'election_results')
 
@@ -165,7 +168,7 @@ def build_sections(races, congress_by_id, ga_by_id):
     buckets = {k: OrderedDict() for k in ('statewide', 'us-house', 'state-senate', 'state-house', 'courts')}
 
     for race in races:
-        if race.get('cycle') != 2026 or 'general' not in race.get('phases', {}):
+        if race.get('cycle') != CYCLE or 'general' not in race.get('phases', {}):
             continue
         section = classify(race)
         if section is None:
@@ -197,7 +200,7 @@ if __name__ == '__main__':
     sections = build_sections(races_data.get('races', []), congress_by_id, ga_by_id)
 
     os.makedirs(OUT_DIR, exist_ok=True)
-    out_path = os.path.join(OUT_DIR, 'ga-general-2026-results.json')
+    out_path = os.path.join(OUT_DIR, f'ga-general-{CYCLE}-results.json')
     with open(out_path, 'w', encoding='utf-8') as f:
         json.dump(sections, f, ensure_ascii=False, separators=(',', ':'))
 
