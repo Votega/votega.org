@@ -43,18 +43,44 @@ jobs:
           token: ${{ secrets.GA_RACES_PUSH_TOKEN }}
           path: target-repo
 
-      - name: Copy races.json to target repo
-        run: cp assets/data/races.json target-repo/races.json
-
       - name: Commit and push to ga-races-elections
         working-directory: target-repo
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add races.json
+
+          # Re-apply the source file(s) onto the current target tree. Used for the
+          # first commit and again after a reset when a push loses a race.
+          restage() {
+            cp "$GITHUB_WORKSPACE/assets/data/races.json" races.json
+            git add races.json
+          }
+
+          restage
           if git diff --cached --quiet; then
-            echo "No changes — races.json is already up to date"
-          else
-            git commit -m "Update races.json ($(date -u '+%Y-%m-%d'))"
-            git push
+            echo "No changes — files are already up to date"
+            exit 0
+          fi
+
+          # Idempotent mirror: on a non-fast-forward push (a concurrent run of
+          # this workflow, or the sibling publisher targeting the same repo), take
+          # the remote tip and re-apply our file rather than rebasing two
+          # pretty-printed JSON snapshots — which would conflict. See the
+          # publish-race incident, 2026-08-19.
+          pushed=0
+          for attempt in 1 2 3; do
+            git commit -m "Update races.json ($(date -u '+%Y-%m-%d'))" || true
+            if git push; then pushed=1; break; fi
+            echo "Push rejected (attempt $attempt) — syncing to remote and re-applying"
+            git fetch origin main
+            git reset --hard origin/main
+            restage
+            if git diff --cached --quiet; then
+              echo "Remote already carries our content"; pushed=1; break
+            fi
+          done
+          if [ "$pushed" -ne 1 ]; then
+            echo "::error::Push to ga-races-elections failed after 3 attempts"
+            exit 1
           fi

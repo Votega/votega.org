@@ -41,6 +41,15 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
   reusable `preview` status.
 - **2026-08-18, working tree** — finding 1.5 (shared `lib/ga_voters.py`), which also
   fixes 3.5. **Tier 1 is complete.**
+- **2026-08-19, live incident — `publish-ga-bills` non-fast-forward.** A real failure surfaced by the
+  notify-workflow-failure listener (2.2): three `ga-bills.json` commits inside 30 min spawned overlapping
+  `publish-*` runs that raced to push the *same* `Votega/ga-legislation` repo, and the loser's plain `git push` was
+  rejected (`! [rejected] main -> main (fetch first)`). A gap in the Tier 2 hardening — it covered the `update-*`
+  push loops but not the `publish-*` ones. Fixed all three sibling publishers (`publish-ga-bills`,
+  `publish-ga-ballot-measures`, `publish-races`) to an **idempotent-mirror** push: on rejection, reset to the remote
+  tip and re-apply the source file rather than rebasing two pretty-printed JSON snapshots (which conflicts —
+  verified). Proven against a two-runner bare-repo simulation: the losing run self-heals and lands its content with
+  no conflict or data loss.
 
 Each fixed finding keeps its original text and gains a **FIXED** note recording what
 changed, what was verified, and — where the original diagnosis was wrong — what the
