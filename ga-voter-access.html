@@ -347,7 +347,8 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
       const src = document.getElementById('vaDataSource');
       const meta = data.metadata || {};
       if (meta.generatedAt) {
-        src.textContent = `Data last updated: ${meta.generatedAt}` + (meta.source ? ` · Source: ${meta.source}` : '');
+        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt}`
+          + (meta.source ? ` · Source: ${meta.source}` : '');
       }
     } catch (err) {
       console.error(err);
@@ -358,3 +359,5 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
 
   loadCalendar();
 </script>
+
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>

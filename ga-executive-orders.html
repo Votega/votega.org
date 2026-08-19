@@ -274,7 +274,10 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
       applyFilter();
 
       const src = document.getElementById('dataSource');
-      src.textContent = `Source: gov.georgia.gov · Data as of: ${data.metadata?.updatedAt || year} · ${allOrders.length} orders`;
+      const eoUpdated = data.metadata?.updatedAt;
+      src.textContent = `Source: gov.georgia.gov · Data as of: `
+        + `${eoUpdated && window.dataStamp ? window.dataStamp.formatDate(eoUpdated) : (eoUpdated || year)}`
+        + ` · ${allOrders.length} orders`;
     } catch (err) {
       console.error(err);
       document.getElementById('orderBody').innerHTML =
@@ -285,3 +288,5 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
   buildYearNav();
   loadYear(activeYear);
 </script>
+
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>

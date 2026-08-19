@@ -181,6 +181,13 @@ async function loadData() {
     allMembers = results.filter(m => m && typeof m === 'object' && m.state === 'Georgia' && m.name);
     statusLine.textContent = '';
     renderMembers();
+    // Provenance stamp — see CODEBASE-REVIEW-2026-08-18.md finding 4.13.
+    if (window.dataStamp) {
+      window.dataStamp.render('dataStamp', {
+        updated: (data.metadata || {}).generatedAt,
+        source:  (data.metadata || {}).source || 'Congress.gov API',
+      });
+    }
   } catch (err) {
     console.error('loadData()', err);
     statusLine.textContent = err.message.includes('HTTP') ?

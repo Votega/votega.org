@@ -308,6 +308,9 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
 <div class="msg" id="status" role="alert"></div>
 
+<p id="dataStamp" class="data-stamp"></p>
+
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="assets/scripts/campaign-finance.js"></script>
 <script>
   const DEBUG = false;
@@ -335,6 +338,13 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       if (!membersRes.ok) throw new Error(`HTTP ${membersRes.status}`);
 
       const data = await membersRes.json();
+      // Provenance stamp — see CODEBASE-REVIEW-2026-08-18.md finding 4.13.
+      if (window.dataStamp) {
+        window.dataStamp.render('dataStamp', {
+          updated: (data.metadata || {}).generatedAt,
+          source:  (data.metadata || {}).source || 'Congress.gov API',
+        });
+      }
       const allMembers = data.members || [];
       const member = allMembers.find(m => m.bioguideId === bioguideId);
 

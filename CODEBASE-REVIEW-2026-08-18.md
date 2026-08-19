@@ -31,7 +31,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
-| Tier 4 — UX / IA / a11y | 15 | **4.1 – 4.3, 4.5 – 4.9, 4.11, 4.12** | 4.10, 4.13 – 4.15 |
+| Tier 4 — UX / IA / a11y | 15 | **4.1 – 4.3, 4.5 – 4.9, 4.11 – 4.14** | 4.10, 4.15 |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
@@ -1607,6 +1607,39 @@ Where it *is* shown, three formats coexist: raw string (`Data last updated: 2026
 
 **Fix:** one shared `formatDate()` plus a standard footer stamp component; add it to the eight pages missing it.
 
+#### ✅ FIXED — 2026-08-19 · one correction to the inventory
+
+Built as prescribed: `assets/scripts/data-stamp.js` exposes a shared `formatDate()` plus
+`dataStamp.render(el, {updated, source, extra})`, with one `.data-stamp` style.
+
+**Correction — the results pages were not missing it.** `_layouts/election_results.html:110` already renders
+`Last updated: {{ page.updated }}`, and 2 of the 6 results pages set that front matter. The real gap was the other
+**4** (`ga-special-2026-*`, `ga-general-2026-*`), which had no `updated:` key so the layout printed nothing. Added
+it to all four, dated from the last commit touching each page's own results data file — an honest answer rather
+than an invented one. So the count was **7 pages, not 8**.
+
+**Stamps added to all 7 genuinely-missing pages**, each verified rendering live:
+
+| Page | Renders |
+|---|---|
+| `federal-reps.html`, `member.html` | `Data last updated: August 19, 2026 · Source: Congress.gov API` |
+| `ga-state-reps.html`, `ga-member.html` | `… August 19, 2026 · Source: Open States API` |
+| `elections.html`, `race.html`, `candidate.html` | `… August 18, 2026 · Source: VoteGA curated race data` |
+
+The two lookup pages are stamped from inside the shared `congress.js` / `ga.js`, so the logic lives once per data
+source rather than once per page.
+
+**A schema difference worth recording.** The member files carry provenance as `metadata.generatedAt`, but
+`races.json` keeps it as a **top-level `updatedAt`** with no `metadata` object at all. The three race-data pages
+read that different key; the helper's `render()` returns false and leaves the element empty when there is no date,
+so a page never prints a dangling "Data last updated:" with nothing after it.
+
+**Three formats unified to one.** The raw-ISO stamps on `ga-ballot-measures.html` and `ga-voter-access.html`
+(`2026-07-15`) and the raw-plus-term-cycle on `ga-executive.html` now run through the shared formatter, as does
+`ga-executive-orders.html`. Verified: ballot measures now reads `July 15, 2026`, executive reads
+`May 3, 2026 · Source: georgia.gov · Term cycle: 2023–2027`, executive orders reads `Data as of: August 19, 2026`.
+Date-only strings are parsed as *local* dates, so a stamp does not read as the previous day west of UTC.
+
 ---
 
 ### 4.14 — Candidate profiles never link to the candidate-claim funnel
@@ -1619,6 +1652,24 @@ a candidate or their staffer will actually be sent — contains no link to it (`
 is guaranteed relevant doesn't have it.
 
 **Fix:** on unclaimed profiles, add "Are you this candidate? Claim this profile →" pointing at `/candidates/`.
+
+#### 🔁 MOSTLY ALREADY BUILT — gap closed 2026-08-19
+
+**Stale finding.** The CTA exists and has since commit `436e1a7 "Candidate Claims"`.
+`candidate.html:391` renders `CandidateClaims.claimCtaHtml(...)` on exactly the right condition — unclaimed, not
+withdrawn, not disqualified, and has a claim key — using the `.claim-*` presentation layer the finding noticed.
+Confirmed live on an unclaimed profile: the "Are you …, or part of this campaign?" block renders with a
+**Claim this profile →** button.
+
+The finding's `grep "candidates/" candidate.html → no match` was reading a real absence but drawing the wrong
+conclusion: the CTA links **straight to the prefilled Tally form**, not to `/candidates/`. For conversion that is
+better than bouncing a candidate through an explainer first.
+
+**The one real gap, closed.** A candidate who wants to know what the programme *is* before handing over their
+details had no route to `/candidates/` from this page. Added a secondary **"How it works"** link beside the
+primary button in `candidate-claims.js`, so the funnel keeps its direct path and gains an informational one.
+Uses the same `basePath()` helper as the rest of the site, so it survives a non-root deployment (finding 4.9).
+Verified rendering at `/candidates/` with the primary CTA unchanged.
 
 ---
 

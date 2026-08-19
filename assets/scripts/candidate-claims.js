@@ -18,6 +18,11 @@
   const CLAIMS_URL = 'assets/data/candidate-claims.json';
   const FORM_BASE  = 'https://tally.so/r/q48agY';
 
+  function basePath() {
+    return window.location.pathname.includes('/votega.org-TEST/')
+      ? '/votega.org-TEST/' : '/';
+  }
+
   // race.level -> questionnaire tier, mirroring scripts/build_candidate_claim_links.py
   const TIER_BY_LEVEL = {
     'federal': 'B',
@@ -234,6 +239,7 @@
         This profile is built from public records — you can add a biography,
         a photo, and your answers to the candidate questionnaire. It’s free.</p>
       <a class="claim-cta-btn" href="${href}" target="_blank" rel="noopener">Claim this profile →</a>
+      <a class="claim-cta-learn" href="${basePath()}candidates/">How it works</a>
     </div>`;
   }
 

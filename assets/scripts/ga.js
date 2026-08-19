@@ -174,6 +174,13 @@ async function loadData() {
     allMembers = (data.members || []).filter(m => !['Resigned', 'Removed', 'Deceased'].includes(m.status));
     statusLine.textContent = '';
     renderMembers();
+    // Provenance stamp — see CODEBASE-REVIEW-2026-08-18.md finding 4.13.
+    if (window.dataStamp) {
+      window.dataStamp.render('dataStamp', {
+        updated: (data.metadata || {}).generatedAt,
+        source:  (data.metadata || {}).source || 'Open States API',
+      });
+    }
   } catch (err) {
     statusLine.textContent = 'Could not load GA member data: ' + err.message;
   }

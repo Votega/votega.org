@@ -296,6 +296,9 @@ share-description: "Profile of a Georgia General Assembly member: district, part
 
 <div class="msg" id="status" role="alert"></div>
 
+<p id="dataStamp" class="data-stamp"></p>
+
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="assets/scripts/ga-districts.js"></script>
 <script>
   const DATA_URL  = 'assets/data/ga-members.json';
@@ -358,6 +361,13 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data  = await res.json();
+      // Provenance stamp — see CODEBASE-REVIEW-2026-08-18.md finding 4.13.
+      if (window.dataStamp) {
+        window.dataStamp.render('dataStamp', {
+          updated: (data.metadata || {}).generatedAt,
+          source:  (data.metadata || {}).source || 'Open States API',
+        });
+      }
       const all   = data.members || [];
       const member = all.find(m => m.id === id);
 

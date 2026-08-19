@@ -461,6 +461,15 @@ footer .footer-custom-content {
   font-family: var(--header-font);
 }
 
+/* Data provenance stamp (finding 4.13) — one look for every page's
+   "last updated" line, which previously appeared in three formats. */
+.data-stamp {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  color: #888;
+  line-height: 1.5;
+}
+
 /* Footer site map (finding 4.4) — one inbound link to every primary
    destination from every page. Uses the theme footer colour tokens. */
 .footer-sitemap {

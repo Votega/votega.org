@@ -200,6 +200,9 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
 <div class="msg" id="status" role="alert"></div>
 <div id="racesOutput"></div>
 
+<p id="dataStamp" class="data-stamp"></p>
+
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}"></script>
 <script>
   const RACES_URL = getBasePath() + 'assets/data/races.json';
@@ -571,6 +574,13 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
       const res = await fetch(RACES_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
+      // Provenance stamp. races.json keeps its timestamp at the top level as
+      // `updatedAt`, not under `metadata`. See CODEBASE-REVIEW-2026-08-18.md 4.13.
+      if (window.dataStamp) {
+        window.dataStamp.render('dataStamp', {
+          updated: data.updatedAt, source: 'VoteGA curated race data',
+        });
+      }
       const races = (data.races || []).filter(r => !r.id?.startsWith('_'));
 
       // Show the newest cycle present rather than a hardcoded year, so adding a

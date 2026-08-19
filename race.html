@@ -7,6 +7,10 @@ share-description: "Details for a Georgia race: the candidates running, the incu
 
 <div id="raceContent"><p>Loading race information…</p></div>
 
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
+
+<p id="dataStamp" class="data-stamp"></p>
+
 <style>
   .race-header { margin-bottom: 1.5rem; }
   .race-header h1 { margin-bottom: 0.25rem; }
@@ -860,6 +864,13 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       const racesRes = await fetch(RACES_URL);
       if (!racesRes.ok) throw new Error(`HTTP ${racesRes.status}`);
       const racesData = await racesRes.json();
+      // Provenance stamp. races.json keeps its timestamp at the top level as
+      // `updatedAt`, not under `metadata`. See CODEBASE-REVIEW-2026-08-18.md 4.13.
+      if (window.dataStamp) {
+        window.dataStamp.render('dataStamp', {
+          updated: racesData.updatedAt, source: 'VoteGA curated race data',
+        });
+      }
       const race = (racesData.races || []).find(r => r.id === raceId);
 
       if (!race) {

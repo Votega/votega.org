@@ -244,7 +244,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       const src = document.getElementById('dataSource');
       const meta = data.metadata || {};
       if (meta.generatedAt) {
-        src.textContent = `Data last updated: ${meta.generatedAt}` +
+        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt}` +
           (meta.source ? ` · Source: ${meta.source}` : '');
       }
     } catch (err) {
@@ -255,3 +255,5 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
 
   loadMeasures();
 </script>
+
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>

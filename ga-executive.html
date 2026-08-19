@@ -318,7 +318,9 @@ share-description: "Georgia's statewide executive officers - Governor, Lieutenan
 
       const src = document.getElementById('dataSource');
       if (data.metadata?.updatedAt) {
-        src.textContent = `Data last updated: ${data.metadata.updatedAt} · Source: ${data.metadata.source || 'georgia.gov'} · Term cycle: ${data.metadata.termCycle || ''}`;
+        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(data.metadata.updatedAt) : data.metadata.updatedAt}`
+          + ` · Source: ${data.metadata.source || 'georgia.gov'}`
+          + (data.metadata.termCycle ? ` · Term cycle: ${data.metadata.termCycle}` : '');
       }
     } catch (err) {
       console.error(err);
@@ -328,3 +330,5 @@ share-description: "Georgia's statewide executive officers - Governor, Lieutenan
 
   loadExecutiveOfficials();
 </script>
+
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
