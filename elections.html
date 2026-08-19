@@ -1,7 +1,9 @@
 ---
 layout: default
 title: 2026 Georgia Elections
-permalink: /elections.html
+permalink: /elections/candidates/
+redirect_from:
+  - /elections.html
 share-description: "Find candidates running in Georgia's 2026 elections. Statewide offices, Congress, and the General Assembly, by race and district."
 ---
 
@@ -198,9 +200,9 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
 <div class="msg" id="status" role="alert"></div>
 <div id="racesOutput"></div>
 
-<script src="assets/scripts/ga-districts.js"></script>
+<script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}"></script>
 <script>
-  const RACES_URL = 'assets/data/races.json';
+  const RACES_URL = getBasePath() + 'assets/data/races.json';
 
   const countySelect   = document.getElementById('countySelect');
   const countyFilter   = document.getElementById('countyFilter');
@@ -507,6 +509,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     params.set('tab', activeTab);
     if (activePhase) params.set('phase', activePhase);
     if (countySelect.value) params.set('county', countySelect.value);
+    if (openSeatOnly.checked) params.set('open', '1');
     history.replaceState(null, '', '?' + params.toString());
   }
 
@@ -534,7 +537,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
   });
 
   countySelect.addEventListener('change', () => { renderRaces(); syncURL(); });
-  openSeatOnly.addEventListener('change', renderRaces);
+  openSeatOnly.addEventListener('change', () => { renderRaces(); syncURL(); });
 
   // Apply tab/phase/county from the query string (if present and valid) after
   // the data-driven defaults have been computed, so a shared link reproduces
@@ -559,6 +562,8 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     if (county && COUNTY_TABS.has(activeTab) && [...countySelect.options].some(o => o.value === county)) {
       countySelect.value = county;
     }
+
+    if (params.get('open') === '1') openSeatOnly.checked = true;
   }
 
   async function loadData() {

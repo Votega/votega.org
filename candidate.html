@@ -727,7 +727,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       const race = (racesData.races || []).find(r => r.id === raceId);
       if (!race) {
         document.getElementById('candidateContent').innerHTML =
-          '<p>Race not found. <a href="elections.html">View all races</a></p>';
+          '<p>Race not found. <a href="elections/candidates/">View all races</a></p>';
         return;
       }
 
@@ -742,7 +742,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
       if (!member) {
         document.getElementById('candidateContent').innerHTML =
-          '<p>Member not found. <a href="elections.html">View all races</a></p>';
+          '<p>Member not found. <a href="elections/candidates/">View all races</a></p>';
         return;
       }
 
@@ -785,7 +785,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     } catch (err) {
       console.error(err);
       document.getElementById('candidateContent').innerHTML =
-        `<p>Error loading profile: ${err.message}. <a href="elections.html">Go back</a></p>`;
+        `<p>Error loading profile: ${err.message}. <a href="elections/candidates/">Go back</a></p>`;
     }
   }
 
@@ -799,7 +799,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     // Challenger route: ?id=...
     if (!candidateId) {
       document.getElementById('candidateContent').innerHTML =
-        '<p>No candidate specified. <a href="elections.html">View all races</a></p>';
+        '<p>No candidate specified. <a href="elections/candidates/">View all races</a></p>';
       return;
     }
 
@@ -846,7 +846,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
       if (!found) {
         document.getElementById('candidateContent').innerHTML =
-          '<p>Candidate not found. <a href="elections.html">View all races</a></p>';
+          '<p>Candidate not found. <a href="elections/candidates/">View all races</a></p>';
         return;
       }
 
@@ -878,7 +878,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     } catch (err) {
       console.error(err);
       document.getElementById('candidateContent').innerHTML =
-        `<p>Error loading candidate: ${err.message}. <a href="elections.html">Go back</a></p>`;
+        `<p>Error loading candidate: ${err.message}. <a href="elections/candidates/">Go back</a></p>`;
     }
   }
 

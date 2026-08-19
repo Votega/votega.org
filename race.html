@@ -807,7 +807,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       ${relatedHtml}
       ${tabBar}
       ${panelsHtml}
-      <div class="back-link"><a href="${basePath}elections.html">← Back to Elections</a></div>`;
+      <div class="back-link"><a href="${basePath}elections/candidates/">← Back to Elections</a></div>`;
 
     // One unified tab handler for party ballots and Campaign Finance alike.
     // Syncs the active panel to location.hash (pushHistory on a real user
@@ -852,7 +852,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   async function init() {
     if (!raceId) {
       document.getElementById('raceContent').innerHTML =
-        '<p>No race specified. <a href="elections.html">View all races</a></p>';
+        '<p>No race specified. <a href="elections/candidates/">View all races</a></p>';
       return;
     }
 
@@ -864,7 +864,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
 
       if (!race) {
         document.getElementById('raceContent').innerHTML =
-          '<p>Race not found. <a href="elections.html">View all races</a></p>';
+          '<p>Race not found. <a href="elections/candidates/">View all races</a></p>';
         return;
       }
 
@@ -906,7 +906,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     } catch (err) {
       console.error(err);
       document.getElementById('raceContent').innerHTML =
-        `<p>Error loading race: ${err.message}. <a href="elections.html">Go back</a></p>`;
+        `<p>Error loading race: ${err.message}. <a href="elections/candidates/">Go back</a></p>`;
     }
   }
 

@@ -31,7 +31,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 1 — wrong data reaching users | 5 | **all five** | — |
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
-| Tier 4 — UX / IA / a11y | 15 | **4.1 – 4.3, 4.5 – 4.9** | 4.10 – 4.15 |
+| Tier 4 — UX / IA / a11y | 15 | **4.1 – 4.3, 4.5 – 4.9, 4.11, 4.12** | 4.10, 4.13 – 4.15 |
 | Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
@@ -1522,6 +1522,44 @@ link goes to the hub. Ambiguous to share, and a standing maintenance trap.
 
 **Fix:** rename `elections.html` → `/elections/candidates/` with `redirect_from: /elections.html`.
 
+#### ✅ FIXED — 2026-08-19 · and a path-depth regression the rename exposed
+
+Renamed as prescribed: the finder is now `permalink: /elections/candidates/` with `redirect_from: /elections.html`
+(the plugin is already in use). The hub stays at `/elections/`, so the two pages now form a clean hierarchy
+instead of the `/elections/` vs `/elections.html` collision. Verified in-browser: old `/elections.html` meta-refreshes
+to `/elections/candidates/`, the hub still resolves at `/elections/`, and the finder loads at its new home.
+
+**A slug caveat, left as the finding specified.** `/elections/candidates/` sits right beside the existing
+`/candidates/` (the claim-your-profile portal), which reads as slightly ambiguous. I kept the finding's slug — the
+page is branded "Candidate Finder" and the `/elections/` parent disambiguates it — but if you'd prefer
+`/elections/races/`, it's a one-line permalink change plus the inbound links below.
+
+**Every inbound link repointed**, not just the finder's own URL:
+
+- **The mislabelled links the finding named.** `ga-ballot-measures.html`, `ga-voter-access.html`, and
+  `results.html` all say "see who's on your ballot" / "what's on the ballot" but linked to the *hub*. Repointed to
+  the finder, so the label and destination now agree. (`404.html`'s generic "Elections" → hub is correct and left.)
+- **The JS-built links** on `race.html` (back-link + 3 error states) and `candidate.html` (6 error states), plus
+  the Liquid links on `candidates.html`, `elections-hub.html`'s Candidate Finder card, and the new footer sitemap.
+
+**A regression the rename introduced, caught and fixed.** Moving the page from the root to a two-segment path
+broke two **document-relative** asset references that had silently assumed root depth:
+
+```
+<script src="assets/scripts/ga-districts.js">   → 404 at /elections/candidates/assets/scripts/…
+const RACES_URL = 'assets/data/races.json'      → 404, so the finder rendered zero races
+```
+
+Caught in-browser: `countyOptionCount: 1`, `racesRendered: 0`, and a `…/elections/candidates/assets/scripts/ga-districts.js
+404` in the network log. Fixed the script tag to `{{ '/…' | relative_url }}` and `RACES_URL` to
+`getBasePath() + 'assets/data/races.json'` (the page's own base-path helper, already baseurl-aware). Re-verified:
+**160 counties load, 180 GA House general races render**, filters restore from the URL.
+
+**Baseurl-safe.** The 9 error-fallback links I first wrote as root-absolute `/elections/candidates/` (JS string
+literals, so no `relative_url`) would have missed the prefix under a non-root deployment. Rewrote them
+document-relative (`elections/candidates/`), matching the original code's style. A full
+`--baseurl "/votega.org-TEST"` build then reported **0 unprefixed internal refs** across the whole site.
+
 ---
 
 ### 4.12 — `elections.html` holds all filter state off-URL
@@ -1534,6 +1572,23 @@ race page lands on the default Executive/Statewide tab with the county cleared. 
 solves exactly this correctly — the pattern is in the codebase.
 
 **Fix:** mirror `race.html`'s hash/`popstate` approach, or use `?tab=&phase=&county=`.
+
+#### ✅ ALREADY FIXED (pre-review) — completed 2026-08-19
+
+**Stale finding.** This was resolved in commit `c70181c "Deep Links"`, before this review run — `git log -S` on
+both `syncURL` and `applyURLParams` points there. `elections.html` already:
+
+- writes `?tab=&phase=&county=` via `history.replaceState` on every tab/phase/county change (deliberately
+  `replaceState`, not `pushState`, so filter clicks don't each add a Back stop), and
+- reads them back in `applyURLParams()` after the data-driven defaults are computed.
+
+Verified in-browser: `?tab=ga-house&county=Newton` restores that exact filtered view, and changing the county
+rewrites the URL. Browser Back from a race page returns to the filtered view rather than the default tab.
+
+**One real gap closed.** The `openSeatOnly` checkbox was the only filter still left off the URL. Added it to both
+`syncURL()` (`?open=1`) and `applyURLParams()`, so "open seats only" is now shareable too — confirmed
+`?tab=ga-house&county=Newton&open=1` restores all three. Everything now round-trips through the finder's new
+`/elections/candidates/` URL.
 
 ---
 
