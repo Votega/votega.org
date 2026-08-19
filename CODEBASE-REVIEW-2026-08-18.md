@@ -11,6 +11,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 
 ## Contents
 
+- [Remediation progress](#remediation-progress)
 - [Executive summary](#executive-summary)
 - [Tier 1 — Wrong data reaching users, or one command away](#tier-1--wrong-data-reaching-users-or-one-command-away)
 - [Tier 2 — Silent-failure machinery](#tier-2--silent-failure-machinery)
@@ -23,9 +24,30 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 
 ---
 
+## Remediation progress
+
+| Tier | Findings | Fixed | Remaining |
+|---|---|---|---|
+| Tier 1 — wrong data reaching users | 5 | **1.1, 1.2, 1.3** | 1.4, 1.5 |
+| Tier 2 — silent-failure machinery | 5 | **all five** | — |
+| Tier 3 — wrong joins | 6 | — | all |
+| Tier 4 — UX / IA / a11y | 15 | — | all |
+| Tier 5 — hygiene, docs, traps | 12 | **5.1**; 5.2 in part | rest |
+
+- **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
+- **2026-08-18, working tree** — Tier 1 findings 1.1, 1.2, 1.3, plus the `remove: true`
+  half of 5.2 (which turned out to be a prerequisite for 1.1 — see below).
+
+Each fixed finding keeps its original text and gains a **FIXED** note recording what
+changed, what was verified, and — where the original diagnosis was wrong — what the
+cause actually was.
+
+---
+
 ## Executive summary
 
-Four things stand out above the rest of the list.
+Four things stand out above the rest of the list. **Three of the four are now fixed**
+(items 1–3); item 4 is open.
 
 1. **`build_legislative_races.py` is an armed trap.** Running it today destroys 391 general-election candidate
    entries across all 236 GA legislative races. It already fired once on 2026-08-17. The only guard is a prose
@@ -51,6 +73,14 @@ push loop. Most Tier 2 findings are one fact wearing six costumes.
 ---
 
 ## Tier 1 — Wrong data reaching users, or one command away
+
+> **STATUS: 1.1, 1.2 and 1.3 fixed on 2026-08-18. 1.4 and 1.5 remain open.**
+>
+> | # | Fix |
+> |---|---|
+> | 1.1 | `build_legislative_races.py` merges instead of replacing, and refuses to write when the post-primary candidate count would drop. A full rebuild is now content-idempotent against `races.json`. **Required fixing the `remove: true` half of [5.2](#52--remove-true-candidate-overrides-are-positional-and-can-delete-the-wrong-person) as a prerequisite** — see the note on that finding. |
+> | 1.2 | `findFecId` collects every district+surname hit and narrows on full name → filing activity → shared committee, reporting `ambiguous` rather than guessing. All three misresolved candidates now resolve correctly; **0 ambiguous across 136 federal entries**, so the editorial pins the finding recommended proved unnecessary. |
+> | 1.3 | Both normalizers reduce to `first last` and strip honorifics. New `scripts/test_fec_name_parity.py` runs the real JS (via node) against the real Python over 329 names. **The finding's stated cause was wrong** — see the note on that finding. |
 
 ### 1.1 — `build_legislative_races.py` destroys 391 general-election candidates on every run
 
@@ -84,6 +114,37 @@ the documented workflow at TO-DO.md:295.
 `primaryResult` from the existing race object; overwrite only `phases.primary.ballots`. Stamp `updatedAt = now()`
 rather than copying `src["updatedAt"]`. Add a refuse-to-run guard when any target race has `activePhase != "primary"`.
 
+#### ✅ FIXED — 2026-08-18
+
+`merge_race()` rebuilds `phases.primary.ballots` from source and carries forward `activePhase`, any populated
+`general`/`runoff` phase, and every race-level key the builder does not own (`BUILDER_OWNED` names the ones it
+does). `updatedAt` now stamps `now()`. Races keep their original index in the array, so the diff stays readable.
+
+The guard is a count rather than an `activePhase` check: the run sums post-primary candidates before and after and
+refuses to write if the number falls. An `activePhase != "primary"` block as originally proposed would have
+refused *every* run, since all 236 races are currently `general`. `--allow-loss` overrides; `--force-reset
+--allow-loss` reproduces the old wholesale-replace behaviour deliberately.
+
+**A prerequisite the finding missed.** Fixing the merge was not sufficient to make the script safe to run. The
+first clean run reintroduced every duplicate candidate that had been removed — `ga-house-149` went 3 → 5
+candidates, `ga-house-14` grew a second Bella Bautista — because the builder never honoured `remove: true`
+(finding [5.2](#52--remove-true-candidate-overrides-are-positional-and-can-delete-the-wrong-person)). This was
+invisible in `races.json`, which already had them stripped, which is also why 5.2 recorded those 14 override keys
+as "orphaned": they are orphaned *against `races.json`* but load-bearing *against the source export*. The builder
+now applies `remove`, with 5.2's name check.
+
+**Verified:**
+
+| Check | Result |
+|---|---|
+| Default run vs. HEAD | **0** races differ — a full rebuild is content-idempotent |
+| General-election candidates | 391 → **391** |
+| `activePhase` reset to primary | **0** of 236 |
+| Duplicate candidate names after rebuild | **0** |
+| Non-legislative races touched | **0** |
+| `--force-reset` without `--allow-loss` | reports `391 → 0`, **exits 1, writes nothing** |
+| Stale positional `remove` (simulated re-order) | **exits 1, deletes nobody**, names the mismatch |
+
 ---
 
 ### 1.2 — FEC district+surname match is first-hit-wins
@@ -113,6 +174,44 @@ fires before step 3 and short-circuits it.
 ambiguous, return `status: 'ambiguous'` rather than guessing — mirroring the GA branch's own stated rule. Ship
 editorial `fecCandidateId` pins for these three immediately.
 
+#### ✅ FIXED — 2026-08-18
+
+`findFecMatch()` (new; `findFecId()` remains as a thin wrapper so `candidate.html`'s direct call still works)
+collects **every** district+surname hit, then narrows through `narrowFecMatches()`:
+
+1. **exact normalized full name** — separates two different people sharing a surname and district
+   (`BROWN, JAMES M` vs `BROWN, TIMOTHY BEAU`);
+2. **filing activity** — a record with `totalRaised`/`coverageEndDate` beats one with neither, which is what
+   distinguishes a live 2026 campaign from the same person's dormant 2014 candidacy;
+3. **shared `committeeId`** — one committee across the remaining ids means duplicate FEC records for a single
+   filer, so either is correct.
+
+Anything still unresolved returns `status: 'ambiguous'`. Step 3 is now collision-aware too, backed by an index the
+JS builds from `fecData.candidates` rather than reading `byNormalizedName` — that index stores one id per key and
+therefore **cannot represent the 14 real collisions** in the current data, which is why falling through to it (as
+the fix above proposed) would not have been safe on its own.
+
+**Verified** — in-browser against the live module, and by a 23-assertion node suite:
+
+| Race | Candidate | Was | Now |
+|---|---|---|---|
+| `ga-11-2026` | Tricia R. Pridemore | all `—` | **$618,361.76** (`H6GA11207`) |
+| `ga-14-2026` | Timothy Beau Brown | $9,879.55 / $1,492.03 — *James Brown's* | **$13,050.01 / $6,212.27** (`H6GA14185`) |
+| `ga-08-2026` | Justin M. Lucas | arbitrary of two | resolves via shared committee |
+
+Brown's candidate page now lists Advocate Health and International Paper as top donor employers instead of
+"Retired- State Farm". Sweep over all **136** federal candidate entries: 129 `ok`, 7 `none`, **0 `ambiguous`** —
+so the editorial `fecCandidateId` pins this finding recommended turned out to be unnecessary.
+
+`candidate.html` now distinguishes "Multiple FEC filings match this name" from "No FEC filing found", matching
+how `race.html:391` already worded the ambiguous case. `member.html:590` carried its own copy of the same
+`.find()` bug — unreachable today (all 15 GA members resolve by bioguide) but now delegating to the shared
+`narrowFecMatches()`.
+
+**Not changed:** `ga-member.html:470` reads `byNormalizedName` via its own `financeNormalizeName()`, but against
+the GA/PeachFile dataset whose matcher [Appendix B](#appendix-b--verified-clean) verified clean. Worth folding
+into the shared rule if the state side is ever consolidated.
+
 ---
 
 ### 1.3 — `normalizeName()` (JS) does not mirror `normalize_name()` (Python)
@@ -140,6 +239,39 @@ Step 3 is therefore dead for **~35% of federal candidates** — which is precise
 **Fix:** in JS, drop middle tokens and single-char initials the way Python does (build `first + last` from the
 token list regardless of comma), and add `dr|mr|mrs|ms` to the JS suffix regex to match the GA branch's
 `GA_SUFFIX_RE`. Add a fixture asserting the two implementations agree on all 252 `ga-fec-data.json` names.
+
+#### ✅ FIXED — 2026-08-18 · original diagnosis corrected
+
+**Divergence #1 above is wrong.** Both implementations reformatted **only** the comma form — the Python has no
+`else` branch either, so it also retained middle tokens for a no-comma name. Measured across the 252 FEC names,
+the two functions disagreed on exactly **2**, both from divergence #2 (single-char initials): `OSSOFF, T.
+JONATHAN` → `jonathan ossoff` in Python vs `t ossoff` in JS, and one Monteleone variant. That divergence is real
+but was latent, since the JS is only ever fed no-comma display names.
+
+**The actual defect** is a shape mismatch, not a drift: `byNormalizedName` is built from FEC's `LAST, FIRST
+MIDDLE` strings and so contains **228 two-token keys** (plus 2 three-token), while lookups pass `races.json`
+display names like `Tricia R. Pridemore`, which reduce to three-token keys. A three-token key cannot match a
+two-token entry, so **57 of 91** distinct federal names missed — 44 of them specifically because a middle name or
+initial survived. The finding's *conclusion* (a dead fallback for most of the field) was right; its stated cause
+was not.
+
+Both sides now reduce to `first last` — dropping middle tokens and bare initials in the no-comma path as well as
+the comma path — and both strip `dr|mr|mrs|ms`. That recovers **32** previously unmatchable names.
+
+**A hazard the fix had to avoid:** reducing to `first last` creates **14 collisions** inside the FEC data,
+including `tricia pridemore` (the 2014 and 2026 filings) and `justin lucas`. A naive first-wins index built on the
+new keys would have reintroduced [1.2](#12--fec-districtsurname-match-is-first-hit-wins) at step 3. This is why
+the JS builds a collision-aware `key → [ids]` index and routes it through `narrowFecMatches()`.
+
+**Verified:** `scripts/test_fec_name_parity.py` runs the **real** JS `normalizeName()` through node — not a Python
+re-implementation of it — against the **real** `normalize_name()`, over every FEC name, every federal candidate
+name in `races.json`, and pinned edge cases (quoted nicknames, `III`, hyphenated and single-word names): **329
+names, 0 disagreements**, 326 reducing to a two-token key. Negative-tested by reintroducing the exact drift, which
+produces 42 failures — so the fixture fails when it should.
+
+Note this changes the `byNormalizedName` keys `generate_fec_data.py` emits on the next regeneration. Nothing
+depends on that: the JS now builds its own index, and the committed `ga-fec-data.json` still works with the new
+code as-is.
 
 ---
 
@@ -197,7 +329,7 @@ metadata so it can't regress silently. Add ghost→canonical aliases to `ga-memb
 
 ## Tier 2 — Silent-failure machinery
 
-> **STATUS: all five fixed on 2026-08-18** (uncommitted working tree). Summary:
+> **STATUS: all five fixed on 2026-08-18**, committed as `4573e63` "Workflow Hardening". Summary:
 >
 > | # | Fix |
 > |---|---|
@@ -772,6 +904,13 @@ stops updating. RECURRING-TASKS §3's changeover checklist lists the two script 
 **Fix:** relative floor — `assert len(bills) >= 0.9 * previous_committed_count` with a small absolute floor for a
 genuinely new session. This is the same delta check proposed in [2.3](#23--five-workflows-commit-on-validation-that-only-prints).
 
+#### ✅ FIXED — 2026-08-18 (`4573e63`)
+
+The `>= 5000` assert is gone, replaced by `scripts/validate_data_update.py` with `--scope-key metadata.session`:
+the floor is now relative to the previously committed count, and a session rollover resets the baseline instead of
+failing every run for a year. The workflow's structural checks (`metadata.totalBills == len(bills)`,
+`paginationComplete`, required fields) were kept as-is.
+
 ---
 
 ### 5.2 — `remove: true` candidate overrides are positional and can delete the wrong person
@@ -792,6 +931,24 @@ appends unconditionally — it does **not** honor `remove`, so the two scripts d
 
 **Fix:** require a `_name` match before removing; warn on unmatched keys; dedupe inside
 `build_legislative_races.py` (the "durable fix, not yet done" at TO-DO.md:45) so these 14 entries can be deleted.
+
+#### 🟡 PARTIALLY FIXED — 2026-08-18 · and one premise corrected
+
+Fixed as a prerequisite for [1.1](#11--build_legislative_racespy-destroys-391-general-election-candidates-on-every-run):
+`build_legislative_races.py` now honours `remove: true`, resolving the disagreement between the two scripts about
+what the flag means. Before deleting, it compares the candidate's name against `_name` (taking the text before the
+` (` annotation, so `"Brian Lamar Prince (duplicate of d-1)"` targets `Brian Lamar Prince`). A mismatch aborts the
+run, names the conflict, and **deletes nobody** — verified by simulating a re-ordered source. Unmatched keys are
+reported as a note rather than passing silently.
+
+**"All 14 keys are currently orphaned" was misleading.** They are orphaned against `races.json`, where the
+deletions already took effect — but all 14 match live rows in the *source export*, and a rebuild applies every
+one of them. They are load-bearing, not vestigial: deleting them would have silently reintroduced 14 duplicate
+candidates on the next run. The evidence that they were dead was an artefact of measuring against the wrong file.
+
+**Still open:** the durable dedupe inside `build_legislative_races.py` (TO-DO.md:45) that would let these 14
+entries be retired, and the warn-on-unmatched-key pass in `apply_overrides.py` (also wanted by
+[5.4](#54--a-financebio-override-keyed-on-an-ocd-id-can-never-fire)).
 
 ---
 
@@ -1067,23 +1224,24 @@ new, so it cannot truncate.
 
 ## Suggested sequencing
 
-**1 — Stop the bleeding (this week)**
+**~~1 — Stop the bleeding~~ · done 2026-08-18**
 
-| # | Item | Why first |
+| # | Item | Outcome |
 |---|---|---|
-| [1.1](#11--build_legislative_racespy-destroys-391-general-election-candidates-on-every-run) | `build_legislative_races.py` merge guard | 391 candidates at risk, one command away, general is ~11 weeks out |
-| [2.1](#21--the-push-retry-loop-swallows-total-failure) | `\|\| exit 1` on the push loop | One line × 15 files; until it lands, every fix below can be silently discarded |
-| [1.2](#12--fec-districtsurname-match-is-first-hit-wins) | 3 editorial `fecCandidateId` pins | Stops a page showing another person's money today, ahead of the code fix |
-| [1.4](#14--ga-general-2026-results-is-live-and-reports-every-candidate-at-0-votes) | Gate the zeroed general-results pages | Only finding that can actively misinform a voter |
+| ~~1.1~~ | `build_legislative_races.py` merge guard | ✅ Rebuild is content-idempotent; loss guard refuses to write |
+| ~~2.1~~ | `\|\| exit 1` on the push loop | ✅ 15 occurrences across 14 workflows |
+| ~~1.2~~ | FEC first-hit-wins | ✅ Fixed in code; the 3 editorial pins proved unnecessary (0 ambiguous) |
+| [1.4](#14--ga-general-2026-results-is-live-and-reports-every-candidate-at-0-votes) | Gate the zeroed general-results pages | ⬜ **Still open — now the top item.** The only finding that can actively misinform a voter |
 
-**2 — Close the silent-failure loop**
+**~~2 — Close the silent-failure loop~~ · done 2026-08-18 (`4573e63`)**
 
-[2.2](#22--no-failure-notification-anywhere) notification step → [2.3](#23--five-workflows-commit-on-validation-that-only-prints)
-generic delta validator (which also retires [5.1](#51--update-ga-bills-hardcodes-the-current-sessions-bill-count))
-→ [2.4](#24--seven-fetchers-three-incompatible-retry-policies) shared `scripts/lib/http.py`, promoted from the
-already-correct `generate_current_members_data.py:41`.
+All of [2.2](#22--no-failure-notification-anywhere), [2.3](#23--five-workflows-commit-on-validation-that-only-prints)
+(which also retired [5.1](#51--update-ga-bills-hardcodes-the-current-sessions-bill-count)),
+[2.4](#24--seven-fetchers-three-incompatible-retry-policies) and
+[2.5](#25--open-states-quota-stacks-three-jobs-into-one-sunday-morning-window). Note 2.4 migrated **12** fetchers,
+not the 7 the finding counted.
 
-**3 — The GA vote-identity cluster**
+**3 — The GA vote-identity cluster · now the largest open block**
 
 [1.5](#15--21-ghost-ocd-person-ids-orphan-38-legislators-from-every-key-vote) is the root cause;
 [3.4](#34--party-line-badges-run-on-an-82-complete-roster-and-never-trip-their-own-warning) and
@@ -1093,10 +1251,10 @@ regardless), then raise the coverage threshold.
 
 **4 — Remaining wrong joins**
 
-[1.3](#13--normalizename-js-does-not-mirror-normalize_name-python) (unblocks the FEC fallback for ~35% of federal
-candidates), [3.1](#31--superior-court-results-one-race-shows-five-other-judges-totals-four-show-none),
+~~1.3~~ ✅ done (the FEC name fallback is live; 32 previously unmatchable names now resolve),
+[3.1](#31--superior-court-results-one-race-shows-five-other-judges-totals-four-show-none),
 [3.2](#32--four-ga-statewide-executives-are-indexed-as-ga-legislator),
-[3.3](#33--mergeinto-in-the-trades-generator-merges-trades-but-not-the-counters),
+[3.3](#33--_mergeinto-in-the-trades-generator-merges-trades-but-not-the-counters),
 [3.6](#36--generate_ga_members_datapy-emits-empty-strings-where-the-schema-says-null).
 
 **5 — UI: the contained edits**
@@ -1119,7 +1277,8 @@ against one new CSS/JS file, which also retires the triplicated card CSS.
 
 **7 — Override plumbing and hygiene**
 
-[5.2](#52--remove-true-candidate-overrides-are-positional-and-can-delete-the-wrong-person),
+[5.2](#52--remove-true-candidate-overrides-are-positional-and-can-delete-the-wrong-person) (🟡 the `remove`
+handling and name check are done; the durable dedupe remains),
 [5.3](#53--apply_overridespy-only-walks-phasesballots-never-phasescandidates),
 [5.4](#54--a-financebio-override-keyed-on-an-ocd-id-can-never-fire) — each removes a class of silent no-op — then
 [5.6](#56--repo-bloat-105-mb-of-dead-blobs-in-history) / [5.7](#57--nine-stray-csvs-tracked-in-assetsdata) /
