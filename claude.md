@@ -15,7 +15,7 @@ Congress.gov API → GitHub Actions → Python script → assets/data/*.json →
 
 ## Project Structure
 
-This map shows categories and representative examples, not an exhaustive file list — run `ls` / `Glob` for the current full set. As of 2026-07, the repo has ~26 top-level HTML pages, ~26 tracked scripts, and 21 GitHub Actions workflows.
+This map shows categories and representative examples, not an exhaustive file list — run `ls` / `Glob` for the current full set. As of 2026-08, the repo has ~35 top-level HTML pages, ~43 tracked scripts (incl. `scripts/lib/`), and 28 GitHub Actions workflows. (Counts drift — `git ls-files` is the source of truth.)
 
 ```
 votega.org/
@@ -65,7 +65,7 @@ votega.org/
 │   ├── img/                             # Images (logo.png, avatar-icon.png, bgimage.png, etc.)
 │   └── docs/                            # PDFs (flock_safety_covington_pd_contract.pdf)
 │
-├── scripts/                             # Build-time data generation (run by GitHub Actions), ~26 tracked
+├── scripts/                             # Build-time data generation (run by GitHub Actions), ~43 tracked
 │   ├── generate_current_members_data.py # Congress.gov API → assets/data/current-members.json
 │   ├── generate_ga_members_data.py      # Open States API → assets/data/ga-members.json
 │   ├── generate_ga_votes_data.py        # Open States API → assets/data/ga-member-votes.json
@@ -78,7 +78,7 @@ votega.org/
 │   ├── inspect_ga_bill_votes.py / inspect_openstates_fields.py  # diagnostics, each backed by its own workflow
 │   └── (one-off/local-machine scripts — e.g. debug_*.py, watch_downloads.py — are gitignored, not tracked)
 │
-├── .github/workflows/                   # 21 workflows: deploy, per-dataset daily/scheduled updates
+├── .github/workflows/                   # 28 workflows: deploy, per-dataset daily/scheduled updates
 │   │                                     # (update-*.yml), and publish-*-to-<sibling-repo>.yml syncs
 │   ├── deploy-pages.yml
 │   ├── update-current-members.yml       # Daily: runs generate_current_members_data.py, commits JSON

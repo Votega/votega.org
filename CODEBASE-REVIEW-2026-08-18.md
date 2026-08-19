@@ -32,7 +32,7 @@ tracked in [Appendix A](#appendix-a--status-of-the-2026-08-13-review).
 | Tier 2 — silent-failure machinery | 5 | **all five** | — |
 | Tier 3 — wrong joins | 6 | **3.1, 3.2, 3.3, 3.4, 3.5, 3.6** | — |
 | Tier 4 — UX / IA / a11y | 15 | **all fifteen** | — |
-| Tier 5 — hygiene, docs, traps | 12 | **5.1, 5.6, 5.7, 5.8, 5.9**; 5.2 in part | rest |
+| Tier 5 — hygiene, docs, traps | 12 | **5.1, 5.6 – 5.9, 5.11, 5.12**; 5.2 in part | 5.3, 5.4, 5.5, 5.10 |
 
 - **2026-08-18, `4573e63` "Workflow Hardening"** — all of Tier 2, plus 5.1.
 - **2026-08-18, `11af8df` "Tier 1 - Data Fixes"** — findings 1.1, 1.2, 1.3, plus the
@@ -2107,6 +2107,22 @@ all three suggest the header line dates to 2026-07 and the tree below it hasn't 
 workflows include `update-ga-campaign-finance-history`, `update-search-corpus`, `inspect-ga-sessions`, and the four
 `publish-*` syncs.
 
+#### ✅ FIXED — 2026-08-19 · re-counted after this session's additions
+
+The gap had widened — this session added workflows (`notify-workflow-failure`, `inspect-ga-voter-resolution`) and
+scripts (`only_keys_changed.py`, `inspect_ga_voter_resolution.py`, `validate_data_update.py`, and the new
+`scripts/lib/` package). Re-counted from `git ls-files`:
+
+| CLAUDE.md now says | Verified |
+|---|---|
+| 28 GitHub Actions workflows | `git ls-files '.github/workflows/*.yml'` → 28 |
+| ~43 tracked scripts (incl. `scripts/lib/`) | 40 at `scripts/*.py` + 3 in `scripts/lib/` |
+| ~35 top-level HTML pages | 35 |
+
+Updated all three sites (the header line, the `scripts/` tree comment, and the `.github/workflows/` comment) and
+added a "counts drift — `git ls-files` is the source of truth" note so the next reader treats them as indicative,
+not authoritative.
+
 ---
 
 ### 5.12 — Documentation sprawl and broken cross-links
@@ -2120,6 +2136,26 @@ is tracked, so the ignore entry is inert.
 
 **Fix:** decide per file — track it (if a tracked doc links to it, it must be tracked) or move it to a
 `docs/local/` folder ignored wholesale. Untracked-but-referenced is the worst of both.
+
+#### ✅ FIXED — 2026-08-19 · resolved by the repo's own evident intent
+
+Both facts confirmed (line numbers had drifted: the `TO-DO.md` links are at RECURRING-TASKS lines 4/35/54/124, and
+the duplicate ignore entries at `.gitignore` 60-61). Reading the full `.gitignore` settled the "track vs ignore"
+question the finding left open: there is a deliberate cluster of **maintainer-local** planning docs —
+`TO-DO.md`, the `*-design.md` files, `General Election Transition Plan.md` — all gitignored, while the review
+deliverables (`CODEBASE-REVIEW-2026-08-13.md`, and this file) are tracked. So `TO-DO.md` is private *by intent*, and
+promoting it to public to satisfy the links would be the wrong resolution — it would expose a working doc the owner
+chose to keep local.
+
+**So the fix runs the other way** — stop the public tracked doc from hard-linking a private one:
+
+- The four `[TO-DO.md](TO-DO.md)` links in `RECURRING-TASKS.md` are now plain `` `TO-DO.md` `` references, with a
+  one-time note at first mention that it's a maintainer-local doc not in the published repo. No more github.com
+  404s; local maintainers still know where to look. Swept every other tracked `.md` for links to gitignored files —
+  **none remain**.
+- The two inert, duplicated `CODEBASE-REVIEW-2026-08-13.md` lines were removed from `.gitignore` (the file is
+  tracked, so the entries did nothing — and its sibling `-08-18.md` is tracked with no ignore entry, confirming the
+  intent). Verified afterward: `08-13.md` is still tracked and no longer carries a dead ignore rule.
 
 ---
 

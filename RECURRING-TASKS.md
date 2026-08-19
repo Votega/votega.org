@@ -1,7 +1,7 @@
 # VoteGA.org — Recurring & Manual Tasks
 
 Things that need a human, organized by **what triggers them** rather than by feature area.
-For one-time backlog items and step-by-step editing procedures, see [TO-DO.md](TO-DO.md).
+For one-time backlog items and step-by-step editing procedures, see `TO-DO.md` — a **maintainer-local** working doc (gitignored, not in the published repo), so the references below are not links.
 
 > Rule of thumb: if a value changes every cycle or session, it should live in a data file,
 > not in code. Each hardcoded value listed below is a small refactor opportunity — the
@@ -32,7 +32,7 @@ All times UTC. Verified against the workflow crons 2026-08-19.
 
 Triggered by: election night, then again at certification.
 
-- [ ] Build the results page from the SOS export CSV — see *Maintenance — Updating Candidate Pages* in [TO-DO.md](TO-DO.md).
+- [ ] Build the results page from the SOS export CSV — see *Maintenance — Updating Candidate Pages* in `TO-DO.md`.
 - [ ] Re-run `python scripts/build_race_results_index.py` and commit
       `assets/data/race-results-index.json`. This feeds the **Earlier This Cycle** tab on
       `race.html`; without it that tab keeps showing the previous election set. The script
@@ -51,7 +51,7 @@ Triggered by: election night, then again at certification.
       (edits `races.json` in place; syncs edits across every phase a candidate appears in).
       **GA state legislative (`ga-house-*`/`ga-senate-*`):** `ga-race-candidate-overrides.json` via
       `ga-overrides-editor.html`, then `python scripts/apply_overrides.py`. See *Maintenance — Updating
-      Candidate Pages* in [TO-DO.md](TO-DO.md).
+      Candidate Pages* in `TO-DO.md`.
 - [ ] If a general-election runoff is required (Georgia holds these when no candidate clears 50%),
       set those races to `activePhase: runoff` with the runoff date.
 - [ ] **Ballot measures:** once results certify, set each measure's `status` to `passed` or
@@ -121,7 +121,7 @@ Triggered by: the biennium rolling over (2025–2026 → 2027–2028).
 | [`scripts/generate_ga_bills_data.py`](scripts/generate_ga_bills_data.py) L33–34 | `GA_SESSION = "2025_26"`, `SESSION_NAME` |
 | [`scripts/generate_ga_votes_data.py`](scripts/generate_ga_votes_data.py) L41–42 | same two constants |
 
-Then follow *Maintenance — Curated GA Bills → Session changeover* in [TO-DO.md](TO-DO.md),
+Then follow *Maintenance — Curated GA Bills → Session changeover* in `TO-DO.md`,
 and re-run both workflows so the new session's data lands before the pages reference it.
 
 **Get the identifier from the API, don't guess it.** Run the `inspect-ga-sessions`
