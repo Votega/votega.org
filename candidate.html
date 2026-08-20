@@ -363,7 +363,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       ? `https://bioguide.congress.gov/bioguide/photo/${existingMemberId[0]}/${existingMemberId}.jpg`
       : '');
     const photoHtml = photoSrc
-      ? `<img class="candidate-photo" src="${photoSrc}" alt="${candidate.name}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',textContent:'👤'}))">`
+      ? `<img class="candidate-photo" src="${escHtmlGa(photoSrc)}" alt="${escHtmlGa(candidate.name)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',textContent:'👤'}))">`
       : `<div class="candidate-photo-placeholder">👤</div>`;
 
     // Role and party badges
@@ -377,11 +377,11 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
     // Detail fields
     const rows = [];
-    if (candidate.occupation) rows.push(['Occupation', candidate.occupation]);
-    if (candidate.county)     rows.push(['County', candidate.county]);
-    if (candidate.party)      rows.push(['Party', candidate.party]);
-    if (candidate.email)      rows.push(['Email', `<a href="mailto:${candidate.email}">${candidate.email}</a>`]);
-    if (candidate.website)    rows.push(['Website', `<a href="${candidate.website}" target="_blank" rel="noopener">${candidate.website} ↗</a>`]);
+    if (candidate.occupation) rows.push(['Occupation', escHtmlGa(candidate.occupation)]);
+    if (candidate.county)     rows.push(['County', escHtmlGa(candidate.county)]);
+    if (candidate.party)      rows.push(['Party', escHtmlGa(candidate.party)]);
+    if (candidate.email)      rows.push(['Email', `<a href="mailto:${escHtmlGa(candidate.email)}">${escHtmlGa(candidate.email)}</a>`]);
+    if (candidate.website)    rows.push(['Website', `<a href="${escHtmlGa(candidate.website)}" target="_blank" rel="noopener">${escHtmlGa(candidate.website)} ↗</a>`]);
 
     const detailsHtml = rows.length ? `
       <div class="profile-details">
@@ -391,7 +391,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     // Suppress the public-record bio when the campaign has submitted its own —
     // the claimed bio renders in the labeled block below to avoid duplication.
     const bioHtml = (candidate.bio && !(claim && claim.bio))
-      ? `<div class="bio-section"><p>${candidate.bio}</p></div>` : '';
+      ? `<div class="bio-section"><p>${escHtmlGa(candidate.bio)}</p></div>` : '';
 
     // Campaign-submitted content block, or the claim CTA when unclaimed.
     const claimBlockHtml = claim ? CandidateClaims.profileBlockHtml(claim) : '';
@@ -428,10 +428,10 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       <div class="candidate-header">
         ${photoHtml}
         <div class="candidate-header-info">
-          <h1>${candidate.name}</h1>
+          <h1>${escHtmlGa(candidate.name)}</h1>
           ${roleBadge}
-          <span class="party-badge ${partyClass(candidate.party)}">${candidate.party || 'Unknown party'}</span>
-          <div class="race-context">Running for: <a href="${raceUrl}">${raceLabel}</a></div>
+          <span class="party-badge ${partyClass(candidate.party)}">${escHtmlGa(candidate.party || 'Unknown party')}</span>
+          <div class="race-context">Running for: <a href="${escHtmlGa(raceUrl)}">${escHtmlGa(raceLabel)}</a></div>
         </div>
       </div>
 
@@ -445,7 +445,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
       <div id="campaignFinance" class="finance-section"></div>
 
-      <div class="back-link"><a href="${raceUrl}">← Back to ${race.displayTitle || (race.chamber + distLabel)} race</a></div>`;
+      <div class="back-link"><a href="${escHtmlGa(raceUrl)}">← Back to ${escHtmlGa(race.displayTitle || (race.chamber + distLabel))} race</a></div>`;
   }
 
   // Money formatting and all FEC/PeachFile candidate matching live in the shared

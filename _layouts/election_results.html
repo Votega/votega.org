@@ -159,7 +159,11 @@ Front-matter contract
 <div id="tab-courts"       class="tab-panel"></div>
 
 <script>
-const SECTIONS = {{ site.data.election_results[page.results_data] | jsonify }};
+// `|| []` guards the case where the keyed results file didn't build: Liquid's
+// jsonify emits `null`, and SECTIONS.forEach below would otherwise throw and
+// leave the page blank. The builder always writes five sections, so an empty
+// array unambiguously means "data missing" — handled explicitly further down.
+const SECTIONS = {{ site.data.election_results[page.results_data] | jsonify }} || [];
 const CFG = {
   mode:     {{ page.results_mode | default: 'round' | jsonify }},
   status:   {{ page.status | default: 'unofficial' | jsonify }},
@@ -371,6 +375,21 @@ function renderContest(c, office, candidateIndex){
 }
 
 buildCandidateIndex().then(candidateIndex => {
+
+// Data file missing/empty (see the SECTIONS guard above): show an explicit
+// notice and hide the now-meaningless tab, filter, and search chrome rather
+// than rendering a page of blank, hidden tabs.
+if (!SECTIONS.length) {
+  document.querySelectorAll('#tabBar, .pr-filter-bar, .search-row')
+    .forEach(el => { el.style.display = 'none'; });
+  const host = document.getElementById('tab-statewide');
+  if (host) {
+    host.classList.add('active');
+    host.innerHTML = '<div class="pr-notice">&#9888; Results for this election aren\'t available yet. '
+      + 'If the election just occurred, the data may still be processing &mdash; please check back soon.</div>';
+  }
+  return;
+}
 
 SECTIONS.forEach(s=>{
   const panel = document.getElementById('tab-'+s.id);
