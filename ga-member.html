@@ -302,6 +302,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
 
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="assets/scripts/ga-districts.js"></script>
+<script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}"></script>
 <script>
   const DATA_URL  = 'assets/data/ga-members.json';
   const RACES_URL = 'assets/data/races.json';
@@ -459,34 +460,27 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     return '$' + Math.round(n).toLocaleString();
   }
 
-  function financeLastName(member) {
-    const raw = member.lastName || (member.name || '').trim().split(/\s+/).pop() || '';
-    return raw.toLowerCase().replace(/[^a-z]/g, '');
-  }
+  // Map the member's chamber (ga-members.json vocabulary) to the race-style
+  // label CampaignFinance.findGaFilers expects (see GA_CHAMBER_MAP there).
+  const GA_FINANCE_CHAMBER = {
+    'House of Representatives': 'Georgia House of Representatives',
+    'Senate': 'Georgia State Senate',
+  };
 
-  function financeNormalizeName(name) {
-    // Mirrors norm_name() in scripts/generate_ga_campaign_finance.py
-    let n = (name || '').toLowerCase();
-    n = n.replace(/["'].*?["']/g, '');
-    n = n.replace(/\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b/g, '');
-    n = n.replace(/[^a-z\s]/g, '');
-    return n.split(/\s+/).filter(Boolean).join(' ');
-  }
-
-  function findFilerId(data, member) {
-    // Seat-scoped surname match first. Matching on surname alone across the whole
-    // state would be actively wrong — there are several unrelated legislators and
-    // candidates sharing surnames (Jackson, Howard, Bell, Martin), so a statewide
-    // surname lookup attributes one person's fundraising to another.
-    const seatKey = `${member.chamber}-${member.district}`;
-    const ids = (data.bySeat || {})[seatKey] || [];
-    const last = financeLastName(member);
-    const hit = ids.find(id => {
-      const f = data.filers?.[id];
-      return f && (f.lastName || '').toLowerCase().replace(/[^a-z]/g, '') === last;
-    });
-    if (hit) return hit;
-    return (data.byNormalizedName || {})[financeNormalizeName(member.name)] || null;
+  // Resolve this legislator to their PeachFile filing using the shared matcher —
+  // the single source of truth also used by candidate.html and race.html. It
+  // matches on seat + surname (given name only breaks ties) and, crucially,
+  // reports ambiguity rather than picking the array-first same-surname filer, so
+  // two different people in one seat (e.g. David vs Joshua Clark in House 100)
+  // can't have one's fundraising shown on the other's page. Returns
+  // { status: 'ok' | 'ambiguous' | 'none', filer }.
+  function resolveFinanceFiler(data, member) {
+    const chamber = GA_FINANCE_CHAMBER[member.chamber];
+    if (!chamber || !window.CampaignFinance) return { status: 'none', filer: null };
+    const hits = window.CampaignFinance.findGaFilers(member.name, chamber, member.district, data);
+    if (hits.length === 1) return { status: 'ok', filer: data.filers[hits[0]] };
+    if (hits.length > 1)  return { status: 'ambiguous', filer: null };
+    return { status: 'none', filer: null };
   }
 
   async function loadCampaignFinance(member) {
@@ -505,8 +499,18 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     }
 
     const searchUrl = data.metadata?.sourceUrl || 'https://peachfile.ethics.ga.gov/public/cf/publiccandidate';
-    const entry = findFilerId(data, member);
-    const f = entry ? data.filers[entry] : null;
+    const { status, filer: f } = resolveFinanceFiler(data, member);
+
+    if (status === 'ambiguous') {
+      container.innerHTML = `
+        <h2>Campaign Finance</h2>
+        <p class="finance-meta">
+          More than one campaign finance filing matches this seat and name, so we
+          can't attribute one to this legislator with confidence.
+          <a href="${escHtml(searchUrl)}" target="_blank" rel="noopener">Search PeachFile ↗</a>
+        </p>`;
+      return;
+    }
 
     if (!f) {
       container.innerHTML = `
@@ -1124,10 +1128,12 @@ share-description: "Profile of a Georgia General Assembly member: district, part
           ${partyLoyaltyHtml  ? `<div style="flex:1;min-width:240px;">${partyLoyaltyHtml}</div>`  : ''}
         </div>` : ''}
         ${chartHtml}
+        <div style="overflow-x:auto;">
         <table class="vote-table">
           <thead><tr><th>Date</th><th>Bill</th><th>Motion</th><th>Vote</th></tr></thead>
           <tbody>${rows}</tbody>
-        </table>`;
+        </table>
+        </div>`;
     } catch (err) {
       console.warn('Could not load voting history:', err);
     }

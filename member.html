@@ -902,10 +902,12 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
         ${chartHtml}
+        <div style="overflow-x:auto;">
         <table class="vote-table">
           <thead><tr><th>Date</th><th>Bill</th>${motionHeader}<th>Vote</th></tr></thead>
           <tbody>${rows}</tbody>
-        </table>`;
+        </table>
+        </div>`;
     } catch (err) {
       console.warn('Could not load voting history:', err);
     }
@@ -951,7 +953,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     const startYears = terms.map(t => t.startYear).filter(y => typeof y === 'number');
     const startYear = startYears.length ? Math.max(...startYears) : 'N/A';
     const currentYear = new Date().getFullYear();
-    const yearsInOffice = startYear ? (currentYear - startYear) : 'N/A';
+    const yearsInOffice = typeof startYear === 'number' ? (currentYear - startYear) : 'N/A';
 
     const imageUrl = member.depiction?.imageUrl;
     const imageHtml = imageUrl ? `<img src="${escHtml(imageUrl)}" alt="${escHtml(fullName)}" style="max-width: 200px; margin-bottom: 1rem; border-radius: 8px;">` : '';
