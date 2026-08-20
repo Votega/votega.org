@@ -182,7 +182,9 @@ async function loadData() {
       });
     }
   } catch (err) {
-    statusLine.textContent = 'Could not load GA member data: ' + err.message;
+    console.error('loadData()', err);
+    statusLine.textContent =
+      'Data file missing or inaccessible. Check that assets/data/ga-members.json exists.';
   }
 }
 

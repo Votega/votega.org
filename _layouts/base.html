@@ -27,6 +27,14 @@ common-js:
 <body>
   {% include gtm_body.html %}
 
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <style>
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 100000;
+      padding: .6rem 1rem; background: #1a1a2e; color: #fff;
+      border-radius: 0 0 6px 0; text-decoration: none; }
+    .skip-link:focus { left: 0; }
+  </style>
+
   {% include nav.html %}
 
   {{ content }}

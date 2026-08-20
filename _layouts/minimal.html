@@ -20,7 +20,15 @@ common-ext-js:
 
   <body>
 
-    <main class="{% if page.full-width %} container-fluid {% else %} container-md {% endif %} main-content">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <style>
+      .skip-link { position: absolute; left: -9999px; top: 0; z-index: 100000;
+        padding: .6rem 1rem; background: #1a1a2e; color: #fff;
+        border-radius: 0 0 6px 0; text-decoration: none; }
+      .skip-link:focus { left: 0; }
+    </style>
+
+    <main id="main-content" tabindex="-1" class="{% if page.full-width %} container-fluid {% else %} container-md {% endif %} main-content">
       {% if page.before-content %}
         <div class="before-content">
           {% for file in page.before-content %}

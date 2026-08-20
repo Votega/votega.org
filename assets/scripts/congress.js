@@ -190,9 +190,8 @@ async function loadData() {
     }
   } catch (err) {
     console.error('loadData()', err);
-    statusLine.textContent = err.message.includes('HTTP') ?
-      'API error: ' + err.message :
-      err.message;
+    statusLine.textContent =
+      'Data file missing or inaccessible. Check that assets/data/current-members.json exists.';
   }
 }
 
