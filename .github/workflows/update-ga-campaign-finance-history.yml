@@ -81,6 +81,7 @@ jobs:
 
       - name: Commit and push if changed
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/data/ga-campaign-finance-history.json
@@ -88,5 +89,14 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update GA campaign finance history (legacy records)"
-            git push
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
           fi

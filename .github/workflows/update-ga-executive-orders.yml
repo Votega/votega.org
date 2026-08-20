@@ -26,6 +26,32 @@ jobs:
       - name: Fetch current year executive orders
         run: python scripts/fetch_ga_executive_orders.py
 
+      - name: Validate output
+        run: |
+          set -e
+          YEAR=$(date +%Y)
+          FILE=assets/data/ga-executive-orders-${YEAR}.json
+          # Previous committed version, so we can assert the count never shrinks —
+          # the fetch merges additively, so a drop means data was lost, not updated.
+          git show HEAD:${FILE} > /tmp/prev-eo.json 2>/dev/null || echo '{"orders":[]}' > /tmp/prev-eo.json
+          python - "$FILE" /tmp/prev-eo.json <<'PY'
+          import json, sys
+          new  = json.load(open(sys.argv[1], encoding='utf-8'))
+          prev = json.load(open(sys.argv[2], encoding='utf-8'))
+          orders = new.get('orders', [])
+          if not orders:
+              sys.exit('ERROR: no orders in output')
+          if new.get('metadata', {}).get('count') != len(orders):
+              sys.exit(f"ERROR: metadata.count {new.get('metadata',{}).get('count')} != {len(orders)} orders")
+          prev_n = len(prev.get('orders', []))
+          if len(orders) < prev_n:
+              sys.exit(f"ERROR: order count dropped {prev_n} -> {len(orders)} (merge should be additive)")
+          missing = [o.get('number') for o in orders if not o.get('number') or not o.get('title')]
+          if missing:
+              sys.exit(f"ERROR: {len(missing)} order(s) missing number/title")
+          print(f"Valid: {len(orders)} orders (was {prev_n})")
+          PY
+
       - name: Commit if changed
         run: |
           set -e

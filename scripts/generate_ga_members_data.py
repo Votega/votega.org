@@ -185,7 +185,8 @@ def normalize_member(raw, committees_by_id=None):
         'termStart':        term_start,
         'termStartYear':    term_start_year,
         'committees':       (committees_by_id or {}).get(raw.get('id', ''), []),
-        # Numeric ID used by legis.ga.gov — needed to join with ga-member-votes.json
+        # Numeric ID used only to construct officialWebsiteUrl (legis.ga.gov member
+        # page). NOT a vote-join key — votes join on the OCD person `id` instead.
         'legisGaGovId':     georgia_id,
         # Departure status — set via overrides only; None means active
         'status':           None,

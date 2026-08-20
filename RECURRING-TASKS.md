@@ -172,11 +172,10 @@ is closed, so the gap is frozen rather than growing.
 - [x] ~~Re-run `update-fec-data.yml` after the bioguide-map fix.~~ Ran 2026-08-08: all 15
       current GA members resolve to their own FEC record via bioguide, zero district
       mismatches. The Scott collision is gone.
-- [ ] **Latent:** `generate_fec_data.py` builds its `byDistrict` buckets from characters 4–5
-      of the FEC candidate ID rather than the API's `district` field, so a candidate who
-      changed districts is filed under their old seat. Harmless while every incumbent
-      resolves via bioguide (the first lookup tier), but it would misfile the district
-      fallback. Fix by reading the `district` field, as `district_key()` already does.
+- [x] ~~**Latent:** `generate_fec_data.py` builds its `byDistrict` buckets from characters 4–5
+      of the FEC candidate ID rather than the API's `district` field.~~ Fixed: the bucket key
+      is now built from `district_key(office, district)` off the API's `district` field
+      (`generate_fec_data.py:376`, with the MTG-06-vs-GA-14 case documented in the comment there).
 - [x] ~~Re-run `update-current-members.yml` after the departed-member fix.~~ Ran 2026-08-08:
       545 → 537 members, all 8 `currentMember: false` records removed, GA delegation 17 → 15.
 - [x] ~~Handle the GA-13 vacancy.~~ `assets/scripts/congress.js` now takes the seat list from

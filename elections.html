@@ -577,6 +577,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
   }
 
   async function loadData() {
+    racesOutput.innerHTML = '<p class="empty-note">Loading races…</p>';
     try {
       const res = await fetch(RACES_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
