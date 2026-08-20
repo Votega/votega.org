@@ -186,8 +186,12 @@ is closed, so the gap is frozen rather than growing.
       **Still true:** federal members have no override mechanism (`ga-members-overrides.json`
       is state-legislature only). If a vacancy ever needs context — successor, special
       election date — that needs a federal equivalent of the overrides file.
-- [ ] **Certify the June 16 primary runoff.** `_data/election_archive.yml` still lists it as
-      `unofficial`, and `ga-primary-runoff-results.html` carries the unofficial notice.
+- [x] ~~**Certify the June 16 primary runoff.**~~ Certified 2026-08-20: flipped
+      `status` to `certified` in both `_data/election_archive.yml` and
+      `ga-primary-runoff-results.html` (and bumped its `updated:` stamp). The SoS
+      certified export was byte-identical to the unofficial numbers already in
+      `_sources/election_results/ga-primary-runoff-results.csv` (81 rows, 0 diffs),
+      so no CSV/JSON rebuild was needed.
 - [ ] **Nov 3 General Election — replace the placeholder with real results.**
       `ga-general-2026-results.html` currently shows every candidate at 0 votes, built by
       `scripts/build_general_placeholder.py` from `races.json`. Once official results are
