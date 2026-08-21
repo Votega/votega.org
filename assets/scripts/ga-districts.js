@@ -489,3 +489,67 @@ const COUNTY_US_HOUSE_DISTRICTS = {
   'Wilkinson':     [8],
   'Worth':         [8],
 };
+
+// County → Superior Court judicial circuit. Keyed by the circuit slug used in
+// race ids (races.json: 'superior-court-<slug>-<name>-YYYY'). Each Georgia county
+// belongs to exactly one circuit; all 159 counties are covered. Source: O.C.G.A.
+// § 15-6-1, corrected for the Columbia Circuit (2021, split from Augusta) and the
+// West Georgia Circuit (eff. 2025-01-01, split from Coweta). Verified 2026-08-21.
+const CIRCUIT_COUNTIES = {
+  'alapaha':          ['Atkinson', 'Berrien', 'Clinch', 'Cook', 'Lanier'],
+  'alcovy':           ['Newton', 'Walton'],
+  'appalachian':      ['Fannin', 'Gilmer', 'Pickens'],
+  'atlanta':          ['Fulton'],
+  'atlantic':         ['Bryan', 'Evans', 'Liberty', 'Long', 'McIntosh', 'Tattnall'],
+  'augusta':          ['Burke', 'Richmond'],
+  'bell-forsyth':     ['Forsyth'],
+  'blue-ridge':       ['Cherokee'],  // Blue Ridge Circuit = Cherokee County
+  'brunswick':        ['Appling', 'Camden', 'Glynn', 'Jeff Davis', 'Wayne'],
+  'chattahoochee':    ['Chattahoochee', 'Harris', 'Marion', 'Muscogee', 'Talbot', 'Taylor'],
+  'cherokee':         ['Bartow', 'Gordon'],  // Cherokee Circuit = Bartow + Gordon (NOT Cherokee County)
+  'clayton':          ['Clayton'],
+  'cobb':             ['Cobb'],
+  'columbia':         ['Columbia'],
+  'conasauga':        ['Murray', 'Whitfield'],
+  'cordele':          ['Ben Hill', 'Crisp', 'Dooly', 'Wilcox'],
+  'coweta':           ['Coweta', 'Meriwether', 'Troup'],
+  'dekalb':           ['DeKalb'],  // Stone Mountain Judicial Circuit
+  'dougherty':        ['Dougherty'],
+  'douglas':          ['Douglas'],
+  'dublin':           ['Johnson', 'Laurens', 'Treutlen', 'Twiggs'],
+  'eastern':          ['Chatham'],
+  'enotah':           ['Lumpkin', 'Towns', 'Union', 'White'],
+  'flint':            ['Henry'],
+  'griffin':          ['Fayette', 'Pike', 'Spalding', 'Upson'],
+  'gwinnett':         ['Gwinnett'],
+  'houston':          ['Houston'],
+  'lookout-mountain': ['Catoosa', 'Chattooga', 'Dade', 'Walker'],
+  'macon':            ['Bibb', 'Crawford', 'Peach'],  // Macon Circuit = Bibb/Crawford/Peach (NOT Macon County)
+  'middle':           ['Candler', 'Emanuel', 'Jefferson', 'Toombs', 'Washington'],
+  'mountain':         ['Habersham', 'Rabun', 'Stephens'],
+  'northeastern':     ['Dawson', 'Hall'],
+  'northern':         ['Elbert', 'Franklin', 'Hart', 'Madison', 'Oglethorpe'],
+  'ocmulgee':         ['Baldwin', 'Greene', 'Hancock', 'Jasper', 'Jones', 'Morgan', 'Putnam', 'Wilkinson'],
+  'oconee':           ['Bleckley', 'Dodge', 'Montgomery', 'Pulaski', 'Telfair', 'Wheeler'],
+  'ogeechee':         ['Bulloch', 'Effingham', 'Jenkins', 'Screven'],
+  'pataula':          ['Clay', 'Early', 'Miller', 'Quitman', 'Randolph', 'Seminole', 'Terrell'],
+  'paulding':         ['Paulding'],
+  'piedmont':         ['Banks', 'Barrow', 'Jackson'],
+  'rockdale':         ['Rockdale'],
+  'rome':             ['Floyd'],
+  'south-georgia':    ['Baker', 'Calhoun', 'Decatur', 'Grady', 'Mitchell'],
+  'southern':         ['Brooks', 'Colquitt', 'Echols', 'Lowndes', 'Thomas'],
+  'southwestern':     ['Lee', 'Macon', 'Schley', 'Stewart', 'Sumter', 'Webster'],
+  'tallapoosa':       ['Haralson', 'Polk'],
+  'tifton':           ['Irwin', 'Tift', 'Turner', 'Worth'],
+  'toombs':           ['Glascock', 'Lincoln', 'McDuffie', 'Taliaferro', 'Warren', 'Wilkes'],
+  'towaliga':         ['Butts', 'Lamar', 'Monroe'],
+  'waycross':         ['Bacon', 'Brantley', 'Charlton', 'Coffee', 'Pierce', 'Ware'],
+  'west-georgia':     ['Carroll', 'Heard'],
+  'western':          ['Clarke', 'Oconee'],
+};
+
+// Derived inverse: county name → circuit slug (one circuit per county).
+const COUNTY_CIRCUIT = Object.fromEntries(
+  Object.entries(CIRCUIT_COUNTIES).flatMap(([slug, counties]) =>
+    counties.map(county => [county, slug])));
