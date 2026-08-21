@@ -31,7 +31,7 @@ These are updated automatically by scheduled workflows. Use them directly. No ke
 
 **Sources:** [Open States](https://openstates.org/) (Plural Policy) · [Congress.gov](https://api.congress.gov/) ·
 [Federal Register](https://www.federalregister.gov/developers/api/v1) · [FEC](https://api.open.fec.gov/) ·
-[Oyez](https://api.oyez.org/) · [gov.georgia.gov](https://gov.georgia.gov/) · Georgia Secretary of State
+[Oyez](https://api.oyez.org/) · [gov.georgia.gov](https://gov.georgia.gov/) · [Georgia Secretary of State](https://sos.ga.gov/)
 
 Full methodology and update schedules: [votega.org/about-the-data](https://www.votega.org/about-the-data)
 
