@@ -1,25 +1,21 @@
+1. Votega/.github/profile/README.md (org landing page)
+markdown
+# VoteGA
+
 **Nonpartisan civic information for Georgia voters.** → [votega.org](https://www.votega.org)
 
 VoteGA publishes accessible, accurate information about Georgia elections, elected
 officials, legislation, and executive action — and releases the underlying data as
 free, machine-readable, openly licensed files that anyone can use.
 
-No party affiliation.
-No endorsements.
-No visitor profiling or data sales - first and foremost we are a nonpartisan civic information site.
+No party affiliation. No endorsements. No visitor profiling or data sales.
 
-The website is served using a static Jekyll site on GitHub Pages, with all data prebuilt by scheduled GitHub Actions workflows.
+---
 
-[![Site](https://img.shields.io/website?url=https%3A%2F%2Fwww.votega.org)](https://www.votega.org)
-[![Update Congress.gov current members data](https://github.com/Votega/votega.org/actions/workflows/update-current-members.yml/badge.svg)](https://github.com/Votega/votega.org/actions/workflows/update-current-members.yml)
-[![Update Georgia General Assembly member data](https://github.com/Votega/votega.org/actions/workflows/update-ga-members.yml/badge.svg)](https://github.com/Votega/votega.org/actions/workflows/update-ga-members.yml)
-![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+## Open data repositories
 
-## What's here
-
-### Open data repositories
-
-These are updated automatically by scheduled workflows. Use them directly. No key, no signup, no rate limit.
+These are updated automatically by scheduled workflows. Use them directly — no key,
+no signup, no rate limit.
 
 | Repository | Contents | Format | Updated |
 |---|---|---|---|
@@ -29,26 +25,14 @@ These are updated automatically by scheduled workflows. Use them directly. No ke
 | [ga-executive-orders](https://github.com/Votega/ga-executive-orders) | Georgia Governor's executive orders, 2023–present — date, number, title, category, PDF link | One JSON file per year | On publication |
 | [ga-races-elections](https://github.com/Votega/ga-races-elections) | 2026 Georgia races and candidates | JSON | As SOS publishes |
 
-**Sources:** [Open States](https://openstates.org/) (Plural Policy), [Congress.gov](https://api.congress.gov/), 
-[Federal Register](https://www.federalregister.gov/developers/api/v1), [FEC](https://api.open.fec.gov/),
-[Oyez](https://api.oyez.org/), [gov.georgia.gov](https://gov.georgia.gov/), [Georgia Secretary of State](https://sos.ga.gov/)
+**Sources:** [Open States](https://openstates.org/) (Plural Policy) · [Congress.gov](https://api.congress.gov/) ·
+[Federal Register](https://www.federalregister.gov/developers/api/v1) · [FEC](https://api.open.fec.gov/) ·
+[Oyez](https://api.oyez.org/) · [gov.georgia.gov](https://gov.georgia.gov/) · [Georgia Secretary of State](https://sos.ga.gov/)
 
 Full methodology and update schedules: [votega.org/about-the-data](https://www.votega.org/about-the-data)
 
-## Architecture
+---
 
-```
-_data/           Jekyll site data
-_layouts/        Page templates (Beautiful Jekyll)
-_posts/          Analysis and election-results posts
-tools/           Standalone admin pages for editing override files and candidate profiles (most are gitignored, local-only)
-assets/
-  data/          Generated JSON consumed by page scripts
-  scripts/       Client-side JS
-  img/, docs/    Images, PDFs
-scripts/         Build-time Python generators (run by Actions)
-.github/workflows/   Scheduled data pipelines
-```
 ## Quick start
 
 ```bash
@@ -69,6 +53,8 @@ senate = [m for m in members if m["chamber"] == "Senate"]
 print(f"{len(senate)} Georgia state senators")
 ```
 
+---
+
 ## Who this is for
 
 - **Civic app developers** — structured GA data without building or maintaining a pipeline
@@ -82,14 +68,92 @@ Spot a wrong district, a stale phone number, a missing email? Open an issue or P
 relevant repo. Accepted corrections flow into our override files and appear on votega.org
 on the next scheduled run.
 
-We accept: data corrections, schema suggestions, bug reports, new source ideas. We don't accept: partisan framing, endorsements, or advocacy content.
+We accept: data corrections, schema suggestions, bug reports, new source ideas.
+We don't accept: partisan framing, endorsements, or advocacy content.
 
-Data corrections are the most valuable contribution, open an issue with the source
-you're citing. Please file legislator/bill/executive-order corrections on the relevant
-[community repo](#Opendatarepositories) above rather than here, so the fix flows into
+## Contact
+
+[admin@votega.org](mailto:admin@votega.org)
+2. Votega/votega.org/README.md (site repo)
+markdown
+# votega.org
+
+Source for [votega.org](https://www.votega.org) — a nonpartisan civic information site
+for Georgia voters. Static Jekyll site on GitHub Pages, with all data prebuilt by
+scheduled GitHub Actions workflows.
+
+[![Site](https://img.shields.io/website?url=https%3A%2F%2Fwww.votega.org)](https://www.votega.org)
+![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+
+## What's here
+
+- **Find my reps** — federal and state legislator lookup with profiles, committees, and voting history
+- **2026 elections** — races, candidates, and campaign finance for Georgia state and federal contests
+- **Legislation** — GA General Assembly bill tracking (2025–26 session)
+- **Executive & judicial** — federal executive orders, cabinet, signed legislation, Supreme Court decisions
+- **Flock / ALPR** — records and coverage of automated license plate readers in Georgia
+
+Data sources, methodology, and update schedules: [about-the-data](https://www.votega.org/about-the-data)
+
+## Architecture
+
+_data/ Jekyll site data
+_layouts/ Page templates (Beautiful Jekyll)
+_posts/ Analysis and election results posts
+assets/
+data/ Generated JSON consumed by page scripts
+scripts/ Client-side JS
+img/, docs/ Images, PDFs
+scripts/ Build-time Python generators (run by Actions)
+.github/workflows/ Scheduled data pipelines
+
+
+**Design rule:** no API keys ever reach the browser. Every keyed source is fetched
+server-side by a scheduled workflow, written to `assets/data/*.json`, and committed
+back to the repo. Pages read the static JSON. Keyless public APIs
+(Federal Register, FEC, Oyez) are the only things fetched live at page load.
+
+## Data pipeline
+
+| Workflow | Generates | Schedule |
+|---|---|---|
+| `update-current-members.yml` | Federal Congress members | Daily 06:00 UTC |
+| `update-ga-members.yml` | GA state legislators | Daily 07:00 UTC |
+| `update-ga-votes.yml` | GA passage votes | Weekly, Sun 08:00 UTC |
+| `update-federal-votes.yml` | Federal roll call votes | Weekly, Sun 09:00 UTC |
+| `update-scotus.yml` | SCOTUS decisions | Weekly, Sun 10:00 UTC |
+
+Several of these also publish to the public
+[community data repos](https://github.com/Votega) so the data is usable outside this site.
+
+## Local development
+
+```bash
+bundle install
+bundle exec jekyll serve
+# → http://localhost:4000
+```
+
+To regenerate data locally (optional — generated JSON is committed):
+
+```bash
+export CONGRESS_API_KEY=...   # api.congress.gov
+export OPENSTATES_API_KEY=... # openstates.org
+python3 scripts/generate_current_members_data.py
+python3 scripts/generate_ga_members_data.py
+```
+
+Keys live in repo secrets and are never committed.
+
+## Contributing
+
+Data corrections are the most valuable contribution — open an issue with the source
+you're citing. Please file legislator/bill/EO corrections on the relevant
+[community repo](https://github.com/Votega) rather than here, so the fix flows into
 both the data feed and the site.
 
-**Contributions must be sourced to official records and free of advocacy framing.**
+**Editorial standard:** VoteGA is nonpartisan. Contributions must be sourced to official
+records and free of advocacy framing.
 
 ## License
 
@@ -99,3 +163,10 @@ Underlying data remains subject to the terms of its original sources.
 ## Contact
 
 [admin@votega.org](mailto:admin@votega.org)
+
+Next steps / to verify:
+
+Confirm workflow filenames in the pipeline table — I inferred three of the five.
+Confirm ga-legislators chamber value ("Senate" vs "State Senate") for the Python snippet.
+Add homepage + topics (civic-tech, open-data, georgia, legislature) to each repo's About box — free discoverability, biggest ROI for the promotion push.
+Reconsider GPL-3.0 → CC0/ODbL on the data repos before you pitch aggregators.
