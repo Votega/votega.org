@@ -1,8 +1,14 @@
-# votega.org
+**Nonpartisan civic information for Georgia voters.** → [votega.org](https://www.votega.org)
 
-Source for [votega.org](https://www.votega.org) — a nonpartisan civic information site
-for Georgia voters. Static Jekyll site on GitHub Pages, with all data prebuilt by
-scheduled GitHub Actions workflows.
+VoteGA publishes accessible, accurate information about Georgia elections, elected
+officials, legislation, and executive action — and releases the underlying data as
+free, machine-readable, openly licensed files that anyone can use.
+
+No party affiliation.
+No endorsements.
+No visitor profiling or data sales - first and foremost we are a nonpartisan civic information site.
+
+The website is served using a static Jekyll site on GitHub Pages, with all data prebuilt by scheduled GitHub Actions workflows.
 
 [![Site](https://img.shields.io/website?url=https%3A%2F%2Fwww.votega.org)](https://www.votega.org)
 [![Update Congress.gov current members data](https://github.com/Votega/votega.org/actions/workflows/update-current-members.yml/badge.svg)](https://github.com/Votega/votega.org/actions/workflows/update-current-members.yml)
@@ -11,14 +17,23 @@ scheduled GitHub Actions workflows.
 
 ## What's here
 
-- **Find my reps** — federal and Georgia state legislator lookup with profiles, committees, and voting history
-- **2026 elections** — races, candidates, campaign finance, ballot measures, the voter access/election calendar, and primary & runoff results
-- **GA Legislation** — bill & resolution tracker for the 2025–26 General Assembly session, plus a majority-vote tracker
-- **Executive & judicial** — federal executive branch (President/VP/Cabinet), federal executive orders, signed legislation, VP tie-breaking votes, Georgia executive orders, and Supreme Court justices/decisions
-- **Congressional stock trades** — STOCK Act disclosures for Georgia's federal delegation
-- **Flock / ALPR** — records and coverage of automated license plate readers in Georgia
+### Open data repositories
 
-Data sources, methodology, and update schedules for all of the above: [about-the-data](https://www.votega.org/about-the-data)
+These are updated automatically by scheduled workflows. Use them directly. No key, no signup, no rate limit.
+
+| Repository | Contents | Format | Updated |
+|---|---|---|---|
+| [ga-legislators](https://github.com/Votega/ga-legislators) | Current GA House & Senate members (158th General Assembly) — name, party, district, committees, contact, official page | `data/all.json` | Daily |
+| [ga-federal-legislators](https://github.com/Votega/ga-federal-legislators) | Georgia's 2 U.S. Senators and 14 U.S. Representatives | JSON | Weekly |
+| [ga-legislation](https://github.com/Votega/ga-legislation) | GA General Assembly bills, 2025–26 session (adapted from Open States) | JSON | Daily |
+| [ga-executive-orders](https://github.com/Votega/ga-executive-orders) | Georgia Governor's executive orders, 2023–present — date, number, title, category, PDF link | One JSON file per year | On publication |
+| [ga-races-elections](https://github.com/Votega/ga-races-elections) | 2026 Georgia races and candidates | JSON | As SOS publishes |
+
+**Sources:** [Open States](https://openstates.org/) (Plural Policy) · [Congress.gov](https://api.congress.gov/) ·
+[Federal Register](https://www.federalregister.gov/developers/api/v1) · [FEC](https://api.open.fec.gov/) ·
+[Oyez](https://api.oyez.org/) · [gov.georgia.gov](https://gov.georgia.gov/) · Georgia Secretary of State
+
+Full methodology and update schedules: [votega.org/about-the-data](https://www.votega.org/about-the-data)
 
 ## Architecture
 
@@ -34,58 +49,47 @@ assets/
 scripts/         Build-time Python generators (run by Actions)
 .github/workflows/   Scheduled data pipelines
 ```
-
-**Design rule:** no API keys ever reach the browser. Every keyed source is fetched
-server-side by a scheduled workflow, written to `assets/data/*.json`, and committed
-back to the repo. Pages read the static JSON. Keyless public APIs
-(Federal Register, FEC, Oyez, CourtListener) are the only ones fetched live at page load.
-
-## Data pipeline
-
-Around twenty scheduled workflows in `.github/workflows/` keep `assets/data/*.json`
-current — federal and GA legislators, voting history, GA bills, executive orders
-(federal and GA), SCOTUS decisions, VP tie-breaking votes, signed legislation, FEC
-figures, and congressional stock trades. Full source-by-source detail and the exact
-cadence for each: [about-the-data → Data Freshness](https://www.votega.org/about-the-data#data-freshness).
-
-Several of these also publish to public community repos so the data is usable outside this site:
-
-| Repo | Contents |
-|---|---|
-| [ga-legislators](https://github.com/Votega/ga-legislators) | GA General Assembly roster + voting record |
-| [ga-federal-legislators](https://github.com/Votega/ga-federal-legislators) | GA's federal delegation + voting record |
-| [ga-executive-orders](https://github.com/Votega/ga-executive-orders) | GA Governor's executive orders, 2023–present |
-| [ga-legislation](https://github.com/Votega/ga-legislation) | GA bills & resolutions, 2025–26 session |
-| [ga-races-elections](https://github.com/Votega/ga-races-elections) | 2026 race and candidate data |
-
-## Local development
+## Quick start
 
 ```bash
-bundle install
-bundle exec jekyll serve
-# → http://localhost:4000
+# Every current Georgia state legislator
+curl -s https://raw.githubusercontent.com/Votega/ga-legislators/main/data/all.json
+
+# Georgia executive orders signed in 2026
+curl -s https://raw.githubusercontent.com/Votega/ga-executive-orders/main/data/2026.json
 ```
 
-To regenerate data locally (optional — generated JSON is committed):
+```python
+import urllib.request, json
 
-```bash
-export CONGRESS_API_KEY=...   # api.congress.gov
-export OPENSTATES_API_KEY=... # openstates.org
-python3 scripts/generate_current_members_data.py assets/data/current-members.json
-python3 scripts/generate_ga_members_data.py assets/data/ga-members.json
+URL = "https://raw.githubusercontent.com/Votega/ga-legislators/main/data/all.json"
+members = json.load(urllib.request.urlopen(URL))["members"]
+
+senate = [m for m in members if m["chamber"] == "Senate"]
+print(f"{len(senate)} Georgia state senators")
 ```
 
-Keys live in repo secrets and are never committed.
+## Who this is for
+
+- **Civic app developers** — structured GA data without building or maintaining a pipeline
+- **Journalists** — a current, citable roster and bill list you can join against your own data
+- **Researchers** — daily snapshots with a stable schema and full commit history
+- **Anyone** — attribution appreciated, not required beyond the license terms
 
 ## Contributing
 
-Data corrections are the most valuable contribution — open an issue with the source
+Spot a wrong district, a stale phone number, a missing email? Open an issue or PR on the
+relevant repo. Accepted corrections flow into our override files and appear on votega.org
+on the next scheduled run.
+
+We accept: data corrections, schema suggestions, bug reports, new source ideas. We don't accept: partisan framing, endorsements, or advocacy content.
+
+Data corrections are the most valuable contribution, open an issue with the source
 you're citing. Please file legislator/bill/executive-order corrections on the relevant
-[community repo](#data-pipeline) above rather than here, so the fix flows into
+[community repo](#Opendatarepositories) above rather than here, so the fix flows into
 both the data feed and the site.
 
-**Editorial standard:** VoteGA is nonpartisan. Contributions must be sourced to official
-records and free of advocacy framing.
+**Contributions must be sourced to official records and free of advocacy framing.**
 
 ## License
 
