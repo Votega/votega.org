@@ -1,0 +1,93 @@
+name: Backfill GA Executive Orders (manual, one-off)
+
+# One-off historical backfill of prior-year executive orders from
+# gov.georgia.gov. The daily job (update-ga-executive-orders.yml) only
+# fetches the current year; this dispatches the same scraper across a range
+# so we can fill the pre-2023 gap (e.g. 2016-2022) that the site still hosts.
+#
+# Runs on GitHub-hosted runners, which can reach gov.georgia.gov directly.
+# Trigger from the Actions tab; set the year range and whether to commit.
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      years:
+        description: 'Year(s) to fetch — a range like "2016-2022" or a single year like "2020"'
+        required: true
+        default: '2016-2022'
+      commit:
+        description: 'Commit the results to this branch? (false = dry run, inspect logs/artifacts only)'
+        type: boolean
+        required: true
+        default: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Fetch executive orders for the requested years
+        run: python scripts/fetch_ga_executive_orders.py ${{ inputs.years }}
+
+      - name: Validate any written files
+        run: |
+          set -e
+          python - <<'PY'
+          import glob, json, sys
+          bad = 0
+          files = sorted(glob.glob('assets/data/ga-executive-orders-*.json'))
+          for f in files:
+              d = json.load(open(f, encoding='utf-8'))
+              orders = d.get('orders', [])
+              meta_n = d.get('metadata', {}).get('count')
+              if meta_n is not None and meta_n != len(orders):
+                  print(f"ERROR {f}: metadata.count {meta_n} != {len(orders)} orders"); bad += 1
+              missing = [o.get('number') for o in orders if not o.get('number') or not o.get('title')]
+              if missing:
+                  print(f"ERROR {f}: {len(missing)} order(s) missing number/title"); bad += 1
+              print(f"{f}: {len(orders)} orders (governor: {d.get('metadata',{}).get('governor')})")
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Upload results as artifact (always, for inspection)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ga-executive-orders-backfill
+          path: assets/data/ga-executive-orders-*.json
+          if-no-files-found: warn
+
+      - name: Commit if requested and changed
+        if: ${{ inputs.commit }}
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/ga-executive-orders-*.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Backfill GA executive orders (${{ inputs.years }})"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin "$GITHUB_REF_NAME" && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts"
+              exit 1
+            fi
+          fi

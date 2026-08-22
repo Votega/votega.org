@@ -25,9 +25,21 @@ from html.parser import HTMLParser
 BASE_URL   = "https://gov.georgia.gov"
 OUTPUT_DIR = "assets/data"
 YEAR       = datetime.now().year
-GOVERNOR   = "Brian P. Kemp"
 
 _MAX_TITLE = 300   # titles longer than this are scraper noise, not real text
+
+
+def governor_for_year(year):
+    """Return the Georgia governor who held office for (most of) the given year.
+
+    Nathan Deal served through 2018 and left office 14 Jan 2019; Brian P. Kemp
+    took office that day. 2019 spans both, so it is labelled for both.
+    """
+    if year <= 2018:
+        return "Nathan Deal"
+    if year == 2019:
+        return "Nathan Deal / Brian P. Kemp"
+    return "Brian P. Kemp"
 
 
 # ── Categorisation ────────────────────────────────────────────────────────────
@@ -224,7 +236,8 @@ def load_existing(year):
     if os.path.exists(path):
         with open(path, encoding='utf-8') as f:
             return json.load(f)
-    return {'metadata': {'year': year, 'governor': GOVERNOR, 'count': 0}, 'orders': []}
+    return {'metadata': {'year': year, 'governor': governor_for_year(year), 'count': 0},
+            'orders': []}
 
 
 def save(year, data):
@@ -237,18 +250,32 @@ def save(year, data):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def main():
-    year       = YEAR
+def fetch_year(year, strict=True):
+    """Fetch and merge one year. Returns True if the file was written.
+
+    strict=True (the daily job) exits non-zero when a year returns nothing, so
+    a broken page structure is caught loudly. strict=False (backfill over a
+    range) treats an empty year as "nothing published / archived" and skips on,
+    since not every year has a reachable listing page.
+    """
     source_url = f"{BASE_URL}/executive-action/executive-orders/{year}"
     print(f"Fetching GA Executive Orders for {year}...")
 
     scraped = scrape_all_pages(year)
     if scraped is None:
-        print("Error: could not fetch page — aborting")
-        sys.exit(1)
+        msg = f"could not fetch listing page for {year}"
+        if strict:
+            print(f"Error: {msg} — aborting")
+            sys.exit(1)
+        print(f"  Skipping {year}: {msg}")
+        return False
     if not scraped:
-        print("Warning: no orders found — page structure may have changed")
-        sys.exit(1)
+        msg = f"no orders found for {year} — page structure may have changed or none published"
+        if strict:
+            print(f"Warning: {msg}")
+            sys.exit(1)
+        print(f"  Skipping {year}: {msg}")
+        return False
 
     # Warn about any entries where the title is missing, too short, or suspiciously long
     bad = [n for n, e in scraped.items()
@@ -285,13 +312,13 @@ def main():
 
     if not new_count:
         print(f"  No new orders — skipping save (file unchanged)")
-        return
+        return False
 
-    data['_note']    = (f"Auto-updated daily from {source_url}. "
-                        f"Years 2023–2025 are static.")
+    data['_note']    = (f"Sourced from {source_url}. "
+                        f"The current year is auto-updated daily; prior years are static.")
     data['metadata'] = {
         'year':      year,
-        'governor':  GOVERNOR,
+        'governor':  governor_for_year(year),
         'updatedAt': datetime.now().strftime('%Y-%m-%d'),
         'source':    source_url,
         'count':     len(all_orders),
@@ -300,6 +327,43 @@ def main():
 
     path = save(year, data)
     print(f"Saved {len(all_orders)} orders -> {path} ({new_count} new)")
+    return True
+
+
+def parse_years(args):
+    """Turn CLI args into a sorted, de-duplicated list of years.
+
+    Accepts individual years ("2020") and inclusive ranges ("2016-2022").
+    With no args, defaults to the current year (the daily-job behaviour).
+    """
+    if not args:
+        return [YEAR]
+    years = set()
+    for a in args:
+        if '-' in a:
+            lo, hi = a.split('-', 1)
+            years.update(range(int(lo), int(hi) + 1))
+        else:
+            years.add(int(a))
+    return sorted(years)
+
+
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    years = parse_years(argv)
+
+    # A single implicit current-year run keeps the strict contract the daily
+    # workflow relies on. An explicit multi-year backfill is lenient per year.
+    strict = (argv == [] or argv is None) and len(years) == 1
+
+    wrote_any = False
+    for year in years:
+        if fetch_year(year, strict=strict):
+            wrote_any = True
+
+    if len(years) > 1:
+        print(f"\nBackfill complete for {years[0]}–{years[-1]}; "
+              f"{'files written' if wrote_any else 'no files changed'}.")
 
 
 if __name__ == '__main__':
