@@ -17,7 +17,7 @@ import io
 import json
 import os
 
-from lib.sibling_publish import publish_or_dry_run
+from lib.sibling_publish import build_json, publish_or_dry_run
 
 REPO = "Votega/ga-legislation"
 TOKEN_ENV = "GA_BALLOT_MEASURES_TOKEN"  # unused in git-based publishing; enables API dry-run override
@@ -41,17 +41,19 @@ def measures_csv(measures):
     return buf.getvalue().encode()
 
 
-def measures_md(doc):
-    measures = doc.get("measures", [])
-    meta = doc.get("metadata", {})
+def measure_cycle(m):
+    """Election cycle (year) a measure is decided in, from its electionDate."""
+    return (m.get("electionDate") or "")[:4]
+
+
+def measures_md(measures, meta, heading, json_link, csv_link):
     # Group by election date (newest first).
     dates = sorted({m.get("electionDate") for m in measures if m.get("electionDate")}, reverse=True)
-    L = ["# Georgia Ballot Measures", ""]
+    L = [f"# {heading}", ""]
     L.append("_Auto-generated from [votega.org](https://votega.org) — do not edit by hand._  ")
     L.append(f"_Last updated {meta.get('generatedAt', '')} · {len(measures)} measures._")
     L.append("")
-    L.append("> Machine-readable: [`ga-ballot-measures.json`](ga-ballot-measures.json), "
-             "[`ga-ballot-measures.csv`](ga-ballot-measures.csv).")
+    L.append(f"> Machine-readable: [`{json_link}`]({json_link}), [`{csv_link}`]({csv_link}).")
     L.append("")
     L.append("Status lifecycle: `potential` (passed the General Assembly, not yet certified) → "
              "`certified` (on the ballot) → `passed` / `failed` (outcome recorded after certification).")
@@ -71,13 +73,36 @@ def measures_md(doc):
 
 def build_artifacts():
     doc = json.load(open(SRC_JSON, encoding="utf-8"))
+    measures = doc.get("measures", [])
+    meta = doc.get("metadata", {})
+
+    # Canonical, cross-cycle files at the root — the single source of truth. This file
+    # spans every cycle and is never partitioned; consumers filter by electionDate.
     artifacts = {
         "ga-ballot-measures.json": open(SRC_JSON, "rb").read(),
-        "ga-ballot-measures.csv": measures_csv(doc.get("measures", [])),
-        "BALLOT-MEASURES.md": measures_md(doc),
+        "ga-ballot-measures.csv": measures_csv(measures),
+        "BALLOT-MEASURES.md": measures_md(
+            measures, meta, "Georgia Ballot Measures",
+            "ga-ballot-measures.json", "ga-ballot-measures.csv"),
     }
     if os.path.exists(SRC_SCHEMA):
         artifacts["ga-ballot-measures.schema.json"] = open(SRC_SCHEMA, "rb").read()
+
+    # Per-cycle views under ballot-measures/<year>/ for browsability — filtered slices of
+    # the same data (NOT a separate source of truth). Parallels sessions/ for bills.
+    cycles = {}
+    for m in measures:
+        cyc = measure_cycle(m)
+        if cyc:
+            cycles.setdefault(cyc, []).append(m)
+    for cyc, subset in cycles.items():
+        base = f"ballot-measures/{cyc}"
+        cyc_meta = {**meta, "cycle": cyc, "count": len(subset)}
+        artifacts[f"{base}/measures.json"] = build_json({"metadata": cyc_meta, "measures": subset})
+        artifacts[f"{base}/measures.csv"] = measures_csv(subset)
+        artifacts[f"{base}/measures.md"] = measures_md(
+            subset, meta, f"Georgia Ballot Measures — {cyc}", "measures.json", "measures.csv")
+
     return artifacts
 
 
