@@ -173,6 +173,19 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
+// Elections to offer in the selector: a sample ballot is forward-looking, so past
+// elections are hidden (their results pages take over). Election day itself still
+// counts as upcoming (date >= today). Off-season — when nothing is upcoming — fall back
+// to the single most recent election so the tool still shows a ballot instead of an
+// empty selector.
+function selectableElections(available, today) {
+  const t = today || todayISO();
+  const upcoming = available.filter(e => e.date >= t).sort((a, b) => a.date < b.date ? -1 : 1);
+  if (upcoming.length) return upcoming;
+  const past = available.filter(e => e.date < t).sort((a, b) => a.date < b.date ? 1 : -1);
+  return past.slice(0, 1);
+}
+
 // Default election: the next broad (non-special) election on or after today, since a
 // special concerns only a sliver of voters and makes a poor landing default. Fall back
 // to the next upcoming special if that's all there is, then to the most recent past one.
@@ -386,7 +399,7 @@ const SampleBallot = {
   geocodeAddress, parseCensusMatch, locationFromCounty,
   assembleBallot, raceApplies, measureApplies,
   circuitSlugFromRaceId, candidatesForPhase, candidatesForActivePhase,
-  availableElections, defaultElectionDate, phaseForDate, newestCycle,
+  availableElections, selectableElections, defaultElectionDate, phaseForDate, newestCycle,
   resolveBallot,
 };
 if (typeof window !== 'undefined') window.SampleBallot = SampleBallot;

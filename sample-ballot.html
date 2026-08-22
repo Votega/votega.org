@@ -11,9 +11,10 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
 <p class="box-note">This is a preview of the <strong>state and federal</strong> portion of your ballot. Your official ballot also includes <strong>county and city races and local questions</strong> that VoteGA doesn't track. For your precinct-exact official sample ballot and polling place, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="noopener">GA Secretary of State My Voter Page</a>.</p>
 
 <div id="lookup" class="ballot-lookup">
-  <label class="lookup-label" for="electionSelect">Which election?</label>
+  <label class="lookup-label" for="electionSelect" id="electionLabel">Which election?</label>
   <div class="lookup-row">
     <select id="electionSelect" class="lookup-input"></select>
+    <p id="electionStatic" class="election-static" hidden></p>
   </div>
 
   <label class="lookup-label lookup-label-spaced" for="addressInput">Your residential address</label>
@@ -48,6 +49,7 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
   .lookup-btn-secondary { background: #666; }
   .lookup-btn-secondary:hover { background: #444; }
   .lookup-or { margin: 0.9rem 0 0.5rem; font-size: 0.85rem; color: #666; }
+  .election-static { margin: 0; padding: 0.55rem 0; font-size: 1rem; font-weight: 600; }
 
   .ballot-status { margin: 0.5rem 0; font-size: 0.95rem; }
   .ballot-status.error { color: #a11; font-weight: 600; }
@@ -317,10 +319,11 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
       return;
     }
 
-    // Populate the "Which election?" dropdown from the elections that have contests,
-    // defaulting to the next broad election.
-    const elections = window.SampleBallot.availableElections(RACES, MEASURES, CALENDAR);
-    const defaultDate = window.SampleBallot.defaultElectionDate(elections);
+    // Populate the "Which election?" selector. Past elections are hidden (the tool is
+    // forward-looking); off-season it falls back to the most recent one.
+    const allElections = window.SampleBallot.availableElections(RACES, MEASURES, CALENDAR);
+    const elections    = window.SampleBallot.selectableElections(allElections);
+    const defaultDate  = window.SampleBallot.defaultElectionDate(elections);
     elections.forEach(e => {
       const opt = document.createElement('option');
       opt.value = e.date;
@@ -328,6 +331,25 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
       if (e.date === defaultDate) opt.selected = true;
       electionSelect.appendChild(opt);
     });
+
+    // With a single election there's nothing to choose — show it as a label, not a
+    // one-item dropdown.
+    if (elections.length <= 1) {
+      const only = elections[0];
+      electionSelect.hidden = true;
+      const staticEl = document.getElementById('electionStatic');
+      const labelEl  = document.getElementById('electionLabel');
+      if (only) {
+        staticEl.textContent = only.name + ' — ' + formatDate(only.date);
+        staticEl.hidden = false;
+        if (labelEl) labelEl.textContent = 'Your next election';
+      } else {
+        // No elections on file at all — hide the whole "which election" control.
+        staticEl.textContent = 'No upcoming election on file.';
+        staticEl.hidden = false;
+        if (labelEl) labelEl.textContent = 'Election';
+      }
+    }
 
     addressBtn.addEventListener('click', lookupAddress);
     addressInput.addEventListener('keydown', e => { if (e.key === 'Enter') lookupAddress(); });
