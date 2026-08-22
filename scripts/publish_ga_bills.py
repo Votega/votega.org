@@ -15,6 +15,7 @@ import csv
 import io
 import json
 import os
+import re
 from collections import Counter
 
 from lib.sibling_publish import build_json, publish_or_dry_run
@@ -26,6 +27,16 @@ SRC_JSON = "assets/data/ga-bills.json"
 SRC_SUBJECTS = "assets/data/ga-bills-subjects.json"
 
 CHAMBER_LABEL = {"lower": "House", "upper": "Senate"}
+
+
+def session_slug(meta):
+    """Directory-friendly session label, e.g. '2025-2026'. Georgia runs two-year
+    sessions, so past sessions are archived under sessions/<slug>/ and never overwritten
+    when the source flips to a new session."""
+    m = re.search(r"(\d{4})\D+(\d{4})", meta.get("sessionName") or "")
+    if m:
+        return f"{m.group(1)}-{m.group(2)}"
+    return (meta.get("session") or "unknown").replace("_", "-")
 
 
 def bills_csv(bills):
@@ -59,8 +70,8 @@ def bills_md(doc):
     L.append(f"_Last updated {meta.get('generatedAt', '')} · {len(bills)} bills · "
              f"{meta.get('sessionName', '')}._")
     L.append("")
-    L.append("> Full data: [`ga-bills.json`](ga-bills.json) (richest — sponsors, votes, links) "
-             "or [`ga-bills.csv`](ga-bills.csv) (one row per bill, for spreadsheets).")
+    L.append("> Full data in this session folder: [`bills.json`](bills.json) (richest — sponsors, "
+             "votes, links) or [`bills.csv`](bills.csv) (one row per bill, for spreadsheets).")
     L.append("")
 
     def table(title, counter, cols=("Value", "Bills"), limit=None):
@@ -122,14 +133,36 @@ def schema():
 
 def build_artifacts():
     doc = json.load(open(SRC_JSON, encoding="utf-8"))
+    meta = doc.get("metadata", {})
+    slug = session_slug(meta)
+    base = f"sessions/{slug}"
+
+    files = {
+        "bills": f"{base}/bills.json",
+        "billsCsv": f"{base}/bills.csv",
+        "schema": f"{base}/bills.schema.json",
+        "summary": f"{base}/BILLS.md",
+    }
     artifacts = {
-        "ga-bills.json": open(SRC_JSON, "rb").read(),
-        "ga-bills.csv": bills_csv(doc.get("bills", [])),
-        "ga-bills.schema.json": build_json(schema()),
-        "BILLS.md": bills_md(doc),
+        files["bills"]: open(SRC_JSON, "rb").read(),
+        files["billsCsv"]: bills_csv(doc.get("bills", [])),
+        files["schema"]: build_json(schema()),
+        files["summary"]: bills_md(doc),
     }
     if os.path.exists(SRC_SUBJECTS):
-        artifacts["ga-bills-subjects.json"] = open(SRC_SUBJECTS, "rb").read()
+        subj_path = f"{base}/bills-subjects.json"
+        artifacts[subj_path] = open(SRC_SUBJECTS, "rb").read()
+        files["subjects"] = subj_path
+
+    # Root pointer to the current session, so consumers can find "the latest bills"
+    # without hard-coding a session; past sessions stay archived under sessions/.
+    artifacts["latest.json"] = build_json({
+        "currentSession": slug,
+        "sessionName": meta.get("sessionName"),
+        "generatedAt": meta.get("generatedAt"),  # source data timestamp (avoids churn)
+        "billCount": len(doc.get("bills", [])),
+        "files": files,
+    })
     return artifacts
 
 

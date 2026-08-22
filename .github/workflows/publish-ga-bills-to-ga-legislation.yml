@@ -55,10 +55,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Regenerate all bill artifacts (JSON passthrough + CSV + schema + BILLS.md)
-          # into the target tree. Used for the first commit and again after a reset
-          # when a push loses a race.
+          # Regenerate all bill artifacts into the target tree. Bills are now archived
+          # per legislative session under sessions/<YYYY-YYYY>/ with a root latest.json
+          # pointer, so remove the old flat root layout on migration (git add -A stages
+          # the deletions). Only bill files are removed — ballot-measure files at the
+          # root belong to the sibling publisher. Used for the first commit and again
+          # after a reset when a push loses a race.
           restage() {
+            rm -f ga-bills.json ga-bills.csv ga-bills.schema.json BILLS.md ga-bills-subjects.json
             ( cd "$GITHUB_WORKSPACE" && OUT_DIR="$GITHUB_WORKSPACE/target-repo" python3 scripts/publish_ga_bills.py )
             git add -A
           }
