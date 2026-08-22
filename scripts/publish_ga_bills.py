@@ -15,9 +15,10 @@ import csv
 import io
 import json
 import os
-import re
 from collections import Counter
 
+from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
+                             session_name, session_slug, tag_session)
 from lib.sibling_publish import build_json, publish_or_dry_run
 
 REPO = "Votega/ga-legislation"
@@ -29,14 +30,10 @@ SRC_SUBJECTS = "assets/data/ga-bills-subjects.json"
 CHAMBER_LABEL = {"lower": "House", "upper": "Senate"}
 
 
-def session_slug(meta):
-    """Directory-friendly session label, e.g. '2025-2026'. Georgia runs two-year
-    sessions, so past sessions are archived under sessions/<slug>/ and never overwritten
-    when the source flips to a new session."""
-    m = re.search(r"(\d{4})\D+(\d{4})", meta.get("sessionName") or "")
-    if m:
-        return f"{m.group(1)}-{m.group(2)}"
-    return (meta.get("session") or "unknown").replace("_", "-")
+def compact_json(obj):
+    """Compact UTF-8 JSON bytes for the large per-session bills.json (pretty-printing
+    the ~9 MB regular-session file would roughly double it)."""
+    return json.dumps(obj, ensure_ascii=False, separators=(",", ":")).encode()
 
 
 def bills_csv(bills):
@@ -132,36 +129,67 @@ def schema():
 
 
 def build_artifacts():
+    """Split the biennium's bills by session into per-session archive dirs and refresh
+    the root latest.json pointer. ga-bills.json now covers the whole biennium (each bill
+    tagged with its `session`); each session directory gets a self-contained bills.json
+    plus bills.csv, bills.schema.json, and BILLS.md. Closed sessions re-emit byte-stable."""
     doc = json.load(open(SRC_JSON, encoding="utf-8"))
     meta = doc.get("metadata", {})
-    slug = session_slug(meta)
-    base = f"sessions/{slug}"
+    all_bills = doc.get("bills", [])
+    subjects_bytes = open(SRC_SUBJECTS, "rb").read() if os.path.exists(SRC_SUBJECTS) else None
 
-    files = {
-        "bills": f"{base}/bills.json",
-        "billsCsv": f"{base}/bills.csv",
-        "schema": f"{base}/bills.schema.json",
-        "summary": f"{base}/BILLS.md",
-    }
-    artifacts = {
-        files["bills"]: open(SRC_JSON, "rb").read(),
-        files["billsCsv"]: bills_csv(doc.get("bills", [])),
-        files["schema"]: build_json(schema()),
-        files["summary"]: bills_md(doc),
-    }
-    if os.path.exists(SRC_SUBJECTS):
-        subj_path = f"{base}/bills-subjects.json"
-        artifacts[subj_path] = open(SRC_SUBJECTS, "rb").read()
-        files["subjects"] = subj_path
+    bills_by_session = {}
+    for b in all_bills:
+        bills_by_session.setdefault(tag_session(b.get("session")), []).append(b)
 
-    # Root pointer to the current session, so consumers can find "the latest bills"
-    # without hard-coding a session; past sessions stay archived under sessions/.
+    artifacts = {}
+    sessions_index = []
+    # Emit every session in the biennium, even one with no bills yet (a just-convened
+    # special session), so the archive structure is complete and latest.json's
+    # currentSession always resolves. Include any unexpected session id found in data.
+    for sid in list(all_session_ids()) + [s for s in bills_by_session if s not in all_session_ids()]:
+        sess_bills = bills_by_session.get(sid, [])
+        slug = session_slug(sid)
+        base = f"sessions/{slug}"
+        sess_doc = {
+            "metadata": {
+                "session": sid,
+                "sessionName": session_name(sid),
+                "biennium": BIENNIUM,
+                "generatedAt": meta.get("generatedAt"),
+                "source": meta.get("source", "Open States API"),
+                "totalBills": len(sess_bills),
+            },
+            "bills": sess_bills,
+        }
+        files = {
+            "bills": f"{base}/bills.json",
+            "billsCsv": f"{base}/bills.csv",
+            "schema": f"{base}/bills.schema.json",
+            "summary": f"{base}/BILLS.md",
+        }
+        artifacts[files["bills"]] = compact_json(sess_doc)
+        artifacts[files["billsCsv"]] = bills_csv(sess_bills)
+        artifacts[files["schema"]] = build_json(schema())
+        artifacts[files["summary"]] = bills_md(sess_doc)
+        if subjects_bytes is not None:
+            files["subjects"] = f"{base}/bills-subjects.json"
+            artifacts[files["subjects"]] = subjects_bytes
+        sessions_index.append({
+            "id": sid, "name": session_name(sid), "slug": slug,
+            "billCount": len(sess_bills), "files": files,
+        })
+
+    active_slug = session_slug(meta.get("activeSession") or ACTIVE_SESSION)
+    # Root pointer to the biennium and the session in progress; source timestamp avoids
+    # churn. Past sessions stay archived under sessions/ and are never overwritten.
     artifacts["latest.json"] = build_json({
-        "currentSession": slug,
-        "sessionName": meta.get("sessionName"),
-        "generatedAt": meta.get("generatedAt"),  # source data timestamp (avoids churn)
-        "billCount": len(doc.get("bills", [])),
-        "files": files,
+        "biennium": BIENNIUM,
+        "currentSession": active_slug,
+        "activeSession": meta.get("activeSession") or ACTIVE_SESSION,
+        "generatedAt": meta.get("generatedAt"),
+        "billCount": len(all_bills),
+        "sessions": sorted(sessions_index, key=lambda s: s["slug"]),
     })
     return artifacts
 

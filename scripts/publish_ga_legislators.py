@@ -17,9 +17,10 @@ entry point):
                                                roster the target repo splits into
                                                house/senate.json), data/members.csv,
                                                data/members.schema.json, ROSTER.md
-  votes          from ga-member-votes.json -> sessions/<slug>/{votes.json, votes.csv,
-                                               votes.schema.json} + root latest.json
-                                               pointer to the current session
+  votes          from ga-member-votes.json -> one sessions/<slug>/{votes.json, votes.csv,
+                                               votes.schema.json} per session in the
+                                               biennium (roll calls split by their
+                                               `session` tag) + root latest.json pointer
   freeze-roster  from ga-members.json      -> sessions/<slug>/{members.json, members.csv,
                                                members.schema.json, ROSTER.md}
 
@@ -40,10 +41,11 @@ import csv
 import io
 import json
 import os
-import re
 import sys
 
 from lib.ga_voters import VOTING_CHAMBERS
+from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
+                             session_name, session_slug, tag_session)
 from lib.sibling_publish import build_json, publish_or_dry_run
 
 REPO = "Votega/ga-legislators"
@@ -54,17 +56,6 @@ SRC_MEMBERS = "assets/data/ga-members.json"
 SRC_VOTES = "assets/data/ga-member-votes.json"
 
 DEPARTED = {"Resigned", "Removed", "Deceased"}
-
-
-def session_slug(meta):
-    """Directory-friendly session label, e.g. '2025-2026', from the source metadata's
-    sessionName ('2025-2026 Regular Session'). Falls back to the raw `session` id
-    ('2025_26' -> '2025-26'). Mirrors publish_ga_bills.py so both sibling archives
-    bucket a biennium under the same slug."""
-    m = re.search(r"(\d{4})\D+(\d{4})", meta.get("sessionName") or "")
-    if m:
-        return f"{m.group(1)}-{m.group(2)}"
-    return (meta.get("session") or "unknown").replace("_", "-")
 
 
 def sitting_legislators(members):
@@ -234,6 +225,7 @@ def votes_schema():
                         "bill": {"type": ["string", "null"]},
                         "billUrl": {"type": ["string", "null"]},
                         "title": {"type": ["string", "null"]},
+                        "session": {"type": ["string", "null"], "description": "Session id, e.g. '2025_26' or '2026_ss'."},
                         "motionText": {"type": ["string", "null"]},
                         "date": {"type": ["string", "null"]},
                         "yea": {"type": "integer"},
@@ -260,42 +252,80 @@ def votes_schema():
     }
 
 
+def compact_json(obj):
+    """Compact (unindented) UTF-8 JSON bytes. Used for the large per-session votes.json —
+    the 2025_26 regular session alone is ~17 MB, and pretty-printing it would roughly
+    double that and strain the Contents API's per-file size limit."""
+    return json.dumps(obj, ensure_ascii=False, separators=(",", ":")).encode()
+
+
 def build_votes():
-    """Archive the current session's votes under sessions/<slug>/ and refresh the root
-    latest.json pointer. Votes are session-scoped and never overwritten across sessions,
-    so — like ga-legislation's bills — they live only in the session directory; there is
-    no flat data/votes.json (consumers resolve the current file via latest.json)."""
+    """Split the biennium's roll calls by session into per-session archive dirs and
+    refresh the root latest.json pointer. ga-member-votes.json now covers the whole
+    biennium (each roll call tagged with its `session`); each session directory gets a
+    self-contained votes.json ({metadata, votes, memberVotes} scoped to that session)
+    plus votes.csv and votes.schema.json. Closed sessions re-emit byte-stable."""
     doc = json.load(open(SRC_VOTES, encoding="utf-8"))
     meta = doc.get("metadata", {})
     votes = doc.get("votes", {})
-    slug = session_slug(meta)
-    base = f"sessions/{slug}"
+    member_votes = doc.get("memberVotes", {})
 
-    files = {
-        "votes": f"{base}/votes.json",
-        "votesCsv": f"{base}/votes.csv",
-        "votesSchema": f"{base}/votes.schema.json",
-    }
-    return {
-        files["votes"]: open(SRC_VOTES, "rb").read(),
-        files["votesCsv"]: votes_csv(votes),
-        files["votesSchema"]: build_json(votes_schema()),
-        # Root pointer to "the current session", so consumers never hard-code a slug.
-        # Uses the source data timestamp (not now()) so an unchanged weekly run produces
-        # a byte-identical pointer and skips a no-op commit.
-        "latest.json": build_json({
-            "currentSession": slug,
-            "sessionName": meta.get("sessionName"),
-            "generatedAt": meta.get("generatedAt"),
-            "voteCount": len(votes),
-            "files": files,
-            # The live roster always sits at data/all.json (refreshed by the `members`
-            # mode); a per-session roster snapshot appears at sessions/<slug>/members.json
-            # once that session is frozen at sine die (see the `freeze-roster` mode).
-            "currentRoster": "data/all.json",
-            "rosterArchive": f"{base}/members.json",
-        }),
-    }
+    ids_by_session = {}
+    for vid, v in votes.items():
+        ids_by_session.setdefault(tag_session(v.get("session")), set()).add(vid)
+
+    artifacts = {}
+    sessions_index = []
+    # Emit every session in the biennium, even one with no roll calls yet, so the archive
+    # is complete and latest.json's currentSession always resolves.
+    for sid in list(all_session_ids()) + [s for s in ids_by_session if s not in all_session_ids()]:
+        vids = ids_by_session.get(sid, set())
+        slug = session_slug(sid)
+        base = f"sessions/{slug}"
+        sess_votes = {vid: votes[vid] for vid in vids}
+        # Restrict each member's roll-call entries to this session; drop members with none.
+        sess_mv = {}
+        for pid, entries in member_votes.items():
+            kept = [e for e in entries if e.get("voteId") in vids]
+            if kept:
+                sess_mv[pid] = kept
+        sess_doc = {
+            "metadata": {
+                "session": sid,
+                "sessionName": session_name(sid),
+                "biennium": BIENNIUM,
+                "generatedAt": meta.get("generatedAt"),
+                "source": meta.get("source", "Open States API"),
+                "totalVotes": len(sess_votes),
+            },
+            "votes": sess_votes,
+            "memberVotes": sess_mv,
+        }
+        artifacts[f"{base}/votes.json"] = compact_json(sess_doc)
+        artifacts[f"{base}/votes.csv"] = votes_csv(sess_votes)
+        artifacts[f"{base}/votes.schema.json"] = build_json(votes_schema())
+        sessions_index.append({
+            "id": sid, "name": session_name(sid), "slug": slug,
+            "voteCount": len(sess_votes),
+            "files": {"votes": f"{base}/votes.json", "votesCsv": f"{base}/votes.csv",
+                      "votesSchema": f"{base}/votes.schema.json"},
+        })
+
+    active_slug = session_slug(meta.get("activeSession") or ACTIVE_SESSION)
+    # Root pointer: the biennium, the session currently in progress, and every session's
+    # files. Uses the source data timestamp (not now()) so an unchanged run produces a
+    # byte-identical pointer. The live roster is always data/all.json; the frozen roster
+    # for the whole General Assembly lives at sessions/<biennium>/members.json.
+    artifacts["latest.json"] = build_json({
+        "biennium": BIENNIUM,
+        "currentSession": active_slug,
+        "activeSession": meta.get("activeSession") or ACTIVE_SESSION,
+        "generatedAt": meta.get("generatedAt"),
+        "currentRoster": "data/all.json",
+        "rosterArchive": f"sessions/{BIENNIUM}/members.json",
+        "sessions": sorted(sessions_index, key=lambda s: s["slug"]),
+    })
+    return artifacts
 
 
 # --------------------------------------------------------------------------- #
@@ -318,16 +348,14 @@ def build_freeze_roster(slug):
 
 
 def resolve_slug(explicit):
-    """Slug for a freeze-roster run. Explicit arg wins; otherwise default to the current
-    votes session (ga-member-votes.json carries a sessionName; ga-members.json does not).
-    At sine die the two are aligned, which is exactly when this should run."""
+    """Slug for a freeze-roster run. Explicit arg wins; otherwise default to the biennium
+    (BIENNIUM). The roster is the same sitting membership across a biennium's regular and
+    special sessions, so one snapshot per General Assembly — at sessions/<biennium>/ —
+    is the natural record, matching latest.json's rosterArchive pointer."""
     if explicit:
         return explicit
-    vmeta = json.load(open(SRC_VOTES, encoding="utf-8")).get("metadata", {})
-    slug = session_slug(vmeta)
-    print(f"No session slug given — defaulting to current votes session: "
-          f"{slug} ({vmeta.get('sessionName')})")
-    return slug
+    print(f"No session slug given — defaulting to the biennium: {BIENNIUM}")
+    return BIENNIUM
 
 
 def main():

@@ -112,48 +112,59 @@ that filtering moved to render time.
 
 ---
 
-## 3. When a new GA legislative session starts
+## 3. When a new GA legislative session starts (regular OR special)
 
-Triggered by: the biennium rolling over (2025–2026 → 2027–2028).
+Triggered by: a new regular session at the biennium rollover (2025–2026 → 2027–2028),
+**or** a special session convened within a biennium (e.g. the 2026 special session).
 
-| File | What to change |
-|---|---|
-| [`scripts/generate_ga_bills_data.py`](scripts/generate_ga_bills_data.py) L33–34 | `GA_SESSION = "2025_26"`, `SESSION_NAME` |
-| [`scripts/generate_ga_votes_data.py`](scripts/generate_ga_votes_data.py) L41–42 | same two constants |
+**All session config now lives in one file:** [`scripts/lib/ga_sessions.py`](scripts/lib/ga_sessions.py).
+Both generators and both sibling-repo publishers import it — there is no longer a
+`GA_SESSION` constant to edit in each generator. To add a session:
 
-Then follow *Maintenance — Curated GA Bills → Session changeover* in `TO-DO.md`,
-and re-run both workflows so the new session's data lands before the pages reference it.
+1. Add its `id -> name` to `SESSION_NAMES` (e.g. `"2027_28": "2027-2028 Regular Session"`).
+2. Point `ACTIVE_SESSION` at whichever session is currently in progress — the only one
+   fetched live. Every other session in `SESSION_NAMES` is treated as **closed and
+   preserved** from the existing data file (its bills/votes are never re-fetched).
+3. Set `UNTAGGED_SESSION` to the session that on-file records with no `session` tag
+   belong to (only relevant the first time an untagged file is migrated).
+4. At a full biennium rollover, also update `BIENNIUM`.
 
-**Freeze the outgoing session's roster into `Votega/ga-legislators` — do this FIRST, at
-sine die, BEFORE bumping `GA_SESSION` or letting `update-ga-members` turn the roster over.**
-Bills and votes are session-scoped, so they archive themselves under `sessions/<slug>/`
-automatically (the publisher buckets by the source's `sessionName`, and past dirs are never
-overwritten). The **roster** does not: `ga-members.json` carries no session name and Open
-States replaces it gradually with the incoming members after the election, so there is no
-safe automatic moment to snapshot it. Capture it by hand:
+Then re-run `update-ga-bills` and `update-ga-votes`. Because only the active session is
+fetched and it opens small, the first pull is a few pages — no quota crunch. Also follow
+*Maintenance — Curated GA Bills → Session changeover* in `TO-DO.md`.
+
+**How the biennium model works:** each bill/vote record carries a `session` id. The
+generators keep closed sessions as a frozen layer and fetch only `ACTIVE_SESSION`, so
+`ga-bills.json` / `ga-member-votes.json` cover the whole biennium; `ga-bills.html` and
+`ga-member.html` show all sessions (filterable / grouped), and the publishers split the
+combined file back into `sessions/<slug>/` archive dirs (regular → `2025-2026`, special
+→ `2026-ss`). No member loses their prior-session record at a changeover.
+
+**Get the identifier from the API, don't guess it.** Run the `inspect-ga-sessions`
+workflow (dispatch-only, one API request). It lists every GA session Open States knows
+about with its exact `identifier`. Guessing a session string produces failures that look
+identical to an expired key or an outage.
+
+### Freeze the roster at the biennium's end
+
+The roster archive is a deliberate `freeze-ga-roster` run, keyed to the General Assembly
+(the biennium), **not** each special session — the membership is the same across a
+biennium's regular and special sessions. Do it at the end of the biennium, BEFORE
+`update-ga-members` turns the roster over to the incoming class. Bills and votes archive
+themselves per session (the publishers bucket by each record's `session` tag, and past
+dirs are never overwritten); the **roster** does not — `ga-members.json` carries no
+session name and Open States replaces it gradually after the election.
 
 - Run the **`freeze-ga-roster`** workflow (dispatch-only). Leave the input blank to freeze
-  the current votes session, or pass an explicit slug like `2025-2026`. It writes
+  the biennium (`2025-2026`), or pass an explicit slug. It writes
   `sessions/<slug>/{members.json, members.csv, members.schema.json, ROSTER.md}` and never
   touches it again.
 - Timing is the whole point: run it while `ga-members.json` still holds the outgoing roster.
   Once the incoming members are seated, that roster is gone from the source and can't be
   reconstructed — only the archive preserves who served in that General Assembly.
 - The live roster stays at `data/all.json` (refreshed daily by `update-ga-members`); the
-  freeze is purely additive. `latest.json` at the repo root always points at the current
-  session's vote files and names the roster-archive path by convention.
-
-**Get the identifier from the API, don't guess it.** Run the `inspect-ga-sessions`
-workflow (dispatch-only, one API request). It lists every GA session Open States knows
-about with its exact `identifier`, flags which one the generators are pinned to, and
-names the next upcoming session. Guessing a session string produces failures that look
-identical to an expired key or an outage.
-
-**Bump these early in the session.** Both generators fetch incrementally and detect the
-session change automatically, forcing one fresh full pull — which is only a few pages
-when a session has just opened. Flip the constants once the session is thousands of
-bills deep and that same full pull becomes ~100+ pages against Open States' 250/day
-cap, which then needs a day when no other job is using the key.
+  freeze is purely additive. `latest.json` at the repo root names the biennium, the session
+  in progress, and every session's files.
 
 **Known gap:** `ga-member-votes.json` covers ~4,280 of the 2025–26 session's ~5,480
 bills (`paginationComplete: false`). A full pass needs ~274 requests against the

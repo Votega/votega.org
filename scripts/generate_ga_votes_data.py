@@ -15,7 +15,11 @@ Open States API flow:
      usable id nor a resolvable name is dropped and counted in
      metadata.unresolvedVoterRows.
 
-To update for a new session: change GA_SESSION below.
+Multi-session (biennium) model: each roll call is tagged with its `session` id. This
+generator fetches only the ACTIVE session live and PRESERVES the (frozen) roll calls of
+the closed sessions already on file, so ga-member-votes.json covers the whole biennium
+and no member loses their prior-session record. Session config lives in
+scripts/lib/ga_sessions.py — update it there, not here.
 
 Data-soundness invariants (enforced on every run and available offline via
 `--sanitize`):
@@ -46,12 +50,15 @@ from lib.http import fetch_json
 from lib.ga_voters import (LEGACY_PERSON_ID_MAP, MemberIndex,
                            assign_remaining_by_surname, event_chamber,
                            normalize_voter_name, resolve_voter)
+from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
+                             session_name, tag_session)
 
 API_KEY      = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL     = "https://v3.openstates.org"
 GA_JURISDICTION = "ocd-jurisdiction/country:us/state:ga/government"
-GA_SESSION   = "2025_26"
-SESSION_NAME = "2025-2026 Regular Session"
+# The session fetched live. Closed sessions are preserved from the existing file.
+GA_SESSION   = ACTIVE_SESSION
+SESSION_NAME = session_name(ACTIVE_SESSION)
 MEMBERS_FILE = "assets/data/ga-members.json"
 
 SANITIZE_ONLY = '--sanitize' in sys.argv
@@ -214,12 +221,14 @@ def incremental_since(meta):
     """
     if not meta.get('generatedAt'):
         return None
-    # A baseline from a different session is not a baseline — see the matching guard
-    # in generate_ga_bills_data.py. Forces a full pull at the biennium changeover so
-    # two sessions never end up merged into one file.
-    if meta.get('session') and meta['session'] != GA_SESSION:
-        print(f"  Baseline is session {meta['session']}, now building {GA_SESSION} "
-              f"— starting a fresh full fetch.")
+    # Only take the incremental path if the ACTIVE session was already being tracked.
+    # A newly active session (e.g. a just-convened special session) has no baseline in
+    # the file yet, so it needs one full pull — cheap, since a session opens small. The
+    # closed sessions in the file are preserved in main(), never re-fetched.
+    if meta.get('activeSession') != GA_SESSION:
+        print(f"  Active session {GA_SESSION} not yet in the baseline "
+              f"(was {meta.get('activeSession') or meta.get('session')}) "
+              f"— starting a fresh full fetch of it.")
         return None
     try:
         ts = meta['generatedAt'].replace('Z', '+00:00')
@@ -343,6 +352,7 @@ def main():
                     'bill':       identifier,
                     'billUrl':    bill_url,
                     'title':      title,
+                    'session':    GA_SESSION,   # only the active session is fetched here
                     'motionText': ve.get('motion_text', ''),
                     'date':       ve.get('start_date', ''),
                     'yea':        yea,
@@ -426,39 +436,31 @@ def main():
     # dataset is complete — a run can succeed fully while the baseline stays partial.
     fetch_complete = total_pages is None or page >= total_pages
 
-    # Merge whenever there is a baseline for *this* session — including a full
-    # refresh. A full refresh cannot finish in one run (the session is ~274 pages
-    # against a 250/day quota shared with every other job, which is why
-    # incremental_since() refuses to demand a complete baseline), so treating it
-    # as a wholesale replacement meant one day's quota silently truncated the
-    # dataset: a FULL_REFRESH=1 run on 2026-08-19 fetched 208 pages and replaced
-    # 2,223 accumulated roll calls with its own 2,145, discarding 78.
+    # Always merge over the baseline. merge_votes re-processes/replaces this run's
+    # refetched (active-session) roll calls under current resolution logic and RETAINS
+    # everything else — anything the run didn't reach (a partial full refresh is normal
+    # against the 250/day quota; see finding 3.4) AND every closed-session roll call,
+    # whose voteIds never collide with the active fetch. This is how prior sessions of
+    # the biennium survive: they are preserved through the merge rather than replaced.
     #
-    # Merging makes a partial full refresh additive instead: old roll calls are
-    # re-processed under current resolution logic, and anything this run did not
-    # reach is retained rather than dropped.
-    #
-    # The one case that must NOT merge is a session changeover, where the prior
-    # file describes a different biennium — incremental_since() already forces a
-    # full pull there, and this keeps the two sessions from being merged into one
-    # file. See CODEBASE-REVIEW-2026-08-18.md finding 3.4.
-    prior_session  = (prior_meta or {}).get('session')
-    session_changed = bool(prior_session) and prior_session != GA_SESSION
-    should_merge = bool(prior_votes) and not session_changed
+    # Migrate first: tag any untagged prior roll call with the session it belongs to so
+    # its provenance carries through (records predating multi-session support are folded
+    # into UNTAGGED_SESSION by tag_session).
+    for v in prior_votes.values():
+        v['session'] = tag_session(v.get('session'))
 
-    if session_changed:
-        print(f"  Baseline is session {prior_session}, building {GA_SESSION} — "
-              f"not merging; this run's data stands alone.")
-
-    if should_merge:
+    was_incremental = bool(since and prior_votes)
+    if prior_votes:
+        preserved_ids = {vid for vid, v in prior_votes.items() if v.get('session') != GA_SESSION}
         fetched_votes, fetched_members = len(votes_meta), len(member_votes)
         votes_meta, member_votes = merge_votes(
             prior_votes, prior_member_votes, votes_meta, member_votes
         )
         retained = len(votes_meta) - fetched_votes
-        print(f"  Merged {fetched_votes} refetched vote(s) across {fetched_members} member(s) "
-              f"into {len(prior_votes)} existing -> {len(votes_meta)} votes, "
-              f"{len(member_votes)} members ({retained} retained from the baseline)")
+        print(f"  Merged {fetched_votes} refetched active-session vote(s) across "
+              f"{fetched_members} member(s) into {len(prior_votes)} existing -> "
+              f"{len(votes_meta)} votes, {len(member_votes)} members "
+              f"({retained} retained, incl. {len(preserved_ids)} from closed session(s))")
 
     # Fail here rather than writing an empty file and letting the workflow's validation
     # catch it later. A failed first page breaks out of the fetch loop above, and without
@@ -486,19 +488,36 @@ def main():
               file=sys.stderr)
         sys.exit(1)
 
+    by_session = {}
+    for v in votes_meta.values():
+        sid = v.get('session') or GA_SESSION
+        by_session[sid] = by_session.get(sid, 0) + 1
     output = {
         'metadata': {
             'generatedAt':          datetime.now().isoformat(),
+            'biennium':             BIENNIUM,
+            # Every session in the biennium, with its roll-call count. Preserved sessions
+            # are frozen; only activeSession is fetched live.
+            'sessions':             [{'id': sid, 'name': session_name(sid),
+                                      'voteCount': by_session.get(sid, 0)}
+                                     for sid in all_session_ids()],
+            'activeSession':        GA_SESSION,
+            'activeSessionName':    SESSION_NAME,
+            # Legacy single-session fields, kept pointing at the active session so any
+            # older reader still resolves. Prefer `biennium` / `sessions` going forward.
             'session':              GA_SESSION,
             'sessionName':          SESSION_NAME,
             'source':               'Open States API',
             'totalVotes':           len(votes_meta),
             'totalBillsSeen':       bills_seen,
-            # Whether the CUMULATIVE dataset is complete. An incremental run inherits
-            # the baseline's gaps, so it can't claim completeness the baseline lacked.
-            # Distinct from fetch_complete below, which is about this run only.
+            # Whether the CUMULATIVE dataset is complete. This run only fetched the active
+            # session; a preserved closed session carries its own completeness, so we
+            # inherit the baseline's flag whenever there is a baseline (the 2025_26
+            # regular session has a known gap — see RECURRING-TASKS §3 — so the cumulative
+            # set stays incomplete until that's backfilled). Distinct from fetch_complete
+            # below, which is about this run's active fetch only.
             'paginationComplete':   fetch_complete and (prior_meta.get('paginationComplete', True)
-                                                        if was_incremental else True),
+                                                        if prior_votes else True),
             'fetchComplete':        fetch_complete,
             'updateMode':           'incremental' if was_incremental else 'full',
             'lastFullRefresh':      (prior_meta.get('lastFullRefresh')

@@ -6,7 +6,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
 ---
 
 <h1>Georgia General Assembly: Bills &amp; Resolutions</h1>
-<p>Browse legislation from the 2025–26 regular session. Data sourced from <a href="https://openstates.org" target="_blank">Open States</a>.</p>
+<p>Browse legislation from the 2025–2026 General Assembly, including the 2026 special session. Data sourced from <a href="https://openstates.org" target="_blank">Open States</a>.</p>
 <p class="data-note" id="billsDataNote" style="display:none"></p>
 
 <style>
@@ -260,6 +260,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     margin-left: 2px;
   }
   .badge-partyline { background: #f3ebff; color: #6d28d9; }
+  .badge-session   { background: #fff4e0; color: #a35b00; }
 
   .detail-links {
     display: flex;
@@ -339,6 +340,10 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     <select id="billSubject">
       <option value="">All subjects</option>
     </select>
+    <label class="sr-only" for="billSession">Filter by session</label>
+    <select id="billSession" style="display:none">
+      <option value="">All sessions</option>
+    </select>
     <label class="sr-only" for="billSort">Sort bills</label>
     <select id="billSort">
       <option value="date">Most recent</option>
@@ -389,6 +394,9 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
   let statusFilter  = '';
   let partyLineOnly = false;
   let searchTimer   = null;
+  let sessionFilter = '';       // '' = all sessions in the biennium
+  let sessionNames  = {};       // session id -> display name (from metadata.sessions)
+  let multiSession  = false;    // more than one session present -> show session UI
 
   // ── DOM refs ──────────────────────────────────────────────────────────────
   const elLoading    = document.getElementById('billsLoading');
@@ -402,6 +410,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
   const elDataNote   = document.getElementById('billsDataNote');
   const elSearch     = document.getElementById('billSearch');
   const elSubject    = document.getElementById('billSubject');
+  const elSession    = document.getElementById('billSession');
   const elSort       = document.getElementById('billSort');
 
   // ── Status classification ─────────────────────────────────────────────────
@@ -610,6 +619,16 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     return 'bill-' + String(identifier).replace(/\s+/g, '');
   }
 
+  // A session badge is shown only for a NON-regular session (e.g. the special
+  // session) and only when the biennium has more than one session, so the default
+  // regular-session view stays uncluttered.
+  function sessionBadgeHtml(bill) {
+    if (!multiSession || !bill.session) return '';
+    const name = sessionNames[bill.session] || bill.session;
+    if (/Regular/i.test(name)) return '';
+    return '<span class="bill-status-badge badge-session">' + escHtml(name) + '</span>';
+  }
+
   // ── Bill card HTML ────────────────────────────────────────────────────────
   function cardHtml(bill, idx) {
     const sc        = bill._status;
@@ -647,6 +666,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       + '<span class="bill-id">' + escHtml(bill.identifier) + '</span>'
       + badgeHtml(sc)
       + (bill._partyLine ? '<span class="bill-status-badge badge-partyline">&#9889; Party-line</span>' : '')
+      + sessionBadgeHtml(bill)
       + '</div>'
       + '<div class="bill-title">' + escHtml(bill.title) + '</div>'
       + '</div>'
@@ -689,6 +709,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       if (chamberTab === 'lower' && b.chamber !== 'lower') return false;
       if (chamberTab === 'upper' && b.chamber !== 'upper') return false;
       if (chamberTab === 'res'   && b.billType !== 'resolution') return false;
+      if (sessionFilter && (b.session || '') !== sessionFilter) return false;
       if (statusFilter && b._status !== statusFilter) return false;
       if (partyLineOnly && !b._partyLine) return false;
       if (subj && !(b.subjects || []).some(function (s) { return s === subj; })) return false;
@@ -784,6 +805,26 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     });
   }
 
+  // Session filter — only surfaced when the biennium has more than one session
+  // (e.g. once the 2026 special session appears). Built from metadata.sessions so
+  // it stays data-driven; counts come from the bills actually present.
+  function buildSessionDropdown(meta) {
+    const sessions = (meta.sessions || []).filter(function (s) { return s.id; });
+    sessions.forEach(function (s) { sessionNames[s.id] = s.name || s.id; });
+    const counts = {};
+    allBills.forEach(function (b) { if (b.session) counts[b.session] = (counts[b.session] || 0) + 1; });
+    const present = sessions.filter(function (s) { return (counts[s.id] || 0) > 0; });
+    multiSession = present.length > 1;
+    if (!multiSession) return;
+    present.forEach(function (s) {
+      const opt = document.createElement('option');
+      opt.value       = s.id;
+      opt.textContent = (s.name || s.id) + ' (' + counts[s.id] + ')';
+      elSession.appendChild(opt);
+    });
+    elSession.style.display = '';
+  }
+
   // ── Stats row ─────────────────────────────────────────────────────────────
   function buildStats(meta) {
     const signed   = allBills.filter(function (b) { return b._status === 'signed'; }).length;
@@ -821,6 +862,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     searchTimer = setTimeout(applyFilters, 250);
   });
   elSubject.addEventListener('change', applyFilters);
+  elSession.addEventListener('change', function () { sessionFilter = elSession.value; applyFilters(); });
   elSort.addEventListener('change', applyFilters);
 
   document.getElementById('chamberTabs').addEventListener('click', function (e) {
@@ -893,6 +935,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     // happens to be active by default.
     elSearch.value = '';
     elSubject.value = '';
+    if (elSession) { elSession.value = ''; sessionFilter = ''; }
     chamberTab = '';
     statusFilter = '';
     partyLineOnly = false;
@@ -937,6 +980,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       elLoading.style.display = 'none';
       buildStats(meta);
       buildSubjectDropdown();
+      buildSessionDropdown(meta);
       elControls.style.display   = '';
 
       const withVotes = allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;

@@ -5,11 +5,14 @@ Requires OPENSTATES_API_KEY environment variable.
 
 Replaces the one-time process_ga_bills.py transform of a static bulk export
 (GA_2025_26_bills.json, May 2026) with a live paginated fetch of
-GET /bills?jurisdiction=GA&session=2025_26&include=... . Output schema is
-unchanged from process_ga_bills.py, so ga-bills.html and
-enrich_bills_with_party_votes.py need no changes.
+GET /bills?jurisdiction=GA&session=<active>&include=... .
 
-To update for a new session: change GA_SESSION / SESSION_NAME below.
+Multi-session (biennium) model: Georgia's General Assembly sits for a two-year
+biennium made up of a regular session plus any special sessions. Each bill is tagged
+with its `session` id. This generator fetches only the ACTIVE session live and PRESERVES
+the (frozen) bills of the closed sessions already on file, so the combined ga-bills.json
+covers the whole biennium. See scripts/lib/ga_sessions.py — update session config there,
+not here. Every session is added and pointed-at in that one module.
 
 Usage:
   python scripts/generate_ga_bills_data.py                       # writes assets/data/ga-bills.json
@@ -28,12 +31,15 @@ import urllib.parse
 from datetime import datetime, timedelta, timezone
 
 from lib.http import fetch_json
+from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
+                             session_name, tag_session)
 
 API_KEY  = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL = "https://v3.openstates.org"
 GA_JURISDICTION = "ocd-jurisdiction/country:us/state:ga/government"
-GA_SESSION      = "2025_26"
-SESSION_NAME    = "2025-2026 Regular Session"
+# The session fetched live. Closed sessions are preserved from the existing file.
+GA_SESSION      = ACTIVE_SESSION
+SESSION_NAME    = session_name(ACTIVE_SESSION)
 
 OUTPUT_FILE     = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-bills.json"
 OVERRIDES_FILE  = os.path.join(os.path.dirname(OUTPUT_FILE), 'ga-bills-subjects.json')
@@ -340,6 +346,7 @@ def slim_bill(b):
     return {
         'id':          b['id'],
         'identifier':  identifier,
+        'session':     GA_SESSION,   # only the active session is fetched/slimmed here
         'billType':    (b.get('classification') or ['bill'])[0],
         'chamber':     get_chamber(identifier),
         'title':       b.get('title', ''),
@@ -387,14 +394,15 @@ def incremental_since(meta):
     """
     if not meta.get('generatedAt'):
         return None
-    # A baseline from a different session is not a baseline. Without this, bumping
-    # GA_SESSION at the biennium changeover would take the incremental path and merge
-    # the new session's bills on top of the old ones, leaving one file holding two
-    # sessions while metadata claimed only the new one. A full pull is the right
-    # behaviour here and it is cheap: a session opens with a handful of bills.
-    if meta.get('session') and meta['session'] != GA_SESSION:
-        print(f"  Baseline is session {meta['session']}, now building {GA_SESSION} "
-              f"— starting a fresh full fetch.")
+    # Only take the incremental path if the ACTIVE session was already being tracked.
+    # When a session first becomes active (e.g. a newly convened special session), the
+    # file has no active-session baseline yet, so a full pull of it is required — and
+    # it's cheap, since a session opens with a handful of bills. The closed sessions in
+    # the file are preserved separately in main(), never re-fetched.
+    if meta.get('activeSession') != GA_SESSION:
+        print(f"  Active session {GA_SESSION} not yet in the baseline "
+              f"(was {meta.get('activeSession') or meta.get('session')}) "
+              f"— starting a fresh full fetch of it.")
         return None
     # Only build on a baseline that was itself complete.
     if meta.get('paginationComplete') is False:
@@ -415,49 +423,58 @@ def main():
         sys.exit(1)
 
     existing_bills, existing_meta = load_existing(OUTPUT_FILE)
+
+    # Migrate + partition the baseline by session: closed sessions are PRESERVED
+    # untouched (they never change), only the active session is (re)fetched. Records
+    # written before multi-session support carried no `session` tag and belong to
+    # UNTAGGED_SESSION (folded in by tag_session).
+    for b in existing_bills:
+        b['session'] = tag_session(b.get('session'))
+    preserved     = [b for b in existing_bills if b['session'] != GA_SESSION]
+    active_prior  = [b for b in existing_bills if b['session'] == GA_SESSION]
+
     since = None if FULL_REFRESH else incremental_since(existing_meta)
 
     if FULL_REFRESH:
-        print(f"Full refresh requested — fetching every bill for session {GA_SESSION}.")
-        print(f"  Note: a full session is ~{-(-len(existing_bills) // PER_PAGE) or '?'} requests "
-              f"against a 250/day quota; this may not complete in one run.")
-    elif since and existing_bills:
-        print(f"Incremental update: {len(existing_bills):,} bills already on file; "
+        print(f"Full refresh requested — fetching every bill for the active session {GA_SESSION}.")
+    elif since and active_prior:
+        print(f"Incremental update: {len(active_prior):,} active-session bills on file; "
               f"fetching only those updated since {since}.")
     else:
-        print(f"No usable baseline — falling back to a full fetch for session {GA_SESSION}.")
+        print(f"No active-session baseline — full fetch of the active session {GA_SESSION}.")
+    if preserved:
+        print(f"  Preserving {len(preserved):,} bill(s) from closed session(s) "
+              f"{sorted(set(b['session'] for b in preserved))} — not re-fetched.")
 
     raw_bills, pagination_complete = get_all_bills(updated_since=since)
 
-    if since and existing_bills:
-        # Merge the changed bills over the baseline, keyed by OCD bill id.
-        fetched = {b['id']: b for b in (slim_bill(x) for x in raw_bills) if b.get('id')}
-        merged  = {b['id']: b for b in existing_bills if b.get('id')}
-        added   = len(set(fetched) - set(merged))
-        merged.update(fetched)
-        bills = list(merged.values())
-        print(f"  Merged {len(fetched)} changed bill(s) ({added} new) into "
-              f"{len(existing_bills):,} existing -> {len(bills):,} total")
-        raw_bills = None   # already slimmed
+    # Slim + tag this run's active-session fetch, then union over the active baseline
+    # (keyed by OCD bill id). Preserved closed-session bills are added back untouched.
+    fetched = {b['id']: b for b in (slim_bill(x) for x in raw_bills) if b.get('id')}
+    active_merged = {b['id']: b for b in active_prior if b.get('id')}
+    added = len(set(fetched) - set(active_merged))
+    active_merged.update(fetched)
+    bills = preserved + list(active_merged.values())
+
+    if since and active_prior:
+        print(f"  Merged {len(fetched)} changed active-session bill(s) ({added} new) into "
+              f"{len(active_prior):,} existing -> {len(active_merged):,} active, "
+              f"{len(bills):,} total incl. preserved")
     else:
-        if not raw_bills:
-            print("Error: no bills fetched")
-            sys.exit(1)
-        bills = None       # slimmed below
+        print(f"  Active session: {len(active_merged):,} bill(s); {len(bills):,} total incl. preserved")
+
+    if not bills:
+        print("Error: no bills at all (no active-session fetch and nothing preserved)")
+        sys.exit(1)
 
     overrides = load_subjects_overrides(OVERRIDES_FILE)
     if overrides:
         print(f'Loaded {len(overrides)} manual subject override(s) from {OVERRIDES_FILE}')
 
-    if bills is None:
-        print(f'Processing {len(raw_bills):,} bills ...')
-        bills = [slim_bill(b) for b in raw_bills]
-    else:
-        print(f'Processing {len(bills):,} bills (merged set) ...')
-
     # Keep a stable order so a merge doesn't reshuffle the file and produce a
-    # misleadingly large diff on every run.
-    bills.sort(key=lambda b: (b.get('chamber') or '', b.get('identifier') or ''))
+    # misleadingly large diff on every run. Group by session first so each session's
+    # bills stay contiguous in the file.
+    bills.sort(key=lambda b: (b.get('session') or '', b.get('chamber') or '', b.get('identifier') or ''))
 
     override_count = 0
     for bill in bills:
@@ -476,15 +493,33 @@ def main():
     for b in bills:
         chambers[b['chamber']] = chambers.get(b['chamber'], 0) + 1
 
-    was_incremental = bool(since and existing_bills)
+    was_incremental = bool(since and active_prior)
+    # This run only fetched the active session; the preserved sessions are complete by
+    # definition (frozen). So the cumulative dataset is complete iff the active fetch
+    # finished AND (on an incremental run) the active baseline was already complete.
+    active_complete = pagination_complete and (existing_meta.get('paginationComplete', True)
+                                               if was_incremental else True)
+    by_session = {}
+    for b in bills:
+        by_session[b['session']] = by_session.get(b['session'], 0) + 1
     output = {
         'metadata': {
             'generatedAt':        datetime.now(timezone.utc).isoformat(),
+            'biennium':           BIENNIUM,
+            # Every session in the biennium, with its bill count. Preserved sessions are
+            # frozen; only activeSession is fetched live.
+            'sessions':           [{'id': sid, 'name': session_name(sid),
+                                    'billCount': by_session.get(sid, 0)}
+                                   for sid in all_session_ids()],
+            'activeSession':      GA_SESSION,
+            'activeSessionName':  SESSION_NAME,
+            # Legacy single-session fields, kept pointing at the active session so any
+            # older reader still resolves. Prefer `biennium` / `sessions` going forward.
             'session':            GA_SESSION,
             'sessionName':        SESSION_NAME,
             'source':             'Open States API',
             'totalBills':         len(bills),
-            'paginationComplete': pagination_complete,
+            'paginationComplete': active_complete,
             'updateMode':         'incremental' if was_incremental else 'full',
             # Provenance of the underlying baseline: incremental runs build on it and
             # never re-verify the untouched bills, so it's worth knowing how old it is.
