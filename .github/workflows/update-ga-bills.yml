@@ -84,3 +84,16 @@ jobs:
               exit 1
             fi
           fi
+
+      # Publish inline so this scheduled update propagates to ga-legislation. The
+      # separate publish-ga-bills-to-ga-legislation.yml (on: push) does NOT fire for the
+      # commit above: GitHub does not trigger workflows for commits authored by the
+      # default GITHUB_TOKEN (recursion guard), so the sibling would otherwise miss every
+      # scheduled run — exactly the gap that left the 2026 special session unpublished.
+      # Contents-API path of publish_ga_bills.py (GA_BILLS_TOKEN set); mirrors the
+      # "Publish votes to ga-legislators repo" step in update-ga-votes.yml. Reuses the
+      # same GA_LEGISLATION_PUSH_TOKEN secret the separate workflow uses.
+      - name: Publish bills to ga-legislation repo
+        env:
+          GA_BILLS_TOKEN: ${{ secrets.GA_LEGISLATION_PUSH_TOKEN }}
+        run: python3 scripts/publish_ga_bills.py

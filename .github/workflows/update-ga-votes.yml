@@ -116,6 +116,16 @@ jobs:
             fi
           fi
 
+      # This job also rewrites ga-bills.json (the enrichment above), so publish it to
+      # ga-legislation here too — same inline-publish reasoning as update-ga-bills.yml:
+      # the GITHUB_TOKEN-authored commit above won't trigger the separate on:push
+      # workflow. Without this, party-tally enrichment would lag the sibling by up to a
+      # week. Contents-API path; reuses GA_LEGISLATION_PUSH_TOKEN.
+      - name: Publish bills to ga-legislation repo
+        env:
+          GA_BILLS_TOKEN: ${{ secrets.GA_LEGISLATION_PUSH_TOKEN }}
+        run: python3 scripts/publish_ga_bills.py
+
       # Reuses the existing GA_LEGISLATORS_TOKEN secret — same target repo as
       # the "Publish to ga-legislators repo" step in update-ga-members.yml.
       # Archives this session's votes under sessions/<slug>/{votes.json,votes.csv,
