@@ -108,7 +108,8 @@ jobs:
       - name: Publish to ga-legislators repo
         env:
           GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
-        # Publishes data/all.json (passthrough) plus consumer-friendly extras
+        # Publishes data/all.json (the LIVE roster) plus consumer-friendly extras
         # (members.csv, members.schema.json, ROSTER.md). The target repo splits
-        # all.json into house.json / senate.json in its own workflow.
+        # all.json into house.json / senate.json in its own workflow. The per-session
+        # roster ARCHIVE is a separate, deliberate freeze — see freeze-ga-roster.yml.
         run: python3 scripts/publish_ga_legislators.py members

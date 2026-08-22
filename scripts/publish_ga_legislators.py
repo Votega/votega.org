@@ -1,26 +1,46 @@
 #!/usr/bin/env python3
 """Publish Georgia state legislators + their votes to the Votega/ga-legislators repo.
 
-Two modes (the two source datasets update on different schedules, so each update
-workflow publishes its own half):
+Georgia runs two-year General Assembly sessions, and both source datasets are
+DESTRUCTIVELY REPLACED at the biennium rollover: ga-member-votes.json is refetched
+for the new session (GA_SESSION bump) and ga-members.json turns over to the new
+roster as Open States seats the incoming members. Left flat, the sibling repo would
+lose every prior session. So — mirroring Votega/ga-legislation — this repo is a
+session ARCHIVE: per-session data lives under sessions/<YYYY-YYYY>/ and is never
+overwritten once a new session begins (the generator only ever writes the *current*
+session's directory, and the Contents API only PUTs, never deletes prior dirs).
 
-  members   from ga-members.json      -> data/all.json (passthrough), members.csv,
-                                          members.schema.json, ROSTER.md
-  votes     from ga-member-votes.json -> data/votes.json (passthrough), votes.csv,
-                                          member-votes.csv, votes.schema.json
+Three modes (the datasets update on different schedules / clocks, so each is its own
+entry point):
+
+  members        from ga-members.json      -> data/all.json (passthrough, the LIVE
+                                               roster the target repo splits into
+                                               house/senate.json), data/members.csv,
+                                               data/members.schema.json, ROSTER.md
+  votes          from ga-member-votes.json -> sessions/<slug>/{votes.json, votes.csv,
+                                               votes.schema.json} + root latest.json
+                                               pointer to the current session
+  freeze-roster  from ga-members.json      -> sessions/<slug>/{members.json, members.csv,
+                                               members.schema.json, ROSTER.md}
+
+The roster and the votes turn over on DIFFERENT clocks: votes flip on the manual
+GA_SESSION bump, but the roster turns over gradually via Open States after the
+election. So the roster is NOT archived automatically alongside votes — it is frozen
+by an explicit, deliberate `freeze-roster` run at end-of-session (sine die), before
+Open States erodes the outgoing roster. See RECURRING-TASKS.md §3.
 
 ga-members.json also carries 4 statewide executives (chamber == "executive") and
 departed members (status Resigned/Removed/Deceased); both are excluded from the roster
 and CSV using VOTING_CHAMBERS — the same filter ga.js and the search-corpus builder use.
-data/all.json stays a full passthrough (the target repo splits it into house/senate.json).
 
 Publishing/dry-run behavior comes from lib.sibling_publish. Usage:
-    python3 scripts/publish_ga_legislators.py <members|votes>
+    python3 scripts/publish_ga_legislators.py <members|votes|freeze-roster> [session-slug]
 """
 import csv
 import io
 import json
 import os
+import re
 import sys
 
 from lib.ga_voters import VOTING_CHAMBERS
@@ -34,6 +54,17 @@ SRC_MEMBERS = "assets/data/ga-members.json"
 SRC_VOTES = "assets/data/ga-member-votes.json"
 
 DEPARTED = {"Resigned", "Removed", "Deceased"}
+
+
+def session_slug(meta):
+    """Directory-friendly session label, e.g. '2025-2026', from the source metadata's
+    sessionName ('2025-2026 Regular Session'). Falls back to the raw `session` id
+    ('2025_26' -> '2025-26'). Mirrors publish_ga_bills.py so both sibling archives
+    bucket a biennium under the same slug."""
+    m = re.search(r"(\d{4})\D+(\d{4})", meta.get("sessionName") or "")
+    if m:
+        return f"{m.group(1)}-{m.group(2)}"
+    return (meta.get("session") or "unknown").replace("_", "-")
 
 
 def sitting_legislators(members):
@@ -65,7 +96,7 @@ def members_csv(legislators):
     return buf.getvalue().encode()
 
 
-def roster_md(legislators, meta):
+def roster_md(legislators, meta, session=None):
     sen = sorted([m for m in legislators if m.get("chamber") == "Senate"],
                  key=lambda m: (m.get("district") if m.get("district") is not None else 999))
     hou = sorted([m for m in legislators if m.get("chamber") == "House of Representatives"],
@@ -78,14 +109,28 @@ def roster_md(legislators, meta):
         return (f"| {m.get('district', '')} | {name}{status} | {m.get('party') or ''} "
                 f"| {m.get('phone') or ''} | {web} |")
 
-    L = ["# Georgia General Assembly", ""]
+    # A session-frozen archive links to files beside it under sessions/<slug>/; the
+    # current-roster ROSTER.md at the repo root links to the live data/ files.
+    if session:
+        heading = f"# Georgia General Assembly — {session}"
+        freshness = (f"_Session roster frozen at sine die from {meta.get('generatedAt', '')} · "
+                     f"{len(sen)} Senators, {len(hou)} Representatives._")
+        machine = ("> Machine-readable: [`members.json`](members.json) / "
+                   "[`members.csv`](members.csv). Roll-call votes for this session: "
+                   "[`votes.csv`](votes.csv) (full records in [`votes.json`](votes.json)).")
+    else:
+        heading = "# Georgia General Assembly"
+        freshness = (f"_Last updated {meta.get('generatedAt', '')} · {len(sen)} Senators, "
+                     f"{len(hou)} Representatives (current, live roster)._")
+        machine = ("> Machine-readable: [`data/all.json`](data/all.json) / "
+                   "[`data/members.csv`](data/members.csv). Current session's votes and "
+                   "past sessions: see [`latest.json`](latest.json) and [`sessions/`](sessions).")
+
+    L = [heading, ""]
     L.append("_Auto-generated from [votega.org](https://votega.org) — do not edit by hand._  ")
-    L.append(f"_Last updated {meta.get('generatedAt', '')} · {len(sen)} Senators, "
-             f"{len(hou)} Representatives._")
+    L.append(freshness)
     L.append("")
-    L.append("> Machine-readable: [`data/all.json`](data/all.json) / "
-             "[`data/members.csv`](data/members.csv). Vote records: "
-             "[`data/votes.csv`](data/votes.csv), [`data/member-votes.csv`](data/member-votes.csv).")
+    L.append(machine)
     L.append("")
     for title, group in (("State Senate", sen), ("House of Representatives", hou)):
         L.append(f"## {title}")
@@ -173,7 +218,7 @@ def votes_csv(votes):
 def votes_schema():
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://raw.githubusercontent.com/Votega/ga-legislators/main/data/votes.schema.json",
+        "$id": "https://raw.githubusercontent.com/Votega/ga-legislators/main/sessions/votes.schema.json",
         "title": "Georgia General Assembly — Roll-call Votes",
         "description": "Passage votes from the Georgia General Assembly (Open States), keyed by OCD "
                        "vote id. memberVotes is keyed by OCD person id (the `id` in members data).",
@@ -216,13 +261,73 @@ def votes_schema():
 
 
 def build_votes():
+    """Archive the current session's votes under sessions/<slug>/ and refresh the root
+    latest.json pointer. Votes are session-scoped and never overwritten across sessions,
+    so — like ga-legislation's bills — they live only in the session directory; there is
+    no flat data/votes.json (consumers resolve the current file via latest.json)."""
     doc = json.load(open(SRC_VOTES, encoding="utf-8"))
+    meta = doc.get("metadata", {})
     votes = doc.get("votes", {})
-    return {
-        "data/votes.json": open(SRC_VOTES, "rb").read(),
-        "data/votes.csv": votes_csv(votes),
-        "data/votes.schema.json": build_json(votes_schema()),
+    slug = session_slug(meta)
+    base = f"sessions/{slug}"
+
+    files = {
+        "votes": f"{base}/votes.json",
+        "votesCsv": f"{base}/votes.csv",
+        "votesSchema": f"{base}/votes.schema.json",
     }
+    return {
+        files["votes"]: open(SRC_VOTES, "rb").read(),
+        files["votesCsv"]: votes_csv(votes),
+        files["votesSchema"]: build_json(votes_schema()),
+        # Root pointer to "the current session", so consumers never hard-code a slug.
+        # Uses the source data timestamp (not now()) so an unchanged weekly run produces
+        # a byte-identical pointer and skips a no-op commit.
+        "latest.json": build_json({
+            "currentSession": slug,
+            "sessionName": meta.get("sessionName"),
+            "generatedAt": meta.get("generatedAt"),
+            "voteCount": len(votes),
+            "files": files,
+            # The live roster always sits at data/all.json (refreshed by the `members`
+            # mode); a per-session roster snapshot appears at sessions/<slug>/members.json
+            # once that session is frozen at sine die (see the `freeze-roster` mode).
+            "currentRoster": "data/all.json",
+            "rosterArchive": f"{base}/members.json",
+        }),
+    }
+
+
+# --------------------------------------------------------------------------- #
+# freeze-roster mode (deliberate, per-session at sine die)
+# --------------------------------------------------------------------------- #
+def build_freeze_roster(slug):
+    """Snapshot the CURRENT ga-members.json roster into sessions/<slug>/ as a permanent
+    record of who served in that General Assembly. Run once, at end of session, before
+    Open States turns the roster over to the incoming members."""
+    doc = json.load(open(SRC_MEMBERS, encoding="utf-8"))
+    legislators = sitting_legislators(doc.get("members", []))
+    meta = doc.get("metadata", {})
+    base = f"sessions/{slug}"
+    return {
+        f"{base}/members.json": open(SRC_MEMBERS, "rb").read(),
+        f"{base}/members.csv": members_csv(legislators),
+        f"{base}/members.schema.json": build_json(members_schema()),
+        f"{base}/ROSTER.md": roster_md(legislators, meta, session=slug),
+    }
+
+
+def resolve_slug(explicit):
+    """Slug for a freeze-roster run. Explicit arg wins; otherwise default to the current
+    votes session (ga-member-votes.json carries a sessionName; ga-members.json does not).
+    At sine die the two are aligned, which is exactly when this should run."""
+    if explicit:
+        return explicit
+    vmeta = json.load(open(SRC_VOTES, encoding="utf-8")).get("metadata", {})
+    slug = session_slug(vmeta)
+    print(f"No session slug given — defaulting to current votes session: "
+          f"{slug} ({vmeta.get('sessionName')})")
+    return slug
 
 
 def main():
@@ -231,8 +336,11 @@ def main():
         artifacts = build_members()
     elif mode == "votes":
         artifacts = build_votes()
+    elif mode == "freeze-roster":
+        slug = resolve_slug(sys.argv[2] if len(sys.argv) > 2 else None)
+        artifacts = build_freeze_roster(slug)
     else:
-        sys.exit("usage: publish_ga_legislators.py <members|votes>")
+        sys.exit("usage: publish_ga_legislators.py <members|votes|freeze-roster> [session-slug]")
     publish_or_dry_run(REPO, artifacts, TOKEN_ENV)
 
 

@@ -124,6 +124,25 @@ Triggered by: the biennium rolling over (2025–2026 → 2027–2028).
 Then follow *Maintenance — Curated GA Bills → Session changeover* in `TO-DO.md`,
 and re-run both workflows so the new session's data lands before the pages reference it.
 
+**Freeze the outgoing session's roster into `Votega/ga-legislators` — do this FIRST, at
+sine die, BEFORE bumping `GA_SESSION` or letting `update-ga-members` turn the roster over.**
+Bills and votes are session-scoped, so they archive themselves under `sessions/<slug>/`
+automatically (the publisher buckets by the source's `sessionName`, and past dirs are never
+overwritten). The **roster** does not: `ga-members.json` carries no session name and Open
+States replaces it gradually with the incoming members after the election, so there is no
+safe automatic moment to snapshot it. Capture it by hand:
+
+- Run the **`freeze-ga-roster`** workflow (dispatch-only). Leave the input blank to freeze
+  the current votes session, or pass an explicit slug like `2025-2026`. It writes
+  `sessions/<slug>/{members.json, members.csv, members.schema.json, ROSTER.md}` and never
+  touches it again.
+- Timing is the whole point: run it while `ga-members.json` still holds the outgoing roster.
+  Once the incoming members are seated, that roster is gone from the source and can't be
+  reconstructed — only the archive preserves who served in that General Assembly.
+- The live roster stays at `data/all.json` (refreshed daily by `update-ga-members`); the
+  freeze is purely additive. `latest.json` at the repo root always points at the current
+  session's vote files and names the roster-archive path by convention.
+
 **Get the identifier from the API, don't guess it.** Run the `inspect-ga-sessions`
 workflow (dispatch-only, one API request). It lists every GA session Open States knows
 about with its exact `identifier`, flags which one the generators are pinned to, and

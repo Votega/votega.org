@@ -1,0 +1,39 @@
+name: Freeze GA session roster (manual, at sine die)
+
+# Deliberate, once-per-session action. The GA roster (ga-members.json) turns over
+# gradually via Open States AFTER the election, so it is NOT archived automatically
+# alongside votes (which flip on the manual GA_SESSION bump). Run this once the session
+# has adjourned sine die, BEFORE Open States seats the incoming members, to snapshot who
+# served in that General Assembly into Votega/ga-legislators sessions/<slug>/.
+# See RECURRING-TASKS.md §3.
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      session_slug:
+        description: >-
+          Session to freeze, e.g. 2025-2026. Leave blank to default to the current
+          votes session (derived from ga-member-votes.json's sessionName).
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  freeze-roster:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Freeze roster into ga-legislators sessions/<slug>/
+        env:
+          GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
+        run: python3 scripts/publish_ga_legislators.py freeze-roster "${{ inputs.session_slug }}"

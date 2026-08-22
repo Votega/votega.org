@@ -118,7 +118,9 @@ jobs:
 
       # Reuses the existing GA_LEGISLATORS_TOKEN secret — same target repo as
       # the "Publish to ga-legislators repo" step in update-ga-members.yml.
-      # Publishes data/votes.json (passthrough) plus votes.csv + votes.schema.json.
+      # Archives this session's votes under sessions/<slug>/{votes.json,votes.csv,
+      # votes.schema.json} and refreshes the root latest.json pointer. Past sessions
+      # are never overwritten (see publish_ga_legislators.py / RECURRING-TASKS.md §3).
       - name: Publish votes to ga-legislators repo
         env:
           GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
