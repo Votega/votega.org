@@ -23,6 +23,11 @@ on:
         type: boolean
         required: true
         default: false
+      archive:
+        description: 'Submit each PDF to the Wayback Machine? Slow on big ranges — leave off for the bulk pull, run an archive-only pass later.'
+        type: boolean
+        required: true
+        default: false
 
 jobs:
   backfill:
@@ -46,6 +51,8 @@ jobs:
         run: python scripts/fetch_ga_executive_orders.py ${{ inputs.years }}
 
       - name: Enrich orders (hash, archive, full text)
+        env:
+          EO_ENRICH_ARCHIVE: ${{ inputs.archive && '1' || '0' }}
         run: python scripts/enrich_ga_executive_orders.py ${{ inputs.years }}
 
       - name: Validate any written files

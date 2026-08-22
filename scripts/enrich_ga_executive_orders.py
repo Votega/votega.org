@@ -46,6 +46,11 @@ TEXT_DIR = os.path.join(OUTPUT_DIR, "eo-text")
 # fall back to OCR.
 _MIN_TEXT_CHARS = 200
 
+# Wayback archival is the slowest step (a save-now per order, rate-limited by
+# archive.org). Set EO_ENRICH_ARCHIVE=0 to skip it — e.g. during a large
+# multi-year backfill — and fill archives in later with an archive-on run.
+_ARCHIVE_ENABLED = os.environ.get('EO_ENRICH_ARCHIVE', '1') != '0'
+
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (executive-orders-enricher)',
     'Accept':     'application/pdf',
@@ -169,36 +174,49 @@ def enrich_order(order, year):
     tpath = text_path(year, number)
     needs_hash = 'sha256' not in order
     needs_text = not os.path.exists(tpath)
-    if not needs_hash and not needs_text:
+    # Archival is gated on its own key, independent of the hash, and only when
+    # enabled — so a transient Wayback failure (key stays absent) is retried by
+    # a later run, while a recorded attempt (key present, url-or-null) is not.
+    needs_arch = _ARCHIVE_ENABLED and 'archiveUrl' not in order
+    if not (needs_hash or needs_text or needs_arch):
         return False  # already enriched — idempotent skip
 
-    pdf = download_pdf(url)
-    if pdf is None:
-        print(f"    {number}: PDF download failed — skipping")
-        return False
-
     changed = False
-    if needs_hash:
-        order['sha256'] = hashlib.sha256(pdf).hexdigest()
-        order['bytes'] = len(pdf)
-        order['fetchedAt'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-        # Attempt archival once, during the first enrichment pass, so we don't
-        # hammer Wayback on every subsequent daily run. May be null.
+
+    # Only the hash and text steps need the PDF bytes; archival needs just the URL.
+    if needs_hash or needs_text:
+        pdf = download_pdf(url)
+        if pdf is None:
+            print(f"    {number}: PDF download failed — skipping")
+        else:
+            if needs_hash:
+                order['sha256'] = hashlib.sha256(pdf).hexdigest()
+                order['bytes'] = len(pdf)
+                order['fetchedAt'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                changed = True
+            if needs_text:
+                _write_text(pdf, tpath, number)
+
+    if needs_arch:
+        # May be null when no snapshot exists and save-now fails; recording the
+        # key stops daily runs from retrying, an archive-on backfill can redo it.
         order['archiveUrl'] = wayback_archive(url)
         changed = True
 
-    if needs_text:
-        text, method = extract_text(pdf)
-        if text:
-            os.makedirs(os.path.dirname(tpath), exist_ok=True)
-            with open(tpath, 'w', encoding='utf-8') as f:
-                f.write(text + '\n')
-            print(f"    {number}: text via {method} ({len(text)} chars)")
-        else:
-            print(f"    {number}: no text extracted "
-                  "(poppler/tesseract missing or image-only PDF)")
-
     return changed
+
+
+def _write_text(pdf, tpath, number):
+    """Extract full text and write it to tpath. Side-effect only."""
+    text, method = extract_text(pdf)
+    if text:
+        os.makedirs(os.path.dirname(tpath), exist_ok=True)
+        with open(tpath, 'w', encoding='utf-8') as f:
+            f.write(text + '\n')
+        print(f"    {number}: text via {method} ({len(text)} chars)")
+    else:
+        print(f"    {number}: no text extracted "
+              "(poppler/tesseract missing or image-only PDF)")
 
 
 # ── Per-year driver ───────────────────────────────────────────────────────────
