@@ -1,5 +1,13 @@
 name: Publish GA Executive Orders data
 
+# Requires secret: GA_EXECUTIVE_ORDERS_TOKEN
+#   A GitHub token with Contents: write on Votega/ga-executive-orders.
+#
+# scripts/publish_ga_executive_orders.py reads every ga-executive-orders-<year>.json and
+# publishes per-year JSON plus consumer-friendly extras (a consolidated CSV across all
+# years, a JSON Schema, and SUMMARY.md) to the target repo via the Contents API.
+# Run it locally without the token for a dry run (writes to ./out).
+
 permissions:
   contents: read
 
@@ -8,7 +16,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'assets/data/ga-executive-orders-2026.json'  # only current year; 2023-2025 are static
+      - 'assets/data/ga-executive-orders-2026.json'  # current year; prior years are static
+      - 'scripts/publish_ga_executive_orders.py'
+      - 'scripts/lib/sibling_publish.py'
 
 jobs:
   publish:
@@ -18,57 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Publish to ga-executive-orders repo
+      - name: Build and publish executive-order artifacts
         env:
           GA_EXECUTIVE_ORDERS_TOKEN: ${{ secrets.GA_EXECUTIVE_ORDERS_TOKEN }}
-        run: |
-          python3 - <<'EOF'
-          import json, base64, urllib.request, urllib.error, os, glob
-
-          token = os.environ['GA_EXECUTIVE_ORDERS_TOKEN']
-          repo  = 'Votega/ga-executive-orders'
-          headers = {
-              'Authorization': f'token {token}',
-              'Accept': 'application/vnd.github.v3+json',
-              'Content-Type': 'application/json',
-          }
-
-          import datetime
-          year  = datetime.datetime.now().year
-          files = sorted(glob.glob(f'assets/data/ga-executive-orders-{year}.json'))
-          if not files:
-              print(f'No ga-executive-orders-{year}.json found')
-              exit(1)
-
-          for local_path in files:
-              year = local_path.split('-')[-1].replace('.json', '')
-              remote_path = f'data/{year}.json'
-              url = f'https://api.github.com/repos/{repo}/contents/{remote_path}'
-
-              with open(local_path, 'rb') as f:
-                  content = base64.b64encode(f.read()).decode()
-
-              # Get current file SHA if it exists
-              sha = None
-              req = urllib.request.Request(url, headers=headers)
-              try:
-                  with urllib.request.urlopen(req) as resp:
-                      sha = json.loads(resp.read())['sha']
-              except urllib.error.HTTPError as e:
-                  if e.code != 404:
-                      raise
-
-              payload = {
-                  'message': f'Publish GA executive orders {year}',
-                  'content': content,
-              }
-              if sha:
-                  payload['sha'] = sha
-
-              req = urllib.request.Request(url, data=json.dumps(payload).encode(), method='PUT', headers=headers)
-              with urllib.request.urlopen(req) as resp:
-                  result = json.loads(resp.read())
-                  print(f"Published {remote_path}: {result['commit']['sha']}")
-
-          print(f'Done — published {len(files)} file(s)')
-          EOF
+        run: python3 scripts/publish_ga_executive_orders.py

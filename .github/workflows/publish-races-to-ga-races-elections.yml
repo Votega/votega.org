@@ -15,6 +15,8 @@ on:
     branches: [main]
     paths:
       - 'assets/data/races.json'
+      - 'scripts/publish_races.py'
+      - 'scripts/lib/sibling_publish.py'
 
 jobs:
   publish:
@@ -53,8 +55,8 @@ jobs:
           # Re-apply the source file(s) onto the current target tree. Used for the
           # first commit and again after a reset when a push loses a race.
           restage() {
-            cp "$GITHUB_WORKSPACE/assets/data/races.json" races.json
-            git add races.json
+            ( cd "$GITHUB_WORKSPACE" && OUT_DIR="$GITHUB_WORKSPACE/target-repo" python3 scripts/publish_races.py )
+            git add -A
           }
 
           restage

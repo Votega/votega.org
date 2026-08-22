@@ -15,6 +15,8 @@ on:
     paths:
       - 'assets/data/ga-ballot-measures.json'
       - 'assets/data/ga-ballot-measures.schema.json'
+      - 'scripts/publish_ga_ballot_measures.py'
+      - 'scripts/lib/sibling_publish.py'
 
 jobs:
   publish:
@@ -87,9 +89,8 @@ jobs:
           # Re-apply the source file(s) onto the current target tree. Used for the
           # first commit and again after a reset when a push loses a race.
           restage() {
-            cp "$GITHUB_WORKSPACE/assets/data/ga-ballot-measures.json" ga-ballot-measures.json
-            cp "$GITHUB_WORKSPACE/assets/data/ga-ballot-measures.schema.json" ga-ballot-measures.schema.json
-            git add ga-ballot-measures.json ga-ballot-measures.schema.json
+            ( cd "$GITHUB_WORKSPACE" && OUT_DIR="$GITHUB_WORKSPACE/target-repo" python3 scripts/publish_ga_ballot_measures.py )
+            git add -A
           }
 
           restage

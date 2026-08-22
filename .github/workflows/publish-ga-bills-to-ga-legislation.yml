@@ -14,6 +14,8 @@ on:
     paths:
       - 'assets/data/ga-bills.json'
       - 'assets/data/ga-bills-subjects.json'
+      - 'scripts/publish_ga_bills.py'
+      - 'scripts/lib/sibling_publish.py'
 
 jobs:
   publish:
@@ -53,14 +55,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Re-apply the source file(s) onto the current target tree. Used for the
-          # first commit and again after a reset when a push loses a race.
+          # Regenerate all bill artifacts (JSON passthrough + CSV + schema + BILLS.md)
+          # into the target tree. Used for the first commit and again after a reset
+          # when a push loses a race.
           restage() {
-            cp "$GITHUB_WORKSPACE/assets/data/ga-bills.json" ga-bills.json
-            if [ -f "$GITHUB_WORKSPACE/assets/data/ga-bills-subjects.json" ]; then
-              cp "$GITHUB_WORKSPACE/assets/data/ga-bills-subjects.json" ga-bills-subjects.json
-            fi
-            git add ga-bills.json ga-bills-subjects.json
+            ( cd "$GITHUB_WORKSPACE" && OUT_DIR="$GITHUB_WORKSPACE/target-repo" python3 scripts/publish_ga_bills.py )
+            git add -A
           }
 
           restage
