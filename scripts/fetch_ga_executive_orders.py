@@ -99,8 +99,11 @@ class EOPageParser(HTMLParser):
     PDF file-size strings like "(PDF, 98.59 KB)" are stripped from the text.
     """
 
+    # The document-path segment is singular for 2023+ ("2026-executive-order")
+    # but plural for the 2020–2022 pages ("2022-executive-orders"), so the `s`
+    # is optional.
     _HREF_RE   = re.compile(
-        r'/document/(\d{4})-executive-order/(\d{6,})(/download)?', re.IGNORECASE
+        r'/document/(\d{4})-executive-orders?/(\d{6,})(/download)?', re.IGNORECASE
     )
     _PDF_NOISE = re.compile(r'\(PDF[^)]*\)', re.IGNORECASE)
 
@@ -210,24 +213,41 @@ def fetch_page(url, retries=3, delay=5):
     return raw.decode('utf-8', errors='replace') if raw is not None else None
 
 
-def scrape_all_pages(year):
-    """Fetch all paginated listing pages and return a merged dict of orders."""
+def candidate_bases(year):
+    """Listing-page URL schemes the GA site has used, newest first.
+
+    2022–present use the bare year; 2020–2021 (and any earlier Kemp-era year
+    the site still hosts) 404 under that and need the '-executive-orders'
+    suffix. We try both and take whichever actually yields orders.
+    """
+    return [
+        f"{BASE_URL}/executive-action/executive-orders/{year}",
+        f"{BASE_URL}/executive-action/executive-orders/{year}-executive-orders",
+    ]
+
+
+def _scrape_from_base(base_url, year):
+    """Paginate one listing-URL scheme. Returns (orders_dict, reachable_bool).
+
+    reachable is False only when page 0 itself could not be fetched (a 404
+    under this scheme), so the caller can tell "wrong URL scheme" apart from
+    "right page, no orders".
+    """
     all_orders = {}
     page = 0
+    reachable = False
 
     while True:
-        url = f"{BASE_URL}/executive-action/executive-orders/{year}"
-        if page > 0:
-            url += f"?page={page}"
-
+        url = base_url if page == 0 else f"{base_url}?page={page}"
         print(f"  Fetching page {page}: {url}")
         html = fetch_page(url)
 
         if not html:
             if page == 0:
-                return None
+                return {}, False
             break
 
+        reachable = True
         parser = EOPageParser(year)
         parser.feed(html)
         parser.close()
@@ -247,7 +267,23 @@ def scrape_all_pages(year):
         page += 1
         time.sleep(1)
 
-    return all_orders
+    return all_orders, reachable
+
+
+def scrape_all_pages(year):
+    """Fetch all paginated listing pages and return a merged dict of orders.
+
+    Tries each known URL scheme; returns the first that yields orders. Returns
+    {} when a page was reachable but empty, or None when no scheme resolved at
+    all — the caller distinguishes these for its strict/lenient exit handling.
+    """
+    any_reachable = False
+    for base in candidate_bases(year):
+        orders, reachable = _scrape_from_base(base, year)
+        any_reachable = any_reachable or reachable
+        if orders:
+            return orders
+    return {} if any_reachable else None
 
 
 # ── JSON I/O ─────────────────────────────────────────────────────────────────
