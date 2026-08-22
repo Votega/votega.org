@@ -23,8 +23,14 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install PDF text + OCR tooling
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils tesseract-ocr
+
       - name: Fetch current year executive orders
         run: python scripts/fetch_ga_executive_orders.py
+
+      - name: Enrich orders (hash, archive, full text)
+        run: python scripts/enrich_ga_executive_orders.py
 
       - name: Validate output
         run: |
@@ -58,7 +64,8 @@ jobs:
           YEAR=$(date +%Y)
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/data/ga-executive-orders-${YEAR}.json
+          mkdir -p assets/data/eo-text
+          git add assets/data/ga-executive-orders-${YEAR}.json assets/data/eo-text
           if git diff --cached --quiet; then
             echo "No new executive orders"
           else

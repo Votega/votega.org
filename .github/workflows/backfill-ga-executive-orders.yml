@@ -39,8 +39,14 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install PDF text + OCR tooling
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils tesseract-ocr
+
       - name: Fetch executive orders for the requested years
         run: python scripts/fetch_ga_executive_orders.py ${{ inputs.years }}
+
+      - name: Enrich orders (hash, archive, full text)
+        run: python scripts/enrich_ga_executive_orders.py ${{ inputs.years }}
 
       - name: Validate any written files
         run: |
@@ -66,7 +72,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ga-executive-orders-backfill
-          path: assets/data/ga-executive-orders-*.json
+          path: |
+            assets/data/ga-executive-orders-*.json
+            assets/data/eo-text/**
           if-no-files-found: warn
 
       - name: Commit if requested and changed
@@ -75,7 +83,8 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/data/ga-executive-orders-*.json
+          mkdir -p assets/data/eo-text
+          git add assets/data/ga-executive-orders-*.json assets/data/eo-text
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

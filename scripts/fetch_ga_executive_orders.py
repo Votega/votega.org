@@ -28,6 +28,27 @@ YEAR       = datetime.now().year
 
 _MAX_TITLE = 300   # titles longer than this are scraper noise, not real text
 
+# Fields added later by enrich_ga_executive_orders.py (Layer 1). The scraper
+# only ever produces the 5 base fields, so on a daily re-scrape it must carry
+# these across rather than clobber them — otherwise every re-scrape would wipe
+# the hash/size/archive data the enricher committed.
+_ENRICH_FIELDS = ('sha256', 'bytes', 'fetchedAt', 'archiveUrl')
+
+
+def _carry_enrichment(new_entry, old_entry):
+    """Preserve Layer-1 enrichment fields when a re-scrape refreshes an entry.
+
+    Only carry them when the download URL is unchanged — a new URL means a new
+    PDF that must be re-hashed and re-archived, so dropping the stale fields is
+    correct and lets the enricher redo them.
+    """
+    if old_entry.get('url') != new_entry.get('url'):
+        return new_entry
+    for fld in _ENRICH_FIELDS:
+        if fld in old_entry and fld not in new_entry:
+            new_entry[fld] = old_entry[fld]
+    return new_entry
+
 
 def governor_for_year(year):
     """Return the Georgia governor who held office for (most of) the given year.
@@ -305,7 +326,7 @@ def fetch_year(year, strict=True):
                 print(f"  Skipping new {num} — bad title ({len(entry.get('title',''))} chars): {entry.get('title','')[:80]!r}")
         else:
             if title_ok:
-                merged[num] = entry   # update with fresh data
+                merged[num] = _carry_enrichment(entry, existing[num])  # refresh, keep enrichment
             # else keep existing curated entry unchanged
 
     all_orders = sorted(merged.values(), key=lambda o: o['number'], reverse=True)
