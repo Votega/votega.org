@@ -1,0 +1,341 @@
+---
+layout: default
+title: Your Sample Ballot
+permalink: /sample-ballot
+share-description: "Preview the federal, state, and judicial contests on your Georgia ballot. Enter your address to see every race and ballot measure you'll vote on, with research on each choice."
+---
+
+<h1>Your Sample Ballot</h1>
+<p>Enter your address to see the federal, statewide, state-legislative, and judicial contests on your Georgia ballot — with a link to research on every candidate and measure. Your address is sent only to the U.S. Census geocoder to look up your districts; VoteGA does not store it.</p>
+
+<p class="box-note">This is a preview of the <strong>state and federal</strong> portion of your ballot. Your official ballot also includes <strong>county and city races and local questions</strong> that VoteGA doesn't track. For your precinct-exact official sample ballot and polling place, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="noopener">GA Secretary of State My Voter Page</a>.</p>
+
+<div id="lookup" class="ballot-lookup">
+  <label class="lookup-label" for="electionSelect">Which election?</label>
+  <div class="lookup-row">
+    <select id="electionSelect" class="lookup-input"></select>
+  </div>
+
+  <label class="lookup-label lookup-label-spaced" for="addressInput">Your residential address</label>
+  <div class="lookup-row">
+    <input type="text" id="addressInput" class="lookup-input"
+           placeholder="123 Peachtree St NE, Atlanta, GA 30303"
+           autocomplete="street-address" />
+    <button id="addressBtn" class="lookup-btn" type="button">Show my ballot</button>
+  </div>
+
+  <p class="lookup-or">or look up by county (shows every district that touches the county)</p>
+  <div class="lookup-row">
+    <select id="countySelect" class="lookup-input">
+      <option value="">Choose a county…</option>
+    </select>
+    <button id="countyBtn" class="lookup-btn lookup-btn-secondary" type="button">Show county ballot</button>
+  </div>
+</div>
+
+<div id="status" class="ballot-status" role="status" aria-live="polite"></div>
+<div id="results" class="ballot-results"></div>
+
+<style>
+  .ballot-lookup { border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: #fafafa; }
+  .lookup-label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
+  .lookup-label-spaced { margin-top: 1rem; }
+  .primary-note { border-left: 4px solid #6a8; background: #f0f7f3; padding: 0.6rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: #2b5340; margin-bottom: 1rem; }
+  .lookup-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.25rem; }
+  .lookup-input { flex: 1 1 260px; min-width: 0; padding: 0.55rem 0.7rem; font-size: 1rem; border: 1px solid #bbb; border-radius: 6px; }
+  .lookup-btn { flex: 0 0 auto; padding: 0.55rem 1.1rem; font-size: 0.95rem; font-weight: 600; color: #fff; background: #0b5394; border: none; border-radius: 6px; cursor: pointer; }
+  .lookup-btn:hover { background: #073763; }
+  .lookup-btn-secondary { background: #666; }
+  .lookup-btn-secondary:hover { background: #444; }
+  .lookup-or { margin: 0.9rem 0 0.5rem; font-size: 0.85rem; color: #666; }
+
+  .ballot-status { margin: 0.5rem 0; font-size: 0.95rem; }
+  .ballot-status.error { color: #a11; font-weight: 600; }
+
+  .ballot-header { margin: 1.5rem 0 0.25rem; }
+  .ballot-header h2 { margin-bottom: 0.15rem; }
+  .ballot-subhead { font-size: 0.9rem; color: #666; margin-bottom: 0.75rem; }
+
+  .ambiguous-note { border-left: 4px solid #e6a700; background: #fff8e6; padding: 0.7rem 0.9rem; border-radius: 4px; font-size: 0.87rem; color: #614d00; margin-bottom: 1rem; }
+
+  .contest-group { margin-bottom: 1.5rem; }
+  .contest-group > h3 { font-size: 1.05rem; border-bottom: 2px solid #eee; padding-bottom: 0.25rem; margin-bottom: 0.6rem; }
+
+  .contest-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.7rem 0.9rem; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 0.5rem; text-decoration: none; color: inherit; background: #fff; transition: background 0.15s; }
+  .contest-row:hover { background: #f2f6fb; }
+  .contest-title { font-weight: 700; font-size: 0.98rem; }
+  .contest-candidates { font-size: 0.84rem; color: #555; margin-top: 0.2rem; }
+  .contest-meta { text-align: right; flex-shrink: 0; font-size: 0.78rem; color: #888; }
+  .contest-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem; vertical-align: middle; }
+  .badge-ambiguous { background: #fff0c2; color: #7a5c00; }
+  .badge-pending { background: #e6eefc; color: #274690; }
+
+  .ballot-handoff { border: 1px solid #cde; background: #f2f7fc; border-radius: 8px; padding: 1rem 1.15rem; margin-top: 1.75rem; font-size: 0.9rem; }
+  .ballot-handoff strong { display: block; margin-bottom: 0.3rem; }
+</style>
+
+<script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}"></script>
+<script>
+(function () {
+  'use strict';
+
+  const basePath = window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  const electionSelect = document.getElementById('electionSelect');
+  const addressInput = document.getElementById('addressInput');
+  const addressBtn   = document.getElementById('addressBtn');
+  const countySelect = document.getElementById('countySelect');
+  const countyBtn    = document.getElementById('countyBtn');
+  const statusEl     = document.getElementById('status');
+  const resultsEl    = document.getElementById('results');
+
+  let RACES = [];
+  let MEASURES = [];
+  let CALENDAR = [];
+  let lastLoc = null;                               // remembered so changing election re-renders without re-geocoding
+  const MEMBER_NAMES = { congress: {}, state: {} }; // memberId → name, for incumbents
+
+  function selectedElectionDate() { return electionSelect.value || undefined; }
+
+  function buildBallot(loc) {
+    return window.SampleBallot.assembleBallot(loc, {
+      races: RACES, measures: MEASURES, calendar: CALENDAR,
+      electionDate: selectedElectionDate(),
+    });
+  }
+
+  // Incumbents in races.json reference a member by id (no inline name); everyone else
+  // carries a name. Resolve the id against the member files, falling back gracefully.
+  function displayName(cand) {
+    if (cand.name) return cand.name;
+    if (cand.memberId) {
+      const src = cand.memberSource === 'state' ? 'state' : 'congress';
+      return MEMBER_NAMES[src][cand.memberId] || 'Incumbent';
+    }
+    return 'Candidate';
+  }
+
+  const escHtml = s => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+  const titleCase = slug => String(slug).split('-')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function formatDate(iso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
+    if (!m) return iso || '';
+    return `${MONTHS[+m[2] - 1]} ${+m[3]}, ${m[1]}`;
+  }
+
+  function partyTag(party) {
+    if (!party) return '';
+    const p = party.toLowerCase();
+    if (p.startsWith('democrat')) return ' (D)';
+    if (p.startsWith('republican')) return ' (R)';
+    if (p.startsWith('libertarian')) return ' (L)';
+    if (p.replace(/[^a-z]/g, '').startsWith('nonpartisan')) return ''; // "Non-Partisan" / "nonpartisan"
+    return ` (${escHtml(party)})`;
+  }
+
+  // Human label for a contest. Superior Court rows carry the circuit so the seven
+  // "Superior Court" rows in a Fulton ballot don't all read identically.
+  function contestTitle(c) {
+    const dist = c.district != null ? ` District ${c.district}` : '';
+    if (c.chamber === 'Superior Court') {
+      const slug = window.SampleBallot.circuitSlugFromRaceId(c.id);
+      return slug ? `Superior Court — ${titleCase(slug)} Circuit` : 'Superior Court';
+    }
+    return `${c.chamber}${dist}`;
+  }
+
+  function candidateSummary(c) {
+    if (!c.candidates || !c.candidates.length) return 'Candidates to be determined';
+    return c.candidates
+      .map(cand => {
+        const incumbent = cand.type === 'incumbent' || cand.isIncumbent;
+        return escHtml(displayName(cand)) + partyTag(cand.party) + (incumbent ? ' — incumbent' : '');
+      })
+      .join(' · ');
+  }
+
+  function raceRow(c) {
+    const href = `${basePath}race.html?id=${encodeURIComponent(c.id)}`;
+    const ambiguous = c.ambiguous
+      ? `<span class="contest-badge badge-ambiguous">may not be your district</span>` : '';
+    return `
+      <a class="contest-row" href="${href}">
+        <div>
+          <div class="contest-title">${escHtml(contestTitle(c))}${ambiguous}</div>
+          <div class="contest-candidates">${candidateSummary(c)}</div>
+        </div>
+        <div class="contest-meta">Compare →</div>
+      </a>`;
+  }
+
+  function measureRow(c) {
+    const m = c.measure;
+    const href = `${basePath}ga-ballot-measures.html`;
+    const pending = c.status === 'potential'
+      ? `<span class="contest-badge badge-pending">pending certification</span>` : '';
+    const type = m.type ? escHtml(m.type) : 'Ballot measure';
+    return `
+      <a class="contest-row" href="${href}">
+        <div>
+          <div class="contest-title">${escHtml(m.title)}${pending}</div>
+          <div class="contest-candidates">${type}</div>
+        </div>
+        <div class="contest-meta">What it means →</div>
+      </a>`;
+  }
+
+  function render(ballot) {
+    const loc = ballot.location;
+    const who = loc.matchedAddress
+      ? escHtml(loc.matchedAddress)
+      : `${escHtml(loc.county)} County`;
+
+    const electionName = ballot.election && ballot.election.name ? ballot.election.name : 'Election';
+    let html = `
+      <div class="ballot-header">
+        <h2>${escHtml(electionName)}</h2>
+        <div class="ballot-subhead">${who} — ${ballot.totalContests} contest${ballot.totalContests === 1 ? '' : 's'}</div>
+      </div>`;
+
+    if (ballot.election && /primary/i.test(ballot.election.type || '')) {
+      html += `<div class="primary-note">This is a <strong>primary</strong>: you vote on <strong>one party's</strong> ballot. Candidates from every party are listed below so you can see the full field — you'll choose your party's races at the polls.</div>`;
+    }
+
+    if (ballot.ambiguous) {
+      html += `<div class="ambiguous-note">A county can span several districts, so district races below show <strong>every candidate whose district touches ${escHtml(loc.county)} County</strong> — not all will be on your ballot. Enter your full address above, or check the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="noopener">My Voter Page</a>, to narrow it to your exact districts.</div>`;
+    }
+
+    if (!ballot.groups.length) {
+      html += `<p>You have no state or federal contests on the ${escHtml(electionName)} ballot. You may still have local races — check the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="noopener">My Voter Page</a>, or choose a different election above.</p>`;
+    }
+
+    ballot.groups.forEach(g => {
+      html += `<div class="contest-group"><h3>${escHtml(g.label)}</h3>`;
+      g.contests.forEach(c => {
+        html += c.kind === 'measure' ? measureRow(c) : raceRow(c);
+      });
+      html += `</div>`;
+    });
+
+    html += `
+      <div class="ballot-handoff">
+        <strong>This is a preview, not your official ballot.</strong>
+        County, city, and local races and questions aren't shown here. For your precinct-exact
+        sample ballot, polling place, and registration status, visit the
+        <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="noopener">GA Secretary of State My Voter Page</a>.
+      </div>`;
+
+    resultsEl.innerHTML = html;
+  }
+
+  function setStatus(msg, isError) {
+    statusEl.textContent = msg || '';
+    statusEl.className = 'ballot-status' + (isError ? ' error' : '');
+  }
+
+  async function lookupAddress() {
+    const addr = addressInput.value.trim();
+    if (!addr) { setStatus('Enter your address, or choose a county below.', true); return; }
+    setStatus('Looking up your districts…', false);
+    resultsEl.innerHTML = '';
+    addressBtn.disabled = true;
+    try {
+      const loc = await window.SampleBallot.geocodeAddress(addr);
+      lastLoc = loc;
+      setStatus('', false);
+      render(buildBallot(loc));
+    } catch (err) {
+      setStatus(err.message || 'Address lookup failed. Try your county below.', true);
+    } finally {
+      addressBtn.disabled = false;
+    }
+  }
+
+  function lookupCounty() {
+    const county = countySelect.value;
+    if (!county) { setStatus('Choose a county first.', true); return; }
+    lastLoc = window.SampleBallot.locationFromCounty(county);
+    setStatus('', false);
+    render(buildBallot(lastLoc));
+  }
+
+  // Changing the election re-renders the ballot already on screen (no re-geocode).
+  function onElectionChange() {
+    if (lastLoc) render(buildBallot(lastLoc));
+  }
+
+  // Populate MEMBER_NAMES from the member files. Best-effort: any failure just leaves
+  // the "Incumbent" fallback in place.
+  async function loadMemberNames() {
+    try {
+      const res = await fetch(basePath + 'assets/data/current-members.json');
+      if (res.ok) (await res.json()).members?.forEach(m => {
+        if (m.bioguideId) MEMBER_NAMES.congress[m.bioguideId] = m.name;
+      });
+    } catch (_) { /* ignore */ }
+    try {
+      const res = await fetch(basePath + 'assets/data/ga-members.json');
+      if (res.ok) (await res.json()).members?.forEach(m => {
+        if (m.id) MEMBER_NAMES.state[m.id] = m.name;
+      });
+    } catch (_) { /* ignore */ }
+  }
+
+  async function init() {
+    // Populate the county dropdown from the canonical county list.
+    if (typeof COUNTY_HOUSE_DISTRICTS !== 'undefined') {
+      Object.keys(COUNTY_HOUSE_DISTRICTS).sort().forEach(county => {
+        const opt = document.createElement('option');
+        opt.value = county; opt.textContent = county;
+        countySelect.appendChild(opt);
+      });
+    }
+
+    setStatus('Loading ballot data…', false);
+    try {
+      const [racesRes, measuresRes, calendarRes] = await Promise.all([
+        fetch(basePath + 'assets/data/races.json'),
+        fetch(basePath + 'assets/data/ga-ballot-measures.json').catch(() => null),
+        fetch(basePath + 'assets/data/ga-election-calendar.json').catch(() => null),
+      ]);
+      if (!racesRes.ok) throw new Error('Ballot data is unavailable right now. Please try again later.');
+      RACES = (await racesRes.json()).races || [];
+      MEASURES = measuresRes && measuresRes.ok ? ((await measuresRes.json()).measures || []) : [];
+      CALENDAR = calendarRes && calendarRes.ok ? ((await calendarRes.json()).elections || []) : [];
+      setStatus('', false);
+
+      // Best-effort incumbent name resolution — never blocks the ballot.
+      loadMemberNames();
+    } catch (err) {
+      setStatus(err.message || 'Could not load ballot data.', true);
+      return;
+    }
+
+    // Populate the "Which election?" dropdown from the elections that have contests,
+    // defaulting to the next broad election.
+    const elections = window.SampleBallot.availableElections(RACES, MEASURES, CALENDAR);
+    const defaultDate = window.SampleBallot.defaultElectionDate(elections);
+    elections.forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e.date;
+      opt.textContent = e.name + ' — ' + formatDate(e.date);
+      if (e.date === defaultDate) opt.selected = true;
+      electionSelect.appendChild(opt);
+    });
+
+    addressBtn.addEventListener('click', lookupAddress);
+    addressInput.addEventListener('keydown', e => { if (e.key === 'Enter') lookupAddress(); });
+    countyBtn.addEventListener('click', lookupCounty);
+    countySelect.addEventListener('change', lookupCounty);
+    electionSelect.addEventListener('change', onElectionChange);
+  }
+
+  init();
+})();
+</script>

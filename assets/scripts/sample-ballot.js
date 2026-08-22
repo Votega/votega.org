@@ -134,6 +134,59 @@ function newestCycle(races) {
   return cycles[0] ?? null;
 }
 
+// Count candidates in a phase across both storage shapes (partisan `ballots`, nonpartisan
+// `candidates`), ignoring withdrawals.
+function phaseCandidateCount(phase) {
+  if (!phase) return 0;
+  const flat = (phase.candidates || []).filter(c => !c.withdrawn).length;
+  const keyed = Object.values(phase.ballots || {})
+    .reduce((s, arr) => s + arr.filter(c => !c.withdrawn).length, 0);
+  return flat + keyed;
+}
+
+// The phase of a race held on a given election date, or null.
+function phaseForDate(race, date) {
+  const phases = race.phases || {};
+  const name = Object.keys(phases).find(p => phases[p] && phases[p].electionDate === date);
+  return name ? Object.assign({ _name: name }, phases[name]) : null;
+}
+
+// The set of elections that actually have contests, newest data driving the list.
+// An election is a date; labels come from ga-election-calendar.json (matched by date).
+// Only dates carrying at least one contest (a race phase with candidates, or a measure)
+// appear — so the dropdown never offers an empty election.
+function availableElections(races, measures, calendar) {
+  const dates = new Set();
+  (races || []).forEach(r => Object.values(r.phases || {}).forEach(p => {
+    if (p.electionDate && phaseCandidateCount(p) > 0) dates.add(p.electionDate);
+  }));
+  (measures || []).forEach(m => { if (m.electionDate) dates.add(m.electionDate); });
+
+  const cal = calendar || [];
+  return [...dates].sort().map(date => {
+    const e = cal.find(c => c.date === date);
+    return { date, id: e ? e.id : date, name: e ? e.name : date, type: e ? e.type : null };
+  });
+}
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// Default election: the next broad (non-special) election on or after today, since a
+// special concerns only a sliver of voters and makes a poor landing default. Fall back
+// to the next upcoming special if that's all there is, then to the most recent past one.
+function defaultElectionDate(available, today) {
+  const t = today || todayISO();
+  const upcoming = available.filter(e => e.date >= t).sort((a, b) => a.date < b.date ? -1 : 1);
+  const isSpecial = e => e.type && /special/i.test(e.type);
+  const broad = upcoming.find(e => !isSpecial(e));
+  if (broad) return broad.date;
+  if (upcoming.length) return upcoming[0].date;
+  const past = available.map(e => e.date).sort();
+  return past[past.length - 1] || null;
+}
+
 // Derive the Superior Court circuit slug from a race id
 // ("superior-court-<slug>-<name>-YYYY"). Circuit slugs and candidate surnames both
 // contain hyphens, so match the id against the known circuit slugs (longest first).
@@ -194,15 +247,27 @@ function raceApplies(race, loc) {
   }
 }
 
-// Flatten the active phase's party-keyed ballots into one candidate list.
+// Flatten a phase's candidates into one list. races.json stores two shapes: partisan
+// races use `ballots` (party-keyed: {Democrat:[…], Republican:[…]}), while nonpartisan
+// races (all judicial) use a flat `candidates` array. Handle both, as race.html and
+// elections.html do. Withdrawn candidates are dropped.
+function candidatesForPhase(phase) {
+  if (!phase) return [];
+  let out;
+  if (phase.ballots) {
+    out = [];
+    Object.keys(phase.ballots).forEach(party => {
+      (phase.ballots[party] || []).forEach(c => out.push({ party, ...c }));
+    });
+  } else {
+    out = (phase.candidates || []).map(c => ({ ...c }));
+  }
+  return out.filter(c => !c.withdrawn);
+}
+
+// Back-compat: candidates for a race's own activePhase.
 function candidatesForActivePhase(race) {
-  const phase = race.phases && race.phases[race.activePhase];
-  const ballots = (phase && phase.ballots) || {};
-  const out = [];
-  Object.keys(ballots).forEach(party => {
-    (ballots[party] || []).forEach(c => out.push({ party, ...c }));
-  });
-  return out;
+  return candidatesForPhase(race.phases && race.phases[race.activePhase]);
 }
 
 // Ballot-measure guardrail: statewide unless a measure declares scope/counties.
@@ -216,18 +281,28 @@ function measureApplies(measure, loc) {
   return true; // statewide
 }
 
-// Assemble the full ballot for a resolved location.
-// opts: { races, measures, cycle? }. Returns ordered contest groups.
+// Assemble the ballot for a resolved location and a chosen election.
+// opts: { races, measures, calendar?, electionDate? }.
+// electionDate selects which phase of each race to show; when omitted it defaults to the
+// next upcoming election that has contests. Returns ordered contest groups plus the list
+// of selectable elections (for the "Which election?" control).
 function assembleBallot(loc, opts) {
   const races    = (opts && opts.races) || [];
   const measures = (opts && opts.measures) || [];
-  const cycle    = (opts && opts.cycle != null) ? opts.cycle : newestCycle(races);
+  const calendar = (opts && opts.calendar) || [];
 
-  const inCycle = races.filter(r => r.cycle === cycle);
+  const available    = availableElections(races, measures, calendar);
+  const electionDate = (opts && opts.electionDate) || defaultElectionDate(available);
+  const election     = available.find(e => e.date === electionDate)
+                       || { date: electionDate, id: electionDate, name: electionDate, type: null };
 
   const contests = [];
-  inCycle.forEach(race => {
-    const verdict = raceApplies(race, loc);
+  races.forEach(race => {
+    const phase = phaseForDate(race, electionDate);   // the phase held on this date, or null
+    if (!phase) return;
+    const candidates = candidatesForPhase(phase);
+    if (!candidates.length) return;                   // race isn't on this election's ballot
+    const verdict = raceApplies(race, loc);           // geography (unchanged)
     if (!verdict.include) return;
     contests.push({
       kind: 'race',
@@ -235,19 +310,16 @@ function assembleBallot(loc, opts) {
       level: race.level,
       chamber: race.chamber,
       district: race.district ?? null,
-      activePhase: race.activePhase,
-      ambiguous: verdict.ambiguous,          // true only for county-only district guesses
-      candidates: candidatesForActivePhase(race),
+      phase: phase._name,                             // which phase this came from
+      ambiguous: verdict.ambiguous,                   // true only for county-only district guesses
+      candidates,
       race,
     });
   });
 
-  // Measures for the focal cycle (matched by election year) that pass the scope guardrail.
+  // Measures on this election's ballot that pass the scope guardrail.
   const measureContests = measures
-    .filter(m => {
-      const yr = m.electionDate ? parseInt(String(m.electionDate).slice(0, 4), 10) : null;
-      return (yr == null || yr === cycle) && measureApplies(m, loc);
-    })
+    .filter(m => m.electionDate === electionDate && measureApplies(m, loc))
     .map(m => ({ kind: 'measure', id: m.id, status: m.status || null, measure: m }));
 
   // Group in ballot order.
@@ -265,13 +337,14 @@ function assembleBallot(loc, opts) {
   if (measureContests.length)
     groups.push({ key: 'ballot-measures', label: 'Ballot Measures', contests: measureContests });
 
-  const ambiguous = contests.some(c => c.ambiguous);
   return {
-    cycle,
+    election,                                // { date, id, name, type }
+    electionDate,
+    available,                               // all selectable elections (for the dropdown)
     location: loc,
     groups,
     totalContests: contests.length + measureContests.length,
-    ambiguous,                               // true if any district contest was county-guessed
+    ambiguous: contests.some(c => c.ambiguous),
   };
 }
 
@@ -288,19 +361,21 @@ async function loadJson(relPath) {
 // Resolve a full ballot. input: { address } (exact) or { county } (fallback).
 // Returns the assembleBallot() result. Throws a user-facing Error on lookup failure.
 async function resolveBallot(input) {
-  const [racesDoc, measuresDoc] = await Promise.all([
+  const [racesDoc, measuresDoc, calendarDoc] = await Promise.all([
     loadJson('assets/data/races.json'),
     loadJson('assets/data/ga-ballot-measures.json').catch(() => ({ measures: [] })),
+    loadJson('assets/data/ga-election-calendar.json').catch(() => ({ elections: [] })),
   ]);
   const races    = racesDoc.races || [];
   const measures = measuresDoc.measures || [];
+  const calendar = calendarDoc.elections || [];
 
   let loc;
   if (input && input.address) loc = await geocodeAddress(input.address);
   else if (input && input.county) loc = locationFromCounty(input.county);
   else throw new Error('Enter an address or choose a county.');
 
-  return assembleBallot(loc, { races, measures });
+  return assembleBallot(loc, { races, measures, calendar, electionDate: input && input.electionDate });
 }
 
 /* ------------------------------------------------------------------ *
@@ -310,7 +385,8 @@ async function resolveBallot(input) {
 const SampleBallot = {
   geocodeAddress, parseCensusMatch, locationFromCounty,
   assembleBallot, raceApplies, measureApplies,
-  circuitSlugFromRaceId, candidatesForActivePhase, newestCycle,
+  circuitSlugFromRaceId, candidatesForPhase, candidatesForActivePhase,
+  availableElections, defaultElectionDate, phaseForDate, newestCycle,
   resolveBallot,
 };
 if (typeof window !== 'undefined') window.SampleBallot = SampleBallot;
