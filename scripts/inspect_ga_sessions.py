@@ -38,7 +38,11 @@ def main():
         print("Error: OPENSTATES_API_KEY environment variable not set", file=sys.stderr)
         sys.exit(1)
 
-    url = f"{BASE_URL}/jurisdictions/{urllib.parse.quote(GA_JURISDICTION, safe='')}"
+    # `legislative_sessions` is an opt-in expanded field on the Open States v3
+    # jurisdiction endpoint — without include=legislative_sessions the response omits
+    # it and the sessions list comes back empty (looks like "no sessions returned").
+    url = (f"{BASE_URL}/jurisdictions/{urllib.parse.quote(GA_JURISDICTION, safe='')}"
+           f"?include=legislative_sessions")
     req = urllib.request.Request(url, headers={
         'X-API-Key': API_KEY,
         'Accept': 'application/json',
@@ -62,7 +66,10 @@ def main():
 
     sessions = data.get('legislative_sessions') or []
     if not sessions:
-        print("No legislative sessions returned.", file=sys.stderr)
+        print("No legislative sessions returned. The request asked for "
+              "include=legislative_sessions, so an empty list means the field name or "
+              "jurisdiction id has drifted — top-level keys returned were: "
+              f"{sorted(data.keys())}", file=sys.stderr)
         sys.exit(1)
 
     today = date.today().isoformat()
