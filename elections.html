@@ -179,6 +179,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
   <button class="tab-btn" data-tab="ga-senate">GA State Senate</button>
   <button class="tab-btn" data-tab="ga-house">GA State House</button>
   <button class="tab-btn" data-tab="courts">Courts</button>
+  <button class="tab-btn" data-tab="district-attorney">District Attorney</button>
 </div>
 
 <div class="filter-bar">
@@ -352,6 +353,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     'ga-senate': r => r.chamber === 'Georgia State Senate',
     'ga-house':  r => r.chamber === 'Georgia House of Representatives',
     'courts':    r => r.level === 'state-judicial',
+    'district-attorney': r => r.chamber === 'District Attorney',
   };
 
   // Populate county dropdown
@@ -498,6 +500,9 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
         const bi = execOfficeOrder.indexOf(b.chamber);
         return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi) || (a.district ?? 0) - (b.district ?? 0);
       }).forEach(r => { html += renderRaceRow(r, basePath); });
+    } else if (activeTab === 'district-attorney') {
+      races.sort((a, b) => (a.circuit || '').localeCompare(b.circuit || ''))
+           .forEach(r => { html += renderRaceRow(r, basePath); });
     } else {
       if (activeTab === 'us-senate' || COUNTY_TABS.has(activeTab)) {
         html += `<p class="box-note" style="margin-bottom:1rem;font-size:0.82rem;color:#555;">Many counties are served by multiple districts. If you are unsure which district you're in, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> and scroll to the bottom to see your districts.</p>`;
