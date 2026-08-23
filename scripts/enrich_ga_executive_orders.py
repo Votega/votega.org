@@ -68,6 +68,30 @@ _PDF_HEADERS = {
     'Accept':     'application/pdf',
 }
 
+# Circuit breaker: archive.org periodically refuses or times out every request
+# from CI runners (blocking or an outage). Without this, each order still burns
+# tens of seconds failing (save timeout + availability polling), turning an
+# archive sweep into a multi-hour no-op. After this many consecutive failures we
+# stop attempting archival for the rest of the run and let a later sweep retry.
+_WAYBACK_MAX_CONSECUTIVE_FAILS = 6
+
+
+class _Wayback:
+    consecutive_fails = 0
+    disabled = False
+
+
+def _note_wayback(ok):
+    if ok:
+        _Wayback.consecutive_fails = 0
+        return
+    _Wayback.consecutive_fails += 1
+    if _Wayback.consecutive_fails >= _WAYBACK_MAX_CONSECUTIVE_FAILS and not _Wayback.disabled:
+        _Wayback.disabled = True
+        print(f"    wayback: {_Wayback.consecutive_fails} consecutive failures — "
+              "archive.org looks unreachable; skipping archival for the rest of this run "
+              "(re-run EO_ENRICH_ARCHIVE=retry later to fill these in)")
+
 
 # ── Downloads ─────────────────────────────────────────────────────────────────
 
@@ -100,7 +124,7 @@ def _snapshot_from_save(url):
     req = urllib.request.Request("https://web.archive.org/save/" + url,
                                  headers=_PDF_HEADERS)
     try:
-        with urllib.request.urlopen(req, timeout=90) as resp:
+        with urllib.request.urlopen(req, timeout=30) as resp:
             loc = resp.headers.get('Content-Location')
             if loc:
                 return "https://web.archive.org" + loc if loc.startswith('/') else loc
@@ -117,26 +141,35 @@ def wayback_archive(url):
     """Existing snapshot if any; otherwise ask Wayback to save one, then re-check.
 
     Returns a snapshot URL or None. Fully best-effort — any failure yields None.
+    Short-circuits once the run-level circuit breaker has tripped, so a total
+    archive.org outage costs a handful of failed attempts, not one per order.
     """
+    if _Wayback.disabled:
+        return None
     try:
         existing = _wayback_snapshot(url)
         if existing:
+            _note_wayback(True)
             return existing
         # Trigger a capture and take the snapshot URL from the save response.
         saved = _snapshot_from_save(url)
         if saved:
+            _note_wayback(True)
             return saved
         # The save may have started without reporting a URL; the availability
-        # API lags the capture, so poll it a few times before giving up rather
-        # than recording a null the same second the save was requested.
-        for delay in (5, 15, 30):
+        # API lags the capture, so poll it briefly before giving up rather than
+        # recording a null the same second the save was requested.
+        for delay in (5, 15):
             time.sleep(delay)
             snap = _wayback_snapshot(url)
             if snap:
+                _note_wayback(True)
                 return snap
+        _note_wayback(False)
         return None
     except Exception as exc:  # noqa: BLE001 - archival must never abort enrichment
         print(f"    wayback failed: {exc}")
+        _note_wayback(False)
         return None
 
 
