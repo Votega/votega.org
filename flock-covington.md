@@ -13,6 +13,8 @@ An open records request has been submitted to both the City of Covington and New
 ## <center>City of Covington, GA</center>
 The City Council in Covington, GA voted unanimously to approve a 3-year contract with Flock, for integration of security cameras, on December 15, 2025. Discussion about similar cameras and systems pre-date the contract approval. 
  - <a href="https://cityofcovington.org/ckeditorfiles/files/2025_CityCouncil_1215_Minutes.pdf" target="_blank"> December 15, 2025 - City Council Meeting Minutes, Item #11</a>
+The City Council voted unanimously to approve a consolidate of Flock agreements into a comprehensive 10-year Safer City contract. Adding 60 LPR cameras, cameras in parks and identified high-crime areas, drone, mobile camera trailers and software/technology enhancements for a total of $523,776.
+ - <a href="https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0615_Minutes.pdf" target="_blank"> June 15, 2026 - City Council Meeting Minutes, Item #9</a>
 ### Open Records
 - <a href="https://www.foiamachine.org/foi/city-of-covington-flock-contract-12983/?sharing=SPVLSTR44AWP" target="_blank"> City of Covington Open Records Request</a>
     - <a href="{{ '/assets/docs/flock_safety_covington_pd_contract.pdf' | relative_url }}" target="_blank"> City of Covington Flock Contract</a>
