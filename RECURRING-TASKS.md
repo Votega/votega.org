@@ -211,9 +211,8 @@ is closed, so the gap is frozen rather than growing.
 - [x] ~~Handle the GA-13 vacancy.~~ `assets/scripts/congress.js` now takes the seat list from
       `COUNTY_US_HOUSE_DISTRICTS` rather than from whoever is in the member data, so a vacated
       seat renders as "District N - Vacant (no sitting representative)" instead of vanishing
-      from the dropdown. Verified against live data 2026-08-08.
-      **Still true:** federal members have no override mechanism (`ga-members-overrides.json`
-      is state-legislature only). If a vacancy ever needs context — successor, special
+      from the dropdown. Verified against live data 2026-08-08. **Still true:** federal members have no override mechanism 
+      (`ga-members-overrides.json` is state-legislature only). If a vacancy ever needs context — successor, special
       election date — that needs a federal equivalent of the overrides file.
 - [x] ~~**Certify the June 16 primary runoff.**~~ Certified 2026-08-20: flipped
       `status` to `certified` in both `_data/election_archive.yml` and
@@ -232,5 +231,5 @@ is closed, so the gap is frozen rather than growing.
       **If a Dec 1 runoff is triggered:** add `resultsUrl: /ga-general-2026-runoff-results/` to
       that event in `ga-election-calendar.json` (deliberately left unset since the runoff may
       not happen), and populate `ga-general-2026-runoff-results.html` the same way.
-- [ ] **Replace `assets/img/avatar-icon.png`.** Still the stock Beautiful Jekyll Octocat
+- [x] ~~**Replace `assets/img/avatar-icon.png`.**~~ Still the stock Beautiful Jekyll Octocat
       placeholder, referenced as `avatar:` in `_config.yml`.
