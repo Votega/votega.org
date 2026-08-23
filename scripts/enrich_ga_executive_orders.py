@@ -30,10 +30,13 @@ dev laptop); CI installs poppler-utils and tesseract-ocr.
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
+import urllib.request
 from datetime import datetime, timezone
 from urllib.parse import quote
 
@@ -47,9 +50,18 @@ TEXT_DIR = os.path.join(OUTPUT_DIR, "eo-text")
 _MIN_TEXT_CHARS = 200
 
 # Wayback archival is the slowest step (a save-now per order, rate-limited by
-# archive.org). Set EO_ENRICH_ARCHIVE=0 to skip it — e.g. during a large
-# multi-year backfill — and fill archives in later with an archive-on run.
-_ARCHIVE_ENABLED = os.environ.get('EO_ENRICH_ARCHIVE', '1') != '0'
+# archive.org). EO_ENRICH_ARCHIVE controls it:
+#     '0'      skip archival entirely — e.g. during a large multi-year backfill,
+#              then fill archives in later with an archive-on run.
+#     '1'      (default, the daily job) archive orders that have never been
+#              attempted; leave a recorded null alone so daily runs don't
+#              re-hammer archive.org for orders it could not capture.
+#     'retry'  (the manual archive sweep) also re-attempt orders whose recorded
+#              archiveUrl is null. This is the pass that actually backfills the
+#              nulls the daily job leaves behind.
+_ARCHIVE_MODE = os.environ.get('EO_ENRICH_ARCHIVE', '1')
+_ARCHIVE_ENABLED = _ARCHIVE_MODE != '0'
+_ARCHIVE_RETRY_NULLS = _ARCHIVE_MODE == 'retry'
 
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (executive-orders-enricher)',
@@ -76,6 +88,31 @@ def _wayback_snapshot(url):
     return None
 
 
+def _snapshot_from_save(url):
+    """Trigger a Wayback save-now and return the snapshot URL it reports, or None.
+
+    The save endpoint identifies the fresh capture in its response headers —
+    `Content-Location` (a /web/<timestamp>/<url> path) and/or a `Link` header
+    carrying rel="memento" — long before the availability API (queried by
+    _wayback_snapshot) indexes it. Reading the URL straight from the save
+    response is what lets a first attempt succeed instead of recording null.
+    """
+    req = urllib.request.Request("https://web.archive.org/save/" + url,
+                                 headers=_PDF_HEADERS)
+    try:
+        with urllib.request.urlopen(req, timeout=90) as resp:
+            loc = resp.headers.get('Content-Location')
+            if loc:
+                return "https://web.archive.org" + loc if loc.startswith('/') else loc
+            link = resp.headers.get('Link') or ''
+            m = re.search(r'<([^>]+)>;\s*rel="memento"', link)
+            if m:
+                return m.group(1).replace('http://', 'https://')
+    except Exception as exc:  # noqa: BLE001 - archival must never abort enrichment
+        print(f"    wayback save failed: {exc}")
+    return None
+
+
 def wayback_archive(url):
     """Existing snapshot if any; otherwise ask Wayback to save one, then re-check.
 
@@ -85,11 +122,19 @@ def wayback_archive(url):
         existing = _wayback_snapshot(url)
         if existing:
             return existing
-        # Trigger a capture (can be slow); the response is ignored.
-        fetch_bytes("https://web.archive.org/save/" + url,
-                    headers=_PDF_HEADERS, retries=1, backoff=2, timeout=90,
-                    label="wayback-save", verbose=False)
-        return _wayback_snapshot(url)
+        # Trigger a capture and take the snapshot URL from the save response.
+        saved = _snapshot_from_save(url)
+        if saved:
+            return saved
+        # The save may have started without reporting a URL; the availability
+        # API lags the capture, so poll it a few times before giving up rather
+        # than recording a null the same second the save was requested.
+        for delay in (5, 15, 30):
+            time.sleep(delay)
+            snap = _wayback_snapshot(url)
+            if snap:
+                return snap
+        return None
     except Exception as exc:  # noqa: BLE001 - archival must never abort enrichment
         print(f"    wayback failed: {exc}")
         return None
@@ -174,10 +219,16 @@ def enrich_order(order, year):
     tpath = text_path(year, number)
     needs_hash = 'sha256' not in order
     needs_text = not os.path.exists(tpath)
-    # Archival is gated on its own key, independent of the hash, and only when
-    # enabled — so a transient Wayback failure (key stays absent) is retried by
-    # a later run, while a recorded attempt (key present, url-or-null) is not.
-    needs_arch = _ARCHIVE_ENABLED and 'archiveUrl' not in order
+    # Archival is gated on its own key, independent of the hash. In the default
+    # mode a recorded attempt (key present, url-or-null) is left alone so daily
+    # runs don't re-hammer archive.org; the 'retry' sweep re-attempts orders
+    # whose recorded archiveUrl is still null.
+    if not _ARCHIVE_ENABLED:
+        needs_arch = False
+    elif _ARCHIVE_RETRY_NULLS:
+        needs_arch = order.get('archiveUrl') is None
+    else:
+        needs_arch = 'archiveUrl' not in order
     if not (needs_hash or needs_text or needs_arch):
         return False  # already enriched — idempotent skip
 
@@ -199,7 +250,8 @@ def enrich_order(order, year):
 
     if needs_arch:
         # May be null when no snapshot exists and save-now fails; recording the
-        # key stops daily runs from retrying, an archive-on backfill can redo it.
+        # key stops daily runs from retrying. The 'retry' archive sweep
+        # (EO_ENRICH_ARCHIVE=retry) re-attempts these nulls later.
         order['archiveUrl'] = wayback_archive(url)
         changed = True
 

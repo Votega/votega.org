@@ -24,7 +24,7 @@ on:
         required: true
         default: false
       archive:
-        description: 'Submit each PDF to the Wayback Machine? Slow on big ranges — leave off for the bulk pull, run an archive-only pass later.'
+        description: 'Submit each PDF to the Wayback Machine, re-attempting any orders whose archiveUrl is still null? Slow on big ranges — leave off for the bulk pull, run this archive sweep later.'
         type: boolean
         required: true
         default: false
@@ -52,7 +52,9 @@ jobs:
 
       - name: Enrich orders (hash, archive, full text)
         env:
-          EO_ENRICH_ARCHIVE: ${{ inputs.archive && '1' || '0' }}
+          # 'retry' so a re-run also re-attempts orders whose archiveUrl is
+          # still null, not just ones never attempted.
+          EO_ENRICH_ARCHIVE: ${{ inputs.archive && 'retry' || '0' }}
         run: python scripts/enrich_ga_executive_orders.py ${{ inputs.years }}
 
       - name: Validate any written files
