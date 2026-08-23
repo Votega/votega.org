@@ -25,6 +25,10 @@ REPO = "Votega/ga-executive-orders"
 TOKEN_ENV = "GA_EXECUTIVE_ORDERS_TOKEN"
 SCHEMA_VERSION = "1.0.0"
 
+# Where enrich_ga_executive_orders.py commits extracted full text, as
+# <year>/<number>.txt. Published to the sibling repo as per-year JSONL bundles.
+TEXT_SRC_DIR = "assets/data/eo-text"
+
 
 def load_years():
     """Return {year: doc} for every ga-executive-orders-<year>.json in source order."""
@@ -56,6 +60,30 @@ def orders_csv(orders):
     return buf.getvalue().encode()
 
 
+def text_bundle(year, doc):
+    """JSONL bundle of committed full text for one year, or None if none exists.
+
+    One line per order: {"number": <order number>, "text": <extracted text>}, in
+    the same newest-first order as data/<year>.json, joinable on `number`. Orders
+    with no committed text file (an image-only PDF OCR couldn't read, or one not
+    yet enriched) are omitted, so this reflects whatever text currently exists.
+    """
+    lines = []
+    for o in doc.get("orders", []):
+        num = o.get("number")
+        if not num:
+            continue
+        path = os.path.join(TEXT_SRC_DIR, str(year), f"{num}.txt")
+        if not os.path.exists(path):
+            continue
+        with open(path, encoding="utf-8") as f:
+            text = f.read().rstrip("\n")
+        lines.append(json.dumps({"number": num, "text": text}, ensure_ascii=False))
+    if not lines:
+        return None
+    return ("\n".join(lines) + "\n").encode()
+
+
 def summary_md(years, orders):
     total = len(orders)
     by_year = Counter(o["_year"] for o in orders)
@@ -65,7 +93,9 @@ def summary_md(years, orders):
     L.append(f"_Last updated {datetime.now(timezone.utc).isoformat()} · {total} orders across {len(by_year)} years._")
     L.append("")
     L.append("> Full data: per-year JSON in [`data/`](data/), or everything in one file — "
-             "[`data/executive-orders.csv`](data/executive-orders.csv).")
+             "[`data/executive-orders.csv`](data/executive-orders.csv). "
+             "Extracted order text: per-year JSONL in [`text/`](text/) (one line per order, "
+             "joinable to the JSON on `number`).")
     L.append("")
     L.append("## By year")
     L.append("")
@@ -136,9 +166,12 @@ def build_artifacts():
     orders = all_orders(years)
 
     artifacts = {}
-    # Per-year JSON passthrough.
+    # Per-year JSON passthrough, plus a per-year full-text bundle when text exists.
     for year, doc in years.items():
         artifacts[f"data/{year}.json"] = build_json(doc)
+        bundle = text_bundle(year, doc)
+        if bundle is not None:
+            artifacts[f"text/{year}.jsonl"] = bundle
     artifacts["data/executive-orders.csv"] = orders_csv(orders)
     artifacts["data/executive-orders.schema.json"] = build_json(schema())
     artifacts["SUMMARY.md"] = summary_md(years, orders)
