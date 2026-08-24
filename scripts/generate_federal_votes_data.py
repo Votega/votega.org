@@ -287,6 +287,25 @@ def parse_house_xml(xml_bytes, bill_label, bill_url, bill_title):
             elif t in ("nay_total", "no_total"):
                 nay += val
 
+    # Whole-chamber party breakdown, straight from the Clerk's <totals-by-party>
+    # blocks (Republican / Democratic / Independent). "other" folds present +
+    # not-voting so the Yea/Nay/other shape matches the GA member page.
+    party_tally = {}
+    for tbp in root.findall(".//totals-by-party"):
+        party = (tbp.findtext("party") or "").strip()
+        if not party:
+            continue
+        def _pint(tag, node=tbp):
+            try:
+                return int(node.findtext(tag) or 0)
+            except (ValueError, TypeError):
+                return 0
+        party_tally[party] = {
+            "yea":   _pint("yea-total"),
+            "nay":   _pint("nay-total"),
+            "other": _pint("present-total") + _pint("not-voting-total"),
+        }
+
     vote_meta = {
         "bill":       bill_label,
         "billUrl":    bill_url,
@@ -297,6 +316,7 @@ def parse_house_xml(xml_bytes, bill_label, bill_url, bill_title):
         "nay":        nay,
         "chamber":    "House",
         "result":     "Pass" if "pass" in result_text.lower() else "Fail",
+        "partyTally": party_tally or None,
     }
 
     ga_votes = {}
@@ -335,8 +355,25 @@ def parse_senate_xml(xml_bytes, bill_label, bill_url, bill_title, lis_to_bioguid
     question  = txt(".//question")
     result    = txt(".//vote_result")
     vote_date = txt(".//vote_date")
-    yea       = int(txt(".//count_yeas") or 0)
-    nay       = int(txt(".//count_nays") or 0)
+    yea       = int(txt(".//count/yeas") or 0)   # Senate XML nests these under <count>
+    nay       = int(txt(".//count/nays") or 0)
+
+    # Senate XML has no party totals, so tally every member's vote by party.
+    # Party letters (D/R/I/ID) map to the same names the House XML and the GA
+    # member page use.
+    PARTY_NAME = {"D": "Democratic", "R": "Republican", "I": "Independent", "ID": "Independent"}
+    party_tally = {}
+    for member in root.findall(".//member"):
+        pletter = (member.findtext("party") or "").strip().upper()
+        pname   = PARTY_NAME.get(pletter, pletter or "Other")
+        label   = VOTE_MAP.get((member.findtext("vote_cast") or "").strip(), "Other")
+        bucket  = party_tally.setdefault(pname, {"yea": 0, "nay": 0, "other": 0})
+        if label == "Yea":
+            bucket["yea"] += 1
+        elif label == "Nay":
+            bucket["nay"] += 1
+        else:
+            bucket["other"] += 1
 
     vote_meta = {
         "bill":       bill_label,
@@ -348,6 +385,7 @@ def parse_senate_xml(xml_bytes, bill_label, bill_url, bill_title, lis_to_bioguid
         "nay":        nay,
         "chamber":    "Senate",
         "result":     "Pass" if any(w in result.lower() for w in ("passed", "agreed", "confirmed")) else "Fail",
+        "partyTally": party_tally or None,
     }
 
     ga_votes = {}

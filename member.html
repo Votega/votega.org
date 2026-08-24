@@ -308,6 +308,15 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     color: #6b7280;
   }
   .kv-tally strong { color: #111; }
+  /* Key-vote party breakdown + full-text link (mirrors the GA member page) */
+  .party-tally { flex: 1; min-width: 180px; }
+  .tally-row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; margin-bottom: 0.25rem; }
+  .tally-label { width: 2.5rem; font-weight: bold; flex-shrink: 0; }
+  .tally-bar-track { flex: 1; background: #e5e7eb; border-radius: 3px; height: 10px; overflow: hidden; }
+  .tally-bar-fill-d { height: 100%; background: #2563eb; border-radius: 3px; }
+  .tally-bar-fill-r { height: 100%; background: #dc2626; border-radius: 3px; }
+  .tally-count { width: 5rem; text-align: right; color: #555; white-space: nowrap; }
+  .kv-text-link { font-size: 0.8rem; white-space: nowrap; }
 </style>
 
 <a class="back-link" href="{{ '/federal-reps' | relative_url }}">← Find My Reps</a>
@@ -834,6 +843,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
     const votesIndex   = votesData.votes || {};
     const memberVotes  = (votesData.memberVotes || {})[member.bioguideId] || [];
+    const lawIdx       = await getEnactedLaws();  // enacted key votes -> GPO law PDF
     // Build quick lookup: voteId -> member's vote string
     const myVoteMap = {};
     for (const { voteId, vote } of memberVotes) myVoteMap[voteId] = vote;
@@ -842,6 +852,24 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     const termsArr   = member.terms?.item || [];
     const latestTerm = (Array.isArray(termsArr) ? termsArr : [termsArr]).slice(-1)[0] || {};
     const chamberKey = (latestTerm.chamber || '').includes('House') ? 'House' : 'Senate';
+
+    // Dem/Rep "Yea by party" bars from a roll call's partyTally (added by
+    // generate_federal_votes_data.py). Same shape and markup as the GA page.
+    function buildTallyBar(partyTally, result) {
+      if (!partyTally) return '';
+      const d = partyTally['Democratic'] || {}, r = partyTally['Republican'] || {};
+      const dYea = d.yea || 0, dTotal = (d.yea || 0) + (d.nay || 0) + (d.other || 0);
+      const rYea = r.yea || 0, rTotal = (r.yea || 0) + (r.nay || 0) + (r.other || 0);
+      if (dTotal + rTotal === 0) return '';
+      const dPct = dTotal ? Math.round(dYea / dTotal * 100) : 0;
+      const rPct = rTotal ? Math.round(rYea / rTotal * 100) : 0;
+      const caption = 'Yea votes by party' + (result ? ` · ${escHtml(result === 'Pass' ? 'Passed' : result === 'Fail' ? 'Failed' : result)}` : '');
+      return `<div class="party-tally">
+        <div style="font-size:0.72rem;color:#666;margin-bottom:0.3rem;">${caption}</div>
+        <div class="tally-row"><span class="tally-label" style="color:#2563eb;">Dem</span><div class="tally-bar-track"><div class="tally-bar-fill-d" style="width:${dPct}%"></div></div><span class="tally-count">${dYea}/${dTotal} &nbsp;${dPct}%</span></div>
+        <div class="tally-row"><span class="tally-label" style="color:#dc2626;">Rep</span><div class="tally-bar-track"><div class="tally-bar-fill-r" style="width:${rPct}%"></div></div><span class="tally-count">${rYea}/${rTotal} &nbsp;${rPct}%</span></div>
+      </div>`;
+    }
 
     const VOTE_DISPLAY = {
       'Yea':        { label: 'Voted Yea',      cls: 'kv-badge-yea'   },
@@ -862,11 +890,20 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
         ? `<span class="kv-badge ${voteInfo.cls}">${voteInfo.label}</span>`
         : `<span class="kv-badge kv-badge-other">${voteId ? 'No record' : `${chamberKey === 'House' ? 'Senate' : 'House'} vote only`}</span>`;
 
-      let tallyHtml = '';
-      if (voteMeta && (voteMeta.yea || voteMeta.nay)) {
-        const result = voteMeta.result || '';
-        tallyHtml = `<span class="kv-tally"><strong>${voteMeta.yea}</strong> Yea · <strong>${voteMeta.nay}</strong> Nay · ${escHtml(result)}</span>`;
+      // Party breakdown: prefer the roll call's partyTally; fall back to the
+      // overall Yea/Nay line when a tally isn't present yet (pre-regeneration).
+      let tallyHtml = buildTallyBar(voteMeta && voteMeta.partyTally, voteMeta && voteMeta.result);
+      if (!tallyHtml && voteMeta && (voteMeta.yea || voteMeta.nay)) {
+        tallyHtml = `<span class="kv-tally"><strong>${voteMeta.yea}</strong> Yea · <strong>${voteMeta.nay}</strong> Nay · ${escHtml(voteMeta.result || '')}</span>`;
       }
+
+      // Full text: enacted key votes -> the GPO-authenticated law PDF (via the
+      // enacted-law index); otherwise the curated bill PDF (GovInfo), when set.
+      const conn   = lawConnector(lawIdx.get(lawKey(bill.bill, '')));
+      const pdfUrl = (conn && conn.officialPdfUrl) || bill.fullTextUrl || '';
+      const textLink = pdfUrl
+        ? `<a class="kv-text-link" href="${escHtml(pdfUrl)}" target="_blank" rel="noopener">Full text (PDF) →</a>`
+        : '';
 
       return `<div class="kv-card">
         <div class="kv-card-header">
@@ -877,6 +914,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
         <div class="kv-footer">
           ${voteBadge}
           ${tallyHtml}
+          ${textLink}
         </div>
       </div>`;
     }).join('');
