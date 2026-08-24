@@ -592,7 +592,7 @@ share-description: "Profile of a federal executive branch official: office held,
 
         const termStart = meta.termStart || official.termStart || '2025-01-20';
         const metaBar = `<p class="law-meta-bar">
-          ${allLaws.length} laws signed since ${termStart} ·
+          ${allLaws.length} laws signed this term (since ${fmt(termStart)}) ·
           <a href="https://www.congress.gov/public-laws/${meta.congress || 119}" target="_blank" rel="noopener">View all on Congress.gov →</a>
         </p>`;
 
@@ -677,7 +677,7 @@ share-description: "Profile of a federal executive branch official: office held,
     function rebuildContainer() {
       const hasMore = currentPage < totalPages;
       const metaBar = totalCount > 0
-        ? `<p class="eo-meta-bar">Showing ${rendered.length} of ${totalCount} executive orders since ${termStart} · <a href="https://www.federalregister.gov/presidential-documents/executive-orders" target="_blank" rel="noopener">View all on Federal Register →</a></p>`
+        ? `<p class="eo-meta-bar">Showing ${rendered.length} of ${totalCount} executive orders signed this term (since ${fmt(termStart)}) · <a href="https://www.federalregister.gov/presidential-documents/executive-orders" target="_blank" rel="noopener">View all on Federal Register →</a></p>`
         : '';
       const loadMoreBtn = hasMore
         ? `<button class="eo-load-more" id="eoLoadMore">Load more</button>`
