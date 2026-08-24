@@ -96,11 +96,21 @@ _SAVE_DELAY_MAX = 60.0
 _RATE_BACKOFF = 20          # base seconds for the escalating 429 backoff
 _SAVE_MAX_TRIES = 3         # 429 retries per order before leaving it null
 
+# Save-now (capture) health, separate from availability reachability. When the
+# capture service hangs/times out for many orders in a row it is effectively
+# down even though availability still answers — so after this many consecutive
+# save failures we stop requesting new captures and race through the rest of the
+# run resolving existing snapshots only, leaving the uncaptured ones for a later
+# sweep instead of burning ~45s timing out on each.
+_SAVE_MAX_CONSECUTIVE_FAILS = 5
+
 
 class _Wayback:
-    consecutive_fails = 0
-    disabled = False
+    consecutive_fails = 0      # availability reachability failures (→ breaker)
+    disabled = False           # archive.org unreachable → skip archival entirely
     save_delay = _SAVE_DELAY_START
+    save_fails = 0             # consecutive save-now capture failures
+    saves_disabled = False     # capture service unhealthy → availability-only
 
 
 def _note_wayback(ok):
@@ -113,6 +123,18 @@ def _note_wayback(ok):
         print(f"    wayback: {_Wayback.consecutive_fails} consecutive unreachable responses — "
               "archive.org looks down/blocked; skipping archival for the rest of this run "
               "(re-run EO_ENRICH_ARCHIVE=retry later to fill these in)")
+
+
+def _note_save(ok):
+    if ok:
+        _Wayback.save_fails = 0
+        return
+    _Wayback.save_fails += 1
+    if _Wayback.save_fails >= _SAVE_MAX_CONSECUTIVE_FAILS and not _Wayback.saves_disabled:
+        _Wayback.saves_disabled = True
+        print(f"    wayback: {_Wayback.save_fails} save-now failures in a row — capture "
+              "service looks unavailable; resolving existing snapshots only for the rest "
+              "of this run (re-run later to capture the rest)")
 
 
 # ── Downloads ─────────────────────────────────────────────────────────────────
@@ -185,7 +207,9 @@ def _save_now_paced(url):
     for attempt in range(_SAVE_MAX_TRIES):
         time.sleep(_Wayback.save_delay)
         try:
-            return _do_save(url), True
+            result = _do_save(url)
+            _note_save(True)   # capture service responded
+            return result, True
         except urllib.error.HTTPError as exc:
             if exc.code == 429:
                 _Wayback.save_delay = min(_Wayback.save_delay * 1.5, _SAVE_DELAY_MAX)
@@ -195,12 +219,15 @@ def _save_now_paced(url):
                 time.sleep(backoff)
                 continue
             print(f"    wayback save failed: HTTP {exc.code}")
+            _note_save(False)
             return None, False
         except Exception as exc:  # noqa: BLE001 - connection/timeout: this order fails, run continues
             print(f"    wayback save failed: {exc}")
+            _note_save(False)
             return None, False
     print(f"    wayback: still rate-limited after {_SAVE_MAX_TRIES} tries — "
           "leaving null for a later sweep")
+    _note_save(False)
     return None, False
 
 
@@ -222,7 +249,13 @@ def wayback_archive(url):
     if snap:
         return snap
 
-    # No existing snapshot — request a paced capture and take its reported URL.
+    # No existing snapshot. Once the capture service has proven unhealthy this
+    # run, stop requesting saves and leave the order null — availability already
+    # answered, so we've captured everything already archived at no extra cost.
+    if _Wayback.saves_disabled:
+        return None
+
+    # Request a paced capture and take its reported URL.
     saved, should_poll = _save_now_paced(url)
     if saved:
         return saved
