@@ -9,6 +9,7 @@ import sys
 import time
 import urllib.request
 import urllib.error
+from urllib.parse import quote
 import yaml
 from datetime import datetime
 
@@ -177,6 +178,80 @@ def get_committee_memberships():
     return lookup
 
 
+def build_profile_enrichment():
+    """Fetch congress-legislators id/bio + social-media YAML, keyed by bioguide.
+
+    Returns {bioguide: {birthday, gender, externalLinks[], socialLinks[]}}, where
+    each *Links entry is {"label", "url"} ready to render. congress-legislators
+    is the canonical, public-domain (CC0) crosswalk of a member's identifiers
+    across reference sites; the Congress.gov API carries none of these. Two
+    separate YAML files:
+      - legislators-current.yaml       id.{wikipedia,ballotpedia,opensecrets,
+                                       govtrack}, bio.{birthday,gender}
+      - legislators-social-media.yaml  social.{twitter,facebook,instagram,youtube*}
+
+    Missing/failed fetches degrade to {} so the build never breaks on this
+    optional enrichment; the caller only overwrites fields it actually got.
+    """
+    result = {}
+
+    leg = fetch_yaml(f"{LEGISLATORS_BASE}/legislators-current.yaml")
+    if leg:
+        for person in leg:
+            ids = person.get('id') or {}
+            bio = person.get('bio') or {}
+            bioguide = ids.get('bioguide')
+            if not bioguide:
+                continue
+            links = []
+            if ids.get('wikipedia'):
+                slug = quote(ids['wikipedia'].replace(' ', '_'), safe='_()')
+                links.append({'label': 'Wikipedia', 'url': f"https://en.wikipedia.org/wiki/{slug}"})
+            if ids.get('ballotpedia'):
+                slug = quote(ids['ballotpedia'].replace(' ', '_'), safe='_()')
+                links.append({'label': 'Ballotpedia', 'url': f"https://ballotpedia.org/{slug}"})
+            if ids.get('opensecrets'):
+                links.append({'label': 'OpenSecrets',
+                              'url': f"https://www.opensecrets.org/members-of-congress/summary?cid={ids['opensecrets']}"})
+            if ids.get('govtrack'):
+                links.append({'label': 'GovTrack',
+                              'url': f"https://www.govtrack.us/congress/members/{ids['govtrack']}"})
+            result[bioguide] = {
+                'birthday': bio.get('birthday') or None,
+                'gender': bio.get('gender') or None,
+                'externalLinks': links,
+            }
+    else:
+        print("Warning: legislators-current.yaml unavailable — profile links skipped")
+
+    social = fetch_yaml(f"{LEGISLATORS_BASE}/legislators-social-media.yaml")
+    if social:
+        for person in social:
+            ids = person.get('id') or {}
+            bioguide = ids.get('bioguide')
+            s = person.get('social') or {}
+            if not bioguide:
+                continue
+            slinks = []
+            if s.get('twitter'):
+                slinks.append({'label': 'X (Twitter)', 'url': f"https://x.com/{s['twitter']}"})
+            if s.get('facebook'):
+                slinks.append({'label': 'Facebook', 'url': f"https://www.facebook.com/{s['facebook']}"})
+            if s.get('instagram'):
+                slinks.append({'label': 'Instagram', 'url': f"https://www.instagram.com/{s['instagram']}"})
+            # Prefer the stable channel ID over the legacy /user/ vanity name.
+            if s.get('youtube_id'):
+                slinks.append({'label': 'YouTube', 'url': f"https://www.youtube.com/channel/{s['youtube_id']}"})
+            elif s.get('youtube'):
+                slinks.append({'label': 'YouTube', 'url': f"https://www.youtube.com/user/{s['youtube']}"})
+            if slinks:
+                result.setdefault(bioguide, {})['socialLinks'] = slinks
+    else:
+        print("Warning: legislators-social-media.yaml unavailable — social links skipped")
+
+    return result
+
+
 def enrich_member_data(bioguideId, basic_member):
     """Fetch and enrich member data. Returns (member, success)."""
     member_details = get_member_details(bioguideId)
@@ -319,6 +394,28 @@ def main():
         member['committees'] = committee_lookup.get(member.get('bioguideId', ''), [])
     committees_count = sum(1 for m in enriched_members if m.get('committees'))
     print(f"Members with committee data: {committees_count}")
+
+    # Enrich with congress-legislators reference links + biographical detail
+    # (Wikipedia/Ballotpedia/OpenSecrets/GovTrack, full birthday, gender, socials).
+    # Additive and optional: only fields actually returned are written, so a
+    # failed fetch leaves members exactly as Congress.gov provided them.
+    print("Enriching with congress-legislators profile links & bio...")
+    profile_lookup = build_profile_enrichment()
+    profile_matched = 0
+    for member in enriched_members:
+        e = profile_lookup.get(member.get('bioguideId', ''))
+        if not e:
+            continue
+        profile_matched += 1
+        if e.get('birthday'):
+            member['birthday'] = e['birthday']
+        if e.get('gender'):
+            member['gender'] = e['gender']
+        if e.get('externalLinks'):
+            member['externalLinks'] = e['externalLinks']
+        if e.get('socialLinks'):
+            member['socialLinks'] = e['socialLinks']
+    print(f"Members enriched with profile data: {profile_matched}/{len(enriched_members)}")
 
     # Create output structure
     output_data = {

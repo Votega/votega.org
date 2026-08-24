@@ -115,6 +115,7 @@ votega.org/
 ### `current-members.json`
 Top-level: `{ metadata: { generatedAt, source, count, apiVersion }, members: [...] }`
 Each member: `bioguideId`, `name`, `partyName`, `state`, `district`, `terms.item[]` (chamber via `item[0].chamber`), `depiction.imageUrl`, `leadership[]`, `committees[]`, `contactInfo`, `officialWebsiteUrl`, `birthYear`, `firstName`, `lastName`.
+Enriched from `unitedstates/congress-legislators` (public-domain crosswalk, merged in `generate_current_members_data.py`; absent when that member isn't in the crosswalk yet, e.g. a just-seated member): `birthday` (full ISO date), `gender`, `externalLinks[]` (`{label, url}` for Wikipedia/Ballotpedia/OpenSecrets/GovTrack), `socialLinks[]` (`{label, url}` for X/Facebook/Instagram/YouTube). The same repo also backs the deterministic FEC-ID crosswalk in `generate_fec_data.py`.
 For GA delegation only: `recentSponsored[]`.
 
 ### `ga-members.json`

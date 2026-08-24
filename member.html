@@ -1036,11 +1036,36 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
         </div>`;
     }
 
+    // Prefer the full birth date from congress-legislators; fall back to the
+    // Congress.gov birth year. Age is computed from the actual date when known.
+    let bornHtml = '';
+    if (member.birthday) {
+      const bd = new Date(member.birthday + 'T00:00:00');
+      const now = new Date();
+      let age = now.getFullYear() - bd.getFullYear();
+      const m = now.getMonth() - bd.getMonth();
+      if (m < 0 || (m === 0 && now.getDate() < bd.getDate())) age--;
+      const fmt = bd.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      bornHtml = `<p style="display:flex;justify-content:space-between;"><span><strong>Born:</strong> ${escHtml(fmt)}</span><span><strong>Age:</strong> ${age}</span></p>`;
+    } else if (member.birthYear) {
+      bornHtml = `<p style="display:flex;justify-content:space-between;"><span><strong>Birth Year:</strong> ${member.birthYear}</span><span><strong>Age (as of ${currentYear}):</strong> ${currentYear - member.birthYear}</span></p>`;
+    }
+
+    // Reference-site profiles and official social accounts (from congress-legislators).
+    const linkList = (items) => items.map(l =>
+      `<a href="${escHtml(l.url)}" target="_blank" rel="noopener">${escHtml(l.label)} ↗</a>`).join(' &nbsp;·&nbsp; ');
+    const extLinks = member.externalLinks || [];
+    const externalLinksHtml = extLinks.length
+      ? `<p><strong>Learn more:</strong> ${linkList(extLinks)}</p>` : '';
+    const socLinks = member.socialLinks || [];
+    const socialLinksHtml = socLinks.length
+      ? `<p><strong>Social media:</strong> ${linkList(socLinks)}</p>` : '';
+
     const html = `
       ${imageHtml}
       <h1>${escHtml(fullName)}</h1>
       ${runningBadgeHtml}
-      ${member.birthYear ? `<p style="display:flex;justify-content:space-between;"><span><strong>Birth Year:</strong> ${member.birthYear}</span><span><strong>Age (as of ${currentYear}):</strong> ${currentYear - member.birthYear}</span></p>` : ''}
+      ${bornHtml}
       <p style="display:flex;justify-content:space-between;"><span><strong>First Term (Current Chamber):</strong> ${startYear}</span><span><strong>Years in Office:</strong> ${yearsInOffice}</span></p>
       <p><strong>Party:</strong> ${escHtml(party)} ${getPartyIconHtml(party)}</p>
       <p><strong>State:</strong> ${escHtml(state)}</p>
@@ -1050,6 +1075,8 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       ${committeesHtml}
       ${contactHtml}
       ${websiteHtml}
+      ${externalLinksHtml}
+      ${socialLinksHtml}
 
       <p><a href="${getBasePath()}federal-reps">Search for another member</a></p>
       ${state === 'Georgia' ? `<p><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${escHtml(fullName)} →</a></p>` : ''}
