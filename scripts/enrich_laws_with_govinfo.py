@@ -22,8 +22,10 @@ Public links point at www.govinfo.gov content URLs, which need no API key, so th
 key is never exposed to the browser. The API key is used only server-side here to
 confirm the package exists and to read the PREMIS hash.
 
-Auth: GOVINFO_API_KEY (a free api.data.gov key, held as a repo secret in CI).
-Falls back to DEMO_KEY for local spot-checks (30 req/hr — not a full build).
+Auth: GOVINFO_API_KEY (a free api.data.gov key, held as a repo secret in CI),
+sent via the X-Api-Key header. Falls back to DEMO_KEY for local spot-checks
+(30 req/hr — not a full build). A misconfigured (invalid) key fails the run
+loudly; a missing one just falls back to DEMO_KEY.
 
 Run: python scripts/enrich_laws_with_govinfo.py [path-to-presidential-laws.json]
 """
@@ -32,6 +34,8 @@ import json
 import os
 import re
 import sys
+import urllib.error
+import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
@@ -40,6 +44,11 @@ from lib.http import fetch_bytes, fetch_json
 API_BASE     = "https://api.govinfo.gov"
 CONTENT_BASE = "https://www.govinfo.gov"
 API_KEY      = os.environ.get('GOVINFO_API_KEY') or 'DEMO_KEY'
+
+# api.data.gov accepts the key via the X-Api-Key header, the ?api_key= query
+# param, or basic-auth. The header is used here so the key never appears in a
+# request URL (and therefore never in any log, proxy record, or history).
+_AUTH_HEADERS = {'X-Api-Key': API_KEY}
 
 DEFAULT_FILE = "assets/data/presidential-laws.json"
 
@@ -67,22 +76,18 @@ def package_id(law):
     return None
 
 
-def _keyed(url):
-    return f"{url}?api_key={API_KEY}"
-
-
 def govinfo_summary(pkg):
     """Package summary dict, or None (404 = not yet published, or fetch failed)."""
-    return fetch_json(_keyed(f"{API_BASE}/packages/{pkg}/summary"),
-                      retries=3, backoff=5, redact=API_KEY, label=pkg,
-                      quiet_statuses=(404,))
+    return fetch_json(f"{API_BASE}/packages/{pkg}/summary",
+                      headers=_AUTH_HEADERS, retries=3, backoff=5,
+                      redact=API_KEY, label=pkg, quiet_statuses=(404,))
 
 
 def pdf_sha256(pkg):
     """SHA-256 of the package's PDF from its PREMIS fixity, or None. Best-effort."""
-    raw = fetch_bytes(_keyed(f"{API_BASE}/packages/{pkg}/premis"),
-                      retries=2, backoff=5, redact=API_KEY,
-                      label=f"{pkg} premis", quiet_statuses=(404,))
+    raw = fetch_bytes(f"{API_BASE}/packages/{pkg}/premis",
+                      headers=_AUTH_HEADERS, retries=2, backoff=5,
+                      redact=API_KEY, label=f"{pkg} premis", quiet_statuses=(404,))
     if not raw:
         return None
     try:
@@ -134,9 +139,36 @@ def enrich(law):
     return True
 
 
+def preflight_key():
+    """Fail loudly on a misconfigured key, rather than silently no-op'ing.
+
+    A single call to a stable endpoint distinguishes an invalid key (an auth
+    rejection — fatal, someone set GOVINFO_API_KEY wrong) from the per-law 404s
+    that are a normal consequence of GovInfo's lag. A missing secret is not an
+    error: the module already falls back to DEMO_KEY. Network hiccups don't
+    block — the per-law calls are best-effort anyway.
+
+    GovInfo's gateway returns 401 (API_KEY_MISSING / API_KEY_INVALID) for auth
+    failures, not the 403 the generic api.data.gov manual documents, so both are
+    treated as fatal.
+    """
+    req = urllib.request.Request(f"{API_BASE}/collections", headers=_AUTH_HEADERS)
+    try:
+        urllib.request.urlopen(req, timeout=20).read(1)
+    except urllib.error.HTTPError as exc:
+        if exc.code in (401, 403):
+            sys.exit(f"FATAL: GovInfo rejected the API key (HTTP {exc.code}). "
+                     "Set GOVINFO_API_KEY to a valid api.data.gov key.")
+        # 429 (rate limited) or any other status is not an auth failure — proceed.
+    except Exception:  # noqa: BLE001 - a transient network error shouldn't abort the run
+        pass
+
+
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     path = argv[0] if argv else DEFAULT_FILE
+
+    preflight_key()
 
     with open(path, encoding='utf-8') as f:
         data = json.load(f)
