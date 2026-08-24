@@ -27,6 +27,15 @@ jobs:
         env:
           CONGRESS_API_KEY: ${{ secrets.CONGRESS_API_KEY }}
 
+      # generate_presidential_laws.py rewrites the file fresh, so provenance must
+      # be re-applied here each run. Needs a free api.data.gov key (GOVINFO_API_KEY);
+      # without it the step falls back to DEMO_KEY, rate-limits after ~30 calls, and
+      # leaves the rest unenriched (non-fatal).
+      - name: Enrich laws with GovInfo (GPO) provenance
+        run: python scripts/enrich_laws_with_govinfo.py assets/data/presidential-laws.json
+        env:
+          GOVINFO_API_KEY: ${{ secrets.GOVINFO_API_KEY }}
+
       - name: Validate generated data
         run: |
           python scripts/validate_data_update.py assets/data/presidential-laws.json \

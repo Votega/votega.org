@@ -224,6 +224,57 @@ share-description: "Profile of a federal executive branch official: office held,
   }
   .law-load-more:hover { background: #f3f4f6; }
   .law-load-more:disabled { color: #9ca3af; cursor: default; }
+
+  /* GovInfo (GPO) provenance */
+  .law-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    background: #ecfdf5;
+    color: #047857;
+    border-radius: 20px;
+    padding: 0.08rem 0.45rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  .law-links {
+    margin-top: 0.35rem;
+    display: flex;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    font-size: 0.78rem;
+  }
+  .law-links a { color: #1d4ed8; text-decoration: none; white-space: nowrap; }
+  .law-links a:hover { text-decoration: underline; }
+  .law-verify { margin-top: 0.35rem; font-size: 0.74rem; }
+  .law-verify summary {
+    cursor: pointer;
+    color: #6b7280;
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .law-verify summary::-webkit-details-marker { display: none; }
+  .law-verify[open] summary { color: #374151; }
+  .law-verify-body {
+    margin-top: 0.35rem;
+    background: #f9fafb;
+    border: 1px solid #eef0f2;
+    border-radius: 6px;
+    padding: 0.5rem 0.6rem;
+    line-height: 1.65;
+    color: #6b7280;
+  }
+  .law-verify-body .lv-row { display: flex; justify-content: space-between; gap: 0.75rem; }
+  .law-verify-body .lv-k { color: #9ca3af; white-space: nowrap; }
+  .law-verify-body .lv-v { text-align: right; word-break: break-all; }
+  .law-verify-body .lv-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.7rem;
+  }
 </style>
 
 <div id="pageLayout">
@@ -489,20 +540,53 @@ share-description: "Profile of a federal executive branch official: office held,
         const hasMore = slice.length < allLaws.length;
 
         const items = slice.map(law => {
-          const lawNum   = law.publicLawNumber ? `P.L. ${law.publicLawNumber}` : law.billLabel;
-          const billId   = law.publicLawNumber ? law.billLabel : '';
+          // Prefer an explicit public-law number; fall back to the one GovInfo
+          // confirms via the package id (Congress.gov often lags on this field).
+          let plNum = law.publicLawNumber;
+          if (!plNum && law.govinfoPackageId) {
+            const m = law.govinfoPackageId.match(/^PLAW-(\d+)publ(\d+)$/);
+            if (m) plNum = `${m[1]}-${m[2]}`;
+          }
+          const lawNum   = plNum ? `P.L. ${plNum}` : law.billLabel;
+          const billId   = plNum ? law.billLabel : '';
           const date     = law.signingDate ? fmt(law.signingDate) : '—';
           const policy   = law.policyArea
             ? `<span class="law-policy">${law.policyArea}</span>`
             : '';
           const metaParts = [date];
           if (billId) metaParts.push(billId);
+
+          // GovInfo (GPO) provenance — only when the enrichment fields are present.
+          const authed = law.gpoAuthenticated && law.officialPdfUrl;
+          const badge  = authed
+            ? `<span class="law-badge" title="Authenticated by the U.S. Government Publishing Office">✓ GPO authenticated</span>`
+            : '';
+          const links = authed
+            ? `<div class="law-links">
+                 <a href="${law.officialPdfUrl}" target="_blank" rel="noopener">Official law text (GPO PDF)</a>
+               </div>`
+            : '';
+          const shaRow = law.sha256Pdf
+            ? `<div class="lv-row"><span class="lv-k">PDF SHA-256</span><span class="lv-v lv-mono">${law.sha256Pdf}</span></div>`
+            : '';
+          const verify = authed
+            ? `<details class="law-verify">
+                 <summary>Verify integrity</summary>
+                 <div class="law-verify-body">
+                   <div class="lv-row"><span class="lv-k">Source</span><span class="lv-v">GovInfo · <a href="${law.officialTextUrl}" target="_blank" rel="noopener">${law.govinfoPackageId}</a></span></div>
+                   <div class="lv-row"><span class="lv-k">Signed by</span><span class="lv-v">U.S. Government Publishing Office</span></div>
+                   ${shaRow}
+                 </div>
+               </details>`
+            : '';
+
           return `<li class="law-item">
             <div class="law-header">
-              <span class="law-id">${lawNum}</span>
+              <span class="law-id">${lawNum}</span>${badge}
               <a class="law-title" href="${law.congressUrl}" target="_blank" rel="noopener">${law.title}</a>${policy}
             </div>
             <div class="law-meta">Signed ${metaParts.join(' · ')}</div>
+            ${links}${verify}
           </li>`;
         }).join('');
 
