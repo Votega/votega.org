@@ -241,6 +241,20 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
   .vote-nay   { color: #b00020; font-weight: bold; }
   .vote-other { color: #666; }
 
+  /* Became-law connector (bills that were enacted -> GPO-authenticated text) */
+  .law-became-badge {
+    display: inline-flex; align-items: center; gap: 0.15rem;
+    background: #ecfdf5; color: #047857;
+    border-radius: 20px; padding: 0.05rem 0.45rem;
+    font-size: 0.7rem; font-weight: 600; white-space: nowrap;
+    vertical-align: middle; margin-left: 0.4rem;
+  }
+  .law-official-link { font-size: 0.78rem; color: #1d4ed8; text-decoration: none; white-space: nowrap; }
+  .law-official-link:hover { text-decoration: underline; }
+  .vote-law-cell { display: block; font-size: 0.72rem; margin-top: 0.15rem; }
+  .vote-law-cell a { color: #1d4ed8; text-decoration: none; }
+  .vote-law-cell a:hover { text-decoration: underline; }
+
   /* Key vote cards */
   .kv-card {
     border: 1px solid #e5e7eb;
@@ -457,6 +471,63 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       .replace(/"/g, '&quot;');
   }
 
+  // Format a YYYY-MM-DD date without the UTC-to-local shift. new Date('YYYY-MM-DD')
+  // is parsed as UTC midnight, which rolls back to the previous day in US
+  // timezones — parsing the components directly keeps the calendar date intact.
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const [y, m, d] = String(iso).slice(0, 10).split('-').map(Number);
+    if (!y || !m || !d) return '—';
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  // Became-law connector: presidential-laws.json is the index of every law
+  // enacted this term (keyed by bill type+number), already carrying GovInfo
+  // (GPO) authenticated-text fields. Both the sponsored-legislation and
+  // voting-history sections join their bills against it at runtime. Fetched
+  // once and cached; a missing/failed file just yields no connectors.
+  let _enactedLawsPromise = null;
+  function getEnactedLaws() {
+    if (!_enactedLawsPromise) {
+      _enactedLawsPromise = fetch(`${getBasePath()}assets/data/presidential-laws.json`)
+        .then(r => (r.ok ? r.json() : null))
+        .then(data => {
+          const idx = new Map();
+          for (const law of (data && data.laws) || []) {
+            const key = lawKey(law.type, law.number);
+            if (key) idx.set(key, law);
+          }
+          return idx;
+        })
+        .catch(() => new Map());
+    }
+    return _enactedLawsPromise;
+  }
+
+  // Canonical join key from a bill's type+number ("HR","8322" -> "hr8322") or
+  // from a combined label ("S. 2" -> "s2"), so both sides normalize alike.
+  function lawKey(type, number) {
+    return String((type || '') + (number || '')).replace(/[.\s]/g, '').toLowerCase();
+  }
+
+  // Provenance a matched law contributes to a member's bill row.
+  function lawConnector(law) {
+    if (!law) return null;
+    let pl = null, isPrivate = false;
+    const pkg = (law.govinfoPackageId || '').match(/^PLAW-(\d+)(publ|pvtl)(\d+)$/);
+    if (pkg) { pl = `${pkg[1]}-${pkg[3]}`; isPrivate = pkg[2] === 'pvtl'; }
+    if (!pl) {
+      const m = (law.actionText || '').match(/Became (Public|Private) Law No[:.]?\s*(\d+-\d+)/i);
+      if (m) { pl = m[2]; isPrivate = /private/i.test(m[1]); }
+    }
+    return {
+      plNumber: pl,
+      isPrivate,
+      signedDate: law.signingDate || law.lawDateIssued || null,
+      officialPdfUrl: (law.gpoAuthenticated && law.officialPdfUrl) ? law.officialPdfUrl : null,
+    };
+  }
+
   function getMemberName(m) {
     const honorific = m.honorificName || '';
     const first = m.firstName || '';
@@ -671,7 +742,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
     const cycleLabel = CampaignFinance.cycleLabelFor(fecCycle) || 'election cycle';
     const coverageNote = entry.coverageEndDate
-      ? `${cycleLabel} · Through ${new Date(entry.coverageEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+      ? `${cycleLabel} · Through ${fmtDate(entry.coverageEndDate)}`
       : cycleLabel;
 
     const employersHtml = (entry.topEmployers || []).length ? `
@@ -789,7 +860,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       ${cards}`;
   }
 
-  function loadSponsoredLegislation(member) {
+  async function loadSponsoredLegislation(member) {
     const container = document.getElementById('sponsoredLegislation');
     if (!container) return;
 
@@ -805,7 +876,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${totalCount.toLocaleString()} total sponsored</small>`
       : '';
 
-    const fmt = d => d ? new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+    const fmt = fmtDate;
 
     const validBills = bills.filter(b => b.type && b.number && b.title);
     if (!validBills.length) {
@@ -814,17 +885,35 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       return;
     }
 
+    const lawIdx = await getEnactedLaws();
+
     const items = validBills.map(b => {
       const policyBadge = b.policyArea
         ? `<span class="bill-policy-area">${escHtml(b.policyArea)}</span>`
         : '';
-      const action = b.latestAction?.text
-        ? `<span style="color:#555;">${escHtml(b.latestAction.text)}</span>`
-        : '';
+
+      // If this bill became law, promote the enactment from buried meta text to
+      // a badge, and link the GPO-authenticated text when it's available.
+      const conn = lawConnector(lawIdx.get(lawKey(b.type, b.number)));
+      let badge = '', metaTail;
+      if (conn) {
+        const label = `Became ${conn.isPrivate ? 'Private' : 'Public'} Law${conn.plNumber ? ` ${conn.plNumber}` : ''}`;
+        badge = `<span class="law-became-badge" title="Signed into law — text authenticated by the U.S. Government Publishing Office">✓ ${label}</span>`;
+        const signed = conn.signedDate ? `signed into law ${fmt(conn.signedDate)}` : 'signed into law';
+        const link = conn.officialPdfUrl
+          ? ` · <a class="law-official-link" href="${escHtml(conn.officialPdfUrl)}" target="_blank" rel="noopener">Read the authenticated law (GPO PDF)</a>`
+          : '';
+        metaTail = `${signed}${link}`;
+      } else {
+        metaTail = b.latestAction?.text
+          ? `<span style="color:#555;">${escHtml(b.latestAction.text)}</span>`
+          : '';
+      }
+
       return `<li class="bill-item">
         <a class="bill-id" href="${escHtml(b.billUrl)}" target="_blank" rel="noopener">${escHtml(b.type)} ${escHtml(b.number)}</a>
-        <span class="bill-title">${escHtml(b.title)}</span>${policyBadge}
-        <div class="bill-meta">Introduced ${fmt(b.introducedDate)} · ${action}</div>
+        <span class="bill-title">${escHtml(b.title)}</span>${policyBadge}${badge}
+        <div class="bill-meta">Introduced ${fmt(b.introducedDate)} · ${metaTail}</div>
       </li>`;
     }).join('');
 
@@ -852,6 +941,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
       const votesIndex = data.votes || {};
       const session    = data.metadata?.sessionName || '';
+      const lawIdx     = await getEnactedLaws();  // every voted bill here is enacted law
 
       // Determine member chamber to conditionally show Motion column
       const termsArr  = member.terms?.item || [];
@@ -881,13 +971,18 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
         const bill     = escHtml(meta.bill || '—');
         const title    = meta.title ? escHtml(meta.title) : '';
         const caption  = escHtml(meta.motionText || '—');
-        const date     = meta.date ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+        const date     = fmtDate(meta.date);
         const billLink = meta.billUrl
           ? `<a href="${escHtml(meta.billUrl)}" target="_blank" rel="noopener">${bill}</a>`
           : bill;
-        const billCell = title
+        const conn = lawConnector(lawIdx.get(lawKey(meta.bill, '')));
+        const lawLine = (conn && conn.officialPdfUrl)
+          ? `<span class="vote-law-cell">${conn.plNumber ? `P.L. ${escHtml(conn.plNumber)} · ` : ''}<a href="${escHtml(conn.officialPdfUrl)}" target="_blank" rel="noopener">Official text (GPO) →</a></span>`
+          : '';
+        const billBase = title
           ? `${billLink}<br><span style="font-size:0.75rem;color:#555;font-weight:normal;">${title}</span>`
           : billLink;
+        const billCell = billBase + lawLine;
         const motionCell = isHouse ? '' : `<td>${caption}</td>`;
         return `<tr>
           <td>${date}</td>
