@@ -32,6 +32,7 @@ from lib.ga_voters import VOTING_CHAMBERS
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "assets" / "data"
+JEKYLL_DATA_DIR = REPO_ROOT / "_data"
 OUTPUT_PATH = DATA_DIR / "search-entities.json"
 
 # Minimum record count below which we assume something went wrong and refuse
@@ -39,9 +40,9 @@ OUTPUT_PATH = DATA_DIR / "search-entities.json"
 MIN_RECORDS = 200
 
 
-def load(name):
+def load(name, base=DATA_DIR):
     """Load a data file, returning None if it's missing (non-fatal)."""
-    path = DATA_DIR / name
+    path = base / name
     if not path.exists():
         print(f"  ! {name} not found -- skipping", file=sys.stderr)
         return None
@@ -263,7 +264,9 @@ def build_ga_executive(records, seen):
 
 
 def build_federal_executive(records, seen):
-    data = load("executive.json")
+    # Source of truth lives in _data/ (Jekyll build-time data); the served
+    # assets/data/executive.json is a generated passthrough, not raw JSON.
+    data = load("executive.json", base=JEKYLL_DATA_DIR)
     if not data:
         return
     for o in data.get("officials", []):

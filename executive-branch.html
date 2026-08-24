@@ -159,106 +159,59 @@ share-description: "The federal executive branch - the President, Vice President
   }
 </style>
 
-<div id="execContent">
-  <p style="color:#777;font-size:0.9rem;">Loading...</p>
+{%- comment -%}
+  Rendered at build time from _data/executive.json so the officials list ships
+  as real HTML in the crawled page (was previously fetched client-side, which
+  left search engines an empty "Loading..." shell -> "Crawled - not indexed").
+{%- endcomment -%}
+{%- assign exec = site.data.executive -%}
+{%- assign meta = exec.metadata -%}
+{%- assign elected = exec.officials | where: "tier", "elected" -%}
+{%- assign cabinet = exec.officials | where: "tier", "cabinet" | sort: "department" -%}
+{%- assign term_start_year = meta.termStart | slice: 0, 4 -%}
+{%- assign term_end_year = meta.termEnd | slice: 0, 4 -%}
+
+<div class="exec-section-header">Elected Officials{% if term_start_year and term_end_year %} &middot; {{ term_start_year }}&ndash;{{ term_end_year }}{% endif %}</div>
+<div class="elected-grid">
+  {%- for o in elected -%}
+  <a class="elected-card" href="{{ '/executive-member.html' | relative_url }}?id={{ o.id | url_encode }}">
+    {%- if o.imageUrl %}<img class="elected-card-photo" src="{{ o.imageUrl }}" alt="{{ o.name | escape }}">{% endif -%}
+    <span class="elected-card-body">
+      <span class="role-label">{{ o.role }}</span>
+      <span class="official-name">{{ o.name }}</span>
+      <span class="official-party">{{ o.party }}{% if o.party contains "Democrat" %}<img width="18" alt="Democratic party" src="{{ '/assets/img/democratic-disc.svg' | relative_url }}" style="vertical-align:middle;margin-left:4px;">{% elsif o.party contains "Republican" %}<img width="18" alt="Republican party" src="{{ '/assets/img/republican-disc.svg' | relative_url }}" style="vertical-align:middle;margin-left:4px;">{% endif %}</span>
+      {%- if o.termEnd %}<span class="official-term">Term ends {{ o.termEnd | slice: 0, 4 }}</span>{% endif %}
+      <span class="view-link">View profile &rarr;</span>
+    </span>
+  </a>
+  {%- endfor -%}
+</div>
+
+<div class="exec-section-header">The President's Cabinet</div>
+<p style="font-size:0.875rem;color:#555;margin-bottom:1rem;">
+  The Cabinet includes the Vice President and the heads of 15 executive departments.
+  All department secretaries are nominated by the President and confirmed by the U.S. Senate.
+</p>
+<div class="cabinet-grid">
+  {%- for o in cabinet -%}
+  <a class="cabinet-card" href="{{ '/executive-member.html' | relative_url }}?id={{ o.id | url_encode }}">
+    {%- if o.imageUrl %}<img class="cabinet-card-photo" src="{{ o.imageUrl }}" alt="{{ o.name | escape }}">{% endif -%}
+    <span class="dept-label">{{ o.department }}</span>
+    <span class="cabinet-name">{{ o.name }}</span>
+    <span class="cabinet-role">{{ o.role }}</span>
+    {%- comment -%}
+      The Office of the Director of National Intelligence coordinates the
+      intelligence community rather than issuing its own regulations, so it has
+      no Federal Register agency listing -- its card links out to the official
+      site instead of promising rule tracking it can't offer.
+    {%- endcomment -%}
+    {%- if o.department == "Office of the Director of National Intelligence" -%}
+    <span class="policy-badge" style="background:#f3f4f6;color:#6b7280;">Visit official website &rarr;</span>
+    {%- else -%}
+    <span class="policy-badge">View agency rules &amp; regulations &rarr;</span>
+    {%- endif -%}
+  </a>
+  {%- endfor -%}
 </div>
 
 <p class="data-note">Cabinet data sourced from Senate confirmation records. Data is manually maintained.</p>
-
-<script>
-  (async function () {
-    const DATA_URL = 'assets/data/executive.json';
-    const container = document.getElementById('execContent');
-
-    function getBasePath() {
-      return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
-    }
-
-    function partyIcon(party) {
-      if (!party) return '';
-      const p = party.toLowerCase();
-      const base = getBasePath();
-      if (p.includes('democrat')) return `<img width="18" alt="Democratic party" src="${base}assets/img/democratic-disc.svg" style="vertical-align:middle;margin-left:4px;">`;
-      if (p.includes('republican')) return `<img width="18" alt="Republican party" src="${base}assets/img/republican-disc.svg" style="vertical-align:middle;margin-left:4px;">`;
-      return '';
-    }
-
-    function formatDate(iso) {
-      if (!iso) return '—';
-      const d = new Date(iso);
-      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    }
-
-    try {
-      const res = await fetch(DATA_URL);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-
-      const officials = data.officials || [];
-      const elected  = officials.filter(o => o.tier === 'elected');
-      const cabinet  = officials.filter(o => o.tier === 'cabinet')
-        .sort((a, b) => (a.department || '').localeCompare(b.department || ''));
-      const base     = getBasePath();
-
-      // --- Elected officials ---
-      const electedCards = elected.map(o => {
-        const termEnd = o.termEnd ? `Term ends ${o.termEnd.slice(0,4)}` : '';
-        const photoHtml = o.imageUrl
-          ? `<img class="elected-card-photo" src="${o.imageUrl}" alt="${o.name}">`
-          : '';
-        return `<a class="elected-card" href="${base}executive-member.html?id=${encodeURIComponent(o.id)}">
-          ${photoHtml}
-          <span class="elected-card-body">
-            <span class="role-label">${o.role}</span>
-            <span class="official-name">${o.name}</span>
-            <span class="official-party">${o.party || ''}${partyIcon(o.party)}</span>
-            ${termEnd ? `<span class="official-term">${termEnd}</span>` : ''}
-            <span class="view-link">View profile →</span>
-          </span>
-        </a>`;
-      }).join('');
-
-      // --- Cabinet cards ---
-      // The Office of the Director of National Intelligence coordinates the
-      // intelligence community rather than issuing its own regulations, so
-      // it has no Federal Register agency listing — its card links out to
-      // the official site instead of promising rule tracking it can't offer.
-      const NO_AGENCY_RULES = new Set(['Office of the Director of National Intelligence']);
-      const cabinetCards = cabinet.map(o => {
-        const photoHtml = o.imageUrl
-          ? `<img class="cabinet-card-photo" src="${o.imageUrl}" alt="${o.name}">`
-          : '';
-        const policyBadge = NO_AGENCY_RULES.has(o.department)
-          ? '<span class="policy-badge" style="background:#f3f4f6;color:#6b7280;">Visit official website →</span>'
-          : '<span class="policy-badge">View agency rules &amp; regulations →</span>';
-        return `<a class="cabinet-card" href="${base}executive-member.html?id=${encodeURIComponent(o.id)}">
-          ${photoHtml}
-          <span class="dept-label">${o.department || ''}</span>
-          <span class="cabinet-name">${o.name}</span>
-          <span class="cabinet-role">${o.role}</span>
-          ${policyBadge}
-        </a>`;
-      }).join('');
-
-      const meta = data.metadata || {};
-      const termRange = meta.termStart && meta.termEnd
-        ? `${meta.termStart.slice(0,4)}–${meta.termEnd.slice(0,4)}`
-        : '';
-
-      container.innerHTML = `
-        <div class="exec-section-header">Elected Officials ${termRange ? `· ${termRange}` : ''}</div>
-        <div class="elected-grid">${electedCards}</div>
-
-        <div class="exec-section-header">The President's Cabinet</div>
-        <p style="font-size:0.875rem;color:#555;margin-bottom:1rem;">
-          The Cabinet includes the Vice President and the heads of 15 executive departments.
-          All department secretaries are nominated by the President and confirmed by the U.S. Senate.
-        </p>
-        <div class="cabinet-grid">${cabinetCards}</div>
-      `;
-    } catch (err) {
-      console.error('executive-branch:', err);
-      container.innerHTML = `<p style="color:#c00;">Could not load executive branch data. Check that <code>assets/data/executive.json</code> exists.</p>`;
-    }
-  })();
-</script>
