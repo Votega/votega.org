@@ -528,6 +528,33 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     };
   }
 
+  // Stock-trade disclosures: ga-congress-trades.json lists only the GA members
+  // who have actually filed any, each tagged with a bioguideId. Cached; used to
+  // show the "View stock trades" link only for members who appear there.
+  let _tradeMemberIdsPromise = null;
+  function getTradeMemberIds() {
+    if (!_tradeMemberIdsPromise) {
+      _tradeMemberIdsPromise = fetch(`${getBasePath()}assets/data/ga-congress-trades.json`)
+        .then(r => (r.ok ? r.json() : null))
+        .then(data => {
+          const ids = new Set();
+          for (const entry of Object.values((data && data.byMember) || {})) {
+            if (entry && entry.bioguideId) ids.add(entry.bioguideId);
+          }
+          return ids;
+        })
+        .catch(() => new Set());
+    }
+    return _tradeMemberIdsPromise;
+  }
+
+  async function gateStockTradesLink(member) {
+    const el = document.getElementById('stockTradesLink');
+    if (!el || !member || !member.bioguideId) return;
+    const ids = await getTradeMemberIds();
+    if (ids.has(member.bioguideId)) el.hidden = false;
+  }
+
   function getMemberName(m) {
     const honorific = m.honorificName || '';
     const first = m.firstName || '';
@@ -1174,7 +1201,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
       ${socialLinksHtml}
 
       <p><a href="${getBasePath()}federal-reps">Search for another member</a></p>
-      ${state === 'Georgia' ? `<p><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${escHtml(fullName)} →</a></p>` : ''}
+      ${state === 'Georgia' ? `<p id="stockTradesLink" hidden><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${escHtml(fullName)} →</a></p>` : ''}
       <div id="campaignFinance" class="finance-section"></div>
       <div class="tab-container">
         <div class="tab-nav" role="tablist" aria-label="Voting record" data-tabs>
@@ -1190,6 +1217,8 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     detailsDiv.innerHTML = html;
     // Tab bar is built here, after load — re-run the ARIA enhancer over it.
     if (window.a11yTabs) window.a11yTabs.scan(detailsDiv);
+    // Reveal the stock-trades link only if this member has filed disclosures.
+    gateStockTradesLink(member);
   }
 </script>
 
