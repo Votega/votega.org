@@ -5,8 +5,13 @@ Requires FEC_API_KEY environment variable.
 
 Flow:
   1. GET /v1/candidates/ for GA House + Senate, cycle 2026
-  2. Cross-reference with current-members.json to enrich bioguide_id
-     (FEC API does not reliably return bioguide_id in candidate list responses)
+  2. Attach bioguide_id to each FEC candidate (FEC API does not reliably return it
+     in candidate list responses), in priority order:
+       a. unitedstates/congress-legislators FEC->bioguide crosswalk (canonical,
+          keyed on the FEC candidate_id itself, so it can never conflate a
+          same-district same-surname challenger with an incumbent)
+       b. surname + seat heuristic against current-members.json, for incumbents
+          the crosswalk doesn't cover yet (e.g. just-seated members)
   3. GET /v1/committee/{id}/totals/ for each principal committee
   4. GET /v1/schedules/schedule_a/by_employer/ for top donors by employer
 
@@ -35,6 +40,11 @@ from lib.http import fetch_json
 
 API_KEY     = os.environ.get('FEC_API_KEY')
 BASE_URL    = "https://api.open.fec.gov/v1"
+# Canonical, human-maintained bioguide<->FEC-ID crosswalk (public domain, CC0,
+# no API key). unitedstates.github.io is the published JSON mirror — the repo
+# itself commits only YAML on the main branch.
+LEGISLATORS_URL = ("https://unitedstates.github.io/congress-legislators/"
+                   "legislators-current.json")
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-fec-data.json"
 RACES_FILE  = "assets/data/races.json"
 FALLBACK_CYCLE = 2026  # only used if races.json can't be read
@@ -229,6 +239,38 @@ def district_key(office, district):
     return (office, d)
 
 
+def load_fec_bioguide_crosswalk():
+    """Return {fec_candidate_id: bioguide_id} from congress-legislators.
+
+    congress-legislators is a canonical, human-maintained mapping of each
+    member's bioguide ID to their FEC candidate IDs (id.fec is a list — one per
+    office/campaign across a career). Inverting it gives a deterministic
+    FEC->bioguide lookup keyed on the FEC candidate_id, which is strictly better
+    than the surname+seat heuristic in load_bioguide_map(): because the key is
+    the candidate ID itself, a challenger (who has their own distinct FEC ID)
+    can never inherit an incumbent's bioguide, no matter how names or districts
+    line up.
+
+    Returns {} on any failure, so the build degrades to the heuristic rather
+    than breaking. The crosswalk is an accuracy upgrade, not a hard dependency.
+    """
+    data = fetch_json(LEGISLATORS_URL, label="congress-legislators")
+    if not data:
+        print("  (congress-legislators unavailable -- FEC ID crosswalk skipped)")
+        return {}
+    crosswalk = {}
+    for person in data:
+        ids = person.get("id") or {}
+        bioguide = ids.get("bioguide")
+        if not bioguide:
+            continue
+        for fec_id in (ids.get("fec") or []):
+            crosswalk[fec_id] = bioguide
+    print(f"  Loaded FEC->bioguide crosswalk: {len(crosswalk)} FEC IDs "
+          f"from congress-legislators")
+    return crosswalk
+
+
 def load_bioguide_map():
     """Build (office, district, last-name) -> bioguide_id map for GA members.
 
@@ -271,6 +313,9 @@ def main():
         print("Error: FEC_API_KEY environment variable not set")
         sys.exit(1)
 
+    print(f"\nLoading FEC->bioguide crosswalk (congress-legislators)...")
+    fec_crosswalk = load_fec_bioguide_crosswalk()
+
     print(f"\nLoading GA member bioguide map...")
     bioguide_map = load_bioguide_map()
 
@@ -290,6 +335,8 @@ def main():
     # handles formal vs. nickname differences (e.g. FEC "MICHAEL" matching display name "Mike").
     by_district  = {}
     unbucketed   = []   # House candidates the FEC gives no district for
+    matched_crosswalk = 0   # bioguide resolved via congress-legislators
+    matched_heuristic = 0   # bioguide resolved via surname+seat fallback
 
     for i, c in enumerate(raw_candidates, 1):
         cid      = c.get("candidate_id")
@@ -308,11 +355,21 @@ def main():
             time.sleep(DELAY)
             committee_id = get_principal_committee_id(cid)
 
-        # FEC doesn't return bioguide_id in list responses; enrich from current-members.json.
-        # Matched on seat + surname so same-surname members aren't conflated.
+        # FEC doesn't return bioguide_id in list responses; enrich it ourselves.
+        # Primary: the congress-legislators crosswalk, keyed on the FEC candidate_id
+        # itself — deterministic, and structurally immune to same-surname conflation.
+        if not bioguide and fec_crosswalk:
+            bioguide = fec_crosswalk.get(cid, "")
+            if bioguide:
+                matched_crosswalk += 1
+        # Fallback: seat + surname against current-members.json, for incumbents the
+        # crosswalk doesn't cover yet (e.g. a just-seated member not in it). Keyed on
+        # seat as well as surname so same-surname members aren't conflated.
         if not bioguide and bioguide_map:
             o, dnum = district_key(office, district)
             bioguide = bioguide_map.get((o, dnum, normalize_last(name)), "")
+            if bioguide:
+                matched_heuristic += 1
 
         print(f"  [{i}/{len(raw_candidates)}] {name} ({cid}){' -> ' + bioguide if bioguide else ''}")
 
@@ -399,6 +456,9 @@ def main():
         "byNormalizedName": by_name,
         "byDistrict":       by_district,
     }
+
+    print(f"\nbioguide matches: {matched_crosswalk} via congress-legislators crosswalk, "
+          f"{matched_heuristic} via surname+seat fallback ({len(by_bioguide)} incumbents total)")
 
     if unbucketed:
         print(f"\n{len(unbucketed)} House candidate(s) had no usable district and are absent "
