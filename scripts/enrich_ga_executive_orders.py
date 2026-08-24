@@ -36,11 +36,12 @@ import subprocess
 import sys
 import tempfile
 import time
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from urllib.parse import quote
 
-from lib.http import fetch_bytes, fetch_json
+from lib.http import fetch_bytes
 from fetch_ga_executive_orders import OUTPUT_DIR, parse_years
 
 TEXT_DIR = os.path.join(OUTPUT_DIR, "eo-text")
@@ -68,17 +69,38 @@ _PDF_HEADERS = {
     'Accept':     'application/pdf',
 }
 
-# Circuit breaker: archive.org periodically refuses or times out every request
-# from CI runners (blocking or an outage). Without this, each order still burns
-# tens of seconds failing (save timeout + availability polling), turning an
-# archive sweep into a multi-hour no-op. After this many consecutive failures we
-# stop attempting archival for the rest of the run and let a later sweep retry.
+def _env_float(name, default):
+    try:
+        return float(os.environ.get(name) or default)
+    except ValueError:
+        return float(default)
+
+
+# Circuit breaker: when archive.org is genuinely unreachable (CI runner IPs are
+# refused/timed out, or an outage), keep failing fast instead of burning tens of
+# seconds per order. It is driven purely by the availability API's reachability
+# (see _wayback_snapshot): a 429 or a missing snapshot does NOT count — those
+# mean archive.org is up, just throttled or not-yet-crawled — so a rate-limited
+# sweep backs off and finishes rather than aborting. Only connection-level
+# failures (refused/timeout/DNS) accumulate toward the trip.
 _WAYBACK_MAX_CONSECUTIVE_FAILS = 6
+
+# Save-now pacing. archive.org rate-limits anonymous save-page-now hard, so
+# captures are spaced out and, on a 429, we back off and permanently slow the
+# pace for the rest of the run — letting a sweep respect the limit and finish
+# (slowly) instead of hammering it into more 429s. Existing-snapshot lookups are
+# NOT paced, so already-archived orders stay fast. EO_WAYBACK_DELAY (seconds)
+# sets the starting pace between save-now calls.
+_SAVE_DELAY_START = _env_float('EO_WAYBACK_DELAY', 8.0)
+_SAVE_DELAY_MAX = 60.0
+_RATE_BACKOFF = 20          # base seconds for the escalating 429 backoff
+_SAVE_MAX_TRIES = 3         # 429 retries per order before leaving it null
 
 
 class _Wayback:
     consecutive_fails = 0
     disabled = False
+    save_delay = _SAVE_DELAY_START
 
 
 def _note_wayback(ok):
@@ -88,8 +110,8 @@ def _note_wayback(ok):
     _Wayback.consecutive_fails += 1
     if _Wayback.consecutive_fails >= _WAYBACK_MAX_CONSECUTIVE_FAILS and not _Wayback.disabled:
         _Wayback.disabled = True
-        print(f"    wayback: {_Wayback.consecutive_fails} consecutive failures — "
-              "archive.org looks unreachable; skipping archival for the rest of this run "
+        print(f"    wayback: {_Wayback.consecutive_fails} consecutive unreachable responses — "
+              "archive.org looks down/blocked; skipping archival for the rest of this run "
               "(re-run EO_ENRICH_ARCHIVE=retry later to fill these in)")
 
 
@@ -103,74 +125,117 @@ def download_pdf(url):
 # ── Wayback archival (best-effort) ────────────────────────────────────────────
 
 def _wayback_snapshot(url):
-    """Return an existing Wayback snapshot URL for `url`, or None."""
+    """Query the Wayback availability API. Returns (snapshot_url_or_None, reachable).
+
+    reachable is False only on a connection-level failure (refused/timeout/DNS);
+    any HTTP response — even one carrying no snapshot — counts as reachable. That
+    is the signal the circuit breaker keys on to tell "archive.org is down" apart
+    from "reachable but not yet crawled / throttled".
+    """
     api = "https://archive.org/wayback/available?url=" + quote(url, safe='')
-    data = fetch_json(api, retries=2, backoff=3, label="wayback-available", verbose=False)
+    req = urllib.request.Request(api, headers={'User-Agent': _PDF_HEADERS['User-Agent']})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            data = json.loads(resp.read().decode('utf-8', errors='replace'))
+    except urllib.error.HTTPError:
+        return None, True   # got an HTTP status → reachable, just no usable snapshot
+    except Exception:       # noqa: BLE001 - refused/timeout/DNS → treat as unreachable
+        return None, False
     snap = ((data or {}).get('archived_snapshots') or {}).get('closest') or {}
     if snap.get('available') and snap.get('url'):
-        return snap['url'].replace('http://', 'https://')
-    return None
+        return snap['url'].replace('http://', 'https://'), True
+    return None, True
 
 
-def _snapshot_from_save(url):
-    """Trigger a Wayback save-now and return the snapshot URL it reports, or None.
+def _do_save(url):
+    """Trigger a save-now and return the snapshot URL from its response headers.
 
-    The save endpoint identifies the fresh capture in its response headers —
-    `Content-Location` (a /web/<timestamp>/<url> path) and/or a `Link` header
-    carrying rel="memento" — long before the availability API (queried by
-    _wayback_snapshot) indexes it. Reading the URL straight from the save
-    response is what lets a first attempt succeed instead of recording null.
+    The save endpoint names the fresh capture in `Content-Location` (a
+    /web/<ts>/<url> path) or a `Link` rel="memento" header, long before the
+    availability API indexes it. Raises on HTTP/connection errors so the paced
+    caller can distinguish a 429 (back off) from other failures.
     """
     req = urllib.request.Request("https://web.archive.org/save/" + url,
                                  headers=_PDF_HEADERS)
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            loc = resp.headers.get('Content-Location')
-            if loc:
-                return "https://web.archive.org" + loc if loc.startswith('/') else loc
-            link = resp.headers.get('Link') or ''
-            m = re.search(r'<([^>]+)>;\s*rel="memento"', link)
-            if m:
-                return m.group(1).replace('http://', 'https://')
-    except Exception as exc:  # noqa: BLE001 - archival must never abort enrichment
-        print(f"    wayback save failed: {exc}")
+    with urllib.request.urlopen(req, timeout=45) as resp:
+        loc = resp.headers.get('Content-Location')
+        if loc:
+            return "https://web.archive.org" + loc if loc.startswith('/') else loc
+        link = resp.headers.get('Link') or ''
+        m = re.search(r'<([^>]+)>;\s*rel="memento"', link)
+        if m:
+            return m.group(1).replace('http://', 'https://')
     return None
 
 
-def wayback_archive(url):
-    """Existing snapshot if any; otherwise ask Wayback to save one, then re-check.
+def _save_now_paced(url):
+    """Paced save-now with adaptive 429 backoff. Returns (snapshot_url, should_poll).
 
-    Returns a snapshot URL or None. Fully best-effort — any failure yields None.
-    Short-circuits once the run-level circuit breaker has tripped, so a total
-    archive.org outage costs a handful of failed attempts, not one per order.
+    Sleeps the current pace before each attempt. On a 429 it slows the pace for
+    the rest of the run (so we stop provoking more 429s) and retries with an
+    escalating backoff; after _SAVE_MAX_TRIES it gives up on this order (leaving
+    it null for a later sweep) rather than stalling forever. Never raises.
+
+    should_poll is True only when the save connected but did not name the capture
+    in its headers — the one case where polling the availability API can still
+    turn it up. On a 429 give-up or a connection error it is False, so a
+    throttled sweep does not waste a 20s poll per order chasing a save that never
+    happened.
+    """
+    for attempt in range(_SAVE_MAX_TRIES):
+        time.sleep(_Wayback.save_delay)
+        try:
+            return _do_save(url), True
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429:
+                _Wayback.save_delay = min(_Wayback.save_delay * 1.5, _SAVE_DELAY_MAX)
+                backoff = _RATE_BACKOFF * (2 ** attempt)
+                print(f"    wayback 429 — backing off {backoff}s "
+                      f"(pace now {_Wayback.save_delay:.0f}s/save)")
+                time.sleep(backoff)
+                continue
+            print(f"    wayback save failed: HTTP {exc.code}")
+            return None, False
+        except Exception as exc:  # noqa: BLE001 - connection/timeout: this order fails, run continues
+            print(f"    wayback save failed: {exc}")
+            return None, False
+    print(f"    wayback: still rate-limited after {_SAVE_MAX_TRIES} tries — "
+          "leaving null for a later sweep")
+    return None, False
+
+
+def wayback_archive(url):
+    """Existing snapshot if any; otherwise a paced save-now, then a short re-check.
+
+    Returns a snapshot URL or None. Best-effort: the circuit breaker (reachability
+    only) short-circuits the whole run when archive.org is down, while 429s are
+    handled by pacing/backoff in _save_now_paced rather than tripping it.
     """
     if _Wayback.disabled:
         return None
-    try:
-        existing = _wayback_snapshot(url)
-        if existing:
-            _note_wayback(True)
-            return existing
-        # Trigger a capture and take the snapshot URL from the save response.
-        saved = _snapshot_from_save(url)
-        if saved:
-            _note_wayback(True)
-            return saved
-        # The save may have started without reporting a URL; the availability
-        # API lags the capture, so poll it briefly before giving up rather than
-        # recording a null the same second the save was requested.
+
+    snap, reachable = _wayback_snapshot(url)
+    if not reachable:
+        _note_wayback(False)
+        return None
+    _note_wayback(True)
+    if snap:
+        return snap
+
+    # No existing snapshot — request a paced capture and take its reported URL.
+    saved, should_poll = _save_now_paced(url)
+    if saved:
+        return saved
+
+    # If the save connected but named no capture, the availability API lags it,
+    # so poll briefly. Skip the poll entirely when the save was throttled/failed.
+    if should_poll:
         for delay in (5, 15):
             time.sleep(delay)
-            snap = _wayback_snapshot(url)
-            if snap:
-                _note_wayback(True)
-                return snap
-        _note_wayback(False)
-        return None
-    except Exception as exc:  # noqa: BLE001 - archival must never abort enrichment
-        print(f"    wayback failed: {exc}")
-        _note_wayback(False)
-        return None
+            s2, _ = _wayback_snapshot(url)
+            if s2:
+                return s2
+    return None
 
 
 # ── Text extraction (Layer 2) ─────────────────────────────────────────────────
