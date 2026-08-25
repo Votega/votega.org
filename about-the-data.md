@@ -209,7 +209,10 @@ Those joins already happened inside this site; they were just never written down
 
 **Identifiers are stable.** Each person gets an opaque `vgId` minted once and held in a committed, append-only ledger. A legislator who changes chamber or name, or whose Open States record is reissued, keeps the same `vgId`, and an ID published once never comes to mean a different person.
 
-- **Coverage:** 264 officeholders — 249 rows from `ga-members.json` (sitting legislators plus the four statewide executives that file carries) and Georgia's 15-member federal delegation. PeachFile IDs resolve for 228 of the 249 state records. Non-incumbent candidates are not yet covered; they appear only as back-references from the officeholders they face.
+**The schema is provisional.** The file carries a `schemaVersion`, currently `1`. Adding candidate coverage will change `peachfileFilerEntityId` from a single ID into a list, because a person who files for two offices in one cycle has one PeachFile filing per office — Georgia's 2026 ballot already contains such a case. That will ship as `schemaVersion` 2. Other field names and meanings are not expected to change. If you build against this file, check `schemaVersion` before trusting the shape.
+
+- **Coverage:** 264 officeholders — 249 rows from `ga-members.json` (245 legislators, including seats since vacated, plus the four statewide executives that file carries) and Georgia's 15-member federal delegation. PeachFile IDs resolve for 228 of the 249 state records, with no ambiguous matches. Of the 21 without one, 7 are hand-confirmed as having no filing this cycle and 14 did not resolve — counted separately in the file's `metadata.coverage`. FEC IDs resolve for all 15 federal records.
+- **Not yet covered:** non-incumbent candidates. 489 distinct people appear on 2026 ballots without holding office today; they currently show up only as back-references from the officeholders they face.
 - **Freshness:** Rebuilt weekly, after the campaign finance and roster data it reads.
 
 ---

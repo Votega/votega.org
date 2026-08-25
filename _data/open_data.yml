@@ -121,13 +121,20 @@ datasets:
       upstream maps an Open States legislator to their Georgia campaign finance
       filing; this is the join, written down.
     source: Open States · Congress.gov · unitedstates/congress-legislators (public domain) · GA Ethics Commission PeachFile
-    scope: Sitting GA legislators, the four statewide executives, and Georgia's federal delegation
+    scope: 264 officeholders — 245 GA legislators (including seats since vacated), 4 statewide executives, and Georgia's 15-member federal delegation
     cadence: Weekly
     coverage: >
-      PeachFile filer ids resolve for 228 of 249 state records; the remainder are
-      officeholders with no filing on record for the cycle, 7 of them confirmed by
-      hand. Ambiguous matches are never guessed — they are left null and listed in
-      the file's metadata. Non-incumbent candidates are not yet covered.
+      PeachFile filer ids resolve for 228 of 249 state records, with no ambiguous
+      matches. Of the 21 without one, 7 are confirmed by hand to have no filing this
+      cycle and 14 simply did not resolve — the file keeps those apart rather than
+      reporting both as "no filing". FEC ids resolve for all 15 federal records.
+      Non-incumbent candidates are not yet covered; 489 are queued for the next
+      release.
+    stability: >
+      Version 1, and provisional. Adding candidate coverage will turn
+      peachfileFilerEntityId into a list, because someone who files for two offices
+      in one cycle has one PeachFile filing per office. That will ship as schema
+      version 2; other field names and meanings are not expected to change.
     files:
       - { name: "id-crosswalk.json", desc: "Officeholder identifier crosswalk with provenance", url: "/assets/data/id-crosswalk.json" }
     docs: /about-the-data#officeholder-id-crosswalk

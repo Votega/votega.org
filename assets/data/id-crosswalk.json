@@ -1,6 +1,8 @@
 {
  "metadata": {
-  "generatedAt": "2026-08-25T10:57:55+00:00",
+  "schemaVersion": 1,
+  "schemaStability": "Provisional. Candidate coverage (phase 2) will change peachfileFilerEntityId from a single id to a list, because a person who files for two offices in one cycle has one PeachFile filing per office. That will ship as schemaVersion 2. Field names and meanings already present are not expected to change otherwise.",
+  "generatedAt": "2026-08-25T11:26:43+00:00",
   "count": 264,
   "scope": "Georgia officeholders: state legislators, statewide executives sharing ga-members.json, and the Georgia federal delegation. Non-incumbent candidates are not yet included.",
   "sources": [
@@ -21,17 +23,23 @@
    "state": {
     "peachfileFilerEntityId": {
      "total": 249,
-     "resolved": 228
+     "resolved": 228,
+     "confirmedNone": 7,
+     "unresolved": 14
     },
     "legisGaGovId": {
      "total": 249,
-     "resolved": 203
+     "resolved": 203,
+     "confirmedNone": 0,
+     "unresolved": 46
     }
    },
    "federal": {
     "fecCandidateId": {
      "total": 15,
-     "resolved": 15
+     "resolved": 15,
+     "confirmedNone": 0,
+     "unresolved": 0
     }
    },
    "ambiguousPeachfile": []

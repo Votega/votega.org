@@ -406,8 +406,24 @@ def build_federal_record(member, ledger, fec, backrefs):
 # ---------------------------------------------------------------------------
 
 def coverage(records, level, key):
+    """Counts for one identifier at one level.
+
+    `resolved` / `confirmedNone` / `unresolved` are kept apart deliberately: a null
+    id because a human checked and found no filing is a different claim from a null
+    id because the join didn't land, and collapsing them into "the rest have no
+    filing" overstates what we know.
+    """
     rows = [r for r in records if r["role"]["level"] == level]
-    return {"total": len(rows), "resolved": sum(1 for r in rows if r["ids"][key] is not None)}
+    resolved = confirmed_none = unresolved = 0
+    for r in rows:
+        if r["ids"][key] is not None:
+            resolved += 1
+        elif (r["provenance"].get(key) or {}).get("confidence") == "confirmed-none":
+            confirmed_none += 1
+        else:
+            unresolved += 1
+    return {"total": len(rows), "resolved": resolved,
+            "confirmedNone": confirmed_none, "unresolved": unresolved}
 
 
 def main():
@@ -443,6 +459,14 @@ def main():
 
     payload = {
         "metadata": {
+            "schemaVersion": 1,
+            "schemaStability": (
+                "Provisional. Candidate coverage (phase 2) will change "
+                "peachfileFilerEntityId from a single id to a list, because a person "
+                "who files for two offices in one cycle has one PeachFile filing per "
+                "office. That will ship as schemaVersion 2. Field names and meanings "
+                "already present are not expected to change otherwise."
+            ),
             "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "count": len(records),
             "scope": ("Georgia officeholders: state legislators, statewide executives "
