@@ -187,14 +187,11 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
   or check <a href="{{ '/results' | relative_url }}">election results</a>.
 </p>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script>
   const DATA_URL = 'assets/data/ga-election-calendar.json';
 
-  function escHtml(s) {
-    return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
-  }
+  function escHtml(value) { return VoteGA.escapeHtml(value); }
 
   function parseLocalDate(iso) {
     // Parse as local date, not UTC, so day boundaries match the visitor's calendar.

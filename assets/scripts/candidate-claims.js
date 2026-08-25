@@ -75,11 +75,9 @@
 
   let _cache = null;
 
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
-  }
+  // Delegates at call time, so html-escape.js only has to be loaded before the
+  // first render rather than before this file is parsed.
+  function esc(s) { return window.VoteGA.escapeHtml(s); }
 
   // Escape, then turn newlines into <br> for multi-line submitted text.
   function escMultiline(s) {

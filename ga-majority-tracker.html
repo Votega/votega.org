@@ -284,6 +284,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   Majority threshold: House 91, Senate 29.
 </p>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script>
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -317,13 +318,7 @@ function memberUrl(id) {
   return `${getBasePath()}ga-member.html?id=${encodeURIComponent(id)}`;
 }
 
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+function escHtml(value) { return VoteGA.escapeHtml(value); }
 
 const HOUSE_MAJORITY = 91;
 const SENATE_MAJORITY = 29;

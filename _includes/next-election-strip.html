@@ -20,6 +20,7 @@
   </div>
 </section>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script>
 (function () {
   const EL = document.getElementById('nextElectionStrip');
@@ -46,10 +47,7 @@
     const today = new Date(); today.setHours(0, 0, 0, 0);
     return Math.round((parseLocalDate(iso) - today) / 86400000);
   }
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  }
+  function esc(value) { return VoteGA.escapeHtml(value); }
 
   fetch(basePath() + 'assets/data/ga-election-calendar.json')
     .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))

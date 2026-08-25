@@ -7,11 +7,13 @@ share-description: "Details for a Georgia race: the candidates running, the incu
 
 <div id="raceContent"><p>Loading race information…</p></div>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 
 <p id="dataStamp" class="data-stamp"></p>
 
 <style>
+{% include result-status.css %}
   .race-header { margin-bottom: 1.5rem; }
   .race-header h1 { margin-bottom: 0.25rem; }
   .race-header .meta { font-size: 0.9rem; color: #555; }
@@ -227,8 +229,6 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   /* Promoted from <h3> so the outline has no h1->h3 skip (finding 4.15). */
   .prior-round-head h2 { font-size: 1rem; font-weight: 700; color: #14213d; margin: 0 0 0.15rem; }
   .prior-round-meta { font-size: 0.78rem; color: #777; }
-  .prior-status { font-weight: 600; color: #856404; }
-  .prior-status.certified { color: #1e7e34; }
   .prior-contest {
     border: 1px solid #e3e3e3;
     border-radius: 8px;
@@ -340,18 +340,38 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   const GA_MEMBERS_URL  = 'assets/data/ga-members.json';
   const CONGRESS_URL    = 'assets/data/current-members.json';
   const PRIOR_URL       = 'assets/data/race-results-index.json';
+  // Built by Jekyll on every deploy from the results pages' front matter, so it
+  // is current even when the baked index above isn't. See the comment in
+  // assets/data/election-status.json.
+  const STATUS_URL      = 'assets/data/election-status.json';
 
   // Results carry candidate names straight from the SoS export, so escape them
   // rather than interpolating source data into markup verbatim.
-  function escapeHtml(s) {
-    return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
-  }
+  function escapeHtml(value) { return VoteGA.escapeHtml(value); }
 
   // race id -> earlier elections this cycle; filled by init(), empty if the
   // index is missing so the tab simply doesn't appear.
   let PRIOR_RESULTS = {};
+
+  // results_data key -> live certification status, overlaid on the statuses
+  // baked into PRIOR_RESULTS. Empty if the fetch fails, in which case the baked
+  // status is used as-is.
+  let ELECTION_STATUS = {};
+
+  // The site-wide vocabulary. Mirrors _includes/result-status-badge.html —
+  // /results/ and the results pages render the same three words from Liquid.
+  const STATUS_LABELS = {
+    certified:  'Certified',
+    unofficial: 'Unofficial',
+    upcoming:   'Upcoming',
+  };
+
+  function statusBadge(status) {
+    const label = STATUS_LABELS[status];
+    return label
+      ? `<span class="result-status ${status}">${label}</span>`
+      : `<span class="result-status">${escapeHtml(status)}</span>`;
+  }
 
   // Set when the member-data fetch itself fails (network/HTTP error), as
   // opposed to a memberId that's simply missing from a successfully-loaded
@@ -641,9 +661,14 @@ share-description: "Details for a Georgia race: the candidates running, the incu
     const partyLabel = p => p === 'rep' ? 'Republican' : p === 'dem' ? 'Democrat' : 'Nonpartisan';
 
     return rounds.map(round => {
-      const statusNote = round.status === 'certified'
-        ? '<span class="prior-status certified">Certified</span>'
-        : '<span class="prior-status">Unofficial</span>';
+      // The index bakes in whatever the status was when it was last generated.
+      // Certifying an election is often a status flip with byte-identical
+      // numbers, so nothing forces a rebuild and the baked value goes stale —
+      // this panel showed the certified June 16 primary runoff as "Unofficial".
+      // ELECTION_STATUS is rebuilt on every deploy, so it wins where it has an
+      // entry.
+      const live = ELECTION_STATUS[round.key];
+      const statusNote = statusBadge((live && live.status) || round.status);
 
       const contests = round.contests.map(contest => {
         const total = contest.totalVotes || 0;
@@ -913,6 +938,15 @@ share-description: "Details for a Georgia race: the candidates running, the incu
         if (pRes.ok) PRIOR_RESULTS = (await pRes.json()).races || {};
       } catch (pErr) {
         console.error('race.html: prior-results index unavailable', pErr);
+      }
+
+      // Also non-fatal: without it the panel falls back to the index's own
+      // statuses, which is what it used before this overlay existed.
+      try {
+        const sRes = await fetch(STATUS_URL);
+        if (sRes.ok) ELECTION_STATUS = (await sRes.json()).elections || {};
+      } catch (sErr) {
+        console.error('race.html: election status overlay unavailable', sErr);
       }
 
       CLAIMS = await CandidateClaims.fetchClaims(getBasePath());

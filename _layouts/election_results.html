@@ -14,12 +14,15 @@ Front-matter contract
   election_date  (required)  ISO date, e.g. 2026-07-28
   subtitle       optional    shown before the date in the meta line (e.g. "U.S. House District 13")
   updated        optional    ISO date for a "Last updated" stamp
-  status         optional    preview | unofficial (default) | certified — drives labels + notice styling
-                             preview = page is staged ahead of election day and no votes exist
-                             yet; the meta line says so instead of "Unofficial Results". Pair it
-                             with `noindex: true`, `sitemap: false` and `search: false` so the
-                             page is not discoverable until it means something. On election night
-                             flip status to `unofficial` and drop those three flags.
+  status         optional    unofficial (default) | certified — drives labels + notice styling
+                             The status actually shown is resolved by _includes/result-status.html:
+                             until the data file holds a single vote the page reads `upcoming`
+                             whatever the front matter says, so a page can be staged with the
+                             status it will have on election night. Staged pages should also carry
+                             `noindex: true`, `sitemap: false` and `search: false` so they are not
+                             discoverable until they mean something; dropping those three flags is
+                             the whole of going live. (`preview` is still accepted and folded into
+                             `upcoming`.)
   results_mode   optional    round (default) | final
                              round = leader wins if >50%, else top-N go to a runoff (primary/jungle)
                              final = leader wins outright (runoff/general)
@@ -29,7 +32,9 @@ Front-matter contract
   notice         optional    raw-HTML notice override; otherwise a default is shown per status
   empty_section_text optional message for a section tab with no races
 {%- endcomment -%}
+{%- include result-status.html stub=page -%}
 <style>
+{% include result-status.css %}
   :root {
     --rep: #c0392b; --rep-light: #fdf0ef; --rep-bar: #e74c3c;
     --dem: #2471a3; --dem-light: #eaf4fb; --dem-bar: #3498db;
@@ -55,12 +60,6 @@ Front-matter contract
   .search-row { margin-bottom: 1.25rem; }
   .search-row input { width: 100%; padding: .45rem .9rem; border: 1px solid var(--border); border-radius: 20px; font-size: .85rem; outline: none; }
   .search-row input:focus { border-color: #999; }
-
-  .pr-notice { background: #fff8e1; border: 1px solid #f9a825; border-radius: 6px; padding: .6rem 1rem; font-size: .82rem; color: #5d4037; margin-bottom: 1rem; }
-  .pr-notice-certified { background: #e8f8e8; border-color: #1e7e34; color: #1a5c2a; }
-  /* Preview: informational blue, not the amber "unofficial results" warning —
-     nothing is provisional here because nothing has been counted yet. */
-  .pr-notice-preview   { background: #eaf4fb; border-color: #2471a3; color: #1b4f72; }
 
   .race-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: .6rem; overflow: hidden; }
   .race-card.rep { border-top: 3px solid var(--rep); }
@@ -108,7 +107,7 @@ Front-matter contract
     {%- if page.subtitle %}{{ page.subtitle }} &nbsp;&middot;&nbsp; {% endif -%}
     Election Date: {{ page.election_date | date: "%B %-d, %Y" }}
     {%- if page.updated %} &nbsp;&middot;&nbsp; Last updated: {{ page.updated | date: "%B %-d, %Y" }}{% endif -%}
-    &nbsp;&middot;&nbsp; {% if page.status == 'certified' %}Official Certified Results{% elsif page.status == 'preview' %}Ballot preview &mdash; results post after polls close{% else %}Unofficial Results{% endif %}
+    &nbsp;&middot;&nbsp; {% include result-status-badge.html status=result_status %}
   </div>
 </div>
 
@@ -117,11 +116,11 @@ Front-matter contract
 {{ content }}
 
 {% if page.notice %}
-  <div class="pr-notice {% if page.status == 'certified' %}pr-notice-certified{% elsif page.status == 'preview' %}pr-notice-preview{% endif %}">{{ page.notice }}</div>
-{% elsif page.status == 'certified' %}
+  <div class="pr-notice {% if result_status == 'certified' %}pr-notice-certified{% elsif result_status == 'upcoming' %}pr-notice-upcoming{% endif %}">{{ page.notice }}</div>
+{% elsif result_status == 'certified' %}
   <div class="pr-notice pr-notice-certified">&#10003; Official certified results from the Georgia Secretary of State.</div>
-{% elsif page.status == 'preview' %}
-  <div class="pr-notice pr-notice-preview">&#128197; Ballot preview. No votes have been cast yet &mdash; results will appear here after polls close.</div>
+{% elsif result_status == 'upcoming' %}
+  <div class="pr-notice pr-notice-upcoming">&#128197; No votes have been counted yet &mdash; results will appear here after polls close.</div>
 {% else %}
   <div class="pr-notice">&#9888; Unofficial results. Official certified results will be available after the Secretary of State certifies the election.</div>
 {% endif %}
@@ -158,6 +157,7 @@ Front-matter contract
 <div id="tab-state-house"  class="tab-panel"></div>
 <div id="tab-courts"       class="tab-panel"></div>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script>
 // `|| []` guards the case where the keyed results file didn't build: Liquid's
 // jsonify emits `null`, and SECTIONS.forEach below would otherwise throw and
@@ -166,7 +166,7 @@ Front-matter contract
 const SECTIONS = {{ site.data.election_results[page.results_data] | jsonify }} || [];
 const CFG = {
   mode:     {{ page.results_mode | default: 'round' | jsonify }},
-  status:   {{ page.status | default: 'unofficial' | jsonify }},
+  status:   {{ result_status | jsonify }},
   advances: {{ page.runoff_advances | default: 2 }},
   labels: {
     winner:      {{ page.label_winner | jsonify }},
@@ -181,13 +181,7 @@ function getBasePath() {
   return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
 }
 
-function escHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+function escHtml(value) { return VoteGA.escapeHtml(value); }
 
 // Results data (built from CSVs) carries no candidate id — races.json is the
 // only place that has one, joined here by normalized name rather than
@@ -360,10 +354,16 @@ function renderContest(c, office, candidateIndex){
     </div>`;
   }).join('');
   const total = noRes ? 'No results reported' : `Total votes: ${fmt(c.totalVotes)}`;
+  // Escaped, not raw: SoS ballot names carry quoted nicknames (`Earl L. "Buddy"
+  // Carter`), and an unescaped `"` closes the attribute early. The parser then
+  // truncated data-cands mid-name and turned the rest into stray attributes, so
+  // searching "carter" or "mccolumn" hid the US Senate card instead of finding
+  // it — on 49 contests across the results pages. race.html renders the same
+  // data and escapes it; this copy did not.
   const candSearch = (c.candidates||[]).map(x=>x.name.toLowerCase()).join(' ');
-  return `<div class="race-card ${p} ${cardCls}" data-party="${p}" data-office="${office.toLowerCase()}" data-cands="${candSearch}">
+  return `<div class="race-card ${p} ${cardCls}" data-party="${p}" data-office="${escHtml(office.toLowerCase())}" data-cands="${escHtml(candSearch)}">
     <div class="race-header">
-      <span class="race-title">${office}</span>
+      <span class="race-title">${escHtml(office)}</span>
       <div class="race-meta">
         <span class="party-badge ${p}">${partyLabel(p)}</span>
         <span class="status-badge ${status}">${badgeText(status)}</span>

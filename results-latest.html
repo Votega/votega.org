@@ -7,15 +7,25 @@ share-description: "The most recent Georgia election results VoteGA.org has post
 ---
 {%- comment -%}
   Always points at the most recently held election in _data/election_archive.yml
-  (newest event whose status is not "upcoming"). No hand-editing: adding the next
+  (newest event that isn't still upcoming). No hand-editing: adding the next
   election's archive entry moves this pointer automatically. Dates are compared as
   integers (YYYYMMDD) for reliability.
+
+  "Isn't upcoming" is resolved through _includes/result-status.html, the same way
+  /results/ decides each card's badge — NOT from the archive's own `status:`,
+  which is a fallback only (see the note atop _data/election_archive.yml). Reading
+  that field here meant this page disagreed with every badge on the site for the
+  window between polls closing and someone hand-editing the archive: the first
+  votes flip an election to `unofficial` everywhere else while the archive still
+  said `upcoming`, and /results/latest/ would skip it and send visitors to the
+  election before it.
 {%- endcomment -%}
 {% assign latest = nil %}
 {% assign latest_d = 0 %}
 {% for cyc in site.data.election_archive %}
   {% for e in cyc.events %}
-    {% unless e.status == 'upcoming' %}
+    {% include result-status.html url=e.url fallback=e.status %}
+    {% unless result_status == 'upcoming' %}
       {% assign ed = e.date | date: '%Y%m%d' | plus: 0 %}
       {% if ed > latest_d %}
         {% assign latest = e %}

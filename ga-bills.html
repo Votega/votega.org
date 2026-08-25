@@ -380,11 +380,14 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
 <div id="billsList"></div>
 <div class="bills-pagination" id="billsPagination"></div>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script>
 (function () {
   'use strict';
 
-  const DATA_URL  = '/assets/data/ga-bills.json';
+  // Relative, so it resolves under the /votega.org-TEST/ deployment too. As an
+  // absolute path this was the one page script in the repo that 404'd there.
+  const DATA_URL  = 'assets/data/ga-bills.json';
   const PER_PAGE  = 50;
 
   let allBills     = [];
@@ -903,13 +906,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     });
   }
 
-  function escHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  function escHtml(value) { return VoteGA.escapeHtml(value); }
 
   // ── Deep-link to a specific bill via ?bill=HB111 ────────────────────────────
   function normalizeIdentifier(s) {

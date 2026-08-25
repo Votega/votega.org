@@ -300,6 +300,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
 
 <p id="dataStamp" class="data-stamp"></p>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="assets/scripts/ga-districts.js"></script>
 <script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}"></script>
@@ -1039,13 +1040,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       </div>`;
   }
 
-  function escHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  function escHtml(value) { return VoteGA.escapeHtml(value); }
 
   async function loadVotingHistory(member, allMembers) {
     const container = document.getElementById('votingHistory');
