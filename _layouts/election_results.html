@@ -359,10 +359,16 @@ function renderContest(c, office, candidateIndex){
     </div>`;
   }).join('');
   const total = noRes ? 'No results reported' : `Total votes: ${fmt(c.totalVotes)}`;
+  // Escaped, not raw: SoS ballot names carry quoted nicknames (`Earl L. "Buddy"
+  // Carter`), and an unescaped `"` closes the attribute early. The parser then
+  // truncated data-cands mid-name and turned the rest into stray attributes, so
+  // searching "carter" or "mccolumn" hid the US Senate card instead of finding
+  // it — on 49 contests across the results pages. race.html renders the same
+  // data and escapes it; this copy did not.
   const candSearch = (c.candidates||[]).map(x=>x.name.toLowerCase()).join(' ');
-  return `<div class="race-card ${p} ${cardCls}" data-party="${p}" data-office="${office.toLowerCase()}" data-cands="${candSearch}">
+  return `<div class="race-card ${p} ${cardCls}" data-party="${p}" data-office="${escHtml(office.toLowerCase())}" data-cands="${escHtml(candSearch)}">
     <div class="race-header">
-      <span class="race-title">${office}</span>
+      <span class="race-title">${escHtml(office)}</span>
       <div class="race-meta">
         <span class="party-badge ${p}">${partyLabel(p)}</span>
         <span class="status-badge ${status}">${badgeText(status)}</span>

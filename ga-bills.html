@@ -384,7 +384,9 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
 (function () {
   'use strict';
 
-  const DATA_URL  = '/assets/data/ga-bills.json';
+  // Relative, so it resolves under the /votega.org-TEST/ deployment too. As an
+  // absolute path this was the one page script in the repo that 404'd there.
+  const DATA_URL  = 'assets/data/ga-bills.json';
   const PER_PAGE  = 50;
 
   let allBills     = [];
