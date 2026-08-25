@@ -176,6 +176,7 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
   <p style="color:#777;font-size:0.9rem;">Loading...</p>
 </div>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script>
   const COURT_URL     = 'assets/data/supreme-court.json';
   const DECISIONS_URL = 'assets/data/scotus-decisions.json';
@@ -305,11 +306,7 @@ share-description: "Profile of a Supreme Court justice: appointment, tenure, and
     }
   }
 
-  function escHtml(str) {
-    return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
+  function escHtml(value) { return VoteGA.escapeHtml(value); }
 
   (async function () {
     const params  = new URLSearchParams(window.location.search);

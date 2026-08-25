@@ -7,6 +7,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
 
 <div id="raceContent"><p>Loading race information…</p></div>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 
 <p id="dataStamp" class="data-stamp"></p>
@@ -346,11 +347,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
 
   // Results carry candidate names straight from the SoS export, so escape them
   // rather than interpolating source data into markup verbatim.
-  function escapeHtml(s) {
-    return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
-  }
+  function escapeHtml(value) { return VoteGA.escapeHtml(value); }
 
   // race id -> earlier elections this cycle; filled by init(), empty if the
   // index is missing so the tab simply doesn't appear.

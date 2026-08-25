@@ -127,6 +127,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   or check <a href="{{ '/results' | relative_url }}">election results</a>.
 </p>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script>
   const DATA_URL = 'assets/data/ga-ballot-measures.json';
 
@@ -134,11 +135,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
   }
 
-  function escHtml(s) {
-    return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
-  }
+  function escHtml(value) { return VoteGA.escapeHtml(value); }
 
   function renderResults(results) {
     if (!results || results.yesPercent == null) return '';

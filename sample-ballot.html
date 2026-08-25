@@ -76,6 +76,7 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
   .ballot-handoff strong { display: block; margin-bottom: 0.3rem; }
 </style>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}"></script>
 <script>
@@ -117,9 +118,7 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
     return 'Candidate';
   }
 
-  const escHtml = s => String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  function escHtml(value) { return VoteGA.escapeHtml(value); }
 
   const titleCase = slug => String(slug).split('-')
     .map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');

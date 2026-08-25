@@ -157,6 +157,7 @@ Front-matter contract
 <div id="tab-state-house"  class="tab-panel"></div>
 <div id="tab-courts"       class="tab-panel"></div>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script>
 // `|| []` guards the case where the keyed results file didn't build: Liquid's
 // jsonify emits `null`, and SECTIONS.forEach below would otherwise throw and
@@ -180,13 +181,7 @@ function getBasePath() {
   return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
 }
 
-function escHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+function escHtml(value) { return VoteGA.escapeHtml(value); }
 
 // Results data (built from CSVs) carries no candidate id — races.json is the
 // only place that has one, joined here by normalized name rather than

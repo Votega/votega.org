@@ -7,6 +7,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
 <div id="candidateContent"><p>Loading candidate information…</p></div>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 
 <p id="dataStamp" class="data-stamp"></p>
@@ -454,11 +455,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
 
   // This page renders most values unescaped via template literals; these finance
   // strings come from an external API, so escape them at the point of use.
-  function escHtmlGa(s) {
-    return String(s ?? '').replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
-  }
+  function escHtmlGa(value) { return VoteGA.escapeHtml(value); }
 
   async function loadCampaignFinance(candidate, race) {
     const container = document.getElementById('campaignFinance');

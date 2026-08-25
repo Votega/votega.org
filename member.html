@@ -335,6 +335,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
 <p id="dataStamp" class="data-stamp"></p>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="assets/scripts/campaign-finance.js"></script>
 <script>
@@ -472,13 +473,7 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
     return pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
   }
 
-  function escHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  function escHtml(value) { return VoteGA.escapeHtml(value); }
 
   // Format a YYYY-MM-DD date without the UTC-to-local shift. new Date('YYYY-MM-DD')
   // is parsed as UTC midnight, which rolls back to the previous day in US

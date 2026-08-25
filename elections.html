@@ -203,6 +203,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
 
 <p id="dataStamp" class="data-stamp"></p>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}"></script>
 <script>
@@ -386,10 +387,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
 
   // races.json is curated, but candidate names still reach innerHTML — escape
   // them like every other page does. See CODEBASE-REVIEW-2026-08-18.md 4.15.
-  function escHtml(str) {
-    return String(str == null ? '' : str).replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  }
+  function escHtml(value) { return VoteGA.escapeHtml(value); }
 
   function candidateSummary(phase) {
     if (!phase) return 'No candidates listed yet';
