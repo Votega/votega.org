@@ -1,0 +1,23 @@
+{
+ "_comment": "Hand-reviewed identifier decisions for assets/data/id-crosswalk.json. Keys are the person's durable upstream id (ocd-person/... for state, bioguide for federal) — NOT a races.json candidate id, which is what assets/data/ga-campaign-finance-overrides.json uses. Set peachfileFilerEntityId to pin a filing, or peachfileNoFiling:true to record that a human checked and found none. Always leave a _note saying how the match was confirmed; an unexplained override is indistinguishable from a guess. Fields prefixed _ are documentation only.",
+ "_why_these_exist": "These three sit in ga-members.json under chamber 'executive' and are on the 2026 governor's ballot. Their committees are registered under 'Governor', not the office they hold, and their races.json candidate rows carry no existingMemberId — ga-member.html is not built to render chamber 'executive', so linking them there would regress those candidate pages. Pinning the filing here resolves the crosswalk without touching the site's rendering path.",
+
+ "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1": {
+  "peachfileFilerEntityId": "102576",
+  "_name": "Brad Raffensperger",
+  "_holds": "Secretary of State",
+  "_note": "Filed as 'Raffensperger, Bradford J.' for Governor; committee 'Brad for Governor, Inc.' Sole Raffensperger in PeachFile."
+ },
+ "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b": {
+  "peachfileFilerEntityId": "101091",
+  "_name": "Burt Jones",
+  "_holds": "Lieutenant Governor",
+  "_note": "Filed under his legal name 'Jones, William B.' for Governor; committee 'Burt Jones for Georgia' confirms identity. Distinct from Vernon Jones (filer 100071, Secretary of State) — the reason this is pinned by hand rather than matched on surname."
+ },
+ "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a": {
+  "peachfileFilerEntityId": "100035",
+  "_name": "Chris Carr",
+  "_holds": "Attorney General",
+  "_note": "Filed as 'Carr, Christopher M.' for Governor; committee 'Carr for Georgia, Inc.' Sole Carr filing for a statewide office."
+ }
+}

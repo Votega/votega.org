@@ -109,10 +109,32 @@ datasets:
   # --------------------------------------------------------------------------
   # ON VOTEGA.ORG (direct JSON — no dedicated repo yet)
   # --------------------------------------------------------------------------
+  - id: id-crosswalk
+    title: Georgia Officeholder ID Crosswalk
+    hosting: site
+    featured: true
+    summary: >
+      One record per Georgia officeholder linking the identifiers that five
+      separate systems assign the same person — Open States, legis.ga.gov,
+      Congress.gov, the FEC, and the Georgia Ethics Commission's PeachFile —
+      with the method and confidence recorded for every derived link. Nothing
+      upstream maps an Open States legislator to their Georgia campaign finance
+      filing; this is the join, written down.
+    source: Open States · Congress.gov · unitedstates/congress-legislators (public domain) · GA Ethics Commission PeachFile
+    scope: Sitting GA legislators, the four statewide executives, and Georgia's federal delegation
+    cadence: Weekly
+    coverage: >
+      PeachFile filer ids resolve for 228 of 249 state records; the remainder are
+      officeholders with no filing on record for the cycle, 7 of them confirmed by
+      hand. Ambiguous matches are never guessed — they are left null and listed in
+      the file's metadata. Non-incumbent candidates are not yet covered.
+    files:
+      - { name: "id-crosswalk.json", desc: "Officeholder identifier crosswalk with provenance", url: "/assets/data/id-crosswalk.json" }
+    docs: /about-the-data#officeholder-id-crosswalk
+
   - id: scotus
     title: U.S. Supreme Court — Justices & Decisions
     hosting: site
-    featured: true
     summary: >
       Current justice biographies joined to per-justice vote alignments for
       recent terms, keyed on a stable Oyez person ID — so "who the justice is"
