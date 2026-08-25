@@ -41,8 +41,17 @@ Triggered by: election night, then again at certification.
       have votes, so it must be re-run *after* the results JSON is built. Check its output:
       it prints how many races matched and lists any that didn't.
 - [ ] Add an entry for the election to [`_data/election_archive.yml`](_data/election_archive.yml) so it appears on `/results/`.
-- [ ] Set that entry's `status` to `unofficial` while results are preliminary.
-- [ ] **On certification:** flip `status` to `certified` and update the "Last updated" line on the results page.
+      Its `status` is only a fallback for an entry that links somewhere other than a results
+      page — `/results/` reads the badge from the results page the entry links to.
+- [ ] Leave the results page's own `status` at `unofficial` (the default) while results are
+      preliminary. A staged page can carry it before its election too: until the results JSON
+      holds a single vote, every badge for that election reads **Upcoming** on its own.
+- [ ] **On certification:** flip `status` to `certified` in the results page's front matter and
+      update its `updated:` line. That one flip moves the badge on the results page, on
+      `/results/`, and in the **Earlier This Cycle** panel on `race.html` together — they all
+      resolve through `_includes/result-status.html`, and `race.html` reads the statuses out of
+      `assets/data/election-status.json`, which Jekyll regenerates on every deploy. No rebuild
+      of `race-results-index.json` is needed for a status-only change.
 - [ ] Advance `activePhase` on affected races in `assets/data/races.json`. The phase toggle on
       `/elections` builds itself from this — a phase appears or disappears based on the data,
       and defaults to the next election that hasn't happened yet. No code change needed.

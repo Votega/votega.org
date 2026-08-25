@@ -9,6 +9,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
 <p id="introMsg">This page contains statewide measures that Georgia voters will decide. Constitutional amendments and statewide referendums are placed on the ballot by the General Assembly and, once approved by voters, become part of Georgia law or the state constitution. In the General Election, your ballot may contain more measures than the statewide items listed as many local and county governments include measures/referendums on the ballot.</p>
 
 <style>
+{% include result-status.css %}
   .measure-grid {
     display: flex;
     flex-direction: column;
@@ -41,8 +42,12 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     padding: 0.15rem 0.5rem;
     border-radius: 999px;
   }
-  .badge-certified { background: #e3f0e4; color: #1e6b2b; }
-  .badge-potential { background: #fbeccb; color: #8a5a00; }
+  /* A measure is "certified" for the ballot, which is not the same thing as
+     certified election results — but the site should not show a third green for
+     the word. These pull the shared certified/unofficial hues; only the pill
+     geometry above is this page's own. */
+  .badge-certified { background: var(--status-certified-bg); color: var(--status-certified-fg); }
+  .badge-potential { background: var(--status-unofficial-bg); color: var(--status-unofficial-fg); }
   .badge-type { background: #e7eef8; color: #1a4d94; }
   .badge-passed { background: #d7efd8; color: #1b5e20; }
   .badge-failed { background: #f6dcdc; color: #a02121; }

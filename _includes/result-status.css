@@ -1,0 +1,72 @@
+/*
+ * result-status.css — the one definition of the "certified / unofficial /
+ * upcoming" vocabulary used for Georgia election results.
+ *
+ * The same three states used to be styled four different ways: a pill on
+ * /results/, bold amber text on race.html, a sentence in the results-page
+ * meta line, and a third set of greens on the ballot-measures page. Same
+ * election, different badge depending on where you looked.
+ *
+ * Inlined into each page's own <style> block with an include tag rather than
+ * linked as a stylesheet, so a page can never render the badge with the
+ * stylesheet missing — which is the failure mode this file exists to prevent.
+ * It is ~1KB. (Spelling the tag out here would make this file include itself.)
+ *
+ * Colors are exposed as custom properties as well as classes, for pages that
+ * have their own badge geometry (ga-ballot-measures.html) or that tint
+ * something other than a pill (the card border on /results/).
+ */
+:root {
+  --status-certified-bg:   #dcfce7;
+  --status-certified-fg:   #166534;
+  --status-certified-line: #16a34a;
+  --status-unofficial-bg:   #fef9c3;
+  --status-unofficial-fg:   #854d0e;
+  --status-unofficial-line: #ca8a04;
+  --status-upcoming-bg:   #f3f4f6;
+  --status-upcoming-fg:   #4b5563;
+  --status-upcoming-line: #6b7280;
+}
+
+/* The badge itself. Defaults to the neutral "upcoming" treatment so an
+   unrecognized status is still legible rather than invisible. */
+.result-status {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  background: var(--status-upcoming-bg);
+  color: var(--status-upcoming-fg);
+}
+.result-status.certified  { background: var(--status-certified-bg);  color: var(--status-certified-fg); }
+.result-status.unofficial { background: var(--status-unofficial-bg); color: var(--status-unofficial-fg); }
+.result-status.upcoming   { background: var(--status-upcoming-bg);   color: var(--status-upcoming-fg); }
+
+/* The explanatory banner on a results page, in the same three hues. A
+   `notice:` override in a page's front matter is rendered with these too, so
+   the banner never contradicts the badge above it. */
+.pr-notice {
+  border: 1px solid var(--status-unofficial-line);
+  background: var(--status-unofficial-bg);
+  color: var(--status-unofficial-fg);
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+}
+.pr-notice-certified {
+  background: var(--status-certified-bg);
+  border-color: var(--status-certified-line);
+  color: var(--status-certified-fg);
+}
+/* Upcoming: informational blue, not the amber "unofficial results" warning —
+   nothing is provisional here because nothing has been counted yet. */
+.pr-notice-upcoming {
+  background: #eaf4fb;
+  border-color: #2471a3;
+  color: #1b4f72;
+}

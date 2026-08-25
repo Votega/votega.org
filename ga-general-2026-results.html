@@ -6,7 +6,7 @@ share-description: "Results from Georgia's November 3, 2026 general election, by
 heading: Georgia 2026 General Election Results
 updated: 2026-08-17
 election_date: 2026-11-03
-status: preview
+status: unofficial
 results_mode: round
 label_winner: Elected
 runoff_advances: 2
@@ -20,11 +20,12 @@ notice: >-
   to a December 1 runoff if no candidate wins a majority.
 # --- Staged ahead of election day -------------------------------------------
 # No votes exist yet, so this page is deliberately undiscoverable: not in the
-# sitemap, not indexable, not in on-site search. `status: preview` also stops the
-# header claiming "Unofficial Results" when there are none.
+# sitemap, not indexable, not in on-site search. The status above is the one it
+# will have on election night; until a vote is actually counted every badge for
+# this election reads "Upcoming" on its own (_includes/result-status.html).
 #
-# TO GO LIVE on election night: set `status: unofficial` and delete the three
-# flags below. Nothing else needs to change.
+# TO GO LIVE on election night: delete the three flags below. Nothing else
+# needs to change.
 noindex: true
 sitemap: false
 search: false

@@ -1,0 +1,17 @@
+{%- comment -%}
+  Renders the status badge. `{% include result-status-badge.html status=... %}`
+  where status is one of upcoming | unofficial | certified, normally the
+  `result_status` left behind by result-status.html.
+
+  Wording lives here so /results/, race.html and the results pages cannot drift
+  apart on it. Anything unrecognized is shown verbatim rather than dropped —
+  a new status should be visible, not silently blank.
+
+  Requires result-status.css to be inlined on the page.
+{%- endcomment -%}
+{%- case include.status -%}
+{%- when 'certified' -%}<span class="result-status certified">Certified</span>
+{%- when 'unofficial' -%}<span class="result-status unofficial">Unofficial</span>
+{%- when 'upcoming' -%}<span class="result-status upcoming">Upcoming</span>
+{%- else -%}<span class="result-status">{{ include.status }}</span>
+{%- endcase -%}

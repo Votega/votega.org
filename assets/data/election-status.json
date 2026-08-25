@@ -1,0 +1,37 @@
+---
+layout: null
+sitemap: false
+---
+{%- comment -%}
+  Built by Jekyll, not by a script, straight from the results pages' front
+  matter — so it is correct on every deploy without anyone remembering to
+  re-run anything.
+
+  race.html renders the "Earlier This Cycle" panel from
+  assets/data/race-results-index.json, which bakes each election's status in at
+  the time that index was last generated. That index is rebuilt when results
+  change; a certification is often just a status flip with byte-identical
+  numbers, so it can be flipped on the results pages and in the archive and
+  still leave race.html saying "Unofficial" for a certified election — which is
+  exactly what happened to the June 16 primary runoff. This file is the live
+  overlay race.html applies on top of the baked index.
+{%- endcomment -%}
+{%- assign stubs = site.pages | where: 'layout', 'election_results' | sort: 'election_date' -%}
+{
+  "metadata": {
+    "source": "Results page front matter, resolved against the counted votes",
+    "vocabulary": ["upcoming", "unofficial", "certified"],
+    "count": {{ stubs | size }}
+  },
+  "elections": {
+    {%- for stub in stubs -%}
+    {%- include result-status.html stub=stub -%}
+    {{ stub.results_data | jsonify }}: {
+      "status": {{ result_status | jsonify }},
+      "date": {{ stub.election_date | date: "%Y-%m-%d" | jsonify }},
+      "url": {{ stub.url | jsonify }},
+      "updated": {{ stub.updated | date: "%Y-%m-%d" | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  }
+}

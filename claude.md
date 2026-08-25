@@ -54,6 +54,7 @@ votega.org/
 │   │   ├── ga-executive-orders-*.json / ga-executive.json / executive.json
 │   │   ├── scotus-decisions.json / supreme-court.json / presidential-laws.json / vp-tie-votes.json
 │   │   ├── ga-congress-trades.json      # Stock trade disclosures for GA federal delegation
+│   │   ├── election-status.json         # Certified/unofficial/upcoming per election (Jekyll-rendered from the results pages' front matter; the live overlay race.html applies to race-results-index.json)
 │   │   ├── searchcorpus.json            # Site search index (Jekyll-rendered: posts + static pages)
 │   │   └── search-entities.json         # Site search index (entities: members, races, candidates, etc. — built by generate_search_corpus.py)
 │   ├── scripts/                         # Client-side JS (loaded by HTML pages) + a few standalone Python utilities

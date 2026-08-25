@@ -1,0 +1,62 @@
+{%- comment -%}
+  Resolves one election to its effective status and leaves it in `result_status`.
+  Vocabulary (shared with race.html and _data/election_archive.yml):
+
+      upcoming    no votes have been counted yet
+      unofficial  results reported, not yet certified by the Secretary of State
+      certified   official certified results
+
+  Inputs (all optional):
+      stub      the results page itself, when the caller has it (`page`)
+      url       a results page permalink to look the stub up by, e.g. from
+                _data/election_archive.yml
+      fallback  status to use when no results page matches `url` — an archive
+                entry can point at something that isn't a results page at all
+                (the general-election entry links to /elections)
+
+  Why derive rather than read `status` straight from front matter: a page is
+  staged days before its election with the status it will have on election
+  night, so between staging and poll close the front matter says "unofficial"
+  while the data file holds nothing but zeros. Counting the votes settles it,
+  and it settles it the same way on every page that asks.
+{%- endcomment -%}
+{%- assign rs_stub = include.stub -%}
+{%- unless rs_stub -%}
+  {%- if include.url -%}
+    {%- assign rs_pages = site.pages | where: 'layout', 'election_results' -%}
+    {%- assign rs_stub = rs_pages | where: 'url', include.url | first -%}
+    {%- unless rs_stub -%}
+      {%- comment -%}
+        Results permalinks all end in a slash; tolerate an archive entry written
+        without one so the badge falls back silently only when the entry really
+        does point somewhere else.
+      {%- endcomment -%}
+      {%- assign rs_url = include.url | append: '/' | replace: '//', '/' -%}
+      {%- assign rs_stub = rs_pages | where: 'url', rs_url | first -%}
+    {%- endunless -%}
+  {%- endif -%}
+{%- endunless -%}
+{%- if rs_stub -%}
+  {%- assign result_status = rs_stub.status | default: 'unofficial' -%}
+  {%- assign rs_votes = 0 -%}
+  {%- for rs_section in site.data.election_results[rs_stub.results_data] -%}
+    {%- for rs_race in rs_section.races -%}
+      {%- for rs_contest in rs_race.contests -%}
+        {%- assign rs_votes = rs_votes | plus: rs_contest.totalVotes -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  {%- endfor -%}
+  {%- if rs_votes == 0 and result_status != 'certified' -%}
+    {%- assign result_status = 'upcoming' -%}
+  {%- endif -%}
+  {%- comment -%}
+    `preview` was the hand-set way of saying "staged, nothing counted yet".
+    Counting the votes says the same thing without anyone having to remember to
+    unset it, so it is folded into `upcoming` and kept only as an accepted input.
+  {%- endcomment -%}
+  {%- if result_status == 'preview' -%}
+    {%- assign result_status = 'upcoming' -%}
+  {%- endif -%}
+{%- else -%}
+  {%- assign result_status = include.fallback | default: 'upcoming' -%}
+{%- endif -%}

@@ -12,6 +12,13 @@
 #           unofficial  — results reported but not yet certified by the SOS
 #           certified   — official certified results
 #
+# `status` is a FALLBACK, not the source of truth. When an event's `url` points
+# at a results page, /results/ takes the status from that page's front matter
+# and the votes in its data file (_includes/result-status.html) — so the badge
+# here can no longer disagree with the badge on the page it links to. It is read
+# only for an event that links somewhere else, such as the general-election
+# entry pointing at /elections.
+#
 # Order does not matter; results.html sorts cycles and events newest-first.
 
 - cycle: 2026
