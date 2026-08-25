@@ -196,6 +196,7 @@ def candidate_from_row(row: dict, idx: int, chamber_slug: str, district: int, pa
 # Populated during build_races(); inspected by main().
 REMOVED_IDS = []
 REMOVAL_MISMATCHES = []
+SEAT_HOLDER_MISMATCHES = []
 
 
 def override_target_name(patch: dict) -> str:
@@ -207,6 +208,37 @@ def override_target_name(patch: dict) -> str:
     """
     raw = (patch.get("_name") or "").strip()
     return raw.split(" (")[0].strip()
+
+
+def shares_a_name(candidate_name: str, member_name: str) -> bool:
+    """True unless the two names have no name-part in common at all.
+
+    Deliberately weaker than `names_match`. This guards a lookup that is already
+    keyed on chamber and district, so the only question is "is this obviously a
+    different person" — and the sources disagree about names constantly. Against
+    the 420 links in races.json today, `names_match` would reject 84 correct ones
+    (`Thomas Stephen Tarvin` vs `Steve Tarvin`, `Dr. Jasmine Clark` vs `Jasmine
+    Clark`); requiring only the surname still rejects 7 (`Sylvia Wayfer Baker` vs
+    `Sylvia Wayfer`, `Angela Butler Osteen` vs `Angie O'Steen`, `Freddie Powell`
+    vs `Freddie Powell Sims`). Requiring one shared token rejects exactly the 5
+    that are genuinely different people — each one a seat that changed hands,
+    every one of them pointing at a member whose status is `Resigned`.
+
+    Unlinking a real incumbent is worse than the bug being guarded against, so
+    when in doubt this says yes.
+    """
+    def parts(name):
+        n = (name or "").lower().replace("'", "").replace("\u2019", "")
+        n = re.sub(r"\([^)]*\)", " ", n)              # drop "(Dem)"-style suffixes
+        n = re.sub(r"[^a-z\s]", " ", n)
+        n = re.sub(r"\b(jr|sr|ii|iii|iv|v)\b", " ", n)  # generational suffixes
+        n = re.sub(r"\b(dr|mr|mrs|ms|rev|hon)\b", " ", n)
+        return {t for t in n.split() if len(t) > 1}
+
+    cand, seat = parts(candidate_name), parts(member_name)
+    if not cand or not seat:
+        return True                                   # nothing to judge on — allow
+    return bool(cand & seat)
 
 
 def names_match(candidate_name: str, member_name: str) -> bool:
@@ -260,9 +292,23 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict, 
             for i, row in enumerate(rows):
                 c = candidate_from_row(row, i, chamber_slug, district, party_slug)
 
-                # Auto-enrich incumbents with imageUrl and member link from ga-members.json
+                # Auto-enrich incumbents with imageUrl and member link from ga-members.json.
+                #
+                # Guarded by name, not district alone. When a seat changes hands
+                # mid-term the export flags the *new* holder as the incumbent while
+                # ga-members.json may still list the person they replaced, and an
+                # unguarded lookup then files the newcomer under their predecessor's
+                # member record. That is how Bill Fincher (HD-23), Eric Gisler
+                # (HD-121) and Steven McNeel (SD-18) came to carry the ids of three
+                # legislators who had resigned — which showed up on the *resigned*
+                # members' pages as "Running for ... in 2026". The auto-detect pass
+                # below has always checked the name; this one did not.
                 if c.get("isIncumbent"):
                     member = member_lookup.get((chamber_slug, district))
+                    if member and not shares_a_name(c["name"], member["name"]):
+                        SEAT_HOLDER_MISMATCHES.append(
+                            (c["id"], c["name"], member["name"]))
+                        member = None
                     if member:
                         if member.get("imageUrl") and not c.get("imageUrl"):
                             c["imageUrl"] = member["imageUrl"]
@@ -367,6 +413,17 @@ def main():
         print(f"  note: {len(unused)} 'remove' override(s) matched no candidate "
               f"(source no longer emits that row): {', '.join(unused[:6])}"
               + (" ..." if len(unused) > 6 else ""))
+
+    if SEAT_HOLDER_MISMATCHES:
+        # Not fatal: the candidate is still built, just without a member link.
+        # Worth seeing, because it means the seat changed hands and the correct
+        # id has to be pinned in ga-race-candidate-overrides.json.
+        print(f"\nnote: {len(SEAT_HOLDER_MISMATCHES)} incumbent(s) do not match the "
+              f"member ga-members.json lists for their district — not linked to a "
+              f"member record. Pin the right id in ga-race-candidate-overrides.json "
+              f"if the seat changed hands:")
+        for cid, cand_name, member_name in SEAT_HOLDER_MISMATCHES:
+            print(f"    {cid}: candidate '{cand_name}' vs seat holder '{member_name}'")
 
     if REMOVAL_MISMATCHES:
         print("\nERROR: 'remove' override(s) point at a different candidate than "
