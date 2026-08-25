@@ -22,6 +22,9 @@
   </dl>
 
   {% if include.d.coverage %}<p class="od-coverage">{{ include.d.coverage }}</p>{% endif %}
+  {%- comment -%}Schema-stability note. Only set where a dataset's shape may still change,
+  so a reuser knows before they build against it.{%- endcomment -%}
+  {% if include.d.stability %}<p class="od-stability"><strong>Schema:</strong> {{ include.d.stability }}</p>{% endif %}
 
   {% if include.d.files %}
   <ul class="od-files">

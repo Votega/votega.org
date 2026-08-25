@@ -109,10 +109,39 @@ datasets:
   # --------------------------------------------------------------------------
   # ON VOTEGA.ORG (direct JSON — no dedicated repo yet)
   # --------------------------------------------------------------------------
+  - id: id-crosswalk
+    title: Georgia Officeholder ID Crosswalk
+    hosting: site
+    featured: true
+    summary: >
+      One record per Georgia officeholder linking the identifiers that five
+      separate systems assign the same person — Open States, legis.ga.gov,
+      Congress.gov, the FEC, and the Georgia Ethics Commission's PeachFile —
+      with the method and confidence recorded for every derived link. Nothing
+      upstream maps an Open States legislator to their Georgia campaign finance
+      filing; this is the join, written down.
+    source: Open States · Congress.gov · unitedstates/congress-legislators (public domain) · GA Ethics Commission PeachFile
+    scope: 264 officeholders — 245 GA legislators (including seats since vacated), 4 statewide executives, and Georgia's 15-member federal delegation
+    cadence: Weekly
+    coverage: >
+      PeachFile filer ids resolve for 228 of 249 state records, with no ambiguous
+      matches. Of the 21 without one, 7 are confirmed by hand to have no filing this
+      cycle and 14 simply did not resolve — the file keeps those apart rather than
+      reporting both as "no filing". FEC ids resolve for all 15 federal records.
+      Non-incumbent candidates are not yet covered; 489 are queued for the next
+      release.
+    stability: >
+      Version 1, and provisional. Adding candidate coverage will turn
+      peachfileFilerEntityId into a list, because someone who files for two offices
+      in one cycle has one PeachFile filing per office. That will ship as schema
+      version 2; other field names and meanings are not expected to change.
+    files:
+      - { name: "id-crosswalk.json", desc: "Officeholder identifier crosswalk with provenance", url: "/assets/data/id-crosswalk.json" }
+    docs: /about-the-data#officeholder-id-crosswalk
+
   - id: scotus
     title: U.S. Supreme Court — Justices & Decisions
     hosting: site
-    featured: true
     summary: >
       Current justice biographies joined to per-justice vote alignments for
       recent terms, keyed on a stable Oyez person ID — so "who the justice is"

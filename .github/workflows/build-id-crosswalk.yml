@@ -1,0 +1,67 @@
+name: Build ID crosswalk (weekly, Sun 09:15 UTC)
+
+permissions:
+  contents: write
+
+# Reads ga-members.json, current-members.json, ga-campaign-finance.json,
+# ga-fec-data.json and races.json — it derives nothing from an API of its own.
+# Scheduled after the last of those lands (GA finance, Sun 08:30) so a run always
+# sees the week's fresh inputs rather than last week's.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 9 * * 0'
+
+jobs:
+  build-id-crosswalk:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout repository
+        # The ledger's append-only check compares against HEAD, so it needs the
+        # committed baseline — not just the working tree.
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build crosswalk
+        run: python scripts/build_id_crosswalk.py
+
+      - name: Validate crosswalk
+        run: python scripts/validate_id_crosswalk.py
+
+      - name: Guard against a collapse in coverage
+        # Catches the case the floors in the validator can't: a file that is still
+        # internally valid but lost a chunk of what it had last week.
+        run: |
+          python scripts/validate_data_update.py assets/data/id-crosswalk.json \
+            --metric people=len:people \
+            --metric peachfile=metadata.coverage.state.peachfileFilerEntityId.resolved \
+            --min people=200
+
+      - name: Commit and push
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/id-crosswalk.json assets/data/id-crosswalk-ledger.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update ID crosswalk"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
+          fi

@@ -59,7 +59,7 @@ votega.org/
 │   ├── scripts/                         # Client-side JS (loaded by HTML pages) + a few standalone Python utilities
 │   │   ├── congress.js                  # Federal lookup: reads current-members.json, filters by state/chamber
 │   │   ├── ga.js                        # GA lookup: county→district mapping, reads ga-members.json
-│   │   └── campaign-finance.js          # Shared FEC + PeachFile finance lookup/matching (used by race.html + candidate.html; single source of truth for the JS match logic — mirrors report_ga_finance_matches.py & tools/ga-finance-overrides-editor.html)
+│   │   └── campaign-finance.js          # Shared FEC + PeachFile finance lookup/matching (used by race.html + candidate.html; single source of truth for the JS match logic — mirrors scripts/lib/ga_match.py, the Python side's single source, & tools/ga-finance-overrides-editor.html)
 │   ├── css/                             # Theme stylesheets (beautifuljekyll.css, bootstrap-social.css, etc.)
 │   ├── js/                              # Theme JS (beautifuljekyll.js, staticman.js)
 │   ├── img/                             # Images (logo.png, avatar-icon.png, bgimage.png, etc.)
@@ -134,6 +134,19 @@ Manual patches applied after Open States fetch. Keys are OCD person IDs (`ocd-pe
 Top-level: `{ metadata: { generatedAt, session, sessionName, source, totalVotes, totalBillsSeen, paginationComplete }, votes: { <voteId>: {...} }, memberVotes: { <ocdPersonId>: [{voteId, vote}] } }`
 Vote values: `"Yea"`, `"Nay"`, `"Not Voting"`, `"Present"`, `"Absent"`, `"Excused"`, `"Other"`.
 Members are joined by OCD person ID — the same `id` field as in `ga-members.json`.
+
+### `id-crosswalk.json` + `id-crosswalk-ledger.json`
+Top-level: `{ metadata: { generatedAt, count, scope, sources[], provenanceMethods, coverage }, people: [...] }`
+Each person: `vgId`, `name{full,first,last}`, `role{level,office,chamber,district,party,status}`, `ids{...}`, `provenance{...}`.
+`ids` carries `ocdPersonId`, `legisGaGovId`, `bioguideId`, `fecCandidateId`, `peachfileFilerEntityId`, `govtrackId`, `openSecretsId`, `votegaCandidateIds[]` — `null` where it doesn't apply or didn't resolve.
+
+Built by `scripts/build_id_crosswalk.py` from the roster, finance and races files; it calls no API of its own. Validate with `scripts/validate_id_crosswalk.py`.
+
+`id-crosswalk-overrides.json` holds hand-reviewed decisions, keyed by **OCD person ID or bioguide ID** — *not* the races.json candidate ID that `ga-campaign-finance-overrides.json` uses. Use it to pin a filing for someone whose committee sits under an office they don't currently hold. Every entry needs a `_note` recording how the match was confirmed.
+
+**⚠ `vgId`s are append-only.** `id-crosswalk-ledger.json` is the assignment record; never renumber or remove an entry, or a published `vgId` silently comes to mean a different person. The validator compares the ledger against HEAD and fails on any renumbering.
+
+**⚠ Never treat a null `peachfileFilerEntityId` as "no filing".** Check `provenance.peachfileFilerEntityId.confidence`: `confirmed-none` means a human verified there is none; `no-match` and `ambiguous` mean the join didn't resolve, which is not the same claim.
 
 ## GA Overrides System
 `assets/data/ga-members-overrides.json` is the mechanism for correcting Open States data and injecting entries (e.g., vacant seats) that Open States doesn't track. When editing:
