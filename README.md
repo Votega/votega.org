@@ -163,10 +163,3 @@ Underlying data remains subject to the terms of its original sources.
 ## Contact
 
 [admin@votega.org](mailto:admin@votega.org)
-
-Next steps / to verify:
-
-Confirm workflow filenames in the pipeline table — I inferred three of the five.
-Confirm ga-legislators chamber value ("Senate" vs "State Senate") for the Python snippet.
-Add homepage + topics (civic-tech, open-data, georgia, legislature) to each repo's About box — free discoverability, biggest ROI for the promotion push.
-Reconsider GPL-3.0 → CC0/ODbL on the data repos before you pitch aggregators.
