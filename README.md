@@ -1,5 +1,3 @@
-1. Votega/.github/profile/README.md (org landing page)
-markdown
 # VoteGA
 
 **Nonpartisan civic information for Georgia voters.** → [votega.org](https://www.votega.org)
