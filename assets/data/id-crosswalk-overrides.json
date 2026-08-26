@@ -1,7 +1,6 @@
 {
  "_comment": "Hand-reviewed identifier decisions for assets/data/id-crosswalk.json. Keys are the person's durable upstream id (ocd-person/... for state, bioguide for federal) — NOT a races.json candidate id, which is what assets/data/ga-campaign-finance-overrides.json uses. Set peachfileFilerEntityId to pin a filing, or peachfileNoFiling:true to record that a human checked and found none. Always leave a _note saying how the match was confirmed; an unexplained override is indistinguishable from a guess. Fields prefixed _ are documentation only.",
  "_why_these_exist": "These three sit in ga-members.json under chamber 'executive' and are on the 2026 governor's ballot. Their committees are registered under 'Governor', not the office they hold, and their races.json candidate rows carry no existingMemberId — ga-member.html is not built to render chamber 'executive', so linking them there would regress those candidate pages. Pinning the filing here resolves the crosswalk without touching the site's rendering path.",
-
  "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1": {
   "peachfileFilerEntityId": "102576",
   "_name": "Brad Raffensperger",
@@ -19,5 +18,11 @@
   "_name": "Chris Carr",
   "_holds": "Attorney General",
   "_note": "Filed as 'Carr, Christopher M.' for Governor; committee 'Carr for Georgia, Inc.' Sole Carr filing for a statewide office."
+ },
+ "_why_sameAs_exists": "PeachFile registers a committee per office, so one person seeking two offices in a cycle has two filer entity ids and would otherwise become two records. sameAs merges the ledger keys onto one person. Only ever set this from positive evidence that it is the same human — a shared committee name, website, or filing address — never from a name match alone.",
+ "peachfile:101360": {
+  "sameAs": "peachfile:104439",
+  "_name": "Clarence Blalock",
+  "_note": "One person, two 2026 filings: 101360 'Blalock, Clarence W.' for Commissioner of Labor (that candidacy is withdrawn) and 104439 'Blalock, Clarence' for Commissioner of Insurance. Both file under the committee name 'Clarence for GA' and the same website clarenceforga.com. Merged onto the Insurance filing, which is the live candidacy."
  }
 }
