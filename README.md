@@ -17,7 +17,7 @@ no signup, no rate limit.
 
 | Repository | Contents | Format | Updated |
 |---|---|---|---|
-| [ga-legislators](https://github.com/Votega/ga-legislators) | Current GA House & Senate members (158th General Assembly) — name, party, district, committees, contact, official page | `data/all.json` | Daily |
+| [ga-legislators](https://github.com/Votega/ga-legislators) | Current GA House & Senate members (158th General Assembly) — name, party, district, committees, contact, official page; each member's passage-vote history; and a derived voting scorecard (party unity + participation) | `data/all.json`, `sessions/2025-2026/scorecard.csv` | Roster daily · votes & scorecard weekly |
 | [ga-federal-legislators](https://github.com/Votega/ga-federal-legislators) | Georgia's 2 U.S. Senators and 14 U.S. Representatives | JSON | Weekly |
 | [ga-legislation](https://github.com/Votega/ga-legislation) | GA General Assembly bills, 2025–26 session (adapted from Open States) | JSON | Daily |
 | [ga-executive-orders](https://github.com/Votega/ga-executive-orders) | Georgia Governor's executive orders, 2023–present — date, number, title, category, PDF link | One JSON file per year | On publication |
@@ -36,6 +36,9 @@ Full methodology and update schedules: [votega.org/about-the-data](https://www.v
 ```bash
 # Every current Georgia state legislator
 curl -s https://raw.githubusercontent.com/Votega/ga-legislators/main/data/all.json
+
+# GA legislator voting scorecard — party unity + participation (CSV)
+curl -s https://raw.githubusercontent.com/Votega/ga-legislators/main/sessions/2025-2026/scorecard.csv
 
 # Georgia executive orders signed in 2026
 curl -s https://raw.githubusercontent.com/Votega/ga-executive-orders/main/data/2026.json

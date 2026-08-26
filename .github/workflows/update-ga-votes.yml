@@ -135,3 +135,42 @@ jobs:
         env:
           GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
         run: python3 scripts/publish_ga_legislators.py votes
+
+      # Derived scorecard: party-unity + participation per legislator, computed from the
+      # freshly generated ga-member-votes.json joined with the committed ga-members.json.
+      # Built here (not in its own workflow) because it depends on the vote data this job
+      # just rewrote, and the GITHUB_TOKEN commit above won't trigger a separate on:push
+      # workflow (see project_sibling_publish_trigger_gotcha).
+      - name: Generate voting scorecard
+        run: python scripts/generate_party_unity.py
+
+      - name: Commit voting scorecard
+        run: |
+          set -e
+          git add -f assets/data/ga-party-unity.json
+          if git diff --cached --quiet; then
+            echo "No changes to ga-party-unity.json"
+          elif python scripts/only_keys_changed.py assets/data/ga-party-unity.json metadata.generatedAt; then
+            echo "Only metadata.generatedAt changed — skipping redundant commit"
+            git restore --staged assets/data/ga-party-unity.json
+            git checkout -- assets/data/ga-party-unity.json
+          else
+            git commit -m "Update GA legislator voting scorecard"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - scorecard was NOT committed"
+              exit 1
+            fi
+          fi
+
+      # Mirror the derived scorecard to the sibling repo alongside the raw votes it came
+      # from (sessions/<biennium>/scorecard.{json,csv,schema.json} + scorecard-latest.json).
+      - name: Publish scorecard to ga-legislators repo
+        env:
+          GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
+        run: python3 scripts/publish_ga_legislators.py scorecard

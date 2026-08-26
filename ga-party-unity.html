@@ -1,0 +1,389 @@
+---
+layout: default
+title: Legislator Voting Scorecard
+permalink: /ga-party-unity.html
+share-description: "How often each Georgia General Assembly member votes with their own party, and how often they miss votes — ranked across all sitting legislators."
+---
+
+<h1>Legislator Voting Scorecard</h1>
+<p>Two numbers published for every member of Congress and, until now, for no one in
+the Georgia General Assembly: how often a lawmaker sides with their own party on
+contested votes, and how often they miss the vote entirely. Ranked across all sitting
+members, from the same roll-call record behind each member's page.</p>
+
+<style>
+  .pu-method {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .pu-card {
+    border-radius: 8px;
+    padding: 1.1rem 1.35rem;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+  }
+  .pu-card h2 {
+    margin: 0 0 0.4rem 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .pu-card h2 .pu-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .pu-card p { margin: 0; font-size: 0.82rem; color: #555; line-height: 1.5; }
+
+  /* ── Controls ─────────────────────────────────────────────── */
+  .pu-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+    align-items: flex-end;
+    margin: 1.75rem 0 0.5rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .pu-ctl label {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #777;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  .pu-seg { display: inline-flex; border: 1px solid #cbd0d8; border-radius: 8px; overflow: hidden; background: #fff; }
+  .pu-seg button {
+    border: 0; border-left: 1px solid #e5e7eb; background: transparent;
+    color: #555; cursor: pointer; font: inherit; font-size: 0.85rem;
+    font-weight: 500; padding: 0.4rem 0.8rem;
+  }
+  .pu-seg button:first-child { border-left: 0; }
+  .pu-seg button[aria-pressed="true"] { background: #1a56a8; color: #fff; font-weight: 600; }
+  .pu-controls select {
+    font: inherit; font-size: 0.88rem; font-weight: 500; color: #222;
+    background: #fff; border: 1px solid #cbd0d8; border-radius: 8px;
+    padding: 0.4rem 0.6rem; cursor: pointer; min-width: 240px;
+  }
+  .pu-range { display: flex; align-items: center; gap: 0.6rem; }
+  .pu-range input { accent-color: #1a56a8; width: 130px; }
+  .pu-rangeval { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 2ch; }
+
+  .pu-count { font-size: 0.8rem; color: #666; margin: 0.9rem 0 0.25rem; }
+  .pu-count strong { color: #222; }
+
+  /* ── Highlight banner ─────────────────────────────────────── */
+  .pu-banner {
+    display: none;
+    margin: 1rem 0 0;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    background: #fff8ec;
+    border: 1px solid #fde7c2;
+    font-size: 0.85rem;
+    color: #333;
+  }
+  .pu-banner a { cursor: pointer; }
+
+  /* ── Table ────────────────────────────────────────────────── */
+  .pu-tablewrap { overflow-x: auto; margin-top: 0.5rem; }
+  table.pu-table { border-collapse: collapse; width: 100%; min-width: 620px; }
+  .pu-table thead th {
+    text-align: right; font-size: 0.68rem; letter-spacing: 0.05em;
+    text-transform: uppercase; color: #888; font-weight: 700;
+    padding: 0 0.6rem 0.6rem; border-bottom: 1px solid #d0d0d0; white-space: nowrap;
+  }
+  .pu-table thead th.l { text-align: left; }
+  .pu-table tbody td { padding: 0.65rem 0.6rem; border-bottom: 1px solid #eee; vertical-align: middle; }
+  .pu-table tbody tr:hover { background: #f6f8fb; }
+  .pu-table tbody tr.pu-hl { background: #fff4d6; }
+  .pu-table tbody tr.pu-hl:hover { background: #ffeec2; }
+  .pu-rank { color: #999; font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; width: 2.4rem; }
+  .pu-name { font-weight: 600; font-size: 0.95rem; }
+  .pu-name a { color: #1a56a8; }
+  .pu-sub { font-size: 0.74rem; color: #666; margin-top: 1px; }
+  .pu-chip {
+    font-size: 0.64rem; font-weight: 700; letter-spacing: 0.03em;
+    padding: 0.1rem 0.4rem; border-radius: 100px; text-transform: uppercase;
+    margin-left: 0.4rem; white-space: nowrap;
+  }
+  .pu-chip.D { background: #dbe4f8; color: #1e40af; }
+  .pu-chip.R { background: #f6dcdc; color: #b91c1c; }
+  .pu-chip.I { background: #eee; color: #555; }
+  .pu-tag {
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+    color: #9a6a12; background: #f4e7cd; padding: 0.1rem 0.35rem; border-radius: 4px;
+    margin-left: 0.4rem; white-space: nowrap;
+  }
+  .pu-metric { width: 230px; }
+  .pu-barrow { display: flex; align-items: center; gap: 0.6rem; }
+  .pu-track { flex: 1; height: 8px; border-radius: 100px; background: #eceff3; overflow: hidden; min-width: 70px; }
+  .pu-fill { height: 100%; border-radius: 100px; }
+  .pu-pct { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 0.9rem; min-width: 3.3rem; text-align: right; }
+  .pu-frac { font-size: 0.7rem; color: #999; font-variant-numeric: tabular-nums; }
+  .pu-table td.pu-num { text-align: right; font-variant-numeric: tabular-nums; font-size: 0.85rem; color: #666; }
+  .pu-table td.pu-num.pu-strong { color: #222; font-weight: 600; }
+
+  .pu-foot { margin-top: 1.75rem; font-size: 0.76rem; color: #666; line-height: 1.6; }
+  .pu-foot code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; }
+
+  @media (max-width: 640px) {
+    .pu-method { grid-template-columns: 1fr; }
+    .pu-metric { width: 150px; }
+    .pu-table td.pu-hide-sm, .pu-table th.pu-hide-sm { display: none; }
+  }
+</style>
+
+<div class="pu-method">
+  <div class="pu-card">
+    <h2><span class="pu-dot" style="background:#8a6a1c;"></span>Party unity</h2>
+    <p>Of the <em>party-line</em> roll calls — where a majority of one caucus voted
+      against a majority of the other — the share on which the member sided with their
+      own party. Lopsided and bipartisan votes are excluded, because they say nothing
+      about a member's independence.</p>
+  </div>
+  <div class="pu-card">
+    <h2><span class="pu-dot" style="background:#777;"></span>Participation</h2>
+    <p>Of the passage roll calls held in the member's chamber, the share on which they
+      cast a Yea or Nay. Absences, excused absences, and "not voting" count against it.
+      A floor-vote participation rate, not full attendance.</p>
+  </div>
+</div>
+
+<div class="pu-controls" role="region" aria-label="Filters">
+  <div class="pu-ctl">
+    <label id="pu-lbl-sort">Rank by</label>
+    <select id="pu-sort" aria-labelledby="pu-lbl-sort">
+      <option value="independence">Independence — breaks with party most</option>
+      <option value="unity">Party unity — most loyal</option>
+      <option value="missed">Missed votes — highest</option>
+      <option value="participation">Participation — highest</option>
+    </select>
+  </div>
+  <div class="pu-ctl">
+    <label>Chamber</label>
+    <div class="pu-seg" id="pu-chamber" role="group" aria-label="Chamber">
+      <button data-v="all" aria-pressed="true">All</button>
+      <button data-v="House of Representatives" aria-pressed="false">House</button>
+      <button data-v="Senate" aria-pressed="false">Senate</button>
+    </div>
+  </div>
+  <div class="pu-ctl">
+    <label>Party</label>
+    <div class="pu-seg" id="pu-party" role="group" aria-label="Party">
+      <button data-v="all" aria-pressed="true">All</button>
+      <button data-v="Republican" aria-pressed="false">Rep</button>
+      <button data-v="Democratic" aria-pressed="false">Dem</button>
+    </div>
+  </div>
+  <div class="pu-ctl">
+    <label for="pu-min">Min. party-line votes <span class="pu-rangeval" id="pu-minval">25</span></label>
+    <div class="pu-range"><input type="range" id="pu-min" min="0" max="100" step="5" value="25"></div>
+  </div>
+</div>
+
+<div class="pu-banner" id="pu-banner"></div>
+<p class="pu-count" id="pu-count"></p>
+
+<div class="pu-tablewrap">
+  <table class="pu-table">
+    <thead>
+      <tr>
+        <th class="l">#</th>
+        <th class="l">Member</th>
+        <th class="l" id="pu-metric-head">Independence</th>
+        <th class="pu-hide-sm">Party unity</th>
+        <th class="pu-hide-sm">Missed</th>
+        <th class="pu-hide-sm">Participation</th>
+      </tr>
+    </thead>
+    <tbody id="pu-rows"></tbody>
+  </table>
+</div>
+
+<p class="pu-foot" id="pu-foot"></p>
+
+<script>
+(function () {
+  var DATA_URL = 'assets/data/ga-party-unity.json';
+  var members = [];
+  var byId = {};
+  var state = { sort: 'independence', chamber: 'all', party: 'all', min: 25 };
+  var highlightId = null;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var pct = function (x) { return (x * 100).toFixed(1) + '%'; };
+  var letter = function (p) { return p === 'Democratic' ? 'D' : p === 'Republican' ? 'R' : 'I'; };
+  var partyColor = function (p) { return p === 'Democratic' ? '#2563eb' : p === 'Republican' ? '#dc2626' : '#888'; };
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+  function getBasePath() { return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/'; }
+
+  var SORTS = {
+    independence: { head: 'Independence', get: function (m) { return m.independenceRate; }, need: 'unity', color: function () { return '#8a6a1c'; } },
+    unity:        { head: 'Party unity',  get: function (m) { return m.partyUnity; },       need: 'unity', color: function (m) { return partyColor(m.party); } },
+    missed:       { head: 'Missed-vote rate', get: function (m) { return m.missedRate; },    need: 'any',   color: function () { return '#9a6a12'; } },
+    participation:{ head: 'Participation', get: function (m) { return m.participationRate; }, need: 'any',  color: function () { return '#777'; } }
+  };
+
+  function passes(m) {
+    if (state.chamber !== 'all' && m.chamber !== state.chamber) return false;
+    if (state.party !== 'all' && m.party !== state.party) return false;
+    var s = SORTS[state.sort];
+    if (s.need === 'unity') {
+      if (m.partyUnity === null) return false;
+      if (m.partyLineVotes < state.min) return false;
+    }
+    return true;
+  }
+
+  function render() {
+    var s = SORTS[state.sort];
+    $('pu-metric-head').textContent = s.head;
+
+    var list = members.filter(passes).slice().sort(function (a, b) {
+      var d = s.get(b) - s.get(a);
+      if (d) return d;
+      return b.partyLineVotes - a.partyLineVotes;
+    });
+
+    $('pu-count').innerHTML = 'Showing <strong>' + list.length + '</strong> members'
+      + (state.chamber === 'all' ? '' : ' &middot; ' + (state.chamber === 'Senate' ? 'Senate' : 'House'))
+      + (state.party === 'all' ? '' : ' &middot; ' + state.party)
+      + (s.need === 'unity' ? ' &middot; min ' + state.min + ' party-line votes' : '');
+
+    var maxV = list.length ? Math.max.apply(null, list.map(s.get)) : 1;
+    if (!(maxV > 0)) maxV = 1;
+    var basePath = getBasePath();
+
+    var html = list.map(function (m, i) {
+      var v = s.get(m);
+      var w = Math.max(2, (v / maxV) * 100);
+      var frac;
+      if (state.sort === 'independence') frac = (m.partyLineVotes - m.votedWithParty) + ' of ' + m.partyLineVotes;
+      else if (state.sort === 'unity') frac = m.votedWithParty + ' of ' + m.partyLineVotes;
+      else if (state.sort === 'missed') frac = m.missed + ' of ' + m.totalRollCalls;
+      else frac = m.cast + ' of ' + m.totalRollCalls;
+
+      var tags = '';
+      if (m.presidingOfficer) tags = '<span class="pu-tag" title="Votes only to break ties by custom">Presiding</span>';
+      else if (s.need === 'unity' && m.partyLineVotes > 0 && m.partyLineVotes < 60) tags = '<span class="pu-tag" title="Seated for part of the biennium — small sample">Partial term</span>';
+
+      var unityCell = m.partyUnity === null ? '&mdash;' : pct(m.partyUnity);
+      var href = basePath + 'ga-member.html?id=' + encodeURIComponent(m.id);
+
+      return '<tr' + (m.id === highlightId ? ' class="pu-hl" id="pu-hl-row"' : '') + '>'
+        + '<td class="pu-rank">' + (i + 1) + '</td>'
+        + '<td><div class="pu-name"><a href="' + href + '">' + esc(m.name) + '</a>'
+          + '<span class="pu-chip ' + letter(m.party) + '">' + letter(m.party) + '</span>' + tags + '</div>'
+          + '<div class="pu-sub">' + (m.chamber === 'Senate' ? 'Senate' : 'House') + ' District ' + esc(m.district) + '</div></td>'
+        + '<td class="pu-metric"><div class="pu-barrow">'
+          + '<div class="pu-track"><div class="pu-fill" style="width:' + w.toFixed(1) + '%;background:' + s.color(m) + ';"></div></div>'
+          + '<span class="pu-pct">' + pct(v) + '</span></div>'
+          + '<div class="pu-frac">' + frac + '</div></td>'
+        + '<td class="pu-num pu-hide-sm ' + (state.sort === 'unity' ? 'pu-strong' : '') + '">' + unityCell + '</td>'
+        + '<td class="pu-num pu-hide-sm ' + (state.sort === 'missed' ? 'pu-strong' : '') + '">' + pct(m.missedRate) + '</td>'
+        + '<td class="pu-num pu-hide-sm ' + (state.sort === 'participation' ? 'pu-strong' : '') + '">' + pct(m.participationRate) + '</td>'
+        + '</tr>';
+    }).join('');
+
+    $('pu-rows').innerHTML = html || '<tr><td colspan="6" style="padding:1.5rem;color:#666;">No members match these filters.</td></tr>';
+    updateBanner(list);
+  }
+
+  // If a member was deep-linked but the current sort/filters would hide them
+  // (e.g. an independent under a unity sort, or a partial-term member below the
+  // min-sample threshold), relax just enough to reveal them, then highlight.
+  function focusHighlighted() {
+    var m = byId[highlightId];
+    if (!m) return;
+    if (m.partyUnity === null && SORTS[state.sort].need === 'unity') {
+      state.sort = 'participation';
+      $('pu-sort').value = 'participation';
+    }
+    if (SORTS[state.sort].need === 'unity' && m.partyLineVotes < state.min) {
+      state.min = 0;
+      $('pu-min').value = 0;
+      $('pu-minval').textContent = '0';
+    }
+  }
+
+  function updateBanner(list) {
+    var b = $('pu-banner');
+    if (!highlightId) { b.style.display = 'none'; return; }
+    var m = byId[highlightId];
+    if (!m) { b.style.display = 'none'; return; }
+    var shown = list.some(function (x) { return x.id === highlightId; });
+    b.style.display = 'block';
+    b.innerHTML = 'Highlighting <strong>' + esc(m.name) + '</strong>'
+      + (shown ? '' : ' — not shown under the current filters')
+      + '. <a id="pu-clear">View full ranking</a>';
+    $('pu-clear').addEventListener('click', function () {
+      highlightId = null;
+      if (window.history && history.replaceState) history.replaceState(null, '', window.location.pathname + window.location.search);
+      render();
+    });
+    if (shown) {
+      var row = $('pu-hl-row');
+      if (row) row.scrollIntoView({ block: 'center' });
+    }
+  }
+
+  function readHash() {
+    var h = window.location.hash.slice(1);
+    if (!h) return null;
+    try { h = decodeURIComponent(h); } catch (e) {}
+    return h || null;
+  }
+
+  $('pu-sort').addEventListener('change', function () { state.sort = this.value; render(); });
+  $('pu-min').addEventListener('input', function () { state.min = +this.value; $('pu-minval').textContent = this.value; render(); });
+  ['pu-chamber', 'pu-party'].forEach(function (gid) {
+    var g = $(gid);
+    var key = gid === 'pu-chamber' ? 'chamber' : 'party';
+    g.addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      state[key] = btn.dataset.v;
+      Array.prototype.forEach.call(g.children, function (c) { c.setAttribute('aria-pressed', c === btn); });
+      render();
+    });
+  });
+  window.addEventListener('hashchange', function () {
+    highlightId = readHash();
+    if (highlightId) focusHighlighted();
+    render();
+  });
+
+  fetch(DATA_URL)
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (data) {
+      members = data.members || [];
+      members.forEach(function (m) { byId[m.id] = m; });
+
+      var meta = data.metadata || {};
+      var incomplete = meta.paginationComplete === false;
+      $('pu-foot').innerHTML =
+        'Small-sample members are held back by the minimum party-line-votes filter — a member '
+        + 'seated for only part of the biennium, or the Speaker (who by custom votes only to break '
+        + 'ties), would otherwise top an independence ranking on a handful of votes. Party unity is '
+        + 'undefined for independents and for members with no party-line votes. Figures cover recorded '
+        + 'passage votes only; committee and procedural votes are excluded. '
+        + (incomplete ? '<strong>Vote data is still being backfilled, so these figures may shift.</strong> ' : '')
+        + 'Source: Open States roll-call record'
+        + (meta.biennium ? ' for the ' + esc(meta.biennium) + ' biennium' : '') + '. '
+        + 'Machine-readable data: <code>' + esc(DATA_URL) + '</code>.';
+
+      highlightId = readHash();
+      if (highlightId) focusHighlighted();
+      render();
+    })
+    .catch(function (err) {
+      $('pu-rows').innerHTML = '<tr><td colspan="6" style="padding:1.5rem;color:#a00;">'
+        + 'Could not load the scorecard data. If this persists, the daily data workflow may not have run yet.</td></tr>';
+      $('pu-count').textContent = '';
+      console.warn('scorecard load failed:', err);
+    });
+})();
+</script>

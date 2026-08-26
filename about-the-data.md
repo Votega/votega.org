@@ -88,6 +88,8 @@ If a member was non-voting, abstained, absent, excused, or had a vote recorded a
 
 **Party voting alignment:** Each profile with a known party also shows how often the member voted with their own party's majority but only on **party-line votes**, roll calls where a majority of Republicans voted opposite a majority of Democrats. Votes where both parties largely agreed are excluded, since counting those would inflate every member's score toward 100% without saying anything about partisanship (most legislation that reaches a floor vote passes with broad, often unanimous, support). This mirrors the standard "party unity score" used in political science and journalism. The party's majority position on each roll call is computed from every member's individual vote which is already collected for the voting-history feature above.
 
+**Legislator Voting Scorecard:** These two figures are also compiled for every sitting member at once on the [Legislator Voting Scorecard](https://www.votega.org/ga-party-unity.html), which ranks the whole General Assembly by party unity, independence (the inverse), or missed-vote rate, filterable by chamber and party. Congress has had this published for decades; no one has published it for the Georgia General Assembly. The ranking is computed at build time into a canonical dataset (`assets/data/ga-party-unity.json`) so the numbers are stable and comparable, and it is published for reuse (see below).
+
 ---
 
 ## [Georgia General Assembly Bills & Resolutions](https://github.com/Votega/ga-legislation)
@@ -156,7 +158,7 @@ A bill is tagged "⚡ Party-line" if any of its recorded passage votes met this 
 
 ## [GA Legislators — Published for Reuse](https://github.com/Votega/ga-legislators)
 
-Our Georgia General Assembly roster (`data/all.json`) and each legislator's passage-vote history (`data/votes.json`) are published as an open, machine-readable dataset covering the 158th (2025–2026) General Assembly. 
+Our Georgia General Assembly roster (`data/all.json`), each legislator's passage-vote history (`data/votes.json`), and the derived voting scorecard (`sessions/2025-2026/scorecard.csv` / `scorecard.json` — party unity and participation per member) are published as an open, machine-readable dataset covering the 158th (2025–2026) General Assembly. 
 
 See **[Open Data](https://github.com/Votega/ga-legislators)** for the repository, file links, and update cadence.
 
@@ -387,6 +389,7 @@ A small number of candidates cannot be resolved this way. Usually because the ba
 | GA legislators community repo | Published from above | Daily, after GA member update |
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
 | GA state legislator voting history | Open States API | Weekly, Sundays 08:00 UTC |
+| GA legislator voting scorecard (party unity + participation) | Derived from GA voting history + roster | Weekly, with the voting-history update |
 | GA bills & resolutions (2025–26 session) | Open States API | Weekly, Sundays 07:30 UTC |
 | GA curated bills (Key Votes) | Open States API | Daily, 08:00 UTC |
 | GA executive orders | gov.georgia.gov (scraped) | Daily, 08:15 UTC (committed when new orders are found) |

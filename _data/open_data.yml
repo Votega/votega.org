@@ -30,14 +30,16 @@ datasets:
     summary: >
       Current Georgia state senators and representatives — roster with district,
       party, committees, and contact — plus each member's passage-vote history,
-      joined on the same Open States person ID.
+      joined on the same Open States person ID, and a derived voting scorecard
+      (party unity + participation) for every member.
     source: Open States API (Plural Policy)
     scope: 158th General Assembly (2025–2026)
-    cadence: Roster daily · votes weekly
+    cadence: Roster daily · votes &amp; scorecard weekly
     repo_url: https://github.com/Votega/ga-legislators
     files:
       - { name: "data/all.json",   desc: "Member roster", url: "https://github.com/Votega/ga-legislators/blob/main/data/all.json" }
       - { name: "data/votes.json", desc: "Passage-vote history (keyed by OCD person ID)", url: "https://github.com/Votega/ga-legislators/blob/main/data/votes.json" }
+      - { name: "scorecard.csv", desc: "Party-unity + participation per legislator (derived)", url: "https://github.com/Votega/ga-legislators/blob/main/sessions/2025-2026/scorecard.csv" }
     docs: /about-the-data#georgia-general-assembly-legislators
     contribute: https://github.com/Votega/ga-legislators/issues
 

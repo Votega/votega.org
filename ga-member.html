@@ -1095,6 +1095,14 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       const partyVoteIndex = buildPartyVoteIndex(data.memberVotes || {}, partyMap);
       const partyLoyaltyHtml = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex, incomplete);
 
+      // Turn this member's own alignment/participation figures into a gateway to the
+      // full ranking: the scorecard opens scrolled to and highlighting this member.
+      const scorecardLink = (participationHtml || partyLoyaltyHtml)
+        ? `<p style="margin:0.35rem 0 1rem 0;font-size:0.85rem;">
+             <a href="${getBasePath()}ga-party-unity.html#${encodeURIComponent(member.id)}">See how this ranks among other GA legislators&nbsp;&rarr;</a>
+           </p>`
+        : '';
+
       const renderRows = list => list.map(({ voteId, vote }) => {
         const meta    = votesIndex[voteId] || {};
         const bill    = escHtml(meta.bill || '—');
@@ -1154,6 +1162,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
           ${participationHtml ? `<div style="flex:1;min-width:240px;">${participationHtml}</div>` : ''}
           ${partyLoyaltyHtml  ? `<div style="flex:1;min-width:240px;">${partyLoyaltyHtml}</div>`  : ''}
         </div>` : ''}
+        ${scorecardLink}
         ${chartHtml}
         ${votesTablesHtml}`;
     } catch (err) {

@@ -10,7 +10,7 @@ session ARCHIVE: per-session data lives under sessions/<YYYY-YYYY>/ and is never
 overwritten once a new session begins (the generator only ever writes the *current*
 session's directory, and the Contents API only PUTs, never deletes prior dirs).
 
-Three modes (the datasets update on different schedules / clocks, so each is its own
+Four modes (the datasets update on different schedules / clocks, so each is its own
 entry point):
 
   members        from ga-members.json      -> data/all.json (passthrough, the LIVE
@@ -21,6 +21,10 @@ entry point):
                                                votes.schema.json} per session in the
                                                biennium (roll calls split by their
                                                `session` tag) + root latest.json pointer
+  scorecard      from ga-party-unity.json  -> sessions/<biennium>/{scorecard.json,
+                                               scorecard.csv, scorecard.schema.json} +
+                                               root scorecard-latest.json pointer. DERIVED
+                                               (party unity + participation), biennium grain.
   freeze-roster  from ga-members.json      -> sessions/<slug>/{members.json, members.csv,
                                                members.schema.json, ROSTER.md}
 
@@ -54,6 +58,7 @@ SCHEMA_VERSION = "1.0.0"
 
 SRC_MEMBERS = "assets/data/ga-members.json"
 SRC_VOTES = "assets/data/ga-member-votes.json"
+SRC_SCORECARD = "assets/data/ga-party-unity.json"
 
 DEPARTED = {"Resigned", "Removed", "Deceased"}
 
@@ -108,14 +113,18 @@ def roster_md(legislators, meta, session=None):
                      f"{len(sen)} Senators, {len(hou)} Representatives._")
         machine = ("> Machine-readable: [`members.json`](members.json) / "
                    "[`members.csv`](members.csv). Roll-call votes for this session: "
-                   "[`votes.csv`](votes.csv) (full records in [`votes.json`](votes.json)).")
+                   "[`votes.csv`](votes.csv) (full records in [`votes.json`](votes.json)). "
+                   "Voting scorecard (party unity + participation): [`scorecard.csv`](scorecard.csv) "
+                   "(full records in [`scorecard.json`](scorecard.json)).")
     else:
         heading = "# Georgia General Assembly"
         freshness = (f"_Last updated {meta.get('generatedAt', '')} · {len(sen)} Senators, "
                      f"{len(hou)} Representatives (current, live roster)._")
         machine = ("> Machine-readable: [`data/all.json`](data/all.json) / "
                    "[`data/members.csv`](data/members.csv). Current session's votes and "
-                   "past sessions: see [`latest.json`](latest.json) and [`sessions/`](sessions).")
+                   "past sessions: see [`latest.json`](latest.json) and [`sessions/`](sessions). "
+                   "Derived voting scorecard (party unity + participation): "
+                   "[`scorecard-latest.json`](scorecard-latest.json).")
 
     L = [heading, ""]
     L.append("_Auto-generated from [votega.org](https://votega.org) — do not edit by hand._  ")
@@ -329,6 +338,109 @@ def build_votes():
 
 
 # --------------------------------------------------------------------------- #
+# scorecard mode (derived: party-unity + participation per legislator)
+# --------------------------------------------------------------------------- #
+# The scorecard is a DERIVED product — computed by generate_party_unity.py from
+# votes.json + members.json, both already published to this repo. It is archived
+# at the biennium grain (not per-session): party unity gets more reliable the more
+# party-line votes it sees, so the score aggregates the whole General Assembly
+# (regular + special sessions), matching how generate_party_unity.py builds it.
+def scorecard_csv(members):
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(["name", "party", "chamber", "district",
+                "partyUnity", "independenceRate", "votedWithParty", "partyLineVotes",
+                "participationRate", "missedRate", "cast", "missed", "totalRollCalls",
+                "presidingOfficer", "id"])
+    for m in members:
+        w.writerow([
+            m.get("name"), m.get("party"), m.get("chamber"),
+            "" if m.get("district") is None else m.get("district"),
+            "" if m.get("partyUnity") is None else m.get("partyUnity"),
+            "" if m.get("independenceRate") is None else m.get("independenceRate"),
+            m.get("votedWithParty"), m.get("partyLineVotes"),
+            m.get("participationRate"), m.get("missedRate"),
+            m.get("cast"), m.get("missed"), m.get("totalRollCalls"),
+            "true" if m.get("presidingOfficer") else "false",
+            m.get("id"),
+        ])
+    return buf.getvalue().encode()
+
+
+def scorecard_schema():
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://raw.githubusercontent.com/Votega/ga-legislators/main/sessions/scorecard.schema.json",
+        "title": "Georgia General Assembly — Voting Scorecard (derived)",
+        "description": "Party-unity and participation scores per legislator, DERIVED from "
+                       "votes.json + members.json in this repo. Party unity = share of party-line "
+                       "roll calls (own-party majority opposite the other party's majority) on which "
+                       "the member voted with their own caucus. Participation = share of the member's "
+                       "own-chamber passage roll calls on which they cast a Yea or Nay.",
+        "type": "object",
+        "required": ["members"],
+        "properties": {
+            "metadata": {"type": "object"},
+            "members": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["id", "name", "chamber"],
+                    "properties": {
+                        "id": {"type": "string", "description": "OCD person id (join key into votes.json / members data)."},
+                        "name": {"type": "string"},
+                        "party": {"type": ["string", "null"]},
+                        "chamber": {"type": "string", "enum": ["Senate", "House of Representatives"]},
+                        "district": {"type": ["integer", "null"]},
+                        "partyUnity": {"type": ["number", "null"], "description": "null when undefined (independent, or no party-line votes)."},
+                        "independenceRate": {"type": ["number", "null"], "description": "1 - partyUnity."},
+                        "votedWithParty": {"type": "integer"},
+                        "partyLineVotes": {"type": "integer", "description": "Denominator for partyUnity."},
+                        "participationRate": {"type": "number"},
+                        "missedRate": {"type": "number", "description": "1 - participationRate."},
+                        "cast": {"type": "integer"},
+                        "missed": {"type": "integer"},
+                        "totalRollCalls": {"type": "integer"},
+                        "presidingOfficer": {"type": "boolean", "description": "Votes only to break ties by custom; partyUnity is typically null."},
+                    },
+                    "additionalProperties": True,
+                },
+            },
+        },
+        "additionalProperties": True,
+    }
+
+
+def build_scorecard():
+    doc = json.load(open(SRC_SCORECARD, encoding="utf-8"))
+    meta = doc.get("metadata", {})
+    members = doc.get("members", [])
+    # Biennium archive dir, matching build_votes' rosterArchive at sessions/<biennium>/.
+    slug = BIENNIUM
+    base = f"sessions/{slug}"
+    artifacts = {
+        f"{base}/scorecard.json": open(SRC_SCORECARD, "rb").read(),
+        f"{base}/scorecard.csv": scorecard_csv(members),
+        f"{base}/scorecard.schema.json": build_json(scorecard_schema()),
+    }
+    # Root pointer, mirroring latest.json. Uses the source generatedAt (not now())
+    # so an unchanged run re-emits byte-identical.
+    artifacts["scorecard-latest.json"] = build_json({
+        "biennium": BIENNIUM,
+        "generatedAt": meta.get("generatedAt"),
+        "count": meta.get("count"),
+        "scoredForUnity": meta.get("scoredForUnity"),
+        "files": {
+            "scorecard": f"{base}/scorecard.json",
+            "scorecardCsv": f"{base}/scorecard.csv",
+            "scorecardSchema": f"{base}/scorecard.schema.json",
+        },
+        "derivedFrom": ["sessions/{}/votes.json".format(slug), "data/all.json"],
+    })
+    return artifacts
+
+
+# --------------------------------------------------------------------------- #
 # freeze-roster mode (deliberate, per-session at sine die)
 # --------------------------------------------------------------------------- #
 def build_freeze_roster(slug):
@@ -364,11 +476,13 @@ def main():
         artifacts = build_members()
     elif mode == "votes":
         artifacts = build_votes()
+    elif mode == "scorecard":
+        artifacts = build_scorecard()
     elif mode == "freeze-roster":
         slug = resolve_slug(sys.argv[2] if len(sys.argv) > 2 else None)
         artifacts = build_freeze_roster(slug)
     else:
-        sys.exit("usage: publish_ga_legislators.py <members|votes|freeze-roster> [session-slug]")
+        sys.exit("usage: publish_ga_legislators.py <members|votes|scorecard|freeze-roster> [session-slug]")
     publish_or_dry_run(REPO, artifacts, TOKEN_ENV)
 
 
