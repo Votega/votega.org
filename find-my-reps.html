@@ -11,7 +11,58 @@ css:
 ---
 
 <h1>Find My Representatives</h1>
-<p>Georgia voters are represented at two levels of government. Choose a category below to find and learn about the officials who represent you.</p>
+<p>Georgia voters are represented at two levels of government. Enter your address to see exactly who represents you, or browse by category below.</p>
+
+<style>
+  .fmr-lookup { margin: 1.25rem 0 2rem; }
+  .fmr-label { display:block; font-weight:600; margin-bottom:0.5rem; }
+  .fmr-row { display:flex; gap:0.5rem; flex-wrap:wrap; }
+  .fmr-input {
+    flex:1; min-width:240px; padding:0.6rem 0.75rem; font-size:1rem;
+    border:1px solid #cbd0d8; border-radius:8px;
+  }
+  .fmr-btn {
+    padding:0.6rem 1.15rem; font-size:1rem; font-weight:600; cursor:pointer;
+    background:#1a56a8; color:#fff; border:0; border-radius:8px; white-space:nowrap;
+  }
+  .fmr-btn:disabled { opacity:0.6; cursor:default; }
+  .fmr-privacy { font-size:0.78rem; color:#666; margin:0.5rem 0 0; }
+  .fmr-status { margin-top:0.9rem; font-size:0.9rem; }
+  .fmr-status.err { color:#b91c1c; }
+  .fmr-results { margin-top:1rem; display:grid; gap:0.9rem; }
+  .fmr-matched { font-size:0.85rem; color:#555; margin:0 0 0.25rem; }
+  .fmr-office { font-size:0.72rem; letter-spacing:0.05em; text-transform:uppercase; color:#777; font-weight:700; margin:0 0 0.4rem; }
+  .fmr-repcard {
+    display:flex; align-items:center; gap:0.9rem; padding:0.85rem 1rem;
+    border:1px solid #e0e0e0; border-radius:10px; background:#fff; text-decoration:none; color:inherit;
+  }
+  .fmr-repcard:hover { border-color:#1a56a8; box-shadow:0 2px 10px rgba(26,86,168,0.08); }
+  .fmr-photo { width:52px; height:52px; border-radius:50%; object-fit:cover; background:#eef1f5; flex-shrink:0; }
+  .fmr-photo-blank { display:flex; align-items:center; justify-content:center; font-size:1.3rem; color:#9aa3af; }
+  .fmr-repname { font-weight:600; font-size:1.02rem; }
+  .fmr-repmeta { font-size:0.82rem; color:#555; margin-top:1px; }
+  .fmr-chip { font-size:0.68rem; font-weight:700; padding:0.05rem 0.4rem; border-radius:100px; margin-left:0.4rem; }
+  .fmr-chip.D { background:#dbe4f8; color:#1e40af; }
+  .fmr-chip.R { background:#f6dcdc; color:#b91c1c; }
+  .fmr-chip.I { background:#eee; color:#555; }
+  .fmr-vacant { color:#a35b00; font-style:italic; }
+  .fmr-browse-lead { margin:0.5rem 0 1rem; font-weight:600; color:#444; }
+</style>
+
+<div class="fmr-lookup">
+  <label class="fmr-label" for="fmrAddress">Enter your residential address</label>
+  <div class="fmr-row">
+    <input type="text" id="fmrAddress" class="fmr-input"
+           placeholder="123 Peachtree St NE, Atlanta, GA 30303"
+           autocomplete="street-address" />
+    <button id="fmrBtn" class="fmr-btn" type="button">Find my reps</button>
+  </div>
+  <p class="fmr-privacy">Your address is sent only to the U.S. Census geocoder to look up your districts. VoteGA does not store it.</p>
+  <div id="fmrStatus" class="fmr-status" role="status" aria-live="polite"></div>
+  <div id="fmrResults" class="fmr-results"></div>
+</div>
+
+<p class="fmr-browse-lead">Or browse by category:</p>
 
 <div class="reps-grid">
   <a class="rep-card" href="{{ '/federal-reps' | relative_url }}">
@@ -40,3 +91,152 @@ css:
     <span class="rep-card-cta">Find my GA state reps →</span>
   </a>
 </div>
+
+<!-- Reuses the tested Census geocoder from the sample-ballot module (address ->
+     county + US House + state House + state Senate districts, via JSONP). No
+     boundary files needed: Census resolves these districts server-side. -->
+<script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}"></script>
+<script>
+(function () {
+  'use strict';
+  var FED_URL = 'assets/data/current-members.json';
+  var GA_URL  = 'assets/data/ga-members.json';
+  var DEPARTED = { Resigned: 1, Removed: 1, Deceased: 1 };
+
+  var input  = document.getElementById('fmrAddress');
+  var btn    = document.getElementById('fmrBtn');
+  var status = document.getElementById('fmrStatus');
+  var out    = document.getElementById('fmrResults');
+
+  function basePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+  function partyLetter(p) {
+    p = (p || '').toLowerCase();
+    return p.indexOf('dem') === 0 ? 'D' : p.indexOf('rep') === 0 ? 'R' : 'I';
+  }
+  function chip(party) {
+    if (!party) return '';
+    var L = partyLetter(party);
+    return '<span class="fmr-chip ' + L + '">' + L + '</span>';
+  }
+  function fedName(m) {
+    if (m.firstName && m.lastName) return m.firstName + ' ' + m.lastName;
+    var n = m.name || '', i = n.indexOf(', ');
+    return i > -1 ? n.slice(i + 2) + ' ' + n.slice(0, i) : n;
+  }
+  function fedChamber(m) {
+    var it = (m.terms && m.terms.item) || [];
+    return it.length ? it[it.length - 1].chamber : null;
+  }
+
+  function loadJson(rel) {
+    return fetch(basePath() + rel).then(function (r) {
+      if (!r.ok) throw new Error('Data file unavailable: ' + rel);
+      return r.json();
+    });
+  }
+
+  // One rep card, or a "vacant" note when the seat has no sitting member.
+  function repCard(office, m, opts) {
+    opts = opts || {};
+    if (!m) {
+      return '<div><p class="fmr-office">' + esc(office) + '</p>'
+        + '<div class="fmr-repcard"><span class="fmr-photo fmr-photo-blank">—</span>'
+        + '<div><div class="fmr-repname fmr-vacant">' + esc(opts.vacant || 'Seat currently vacant') + '</div>'
+        + (opts.sub ? '<div class="fmr-repmeta">' + esc(opts.sub) + '</div>' : '') + '</div></div></div>';
+    }
+    var href = opts.href;
+    var photo = opts.photo
+      ? '<img class="fmr-photo" src="' + esc(opts.photo) + '" alt="" loading="lazy" />'
+      : '<span class="fmr-photo fmr-photo-blank">👤</span>';
+    return '<div><p class="fmr-office">' + esc(office) + '</p>'
+      + '<a class="fmr-repcard" href="' + esc(href) + '">' + photo
+      + '<div><div class="fmr-repname">' + esc(opts.name) + chip(opts.party) + '</div>'
+      + '<div class="fmr-repmeta">' + esc(opts.sub || '') + '</div></div></a></div>';
+  }
+
+  function render(loc, fed, ga) {
+    var base = basePath();
+    var fedGA = (fed.members || []).filter(function (m) {
+      return m.state === 'Georgia' && m.currentMember !== false;
+    });
+    var senators = fedGA.filter(function (m) { return fedChamber(m) === 'Senate'; })
+      .sort(function (a, b) { return fedName(a).localeCompare(fedName(b)); });
+    var usRep = fedGA.find(function (m) {
+      return fedChamber(m) === 'House of Representatives' && m.district === loc.usHouse;
+    });
+
+    var gaSeated = (ga.members || []).filter(function (m) { return !DEPARTED[m.status]; });
+    var stSen = gaSeated.find(function (m) { return m.chamber === 'Senate' && m.district === loc.stateSenate; });
+    var stRep = gaSeated.find(function (m) { return m.chamber === 'House of Representatives' && m.district === loc.stateHouse; });
+
+    var html = '';
+    if (loc.matchedAddress) html += '<p class="fmr-matched">Showing representatives for <strong>' + esc(loc.matchedAddress) + '</strong></p>';
+
+    senators.forEach(function (m) {
+      html += repCard('U.S. Senate', m, {
+        name: fedName(m), party: m.partyName, sub: 'Georgia · U.S. Senator',
+        photo: m.depiction && m.depiction.imageUrl,
+        href: base + 'member.html?bioguideId=' + encodeURIComponent(m.bioguideId),
+      });
+    });
+
+    html += repCard('U.S. House', usRep, usRep ? {
+      name: fedName(usRep), party: usRep.partyName,
+      sub: 'District ' + loc.usHouse,
+      photo: usRep.depiction && usRep.depiction.imageUrl,
+      href: base + 'member.html?bioguideId=' + encodeURIComponent(usRep.bioguideId),
+    } : { sub: loc.usHouse != null ? 'District ' + loc.usHouse : '', vacant: 'No sitting U.S. Representative found' });
+
+    html += repCard('Georgia State Senate', stSen, stSen ? {
+      name: stSen.name, party: stSen.party,
+      sub: 'District ' + loc.stateSenate + (stSen.status === 'Vacant' ? ' · Vacant' : ''),
+      photo: stSen.imageUrl,
+      href: base + 'ga-member.html?id=' + encodeURIComponent(stSen.id),
+    } : { sub: loc.stateSenate != null ? 'District ' + loc.stateSenate : '', vacant: 'This Senate seat is currently vacant' });
+
+    html += repCard('Georgia House of Representatives', stRep, stRep ? {
+      name: stRep.name, party: stRep.party,
+      sub: 'District ' + loc.stateHouse + (stRep.status === 'Vacant' ? ' · Vacant' : ''),
+      photo: stRep.imageUrl,
+      href: base + 'ga-member.html?id=' + encodeURIComponent(stRep.id),
+    } : { sub: loc.stateHouse != null ? 'District ' + loc.stateHouse : '', vacant: 'This House seat is currently vacant' });
+
+    out.innerHTML = html;
+    status.textContent = '';
+    status.className = 'fmr-status';
+  }
+
+  var busy = false;
+  function lookup() {
+    var addr = (input.value || '').trim();
+    if (!addr) { status.textContent = 'Enter your address above.'; status.className = 'fmr-status err'; return; }
+    if (busy) return;
+    busy = true;
+    btn.disabled = true;
+    out.innerHTML = '';
+    status.textContent = 'Looking up your districts…';
+    status.className = 'fmr-status';
+
+    // SampleBallot.geocodeAddress: address -> { county, usHouse, stateHouse, stateSenate }.
+    Promise.all([
+      window.SampleBallot.geocodeAddress(addr),
+      loadJson(FED_URL),
+      loadJson(GA_URL),
+    ]).then(function (r) {
+      render(r[0], r[1], r[2]);
+    }).catch(function (err) {
+      status.textContent = (err && err.message) || 'Something went wrong. Try browsing by category below.';
+      status.className = 'fmr-status err';
+    }).finally(function () {
+      busy = false;
+      btn.disabled = false;
+    });
+  }
+
+  btn.addEventListener('click', lookup);
+  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); lookup(); } });
+})();
+</script>
