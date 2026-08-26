@@ -1,42 +1,62 @@
 {%- comment -%}
-  "What's on my ballot" entry point. The home page previously went straight from
-  the two rep-lookup cards to "Latest Updates", so the elections journey — half
-  the site — was reachable only from a navbar dropdown.
+  "What's on my ballot" entry point and its companion "Latest Results" card. The
+  home page previously went straight from the two rep-lookup cards to "Latest
+  Updates", so the elections journey — half the site — was reachable only from a
+  navbar dropdown. See CODEBASE-REVIEW-2026-08-18.md finding 4.10.
 
-  Dates come from ga-election-calendar.json, so this never needs hand-editing as
-  a cycle advances; the strip hides itself once no upcoming election remains.
-  See CODEBASE-REVIEW-2026-08-18.md finding 4.10.
+  Two peer cards share a flex row (#electionCards):
 
-  The results link is a second, independent read of election-status.json — the
-  live status overlay Jekyll rebuilds from the results pages' own front matter
-  and vote totals. It points at the most recent election that has actually been
-  counted, and stays hidden when none has, so the home page can never offer a
-  results page that is still all zeros. The two fetches are deliberately not
-  chained: a missing or stale calendar must not take the results link down with
-  it, and vice versa.
+  - Next Election (left) is driven by ga-election-calendar.json: it shows the
+    soonest election dated today-or-later and hides itself once none remains, so
+    it never needs hand-editing as a cycle advances.
+
+  - Latest Results (right) is driven by election-status.json — the live status
+    overlay Jekyll rebuilds from each results page's own front matter AND the
+    votes in its data file. It surfaces the most recent election that has
+    actually been counted, within a 30-day window after election day (see
+    RESULTS_WINDOW_DAYS), so a just-decided race is one click from the home page
+    while interest is high and then ages out on its own. "upcoming" there means
+    "nothing counted yet" no matter what a page's front matter says, so a staged
+    page of zeros can never be offered.
+
+  The two feeds are read independently (Promise.allSettled): a missing or stale
+  calendar must not take the results card down, nor the reverse. The results
+  card enriches its title from the calendar when available and falls back to a
+  generic label when it is not. The row hides entirely only when neither card
+  has anything to show.
 {%- endcomment -%}
-<section id="nextElectionStrip" class="next-election" hidden aria-labelledby="nextElectionHeading">
-  <div class="next-election-main">
-    <p class="next-election-label" id="nextElectionHeading">Next Election</p>
-    <p class="next-election-name" id="nextElectionName"></p>
-    <p class="next-election-date" id="nextElectionDate"></p>
-  </div>
-  <dl class="next-election-facts" id="nextElectionFacts"></dl>
-  <div class="next-election-actions">
-    <a class="next-election-btn" href="{{ '/sample-ballot' | relative_url }}">See what's on my ballot &rarr;</a>
-    <a class="next-election-link" href="{{ '/ga-voter-access' | relative_url }}">Voter access &amp; deadlines</a>
-    <a class="next-election-link next-election-results" id="nextElectionResults" href="{{ '/results' | relative_url }}" hidden>
-      Election results &rarr;
-      <span class="next-election-results-sub" id="nextElectionResultsSub"></span>
-    </a>
-  </div>
-</section>
+<div class="election-cards" id="electionCards" hidden>
+  <section id="nextElectionStrip" class="next-election" hidden aria-labelledby="nextElectionHeading">
+    <div class="next-election-main">
+      <p class="next-election-label" id="nextElectionHeading">Next Election</p>
+      <p class="next-election-name" id="nextElectionName"></p>
+      <p class="next-election-date" id="nextElectionDate"></p>
+    </div>
+    <dl class="next-election-facts" id="nextElectionFacts"></dl>
+    <div class="next-election-actions">
+      <a class="next-election-btn" href="{{ '/sample-ballot' | relative_url }}">See what's on my ballot &rarr;</a>
+      <a class="next-election-link" href="{{ '/ga-voter-access' | relative_url }}">Voter access &amp; deadlines</a>
+    </div>
+  </section>
+
+  <a class="results-card" id="latestResultsCard" href="{{ '/results' | relative_url }}" hidden aria-labelledby="latestResultsHeading">
+    <p class="results-card-label" id="latestResultsHeading">Latest Results</p>
+    <p class="results-card-name" id="latestResultsName"></p>
+    <p class="results-card-meta" id="latestResultsMeta"></p>
+    <span class="results-card-cta">See full results &rarr;</span>
+  </a>
+</div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script>
 (function () {
-  const EL = document.getElementById('nextElectionStrip');
-  if (!EL) return;
+  const CARDS = document.getElementById('electionCards');
+  const STRIP = document.getElementById('nextElectionStrip');
+  const RESULTS = document.getElementById('latestResultsCard');
+  if (!CARDS) return;
+
+  // How long a decided election keeps its home-page card after election day.
+  const RESULTS_WINDOW_DAYS = 30;
 
   function basePath() {
     return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
@@ -60,67 +80,81 @@
     return Math.round((parseLocalDate(iso) - today) / 86400000);
   }
   function esc(value) { return VoteGA.escapeHtml(value); }
+  function reveal(el) { el.hidden = false; CARDS.hidden = false; }
 
-  fetch(basePath() + 'assets/data/ga-election-calendar.json')
-    .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
-    .then(data => {
-      const today = new Date(); today.setHours(0, 0, 0, 0);
-      const next = (data.elections || [])
-        .filter(e => e.date && parseLocalDate(e.date) >= today)
-        .sort((a, b) => a.date.localeCompare(b.date))[0];
-      // No upcoming election on file — stay hidden rather than show a stale one.
-      if (!next) return;
+  // --- Next Election (calendar) -------------------------------------------
+  function renderNext(data) {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const next = (data.elections || [])
+      .filter(e => e.date && parseLocalDate(e.date) >= today)
+      .sort((a, b) => a.date.localeCompare(b.date))[0];
+    // No upcoming election on file — stay hidden rather than show a stale one.
+    if (!next) return;
 
-      const days = daysUntil(next.date);
-      const when = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `${days} days away`;
+    const days = daysUntil(next.date);
+    const when = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `${days} days away`;
 
-      document.getElementById('nextElectionName').textContent = next.name;
-      document.getElementById('nextElectionDate').innerHTML =
-        `${esc(fmtLong(next.date))} <span class="next-election-countdown">&middot; ${esc(when)}</span>`;
+    document.getElementById('nextElectionName').textContent = next.name;
+    document.getElementById('nextElectionDate').innerHTML =
+      `${esc(fmtLong(next.date))} <span class="next-election-countdown">&middot; ${esc(when)}</span>`;
 
-      const facts = [];
-      if (next.registrationDeadline) {
-        facts.push(['Register by', fmtShort(next.registrationDeadline)]);
-      }
-      if (next.earlyVotingStart) {
-        facts.push(['Early voting', next.earlyVotingEnd
-          ? fmtShort(next.earlyVotingStart) + ' – ' + fmtShort(next.earlyVotingEnd)
-          : 'Begins ' + fmtShort(next.earlyVotingStart)]);
-      }
-      document.getElementById('nextElectionFacts').innerHTML = facts
-        .map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('');
+    const facts = [];
+    if (next.registrationDeadline) {
+      facts.push(['Register by', fmtShort(next.registrationDeadline)]);
+    }
+    if (next.earlyVotingStart) {
+      facts.push(['Early voting', next.earlyVotingEnd
+        ? fmtShort(next.earlyVotingStart) + ' – ' + fmtShort(next.earlyVotingEnd)
+        : 'Begins ' + fmtShort(next.earlyVotingStart)]);
+    }
+    document.getElementById('nextElectionFacts').innerHTML = facts
+      .map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('');
 
-      EL.hidden = false;
-    })
-    .catch(err => console.warn('next-election strip:', err));
+    reveal(STRIP);
+  }
 
-  // --- Results link -------------------------------------------------------
-  // election-status.json resolves each results page against the votes actually
-  // in its data file, so "upcoming" here means "nothing counted yet" no matter
-  // what the page's front matter says. Anything else is safe to link to.
-  const RESULTS_LINK = document.getElementById('nextElectionResults');
-  if (!RESULTS_LINK) return;
+  // --- Latest Results (status overlay, name from calendar when present) ----
+  function renderResults(statusData, calendarData) {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const counted = Object.values((statusData && statusData.elections) || {})
+      .filter(e => e.url && e.date && e.status !== 'upcoming' &&
+                   parseLocalDate(e.date) <= today &&
+                   -daysUntil(e.date) <= RESULTS_WINDOW_DAYS)
+      .sort((a, b) => b.date.localeCompare(a.date))[0];
+    // Nothing counted within the window — leave the card out rather than send a
+    // voter to a page of zeros or a months-old result.
+    if (!counted) return;
 
-  fetch(basePath() + 'assets/data/election-status.json')
-    .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
-    .then(data => {
-      const today = new Date(); today.setHours(0, 0, 0, 0);
-      const counted = Object.values(data.elections || {})
-        .filter(e => e.url && e.date && e.status !== 'upcoming' &&
-                     parseLocalDate(e.date) <= today)
-        .sort((a, b) => b.date.localeCompare(a.date))[0];
-      // Nothing counted yet this cycle — leave the link out rather than send
-      // a voter to a page of zeros.
-      if (!counted) return;
+    const byDate = {};
+    (((calendarData && calendarData.elections) || [])).forEach(e => {
+      if (e.date && e.name) byDate[e.date] = e.name;
+    });
+    const name = byDate[counted.date] || 'Georgia Election Results';
+    const certified = counted.status === 'certified';
+    const label = certified ? 'Certified' : 'Unofficial';
 
-      const label = counted.status === 'certified' ? 'Certified' : 'Unofficial';
-      RESULTS_LINK.href = basePath().replace(/\/$/, '') + counted.url;
-      RESULTS_LINK.setAttribute('aria-label',
-        `Election results: ${fmtLong(counted.date)}, ${label.toLowerCase()}`);
-      document.getElementById('nextElectionResultsSub').textContent =
-        `${fmtShort(counted.date)} · ${label}`;
-      RESULTS_LINK.hidden = false;
-    })
-    .catch(err => console.warn('next-election results link:', err));
+    RESULTS.href = basePath().replace(/\/$/, '') + counted.url;
+    document.getElementById('latestResultsName').textContent = name;
+    document.getElementById('latestResultsMeta').innerHTML =
+      `${esc(fmtShort(counted.date))} <span class="results-card-status ${certified ? 'certified' : 'unofficial'}">${esc(label)}</span>`;
+    RESULTS.setAttribute('aria-label',
+      `Latest results: ${name}, ${fmtLong(counted.date)}, ${label.toLowerCase()}`);
+    reveal(RESULTS);
+  }
+
+  const calendar = fetch(basePath() + 'assets/data/ga-election-calendar.json')
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)));
+  const status = fetch(basePath() + 'assets/data/election-status.json')
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)));
+
+  calendar.then(renderNext).catch(err => console.warn('next-election strip:', err));
+
+  Promise.allSettled([status, calendar]).then(([s, c]) => {
+    if (s.status !== 'fulfilled') {
+      console.warn('latest-results card: status feed unavailable', s.reason);
+      return;
+    }
+    renderResults(s.value, c.status === 'fulfilled' ? c.value : null);
+  });
 })();
 </script>
