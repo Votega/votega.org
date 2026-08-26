@@ -22,7 +22,20 @@ before editing any JSON by hand; a hand edit will be overwritten on the next run
 | Weekly (Sun) | `update-ga-bills` (07:30), `update-fec-data` (08:00), `update-ga-campaign-finance` (08:30), `update-federal-votes` (09:00), `update-vp-tie-votes` (09:30), `update-presidential-laws` (09:45), `update-scotus-decisions` (10:00), `update-ga-congress-trades` (10:00) |
 | Weekly (Mon) | `update-ga-votes` (07:30) &mdash; cron `30 7 * * 1`, deliberately off the Sunday cluster |
 | On push to `main` | The five `publish-*` syncs each fire when the `assets/data/*.json` they mirror changes (and are also `workflow_dispatch`-able). `publish-races-to-ga-races-elections` additionally runs on the daily schedule above. |
-| Manual dispatch only | `deploy-pages`, `validate-ga-overrides`, `sync-generated-data-on-pr`, the `inspect-*` diagnostics |
+| Manual dispatch only | `validate-ga-overrides`, the `inspect-*` diagnostics. (`sync-generated-data-on-pr` runs on every pull request.) |
+| Daily deploy | `deploy-pages` (13:00) &mdash; **also** on every push to `main`. It is not manual-only, and the schedule is load-bearing: see the note below. |
+
+> **A `publish-*` sync cannot see a bot's commit.** GitHub does not fire a `push`
+> trigger for commits authored by the default `GITHUB_TOKEN`, and every workflow
+> in this table commits with it. So a `paths:` trigger watching a generated file
+> only ever fires for a *human* edit to that file. Three publishers were dead
+> this way — the federal-delegation sync ran 4 times in two months while its
+> inputs updated daily, and `deploy-pages` had 326 runs without one on a bot
+> commit, so the public site only refreshed when someone happened to push.
+> The fix is to publish from the workflow that writes the data (see the inline
+> `Publish ...` step at the end of `update-current-members.yml`), or to add a
+> schedule. `python scripts/validate_workflow_triggers.py` checks that every
+> such trigger is covered and fails if one is not.
 
 All times UTC. Verified against the workflow crons 2026-08-19.
 

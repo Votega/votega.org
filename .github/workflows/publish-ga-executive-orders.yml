@@ -16,7 +16,14 @@ on:
   push:
     branches: [main]
     paths:
-      - 'assets/data/ga-executive-orders-2026.json'  # current year; prior years are static
+      # publish_ga_executive_orders.py globs ga-executive-orders-*.json and reads
+      # eo-text/, so watching only the current year meant the 2020 and 2021
+      # backfills did not trigger a publish at all. They reached the sibling repo
+      # because the maintainer dispatched this workflow by hand afterwards — the
+      # data got there, the automation did not. Prior years are static in normal
+      # operation, but a backfill is exactly when they are not.
+      - 'assets/data/ga-executive-orders-*.json'
+      - 'assets/data/eo-text/**'
       - 'scripts/publish_ga_executive_orders.py'
       - 'scripts/lib/sibling_publish.py'
 

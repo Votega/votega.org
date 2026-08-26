@@ -4,6 +4,21 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # GitHub does not fire a `push` trigger for commits authored by the default
+  # GITHUB_TOKEN (the recursion guard documented in update-ga-bills.yml), and
+  # every scheduled data workflow commits with it. So none of the daily member,
+  # executive-order, search-index or ballot-preview commits deployed themselves:
+  # across 326 runs of this workflow, every single one was a human push. The site
+  # only went live as a side effect of somebody committing something else, which
+  # made freshness a function of how busy the maintainer was that week.
+  #
+  # Daily at 13:00 UTC, after the last of the scheduled data workflows
+  # (update-search-corpus, 12:00). A `workflow_run` trigger would be tighter, but
+  # it matches on a hand-maintained list of workflow names — the same list that
+  # already let one workflow go unmonitored in notify-workflow-failure.yml. A
+  # cron cannot fall out of step with anything.
+  schedule:
+    - cron: '0 13 * * *'
 
 permissions:
   contents: read

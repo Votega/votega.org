@@ -109,3 +109,13 @@ jobs:
               exit 1
             fi
           fi
+
+      - name: Publish executive-order artifacts to ga-executive-orders
+        if: ${{ inputs.commit }}
+        # Same reason as update-ga-executive-orders.yml: the standalone publisher's
+        # `paths` trigger cannot see a commit this workflow makes, because it is
+        # authored by the default GITHUB_TOKEN. The 2020 and 2021 backfills sat in
+        # this repo unpublished until someone dispatched the publisher by hand.
+        env:
+          GA_EXECUTIVE_ORDERS_TOKEN: ${{ secrets.GA_EXECUTIVE_ORDERS_TOKEN }}
+        run: python3 scripts/publish_ga_executive_orders.py

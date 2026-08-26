@@ -81,3 +81,13 @@ jobs:
               exit 1
             fi
           fi
+
+      # Published from here, not left to publish-ga-executive-orders.yml's
+      # `paths` trigger: that trigger watches a file this workflow writes, and
+      # GitHub does not fire `push` for a commit authored by the default
+      # GITHUB_TOKEN. The standalone workflow was being dispatched by hand after these commits
+      # instead — runs 20, 21 and 22 were all manual, right after a bot commit.
+      - name: Publish executive-order artifacts to ga-executive-orders
+        env:
+          GA_EXECUTIVE_ORDERS_TOKEN: ${{ secrets.GA_EXECUTIVE_ORDERS_TOKEN }}
+        run: python3 scripts/publish_ga_executive_orders.py
