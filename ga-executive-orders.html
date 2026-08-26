@@ -275,9 +275,18 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
 
       const src = document.getElementById('dataSource');
       const eoUpdated = data.metadata?.updatedAt;
-      src.textContent = `Source: gov.georgia.gov · Data as of: `
-        + `${eoUpdated && window.dataStamp ? window.dataStamp.formatDate(eoUpdated) : (eoUpdated || year)}`
-        + ` · ${allOrders.length} orders`;
+      const stamp = eoUpdated && window.dataStamp ? window.dataStamp.formatDate(eoUpdated) : (eoUpdated || year);
+      src.textContent = `Source: gov.georgia.gov · Data as of: ${stamp} · ${allOrders.length} orders · `;
+      // Machine-readable data is published (and archived per year, alongside an
+      // all-years CSV + schema) in the ga-executive-orders repo — the stable open-
+      // data home, not the internal per-year asset this page fetches. See the
+      // sibling-repo footnote convention in CLAUDE.md.
+      const repoLink = document.createElement('a');
+      repoLink.href = 'https://github.com/Votega/ga-executive-orders';
+      repoLink.target = '_blank';
+      repoLink.rel = 'noopener';
+      repoLink.textContent = 'Open data (JSON + CSV)';
+      src.appendChild(repoLink);
     } catch (err) {
       console.error(err);
       document.getElementById('orderBody').innerHTML =
