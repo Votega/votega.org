@@ -20,7 +20,7 @@ import time
 import urllib.request
 import urllib.error
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.http import fetch_json as http_fetch_json
 
@@ -53,7 +53,7 @@ def unix_to_date(ts):
     if not ts:
         return None
     try:
-        return datetime.utcfromtimestamp(int(ts)).strftime("%Y-%m-%d")
+        return datetime.fromtimestamp(int(ts), timezone.utc).strftime("%Y-%m-%d")
     except (ValueError, OSError):
         return None
 
