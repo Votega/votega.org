@@ -117,6 +117,39 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
   .county-filter.visible { display: block; }
   .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; }
 
+  .address-filter { display: none; margin-bottom: 1rem; }
+  .address-filter.visible { display: block; }
+  .address-filter > label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; font-weight: 600; }
+  .address-row { display: flex; gap: 0.5rem; flex-wrap: wrap; max-width: 560px; }
+  .address-row input { flex: 1 1 260px; min-width: 0; padding: 8px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+  .address-row button { flex: 0 0 auto; padding: 8px 16px; font-weight: 600; color: #fff; background: #0b5394; border: none; border-radius: 6px; cursor: pointer; }
+  .address-row button:hover { background: #073763; }
+  .address-row button:disabled { opacity: 0.6; cursor: default; }
+  .address-hint { font-size: 0.78rem; color: #777; margin-top: 0.3rem; }
+  .address-error { color: #c00; font-size: 0.85rem; margin-top: 0.35rem; }
+  .address-or { font-size: 0.82rem; color: #888; margin: 0.6rem 0 0.3rem; }
+
+  .voter-banner {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    background: #eef6ff;
+    border: 1px solid #cfe3fb;
+    font-size: 0.88rem;
+    color: #1a3f6b;
+  }
+  .voter-banner.visible { display: flex; }
+  .voter-banner button {
+    background: none; border: none; padding: 0;
+    color: #1a56a8; font-weight: 600; font-size: 0.85rem;
+    text-decoration: underline; cursor: pointer;
+  }
+
   .filter-bar {
     display: flex;
     align-items: center;
@@ -182,6 +215,21 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
   <button class="tab-btn" data-tab="district-attorney">District Attorney</button>
 </div>
 
+<div class="address-filter" id="addressFilter">
+  <label for="addressInput">Find your exact districts by address</label>
+  <div class="address-row">
+    <input type="text" id="addressInput"
+           placeholder="123 Peachtree St NE, Atlanta, GA 30303"
+           autocomplete="street-address" />
+    <button type="button" id="addressBtn">Find my districts</button>
+  </div>
+  <div class="address-hint">Your address is sent only to the U.S. Census geocoder to look up your districts; VoteGA doesn't store it.</div>
+  <div class="address-error" id="addressError" role="alert"></div>
+  <p class="address-or">or filter by county below (shows every district touching the county)</p>
+</div>
+
+<div class="voter-banner" id="voterBanner"></div>
+
 <div class="filter-bar">
   <div class="county-filter" id="countyFilter">
     <label for="countySelect">Filter by county</label>
@@ -206,11 +254,20 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/voter-location.js' | relative_url }}"></script>
+<!-- sample-ballot.js is pure function definitions (no side effects on load); we use its
+     exported geocodeAddress() so address→district logic lives in one place. -->
+<script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}"></script>
 <script>
   const RACES_URL = getBasePath() + 'assets/data/races.json';
 
   const countySelect   = document.getElementById('countySelect');
   const countyFilter   = document.getElementById('countyFilter');
+  const addressFilter  = document.getElementById('addressFilter');
+  const addressInput   = document.getElementById('addressInput');
+  const addressBtn     = document.getElementById('addressBtn');
+  const addressError   = document.getElementById('addressError');
+  const voterBanner    = document.getElementById('voterBanner');
   const openSeatOnly   = document.getElementById('openSeatOnly');
   const statusEl       = document.getElementById('status');
   const racesOutput    = document.getElementById('racesOutput');
@@ -222,6 +279,12 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
   let activeTab   = 'executive';
   let activeCycle = null;   // newest cycle present in races.json, set by loadData()
   let activePhase = null;   // set by buildPhaseToggle() from the data
+  // Resolved voter location from an address lookup (this page or carried over from the
+  // sample ballot via VoterLocation/sessionStorage). {source:'address', county, usHouse,
+  // stateHouse, stateSenate}. When set, district tabs filter to the exact district
+  // instead of the county's overlapping set. County-only carryover pre-selects the
+  // dropdown instead and leaves this null.
+  let voterLoc    = null;
 
   // Copy per phase. {date} and {year} are filled from the phase's electionDate in
   // races.json, so dates are never hardcoded here — a new cycle just works.
@@ -408,20 +471,35 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     return names || 'No active candidates';
   }
 
-  function racesForTab(tab, county) {
+  function racesForTab(tab) {
     let races = allRaces.filter(r => r.activePhase === activePhase).filter(TAB_FILTER[tab] || (() => false));
 
-    // For district-based tabs, filter by county if one is selected
-    if (COUNTY_TABS.has(tab) && county) {
-      const houseDists  = COUNTY_HOUSE_DISTRICTS[county]  || [];
-      const senateDists = COUNTY_SENATE_DISTRICTS[county] || [];
-      const usDists     = COUNTY_US_HOUSE_DISTRICTS[county] || [];
-      races = races.filter(r => {
-        if (r.chamber === 'Georgia House of Representatives') return houseDists.includes(r.district);
-        if (r.chamber === 'Georgia State Senate')             return senateDists.includes(r.district);
-        if (r.chamber === 'U.S. House')                      return usDists.includes(r.district);
-        return true;
-      });
+    if (COUNTY_TABS.has(tab)) {
+      if (voterLoc && voterLoc.source === 'address') {
+        // Exact districts from the address geocode. If Census didn't return a layer
+        // (district null), don't filter that chamber rather than hide everything.
+        races = races.filter(r => {
+          if (r.chamber === 'Georgia House of Representatives')
+            return voterLoc.stateHouse == null || r.district === voterLoc.stateHouse;
+          if (r.chamber === 'Georgia State Senate')
+            return voterLoc.stateSenate == null || r.district === voterLoc.stateSenate;
+          if (r.chamber === 'U.S. House')
+            return voterLoc.usHouse == null || r.district === voterLoc.usHouse;
+          return true;
+        });
+      } else if (countySelect.value) {
+        // County-only: widen to every district overlapping the county.
+        const county      = countySelect.value;
+        const houseDists  = COUNTY_HOUSE_DISTRICTS[county]  || [];
+        const senateDists = COUNTY_SENATE_DISTRICTS[county] || [];
+        const usDists     = COUNTY_US_HOUSE_DISTRICTS[county] || [];
+        races = races.filter(r => {
+          if (r.chamber === 'Georgia House of Representatives') return houseDists.includes(r.district);
+          if (r.chamber === 'Georgia State Senate')             return senateDists.includes(r.district);
+          if (r.chamber === 'U.S. House')                      return usDists.includes(r.district);
+          return true;
+        });
+      }
     }
 
     if (openSeatOnly.checked) {
@@ -459,13 +537,13 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
   }
 
   function renderRaces() {
-    const county  = countySelect.value;
-    const races   = racesForTab(activeTab, county);
+    const races   = racesForTab(activeTab);
     const basePath = getBasePath();
 
     if (!races.length) {
-      const hint = COUNTY_TABS.has(activeTab) && !county
-        ? 'Select a county above to filter by district, or all districts are shown when no county is selected.'
+      const noFilter = !voterLoc && !countySelect.value;
+      const hint = COUNTY_TABS.has(activeTab) && noFilter
+        ? 'Enter your address or select a county above to filter by district — all districts are shown when neither is set.'
         : phaseMeta(activePhase).empty;
       racesOutput.innerHTML = `<p class="empty-note">${hint}</p>`;
       return;
@@ -502,7 +580,10 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
       races.sort((a, b) => (a.circuit || '').localeCompare(b.circuit || ''))
            .forEach(r => { html += renderRaceRow(r, basePath); });
     } else {
-      if (activeTab === 'us-senate' || COUNTY_TABS.has(activeTab)) {
+      // The "which district am I in?" nudge is moot once an address has pinned the
+      // exact districts, so only show it when we're not address-filtered.
+      const addressExact = voterLoc && voterLoc.source === 'address' && COUNTY_TABS.has(activeTab);
+      if ((activeTab === 'us-senate' || COUNTY_TABS.has(activeTab)) && !addressExact) {
         html += `<p class="box-note" style="margin-bottom:1rem;font-size:0.82rem;color:#555;">Many counties are served by multiple districts. If you are unsure which district you're in, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> and scroll to the bottom to see your districts.</p>`;
       }
 
@@ -526,6 +607,68 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     history.replaceState(null, '', '?' + params.toString());
   }
 
+  // Both district filters (address + county) are only meaningful on the tabs that carry
+  // a district, so they appear and hide together with those tabs.
+  function updateFilterVisibility() {
+    const show = COUNTY_TABS.has(activeTab);
+    countyFilter.classList.toggle('visible', show);
+    addressFilter.classList.toggle('visible', show);
+  }
+
+  function renderVoterBanner() {
+    if (!voterLoc) { voterBanner.classList.remove('visible'); voterBanner.innerHTML = ''; return; }
+    const parts = [];
+    if (voterLoc.stateHouse  != null) parts.push(`State House ${voterLoc.stateHouse}`);
+    if (voterLoc.stateSenate != null) parts.push(`State Senate ${voterLoc.stateSenate}`);
+    if (voterLoc.usHouse     != null) parts.push(`U.S. House ${voterLoc.usHouse}`);
+    const where = parts.length ? parts.join(' · ')
+                : (voterLoc.county ? voterLoc.county + ' County' : 'your address');
+    voterBanner.innerHTML =
+      `<span>Filtered to your districts: <strong>${escHtml(where)}</strong>. District tabs show only your races.</span>`
+      + `<button type="button" id="clearVoterBtn">Clear</button>`;
+    voterBanner.classList.add('visible');
+    document.getElementById('clearVoterBtn').addEventListener('click', clearVoterLoc);
+  }
+
+  function clearVoterLoc() {
+    voterLoc = null;
+    if (window.VoterLocation) window.VoterLocation.clear();
+    addressInput.value = '';
+    addressError.textContent = '';
+    renderVoterBanner();
+    renderRaces();
+    syncURL();
+  }
+
+  async function lookupAddress() {
+    const addr = addressInput.value.trim();
+    addressError.textContent = '';
+    if (!addr) { addressError.textContent = 'Enter your address, or use the county filter below.'; return; }
+    if (!(window.SampleBallot && window.SampleBallot.geocodeAddress)) {
+      addressError.textContent = 'Address lookup is unavailable right now — use the county filter below.';
+      return;
+    }
+    addressBtn.disabled = true;
+    addressBtn.textContent = 'Looking up…';
+    try {
+      const loc = await window.SampleBallot.geocodeAddress(addr);
+      countySelect.value = '';                          // an exact address supersedes a county pick
+      voterLoc = loc;
+      if (window.VoterLocation) window.VoterLocation.save(loc);  // carry over to other pages this visit
+      renderVoterBanner();
+      renderRaces();
+      syncURL();
+    } catch (err) {
+      addressError.textContent = err.message || 'Address lookup failed. Use the county filter below.';
+    } finally {
+      addressBtn.disabled = false;
+      addressBtn.textContent = 'Find my districts';
+    }
+  }
+
+  addressBtn.addEventListener('click', lookupAddress);
+  addressInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); lookupAddress(); } });
+
   // Phase toggle handler
   document.getElementById('phaseToggle').addEventListener('click', e => {
     const btn = e.target.closest('.phase-btn');
@@ -543,13 +686,19 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     if (!btn) return;
     activeTab = btn.dataset.tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
-    countyFilter.classList.toggle('visible', COUNTY_TABS.has(activeTab));
+    updateFilterVisibility();
     countySelect.value = '';
     renderRaces();
     syncURL();
   });
 
-  countySelect.addEventListener('change', () => { renderRaces(); syncURL(); });
+  countySelect.addEventListener('change', () => {
+    // Picking a county by hand is a deliberate choice — it drops any active
+    // address-exact filter and reverts to the county's overlapping-district view.
+    if (voterLoc) { voterLoc = null; if (window.VoterLocation) window.VoterLocation.clear(); renderVoterBanner(); }
+    renderRaces();
+    syncURL();
+  });
   openSeatOnly.addEventListener('change', () => { renderRaces(); syncURL(); });
 
   // Apply tab/phase/county from the query string (if present and valid) after
@@ -562,7 +711,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     if (tab && TAB_FILTER[tab]) {
       activeTab = tab;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      countyFilter.classList.toggle('visible', COUNTY_TABS.has(activeTab));
+      updateFilterVisibility();
     }
 
     const phase = params.get('phase');
@@ -604,6 +753,23 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
       allRaces = races.filter(r => r.cycle === activeCycle);
       buildPhaseToggle();
       applyURLParams();
+
+      // Carry over a location resolved earlier this visit (e.g. on the sample ballot).
+      // An explicit ?county= in the URL wins over stored state. An address-derived
+      // location filters to exact districts (with a banner); a county-only one just
+      // pre-selects the dropdown.
+      const urlHasCounty = countySelect.value !== '';
+      const stored = window.VoterLocation ? window.VoterLocation.load() : null;
+      if (stored && !urlHasCounty) {
+        if (stored.source === 'address') {
+          voterLoc = stored;
+        } else if (stored.source === 'county' && stored.county
+                   && [...countySelect.options].some(o => o.value === stored.county)) {
+          countySelect.value = stored.county;
+        }
+      }
+      renderVoterBanner();
+
       updatePageHeader();
       renderRaces();
     } catch (err) {

@@ -79,6 +79,7 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/voter-location.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}"></script>
 <script>
 (function () {
@@ -250,6 +251,7 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
     try {
       const loc = await window.SampleBallot.geocodeAddress(addr);
       lastLoc = loc;
+      if (window.VoterLocation) window.VoterLocation.save(loc);  // carry over to other pages this visit
       setStatus('', false);
       render(buildBallot(loc));
     } catch (err) {
@@ -263,6 +265,7 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
     const county = countySelect.value;
     if (!county) { setStatus('Choose a county first.', true); return; }
     lastLoc = window.SampleBallot.locationFromCounty(county);
+    if (window.VoterLocation) window.VoterLocation.save(lastLoc);  // carry over to other pages this visit
     setStatus('', false);
     render(buildBallot(lastLoc));
   }
