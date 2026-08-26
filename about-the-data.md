@@ -316,6 +316,8 @@ Race and candidate information for the 2026 election cycle is maintained in a cu
 
 **Incumbent enrichment:** When a candidate is the current officeholder, their profile photo and member record link are automatically pulled from our existing legislator data (Congress.gov for Federal, Open States for State). No duplicate data entry required. Judicial incumbents are identified from the SoS qualification data but do not link to a separate legislator profile.
 
+**Unopposed-seat count:** From this same race data we derive how many of Georgia's 236 legislative seats have no major-party opponent — a seat where at most one of the two major parties fields a candidate on the general-election ballot, so the contest is effectively decided. The figure is recomputed at build time whenever the race data changes (never hardcoded) and shown on the [Majority Tracker](https://www.votega.org/ga-majority-tracker.html). It is measured on the general-election ballot rather than primary filings, so a seat where both parties filed but only one nominee advanced is counted correctly.
+
 - **Scope:** 2026 primary, general, runoff, and special election races for Georgia's federal delegation, all 236 Georgia General Assembly districts, and all 2026 Georgia judicial races (84 Superior Court seats across 41 circuits, 5 Court of Appeals seats, and 2 Supreme Court seats).
 - **Freshness:** GA legislative and judicial candidate data is updated when the Secretary of State publishes new filing data. Federal challenger data is manually maintained.
 

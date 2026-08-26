@@ -1,0 +1,77 @@
+name: Refresh unopposed-seat count (daily, 07:35 UTC)
+
+# _data/ga_unopposed_seats.json is a pure derivation of races.json: how many of
+# the 236 GA legislative seats have no major-party opponent in 2026. The Majority
+# Tracker renders it server-side, so it must be rebuilt whenever races.json is
+# curated — otherwise the headline number silently goes stale.
+#
+# Same pattern as refresh-general-placeholder: a schedule AND a push trigger,
+# because races.json is also touched by workflows whose GITHUB_TOKEN commits do
+# not fire a `push` trigger (the recursion guard).
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 7 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/races.json'
+      - 'scripts/generate_unopposed_seats.py'
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Rebuild the unopposed-seat count
+        run: python scripts/generate_unopposed_seats.py
+
+      - name: Validate the rebuild
+        run: |
+          set -e
+          python -c "
+          import json
+          d = json.load(open('_data/ga_unopposed_seats.json'))
+          assert d['total'] == d['byChamber']['house']['total'] + d['byChamber']['senate']['total'], 'chamber totals do not sum'
+          assert d['unopposed'] == d['byChamber']['house']['unopposed'] + d['byChamber']['senate']['unopposed'], 'chamber unopposed do not sum'
+          assert d['unopposed'] + d['contested'] == d['total'], 'unopposed + contested != total'
+          assert 150 <= d['total'] <= 260, f\"suspicious seat total: {d['total']}\"
+          assert len(d['seats']) == d['unopposed'], 'seat list length != unopposed count'
+          print(f\"Validated: {d['unopposed']} of {d['total']} seats unopposed ({d['unopposedPct']}%)\")
+          "
+          # Belt and braces: the file on disk must now agree with races.json.
+          python scripts/generate_unopposed_seats.py --check
+
+      - name: Commit and push the refreshed count
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f _data/ga_unopposed_seats.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Refresh unopposed-seat count from races.json"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - refreshed count was NOT committed"
+              exit 1
+            fi
+          fi
