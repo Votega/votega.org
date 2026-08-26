@@ -1,0 +1,87 @@
+name: Refresh general-election ballot preview (daily, 07:30 UTC)
+
+# The Nov 3 results page is a placeholder until votes exist: every candidate at
+# 0 votes, listing who is on the ballot. It is a pure derivation of races.json,
+# and rebuilding it was a manual step nobody had reason to remember — so the
+# published preview drifted 110 offices away from races.json, four of them
+# naming the opponent a candidate had already beaten in the primary rather than
+# the person actually on the ballot.
+#
+# Once real results are loaded the script's --check retires itself (it sees
+# counted votes and stops), so this cannot overwrite election-night numbers
+# with zeros.
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily at 07:30 UTC, after update-ga-members (07:00) — the preview resolves
+    # some candidate names through the member rosters. A schedule as well as the
+    # push trigger below because races.json's inputs are refreshed by workflows
+    # whose commits do not fire a `push` trigger (GITHUB_TOKEN recursion guard).
+    - cron: '30 7 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/races.json'
+      - 'assets/data/ga-members.json'
+      - 'assets/data/current-members.json'
+      - 'scripts/build_general_placeholder.py'
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Rebuild the ballot preview
+        run: python scripts/build_general_placeholder.py
+
+      - name: Validate the rebuild
+        run: |
+          set -e
+          python -c "
+          import json
+          d = json.load(open('_data/election_results/ga-general-2026-results.json'))
+          offices = sum(len(s.get('races', [])) for s in d)
+          cands = sum(len(c['candidates']) for s in d for r in s.get('races', []) for c in r['contests'])
+          votes = sum(c.get('totalVotes', 0) for s in d for r in s.get('races', []) for c in r['contests'])
+          assert len(d) == 5, f'expected 5 sections, got {len(d)}'
+          assert offices >= 300, f'suspiciously few offices: {offices}'
+          assert cands >= 400, f'suspiciously few candidates: {cands}'
+          assert votes == 0, f'placeholder should carry no votes, found {votes}'
+          print(f'Validated: {offices} offices, {cands} candidates, 0 votes')
+          "
+          # Belt and braces: the file on disk must now agree with races.json.
+          python scripts/build_general_placeholder.py --check
+
+      - name: Commit and push the refreshed preview
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f _data/election_results/ga-general-2026-results.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Refresh general-election ballot preview from races.json"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - refreshed preview was NOT committed"
+              exit 1
+            fi
+          fi

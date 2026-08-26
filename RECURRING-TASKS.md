@@ -17,7 +17,7 @@ before editing any JSON by hand; a hand edit will be overwritten on the next run
 
 | Cadence | Workflows |
 |---|---|
-| Daily | `update-current-members` (06:00), `update-ga-members` (07:00), `publish-races-to-ga-races-elections` (07:00), `update-ga-executive-orders` (08:15) |
+| Daily | `update-current-members` (06:00), `update-ga-members` (07:00), `publish-races-to-ga-races-elections` (07:00), `refresh-general-placeholder` (07:30), `update-ga-executive-orders` (08:15) |
 | Tue & Thu | `update-curated-ga-bills` (08:00) &mdash; cron `0 8 * * 2,4`, **not** daily |
 | Weekly (Sun) | `update-ga-bills` (07:30), `update-fec-data` (08:00), `update-ga-campaign-finance` (08:30), `update-federal-votes` (09:00), `update-vp-tie-votes` (09:30), `update-presidential-laws` (09:45), `update-scotus-decisions` (10:00), `update-ga-congress-trades` (10:00) |
 | Weekly (Mon) | `update-ga-votes` (07:30) &mdash; cron `30 7 * * 1`, deliberately off the Sunday cluster |
@@ -61,6 +61,12 @@ Triggered by: election night, then again at certification.
       **GA state legislative (`ga-house-*`/`ga-senate-*`):** `ga-race-candidate-overrides.json` via
       `ga-overrides-editor.html`, then `python scripts/apply_overrides.py`. See *Maintenance — Updating
       Candidate Pages* in `TO-DO.md`.
+- [ ] Then run `python scripts/sync_candidate_profiles.py`. Curating "for the next phase" only
+      edits the phase you are looking at, and `races.json` stores a candidate once per phase —
+      so the earlier copies keep the old bio, photo and name spelling. The script reconciles
+      them (later phase wins for editorial fields; gaps filled for identity fields) and warns
+      when a name change would stop the results pages linking that candidate to their profile.
+      `--check` reports without writing. It leaves `type` alone — see the script's docstring.
 - [ ] If a general-election runoff is required (Georgia holds these when no candidate clears 50%),
       set those races to `activePhase: runoff` with the runoff date.
 - [ ] **Ballot measures:** once results certify, set each measure's `status` to `passed` or
@@ -235,8 +241,11 @@ is closed, so the gap is frozen rather than growing.
       available as a Georgia SoS "Total Votes Results" CSV, run the real builder instead:
       `python scripts/build_results_json.py <official_csv> ga-general-2026-results`
       (see §1 above for the full election-night checklist — archive status, certification, etc.).
-      If any candidates change on `races.json` before election night, re-run
-      `python scripts/build_general_placeholder.py` to refresh the preview in the meantime.
+      Keeping the preview in step with `races.json` is no longer a manual step:
+      `refresh-general-placeholder.yml` rebuilds and commits it daily and on any push that
+      touches `races.json`. It stops on its own once the file carries real votes, so it
+      cannot overwrite election-night numbers with zeros. To check by hand:
+      `python scripts/build_general_placeholder.py --check`.
       **If a Dec 1 runoff is triggered:** add `resultsUrl: /ga-general-2026-runoff-results/` to
       that event in `ga-election-calendar.json` (deliberately left unset since the runoff may
       not happen), and populate `ga-general-2026-runoff-results.html` the same way.
