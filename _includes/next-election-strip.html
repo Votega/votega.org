@@ -6,6 +6,14 @@
   Dates come from ga-election-calendar.json, so this never needs hand-editing as
   a cycle advances; the strip hides itself once no upcoming election remains.
   See CODEBASE-REVIEW-2026-08-18.md finding 4.10.
+
+  The results link is a second, independent read of election-status.json — the
+  live status overlay Jekyll rebuilds from the results pages' own front matter
+  and vote totals. It points at the most recent election that has actually been
+  counted, and stays hidden when none has, so the home page can never offer a
+  results page that is still all zeros. The two fetches are deliberately not
+  chained: a missing or stale calendar must not take the results link down with
+  it, and vice versa.
 {%- endcomment -%}
 <section id="nextElectionStrip" class="next-election" hidden aria-labelledby="nextElectionHeading">
   <div class="next-election-main">
@@ -17,6 +25,10 @@
   <div class="next-election-actions">
     <a class="next-election-btn" href="{{ '/sample-ballot' | relative_url }}">See what's on my ballot &rarr;</a>
     <a class="next-election-link" href="{{ '/ga-voter-access' | relative_url }}">Voter access &amp; deadlines</a>
+    <a class="next-election-link next-election-results" id="nextElectionResults" href="{{ '/results' | relative_url }}" hidden>
+      Election results &rarr;
+      <span class="next-election-results-sub" id="nextElectionResultsSub"></span>
+    </a>
   </div>
 </section>
 
@@ -81,5 +93,34 @@
       EL.hidden = false;
     })
     .catch(err => console.warn('next-election strip:', err));
+
+  // --- Results link -------------------------------------------------------
+  // election-status.json resolves each results page against the votes actually
+  // in its data file, so "upcoming" here means "nothing counted yet" no matter
+  // what the page's front matter says. Anything else is safe to link to.
+  const RESULTS_LINK = document.getElementById('nextElectionResults');
+  if (!RESULTS_LINK) return;
+
+  fetch(basePath() + 'assets/data/election-status.json')
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+    .then(data => {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const counted = Object.values(data.elections || {})
+        .filter(e => e.url && e.date && e.status !== 'upcoming' &&
+                     parseLocalDate(e.date) <= today)
+        .sort((a, b) => b.date.localeCompare(a.date))[0];
+      // Nothing counted yet this cycle — leave the link out rather than send
+      // a voter to a page of zeros.
+      if (!counted) return;
+
+      const label = counted.status === 'certified' ? 'Certified' : 'Unofficial';
+      RESULTS_LINK.href = basePath().replace(/\/$/, '') + counted.url;
+      RESULTS_LINK.setAttribute('aria-label',
+        `Election results: ${fmtLong(counted.date)}, ${label.toLowerCase()}`);
+      document.getElementById('nextElectionResultsSub').textContent =
+        `${fmtShort(counted.date)} · ${label}`;
+      RESULTS_LINK.hidden = false;
+    })
+    .catch(err => console.warn('next-election results link:', err));
 })();
 </script>
