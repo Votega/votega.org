@@ -1235,16 +1235,17 @@ share-description: "Profile of a member of the U.S. Congress: district, party, c
 
       <p><a href="${getBasePath()}federal-reps">Search for another member</a></p>
       ${state === 'Georgia' ? `<p id="stockTradesLink" hidden><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${escHtml(fullName)} →</a></p>` : ''}
-      <div id="campaignFinance" class="finance-section"></div>
       <div class="tab-container">
-        <div class="tab-nav" role="tablist" aria-label="Voting record" data-tabs>
+        <div class="tab-nav" role="tablist" aria-label="Voting record and campaign finance" data-tabs>
           <button class="tab-btn active" data-tab="keyVotes">Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory">Voting History</button>
           <button class="tab-btn" data-tab="sponsoredLegislation">Sponsored Legislation</button>
+          ${state === 'Georgia' ? `<button class="tab-btn" data-tab="campaignFinance">Campaign Finance</button>` : ''}
         </div>
         <div id="keyVotes" class="tab-panel active"></div>
         <div id="votingHistory" class="tab-panel"></div>
         <div id="sponsoredLegislation" class="tab-panel"></div>
+        ${state === 'Georgia' ? `<div id="campaignFinance" class="tab-panel"></div>` : ''}
       </div>
     `;
     detailsDiv.innerHTML = html;

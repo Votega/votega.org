@@ -88,6 +88,9 @@ share-description: "Profile of a Georgia General Assembly member: district, part
   /* Promoted from <h3> so the page's heading outline has no h1->h3 skip;
      font-size pinned to keep the previous visual level. Finding 4.15. */
   #votingHistory h2 { margin: 0 0 0.75rem 0; font-size: 1.5rem; }
+  /* Finance now lives in a tab; match the sibling panels' heading level rather
+     than the smaller stand-alone-section heading it used to render at. */
+  #campaignFinance h2 { margin: 0 0 0.75rem 0; font-size: 1.5rem; }
   .vote-table {
     width: 100%;
     border-collapse: collapse;
@@ -673,15 +676,16 @@ share-description: "Profile of a Georgia General Assembly member: district, part
             ? `<p style="margin-top:1rem;font-size:0.8rem;color:#a35b00;">Committee data is temporarily unavailable (the last data refresh could not fetch it).</p>`
             : '')}
       <p><a href="ga-state-reps">Search for another member</a></p>
-      <div id="campaignFinance" class="finance-section"></div>
       <div id="votesTabs">
-        <div class="tab-bar" role="tablist" aria-label="Voting record"
+        <div class="tab-bar" role="tablist" aria-label="Voting record and campaign finance"
              data-tabs data-tab-active="tab-active">
           <button class="tab-btn tab-active" data-tab="curatedBills" onclick="switchTab('curatedBills')">Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory" onclick="switchTab('votingHistory')">Voting History</button>
+          <button class="tab-btn" data-tab="campaignFinance" onclick="switchTab('campaignFinance')">Campaign Finance</button>
         </div>
         <div id="curatedBills" class="tab-panel"></div>
         <div id="votingHistory" class="tab-panel" style="display:none;"></div>
+        <div id="campaignFinance" class="tab-panel" style="display:none;"></div>
       </div>
     `;
     // Tab bar is built here, after load — re-run the ARIA enhancer over it.
