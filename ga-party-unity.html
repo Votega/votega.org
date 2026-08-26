@@ -208,6 +208,17 @@ members, from the same roll-call record behind each member's page.</p>
 <script>
 (function () {
   var DATA_URL = 'assets/data/ga-party-unity.json';
+  // The published, machine-readable home for this scorecard is the ga-legislators
+  // repo, which archives it per session (scorecard.{json,csv} + schema) and, unlike
+  // the internal asset above, is not destructively replaced at the biennium rollover.
+  // Link straight to the session that matches the data on screen; fall back to the
+  // repo root if the metadata carries no biennium.
+  var SCORECARD_REPO = 'https://github.com/Votega/ga-legislators';
+  function scorecardRepoUrl(biennium) {
+    return biennium
+      ? SCORECARD_REPO + '/tree/main/sessions/' + encodeURIComponent(biennium)
+      : SCORECARD_REPO;
+  }
   var members = [];
   var byId = {};
   var state = { sort: 'independence', chamber: 'all', party: 'all', min: 25 };
@@ -365,15 +376,18 @@ members, from the same roll-call record behind each member's page.</p>
       var meta = data.metadata || {};
       var incomplete = meta.paginationComplete === false;
       $('pu-foot').innerHTML =
-        'Small-sample members are held back by the minimum party-line-votes filter — a member '
-        + 'seated for only part of the biennium, or the Speaker (who by custom votes only to break '
+        'Small-sample members are held back by the minimum party-line-votes filter. A member '
+        + 'seated for only part of the legislative session (biennium), or the Speaker (who by custom votes only to break '
         + 'ties), would otherwise top an independence ranking on a handful of votes. Party unity is '
         + 'undefined for independents and for members with no party-line votes. Figures cover recorded '
         + 'passage votes only; committee and procedural votes are excluded. '
         + (incomplete ? '<strong>Our roll-call record covers most, but not all, of the regular session\'s bills, so some passage votes are missing and these figures may understate a member\'s totals.</strong> ' : '')
         + 'Source: Open States roll-call record'
         + (meta.biennium ? ' for the ' + esc(meta.biennium) + ' biennium' : '') + '. '
-        + 'Machine-readable data: <code>' + esc(DATA_URL) + '</code>.';
+        + 'Machine-readable data: party unity and participation for every member are published as '
+        + 'open data — <code>scorecard.csv</code> / <code>scorecard.json</code> — in the '
+        + '<a href="' + esc(scorecardRepoUrl(meta.biennium)) + '" target="_blank" rel="noopener">'
+        + 'Votega/ga-legislators</a> repository.';
 
       highlightId = readHash();
       if (highlightId) focusHighlighted();
