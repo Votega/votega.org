@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 """
-Find `on: push: paths:` triggers that can never fire.
+Check that this repo's workflows are wired to each other correctly.
+
+Two invariants, both about a trigger that looks fine and silently is not:
+
+  1. A `push: paths:` trigger that can never fire.
+  2. A scheduled workflow the failure notifier does not watch.
+
+Both fail the same way — nothing happens, and nothing happening is exactly what
+success looks like.
+
+── 1. Push triggers that cannot fire ──────────────────────────────────────────
 
 GitHub does not start a workflow run for a commit authored by the default
 GITHUB_TOKEN — the recursion guard documented in update-ga-bills.yml. Every
@@ -29,6 +39,23 @@ trigger is normal and fine:
 So a trigger that fires for human edits and is *also* covered for bot writes is
 not a finding. Only an actual gap is.
 
+── 2. Workflows the failure notifier is not watching ──────────────────────────
+notify-workflow-failure.yml is the only alarm on the scheduled data workflows,
+and it decides what to listen to from a hand-typed list in its `workflow_run`
+trigger. That list matches on the `name:` field, not the filename, so it strands
+an entry in two directions: a new scheduled workflow nobody adds, and a renamed
+workflow whose old name stays behind. Build ID crosswalk was the first kind —
+added, scheduled weekly, and unwatched until four days before its first run.
+
+Reported here:
+  * a workflow with a `schedule:` that the notifier does not name (its failures
+    open no issue)
+  * a name in the notifier that matches no workflow (a rename left it behind, so
+    it is watching nothing)
+
+Only scheduled workflows are required. A push-triggered one fails in front of
+the person who pushed; an unattended one fails in front of nobody.
+
 Usage:
     python scripts/validate_workflow_triggers.py           # report, exit 1 if any
     python scripts/validate_workflow_triggers.py --list    # report, always exit 0
@@ -42,6 +69,7 @@ from pathlib import Path
 import yaml
 
 WORKFLOWS = Path(".github/workflows")
+NOTIFIER = WORKFLOWS / "notify-workflow-failure.yml"
 
 # A path a workflow adds to git. `git add -f assets/data/x.json` and
 # `git add assets/data/y-*.json assets/data/dir` both count.
@@ -116,11 +144,62 @@ def matches(watched, written):
             or watched.rstrip("/*").startswith(written.rstrip("/*")))
 
 
+def notifier_watchlist(docs):
+    """The workflow names notify-workflow-failure.yml listens for."""
+    doc = docs.get(NOTIFIER)
+    if not doc:
+        return None
+    run = triggers(doc).get("workflow_run") or {}
+    return set(run.get("workflows") or [])
+
+
+def check_notifier_coverage(docs):
+    """(unwatched, stranded) — scheduled workflows nobody watches, and watched
+    names that match no workflow."""
+    watched = notifier_watchlist(docs)
+    if watched is None:
+        return [], []
+
+    unwatched, names = [], set()
+    for path, doc in docs.items():
+        name = doc.get("name")
+        if not name:
+            continue
+        names.add(name)
+        if path == NOTIFIER:
+            continue                       # it cannot report its own failure
+        if has_schedule(doc) and name not in watched:
+            unwatched.append((path.name, name))
+
+    return sorted(unwatched), sorted(watched - names)
+
+
+def report_notifier(unwatched, stranded):
+    if unwatched:
+        print(f"{len(unwatched)} scheduled workflow(s) are not watched by "
+              f"{NOTIFIER.name}. They run unattended, so a failure opens no issue "
+              f"and looks exactly like a clean run:\n")
+        for filename, name in unwatched:
+            print(f"  {filename}")
+            print(f"      add to the notifier's `workflows:` list: {name}")
+        print()
+
+    if stranded:
+        print(f"{len(stranded)} name(s) in {NOTIFIER.name} match no workflow. "
+              f"`workflow_run` matches on `name:` exactly, so a rename leaves the "
+              f"entry watching nothing:\n")
+        for name in stranded:
+            print(f"  {name}")
+        print()
+
+
 def main():
     list_only = "--list" in sys.argv
 
     docs = {path: load(path) for path in workflow_files()}
     writers = {path: committed_paths(path, doc) for path, doc in docs.items()}
+
+    unwatched, stranded = check_notifier_coverage(docs)
 
     findings = []
     for path, doc in docs.items():
@@ -144,10 +223,16 @@ def main():
             if uncovered:
                 findings.append((path.name, watched, uncovered))
 
+    report_notifier(unwatched, stranded)
+
     if not findings:
-        print(f"Checked {len(docs)} workflows — every push/paths trigger on a "
-              f"bot-written file is covered by an inline publish or a schedule.")
-        return 0
+        if not (unwatched or stranded):
+            print(f"Checked {len(docs)} workflows — every push/paths trigger on a "
+                  f"bot-written file is covered by an inline publish or a "
+                  f"schedule, and every scheduled workflow is watched by "
+                  f"{NOTIFIER.name}.")
+            return 0
+        return 0 if list_only else 1
 
     print(f"{len(findings)} push trigger(s) watch a file that another workflow "
           f"commits, with nothing else covering it. A commit authored by "
@@ -159,6 +244,9 @@ def main():
     print("\nFix by publishing from the producing workflow (see the inline publish "
           "step in update-current-members.yml), or by adding a schedule.")
     return 0 if list_only else 1
+
+
+
 
 
 if __name__ == "__main__":
