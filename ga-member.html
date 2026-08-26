@@ -1065,12 +1065,13 @@ share-description: "Profile of a Georgia General Assembly member: district, part
       const sessionNames = {};
       (data.metadata?.sessions || []).forEach(s => { if (s.id) sessionNames[s.id] = s.name || s.id; });
       const activeSession = data.metadata?.activeSession || '';
+      // paginationComplete === false is a known, frozen coverage gap: our roll-call
+      // record covers most — but not all — of the regular session's bills (a full
+      // re-pull exceeds the Open States daily quota and the session is closed, so the
+      // gap no longer grows). Describe it as a bounded gap, not an in-progress backfill.
       const incomplete = data.metadata?.paginationComplete === false;
-      const seenNote   = (incomplete && data.metadata?.totalBillsSeen)
-        ? ' (' + data.metadata.totalBillsSeen.toLocaleString() + ' bills processed so far)'
-        : '';
       const incompleteNote = incomplete
-        ? '<p style="font-size:0.78rem;color:#a35b00;background:#fff8ec;border:1px solid #fde7c2;border-radius:6px;padding:0.5rem 0.75rem;margin:0 0 0.75rem 0;">Note: vote data is still being backfilled' + seenNote + '  The participation, party-alignment, and chart figures below reflect only what has been pulled so far and may shift.</p>'
+        ? '<p style="font-size:0.78rem;color:#a35b00;background:#fff8ec;border:1px solid #fde7c2;border-radius:6px;padding:0.5rem 0.75rem;margin:0 0 0.75rem 0;">Note: our roll-call record covers most, but not all, of the regular session\'s bills, so some passage votes are missing. The participation, party-alignment, and chart figures below are based on the votes we have and may understate a member\'s totals.</p>'
         : '';
 
       // Sort most recent first
