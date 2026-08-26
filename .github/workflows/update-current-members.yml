@@ -85,3 +85,13 @@ jobs:
               exit 1
             fi
           fi
+
+      # Published from here, not left to publish-federal-delegation-to-ga-federal-legislators.yml's
+      # `paths` trigger: that trigger watches a file this workflow writes, and
+      # GitHub does not fire `push` for a commit authored by the default
+      # GITHUB_TOKEN. The standalone workflow had run 4 times in two months — all of them manual,
+      # or on a human commit touching the script — while this data updated daily.
+      - name: Publish GA federal delegation to ga-federal-legislators
+        env:
+          GA_FEDERAL_LEGISLATORS: ${{ secrets.GA_FEDERAL_LEGISLATORS }}
+        run: python3 scripts/publish_federal_delegation.py
