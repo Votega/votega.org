@@ -61,6 +61,12 @@ Triggered by: election night, then again at certification.
       **GA state legislative (`ga-house-*`/`ga-senate-*`):** `ga-race-candidate-overrides.json` via
       `ga-overrides-editor.html`, then `python scripts/apply_overrides.py`. See *Maintenance — Updating
       Candidate Pages* in `TO-DO.md`.
+- [ ] Then run `python scripts/sync_candidate_profiles.py`. Curating "for the next phase" only
+      edits the phase you are looking at, and `races.json` stores a candidate once per phase —
+      so the earlier copies keep the old bio, photo and name spelling. The script reconciles
+      them (later phase wins for editorial fields; gaps filled for identity fields) and warns
+      when a name change would stop the results pages linking that candidate to their profile.
+      `--check` reports without writing. It leaves `type` alone — see the script's docstring.
 - [ ] If a general-election runoff is required (Georgia holds these when no candidate clears 50%),
       set those races to `activePhase: runoff` with the runoff date.
 - [ ] **Ballot measures:** once results certify, set each measure's `status` to `passed` or
