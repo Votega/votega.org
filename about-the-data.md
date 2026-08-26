@@ -187,33 +187,40 @@ The Federal Register API is queried at page load time, filtered to executive ord
 
 ---
 
-## Officeholder ID Crosswalk
+## Officeholder & Candidate ID Crosswalk
 
-**Sources:** [Open States](https://openstates.org/) (Plural Policy), [Congress.gov](https://api.congress.gov/), [unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators) (public domain), [Georgia Ethics Commission PeachFile](https://peachfile.ethics.ga.gov/public/cf/publiccandidate)
+**Sources:** [Open States](https://openstates.org/) (Plural Policy), [Congress.gov](https://api.congress.gov/), [unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators) (public domain), [Georgia Ethics Commission PeachFile](https://peachfile.ethics.ga.gov/public/cf/publiccandidate), [FEC](https://api.open.fec.gov/)
 
-Five systems assign an identifier to the same Georgia officeholder, and none of them share a key: Open States issues an OCD person ID, legis.ga.gov a numeric member ID, Congress.gov a bioguide ID, the FEC a candidate ID, and the state Ethics Commission a PeachFile filer entity ID. Joining them is what makes a member page able to show a legislator's votes and their fundraising side by side.
+Five systems assign an identifier to the same Georgia officeholder or candidate, and none of them share a key: Open States issues an OCD person ID, legis.ga.gov a numeric member ID, Congress.gov a bioguide ID, the FEC a candidate ID, and the state Ethics Commission a PeachFile filer entity ID. Joining them is what lets a member page show a legislator's votes and their fundraising side by side.
 
-Those joins already happened inside this site; they were just never written down. [`id-crosswalk.json`](/assets/data/id-crosswalk.json) records them as data — one entry per officeholder, with every identifier we hold and, for each one, how it was arrived at.
+Those joins already happened inside this site; they were just never written down. [`id-crosswalk.json`](/assets/data/id-crosswalk.json) records them as data — one entry per person, with every identifier we hold, how each was arrived at, and every 2026 race they appear on.
 
-**Why it might be useful to you.** The federal half largely restates `unitedstates/congress-legislators`, which is public domain and already maps bioguide to FEC, GovTrack and OpenSecrets; we carry those so a consumer needs one file rather than two. The Georgia half has no upstream equivalent. Nothing published anywhere maps an Open States legislator to their Georgia campaign finance filing, so if you want to join state legislative behavior to state campaign money, this is the missing key.
+**Why it might be useful to you.** The federal half largely restates `unitedstates/congress-legislators`, which is public domain and already maps bioguide to FEC, GovTrack and OpenSecrets; we carry those so a consumer needs one file rather than two. The Georgia half has no upstream equivalent. Nothing published anywhere maps an Open States legislator — or a Georgia candidate — to their state campaign finance filing, so if you want to join legislative behavior or a ballot line to campaign money, this is the missing key.
 
 **Every derived link carries its provenance.** Each identifier is tagged with the method that produced it:
 
 - `authoritative` — the upstream source publishes this ID for this person directly.
 - `reviewed` — a human confirmed the match, recorded in a public overrides file. This includes `confirmed-none`: someone checked and there is genuinely no filing, which is a different claim from nobody having looked.
-- `seat+surname` — derived by matching within the person's seat or statewide office, requiring the surname.
+- `seat+surname`, `name-exact`, `district+surname` — derived by matching within the person's seat, office, or district, always requiring the surname.
 
-**Ambiguity is never resolved by guessing.** Where more than one filing matches a person, the identifier is left null and the case is listed in the file's `metadata`, because attributing one official's fundraising to another is the failure this join exists to prevent.
+**Ambiguity is never resolved by guessing.** Where more than one filing matches a person, the identifier is left null and the case is listed in the file's `metadata`, because attributing one candidate's fundraising to another is the failure this join exists to prevent.
 
-**Committees follow the office sought, not the office held.** A campaign committee is registered against the office a candidate is seeking, and PeachFile files it that way. So a sitting state representative running for the Senate has their committee under the Senate seat, not the House one. The crosswalk matches against the office sought first and falls back to the seat currently held — which is how it resolves the sitting statewide executives on the 2026 governor's ballot, whose committees sit under "Governor" rather than under the office they occupy today.
+**Some people deliberately have no identifier.** An officeholder's `vgId` is minted against an ID their upstream owns — an OCD person ID or a bioguide ID — so it is stable by construction. Candidates have no such ID: the candidate IDs in our own race data are *positional*, ending in a row index into the Secretary of State's export, so they shift whenever that export is re-ordered. The Secretary of State publishes no candidate ID to use instead.
 
-**Identifiers are stable.** Each person gets an opaque `vgId` minted once and held in a committed, append-only ledger. A legislator who changes chamber or name, or whose Open States record is reissued, keeps the same `vgId`, and an ID published once never comes to mean a different person.
+So a candidate is keyed on their **campaign filing** — a PeachFile filer entity ID or an FEC candidate ID, both assigned by the regulator and stable. A candidate with no filing on record gets **no identifier at all** rather than one derived from a row index, and the record says so in `provenance.vgId`. A visible gap is safer than an ID that quietly comes to mean someone else. That accounts for 67 of the 749 people, all of them candidates, including every local candidate — Georgia municipal filings are not in PeachFile.
 
-**The schema is provisional.** The file carries a `schemaVersion`, currently `1`. Adding candidate coverage will change `peachfileFilerEntityId` from a single ID into a list, because a person who files for two offices in one cycle has one PeachFile filing per office — Georgia's 2026 ballot already contains such a case. That will ship as `schemaVersion` 2. Other field names and meanings are not expected to change. If you build against this file, check `schemaVersion` before trusting the shape.
+Keying on the filing also dedupes correctly: three sitting statewide executives are on the 2026 governor's ballot, and their candidate rows resolve to the same filing as their officeholder record, so the candidacy attaches to the existing person instead of creating a second one.
 
-- **Coverage:** 264 officeholders — 249 rows from `ga-members.json` (245 legislators, including seats since vacated, plus the four statewide executives that file carries) and Georgia's 15-member federal delegation. PeachFile IDs resolve for 228 of the 249 state records, with no ambiguous matches. Of the 21 without one, 7 are hand-confirmed as having no filing this cycle and 14 did not resolve — counted separately in the file's `metadata.coverage`. FEC IDs resolve for all 15 federal records.
-- **Not yet covered:** non-incumbent candidates. 489 distinct people appear on 2026 ballots without holding office today; they currently show up only as back-references from the officeholders they face.
-- **Freshness:** Rebuilt weekly, after the campaign finance and roster data it reads.
+**Committees follow the office sought, not the office held.** A campaign committee is registered against the office a candidate is seeking, and PeachFile files it that way. So a sitting state representative running for the Senate has their committee under the Senate seat, not the House one. The crosswalk matches against the office sought first and falls back to the seat currently held.
+
+**Where one person has two filings.** Because PeachFile registers a committee per office, someone seeking two offices in a cycle has two filer entity IDs — Georgia's 2026 ballot contains such a case. Those are merged onto one person only by an explicit, documented decision recorded in a public overrides file, never inferred from a name match.
+
+**Identifiers are stable.** Each person's `vgId` is minted once and held in a committed, append-only ledger. A legislator who changes chamber or name, or whose Open States record is reissued, keeps the same `vgId`, and an ID published once never comes to mean a different person. The build refuses to complete if the ledger renumbers or drops an assignment, or if a positional candidate ID is ever used as a key.
+
+**Schema version.** The file carries a `schemaVersion`, currently `2`. Version 2 turned `peachfileFilerEntityId` and `fecCandidateId` into the lists `peachfileFilerEntityIds` / `fecCandidateIds` and added a `candidacies[]` array. Check `schemaVersion` before trusting the shape.
+
+- **Coverage:** 749 people across 716 candidacies — 264 officeholders (245 GA legislators including seats since vacated, 4 statewide executives, and Georgia's 15-member federal delegation) plus 485 further 2026 candidates. 682 carry a stable `vgId`; 661 carry at least one campaign filing. No ambiguous matches.
+- **Freshness:** Rebuilt weekly, after the campaign finance, roster, and race data it reads.
 
 ---
 
@@ -390,7 +397,7 @@ A small number of candidates cannot be resolved this way. Usually because the ba
 | Georgia ballot measures | GA Secretary of State + legis.ga.gov | Manually maintained; results added after certification |
 | Federal campaign finance | FEC API | Weekly, Sundays 08:00 UTC |
 | Georgia state campaign finance | GA Ethics Commission (PeachFile) | Weekly, Sundays 08:30 UTC |
-| Officeholder ID crosswalk | Derived from the rosters + finance data above | Weekly, Sundays 09:15 UTC |
+| Officeholder & candidate ID crosswalk | Derived from the rosters + finance + race data above | Weekly, Sundays 09:15 UTC |
 
 ---
 

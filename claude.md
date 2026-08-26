@@ -136,17 +136,19 @@ Vote values: `"Yea"`, `"Nay"`, `"Not Voting"`, `"Present"`, `"Absent"`, `"Excuse
 Members are joined by OCD person ID — the same `id` field as in `ga-members.json`.
 
 ### `id-crosswalk.json` + `id-crosswalk-ledger.json`
-Top-level: `{ metadata: { generatedAt, count, scope, sources[], provenanceMethods, coverage }, people: [...] }`
-Each person: `vgId`, `name{full,first,last}`, `role{level,office,chamber,district,party,status}`, `ids{...}`, `provenance{...}`.
-`ids` carries `ocdPersonId`, `legisGaGovId`, `bioguideId`, `fecCandidateId`, `peachfileFilerEntityId`, `govtrackId`, `openSecretsId`, `votegaCandidateIds[]` — `null` where it doesn't apply or didn't resolve.
+Top-level: `{ metadata: { schemaVersion, schemaStability, generatedAt, count, scope, sources[], provenanceMethods, coverage }, people: [...] }`
+Each person: `vgId` (**may be null**), `name{full,first,last}`, `role{...}` (null for candidate-only records), `ids{...}`, `candidacies[]`, `provenance{...}`.
+`ids` carries `ocdPersonId`, `legisGaGovId`, `bioguideId`, `govtrackId`, `openSecretsId`, and the **lists** `fecCandidateIds`, `peachfileFilerEntityIds`, `votegaCandidateIds`.
 
 Built by `scripts/build_id_crosswalk.py` from the roster, finance and races files; it calls no API of its own. Validate with `scripts/validate_id_crosswalk.py`.
 
-`id-crosswalk-overrides.json` holds hand-reviewed decisions, keyed by **OCD person ID or bioguide ID** — *not* the races.json candidate ID that `ga-campaign-finance-overrides.json` uses. Use it to pin a filing for someone whose committee sits under an office they don't currently hold. Every entry needs a `_note` recording how the match was confirmed.
+`id-crosswalk-overrides.json` holds hand-reviewed decisions, keyed by **OCD person ID, bioguide ID, `peachfile:<id>` or `fec:<id>`** — *not* the races.json candidate ID that `ga-campaign-finance-overrides.json` uses. Pin a filing with `peachfileFilerEntityId`, record a verified non-filer with `peachfileNoFiling`, or merge two ledger keys onto one person with `sameAs`. Every entry needs a `_note` recording how it was confirmed.
 
-**⚠ `vgId`s are append-only.** `id-crosswalk-ledger.json` is the assignment record; never renumber or remove an entry, or a published `vgId` silently comes to mean a different person. The validator compares the ledger against HEAD and fails on any renumbering.
+**⚠ Never key identity on a races.json candidate ID.** They are positional — `make_candidate_id()` ends them with a row index into the SoS export, so a re-ordered export makes `ga-house-15-2026-d-3` a different person (CODEBASE-REVIEW-2026-08-18.md 5.2). Candidates are keyed on their campaign filing (`peachfile:` / `fec:`) instead; a candidate with no filing gets `vgId: null` rather than an invented ID. The validator fails the build if a positional ID reaches the ledger.
 
-**⚠ Never treat a null `peachfileFilerEntityId` as "no filing".** Check `provenance.peachfileFilerEntityId.confidence`: `confirmed-none` means a human verified there is none; `no-match` and `ambiguous` mean the join didn't resolve, which is not the same claim.
+**⚠ `vgId`s are append-only.** `id-crosswalk-ledger.json` is the assignment record; never renumber or remove an entry, or a published `vgId` silently comes to mean a different person. The validator compares against HEAD and fails on any renumbering.
+
+**⚠ A null filing list is not "no filing".** Check `provenance`: `confirmed-none` means a human verified there is none; `no-match` and `ambiguous` mean the join didn't resolve, which is not the same claim.
 
 ## GA Overrides System
 `assets/data/ga-members-overrides.json` is the mechanism for correcting Open States data and injecting entries (e.g., vacant seats) that Open States doesn't track. When editing:

@@ -41,8 +41,11 @@ jobs:
         run: |
           python scripts/validate_data_update.py assets/data/id-crosswalk.json \
             --metric people=len:people \
-            --metric peachfile=metadata.coverage.state.peachfileFilerEntityId.resolved \
-            --min people=200
+            --metric keyed=metadata.coverage.withVgId \
+            --metric filings=metadata.coverage.withAnyFiling \
+            --metric candidacies=metadata.coverage.candidacies \
+            --min people=600 \
+            --min keyed=550
 
       - name: Commit and push
         run: |

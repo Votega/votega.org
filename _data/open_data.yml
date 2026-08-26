@@ -110,34 +110,33 @@ datasets:
   # ON VOTEGA.ORG (direct JSON — no dedicated repo yet)
   # --------------------------------------------------------------------------
   - id: id-crosswalk
-    title: Georgia Officeholder ID Crosswalk
+    title: Georgia Officeholder & Candidate ID Crosswalk
     hosting: site
     featured: true
     summary: >
-      One record per Georgia officeholder linking the identifiers that five
-      separate systems assign the same person — Open States, legis.ga.gov,
-      Congress.gov, the FEC, and the Georgia Ethics Commission's PeachFile —
-      with the method and confidence recorded for every derived link. Nothing
-      upstream maps an Open States legislator to their Georgia campaign finance
+      One record per Georgia officeholder and 2026 candidate, linking the identifiers
+      that five separate systems assign the same person — Open States, legis.ga.gov,
+      Congress.gov, the FEC, and the Georgia Ethics Commission's PeachFile — with the
+      method and confidence recorded for every derived link. Nothing upstream maps an
+      Open States legislator, or a Georgia candidate, to their campaign finance
       filing; this is the join, written down.
-    source: Open States · Congress.gov · unitedstates/congress-legislators (public domain) · GA Ethics Commission PeachFile
-    scope: 264 officeholders — 245 GA legislators (including seats since vacated), 4 statewide executives, and Georgia's 15-member federal delegation
+    source: Open States · Congress.gov · unitedstates/congress-legislators (public domain) · GA Ethics Commission PeachFile · FEC
+    scope: 749 people — 264 officeholders (245 GA legislators, 4 statewide executives, Georgia's 15-member federal delegation) and 485 further 2026 candidates, across 716 candidacies
     cadence: Weekly
     coverage: >
-      PeachFile filer ids resolve for 228 of 249 state records, with no ambiguous
-      matches. Of the 21 without one, 7 are confirmed by hand to have no filing this
-      cycle and 14 simply did not resolve — the file keeps those apart rather than
-      reporting both as "no filing". FEC ids resolve for all 15 federal records.
-      Non-incumbent candidates are not yet covered; 489 are queued for the next
-      release.
+      682 of 749 people carry a stable identifier. The other 67 are candidates with
+      no campaign filing to key on — including all 10 local candidates, since Georgia
+      municipal filings are not in PeachFile — and are published with a null id and a
+      stated reason rather than an invented one. No ambiguous filing matches: where
+      more than one filing could be the same person, the file records none.
     stability: >
-      Version 1, and provisional. Adding candidate coverage will turn
-      peachfileFilerEntityId into a list, because someone who files for two offices
-      in one cycle has one PeachFile filing per office. That will ship as schema
-      version 2; other field names and meanings are not expected to change.
+      Version 2, and stable in field names and meanings. Version 2 turned
+      peachfileFilerEntityId and fecCandidateId into lists (a person who files for two
+      offices in one cycle has one filing per office) and added a candidacies[] array.
+      Records may carry a null id; provenance.vgId says why.
     files:
-      - { name: "id-crosswalk.json", desc: "Officeholder identifier crosswalk with provenance", url: "/assets/data/id-crosswalk.json" }
-    docs: /about-the-data#officeholder-id-crosswalk
+      - { name: "id-crosswalk.json", desc: "Officeholder & candidate identifier crosswalk with provenance", url: "/assets/data/id-crosswalk.json" }
+    docs: /about-the-data#officeholder--candidate-id-crosswalk
 
   - id: scotus
     title: U.S. Supreme Court — Justices & Decisions
