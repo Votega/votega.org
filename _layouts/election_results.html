@@ -158,6 +158,7 @@ Front-matter contract
 <div id="tab-courts"       class="tab-panel"></div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/results-contest.js' | relative_url }}"></script>
 <script>
 // `|| []` guards the case where the keyed results file didn't build: Liquid's
 // jsonify emits `null`, and SECTIONS.forEach below would otherwise throw and
@@ -310,9 +311,9 @@ function lookupCandidate(index, name) {
   return hits.size === 1 ? [...hits][0] : null;
 }
 
-function pct(v,t){ return t ? (v/t)*100 : 0; }
+function pct(v,t){ return ResultsContest.percent(v,t); }
 function fmt(n){ return (n||0).toLocaleString(); }
-function partyLabel(p){ return p==='rep'?'Republican':p==='dem'?'Democrat':'Nonpartisan'; }
+const partyLabel = ResultsContest.partyLabel;
 
 function badgeText(kind){
   const L = CFG.labels;
@@ -322,23 +323,17 @@ function badgeText(kind){
   return L.noResults || (CFG.status==='certified' ? 'No Results' : 'Awaiting Results');
 }
 
-function getStatus(c){
-  if(!c.candidates || !c.candidates.length || !c.totalVotes) return 'no-results';
-  if(c.candidates.length===1) return 'uncontested';
-  if(CFG.mode==='final') return 'winner';
-  return pct(c.candidates[0].votes, c.totalVotes) > 50 ? 'winner' : 'runoff';
-}
+function getStatus(c){ return ResultsContest.status(c, CFG); }
 
 function renderContest(c, office, candidateIndex){
   const status = getStatus(c);
   const p = c.party || 'np';
   const noRes = status==='no-results';
-  const marks = status==='winner' ? 1 : status==='runoff' ? CFG.advances : 0;
-  const advanceTip = CFG.mode==='round' && status==='runoff' ? 'Advances to the runoff' : 'Leads';
+  const marks = ResultsContest.advanceCount(status, CFG);
+  const advanceTip = ResultsContest.advanceTitle(status, CFG);
   const cardCls = status==='winner' ? 'winner-race' : status==='runoff' ? 'runoff-race' : status==='no-results' ? 'no-results' : '';
   const cands = (c.candidates||[]).map((cd,i)=>{
-    const pp = pct(cd.votes, c.totalVotes);
-    const wi = i<marks ? `<span class="wi" title="${advanceTip}">&#10003;</span>` : '';
+    const wi = i<marks ? `<span class="wi" title="${escHtml(advanceTip)}">&#10003;</span>` : '';
     const inc = cd.incumbent ? ' <span class="inc">(I)</span>' : '';
     const link = lookupCandidate(candidateIndex, cd.name);
     const nameHtml = link ? `<a href="${link}">${escHtml(cd.name)}</a>` : escHtml(cd.name);
@@ -347,10 +342,10 @@ function renderContest(c, office, candidateIndex){
         <span class="cand-name">${wi}${nameHtml}${inc}</span>
         <span style="display:flex;gap:.5rem;align-items:center">
           ${noRes?'':`<span class="cand-votes">${fmt(cd.votes)} votes</span>`}
-          <span class="cand-pct">${noRes?'&mdash;':pp.toFixed(1)+'%'}</span>
+          <span class="cand-pct">${ResultsContest.percentText(c, cd, status)}</span>
         </span>
       </div>
-      <div class="bar-track"><div class="bar-fill ${p}${i>0?' trail':''}" style="width:${noRes?0:Math.min(pp,100)}%"></div></div>
+      <div class="bar-track"><div class="bar-fill ${p}${i>0?' trail':''}" style="width:${ResultsContest.barWidth(c, cd, status)}%"></div></div>
     </div>`;
   }).join('');
   const total = noRes ? 'No results reported' : `Total votes: ${fmt(c.totalVotes)}`;
