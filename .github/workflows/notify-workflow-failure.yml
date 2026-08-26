@@ -11,6 +11,10 @@ name: Notify on data workflow failure
 # If you rename a workflow, update the matching entry here or its failures go
 # unreported. Several names embed their schedule, so a cron change means a name
 # change means an edit here.
+#
+# `python scripts/validate_workflow_triggers.py` enforces both directions of
+# that: a scheduled workflow missing from this list, and a name here that
+# matches no workflow. Run it after adding or renaming any workflow.
 
 on:
   workflow_run:

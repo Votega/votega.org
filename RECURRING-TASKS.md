@@ -35,7 +35,10 @@ before editing any JSON by hand; a hand edit will be overwritten on the next run
 > The fix is to publish from the workflow that writes the data (see the inline
 > `Publish ...` step at the end of `update-current-members.yml`), or to add a
 > schedule. `python scripts/validate_workflow_triggers.py` checks that every
-> such trigger is covered and fails if one is not.
+> such trigger is covered and fails if one is not — and, in the same pass, that
+> every scheduled workflow is named in `notify-workflow-failure.yml`, whose
+> hand-typed list is the only thing standing between a broken generator and
+> nobody finding out. Run it after adding or renaming any workflow.
 
 All times UTC. Verified against the workflow crons 2026-08-19.
 
