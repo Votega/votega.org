@@ -8,6 +8,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
 <div id="raceContent"><p>Loading race information…</p></div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/results-contest.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 
 <p id="dataStamp" class="data-stamp"></p>
@@ -658,7 +659,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
   // Rendered from assets/data/race-results-index.json. Percentages are computed
   // here rather than stored so they always agree with the vote counts shown.
   function renderPriorResults(rounds) {
-    const partyLabel = p => p === 'rep' ? 'Republican' : p === 'dem' ? 'Democrat' : 'Nonpartisan';
+    const partyLabel = ResultsContest.partyLabel;
 
     return rounds.map(round => {
       // The index bakes in whatever the status was when it was last generated.
@@ -670,26 +671,36 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       const live = ELECTION_STATUS[round.key];
       const statusNote = statusBadge((live && live.status) || round.status);
 
+      // How this round should be read — leader-wins, or top-N advance to a
+      // runoff. Live from election-status.json where available, falling back to
+      // the value baked into the index. Without it this panel marked a single
+      // leader in a primary while the results page marked both runoff-bound
+      // finishers, for the same contest.
+      const cfg = {
+        mode:     (live && live.mode) || round.mode || 'round',
+        advances: (live && live.advances) || round.advances || 2,
+      };
+
       const contests = round.contests.map(contest => {
         const total = contest.totalVotes || 0;
-        // A lone candidate at 100% is an unopposed ballot line, not a landslide —
-        // label it so the number isn't read as a margin.
-        const uncontested = contest.candidates.length === 1;
+        const contestStatus = ResultsContest.status(contest, cfg);
+        const uncontested = contestStatus === 'uncontested';
+        const marks = ResultsContest.advanceCount(contestStatus, cfg);
+        const advanceTip = ResultsContest.advanceTitle(contestStatus, cfg);
         const rows = contest.candidates.map((c, i) => {
           // A row with no `votes` used to throw on .toLocaleString() and blank
           // the entire "Earlier This Cycle" panel. See CODEBASE-REVIEW-2026-08-18.md 4.15.
           const votes = Number(c.votes) || 0;
-          const pct = total ? (votes / total) * 100 : 0;
           return `
             <div class="prior-cand">
               <div class="prior-cand-top">
-                <span class="prior-name">${i === 0 && !uncontested ? '<span class="prior-lead">✓</span>' : ''}${escapeHtml(c.name)}${c.incumbent ? ' <span class="prior-inc">(I)</span>' : ''}</span>
+                <span class="prior-name">${i < marks ? `<span class="prior-lead" title="${escapeHtml(advanceTip)}">✓</span>` : ''}${escapeHtml(c.name)}${c.incumbent ? ' <span class="prior-inc">(I)</span>' : ''}</span>
                 <span class="prior-figures">
                   <span class="prior-votes">${votes.toLocaleString()}</span>
-                  <span class="prior-pct">${uncontested ? '—' : pct.toFixed(1) + '%'}</span>
+                  <span class="prior-pct">${ResultsContest.percentText(contest, c, contestStatus)}</span>
                 </span>
               </div>
-              <div class="prior-bar"><div class="prior-bar-fill ${contest.party}" style="width:${uncontested ? 100 : Math.min(pct, 100)}%"></div></div>
+              <div class="prior-bar"><div class="prior-bar-fill ${contest.party}" style="width:${ResultsContest.barWidth(contest, c, contestStatus)}%"></div></div>
             </div>`;
         }).join('');
 

@@ -91,6 +91,11 @@ def discover_elections():
             'subtitle': fm.get('subtitle'),
             'date': str(fm.get('election_date') or ''),
             'status': fm.get('status') or 'unofficial',
+            # How the contest should be read — leader-wins vs top-N-advance. Baked
+            # so race.html can render a round correctly even if the live overlay
+            # (assets/data/election-status.json) is unavailable.
+            'mode': fm.get('results_mode') or 'round',
+            'advances': fm.get('runoff_advances') or 2,
             'url': fm.get('permalink') or '',
             'sections': load_json(data_path),
         })
@@ -396,6 +401,7 @@ def main():
             entries.append({
                 'key': e['key'], 'label': e['label'], 'subtitle': e['subtitle'],
                 'date': e['date'], 'status': e['status'], 'url': e['url'],
+                'mode': e['mode'], 'advances': e['advances'],
                 'contests': trimmed,
             })
         if entries:

@@ -28,6 +28,8 @@ sitemap: false
     {%- include result-status.html stub=stub -%}
     {{ stub.results_data | jsonify }}: {
       "status": {{ result_status | jsonify }},
+      "mode": {{ stub.results_mode | default: 'round' | jsonify }},
+      "advances": {{ stub.runoff_advances | default: 2 }},
       "date": {{ stub.election_date | date: "%Y-%m-%d" | jsonify }},
       "url": {{ stub.url | jsonify }},
       "updated": {{ stub.updated | date: "%Y-%m-%d" | jsonify }}
