@@ -295,6 +295,10 @@ def main():
     page         = 1
     total_pages  = None
     bills_seen   = 0
+    # Did the API ever return a usable page (even an empty one)? Separates a genuine
+    # outage (fetch failed, never set) from an incremental window with no updated bills
+    # (a valid page with empty results). See the bills_seen == 0 guard below.
+    got_response = False
 
     print(f"Fetching GA bills for session {GA_SESSION} (passage votes only)...")
 
@@ -318,6 +322,7 @@ def main():
                 print(f"  Failed on page {page}, stopping.")
             break
 
+        got_response = True
         results = data.get('results', [])
         if not results:
             break
@@ -418,10 +423,21 @@ def main():
     # locally only because a separate validation step downstream happened to
     # catch it. That's a fragile safety net; fail here directly so this script
     # is correct on its own regardless of how it's invoked.
+    # Zero bills is fatal for a FULL fetch (API down, or a rejected session id). But for
+    # an INCREMENTAL fetch it's the normal, expected result when nothing has changed in
+    # the updated_since window — e.g. the 2026 special session has gone quiet. Tell the
+    # two apart by got_response: a real outage never returns a usable page, while an
+    # empty-but-valid results page does. When it's just a quiet window, fall through to
+    # the merge, which retains the full baseline unchanged.
     if bills_seen == 0:
-        print("Error: fetched zero bills — the Open States API may be down or "
-              "unreachable. Refusing to write an empty output file.")
-        sys.exit(1)
+        if since and got_response:
+            print(f"Incremental update: no bills updated since {since} — nothing new to "
+                  f"fetch. Keeping the {len(prior_votes)} vote(s) already on file.")
+        else:
+            print("Error: fetched zero bills and the Open States API returned no usable "
+                  "response — it may be down, or the session id may be rejected. "
+                  "Refusing to write an empty output file.")
+            sys.exit(1)
 
     # Enforce data-soundness invariants: fold deprecated OCD ids into their
     # current id, de-duplicate roll calls, and drop cross-chamber contamination
@@ -544,6 +560,17 @@ def main():
         'votes':       votes_meta,
         'memberVotes': member_votes,
     }
+
+    # Quiet incremental run: nothing was fetched, so the merged data equals the baseline
+    # exactly. Re-emit the prior metadata verbatim (only bumping generatedAt) instead of
+    # this run's zeroed-out counts — otherwise totalBillsSeen, updateMode and the resolve
+    # stats would flip to 0/incremental, misrepresenting the dataset AND defeating the
+    # workflow's "only generatedAt changed" guard, forcing a spurious ~15 MB commit every
+    # quiet week (finding 5.6). With the metadata unchanged, that guard cleanly skips.
+    if bills_seen == 0 and was_incremental:
+        preserved = dict(prior_meta)
+        preserved['generatedAt'] = output['metadata']['generatedAt']
+        output['metadata'] = preserved
 
     os.makedirs(os.path.dirname(OUTPUT_FILE) or '.', exist_ok=True)
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
