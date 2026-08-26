@@ -556,7 +556,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
            period (21-5-34(c)), hence the staleness wording. -->
       <p class="finance-meta" style="margin-top:0.35rem;">
         These are committee totals as reported to the Commission, current as of each
-        committee's most recent required report — reports are due in January, April,
+        committee's most recent required report. Reports are due in January, April,
         July, and October, so figures may be several months old. Under state law
         contributions and expenditures are totaled for each election cycle while cash
         on hand carries forward from the previous cycle, so the three figures are not
@@ -795,7 +795,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
         <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
         <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
       </div>
-      <p style="font-size:0.72rem;color:#888;margin:0 0 1.25rem 0;max-width:32rem;">Most bills that reach a floor vote pass, so a chart weighted toward “Yea” is typical here and on other members' pages — it reflects which bills got a recorded vote, not this member's overall independence or party loyalty.</p>
+      <p style="font-size:0.72rem;color:#888;margin:0 0 1.25rem 0;max-width:32rem;">Most bills that reach a floor vote pass, so a chart weighted toward “Yea” is typical here and on other members' pages. It reflects which bills got a recorded vote, not this member's overall independence or party loyalty.</p>
     </div>`;
   }
 
@@ -942,7 +942,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     for (const v of seen.values()) if (v === 'Yea' || v === 'Nay') voted++;
     const rate = Math.round(voted / total * 100);
 
-    const methodology = 'Share of recorded passage-vote roll calls in this member’s chamber on which they cast a Yea or Nay. “Other” — absences, excused absences, and abstentions — counts against this figure. Excludes committee and procedural votes.'
+    const methodology = 'Share of recorded passage-vote roll calls in this member’s chamber on which they cast a Yea or Nay. “Other” which includes, absences, excused absences, and abstentions, counts against this figure. Excludes committee and procedural votes.'
       + (incomplete ? ' Based on the partial session data noted above, so this figure may shift as more bills are fetched.' : '');
 
     // Presiding-officer heuristic: essentially never casts a Yea/Nay despite a
@@ -953,7 +953,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
         <div class="participation-box">
           <div class="participation-head">Voting Participation</div>
           <div class="participation-figure">Presiding officer</div>
-          <div class="participation-note">By custom, a presiding officer votes only to break ties or on select matters. This member cast a recorded Yea or Nay on ${voted} of ${total} passage votes — expected for this role, not a measure of attendance.</div>
+          <div class="participation-note">By custom, a presiding officer votes only to break ties or on select matters. This member cast a recorded Yea or Nay on ${voted} of ${total} passage votes. Expected for this role, not a measure of attendance.</div>
         </div>`;
     }
 
@@ -1029,7 +1029,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
     if (considered === 0) return '';
     const rate = Math.round(aligned / considered * 100);
     const accent = member.party === 'Democratic' ? '#2563eb' : member.party === 'Republican' ? '#dc2626' : '#1a56a8';
-    const methodology = `Share of this member's votes on <strong>party-line roll calls</strong> — where a majority of ${escHtml(member.party)}s voted opposite a majority of the other party — that matched their own caucus's position. Excludes votes where both parties largely agreed, so this reflects behavior specifically on contested, partisan votes.`
+    const methodology = `Share of this member's votes on <strong>party-line roll calls</strong>. Where a majority of ${escHtml(member.party)}s voted opposite a majority of the other party that matched their own caucus's position. Excludes votes where both parties largely agreed, so this reflects behavior specifically on contested, partisan votes.`
       + (incomplete ? ' Based on the partial session data noted above, so this figure may shift as more bills are fetched.' : '');
 
     return `
@@ -1070,7 +1070,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
         ? ' (' + data.metadata.totalBillsSeen.toLocaleString() + ' bills processed so far)'
         : '';
       const incompleteNote = incomplete
-        ? '<p style="font-size:0.78rem;color:#a35b00;background:#fff8ec;border:1px solid #fde7c2;border-radius:6px;padding:0.5rem 0.75rem;margin:0 0 0.75rem 0;">Note: vote data is still being backfilled' + seenNote + ' — the participation, party-alignment, and chart figures below reflect only what has been fetched so far and may shift.</p>'
+        ? '<p style="font-size:0.78rem;color:#a35b00;background:#fff8ec;border:1px solid #fde7c2;border-radius:6px;padding:0.5rem 0.75rem;margin:0 0 0.75rem 0;">Note: vote data is still being backfilled' + seenNote + '  The participation, party-alignment, and chart figures below reflect only what has been pulled so far and may shift.</p>'
         : '';
 
       // Sort most recent first
@@ -1147,7 +1147,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
 
       container.innerHTML = `
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
-        <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing recorded passage votes — the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
+        <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing recorded passage votes, the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
         ${incompleteNote}
         ${(participationHtml || partyLoyaltyHtml) ? `
         <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
