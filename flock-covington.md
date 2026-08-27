@@ -14,10 +14,10 @@ An open records request has been submitted to both the City of Covington and New
 
 ### Open Records
 - <a href="https://www.foiamachine.org/foi/city-of-covington-flock-contract-12983/?sharing=SPVLSTR44AWP" target="_blank"> City of Covington Open Records Request</a>
-    - <a href="{{ '/assets/docs/flock_safety_covington_pd_contract.pdf' | relative_url }}" target="_blank"> City of Covington Flock Contract</a>
+    - Responsive Documents: <a href="{{ '/assets/docs/flock_safety_covington_pd_contract.pdf' | relative_url }}" target="_blank"> City of Covington Flock Contract</a>
 
 **December 2025**  
- 
+
 The City Council in Covington, GA voted unanimously to approve a 3-year contract with Flock, for integration of security cameras, on December 15, 2025. Discussion about similar cameras and systems pre-date the contract approval. 
  - <a href="https://cityofcovington.org/ckeditorfiles/files/2025_CityCouncil_1215_Minutes.pdf" target="_blank"> December 15, 2025 - City Council Meeting Minutes, Item #11</a>
 
@@ -30,12 +30,13 @@ The City Council voted unanimously to approve a consolidation of Flock agreement
 
 
 ## <center>Newton County, GA</center>
-The Newton County Sheriff's Office has implemented Flock cameras in the county (and very likely using other vendors as well). So far, we've found references to purchasing/installation of flock cameras in the following:
+The Newton County Sheriff's Office has implemented Flock cameras in the county (and very likely using other vendors as well). So far, we've found references to purchasing/installation of Flock cameras in the following:
  - <a href="https://www.newtoncountyga.gov/AgendaCenter/ViewFile/Agenda/_04152025-812" target="_blank"> April 15, 2025 - Board of Commissioners Meeting Agenda, Item #18</a>
 ### Open Records
 - <a href="https://www.foiamachine.org/foi/newton-county-flock-contractaudit-logs-12995/?sharing=7BJXA4YTVL4P" target="_blank">Newton County Open Records Request</a>
+    - Responsive Documents: <a href="https://drive.proton.me/urls/WAMHDGKQVM#nh1kZcP1IBip" target="_blank">Newton County Sheriff's Office Network Audit Logs (Jan 2026 - April 2026)</a>
 
-<center>If you have any relevant information that you think should be included, please contact us at <admin@votega.org>. Records obtained through GA Open Records Requests, City Council/Board meeting agendas or minutes, etc, are welcome additions.</center> 
+If you have any relevant information that you think should be included on VoteGA, please contact us at [admin@votega.org](mailto:admin@votega.org). Records obtained through GA Open Records Requests, City Council/Board meeting agendas or minutes, news releases, etc, are all welcome additions. 
 
 
 ## <center>Deflock.org ALPR Community Map</center>
