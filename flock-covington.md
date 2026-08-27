@@ -35,11 +35,11 @@ The City Council voted unanimously to approve a consolidation of Flock agreement
 
 ## <center>Newton County, GA</center>
 ### Board of Commissioners Actions
-The Newton County Sheriff's Office has implemented Flock cameras in the county (and very likely using other vendors as well). So far, we've found references to purchasing/installation of Flock cameras in the following:
+The Newton County Sheriff's Office has implemented Flock cameras in the county (and very likely is using other vendors as well). So far, we've found references to approval of purchasing/installation of Flock cameras in the following:
  - <a href="https://www.newtoncountyga.gov/AgendaCenter/ViewFile/Agenda/_04152025-812" target="_blank"> Item #18 - April 15, 2025 - Board of Commissioners Meeting Agenda</a>
 
 ### Open Records Requests
-**April 2026** 
+#### **April 2026** 
 - <a href="https://www.foiamachine.org/foi/newton-county-flock-contractaudit-logs-12995/?sharing=7BJXA4YTVL4P" target="_blank">Newton County - Open Records Request - 2026.04.25</a>
     - Responsive Documents: <a href="https://drive.proton.me/urls/WAMHDGKQVM#nh1kZcP1IBip" target="_blank">Newton County Sheriff's Office - Network Audit Logs - Jan 2026 to April 2026</a>
 
