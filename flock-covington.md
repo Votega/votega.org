@@ -41,7 +41,7 @@ The Newton County Sheriff's Office has implemented Flock cameras in the county (
 - <a href="https://www.foiamachine.org/foi/newton-county-flock-contractaudit-logs-12995/?sharing=7BJXA4YTVL4P" target="_blank">Newton County Open Records Request - April 2026</a>
     - Responsive Documents: <a href="https://drive.proton.me/urls/WAMHDGKQVM#nh1kZcP1IBip" target="_blank">Newton County Sheriff's Office Network Audit Logs (Jan 2026 - April 2026)</a>
 
-## Contact Us
+## <center> Contact Us</center>
 
 If you have any relevant information on Flock, or other ALPR vendors, within the State of Georgia that you'd like for VoteGA to include, please contact us at [admin@votega.org](mailto:admin@votega.org). Records obtained through GA Open Records Requests, City Council/Board meeting agendas or minutes, news releases, etc, are all welcome additions. 
 
