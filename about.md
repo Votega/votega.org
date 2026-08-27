@@ -10,5 +10,7 @@ We strive to only display data backed by primary, authoritative, sources. If you
 
 {: .box-note}
 This site is still under construction. Content and features will continue to change. 
+
+VoteGA.org is an independent informational website and is not supported by any political party or candidate. It is not affiliated with, authorized by, or endorsed by any politicians, Flock Safety, or any other ALPR vendor. The information on this site uses primary, authoritative, sources in an effort to inform voters of the State of Georgia.  
        
     
