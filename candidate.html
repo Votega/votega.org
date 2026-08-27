@@ -820,6 +820,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       if (window.dataStamp) {
         window.dataStamp.render('dataStamp', {
           updated: data.updatedAt, source: 'VoteGA curated race data',
+          repo: { url: 'https://github.com/Votega/ga-races-elections' },
         });
       }
       const races = data.races || [];

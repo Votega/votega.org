@@ -247,7 +247,15 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       const meta = data.metadata || {};
       if (meta.generatedAt) {
         src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt}` +
-          (meta.source ? ` · Source: ${meta.source}` : '');
+          (meta.source ? ` · Source: ${meta.source}` : '') + ` · `;
+        // Ballot measures are published as open data in the ga-legislation repo —
+        // the stable home, not the internal asset this page fetches. See CLAUDE.md.
+        const repoLink = document.createElement('a');
+        repoLink.href = 'https://github.com/Votega/ga-legislation';
+        repoLink.target = '_blank';
+        repoLink.rel = 'noopener';
+        repoLink.textContent = 'Open data';
+        src.appendChild(repoLink);
       }
     } catch (err) {
       console.error(err);

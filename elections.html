@@ -739,6 +739,7 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
       if (window.dataStamp) {
         window.dataStamp.render('dataStamp', {
           updated: data.updatedAt, source: 'VoteGA curated race data',
+          repo: { url: 'https://github.com/Votega/ga-races-elections' },
         });
       }
       const races = (data.races || []).filter(r => !r.id?.startsWith('_'));

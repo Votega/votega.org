@@ -909,6 +909,7 @@ share-description: "Details for a Georgia race: the candidates running, the incu
       if (window.dataStamp) {
         window.dataStamp.render('dataStamp', {
           updated: racesData.updatedAt, source: 'VoteGA curated race data',
+          repo: { url: 'https://github.com/Votega/ga-races-elections' },
         });
       }
       const race = (racesData.races || []).find(r => r.id === raceId);

@@ -179,6 +179,7 @@ async function loadData() {
       window.dataStamp.render('dataStamp', {
         updated: (data.metadata || {}).generatedAt,
         source:  (data.metadata || {}).source || 'Open States API',
+        repo:    { url: 'https://github.com/Votega/ga-legislators' },
       });
     }
   } catch (err) {

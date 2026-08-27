@@ -373,6 +373,7 @@ share-description: "Profile of a Georgia General Assembly member: district, part
         window.dataStamp.render('dataStamp', {
           updated: (data.metadata || {}).generatedAt,
           source:  (data.metadata || {}).source || 'Open States API',
+          repo:    { url: 'https://github.com/Votega/ga-legislators' },
         });
       }
       const all   = data.members || [];

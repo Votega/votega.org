@@ -987,7 +987,10 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       const coverageNote = withVotes && withParty < withVotes
         ? ' Party-line tags and Democrat/Republican vote tallies are still being backfilled. Available for ' + withParty.toLocaleString() + ' of ' + withVotes.toLocaleString() + ' bills with recorded votes, so some party-line votes may not yet be flagged.'
         : '';
-      elDataNote.innerHTML = 'Data snapshot pulled via Open States bulk export, May 2026. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote);
+      elDataNote.innerHTML = 'Data snapshot pulled via Open States bulk export, May 2026. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote)
+        // Published as open data (JSON/CSV/schema) in the ga-legislation repo —
+        // the stable home, not the internal asset this page fetches. See CLAUDE.md.
+        + ' Open data: <a href="https://github.com/Votega/ga-legislation" target="_blank" rel="noopener">Votega/ga-legislation</a>.';
       elDataNote.style.display   = '';
 
       jumpToBillFromURL();

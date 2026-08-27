@@ -9,6 +9,13 @@
  * Usage:
  *   dataStamp.render(el, { updated: meta.generatedAt, source: 'Congress.gov API' });
  *   dataStamp.render(el, { updated: iso, source: 'x', extra: 'Term cycle: 2023-2027' });
+ *   dataStamp.render(el, { updated: iso, source: 'x',
+ *                          repo: { url: 'https://github.com/Votega/ga-legislators' } });
+ *
+ * `repo` appends an "Open data" link (label defaults to "Open data") to the
+ * published sibling dataset. Per the CLAUDE.md convention, any page that renders
+ * data we also publish to a sibling repo should point readers at that repo here,
+ * not at the internal assets/data path it fetches.
  *
  * `updated` accepts an ISO datetime, an ISO date, or null. Anything unparseable
  * is passed through verbatim rather than rendered as "Invalid Date".
@@ -58,6 +65,10 @@
     var parts = ['Data last updated: ' + escape(when)];
     if (opts.source) parts.push('Source: ' + escape(opts.source));
     if (opts.extra) parts.push(escape(opts.extra));
+    if (opts.repo && opts.repo.url) {
+      parts.push('<a href="' + escape(opts.repo.url) + '" target="_blank" rel="noopener">'
+        + escape(opts.repo.label || 'Open data') + '</a>');
+    }
 
     node.classList.add('data-stamp');
     node.innerHTML = parts.join(' &middot; ');
