@@ -17,6 +17,7 @@ import csv
 import io
 import json
 import os
+import sys
 from collections import Counter
 
 from lib.sibling_publish import build_json, publish_or_dry_run
@@ -63,6 +64,64 @@ def phase_candidates(phase):
     else:
         out.extend(phase.get("candidates") or [])
     return out
+
+
+# Canonical phase order. activePhase only ever moves forward through this
+# sequence, one step per election as its winners are certified.
+PHASE_ORDER = {"primary": 0, "special": 1, "runoff": 2, "general": 3}
+
+
+def derive_active_phase(race):
+    """The phase a race is currently in, derived from which phases hold candidates.
+
+    Equals the furthest-along phase that has actually been populated. This works
+    because build_legislative_races.py seeds an EMPTY general (candidates: []) dated
+    in November, and the certification scripts (update_general_from_primary.py /
+    _from_runoff.py) populate the next phase's ballot and bump activePhase together.
+    So "latest populated phase, in canonical order" tracks the stored field through
+    every state -- including the post-election window before winners are promoted
+    (empty general -> still 'primary'), which a pure date-based rule gets wrong.
+
+    Returns None when no phase has any candidate (nothing to assert against).
+    """
+    phases = race.get("phases") or {}
+    populated = [name for name, ph in phases.items() if phase_candidates(ph)]
+    if not populated:
+        return None
+    return sorted(populated, key=lambda n: PHASE_ORDER.get(n, 99))[-1]
+
+
+def check_active_phase(races):
+    """Fail the publish if any race's stored activePhase disagrees with its ballot data.
+
+    This is the automated guard for the manual "advance activePhase after each
+    election" step in RECURRING-TASKS.md. It runs on every push to main that touches
+    races.json (via publish-races-to-ga-races-elections.yml), so a forgotten bump
+    stops being a silent stale-ballot bug on the live site and becomes a red run.
+
+    It does NOT false-fire during the legitimate post-election certification lag,
+    because the derivation is populated-aware, not date-based: while the next phase's
+    ballot is still empty, both the stored field and the derived value read the old
+    phase. Drift only appears once a later phase has candidates but activePhase still
+    points elsewhere (or vice-versa: activePhase advanced past an empty phase).
+    """
+    drift = []
+    for r in races:
+        want = derive_active_phase(r)
+        got = r.get("activePhase")
+        if want is not None and got != want:
+            drift.append((r.get("id"), got, want))
+    if drift:
+        print("ERROR: activePhase is out of sync with the ballot data in races.json.")
+        print("Most likely an election was certified but the 'advance activePhase'")
+        print("step in RECURRING-TASKS.md was missed (or a ballot was populated/emptied")
+        print("without updating activePhase).\n")
+        for rid, got, want in drift:
+            print(f"  {rid}: activePhase={got!r} but its data implies {want!r}")
+        print(f"\n{len(drift)} race(s) out of sync. Set activePhase in "
+              "assets/data/races.json to match, or populate the intended phase's ballot.")
+        sys.exit(1)
+    print(f"activePhase check: all {len(races)} races consistent with their ballot data.")
 
 
 def races_csv(races):
@@ -171,6 +230,7 @@ def schema():
 def build_artifacts():
     doc = json.load(open(SRC_RACES, encoding="utf-8"))
     races = doc.get("races", [])
+    check_active_phase(races)  # refuse to publish a stale/forgotten phase bump
     fed, state = load_name_maps()
     return {
         "races.json": open(SRC_RACES, "rb").read(),

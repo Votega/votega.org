@@ -71,6 +71,20 @@ Triggered by: election night, then again at certification.
 - [ ] Advance `activePhase` on affected races in `assets/data/races.json`. The phase toggle on
       `/elections` builds itself from this — a phase appears or disappears based on the data,
       and defaults to the next election that hasn't happened yet. No code change needed.
+      Note: the certification scripts (`update_general_from_primary.py` / `_from_runoff.py`)
+      already bump `activePhase` for the races they promote, so this manual step is really a
+      *sweep for the races those scripts didn't touch* — federal/other non-regenerated races,
+      and any race whose winners you populated by hand.
+      **Safety net (added 2026-08-27):** `scripts/publish_races.py` now runs `check_active_phase()`
+      on every push to `main` that touches `races.json` (via `publish-races-to-ga-races-elections.yml`).
+      It fails the publish run if a race's `activePhase` disagrees with which phase actually holds
+      candidates — so a *forgotten* bump surfaces as a red run instead of a silent stale ballot on
+      the live site. It is populated-aware (not date-based) on purpose, so it does **not** false-fire
+      during the normal post-election window when the next phase's ballot is still empty. If it fires,
+      the fix is exactly this task: set `activePhase` to match the populated phase (or populate the
+      phase you intended). Run it locally before pushing with: `python scripts/publish_races.py`
+      (dry-runs without the publish token; prints the check result). See *"activePhase is derived
+      state, guarded not stored"* in `TO-DO.md`.
 - [ ] Curate the surviving candidates' profiles (bio, photo, website, withdrawn/disqualified) for the
       next phase. **Federal & other non-regenerated races:** `tools/race-candidate-editor.html`
       (edits `races.json` in place; syncs edits across every phase a candidate appears in).
