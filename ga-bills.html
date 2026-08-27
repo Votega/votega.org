@@ -703,6 +703,19 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
   };
 
   // ── Filter & sort ─────────────────────────────────────────────────────────
+  // The date "Most recent" sorts on: the most recent thing that actually happened
+  // to the bill. For a signed/vetoed bill that is the governor's decision date —
+  // NOT bill.statusDate, which for these holds the "Effective Date", often years in
+  // the future (e.g. SB 160 signed 2026-05-06 but effective 2028-07-01). Sorting on
+  // statusDate floated those future effective dates above genuinely recent bills.
+  // The card already displays governorAction.decisionDate, so this aligns the sort
+  // with what the user sees. Everything else falls back to statusDate (its latest
+  // action date). See also the "Effective Date" status rows in ga-bills.json.
+  function recentDate(bill) {
+    const ga = bill.governorAction || {};
+    return ga.decisionDate || ga.sentDate || bill.statusDate || '';
+  }
+
   function applyFilters() {
     const q      = elSearch.value.trim().toLowerCase();
     const subj   = elSubject.value;
@@ -725,7 +738,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     });
 
     filtered.sort(function (a, b) {
-      if (sort === 'date')  return (b.statusDate || '').localeCompare(a.statusDate || '');
+      if (sort === 'date')  return recentDate(b).localeCompare(recentDate(a));
       if (sort === 'alpha') return a.title.localeCompare(b.title);
       // Bill number: sort numerically within type prefix (HB, SB, HR, SR)
       const parseId = function (id) {
