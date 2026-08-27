@@ -1,0 +1,67 @@
+name: Stamp races.json updatedAt
+
+# races.json's `updatedAt` is maintained by many writers and drifts stale when an
+# edit path forgets to bump it (see scripts/stamp_races_updated_at.py). That field
+# drives the "Data last updated" stamp on race.html / elections.html /
+# candidate.html and RACES.md in the published ga-races-elections repo, so a stale
+# value makes the site under-report freshness. This reconciles it after any push
+# that touches races.json, committing a one-line correction only when needed.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/races.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stamp-races-updated-at
+  cancel-in-progress: false
+
+jobs:
+  stamp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconcile updatedAt against the pushed range
+        run: |
+          set -e
+          BASE='${{ github.event.before }}'
+          # Fall back to HEAD~1 for manual dispatch, or a first push where
+          # `before` is the empty tree / an unknown commit.
+          if [ -z "$BASE" ] || ! git cat-file -e "${BASE}^{commit}" 2>/dev/null; then
+            BASE="$(git rev-parse HEAD~1 2>/dev/null || echo HEAD)"
+          fi
+          echo "Comparing against $BASE"
+          python3 scripts/stamp_races_updated_at.py --base "$BASE"
+
+      - name: Commit and push if the stamp changed
+        run: |
+          set -e
+          if git diff --quiet -- assets/data/races.json; then
+            echo "updatedAt already current — nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/races.json
+          git commit -m "Stamp races.json updatedAt"
+          # A GITHUB_TOKEN bot commit does not re-trigger this on:push workflow, so
+          # this cannot loop; even if it did, the stamp-only commit is not a content
+          # change, so the next run would be a no-op.
+          pushed=0
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push; then pushed=1; break; fi
+            echo "Push attempt $attempt failed, retrying..."
+            sleep 5
+          done
+          if [ "$pushed" -ne 1 ]; then
+            echo "::error::Push failed after 3 attempts - updatedAt was NOT corrected"
+            exit 1
+          fi
