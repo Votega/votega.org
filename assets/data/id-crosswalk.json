@@ -2,8 +2,8 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-08-26T03:42:25+00:00",
-  "count": 749,
+  "generatedAt": "2026-08-27T11:50:52+00:00",
+  "count": 746,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
    "Open States (Plural Policy) — ocdPersonId, legisGaGovId",
@@ -23,12 +23,12 @@
    "out-of-scope": "this identifier does not apply to this person"
   },
   "coverage": {
-   "people": 749,
+   "people": 746,
    "officeholders": 264,
-   "candidateOnly": 485,
-   "withVgId": 682,
-   "unkeyed": 67,
-   "withAnyFiling": 661,
+   "candidateOnly": 482,
+   "withVgId": 681,
+   "unkeyed": 65,
+   "withAnyFiling": 664,
    "candidacies": 716,
    "ambiguous": []
   }
@@ -863,9 +863,35 @@
     "peachfileFilerEntityIds": [
      "103746"
     ],
-    "votegaCandidateIds": []
+    "votegaCandidateIds": [
+     "ga-house-23-2026-r-1"
+    ]
    },
-   "candidacies": [],
+   "candidacies": [
+    {
+     "raceId": "ga-house-23-2026",
+     "candidateId": "ga-house-23-2026-r-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 23,
+     "party": "Republican",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": true,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "103746",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -4138,19 +4164,47 @@
     "govtrackId": null,
     "openSecretsId": null,
     "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": []
+    "peachfileFilerEntityIds": [
+     "100008"
+    ],
+    "votegaCandidateIds": [
+     "challenger-derrick-jackson-gov-2026"
+    ]
    },
-   "candidacies": [],
+   "candidacies": [
+    {
+     "raceId": "ga-governor-2026",
+     "candidateId": "challenger-derrick-jackson-gov-2026",
+     "cycle": 2026,
+     "level": "state-executive",
+     "office": "Governor",
+     "district": null,
+     "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "100008",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
      "source": "Open States"
     },
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "no-match",
-     "note": "no filing matched this person's seat or the office they seek"
+     "method": "reviewed",
+     "confidence": "high",
+     "source": "assets/data/id-crosswalk-overrides.json",
+     "note": "Vacated House 68 to run for Governor (lost the 2026 primary); filed as 'Jackson, Derrick L.' for Governor, committee 'Committee to Elect Derrick Jackson', party DEM. His filing is under the Governor office he sought, not the House seat he held, so seat+surname could not match it."
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -5263,9 +5317,35 @@
     "peachfileFilerEntityIds": [
      "101502"
     ],
-    "votegaCandidateIds": []
+    "votegaCandidateIds": [
+     "ga-house-121-2026-d-1"
+    ]
    },
-   "candidacies": [],
+   "candidacies": [
+    {
+     "raceId": "ga-house-121-2026",
+     "candidateId": "ga-house-121-2026-d-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 121,
+     "party": "Democrat",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": true,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "101502",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -6355,9 +6435,35 @@
     "peachfileFilerEntityIds": [
      "102433"
     ],
-    "votegaCandidateIds": []
+    "votegaCandidateIds": [
+     "ga-senate-35-2026-d-3"
+    ]
    },
-   "candidacies": [],
+   "candidacies": [
+    {
+     "raceId": "ga-senate-35-2026",
+     "candidateId": "ga-senate-35-2026-d-3",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia State Senate",
+     "district": 35,
+     "party": "Democrat",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": true,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "102433",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -6649,9 +6755,35 @@
     "peachfileFilerEntityIds": [
      "101078"
     ],
-    "votegaCandidateIds": []
+    "votegaCandidateIds": [
+     "ga-senate-21-2026-r-1"
+    ]
    },
-   "candidacies": [],
+   "candidacies": [
+    {
+     "raceId": "ga-senate-21-2026",
+     "candidateId": "ga-senate-21-2026-r-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia State Senate",
+     "district": 21,
+     "party": "Republican",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": true,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "101078",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -7526,19 +7658,49 @@
     "govtrackId": null,
     "openSecretsId": null,
     "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": []
+    "peachfileFilerEntityIds": [
+     "100828"
+    ],
+    "votegaCandidateIds": [
+     "challenger-josh-mclaurin-ltgov-2026"
+    ]
    },
-   "candidacies": [],
+   "candidacies": [
+    {
+     "raceId": "ga-lt-governor-2026",
+     "candidateId": "challenger-josh-mclaurin-ltgov-2026",
+     "cycle": 2026,
+     "level": "state-executive",
+     "office": "Lieutenant Governor",
+     "district": null,
+     "party": "Democrat",
+     "phases": [
+      "primary",
+      "general",
+      "runoff"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "100828",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
      "source": "Open States"
     },
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "no-match",
-     "note": "no filing matched this person's seat or the office they seek"
+     "method": "reviewed",
+     "confidence": "high",
+     "source": "assets/data/id-crosswalk-overrides.json",
+     "note": "Vacated Senate 14 to run for Lieutenant Governor (advanced through the 2026 primary runoff; on the November ballot); filed as 'McLaurin, Joshua' for Lieutenant Governor, committee 'Josh for Georgia, Inc.', party DEM. Filing is under the statewide office he sought, not the Senate seat he held, so seat+surname could not match it."
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -14486,9 +14648,35 @@
     "peachfileFilerEntityIds": [
      "100926"
     ],
-    "votegaCandidateIds": []
+    "votegaCandidateIds": [
+     "ga-senate-18-2026-r-2"
+    ]
    },
-   "candidacies": [],
+   "candidacies": [
+    {
+     "raceId": "ga-senate-18-2026",
+     "candidateId": "ga-senate-18-2026-r-2",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia State Senate",
+     "district": 18,
+     "party": "Republican",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": true,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "100926",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -15722,19 +15910,48 @@
     "govtrackId": null,
     "openSecretsId": null,
     "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": []
+    "peachfileFilerEntityIds": [
+     "103563"
+    ],
+    "votegaCandidateIds": [
+     "ga-senate-51-2026-r-3"
+    ]
    },
-   "candidacies": [],
+   "candidacies": [
+    {
+     "raceId": "ga-senate-51-2026",
+     "candidateId": "ga-senate-51-2026-r-3",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia State Senate",
+     "district": 51,
+     "party": "Republican",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "103563",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
      "source": "Open States"
     },
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "no-match",
-     "note": "no filing matched this person's seat or the office they seek"
+     "method": "reviewed",
+     "confidence": "high",
+     "source": "assets/data/id-crosswalk-overrides.json",
+     "note": "Vacated House 9 to run for Senate 51 (advanced through the 2026 primary runoff; on the November ballot); filed as 'Wade, Will' for State Senator district 51, committee 'Friends of Will Wade Inc.', party REP. Filing is under the Senate seat he sought, not the House seat he held, so seat+surname could not match it."
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -15834,7 +16051,9 @@
     "govtrackId": null,
     "openSecretsId": null,
     "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
+    "peachfileFilerEntityIds": [
+     "104715"
+    ],
     "votegaCandidateIds": []
    },
    "candidacies": [],
@@ -15844,9 +16063,10 @@
      "source": "Open States"
     },
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "no-match",
-     "note": "no filing matched this person's seat or the office they seek"
+     "method": "reviewed",
+     "confidence": "high",
+     "source": "assets/data/id-crosswalk-overrides.json",
+     "note": "Won the 2026 Senate 7 Special Election and was sworn in June 26, 2026 (injected member, synthetic id — too new for Open States); not seeking re-election. Qualified with the SoS and filed in PeachFile under her name 'White, Adrienne' (SoS qualifying name Adrienne Annice White) for the Senate 7 Special Election, committee 'Adrienne for Georgia', party DEM. Surname on the filing (White) differs from her officeholder surname (Carden), so seat+surname could not match it."
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -16060,35 +16280,9 @@
     "openSecretsId": null,
     "fecCandidateIds": [],
     "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "ga-senate-35-2026-d-3"
-    ]
+    "votegaCandidateIds": []
    },
-   "candidacies": [
-    {
-     "raceId": "ga-senate-35-2026",
-     "candidateId": "ga-senate-35-2026-d-3",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia State Senate",
-     "district": 35,
-     "party": "Democrat",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": true,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "no-match",
-      "note": "no filing matched this person's seat or the office they seek"
-     }
-    }
-   ],
+   "candidacies": [],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -16124,35 +16318,9 @@
     "openSecretsId": null,
     "fecCandidateIds": [],
     "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "ga-senate-18-2026-r-2"
-    ]
+    "votegaCandidateIds": []
    },
-   "candidacies": [
-    {
-     "raceId": "ga-senate-18-2026",
-     "candidateId": "ga-senate-18-2026-r-2",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia State Senate",
-     "district": 18,
-     "party": "Republican",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": true,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "no-match",
-      "note": "no filing matched this person's seat or the office they seek"
-     }
-    }
-   ],
+   "candidacies": [],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -16188,35 +16356,9 @@
     "openSecretsId": null,
     "fecCandidateIds": [],
     "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "ga-senate-21-2026-r-1"
-    ]
+    "votegaCandidateIds": []
    },
-   "candidacies": [
-    {
-     "raceId": "ga-senate-21-2026",
-     "candidateId": "ga-senate-21-2026-r-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia State Senate",
-     "district": 21,
-     "party": "Republican",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": true,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "no-match",
-      "note": "no filing matched this person's seat or the office they seek"
-     }
-    }
-   ],
+   "candidacies": [],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -16330,35 +16472,9 @@
     "openSecretsId": null,
     "fecCandidateIds": [],
     "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "ga-house-23-2026-r-1"
-    ]
+    "votegaCandidateIds": []
    },
-   "candidacies": [
-    {
-     "raceId": "ga-house-23-2026",
-     "candidateId": "ga-house-23-2026-r-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 23,
-     "party": "Republican",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": true,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "no-match",
-      "note": "no filing matched this person's seat or the office they seek"
-     }
-    }
-   ],
+   "candidacies": [],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -16394,35 +16510,9 @@
     "openSecretsId": null,
     "fecCandidateIds": [],
     "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "ga-house-121-2026-d-1"
-    ]
+    "votegaCandidateIds": []
    },
-   "candidacies": [
-    {
-     "raceId": "ga-house-121-2026",
-     "candidateId": "ga-house-121-2026-d-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 121,
-     "party": "Democrat",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": true,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "no-match",
-      "note": "no filing matched this person's seat or the office they seek"
-     }
-    }
-   ],
+   "candidacies": [],
    "provenance": {
     "ocdPersonId": {
      "method": "authoritative",
@@ -19216,60 +19306,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000299",
-   "name": {
-    "full": "Derrick L. Jackson",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "100008"
-    ],
-    "votegaCandidateIds": [
-     "challenger-derrick-jackson-gov-2026"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-governor-2026",
-     "candidateId": "challenger-derrick-jackson-gov-2026",
-     "cycle": 2026,
-     "level": "state-executive",
-     "office": "Governor",
-     "district": null,
-     "party": "Democrat",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "100008",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000300",
    "name": {
     "full": "Emanuel D. Jones",
@@ -20843,62 +20879,6 @@
      "method": "name-exact",
      "confidence": "high",
      "source": "FEC candidate index"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000329",
-   "name": {
-    "full": "Josh McLaurin",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "100828"
-    ],
-    "votegaCandidateIds": [
-     "challenger-josh-mclaurin-ltgov-2026"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-lt-governor-2026",
-     "candidateId": "challenger-josh-mclaurin-ltgov-2026",
-     "cycle": 2026,
-     "level": "state-executive",
-     "office": "Lieutenant Governor",
-     "district": null,
-     "party": "Democrat",
-     "phases": [
-      "primary",
-      "general",
-      "runoff"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "100828",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
     }
    }
   },
@@ -36524,7 +36504,7 @@
   {
    "vgId": "vg-ga-p-000616",
    "name": {
-    "full": "Michael Dwight Dvorscak",
+    "full": "Mike Dvorscak",
     "first": null,
     "last": null
    },
@@ -36742,7 +36722,7 @@
   {
    "vgId": "vg-ga-p-000620",
    "name": {
-    "full": "Charles Herbert Hand Iii",
+    "full": "Chuck Hand",
     "first": null,
     "last": null
    },
@@ -37450,7 +37430,7 @@
   {
    "vgId": "vg-ga-p-000633",
    "name": {
-    "full": "Lorraine Violet Thomas",
+    "full": "Lorraine Thomas",
     "first": null,
     "last": null
    },
@@ -37559,7 +37539,7 @@
   {
    "vgId": "vg-ga-p-000635",
    "name": {
-    "full": "Tracy Conkle Wheeler",
+    "full": "Tracy Wheeler",
     "first": null,
     "last": null
    },
@@ -37723,7 +37703,7 @@
   {
    "vgId": "vg-ga-p-000638",
    "name": {
-    "full": "Michael James Dudgeon",
+    "full": "Mike Dudgeon",
     "first": null,
     "last": null
    },
@@ -38269,7 +38249,7 @@
   {
    "vgId": "vg-ga-p-000648",
    "name": {
-    "full": "Eric Jamal Helvy",
+    "full": "Eric Helvy",
     "first": null,
     "last": null
    },
@@ -38433,7 +38413,7 @@
   {
    "vgId": "vg-ga-p-000651",
    "name": {
-    "full": "Melina Renee Mast",
+    "full": "Melina Mast",
     "first": null,
     "last": null
    },
@@ -38542,7 +38522,7 @@
   {
    "vgId": "vg-ga-p-000653",
    "name": {
-    "full": "Jeffery Eugene Newlin",
+    "full": "Jeff Newlin",
     "first": null,
     "last": null
    },
@@ -38816,7 +38796,7 @@
   {
    "vgId": "vg-ga-p-000658",
    "name": {
-    "full": "Anthony Scott Tippetts",
+    "full": "Anthony \"Scott\" Tippetts",
     "first": null,
     "last": null
    },
@@ -39143,7 +39123,7 @@
   {
    "vgId": "vg-ga-p-000664",
    "name": {
-    "full": "Justin Grant Gillespie",
+    "full": "Justin Gillespie",
     "first": null,
     "last": null
    },
@@ -39561,61 +39541,6 @@
      "withdrawn": false,
      "disqualified": false,
      "peachfileFilerEntityId": "102552",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000672",
-   "name": {
-    "full": "William Solomon Wade",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "103563"
-    ],
-    "votegaCandidateIds": [
-     "ga-senate-51-2026-r-3"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-senate-51-2026",
-     "candidateId": "ga-senate-51-2026-r-3",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia State Senate",
-     "district": 51,
-     "party": "Republican",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "103563",
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "seat+surname",
@@ -40173,6 +40098,110 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000683",
+   "name": {
+    "full": "Timothy Beau Brown",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [
+     "H6GA14185"
+    ],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "challenger-timothy-brown-ga14-2026"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-14-2026",
+     "candidateId": "challenger-timothy-brown-ga14-2026",
+     "cycle": 2026,
+     "level": "federal",
+     "office": "U.S. House",
+     "district": 14,
+     "party": "Republican",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": "H6GA14185",
+     "filingProvenance": {
+      "method": "curated",
+      "source": "assets/data/races.json"
+     }
+    }
+   ],
+   "provenance": {
+    "fecCandidateIds": {
+     "method": "curated",
+     "source": "assets/data/races.json"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000684",
+   "name": {
+    "full": "Tricia R. Pridemore",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [
+     "H6GA11207"
+    ],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "challenger-tricia-pridemore-ga11-2026"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-11-2026",
+     "candidateId": "challenger-tricia-pridemore-ga11-2026",
+     "cycle": 2026,
+     "level": "federal",
+     "office": "U.S. House",
+     "district": 11,
+     "party": "Republican",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": "H6GA11207",
+     "filingProvenance": {
+      "method": "curated",
+      "source": "assets/data/races.json"
+     }
+    }
+   ],
+   "provenance": {
+    "fecCandidateIds": {
+     "method": "curated",
+     "source": "assets/data/races.json"
     }
    }
   },
@@ -43281,60 +43310,6 @@
   {
    "vgId": null,
    "name": {
-    "full": "Timothy Beau Brown",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "challenger-timothy-brown-ga14-2026"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-14-2026",
-     "candidateId": "challenger-timothy-brown-ga14-2026",
-     "cycle": 2026,
-     "level": "federal",
-     "office": "U.S. House",
-     "district": 14,
-     "party": "Republican",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "district+surname",
-      "confidence": "ambiguous",
-      "candidates": [
-       "H6GA14177",
-       "H6GA14185"
-      ]
-     }
-    }
-   ],
-   "provenance": {
-    "vgId": {
-     "method": "unkeyed",
-     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
-    }
-   }
-  },
-  {
-   "vgId": null,
-   "name": {
     "full": "Tony Michael Brown",
     "first": null,
     "last": null
@@ -43424,60 +43399,6 @@
      "filingProvenance": {
       "method": "district+surname",
       "confidence": "no-match"
-     }
-    }
-   ],
-   "provenance": {
-    "vgId": {
-     "method": "unkeyed",
-     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
-    }
-   }
-  },
-  {
-   "vgId": null,
-   "name": {
-    "full": "Tricia R. Pridemore",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "challenger-tricia-pridemore-ga11-2026"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-11-2026",
-     "candidateId": "challenger-tricia-pridemore-ga11-2026",
-     "cycle": 2026,
-     "level": "federal",
-     "office": "U.S. House",
-     "district": 11,
-     "party": "Republican",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "district+surname",
-      "confidence": "ambiguous",
-      "candidates": [
-       "H4GA11087",
-       "H6GA11207"
-      ]
      }
     }
    ],
