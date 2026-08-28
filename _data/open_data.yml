@@ -5,16 +5,21 @@
 #   repo  — published to a dedicated public GitHub repo (contribution-friendly)
 #   site  — served directly from votega.org/assets/data (no dedicated repo yet)
 #
-# Keep claims accurate: `source` names the authoritative upstream; do not assert
-# a specific software license here — the page carries one shared reuse/attribution
-# section, and upstream terms (e.g. Oyez) should be verified before promoting a
-# dataset. `docs` links into /about-the-data for the full methodology.
+# Keep claims accurate: `source` names the authoritative upstream. Do not assert a
+# per-dataset license here — VoteGA data is published under CC BY 4.0, stated once in
+# the page's shared reuse section and emitted into every sibling repo as LICENSE +
+# NOTICE.md by scripts/lib/sibling_publish.py. Upstream terms (e.g. Oyez) still apply
+# to the underlying facts and should be verified before promoting a dataset.
+# `docs` links into /about-the-data for the full methodology.
+#
+# File links are checked by scripts/validate_open_data_links.py (CI, weekly + on
+# change). If a publisher moves a file, fix the path here — do not delete the check.
 #
 # To add a dataset: copy a block, keep the field order, fill what applies.
 # ============================================================================
 
 meta:
-  last_reviewed: 2026-08-10
+  last_reviewed: 2026-08-27
   intro: >
     Structured, machine-readable civic data we already maintain for VoteGA.org,
     published for anyone to reuse — civic apps, researchers, journalists, or
@@ -37,9 +42,11 @@ datasets:
     cadence: Roster daily · votes &amp; scorecard weekly
     repo_url: https://github.com/Votega/ga-legislators
     files:
-      - { name: "data/all.json",   desc: "Member roster", url: "https://github.com/Votega/ga-legislators/blob/main/data/all.json" }
-      - { name: "data/votes.json", desc: "Passage-vote history (keyed by OCD person ID)", url: "https://github.com/Votega/ga-legislators/blob/main/data/votes.json" }
-      - { name: "scorecard.csv", desc: "Party-unity + participation per legislator (derived)", url: "https://github.com/Votega/ga-legislators/blob/main/sessions/2025-2026/scorecard.csv" }
+      - { name: "latest.json", desc: "Start here — indexes every session and names its files", url: "https://github.com/Votega/ga-legislators/blob/main/latest.json" }
+      - { name: "data/all.json", desc: "Live member roster", url: "https://github.com/Votega/ga-legislators/blob/main/data/all.json" }
+      - { name: "sessions/2025-2026/votes.json", desc: "Passage-vote history, regular session (keyed by OCD person ID)", url: "https://github.com/Votega/ga-legislators/blob/main/sessions/2025-2026/votes.json" }
+      - { name: "sessions/2026-ss/votes.json", desc: "Passage-vote history, 2026 special session", url: "https://github.com/Votega/ga-legislators/blob/main/sessions/2026-ss/votes.json" }
+      - { name: "sessions/2025-2026/scorecard.csv", desc: "Party-unity + participation per legislator (derived)", url: "https://github.com/Votega/ga-legislators/blob/main/sessions/2025-2026/scorecard.csv" }
     docs: /about-the-data#georgia-general-assembly-legislators
     contribute: https://github.com/Votega/ga-legislators/issues
 
@@ -67,13 +74,34 @@ datasets:
       Every bill and resolution for the current Georgia legislative session —
       sponsors, subjects, status, and action history — as a compact static file.
     source: Open States (Plural Policy)
-    scope: 2025–2026 session
+    scope: 2025–2026 biennium — regular session and 2026 special session, each archived under sessions/
     cadence: Weekly
     repo_url: https://github.com/Votega/ga-legislation
     files:
-      - { name: "ga-bills.json",          desc: "All bills & resolutions", url: "https://github.com/Votega/ga-legislation/blob/main/ga-bills.json" }
-      - { name: "ga-bills-subjects.json", desc: "Subject index", url: "https://github.com/Votega/ga-legislation/blob/main/ga-bills-subjects.json" }
+      - { name: "latest.json", desc: "Start here — indexes every session and names its files", url: "https://github.com/Votega/ga-legislation/blob/main/latest.json" }
+      - { name: "sessions/2025-2026/bills.json", desc: "Bills & resolutions, 2025-2026 regular session", url: "https://github.com/Votega/ga-legislation/blob/main/sessions/2025-2026/bills.json" }
+      - { name: "sessions/2026-ss/bills.json", desc: "Bills & resolutions, 2026 special session", url: "https://github.com/Votega/ga-legislation/blob/main/sessions/2026-ss/bills.json" }
+      - { name: "sessions/2025-2026/bills-subjects.json", desc: "Subject index, regular session", url: "https://github.com/Votega/ga-legislation/blob/main/sessions/2025-2026/bills-subjects.json" }
     docs: /about-the-data#georgia-general-assembly-bills--resolutions
+    contribute: https://github.com/Votega/ga-legislation/issues
+
+  - id: ga-ballot-measures
+    title: Georgia Statewide Ballot Measures
+    hosting: repo
+    summary: >
+      Statewide constitutional amendments and referendums Georgia voters decide —
+      plain-language summary, subject tags, certification status, and a link to the
+      enabling legislation on legis.ga.gov. Published alongside the bills data in
+      the ga-legislation repo.
+    source: Georgia Secretary of State · Georgia General Assembly (legis.ga.gov) · manual curation
+    scope: 2026 general election — 4 measures
+    cadence: On change (curated)
+    repo_url: https://github.com/Votega/ga-legislation
+    files:
+      - { name: "ga-ballot-measures.json", desc: "All measures, current cycle", url: "https://github.com/Votega/ga-legislation/blob/main/ga-ballot-measures.json" }
+      - { name: "ballot-measures/2026/measures.json", desc: "2026 cycle archive", url: "https://github.com/Votega/ga-legislation/blob/main/ballot-measures/2026/measures.json" }
+      - { name: "ga-ballot-measures.schema.json", desc: "Field definitions", url: "https://github.com/Votega/ga-legislation/blob/main/ga-ballot-measures.schema.json" }
+    docs: /about-the-data#georgia-ballot-measures
     contribute: https://github.com/Votega/ga-legislation/issues
 
   - id: ga-executive-orders

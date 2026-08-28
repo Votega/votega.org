@@ -1,0 +1,57 @@
+name: Validate /open-data catalog links (weekly, Mon 06:30 UTC)
+
+# The /open-data catalog in _data/open_data.yml is hand-maintained, but it points
+# at artifacts produced by the publishers in this repo and committed to the
+# sibling repos. When a publisher moves a file, the catalog keeps advertising the
+# old path and the page — which is in the site navbar — quietly serves 404s.
+#
+# That is not hypothetical: the sessions/ migration moved ga-bills.json to
+# sessions/<slug>/bills.json and ga-legislators' votes to sessions/<slug>/, and
+# three of seven repo links on /open-data were dead for roughly two weeks before
+# CODEBASE-REVIEW-2026-08-27.md found them.
+#
+# A pull_request trigger alone would not have caught it, because the change that
+# broke the links landed in a DIFFERENT repo. Hence the weekly schedule.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '_data/open_data.yml'
+      - 'scripts/validate_open_data_links.py'
+      - '.github/workflows/validate-open-data-links.yml'
+  pull_request:
+    paths:
+      - '_data/open_data.yml'
+      - 'scripts/validate_open_data_links.py'
+      - '.github/workflows/validate-open-data-links.yml'
+  schedule:
+    # Monday 06:30 UTC — before the Monday 07:30 GA votes run, and off the
+    # crowded 07:00-08:30 band the data generators occupy.
+    - cron: '30 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Validate catalog links
+        run: python scripts/validate_open_data_links.py
