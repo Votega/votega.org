@@ -8,7 +8,7 @@ name: Validate /open-data catalog links (weekly, Mon 06:30 UTC)
 # That is not hypothetical: the sessions/ migration moved ga-bills.json to
 # sessions/<slug>/bills.json and ga-legislators' votes to sessions/<slug>/, and
 # three of seven repo links on /open-data were dead for roughly two weeks before
-# CODEBASE-REVIEW-2026-08-27.md found them.
+# anyone noticed.
 #
 # A pull_request trigger alone would not have caught it, because the change that
 # broke the links landed in a DIFFERENT repo. Hence the weekly schedule.
