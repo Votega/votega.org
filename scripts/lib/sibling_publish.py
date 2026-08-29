@@ -12,7 +12,6 @@ Every publish also carries the reuse terms (LICENSE + NOTICE.md), injected here 
 than hand-maintained in each sibling repo. Five hand-copied LICENSE files silently drifted
 to GPL-3.0 while /open-data promised attribution-only reuse; emitting them from one place
 means the license is stated once and cannot diverge again.
-See CODEBASE-REVIEW-2026-08-27.md.
 """
 import base64
 import json
