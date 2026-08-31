@@ -232,6 +232,17 @@ is closed, so the gap is frozen rather than growing.
   `Votega/ga-legislation` via `publish-ga-ballot-measures-to-ga-legislation` on push. Per-measure
   lifecycle: `potential → certified → passed/failed`. See §1 (record results at certification)
   and §2 (introduce the next cycle to archive the last one).
+- **Bill subject tags** — every HB/SB in `assets/data/ga-bills.json` should carry at least one
+  `subjects` entry. Tags come from three sources, in order: the Open States `subject[]`, then an
+  auto-tag of local/municipal bills as `"Local / Municipal"` (`infer_local_subject()`), then manual
+  overrides in [`assets/data/ga-bills-subjects.json`](assets/data/ga-bills-subjects.json). A bill
+  with none of those lands untagged. To find any (no API key / quota — reads the committed JSON):
+  `python scripts/list_untagged_bills.py`. `update-ga-bills` also writes `scripts/ga-bills-review.csv`
+  on each live run, but the offline script is quicker for a spot check. **To add or correct a tag:**
+  edit `ga-bills-subjects.json` (keyed by identifier, e.g. `"HB 739": ["HEALTH"]`; values must match
+  the canonical Open States taxonomy, except the site's own `"Local / Municipal"`), then re-run
+  `generate_ga_bills_data.py` to apply. `python scripts/list_untagged_bills.py --show "SB 30"` prints
+  a bill's current subjects + title when deciding a correction. As of 2026-08-31, 0 are untagged.
 - **State campaign finance coverage** — `update-ga-campaign-finance` pulls only the cycle
   matching the newest `cycle` in `races.json`. After an election, check that sitting
   legislators still resolve: a member with no filing shows "no filing found", which is
