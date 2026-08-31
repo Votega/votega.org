@@ -197,6 +197,53 @@ def candidate_from_row(row: dict, idx: int, chamber_slug: str, district: int, pa
 REMOVED_IDS = []
 REMOVAL_MISMATCHES = []
 SEAT_HOLDER_MISMATCHES = []
+DEDUPE_DROPPED = []      # (kept_id, dropped_id, name) collapsed automatically
+DEDUPE_WARNINGS = []     # (id_a, id_b, name_a, name_b) same-name pairs NOT collapsed
+
+
+def dedupe_double_ingest(candidates: list) -> list:
+    """Collapse the double-ingestion artifact within a single party ballot.
+
+    ga-legislative-candidates.json was assembled by two paths writing into the same
+    contest array: a bulk CSV import (rows with NO Salesforce `Id`) and a per-contest
+    record fetch (rows carrying an `Id`, sometimes with a doubled space where a middle
+    name would go). For ~14 GA House (D) contests both ran, entering the same person
+    twice with different name formats (`TIM RILEY` / `TIMOTHY SHAWN RILEY`). This used
+    to be patched by hand with ~14 `remove: true` overrides; this collapses it at the
+    source instead. See TO-DO.md "Fix Candidates Listed Twice" and CODEBASE-REVIEW-2026-08-18.md 5.2.
+
+    Signature required to collapse, both parts, so a real same-surname pair is never merged:
+      1. one row has `_srcHasId` True and the other False (the exact double-ingest tell —
+         two genuinely distinct candidates come from the same path, so both would match), and
+      2. the names match on surname + first initial (`names_match`).
+    The `Id` row is kept (the CSV-fallback path drops fields the API returns), so IDs are
+    assigned to the full row list first and the non-`Id` twin is dropped — reproducing the
+    old override outcome exactly, including the surviving candidate's id (which the general
+    ballots in races.json reference). A same-name pair that does NOT split on Id/no-Id is
+    left intact and reported, never silently merged.
+    """
+    survivors: list = []
+    for c in candidates:
+        twin = None
+        for s in survivors:
+            if names_match(c["name"], s["name"]):
+                if c.get("_srcHasId") != s.get("_srcHasId"):
+                    twin = s
+                    break
+                # Same name, same ingest path -> not the double-ingest bug. Keep both,
+                # but surface it: could be a genuine duplicate or two real people.
+                DEDUPE_WARNINGS.append((s["id"], c["id"], s["name"], c["name"]))
+        if twin is None:
+            survivors.append(c)
+            continue
+        keep = twin if twin.get("_srcHasId") else c
+        drop = c if keep is twin else twin
+        if keep is not twin:                       # incoming row is the Id one -> it wins
+            survivors[survivors.index(twin)] = keep
+        DEDUPE_DROPPED.append((keep["id"], drop["id"], keep["name"]))
+    for c in survivors:
+        c.pop("_srcHasId", None)
+    return survivors
 
 
 def override_target_name(patch: dict) -> str:
@@ -291,6 +338,9 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict, 
             candidates = []
             for i, row in enumerate(rows):
                 c = candidate_from_row(row, i, chamber_slug, district, party_slug)
+                # Temporary marker for dedupe_double_ingest(): whether the source row
+                # carried a Salesforce Id. Stripped again before the ballot is emitted.
+                c["_srcHasId"] = bool(row.get("Id"))
 
                 # Auto-enrich incumbents with imageUrl and member link from ga-members.json.
                 #
@@ -336,6 +386,8 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict, 
                     c.update({k: v for k, v in patch.items() if not k.startswith("_")})
 
                 candidates.append(c)
+            # Collapse the double-ingestion artifact (retires the manual `remove:` overrides).
+            candidates = dedupe_double_ingest(candidates)
             ballots[party_label] = candidates
 
         if not ballots:
@@ -402,6 +454,17 @@ def main():
 
     new_races = build_races(src, member_lookup, candidate_overrides, race_overrides)
     print(f"Built {len(new_races)} legislative race entries")
+
+    if DEDUPE_DROPPED:
+        print(f"Auto-deduped {len(DEDUPE_DROPPED)} double-ingested candidate(s) "
+              f"(kept the Salesforce-Id row, dropped its no-Id twin):")
+        for kept, dropped, name in DEDUPE_DROPPED:
+            print(f"    {name}: kept {kept}, dropped {dropped}")
+    if DEDUPE_WARNINGS:
+        print(f"\nnote: {len(DEDUPE_WARNINGS)} same-name pair(s) NOT collapsed "
+              f"(same ingest path — could be a real duplicate or two distinct people):")
+        for ida, idb, na, nb in DEDUPE_WARNINGS:
+            print(f"    {ida} ({na!r}) vs {idb} ({nb!r})")
 
     removal_keys = {k for k, v in candidate_overrides.items()
                     if isinstance(v, dict) and v.get("remove")}
