@@ -276,6 +276,18 @@ is closed, so the gap is frozen rather than growing.
       certified export was byte-identical to the unofficial numbers already in
       `_sources/election_results/ga-primary-runoff-results.csv` (81 rows, 0 diffs),
       so no CSV/JSON rebuild was needed.
+- [ ] **Certify the Aug 25 GA-13 special runoff.** Held 2026-08-25; results are live and
+      **unofficial** (`ga-special-2026-runoff-results.html` + the runoff entry in
+      `_data/election_archive.yml`), awaiting SoS certification. When certified: flip
+      `status` `unofficial → certified` in both files and bump the page's `updated:` stamp.
+      Replace `_sources/election_results/ga-special-2026-runoff-results.csv` and re-run
+      `python scripts/build_results_json.py _sources/election_results/ga-special-2026-runoff-results.csv ga-special-2026-runoff-results`
+      **only if** the certified export differs from the election-night numbers (Blair 9,891 /
+      Scott 8,443); a status-only change needs no rebuild. **No `activePhase` change and no
+      `set_general_candidates.py`** — `ga-13-special-2026` has no `general` phase (it fills only
+      the remainder of the term; the full-term seat is the separate `ga-13-2026` Nov 3 general).
+      The winner's seating as US Rep is federal data — `update-current-members` picks it up from
+      Congress.gov automatically; `congress.js` shows GA-13 "Vacant" until it does.
 - [ ] **Nov 3 General Election — replace the placeholder with real results.**
       `ga-general-2026-results.html` currently shows every candidate at 0 votes, built by
       `scripts/build_general_placeholder.py` from `races.json`. Once official results are
