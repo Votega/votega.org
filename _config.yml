@@ -366,3 +366,11 @@ plugins:
   - jekyll-paginate
   - jekyll-sitemap
   - jekyll-redirect-from
+
+# Per-entity detail pages (legislators, members of Congress, races, …) are
+# materialized into _entities/ at deploy time by scripts/build_entity_pages.py
+# (GitHub Pages safe mode disallows generator plugins). Each doc sets its own
+# clean permalink; output: true makes them real, crawlable, sitemap-listed pages.
+collections:
+  entities:
+    output: true
