@@ -1,0 +1,49 @@
+name: Submit URLs to IndexNow
+
+# After each Pages deploy, ping IndexNow with new/changed URLs so Bing (and other
+# participating engines) crawl them within minutes. scripts/indexnow_submit.py
+# submits only URLs newly added to the sitemap since the last run, plus a small
+# curated set of pages that change every day — not the whole sitemap daily, per
+# IndexNow guidance. The previous run's URL list is kept in the Actions cache so
+# each run can diff against it.
+
+on:
+  workflow_run:
+    workflows: ["Build and deploy Jekyll site to Pages"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    # Only after a successful deploy (or a manual run).
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Restore the previous run's URL list so we can submit only the delta.
+      # The key is unique per run (always saves a fresh copy); restore-keys pulls
+      # the most recent prior list.
+      - name: Restore previous URL list
+        uses: actions/cache@v4
+        with:
+          path: .indexnow
+          key: indexnow-locs-${{ github.run_id }}
+          restore-keys: |
+            indexnow-locs-
+
+      - name: Submit new/changed URLs
+        env:
+          INDEXNOW_KEY: "88cc36d6b0a248d091176173c9bd751e"
+          HOST: "www.votega.org"
+          PREV_LOCS: ".indexnow/locs.txt"
+          OUT_LOCS: ".indexnow/locs.txt"
+        run: python3 scripts/indexnow_submit.py
