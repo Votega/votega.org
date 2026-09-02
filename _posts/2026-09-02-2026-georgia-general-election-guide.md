@@ -1,8 +1,8 @@
 ---
 layout: post
-title: Your 2026 Georgia General Election Guide: Dates, Deadlines, and Your Ballot
+title: Your 2026 Georgia General Election Guide. Dates, Deadlines, and Your Ballot
 subtitle: Everything Georgia voters need before November 3, 2026 and the tools to look it all up
-share-title: 2026 Georgia General Election Guide: Dates, Deadlines & Your Ballot
+share-title: 2026 Georgia General Election Guide. Dates, Deadlines & Your Ballot
 share-description: Georgia's 2026 General Election is November 3. Here are the registration deadline, early voting dates, and free tools to preview your ballot and find your representatives.
 tags: [elections, voter guide, 2026 general election, early voting, sample ballot]
 ---
