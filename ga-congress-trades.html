@@ -227,7 +227,23 @@ share-description: "Stock trades disclosed by Georgia's congressional delegation
   }
 </style>
 
-<div id="summaryBar">Loading trade data…</div>
+<div id="summaryBar">
+  {%- comment -%} Server-rendered fallback; JS overwrites #summaryBar. See scripts/build_render_data.py {%- endcomment -%}
+  {%- assign r = site.data.rendered.ga_congress_trades -%}
+  {%- if r and r.rows -%}
+    {% include data-freshness.html data=r noun="disclosed trades" %}
+    <ul style="list-style:none;padding:0;margin:0;">
+      {%- for m in r.rows -%}
+      <li style="padding:.4rem 0;border-bottom:1px solid #e5e7eb;">
+        <strong>{{ m.name | escape }}</strong>{% if m.office %} <span style="color:#6b7280;">· {{ m.office | escape }}</span>{% endif %}
+        {%- if m.tradeCount %} — {{ m.tradeCount }} trades{% endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  {%- else -%}
+    Loading trade data…
+  {%- endif -%}
+</div>
 <div id="loadError" role="alert" style="display:none;padding:1rem;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;color:#991b1b;font-size:0.9rem;"></div>
 
 <div id="tradesApp">

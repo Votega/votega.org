@@ -137,7 +137,16 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     </tr>
   </thead>
   <tbody id="orderBody">
-    <tr><td colspan="4">Loading…</td></tr>
+    {%- comment -%} Server-rendered fallback; JS overwrites #orderBody. See scripts/build_render_data.py {%- endcomment -%}
+    {%- assign r = site.data.rendered.ga_executive_orders -%}
+    {%- if r and r.rows -%}
+      {%- if r.updated -%}<tr><td colspan="4" style="color:#6b7280;font-size:.85rem;">Last updated {% if r.updatedISO %}<time datetime="{{ r.updatedISO }}">{{ r.updated }}</time>{% else %}{{ r.updated }}{% endif %}{% if r.count %} · {{ r.count }} orders{% endif %}</td></tr>{%- endif -%}
+      {%- for o in r.rows -%}
+      <tr><td>{{ o.date | escape }}</td><td>{{ o.number | escape }}</td><td>{{ o.title | escape }}</td><td>{{ o.category | escape }}</td></tr>
+      {%- endfor -%}
+    {%- else -%}
+      <tr><td colspan="4">Loading…</td></tr>
+    {%- endif -%}
   </tbody>
 </table>
 

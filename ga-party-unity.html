@@ -199,7 +199,20 @@ members, from the same roll-call record behind each member's page.</p>
         <th class="pu-hide-sm">Participation</th>
       </tr>
     </thead>
-    <tbody id="pu-rows"></tbody>
+    <tbody id="pu-rows">
+      {%- comment -%} Server-rendered fallback; JS overwrites #pu-rows. See scripts/build_render_data.py {%- endcomment -%}
+      {%- assign r = site.data.rendered.ga_party_unity -%}
+      {%- if r and r.rows -%}
+        {%- if r.updated -%}<tr><td colspan="6" style="color:#6b7280;font-size:.85rem;">Last updated {% if r.updatedISO %}<time datetime="{{ r.updatedISO }}">{{ r.updated }}</time>{% else %}{{ r.updated }}{% endif %}{% if r.count %} · {{ r.count }} members{% endif %}</td></tr>{%- endif -%}
+        {%- for m in r.rows -%}
+        <tr>
+          <td>{{ forloop.index }}</td>
+          <td>{{ m.name | escape }}{% if m.party %} <span style="color:#6b7280;">({{ m.party | escape }}{% if m.chamber %}, {{ m.chamber | escape }}{% endif %}{% if m.district %} {{ m.district | escape }}{% endif %})</span>{% endif %}</td>
+          <td colspan="4">{% if m.partyUnity %}Party unity {{ m.partyUnity | times: 100 | round: 1 }}%{% endif %}{% if m.votedWithParty %} · voted with party {{ m.votedWithParty }}{% endif %}</td>
+        </tr>
+        {%- endfor -%}
+      {%- endif -%}
+    </tbody>
   </table>
 </div>
 

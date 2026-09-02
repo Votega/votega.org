@@ -152,7 +152,21 @@ share-description: "The Supreme Court of the United States - the nine justices, 
 </style>
 
 <div id="scotusContent">
-  <p style="color:#777;font-size:0.9rem;">Loading...</p>
+  {%- comment -%} Server-rendered fallback; JS overwrites #scotusContent. See scripts/build_render_data.py {%- endcomment -%}
+  {%- assign r = site.data.rendered.supreme_court -%}
+  {%- if r and r.rows -%}
+    {% include data-freshness.html data=r noun="justices" %}
+    <ul style="list-style:none;padding:0;margin:0;">
+      {%- for j in r.rows -%}
+      <li style="padding:.45rem 0;border-bottom:1px solid #e5e7eb;">
+        <strong>{{ j.name | escape }}</strong>{% if j.title %} — {{ j.title | escape }}{% endif %}
+        {%- if j.appointedBy %} <span style="color:#6b7280;">· appointed by {{ j.appointedBy | escape }}</span>{% endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  {%- else -%}
+    <p style="color:#777;font-size:0.9rem;">Loading...</p>
+  {%- endif -%}
 </div>
 
 <script>

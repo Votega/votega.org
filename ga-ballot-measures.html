@@ -116,7 +116,22 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
 </style>
 
 <div id="measuresContainer">
-  <p id="loadingMsg">Loading…</p>
+  {%- comment -%} Server-rendered fallback; JS overwrites #measuresContainer. See scripts/build_render_data.py {%- endcomment -%}
+  {%- assign r = site.data.rendered.ga_ballot_measures -%}
+  {%- if r and r.rows -%}
+    {% include data-freshness.html data=r noun="measures" %}
+    <ul style="list-style:none;padding:0;margin:0;">
+      {%- for m in r.rows -%}
+      <li style="padding:.6rem 0;border-bottom:1px solid #e5e7eb;">
+        <strong>{{ m.title | escape }}</strong>
+        {%- if m.status %} <span style="color:#6b7280;">({{ m.status | escape }})</span>{% endif %}
+        {%- if m.summary %}<br><span style="color:#444;">{{ m.summary | escape }}</span>{% endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  {%- else -%}
+    <p id="loadingMsg">Loading…</p>
+  {%- endif -%}
 </div>
 
 <p style="margin-top:1.5rem;font-size:0.8rem;color:#888;" id="dataSource"></p>

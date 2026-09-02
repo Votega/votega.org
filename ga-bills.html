@@ -329,7 +329,24 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
 
 <div id="billsStats" class="bills-stats" style="display:none"></div>
 
-<div id="billsLoading" class="bills-loading">Loading bill data…</div>
+<div id="billsLoading" class="bills-loading">
+  {%- comment -%} Server-rendered fallback; JS hides #billsLoading on load. See scripts/build_render_data.py {%- endcomment -%}
+  {%- assign r = site.data.rendered.ga_bills -%}
+  {%- if r and r.rows -%}
+    {% include data-freshness.html data=r noun="bills" %}
+    <ul style="list-style:none;padding:0;margin:0;text-align:left;">
+      {%- for b in r.rows -%}
+      <li style="padding:.4rem 0;border-bottom:1px solid #e5e7eb;">
+        <strong>{{ b.identifier | escape }}</strong>{% if b.title %} — {{ b.title | escape }}{% endif %}
+        {%- if b.status %} <span style="color:#6b7280;">· {{ b.status | escape }}</span>{% endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+    {%- if r.count > r.shown %}<p style="color:#6b7280;font-size:.85rem;margin-top:.75rem;">Showing {{ r.shown }} of {{ r.count }} bills. The full, searchable list loads below.</p>{% endif -%}
+  {%- else -%}
+    Loading bill data…
+  {%- endif -%}
+</div>
 <div id="billsError"  class="bills-error"  style="display:none" role="alert"></div>
 
 <div id="billsControls" style="display:none">
