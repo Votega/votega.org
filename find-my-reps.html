@@ -60,6 +60,8 @@ css:
   <p class="fmr-privacy">Your address is sent only to the U.S. Census geocoder to look up your districts. VoteGA does not store it.</p>
   <div id="fmrStatus" class="fmr-status" role="status" aria-live="polite"></div>
   <div id="fmrResults" class="fmr-results"></div>
+  {%- comment -%} Server-rendered freshness signal for the underlying representative data. See scripts/build_render_data.py {%- endcomment -%}
+  {% include data-freshness.html data=site.data.rendered.find_my_reps noun="" %}
 </div>
 
 <p class="fmr-browse-lead">Or browse by category:</p>

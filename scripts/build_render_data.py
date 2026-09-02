@@ -133,6 +133,30 @@ def build_majority(data, cfg):
             "shown": len(rows), "source": _get(data, "metadata.source"), "rows": rows}
 
 
+def make_freshness_builder(extra_srcs, date_paths):
+    """Build a rows-less 'data last updated' sidecar for interactive tools that have
+    no single list to render. Reports the most recent date across several source files."""
+    def _builder(data, cfg):
+        best = None  # (iso, human)
+        for path, data_obj in [(cfg["src"], data)] + [(s, None) for s in extra_srcs]:
+            if data_obj is None:
+                full = os.path.join(SRC_DIR, path)
+                if not os.path.exists(full):
+                    continue
+                with open(full, encoding="utf-8") as fh:
+                    data_obj = json.load(fh)
+            for dp in date_paths:
+                human, iso = _fmt_date(_get(data_obj, dp))
+                if iso and (best is None or iso > best[0]):
+                    best = (iso, human)
+                    break
+        if best is None:
+            return None
+        return {"updated": best[1], "updatedISO": best[0], "count": None,
+                "shown": 0, "source": None, "rows": []}
+    return _builder
+
+
 def rows_from_bymember_trades(data, list_key, fields, cap):
     """ga-congress-trades stores byMember as a name-keyed dict; flatten to rows sorted by tradeCount."""
     bm = _get(data, list_key, {}) or {}
@@ -197,6 +221,22 @@ CONFIG = {
     },
     "ga_majority": {
         "src": "ga-members.json", "date": "metadata.generatedAt", "builder": build_majority,
+    },
+    # Interactive lookup tools: no list to render, just a "data last updated" signal
+    # from the most recent of their underlying sources.
+    "find_my_reps": {
+        "src": "ga-members.json",
+        "builder": make_freshness_builder(
+            ["current-members.json"],
+            ["metadata.generatedAt", "metadata.updatedAt", "updatedAt"],
+        ),
+    },
+    "sample_ballot": {
+        "src": "races.json",
+        "builder": make_freshness_builder(
+            ["ga-members.json", "current-members.json", "ga-ballot-measures.json", "ga-election-calendar.json"],
+            ["updatedAt", "metadata.generatedAt", "metadata.updatedAt"],
+        ),
     },
 }
 

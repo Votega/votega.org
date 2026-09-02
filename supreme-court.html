@@ -164,6 +164,20 @@ share-description: "The Supreme Court of the United States - the nine justices, 
       </li>
       {%- endfor -%}
     </ul>
+    {%- assign d = site.data.rendered.scotus_decisions -%}
+    {%- if d and d.rows -%}
+    <h2 style="margin-top:2rem;">Recent decisions</h2>
+    {% include data-freshness.html data=d noun="decisions" %}
+    <ul style="list-style:none;padding:0;margin:0;">
+      {%- for c in d.rows -%}
+      <li style="padding:.45rem 0;border-bottom:1px solid #e5e7eb;">
+        <strong>{{ c.name | escape }}</strong>
+        {%- if c.term %} <span style="color:#6b7280;">· {{ c.term | escape }} term</span>{% endif %}
+        {%- if c.decidedDate %} <span style="color:#6b7280;">· decided {{ c.decidedDate | escape }}</span>{% endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+    {%- endif -%}
   {%- else -%}
     <p style="color:#777;font-size:0.9rem;">Loading...</p>
   {%- endif -%}
