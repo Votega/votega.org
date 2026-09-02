@@ -142,8 +142,116 @@ def build_ga_legislators(records, urls):
     return count
 
 
+# ─────────────────────────── U.S. Congress (GA delegation) ───────────────────────────
+
+def build_federal_legislators(records, urls):
+    members = {m.get("bioguideId"): m for m in
+               (load("current-members.json").get("members") or [])}
+    seen = set()
+    count = 0
+    for rec in records:
+        if rec.get("category") != "U.S. Congress":
+            continue
+        bid = qs_id(rec["url"], "bioguideId")
+        if not bid:
+            continue
+        m = members.get(bid, {})
+        name = " ".join(x for x in (m.get("firstName"), m.get("lastName")) if x)
+        if not name:  # manifest name is "Last, First"
+            t = rec.get("title") or ""
+            name = " ".join(reversed([p.strip() for p in t.split(",")])) if "," in t else t
+        desc_txt = rec.get("desc") or ""
+        is_senate = "senate" in desc_txt.lower()
+        district = m.get("district")
+        party = m.get("party") or (desc_txt.split(",")[-1].strip() if "," in desc_txt else "")
+        role = "U.S. Senator" if is_senate else "U.S. Representative"
+        chamber = "U.S. Senate" if is_senate else "U.S. House of Representatives"
+
+        anchor = "senate" if is_senate else f"ga-{district}"
+        slug = slugify(name, anchor)
+        if slug in seen:
+            slug = slugify(slug, bid)
+        seen.add(slug)
+        permalink = f"/us-congress/{slug}/"
+        urls.setdefault("us-congress", {})[bid] = permalink
+
+        dist_txt = f", Georgia District {district}" if district and not is_senate else " for Georgia"
+        share_title = f"{name} — {role}{dist_txt}"
+        desc = (f"{desc_txt or role}. Voting record, sponsored legislation, committee "
+                f"assignments, campaign finance, and contact information for {name}, "
+                f"member of the {chamber} from Georgia.")
+        ld = json_ld({
+            "@context": "https://schema.org", "@type": "Person", "name": name,
+            "jobTitle": role, "url": SITE_URL + permalink,
+            "memberOf": {"@type": "GovernmentOrganization", "name": chamber},
+            "affiliation": party or None,
+        })
+        fm = {
+            "layout": "default",
+            "title": yaml_quote(name),
+            "share-title": yaml_quote(share_title),
+            "share-description": yaml_quote(desc),
+            "permalink": permalink,
+            "entity": {"type": "us-congress", "id": bid, "name": name,
+                       "title": role, "chamber": chamber, "district": district,
+                       "party": party},
+        }
+        body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(bid)}}};</script>\n'
+                f"{ld}\n"
+                f"{{% include entity/federal-legislator.html %}}")
+        write_page("us-congress", slug, fm, body)
+        count += 1
+    return count
+
+
+# ─────────────────────────── Races ───────────────────────────
+
+def build_races(records, urls):
+    races = {r["id"]: r for r in load("races.json").get("races", [])}
+    seen = set()
+    count = 0
+    for rec in records:
+        if rec.get("category") != "Race":
+            continue
+        rid = qs_id(rec["url"])
+        if not rid:
+            continue
+        r = races.get(rid, {})
+        name = rec.get("title") or rid
+        chamber = r.get("chamber") or ""
+        cycle = r.get("cycle")
+        level = (r.get("level") or "").replace("-", " ")
+
+        slug = slugify(rid)  # race ids are already clean & stable (e.g. senate-2026, ga-01-2026)
+        if slug in seen:
+            slug = slugify(slug, str(count))
+        seen.add(slug)
+        permalink = f"/races/{slug}/"
+        urls.setdefault("race", {})[rid] = permalink
+
+        share_title = f"{name} — Candidates & Results"
+        desc = (f"Candidates, the incumbent, district information, and results for the "
+                f"{name} race in Georgia.")
+        fm = {
+            "layout": "default",
+            "title": yaml_quote(name),
+            "share-title": yaml_quote(share_title),
+            "share-description": yaml_quote(desc),
+            "permalink": permalink,
+            "entity": {"type": "race", "id": rid, "name": name, "chamber": chamber,
+                       "cycle": cycle, "summary": (level.title() + " race") if level else None},
+        }
+        body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(rid)}}};</script>\n'
+                f"{{% include entity/race.html %}}")
+        write_page("races", slug, fm, body)
+        count += 1
+    return count
+
+
 CATEGORY_BUILDERS = [
     ("GA Legislator", build_ga_legislators),
+    ("U.S. Congress", build_federal_legislators),
+    ("Race", build_races),
 ]
 
 
