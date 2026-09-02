@@ -41,6 +41,15 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # Generate compact server-render sidecars in _data/rendered/ from the large
+      # runtime JSON in assets/data/. GitHub Pages builds Jekyll in safe mode, so
+      # Liquid can only read _data/; this step (stdlib Python only) lets the data
+      # pages server-render a "last updated" date and a content summary into the
+      # initial HTML. Non-fatal: pages guard on presence and fall back to client
+      # rendering, so a failure here must not block the deploy.
+      - name: Generate server-render data
+        run: python3 scripts/build_render_data.py || echo "sidecar generation failed; pages fall back to client rendering"
+
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:

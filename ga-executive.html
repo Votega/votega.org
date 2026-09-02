@@ -161,7 +161,27 @@ share-description: "Georgia's statewide executive officers - Governor, Lieutenan
 </style>
 
 <div class="exec-grid" id="execGrid">
-  <p id="loadingMsg">Loading…</p>
+  {%- comment -%}
+    Server-rendered fallback (see scripts/build_render_data.py). Crawlers and
+    no-JS visitors get the officials list and a freshness date in the initial
+    HTML; the script below overwrites #execGrid with the interactive cards.
+  {%- endcomment -%}
+  {%- assign r = site.data.rendered.ga_executive -%}
+  {%- if r and r.rows -%}
+    <div class="ssr-fallback" style="grid-column:1/-1;">
+      {% include data-freshness.html data=r noun="offices" %}
+      <ul style="list-style:none;padding:0;margin:0;">
+        {%- for o in r.rows -%}
+        <li style="padding:.4rem 0;border-bottom:1px solid #e5e7eb;">
+          <strong>{{ o.title | escape }}</strong> — {{ o.name | escape }}
+          {%- if o.party %} <span style="color:#6b7280;">({{ o.party | escape }})</span>{% endif -%}
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- else -%}
+    <p id="loadingMsg">Loading…</p>
+  {%- endif -%}
 </div>
 
 <p style="margin-top:1.5rem;font-size:0.8rem;color:#888;" id="dataSource"></p>

@@ -1,0 +1,15 @@
+{%- comment -%}
+  Server-rendered "last updated" line for data pages. Pass a sidecar built by
+  scripts/build_render_data.py and an optional noun for the count:
+      {% include data-freshness.html data=site.data.rendered.ga_bills noun="bills" %}
+  Renders nothing when the sidecar is absent, so pages fall back safely to their
+  client-rendered freshness stamp.
+{%- endcomment -%}
+{%- if include.data and include.data.updated -%}
+<p class="data-freshness" style="font-size:.85rem;color:#6b7280;margin:.25rem 0 1rem;">
+  Last updated
+  {%- if include.data.updatedISO %} <time datetime="{{ include.data.updatedISO }}">{{ include.data.updated }}</time>
+  {%- else %} {{ include.data.updated }}{% endif -%}
+  {%- if include.data.count and include.noun %} · {{ include.data.count }} {{ include.noun }}{% endif -%}
+</p>
+{%- endif -%}
