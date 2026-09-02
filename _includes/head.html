@@ -136,6 +136,13 @@
       {%- endif -%}
     {%- elsif page.thumbnail-img -%}
       {{ page.thumbnail-img }}
+    {%- elsif site.og-image -%}
+      {%- comment -%}
+        Site-wide default share card (1200x630). Used for any page without its own
+        share/cover/thumbnail image, so social/messaging previews render as a large
+        card instead of falling back to the small logo. Source & regen: tools/og-image/.
+      {%- endcomment -%}
+      {{ site.og-image }}
     {%- elsif site.avatar -%}
       {{ site.avatar }}
     {% endif %}
