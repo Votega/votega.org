@@ -175,7 +175,24 @@ share-description: "Georgia voter registration deadlines, early voting dates, an
 
 <h2 class="va-section-heading">2026 Election Calendar</h2>
 
-<div id="vaLoading" style="padding:1.5rem 0;color:#666;">Loading…</div>
+<div id="vaLoading" style="padding:1.5rem 0;color:#666;">
+  {%- comment -%} Server-rendered fallback; JS hides #vaLoading on load. See scripts/build_render_data.py {%- endcomment -%}
+  {%- assign r = site.data.rendered.ga_election_calendar -%}
+  {%- if r and r.rows -%}
+    {% include data-freshness.html data=r noun="elections" %}
+    <ul style="list-style:none;padding:0;margin:0;">
+      {%- for e in r.rows -%}
+      <li style="padding:.6rem 0;border-bottom:1px solid #e5e7eb;">
+        <strong>{{ e.name | escape }}</strong>{% if e.date %} — <time datetime="{{ e.date }}">{{ e.date }}</time>{% endif %}
+        {%- if e.earlyVotingStart %}<br><span style="color:#444;">Early voting: {{ e.earlyVotingStart }}{% if e.earlyVotingEnd %} – {{ e.earlyVotingEnd }}{% endif %}</span>{% endif -%}
+        {%- if e.registrationDeadline %}<br><span style="color:#444;">Registration deadline: {{ e.registrationDeadline }}</span>{% endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  {%- else -%}
+    Loading…
+  {%- endif -%}
+</div>
 <div id="vaNext"></div>
 <div id="vaCalendar" class="va-cal-grid"></div>
 

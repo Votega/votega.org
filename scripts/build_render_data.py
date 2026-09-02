@@ -87,6 +87,52 @@ def rows_from_list(data, list_key, fields, cap):
     return rows, total
 
 
+def build_elections(data, cfg):
+    """races.json has no per-race office label (it's nested in phases), so summarize
+    by level instead of listing races — a crawlable, honest overview for /elections."""
+    races = data.get("races", []) or []
+    labels = {
+        "state": "State legislative", "state-judicial": "State judicial",
+        "federal": "Federal", "state-executive": "State executive", "local": "Local",
+    }
+    counts = {}
+    for r in races:
+        lvl = r.get("level")
+        counts[lvl] = counts.get(lvl, 0) + 1
+    order = ["federal", "state-executive", "state", "state-judicial", "local"]
+    rows = [{"label": labels.get(k, k or "Other"), "count": counts[k]}
+            for k in order if k in counts]
+    rows += [{"label": labels.get(k, k), "count": v} for k, v in counts.items() if k not in order]
+    human, iso = _fmt_date(_get(data, cfg["date"]))
+    return {"updated": human, "updatedISO": iso, "count": len(races),
+            "shown": len(rows), "source": None, "rows": rows}
+
+
+def build_majority(data, cfg):
+    """Compute per-chamber party balance from ga-members.json for the majority tracker."""
+    members = data.get("members", []) or []
+    chambers = {}
+    for m in members:
+        ch = m.get("chamber")
+        if ch in (None, "", "executive"):
+            continue
+        party = (m.get("party") or "").lower()
+        c = chambers.setdefault(ch, {"chamber": ch, "republican": 0, "democratic": 0, "other": 0, "total": 0})
+        if party.startswith("rep"):
+            c["republican"] += 1
+        elif party.startswith("dem"):
+            c["democratic"] += 1
+        else:
+            c["other"] += 1
+        c["total"] += 1
+    order = ["Senate", "House of Representatives"]
+    rows = [chambers[k] for k in order if k in chambers]
+    rows += [v for k, v in chambers.items() if k not in order]
+    human, iso = _fmt_date(_get(data, cfg["date"]))
+    return {"updated": human, "updatedISO": iso, "count": sum(r["total"] for r in rows),
+            "shown": len(rows), "source": _get(data, "metadata.source"), "rows": rows}
+
+
 def rows_from_bymember_trades(data, list_key, fields, cap):
     """ga-congress-trades stores byMember as a name-keyed dict; flatten to rows sorted by tradeCount."""
     bm = _get(data, list_key, {}) or {}
@@ -141,6 +187,17 @@ CONFIG = {
         "src": "ga-executive-orders-2026.json", "date": "metadata.updatedAt", "count": "metadata.count",
         "list": "orders", "fields": ["date", "number", "title", "category"], "cap": 60,
     },
+    "ga_election_calendar": {
+        "src": "ga-election-calendar.json", "date": "metadata.generatedAt", "list": "elections",
+        "fields": ["name", "type", "date", "earlyVotingStart", "earlyVotingEnd", "registrationDeadline"],
+        "cap": 12,
+    },
+    "elections": {
+        "src": "races.json", "date": "updatedAt", "builder": build_elections,
+    },
+    "ga_majority": {
+        "src": "ga-members.json", "date": "metadata.generatedAt", "builder": build_majority,
+    },
 }
 
 
@@ -151,6 +208,10 @@ def build_one(name, cfg):
         return None
     with open(path, encoding="utf-8") as fh:
         data = json.load(fh)
+
+    builder = cfg.get("builder")
+    if builder is not None:
+        return builder(data, cfg)
 
     transform = cfg.get("transform", rows_from_list)
     rows, total = transform(data, cfg["list"], cfg["fields"], cfg["cap"])
