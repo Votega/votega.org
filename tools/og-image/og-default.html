@@ -1,0 +1,114 @@
+<!doctype html>
+<!--
+  Source for the default Open Graph / Twitter share card: /assets/img/og-default.png (1200x630).
+  Regenerate with tools/og-image/build.sh (renders this file with headless Chromium).
+  Brand per VoteGA Style Guide: navy #1a1a2e ground, civic blue #1a56a8 / action #008AFF,
+  "Vote" white + "GA" blue wordmark, tagline "Informing the Electorate". Nonpartisan — no party colors.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    --navy: #1a1a2e;
+    --navy-2: #14142a;
+    --blue: #1a56a8;
+    --action: #008AFF;
+    --line: rgba(255,255,255,0.055);
+    --muted: #9aa6bd;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    font-family: "Liberation Sans", "Helvetica Neue", Arial, sans-serif;
+    background:
+      radial-gradient(1100px 700px at 78% -12%, rgba(0,138,255,0.16), transparent 60%),
+      linear-gradient(150deg, #1b1b34 0%, var(--navy) 55%, var(--navy-2) 100%);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  /* faint blueprint grid echoing the style-guide cover */
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: linear-gradient(120deg, #000 0%, transparent 72%);
+    -webkit-mask-image: linear-gradient(120deg, #000 0%, transparent 72%);
+  }
+  .frame {
+    position: absolute; inset: 0;
+    padding: 76px 84px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  /* accent rail, matches the site's left-border accent system */
+  .rail {
+    position: absolute; left: 84px; top: 172px;
+    width: 6px; height: 286px; border-radius: 6px;
+    background: linear-gradient(180deg, var(--action), var(--blue));
+  }
+  .top { display: flex; align-items: center; gap: 16px; }
+  .logo {
+    width: 62px; height: 62px; border-radius: 12px;
+    background: linear-gradient(145deg, #21386a, #14142a);
+    border: 1px solid rgba(255,255,255,0.14);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 34px; color: #fff; font-style: italic;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.35);
+  }
+  .top .kicker {
+    font-size: 15px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); font-weight: 700;
+  }
+  .center { padding-left: 44px; margin-top: -6px; }
+  .wordmark {
+    font-size: 132px; font-weight: 700; line-height: 0.98;
+    letter-spacing: -0.02em;
+  }
+  .wordmark .ga { color: var(--action); margin-left: 20px; }
+  .tagline {
+    margin-top: 26px; font-size: 40px; font-weight: 400;
+    color: #dbe3f2; letter-spacing: -0.01em;
+  }
+  .sub {
+    margin-top: 18px; font-size: 25px; color: var(--muted);
+    max-width: 20ch; line-height: 1.35;
+  }
+  .bottom {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .domain { font-size: 30px; font-weight: 700; letter-spacing: 0.01em; }
+  .domain .dot { color: var(--action); }
+  .pill {
+    font-size: 16px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #cdd8ee;
+    border: 1px solid rgba(255,255,255,0.18);
+    padding: 11px 20px; border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+  }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="rail"></div>
+  <div class="frame">
+    <div class="top">
+      <div class="logo">V</div>
+      <div class="kicker">Georgia Voter Information</div>
+    </div>
+
+    <div class="center">
+      <div class="wordmark">Vote<span class="ga">GA</span></div>
+      <div class="tagline">Informing the Electorate</div>
+      <div class="sub">Representatives, elections, bills &amp; open civic data for Georgia.</div>
+    </div>
+
+    <div class="bottom">
+      <div class="domain">votega<span class="dot">.</span>org</div>
+      <div class="pill">Nonpartisan &middot; Public Data</div>
+    </div>
+  </div>
+</body>
+</html>

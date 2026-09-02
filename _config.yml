@@ -59,6 +59,11 @@ avatar: "/assets/img/logo.png"
 # By default, the image is cut into a circle. You can disable this behaviour by setting 'round-avatar: false'
 round-avatar: false
 
+# Default Open Graph / Twitter share card (1200x630) for pages without their own
+# share-img/cover-img/thumbnail-img. Ensures social & messaging previews render a
+# large card instead of the small logo. Source & regeneration: tools/og-image/
+og-image: "/assets/img/og-default.png"
+
 # If you want to have an image logo in the top-left corner instead of having the title of the website,
 # then specify the following parameter
 title-img: /assets/img/logo.png
