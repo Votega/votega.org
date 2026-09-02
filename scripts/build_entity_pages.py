@@ -80,6 +80,18 @@ def json_ld(obj):
             + "</script>")
 
 
+def breadcrumb_ld(items):
+    """items: list of (name, path_or_None). Final crumb (the page itself) omits the url."""
+    elements = []
+    for i, (name, path) in enumerate(items, start=1):
+        el = {"@type": "ListItem", "position": i, "name": name}
+        if path:
+            el["item"] = SITE_URL + path
+        elements.append(el)
+    return json_ld({"@context": "https://schema.org", "@type": "BreadcrumbList",
+                    "itemListElement": elements})
+
+
 # ─────────────────────────── GA Legislators ───────────────────────────
 
 def build_ga_legislators(records, urls):
@@ -134,8 +146,9 @@ def build_ga_legislators(records, urls):
                        "title": role_short, "chamber": chamber, "district": district,
                        "party": party},
         }
+        bc = breadcrumb_ld([("Home", "/"), ("Georgia Legislators", "/ga-state-reps"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(mid)}}};</script>\n'
-                f"{ld}\n"
+                f"{ld}\n{bc}\n"
                 f"{{% include entity/ga-legislator.html %}}")
         write_page("ga-legislators", slug, fm, body)
         count += 1
@@ -196,8 +209,9 @@ def build_federal_legislators(records, urls):
                        "title": role, "chamber": chamber, "district": district,
                        "party": party},
         }
+        bc = breadcrumb_ld([("Home", "/"), ("U.S. Congress", "/federal-reps"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(bid)}}};</script>\n'
-                f"{ld}\n"
+                f"{ld}\n{bc}\n"
                 f"{{% include entity/federal-legislator.html %}}")
         write_page("us-congress", slug, fm, body)
         count += 1
@@ -241,7 +255,9 @@ def build_races(records, urls):
             "entity": {"type": "race", "id": rid, "name": name, "chamber": chamber,
                        "cycle": cycle, "summary": (level.title() + " race") if level else None},
         }
+        bc = breadcrumb_ld([("Home", "/"), ("2026 Elections", "/elections/"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(rid)}}};</script>\n'
+                f"{bc}\n"
                 f"{{% include entity/race.html %}}")
         write_page("races", slug, fm, body)
         count += 1
