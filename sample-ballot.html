@@ -37,6 +37,8 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
 
 <div id="status" class="ballot-status" role="status" aria-live="polite"></div>
 <div id="results" class="ballot-results"></div>
+{%- comment -%} Server-rendered freshness signal for the underlying ballot data. See scripts/build_render_data.py {%- endcomment -%}
+{% include data-freshness.html data=site.data.rendered.sample_ballot noun="" %}
 
 <style>
   .ballot-lookup { border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: #fafafa; }

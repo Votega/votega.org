@@ -248,7 +248,19 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
 </div>
 
 <div class="msg" id="status" role="alert"></div>
-<div id="racesOutput"></div>
+<div id="racesOutput">
+  {%- comment -%} Server-rendered fallback; JS overwrites #racesOutput. See scripts/build_render_data.py {%- endcomment -%}
+  {%- assign r = site.data.rendered.elections -%}
+  {%- if r and r.rows -%}
+    {% include data-freshness.html data=r noun="races" %}
+    <p style="margin:.25rem 0 .5rem;">Georgia's {{ r.count }} races on the ballot this cycle:</p>
+    <ul style="list-style:none;padding:0;margin:0;">
+      {%- for row in r.rows -%}
+      <li style="padding:.4rem 0;border-bottom:1px solid #e5e7eb;"><strong>{{ row.count }}</strong> {{ row.label | escape }}</li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</div>
 
 <p id="dataStamp" class="data-stamp"></p>
 

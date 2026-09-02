@@ -242,16 +242,29 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
 </style>
 
 <!-- Stats banner (populated by JS) -->
+{%- comment -%} Server-rendered fallback; JS overwrites each card. See scripts/build_render_data.py {%- endcomment -%}
+{%- assign maj = site.data.rendered.ga_majority -%}
+{%- assign sen = maj.rows | where: "chamber", "Senate" | first -%}
+{%- assign hou = maj.rows | where: "chamber", "House of Representatives" | first -%}
 <div class="tracker-banner" id="trackerBanner">
   <div class="tracker-card" id="senateCard">
     <h2>Senate</h2>
-    <div class="loading">Loading…</div>
+    {%- if sen -%}
+      <div>{{ sen.republican }} Republican · {{ sen.democratic }} Democratic{% if sen.other and sen.other > 0 %} · {{ sen.other }} other{% endif %} <span style="color:#6b7280;">({{ sen.total }} seats)</span></div>
+    {%- else -%}
+      <div class="loading">Loading…</div>
+    {%- endif -%}
   </div>
   <div class="tracker-card" id="houseCard">
     <h2>House of Representatives</h2>
-    <div class="loading">Loading…</div>
+    {%- if hou -%}
+      <div>{{ hou.republican }} Republican · {{ hou.democratic }} Democratic{% if hou.other and hou.other > 0 %} · {{ hou.other }} other{% endif %} <span style="color:#6b7280;">({{ hou.total }} seats)</span></div>
+    {%- else -%}
+      <div class="loading">Loading…</div>
+    {%- endif -%}
   </div>
 </div>
+{%- if maj and maj.updated -%}{% include data-freshness.html data=maj noun="members" %}{%- endif -%}
 
 {% assign u = site.data.ga_unopposed_seats %}
 {% if u and u.total %}
