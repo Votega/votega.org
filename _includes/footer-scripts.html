@@ -36,3 +36,9 @@
     <script src="{{ js | relative_url }}"></script>
   {% endfor %}
 {% endif %}
+
+{%- comment -%}
+  Rewrite legacy ?id= entity links to their clean URLs. Lazy: only fetches the
+  id→URL map on pages that contain a legacy entity link. See entity-url.js.
+{%- endcomment -%}
+<script src="{{ '/assets/scripts/entity-url.js' | relative_url }}" defer></script>

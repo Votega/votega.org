@@ -33,6 +33,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.join(ROOT, "assets", "data")
 ENTITIES_DIR = os.path.join(ROOT, "_entities")
 ENTITY_URLS_PATH = os.path.join(ROOT, "_data", "entity_urls.json")
+ENTITY_URLS_ASSET = os.path.join(ROOT, "assets", "data", "entity-urls.json")
 
 SITE_URL = "https://www.votega.org"
 
@@ -270,6 +271,11 @@ def main():
         print(f"  {label}: {n} pages")
         total += n
     with open(ENTITY_URLS_PATH, "w", encoding="utf-8") as fh:
+        json.dump(urls, fh, ensure_ascii=False, separators=(",", ":"))
+    # Served copy so the client-side link rewriter (assets/scripts/entity-url.js)
+    # can map legacy ?id= links to their clean URLs.
+    os.makedirs(os.path.dirname(ENTITY_URLS_ASSET), exist_ok=True)
+    with open(ENTITY_URLS_ASSET, "w", encoding="utf-8") as fh:
         json.dump(urls, fh, ensure_ascii=False, separators=(",", ":"))
     print(f"build_entity_pages: {total} pages, {sum(len(v) for v in urls.values())} URL mappings")
     return 0
