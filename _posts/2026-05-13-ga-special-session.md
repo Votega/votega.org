@@ -13,5 +13,5 @@ Plain language: The State legislature will review, likely revise, and redraw dis
 Georgia is now following the lead of States such as: Alabama, Tennessee, Louisiana, and others. However, for the time being it does not appear that any changes in Georgia will be effective for the upcoming Primary Election on May 19, 2026 or the General Election on November 3, 2026. 
 
 <div style="text-align: center;">
-  <img src="{{ '/assets/img/convening_special_session_2026_05_13.jpg' | relative_url }}">
+  <img src="{{ '/assets/img/convening_special_session_2026_05_13.jpg' | relative_url }}" alt="The Georgia General Assembly convening for the 2026 special legislative session" loading="lazy" decoding="async" style="max-width:100%;height:auto;">
 </div>

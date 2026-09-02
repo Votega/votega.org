@@ -175,7 +175,7 @@ share-description: "The federal executive branch - the President, Vice President
 <div class="elected-grid">
   {%- for o in elected -%}
   <a class="elected-card" href="{{ '/executive-member.html' | relative_url }}?id={{ o.id | url_encode }}">
-    {%- if o.imageUrl %}<img class="elected-card-photo" src="{{ o.imageUrl }}" alt="{{ o.name | escape }}">{% endif -%}
+    {%- if o.imageUrl %}<img class="elected-card-photo" src="{{ o.imageUrl }}" alt="{{ o.name | escape }}" loading="lazy" decoding="async">{% endif -%}
     <span class="elected-card-body">
       <span class="role-label">{{ o.role }}</span>
       <span class="official-name">{{ o.name }}</span>
@@ -195,7 +195,7 @@ share-description: "The federal executive branch - the President, Vice President
 <div class="cabinet-grid">
   {%- for o in cabinet -%}
   <a class="cabinet-card" href="{{ '/executive-member.html' | relative_url }}?id={{ o.id | url_encode }}">
-    {%- if o.imageUrl %}<img class="cabinet-card-photo" src="{{ o.imageUrl }}" alt="{{ o.name | escape }}">{% endif -%}
+    {%- if o.imageUrl %}<img class="cabinet-card-photo" src="{{ o.imageUrl }}" alt="{{ o.name | escape }}" loading="lazy" decoding="async">{% endif -%}
     <span class="dept-label">{{ o.department }}</span>
     <span class="cabinet-name">{{ o.name }}</span>
     <span class="cabinet-role">{{ o.role }}</span>

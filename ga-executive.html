@@ -262,7 +262,7 @@ share-description: "Georgia's statewide executive officers - Governor, Lieutenan
     const currentYear = new Date().getFullYear();
 
     const photoHtml = official.imageUrl
-      ? `<img src="${official.imageUrl}" alt="${official.name}">`
+      ? `<img src="${official.imageUrl}" alt="${official.name}" loading="lazy" decoding="async">`
       : `<div class="exec-photo-placeholder">No photo</div>`;
 
     const yearsInOffice = official.termStartYear
