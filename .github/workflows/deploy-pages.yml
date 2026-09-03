@@ -50,6 +50,17 @@ jobs:
       - name: Generate server-render data
         run: python3 scripts/build_render_data.py || echo "sidecar generation failed; pages fall back to client rendering"
 
+      # Persist per-entity last-modified state so an entity page's lastmod only
+      # advances when its content actually changes (not on every deploy). Unique
+      # key always saves a fresh copy; restore-keys pulls the most recent prior.
+      - name: Restore entity lastmod state
+        uses: actions/cache@v4
+        with:
+          path: _data/entity_lastmod.json
+          key: entity-lastmod-${{ github.run_id }}
+          restore-keys: |
+            entity-lastmod-
+
       # Materialize per-entity detail pages (see scripts/build_entity_pages.py).
       # Non-fatal: on failure the legacy query-string pages still serve.
       - name: Generate entity pages

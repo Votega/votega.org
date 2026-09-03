@@ -58,10 +58,33 @@ def fetch(url, timeout=30):
         return r.read().decode("utf-8", "replace")
 
 
-def sitemap_locs(xml):
-    # Minimal, dependency-free <loc> extraction.
+def sitemap_entries(xml):
+    """Return {loc: lastmod-or-empty} from the sitemap, dependency-free."""
     import re
-    return {m.strip() for m in re.findall(r"<loc>\s*(.*?)\s*</loc>", xml, re.S)}
+    out = {}
+    for block in re.findall(r"<url>(.*?)</url>", xml, re.S):
+        loc = re.search(r"<loc>\s*(.*?)\s*</loc>", block, re.S)
+        if not loc:
+            continue
+        lm = re.search(r"<lastmod>\s*(.*?)\s*</lastmod>", block, re.S)
+        out[loc.group(1).strip()] = lm.group(1).strip() if lm else ""
+    return out
+
+
+def load_prev(path):
+    """Prior {loc: lastmod}. Tolerates the older newline-list format (lastmod unknown)."""
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as fh:
+            text = fh.read().strip()
+        if not text:
+            return {}
+        if text[0] == "{":
+            return json.loads(text)
+        return {ln.strip(): "" for ln in text.splitlines() if ln.strip()}
+    except (ValueError, OSError):
+        return {}
 
 
 def main():
@@ -69,7 +92,7 @@ def main():
         print("INDEXNOW_KEY not set; skipping", file=sys.stderr)
         return 0
     try:
-        current = sitemap_locs(fetch(SITEMAP_URL))
+        current = sitemap_entries(fetch(SITEMAP_URL))
     except Exception as exc:
         print(f"could not fetch sitemap ({exc}); skipping", file=sys.stderr)
         return 0
@@ -77,24 +100,24 @@ def main():
         print("sitemap had no URLs; skipping", file=sys.stderr)
         return 0
 
-    prev = set()
-    if os.path.exists(PREV_LOCS):
-        with open(PREV_LOCS, encoding="utf-8") as fh:
-            prev = {ln.strip() for ln in fh if ln.strip()}
-
-    curated = {f"https://{HOST}{p}" for p in CURATED_PATHS} & current
-    if prev:
-        added = current - prev
-        submit = sorted((added | curated))
-        reason = f"{len(added)} new + {len(curated & current)} daily"
+    prev = load_prev(PREV_LOCS)
+    curated = {f"https://{HOST}{p}" for p in CURATED_PATHS} & set(current)
+    if prev is not None:
+        # New URLs, plus any whose lastmod advanced since last run. Pages with no
+        # lastmod in the sitemap (some hubs) can't be diffed this way, so the
+        # curated daily set is the backstop for those.
+        changed = {loc for loc, lm in current.items()
+                   if loc not in prev or prev.get(loc, "") != lm}
+        submit = sorted(changed | curated)
+        reason = f"{len(changed - curated)} new/changed + {len(curated)} daily"
     else:
         submit = sorted(current)  # first run: bulk adoption
         reason = "first run (bulk)"
 
-    # Always record the current set for the next run's diff.
+    # Always record the current {loc: lastmod} for the next run's diff.
     os.makedirs(os.path.dirname(OUT_LOCS) or ".", exist_ok=True)
     with open(OUT_LOCS, "w", encoding="utf-8") as fh:
-        fh.write("\n".join(sorted(current)) + "\n")
+        json.dump(current, fh, separators=(",", ":"))
 
     if not submit:
         print("nothing new to submit")
