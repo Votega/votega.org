@@ -175,3 +175,32 @@ Built by `scripts/build_id_crosswalk.py` from the roster, finance and races file
 - For new features, verify against Congress.gov API docs and test with sample data.
 - When modifying `normalize_member()` in `generate_ga_members_data.py`, ensure all schema fields are present in the output — missing fields cause silent JS failures downstream.
 - Do not use empty strings for optional fields — use `None`/`null`.
+
+## Scaling & GitHub limits (REVISIT — findings 2026-09)
+
+Baseline at time of writing (Phase 1 entity pages live, before Phase 2 candidates):
+built `_site` ≈ **111 MB**, ~4,200 files, 613 generated entity pages, ~7 s Jekyll build.
+
+Where the caps are and how close we are:
+- **Published site size — 1 GB hard.** At ~111 MB (~11%). Phase 2 adds ~707 candidate
+  pages (~70 KB each ≈ +50 MB) → ~160 MB. Would take ~9× current content to approach 1 GB.
+  Not a concern.
+- **Build time / Actions minutes.** Deploy is via GitHub Actions (`actions/jekyll-build-pages`
+  + `deploy-pages`), so the legacy "10 builds/hour" Pages soft limit does **not** apply. Public
+  repo ⇒ unlimited Actions minutes. Build is seconds. Not a concern.
+- **Single file — 100 MB.** Largest is `assets/data/ga-member-votes.json` ≈ 20 MB. Fine.
+
+First ceilings we would actually hit (in order):
+1. **Bandwidth — 100 GB/month soft.** Not from HTML (tiny) but from the big client-fetched
+   JSON: `ga-member-votes.json` (~20 MB) + `ga-bills.json` (~9.4 MB). Rough math: ~5,000 full
+   member-votes page loads/month ≈ 100 GB from that one file. Mitigation = slice/paginate those
+   blobs (also the outstanding Core Web Vitals item). GitHub warns before throttling.
+2. **Git history bloat — the real sleeper (NOT a Pages-serving limit).** The daily `update-*`
+   workflows commit those large JSON files into git every day, so `.git` grows ~30–40 MB/day
+   (~1 GB/month) even when daily diffs are small. GitHub warns around 5 GB repo size and
+   clones/Actions checkouts slow well before that. Mitigations to evaluate when revisiting:
+   move big generated JSON to **Git LFS**, or **generate them at deploy** (like entity pages /
+   `_data/rendered` sidecars) instead of committing, or periodically prune/squash history.
+
+Bottom line: safe through Phase 2. Revisit (1) before any big traffic spike and (2) before repo
+history reaches a few GB — item (2) will bite first if left unaddressed.
