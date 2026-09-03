@@ -3,7 +3,54 @@ layout: default
 title: Open Data
 permalink: /open-data
 share-description: "Free, machine-readable civic datasets from VoteGA.org. Georgia legislators, bills, elections, executive orders, and U.S. Supreme Court decisions for civic apps, researchers, and journalists."
+breadcrumb:
+  - name: Home
+    url: /
+  - name: Open Data
 ---
+
+{%- comment -%} schema.org DataCatalog/Dataset so the open datasets are eligible for
+  Google Dataset Search. Sourced from _data/open_data.yml; CC BY 4.0 per the catalog. {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DataCatalog",
+  "name": "VoteGA Open Data",
+  "url": "{{ '/open-data' | absolute_url }}",
+  "description": {{ site.data.open_data.meta.intro | strip_newlines | jsonify }},
+  "publisher": { "@type": "Organization", "name": {{ site.title | jsonify }}, "url": "{{ site.url }}/" },
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "dataset": [
+    {% for d in site.data.open_data.datasets -%}
+    {
+      "@type": "Dataset",
+      "name": {{ d.title | jsonify }},
+      "description": {{ d.summary | strip_newlines | strip | jsonify }},
+      "url": "{{ d.repo_url | default: '/open-data' | absolute_url }}",
+      "identifier": {{ d.id | jsonify }},
+      "isAccessibleForFree": true,
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      {% if d.source %}"creator": { "@type": "Organization", "name": {{ d.source | strip_newlines | jsonify }} },{% endif %}
+      "includedInDataCatalog": { "@type": "DataCatalog", "name": "VoteGA Open Data", "url": "{{ '/open-data' | absolute_url }}" },
+      "publisher": { "@type": "Organization", "name": {{ site.title | jsonify }}, "url": "{{ site.url }}/" }
+      {%- if d.files and d.files.size > 0 %},
+      "distribution": [
+        {% for f in d.files -%}
+        {
+          "@type": "DataDownload",
+          "name": {{ f.name | jsonify }},
+          {% if f.desc %}"description": {{ f.desc | strip_newlines | jsonify }},{% endif %}
+          "contentUrl": {{ f.url | jsonify }},
+          "encodingFormat": "{% assign ext = f.name | split: '.' | last | downcase %}{% case ext %}{% when 'json' %}application/json{% when 'csv' %}text/csv{% when 'geojson' %}application/geo+json{% when 'xml' %}application/xml{% else %}text/plain{% endcase %}"
+        }{% unless forloop.last %},{% endunless %}
+        {%- endfor %}
+      ]
+      {%- endif %}
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
+}
+</script>
 
 <!--
   Renders _data/open_data.yml server-side. Datasets are grouped by `hosting`:

@@ -1,0 +1,92 @@
+---
+layout: default
+title: Search
+permalink: /search/
+share-description: "Search VoteGA.org — Georgia legislators, members of Congress, races, candidates, bills, and civic data."
+breadcrumb:
+  - name: Home
+    url: /
+  - name: Search
+---
+
+<h1>Search VoteGA</h1>
+<p style="color:#555;">Find Georgia legislators, members of Congress, races, candidates, and pages across the site.</p>
+
+<form id="searchForm" role="search" style="margin:1rem 0;">
+  <label for="searchQuery" class="sr-only">Search VoteGA</label>
+  <input type="search" id="searchQuery" name="q" placeholder="Search legislators, races, bills…"
+         autocomplete="off" style="width:100%;max-width:32rem;padding:.6rem .8rem;font-size:1rem;
+         border:1px solid #d9dfe5;border-radius:8px;">
+</form>
+
+<p id="searchStatus" style="color:#6b7280;font-size:.9rem;" role="status" aria-live="polite"></p>
+<ul id="searchResults" style="list-style:none;padding:0;margin:0;"></ul>
+
+<style>
+  .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
+  #searchResults li { padding:.6rem 0;border-bottom:1px solid #e5e7eb; }
+  #searchResults .search-cat { display:inline-block;font-size:.7em;text-transform:uppercase;
+    letter-spacing:.04em;color:#6b7280;margin-right:.5em; }
+</style>
+
+<script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
+<script>
+  // Standalone, deep-linkable search results page (/search/?q=…). Reuses the same
+  // indexes as the nav-bar overlay: searchcorpus.json (posts/pages, rendered by
+  // Jekyll) merged with search-entities.json (legislators, races, candidates, …).
+  (function () {
+    var base = '{{ site.baseurl }}';
+    var input   = document.getElementById('searchQuery');
+    var results = document.getElementById('searchResults');
+    var status  = document.getElementById('searchStatus');
+    var form    = document.getElementById('searchForm');
+
+    function queryParam() {
+      try { return new URLSearchParams(location.search).get('q') || ''; }
+      catch (e) { return ''; }
+    }
+    // Keep the URL shareable/bookmarkable as the user types (no history spam).
+    form.addEventListener('submit', function (e) { e.preventDefault(); });
+    input.addEventListener('input', function () {
+      var q = input.value.trim();
+      var url = base + '/search/' + (q ? '?q=' + encodeURIComponent(q) : '');
+      history.replaceState(null, '', url);
+      status.textContent = q ? '' : 'Type to search.';
+    });
+
+    var loadPagesPosts = fetch(base + '/assets/data/searchcorpus.json')
+      .then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
+    var loadEntities = fetch(base + '/assets/data/search-entities.json')
+      .then(function (r) { return r.ok ? r.json() : { records: [] }; }).catch(function () { return { records: [] }; });
+
+    status.textContent = 'Loading…';
+    Promise.all([loadPagesPosts, loadEntities]).then(function (res) {
+      var pagesPosts = Array.isArray(res[0]) ? res[0] : [];
+      var entities = (res[1] && res[1].records) ? res[1].records : [];
+      entities = entities.map(function (rec) {
+        return { title: rec.title, desc: rec.desc, category: rec.category, url: base + '/' + rec.url };
+      });
+
+      SimpleJekyllSearch({
+        searchInput: input,
+        resultsContainer: results,
+        json: pagesPosts.concat(entities),
+        searchResultTemplate: '<li><a href="{url}"><span class="search-cat">{category}</span>{title}</a></li>',
+        noResultsText: '<li style="border:0;color:#6b7280;">No results found.</li>',
+        limit: 50,
+        fuzzy: false
+      });
+
+      var q = queryParam();
+      if (q) {
+        input.value = q;
+        input.dispatchEvent(new Event('input'));
+      } else {
+        status.textContent = 'Type to search.';
+      }
+      input.focus();
+    }).catch(function () {
+      status.textContent = 'Search is temporarily unavailable.';
+    });
+  })();
+</script>
