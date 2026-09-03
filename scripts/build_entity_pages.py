@@ -23,18 +23,49 @@ phases via the CATEGORY_BUILDERS table.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
 import sys
+from datetime import datetime, date
 from urllib.parse import urlparse, parse_qs, unquote
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.join(ROOT, "assets", "data")
 ENTITIES_DIR = os.path.join(ROOT, "_entities")
 ENTITY_URLS_PATH = os.path.join(ROOT, "_data", "entity_urls.json")
+# Persisted {permalink: {"h": content-hash, "d": "YYYY-MM-DD"}} so a page's
+# last_modified_at only advances when its content actually changes. Restored from
+# the Actions cache across deploys (see deploy-pages.yml); missing = treat all as
+# changed on the current data date, a safe (if noisier) fallback.
+LASTMOD_STATE_PATH = os.path.join(ROOT, "_data", "entity_lastmod.json")
 
 SITE_URL = "https://www.votega.org"
+
+
+def _date_only(s):
+    """Best-effort YYYY-MM-DD from an ISO date/datetime; today if unparseable."""
+    if isinstance(s, str) and s.strip():
+        try:
+            return datetime.fromisoformat(s.strip().replace("Z", "+00:00")).date().isoformat()
+        except ValueError:
+            m = re.match(r"(\d{4}-\d{2}-\d{2})", s.strip())
+            if m:
+                return m.group(1)
+    return date.today().isoformat()
+
+
+def resolve_lastmod(permalink, fingerprint, data_date, prior, new_state):
+    """Return a page's last-modified date: the stored date when its content hash is
+    unchanged, else data_date (the date the source data was produced)."""
+    h = hashlib.sha1(
+        json.dumps(fingerprint, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    ).hexdigest()[:16]
+    prev = prior.get(permalink)
+    d = prev["d"] if (prev and prev.get("h") == h and prev.get("d")) else data_date
+    new_state[permalink] = {"h": h, "d": d}
+    return d
 
 
 def load(name):
@@ -94,8 +125,10 @@ def breadcrumb_ld(items):
 
 # ─────────────────────────── GA Legislators ───────────────────────────
 
-def build_ga_legislators(records, urls):
-    members = {m["id"]: m for m in load("ga-members.json").get("members", [])}
+def build_ga_legislators(records, urls, prior, new_state):
+    data = load("ga-members.json")
+    members = {m["id"]: m for m in data.get("members", [])}
+    data_date = _date_only((data.get("metadata") or {}).get("generatedAt"))
     seen = set()
     count = 0
     for rec in records:
@@ -136,15 +169,19 @@ def build_ga_legislators(records, urls):
             "affiliation": party or None,
         })
 
+        entity = {"type": "ga-legislator", "id": mid, "name": name,
+                  "title": role_short, "chamber": chamber, "district": district,
+                  "party": party}
+        lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
+                                  data_date, prior, new_state)
         fm = {
             "layout": "default",
             "title": yaml_quote(name),
             "share-title": yaml_quote(share_title),
             "share-description": yaml_quote(desc),
             "permalink": permalink,
-            "entity": {"type": "ga-legislator", "id": mid, "name": name,
-                       "title": role_short, "chamber": chamber, "district": district,
-                       "party": party},
+            "last_modified_at": lastmod,
+            "entity": entity,
         }
         bc = breadcrumb_ld([("Home", "/"), ("Georgia Legislators", "/ga-state-reps"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(mid)}}};</script>\n'
@@ -157,9 +194,10 @@ def build_ga_legislators(records, urls):
 
 # ─────────────────────────── U.S. Congress (GA delegation) ───────────────────────────
 
-def build_federal_legislators(records, urls):
-    members = {m.get("bioguideId"): m for m in
-               (load("current-members.json").get("members") or [])}
+def build_federal_legislators(records, urls, prior, new_state):
+    data = load("current-members.json")
+    members = {m.get("bioguideId"): m for m in (data.get("members") or [])}
+    data_date = _date_only((data.get("metadata") or {}).get("generatedAt"))
     seen = set()
     count = 0
     for rec in records:
@@ -199,15 +237,18 @@ def build_federal_legislators(records, urls):
             "memberOf": {"@type": "GovernmentOrganization", "name": chamber},
             "affiliation": party or None,
         })
+        entity = {"type": "us-congress", "id": bid, "name": name,
+                  "title": role, "chamber": chamber, "district": district, "party": party}
+        lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
+                                  data_date, prior, new_state)
         fm = {
             "layout": "default",
             "title": yaml_quote(name),
             "share-title": yaml_quote(share_title),
             "share-description": yaml_quote(desc),
             "permalink": permalink,
-            "entity": {"type": "us-congress", "id": bid, "name": name,
-                       "title": role, "chamber": chamber, "district": district,
-                       "party": party},
+            "last_modified_at": lastmod,
+            "entity": entity,
         }
         bc = breadcrumb_ld([("Home", "/"), ("U.S. Congress", "/federal-reps"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(bid)}}};</script>\n'
@@ -220,8 +261,10 @@ def build_federal_legislators(records, urls):
 
 # ─────────────────────────── Races ───────────────────────────
 
-def build_races(records, urls):
-    races = {r["id"]: r for r in load("races.json").get("races", [])}
+def build_races(records, urls, prior, new_state):
+    data = load("races.json")
+    races = {r["id"]: r for r in data.get("races", [])}
+    data_date = _date_only(data.get("updatedAt"))
     seen = set()
     count = 0
     for rec in records:
@@ -246,14 +289,18 @@ def build_races(records, urls):
         share_title = f"{name} — Candidates & Results"
         desc = (f"Candidates, the incumbent, district information, and results for the "
                 f"{name} race in Georgia.")
+        entity = {"type": "race", "id": rid, "name": name, "chamber": chamber,
+                  "cycle": cycle, "summary": (level.title() + " race") if level else None}
+        lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
+                                  data_date, prior, new_state)
         fm = {
             "layout": "default",
             "title": yaml_quote(name),
             "share-title": yaml_quote(share_title),
             "share-description": yaml_quote(desc),
             "permalink": permalink,
-            "entity": {"type": "race", "id": rid, "name": name, "chamber": chamber,
-                       "cycle": cycle, "summary": (level.title() + " race") if level else None},
+            "last_modified_at": lastmod,
+            "entity": entity,
         }
         bc = breadcrumb_ld([("Home", "/"), ("2026 Elections", "/elections/"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(rid)}}};</script>\n'
@@ -275,11 +322,21 @@ def main():
     records = load("search-entities.json").get("records", [])
     os.makedirs(ENTITIES_DIR, exist_ok=True)
     os.makedirs(os.path.dirname(ENTITY_URLS_PATH), exist_ok=True)
+
+    prior = {}
+    if os.path.exists(LASTMOD_STATE_PATH):
+        try:
+            with open(LASTMOD_STATE_PATH, encoding="utf-8") as fh:
+                prior = json.load(fh)
+        except (ValueError, OSError):
+            prior = {}
+    new_state = {}
+
     urls = {}
     total = 0
     for label, builder in CATEGORY_BUILDERS:
         try:
-            n = builder(records, urls)
+            n = builder(records, urls, prior, new_state)
         except Exception as exc:
             print(f"  {label}: FAILED — {exc}", file=sys.stderr)
             continue
@@ -287,7 +344,11 @@ def main():
         total += n
     with open(ENTITY_URLS_PATH, "w", encoding="utf-8") as fh:
         json.dump(urls, fh, ensure_ascii=False, separators=(",", ":"))
-    print(f"build_entity_pages: {total} pages, {sum(len(v) for v in urls.values())} URL mappings")
+    with open(LASTMOD_STATE_PATH, "w", encoding="utf-8") as fh:
+        json.dump(new_state, fh, ensure_ascii=False, separators=(",", ":"))
+    changed = sum(1 for k, v in new_state.items() if prior.get(k, {}).get("h") != v["h"])
+    print(f"build_entity_pages: {total} pages, {sum(len(v) for v in urls.values())} URL mappings, "
+          f"{changed} changed since last run")
     return 0
 
 
