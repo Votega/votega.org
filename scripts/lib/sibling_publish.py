@@ -16,8 +16,37 @@ means the license is stated once and cannot diverge again.
 import base64
 import json
 import os
+import time
 import urllib.error
 import urllib.request
+
+# Retry the GitHub Contents API on transient failures only, per the project's
+# retry convention (CLAUDE.md): HTTP 429 and 5xx are retryable; 4xx (e.g. 404,
+# 422) are not and propagate immediately. Without this, a single transient 500
+# from the API aborts a multi-file publish partway through — and since LICENSE
+# and NOTICE.md are appended last, a mid-run failure would leave them unwritten.
+_RETRYABLE_STATUSES = frozenset({429, 500, 502, 503, 504})
+_MAX_ATTEMPTS = 5
+
+
+def _urlopen_retry(req):
+    """urlopen(req), retrying transient 429/5xx and network errors with backoff.
+
+    Returns the response body bytes. Non-retryable HTTPErrors (404, 422, …) are
+    raised on the first occurrence so callers can handle them (e.g. 404 = file
+    does not exist yet). The final attempt's error is always raised.
+    """
+    for attempt in range(_MAX_ATTEMPTS):
+        try:
+            with urllib.request.urlopen(req) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as e:
+            if e.code not in _RETRYABLE_STATUSES or attempt == _MAX_ATTEMPTS - 1:
+                raise
+        except urllib.error.URLError:
+            if attempt == _MAX_ATTEMPTS - 1:
+                raise
+        time.sleep(2 ** attempt)
 
 # The upstream each sibling repo credits. Keyed by TARGET REPO, not by publisher:
 # two publishers write to ga-legislation (bills and ballot measures), and if each
@@ -105,8 +134,7 @@ def _publish(repo, artifacts, token):
         url = f"https://api.github.com/repos/{repo}/contents/{remote_path}"
         sha = None
         try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers=headers)) as resp:
-                sha = json.loads(resp.read())["sha"]
+            sha = json.loads(_urlopen_retry(urllib.request.Request(url, headers=headers)))["sha"]
         except urllib.error.HTTPError as e:
             if e.code != 404:
                 raise
@@ -117,9 +145,8 @@ def _publish(repo, artifacts, token):
         if sha:
             body["sha"] = sha
         req = urllib.request.Request(url, data=json.dumps(body).encode(), method="PUT", headers=headers)
-        with urllib.request.urlopen(req) as resp:
-            result = json.loads(resp.read())
-            print(f"  published {remote_path}: {result['commit']['sha'][:9]}")
+        result = json.loads(_urlopen_retry(req))
+        print(f"  published {remote_path}: {result['commit']['sha'][:9]}")
 
 
 def _dry_run(artifacts, out_dir):
