@@ -12,5 +12,9 @@ We strive to only display data backed by primary, authoritative, sources. If you
 This site is still under construction. Content and features will continue to change. 
 
 VoteGA.org is an independent informational website and is not supported by any political party or candidate. It is not affiliated with, authorized by, or endorsed by any politicians, Flock Safety, or any other ALPR vendor. The information on this site uses primary, authoritative, sources in an effort to inform voters of the State of Georgia.  
+
+## License
+
+The written content of this site and our machine-readable datasets are licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) — you may share and adapt them, including commercially, as long as you give credit. Our original source code is available under the MIT License. See our [Open Data](https://www.votega.org/open-data) page for the datasets and reuse terms, and [About the Data](https://www.votega.org/about-the-data) for where each figure comes from. The underlying facts come from public and government sources whose own terms may apply to anything you redistribute.
        
     
