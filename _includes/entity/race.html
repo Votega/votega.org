@@ -460,6 +460,17 @@
 
     const sourceName = race.level === 'federal' ? 'the Federal Election Commission (FEC)' : 'the Georgia Ethics Commission (PeachFile)';
 
+    // The finance figures come from ga-fec-data.json / ga-campaign-finance.json,
+    // not races.json, so the page-level "curated race data" stamp doesn't describe
+    // them. Give this panel its own dated provenance line from the finance data's
+    // own metadata.generatedAt (both loaders are cached, so this is a free read).
+    const finData   = race.level === 'federal' ? await CampaignFinance.getFecData() : await CampaignFinance.getGaFinanceData();
+    const finGenIso = finData?.metadata?.generatedAt || null;
+    const finGenDate = finGenIso
+      ? new Date(finGenIso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      : null;
+    const sourceShort = race.level === 'federal' ? 'the FEC' : 'the GA Ethics Commission (PeachFile)';
+
     const bodyRows = rows.map(r => {
       const pc = partyClass(r.party);
       const asOf = r.s.asOf ? `as of ${r.s.asOf}` : (r.s.status === 'ok' ? 'latest report' : '');
@@ -494,7 +505,8 @@
       </div>
       <p class="finance-disclaimer">
         Figures come from ${sourceName} and reflect each committee's most recent required report, so they may be several months old. All bars share one scale (the largest single figure in the table) so a wider bar always means more dollars. <strong>“No filing on record” means no report has been filed, not $0</strong>, and often reflects a candidate who hasn't begun formal fundraising${race.level === 'federal' ? '' : ' or filed before the ' + (race.cycle || '') + ' PeachFile records begin'}.
-      </p>`;
+      </p>
+      ${finGenDate ? `<p class="finance-disclaimer finance-provenance">Finance data from ${sourceShort}, updated ${finGenDate}.</p>` : ''}`;
   }
 
   // Clean per-entity URLs set window.VOTEGA_ENTITY; the legacy ?id= URL still works.
