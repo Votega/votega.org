@@ -945,6 +945,8 @@
         const btn = e.target.closest('.race-tab-btn');
         if (!btn) return;
         activatePanel(btn.dataset.panel, true);
+        // Which race tab people open — finance vs a party ballot. No PII.
+        window.vgTrack && window.vgTrack('race_tab', { tab: btn.dataset.kind || 'ballot' });
       });
 
       window.addEventListener('popstate', () => {

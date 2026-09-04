@@ -408,7 +408,7 @@ A small number of candidates cannot be resolved this way. Usually because the ba
 
 ## What We Don't Do
 
-- **No tracking or analytics beyond standard page metrics.** We do not build profiles of visitors or sell data.
+- **Only aggregate, anonymous usage metrics.** We measure which pages and tools get used so we can improve the site — never personal data, and we do not build profiles of individual visitors or sell data. When you use an address lookup (Find My Reps, Sample Ballot), your address is sent only to the U.S. Census geocoder to resolve your districts; it is never sent to our analytics or stored by us.
 
 ---
 

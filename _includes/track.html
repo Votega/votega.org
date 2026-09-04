@@ -1,0 +1,48 @@
+{% if site.gtag %}
+{%- comment -%}
+  VoteGA event tracking — a thin, privacy-respecting wrapper over GA4 (gtag.js).
+
+  Principles:
+  - No personal data is ever sent. Callers pass only coarse, non-identifying
+    values (outcomes, counts, tab names, category labels). The address tools
+    (Find My Reps, Sample Ballot) report only success/failure — never the
+    address, coordinates, or resolved districts tied to a person.
+  - Declarative use: add data-vg-track="event_name" to any clickable element.
+    Optional data-vg-<key>="value" attributes become event parameters. Because
+    this path reads only author-set attributes (never user input), no personal
+    data can leak through it by construction.
+  - Programmatic use: window.vgTrack('event_name', { key: 'value' }). Use this
+    from page JS for outcome events, passing only enums/counts you control.
+
+  Loaded site-wide from head.html, right after gtag.html, and guarded by the
+  same site.gtag check so it is inert when analytics is disabled.
+{%- endcomment -%}
+<script>
+(function () {
+  'use strict';
+
+  // Forward an event to GA4 if analytics has loaded; a harmless no-op otherwise
+  // (e.g. gtag blocked by an ad blocker, or analytics disabled in config).
+  window.vgTrack = function (name, params) {
+    if (!name || typeof window.gtag !== 'function') return;
+    try { window.gtag('event', String(name), params || {}); } catch (e) {}
+  };
+
+  // Declarative click tracking via [data-vg-track]. Delegated at the document so
+  // it covers content rendered after load. Reads only author-set data-vg-*
+  // attributes, so user-entered text can never be captured through this path.
+  document.addEventListener('click', function (e) {
+    var el = e.target && e.target.closest ? e.target.closest('[data-vg-track]') : null;
+    if (!el) return;
+    var params = {};
+    for (var i = 0; i < el.attributes.length; i++) {
+      var a = el.attributes[i];
+      if (a.name.indexOf('data-vg-') === 0 && a.name !== 'data-vg-track') {
+        params[a.name.slice('data-vg-'.length).replace(/-/g, '_')] = a.value;
+      }
+    }
+    window.vgTrack(el.getAttribute('data-vg-track'), params);
+  }, true);
+})();
+</script>
+{% endif %}

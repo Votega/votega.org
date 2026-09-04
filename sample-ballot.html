@@ -256,8 +256,11 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
       if (window.VoterLocation) window.VoterLocation.save(loc);  // carry over to other pages this visit
       setStatus('', false);
       render(buildBallot(loc));
+      // Outcome + method only — never the address or resolved districts.
+      window.vgTrack && window.vgTrack('ballot_lookup', { method: 'address', outcome: 'success' });
     } catch (err) {
       setStatus(err.message || 'Address lookup failed. Try your county below.', true);
+      window.vgTrack && window.vgTrack('ballot_lookup', { method: 'address', outcome: 'error' });
     } finally {
       addressBtn.disabled = false;
     }
@@ -270,6 +273,7 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
     if (window.VoterLocation) window.VoterLocation.save(lastLoc);  // carry over to other pages this visit
     setStatus('', false);
     render(buildBallot(lastLoc));
+    window.vgTrack && window.vgTrack('ballot_lookup', { method: 'county', outcome: 'success' });
   }
 
   // Changing the election re-renders the ballot already on screen (no re-geocode).

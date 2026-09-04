@@ -443,6 +443,9 @@
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.tab).classList.add('active');
+        // Which executive content people open: execOrders, agencyActions,
+        // signedLegislation, vpTieVotes. No PII.
+        window.vgTrack && window.vgTrack('exec_tab', { tab: btn.dataset.tab });
       });
     });
   }

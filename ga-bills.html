@@ -905,6 +905,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     btn.classList.add('active');
     chamberTab = btn.dataset.chamber;
     applyFilters();
+    window.vgTrack && window.vgTrack('bills_filter', { control: 'chamber', value: btn.dataset.chamber || 'all' });
   });
 
   document.getElementById('statusPills').addEventListener('click', function (e) {
@@ -915,6 +916,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
       partyLineOnly = !partyLineOnly;
       btn.classList.toggle('active', partyLineOnly);
       applyFilters();
+      if (partyLineOnly) window.vgTrack && window.vgTrack('bills_filter', { control: 'party_line' });
       return;
     }
 
@@ -922,6 +924,7 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     btn.classList.add('active');
     statusFilter = btn.dataset.status;
     applyFilters();
+    window.vgTrack && window.vgTrack('bills_filter', { control: 'status', value: btn.dataset.status || 'all' });
   });
 
   // ── Load data ─────────────────────────────────────────────────────────────

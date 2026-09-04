@@ -247,9 +247,12 @@ css:
       loadJson(GA_URL),
     ]).then(function (r) {
       render(r[0], r[1], r[2]);
+      // Outcome only — never the address, coordinates, or resolved districts.
+      window.vgTrack && window.vgTrack('reps_lookup', { outcome: 'success' });
     }).catch(function (err) {
       status.textContent = (err && err.message) || 'Something went wrong. Try browsing by category below.';
       status.className = 'fmr-status err';
+      window.vgTrack && window.vgTrack('reps_lookup', { outcome: 'error' });
     }).finally(function () {
       busy = false;
       btn.disabled = false;

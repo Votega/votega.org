@@ -250,6 +250,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
       btn.addEventListener('click', () => {
         activeCategory = btn.dataset.cat;
         applyFilter();
+        window.vgTrack && window.vgTrack('ga_eo_filter', { category: btn.dataset.cat });
       });
     });
   }
