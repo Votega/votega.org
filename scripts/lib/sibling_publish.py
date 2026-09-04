@@ -124,6 +124,50 @@ def build_json(obj):
     return json.dumps(obj, ensure_ascii=False, indent=1).encode()
 
 
+def _get_sha(url, headers):
+    """Current blob sha for a Contents API path, or None if the file doesn't exist."""
+    try:
+        return json.loads(_urlopen_retry(urllib.request.Request(url, headers=headers))).get("sha")
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+
+
+def _put_content(url, remote_path, data, headers):
+    """PUT one file, creating or updating it. Fetches the existing sha first.
+
+    Retries once on 409/422 by re-fetching the sha: the Contents API is eventually
+    consistent, so a create can 422 ("sha wasn't supplied") when a stale read missed
+    an existing file, and an update can 409 when the sha moved between read and write.
+    Re-reading the sha and retrying resolves both. On a fatal error the API's own
+    JSON message is printed, since "Unprocessable Entity" alone is undiagnosable.
+    """
+    for attempt in range(2):
+        body = {
+            "message": f"Publish {remote_path} from votega.org",
+            "content": base64.b64encode(data).decode(),
+        }
+        sha = _get_sha(url, headers)
+        if sha:
+            body["sha"] = sha
+        req = urllib.request.Request(
+            url, data=json.dumps(body).encode(), method="PUT", headers=headers
+        )
+        try:
+            return json.loads(_urlopen_retry(req))
+        except urllib.error.HTTPError as e:
+            if e.code in (409, 422) and attempt == 0:
+                continue  # stale/missing sha — re-read and retry once
+            detail = ""
+            try:
+                detail = " — " + e.read().decode("utf-8", "replace").strip()
+            except Exception:
+                pass
+            print(f"  FAILED {remote_path}: HTTP {e.code}{detail}")
+            raise
+
+
 def _publish(repo, artifacts, token):
     headers = {
         "Authorization": f"token {token}",
@@ -132,20 +176,7 @@ def _publish(repo, artifacts, token):
     }
     for remote_path, data in artifacts.items():
         url = f"https://api.github.com/repos/{repo}/contents/{remote_path}"
-        sha = None
-        try:
-            sha = json.loads(_urlopen_retry(urllib.request.Request(url, headers=headers)))["sha"]
-        except urllib.error.HTTPError as e:
-            if e.code != 404:
-                raise
-        body = {
-            "message": f"Publish {remote_path} from votega.org",
-            "content": base64.b64encode(data).decode(),
-        }
-        if sha:
-            body["sha"] = sha
-        req = urllib.request.Request(url, data=json.dumps(body).encode(), method="PUT", headers=headers)
-        result = json.loads(_urlopen_retry(req))
+        result = _put_content(url, remote_path, data, headers)
         print(f"  published {remote_path}: {result['commit']['sha'][:9]}")
 
 
