@@ -311,10 +311,112 @@ def build_races(records, urls, prior, new_state):
     return count
 
 
+# ─────────────────────────── Candidates ───────────────────────────
+
+def build_candidates(records, urls, prior, new_state):
+    """One page per candidate at /candidates/<slug>/.
+
+    Runs AFTER build_federal_legislators so urls['us-congress'] is populated: the
+    11 federal incumbents running for re-election appear in the manifest with a
+    ?raceId=&memberId= url (no candidate id) and already have a /us-congress/ page,
+    so we point the legacy shell at that page rather than build a duplicate profile.
+
+    Slug is name + seat, never the candidate id: make_candidate_id() ends ids with a
+    positional row index (…-d-1), so a re-ordered source export would silently move
+    a URL. The seat comes from the race id with its cycle stripped, which is stable.
+    """
+    data = load("races.json")
+    data_date = _date_only(data.get("updatedAt"))
+    races = data.get("races", [])
+
+    # cid -> (candidate, race). A candidate id is stable per person across phases,
+    # so the first occurrence wins.
+    cand_index = {}
+    for r in races:
+        for phase in (r.get("phases") or {}).values():
+            if not isinstance(phase, dict):
+                continue
+            groups = list((phase.get("ballots") or {}).values()) + [phase.get("candidates") or []]
+            for group in groups:
+                for c in (group or []):
+                    cid = c.get("id")
+                    if cid and cid not in cand_index:
+                        cand_index[cid] = (c, r)
+
+    us_urls = urls.get("us-congress", {})
+    seen = set()
+    count = 0
+    for rec in records:
+        if rec.get("category") != "Candidate":
+            continue
+        name = rec.get("title") or ""
+        desc = rec.get("desc") or ""
+        cid = qs_id(rec["url"])
+
+        # Federal incumbent (?raceId=&memberId=…): redirect the shell to their
+        # /us-congress/ page; don't emit a duplicate candidate page.
+        if not cid:
+            member_id = qs_id(rec["url"], "memberId")
+            dest = us_urls.get(member_id)
+            if member_id and dest:
+                urls.setdefault("candidate", {})[member_id] = dest
+            continue
+
+        race = (cand_index.get(cid) or (None, {}))[1]
+        rid = race.get("id") or ""
+        anchor = re.sub(r"-20\d\d$", "", rid) if rid else slugify(desc)
+        slug = slugify(name, anchor) or slugify(cid)
+        if slug in seen:  # two different people, same name+seat (not seen in current data)
+            slug = slugify(slug, hashlib.sha1(cid.encode()).hexdigest()[:6])
+        seen.add(slug)
+        permalink = f"/candidates/{slug}/"
+        urls.setdefault("candidate", {})[cid] = permalink
+
+        dist = race.get("district")
+        race_label = (race.get("displayTitle")
+                      or ((race.get("chamber") or "") + (f" District {dist}" if dist else ""))
+                      or rid)
+        race_url = urls.get("race", {}).get(rid)
+        party = desc.split("·")[0].strip() if "·" in desc else ""
+
+        share_title = f"{name} — Candidate for {race_label}".strip()
+        page_desc = desc or f"Candidate profile for {name}."
+        ld = json_ld({
+            "@context": "https://schema.org", "@type": "Person", "name": name,
+            "url": SITE_URL + permalink,
+            "description": desc or None,
+            "affiliation": party or None,
+        })
+        entity = {"type": "candidate", "id": cid, "name": name}
+        lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": page_desc},
+                                  data_date, prior, new_state)
+        fm = {
+            "layout": "default",
+            "title": yaml_quote(name),
+            "share-title": yaml_quote(share_title),
+            "share-description": yaml_quote(page_desc),
+            "permalink": permalink,
+            "last_modified_at": lastmod,
+            "entity": entity,
+        }
+        crumbs = [("Home", "/"), ("2026 Elections", "/elections/")]
+        if race_url:
+            crumbs.append((race_label, race_url))
+        crumbs.append((name, None))
+        bc = breadcrumb_ld(crumbs)
+        body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(cid)}}};</script>\n'
+                f"{ld}\n{bc}\n"
+                f"{{% include entity/candidate.html %}}")
+        write_page("candidates", slug, fm, body)
+        count += 1
+    return count
+
+
 CATEGORY_BUILDERS = [
     ("GA Legislator", build_ga_legislators),
     ("U.S. Congress", build_federal_legislators),
     ("Race", build_races),
+    ("Candidate", build_candidates),  # after U.S. Congress: reuses urls['us-congress']
 ]
 
 
