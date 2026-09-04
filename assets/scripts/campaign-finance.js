@@ -14,8 +14,17 @@
 window.CampaignFinance = (function () {
   'use strict';
 
-  const FEC_DATA_URL   = 'assets/data/ga-fec-data.json';
-  const GA_FINANCE_URL = 'assets/data/ga-campaign-finance.json';
+  // Resolve data URLs against the site root, not the current page. Bare-relative
+  // paths only work on the legacy root pages (/race.html, /candidate.html); on
+  // the clean entity URLs (/races/<slug>/, /ga-legislators/<slug>/) a relative
+  // 'assets/data/…' fetch resolves under the entity directory and 404s, which
+  // surfaced as "Finance data unavailable" on every entity-page finance tab.
+  // Mirrors the getBasePath() helper the entity includes use for their own data.
+  function basePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+  const FEC_DATA_URL   = basePath() + 'assets/data/ga-fec-data.json';
+  const GA_FINANCE_URL = basePath() + 'assets/data/ga-campaign-finance.json';
 
   const PEACHFILE_SEARCH = 'https://peachfile.ethics.ga.gov/public/cf/publiccandidate';
 
