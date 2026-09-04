@@ -412,11 +412,125 @@ def build_candidates(records, urls, prior, new_state):
     return count
 
 
+# ─────────────────────────── Federal Executives ───────────────────────────
+
+def build_federal_executives(records, urls, prior, new_state):
+    """One page per federal executive at /federal-executives/<slug>/.
+
+    Data (bios, tabs) is rendered client-side by _includes/entity/federal-executive.html;
+    the builder only needs the manifest record (name + role + the shell's ?id=). Slug is
+    the person's name — the 19 names are unique — so it is stable and readable.
+    """
+    # executive.json is a Jekyll-rendered template (front matter), not plain JSON, so
+    # it can't be loaded here — and isn't needed: the body renders client-side and the
+    # builder works from the manifest record. Stamp with today's date.
+    data_date = date.today().isoformat()
+    seen = set()
+    count = 0
+    for rec in records:
+        if rec.get("category") != "Federal Executive":
+            continue
+        oid = qs_id(rec["url"])
+        if not oid:
+            continue
+        name = rec.get("title") or oid
+        role = rec.get("desc") or ""
+        slug = slugify(name) or slugify(oid)
+        if slug in seen:
+            slug = slugify(slug, oid)
+        seen.add(slug)
+        permalink = f"/federal-executives/{slug}/"
+        urls.setdefault("federal-executive", {})[oid] = permalink
+
+        share_title = f"{name} — {role}" if role else name
+        desc = (f"{role}. Profile, background, and official actions for {name} in the "
+                f"U.S. federal executive branch.") if role else f"Profile of {name}."
+        ld = json_ld({
+            "@context": "https://schema.org", "@type": "Person", "name": name,
+            "jobTitle": role or None, "url": SITE_URL + permalink,
+        })
+        entity = {"type": "federal-executive", "id": oid, "name": name}
+        lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
+                                  data_date, prior, new_state)
+        fm = {
+            "layout": "default",
+            "title": yaml_quote(name),
+            "share-title": yaml_quote(share_title),
+            "share-description": yaml_quote(desc),
+            "permalink": permalink,
+            "last_modified_at": lastmod,
+            "entity": entity,
+        }
+        bc = breadcrumb_ld([("Home", "/"), ("Executive Branch", "/executive-branch.html"), (name, None)])
+        body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(oid)}}};</script>\n'
+                f"{ld}\n{bc}\n"
+                f"{{% include entity/federal-executive.html %}}")
+        write_page("federal-executives", slug, fm, body)
+        count += 1
+    return count
+
+
+# ─────────────────────────── Supreme Court Justices ───────────────────────────
+
+def build_justices(records, urls, prior, new_state):
+    """One page per justice at /justices/<slug>/. Body renders client-side from
+    supreme-court.json + scotus-decisions.json; the builder uses the manifest record."""
+    court = load("supreme-court.json")
+    data_date = _date_only((court.get("metadata") or {}).get("generatedAt"))
+    seen = set()
+    count = 0
+    for rec in records:
+        if rec.get("category") != "U.S. Supreme Court":
+            continue
+        jid = qs_id(rec["url"])
+        if not jid:
+            continue
+        name = rec.get("title") or jid
+        role = rec.get("desc") or "Justice of the Supreme Court of the United States"
+        slug = slugify(name) or slugify(jid)
+        if slug in seen:
+            slug = slugify(slug, jid)
+        seen.add(slug)
+        permalink = f"/justices/{slug}/"
+        urls.setdefault("justice", {})[jid] = permalink
+
+        share_title = f"{name} — U.S. Supreme Court"
+        desc = (f"{role}. Appointment, tenure, and voting record for {name} on the "
+                f"Supreme Court of the United States.")
+        ld = json_ld({
+            "@context": "https://schema.org", "@type": "Person", "name": name,
+            "jobTitle": role, "url": SITE_URL + permalink,
+            "memberOf": {"@type": "GovernmentOrganization",
+                         "name": "Supreme Court of the United States"},
+        })
+        entity = {"type": "justice", "id": jid, "name": name}
+        lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
+                                  data_date, prior, new_state)
+        fm = {
+            "layout": "default",
+            "title": yaml_quote(name),
+            "share-title": yaml_quote(share_title),
+            "share-description": yaml_quote(desc),
+            "permalink": permalink,
+            "last_modified_at": lastmod,
+            "entity": entity,
+        }
+        bc = breadcrumb_ld([("Home", "/"), ("Supreme Court", "/supreme-court.html"), (name, None)])
+        body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(jid)}}};</script>\n'
+                f"{ld}\n{bc}\n"
+                f"{{% include entity/justice.html %}}")
+        write_page("justices", slug, fm, body)
+        count += 1
+    return count
+
+
 CATEGORY_BUILDERS = [
     ("GA Legislator", build_ga_legislators),
     ("U.S. Congress", build_federal_legislators),
     ("Race", build_races),
     ("Candidate", build_candidates),  # after U.S. Congress: reuses urls['us-congress']
+    ("Federal Executive", build_federal_executives),
+    ("U.S. Supreme Court", build_justices),
 ]
 
 
