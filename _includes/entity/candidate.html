@@ -310,6 +310,14 @@
   const CONGRESS_URL    = 'assets/data/current-members.json';
   const GA_MEMBERS_URL  = 'assets/data/ga-members.json';
 
+  // Clean entity-URL maps (bioguideId / OCD id -> "/us-congress/…", "/ga-legislators/…").
+  // Linking straight to these skips the legacy member.html?bioguideId= / ga-member.html?id=
+  // shells, whose client-side location.replace() to the clean URL is a second navigation
+  // the user sees as a blank flash before the profile populates.
+  const US_CONGRESS_URLS   = {{ site.data.entity_urls['us-congress'] | jsonify }};
+  const GA_LEGISLATOR_URLS = {{ site.data.entity_urls['ga-legislator'] | jsonify }};
+  const RACE_URLS          = {{ site.data.entity_urls['race'] | jsonify }};
+
   const _params              = new URLSearchParams(window.location.search);
   // On a clean /candidates/<slug>/ entity page the id is injected via
   // window.VOTEGA_ENTITY (build_entity_pages.py); the ?id= param is the legacy
@@ -323,6 +331,31 @@
     return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
   }
 
+  // Resolve a sitting member's profile to the clean entity URL, falling back to the
+  // legacy query-string shell if the id isn't in the map yet. `source === 'congress'`
+  // keys on bioguideId (us-congress map); otherwise on OCD id (ga-legislator map).
+  function memberProfileUrl(id, source, anchor) {
+    const hash = anchor || '';
+    if (source === 'congress') {
+      const clean = US_CONGRESS_URLS[id];
+      return clean
+        ? getBasePath() + clean.replace(/^\//, '') + hash
+        : `${getBasePath()}member.html?bioguideId=${encodeURIComponent(id)}${hash}`;
+    }
+    const clean = GA_LEGISLATOR_URLS[id];
+    return clean
+      ? getBasePath() + clean.replace(/^\//, '') + hash
+      : `${getBasePath()}ga-member.html?id=${encodeURIComponent(id)}${hash}`;
+  }
+
+  // Race id -> clean "/races/…" URL, falling back to the legacy race.html?id= shell.
+  function raceHref(id) {
+    const clean = RACE_URLS[id];
+    return clean
+      ? getBasePath() + clean.replace(/^\//, '')
+      : `${getBasePath()}race.html?id=${encodeURIComponent(id)}`;
+  }
+
   function partyClass(party) {
     if (!party) return 'party-other';
     const p = party.toLowerCase();
@@ -332,7 +365,6 @@
   }
 
   function renderCandidate(candidate, race, phaseName) {
-    const basePath   = getBasePath();
     const claim      = candidate._claim || null;
     // Campaign-submitted photo supersedes the placeholder/bioguide fallback.
     if (claim && claim.imageUrl && !candidate.imageUrl) candidate.imageUrl = claim.imageUrl;
@@ -344,7 +376,7 @@
     const phaseLabel = PHASE_LABELS[phaseName]
       || (phaseName ? phaseName[0].toUpperCase() + phaseName.slice(1) : 'Election');
     const raceLabel  = `${race.displayTitle || (race.chamber + distLabel)} — ${race.cycle} ${phaseLabel}`;
-    const raceUrl    = `${basePath}race.html?id=${encodeURIComponent(race.id)}`;
+    const raceUrl    = raceHref(race.id);
     const isFederal  = race.level === 'federal';
     const isIncumbent = candidate.isIncumbent || candidate.type === 'incumbent';
     const isWithdrawn     = !!candidate.withdrawn;
@@ -354,9 +386,7 @@
     const existingMemberId = candidate.existingMemberId || '';
     const memberSource     = candidate.existingMemberSource || '';
     const memberUrl = existingMemberId
-      ? memberSource === 'congress'
-        ? `${basePath}member.html?bioguideId=${encodeURIComponent(existingMemberId)}#votingHistory`
-        : `${basePath}ga-member.html?id=${encodeURIComponent(existingMemberId)}#votingHistory`
+      ? memberProfileUrl(existingMemberId, memberSource, '#votingHistory')
       : null;
     const memberRecordLabel = memberSource === 'congress' ? 'View Congressional record' : 'View legislative record';
 

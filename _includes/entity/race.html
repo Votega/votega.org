@@ -516,6 +516,34 @@
     return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
   }
 
+  // Clean entity-URL maps (bioguideId / OCD id -> "/us-congress/…", "/ga-legislators/…").
+  // Linking straight to these skips the legacy member.html?bioguideId= / ga-member.html?id=
+  // shells, whose client-side location.replace() to the clean URL is a second navigation
+  // the user sees as a blank flash before the profile populates.
+  const US_CONGRESS_URLS   = {{ site.data.entity_urls['us-congress'] | jsonify }};
+  const GA_LEGISLATOR_URLS = {{ site.data.entity_urls['ga-legislator'] | jsonify }};
+  const CANDIDATE_URLS     = {{ site.data.entity_urls['candidate'] | jsonify }};
+
+  // Resolve a sitting member's profile to the clean entity URL, falling back to the
+  // legacy query-string shell if the id isn't in the map yet. State members key on
+  // OCD id (ga-legislator map); federal members on bioguideId (us-congress map).
+  function memberProfileUrl(id, isState, anchor) {
+    const hash = anchor || '';
+    const clean = (isState ? GA_LEGISLATOR_URLS : US_CONGRESS_URLS)[id];
+    if (clean) return getBasePath() + clean.replace(/^\//, '') + hash;
+    return isState
+      ? `${getBasePath()}ga-member.html?id=${encodeURIComponent(id)}${hash}`
+      : `${getBasePath()}member.html?bioguideId=${encodeURIComponent(id)}${hash}`;
+  }
+
+  // Candidate id -> clean profile URL, falling back to the legacy candidate.html?id= shell.
+  function candidateHref(id) {
+    const clean = CANDIDATE_URLS[id];
+    return clean
+      ? getBasePath() + clean.replace(/^\//, '')
+      : `${getBasePath()}candidate.html?id=${encodeURIComponent(id)}`;
+  }
+
   function formatDate(iso) {
     if (!iso) return '';
     const [y, m, d] = iso.split('-').map(Number);
@@ -558,14 +586,23 @@
     const chamber = member.chamber || '';
     const district = member.district ?? '';
 
-    const memberUrl = isState
-      ? `${basePath}ga-member.html?id=${encodeURIComponent(member.id)}#votingHistory`
-      : `${basePath}member.html?bioguideId=${encodeURIComponent(member.bioguideId)}#votingHistory`;
+    const memberUrl = memberProfileUrl(
+      isState ? member.id : member.bioguideId, isState, '#votingHistory');
 
     const subtitle = [chamber, district ? `District ${district}` : ''].filter(Boolean).join(' · ');
 
     const claimKey = candidate.memberId || candidate.existingMemberId;
     const claimBadge = CandidateClaims.badgeHtml(CandidateClaims.getClaim(CLAIMS, claimKey));
+
+    // The incumbent's candidate profile has no candidate.id of its own — it's a
+    // memberId projection the legacy shell redirects to the member's clean page.
+    // Resolve that clean URL directly (CANDIDATE_URLS is keyed by memberId for
+    // incumbents), falling back to the synthetic shell URL when it isn't mapped.
+    const incMemberId = candidate.existingMemberId || candidate.memberId;
+    const incMemberSrc = candidate.existingMemberSource || candidate.memberSource || 'congress';
+    const incProfileUrl = CANDIDATE_URLS[incMemberId]
+      ? getBasePath() + CANDIDATE_URLS[incMemberId].replace(/^\//, '')
+      : `${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(incMemberId)}&memberSource=${encodeURIComponent(incMemberSrc)}`;
 
     return `
       <div class="candidate-card incumbent">
@@ -578,13 +615,12 @@
         ${candidate.bio ? `<p class="candidate-bio">${candidate.bio}</p>` : ''}
         <div class="candidate-links">
           <a href="${memberUrl}">View legislative record →</a>
-          <a href="${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(candidate.existingMemberId || candidate.memberId)}&memberSource=${encodeURIComponent(candidate.existingMemberSource || candidate.memberSource || 'congress')}">View candidate profile →</a>
+          <a href="${incProfileUrl}">View candidate profile →</a>
         </div>
       </div>`;
   }
 
   function renderChallengerCard(candidate) {
-    const basePath = getBasePath();
     if (candidate.disqualified) {
       return `
         <div class="candidate-card challenger disqualified">
@@ -607,7 +643,7 @@
     const badgeClass   = isIncumbent ? 'role-badge role-incumbent' : 'role-badge role-challenger';
     const badgeLabel   = isIncumbent ? '&#9733; Current Officeholder' : 'Candidate';
 
-    const profileUrl = `${basePath}candidate.html?id=${encodeURIComponent(candidate.id)}`;
+    const profileUrl = candidateHref(candidate.id);
     // Only linkify http(s) URLs — guards the href against javascript:/data: schemes,
     // and prefixes a scheme-less value (e.g. "example.com") so it isn't treated as a
     // relative path. races.json is editorial, so this is defense-in-depth.

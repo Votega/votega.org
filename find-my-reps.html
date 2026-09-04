@@ -110,8 +110,27 @@ css:
   var status = document.getElementById('fmrStatus');
   var out    = document.getElementById('fmrResults');
 
+  // Clean entity-URL maps (bioguideId / OCD id -> "/us-congress/…", "/ga-legislators/…").
+  // Linking straight to these skips the legacy member.html?bioguideId= shell, whose
+  // client-side location.replace() to the clean URL was a second navigation the user
+  // saw as a blank flash before the profile populated.
+  var FED_URLS = {{ site.data.entity_urls['us-congress'] | jsonify }};
+  var GA_URLS  = {{ site.data.entity_urls['ga-legislator'] | jsonify }};
+
   function basePath() {
     return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+  // Prefer the clean entity URL; fall back to the legacy query-string shell if the
+  // member isn't in the map yet (e.g. a just-seated member before the pages rebuild).
+  function fedHref(m) {
+    var clean = FED_URLS[m.bioguideId];
+    return clean ? basePath() + clean.replace(/^\//, '')
+                 : basePath() + 'member.html?bioguideId=' + encodeURIComponent(m.bioguideId);
+  }
+  function gaHref(m) {
+    var clean = GA_URLS[m.id];
+    return clean ? basePath() + clean.replace(/^\//, '')
+                 : basePath() + 'ga-member.html?id=' + encodeURIComponent(m.id);
   }
   function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
   function partyLetter(p) {
@@ -160,7 +179,6 @@ css:
   }
 
   function render(loc, fed, ga) {
-    var base = basePath();
     var fedGA = (fed.members || []).filter(function (m) {
       return m.state === 'Georgia' && m.currentMember !== false;
     });
@@ -181,7 +199,7 @@ css:
       html += repCard('U.S. Senate', m, {
         name: fedName(m), party: m.partyName, sub: 'Georgia · U.S. Senator',
         photo: m.depiction && m.depiction.imageUrl,
-        href: base + 'member.html?bioguideId=' + encodeURIComponent(m.bioguideId),
+        href: fedHref(m),
       });
     });
 
@@ -189,21 +207,21 @@ css:
       name: fedName(usRep), party: usRep.partyName,
       sub: 'District ' + loc.usHouse,
       photo: usRep.depiction && usRep.depiction.imageUrl,
-      href: base + 'member.html?bioguideId=' + encodeURIComponent(usRep.bioguideId),
+      href: fedHref(usRep),
     } : { sub: loc.usHouse != null ? 'District ' + loc.usHouse : '', vacant: 'No sitting U.S. Representative found' });
 
     html += repCard('Georgia State Senate', stSen, stSen ? {
       name: stSen.name, party: stSen.party,
       sub: 'District ' + loc.stateSenate + (stSen.status === 'Vacant' ? ' · Vacant' : ''),
       photo: stSen.imageUrl,
-      href: base + 'ga-member.html?id=' + encodeURIComponent(stSen.id),
+      href: gaHref(stSen),
     } : { sub: loc.stateSenate != null ? 'District ' + loc.stateSenate : '', vacant: 'This Senate seat is currently vacant' });
 
     html += repCard('Georgia House of Representatives', stRep, stRep ? {
       name: stRep.name, party: stRep.party,
       sub: 'District ' + loc.stateHouse + (stRep.status === 'Vacant' ? ' · Vacant' : ''),
       photo: stRep.imageUrl,
-      href: base + 'ga-member.html?id=' + encodeURIComponent(stRep.id),
+      href: gaHref(stRep),
     } : { sub: loc.stateHouse != null ? 'District ' + loc.stateHouse : '', vacant: 'This House seat is currently vacant' });
 
     out.innerHTML = html;

@@ -345,6 +345,15 @@
 <script>
   const DEBUG = false;
 
+  // bioguideId -> clean "/us-congress/…" URL. Linking straight to these (below, in
+  // the delegation sidebar) avoids the legacy member.html?bioguideId= shell, whose
+  // location.replace() to the clean URL is a second navigation the user sees as a
+  // blank flash before the next profile populates.
+  const US_CONGRESS_URLS = {{ site.data.entity_urls['us-congress'] | jsonify }};
+  // Same purpose for the "View race →" / "View candidate profile →" links below.
+  const RACE_URLS        = {{ site.data.entity_urls['race'] | jsonify }};
+  const CANDIDATE_URLS   = {{ site.data.entity_urls['candidate'] | jsonify }};
+
   const urlParams = new URLSearchParams(window.location.search);
   // Clean per-entity URLs set window.VOTEGA_ENTITY; the legacy ?bioguideId= URL still works.
   const bioguideId = urlParams.get('bioguideId') || (window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.id);
@@ -479,6 +488,18 @@
     return pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
   }
 
+  // Race / candidate id -> clean entity URL, falling back to the legacy shell route.
+  function raceHref(id) {
+    const clean = RACE_URLS[id];
+    return clean ? getBasePath() + clean.replace(/^\//, '')
+                 : `${getBasePath()}race.html?id=${encodeURIComponent(id)}`;
+  }
+  function candidateHref(id) {
+    const clean = CANDIDATE_URLS[id];
+    return clean ? getBasePath() + clean.replace(/^\//, '')
+                 : `${getBasePath()}candidate.html?id=${encodeURIComponent(id)}`;
+  }
+
   function escHtml(value) { return VoteGA.escapeHtml(value); }
 
   // Format a YYYY-MM-DD date without the UTC-to-local shift. new Date('YYYY-MM-DD')
@@ -610,7 +631,11 @@
         if (isCurrent) {
           return `<span class="sidebar-member current">${name}<br><span class="sidebar-member-sub">${sub}</span></span>`;
         }
-        return `<a class="sidebar-member" href="${basePath}member.html?bioguideId=${encodeURIComponent(m.bioguideId)}">${name}<br><span class="sidebar-member-sub">${sub}</span></a>`;
+        const clean = US_CONGRESS_URLS[m.bioguideId];
+        const href = clean
+          ? basePath + clean.replace(/^\//, '')
+          : `${basePath}member.html?bioguideId=${encodeURIComponent(m.bioguideId)}`;
+        return `<a class="sidebar-member" href="${href}">${name}<br><span class="sidebar-member-sub">${sub}</span></a>`;
       }).join('');
       return `<div class="sidebar-group-label">${escHtml(label)}</div>${items}`;
     }
@@ -1172,11 +1197,10 @@
     // Running for office badge
     let runningBadgeHtml = '';
     if (electionInfo) {
-      const basePath = getBasePath();
       const race = electionInfo.race;
       const distLabel = race.district ? ` District ${race.district}` : '';
       const raceLabel = escHtml(`${race.chamber}${distLabel}`);
-      const raceUrl = `${basePath}race.html?id=${encodeURIComponent(race.id)}`;
+      const raceUrl = raceHref(race.id);
 
       if (electionInfo.type === 'reelection') {
         runningBadgeHtml = `
@@ -1186,7 +1210,7 @@
             <a href="${escHtml(raceUrl)}">View ${raceLabel} race →</a>
           </div>`;
       } else if (electionInfo.type === 'different-office') {
-        const candidateUrl = `${basePath}candidate.html?id=${encodeURIComponent(electionInfo.challenger.id)}`;
+        const candidateUrl = candidateHref(electionInfo.challenger.id);
         runningBadgeHtml = `
           <div class="running-badge different-office">
             <strong>Running for a Different Office</strong>
@@ -1195,9 +1219,8 @@
           </div>`;
       }
     } else if (seatRace) {
-      const basePath  = getBasePath();
       const distLabel = seatRace.district ? ` District ${seatRace.district}` : '';
-      const raceUrl   = `${basePath}race.html?id=${encodeURIComponent(seatRace.id)}`;
+      const raceUrl   = raceHref(seatRace.id);
       runningBadgeHtml = `
         <div class="running-badge seat-election">
           <strong>This seat is up for election in ${escHtml(seatRace.cycle)}</strong>
