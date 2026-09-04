@@ -1,0 +1,54 @@
+name: Validate workflow triggers & failure watchlist
+
+# scripts/validate_workflow_triggers.py enforces two invariants that are easy to
+# break by hand and invisible until a job silently stops being monitored:
+#   1. Every SCHEDULED data workflow appears in notify-workflow-failure.yml's
+#      watchlist, so a broken generator opens an issue instead of failing quietly.
+#   2. Every push/paths trigger on a bot-written data file is backed by an inline
+#      publish or a schedule (a GITHUB_TOKEN commit does not fire on:push, so such
+#      a trigger would otherwise be dead).
+#
+# The validator existed but was advisory-only ("run it after adding a workflow"),
+# and a scheduled workflow shipped missing from the watchlist anyway. Running it on
+# every workflow change makes the check enforcing rather than remembered.
+#
+# No schedule here on purpose: watchlist/trigger drift can only land via a workflow
+# edit, which the push/pull_request paths below already catch — so this workflow is
+# itself unscheduled and needs no entry in the notifier watchlist.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/validate_workflow_triggers.py'
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/validate_workflow_triggers.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Validate workflow triggers and failure watchlist
+        run: python scripts/validate_workflow_triggers.py
