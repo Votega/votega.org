@@ -168,7 +168,7 @@ updateCountyVisibility();
 async function loadData() {
   statusLine.textContent = 'Loading member data…';
   try {
-    const res = await fetch(DATA_URL);
+    const res = await fetch(getBasePath() + DATA_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const results = data.members || [];

@@ -728,7 +728,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
   async function initIncumbent(raceId, memberId, memberSource) {
     try {
       const membersUrl = memberSource === 'congress' ? CONGRESS_URL : GA_MEMBERS_URL;
-      const [racesRes, membersRes] = await Promise.all([fetch(RACES_URL), fetch(membersUrl)]);
+      const [racesRes, membersRes] = await Promise.all([fetch(getBasePath() + RACES_URL), fetch(getBasePath() + membersUrl)]);
       if (!racesRes.ok) throw new Error(`HTTP ${racesRes.status}`);
 
       const racesData = await racesRes.json();
@@ -812,7 +812,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
     }
 
     try {
-      const res = await fetch(RACES_URL);
+      const res = await fetch(getBasePath() + RACES_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       // Provenance stamp. races.json keeps its timestamp at the top level as
@@ -870,7 +870,7 @@ share-description: "Profile of a candidate running for office in Georgia: the of
       if (found.existingMemberId) {
         try {
           const membersUrl = found.existingMemberSource === 'state' ? GA_MEMBERS_URL : CONGRESS_URL;
-          const membersRes = await fetch(membersUrl);
+          const membersRes = await fetch(getBasePath() + membersUrl);
           if (membersRes.ok) {
             const membersData = await membersRes.json();
             const members = membersData.members || [];
