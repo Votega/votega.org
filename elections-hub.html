@@ -62,3 +62,59 @@ css:
     <span class="election-card-cta">View results →</span>
   </a>
 </div>
+
+<!-- Candidate-facing CTA, deliberately set apart from and below the four
+     voter-facing cards above: muted styling and its own audience heading so a
+     voter scanning the hub isn't steered to the "claim your profile" flow that
+     is only for candidates and their staff. -->
+<section class="for-candidates-callout" aria-labelledby="fccHeading">
+  <div class="fcc-text">
+    <p class="fcc-eyebrow">For candidates &amp; campaigns</p>
+    <p id="fccHeading" class="fcc-heading">Running for office in Georgia?</p>
+    <p class="fcc-desc">VoteGA already has a page for every candidate on the 2026 ballot, built from public records. If you're a candidate or work for one, you can claim yours to add a biography, photo, and answers to a shared questionnaire — free, nonpartisan, and clearly labeled.</p>
+  </div>
+  <a class="fcc-link" href="{{ '/for-candidates/' | relative_url }}">Claim your profile →</a>
+</section>
+
+<style>
+  .for-candidates-callout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin: 3rem 0 1rem;
+    padding: 1.1rem 1.35rem;
+    background: #f7f7f8;
+    border: 1px solid #e2e2e6;
+    border-radius: 8px;
+  }
+  .for-candidates-callout .fcc-text { flex: 1 1 22rem; }
+  .for-candidates-callout .fcc-eyebrow {
+    margin: 0 0 0.15rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #8a8a93;
+  }
+  .for-candidates-callout .fcc-heading {
+    margin: 0 0 0.3rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #404040;
+  }
+  .for-candidates-callout .fcc-desc {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #666;
+    max-width: 46rem;
+  }
+  .for-candidates-callout .fcc-link {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-weight: 600;
+    color: #008AFF;
+  }
+</style>
