@@ -608,8 +608,15 @@
     const badgeLabel   = isIncumbent ? '&#9733; Current Officeholder' : 'Candidate';
 
     const profileUrl = `${basePath}candidate.html?id=${encodeURIComponent(candidate.id)}`;
-    const websiteHtml = candidate.website
-      ? `<a href="${candidate.website}" target="_blank" rel="noopener">Campaign website ↗</a>`
+    // Only linkify http(s) URLs — guards the href against javascript:/data: schemes,
+    // and prefixes a scheme-less value (e.g. "example.com") so it isn't treated as a
+    // relative path. races.json is editorial, so this is defense-in-depth.
+    const rawSite  = (candidate.website || '').trim();
+    const safeSite = /^https?:\/\//i.test(rawSite)
+      ? rawSite
+      : (rawSite && !/^[a-z][a-z0-9+.-]*:/i.test(rawSite) ? 'https://' + rawSite.replace(/^\/+/, '') : '');
+    const websiteHtml = safeSite
+      ? `<a href="${escapeHtml(safeSite)}" target="_blank" rel="noopener">Campaign website ↗</a>`
       : '';
 
     const claimBadge = CandidateClaims.badgeHtml(CandidateClaims.getClaim(CLAIMS, candidate.id));

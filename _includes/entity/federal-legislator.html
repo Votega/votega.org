@@ -781,6 +781,13 @@
     const coverageNote = entry.coverageEndDate
       ? `${cycleLabel} · Through ${fmtDate(entry.coverageEndDate)}`
       : cycleLabel;
+    // Per-block provenance: these figures come from ga-fec-data.json, not the roster
+    // file the page-level stamp describes, so give the panel its own dated line from
+    // the finance data's own metadata.generatedAt. Omit it when the timestamp is absent.
+    const finGenIso  = fecData.metadata?.generatedAt || null;
+    const finGenDate = finGenIso
+      ? new Date(finGenIso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      : null;
 
     const employersHtml = (entry.topEmployers || []).length ? `
       <h3 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h3>
@@ -819,6 +826,7 @@
       </div>
       <p class="finance-meta">${coverageNote}</p>
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
+      ${finGenDate ? `<p class="finance-meta">Finance data from the FEC, updated ${finGenDate}.</p>` : ''}
       ${employersHtml}`;
   }
 
