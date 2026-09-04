@@ -169,12 +169,12 @@ def normalize_member(raw, committees_by_id=None):
     return {
         'id':               raw.get('id', ''),
         'name':             raw.get('name', ''),
-        'firstName':        raw.get('given_name', ''),
-        'lastName':         raw.get('family_name', ''),
+        'firstName':        raw.get('given_name') or None,
+        'lastName':         raw.get('family_name') or None,
         'party':            raw.get('party') or None,  # empty string → None
         'chamber':          chamber,
         'district':         district,
-        'title':            role.get('title', ''),
+        'title':            role.get('title') or None,
         'imageUrl':         raw.get('image') or None,
         'phone':            phone,
         'address':          address,

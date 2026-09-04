@@ -239,7 +239,7 @@ def main():
                 'filing_date':        t.get('filing_date', ''),
                 'days_to_file':       t.get('days_to_file'),
                 'is_late':            bool(t.get('is_late')),
-                'ticker':             t.get('ticker') or '',
+                'ticker':             t.get('ticker') or None,
                 'asset_name':         t.get('asset_name', ''),
                 'transaction_type':   t.get('transaction_type', ''),
                 'amount_range_label': t.get('amount_range_label', ''),

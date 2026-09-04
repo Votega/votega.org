@@ -171,8 +171,8 @@ def extract_decision(detail, cl_index):
         opinions.append({
             "type":      op_type.get("value") or "",
             "label":     op_type.get("label") or "",
-            "author":    wo.get("judge_last_name") or wo.get("judge_full_name") or "",
-            "justiaUrl": wo.get("justia_opinion_url") or "",
+            "author":    wo.get("judge_last_name") or wo.get("judge_full_name") or None,
+            "justiaUrl": wo.get("justia_opinion_url") or None,
         })
 
     cl_url = cl_index.get(docket) or cl_index.get(docket.rstrip())
@@ -195,8 +195,8 @@ def extract_decision(detail, cl_index):
         "votes":        votes,
         "opinions":     opinions,
         "oyezUrl":      f"https://www.oyez.org/cases/{term}/{docket}",
-        "justiaUrl":    detail.get("justia_url") or "",
-        "courtListenerUrl": cl_url or "",
+        "justiaUrl":    detail.get("justia_url") or None,
+        "courtListenerUrl": cl_url or None,
     }
 
 
