@@ -351,6 +351,25 @@
     ) || null;
   }
 
+  // This member's own candidate entry within one race (their current seat),
+  // matched by OCD id. Returns the races.json candidate id or null — the key the
+  // campaign-finance override map uses.
+  function findMemberCandidateId(race, memberId) {
+    if (!race) return null;
+    for (const phaseName of ['primary', 'general']) {
+      const phase = race.phases?.[phaseName];
+      if (!phase) continue;
+      const cands = phase.ballots
+        ? Object.values(phase.ballots).flat()
+        : (phase.candidates || []);
+      const m = cands.find(
+        c => c.existingMemberId === memberId && c.existingMemberSource === 'state'
+      );
+      if (m && m.id) return m.id;
+    }
+    return null;
+  }
+
   // Find any race where this member appears as a challenger running for a different office
   function findMemberInRaces(memberId, races) {
     for (const race of races) {
@@ -416,7 +435,7 @@
       // party still needs to count toward other members' loyalty stats.
       const currentPeers = all.filter(m => !['Resigned', 'Removed', 'Deceased'].includes(m.status));
       displaySidebar(member, currentPeers);
-      loadCampaignFinance(member);
+      loadCampaignFinance(member, seatRace);
       loadCuratedBills(member);
       loadVotingHistory(member, all);
       if (window.location.hash) {
@@ -498,7 +517,7 @@
     return { status: 'none', filer: null };
   }
 
-  async function loadCampaignFinance(member) {
+  async function loadCampaignFinance(member, seatRace) {
     const container = document.getElementById('campaignFinance');
     if (!container || !member || !member.chamber) return;
 
@@ -514,7 +533,25 @@
     }
 
     const searchUrl = data.metadata?.sourceUrl || 'https://peachfile.ethics.ga.gov/public/cf/publiccandidate';
-    const { status, filer: f } = resolveFinanceFiler(data, member);
+
+    // A human-reviewed finance override wins over the automatic match — the same
+    // decision honored on race.html/candidate.html. Those key on the races.json
+    // candidate id; this page resolves that id from seatRace (the member's CURRENT
+    // seat). Scoping to seatRace is deliberate: a member running for a DIFFERENT
+    // seat has an override under that other race, and it must not suppress or
+    // rewrite their current-seat committee (e.g. a House member seeking a Senate
+    // seat keeps their House committee on their House page).
+    let status, f;
+    const candidateId = findMemberCandidateId(seatRace, member.id);
+    const override = candidateId ? data.candidateOverrides?.[candidateId] : null;
+    if (override?.noFiling) {
+      status = 'none'; f = null;
+    } else if (override?.filerEntityId) {
+      f = data.filers?.[override.filerEntityId] || null;
+      status = f ? 'ok' : 'none';
+    } else {
+      ({ status, filer: f } = resolveFinanceFiler(data, member));
+    }
 
     if (status === 'ambiguous') {
       container.innerHTML = `
