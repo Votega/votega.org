@@ -34,13 +34,14 @@ REPO_SOURCES = {
                                   "(gov.georgia.gov)",
 }
 
-# Published under CC BY 4.0: a data license, matching the attribution /open-data asks
-# of reusers. LICENSE carries the canonical, unmodified legalcode so GitHub detects the
-# license; the attribution string reusers actually need lives in NOTICE.md beside it.
-LICENSE_SPDX = "CC-BY-4.0"
-LICENSE_NAME = "Creative Commons Attribution 4.0 International"
-LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
-_LICENSE_PATH = os.path.join(os.path.dirname(__file__), "LICENSE-CC-BY-4.0.txt")
+# Published under CC BY-SA 4.0: a data license, matching the attribution + share-alike
+# /open-data asks of reusers. LICENSE carries the canonical, unmodified legalcode so
+# GitHub detects the license; the attribution string reusers actually need lives in
+# NOTICE.md beside it.
+LICENSE_SPDX = "CC-BY-SA-4.0"
+LICENSE_NAME = "Creative Commons Attribution-ShareAlike 4.0 International"
+LICENSE_URL = "https://creativecommons.org/licenses/by-sa/4.0/"
+_LICENSE_PATH = os.path.join(os.path.dirname(__file__), "LICENSE-CC-BY-SA-4.0.txt")
 
 NOTICE_TEMPLATE = """\
 # Reuse and attribution
@@ -49,11 +50,12 @@ The data in this repository is published by [VoteGA.org](https://votega.org) und
 [{name}]({url}) license (`{spdx}`). The full legalcode is in [LICENSE](LICENSE).
 
 You are free to share and adapt this data, including commercially, provided you give
-appropriate credit.
+appropriate credit and license any adaptations you distribute under the same terms
+(CC BY-SA 4.0).
 
 ## How to credit
 
-> Data from [VoteGA.org](https://votega.org), licensed under [CC BY 4.0]({url}).
+> Data from [VoteGA.org](https://votega.org), licensed under [CC BY-SA 4.0]({url}).
 > Original source: {source}.
 
 ## Two things the license does not cover

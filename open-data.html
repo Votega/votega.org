@@ -10,7 +10,7 @@ breadcrumb:
 ---
 
 {%- comment -%} schema.org DataCatalog/Dataset so the open datasets are eligible for
-  Google Dataset Search. Sourced from _data/open_data.yml; CC BY 4.0 per the catalog. {%- endcomment -%}
+  Google Dataset Search. Sourced from _data/open_data.yml; CC BY-SA 4.0 per the catalog. {%- endcomment -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -19,7 +19,7 @@ breadcrumb:
   "url": "{{ '/open-data' | absolute_url }}",
   "description": {{ site.data.open_data.meta.intro | strip_newlines | jsonify }},
   "publisher": { "@type": "Organization", "name": {{ site.title | jsonify }}, "url": "{{ site.url }}/" },
-  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "license": "https://creativecommons.org/licenses/by-sa/4.0/",
   "dataset": [
     {% for d in site.data.open_data.datasets -%}
     {
@@ -29,7 +29,7 @@ breadcrumb:
       "url": "{{ d.repo_url | default: '/open-data' | absolute_url }}",
       "identifier": {{ d.id | jsonify }},
       "isAccessibleForFree": true,
-      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
       {% if d.source %}"creator": { "@type": "Organization", "name": {{ d.source | strip_newlines | jsonify }} },{% endif %}
       "includedInDataCatalog": { "@type": "DataCatalog", "name": "VoteGA Open Data", "url": "{{ '/open-data' | absolute_url }}" },
       "publisher": { "@type": "Organization", "name": {{ site.title | jsonify }}, "url": "{{ site.url }}/" }
@@ -129,11 +129,12 @@ breadcrumb:
   <h2>Using this data</h2>
   <p>These datasets are provided free for public reuse. The underlying facts come from public and government sources, cleaned and joined into machine-readable files.</p>
   <ul>
-    <li><strong>License:</strong> data published by VoteGA.org is available under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">Creative Commons Attribution 4.0 International (CC BY 4.0)</a>. You may share and adapt it, including commercially, as long as you give credit. Each repository carries the full license in its <code>LICENSE</code> file and a plain-language summary in <code>NOTICE.md</code>.</li>
-    <li><strong>Attribution:</strong> please credit both <em>VoteGA.org</em> and the original source named on each dataset (e.g. Open States, Congress.gov, the Georgia Secretary of State). A one-line credit works: <em>&ldquo;Data from VoteGA.org, licensed under CC BY 4.0.&rdquo;</em></li>
+    <li><strong>License:</strong> data published by VoteGA.org is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="license noopener" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)</a>. You may share and adapt it, including commercially, as long as you give credit and license any adaptations you distribute under the same terms. Each repository carries the full license in its <code>LICENSE</code> file and a plain-language summary in <code>NOTICE.md</code>.</li>
+    <li><strong>Attribution:</strong> please credit both <em>VoteGA.org</em> and the original source named on each dataset (e.g. Open States, Congress.gov, the Georgia Secretary of State). A one-line credit works: <em>&ldquo;Data from VoteGA.org, licensed under CC BY-SA 4.0.&rdquo;</em></li>
     <li><strong>Verify upstream terms</strong> for anything you redistribute. Our license covers the compilation, cleaning, and joins we do &mdash; not the underlying facts, whose original sources may set their own reuse conditions that flow through to derived data.</li>
     <li><strong>Freshness &amp; schema:</strong> each dataset lists its update cadence above; field definitions and methodology live in <a href="{{ '/about-the-data' | relative_url }}">About the Data</a> and each repository's README.</li>
     <li><strong>No warranty:</strong> data is provided as is. Spotted an error? Open an issue on the relevant repository, or email <a href="mailto:admin@votega.org">admin@votega.org</a>.</li>
   </ul>
+  <p xmlns:cc="http://creativecommons.org/ns#">This work is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International</a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"></p>
   <p style="margin-bottom:0;"><strong>Have a dataset you'd like to see here?</strong> Let us know at <a href="mailto:admin@votega.org">admin@votega.org</a>.</p>
 </div>
