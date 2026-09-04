@@ -12,14 +12,10 @@
         </div>
       {% endif %}
       <p class="copyright text-muted">
-      {% if site.author %}
-        {{ site.author }}
-        &nbsp;&bull;&nbsp;
-      {% endif %}
-      {{ site.time | date: '%Y' }}
+      &copy;&nbsp;{{ site.time | date: '%Y' }}
 
       {% if site.url-pretty %}
-        &nbsp;&bull;&nbsp;
+        &nbsp;
         <span class="author-site">
           <a href="{% if site.url-canonical %}{{ site.url-canonical }}{% else %}{{ '/' | absolute_url }}{% endif %}">{{ site.url-pretty }}</a>
         </span>
