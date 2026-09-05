@@ -304,6 +304,7 @@
 </style>
 
 <script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/entity-news.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/candidate-claims.js' | relative_url }}"></script>
 <script>
   const RACES_URL       = 'assets/data/races.json';
@@ -477,6 +478,11 @@
 
       <div id="campaignFinance" class="finance-section"></div>
 
+      <section id="entityNews" class="finance-section" hidden>
+        <h2>In the News</h2>
+        <div id="entityNewsBody"></div>
+      </section>
+
       <div class="back-link"><a href="${escHtmlGa(raceUrl)}">← Back to ${escHtmlGa(race.displayTitle || (race.chamber + distLabel))} race</a></div>`;
   }
 
@@ -487,6 +493,28 @@
   // This page renders most values unescaped via template literals; these finance
   // strings come from an external API, so escape them at the point of use.
   function escHtmlGa(value) { return VoteGA.escapeHtml(value); }
+
+  // Reveal the "In the News" section only if this candidate has tagged news
+  // items; otherwise leave it hidden (no empty box). See entity-news.js. This page
+  // has no tabs, so news is a stacked section like Campaign Finance.
+  async function loadEntityNews(candidate) {
+    const section = document.getElementById('entityNews');
+    const body = document.getElementById('entityNewsBody');
+    if (!section || !body || !window.EntityNews || !candidate) return;
+    try {
+      const { vgId, name, items } = await EntityNews.load({
+        candidateId: candidate.id,
+        bioguideId: candidate.existingMemberId || candidate.bioguideId,
+      });
+      if (!vgId || !items.length) return;  // stays hidden
+      body.innerHTML = EntityNews.renderCards(items, {
+        limit: 8, name: name, hubHref: EntityNews.hubHref(EntityNews.basePath(), vgId),
+      });
+      section.hidden = false;
+    } catch (e) {
+      if (window.console) console.warn('entity-news:', e);
+    }
+  }
 
   async function loadCampaignFinance(candidate, race) {
     const container = document.getElementById('campaignFinance');
@@ -821,6 +849,7 @@
 
       renderCandidate(candidate, race, race.activePhase);
       loadCampaignFinance(candidate, race);
+      loadEntityNews(candidate);
     } catch (err) {
       console.error(err);
       document.getElementById('candidateContent').innerHTML =
@@ -922,6 +951,7 @@
 
       renderCandidate(found, foundRace, foundPhase);
       loadCampaignFinance(found, foundRace);
+      loadEntityNews(found);
     } catch (err) {
       console.error(err);
       document.getElementById('candidateContent').innerHTML =

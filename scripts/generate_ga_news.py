@@ -541,7 +541,19 @@ def main():
             if not p:
                 continue
             url = resolve_entity_url(p, entity_urls)
-            entities[vg] = {"name": display_name((p.get("name") or {}).get("full")), "url": url}
+            # Carry the alt-ids so an entity page can reverse-map its own id
+            # (bioguideId / ocdPersonId / candidateId) -> vgId and pull just this
+            # person's news client-side. Only tagged people land here, so the map
+            # stays small. Omit null/empty id fields to keep it compact.
+            pids = p.get("ids") or {}
+            entry = {"name": display_name((p.get("name") or {}).get("full")), "url": url}
+            if pids.get("bioguideId"):
+                entry["bioguideId"] = pids["bioguideId"]
+            if pids.get("ocdPersonId"):
+                entry["ocdPersonId"] = pids["ocdPersonId"]
+            if pids.get("votegaCandidateIds"):
+                entry["candidateIds"] = pids["votegaCandidateIds"]
+            entities[vg] = entry
             if url:
                 linked += 1
 

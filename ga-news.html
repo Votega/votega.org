@@ -102,6 +102,10 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
     </aside>
 
     <main>
+      <div id="gn-entity-banner" hidden style="margin-bottom:0.6rem;padding:0.5rem 0.75rem;background:var(--gn-accent-w);border:1px solid var(--gn-accent);border-radius:8px;font-size:0.9rem;">
+        Showing news about <b id="gn-entity-name"></b>.
+        <a id="gn-entity-clear" href="#" style="margin-left:0.5rem;color:var(--gn-accent);font-weight:600;">← All Georgia news</a>
+      </div>
       <div class="count" id="gn-count" hidden><b id="gn-shown">0</b> of <b id="gn-total">0</b> stories</div>
       <div class="state" id="gn-loading">Loading Georgia political news…</div>
       <div id="gn-feed"></div>
@@ -127,7 +131,7 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
     budget: 'Budget', courts: 'Courts', education: 'Education', healthcare: 'Healthcare'
   };
 
-  var state = { q: '', topics: new Set(), sources: new Set() };
+  var state = { q: '', topics: new Set(), sources: new Set(), entity: null };
   var DATA = null;
 
   var el = function (id) { return document.getElementById(id); };
@@ -170,6 +174,7 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
   }
 
   function matches(it) {
+    if (state.entity && (it.entityIds || []).indexOf(state.entity) === -1) return false;
     if (state.topics.size && !(it.topics || []).some(function (t) { return state.topics.has(t); })) return false;
     if (state.sources.size && !state.sources.has(it.source)) return false;
     if (state.q) {
@@ -237,6 +242,28 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
     render();
   });
 
+  function setEntity(vgId) {
+    var banner = el('gn-entity-banner');
+    if (vgId && DATA && DATA.entities && DATA.entities[vgId]) {
+      state.entity = vgId;
+      el('gn-entity-name').textContent = DATA.entities[vgId].name || 'this official';
+      banner.hidden = false;
+    } else {
+      state.entity = null;
+      banner.hidden = true;
+    }
+  }
+  function applyEntityParam() {
+    var p = new URLSearchParams(window.location.search).get('entity');
+    if (p) setEntity(p);
+  }
+  el('gn-entity-clear').addEventListener('click', function (e) {
+    e.preventDefault();
+    setEntity(null);
+    history.replaceState(null, '', window.location.pathname);
+    render();
+  });
+
   fetch(DATA_URL)
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) {
@@ -249,6 +276,7 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
         if (!isNaN(d)) el('gn-updated').textContent = 'Updated ' + d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) + '. ';
       }
       buildFilters();
+      applyEntityParam();
       render();
     })
     .catch(function (err) {

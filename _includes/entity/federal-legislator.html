@@ -342,6 +342,7 @@
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/entity-news.js' | relative_url }}"></script>
 <script>
   const DEBUG = false;
 
@@ -416,6 +417,7 @@
       loadKeyVotes(member);
       loadSponsoredLegislation(member);
       loadVotingHistory(member);
+      loadEntityNews(member);
       if (window.location.hash) {
         const target = document.getElementById(window.location.hash.slice(1));
         if (target) target.scrollIntoView({ behavior: 'smooth' });
@@ -584,6 +586,25 @@
     if (!el || !member || !member.bioguideId) return;
     const ids = await getTradeMemberIds();
     if (ids.has(member.bioguideId)) el.hidden = false;
+  }
+
+  // Reveal the "In the News" tab only if this member has tagged news items;
+  // otherwise remove the tab + panel entirely (no empty box). See entity-news.js.
+  async function loadEntityNews(member) {
+    const btn = document.querySelector('.tab-btn[data-tab="entityNews"]');
+    const panel = document.getElementById('entityNews');
+    if (!btn || !panel || !window.EntityNews || !member) return;
+    try {
+      const { vgId, name, items } = await EntityNews.load({ bioguideId: member.bioguideId });
+      if (!vgId || !items.length) { btn.remove(); panel.remove(); return; }
+      panel.innerHTML = EntityNews.renderCards(items, {
+        limit: 8, name: name, hubHref: EntityNews.hubHref(getBasePath(), vgId),
+      });
+      btn.hidden = false;
+    } catch (e) {
+      btn.remove(); panel.remove();
+      if (window.console) console.warn('entity-news:', e);
+    }
   }
 
   function getMemberName(m) {
@@ -1278,11 +1299,13 @@
           <button class="tab-btn" data-tab="votingHistory">Voting History</button>
           <button class="tab-btn" data-tab="sponsoredLegislation">Sponsored Legislation</button>
           ${state === 'Georgia' ? `<button class="tab-btn" data-tab="campaignFinance">Campaign Finance</button>` : ''}
+          <button class="tab-btn" data-tab="entityNews" hidden>In the News</button>
         </div>
         <div id="keyVotes" class="tab-panel active"></div>
         <div id="votingHistory" class="tab-panel"></div>
         <div id="sponsoredLegislation" class="tab-panel"></div>
         ${state === 'Georgia' ? `<div id="campaignFinance" class="tab-panel"></div>` : ''}
+        <div id="entityNews" class="tab-panel"></div>
       </div>
     `;
     detailsDiv.innerHTML = html;

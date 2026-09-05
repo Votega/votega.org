@@ -316,6 +316,7 @@
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/entity-news.js' | relative_url }}"></script>
 <script>
   const DATA_URL  = getBasePath() + 'assets/data/ga-members.json';
   const RACES_URL = getBasePath() + 'assets/data/races.json';
@@ -459,6 +460,7 @@
       loadCampaignFinance(member, seatRace);
       loadCuratedBills(member);
       loadVotingHistory(member, all);
+      loadEntityNews(member);
       if (window.location.hash) {
         switchTab(window.location.hash.slice(1), false);
         const target = document.getElementById(window.location.hash.slice(1));
@@ -536,6 +538,25 @@
     if (hits.length === 1) return { status: 'ok', filer: data.filers[hits[0]] };
     if (hits.length > 1)  return { status: 'ambiguous', filer: null };
     return { status: 'none', filer: null };
+  }
+
+  // Reveal the "In the News" tab only if this legislator has tagged news items;
+  // otherwise remove the tab + panel entirely (no empty box). See entity-news.js.
+  async function loadEntityNews(member) {
+    const btn = document.querySelector('.tab-btn[data-tab="entityNews"]');
+    const panel = document.getElementById('entityNews');
+    if (!btn || !panel || !window.EntityNews || !member) return;
+    try {
+      const { vgId, name, items } = await EntityNews.load({ ocdPersonId: member.id });
+      if (!vgId || !items.length) { btn.remove(); panel.remove(); return; }
+      panel.innerHTML = EntityNews.renderCards(items, {
+        limit: 8, name: name, hubHref: EntityNews.hubHref(getBasePath(), vgId),
+      });
+      btn.hidden = false;
+    } catch (e) {
+      btn.remove(); panel.remove();
+      if (window.console) console.warn('entity-news:', e);
+    }
   }
 
   async function loadCampaignFinance(member, seatRace) {
@@ -749,10 +770,12 @@
           <button class="tab-btn tab-active" data-tab="curatedBills" onclick="switchTab('curatedBills')">Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory" onclick="switchTab('votingHistory')">Voting History</button>
           <button class="tab-btn" data-tab="campaignFinance" onclick="switchTab('campaignFinance')">Campaign Finance</button>
+          <button class="tab-btn" data-tab="entityNews" onclick="switchTab('entityNews')" hidden>In the News</button>
         </div>
         <div id="curatedBills" class="tab-panel"></div>
         <div id="votingHistory" class="tab-panel" style="display:none;"></div>
         <div id="campaignFinance" class="tab-panel" style="display:none;"></div>
+        <div id="entityNews" class="tab-panel" style="display:none;"></div>
       </div>
     `;
     // Tab bar is built here, after load — re-run the ARIA enhancer over it.
