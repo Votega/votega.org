@@ -31,6 +31,13 @@ The crosswalk mixes name formats ("Brian Kemp" vs "Warnock, Raphael G."); this
 reads name.first / name.last when present and only parses `full` as a fallback,
 so a federal member's surname is not mistaken for their initial.
 
+Official press-release feeds (a feed with an `entity` key in news_sources.yml)
+are the one exception to name-only tagging: every item from an official's own
+feed is force-tagged to that person by their crosswalk id, because a release
+("Statement on the farm bill") often never names its author. The `entity` value
+may be a vgId, a federal member's bioguideId, or a state person's ocdPersonId;
+name-matching still runs on top to catch anyone else the item mentions.
+
 Usage:
     python scripts/generate_ga_news.py [output.json] [overrides.json]
 """
@@ -181,6 +188,45 @@ def build_entity_index(people):
         if len(holders) == 1 and len(persons) == 1:
             sole_bare.add(sk)
     return by_surname, sole_bare, indexed
+
+
+def build_id_index(people):
+    """Map any stable person id -> vgId, for resolving a feed's `entity` binding.
+
+    Accepts the id forms news_sources.yml is allowed to reference: the vgId
+    itself, a federal member's bioguideId, or a state person's ocdPersonId. A
+    feed keyed on any of these force-tags every item it yields to that person
+    (see resolve_feed_entity), which is how an official's own press releases get
+    attributed even when the headline never names them.
+    """
+    index = {}
+    for p in people:
+        vg = p.get("vgId")
+        if not vg:
+            continue
+        index[vg] = vg
+        ids = p.get("ids") or {}
+        for key in ("bioguideId", "ocdPersonId"):
+            val = ids.get(key)
+            if val:
+                index[val] = vg
+    return index
+
+
+def resolve_feed_entity(feed, id_index):
+    """The vgId a feed is bound to via its optional `entity` key, or None.
+
+    Prints a warning and returns None on an unknown reference so a stale binding
+    degrades to plain name-matching rather than silently tagging nothing.
+    """
+    ref = feed.get("entity")
+    if not ref:
+        return None
+    vg = id_index.get(ref)
+    if not vg:
+        print(f"  WARNING: feed '{feed.get('name')}' binds to unknown entity "
+              f"'{ref}' -- ignoring (check assets/data/id-crosswalk.json)")
+    return vg
 
 
 def match_entities(text_tokens, by_surname, sole_bare):
@@ -395,6 +441,7 @@ def main():
           f"({len(sole_bare)} bare-surname-eligible)\n")
 
     person_by_vgid = {p.get("vgId"): p for p in people if p.get("vgId")}
+    id_index = build_id_index(people)
     entity_urls = load_entity_urls()
     overrides = load_overrides()
 
@@ -403,7 +450,12 @@ def main():
 
     for feed in feeds:
         name, url = feed["name"], feed["url"]
-        ga_focused = bool(feed.get("ga_focused"))
+        bound_vgid = resolve_feed_entity(feed, id_index)
+        # An official's own feed is inherently GA-relevant, so a bound feed
+        # bypasses the ga_terms gate the same way an explicitly ga_focused one
+        # does -- a "Statement on the shutdown" release must not be dropped for
+        # never saying "Georgia".
+        ga_focused = bool(feed.get("ga_focused")) or bool(bound_vgid)
         raw = fetch_bytes(url, label=name)
         if raw is None:
             print(f"[{name}] fetch failed -- skipping")
@@ -428,6 +480,12 @@ def main():
 
             it["entityIds"] = [e["vgId"] for e in ents if e["vgId"]]
             it["entityNames"] = [e["name"] for e in ents]
+            # Force-tag the feed's bound official (their own press release),
+            # first and deduped, on top of anyone name-matched in the text.
+            if bound_vgid and bound_vgid not in it["entityIds"]:
+                it["entityIds"].insert(0, bound_vgid)
+                bp = person_by_vgid.get(bound_vgid)
+                it["entityNames"].insert(0, (bp.get("name") or {}).get("full") if bp else bound_vgid)
             it["topics"] = bucket_topics(text, topics)
 
             # Apply per-item overrides (add/replace tags).
