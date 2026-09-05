@@ -12,13 +12,19 @@ on:
   # only went live as a side effect of somebody committing something else, which
   # made freshness a function of how busy the maintainer was that week.
   #
-  # Daily at 13:00 UTC, after the last of the scheduled data workflows
-  # (update-search-corpus, 12:00). A `workflow_run` trigger would be tighter, but
-  # it matches on a hand-maintained list of workflow names — the same list that
-  # already let one workflow go unmonitored in notify-workflow-failure.yml. A
-  # cron cannot fall out of step with anything.
+  # Twice daily. A `workflow_run` trigger would be tighter, but it matches on a
+  # hand-maintained list of workflow names — the same list that already let one
+  # workflow go unmonitored in notify-workflow-failure.yml. A cron cannot fall
+  # out of step with anything.
+  #   13:00 UTC — after the last of the morning data workflows (update-search-
+  #               corpus, 12:00), so their commits go live.
+  #   23:00 UTC — after the 22:00 UTC evening executive-orders re-fetch, so EOs
+  #               posted during today's GA business day are deployed the same
+  #               day instead of waiting for tomorrow's 13:00 run. Also picks up
+  #               anything else committed since 13:00.
   schedule:
     - cron: '0 13 * * *'
+    - cron: '0 23 * * *'
 
 permissions:
   contents: read
