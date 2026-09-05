@@ -56,16 +56,47 @@ places:
           Newton County Recreation Commission: 9
           Planning Commission: 5
           Solid Waste Authority: 6
+        # Curated recurring schedule shown as a "When they meet" note on the page.
+        # Fill `when:` (and optional `location:`) for each body. Blank entries are
+        # hidden; the whole note disappears if none are filled. Not scraped — confirm
+        # against the county's posted notices and update when they change.
+        schedule:
+          - body: Board of Commissioners
+            when: "1st & 3rd Tuesday, 7:00 p.m."
+            location: "Historic Courthouse, 1124 Clark Street, Covington"
+          # - body: Planning Commission
+          #  when: "4th Tuesday of every month, 7:00 p.m."
+          #  location: "3rd Floor Boardroom, Historic Courthouse, 1124 Clark Street, Covington"
+          # - body: Board of Zoning Appeals
+          #  when: "4th Thursday of every month, 7:00 p.m."
+          #  location: "3rd Floor Boardroom, Historic Courthouse, 1124 Clark Street, Covington"
+          # - body: Newton County Recreation Commission
+          #   when: ""
+          # - body: Solid Waste Authority
+          #  when: "2nd Thursday of every month, 5:30 p.m."
+          #  location: "Commissioners' Boardroom, Historic Courthouse, 1124 Clark Street, Covington"
+          - body: Board of Elections
+            when: "2nd Monday of every month, 4:00 p.m."
+            location: "Board of Elections Office, 1113 Usher Street, Suite 103, Covington"
 
-  # Cities onboarded officials-first: rosters live in _data/local_officials.yml
-  # (slug == jurisdiction id). No meetings adapter yet — Covington is CoreCode,
-  # pending that adapter; add a `domains.meetings` block when ready.
   - slug: covington
     name: City of Covington
     type: city
     fips: null
     parentCounty: newton
     region: Metro Atlanta
+    domains:
+      meetings:
+        # CoreCode CMS: a flat council-meetings table (minutes PDFs + Vimeo
+        # recordings; no agendas published). See scripts/lib/corecode.py.
+        platform: corecode
+        base_url: https://www.cityofcovington.org
+        meetings_path: "/index.php?section=Council-Meetings"
+        # Fill `when:` to show a "When they meet" note (see Newton for the shape).
+        schedule:
+          - body: City Council
+            when: "1st and 3rd Monday, 6:30 p.m."
+            location: "Council Room, 2116 Stallings Street, Covington"
 
   - slug: carrollton
     name: City of Carrollton

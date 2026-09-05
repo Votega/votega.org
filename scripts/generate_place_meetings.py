@@ -35,6 +35,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.civicplus import fetch_agenda_center  # noqa: E402
+from lib.corecode import fetch_council_meetings, DEFAULT_MEETINGS_PATH  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -54,17 +55,23 @@ def _norm(name):
 def fetch_meetings(cfg):
     """Dispatch on platform. Returns (meetings, bodies_seen) or (None, None)."""
     platform = cfg.get('platform')
+    base = cfg['base_url'].rstrip('/')
     if platform == 'civicplus':
-        return fetch_agenda_center(cfg['base_url'].rstrip('/'),
-                                   module_id=cfg.get('agenda_module_id', 65))
-    # corecode (Covington) and others land here as they are built.
+        return fetch_agenda_center(base, module_id=cfg.get('agenda_module_id', 65))
+    if platform == 'corecode':
+        return fetch_council_meetings(
+            base, path=cfg.get('meetings_path', DEFAULT_MEETINGS_PATH))
     raise ValueError('unknown meetings platform %r' % platform)
 
 
 def source_url(cfg):
-    if cfg.get('platform') == 'civicplus':
-        return '%s/AgendaCenter' % cfg['base_url'].rstrip('/')
-    return cfg.get('base_url')
+    base = cfg['base_url'].rstrip('/')
+    platform = cfg.get('platform')
+    if platform == 'civicplus':
+        return '%s/AgendaCenter' % base
+    if platform == 'corecode':
+        return base + cfg.get('meetings_path', DEFAULT_MEETINGS_PATH)
+    return base
 
 
 def build_place(place):

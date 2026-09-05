@@ -81,8 +81,11 @@ def check_place(place, min_meetings, sample, network):
             errors.append('%s: body missing' % where)
         if not DATE_RE.match(m.get('date') or ''):
             errors.append('%s: bad date %r' % (where, m.get('date')))
-        if not (m.get('agendaUrl') or m.get('minutesUrl')):
-            errors.append('%s: no agenda or minutes URL' % where)
+        # A meeting is a usable record if it links ANY artifact. Most platforms
+        # publish agendas/minutes; CoreCode (Covington) publishes minutes + video
+        # only, and the newest meetings may have just the video until minutes post.
+        if not (m.get('agendaUrl') or m.get('minutesUrl') or m.get('videoUrl')):
+            errors.append('%s: no agenda, minutes, or video URL' % where)
 
     present = {_norm(b) for b in (bodies or [])}
     for b in (cfg.get('bodies') or {}):

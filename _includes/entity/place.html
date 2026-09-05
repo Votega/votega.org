@@ -56,6 +56,18 @@
   .cm-upcoming .cm-date { color: #1b5e20; }
   #cmSource { margin-top: 1.5rem; font-size: 0.8rem; color: #888; }
 
+  /* "When they meet" — curated recurring schedule from _data/places.yml. */
+  .cm-schedule {
+    background: #f5f8fd; border: 1px solid #dbe6f5; border-left: 4px solid #1a56a8;
+    border-radius: 6px; padding: 0.85rem 1rem; margin: 1rem 0 0.5rem; font-size: 0.9rem;
+  }
+  .cm-schedule > strong { display: block; margin-bottom: 0.4rem; color: #1a4d94; }
+  .cm-schedule ul { margin: 0; padding-left: 1.1rem; }
+  .cm-schedule li { margin: 0.15rem 0; }
+  .cm-sched-body { font-weight: 600; }
+  .cm-sched-loc { color: #666; }
+  .cm-sched-note { margin: 0.5rem 0 0; font-size: 0.78rem; color: #777; }
+
   /* Officials domain — the precedence section, server-rendered above meetings. */
   .po-section { margin: 1.5rem 0 2.5rem; }
   .po-heading { font-size: 1.15rem; color: #333; border-bottom: 2px solid #eee; padding-bottom: 0.3rem; }
@@ -152,9 +164,33 @@
   <h2 class="po-heading" style="margin-top: 2rem;">Public meetings</h2>
   <p class="place-intro">
     Public meeting agendas, minutes, and video for {{ e.name }}, aggregated from the
-    government's official Agenda Center. Each link opens the document or recording on
-    that site. Minutes appear once a meeting has been held and approved.
+    government's official website. Each link opens the document or recording on that
+    site. Minutes appear once a meeting has been held and approved.
   </p>
+
+  {%- comment %} "When they meet" — curated recurring schedule from _data/places.yml
+      (domains.meetings.schedule). Entries with a blank `when` are skipped; the note
+      is omitted entirely if none are filled in. {% endcomment -%}
+  {% assign place = site.data.places.places | where: "slug", e.slug | first %}
+  {% assign schedule = place.domains.meetings.schedule %}
+  {% assign sched_shown = 0 %}
+  {% for s in schedule %}{% if s.when and s.when != "" %}{% assign sched_shown = sched_shown | plus: 1 %}{% endif %}{% endfor %}
+  {% if sched_shown > 0 %}
+  <div class="cm-schedule">
+    <strong>When they meet</strong>
+    <ul>
+      {% for s in schedule %}{% if s.when and s.when != "" %}
+      <li><span class="cm-sched-body">{{ s.body }}</span> — {{ s.when }}{% if s.location and s.location != "" %} <span class="cm-sched-loc">&middot; {{ s.location }}</span>{% endif %}</li>
+      {% endif %}{% endfor %}
+    </ul>
+    <p class="cm-sched-note">
+      Schedules are provided as a guide and can change — holidays and special called
+      meetings may differ. Confirm on the
+      <a href="{{ place.domains.meetings.base_url }}" target="_blank" rel="noopener">official site</a>.
+    </p>
+  </div>
+  {% endif %}
+
   <div id="cmControls" class="cm-controls" hidden>
     <div class="cm-pills" id="cmPills"></div>
     <label class="cm-toggle"><input type="checkbox" id="cmMinutesOnly"> Minutes available only</label>
