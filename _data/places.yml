@@ -98,6 +98,21 @@ places:
             when: "1st and 3rd Monday, 6:30 p.m."
             location: "Council Room, 2116 Stallings Street, Covington"
 
+  # CivicClerk prototype (JSON API, not HTML). Douglas is on the newer CivicPlus
+  # platform whose Agenda Center is JS-rendered — the classic civicplus adapter
+  # gets nothing, so meetings come from the CivicClerk OData API instead. Same
+  # adapter will cover Cobb, Henry, and other GA CivicClerk counties.
+  - slug: douglas
+    name: Douglas County
+    type: county
+    fips: "13097"
+    parentCounty: null
+    region: Metro Atlanta
+    domains:
+      meetings:
+        platform: civicclerk
+        subdomain: douglascountyga
+
   - slug: carrollton
     name: City of Carrollton
     type: city
