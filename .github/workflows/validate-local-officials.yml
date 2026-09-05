@@ -1,0 +1,35 @@
+name: Validate local officials
+
+# Officials is the hand-curated, no-API domain, so this validator is its only
+# automated guard. It also cross-checks _data/places.yml (jurisdiction id must
+# equal a place slug), so a change to EITHER file re-runs it.
+on:
+  push:
+    paths:
+      - '_data/local_officials.yml'
+      - '_data/places.yml'
+      - 'scripts/validate_local_officials.py'
+  pull_request:
+    paths:
+      - '_data/local_officials.yml'
+      - '_data/places.yml'
+      - 'scripts/validate_local_officials.py'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate local_officials.yml
+        run: python scripts/validate_local_officials.py

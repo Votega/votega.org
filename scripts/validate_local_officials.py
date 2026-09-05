@@ -16,6 +16,7 @@ from datetime import date
 import yaml
 
 DATA_PATH = "_data/local_officials.yml"
+PLACES_PATH = "_data/places.yml"
 
 VALID_TYPES = {"city", "county"}
 VALID_ROLES = {
@@ -174,6 +175,44 @@ def validate_jurisdiction(index, juris, seen_ids):
         validate_member(juris_id, i, member, partisan)
 
 
+def load_places():
+    """Return {slug: place} from the places registry, or None if it is absent.
+
+    Officials is a DOMAIN of a place: a jurisdiction's `id` must equal a place
+    `slug` (the join key the hub renders on). Absent registry = skip the check."""
+    try:
+        with open(PLACES_PATH) as f:
+            pdata = yaml.safe_load(f)
+    except FileNotFoundError:
+        return None
+    if not isinstance(pdata, dict):
+        return {}
+    return {p.get("slug"): p for p in (pdata.get("places") or []) if isinstance(p, dict)}
+
+
+def cross_check_places(jurisdictions):
+    """Every jurisdiction id must map to a place slug, and types must agree —
+    this is what keeps _data/local_officials.yml and _data/places.yml from
+    silently drifting (e.g. `newton` vs `newton-county`) as places scale up."""
+    places = load_places()
+    if places is None:
+        warn("places", f"{PLACES_PATH} not found — skipping slug cross-check")
+        return
+    for juris in jurisdictions:
+        if not isinstance(juris, dict):
+            continue
+        jid = juris.get("id")
+        if jid not in places:
+            err(jid or "?", f"no matching place slug {jid!r} in {PLACES_PATH} — "
+                            f"officials must be onboarded as a place first "
+                            f"(see LOCAL-GOVERNMENT-IA.md)")
+            continue
+        ptype = places[jid].get("type")
+        jtype = juris.get("type")
+        if ptype and jtype and ptype != jtype:
+            err(jid, f"type {jtype!r} disagrees with place type {ptype!r} in {PLACES_PATH}")
+
+
 def main():
     try:
         with open(DATA_PATH) as f:
@@ -200,6 +239,8 @@ def main():
             err(f"jurisdictions[{i}]", "must be a mapping")
             continue
         validate_jurisdiction(i, juris, seen_ids)
+
+    cross_check_places(jurisdictions)
 
     if warnings:
         print(f"{len(warnings)} warning(s):")

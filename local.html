@@ -7,9 +7,10 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
 
 <h1>Georgia Local Government</h1>
 <p id="localIntro">
-  Public meetings, agendas, minutes, and video for Georgia counties and cities,
-  aggregated from each government's official site. Search or filter to find a
-  place, then open it to browse its meeting record.
+  Your local elected officials — city councils and county commissions — plus the public
+  meetings, agendas, and minutes for Georgia counties and cities, aggregated from each
+  government's official site. Search or filter to find a place, then open it to see who
+  represents you and browse its meeting record.
 </p>
 
 <style>
@@ -62,6 +63,9 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
 <div class="lh-grid" id="lhGrid">
   {%- for p in places %}
   {%- assign ptype = p.type | default: "county" %}
+  {%- comment %} Officials is a derived domain (slug == jurisdiction id) and leads the card. {% endcomment -%}
+  {%- assign hasOfficials = site.data.local_officials.jurisdictions | where: "id", p.slug | first %}
+  {%- assign hasMeetings = p.domains.meetings %}
   <a class="lh-card {{ ptype }}" href="{{ '/local/' | append: p.slug | append: '/' | relative_url }}"
      data-name="{{ p.name | downcase }}" data-type="{{ ptype }}">
     <div class="lh-name">{{ p.name }}</div>
@@ -70,8 +74,9 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
       {%- if p.region %}{{ p.region }}{% endif %}
     </div>
     <div class="lh-domains">
-      {%- if p.domains.meetings %}📅 Meetings{% endif %}
-      {%- unless p.domains %}Coming soon{% endunless %}
+      {%- if hasOfficials %}👥 Officials{% endif %}
+      {%- if hasMeetings %}{% if hasOfficials %} &middot; {% endif %}📅 Meetings{% endif %}
+      {%- unless hasOfficials or hasMeetings %}Coming soon{% endunless %}
     </div>
   </a>
   {%- endfor %}

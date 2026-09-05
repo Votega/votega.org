@@ -37,6 +37,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.join(ROOT, "assets", "data")
 ENTITIES_DIR = os.path.join(ROOT, "_entities")
 PLACES_PATH = os.path.join(ROOT, "_data", "places.yml")
+LOCAL_OFFICIALS_PATH = os.path.join(ROOT, "_data", "local_officials.yml")
 ENTITY_URLS_PATH = os.path.join(ROOT, "_data", "entity_urls.json")
 # Persisted {permalink: {"h": content-hash, "d": "YYYY-MM-DD"}} so a page's
 # last_modified_at only advances when its content actually changes. Restored from
@@ -100,7 +101,12 @@ def write_page(subdir, slug, front_matter, body):
         if isinstance(v, dict):
             lines.append(f"{k}:")
             for kk, vv in v.items():
-                lines.append(f"  {kk}: {yaml_quote(vv)}" if vv is not None else f"  {kk}: ")
+                if isinstance(vv, list):
+                    lines.append(f"  {kk}: [{', '.join(yaml_quote(x) for x in vv)}]")
+                elif vv is not None:
+                    lines.append(f"  {kk}: {yaml_quote(vv)}")
+                else:
+                    lines.append(f"  {kk}: ")
         else:
             lines.append(f"{k}: {v}")
     lines.append("---")
@@ -551,6 +557,15 @@ def build_places(records, urls, prior, new_state):
     with open(PLACES_PATH, encoding="utf-8") as fh:
         places = (yaml.safe_load(fh) or {}).get("places", [])
     by_slug = {p["slug"]: p for p in places}
+    # Officials is a derived domain: a place has it when a jurisdiction in
+    # local_officials.yml shares its slug (join key == slug == id). See
+    # LOCAL-GOVERNMENT-IA.md. It is the precedence domain, so it leads the list.
+    officials_slugs = set()
+    if os.path.exists(LOCAL_OFFICIALS_PATH):
+        with open(LOCAL_OFFICIALS_PATH, encoding="utf-8") as fh:
+            for j in (yaml.safe_load(fh) or {}).get("jurisdictions", []) or []:
+                if isinstance(j, dict) and j.get("id"):
+                    officials_slugs.add(j["id"])
     data_date = date.today().isoformat()  # registry is hand-edited; use today
 
     count = 0
@@ -562,14 +577,23 @@ def build_places(records, urls, prior, new_state):
         urls.setdefault("place", {})[slug] = permalink
 
         parent = by_slug.get(p.get("parentCounty") or "")
-        domains = sorted((p.get("domains") or {}).keys())
+        # Officials leads (precedence domain), then the configured adapter domains.
+        domains = (["officials"] if slug in officials_slugs else []) \
+            + sorted((p.get("domains") or {}).keys())
         fallback = _places_source_fallback(p)
 
         kind = "City" if ptype == "city" else "County"
-        share_title = f"{name}, Georgia — Public Meetings & Local Government"
-        desc = (f"Public meeting agendas, minutes, and video for {name}, Georgia. "
-                f"Board and commission meetings aggregated from the "
-                f"{'city' if ptype == 'city' else 'county'}'s official Agenda Center.")
+        has_officials = slug in officials_slugs
+        share_title = f"{name}, Georgia — Local Officials & Government"
+        if has_officials:
+            desc = (f"Elected officials, plus public meeting agendas and minutes, for "
+                    f"{name}, Georgia — who represents you locally, their seats, terms, "
+                    f"and next elections, with meetings aggregated from the "
+                    f"{'city' if ptype == 'city' else 'county'}'s official site.")
+        else:
+            desc = (f"Public meeting agendas, minutes, and video for {name}, Georgia. "
+                    f"Board and commission meetings aggregated from the "
+                    f"{'city' if ptype == 'city' else 'county'}'s official Agenda Center.")
 
         ld = json_ld({
             "@context": "https://schema.org", "@type": "GovernmentOrganization",
@@ -583,6 +607,7 @@ def build_places(records, urls, prior, new_state):
             "type": "place", "slug": slug, "placeType": ptype, "name": name,
             "parentCountySlug": (parent or {}).get("slug"),
             "parentCountyName": (parent or {}).get("name"),
+            "domains": domains,  # lets place.html branch server-side (officials/meetings)
         }
         lastmod = resolve_lastmod(
             permalink, {"e": entity, "t": share_title, "d": desc, "dom": domains},

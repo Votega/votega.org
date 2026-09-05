@@ -5,8 +5,9 @@
   finding 4.4.
 
   Internal links go through relative_url so a non-root deployment resolves them
-  (finding 4.9). local-officials.html is deliberately omitted — it is unlisted
-  on purpose while its data is built out.
+  (finding 4.9). Local officials now live inside the /local/ Government Hub
+  (officials are a place's precedence domain — see LOCAL-GOVERNMENT-IA.md), so
+  "Local Government" is the single listed destination for them.
 {%- endcomment -%}
 <nav class="footer-sitemap" aria-label="Site map">
   <div class="footer-sitemap-col">
@@ -35,6 +36,7 @@
   <div class="footer-sitemap-col">
     <h2 class="footer-sitemap-head">Government</h2>
     <ul>
+      <li><a href="{{ '/local/' | relative_url }}">Local Government</a></li>
       <li><a href="{{ '/ga-bills' | relative_url }}">GA Bill Tracker</a></li>
       <li><a href="{{ '/ga-majority-tracker' | relative_url }}">Majority Tracker</a></li>
       <li><a href="{{ '/ga-executive' | relative_url }}">GA Executive Offices</a></li>

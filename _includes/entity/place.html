@@ -55,6 +55,33 @@
   .cm-empty { color: #666; font-style: italic; padding: 0.8rem 0; }
   .cm-upcoming .cm-date { color: #1b5e20; }
   #cmSource { margin-top: 1.5rem; font-size: 0.8rem; color: #888; }
+
+  /* Officials domain — the precedence section, server-rendered above meetings. */
+  .po-section { margin: 1.5rem 0 2.5rem; }
+  .po-heading { font-size: 1.15rem; color: #333; border-bottom: 2px solid #eee; padding-bottom: 0.3rem; }
+  .po-intro { color: #333; line-height: 1.5; margin: 0.6rem 0 1.25rem; }
+  .po-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+  .po-card { border: 1px solid #ddd; border-radius: 10px; padding: 1.1rem; background: #fff;
+    display: flex; flex-direction: column; gap: 0.45rem; }
+  .po-card.is-presiding { border-color: #008AFF; box-shadow: 0 2px 10px rgba(0,138,255,0.10); }
+  .po-role { align-self: flex-start; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.03em;
+    text-transform: uppercase; color: #1a56a8; background: #f0f4ff; border-radius: 20px; padding: 0.15rem 0.6rem; }
+  .po-card.is-presiding .po-role { color: #fff; background: #008AFF; }
+  .po-name { font-size: 1.1rem; font-weight: 700; margin: 0; color: #333; }
+  .po-name .muted { color: #999; font-weight: 500; font-style: italic; }
+  .po-seat { font-size: 0.88rem; color: #555; margin: 0; }
+  .po-party { font-size: 0.72rem; font-weight: 600; border-radius: 20px; padding: 0.1rem 0.55rem; align-self: flex-start; }
+  .po-party.Republican { background: #fdeaea; color: #b91c1c; }
+  .po-party.Democratic { background: #e8f0fe; color: #1a56a8; }
+  .po-terms { font-size: 0.84rem; color: #444; margin: 0.1rem 0 0; line-height: 1.6; }
+  .po-terms .po-next { font-weight: 600; color: #1a56a8; }
+  .po-tiebreak { font-size: 0.78rem; color: #777; font-style: italic; margin: 0; }
+  .po-contact { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.2rem; font-size: 0.85rem; }
+  .po-contact a { color: #008AFF; font-weight: 600; }
+  .po-source { font-size: 0.75rem; margin-top: auto; }
+  .po-source a { color: #888; }
+  .po-meta { font-size: 0.85rem; color: #555; margin: 0.35rem 0 0; }
+  .po-meta a { color: #008AFF; font-weight: 600; }
 </style>
 
 <a class="back-link" href="{{ '/local/' | relative_url }}">&larr; All Georgia local governments</a>
@@ -67,13 +94,67 @@
   {%- endif %}
 </p>
 
-<p class="place-intro">
-  Public meeting agendas, minutes, and video for {{ e.name }}, aggregated from the
-  government's official Agenda Center. Each link opens the document or recording on
-  that site. Minutes appear once a meeting has been held and approved.
-</p>
+{%- comment %} Officials — the precedence domain: server-rendered above meetings,
+    matched to this place by slug == jurisdiction id in local_officials.yml. {% endcomment -%}
+{% assign juris = site.data.local_officials.jurisdictions | where: "id", e.slug | first %}
+{% assign role_order = "Mayor,Mayor Pro Tem,Chair,Vice Chair,Council Member,Commissioner" | split: "," %}
+{% if juris %}
+<section class="po-section" id="officials">
+  <h2 class="po-heading">Elected officials</h2>
+  <p class="po-intro">
+    Who represents {{ e.name }} on the {{ juris.body }}{% if juris.partisan == false %} (a nonpartisan body){% endif %} —
+    their seats, terms, and next elections. Each card links to the primary source it was verified against.
+  </p>
+  {% if juris.official_url != "" or juris.related_pages %}
+  <p class="po-meta">
+    {% if juris.official_url != "" %}<a href="{{ juris.official_url }}" target="_blank" rel="noopener">Official site ↗</a>{% endif %}
+    {% for rp in juris.related_pages %} &middot; <a href="{{ rp.url | relative_url }}">{{ rp.title }} →</a>{% endfor %}
+  </p>
+  {% endif %}
+  <div class="po-grid">
+    {% for role in role_order %}
+      {% for m in juris.members %}
+        {% if m.role == role %}
+        <div class="po-card{% if m.role == 'Mayor' or m.role == 'Chair' %} is-presiding{% endif %}">
+          <span class="po-role">{{ m.role }}</span>
+          <p class="po-name">{% if m.name and m.name != "" %}{{ m.name }}{% else %}<span class="muted">Name TBD</span>{% endif %}</p>
+          {% if m.seat and m.seat != "" %}<p class="po-seat">{{ m.seat }}</p>{% endif %}
+          {% if juris.partisan and m.party and m.party != "" and m.party != "Nonpartisan" %}
+            <span class="po-party {{ m.party }}">{{ m.party }}</span>
+          {% endif %}
+          {% if m.last_elected or m.next_election %}
+          <p class="po-terms">
+            {% if m.last_elected %}Last elected {{ m.last_elected }}{% endif %}
+            {% if m.next_election %}<br><span class="po-next">Next election {{ m.next_election }}</span>{% endif %}
+            {% if m.term_end %}<br>Term ends {{ m.term_end }}{% endif %}
+          </p>
+          {% endif %}
+          {% if m.tie_break_only %}<p class="po-tiebreak">Votes only to break ties</p>{% endif %}
+          {% if m.email != "" or m.phone != "" %}
+          <div class="po-contact">
+            {% if m.email != "" %}<a href="mailto:{{ m.email }}">Email</a>{% endif %}
+            {% if m.phone != "" %}<a href="tel:{{ m.phone }}">{{ m.phone }}</a>{% endif %}
+          </div>
+          {% endif %}
+          {% if m.source != "" %}<p class="po-source"><a href="{{ m.source }}" target="_blank" rel="noopener">Source ↗</a></p>{% endif %}
+        </div>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 
+{%- comment %} Meetings — the automated, self-healing domain, below officials.
+    Only rendered when the place actually declares a meetings adapter. {% endcomment -%}
+{% if e.domains contains 'meetings' %}
 <section id="cmMeetings">
+  <h2 class="po-heading" style="margin-top: 2rem;">Public meetings</h2>
+  <p class="place-intro">
+    Public meeting agendas, minutes, and video for {{ e.name }}, aggregated from the
+    government's official Agenda Center. Each link opens the document or recording on
+    that site. Minutes appear once a meeting has been held and approved.
+  </p>
   <div id="cmControls" class="cm-controls" hidden>
     <div class="cm-pills" id="cmPills"></div>
     <label class="cm-toggle"><input type="checkbox" id="cmMinutesOnly"> Minutes available only</label>
@@ -81,6 +162,7 @@
   <div id="cmContainer"><p id="cmLoading">Loading meetings&hellip;</p></div>
   <p id="cmSource"></p>
 </section>
+{% endif %}
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>

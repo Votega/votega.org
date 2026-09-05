@@ -1,0 +1,57 @@
+name: Report stale local officials (monthly)
+
+# Officials are hand-curated with no upstream API, so they never self-refresh
+# (unlike the weekly meetings scrape). This turns "remember to re-check after an
+# election" into a dated GitHub issue: report_stale_officials.py flags any roster
+# whose next_election has passed or whose last_reviewed is old, and this opens or
+# updates a single tracking issue with that worklist. It never edits data.
+permissions:
+  contents: read
+  issues: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 13 1 * *'  # 1st of each month, 13:00 UTC
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ISSUE_TITLE: 'Local officials: rosters due for re-verification'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Generate staleness report
+        run: python scripts/report_stale_officials.py | tee report.md
+
+      - name: Open or update the tracking issue
+        run: |
+          set -e
+          # Nothing due (report starts with the ✅ line) → don't nag; leave any
+          # open issue for a human to close once they've worked it.
+          if head -n1 report.md | grep -q '^✅'; then
+            echo "No rosters due — skipping issue."
+            exit 0
+          fi
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file report.md
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by report-stale-officials."
+          else
+            echo "Creating new tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file report.md
+          fi

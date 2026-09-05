@@ -20,9 +20,10 @@ before editing any JSON by hand; a hand edit will be overwritten on the next run
 | Daily | `update-current-members` (06:00), `update-ga-members` (07:00), `publish-races-to-ga-races-elections` (07:00), `refresh-general-placeholder` (07:30), `update-ga-executive-orders` (08:15) |
 | Tue & Thu | `update-curated-ga-bills` (08:00) &mdash; cron `0 8 * * 2,4`, **not** daily |
 | Weekly (Sun) | `update-ga-bills` (07:30), `update-fec-data` (08:00), `update-ga-campaign-finance` (08:30), `update-federal-votes` (09:00), `update-vp-tie-votes` (09:30), `update-presidential-laws` (09:45), `update-scotus-decisions` (10:00), `update-ga-congress-trades` (10:00) |
-| Weekly (Mon) | `update-ga-votes` (07:30) &mdash; cron `30 7 * * 1`, deliberately off the Sunday cluster |
+| Weekly (Mon) | `update-ga-votes` (07:30) &mdash; cron `30 7 * * 1`, deliberately off the Sunday cluster; `update-local-government` (08:40) &mdash; scrapes each place's meetings feed |
+| On push / PR (validators) | `validate-ga-overrides` (on `ga-members-overrides.json`); `validate-local-officials` (on `_data/local_officials.yml` **or** `_data/places.yml` &mdash; it cross-checks the slug join). (`sync-generated-data-on-pr` runs on every pull request.) |
 | On push to `main` | The five `publish-*` syncs each fire when the `assets/data/*.json` they mirror changes (and are also `workflow_dispatch`-able). `publish-races-to-ga-races-elections` additionally runs on the daily schedule above. |
-| Manual dispatch only | `validate-ga-overrides`, the `inspect-*` diagnostics. (`sync-generated-data-on-pr` runs on every pull request.) |
+| Manual dispatch only | the `inspect-*` diagnostics. |
 | Daily deploy | `deploy-pages` (13:00) &mdash; **also** on every push to `main`. It is not manual-only, and the schedule is load-bearing: see the note below. |
 
 > **A `publish-*` sync cannot see a bot's commit.** GitHub does not fire a `push`
@@ -108,6 +109,38 @@ Triggered by: election night, then again at certification.
 
 > **Do not** update a results CSV from an unofficial export once certified numbers exist —
 > replace it wholesale with the certified file instead.
+
+- [ ] **Local officials:** re-verify the roster of every affected place whose seats were on
+      the ballot (see §1b). Municipal terms turn over on their own cycle, so this is the main
+      recurring trigger for local-officials curation.
+
+---
+
+## 1b. Curating local officials (the one no-API dataset)
+
+Local officials (`_data/local_officials.yml`) is the only hand-curated dataset — there is **no
+upstream API**, so every field is human-verified against a primary source. It is the
+**precedence domain** of the `/local/` hub (renders above meetings on `/local/<slug>/`). The
+model is in [`LOCAL-GOVERNMENT-IA.md`](LOCAL-GOVERNMENT-IA.md); the goal here is to keep the
+manual effort small.
+
+**Onboarding a place (officials-first, one place per PR):**
+1. Add the place to [`_data/places.yml`](_data/places.yml) — officials needs no domain config;
+   the jurisdiction `id` you use below **must equal** the place `slug`.
+2. Draft the roster into `local_officials.yml`. Either **Track A (assisted):** have Claude Code
+   read the official site / SoS qualifying list and draft a schema-conformant block with a
+   `source:` URL per member; or **Track B (manual):** copy each value into the member skeleton
+   in the file header.
+3. `python scripts/validate_local_officials.py` (also enforced in CI by
+   `validate-local-officials`) — checks vocabularies, term sanity, and the slug↔id join.
+4. **Verification gate (don't skip):** in the PR, click every member's `source:` link and
+   confirm name / role / seat / party / term against it. Keep PRs to one place so this stays
+   quick.
+5. Merge, then bump `meta.last_reviewed`.
+
+**Staying fresh:** meetings self-heal weekly; officials do not. Re-verify after each municipal
+election (`meta.review_after_elections`). `scripts/report_stale_officials.py` lists jurisdictions
+whose `next_election` has passed or whose `last_reviewed` is stale, so the work surfaces itself.
 
 ---
 
