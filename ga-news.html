@@ -1,0 +1,260 @@
+---
+layout: default
+title: Georgia Politics in the News
+permalink: /ga-news.html
+share-description: "Headlines about Georgia's elected officials, candidates, and civic issues — aggregated from Georgia news outlets and linked to the source."
+---
+
+<style>
+  #ganews {
+    --gn-ink:      #1a2230;
+    --gn-muted:    #5b6675;
+    --gn-faint:    #8b95a4;
+    --gn-border:   #e2e6ec;
+    --gn-border-2: #d3d9e2;
+    --gn-panel:    #f7f8fa;
+    --gn-accent:   #1d4ed8;
+    --gn-accent-w: #eff4ff;
+    --gn-gold:     #b45309;
+    --t-elections: #7c3aed;
+    --t-ethics:    #b91c1c;
+    --t-surveillance: #0f766e;
+    --t-budget:    #a16207;
+    --t-courts:    #4338ca;
+    --t-education: #0369a1;
+    --t-healthcare:#be185d;
+  }
+  @media (prefers-color-scheme: dark) {
+    #ganews {
+      --gn-ink:#e7ecf3; --gn-muted:#9aa6b6; --gn-faint:#6b7686;
+      --gn-border:#263041; --gn-border-2:#313d50; --gn-panel:#161c26;
+      --gn-accent:#6ea0ff; --gn-accent-w:#17233b; --gn-gold:#e0a54a;
+      --t-elections:#b492f5; --t-ethics:#f0857e; --t-surveillance:#5ec6b8;
+      --t-budget:#e2b95c; --t-courts:#93a0f5; --t-education:#5aa9e6; --t-healthcare:#ef8bb3;
+    }
+  }
+
+  #ganews { color: var(--gn-ink); }
+  #ganews .masthead { border-bottom: 2px solid var(--gn-ink); padding-bottom: 0.8rem; margin-bottom: 0.3rem; }
+  #ganews .kicker { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gn-accent); font-weight: 700; }
+  #ganews .masthead p { margin: 0.4rem 0 0; color: var(--gn-muted); max-width: 60ch; font-size: 0.95rem; }
+
+  #ganews .layout { display: grid; grid-template-columns: 210px 1fr; gap: 2rem; margin-top: 1.4rem; align-items: start; }
+  @media (max-width: 760px) { #ganews .layout { grid-template-columns: 1fr; gap: 1.1rem; } }
+
+  #ganews .rail { display: flex; flex-direction: column; gap: 1.3rem; }
+  #ganews .search { width: 100%; padding: 0.55rem 0.7rem; border: 1px solid var(--gn-border-2); border-radius: 8px; background: var(--gn-panel); color: var(--gn-ink); font-size: 0.9rem; }
+  #ganews .search:focus { outline: 2px solid var(--gn-accent); outline-offset: 1px; border-color: var(--gn-accent); }
+  #ganews .facet h3, #ganews .rail label.lbl { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gn-faint); margin: 0 0 0.5rem; font-weight: 700; display: block; }
+  #ganews .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  #ganews .chip { font: inherit; font-size: 0.8rem; cursor: pointer; padding: 0.28rem 0.6rem; border-radius: 999px; border: 1px solid var(--gn-border-2); background: var(--gn-panel); color: var(--gn-muted); display: inline-flex; align-items: center; gap: 0.38rem; transition: all 0.12s; }
+  #ganews .chip:hover { border-color: var(--gn-accent); color: var(--gn-ink); }
+  #ganews .chip[aria-pressed="true"] { background: var(--gn-accent-w); border-color: var(--gn-accent); color: var(--gn-accent); font-weight: 600; }
+  #ganews .chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  #ganews .count { color: var(--gn-muted); font-size: 0.85rem; margin-bottom: 0.2rem; }
+  #ganews .count b { color: var(--gn-ink); font-variant-numeric: tabular-nums; }
+  #ganews .daylabel { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gn-faint); font-weight: 700; padding-bottom: 0.4rem; border-bottom: 1px solid var(--gn-border); margin: 1.3rem 0 0.2rem; }
+
+  #ganews .story { padding: 0.95rem 0; border-bottom: 1px solid var(--gn-border); }
+  #ganews .story-top { display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+  #ganews .source { font-size: 0.74rem; font-weight: 700; color: var(--gn-ink); }
+  #ganews .source::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--gn-accent); margin-right: 0.45rem; vertical-align: 1.5px; }
+  #ganews .time { font-size: 0.74rem; color: var(--gn-faint); font-variant-numeric: tabular-nums; }
+  #ganews .headline { font-family: Georgia, "Times New Roman", serif; font-size: 1.16rem; font-weight: 600; line-height: 1.28; margin: 0 0 0.3rem; }
+  #ganews .headline a { color: var(--gn-ink); text-decoration: none; border-bottom: 1.5px solid transparent; }
+  #ganews .headline a:hover { color: var(--gn-accent); border-bottom-color: var(--gn-accent); }
+  #ganews .snippet { color: var(--gn-muted); font-size: 0.9rem; margin: 0 0 0.5rem; max-width: 70ch; }
+  #ganews .story-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+  #ganews .tag { font-size: 0.72rem; padding: 0.16rem 0.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; white-space: nowrap; border: 1px solid transparent; }
+  #ganews a.tag.person { color: var(--gn-accent); background: var(--gn-accent-w); border-color: color-mix(in srgb, var(--gn-accent) 22%, transparent); }
+  #ganews a.tag.person:hover { border-color: var(--gn-accent); }
+  #ganews span.tag.person { color: var(--gn-muted); background: var(--gn-panel); border-color: var(--gn-border-2); }
+  #ganews .tag.topic { background: transparent; border-color: color-mix(in srgb, var(--tc) 40%, transparent); color: var(--tc); }
+  #ganews .tag.topic .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--tc); margin-right: 0.3rem; vertical-align: 1px; }
+
+  #ganews .empty, #ganews .state { padding: 2.2rem 1rem; text-align: center; color: var(--gn-muted); }
+  #ganews .footnote { margin-top: 2.2rem; padding-top: 1rem; border-top: 1px solid var(--gn-border); font-size: 0.78rem; color: var(--gn-faint); max-width: 74ch; }
+  #ganews .footnote a { color: var(--gn-accent); }
+</style>
+
+<div id="ganews">
+  <header class="masthead">
+    <div class="kicker">VoteGA · Newsroom</div>
+    <h1 style="margin:0.1rem 0 0;">Georgia Politics in the News</h1>
+    <p>Headlines about Georgia's elected officials, candidates, and civic issues — gathered from Georgia news outlets and linked straight to the source. VoteGA does not host article text.</p>
+  </header>
+
+  <div class="layout">
+    <aside class="rail">
+      <div>
+        <label class="lbl" for="gn-q">Search</label>
+        <input id="gn-q" class="search" type="search" placeholder="Person, topic, keyword…" autocomplete="off">
+      </div>
+      <div class="facet">
+        <h3>Topics</h3>
+        <div class="chips" id="gn-topicChips"></div>
+      </div>
+      <div class="facet">
+        <h3>Sources</h3>
+        <div class="chips" id="gn-sourceChips"></div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="count" id="gn-count" hidden><b id="gn-shown">0</b> of <b id="gn-total">0</b> stories</div>
+      <div class="state" id="gn-loading">Loading Georgia political news…</div>
+      <div id="gn-feed"></div>
+      <div class="empty" id="gn-empty" hidden>No stories match those filters. <button class="chip" id="gn-clear" style="margin-left:0.4rem">Clear filters</button></div>
+      <p class="footnote" id="gn-footnote" hidden>
+        Headlines and short excerpts are aggregated for civic information and link to the original publisher; VoteGA does not host article text.
+        Sources are a curated, published list. <span id="gn-updated"></span>
+        <a href="{{ '/about-the-data' | relative_url }}">About the data</a>.
+      </p>
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+  function getBasePath() {
+    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  }
+  var DATA_URL = getBasePath() + 'assets/data/ga-news.json';
+
+  var TOPIC_LABEL = {
+    elections: 'Elections', ethics: 'Ethics', surveillance: 'Surveillance',
+    budget: 'Budget', courts: 'Courts', education: 'Education', healthcare: 'Healthcare'
+  };
+
+  var state = { q: '', topics: new Set(), sources: new Set() };
+  var DATA = null;
+
+  var el = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+
+  function dayLabel(iso) {
+    if (!iso) return 'Undated';
+    var d = new Date(iso);
+    if (isNaN(d)) return 'Undated';
+    var now = new Date();
+    var startOf = function (x) { return new Date(x.getFullYear(), x.getMonth(), x.getDate()); };
+    var diff = Math.round((startOf(now) - startOf(d)) / 86400000);
+    if (diff <= 0) return 'Today';
+    if (diff === 1) return 'Yesterday';
+    if (diff < 7) return d.toLocaleDateString([], { weekday: 'long' });
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  }
+  function timeLabel(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+
+  function personTag(vgId) {
+    var e = (DATA.entities || {})[vgId];
+    if (!e) return '';
+    if (e.url) {
+      var href = getBasePath() + String(e.url).replace(/^\//, '');
+      return '<a class="tag person" href="' + esc(href) + '">' + esc(e.name) + '</a>';
+    }
+    return '<span class="tag person">' + esc(e.name) + '</span>';
+  }
+  function topicTag(t) {
+    var label = TOPIC_LABEL[t] || t;
+    return '<span class="tag topic" style="--tc:var(--t-' + esc(t) + ')"><span class="dot"></span>' + esc(label) + '</span>';
+  }
+
+  function matches(it) {
+    if (state.topics.size && !(it.topics || []).some(function (t) { return state.topics.has(t); })) return false;
+    if (state.sources.size && !state.sources.has(it.source)) return false;
+    if (state.q) {
+      var names = (it.entityIds || []).map(function (v) { return (DATA.entities[v] || {}).name || ''; }).join(' ');
+      var hay = (it.title + ' ' + it.snippet + ' ' + names + ' ' + (it.topics || []).join(' ')).toLowerCase();
+      if (hay.indexOf(state.q) === -1) return false;
+    }
+    return true;
+  }
+
+  function render() {
+    var list = (DATA.items || []).filter(matches);
+    el('gn-total').textContent = (DATA.items || []).length;
+    el('gn-shown').textContent = list.length;
+    el('gn-count').hidden = false;
+    el('gn-empty').hidden = list.length > 0;
+
+    var html = '', lastDay = null;
+    list.forEach(function (it) {
+      var dl = dayLabel(it.publishedAt);
+      if (dl !== lastDay) { html += '<div class="daylabel">' + esc(dl) + '</div>'; lastDay = dl; }
+      var people = (it.entityIds || []).map(personTag).join('');
+      var topics = (it.topics || []).map(topicTag).join('');
+      var tags = (people + topics) ? '<div class="story-tags">' + people + topics + '</div>' : '';
+      html += '<article class="story">' +
+        '<div class="story-top"><span class="source">' + esc(it.source) + '</span>' +
+        (timeLabel(it.publishedAt) ? '<span class="time">' + esc(timeLabel(it.publishedAt)) + '</span>' : '') + '</div>' +
+        '<h2 class="headline"><a href="' + esc(it.url) + '" target="_blank" rel="noopener nofollow">' + esc(it.title) + '</a></h2>' +
+        (it.snippet ? '<p class="snippet">' + esc(it.snippet) + '</p>' : '') +
+        tags + '</article>';
+    });
+    el('gn-feed').innerHTML = html;
+  }
+
+  function chip(container, label, value, key, dotVar) {
+    var b = document.createElement('button');
+    b.className = 'chip';
+    b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = (dotVar ? '<span class="dot" style="background:var(' + dotVar + ')"></span>' : '') + esc(label);
+    b.addEventListener('click', function () {
+      var set = state[key];
+      if (set.has(value)) { set.delete(value); b.setAttribute('aria-pressed', 'false'); }
+      else { set.add(value); b.setAttribute('aria-pressed', 'true'); }
+      render();
+    });
+    container.appendChild(b);
+  }
+
+  function buildFilters() {
+    var tc = el('gn-topicChips');
+    var present = {};
+    (DATA.items || []).forEach(function (it) { (it.topics || []).forEach(function (t) { present[t] = true; }); });
+    Object.keys(TOPIC_LABEL).forEach(function (t) {
+      if (present[t]) chip(tc, TOPIC_LABEL[t], t, 'topics', '--t-' + t);
+    });
+    var sc = el('gn-sourceChips');
+    ((DATA.metadata && DATA.metadata.sources) || []).forEach(function (s) { chip(sc, s, s, 'sources', null); });
+  }
+
+  el('gn-q').addEventListener('input', function (e) { state.q = e.target.value.trim().toLowerCase(); render(); });
+  el('gn-clear').addEventListener('click', function () {
+    state.q = ''; state.topics.clear(); state.sources.clear();
+    el('gn-q').value = '';
+    document.querySelectorAll('#ganews .chip').forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
+    render();
+  });
+
+  fetch(DATA_URL)
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (data) {
+      DATA = data;
+      el('gn-loading').hidden = true;
+      el('gn-footnote').hidden = false;
+      var gen = data.metadata && data.metadata.generatedAt;
+      if (gen) {
+        var d = new Date(gen);
+        if (!isNaN(d)) el('gn-updated').textContent = 'Updated ' + d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) + '. ';
+      }
+      buildFilters();
+      render();
+    })
+    .catch(function (err) {
+      el('gn-loading').innerHTML = 'News data is temporarily unavailable. ' +
+        '<a href="' + esc(getBasePath()) + '">Return home</a>.';
+      if (window.console) console.error('ga-news:', err);
+    });
+})();
+</script>

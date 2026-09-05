@@ -1,0 +1,8 @@
+{
+  "_comment": "Manual corrections for the GA news hub, applied by generate_ga_news.py. This is an editorial control surface for a public aggregator.",
+  "_howto": {
+    "_suppress": "Array of item ids (12-char sha1 prefix from ga-news.json) OR url substrings to drop entirely (spam, off-topic, or a source's non-news item).",
+    "per-item patch": "A top-level key = an item id; value = { entityIds: [...], topics: [...] } to REPLACE the auto-detected tags on that item (e.g. fix a missed or wrong entity match)."
+  },
+  "_suppress": []
+}

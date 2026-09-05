@@ -1,0 +1,80 @@
+# Curated feeds for the Georgia political news hub.
+# Consumed at build time by scripts/generate_ga_news.py -> assets/data/ga-news.json.
+#
+# Source policy (see CLAUDE.md "checked, not trusted"): this list is the audit
+# surface for what the hub aggregates. Only headlines + a short excerpt are stored
+# and every card links to the publisher; VoteGA never hosts article text.
+#
+# Google News RSS is deliberately NOT used: its feed is licensed "solely for...
+# a personal feed reader for personal, non-commercial use", which does not fit a
+# public site. Direct outlet + official feeds are the legally-safe base.
+#
+# Each feed:
+#   name        display name shown on the card
+#   url         RSS/Atom feed
+#   type        outlet | official
+#   ga_focused  true  -> feed is wholly GA politics; keep every item
+#               false -> general feed; apply the GA-relevance gate (drops national
+#                        wire copy, e.g. the States Newsroom syndication that makes
+#                        up ~1/3 of the Georgia Recorder feed)
+feeds:
+  - name: Georgia Recorder
+    url: https://georgiarecorder.com/feed/
+    type: outlet
+    ga_focused: false
+  - name: Capitol Beat
+    url: https://capitol-beat.org/feed/
+    type: outlet
+    ga_focused: true
+  - name: The Current GA
+    url: https://thecurrentga.org/feed/
+    type: outlet
+    ga_focused: false
+  - name: GPB News
+    url: https://www.gpb.org/rss.xml
+    type: outlet
+    ga_focused: false
+  # Rough Draft Atlanta (roughdraftatlanta.com/feed/) is behind Cloudflare bot
+  # protection and returns 403 "Just a moment..." to a server-side fetch, so it is
+  # not included. Revisit if a fetchable feed URL becomes available.
+  - name: GA Secretary of State
+    url: https://sos.ga.gov/rss.xml
+    type: official
+    ga_focused: true
+
+# Extra GA-relevance signals (place names, institutions) beyond a matched entity.
+# An item from a non-ga_focused feed is kept only if it names a GA politician OR
+# contains one of these.
+ga_terms:
+  - georgia
+  - atlanta
+  - savannah
+  - augusta
+  - macon
+  - columbus
+  - athens
+  - cobb county
+  - gwinnett
+  - dekalb
+  - fulton county
+  - chatham
+  - clayton county
+  - general assembly
+  - gold dome
+  - peach state
+  - buckhead
+  - marietta
+  - sandy springs
+  - valdosta
+  - gainesville
+
+# Topic buckets: topic slug -> regex, matched case-insensitively on title+snippet.
+# Single-quoted so YAML preserves the backslashes.
+topics:
+  elections:    '\b(elect|ballot|voter|\bvote|primary|runoff|campaign|candidat|\bpoll|redistrict|\brace\b)'
+  ethics:       '\b(ethic|corrupt|indict|disclosure|conflict of interest|bribe|subpoena)'
+  surveillance: '\b(flock|surveillance|license[- ]plate|\bcamera|privacy|data broker|facial recogn)'
+  budget:       '\b(budget|\btax|revenue|spending|appropriat|surplus)'
+  courts:       '\b(court|lawsuit|\bjudge|ruling|appeal|justice|\bsue[ds]?\b|litigat|verdict)'
+  education:    '\b(school|student|teacher|education|university|college|classroom|curriculum)'
+  healthcare:   '\b(medicaid|\bhealth|hospital|\baca\b|insurance|abortion|maternal)'

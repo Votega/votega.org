@@ -1,0 +1,63 @@
+name: Update GA political news (every 3 hours)
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every 3 hours, on the hour.
+    - cron: '0 */3 * * *'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Generate GA news data
+        run: python scripts/generate_ga_news.py assets/data/ga-news.json
+
+      - name: Validate generated data
+        # Absolute floor only, deliberately: individual feeds sit behind
+        # Cloudflare bot protection and intermittently 403 a datacenter runner,
+        # so a per-source or tight delta check would fail the build on a healthy
+        # day. 20 is well under a normal run (~65) but proves the aggregate did
+        # not collapse to a single surviving feed.
+        run: |
+          python scripts/validate_data_update.py assets/data/ga-news.json \
+            --metric items=metadata.count \
+            --metric entities=len:entities \
+            --min items=20
+
+      - name: Commit and push generated data
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/ga-news.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update GA political news data"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
+          fi

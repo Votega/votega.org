@@ -376,6 +376,22 @@ A small number of candidates cannot be resolved this way. Usually because the ba
 
 ---
 
+## Political News in the News
+
+**Sources:** A curated list of Georgia news outlets' public RSS feeds (maintained in [`_data/news_sources.yml`](https://github.com/Votega/votega.org/blob/main/_data/news_sources.yml)).
+
+The [Georgia Politics in the News](/ga-news.html) page gathers recent headlines about Georgia's elected officials, candidates, and civic issues from Georgia news publishers.
+
+**What we store, and what we don't.** We keep only a headline, a short excerpt (up to 200 characters) from the feed's own summary, the publisher's name, and a link to the original article. **VoteGA does not host or reproduce article text** — every headline links straight to the publisher's own page, where the reporting lives.
+
+**How stories are tagged.** Each item is scanned for mentions of Georgia politicians and matched to their VoteGA profile only when the reference is unambiguous — a full "First Last" name, or a bare surname for a small set of nationally-covered figures (U.S. senators, U.S. representatives, and statewide executives). When a mention is ambiguous, we leave it untagged rather than risk attributing a story to the wrong person. Stories are also sorted into broad topics (elections, ethics, surveillance, budget, courts, education, healthcare) by keyword.
+
+**Source selection is transparent.** The list of outlets we draw from is a published, curated file, not an open-ended crawl. National wire copy that some Georgia outlets republish is filtered out so the page stays focused on Georgia politics.
+
+- **Freshness:** Refreshed every 3 hours; rolling 45-day window.
+
+---
+
 ## Data Freshness
 
 | Data | Source | Update Schedule |

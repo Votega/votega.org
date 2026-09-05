@@ -1,0 +1,58 @@
+name: Update County Meetings (CivicPlus, weekly)
+
+permissions:
+  contents: write
+
+# Weekly, NOT daily: county Agenda Centers post infrequently, and the failure
+# this guards against — a county reskinning its site so the scrape breaks —
+# originates on the county's server, not in this repo, so only a scheduled run
+# can catch it (a push/PR trigger never would). Manual dispatch for onboarding a
+# new county to _data/county_civicplus.yml.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '40 8 * * 1'  # Mondays 08:40 UTC (offset from other update-* jobs)
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Generate county meeting data
+        run: python scripts/generate_county_meetings.py
+
+      - name: Validate output
+        run: python scripts/validate_county_meetings.py
+
+      - name: Commit if changed
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/county-*-meetings.json
+          if git diff --cached --quiet; then
+            echo "No county meeting changes"
+          else
+            git commit -m "Update county meeting data ($(date -u '+%Y-%m-%d'))"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
+          fi
