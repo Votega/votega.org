@@ -392,6 +392,27 @@ The [Georgia Politics in the News](/ga-news.html) page gathers recent headlines 
 
 ---
 
+## Local Government (counties & cities)
+
+The [Local Government hub](/local/) covers Georgia counties and cities through two kinds of data:
+
+- **Elected officials** — city councils and county commissions. This is our **one hand-curated
+  dataset**: there is **no upstream API** for local officials, so every field is entered by a
+  person and verified against a **primary source** (the government's own site, a meeting agenda,
+  or the Secretary of State's qualifying list), with that source URL recorded per official.
+  It is maintained in [`_data/local_officials.yml`](https://github.com/Votega/votega.org/blob/main/_data/local_officials.yml)
+  and guarded by an automated validator on every change.
+- **Public meetings** — agendas, minutes, and video, aggregated weekly from each government's
+  official site. We store only links to the source documents, never the documents themselves.
+
+**Corrections** flow the same way as everywhere else on the site — open an issue or PR. An
+officials correction is verified against its primary source before it merges.
+
+- **Freshness:** Officials are reviewed on each municipal election cycle (and on report); meetings
+  refresh weekly.
+
+---
+
 ## Data Freshness
 
 | Data | Source | Update Schedule |

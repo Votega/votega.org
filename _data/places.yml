@@ -26,6 +26,12 @@
 #     meetings.platform  civicplus | corecode
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
+#
+# OFFICIALS is a domain too, but it is NOT configured here — a place "has
+# officials" automatically when a jurisdiction in _data/local_officials.yml
+# shares this place's `slug`. It is the PRECEDENCE domain: it renders first on
+# /local/<slug>/. Onboard officials-first — a place may have officials and no
+# meetings adapter yet (that's fine; the meetings pipeline just skips it).
 
 places:
   - slug: newton
@@ -46,3 +52,20 @@ places:
           Newton County Recreation Commission: 9
           Planning Commission: 5
           Solid Waste Authority: 6
+
+  # Cities onboarded officials-first: rosters live in _data/local_officials.yml
+  # (slug == jurisdiction id). No meetings adapter yet — Covington is CoreCode,
+  # pending that adapter; add a `domains.meetings` block when ready.
+  - slug: covington
+    name: City of Covington
+    type: city
+    fips: null
+    parentCounty: newton
+    region: Metro Atlanta
+
+  - slug: carrollton
+    name: City of Carrollton
+    type: city
+    fips: null
+    parentCounty: null              # Carroll County not yet a place in this registry
+    region: West Georgia

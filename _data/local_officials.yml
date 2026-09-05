@@ -9,7 +9,21 @@
 #
 # Rendered server-side by Jekyll from site.data.local_officials, so edits go
 # live on the next deploy. Run scripts/validate_local_officials.py after editing
-# (or let the validate workflow catch it) before pushing.
+# (or let the validate-local-officials workflow catch it) before pushing.
+#
+# ----------------------------------------------------------------------------
+# HUB INTEGRATION — officials is a DOMAIN of a place (see LOCAL-GOVERNMENT-IA.md)
+# ----------------------------------------------------------------------------
+#   Officials is the PRIMARY (precedence) domain of the /local/ hub — it renders
+#   ABOVE meetings on each /local/<slug>/ page and is server-rendered for SEO.
+#   A place "has officials" purely because a jurisdiction here shares its slug —
+#   there is nothing to hand-flag in places.yml.
+#
+#   THE JOIN KEY:  a jurisdiction's `id` MUST equal the matching place `slug` in
+#   _data/places.yml (e.g. Newton County is `newton` in BOTH files, not
+#   `newton-county`). validate_local_officials.py enforces this cross-check, so a
+#   mismatch fails CI. Onboard officials-first: add the place to places.yml, fill
+#   the roster here, then wire up the meetings adapter later.
 #
 # ----------------------------------------------------------------------------
 # STRUCTURE — READ THIS BEFORE ADDING PEOPLE
@@ -45,6 +59,37 @@
 #   PHASE 3 (maybe): tie named members to specific local votes (e.g. the Flock
 #                    contract). The `voting` / `tie_break_only` flags exist now so
 #                    that view can trust who actually casts a vote.
+#
+#   NOTE: the `meetings:` / `participate:` blocks below predate the hub's
+#   automated meetings domain (scraped weekly into local-<slug>-meetings.json).
+#   Leave them blank for any place that has a meetings adapter in places.yml —
+#   the scraped feed supersedes them. They remain only for places with no adapter.
+#
+# ----------------------------------------------------------------------------
+# CURATION WORKFLOW  (minimize manual effort — one place per PR)
+# ----------------------------------------------------------------------------
+#   No API exists, so drafting is either:
+#     TRACK A (assisted): have Claude Code read the official site / SoS qualifying
+#             list and draft a roster block in this schema, one `source:` URL per
+#             member, opened as a PR. Fast for onboarding many places.
+#     TRACK B (manual): copy each value from a primary source into the skeleton
+#             below.
+#   Both converge on the SAME gate: CI green -> a human clicks every `source:`
+#   link and confirms each value -> merge -> bump meta.last_reviewed. Never merge
+#   a value you have not confirmed against its cited source.
+#
+#   MEMBER SKELETON (copy one row per person into a jurisdiction's `members:`):
+#     - name: ""
+#       role: Council Member          # see controlled vocab above
+#       seat: ""                      # "Ward 1", "District 2", "At-large"
+#       party: Nonpartisan            # Republican | Democratic | Nonpartisan
+#       email: ""
+#       phone: ""
+#       last_elected:                 # 4-digit year
+#       term_end:
+#       next_election:
+#       voting: true
+#       source: ""                    # REQUIRED — primary-source URL for the above
 # ============================================================================
 
 meta:
@@ -285,7 +330,7 @@ jurisdictions:
   # ==========================================================================
   # NEWTON COUNTY  (county — partisan)  — SKELETON, fill in members
   # ==========================================================================
-  - id: newton-county
+  - id: newton                      # MUST equal the places.yml slug (join key)
     name: Newton County
     type: county
     county: Newton
