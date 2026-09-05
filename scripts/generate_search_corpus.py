@@ -315,6 +315,8 @@ def build_places(records, seen):
     with open(path, encoding="utf-8") as f:
         places = (yaml.safe_load(f) or {}).get("places", [])
     for p in places:
+        if p.get("hidden"):
+            continue  # hidden places are kept in the registry but not published
         slug = clean(p.get("slug"))
         name = clean(p.get("name"))
         if not slug or not name:

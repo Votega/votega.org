@@ -570,6 +570,8 @@ def build_places(records, urls, prior, new_state):
 
     count = 0
     for p in places:
+        if p.get("hidden"):
+            continue  # kept in the registry, but no /local/<slug>/ page is emitted
         slug = p["slug"]
         name = p.get("name") or slug
         ptype = p.get("type") or "county"

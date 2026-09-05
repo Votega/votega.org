@@ -22,6 +22,10 @@
 #   fips                 county FIPS (counties); null for cities
 #   parentCounty         slug of the containing county (cities only; null for counties)
 #   region               optional grouping label for the hub filter
+#   hidden               optional; `true` keeps the place in this registry but
+#                        omits it everywhere public — no hub card, no
+#                        /local/<slug>/ page, no search entry. Flip it back to
+#                        unhide. (The officials cross-check still sees the slug.)
 #   domains              per-domain adapter config; supported domain today: meetings
 #     meetings.platform  civicplus | corecode
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
@@ -69,3 +73,4 @@ places:
     fips: null
     parentCounty: null              # Carroll County not yet a place in this registry
     region: West Georgia
+    hidden: true                    # hidden from the hub for now (roster kept, page not published)
