@@ -72,70 +72,84 @@ feeds:
     url: https://www.warnock.senate.gov/press-releases/feed/
     type: official
     entity: W000790
-  # -- Statewide executives (georgia.gov Drupal; confirm feed URL) --
-  # - name: Gov. Brian Kemp (press)
-  #   url: https://gov.georgia.gov/press-releases/feed        # TBD: confirm
-  #   type: official
-  #   entity: ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f
-  # - name: Attorney General Chris Carr (press)
-  #   url: https://law.georgia.gov/press-releases/feed        # TBD: confirm
-  #   type: official
-  #   entity: ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a
-  # - name: Lt. Gov. Burt Jones (press)
-  #   url: https://ltgov.georgia.gov/press-releases/feed      # TBD: confirm
-  #   type: official
-  #   entity: ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b
-  # -- U.S. House delegation (feed URL listed at <host>/media-center/feeds) --
-  # - name: Rep. Buddy Carter (GA-01, press)
-  #   url: https://buddycarter.house.gov/...   # TBD
-  #   type: official
-  #   entity: C001103
-  # - name: Rep. Sanford Bishop (GA-02, press)
-  #   url: https://bishop.house.gov/...        # TBD
-  #   type: official
-  #   entity: B000490
-  # - name: Rep. Brian Jack (GA-03, press)
-  #   url: https://jack.house.gov/...          # TBD
+  # -- Statewide executives (georgia.gov Drupal; feed is <host>/rss.xml) --
+  - name: Gov. Brian Kemp (press)
+    url: https://gov.georgia.gov/rss.xml
+    type: official
+    entity: ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f
+  - name: Attorney General Chris Carr (press)
+    url: https://law.georgia.gov/rss.xml
+    type: official
+    entity: ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a
+  - name: Lt. Gov. Burt Jones (press)
+    url: https://ltgov.georgia.gov/rss.xml
+    type: official
+    entity: ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b
+
+  # -- U.S. House delegation --
+  # Feed paths vary by the member site's platform (WordPress /feed/, the older
+  # House CMS /news/rss.aspx, or /rss.xml). Every URL below was fetched and its
+  # dates validated 2026-09-05. Members whose only reachable feed is a frozen
+  # default template (newest item 2023-2025, swearing-in boilerplate) or has
+  # unparseable dates are commented out with the reason -- re-enable if the
+  # office starts maintaining a real feed. The generator skips a 404/dead feed,
+  # so an enabled-but-later-broken URL is non-fatal.
+  - name: Rep. Buddy Carter (GA-01, press)
+    url: https://buddycarter.house.gov/news/rss.aspx
+    type: official
+    entity: C001103
+  - name: Rep. Sanford Bishop (GA-02, press)
+    url: https://bishop.house.gov/rss.xml
+    type: official
+    entity: B000490
+  # - name: Rep. Brian Jack (GA-03, press)       # /rss.xml frozen (newest 2025-01)
+  #   url: https://jack.house.gov/rss.xml
   #   type: official
   #   entity: J000311
-  # - name: Rep. Hank Johnson (GA-04, press)
-  #   url: https://hankjohnson.house.gov/...   # TBD
+  # - name: Rep. Hank Johnson (GA-04, press)     # /rss.xml stale (newest 2025-05)
+  #   url: https://hankjohnson.house.gov/rss.xml
   #   type: official
   #   entity: J000288
-  # - name: Rep. Nikema Williams (GA-05, press)
-  #   url: https://nikemawilliams.house.gov/...# TBD
-  #   type: official
-  #   entity: W000788
-  # - name: Rep. Lucy McBath (GA-06, press)
-  #   url: https://mcbath.house.gov/...        # TBD
-  #   type: official
-  #   entity: M001208
-  # - name: Rep. Rich McCormick (GA-07, press)
-  #   url: https://mccormick.house.gov/...     # TBD
+  - name: Rep. Nikema Williams (GA-05, press)
+    url: https://nikemawilliams.house.gov/feed
+    type: official
+    entity: W000788
+  - name: Rep. Lucy McBath (GA-06, press)
+    url: https://mcbath.house.gov/feed/
+    type: official
+    entity: M001208
+  # - name: Rep. Rich McCormick (GA-07, press)   # /rss.xml stale (newest 2026-01)
+  #   url: https://mccormick.house.gov/rss.xml
   #   type: official
   #   entity: M001218
-  # - name: Rep. Austin Scott (GA-08, press)
-  #   url: https://austinscott.house.gov/...   # TBD
+  # - name: Rep. Austin Scott (GA-08, press)     # ?a=rss.feed has unparseable pubDates
+  #   url: https://austinscott.house.gov/?a=rss.feed
   #   type: official
   #   entity: S001189
-  # - name: Rep. Andrew Clyde (GA-09, press)
-  #   url: https://clyde.house.gov/...         # TBD
-  #   type: official
-  #   entity: C001116
-  # - name: Rep. Mike Collins (GA-10, press)
-  #   url: https://collins.house.gov/...       # TBD
+  - name: Rep. Andrew Clyde (GA-09, press)
+    url: https://clyde.house.gov/news/rss.aspx
+    type: official
+    entity: C001116
+  # - name: Rep. Mike Collins (GA-10, press)     # /rss.xml frozen (newest 2023-04)
+  #   url: https://collins.house.gov/rss.xml
   #   type: official
   #   entity: C001129
-  # - name: Rep. Barry Loudermilk (GA-11, press)
-  #   url: https://loudermilk.house.gov/...    # TBD
+  - name: Rep. Barry Loudermilk (GA-11, press)
+    url: https://loudermilk.house.gov/feed/
+    type: official
+    entity: L000583
+  - name: Rep. Rick Allen (GA-12, press)
+    url: https://allen.house.gov/news/rss.aspx
+    type: official
+    entity: A000372
+  # - name: Rep. Everton Blair (GA-13, press)    # /rss.xml frozen (newest 2025-01)
+  #   url: https://blair.house.gov/rss.xml
   #   type: official
-  #   entity: L000583
-  # - name: Rep. Rick Allen (GA-12, press)
-  #   url: https://allen.house.gov/...         # TBD
-  #   type: official
-  #   entity: A000372
-  # NB: GA-13 (David Scott) and GA-14 are not resolvable as current federal
-  # officeholders in the crosswalk yet -- add them once the crosswalk settles.
+  #   entity: B001328
+  # - name: Rep. Clay Fuller (GA-14, press)      # posts ARE current, but only as HTML
+  #   url: https://fuller.house.gov/rss.xml       # at /media/press-releases; /rss.xml is a
+  #   type: official                              # frozen Drupal default (static service pages,
+  #   entity: F000485                             # 2025-01). Needs an HTML adapter, not RSS.
 
 # Extra GA-relevance signals (place names, institutions) beyond a matched entity.
 # An item from a non-ga_focused feed is kept only if it names a GA politician OR

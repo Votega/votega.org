@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-05T22:28:45.626414+00:00",
+    "generatedAt": "2026-09-05T22:40:41.304800+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -9,70 +9,108 @@
       "GPB News",
       "GA Secretary of State",
       "Sen. Jon Ossoff (press)",
-      "Sen. Raphael Warnock (press)"
+      "Sen. Raphael Warnock (press)",
+      "Gov. Brian Kemp (press)",
+      "Attorney General Chris Carr (press)",
+      "Lt. Gov. Burt Jones (press)",
+      "Rep. Buddy Carter (GA-01, press)",
+      "Rep. Sanford Bishop (GA-02, press)",
+      "Rep. Nikema Williams (GA-05, press)",
+      "Rep. Lucy McBath (GA-06, press)",
+      "Rep. Andrew Clyde (GA-09, press)",
+      "Rep. Barry Loudermilk (GA-11, press)",
+      "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 72,
+    "count": 106,
     "windowDays": 45,
-    "entityTagged": 26,
+    "entityTagged": 60,
     "topicCounts": {
-      "healthcare": 15,
+      "healthcare": 19,
       "education": 7,
       "elections": 16,
-      "courts": 5,
-      "budget": 3,
-      "surveillance": 2,
-      "ethics": 1
+      "courts": 9,
+      "budget": 4,
+      "ethics": 6,
+      "surveillance": 2
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": "/us-congress/nikema-williams-ga-5/"
+    },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
       "url": null
     },
+    "vg-ga-p-000262": {
+      "name": "Lucy McBath",
+      "url": "/us-congress/lucy-mcbath-ga-6/"
+    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
-      "url": null
+      "url": "/us-congress/jon-ossoff-senate/"
+    },
+    "vg-ga-p-000255": {
+      "name": "Andrew S. Clyde",
+      "url": "/us-congress/andrew-clyde-ga-9/"
     },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
-      "url": null
+      "url": "/candidates/rick-jackson-ga-governor/"
     },
     "vg-ga-p-000335": {
       "name": "Keisha R. Lance Bottoms",
-      "url": null
+      "url": "/candidates/keisha-r-lance-bottoms-ga-governor/"
     },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
-      "url": null
+      "url": "/us-congress/raphael-warnock-senate/"
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": "/candidates/christopher-michael-carr-ga-governor/"
+    },
+    "vg-ga-p-000256": {
+      "name": "Rick W. Allen",
+      "url": "/us-congress/rick-allen-ga-12/"
     },
     "vg-ga-p-000303": {
       "name": "Dr. Everton Blair",
-      "url": null
+      "url": "/candidates/dr-everton-blair-ga-13/"
+    },
+    "vg-ga-p-000258": {
+      "name": "Earl L. \"Buddy\" Carter",
+      "url": "/us-congress/earl-carter-ga-1/"
     },
     "vg-ga-p-000261": {
       "name": "Sanford D. Bishop",
-      "url": null
+      "url": "/us-congress/sanford-bishop-ga-2/"
     },
     "vg-ga-p-000384": {
       "name": "Tyler J. Harper",
-      "url": null
+      "url": "/candidates/tyler-j-harper-ga-agriculture-commissioner/"
     },
     "vg-ga-p-000684": {
       "name": "Tricia R. Pridemore",
-      "url": null
+      "url": "/candidates/tricia-r-pridemore-ga-11/"
+    },
+    "vg-ga-p-000257": {
+      "name": "Barry Loudermilk",
+      "url": "/us-congress/barry-loudermilk-ga-11/"
     },
     "vg-ga-p-000123": {
       "name": "Kay Kirkpatrick",
-      "url": null
+      "url": "/ga-legislators/kay-kirkpatrick-senate-32/"
     },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
-      "url": null
+      "url": "/us-congress/mike-collins-ga-10/"
     },
     "vg-ga-p-000021": {
       "name": "Brad Raffensperger",
-      "url": null
+      "url": "/candidates/brad-raffensperger-ga-governor/"
     }
   },
   "items": [
@@ -87,6 +125,18 @@
       "topics": [
         "healthcare"
       ]
+    },
+    {
+      "id": "dca2d08515b3",
+      "title": "Congresswoman Nikema Williams Reintroduces Legislation to Increase Access to Child Care",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-reintroduces-legislation-to-increase-access-to-child-care",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-09-04T13:34:57+00:00",
+      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) reintroduced the Care is an Economic Development Strategy (CEDS) Act. This legislation would require Economic Development Districts to show in ",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": []
     },
     {
       "id": "926a2592e050",
@@ -125,6 +175,18 @@
       "topics": []
     },
     {
+      "id": "e3eada056def",
+      "title": "McBath, Lee Introduce Bill To Protect Vulnerable Communities From Violence and Exploitation During Disasters",
+      "url": "https://mcbath.house.gov/2026/09/03/mcbath-lee-introduce-bill-to-protect-vulnerable-communities-from-violence-and-exploitation-during-disasters/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-09-03T17:59:10+00:00",
+      "snippet": "Washington, DC – Today, Representative Lucy McBath (GA-06) and Congresswoman Laurel Lee (FL-15) introduced the FEMA for Safe Recovery Act, legislation that strengthens federal disaster response by ens",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": []
+    },
+    {
       "id": "686de278b636",
       "title": "Citizen-led lawsuit challenges zoning for OpenAI Georgia data center",
       "url": "https://thecurrentga.org/2026/09/03/citizen-led-lawsuit-challenges-zoning-for-openai-georgia-data-center/",
@@ -149,6 +211,18 @@
       "topics": []
     },
     {
+      "id": "5891e3d2099a",
+      "title": "Gov. Kemp Announces Another Record-Breaking Year for Economic Development Investments",
+      "url": "https://gov.georgia.gov/press-releases/2026-09-03/gov-kemp-announces-another-record-breaking-year-economic-development",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-09-03T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp, in conjunction with the Georgia Department of Economic Development (GDEcD), today announced a new record in Fiscal Year 2026 with roughly $35.2 billion in project inv",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
       "id": "d94ea43996ff",
       "title": "Bookman: Secrecy and tax breaks pave the way for surge of unpopular data center proposals in Georgia",
       "url": "https://georgiarecorder.com/2026/09/03/bookman-secrecy-and-tax-breaks-pave-the-way-for-surge-of-unpopular-data-center-proposals-in-georgia/",
@@ -158,6 +232,20 @@
       "entityIds": [],
       "topics": [
         "budget"
+      ]
+    },
+    {
+      "id": "d3aea21deed7",
+      "title": "Rep. Clyde Files Amicus Brief in Defense of Americans’ Second Amendment Freedoms",
+      "url": "http://clyde.house.gov/news/documentsingle.aspx?DocumentID=3765",
+      "source": "Rep. Andrew Clyde (GA-09, press)",
+      "publishedAt": "2026-09-03T04:00:00+00:00",
+      "snippet": "WASHINGTON, D.C. — Today, Congressman Andrew Clyde (GA-09), in partnership with the American Center for Law & Justice (ACLJ), filed a Supreme Court amicus brief in the case Viramontes v. Cook County (",
+      "entityIds": [
+        "vg-ga-p-000255"
+      ],
+      "topics": [
+        "courts"
       ]
     },
     {
@@ -204,6 +292,18 @@
       ]
     },
     {
+      "id": "56c6041a5eb0",
+      "title": "Congresswoman Nikema Williams Reintroduces the Equal Pay for Equal Work Act",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-reintroduces-the-equal-pay-for-equal-work-act",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-09-02T16:14:55+00:00",
+      "snippet": "WASHINGTON, D.C. – Today, Congresswoman Nikema Williams (GA-05) led 12 members of the House in introducing the Equal Pay for Equal Work Act, which will reestablish the National Equal Pay Enforcement T",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": []
+    },
+    {
       "id": "99d88304f0ba",
       "title": "New invasive insect poses ‘serious threat’ to Georgia farmers",
       "url": "https://georgiarecorder.com/2026/09/02/new-invasive-insect-poses-serious-threat-to-georgia-farmers/",
@@ -222,6 +322,20 @@
       "snippet": "A Georgia energy efficiency program has distributed $50 million in federal funding through the Inflation Reduction Act to provide rebates for home upgrades such as improved insulation and HVAC systems",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "5eb9bb946ad4",
+      "title": "Congresswoman Nikema Williams Calls on Secretary Robert F. Kennedy to Take Action on Endometriosis Diagnosis and Care",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-calls-on-secretary-robert-f-kennedy-to-take-action-on-endometriosis-diagnosis-and-care",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-09-01T13:35:22+00:00",
+      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) sent a congressional oversight letter to U.S. Department of Health and Human Services Secretary Robert F. Kennedy inquiring about what action t",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "healthcare"
+      ]
     },
     {
       "id": "feb5c9e5688b",
@@ -331,6 +445,20 @@
       "topics": []
     },
     {
+      "id": "448254118b7e",
+      "title": "AG Carr and DA Shealy Secure New Indictment for Death of 16-Year-Old in Remerton",
+      "url": "https://law.georgia.gov/press-releases/2026-08-28/ag-carr-and-da-shealy-secure-new-indictment-death-16-year-old-remerton",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-28T12:00:00+00:00",
+      "snippet": "LOWNDES COUNTY, GA – Georgia Attorney General Chris Carr and Southern Judicial Circuit District Attorney Bradfield M. Shealy today announced the indictment of Lavernous Arnold (aka “Gunna”), 22, of Qu",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics"
+      ]
+    },
+    {
       "id": "14eb7a7bae38",
       "title": "Trump stronghold feels healthcare cuts, but political shift remains unlikely",
       "url": "https://georgiarecorder.com/2026/08/28/trump-stronghold-feels-healthcare-cuts-but-political-shift-remains-unlikely/",
@@ -377,6 +505,30 @@
       ]
     },
     {
+      "id": "93e614a76826",
+      "title": "Gov. Kemp: Walmart to Bring 1,000 Jobs, Next-Gen Fulfillment Center to Carnesville",
+      "url": "https://gov.georgia.gov/press-releases/2026-08-27/gov-kemp-walmart-bring-1000-jobs-next-gen-fulfillment-center-carnesville",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-08-27T12:00:00+00:00",
+      "snippet": "LIMA, PERU – Governor Brian P. Kemp today, while continuing an economic development mission in South America, announced that Walmart, Inc. plans to build a high-tech, next-generation fulfillment cente",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "50e97b945b65",
+      "title": "Congressman Allen Announces September Community Office Hours",
+      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7373",
+      "source": "Rep. Rick Allen (GA-12, press)",
+      "publishedAt": "2026-08-27T04:00:00+00:00",
+      "snippet": "Today, Congressman Rick W. Allen (GA-12) announced members of his staff will host Community Office Hours across Georgia’s 12th District during the month of September.\n\nDuring these events, members of ",
+      "entityIds": [
+        "vg-ga-p-000256"
+      ],
+      "topics": []
+    },
+    {
       "id": "ea7e81e48d89",
       "title": "Meta settlement would require new teen safeguards and could deliver up to $135 million to Georgia",
       "url": "https://capitol-beat.org/2026/08/meta-settlement-would-require-new-teen-safeguards-and-could-deliver-up-to-135-million-to-georgia/?utm_source=rss&utm_medium=rss&utm_campaign=meta-settlement-would-require-new-teen-safeguards-and-could-deliver-up-to-135-million-to-georgia",
@@ -387,6 +539,32 @@
       "topics": [
         "courts"
       ]
+    },
+    {
+      "id": "de8aa9b974c4",
+      "title": "Congresswoman Nikema Williams’ Statement on the Eleventh Circuit Court’s Decision on Georgia District Maps",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-statement-on-the-eleventh-circuit-courts-decision-on-georgia-district-maps",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-08-26T18:41:15+00:00",
+      "snippet": "ATLANTA, GA – Congresswoman Nikema Williams (GA-05) released the following statement in response to the 11th Circuit Court of Appeals ordering a review of Georgia’s district maps under new voting righ",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "69ebe0a7fdfe",
+      "title": "McBath, Harder Announce New Legislation to Scale Up Job Training Programs Across the U.S.",
+      "url": "https://mcbath.house.gov/2026/08/26/mcbath-harder-announce-new-legislation-to-scale-up-job-training-programs-across-the-u-s/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-08-26T17:00:00+00:00",
+      "snippet": "Atlanta, GA – Today, Rep. Lucy McBath (GA-06) and Rep. Josh Harder (CA-09) announced new legislation to scale up local workforce development programs and kickstart a national job training model. The B",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": []
     },
     {
       "id": "7b571ef96378",
@@ -413,6 +591,32 @@
       "topics": [
         "healthcare"
       ]
+    },
+    {
+      "id": "3dc664aef942",
+      "title": "Gov. Kemp Announces Gwinnett Superior Court Appointments",
+      "url": "https://gov.georgia.gov/press-releases/2026-08-26/gov-kemp-announces-gwinnett-superior-court-appointments",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-08-26T12:00:00+00:00",
+      "snippet": "SANTIAGO, CHILE – Governor Brian P. Kemp today, while on an economic development mission in South America, announced the following judicial appointments to the Superior Court of the Gwinnett Judicial ",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "21311cc278a4",
+      "title": "Carr Announces Largest Big Tech Settlement in History",
+      "url": "https://law.georgia.gov/press-releases/2026-08-26/carr-announces-largest-big-tech-settlement-history",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-26T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr today announced a landmark $17.1 billion multistate settlement with Meta Platforms, Inc. – the largest state consumer protection settlement in history",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
     },
     {
       "id": "9fa36c605c3c",
@@ -474,6 +678,33 @@
       ]
     },
     {
+      "id": "be7c077469b2",
+      "title": "Carr: Owner of Therapy Center Charged with $88k Medicaid Fraud in Fulton County",
+      "url": "https://law.georgia.gov/press-releases/2026-08-25/carr-owner-therapy-center-charged-88k-medicaid-fraud-fulton-county",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-25T12:00:00+00:00",
+      "snippet": "FULTON COUNTY, GA – Georgia Attorney General Chris Carr today announced that Desmond Maul, 74, of Conyers, has been indicted in Fulton County on one count of Medicaid Fraud and 32 counts of False Stat",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "fe790812e91e",
+      "title": "Carr Returns Stolen Crypto to Investment Fraud Victim in Cobb County",
+      "url": "https://law.georgia.gov/press-releases/2026-08-25/carr-returns-stolen-crypto-investment-fraud-victim-cobb-county",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-25T12:00:00+00:00",
+      "snippet": "COBB COUNTY, GA – Georgia Attorney General Chris Carr today announced that his White Collar and Cyber Crime Unit has seized and returned cryptocurrency to a victim of an investment scam in Cobb County",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
       "id": "96dae2ef4d3d",
       "title": "Georgia Chamber to counter ‘misinformation, disinformation’ about data centers",
       "url": "https://capitol-beat.org/2026/08/georgia-chamber-to-counter-misinformation-disinformation-about-data-centers/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-chamber-to-counter-misinformation-disinformation-about-data-centers",
@@ -482,6 +713,20 @@
       "snippet": "ATLANTA — Data centers are a financial boon to communities, according to the Georgia Chamber of Commerce, which is pushing back on concerns about their impact on the environment, on utility bills and ",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "fea757ac2ac7",
+      "title": "Rep. Carter, Southern Healthcare Collaborative announce HHS grants for Rural Health Services",
+      "url": "http://buddycarter.house.gov/news/documentsingle.aspx?DocumentID=16623",
+      "source": "Rep. Buddy Carter (GA-01, press)",
+      "publishedAt": "2026-08-24T20:30:00+00:00",
+      "snippet": "WASHINGTON, D.C. – Rep. Earl L. “Buddy” Carter (R-GA) today released the following statement after joining Southern Healthcare Collaboration leaders and local officials in Baxley to announce new feder",
+      "entityIds": [
+        "vg-ga-p-000258"
+      ],
+      "topics": [
+        "healthcare"
+      ]
     },
     {
       "id": "950ab1a2c16d",
@@ -519,6 +764,18 @@
       "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working with Republicans and Democrats to strengthen diabetes prevention. Sen. Ossoff is cosponsoring the bipartisan Strengthening Collective Resources fo",
       "entityIds": [
         "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "fb5b00cfb2bf",
+      "title": "Gov. and First Lady Kemp Lead Economic Mission to Chile and Peru",
+      "url": "https://gov.georgia.gov/press-releases/2026-08-24/gov-and-first-lady-kemp-lead-economic-mission-chile-and-peru",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-08-24T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that he and First Lady Marty Kemp will lead an international economic development mission this week to Chile and Peru. In addition to direct talks with",
+      "entityIds": [
+        "vg-ga-p-000024"
       ],
       "topics": []
     },
@@ -573,6 +830,18 @@
       ]
     },
     {
+      "id": "0c0bcbcfbc40",
+      "title": "Gov. Kemp Announces New Public Service Commissioner",
+      "url": "https://gov.georgia.gov/press-releases/2026-08-21/gov-kemp-announces-new-public-service-commissioner",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-08-21T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced he will appoint Stan Wise to the District 5 seat of the Georgia Public Service Commission (PSC), following the resignation of Commissioner Tricia Pride",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
       "id": "7f4dd743b67e",
       "title": "Atlanta left off the shortlist of 2028 DNC host cities",
       "url": "https://georgiarecorder.com/briefs/atlanta-left-off-the-shortlist-of-2028-dnc-host-cities/",
@@ -607,6 +876,20 @@
         "vg-ga-p-000264"
       ],
       "topics": []
+    },
+    {
+      "id": "c4e3a35310e7",
+      "title": "Carr Indicts Eight Following Multi-County Human Trafficking and Gang Investigation",
+      "url": "https://law.georgia.gov/press-releases/2026-08-20/carr-indicts-eight-following-multi-county-human-trafficking-and-gang",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-20T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr today announced that his Human Trafficking and Gang Prosecution Units have secured three separate indictments charging eight individuals in Richmond, ",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics"
+      ]
     },
     {
       "id": "76f4df75a758",
@@ -661,6 +944,32 @@
       ]
     },
     {
+      "id": "7de61e18c4e1",
+      "title": "Carr Secures New Indictment for Trafficking of 16-Year-Old Following Operation “Global Chain”",
+      "url": "https://law.georgia.gov/press-releases/2026-08-18/carr-secures-new-indictment-trafficking-16-year-old-following-operation",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-18T12:00:00+00:00",
+      "snippet": "International operation resulted in the recovery of 11 missing children in Georgia FULTON COUNTY, GA – Georgia Attorney General Chris Carr today announced that his Human Trafficking Prosecution Unit h",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics"
+      ]
+    },
+    {
+      "id": "e3487e73907d",
+      "title": "Carr Appoints New Chief of Statewide Human Trafficking Prosecution Unit",
+      "url": "https://law.georgia.gov/press-releases/2026-08-18/carr-appoints-new-chief-statewide-human-trafficking-prosecution-unit",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-18T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr today announced that Chris Keegan has been appointed as the new Section Chief of the office’s Human Trafficking Prosecution Unit. He fills the role of",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
       "id": "d2f6c9890d31",
       "title": "How this Georgia factory is surviving America’s solar policy whiplash",
       "url": "https://georgiarecorder.com/2026/08/17/how-this-georgia-factory-is-surviving-americas-solar-policy-whiplash/",
@@ -678,6 +987,30 @@
       "publishedAt": "2026-08-17T23:41:27+00:00",
       "snippet": "Kindergarten immunization rates are falling and vaccine exemptions are on the rise, according to data from the Centers for Disease Control and Prevention released this week. In a press release, the CD",
       "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "75dd8e1f0cda",
+      "title": "Gov. Kemp: Cirkla to Bring 140 New Jobs to Hall County",
+      "url": "https://gov.georgia.gov/press-releases/2026-08-17/gov-kemp-cirkla-bring-140-new-jobs-hall-county",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-08-17T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that Cirkla will invest more than $5 million to establish a new food packaging manufacturing facility in Gainesville, Georgia. The project is expected ",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "e418f4980748",
+      "title": "Carr Announces Seizure and Return of Cryptocurrency to Elderly Fraud Victims in Oconee County",
+      "url": "https://law.georgia.gov/press-releases/2026-08-17/carr-announces-seizure-and-return-cryptocurrency-elderly-fraud-victims",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-17T12:00:00+00:00",
+      "snippet": "OCONEE COUNTY, GA – Georgia Attorney General Chris Carr today announced that his White Collar and Cyber Crime Unit has seized and returned cryptocurrency to elderly fraud victims in Oconee County.",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
       "topics": []
     },
     {
@@ -705,6 +1038,18 @@
       ]
     },
     {
+      "id": "da3a88fefe55",
+      "title": "Rep. Loudermilk’s Week In Review",
+      "url": "https://loudermilk.house.gov/2026/08/14/rep-loudermilks-week-in-review-78/",
+      "source": "Rep. Barry Loudermilk (GA-11, press)",
+      "publishedAt": "2026-08-14T16:36:35+00:00",
+      "snippet": "Friends, I hope you have had a great week! As your Representative in Congress, it’s a priority to keep you informed of how we’re serving you. If you would like to stay up to date, check out our websit",
+      "entityIds": [
+        "vg-ga-p-000257"
+      ],
+      "topics": []
+    },
+    {
       "id": "2a7e0db51074",
       "title": "MS NOW: “Jon Ossoff Has a Congressional Superpower”",
       "url": "https://www.ossoff.senate.gov/press-releases/ms-now-jon-ossoff-has-a-congressional-superpower/",
@@ -717,6 +1062,18 @@
       "topics": [
         "ethics"
       ]
+    },
+    {
+      "id": "ae299ec389b3",
+      "title": "Gov. Kemp: DeltaX to Establish North American HQ in Walton County",
+      "url": "https://gov.georgia.gov/press-releases/2026-08-14/gov-kemp-deltax-establish-north-american-hq-walton-county",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-08-14T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that DeltaX, a global provider of advanced battery energy storage solutions (BESS), will create approximately 250 new jobs and invest $141 million to e",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
     },
     {
       "id": "6d3f8489039e",
@@ -815,6 +1172,19 @@
       "topics": []
     },
     {
+      "id": "faea478e22b4",
+      "title": "McBath, Georgia Dems Highlight Governor Brian Kemp’s Final Opportunity to Participate in Summer Meal Program for Hungry Children",
+      "url": "https://mcbath.house.gov/2026/08/11/mcbath-georgia-dems-highlight-governor-brian-kemps-final-opportunity-to-participate-in-summer-meal-program-for-hungry-children/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-08-11T14:12:15+00:00",
+      "snippet": "Atlanta, GA — Representative Lucy McBath (D-GA-06) is once again leading the Democratic members of Georgia’s congressional delegation in urging Governor Brian Kemp to allow Georgia families to partici",
+      "entityIds": [
+        "vg-ga-p-000024",
+        "vg-ga-p-000262"
+      ],
+      "topics": []
+    },
+    {
       "id": "ac4f417a6aff",
       "title": "Four dozen Black Georgia lawmakers press Collins on alleged ‘white nationalist’ ties",
       "url": "https://georgiarecorder.com/2026/08/11/four-dozen-black-georgia-lawmakers-press-collins-on-alleged-white-nationalist-ties/",
@@ -823,6 +1193,18 @@
       "snippet": "More than 50 Black Georgia lawmakers have signed onto a statement condemning Republican U.S. Rep. Mike Collins for associates’ comments and posts that have been widely panned as racist and antisemitic",
       "entityIds": [
         "vg-ga-p-000253"
+      ],
+      "topics": []
+    },
+    {
+      "id": "6654681b41bc",
+      "title": "Congresswoman Nikema Williams Joins Legislation to Ban ICE from Using TSA Data",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-joins-legislation-to-ban-ice-from-using-tsa-data",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-08-10T20:13:22+00:00",
+      "snippet": "Washington, D.C. – Congresswoman Nikema Williams (GA-05) co-sponsored the No TSA Data for ICE Act, introduced by Rep. Rashida Tlaib (MI-12), that would prevent the two agencies from coordinating to en",
+      "entityIds": [
+        "vg-ga-p-000254"
       ],
       "topics": []
     },
@@ -865,6 +1247,32 @@
       ]
     },
     {
+      "id": "7a63da2ed554",
+      "title": "July Net Tax Revenues Up 3.1%",
+      "url": "https://gov.georgia.gov/press-releases/2026-08-07/july-net-tax-revenues-31",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-08-07T12:00:00+00:00",
+      "snippet": "ATLANTA – The State of Georgia’s net tax collections for the first month of Fiscal Year (FY) 2027 totaled $2.57 billion, an increase of $78.1 million, or 3.1%, compared to July of last year (FY 2026) ",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "642f47c256b8",
+      "title": "Gov. Kemp: Siemens Plans 1,400+ New Jobs in Jackson County",
+      "url": "https://gov.georgia.gov/press-releases/2026-08-07/gov-kemp-siemens-plans-1400-new-jobs-jackson-county",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-08-07T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that Siemens is planning to create more than 1,400 jobs at its new advanced manufacturing facility in Pendergrass over the next three years. The projec",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
       "id": "7adb3b714330",
       "title": "Trump administration plan to roll back Head Start regulations could impact over 350 Georgia centers",
       "url": "https://georgiarecorder.com/briefs/trump-administration-plan-to-roll-back-head-start-regulations-could-impact-over-350-georgia-centers/",
@@ -878,6 +1286,18 @@
       ]
     },
     {
+      "id": "46115a77a460",
+      "title": "Carr Leads 15-State Coalition Urging Congress to Strengthen Federal Penalties for ATM Robberies",
+      "url": "https://law.georgia.gov/press-releases/2026-08-06/carr-leads-15-state-coalition-urging-congress-strengthen-federal",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-06T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Attorney General Chris Carr is leading a 15-state coalition in urging Congress to pass the Safe Access to Cash Act (S. 3798/H.R. 1631), critical legislation that would help to prosecute ",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
       "id": "5e51445d525f",
       "title": "Bottoms, Jackson offer competing visions on data centers, Medicaid expansion at business luncheon",
       "url": "https://georgiarecorder.com/2026/08/05/bottoms-jackson-offer-competing-visions-on-data-centers-medicaid-expansion-at-business-luncheon/",
@@ -888,6 +1308,20 @@
       "topics": [
         "elections",
         "healthcare"
+      ]
+    },
+    {
+      "id": "713baa74531e",
+      "title": "Carr Secures New Indictment for Trafficking of Missing Teen in Richmond County",
+      "url": "https://law.georgia.gov/press-releases/2026-08-05/carr-secures-new-indictment-trafficking-missing-teen-richmond-county",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-08-05T12:00:00+00:00",
+      "snippet": "RICHMOND COUNTY, GA – Georgia Attorney General Chris Carr today announced that his Human Trafficking Prosecution Unit has secured the indictment of William Wyche, 34, of Hephzibah, for the trafficking",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics"
       ]
     },
     {
@@ -910,6 +1344,32 @@
       "entityIds": [],
       "topics": [
         "elections"
+      ]
+    },
+    {
+      "id": "03f520502bda",
+      "title": "McBath Leads House Introduction of Bipartisan READ Act",
+      "url": "https://mcbath.house.gov/2026/08/04/mcbath-leads-house-introduction-of-bipartisan-read-act/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-08-04T14:06:49+00:00",
+      "snippet": "Washington, D.C. — Yesterday, Congresswoman Lucy McBath (GA-06) led the House introduction of the bipartisan and bicameral Reading Excellence and Achievement for Development (READ) Act, legislation wh",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": []
+    },
+    {
+      "id": "d8f06e1ebe10",
+      "title": "Gov. Kemp Announces Judicial and Prosecutorial Appointments",
+      "url": "https://gov.georgia.gov/press-releases/2026-08-04/gov-kemp-announces-judicial-and-prosecutorial-appointments",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-08-04T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced the following judicial and prosecutorial appointments: Charles B. “Brad” Dixon to the Superior Court of the Atlantic Judicial Circuit, filling a vacanc",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "courts"
       ]
     },
     {
@@ -944,6 +1404,20 @@
       "entityIds": [],
       "topics": [
         "elections"
+      ]
+    },
+    {
+      "id": "824f8daef256",
+      "title": "Congresswoman Nikema Williams Introduces Legislation to Increase Access to STI Testing",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-introduces-legislation-to-increase-access-to-sti-testing",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-07-24T18:22:20+00:00",
+      "snippet": "New legislation to create a more equitable healthcare system Washington, D.C. – Today, Congresswoman Nikema Williams (GA-05) introduced the Equity in STI Testing Act, legislation that would make certa",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "healthcare"
       ]
     }
   ]
