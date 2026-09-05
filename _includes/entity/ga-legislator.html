@@ -1129,6 +1129,22 @@
       if (!res.ok) return; // silently skip if file not yet generated
 
       const data        = await res.json();
+      // ga-member-votes.json uses a compact schema: `voteIds` interns each vote id,
+      // and memberVotes values are { indexString: code } (Y/N/O). Decode the whole
+      // map once, back to the legacy [{voteId, vote}] shape the code below expects,
+      // so every helper stays unchanged. Legacy files (no voteIds) pass through.
+      if (Array.isArray(data.voteIds)) {
+        const CODE = { Y: 'Yea', N: 'Nay', NV: 'Not Voting', P: 'Present', A: 'Absent', E: 'Excused', O: 'Other' };
+        const ids = data.voteIds;
+        const decoded = {};
+        for (const pid in data.memberVotes) {
+          const compact = data.memberVotes[pid];
+          const list = [];
+          for (const i in compact) list.push({ voteId: ids[+i], vote: CODE[compact[i]] || compact[i] });
+          decoded[pid] = list;
+        }
+        data.memberVotes = decoded;
+      }
       const memberVotes = (data.memberVotes || {})[member.id];
       if (!memberVotes || memberVotes.length === 0) {
         container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No voting record found for this member in our data for this session. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';

@@ -133,9 +133,12 @@ Optional override-only fields: `leadershipRole`, `statusNote`.
 Manual patches applied after Open States fetch. Keys are OCD person IDs (`ocd-person/...`) or member full names. Use `_inject` array for entirely new entries (vacant seats). Departure fields: `status`, `statusDate`, `statusNote`. Fields prefixed `_` are stripped before merging.
 
 ### `ga-member-votes.json`
-Top-level: `{ metadata: { generatedAt, session, sessionName, source, totalVotes, totalBillsSeen, paginationComplete }, votes: { <voteId>: {...} }, memberVotes: { <ocdPersonId>: [{voteId, vote}] } }`
-Vote values: `"Yea"`, `"Nay"`, `"Not Voting"`, `"Present"`, `"Absent"`, `"Excused"`, `"Other"`.
+Top-level: `{ metadata: { schemaVersion: 2, generatedAt, session, sessionName, source, totalVotes, totalBillsSeen, paginationComplete }, voteIds: [<voteId>, ...], votes: { <voteId>: {...} }, memberVotes: { <ocdPersonId>: { <indexString>: <code> } } }`
 Members are joined by OCD person ID — the same `id` field as in `ga-members.json`.
+
+**⚠ Compact schema (v2).** At ~270k rows the old `memberVotes: {pid: [{voteId, vote}]}` form repeated the keys and a 45-char uuid on every entry, making the file ~19 MB — the site's largest blob and top client-fetched file. v2 shrinks it to ~3.6 MB (81%): `voteIds` is an ordered index of vote ids; `memberVotes` values are `{indexString: code}` maps, where the index resolves via `voteIds[i]` and `code` is `Y`/`N`/`O` (full map `Y`/`N`/`NV`/`P`/`A`/`E`/`O` for the Open States options `Yea`/`Nay`/`Not Voting`/`Present`/`Absent`/`Excused`/`Other`; GA data currently only uses Yea/Nay/Other). `votes` is **unchanged** (still keyed by voteId).
+
+**Never hand-decode this.** `scripts/lib/votes_schema.py` is the one codec: `member_votes_map(data)` returns the legacy `{pid: [{voteId, vote}]}` shape from **either** schema (readers use it — `generate_party_unity.py`, `enrich_bills_with_party_votes.py`, `publish_ga_legislators.py`), and `encode_member_votes(mv, list(votes.keys()))` writes v2 (writers use it — `generate_ga_votes_data.py`, `import_legiscan_csv.py`). `_includes/entity/ga-legislator.html` decodes inline (the only client that fetches this file). The **sibling-repo publish keeps the legacy shape** (the publisher expands via the codec), so `Votega/ga-legislators` `votes.json`/`votes.schema.json` are unaffected. `federal-member-votes.json` (0.14 MB) stays legacy and does **not** use this codec. Index order tracks the append-only `votes` dict so quiet incremental runs stay byte-identical (finding 5.6).
 
 ### `id-crosswalk.json` + `id-crosswalk-ledger.json`
 Top-level: `{ metadata: { schemaVersion, schemaStability, generatedAt, count, scope, sources[], provenanceMethods, coverage }, people: [...] }`
@@ -190,19 +193,22 @@ Where the caps are and how close we are:
 - **Build time / Actions minutes.** Deploy is via GitHub Actions (`actions/jekyll-build-pages`
   + `deploy-pages`), so the legacy "10 builds/hour" Pages soft limit does **not** apply. Public
   repo ⇒ unlimited Actions minutes. Build is seconds. Not a concern.
-- **Single file — 100 MB.** Largest is `assets/data/ga-member-votes.json` ≈ 20 MB. Fine.
+- **Single file — 100 MB.** Largest is `assets/data/ga-bills.json` ≈ 6 MB (`ga-member-votes.json`
+  was ~20 MB before the v2 compact schema took it to ~3.6 MB — see its schema note above). Fine.
 
 First ceilings we would actually hit (in order):
 1. **Bandwidth — 100 GB/month soft.** Not from HTML (tiny) but from the big client-fetched
-   JSON: `ga-member-votes.json` (~20 MB) + `ga-bills.json` (~9.4 MB). Rough math: ~5,000 full
-   member-votes page loads/month ≈ 100 GB from that one file. Mitigation = slice/paginate those
-   blobs (also the outstanding Core Web Vitals item). GitHub warns before throttling.
-2. **Git history bloat — the real sleeper (NOT a Pages-serving limit).** The daily `update-*`
-   workflows commit those large JSON files into git every day, so `.git` grows ~30–40 MB/day
-   (~1 GB/month) even when daily diffs are small. GitHub warns around 5 GB repo size and
-   clones/Actions checkouts slow well before that. Mitigations to evaluate when revisiting:
-   move big generated JSON to **Git LFS**, or **generate them at deploy** (like entity pages /
-   `_data/rendered` sidecars) instead of committing, or periodically prune/squash history.
+   JSON: `ga-member-votes.json` (~3.6 MB since the v2 compact schema, down from ~20 MB) +
+   `ga-bills.json` (~6 MB, minified). The v2 compaction cut the worst offender ~5×; further
+   mitigation if needed = slice/paginate these blobs (also the outstanding Core Web Vitals item).
+   GitHub warns before throttling.
+2. **Git history bloat.** The `update-*` workflows commit these JSON files, but git delta-
+   compresses them in the packfile, so the reality is far milder than a naive
+   "full-file-per-commit" projection: measured, the two big files' entire history was only
+   ~10 MB on disk and `.git` packs to ~56 MB. The v2 compaction (and the `ga-bills.json` minify)
+   shrink each future commit further. If history ever does approach a few GB, options are **Git
+   LFS** or **generate-at-deploy** for the big blobs — but at current sizes neither is justified
+   (a history rewrite would recover single-digit MB at high risk).
 
-Bottom line: safe through Phase 2. Revisit (1) before any big traffic spike and (2) before repo
-history reaches a few GB — item (2) will bite first if left unaddressed.
+Bottom line: safe through Phase 2. The compaction bought a large margin on both bandwidth and
+history; revisit only before a big traffic spike or if `.git` actually trends toward GitHub's ~5 GB warning.

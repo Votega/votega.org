@@ -15,6 +15,9 @@ import json
 import sys
 from datetime import datetime, timezone
 
+# scripts/ is sys.path[0] when run as `python scripts/enrich_bills_with_party_votes.py`
+from lib.votes_schema import member_votes_map
+
 
 def main():
     if len(sys.argv) < 4:
@@ -41,9 +44,10 @@ def main():
         key = (v.get('bill', ''), v.get('motionText', ''))
         vote_index[key] = vote_id
 
-    # Invert memberVotes into vote_roster: {voteId: {personId: vote_option}}
+    # Invert memberVotes into vote_roster: {voteId: {personId: vote_option}}.
+    # member_votes_map decodes compact or legacy schema; see scripts/lib/votes_schema.py.
     vote_roster = {}
-    for person_id, person_votes in votes_data.get('memberVotes', {}).items():
+    for person_id, person_votes in member_votes_map(votes_data).items():
         for entry in person_votes:
             vid = entry.get('voteId')
             if vid:
@@ -121,8 +125,12 @@ def main():
         bills_data['metadata']['partyTallyEnrichedAt'] = datetime.now(timezone.utc).isoformat()
 
     # 4. Write enriched ga-bills.json
+    # Minified to match generate_ga_bills_data.py's own output: this is the FINAL
+    # writer (it runs after generate in update-ga-bills.yml), so an indent=2 here
+    # was what left the committed file pretty-printed at ~9 MB. It is a large,
+    # generated, client-fetched blob, not a human-reviewed diff.
     with open(bills_path, 'w', encoding='utf-8') as f:
-        json.dump(bills_data, f, indent=2, ensure_ascii=False)
+        json.dump(bills_data, f, separators=(',', ':'), ensure_ascii=False)
 
     print(f"Done — {matched} passageVotes enriched, {unmatched} unmatched")
     print(f"Written: {bills_path}")

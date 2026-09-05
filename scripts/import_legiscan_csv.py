@@ -22,6 +22,9 @@ import os
 import sys
 from datetime import datetime
 
+# scripts/ is sys.path[0] when run as `python scripts/import_legiscan_csv.py`
+from lib.votes_schema import encode_member_votes
+
 CSV_DIR      = sys.argv[1] if len(sys.argv) > 1 else "assets/data/legiscan-csv"
 OUTPUT_FILE  = sys.argv[2] if len(sys.argv) > 2 else "assets/data/ga-member-votes.json"
 MEMBERS_FILE = sys.argv[3] if len(sys.argv) > 3 else "assets/data/ga-members.json"
@@ -244,17 +247,21 @@ def main():
     print(f"  {len(vote_rows):,} records → {len(member_votes)} members with votes ({skipped:,} skipped)")
 
     # ── Write output ─────────────────────────────────────────────────────────
+    # Compact schema (see lib/votes_schema.py) to match generate_ga_votes_data.py.
     session_id = sorted(session_ids)[-1] if session_ids else ""
+    member_votes_compact, vote_ids = encode_member_votes(member_votes, list(votes_meta.keys()))
     output = {
         "metadata": {
+            "schemaVersion": 2,
             "generatedAt": datetime.now().isoformat(),
             "session":     session_id,
             "sessionName": "Georgia General Assembly",
             "source":      "LegiScan CSV",
             "totalVotes":  len(votes_meta),
         },
+        "voteIds":     vote_ids,
         "votes":       votes_meta,
-        "memberVotes": member_votes,
+        "memberVotes": member_votes_compact,
     }
 
     os.makedirs(os.path.dirname(OUTPUT_FILE) or ".", exist_ok=True)

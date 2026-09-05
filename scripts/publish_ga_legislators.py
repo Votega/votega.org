@@ -51,6 +51,7 @@ from lib.ga_voters import VOTING_CHAMBERS
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              session_name, session_slug, tag_session)
 from lib.sibling_publish import build_json, publish_or_dry_run
+from lib.votes_schema import member_votes_map
 
 REPO = "Votega/ga-legislators"
 TOKEN_ENV = "GA_LEGISLATORS_TOKEN"
@@ -277,7 +278,10 @@ def build_votes():
     doc = json.load(open(SRC_VOTES, encoding="utf-8"))
     meta = doc.get("metadata", {})
     votes = doc.get("votes", {})
-    member_votes = doc.get("memberVotes", {})
+    # Decode to the legacy [{voteId, vote}] shape so the PUBLISHED sibling-repo
+    # votes.json keeps its documented schema (votes.schema.json), even though the
+    # internal ga-member-votes.json is now compact. See lib/votes_schema.py.
+    member_votes = member_votes_map(doc)
 
     ids_by_session = {}
     for vid, v in votes.items():

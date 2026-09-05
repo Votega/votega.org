@@ -56,6 +56,9 @@ jobs:
           print(f'Validated: {votes} votes, {members} members with vote records, {size_kb} KB')
           assert votes > 0, 'Expected at least one vote — this data comes from the Open States API (/bills). Check the OPENSTATES_API_KEY secret and the GA_SESSION identifier in generate_ga_votes_data.py, and see the HTTP status in the generate step above.'
           assert members > 0, 'memberVotes is empty — Open States returned roll calls without per-legislator detail. See the generate step output above.'
+          vote_ids = d.get('voteIds')
+          assert isinstance(vote_ids, list) and len(vote_ids) >= votes, 'voteIds index missing or shorter than votes — the compact schema was not written correctly (see scripts/lib/votes_schema.py).'
+          assert all(isinstance(v, dict) for v in d['memberVotes'].values()), 'memberVotes must be {index: code} maps (compact schema).'
           "
 
       - name: Commit and push generated data

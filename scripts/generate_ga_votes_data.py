@@ -52,6 +52,7 @@ from lib.ga_voters import (LEGACY_PERSON_ID_MAP, MemberIndex,
                            normalize_voter_name, resolve_voter)
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              session_name, tag_session)
+from lib.votes_schema import member_votes_map, encode_member_votes
 
 API_KEY      = os.environ.get('OPENSTATES_API_KEY')
 BASE_URL     = "https://v3.openstates.org"
@@ -157,7 +158,7 @@ def sanitize_existing(path):
         data = json.load(f)
 
     votes_meta = data.get('votes', {})
-    raw        = data.get('memberVotes', {})
+    raw        = member_votes_map(data)  # decode compact or legacy
     if not raw:
         print("Error: no memberVotes in file — refusing to write.")
         sys.exit(1)
@@ -166,8 +167,11 @@ def sanitize_existing(path):
     raw = remap_legacy_ids(raw)
     clean, stats = sanitize_member_votes(raw, votes_meta, member_chambers)
 
-    data['memberVotes'] = clean
+    compact, vote_ids = encode_member_votes(clean, list(votes_meta.keys()))
+    data['voteIds']     = vote_ids
+    data['memberVotes'] = compact
     meta = data.setdefault('metadata', {})
+    meta['schemaVersion']        = 2
     meta['sanitizedAt']          = datetime.now().isoformat()
     meta['duplicateVotesDropped'] = stats['duplicateVotesDropped']
     meta['crossChamberDropped']   = stats['crossChamberDropped']
@@ -203,7 +207,9 @@ def load_existing(path):
     try:
         with open(path, encoding='utf-8') as f:
             d = json.load(f)
-        return d.get('votes') or {}, d.get('memberVotes') or {}, d.get('metadata') or {}
+        # Decode compact (or pass through legacy) so the merge logic below always
+        # works on the {pid: [{voteId, vote}]} shape. See lib/votes_schema.py.
+        return d.get('votes') or {}, member_votes_map(d), d.get('metadata') or {}
     except Exception as e:
         print(f"  Could not read existing {path}: {e}")
         return {}, {}, {}
@@ -508,8 +514,13 @@ def main():
     for v in votes_meta.values():
         sid = v.get('session') or GA_SESSION
         by_session[sid] = by_session.get(sid, 0) + 1
+    # Compact schema: intern voteIds and encode memberVotes as {index: code}.
+    # base order = votes_meta keys (stable, append-only) so quiet incremental runs
+    # stay byte-identical. See lib/votes_schema.py.
+    member_votes_compact, vote_ids = encode_member_votes(member_votes, list(votes_meta.keys()))
     output = {
         'metadata': {
+            'schemaVersion':        2,
             'generatedAt':          datetime.now().isoformat(),
             'biennium':             BIENNIUM,
             # Every session in the biennium, with its roll-call count. Preserved sessions
@@ -557,8 +568,9 @@ def main():
             # only way to attribute a bare-surname row shared by several members.
             'surnameResolved':       surname_resolved,
         },
+        'voteIds':     vote_ids,
         'votes':       votes_meta,
-        'memberVotes': member_votes,
+        'memberVotes': member_votes_compact,
     }
 
     # Quiet incremental run: nothing was fetched, so the merged data equals the baseline

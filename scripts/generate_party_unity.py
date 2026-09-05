@@ -36,6 +36,7 @@ from datetime import datetime, timezone
 
 # scripts/ is sys.path[0] when run as `python scripts/generate_party_unity.py`
 from lib.ga_voters import VOTING_CHAMBERS
+from lib.votes_schema import member_votes_map
 
 VOTES_FILE = "assets/data/ga-member-votes.json"
 MEMBERS_FILE = "assets/data/ga-members.json"
@@ -182,7 +183,9 @@ def main():
         members_data = json.load(f)
 
     votes_index = votes_data.get("votes", {})
-    member_votes = votes_data.get("memberVotes", {})
+    # Decode compact or legacy memberVotes to the {pid: [{voteId, vote}]} shape the
+    # rest of this script expects. See scripts/lib/votes_schema.py.
+    member_votes = member_votes_map(votes_data)
 
     party_map = {
         m["id"]: m.get("party")
