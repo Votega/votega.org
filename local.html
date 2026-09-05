@@ -1,0 +1,118 @@
+---
+layout: default
+title: Georgia Local Government
+permalink: /local/
+share-description: "Public meetings, agendas, minutes, and officials for Georgia counties and cities. Searchable and organized by place."
+---
+
+<h1>Georgia Local Government</h1>
+<p id="localIntro">
+  Public meetings, agendas, minutes, and video for Georgia counties and cities,
+  aggregated from each government's official site. Search or filter to find a
+  place, then open it to browse its meeting record.
+</p>
+
+<style>
+  .lh-controls {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem;
+    margin: 1.25rem 0 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;
+  }
+  .lh-search {
+    flex: 1 1 16rem; font-size: 0.95rem; padding: 0.5rem 0.7rem;
+    border: 1px solid #ccc; border-radius: 6px;
+  }
+  .lh-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .lh-pill {
+    font-size: 0.82rem; font-weight: 600; padding: 0.28rem 0.7rem;
+    border: 1px solid #ccc; border-radius: 999px; background: #fff;
+    color: #1a4d94; cursor: pointer; line-height: 1.2;
+  }
+  .lh-pill:hover { background: #f0f5fc; }
+  .lh-pill.active { background: #1a56a8; border-color: #1a56a8; color: #fff; }
+  .lh-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; }
+  .lh-card {
+    display: block; padding: 1rem 1.15rem; border: 1px solid #ddd; border-radius: 8px;
+    background: #fff; text-decoration: none; color: inherit; border-left: 4px solid #1a56a8;
+  }
+  .lh-card:hover { border-color: #1a56a8; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .lh-card.city { border-left-color: #2e7d32; }
+  .lh-name { font-size: 1.05rem; font-weight: 700; color: #111; margin-bottom: 0.35rem; }
+  .lh-meta { font-size: 0.78rem; color: #777; margin-bottom: 0.5rem; }
+  .lh-badge {
+    display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; border-radius: 4px; padding: 0.1rem 0.4rem; margin-right: 0.3rem;
+  }
+  .lh-badge-county { background: #e7eef8; color: #1a4d94; }
+  .lh-badge-city { background: #e3f2e4; color: #1b5e20; }
+  .lh-domains { font-size: 0.8rem; color: #444; }
+  .lh-empty { color: #666; font-style: italic; padding: 1rem 0; }
+  .lh-note { margin-top: 2rem; font-size: 0.82rem; color: #777; }
+</style>
+
+<div class="lh-controls">
+  <input type="search" id="lhSearch" class="lh-search" placeholder="Search counties and cities…" aria-label="Search places">
+  <div class="lh-pills" id="lhPills">
+    <button class="lh-pill active" data-type="all">All</button>
+    <button class="lh-pill" data-type="county">Counties</button>
+    <button class="lh-pill" data-type="city">Cities</button>
+  </div>
+</div>
+
+{% assign places = site.data.places.places | sort: "name" %}
+<div class="lh-grid" id="lhGrid">
+  {%- for p in places %}
+  {%- assign ptype = p.type | default: "county" %}
+  <a class="lh-card {{ ptype }}" href="{{ '/local/' | append: p.slug | append: '/' | relative_url }}"
+     data-name="{{ p.name | downcase }}" data-type="{{ ptype }}">
+    <div class="lh-name">{{ p.name }}</div>
+    <div class="lh-meta">
+      <span class="lh-badge lh-badge-{{ ptype }}">{{ ptype }}</span>
+      {%- if p.region %}{{ p.region }}{% endif %}
+    </div>
+    <div class="lh-domains">
+      {%- if p.domains.meetings %}📅 Meetings{% endif %}
+      {%- unless p.domains %}Coming soon{% endunless %}
+    </div>
+  </a>
+  {%- endfor %}
+</div>
+<p class="lh-empty" id="lhEmpty" hidden>No places match your search.</p>
+
+<p class="lh-note">
+  More Georgia counties and cities are being added. Data is aggregated from each
+  government's official website; open a place to see its source and last-updated date.
+</p>
+
+<script>
+  (function () {
+    var search = document.getElementById('lhSearch');
+    var grid = document.getElementById('lhGrid');
+    var empty = document.getElementById('lhEmpty');
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('.lh-card'));
+    var state = { q: '', type: 'all' };
+
+    function apply() {
+      var q = state.q.trim().toLowerCase();
+      var shown = 0;
+      cards.forEach(function (c) {
+        var okType = state.type === 'all' || c.dataset.type === state.type;
+        var okText = !q || c.dataset.name.indexOf(q) !== -1;
+        var show = okType && okText;
+        c.hidden = !show;
+        if (show) shown++;
+      });
+      empty.hidden = shown !== 0;
+    }
+
+    search.addEventListener('input', function (e) { state.q = e.target.value; apply(); });
+    document.getElementById('lhPills').addEventListener('click', function (e) {
+      var btn = e.target.closest('.lh-pill');
+      if (!btn) return;
+      state.type = btn.dataset.type;
+      Array.prototype.forEach.call(this.querySelectorAll('.lh-pill'), function (p) {
+        p.classList.toggle('active', p === btn);
+      });
+      apply();
+    });
+  })();
+</script>

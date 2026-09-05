@@ -31,9 +31,12 @@ import sys
 from datetime import datetime, date
 from urllib.parse import urlparse, parse_qs, unquote
 
+import yaml
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.join(ROOT, "assets", "data")
 ENTITIES_DIR = os.path.join(ROOT, "_entities")
+PLACES_PATH = os.path.join(ROOT, "_data", "places.yml")
 ENTITY_URLS_PATH = os.path.join(ROOT, "_data", "entity_urls.json")
 # Persisted {permalink: {"h": content-hash, "d": "YYYY-MM-DD"}} so a page's
 # last_modified_at only advances when its content actually changes. Restored from
@@ -524,6 +527,86 @@ def build_justices(records, urls, prior, new_state):
     return count
 
 
+# ─────────────────────────── Local government (places) ───────────────────────────
+
+def _places_source_fallback(place):
+    """Best public URL to link when data is missing, per meetings platform."""
+    cfg = ((place.get("domains") or {}).get("meetings")) or {}
+    base = (cfg.get("base_url") or "").rstrip("/")
+    if not base:
+        return ""
+    return base + "/AgendaCenter" if cfg.get("platform") == "civicplus" else base
+
+
+def build_places(records, urls, prior, new_state):
+    """Emit /local/<slug>/ pages from the places registry.
+
+    Unlike the other builders this iterates _data/places.yml directly rather than
+    the search manifest: the registry is the authoritative, committed source of
+    truth for which places exist, so pages materialize at deploy even before the
+    (separately scheduled) search index has picked a new place up.
+    """
+    if not os.path.exists(PLACES_PATH):
+        return 0
+    with open(PLACES_PATH, encoding="utf-8") as fh:
+        places = (yaml.safe_load(fh) or {}).get("places", [])
+    by_slug = {p["slug"]: p for p in places}
+    data_date = date.today().isoformat()  # registry is hand-edited; use today
+
+    count = 0
+    for p in places:
+        slug = p["slug"]
+        name = p.get("name") or slug
+        ptype = p.get("type") or "county"
+        permalink = f"/local/{slug}/"
+        urls.setdefault("place", {})[slug] = permalink
+
+        parent = by_slug.get(p.get("parentCounty") or "")
+        domains = sorted((p.get("domains") or {}).keys())
+        fallback = _places_source_fallback(p)
+
+        kind = "City" if ptype == "city" else "County"
+        share_title = f"{name}, Georgia — Public Meetings & Local Government"
+        desc = (f"Public meeting agendas, minutes, and video for {name}, Georgia. "
+                f"Board and commission meetings aggregated from the "
+                f"{'city' if ptype == 'city' else 'county'}'s official Agenda Center.")
+
+        ld = json_ld({
+            "@context": "https://schema.org", "@type": "GovernmentOrganization",
+            "name": name, "url": SITE_URL + permalink,
+            "areaServed": {"@type": "AdministrativeArea", "name": name},
+            "containedInPlace": {"@type": "State", "name": "Georgia"},
+        })
+        bc = breadcrumb_ld([("Home", "/"), ("Local Government", "/local/"), (name, None)])
+
+        entity = {
+            "type": "place", "slug": slug, "placeType": ptype, "name": name,
+            "parentCountySlug": (parent or {}).get("slug"),
+            "parentCountyName": (parent or {}).get("name"),
+        }
+        lastmod = resolve_lastmod(
+            permalink, {"e": entity, "t": share_title, "d": desc, "dom": domains},
+            data_date, prior, new_state)
+
+        place_js = {"slug": slug, "placeName": name,
+                    "sourceFallback": fallback, "domains": domains}
+        fm = {
+            "layout": "default",
+            "title": yaml_quote(name),
+            "share-title": yaml_quote(share_title),
+            "share-description": yaml_quote(desc),
+            "permalink": permalink,
+            "last_modified_at": lastmod,
+            "entity": entity,
+        }
+        body = (f"<script>window.VOTEGA_PLACE = {json.dumps(place_js)};</script>\n"
+                f"{ld}\n{bc}\n"
+                f"{{% include entity/place.html %}}")
+        write_page("local", slug, fm, body)
+        count += 1
+    return count
+
+
 CATEGORY_BUILDERS = [
     ("GA Legislator", build_ga_legislators),
     ("U.S. Congress", build_federal_legislators),
@@ -531,6 +614,7 @@ CATEGORY_BUILDERS = [
     ("Candidate", build_candidates),  # after U.S. Congress: reuses urls['us-congress']
     ("Federal Executive", build_federal_executives),
     ("U.S. Supreme Court", build_justices),
+    ("Local Government", build_places),  # iterates _data/places.yml, ignores records
 ]
 
 

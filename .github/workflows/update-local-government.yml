@@ -1,13 +1,13 @@
-name: Update County Meetings (CivicPlus, weekly)
+name: Update Local Government data (weekly)
 
 permissions:
   contents: write
 
-# Weekly, NOT daily: county Agenda Centers post infrequently, and the failure
-# this guards against — a county reskinning its site so the scrape breaks —
-# originates on the county's server, not in this repo, so only a scheduled run
-# can catch it (a push/PR trigger never would). Manual dispatch for onboarding a
-# new county to _data/county_civicplus.yml.
+# Weekly, NOT daily: local-government sites post infrequently, and the failure
+# this guards against — a place reskinning its site so the scrape breaks —
+# originates on the place's server, not in this repo, so only a scheduled run can
+# catch it (a push/PR trigger never would). Manual dispatch for onboarding a new
+# place to _data/places.yml.
 on:
   workflow_dispatch:
   schedule:
@@ -29,22 +29,22 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
 
-      - name: Generate county meeting data
-        run: python scripts/generate_county_meetings.py
+      - name: Generate local-government meeting data
+        run: python scripts/generate_place_meetings.py
 
       - name: Validate output
-        run: python scripts/validate_county_meetings.py
+        run: python scripts/validate_place_meetings.py
 
       - name: Commit if changed
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/data/county-*-meetings.json
+          git add assets/data/local-*-meetings.json
           if git diff --cached --quiet; then
-            echo "No county meeting changes"
+            echo "No local-government meeting changes"
           else
-            git commit -m "Update county meeting data ($(date -u '+%Y-%m-%d'))"
+            git commit -m "Update local-government meeting data ($(date -u '+%Y-%m-%d'))"
             pushed=0
             for attempt in 1 2 3; do
               if git pull --rebase origin main && git push; then pushed=1; break; fi

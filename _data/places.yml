@@ -1,0 +1,48 @@
+# Registry of Georgia local governments (counties and cities) VoteGA aggregates.
+# One entry per PLACE; each declares its platform + per-domain config. Checked,
+# not trusted (like open_data.yml): a place that reskins its site silently breaks
+# the scrape — scripts/validate_place_meetings.py guards that, and
+# update-local-government.yml runs WEEKLY because the break lands on the place's
+# own server, not in this repo.
+#
+# See LOCAL-GOVERNMENT-IA.md for the full model. Platform-agnostic by design:
+# Newton is CivicPlus, Covington will be CoreCode — the adapter
+# (scripts/lib/<platform>.py) is chosen per domain, and every adapter normalizes
+# to the SAME domain schema, so the page render never depends on the platform.
+#
+# Consumed by:
+#   scripts/generate_place_meetings.py  -> assets/data/local-<slug>-meetings.json
+#   scripts/validate_place_meetings.py  -> CI guard
+#   scripts/generate_search_corpus.py   -> makes places searchable sitewide
+#   scripts/build_entity_pages.py       -> /local/<slug>/ crawlable entity pages
+#   local.html (via site.data.places)   -> the /local/ hub directory
+#
+# Fields
+#   slug / name / type   identity; type is county | city
+#   fips                 county FIPS (counties); null for cities
+#   parentCounty         slug of the containing county (cities only; null for counties)
+#   region               optional grouping label for the hub filter
+#   domains              per-domain adapter config; supported domain today: meetings
+#     meetings.platform  civicplus | corecode
+#       civicplus keys:  base_url (no trailing slash), agenda_module_id,
+#                        bodies (display name -> catId; see <base_url>/RSS.aspx)
+
+places:
+  - slug: newton
+    name: Newton County
+    type: county
+    fips: "13217"
+    parentCounty: null
+    region: Metro Atlanta
+    domains:
+      meetings:
+        platform: civicplus
+        base_url: https://www.newtoncountyga.gov
+        agenda_module_id: 65
+        bodies:
+          Board of Commissioners: 2
+          Board of Elections: 11
+          Board of Zoning Appeals: 7
+          Newton County Recreation Commission: 9
+          Planning Commission: 5
+          Solid Waste Authority: 6

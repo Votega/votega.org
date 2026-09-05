@@ -1,0 +1,99 @@
+<!-- Local-government place profile. Rendered by /local/<slug>/ entity pages
+     (build_entity_pages.py sets window.VOTEGA_PLACE). Identity/header is
+     server-rendered from page.entity for crawlability; the Meetings domain loads
+     client-side from local-<slug>-meetings.json via local-meetings.js, which is
+     base-path-aware so it works under the clean entity URL. -->
+{% assign e = page.entity %}
+<style>
+  .place-kicker {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; color: #888; margin: 0 0 0.75rem 0;
+  }
+  .place-intro { color: #333; line-height: 1.5; margin: 0 0 0.5rem; }
+  .back-link {
+    display: inline-block; margin-bottom: 1rem; font-size: 0.875rem;
+    color: #1d4ed8; text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .cm-controls {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem;
+    margin: 1.25rem 0 0.5rem; padding-bottom: 0.9rem; border-bottom: 1px solid #e5e7eb;
+  }
+  .cm-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .cm-pill {
+    font-size: 0.82rem; font-weight: 600; padding: 0.28rem 0.7rem;
+    border: 1px solid #ccc; border-radius: 999px; background: #fff;
+    color: #1a4d94; cursor: pointer; line-height: 1.2;
+  }
+  .cm-pill:hover { background: #f0f5fc; }
+  .cm-pill.active { background: #1a56a8; border-color: #1a56a8; color: #fff; }
+  .cm-pill .cm-count { opacity: 0.7; font-weight: 500; }
+  .cm-toggle {
+    font-size: 0.85rem; color: #444; display: inline-flex; align-items: center;
+    gap: 0.4rem; margin-left: auto; cursor: pointer;
+  }
+  .cm-section-heading {
+    margin-top: 1.75rem; font-size: 1.15rem; color: #333;
+    border-bottom: 2px solid #eee; padding-bottom: 0.3rem;
+  }
+  .cm-list { list-style: none; padding: 0; margin: 0.75rem 0 0; }
+  .cm-row {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem;
+    padding: 0.7rem 0; border-bottom: 1px solid #eee;
+  }
+  .cm-date { font-weight: 700; color: #222; min-width: 6.5rem; }
+  .cm-body-chip {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; background: #e7eef8; color: #1a4d94;
+    border-radius: 4px; padding: 0.1rem 0.45rem;
+  }
+  .cm-title { color: #333; flex: 1 1 12rem; }
+  .cm-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .cm-links a { font-size: 0.85rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .cm-links a:hover { text-decoration: underline; }
+  .cm-empty { color: #666; font-style: italic; padding: 0.8rem 0; }
+  .cm-upcoming .cm-date { color: #1b5e20; }
+  #cmSource { margin-top: 1.5rem; font-size: 0.8rem; color: #888; }
+</style>
+
+<a class="back-link" href="{{ '/local/' | relative_url }}">&larr; All Georgia local governments</a>
+
+<h1 class="place-name">{{ e.name }}</h1>
+<p class="place-kicker">
+  {% if e.placeType == 'city' %}City in Georgia{% else %}Georgia County{% endif %}
+  {%- if e.parentCountyName and e.parentCountySlug %} &middot;
+    part of <a href="{{ '/local/' | append: e.parentCountySlug | append: '/' | relative_url }}">{{ e.parentCountyName }}</a>
+  {%- endif %}
+</p>
+
+<p class="place-intro">
+  Public meeting agendas, minutes, and video for {{ e.name }}, aggregated from the
+  government's official Agenda Center. Each link opens the document or recording on
+  that site. Minutes appear once a meeting has been held and approved.
+</p>
+
+<section id="cmMeetings">
+  <div id="cmControls" class="cm-controls" hidden>
+    <div class="cm-pills" id="cmPills"></div>
+    <label class="cm-toggle"><input type="checkbox" id="cmMinutesOnly"> Minutes available only</label>
+  </div>
+  <div id="cmContainer"><p id="cmLoading">Loading meetings&hellip;</p></div>
+  <p id="cmSource"></p>
+</section>
+
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/local-meetings.js' | relative_url }}"></script>
+<script>
+  // window.VOTEGA_PLACE is emitted by build_entity_pages.py above this include.
+  if (window.VOTEGA_PLACE && (window.VOTEGA_PLACE.domains || []).indexOf('meetings') !== -1) {
+    LocalMeetings.init({
+      slug: window.VOTEGA_PLACE.slug,
+      placeName: window.VOTEGA_PLACE.placeName,
+      sourceFallback: window.VOTEGA_PLACE.sourceFallback,
+      containerId: 'cmContainer', controlsId: 'cmControls', pillsId: 'cmPills',
+      minutesToggleId: 'cmMinutesOnly', sourceId: 'cmSource'
+    });
+  }
+</script>

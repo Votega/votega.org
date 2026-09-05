@@ -25,6 +25,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
+import yaml
+
 # The two chambers of the General Assembly. Shared so the definition of "is a
 # legislator" lives in one place -- ga-members.json also carries statewide
 # executives, and every consumer has to exclude them the same way.
@@ -299,6 +301,35 @@ def build_scotus(records, seen):
         )
 
 
+def build_places(records, seen):
+    """Index local governments (counties/cities) so sitewide search finds them.
+
+    Reads the places registry directly (_data/places.yml), not an assets/data
+    file — the registry is the authoritative list of places. Each points at its
+    clean /local/<slug>/ entity page.
+    """
+    path = JEKYLL_DATA_DIR / "places.yml"
+    if not path.exists():
+        print("  ! places.yml not found -- skipping", file=sys.stderr)
+        return
+    with open(path, encoding="utf-8") as f:
+        places = (yaml.safe_load(f) or {}).get("places", [])
+    for p in places:
+        slug = clean(p.get("slug"))
+        name = clean(p.get("name"))
+        if not slug or not name:
+            continue
+        kind = "city" if p.get("type") == "city" else "county"
+        add(
+            records,
+            seen,
+            title=name,
+            desc=f"Public meetings, agendas, and minutes for this Georgia {kind}.",
+            category="Local Government",
+            url=f"local/{slug}/",
+        )
+
+
 def main():
     records = []
     seen = set()
@@ -310,6 +341,7 @@ def main():
     build_ga_executive(records, seen)
     build_federal_executive(records, seen)
     build_scotus(records, seen)
+    build_places(records, seen)
 
     # Tally by category for the run log / sanity check.
     by_cat = {}
