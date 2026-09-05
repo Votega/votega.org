@@ -62,6 +62,7 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
 {% assign places = site.data.places.places | sort: "name" %}
 <div class="lh-grid" id="lhGrid">
   {%- for p in places %}
+  {%- if p.hidden %}{% continue %}{% endif %}
   {%- assign ptype = p.type | default: "county" %}
   {%- comment %} Officials is a derived domain (slug == jurisdiction id) and leads the card. {% endcomment -%}
   {%- assign hasOfficials = site.data.local_officials.jurisdictions | where: "id", p.slug | first %}
