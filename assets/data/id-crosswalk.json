@@ -2,7 +2,7 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-08-30T14:23:50+00:00",
+  "generatedAt": "2026-09-06T12:51:20+00:00",
   "count": 746,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
@@ -24,10 +24,10 @@
   },
   "coverage": {
    "people": 746,
-   "officeholders": 264,
-   "candidateOnly": 482,
-   "withVgId": 681,
-   "unkeyed": 65,
+   "officeholders": 265,
+   "candidateOnly": 481,
+   "withVgId": 680,
+   "unkeyed": 66,
    "withAnyFiling": 664,
    "candidacies": 716,
    "ambiguous": []
@@ -16134,7 +16134,9 @@
     "govtrackId": null,
     "openSecretsId": null,
     "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
+    "peachfileFilerEntityIds": [
+     "101051"
+    ],
     "votegaCandidateIds": [
      "ga-senate-12-2026-d-3"
     ]
@@ -16154,11 +16156,11 @@
      "isIncumbent": true,
      "withdrawn": true,
      "disqualified": false,
-     "peachfileFilerEntityId": null,
+     "peachfileFilerEntityId": "101051",
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "reviewed",
-      "confidence": "confirmed-none",
+      "confidence": "high",
       "source": "assets/data/ga-campaign-finance-overrides.json",
       "key": "ga-senate-12-2026-d-3"
      }
@@ -16171,7 +16173,7 @@
     },
     "peachfileFilerEntityIds": {
      "method": "reviewed",
-     "confidence": "confirmed-none",
+     "confidence": "high",
      "source": "assets/data/ga-campaign-finance-overrides.json",
      "key": "ga-senate-12-2026-d-3"
     },
@@ -19462,60 +19464,6 @@
    "provenance": {
     "fecCandidateIds": {
      "method": "district+surname",
-     "confidence": "high",
-     "source": "FEC candidate index"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000303",
-   "name": {
-    "full": "Dr. Everton Blair",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [
-     "H6GA13062"
-    ],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "challenger-everton-blair-ga13-2026"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-13-2026",
-     "candidateId": "challenger-everton-blair-ga13-2026",
-     "cycle": 2026,
-     "level": "federal",
-     "office": "U.S. House",
-     "district": 13,
-     "party": "Democrat",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": "H6GA13062",
-     "filingProvenance": {
-      "method": "name-exact",
-      "confidence": "high",
-      "source": "FEC candidate index"
-     }
-    }
-   ],
-   "provenance": {
-    "fecCandidateIds": {
-     "method": "name-exact",
      "confidence": "high",
      "source": "FEC candidate index"
     }
@@ -39613,60 +39561,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000674",
-   "name": {
-    "full": "Blake Allan Elsberry",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "100688"
-    ],
-    "votegaCandidateIds": [
-     "ga-senate-53-2026-r-1"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-senate-53-2026",
-     "candidateId": "ga-senate-53-2026-r-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia State Senate",
-     "district": 53,
-     "party": "Republican",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "100688",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000675",
    "name": {
     "full": "Denise Pierce Burns",
@@ -40206,6 +40100,74 @@
    }
   },
   {
+   "vgId": "vg-ga-p-000685",
+   "name": {
+    "full": "Blair, Everton",
+    "first": "Everton",
+    "last": "Blair"
+   },
+   "role": {
+    "level": "federal",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 13,
+    "party": "Democratic",
+    "status": null
+   },
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": "B001328",
+    "govtrackId": 457045,
+    "openSecretsId": null,
+    "fecCandidateIds": [
+     "H6GA13062"
+    ],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "challenger-everton-blair-ga13-2026"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-13-2026",
+     "candidateId": "challenger-everton-blair-ga13-2026",
+     "cycle": 2026,
+     "level": "federal",
+     "office": "U.S. House",
+     "district": 13,
+     "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": "H6GA13062",
+     "filingProvenance": {
+      "method": "name-exact",
+      "confidence": "high",
+      "source": "FEC candidate index"
+     }
+    }
+   ],
+   "provenance": {
+    "bioguideId": {
+     "method": "authoritative",
+     "source": "Congress.gov"
+    },
+    "fecCandidateIds": {
+     "method": "authoritative",
+     "source": "unitedstates/congress-legislators (public domain)"
+    },
+    "govtrackId": {
+     "method": "authoritative",
+     "source": "unitedstates/congress-legislators (public domain)"
+    }
+   }
+  },
+  {
    "vgId": null,
    "name": {
     "full": "Alisha Adams Johnson",
@@ -40399,6 +40361,56 @@
       "method": "out-of-scope",
       "confidence": null,
       "note": "no campaign finance source covers GA local offices"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Blake Allan Elsberry",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "ga-senate-53-2026-r-1"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-senate-53-2026",
+     "candidateId": "ga-senate-53-2026-r-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia State Senate",
+     "district": 53,
+     "party": "Republican",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
      }
     }
    ],
