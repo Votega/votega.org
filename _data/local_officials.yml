@@ -523,3 +523,128 @@ jurisdictions:
         photo: "https://assets.cobbcounty.gov/files/2025-09/BOC-Sheffield-Headshot.jpg"
         source: "https://www.cobbcounty.gov/board/district-commissioners/district-4-commissioner"
         notes: ""
+  # ==========================================================================
+  # DEKALB COUNTY  (county — partisan)  — SKELETON, fill in members
+  # ==========================================================================
+  - id: dekalb                      # MUST equal the places.yml slug (join key)
+    name: DeKalb County
+    type: county
+    county: DeKalb
+    body: Board of Commissioners
+    partisan: true       
+    official_url: https://dekalbcountyga.gov/government/board-of-commissioners
+    related_pages: 
+    # ---- PHASE 1 — ROSTER --------------------------------------------------
+    members:
+      - name: "Lorraine Cochran-Johnson"
+        role: Chief Executive Officer               # countywide-elected board chair
+        seat: At-large
+        party: ""                   # Republican | Democratic
+        email: ""
+        phone: ""
+        last_elected: 
+        term_end: 2028
+        next_election: 2027
+        voting: true           # verify: many GA chairs vote only to break ties
+        tie_break_only: false
+        photo: "https://assets.cobbcounty.gov/files/2025-09/cupid.headshot.2024.low_.jpg"
+        source: "https://www.cobbcounty.gov/board/commission-chairwoman"
+        notes: ""
+      - name: "Robert Patrick"
+        role: Commissioner
+        seat: "District 1"                    # e.g. "District 1"
+        party: ""
+        email: "district1@dekalbcountyga.gov"
+        phone: "404-371-3052"
+        last_elected:
+        term_end: 2028
+        next_election: 2027
+        voting: true
+        tie_break_only: false
+        photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_1_robert_patrick.jpg.avif?itok=E2F4FbAE"
+        source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/robert-patrick"
+        notes: ""
+      - name: "Michelle Long Spears"
+        role: Commissioner
+        seat: "District 2"                    # e.g. "District 1"
+        party: ""
+        email: "district2@dekalbcountyga.gov"
+        phone: "404-371-2863"
+        last_elected:
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_2_michelle_long_spears.jpg.avif?itok=k8n22CG0"
+        source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/michelle-long-spears"
+        notes: ""
+      - name: "Nicole Massiah"
+        role: Commissioner
+        seat: "District 3"                    # e.g. "District 1"
+        party: "Democratic"
+        email: "District3@dekalbcountyga.gov"
+        phone: "404-371-2425"
+        last_elected: 
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_3_nicole_massiah.jpg.avif?itok=ht71lmR3"
+        source: "https://dekalbcountyga.gov/index%2ephp/government/board-of-commissioners/districts/nicole-massiah"
+        notes: ""
+      - name: "Chakira Johnson"
+        role: Commissioner
+        seat: "District 4"                    # e.g. "District 1"
+        party: ""
+        email: "chakira@dekalbcountyga.gov"
+        phone: "404-371-4907"
+        last_elected: 
+        term_end: 2028
+        next_election: 2027
+        voting: true
+        tie_break_only: false
+        photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_4_chakira_johnson.jpg.avif?itok=Z-h5EuCD"
+        source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/chakira-johnson"
+        notes: ""
+      - name: "Mereda Davis Johnson"
+        role: Commissioner
+        seat: "District 5"                    # e.g. "District 1"
+        party: ""
+        email: "mdjohnson@dekalbcountyga.gov"
+        phone: "404-371-2159"
+        last_elected: 
+        term_end: 2028
+        next_election: 2027
+        voting: true
+        tie_break_only: false
+        photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-06/District_5_Mereda_Davis_Johnson_Revised_1.png.avif?itok=hFcz_4zT"
+        source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/mareda-davis-johnson"
+        notes: ""
+      - name: "Ted Terry"
+        role: Commissioner
+        seat: "Super District 6"                    # e.g. "District 1"
+        party: ""
+        email: "ted@dekalbcountyga.gov"
+        phone: "404-371-4909"
+        last_elected: 
+        term_end: 2028
+        next_election: 2027
+        voting: true
+        tie_break_only: false
+        photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_6_edward_terry.jpg.avif?itok=sJh1-Js0"
+        source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/ted-terry"
+        notes: ""
+      - name: "LaDena Bolton, PhD"
+        role: Commissioner
+        seat: "Super District 7"                    # e.g. "District 1"
+        party: ""
+        email: "district7@DeKalbCountyGA.gov"
+        phone: "404-371-2899"
+        last_elected: 
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_7_ladena_bolton.jpg.avif?itok=_Jsgy9F_"
+        source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/ladena-bolton"
+        notes: ""
