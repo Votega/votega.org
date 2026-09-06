@@ -161,6 +161,10 @@ places:
     domains:
       meetings:
         platform: civicclerk
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd Tuesday of every month, 9:00 a.m. and 4th Tuesday of every month, 7:00 p.m."
+            location: "Public Meeting Room, 100 Cherokee Street, Marietta"
         subdomain: cobbcoga
         # Cobb stores the meeting TYPE in CivicClerk's categoryName. Map to clean
         # bodies; drop administrative ones (Board of Elections & Registration, the

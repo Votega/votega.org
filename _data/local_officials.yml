@@ -448,7 +448,7 @@ jurisdictions:
     type: county
     county: Cobb
     body: Board of Commissioners
-    partisan: false              
+    partisan: true       
     official_url: https://www.cobbcounty.gov/board
     related_pages: 
     # ---- PHASE 1 — ROSTER --------------------------------------------------
@@ -456,35 +456,35 @@ jurisdictions:
       - name: "Lisa Cupid"
         role: Chair                 # countywide-elected board chair
         seat: At-large
-        party: ""                   # Republican | Democratic
+        party: "Democratic"                   # Republican | Democratic
         email: "lisa.cupid@cobbcounty.gov"
         phone: "678-625-1201"
-        last_elected: 
-        term_end: 
-        next_election: 
-        voting: false               # verify: many GA chairs vote only to break ties
-        tie_break_only: true
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2027
+        voting: true           # verify: many GA chairs vote only to break ties
+        tie_break_only: false
         photo: "https://assets.cobbcounty.gov/files/2025-09/cupid.headshot.2024.low_.jpg"
         source: "https://www.cobbcounty.gov/board/commission-chairwoman"
         notes: ""
       - name: "Keli Gambrill"
         role: Commissioner
         seat: "District 1"                    # e.g. "District 1"
-        party: ""
+        party: "Republican"
         email: "keli.gambrill@cobbcounty.gov"
         phone: "770-528-3313"
         last_elected: 2023
-        term_end: 
-        next_election: 
+        term_end: 2027
+        next_election: 2026 
         voting: true
         tie_break_only: false
         photo: "https://assets.cobbcounty.gov/files/2020-12/BOC-Gambrill-Headshot.jpg"
         source: "https://www.cobbcounty.gov/board/district-commissioners/district-1-commissioner"
-        notes: ""
+        notes: "Serving second term after re-election in 2023"
       - name: "Erick Allen"
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
-        party: ""
+        party: "Democratic"
         email: "erick.allen@cobbcounty.gov"
         phone: "770-528-3315"
         last_elected: 2025
@@ -494,30 +494,30 @@ jurisdictions:
         tie_break_only: false
         photo: "https://assets.cobbcounty.gov/files/2025-09/erick%20allen%20SQ_0.jpg"
         source: "https://www.cobbcounty.gov/board/district-commissioners/district-2-commissioner"
-        notes: ""
+        notes: "Elected in special election in 2025."
       - name: "JoAnn Birrell"
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
-        party: ""
+        party: "Republican"
         email: "joann.birrell@cobbcounty.gov"
         phone: "770-528-3317"
-        last_elected:
-        term_end: 
-        next_election:
+        last_elected: 2023
+        term_end: 2027
+        next_election: 2026
         voting: true
         tie_break_only: false
         photo: "https://assets.cobbcounty.gov/files/2025-09/Birrell-headshot.jpg"
         source: "https://www.cobbcounty.gov/board/district-commissioners/district-3-commissioner"
-        notes: ""
+        notes: "Serving fourth term."
       - name: "Monique Sheffield"
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
-        party: ""
+        party: "Democratic"
         email: "monique.sheffield@cobbcounty.gov"
         phone: "770-528-3312"
-        last_elected:
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2027
+        next_election: 2026
         voting: true
         tie_break_only: false
         photo: "https://assets.cobbcounty.gov/files/2025-09/BOC-Sheffield-Headshot.jpg"
