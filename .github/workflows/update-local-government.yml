@@ -29,18 +29,39 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
 
+      # poppler-utils (pdftotext/pdftoppm) + tesseract power the OCR meeting
+      # enricher; agenda PDFs almost always have a text layer, so pdftotext does
+      # the work and tesseract is only the scanned-PDF fallback.
+      - name: Install PDF text tools
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils tesseract-ocr
+
       - name: Generate local-government meeting data
         run: python scripts/generate_place_meetings.py
 
       - name: Validate output
         run: python scripts/validate_place_meetings.py
 
+      # Topic / data-center enrichment. Both writers guard like the steps above —
+      # they never overwrite a good sidecar or good flags with an empty result —
+      # so a transient upstream failure can't wipe the committed watch data.
+      # Legistar (Fulton, DeKalb): structured API, no OCR.
+      - name: Enrich Legistar meetings (topics + data-center watch)
+        run: python scripts/enrich_legistar_meetings.py
+
+      # PDF places (Newton/Covington/Douglas/Cobb/Henry): poppler text-layer,
+      # OCR fallback. Incremental — the committed sidecar is the cache, so only
+      # meetings new since last week are downloaded and classified.
+      - name: Enrich PDF-platform meetings (topics + data-center watch)
+        run: python scripts/enrich_ocr_meetings.py --months 12 --limit 25
+
       - name: Commit if changed
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/data/local-*-meetings.json
+          git add assets/data/local-*-meetings.json \
+                  assets/data/local-*-meetings-enriched.json \
+                  assets/data/local-flags.json
           if git diff --cached --quiet; then
             echo "No local-government meeting changes"
           else
