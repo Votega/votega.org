@@ -122,7 +122,8 @@
 {%- comment %} Officials — the precedence domain: server-rendered above meetings,
     matched to this place by slug == jurisdiction id in local_officials.yml. {% endcomment -%}
 {% assign juris = site.data.local_officials.jurisdictions | where: "id", e.slug | first %}
-{% assign role_order = "Mayor,Mayor Pro Tem,Chair,Vice Chair,Council Member,Commissioner" | split: "," %}
+{% assign role_order = "Mayor,Mayor Pro Tem,Chief Executive Officer,Chair,Commission Chairman,Commission Chairwoman,Vice Chair,Council Member,Commissioner" | split: "," %}
+{% assign presiding_roles = "Mayor,Chief Executive Officer,Chair,Commission Chairman,Commission Chairwoman" | split: "," %}
 {% if juris %}
 <section class="po-section" id="officials">
   <h2 class="po-heading">Elected officials</h2>
@@ -136,11 +137,25 @@
     {% for rp in juris.related_pages %} &middot; <a href="{{ rp.url | relative_url }}">{{ rp.title }} →</a>{% endfor %}
   </p>
   {% endif %}
+  {%- comment %} Order members by role_order, then append anyone whose role isn't
+      listed (county chairs use varied titles — "Chief Executive Officer",
+      "Commission Chairman/Chairwoman"). This prevents an unlisted role from being
+      silently dropped from the roster. {% endcomment -%}
+  {% assign ordered = "" | split: "" %}
+  {% for role in role_order %}
+    {% assign chunk = juris.members | where: "role", role %}
+    {% assign ordered = ordered | concat: chunk %}
+  {% endfor %}
+  {% for m in juris.members %}
+    {% unless role_order contains m.role %}
+      {% assign chunk = juris.members | where: "role", m.role %}
+      {% assign ordered = ordered | concat: chunk %}
+    {% endunless %}
+  {% endfor %}
+  {% assign ordered = ordered | uniq %}
   <div class="po-grid">
-    {% for role in role_order %}
-      {% for m in juris.members %}
-        {% if m.role == role %}
-        <div class="po-card{% if m.role == 'Mayor' or m.role == 'Chair' %} is-presiding{% endif %}">
+    {% for m in ordered %}
+        <div class="po-card{% if presiding_roles contains m.role %} is-presiding{% endif %}">
           <span class="po-role">{{ m.role }}</span>
           <p class="po-name">{% if m.name and m.name != "" %}{{ m.name }}{% else %}<span class="muted">Name TBD</span>{% endif %}</p>
           {% if m.seat and m.seat != "" %}<p class="po-seat">{{ m.seat }}</p>{% endif %}
@@ -163,8 +178,6 @@
           {% endif %}
           {% if m.source != "" %}<p class="po-source"><a href="{{ m.source }}" target="_blank" rel="noopener">Source ↗</a></p>{% endif %}
         </div>
-        {% endif %}
-      {% endfor %}
     {% endfor %}
   </div>
 </section>
