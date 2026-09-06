@@ -173,6 +173,38 @@ places:
           - { match: "Special Called", label: "Board of Commissioners" }
           - { match: "Millage", label: "Board of Commissioners" }
 
+  - slug: fulton
+    name: Fulton County
+    type: county
+    fips: "13121"
+    parentCounty: null
+    region: Metro Atlanta
+    domains:
+      meetings:
+        # Legistar (Granicus) open JSON API. Fulton publishes only the Board of
+        # Commissioners through Legistar — clean single body, no scoping needed.
+        platform: legistar
+        client: fulton
+
+  - slug: dekalb
+    name: DeKalb County
+    type: county
+    fips: "13089"
+    parentCounty: null
+    region: Metro Atlanta
+    domains:
+      meetings:
+        platform: legistar
+        client: dekalbcountyga
+        # Fold the Board of Commissioners' meeting variants (Committee of the
+        # Whole, Special Called, Zoning) into one body; keep Planning Commission.
+        # All are legislative/land-use — nothing administrative to drop.
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+          - { match: "Committee of the Whole", label: "Board of Commissioners" }
+          - { match: "Special Called", label: "Board of Commissioners" }
+
   - slug: carrollton
     name: City of Carrollton
     type: city
