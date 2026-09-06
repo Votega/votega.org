@@ -79,6 +79,44 @@ def source_url(cfg):
     return cfg.get('base_url')
 
 
+def scope_bodies(cfg, meetings, slug):
+    """Narrow meetings to the bodies we publish, and optionally relabel them.
+
+    Policy (see LOCAL-GOVERNMENT-IA.md): as counties are onboarded we surface only
+    the top-level legislative body (the Board of Commissioners), not every board,
+    commission, and authority. Three optional keys under domains.meetings:
+
+      include_bodies  keep only meetings whose body contains one of these
+                      (case-insensitive substring) — an allow-list.
+      exclude_bodies  drop meetings whose body contains one of these.
+      body_label      relabel every kept meeting to this single body name, for
+                      sources (e.g. Cobb's CivicClerk) that store the meeting
+                      *type* in the body field rather than a clean body name.
+
+    Returns (meetings, bodies_seen) recomputed from the kept set.
+    """
+    inc = [p.lower() for p in (cfg.get('include_bodies') or [])]
+    exc = [p.lower() for p in (cfg.get('exclude_bodies') or [])]
+    label = cfg.get('body_label')
+
+    if inc or exc:
+        def keep(m):
+            b = (m.get('body') or '').lower()
+            if inc and not any(p in b for p in inc):
+                return False
+            if exc and any(p in b for p in exc):
+                return False
+            return True
+        meetings = [m for m in meetings if keep(m)]
+
+    if label:
+        for m in meetings:
+            m['body'] = label
+
+    bodies_seen = sorted({m['body'] for m in meetings})
+    return meetings, bodies_seen
+
+
 def build_place(place):
     """Fetch + normalize one place's meetings. Returns the output dict, or None."""
     slug = place['slug']
@@ -95,6 +133,12 @@ def build_place(place):
     if not meetings:
         print('  ERROR: parsed zero meetings for %s (source markup may have changed)'
               % slug)
+        return None
+
+    meetings, bodies_seen = scope_bodies(cfg, meetings, slug)
+    if not meetings:
+        print('  ERROR: body filter for %s matched zero meetings — check '
+              'include_bodies/exclude_bodies against the source' % slug)
         return None
 
     with_minutes = sum(1 for m in meetings if m['minutesUrl'])

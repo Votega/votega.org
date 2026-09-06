@@ -27,9 +27,17 @@
 #                        /local/<slug>/ page, no search entry. Flip it back to
 #                        unhide. (The officials cross-check still sees the slug.)
 #   domains              per-domain adapter config; supported domain today: meetings
-#     meetings.platform  civicplus | corecode
+#     meetings.platform  civicplus | corecode | civicclerk
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
+#       corecode keys:   base_url, meetings_path
+#       civicclerk keys: subdomain (the <sub> in <sub>.api.civicclerk.com)
+#     Body scoping (any platform, optional) — POLICY: publish only the top-level
+#     legislative body (Board of Commissioners), not every board/commission:
+#       include_bodies   allow-list; keep meetings whose body contains one of these
+#       exclude_bodies   drop meetings whose body contains one of these
+#       body_label       relabel every kept meeting to this single body name (for
+#                        sources that put the meeting TYPE in the body field)
 #
 # OFFICIALS is a domain too, but it is NOT configured here — a place "has
 # officials" automatically when a jurisdiction in _data/local_officials.yml
@@ -112,6 +120,40 @@ places:
       meetings:
         platform: civicclerk
         subdomain: douglascountyga
+
+  - slug: henry
+    name: Henry County
+    type: county
+    fips: "13151"
+    parentCounty: null
+    region: Metro Atlanta
+    domains:
+      meetings:
+        platform: civicclerk
+        subdomain: henrycoga            # NB: not "henrycountyga" (that api host 404s)
+        include_bodies:                 # top-level legislative body only
+          - Board of Commissioners
+
+  - slug: cobb
+    name: Cobb County
+    type: county
+    fips: "13067"
+    parentCounty: null
+    region: Metro Atlanta
+    domains:
+      meetings:
+        platform: civicclerk
+        subdomain: cobbcoga
+        # Cobb stores the meeting TYPE in CivicClerk's categoryName, not a clean
+        # body — so allow-list the Board of Commissioners' meeting types and
+        # relabel them all to one body. (Excludes Elections, Planning Commission,
+        # Board of Zoning Appeals, SWMA.)
+        include_bodies:
+          - BOC
+          - "1:30 Work Session"
+          - Special Called Meeting
+          - Millage Public Hearing
+        body_label: Board of Commissioners
 
   - slug: carrollton
     name: City of Carrollton
