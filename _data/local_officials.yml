@@ -488,8 +488,8 @@ jurisdictions:
         email: "erick.allen@cobbcounty.gov"
         phone: "770-528-3315"
         last_elected: 2025
-        term_end:
-        next_election:
+        term_end: 2029
+        next_election: 2028
         voting: true
         tie_break_only: false
         photo: "https://assets.cobbcounty.gov/files/2025-09/erick%20allen%20SQ_0.jpg"
@@ -648,3 +648,86 @@ jurisdictions:
         photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_7_ladena_bolton.jpg.avif?itok=_Jsgy9F_"
         source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/ladena-bolton"
         notes: ""
+  # ==========================================================================
+  # DOUGLAS COUNTY  (county — partisan)  — SKELETON, fill in members
+  # ==========================================================================
+  - id: douglas                      # MUST equal the places.yml slug (join key)
+    name: Douglas County
+    type: county
+    county: Douglas
+    body: Board of Commissioners
+    partisan: true       
+    official_url: https://www.douglascountyga.gov/323/Board-of-Commissioners
+    related_pages: 
+    # ---- PHASE 1 — ROSTER --------------------------------------------------
+    members:
+      - name: "Dr. Romona Jackson Jones"
+        role: Commission Chairman            # countywide-elected board chair
+        seat: At-large
+        party: "Democratic"                   # Republican | Democratic
+        email: ""
+        phone: "770-920-7269"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2027
+        voting: true           # verify: many GA chairs vote only to break ties
+        tie_break_only: false
+        photo: "https://www.douglascountyga.gov/ImageRepository/Document?documentID=1079"
+        source: "https://www.douglascountyga.gov/335/Dr-Romona-Jackson-Jones"
+        notes: "First elected in 2016."
+      - name: "Henry Mitchell III"
+        role: Commissioner
+        seat: "District 1"                    # e.g. "District 1"
+        party: "Democratic"
+        email: "hmitchell@douglascountyga.gov"
+        phone: "770-920-7204"
+        last_elected:
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: "https://www.douglascountyga.gov/ImageRepository/Document?documentId=11135"
+        source: "https://www.douglascountyga.gov/334/Henry-Mitchell-III"
+        notes: "Served 3 terms, going into his 4th."
+      - name: "Whitney Kenner Jones"
+        role: Commissioner
+        seat: "District 2"                    # e.g. "District 1"
+        party: "Democratic"
+        email: "wkennerjones@douglascountyga.gov"
+        phone: "770-920-7266"
+        last_elected:
+        term_end: 2028
+        next_election: 2027
+        voting: true
+        tie_break_only: false
+        photo: "https://www.douglascountyga.gov/ImageRepository/Document?documentId=10661"
+        source: "https://www.douglascountyga.gov/333/Whitney-Kenner-Jones"
+        notes: ""
+      - name: "Martin Raxton"
+        role: Commissioner
+        seat: "District 3"                    # e.g. "District 1"
+        party: "Democratic"
+        email: "mraxton@douglascountyga.gov"
+        phone: "770-616-3996"
+        last_elected: 
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: "https://www.douglascountyga.gov/ImageRepository/Document?documentId=10897"
+        source: "https://www.douglascountyga.gov/332/Martin-Raxton"
+        notes: ""
+      - name: "Mark Alcarez"
+        role: Commissioner
+        seat: "District 4"                    # e.g. "District 1"
+        party: "Republican"
+        email: "malcarez@douglascountyga.gov"
+        phone: "770-920-7266"
+        last_elected: 
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: "https://www.douglascountyga.gov/ImageRepository/Document?documentID=9205"
+        source: "https://www.douglascountyga.gov/331/Mark-Alcarez"
+        notes: "https://www.douglascountyga.gov/554/Elected-Officials"

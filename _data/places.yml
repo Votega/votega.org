@@ -128,6 +128,10 @@ places:
     domains:
       meetings:
         platform: civicclerk
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Tuesday of every month, 10:00 a.m."
+            location: "Citizens Hall, Douglas County Courthouse, 8700 Hospital Drive, Douglasville"
         subdomain: douglascountyga
         # CivicClerk stores the meeting type in categoryName. Map to clean bodies:
         # the joint zoning sessions -> Planning & Zoning; pure BOC and the "General"
