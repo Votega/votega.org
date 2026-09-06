@@ -190,6 +190,10 @@ places:
     region: Metro Atlanta
     domains:
       meetings:
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Wednesday of every month, 10:00 a.m."
+            location: "Fulton County Government Center, Assembly Hall, 141 Pryor Street SW, Atlanta"
         # Legistar (Granicus) open JSON API. Fulton publishes only the Board of
         # Commissioners through Legistar — clean single body, no scoping needed.
         platform: legistar

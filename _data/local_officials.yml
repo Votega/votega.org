@@ -731,3 +731,114 @@ jurisdictions:
         photo: "https://www.douglascountyga.gov/ImageRepository/Document?documentID=9205"
         source: "https://www.douglascountyga.gov/331/Mark-Alcarez"
         notes: "https://www.douglascountyga.gov/554/Elected-Officials"
+  # ==========================================================================
+  # FULTON COUNTY  (county — partisan)  — SKELETON, fill in members
+  # ==========================================================================
+  - id: fulton                      # MUST equal the places.yml slug (join key)
+    name: Fulton County
+    type: county
+    county: Fulton
+    body: Board of Commissioners
+    partisan: true       
+    official_url: https://www.fultoncountyga.gov/Commissioners
+    related_pages: 
+    # ---- PHASE 1 — ROSTER --------------------------------------------------
+    members:
+      - name: "Robb Pitts"
+        role: Commission Chairman            # countywide-elected board chair
+        seat: At-large
+        party: ""                   # Republican | Democratic
+        email: "robb.pitts@fultoncountyga.gov"
+        phone: "404-613-2330"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true           # verify: many GA chairs vote only to break ties
+        tie_break_only: false
+        photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Pitts/2023_ROBB-PITTS-200x200.jpg"
+        source: "https://www.fultoncountyga.gov/Commissioners/Robb-Pitts"
+        notes: "Elected chairman in 2017."
+      - name: "Bridget Thorne"
+        role: Commissioner
+        seat: "District 1"                    # e.g. "District 1"
+        party: ""
+        email: "bridget.thorne@fultoncountyga.gov"
+        phone: ""
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: "https://www.fultoncountyga.gov/-/media/Departments/District-Attorney/DA-headshots-2023/BRIDGET-THORNE_200x200.png"
+        source: "https://www.fultoncountyga.gov/Commissioners/Bridget-Thorne"
+        notes: ""
+      - name: "Bob Ellis"
+        role: Commissioner
+        seat: "District 2"                    # e.g. "District 1"
+        party: ""
+        email: "bob.ellis@fultoncountyga.gov"
+        phone: "404-612-8216"
+        last_elected: 2025
+        term_end: 2028
+        next_election: 2027
+        voting: true
+        tie_break_only: false
+        photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Ellis/Ellis-02-01.jpg"
+        source: "https://www.fultoncountyga.gov/Commissioners/Bob-Ellis"
+        notes: ""
+      - name: "Dana Barrett"
+        role: Commissioner
+        seat: "District 3"                    # e.g. "District 1"
+        party: ""
+        email: "dana.barrett@fultoncountyga.gov"
+        phone: "404-612-9800"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Barrett/Barrett-01.jpg"
+        source: "https://www.fultoncountyga.gov/Commissioners/Dana-Barrett"
+        notes: ""
+      - name: "VACANT"
+        role: Commissioner
+        seat: "District 4"                    # e.g. "District 1"
+        party: ""
+        email: ""
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: ""
+        source: ""
+        notes: ""
+      - name: "Marvin S. Arrington, Jr."
+        role: Commissioner
+        seat: "District 5"                    # e.g. "District 1"
+        party: ""
+        email: "Marvin.Arrington@fultoncountyga.gov"
+        phone: "404-613-0202"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        tie_break_only: false
+        photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Arrington/2023-_MARVIN-ARRINGTON-200X200.jpg"
+        source: "https://www.fultoncountyga.gov/Commissioners/Marvin-Arrington"
+        notes: ""
+      - name: "Khadijah Abdur-Rahman"
+        role: Commissioner
+        seat: "District 6"                    # e.g. "District 1"
+        party: ""
+        email: "Khadijah.Abdur-Rahman@fultoncountyga.gov"
+        phone: "404-612-8222"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        tie_break_only: false
+        photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Abdur-Rahman/2023_KHADIJAH-ABDUR-RAHMAN-200x200.jpg"
+        source: "https://www.fultoncountyga.gov/Commissioners/Khadijah-Abdur-Rahman"
+        notes: ""
