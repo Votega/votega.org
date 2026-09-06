@@ -9,8 +9,7 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
 <p id="localIntro">
   Your local elected officials — city councils and county commissions — plus the public
   meetings, agendas, and minutes for Georgia counties and cities, aggregated from each
-  government's official site. Search or filter to find a place, then open it to see who
-  represents you and browse its meeting record.
+  government's official site. Cities are grouped under their county; search to jump to a place.
 </p>
 
 <style>
@@ -22,22 +21,15 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
     flex: 1 1 16rem; font-size: 0.95rem; padding: 0.5rem 0.7rem;
     border: 1px solid #ccc; border-radius: 6px;
   }
-  .lh-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .lh-pill {
-    font-size: 0.82rem; font-weight: 600; padding: 0.28rem 0.7rem;
-    border: 1px solid #ccc; border-radius: 999px; background: #fff;
-    color: #1a4d94; cursor: pointer; line-height: 1.2;
-  }
-  .lh-pill:hover { background: #f0f5fc; }
-  .lh-pill.active { background: #1a56a8; border-color: #1a56a8; color: #fff; }
-  .lh-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; }
+  .lh-groups { display: flex; flex-direction: column; gap: 1.5rem; }
   .lh-card {
     display: block; padding: 1rem 1.15rem; border: 1px solid #ddd; border-radius: 8px;
     background: #fff; text-decoration: none; color: inherit; border-left: 4px solid #1a56a8;
   }
-  .lh-card:hover { border-color: #1a56a8; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  a.lh-card:hover { border-color: #1a56a8; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
   .lh-card.city { border-left-color: #2e7d32; }
   .lh-name { font-size: 1.05rem; font-weight: 700; color: #111; margin-bottom: 0.35rem; }
+  .lh-child .lh-name { font-size: 0.98rem; }
   .lh-meta { font-size: 0.78rem; color: #777; margin-bottom: 0.5rem; }
   .lh-badge {
     display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
@@ -46,41 +38,114 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
   .lh-badge-county { background: #e7eef8; color: #1a4d94; }
   .lh-badge-city { background: #e3f2e4; color: #1b5e20; }
   .lh-domains { font-size: 0.8rem; color: #444; }
+  /* Cities nested beneath their county */
+  .lh-children {
+    margin: 0.7rem 0 0 1.25rem; padding-left: 1rem; border-left: 2px solid #e5e7eb;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr)); gap: 0.75rem;
+  }
+  /* Placeholder header for a county not yet in the system */
+  .lh-placeholder { border-left-color: #bbb; background: #fafafa; color: #555; }
+  .lh-placeholder .lh-name { color: #555; }
+  .lh-placeholder .lh-sub {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: #999;
+  }
   .lh-empty { color: #666; font-style: italic; padding: 1rem 0; }
   .lh-note { margin-top: 2rem; font-size: 0.82rem; color: #777; }
 </style>
 
 <div class="lh-controls">
   <input type="search" id="lhSearch" class="lh-search" placeholder="Search counties and cities…" aria-label="Search places">
-  <div class="lh-pills" id="lhPills">
-    <button class="lh-pill active" data-type="all">All</button>
-    <button class="lh-pill" data-type="county">Counties</button>
-    <button class="lh-pill" data-type="city">Cities</button>
-  </div>
 </div>
 
-{% assign places = site.data.places.places | sort: "name" %}
-<div class="lh-grid" id="lhGrid">
-  {%- for p in places %}
-  {%- if p.hidden %}{% continue %}{% endif %}
-  {%- assign ptype = p.type | default: "county" %}
-  {%- comment %} Officials is a derived domain (slug == jurisdiction id) and leads the card. {% endcomment -%}
-  {%- assign hasOfficials = site.data.local_officials.jurisdictions | where: "id", p.slug | first %}
-  {%- assign hasMeetings = p.domains.meetings %}
-  <a class="lh-card {{ ptype }}" href="{{ '/local/' | append: p.slug | append: '/' | relative_url }}"
-     data-name="{{ p.name | downcase }}" data-type="{{ ptype }}">
-    <div class="lh-name">{{ p.name }}</div>
-    <div class="lh-meta">
-      <span class="lh-badge lh-badge-{{ ptype }}">{{ ptype }}</span>
-      {%- if p.region %}{{ p.region }}{% endif %}
+{%- comment %} ---- Card renderer (county or city). Sets domain indicators from the
+    same sources the entity pages use: officials by slug in local_officials.yml,
+    meetings from the place's domains.meetings. ---- {% endcomment -%}
+
+{% assign all = site.data.places.places %}
+{% assign counties = all | where: "type", "county" | sort: "name" %}
+{% assign cities = all | where: "type", "city" %}
+
+{%- comment %} Slug set of real (non-hidden) counties, for orphan detection. {% endcomment -%}
+{% assign county_slugs = "" %}
+{% for c in counties %}{% unless c.hidden %}{% assign county_slugs = county_slugs | append: "|" | append: c.slug | append: "|" %}{% endunless %}{% endfor %}
+
+<div class="lh-groups" id="lhGroups">
+
+  {%- for county in counties %}
+  {%- if county.hidden %}{% continue %}{% endif %}
+  {%- assign coOfficials = site.data.local_officials.jurisdictions | where: "id", county.slug | first %}
+  <section class="lh-group">
+    <a class="lh-card lh-county county" href="{{ '/local/' | append: county.slug | append: '/' | relative_url }}"
+       data-name="{{ county.name | downcase }}">
+      <div class="lh-name">{{ county.name }}</div>
+      <div class="lh-meta"><span class="lh-badge lh-badge-county">county</span>{% if county.region %}{{ county.region }}{% endif %}</div>
+      <div class="lh-domains">
+        {%- if coOfficials %}👥 Officials{% endif %}
+        {%- if county.domains.meetings %}{% if coOfficials %} &middot; {% endif %}📅 Meetings{% endif %}
+        {%- unless coOfficials or county.domains.meetings %}Coming soon{% endunless %}
+      </div>
+    </a>
+    {%- assign kids = cities | where: "parentCounty", county.slug | sort: "name" %}
+    {%- assign visibleKids = 0 %}
+    {%- for city in kids %}{% unless city.hidden %}{% assign visibleKids = visibleKids | plus: 1 %}{% endunless %}{% endfor %}
+    {%- if visibleKids > 0 %}
+    <div class="lh-children">
+      {%- for city in kids %}
+      {%- if city.hidden %}{% continue %}{% endif %}
+      {%- assign ciOfficials = site.data.local_officials.jurisdictions | where: "id", city.slug | first %}
+      <a class="lh-card lh-child city" href="{{ '/local/' | append: city.slug | append: '/' | relative_url }}"
+         data-name="{{ city.name | downcase }}">
+        <div class="lh-name">{{ city.name }}</div>
+        <div class="lh-meta"><span class="lh-badge lh-badge-city">city</span>{% if city.region %}{{ city.region }}{% endif %}</div>
+        <div class="lh-domains">
+          {%- if ciOfficials %}👥 Officials{% endif %}
+          {%- if city.domains.meetings %}{% if ciOfficials %} &middot; {% endif %}📅 Meetings{% endif %}
+          {%- unless ciOfficials or city.domains.meetings %}Coming soon{% endunless %}
+        </div>
+      </a>
+      {%- endfor %}
     </div>
-    <div class="lh-domains">
-      {%- if hasOfficials %}👥 Officials{% endif %}
-      {%- if hasMeetings %}{% if hasOfficials %} &middot; {% endif %}📅 Meetings{% endif %}
-      {%- unless hasOfficials or hasMeetings %}Coming soon{% endunless %}
-    </div>
-  </a>
+    {%- endif %}
+  </section>
   {%- endfor %}
+
+  {%- comment %} Orphan cities: parent county not (yet) a place → placeholder group,
+      one per distinct parent, labeled but not linked. {% endcomment -%}
+  {%- assign seenOrphans = "" %}
+  {%- for city in cities %}
+  {%- if city.hidden %}{% continue %}{% endif %}
+  {%- assign pc = city.parentCounty | default: "" %}
+  {%- assign pctoken = "|" | append: pc | append: "|" %}
+  {%- if pc != "" and county_slugs contains pctoken %}{% continue %}{% endif %}
+  {%- if seenOrphans contains pctoken %}{% continue %}{% endif %}
+  {%- assign seenOrphans = seenOrphans | append: pctoken %}
+  {%- assign pcName = city.parentCountyName | default: pc | replace: "-", " " | capitalize %}
+  <section class="lh-group">
+    <div class="lh-card lh-county lh-placeholder" data-name="{{ pcName | downcase }} county">
+      <div class="lh-name">{% if pcName != "" %}{{ pcName }} County{% else %}Other{% endif %}</div>
+      <div class="lh-sub">Not yet in VoteGA</div>
+    </div>
+    <div class="lh-children">
+      {%- for c2 in cities %}
+      {%- if c2.hidden %}{% continue %}{% endif %}
+      {%- assign pc2 = c2.parentCounty | default: "" %}
+      {%- if pc2 != pc %}{% continue %}{% endif %}
+      {%- assign c2Officials = site.data.local_officials.jurisdictions | where: "id", c2.slug | first %}
+      <a class="lh-card lh-child city" href="{{ '/local/' | append: c2.slug | append: '/' | relative_url }}"
+         data-name="{{ c2.name | downcase }}">
+        <div class="lh-name">{{ c2.name }}</div>
+        <div class="lh-meta"><span class="lh-badge lh-badge-city">city</span>{% if c2.region %}{{ c2.region }}{% endif %}</div>
+        <div class="lh-domains">
+          {%- if c2Officials %}👥 Officials{% endif %}
+          {%- if c2.domains.meetings %}{% if c2Officials %} &middot; {% endif %}📅 Meetings{% endif %}
+          {%- unless c2Officials or c2.domains.meetings %}Coming soon{% endunless %}
+        </div>
+      </a>
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endfor %}
+
 </div>
 <p class="lh-empty" id="lhEmpty" hidden>No places match your search.</p>
 
@@ -92,33 +157,32 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
 <script>
   (function () {
     var search = document.getElementById('lhSearch');
-    var grid = document.getElementById('lhGrid');
     var empty = document.getElementById('lhEmpty');
-    var cards = Array.prototype.slice.call(grid.querySelectorAll('.lh-card'));
-    var state = { q: '', type: 'all' };
+    var groups = Array.prototype.slice.call(document.querySelectorAll('.lh-group'));
+
+    function matches(name, q) { return !q || (name && name.indexOf(q) !== -1); }
 
     function apply() {
-      var q = state.q.trim().toLowerCase();
-      var shown = 0;
-      cards.forEach(function (c) {
-        var okType = state.type === 'all' || c.dataset.type === state.type;
-        var okText = !q || c.dataset.name.indexOf(q) !== -1;
-        var show = okType && okText;
-        c.hidden = !show;
-        if (show) shown++;
+      var q = search.value.trim().toLowerCase();
+      var shownGroups = 0;
+      groups.forEach(function (g) {
+        var head = g.querySelector('.lh-county');
+        var countyMatch = matches(head ? head.dataset.name : '', q);
+        var kids = Array.prototype.slice.call(g.querySelectorAll('.lh-child'));
+        var anyKid = false;
+        kids.forEach(function (k) {
+          // Show a city if it matches, or if its county matched (show the whole county).
+          var show = countyMatch || matches(k.dataset.name, q);
+          k.hidden = !show;
+          if (show) anyKid = true;
+        });
+        var groupShown = countyMatch || anyKid;
+        g.hidden = !groupShown;
+        if (groupShown) shownGroups++;
       });
-      empty.hidden = shown !== 0;
+      empty.hidden = shownGroups !== 0;
     }
 
-    search.addEventListener('input', function (e) { state.q = e.target.value; apply(); });
-    document.getElementById('lhPills').addEventListener('click', function (e) {
-      var btn = e.target.closest('.lh-pill');
-      if (!btn) return;
-      state.type = btn.dataset.type;
-      Array.prototype.forEach.call(this.querySelectorAll('.lh-pill'), function (p) {
-        p.classList.toggle('active', p === btn);
-      });
-      apply();
-    });
+    search.addEventListener('input', apply);
   })();
 </script>

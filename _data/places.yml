@@ -159,6 +159,7 @@ places:
     name: City of Carrollton
     type: city
     fips: null
-    parentCounty: null              # Carroll County not yet a place in this registry
-    region: West Georgia
+    parentCounty: carroll           # Carroll County not yet a place — the hub nests
+    parentCountyName: Carroll        # this city under a "Carroll County (not yet in
+    region: West Georgia             # VoteGA)" placeholder header until the county is added
     hidden: true                    # hidden from the hub for now (roster kept, page not published)
