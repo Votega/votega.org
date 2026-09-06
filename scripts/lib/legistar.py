@@ -67,6 +67,32 @@ def _event_to_meeting(e):
     }
 
 
+def fetch_events(client, since, timeout=40):
+    """Raw Event rows (dicts) since `since` (YYYY-MM-DD), newest first — includes
+    EventInSiteURL for sourcing. Used by the enrichment prototype."""
+    order = quote('EventDate desc')
+    filt = quote("EventDate ge datetime'%s'" % since)
+    url = '%s/Events?%%24orderby=%s&%%24filter=%s' % (api_base(client), order, filt)
+    data = fetch_json(url, timeout=timeout, label='%s events' % client)
+    return data if isinstance(data, list) else []
+
+
+def fetch_event_items(client, event_id, timeout=40):
+    """Structured agenda items for a meeting (topics, matter type, pass/fail)."""
+    url = '%s/Events/%s/EventItems' % (api_base(client), event_id)
+    data = fetch_json(url, timeout=timeout, label='%s event %s items' % (client, event_id))
+    return data if isinstance(data, list) else []
+
+
+def fetch_rollcalls(client, event_item_id, timeout=40):
+    """Per-member roll-call votes for one agenda item: [{RollCallPersonName,
+    RollCallValueName}, ...]."""
+    url = '%s/EventItems/%s/RollCalls' % (api_base(client), event_item_id)
+    data = fetch_json(url, timeout=timeout,
+                      label='%s item %s rollcalls' % (client, event_item_id))
+    return data if isinstance(data, list) else []
+
+
 def fetch_legistar_meetings(client, years=4, timeout=40, page_size=1000, max_pages=20):
     """Fetch and normalize a Legistar client's meetings.
 

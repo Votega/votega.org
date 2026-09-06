@@ -51,6 +51,11 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
   }
   .lh-empty { color: #666; font-style: italic; padding: 1rem 0; }
   .lh-note { margin-top: 2rem; font-size: 0.82rem; color: #777; }
+  /* Flag pill injected onto a card when a place has a hot topic on recent agendas */
+  .lh-flags { margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .lh-flag { font-size: 0.7rem; font-weight: 700; border-radius: 999px; padding: 0.12rem 0.5rem; }
+  .lh-flag-dc { background: #fde8cf; color: #b35a00; }
+  .lh-flag-lu { background: #e3f2e4; color: #1b5e20; }
 </style>
 
 <div class="lh-controls">
@@ -76,7 +81,7 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
   {%- assign coOfficials = site.data.local_officials.jurisdictions | where: "id", county.slug | first %}
   <section class="lh-group">
     <a class="lh-card lh-county county" href="{{ '/local/' | append: county.slug | append: '/' | relative_url }}"
-       data-name="{{ county.name | downcase }}">
+       data-name="{{ county.name | downcase }}" data-slug="{{ county.slug }}">
       <div class="lh-name">{{ county.name }}</div>
       <div class="lh-meta"><span class="lh-badge lh-badge-county">county</span>{% if county.region %}{{ county.region }}{% endif %}</div>
       <div class="lh-domains">
@@ -94,7 +99,7 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
       {%- if city.hidden %}{% continue %}{% endif %}
       {%- assign ciOfficials = site.data.local_officials.jurisdictions | where: "id", city.slug | first %}
       <a class="lh-card lh-child city" href="{{ '/local/' | append: city.slug | append: '/' | relative_url }}"
-         data-name="{{ city.name | downcase }}">
+         data-name="{{ city.name | downcase }}" data-slug="{{ city.slug }}">
         <div class="lh-name">{{ city.name }}</div>
         <div class="lh-meta"><span class="lh-badge lh-badge-city">city</span>{% if city.region %}{{ city.region }}{% endif %}</div>
         <div class="lh-domains">
@@ -132,7 +137,7 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
       {%- if pc2 != pc %}{% continue %}{% endif %}
       {%- assign c2Officials = site.data.local_officials.jurisdictions | where: "id", c2.slug | first %}
       <a class="lh-card lh-child city" href="{{ '/local/' | append: c2.slug | append: '/' | relative_url }}"
-         data-name="{{ c2.name | downcase }}">
+         data-name="{{ c2.name | downcase }}" data-slug="{{ c2.slug }}">
         <div class="lh-name">{{ c2.name }}</div>
         <div class="lh-meta"><span class="lh-badge lh-badge-city">city</span>{% if c2.region %}{{ c2.region }}{% endif %}</div>
         <div class="lh-domains">
@@ -184,5 +189,29 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
     }
 
     search.addEventListener('input', apply);
+
+    // Hot-topic flags: badge cards whose place has a data-center / land-use item on
+    // recent agendas (enrichment sidecar local-flags.json; base-path aware).
+    function getBasePath() {
+      return location.pathname.indexOf('/votega.org-TEST/') !== -1 ? '/votega.org-TEST/' : '/';
+    }
+    fetch(getBasePath() + 'assets/data/local-flags.json')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.places) return;
+        Array.prototype.forEach.call(document.querySelectorAll('.lh-card[data-slug]'), function (card) {
+          var f = d.places[card.dataset.slug];
+          if (!f || !f.flags || !f.flags.length) return;
+          var wrap = document.createElement('div');
+          wrap.className = 'lh-flags';
+          if (f.dataCenterCount > 0) {
+            wrap.innerHTML = '<span class="lh-flag lh-flag-dc">🏭 Data centers on agenda</span>';
+          } else if (f.flags.indexOf('land-use') !== -1) {
+            wrap.innerHTML = '<span class="lh-flag lh-flag-lu">🏗️ Land use</span>';
+          }
+          if (wrap.children.length) card.appendChild(wrap);
+        });
+      })
+      .catch(function () { /* no flags file — cards render without badges */ });
   })();
 </script>

@@ -68,6 +68,19 @@
   .cm-sched-loc { color: #666; }
   .cm-sched-note { margin: 0.5rem 0 0; font-size: 0.78rem; color: #777; }
 
+  /* "On recent agendas" — subjects + data-center watch (enrichment sidecar). */
+  .sub-dc { background: #fff7ef; border: 1px solid #f2dcc4; border-left: 4px solid #b35a00;
+    border-radius: 6px; padding: 0.85rem 1rem; margin: 0.75rem 0; }
+  .sub-dc > strong { color: #8a4500; display: block; margin-bottom: 0.4rem; }
+  .sub-dc ul { margin: 0; padding-left: 1.1rem; font-size: 0.9rem; }
+  .sub-dc li { margin: 0.3rem 0; line-height: 1.45; }
+  .sub-dc a { font-weight: 600; white-space: nowrap; }
+  .sub-date { font-weight: 700; color: #555; }
+  .sub-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+  .sub-chip { font-size: 0.78rem; background: #eef2f7; color: #33415a; border-radius: 999px;
+    padding: 0.2rem 0.6rem; text-transform: capitalize; }
+  .sub-chip .sub-n { color: #8894a8; font-weight: 600; }
+
   /* Officials domain — the precedence section, server-rendered above meetings. */
   .po-section { margin: 1.5rem 0 2.5rem; }
   .po-heading { font-size: 1.15rem; color: #333; border-bottom: 2px solid #eee; padding-bottom: 0.3rem; }
@@ -157,6 +170,11 @@
 </section>
 {% endif %}
 
+{%- comment %} "On recent agendas" — subject areas + data-center watch, loaded
+    client-side from the enrichment sidecar. Hidden unless that file exists
+    (Legistar places today). {% endcomment -%}
+<section class="po-section" id="subjects" hidden></section>
+
 {%- comment %} Meetings — the automated, self-healing domain, below officials.
     Only rendered when the place actually declares a meetings adapter. {% endcomment -%}
 {% if e.domains contains 'meetings' %}
@@ -202,9 +220,13 @@
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/local-subjects.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/local-meetings.js' | relative_url }}"></script>
 <script>
   // window.VOTEGA_PLACE is emitted by build_entity_pages.py above this include.
+  if (window.VOTEGA_PLACE) {
+    LocalSubjects.init({ slug: window.VOTEGA_PLACE.slug, containerId: 'subjects' });
+  }
   if (window.VOTEGA_PLACE && (window.VOTEGA_PLACE.domains || []).indexOf('meetings') !== -1) {
     LocalMeetings.init({
       slug: window.VOTEGA_PLACE.slug,
