@@ -27,29 +27,13 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.legistar import fetch_events, fetch_event_items, fetch_rollcalls  # noqa: E402
+from lib.meeting_topics import (  # noqa: E402
+    LAND_USE, classify, topic_flags, build_summary, flag_entry, write_flags_file,
+)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
 OUT_DIR = os.path.join(ROOT, 'assets', 'data')
-
-# Subject taxonomy — keyword rules over the item title + matter name/type.
-TOPIC_RULES = {
-    'data-center':        ['data center', 'data centre', 'hyperscale', 'data-center'],
-    'rezoning':           ['rezon'],
-    'special-land-use':   ['special land use', 'special-use', 'slup', 'conditional use',
-                           'land use permit'],
-    'variance':           ['variance'],
-    'annexation':         ['annex'],
-    'development':        ['apartment', 'subdivision', 'warehouse', 'mixed use',
-                           'mixed-use', 'townhome', 'multifamily', 'multi-family'],
-    'comprehensive-plan': ['comprehensive plan', 'future land use', 'land use plan'],
-    'millage-budget':     ['millage', 'ad valorem', 'tax rate', 'budget', 'fiscal year'],
-    'contract':           ['contract', 'procurement', 'task order', 'award of', 'purchase order'],
-    'appointment':        ['appoint', 'reappoint'],
-}
-# Subjects that make an item "land use" (drives the card flag).
-LAND_USE = {'data-center', 'rezoning', 'special-land-use', 'variance',
-            'annexation', 'development', 'comprehensive-plan'}
 
 _TAG = re.compile(r'<[^>]+>')
 _DISTRICTS = re.compile(r'Commission District\(s\):\s*([^\n<]+)', re.I)
@@ -57,11 +41,6 @@ _DISTRICTS = re.compile(r'Commission District\(s\):\s*([^\n<]+)', re.I)
 
 def _clean(s):
     return re.sub(r'\s+', ' ', _TAG.sub(' ', s or '')).strip()
-
-
-def classify(text):
-    t = text.lower()
-    return [tag for tag, kws in TOPIC_RULES.items() if any(k in t for k in kws)]
 
 
 def legistar_places(slug=None):
@@ -111,66 +90,25 @@ def enrich_event(client, e):
                                 for v in votes if v.get('RollCallPersonName')}
             land_use_items.append(rec)
 
-    flags = []
-    if any(t in topics for t in LAND_USE):
-        flags.append('land-use')
-    if 'data-center' in topics:
-        flags.append('data-center')
-    if 'millage-budget' in topics:
-        flags.append('millage-budget')
+    date = (e.get('EventDate') or '')[:10]
+    source_url = e.get('EventInSiteURL')
+    # Meeting-level data-center list (title-per-item) — the shared rollup reads
+    # this key from every enricher, so a Legistar and an OCR place produce the
+    # same summary shape. Each entry links its source.
+    dc_items = [{'title': it['title'], 'date': date, 'sourceUrl': source_url}
+                for it in land_use_items if 'data-center' in it['tags']]
 
     return {
         'eventId': e.get('EventId'),
-        'date': (e.get('EventDate') or '')[:10],
+        'date': date,
         'body': e.get('EventBodyName'),
-        'sourceUrl': e.get('EventInSiteURL'),
+        'sourceUrl': source_url,
         'itemCount': len(items),
         'topics': topics,
-        'flags': flags,
+        'flags': topic_flags(topics),
+        'dataCenterItems': dc_items,
         'landUseItems': land_use_items,
     }
-
-
-def build_summary(enriched):
-    """Roll per-meeting enrichment up into a place-level summary for the UI."""
-    topic_totals = {}
-    dc_items = {}
-    flags = set()
-    last = None
-    for m in enriched:
-        flags.update(m['flags'])
-        if m['date'] and (last is None or m['date'] > last):
-            last = m['date']
-        for tg, n in m['topics'].items():
-            topic_totals[tg] = topic_totals.get(tg, 0) + n
-        for it in m['landUseItems']:
-            if 'data-center' in it['tags']:
-                dc_items.setdefault(it['title'], {'title': it['title'],
-                                                  'date': m['date'], 'sourceUrl': m['sourceUrl']})
-    return {
-        'flags': sorted(flags),
-        'lastActivity': last,
-        'topicTotals': topic_totals,
-        'dataCenterItems': list(dc_items.values()),
-        'landUseMeetings': sum(1 for m in enriched if 'land-use' in m['flags']),
-    }
-
-
-def write_flags_file(updates):
-    """Merge per-place flag summaries into the single hub file local-flags.json."""
-    path = os.path.join(OUT_DIR, 'local-flags.json')
-    doc = {'metadata': {}, 'places': {}}
-    if os.path.exists(path):
-        try:
-            with open(path, encoding='utf-8') as f:
-                doc = json.load(f)
-        except (ValueError, OSError):
-            pass
-    doc.setdefault('places', {}).update(updates)
-    doc['metadata'] = {'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(doc, f, ensure_ascii=False, indent=1)
-    print('  Wrote %s' % path)
 
 
 def main():
@@ -190,8 +128,15 @@ def main():
         events = [e for e in fetch_events(client, since) if e.get('EventAgendaFile')][:args.limit]
         print('  processing %d meeting(s)...' % len(events))
         enriched = [enrich_event(client, e) for e in events]
-        summary = build_summary(enriched)
 
+        # Guard like the other steps: never overwrite a good sidecar / good flags
+        # with nothing. A zero-meeting result means the API was unreachable or the
+        # window was empty, not that the place stopped flagging data centers.
+        if not enriched:
+            print('  WARNING: 0 meetings for %s — leaving existing enriched data intact' % slug)
+            continue
+
+        summary = build_summary(enriched)
         out = {
             'metadata': {
                 'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -205,19 +150,12 @@ def main():
         with open(os.path.join(OUT_DIR, 'local-%s-meetings-enriched.json' % slug),
                   'w', encoding='utf-8') as f:
             json.dump(out, f, ensure_ascii=False, indent=1)
-        flag_updates[slug] = {
-            'flags': summary['flags'],
-            'dataCenterCount': len(summary['dataCenterItems']),
-            'lastActivity': summary['lastActivity'],
-        }
+        flag_updates[slug] = flag_entry(summary)
         print('  %s: flags=%s, %d data-center item(s)'
               % (slug, ','.join(summary['flags']) or '-', len(summary['dataCenterItems'])))
 
-    write_flags_file(flag_updates)
-
-
-if __name__ == '__main__':
-    main()
+    if flag_updates:
+        print('  Wrote %s' % write_flags_file(OUT_DIR, flag_updates))
 
 
 if __name__ == '__main__':
