@@ -32,12 +32,18 @@
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
 #       corecode keys:   base_url, meetings_path
 #       civicclerk keys: subdomain (the <sub> in <sub>.api.civicclerk.com)
-#     Body scoping (any platform, optional) — POLICY: publish only the top-level
-#     legislative body (Board of Commissioners), not every board/commission:
+#     Body scoping (any platform, optional) — POLICY: publish the legislative and
+#     land-use bodies (Board of Commissioners + Planning Commission + zoning
+#     boards, where rezonings / data centers are heard); drop administrative
+#     bodies (Elections & Registration, Recreation, Solid Waste / utility
+#     authorities):
 #       include_bodies   allow-list; keep meetings whose body contains one of these
 #       exclude_bodies   drop meetings whose body contains one of these
-#       body_label       relabel every kept meeting to this single body name (for
-#                        sources that put the meeting TYPE in the body field)
+#       body_label       relabel every kept meeting to this single body name
+#       body_map         ordered [{match,label}] for sources that store the meeting
+#                        TYPE in the body field (Cobb, Douglas): first matching
+#                        rule renames the body; unmatched meetings are DROPPED
+#                        (allow-list + rename). Supersedes the three keys above.
 #
 # OFFICIALS is a domain too, but it is NOT configured here — a place "has
 # officials" automatically when a jurisdiction in _data/local_officials.yml
@@ -57,6 +63,9 @@ places:
         platform: civicplus
         base_url: https://www.newtoncountyga.gov
         agenda_module_id: 65
+        exclude_bodies:                 # keep BOC + Planning + Zoning Appeals;
+          - Recreation                  # drop the administrative bodies
+          - Solid Waste
         bodies:
           Board of Commissioners: 2
           Board of Elections: 11
@@ -120,6 +129,15 @@ places:
       meetings:
         platform: civicclerk
         subdomain: douglascountyga
+        # CivicClerk stores the meeting type in categoryName. Map to clean bodies:
+        # the joint zoning sessions -> Planning & Zoning; pure BOC and the "General"
+        # bucket (BOC special-called / millage / joint) -> Board of Commissioners.
+        # (Order matters: "Planning & Zoning / Board of Commissioners" must match
+        # the Planning & Zoning rule first.)
+        body_map:
+          - { match: "Planning & Zoning", label: "Planning & Zoning" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+          - { match: "General", label: "Board of Commissioners" }
 
   - slug: henry
     name: Henry County
@@ -131,8 +149,8 @@ places:
       meetings:
         platform: civicclerk
         subdomain: henrycoga            # NB: not "henrycountyga" (that api host 404s)
-        include_bodies:                 # top-level legislative body only
-          - Board of Commissioners
+        # Bodies arrive clean (Board of Commissioners, Zoning Advisory Board) and
+        # both are kept — no administrative bodies to drop.
 
   - slug: cobb
     name: Cobb County
@@ -144,16 +162,16 @@ places:
       meetings:
         platform: civicclerk
         subdomain: cobbcoga
-        # Cobb stores the meeting TYPE in CivicClerk's categoryName, not a clean
-        # body — so allow-list the Board of Commissioners' meeting types and
-        # relabel them all to one body. (Excludes Elections, Planning Commission,
-        # Board of Zoning Appeals, SWMA.)
-        include_bodies:
-          - BOC
-          - "1:30 Work Session"
-          - Special Called Meeting
-          - Millage Public Hearing
-        body_label: Board of Commissioners
+        # Cobb stores the meeting TYPE in CivicClerk's categoryName. Map to clean
+        # bodies; drop administrative ones (Board of Elections & Registration, the
+        # Solid Waste authority "SWMA") by leaving them unmapped.
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Zoning Appeals", label: "Board of Zoning Appeals" }
+          - { match: "BOC", label: "Board of Commissioners" }
+          - { match: "1:30 Work Session", label: "Board of Commissioners" }
+          - { match: "Special Called", label: "Board of Commissioners" }
+          - { match: "Millage", label: "Board of Commissioners" }
 
   - slug: carrollton
     name: City of Carrollton

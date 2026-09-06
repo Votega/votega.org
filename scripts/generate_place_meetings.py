@@ -82,36 +82,56 @@ def source_url(cfg):
 def scope_bodies(cfg, meetings, slug):
     """Narrow meetings to the bodies we publish, and optionally relabel them.
 
-    Policy (see LOCAL-GOVERNMENT-IA.md): as counties are onboarded we surface only
-    the top-level legislative body (the Board of Commissioners), not every board,
-    commission, and authority. Three optional keys under domains.meetings:
+    Policy (see LOCAL-GOVERNMENT-IA.md): each county publishes its legislative and
+    land-use bodies — the Board of Commissioners plus the Planning Commission and
+    zoning boards, where rezonings and special-use permits (data centers, ware-
+    houses, quarries, solar, etc.) are heard — and drops purely administrative
+    bodies (Elections & Registration, Recreation, Solid Waste / utility
+    authorities). Optional keys under domains.meetings:
 
       include_bodies  keep only meetings whose body contains one of these
                       (case-insensitive substring) — an allow-list.
       exclude_bodies  drop meetings whose body contains one of these.
-      body_label      relabel every kept meeting to this single body name, for
-                      sources (e.g. Cobb's CivicClerk) that store the meeting
-                      *type* in the body field rather than a clean body name.
+      body_label      relabel every kept meeting to this single body name.
+      body_map        ordered [{match, label}] rules for sources that store the
+                      meeting *type* in the body field (Cobb, Douglas via
+                      CivicClerk) rather than a clean body name: the first rule
+                      whose `match` is a substring of the body wins and sets the
+                      body to `label`; a meeting matching no rule is DROPPED
+                      (so body_map is an allow-list + rename in one). When set,
+                      body_map supersedes include/exclude/body_label.
 
     Returns (meetings, bodies_seen) recomputed from the kept set.
     """
-    inc = [p.lower() for p in (cfg.get('include_bodies') or [])]
-    exc = [p.lower() for p in (cfg.get('exclude_bodies') or [])]
-    label = cfg.get('body_label')
-
-    if inc or exc:
-        def keep(m):
-            b = (m.get('body') or '').lower()
-            if inc and not any(p in b for p in inc):
-                return False
-            if exc and any(p in b for p in exc):
-                return False
-            return True
-        meetings = [m for m in meetings if keep(m)]
-
-    if label:
+    body_map = cfg.get('body_map')
+    if body_map:
+        rules = [(str(r['match']).lower(), r['label']) for r in body_map]
+        kept = []
         for m in meetings:
-            m['body'] = label
+            b = (m.get('body') or '').lower()
+            for pat, label in rules:
+                if pat in b:
+                    m['body'] = label
+                    kept.append(m)
+                    break
+            # a meeting matching no rule is dropped
+        meetings = kept
+    else:
+        inc = [p.lower() for p in (cfg.get('include_bodies') or [])]
+        exc = [p.lower() for p in (cfg.get('exclude_bodies') or [])]
+        label = cfg.get('body_label')
+        if inc or exc:
+            def keep(m):
+                b = (m.get('body') or '').lower()
+                if inc and not any(p in b for p in inc):
+                    return False
+                if exc and any(p in b for p in exc):
+                    return False
+                return True
+            meetings = [m for m in meetings if keep(m)]
+        if label:
+            for m in meetings:
+                m['body'] = label
 
     bodies_seen = sorted({m['body'] for m in meetings})
     return meetings, bodies_seen
