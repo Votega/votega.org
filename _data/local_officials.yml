@@ -440,3 +440,86 @@ jurisdictions:
         photo: "https://www.newtoncountyga.gov/ImageRepository/Document?documentId=6918"
         source: "https://www.newtoncountyga.gov/693/LeAnne-Long"
         notes: "Elected to the Board of Commissioners in 2024."
+  # ==========================================================================
+  # COBB COUNTY  (county — partisan)  — SKELETON, fill in members
+  # ==========================================================================
+  - id: cobb                      # MUST equal the places.yml slug (join key)
+    name: Cobb County
+    type: county
+    county: Cobb
+    body: Board of Commissioners
+    partisan: false              
+    official_url: https://www.cobbcounty.gov/board
+    related_pages: 
+    # ---- PHASE 1 — ROSTER --------------------------------------------------
+    members:
+      - name: "Lisa Cupid"
+        role: Chair                 # countywide-elected board chair
+        seat: At-large
+        party: ""                   # Republican | Democratic
+        email: "lisa.cupid@cobbcounty.gov"
+        phone: "678-625-1201"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: false               # verify: many GA chairs vote only to break ties
+        tie_break_only: true
+        photo: "https://www.newtoncountyga.gov/ImageRepository/Document?documentId=868"
+        source: "https://www.newtoncountyga.gov/158/Marcello-Banes"
+        notes: "Elected to the Board of Commissioners in 2016."
+      - name: "Keli Gambrill"
+        role: Commissioner
+        seat: "District 1"                    # e.g. "District 1"
+        party: ""
+        email: "keli.gambrill@cobbcounty.gov"
+        phone: "770-528-3313"
+        last_elected: 2023
+        term_end: 
+        next_election: 
+        voting: true
+        tie_break_only: false
+        photo: "https://assets.cobbcounty.gov/files/2020-12/BOC-Gambrill-Headshot.jpg"
+        source: "https://www.cobbcounty.gov/board/district-commissioners/district-1-commissioner"
+        notes: ""
+      - name: "Erick Allen"
+        role: Commissioner
+        seat: "District 2"                    # e.g. "District 1"
+        party: ""
+        email: "erick.allen@cobbcounty.gov"
+        phone: "770-528-3315"
+        last_elected: 2025
+        term_end:
+        next_election:
+        voting: true
+        tie_break_only: false
+        photo: "https://assets.cobbcounty.gov/files/2025-09/erick%20allen%20SQ_0.jpg"
+        source: "https://www.cobbcounty.gov/board/district-commissioners/district-2-commissioner"
+        notes: ""
+      - name: "JoAnn Birrell"
+        role: Commissioner
+        seat: "District 3"                    # e.g. "District 1"
+        party: ""
+        email: "joann.birrell@cobbcounty.gov"
+        phone: "770-528-3317"
+        last_elected:
+        term_end: 
+        next_election:
+        voting: true
+        tie_break_only: false
+        photo: "https://assets.cobbcounty.gov/files/2025-09/Birrell-headshot.jpg"
+        source: "https://www.cobbcounty.gov/board/district-commissioners/district-3-commissioner"
+        notes: ""
+      - name: "Monique Sheffield"
+        role: Commissioner
+        seat: "District 4"                    # e.g. "District 1"
+        party: ""
+        email: "monique.sheffield@cobbcounty.gov"
+        phone: "770-528-3312"
+        last_elected:
+        term_end: 
+        next_election: 
+        voting: true
+        tie_break_only: false
+        photo: "https://assets.cobbcounty.gov/files/2025-09/BOC-Sheffield-Headshot.jpg"
+        source: "https://www.cobbcounty.gov/board/district-commissioners/district-4-commissioner"
+        notes: ""
