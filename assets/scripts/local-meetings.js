@@ -168,11 +168,13 @@
       .catch(function (err) {
         if (global.console) console.error(err);
         container.innerHTML =
-          '<p style="color:#c00;">Meeting data is temporarily unavailable.' +
+          '<p style="color:#555;">We’re working to link agendas and minutes to this ' +
+          'page for ease of viewing and navigation. You can always view agendas and ' +
+          'minutes directly on the ' +
           (sourceFallback
-            ? ' You can view agendas and minutes directly on the ' +
-              '<a href="' + esc(sourceFallback) + '" target="_blank" rel="noopener">official site</a>.'
-            : '') + '</p>';
+            ? '<a href="' + esc(sourceFallback) + '" target="_blank" rel="noopener">official site</a>'
+            : 'official site') +
+          '.</p>';
       });
   }
 
