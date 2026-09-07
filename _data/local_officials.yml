@@ -1516,6 +1516,75 @@ jurisdictions:
         voting: true
         source: "https://www.cherokeecountyga.gov/BOC/"
 
+  - id: clayton
+    name: Clayton County
+    type: county
+    county: Clayton
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 3             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.claytoncountyga.gov/government/board-of-commissioners/"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Dr. Alieka Anderson-Henry"
+        role: Chair
+        title: County Commission Chair
+        seat: "At-large"
+        party: Democratic
+        email: ""
+        phone: "770-477-3208"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/clayton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Alaina Reaves"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "alaina.reaves@claytoncountyga.gov"
+        phone: "770-477-3213"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.claytoncountyga.gov/government/board-of-commissioners/district-1/" 
+      - name: "Gail Hambrick"
+        role: Commissioner
+        seat: "District 2"
+        party: Democratic
+        email: "gail.hambrick@claytoncountyga.gov"
+        phone: "770-603-4135"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/clayton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Tashe Allen"
+        role: Commissioner
+        seat: "District 3"
+        party: Democratic
+        email: "Tashe.Allen@claytoncountyga.gov"
+        phone: "770-473-5465"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/clayton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "DeMont Davis"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "demont.davis@claytoncountyga.gov"
+        phone: "770-477-3216"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.claytoncountyga.gov/government/board-of-commissioners/district-4/"
+        
   - id: henry
     name: Henry County
     type: county

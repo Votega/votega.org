@@ -270,6 +270,26 @@ places:
           - body: Board of Commissioners
             when: "1st Tuesday of every month, 6:00 p.m., and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: "Cherokee County Admin Building, 1130 Bluffs Parkway, Canton"            # optional
+  
+  - slug: clayton
+    name: Clayton County
+    type: county
+    fips: "13063"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/clayton/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: legistar
+        base_url: https://www.claytoncountyga.gov/
+        agendas_url: "https://claytoncountyga.primegov.com/public/portal?fromiframe=true"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Boardroom, 112 Smith Street, Jonesboro"            # optional
 
   - slug: newton
     name: Newton County
