@@ -118,6 +118,13 @@ def scope_bodies(cfg, meetings, slug):
     def match_text(m):
         return (m.get(field) or '').lower()
 
+    # A document-type-grouped Agenda Center (body_from: title) splits ONE meeting
+    # across "Agendas"/"Minutes" panels; remember each row's source panel (its
+    # pre-relabel body) so _merge_type_grouped can route its file correctly below.
+    if field == 'title':
+        for m in meetings:
+            m['_panel'] = m.get('body') or ''
+
     body_map = cfg.get('body_map')
     if body_map:
         rules = [(str(r['match']).lower(), r['label']) for r in body_map]
@@ -148,8 +155,37 @@ def scope_bodies(cfg, meetings, slug):
             for m in meetings:
                 m['body'] = label
 
+    if field == 'title':
+        meetings = _merge_type_grouped(meetings)
+
     bodies_seen = sorted({m['body'] for m in meetings})
     return meetings, bodies_seen
+
+
+def _merge_type_grouped(meetings):
+    """Collapse rows for one meeting that a document-type-grouped Agenda Center
+    split across "Agendas"/"Minutes" panels into a single record, routing each
+    panel's file to agendaUrl / minutesUrl. Keyed by (date, normalized title);
+    newest-first order is preserved. The internal `_panel` marker is dropped."""
+    merged = {}
+    order = []
+    for m in meetings:
+        key = (m.get('date'), _norm(m.get('title') or ''))
+        tgt = merged.get(key)
+        if tgt is None:
+            tgt = {k: v for k, v in m.items() if k != '_panel'}
+            tgt['agendaUrl'] = None
+            tgt['minutesUrl'] = None
+            merged[key] = tgt
+            order.append(key)
+        doc = m.get('agendaUrl') or m.get('minutesUrl')
+        if 'minute' in (m.get('_panel') or '').lower():
+            tgt['minutesUrl'] = tgt['minutesUrl'] or doc
+        else:
+            tgt['agendaUrl'] = tgt['agendaUrl'] or doc
+        tgt['videoUrl'] = tgt.get('videoUrl') or m.get('videoUrl')
+        tgt['hasPreviousVersions'] = tgt.get('hasPreviousVersions') or m.get('hasPreviousVersions')
+    return [merged[k] for k in order]
 
 
 def build_place(place):
