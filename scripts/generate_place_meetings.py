@@ -105,15 +105,25 @@ def scope_bodies(cfg, meetings, slug):
                       body to `label`; a meeting matching no rule is DROPPED
                       (so body_map is an allow-list + rename in one). When set,
                       body_map supersedes include/exclude/body_label.
+      body_from       which field the include/exclude/body_map matching reads:
+                      'body' (default) or 'title'. Some Agenda Centers group by
+                      document TYPE ("Agendas"/"Minutes") so the real body is only
+                      in the meeting title (Banks): body_from: title + a body_map
+                      allow-list on the title keeps the Board of Commissioners and
+                      drops Board of Elections etc. body_map still relabels `body`.
 
     Returns (meetings, bodies_seen) recomputed from the kept set.
     """
+    field = cfg.get('body_from', 'body')
+    def match_text(m):
+        return (m.get(field) or '').lower()
+
     body_map = cfg.get('body_map')
     if body_map:
         rules = [(str(r['match']).lower(), r['label']) for r in body_map]
         kept = []
         for m in meetings:
-            b = (m.get('body') or '').lower()
+            b = match_text(m)
             for pat, label in rules:
                 if pat in b:
                     m['body'] = label
@@ -127,7 +137,7 @@ def scope_bodies(cfg, meetings, slug):
         label = cfg.get('body_label')
         if inc or exc:
             def keep(m):
-                b = (m.get('body') or '').lower()
+                b = match_text(m)
                 if inc and not any(p in b for p in inc):
                     return False
                 if exc and any(p in b for p in exc):

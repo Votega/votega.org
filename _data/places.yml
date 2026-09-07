@@ -45,6 +45,10 @@
 #                        TYPE in the body field (Cobb, Douglas): first matching
 #                        rule renames the body; unmatched meetings are DROPPED
 #                        (allow-list + rename). Supersedes the three keys above.
+#       body_from        which field the above matching reads: body (default) or
+#                        title. For Agenda Centers grouped by document type
+#                        ("Agendas"/"Minutes") the real body is only in the title
+#                        (Banks) — body_from: title + a body_map keeps just the BoC.
 #
 # OFFICIALS is a domain too, but it is NOT configured here — a place "has
 # officials" automatically when a jurisdiction in _data/local_officials.yml
@@ -158,6 +162,12 @@ places:
         platform: civicplus
         base_url: https://www.bankscountyga.org
         agendas_url: "https://www.bankscountyga.org/1228/Agendas-and-Minutes"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # Banks' Agenda Center groups by document TYPE ("Agendas"/"Minutes"), so the
+        # real body is only in the title — match on the title and keep just the BoC
+        # (drops the Board of Elections & Registration meetings).
+        body_from: title
+        body_map:
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
             when: "2nd Tuesday every month, 6:30 p.m., and 4th Tuesday of every month, 3:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
