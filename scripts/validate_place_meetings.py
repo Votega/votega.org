@@ -37,10 +37,13 @@ REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
 DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 _TODAY = date.today().isoformat()
-# Platforms with a scraper adapter (generate_place_meetings.py). A place with no
-# platform (schedule/agendas_url-only) or an unrecognized one produces no JSON, so
-# there is nothing here to validate.
-KNOWN_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode'}
+# Kept in sync with generate_place_meetings.py. Platforms with a scraper adapter…
+ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode'}
+# …and recognized platforms/markers we have NO scraper for (unknown + bespoke CMSs
+# like Revize/Wix/WordPress): they produce no JSON, so there is nothing to validate
+# and they are skipped silently. A value in neither set is a likely typo → warned.
+NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'revize', 'wix', 'wordpress', 'granicus',
+                        'governmentwindow'}
 
 
 def _norm(name):
@@ -53,13 +56,13 @@ def check_place(place, min_meetings, sample, network):
     if not cfg:
         return [], []  # no meetings domain — nothing to validate
     platform = cfg.get('platform')
-    if not platform or platform == 'unknown':
-        # schedule / agendas_url-only, or a deliberate `unknown` "identify later"
-        # marker — nothing scraped, skip silently.
+    if not platform or platform in NO_SCRAPER_PLATFORMS:
+        # schedule / agendas_url-only, or a recognized no-scraper platform
+        # (`unknown`, Revize, Wix, …) — nothing scraped, skip silently.
         return [], []
-    if platform not in KNOWN_PLATFORMS:
-        # A typo, or a real platform we haven't built an adapter for — worth a nudge
-        # (unlike the intentional `unknown` marker above).
+    if platform not in ADAPTER_PLATFORMS:
+        # Not an adapter platform AND not a recognized no-scraper one — likely a
+        # typo; nudge so it gets fixed (or registered in NO_SCRAPER_PLATFORMS).
         return [], ['%s: unrecognized meetings platform %r — no scraper, skipping'
                     % (slug, platform)]
 

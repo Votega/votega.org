@@ -27,12 +27,20 @@
 #                        /local/<slug>/ page, no search entry. Flip it back to
 #                        unhide. (The officials cross-check still sees the slug.)
 #   domains              per-domain adapter config; supported domain today: meetings
-#     meetings.platform  civicplus | corecode | civicclerk | legistar | teammunicode
-#                        | unknown  (`unknown` = a deliberate "identify the meetings
-#                        platform later" marker: skipped silently by the generator &
-#                        validator, so the schedule / agendas_url still render but
-#                        nothing is scraped. Omitting platform entirely does the same
-#                        for a schedule-only place.)
+#     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
+#                        legistar | teammunicode
+#                        NO-SCRAPER (recorded for provenance, skipped silently — the
+#                        schedule / agendas_url still render, nothing is scraped):
+#                          unknown  = platform not yet identified ("look into later")
+#                          revize | wix | wordpress | granicus | governmentwindow |
+#                          custom  = a real but adapter-less system (usually a
+#                                     bespoke CMS that just lists agenda PDFs — e.g.
+#                                     Bartow is Revize; `custom` = a hand-built page
+#                                     with no CMS name, e.g. Bacon's PHP). Register in
+#                                     NO_SCRAPER_PLATFORMS in generate_place_meetings.py
+#                                     + validate_place_meetings.py before using it,
+#                                     else it is flagged as a typo.
+#                        Omitting platform entirely = a schedule-only place.
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
 #       corecode keys:   base_url, meetings_path
@@ -81,7 +89,7 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: unknown
+        platform: wordpress
         base_url: https://applingcountyga.org/
         agendas_url: "https://applingcountyga.org/?page_id=98"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:
@@ -101,7 +109,7 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: unknown
+        platform: wordpress
         base_url: https://atkinsoncounty.org/
         agendas_url: "https://atkinsoncounty.org/agenda/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:
@@ -121,7 +129,7 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: unknown
+        platform: custom
         base_url: https://baconcounty.org/
         agendas_url: "https://baconcounty.org/minutes-agendas.php"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:
@@ -141,7 +149,7 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: unknown
+        platform: wix
         base_url: https://www.bakercountyga.com
         agendas_url: "https://www.bakercountyga.com/minutes-and-agendas"     # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:
@@ -235,7 +243,7 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: unknown
+        platform: revize   # Revize CMS (no scraper adapter) — agendas are PDFs on the page
         base_url: https://www.bartowcountyga.gov/index.php
         agendas_url: "https://www.bartowcountyga.gov/departments/county_commissioner/public_meeting_minutes/index.php"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:

@@ -44,6 +44,17 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
 OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 
+# Platforms with a scraper adapter (see fetch_meetings' dispatch below).
+ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode'}
+# Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
+# provenance and skipped silently (the schedule / agendas_url still render, nothing
+# is scraped): `unknown` (platform not yet identified) plus real but adapter-less
+# systems, mostly bespoke CMSs that just list agenda PDFs (Revize, Wix, WordPress,
+# Granicus, GovernmentWindow). Add a value here to register it as a silent no-op;
+# anything NOT in either set is treated as a typo and warned about.
+NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'revize', 'wix', 'wordpress', 'granicus',
+                        'governmentwindow'}
+
 
 def load_registry(path):
     with open(path, encoding='utf-8') as f:
@@ -200,11 +211,12 @@ def build_place(place):
     if not cfg:
         return 'skip'  # place has no meetings domain — not an error
     platform = cfg.get('platform')
-    if not platform or platform == 'unknown':
-        # No platform = a schedule / agendas_url-only block (the schedule renders
-        # from places.yml and the page links agendas_url). `unknown` = a deliberate
-        # "identify the meetings platform later" marker. Either way there is nothing
-        # to scrape, so skip silently (NOT an error).
+    if not platform or platform in NO_SCRAPER_PLATFORMS:
+        # No platform = a schedule / agendas_url-only block; or a recognized
+        # no-scraper platform (`unknown`, Revize, Wix, …). Either way there is
+        # nothing to scrape — the schedule and agendas_url still render — so skip
+        # silently (NOT an error). A value in neither set falls through to
+        # fetch_meetings and is reported as an unknown platform.
         return 'skip'
 
     print('Fetching meetings for %s (%s)...' % (place['name'], cfg.get('platform')))
