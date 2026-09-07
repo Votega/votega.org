@@ -52,6 +52,114 @@
 # meetings adapter yet (that's fine; the meetings pipeline just skips it).
 
 places:
+  - slug: appling
+    name: Appling County
+    type: county
+    fips: "13001"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/appling/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: "https://applingcountyga.org/?page_id=98"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 5:30 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Appling County Courthouse Annex, Commissioners' Meeting Room, 69 Tippins Street, Baxley"            # optional
+
+  - slug: atkinson
+    name: Atkinson County
+    type: county
+    fips: "13003"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/atkinson/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: "https://atkinsoncounty.org/agenda/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd Friday of every month, 5:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Board of Commissioners Conference Room"            # optional
+
+  - slug: bacon
+    name: Bacon County
+    type: county
+    fips: "13005"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/bacon/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: "https://baconcounty.org/minutes-agendas.php"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "3rd Tuesday of every month, 5:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Meeting Room, 1st Floor, Bacon County Courthouse"            # optional
+
+  - slug: baker
+    name: Baker County
+    type: county
+    fips: "13007"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/baker/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: "https://www.bakercountyga.com/minutes-and-agendas"     # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 7:30 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Baker County Board of Commissioners Office, 439 Georgia Hwy NW, Newton"            # optional
+
+  - slug: baldwin
+    name: Baldwin County
+    type: county
+    fips: "13009"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/baldwin/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: "https://www.baldwincountyga.com/1209/Agendas-Minutes"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Baldwin County Government Building"            # optional
+
+  - slug: banks
+    name: Banks County
+    type: county
+    fips: "13011"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/banks/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: "https://www.bankscountyga.org/1228/Agendas-and-Minutes"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd Tuesday every month, 6:30 p.m., and 4th Tuesday of every month, 3:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Courthouse Annex Boardroom, 150 Hudson Ridge, Homer"            # optional
+            
   - slug: newton
     name: Newton County
     type: county

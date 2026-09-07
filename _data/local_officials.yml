@@ -882,3 +882,453 @@ jurisdictions:
         photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Abdur-Rahman/2023_KHADIJAH-ABDUR-RAHMAN-200x200.jpg"
         source: "https://www.fultoncountyga.gov/Commissioners/Khadijah-Abdur-Rahman"
         notes: ""
+  
+  - id: appling
+    name: Appling County
+    type: county
+    county: Appling
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 6             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://applingcountyga.org/"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Leslie Burch"
+        role: Chair
+        seat: "At-Large"
+        party: 
+        email: ""
+        phone: ""
+        last_elected: 
+        term_end:                 # TODO: per-county term length
+        next_election:
+        voting: true
+        source: "https://applingcountyga.org/?page_id=1464"
+      - name: "Randy Sellers"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: ""
+        phone: ""
+        last_elected: 
+        term_end:                 # TODO: per-county term length
+        next_election:
+        voting: true
+        source: "https://applingcountyga.org/?page_id=1464"
+      - name: "Jakharis Jones"
+        role: Commissioner
+        seat: "District 2"
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/appling-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Daryl Edwards"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: ""
+        phone: ""
+        last_elected: 
+        term_end:                 # TODO: per-county term length
+        next_election:
+        voting: true
+        source: "https://applingcountyga.org/?page_id=1464"
+      - name: "Chad Kent"
+        role: Commissioner
+        seat: "District 4"
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/appling-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Ricky Barnes"
+        role: Commissioner
+        seat: "District 5"
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/appling-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+
+  - id: atkinson
+    name: Atkinson County
+    type: county
+    county: Atkinson
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 6             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://atkinsoncounty.org/board-of-commissioners/"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Benjamin Liles"
+        role: Chair
+        seat: "At-Large"
+        party: 
+        email: ""
+        phone: "912-422-3391"
+        last_elected:
+        term_end:                 # TODO: per-county term length
+        next_election:
+        voting: true
+        source: "https://atkinsoncounty.org/board-of-commissioners/"
+      - name: "Buddy Willis"
+        role: Commissioner
+        seat: "District 1"
+        party: Republican
+        email: ""
+        phone: "912-422-3391"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/atkinson-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Gloria Farrell"
+        role: Commissioner
+        seat: "District 2"
+        party: 
+        email: ""
+        phone: "912-422-3391"
+        last_elected:
+        term_end:                 # TODO: per-county term length
+        next_election:
+        voting: true
+        source: "https://atkinsoncounty.org/board-of-commissioners/"
+      - name: "Charlton Gillis"
+        role: Commissioner
+        seat: "District 3"
+        party: Republican
+        email: ""
+        phone: "912-422-3391"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/atkinson-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Johnny Durrance"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: ""
+        phone: "912-422-3391"
+        last_elected:
+        term_end:                 # TODO: per-county term length
+        next_election:
+        voting: true
+        source: "https://atkinsoncounty.org/board-of-commissioners/"
+      - name: "Tom Morris"
+        role: Commissioner
+        seat: "District 5"
+        party: Republican
+        email: ""
+        phone: "912-422-3391"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/atkinson-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+
+  - id: bacon
+    name: Bacon County
+    type: county
+    county: Bacon
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 6             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://baconcounty.org/administration.php"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Shane Taylor"
+        full_name: ""   # authoritative full name (matching); site shows `name`
+        role: Chair
+        seat: "At-Large"
+        party: 
+        email: ""
+        phone: "912-632-5214"
+        last_elected: 
+        term_end:
+        next_election: 
+        voting: true
+        source: "https://baconcounty.org/administration.php"
+      - name: "Lee Hagans"
+        full_name: "Lee A. Hagans"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 2"
+        party: Democratic
+        email: ""
+        phone: "912-632-5214"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/bacon-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Lonann Sweat"
+        full_name: ""   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: ""
+        phone: "912-632-5214"
+        last_elected: 
+        term_end:
+        next_election: 
+        voting: true
+        source: "https://baconcounty.org/administration.php"
+      - name: "Corey Tyre"
+        full_name: ""   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: ""
+        phone: "912-632-5214"
+        last_elected: 
+        term_end:
+        next_election: 
+        voting: true
+        source: "https://baconcounty.org/administration.php"
+      - name: "Rusty Sears"
+        role: Commissioner
+        seat: "District 5"
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/bacon-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Sammy Boatright"
+        full_name: ""   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 6"
+        party: 
+        email: ""
+        phone: "912-632-5214"
+        last_elected: 
+        term_end:
+        next_election: 
+        voting: true
+        source: "https://baconcounty.org/administration.php"
+  
+  - id: baker
+    name: Baker County
+    type: county
+    county: Baker
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.bakercountyga.com/board-of-commissioners-1"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Matt Bryan"
+        role: Commissioner
+        seat: "Anna District"
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baker-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Connie Hobbs"
+        full_name: "Connie C. Hobbs"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "Elmodel District"
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baker-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Chris Moore"
+        role: Commissioner
+        seat: "Hogards Mill District"
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baker-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Tommy Rentz"
+        role: Commissioner
+        seat: "Milford District"
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baker-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Vann Irvin"
+        role: Commissioner
+        seat: "Newton District"
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baker-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+
+  - id: baldwin
+    name: Baldwin County
+    type: county
+    county: Baldwin
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.baldwincountyga.com/1194/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Emily Davis"
+        full_name: "Emily C. Davis"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 1"
+        party: Democratic
+        email: "ecdavis@baldwincountyga.com"
+        phone: "478-451-7105"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baldwin-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Kendrick Butts"
+        full_name: "Kendrick B. Butts"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 2"
+        party: Democratic
+        email: "kbutts@baldwincountyga.com"
+        phone: "478-288-6835"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.baldwincountyga.com/m/directory/employee?eid=8"   # SoS results — CONFIRM before merge
+      - name: "Sammy Hall"
+        role: Commissioner
+        seat: "District 3"
+        party: Republican
+        email: "shall@baldwincountyga.com"
+        phone: "478-932-5662"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baldwin-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Andrew Strickland"
+        role: Commissioner
+        seat: "District 4"
+        party: Republican
+        email: "astrickland@baldwincountyga.com"
+        phone: "478-454-8447"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baldwin-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Scott Little"
+        role: Commissioner
+        seat: "District 5"
+        party: Republican
+        email: "slittle@baldwincountyga.com"
+        phone: "478-234-7602"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baldwin-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+
+  - id: banks
+    name: Banks County
+    type: county
+    county: Banks
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.bankscountyga.org/1227/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Taylor Griffith"
+        role: Chair
+        title: County Commission Chairman
+        seat: "At-large"
+        party: Republican
+        email: "chairman@co.banks.ga.us"
+        phone: "678-858-4603"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/banks-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Danny Maxwell"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "djmaxwell@co.banks.ga.us"
+        phone: "706-654-8326"
+        last_elected: 2022
+        term_end: 2027
+        next_election: 2026
+        voting: true
+        source: "https://www.bankscountyga.org/1227/Board-of-Commissioners"
+      - name: "Bo Garrison"
+        role: Commissioner
+        seat: "District 2"
+        party: Republican
+        email: "bogarrison@co.banks.ga.us"
+        phone: "706-201-5910"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/banks-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Chris Ausburn"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "causburn@co.banks.ga.us"
+        phone: "678-858-4603"
+        last_elected: 2022
+        term_end: 2027
+        next_election: 2026
+        voting: true
+        source: "https://www.bankscountyga.org/1227/Board-of-Commissioners"
+      - name: "Keith Roberts"
+        role: Commissioner
+        seat: "District 4"
+        party: Republican
+        email: "bkroberts@co.banks.ga.us"
+        phone: "678-858-4603"
+        last_elected: 2025
+        term_end: 2030
+        next_election: 2029
+        voting: true
+        source: "https://www.bankscountyga.org/1227/Board-of-Commissioners"   # SoS results — CONFIRM before merge
