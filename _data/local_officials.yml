@@ -1632,18 +1632,20 @@ jurisdictions:
         next_election: 2028
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/henry-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
-      - name: "Dee Anglyn III"   
+      - name: "Dee Anglyn III"
+        full_name: "Derrell Winsor Anglyn III"   # GA SoS 2026 qualifying list
         role: Commissioner
         seat: "District 3"
-        party: 
+        party: Republican
         email: "danglyn@henrycountyga.gov"
         phone: ""
         last_elected: 2024
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://www.henrycountyga.gov/board-of-commissioners"   # SoS results — CONFIRM before merge
-      - name: "Michael Price"   # (!) 25% — sub-50%, RUNOFF decided this; verify (not in portal)
+        source: "https://www.henrycountyga.gov/board-of-commissioners"   # party + incumbency confirmed by GA SoS 2026 Qualified Candidates list
+      - name: "Michael Price"   # D4 incumbency confirmed by GA SoS 2026 Qualified Candidates list
+        full_name: "Michael Todd Price"
         role: Commissioner
         seat: "District 4"
         party: Democratic
@@ -1653,15 +1655,16 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/henry-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
-      - name: "Kevin Lewis"   # (!) 25% — sub-50%, RUNOFF decided this; verify (not in portal)
+        source: "https://results.sos.ga.gov/results/public/api/elections/henry-county-ga/2024NovGen/data"   # incumbency confirmed by GA SoS 2026 Qualified Candidates list
+      - name: "Kevin Lewis"   # D5 incumbency confirmed by GA SoS 2026 Qualified Candidates list
+        full_name: "Kevin Jeremaine Lewis"
         role: Commissioner
         seat: "District 5"
-        party: 
+        party: Democratic
         email: "klewis@henrycountyga.gov"
         phone: ""
         last_elected: 2024
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://www.henrycountyga.gov/board-of-commissioners"
+        source: "https://www.henrycountyga.gov/board-of-commissioners"   # party + incumbency confirmed by GA SoS 2026 Qualified Candidates list
