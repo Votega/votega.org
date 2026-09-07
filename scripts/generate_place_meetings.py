@@ -38,6 +38,7 @@ from lib.civicplus import fetch_agenda_center  # noqa: E402
 from lib.corecode import fetch_council_meetings, DEFAULT_MEETINGS_PATH  # noqa: E402
 from lib.civicclerk import fetch_civicclerk_meetings, portal_url  # noqa: E402
 from lib.legistar import fetch_legistar_meetings, portal_url as legistar_portal  # noqa: E402
+from lib.teammunicode import fetch_teammunicode_meetings  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -68,6 +69,8 @@ def fetch_meetings(cfg):
         return fetch_civicclerk_meetings(cfg['subdomain'])
     if platform == 'legistar':
         return fetch_legistar_meetings(cfg['client'])
+    if platform == 'teammunicode':
+        return fetch_teammunicode_meetings(cfg['base_url'].rstrip('/'))
     raise ValueError('unknown meetings platform %r' % platform)
 
 
@@ -81,6 +84,8 @@ def source_url(cfg):
         return portal_url(cfg['subdomain'])
     if platform == 'legistar':
         return legistar_portal(cfg['client'])
+    if platform == 'teammunicode':
+        return cfg['base_url'].rstrip('/') + '/meetings'
     return cfg.get('base_url')
 
 

@@ -25,6 +25,7 @@ import json
 import os
 import re
 import sys
+from datetime import date
 
 import yaml
 
@@ -35,6 +36,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
 DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+_TODAY = date.today().isoformat()
+# Platforms with a scraper adapter (generate_place_meetings.py). A place with no
+# platform (schedule/agendas_url-only) or an unrecognized one produces no JSON, so
+# there is nothing here to validate.
+KNOWN_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode'}
 
 
 def _norm(name):
@@ -46,12 +52,23 @@ def check_place(place, min_meetings, sample, network):
     cfg = (place.get('domains') or {}).get('meetings')
     if not cfg:
         return [], []  # no meetings domain — nothing to validate
+    platform = cfg.get('platform')
+    if not platform:
+        return [], []  # schedule / agendas_url-only — nothing scraped to validate
+    if platform not in KNOWN_PLATFORMS:
+        return [], ['%s: unrecognized meetings platform %r — no scraper, skipping'
+                    % (slug, platform)]
 
     path = os.path.join(DATA_DIR, 'local-%s-meetings.json' % slug)
     errors, warnings = [], []
 
     if not os.path.exists(path):
-        return ['%s: missing file %s' % (slug, path)], []
+        # A missing file means the scrape never produced output (a newly-added or
+        # mis-configured place). generate_place_meetings.py already warns loudly on
+        # that, so keep it a WARNING here rather than hard-failing the whole run —
+        # a broken *existing* file (stale / dead links / schema) still errors below.
+        return [], ['%s: no meetings file yet (%s) — scrape has not produced output'
+                    % (slug, os.path.basename(path))]
 
     with open(path, encoding='utf-8') as f:
         data = json.load(f)
@@ -84,7 +101,12 @@ def check_place(place, min_meetings, sample, network):
         # A meeting is a usable record if it links ANY artifact. Most platforms
         # publish agendas/minutes; CoreCode (Covington) publishes minutes + video
         # only, and the newest meetings may have just the video until minutes post.
-        if not (m.get('agendaUrl') or m.get('minutesUrl') or m.get('videoUrl')):
+        # EXCEPTION: an UPCOMING meeting (date today or later) legitimately has no
+        # documents yet — it is surfaced as a scheduled meeting, not an error.
+        date = m.get('date') or ''
+        is_upcoming = DATE_RE.match(date) and date >= _TODAY
+        if not (m.get('agendaUrl') or m.get('minutesUrl') or m.get('videoUrl')) \
+                and not is_upcoming:
             errors.append('%s: no agenda, minutes, or video URL' % where)
 
     present = {_norm(b) for b in (bodies or [])}
