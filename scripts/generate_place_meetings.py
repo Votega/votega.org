@@ -148,9 +148,20 @@ def build_place(place):
     cfg = (place.get('domains') or {}).get('meetings')
     if not cfg:
         return 'skip'  # place has no meetings domain — not an error
+    if not cfg.get('platform'):
+        # A meetings block with only a schedule / agendas_url (no scraper adapter)
+        # is legitimate — the schedule renders from places.yml and the page links
+        # agendas_url. There is nothing to scrape, so skip it (NOT an error).
+        return 'skip'
 
     print('Fetching meetings for %s (%s)...' % (place['name'], cfg.get('platform')))
-    meetings, bodies_seen = fetch_meetings(cfg)
+    try:
+        meetings, bodies_seen = fetch_meetings(cfg)
+    except (ValueError, KeyError) as e:
+        # Unknown platform or missing required key for this platform — a config
+        # error in one place must not abort the whole weekly run for every other.
+        print('  ERROR: bad meetings config for %s: %s' % (slug, e))
+        return None
 
     if meetings is None:
         print('  ERROR: could not fetch meetings source for %s' % slug)
@@ -202,6 +213,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--slug', help='only build this place (default: all in registry)')
     ap.add_argument('--registry', default=DEFAULT_REGISTRY)
+    ap.add_argument('--strict', action='store_true',
+                    help='exit non-zero if any place failed (default: warn and continue, '
+                         'so one broken/transiently-down source does not block committing '
+                         'every other place\'s good data)')
     args = ap.parse_args()
 
     places = load_registry(args.registry)
@@ -219,12 +234,20 @@ def main():
         if payload is None:
             failed.append(place['slug'])
             continue
-        write_place(place['slug'], payload)
+        write_place(place['slug'], payload)  # good ones are written as we go
         built += 1
 
+    print('Done (%d place(s) with meetings, %d failed).' % (built, len(failed)))
     if failed:
-        sys.exit('FAILED: %s' % ', '.join(failed))
-    print('Done (%d place(s) with meetings).' % built)
+        msg = '%d place(s) failed to scrape and were left unchanged: %s' % (
+            len(failed), ', '.join(failed))
+        # GitHub Actions annotation — surfaces prominently on the run without
+        # failing the job, so the good data still commits. validate_place_meetings.py
+        # is the hard guard on the committed JSONs (staleness / dead links / zero).
+        print('::warning::%s' % msg)
+        print('WARNING: %s' % msg, file=sys.stderr)
+        if args.strict:
+            sys.exit('FAILED (strict): %s' % ', '.join(failed))
 
 
 if __name__ == '__main__':
