@@ -242,6 +242,26 @@ places:
           - body: Board of Commissioners
             when: "1st Wednesday of every month, 10:00 a.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: "Commissioner’s Conference Room, 135 W. Cherokee Avenue, Cartersville"            # optional
+  
+  - slug: cherokee
+    name: Cherokee County
+    type: county
+    fips: "13057"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/cherokee/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: Legistar
+        base_url: https://www.cherokeecountyga.gov/
+        agendas_url: "https://cherokeega.granicus.com/ViewPublisher.php?view_id=1"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 6:00 p.m., and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Cherokee County Admin Building, 1130 Bluffs Parkway, Canton"            # optional
 
   - slug: newton
     name: Newton County
