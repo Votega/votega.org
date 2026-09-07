@@ -202,7 +202,47 @@ places:
           - body: Board of Commissioners
             when: "2nd Tuesday every month, 6:30 p.m., and 4th Tuesday of every month, 3:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: "Courthouse Annex Boardroom, 150 Hudson Ridge, Homer"            # optional
-            
+   
+  - slug: barrow
+    name: Barrow County
+    type: county
+    fips: "13013"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/barrow/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: civicplus
+        base_url: https://barrowga.org/
+        agendas_url: "https://barrowga.granicus.com/ViewPublisher.php?view_id=1"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd Tuesday of every month, 5:00 p.m., 4th Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Commissioner Meeting Room, Historic Courthouse, 30 N. Broad Street, Winder"            # optional
+
+  - slug: bartow
+    name: Bartow County
+    type: county
+    fips: "13015"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/bartow/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: unknown
+        base_url: https://www.bartowcountyga.gov/index.php
+        agendas_url: "https://www.bartowcountyga.gov/departments/county_commissioner/public_meeting_minutes/index.php"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Wednesday of every month, 10:00 a.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Commissioner’s Conference Room, 135 W. Cherokee Avenue, Cartersville"            # optional
+
   - slug: newton
     name: Newton County
     type: county

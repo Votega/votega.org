@@ -1332,3 +1332,118 @@ jurisdictions:
         next_election: 2029
         voting: true
         source: "https://www.bankscountyga.org/1227/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+  
+  - id: barrow
+    name: Barrow County
+    type: county
+    county: Barrow
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 7             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://barrowga.org/380/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Pat Graham"
+        role: Chair
+        title: County Commission Chairman
+        seat: "At-large"
+        party: Republican
+        email: "pgraham@barrowga.org"
+        phone: "678-300-5367"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/barrow-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Joe Goodman"
+        role: Commissioner
+        seat: "District 1"
+        party: Republican
+        email: "jgoodman@barrowga.org"
+        phone: "770-883-5609"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/barrow-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Kenny Shook"
+        role: Commissioner
+        seat: "District 2"
+        party: Republican
+        email: "kshook@barrowga.org"
+        phone: "770-307-3005"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/barrow-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Rolando Alvarez"
+        role: Commissioner
+        seat: "District 3"
+        party: Republican
+        email: "ralvarez@barrowga.org"
+        phone: "770-307-3005"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/barrow-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Alex Ward"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "ralvarez@barrowga.org"
+        phone: "770-307-3005"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://barrowga.org/m/directory/employee?eid=123"
+      - name: "Tim Walker"
+        role: Commissioner
+        seat: "District 5"
+        party: 
+        email: "twalker@barrowga.org"
+        phone: "770-307-3005"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://barrowga.org/m/directory/employee?eid=124"   
+      - name: "Deborah Lynn"
+        role: Commissioner
+        seat: "District 6"
+        party: 
+        email: "dlynn@barrowga.org"
+        phone: "770-307-3005"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://barrowga.org/m/directory/employee?eid=125"
+  
+  - id: bartow
+    name: Bartow County
+    type: county
+    county: Bartow
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 1             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.bartowcountyga.gov/departments/county_commissioner/index.php"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Steve Taylor"
+        role: Commissioner
+        seat: "At-large"
+        party: Republican
+        email: "commissionerpublic@bartowcountyga.gov"
+        phone: "770-387-5030"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/bartow-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
