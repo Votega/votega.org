@@ -1922,3 +1922,95 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/"   # SoS results — CONFIRM before merge
+  
+  - id: walton
+    name: Walton County
+    type: county
+    county: Walton
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 7             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.waltoncountyga.gov/322/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "David Thompson"
+        role: Chair
+        title: County Commission Chairman
+        seat: "At-large"
+        party: Republican
+        email: "davidg.thompson@co.walton.ga.us"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/walton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Amarie Warren"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "amarie.warren@co.walton.ga.us"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.waltoncountyga.gov/322/Board-of-Commissioners"
+      - name: "Pete Myers"
+        role: Commissioner
+        seat: "District 2"
+        party: Republican
+        email: "pete.myers@co.walton.ga.us"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/walton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Timmy Shelnutt"
+        role: Commissioner
+        seat: "District 3"
+        party: Republican
+        email: "timmy@andersongrading.com"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/walton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Lee Bradford"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "bradford4walton@gmail.com"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.waltoncountyga.gov/322/Board-of-Commissioners"
+      - name: "Jeremy Adams"
+        role: Commissioner
+        seat: "District 5"
+        party: 
+        email: "dradams@co.walton.ga.us"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.waltoncountyga.gov/322/Board-of-Commissioners"
+      - name: "Kirklyn Dixon"
+        full_name: "Kirklyn L. Dixon"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 6"
+        party: Republican
+        email: "kirklyn.dixon@co.walton.ga.us"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/walton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge

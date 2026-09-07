@@ -41,6 +41,18 @@
 #                                     + validate_place_meetings.py before using it,
 #                                     else it is flagged as a typo.
 #                        Omitting platform entirely = a schedule-only place.
+#     Link fields (any platform, optional) — the county's own agenda/minutes/video
+#     hubs, rendered on /local/<slug>/ as human links (NOT scraped):
+#       agendas_url      the direct agenda (or combined agenda/minutes) hub. Also
+#                        the "Confirm on the official site" link under the schedule,
+#                        and the fallback source link. Prefer it over base_url.
+#       minutes_url      separate minutes hub, when the county splits them out.
+#       video_url        separate meeting-video/recordings hub.
+#                        When minutes_url or video_url is set, the page shows an
+#                        "On the official site: Agendas · Minutes · Video" line
+#                        (whichever are present) — independent of the schedule, so a
+#                        links-only place (no `when` filled) still surfaces them
+#                        (e.g. Rockdale). An agendas-only place is unaffected.
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
 #       corecode keys:   base_url, meetings_path
@@ -438,7 +450,7 @@ places:
     type: city
     fips: null
     parentCounty: newton
-    region: Metro Atlanta
+    region: Broader Metropolitan Statistical Area
     domains:
       meetings:
         # CoreCode CMS: a flat council-meetings table (minutes PDFs + Vimeo
@@ -584,6 +596,26 @@ places:
           - { match: "Board of Commissioners", label: "Board of Commissioners" }
           - { match: "Committee of the Whole", label: "Board of Commissioners" }
           - { match: "Special Called", label: "Board of Commissioners" }
+
+  - slug: walton
+    name: Walton County
+    type: county
+    fips: "13297"
+    parentCounty: null
+    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/walton/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: teammunicode   
+        base_url: https://www.waltoncountyga.gov
+        agendas_url: "https://waltoncounty-ga.municodemeetings.com/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Historic walton County Courthouse, 111 S Broad Street, Monroe"            # optional
 
   - slug: carrollton
     name: City of Carrollton
