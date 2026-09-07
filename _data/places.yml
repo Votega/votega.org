@@ -311,6 +311,12 @@ places:
         subdomain: carrollcoga
         base_url: https://ga-carrollcounty.civicplus.com/182/Board-of-Commissioners
         agendas_url: "https://carrollcoga.portal.civicclerk.com/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # Scope to the legislative + land-use bodies; drops Board of Elections &
+        # Registration and the "General"/advisory bucket (administrative).
+        body_map:
+          - { match: "Planning and Zoning", label: "Planning & Zoning" }
+          - { match: "Board of Appeals", label: "Board of Appeals" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
             when: "1st Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
