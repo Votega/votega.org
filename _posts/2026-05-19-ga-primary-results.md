@@ -2,6 +2,7 @@
 layout: post
 title: 2026 Georgia Primary Results
 subtitle: Election night results for GA Primary Races
+share-description: "Election-night results from Georgia's 2026 primary, with vote totals and outcomes for statewide, congressional, and General Assembly races as they came in."
 ---
 
 Polls closed at 7:00 PM ET tonight for Georgia's May 19, 2026 General Primary Election. Results are now rolling in across all statewide, congressional, and legislative races.

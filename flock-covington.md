@@ -2,6 +2,7 @@
 layout: page
 title: Flock Covington
 subtitle: City and County Flock Implementation
+share-description: "Tracking Flock Safety license plate reader deployment in Covington, Newton County, and Oxford, GA — city council votes, contracts, and open records requests."
 ---
 
 Information on the use of Automated License Plate Readers (ALPRs) in the Covington, Newton County, and Oxford, GA area will be shared here. 

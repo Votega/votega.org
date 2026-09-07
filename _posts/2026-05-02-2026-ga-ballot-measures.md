@@ -2,6 +2,7 @@
 layout: post
 title: 2026 Georgia Ballot Measures
 subtitle: Georgia Amendments on the Ballot
+share-description: "A plain-language guide to the constitutional amendments and statewide ballot measures Georgia voters will decide in 2026, and what a yes or no vote means."
 ---
 
 > **See the live tracker:** For an up-to-date, structured view of Georgia's ballot measures — including enabling legislation and, after the election, results — visit the [Georgia Ballot Measures page]({{ '/ga-ballot-measures.html' | relative_url }}).

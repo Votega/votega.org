@@ -2,6 +2,7 @@
 layout: post
 title: Analysis of Election Results (Official)
 subtitle: Official certified results analysis for GA Primary Races
+share-description: "Analysis of the official, certified results from Georgia's 2026 primary elections, with final vote counts and outcomes across key statewide and legislative races."
 ---
 
 # Georgia Primary Election 2026 — Statewide Voting Data Analysis

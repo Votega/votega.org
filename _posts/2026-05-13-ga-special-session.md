@@ -2,6 +2,7 @@
 layout: post
 title: Georgia Special Legislative Session
 subtitle: Governor Kemp calls Special Session of General Assembly
+share-description: "Governor Kemp has called a special session of the Georgia General Assembly. Here's why lawmakers are returning to the Capitol and what's on the agenda."
 ---
 
 A special session of the Georgia General Assembly will begin on Wednesday, June 17, 2026 for the purposes of:

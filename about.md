@@ -2,6 +2,7 @@
 layout: page
 title: About
 subtitle: What is it you do here?
+share-description: "About VoteGA.org, a nonpartisan resource for Georgia voter information covering your federal and state legislators, elections, ballot measures, and civic topics."
 ---
 
 VoteGA.org is a public resource, a non-partisan record of who represents the State of Georgia federally and at the State Capitol - and how they vote. We pull from official sources, refresh regularly, and link every figure back to it's origin. 

@@ -2,6 +2,7 @@
 layout: post
 title: GA Primary Runoff Results
 subtitle: Unofficial Results from GA Primary Runoff
+share-description: "Unofficial results from Georgia's 2026 primary runoff elections, with vote totals and outcomes for the races that advanced past the May primary."
 ---
 
 # Georgia Primary Runoff Results

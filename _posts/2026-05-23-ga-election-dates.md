@@ -2,6 +2,7 @@
 layout: post
 title: Upcoming Election Dates
 subtitle: Runoff and General Election Dates
+share-description: "Key upcoming Georgia election dates, including the 2026 primary runoff and November general election, plus voter registration and early voting deadlines."
 ---
 
 > **See the live calendar:** For an up-to-date election calendar plus links to check your registration, polling place, and ballot status, visit the [Voter Access & Election Calendar page]({{ '/ga-voter-access.html' | relative_url }}).

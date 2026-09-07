@@ -1,7 +1,8 @@
 ---
 layout: post
 title: Analysis of Election Results (Unofficial)
-subtitle: Unoffical election results analysis for GA Primary Races
+subtitle: Unofficial election results analysis for GA Primary Races
+share-description: "Analysis of the unofficial results from Georgia's 2026 primary elections, breaking down early vote counts and outcomes across key races before certification."
 ---
 
 # Georgia Primary Election 2026 — Statewide Voting Data Analysis

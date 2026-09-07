@@ -2,6 +2,7 @@
 layout: post
 title: Congressional Trades
 subtitle: Georgia's congressional delegation filed over 1,000 stock trades while in office
+share-description: "Georgia's congressional delegation disclosed more than 1,000 stock trades while in office. Explore who traded what, when, and how the transactions break down."
 ---
 
 Six Georgia Congressional members have filed **1,081 stock trades** since taking office — and federal law requires every one of them to be disclosed publicly.

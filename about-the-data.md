@@ -2,6 +2,7 @@
 layout: page
 title: About The Data
 subtitle: Where our information comes from and how it's kept current
+share-description: "Where VoteGA.org's information comes from — the public sources and APIs behind each dataset, and how the site keeps its legislator and election data current."
 ---
 
 VoteGA.org is a static website. We run automated workflows that pull data from trusted public sources and publish it as static files that power the site. A few data sources, federal executive orders and select biography data, are fetched live from public APIs when you visit a page. Here's what we use and why.

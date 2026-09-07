@@ -2,6 +2,7 @@
 layout: page
 title: Flock Safety
 subtitle: Who watches the watchers?
+share-description: "How Flock Safety's automated license plate reader cameras work in Georgia, where they're deployed, and the privacy and civil-liberties concerns they raise."
 ---
 ## What is Flock? 
 
