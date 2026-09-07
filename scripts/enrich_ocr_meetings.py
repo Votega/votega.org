@@ -60,9 +60,11 @@ DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 # direct PDFs. Legistar is structured (enrich_legistar_meetings.py) and Granicus
 # ViewPublisher serves HTML (enrich_granicus_meetings.py), so both are excluded.
 # PrimeGov (Clayton) exposes agendas as CompiledDocument PDFs with a text layer,
-# and TeamMunicode (Baldwin/Banks/Walton) serves direct agenda PDFs on Azure blob
-# storage — both ride the same poppler path.
-OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'primegov', 'teammunicode'}
+# TeamMunicode (Baldwin/Banks/Walton) serves direct agenda PDFs on Azure blob
+# storage, and Gwinnett serves agenda PDFs from its own host — all ride the same
+# poppler path.
+OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'primegov', 'teammunicode',
+                 'gwinnett'}
 
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (meeting-topic-enricher)',

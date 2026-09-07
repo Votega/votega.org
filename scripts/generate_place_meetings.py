@@ -41,6 +41,7 @@ from lib.legistar import fetch_legistar_meetings, portal_url as legistar_portal 
 from lib.teammunicode import fetch_teammunicode_meetings  # noqa: E402
 from lib.primegov import fetch_primegov_meetings  # noqa: E402
 from lib.granicus import fetch_granicus_meetings  # noqa: E402
+from lib.gwinnett import fetch_gwinnett_meetings  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -48,7 +49,7 @@ OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 
 # Platforms with a scraper adapter (see fetch_meetings' dispatch below).
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
-                     'primegov', 'granicus'}
+                     'primegov', 'granicus', 'gwinnett'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
@@ -93,6 +94,8 @@ def fetch_meetings(cfg):
         return fetch_primegov_meetings(cfg['base_url'].rstrip('/'))
     if platform == 'granicus':
         return fetch_granicus_meetings(cfg['agendas_url'], view_ids=cfg.get('view_ids'))
+    if platform == 'gwinnett':
+        return fetch_gwinnett_meetings(cfg['agendas_url'])
     raise ValueError('unknown meetings platform %r' % platform)
 
 
@@ -111,6 +114,8 @@ def source_url(cfg):
     if platform == 'primegov':
         return cfg['base_url'].rstrip('/') + '/public/portal'
     if platform == 'granicus':
+        return cfg['agendas_url']
+    if platform == 'gwinnett':
         return cfg['agendas_url']
     return cfg.get('base_url')
 

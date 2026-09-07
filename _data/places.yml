@@ -28,7 +28,7 @@
 #                        unhide. (The officials cross-check still sees the slug.)
 #   domains              per-domain adapter config; supported domain today: meetings
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
-#                        legistar | teammunicode | primegov | granicus
+#                        legistar | teammunicode | primegov | granicus | gwinnett
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
@@ -398,13 +398,14 @@ places:
     region: Atlanta Regional Commission                          # optional hub grouping label
     domains:
       meetings:
-        # Bespoke Gwinnett CMS (no third-party platform): the meetings page lists
-        # agenda/minutes PDFs directly at /static/upload/bac/<committeeId>/<yyyymmdd>/
-        # (a_=agenda, ap_=agenda package, m_=minutes). Scrapable with a custom
-        # adapter if we choose to build one; `custom` = identified but adapter-less.
-        platform: custom
+        # Bespoke Gwinnett Liferay "BAC" portal (lib/gwinnett.py). agendas_url is the
+        # committee meetings table (…/bacs/meetings/<id>; 52 = Board of Commissioners).
+        # Every row is a BOC meeting-type variant (Business/Work Session, Public
+        # Hearing, …), so body_label folds them all into one body.
+        platform: gwinnett
         base_url: https://www.gwinnettcounty.com/
         agendas_url: "https://www.gwinnettcounty.com/government/departments/county-clerk/boards-authorities/-/bacs/meetings/52"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
             when: "1st and 3rd Tuesday of every month, 2:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
