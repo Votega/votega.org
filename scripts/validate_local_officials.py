@@ -29,6 +29,9 @@ VALID_ROLES = {
 }
 VALID_PARTIES = {"Republican", "Democratic", "Nonpartisan"}
 PRESIDING_ROLES = {"Mayor", "Chair"}
+# Structural form of a county's governing body (derivable from the roster titles;
+# emitted by generate_local_officials.py). Optional jurisdiction field.
+VALID_GOVERNMENT_FORMS = {"commission", "commission-chair", "ceo", "sole-commissioner"}
 
 # Sanity window for election/term years — catches fat-fingered dates.
 MIN_YEAR = 2000
@@ -92,6 +95,14 @@ def validate_member(juris_id, index, member, partisan):
     title = member.get("title")
     if title is not None and (not isinstance(title, str) or not title.strip()):
         err(context, f"title must be a non-empty string when present, got: {title!r}")
+
+    # `full_name` is the OPTIONAL complete name (middle initial / suffix) used for
+    # matching against authoritative sources — generate_local_officials.py pairs a
+    # roster on full_name for confidence. The site still displays `name` (the short
+    # form), so full_name never appears on a page. Non-empty string when present.
+    full_name = member.get("full_name")
+    if full_name is not None and (not isinstance(full_name, str) or not full_name.strip()):
+        err(context, f"full_name must be a non-empty string when present, got: {full_name!r}")
 
     party = member.get("party")
     if party in (None, ""):
@@ -167,6 +178,16 @@ def validate_jurisdiction(index, juris, seen_ids):
     partisan = juris.get("partisan")
     if partisan is not None and not isinstance(partisan, bool):
         err(context, f"partisan must be true/false, got: {partisan!r}")
+
+    # Structural metadata (all optional; feed a future sibling-repo publisher and
+    # let term dates be derived instead of hand-entered).
+    gform = juris.get("government_form")
+    if gform is not None and gform not in VALID_GOVERNMENT_FORMS:
+        err(context, f"government_form must be one of {sorted(VALID_GOVERNMENT_FORMS)}, got: {gform!r}")
+    for f in ("term_years", "board_size"):
+        v = juris.get(f)
+        if v is not None and (not isinstance(v, int) or isinstance(v, bool) or v < 0):
+            err(context, f"{f} must be a non-negative integer, got: {v!r}")
 
     validate_reserved_block(juris_id, "meetings", juris.get("meetings"), MEETINGS_KEYS)
     validate_reserved_block(juris_id, "participate", juris.get("participate"), PARTICIPATE_KEYS)

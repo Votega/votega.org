@@ -1,11 +1,19 @@
 # ============================================================================
 # LOCAL OFFICIALS — city councils & county commissions
 # ============================================================================
-# Hand-curated. There is NO upstream API for municipal/county officials (unlike
-# the state/federal rosters), so every field is entered by a human and MUST be
-# verified against a primary source — the city/county site, a meeting agenda or
-# minutes, or the SoS qualifying list. Record that source in each member's
-# `source` field so the roster stays auditable.
+# Human-gated, data-assisted. There is no single upstream API that maintains this
+# roster, so a HUMAN confirms every value against a primary source (the city/county
+# site, a meeting agenda or minutes, the SoS qualifying list) and records it in each
+# member's `source` field. Two tools ASSIST — they draft and flag, they never write
+# this file:
+#   - scripts/generate_local_officials.py drafts county-commission rosters from the
+#     GA SoS results API (most-recent-cycle winners). It fills only ~half of a 4-yr
+#     staggered board and no term dates, and a sub-50% winner needs runoff checking
+#     — so its output is a DRAFT to confirm, not truth. See that script's header.
+#   - scripts/report_stale_officials.py nudges when a seat is past next_election,
+#     when an executive order names a county vacancy/special election, or when the
+#     SoS results disagree with a roster (the monthly report-stale-officials issue).
+# City rosters and contact info (email/phone) remain fully manual — no API covers them.
 #
 # Rendered server-side by Jekyll from site.data.local_officials, so edits go
 # live on the next deploy. Run scripts/validate_local_officials.py after editing
@@ -49,6 +57,33 @@
 #   party  : Republican | Democratic | Nonpartisan
 #            (use Nonpartisan for municipal seats; set jurisdiction.partisan:false)
 #
+#   government_form (jurisdiction, optional):
+#            commission | commission-chair | ceo | sole-commissioner
+#            (auto-derived from the roster titles by generate_local_officials.py)
+#
+#   OPTIONAL member display/data fields (not enumerated, but validated as non-
+#   empty strings when present):
+#     title     : verbatim office label shown INSTEAD of `role` when a body uses a
+#                 distinctive name — "Chief Executive Officer" (DeKalb), "Commission
+#                 Chairman", "Sole Commissioner". `role` still holds the canonical
+#                 function (the UI sorts and the presiding check key on it); `title`
+#                 is display only. The card renders `title` if set, else `role`.
+#     full_name : the complete legal name (middle initial / suffix) for MATCHING
+#                 against authoritative sources (generate_local_officials.py pairs on
+#                 it for confidence). The site always displays `name` (the short
+#                 form), so full_name never appears on a page — e.g.
+#                 name: "Lisa Cupid"  +  full_name: "Lisa N. Cupid".
+#
+#   OPTIONAL jurisdiction structural fields (feed an eventual sibling-repo publish;
+#   a publisher DERIVES counts/vacancies from members[] — don't store those):
+#     term_years      : per-county term length (GA local act; most 4). Lets term_end
+#                       / next_election be derived as last_elected + term_years.
+#     board_size      : authorized number of seats (chair + districts + at-large).
+#                       Makes an incomplete roster legible ("4 of 9 captured").
+#     government_form : see controlled vocab above.
+#   The meeting agenda/minutes hub URL lives in _data/places.yml (domains.meetings.
+#   agendas_url), NOT here — `official_url` here is the general BoC/government page.
+#
 # ----------------------------------------------------------------------------
 # PHASING
 # ----------------------------------------------------------------------------
@@ -68,19 +103,21 @@
 # ----------------------------------------------------------------------------
 # CURATION WORKFLOW  (minimize manual effort — one place per PR)
 # ----------------------------------------------------------------------------
-#   No API exists, so drafting is either:
-#     TRACK A (assisted): have Claude Code read the official site / SoS qualifying
-#             list and draft a roster block in this schema, one `source:` URL per
-#             member, opened as a PR. Fast for onboarding many places.
-#     TRACK B (manual): copy each value from a primary source into the skeleton
-#             below.
+#   Drafting is either:
+#     TRACK A (assisted): for a COUNTY commission, run
+#             `python scripts/generate_local_officials.py --counties <slug> --emit yaml`
+#             to draft a block from the SoS results API, or have Claude Code read the
+#             official site / SoS qualifying list. Fast for onboarding many places.
+#     TRACK B (manual): copy each value from a primary source into the skeleton below.
 #   Both converge on the SAME gate: CI green -> a human clicks every `source:`
 #   link and confirms each value -> merge -> bump meta.last_reviewed. Never merge
 #   a value you have not confirmed against its cited source.
 #
 #   MEMBER SKELETON (copy one row per person into a jurisdiction's `members:`):
-#     - name: ""
+#     - name: ""                      # short DISPLAY name (what the site shows)
+#       # full_name: ""               # optional: complete name for matching (see vocab)
 #       role: Council Member          # see controlled vocab above
+#       # title: ""                   # optional: verbatim office label (see vocab)
 #       seat: ""                      # "Ward 1", "District 2", "At-large"
 #       party: Nonpartisan            # Republican | Democratic | Nonpartisan
 #       email: ""

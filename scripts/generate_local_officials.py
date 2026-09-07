@@ -102,10 +102,27 @@ def slug_of(short_name):
 
 
 def clean_name(raw):
-    """Strip inline markers the API appends: '(I)', '(Dem)', '(Rep)', '(Incumbent)'."""
+    """The FULL name: strip only the inline markers the API appends ('(I)', '(Dem)',
+    '(Rep)', '(Incumbent)'). Keeps middle initials and suffixes — that is the value
+    of full_name."""
     n = _text(raw) if not isinstance(raw, str) else raw
     n = re.sub(r"\s*\((?:I|Inc|Incumbent|Rep|Dem|Ind|NPA|Lib|Grn|[A-Za-z]{2,3})\)", "", n)
     return re.sub(r"\s+", " ", n).strip()
+
+
+def short_name(full):
+    """The DISPLAY name: drop quotes and interior single-letter middle initials,
+    keeping the first and last tokens. 'Lisa N. Cupid' -> 'Lisa Cupid'; 'Whitney C.
+    Kenner Jones' -> 'Whitney Kenner Jones'. First/last are never dropped, so a
+    lone initial that IS the name survives."""
+    parts = full.replace('"', "").replace("'", "").split()
+    keep = []
+    for i, p in enumerate(parts):
+        interior = 0 < i < len(parts) - 1
+        if interior and len(p.rstrip(".")) == 1:
+            continue
+        keep.append(p)
+    return " ".join(keep) or full
 
 
 def map_party(abbr):
@@ -138,14 +155,42 @@ def classify(office):
         # e.g. "Commission Chair", "Board of Commissioners Chairman"
         title = re.sub(r"\s*\(special\)", "", o, flags=re.I).strip()
         return ("Chair", title, "At-large", special)
-    if "commissioner" in ol or "board of commissioners" in ol:
-        n = re.search(r"\b(?:super\s+district|district|dist|d|post)\s*[-#]?\s*(\d+)", ol)
-        if n:
-            seat = f"Super District {n.group(1)}" if "super" in ol else f"District {n.group(1)}"
-        else:
-            seat = "At-large"
-        return ("Commissioner", None, seat, special)
+    # A county-commission member seat. Gate on the county board specifically, then
+    # extract the seat from the many label styles GA counties use.
+    if re.search(r"commissioner|board of commissioners|county commission", ol):
+        return ("Commissioner", None, _commission_seat(o, ol), special)
     return None
+
+
+def _commission_seat(o, ol):
+    """Extract a commission member's seat label from the varied SoS forms:
+      'County Commissioner - District 2' / 'County Commission - District 2'  -> District 2
+      'County Commissioner D6' / 'Super District 6'                          -> (Super) District 6
+      'County Commission 1' / 'County Commission 5 At Large'  (bare number)  -> District 1 / District 5 (At-Large)
+      'County Commission - Anna' / 'Board of Commissioners, Elmodel' (named)  -> Anna / Elmodel
+      'County Commission - At Large'                                          -> At-large
+    Falls back to 'At-large' when nothing else parses."""
+    at_large = "at large" in ol or "at-large" in ol
+    # 1) explicit District/Post/Super District N
+    m = re.search(r"\b(?:super\s+district|district|dist|post)\s*[-#]?\s*(\d+)", ol)
+    if not m:
+        m = re.search(r"\bd\s*[-#]?\s*(\d+)\b", ol)  # 'D6' short form
+    # 2) bare number after 'commission' (e.g. 'County Commission 1')
+    if not m:
+        m = re.search(r"commission[^0-9a-z]+(\d+)", ol)
+    if m:
+        n = m.group(1)
+        if "super" in ol:
+            return f"Super District {n}"
+        return f"District {n} (At-Large)" if at_large else f"District {n}"
+    if at_large:
+        return "At-large"
+    # 3) named district: text after 'commission -' / 'commissioners,' that isn't a number
+    m = re.search(r"commission(?:ers?)?\s*[-,]\s*([a-z][a-z .'&]+?)\s*(?:\(special\))?$",
+                  o.strip(), re.I)
+    if m:
+        return m.group(1).strip().title()
+    return "At-large"
 
 
 def winner_of(ballot_item):
@@ -161,10 +206,10 @@ def winner_of(ballot_item):
     return (clean_name(lead.get("name")), abbr, share)
 
 
-def draft_county(short_name):
+def draft_county(county_short):
     """Fetch one county and return a draft roster (list of member dicts)."""
     try:
-        d = _get(f"{API}/elections/{short_name}/{SEATING_SLUG}/data")
+        d = _get(f"{API}/elections/{county_short}/{SEATING_SLUG}/data")
     except urllib.error.HTTPError as e:
         return {"error": f"HTTP {e.code}"}
     members = []
@@ -177,9 +222,10 @@ def draft_county(short_name):
         w = winner_of(it)
         if not w:
             continue
-        name, abbr, share = w
+        full, abbr, share = w
+        disp = short_name(full)
         m = {
-            "name": name,
+            "name": disp,          # short display name (what the site shows)
             "role": role,
             "seat": seat,
             "party": map_party(abbr),
@@ -189,10 +235,12 @@ def draft_county(short_name):
             "term_end": None,      # unknowable from results — curator fills
             "next_election": None,
             "voting": True,
-            "source": f"{API}/elections/{short_name}/{SEATING_SLUG}/data",
+            "source": f"{API}/elections/{county_short}/{SEATING_SLUG}/data",
             "_office": office,     # provenance: the verbatim SoS label
             "_share": round(share, 3),
         }
+        if full != disp:           # keep the authoritative full name when it adds info
+            m["full_name"] = full
         if title:
             m["title"] = title
         if special:
@@ -209,7 +257,69 @@ def draft_county(short_name):
 # ---------------------------------------------------------------------------
 # YAML emission (hand-rolled to control comments/ordering — no yaml.dump)
 # ---------------------------------------------------------------------------
+def load_place_slugs():
+    """Slugs already registered in _data/places.yml — skip these when stubbing."""
+    import yaml
+    try:
+        with open("_data/places.yml", encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+    except FileNotFoundError:
+        return set()
+    return {p.get("slug") for p in (data.get("places") or []) if isinstance(p, dict)}
+
+
+def emit_places_yaml(county_slug, county_name):
+    """A _data/places.yml stub: identity + an empty meeting-schedule scaffold. The
+    schedule (body/when/location) is HAND-entered from the county site — it is not
+    in any API. FIPS comes from the Census (scripts/lib/ga_county_fips.py)."""
+    try:
+        from lib.ga_county_fips import GA_COUNTY_FIPS
+    except ImportError:
+        GA_COUNTY_FIPS = {}
+    fips = GA_COUNTY_FIPS.get(county_slug)
+    fips_line = f'    fips: "{fips}"' if fips else '    fips:            # TODO: county FIPS (13xxx)'
+    return "\n".join([
+        f"  - slug: {county_slug}",
+        f"    name: {county_name}",
+        "    type: county",
+        fips_line,
+        "    parentCounty: null",
+        "    region:                         # optional hub grouping label",
+        "    domains:",
+        "      meetings:",
+        "        # Curated recurring schedule -> the \"When they meet\" note on /local/"
+        f"{county_slug}/.",
+        "        # Fill when: (and optional location:) per body. No scraper adapter needed",
+        "        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to",
+        "        # auto-aggregate agendas/minutes (see the places.yml header).",
+        '        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)',
+        "        schedule:",
+        "          - body: Board of Commissioners",
+        '            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."',
+        '            location: ""            # optional',
+    ])
+
+
+def _yq(s):
+    """YAML-safe double-quoted scalar — escapes backslash and quote so a name with
+    an inline nickname (Howard "Hal" Wiley) can't break the document."""
+    return '"' + str(s).replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def derive_government_form(members):
+    """ceo | sole-commissioner | commission-chair | commission, from roster titles."""
+    tl = " | ".join((m.get("title") or "") for m in members).lower()
+    if "chief executive" in tl:
+        return "ceo"
+    if "sole commissioner" in tl:
+        return "sole-commissioner"
+    if any(m.get("role") == "Chair" for m in members):
+        return "commission-chair"
+    return "commission"
+
+
 def emit_yaml(county_slug, county_name, draft):
+    members = draft["members"]
     lines = []
     lines.append(f"  - id: {county_slug}")
     lines.append(f"    name: {county_name}")
@@ -217,43 +327,61 @@ def emit_yaml(county_slug, county_name, draft):
     lines.append(f"    county: {county_name.replace(' County', '')}")
     lines.append("    body: Board of Commissioners")
     lines.append("    partisan: true")
+    lines.append("    term_years: 4            # GA terms are per-county local act; most are 4 — override if different")
+    lines.append(f"    board_size: {len(members)}             # auto: current roster size — verify against authorized seats")
+    lines.append(f"    government_form: {derive_government_form(members)}   # ceo | sole-commissioner | commission-chair | commission")
     lines.append(f"    official_url: \"\"            # TODO: county government site")
     lines.append("    related_pages:")
     lines.append("    members:")
-    for m in draft["members"]:
+    for m in members:
         flag = ""
         if m.get("_needs_runoff_check"):
             flag = f"   # (!) {int(m['_share']*100)}% — sub-50%, RUNOFF decided this; verify (not in portal)"
         elif m.get("_special"):
             flag = "   # special election"
-        lines.append(f"      - name: \"{m['name']}\"{flag}")
+        lines.append(f"      - name: {_yq(m['name'])}{flag}")
+        if m.get("full_name"):
+            lines.append(f"        full_name: {_yq(m['full_name'])}   # authoritative full name (matching); site shows `name`")
         lines.append(f"        role: {m['role']}")
         if m.get("title"):
             lines.append(f"        title: {m['title']}")
-        lines.append(f"        seat: \"{m['seat']}\"")
+        lines.append(f"        seat: {_yq(m['seat'])}")
         lines.append(f"        party: {m['party']}")
         lines.append(f"        email: \"\"")
         lines.append(f"        phone: \"\"")
         lines.append(f"        last_elected: {m['last_elected']}")
-        lines.append(f"        term_end:                 # TODO: per-county term length")
-        lines.append(f"        next_election:")
+        lines.append(f"        term_end: {m['last_elected'] + 4}         # last_elected + term_years (default 4) — verify")
+        lines.append(f"        next_election: {m['last_elected'] + 4}")
         lines.append(f"        voting: true")
-        lines.append(f"        source: \"{m['source']}\"   # SoS results — CONFIRM before merge")
+        lines.append(f"        source: {_yq(m['source'])}   # SoS results — CONFIRM before merge")
     return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
 # Diff against the existing hand-curated roster
 # ---------------------------------------------------------------------------
-def _norm(s):
-    """Normalize a name for comparison: lowercase, drop suffixes/titles, and turn
-    any non-letter (hyphen, period, comma) into a space so 'Cochran-Johnson' ==
-    'Cochran Johnson'. Middle initials are kept — they are a real difference worth
-    surfacing, so 'Whitney Kenner Jones' != 'Whitney C. Kenner Jones'."""
+_NAME_STOP = {"jr", "sr", "ii", "iii", "iv", "phd", "dr", "mr", "mrs", "ms"}
+
+
+def _norm(s, loose=False):
+    """Normalize a name for the 'is this the same person?' comparison. Lowercase,
+    turn any non-letter (hyphen, period, comma, quotes) into a space, drop honorific
+    /suffix words.
+
+    strict (default) KEEPS middle initials, so it only equates identical forms
+    ('lisa n cupid'). loose ALSO drops single-letter tokens, collapsing middle-
+    initial variants ('Lisa Cupid' == 'Lisa N. Cupid'). We match strict first (on
+    the stored full_name, for confidence), then fall back to loose so a roster that
+    only stored the short display name still pairs and doesn't nag every run."""
     s = (s or "").lower()
-    s = re.sub(r"\b(jr|sr|ii|iii|iv|phd|dr|mr|mrs|ms)\b", " ", s)
     s = re.sub(r"[^a-z]+", " ", s)
-    return re.sub(r"\s+", " ", s).strip()
+    toks = [t for t in s.split() if t not in _NAME_STOP and (not loose or len(t) > 1)]
+    return " ".join(toks)
+
+
+def _cmp_name(m):
+    """The richest name a member carries, for matching: prefer stored full_name."""
+    return m.get("full_name") or m.get("name") or ""
 
 
 def _seat_key(seat):
@@ -269,7 +397,7 @@ def load_curated():
     return {j.get("id"): j for j in (data.get("jurisdictions") or []) if isinstance(j, dict)}
 
 
-def diff_county(slug, draft, curated):
+def diff_county(slug, draft, curated, changes_only=False):
     """Three-pass reconciliation so the same person isn't double-reported when a
     seat label differs (SoS 'D6' vs your 'Super District 6'):
       1. pair by NAME  -> '=' match (note any seat-label difference)
@@ -277,24 +405,36 @@ def diff_county(slug, draft, curated):
       3. leftovers -> '+' results-only / '-' roster-only (pre-2024 cohort)."""
     j = curated.get(slug)
     if not j:
+        if changes_only:
+            return None
         return f"  {slug}: not yet curated ({len(draft['members'])} seats drafted from {SEATING_SLUG})"
     gen = list(draft["members"])
     man = list(j.get("members") or [])
     used_g, used_m = set(), set()
     out = [f"  {slug}:"]
+    actionable = 0  # '~' mismatches and '+' results-only (real drift signals)
 
-    # Pass 1 — by name
+    # Pass 1 — by name (strict on full_name first, then loose)
     for gi, g in enumerate(gen):
+        gstrict, gloose = _norm(_cmp_name(g)), _norm(_cmp_name(g), loose=True)
         for mi, m in enumerate(man):
             if mi in used_m:
                 continue
-            if _norm(g["name"]) and _norm(g["name"]) == _norm(m.get("name")):
-                used_g.add(gi); used_m.add(mi)
+            mstrict, mloose = _norm(_cmp_name(m)), _norm(_cmp_name(m), loose=True)
+            if not gloose or gloose != mloose:
+                continue  # not the same person
+            used_g.add(gi); used_m.add(mi)
+            if not changes_only:  # '=' match is confirmation, not a to-do
                 seatnote = ("" if _seat_key(g["seat"]) == _seat_key(m.get("seat"))
                             else f"  (seat: yours='{m.get('seat')}' vs results='{g['seat']}')")
+                # Loose-but-not-strict = same person, different name form. Offer the
+                # authoritative full name so the curator can store it (upgrades
+                # future matches to strict) without changing the display `name`.
+                formnote = ("" if gstrict == mstrict
+                            else f"  (consider full_name: \"{g.get('full_name') or g['name']}\")")
                 extra = "  [!] results <50%, runoff-decided" if g.get("_needs_runoff_check") else ""
-                out.append(f"      = {g['name']} - match{seatnote}{extra}")
-                break
+                out.append(f"      = {g['name']} - match{seatnote}{formnote}{extra}")
+            break
 
     # Pass 2 — remaining, by seat (name differs => turnover or stale)
     for gi, g in enumerate(gen):
@@ -308,6 +448,7 @@ def diff_county(slug, draft, curated):
                 note = ("  (results leader <50% -> runoff decided this; trust your roster)"
                         if g.get("_needs_runoff_check") else "")
                 out.append(f"      ~ {g['seat']:16} MISMATCH  yours={m.get('name')}  results={g['name']}{note}")
+                actionable += 1
                 break
 
     # Pass 3 — leftovers
@@ -316,11 +457,16 @@ def diff_county(slug, draft, curated):
             continue
         note = "  [!] <50%, runoff-unverified" if g.get("_needs_runoff_check") else ""
         out.append(f"      + {g['seat']:16} {g['name']} [{g['party'][:3]}] - in results, not in your roster{note}")
-    for mi, m in enumerate(man):
-        if mi in used_m:
-            continue
-        out.append(f"      - {(m.get('seat') or '?'):16} {m.get('name')} - in your roster, NOT in "
-                   f"{SEATING_SLUG} (likely a pre-2024 cohort the API lacks)")
+        actionable += 1
+    if not changes_only:  # a roster-only seat is expected (pre-2024 cohort), not a to-do
+        for mi, m in enumerate(man):
+            if mi in used_m:
+                continue
+            out.append(f"      - {(m.get('seat') or '?'):16} {m.get('name')} - in your roster, NOT in "
+                       f"{SEATING_SLUG} (likely a pre-2024 cohort the API lacks)")
+
+    if changes_only and actionable == 0:
+        return None
     return "\n".join(out)
 
 
@@ -329,28 +475,42 @@ def main():
     grp = ap.add_mutually_exclusive_group(required=True)
     grp.add_argument("--counties", help="comma-separated county slugs (e.g. dekalb,douglas)")
     grp.add_argument("--all", action="store_true", help="all 159 counties")
-    ap.add_argument("--emit", choices=["yaml", "json", "none"], default="none",
-                    help="draft output format (default none — diff/summary only)")
+    grp.add_argument("--curated", action="store_true",
+                     help="only county-type jurisdictions already in local_officials.yml "
+                          "(the drift-check mode for the scheduled report)")
+    ap.add_argument("--emit", choices=["yaml", "json", "places-yaml", "none"], default="none",
+                    help="draft output: yaml/json = local_officials roster blocks; "
+                         "places-yaml = _data/places.yml stubs (identity + empty meeting "
+                         "schedule scaffold) for counties not already registered; "
+                         "default none = diff/summary only")
     ap.add_argument("--out", help="write --emit output here instead of stdout")
     ap.add_argument("--diff", action="store_true", help="diff drafts against _data/local_officials.yml")
+    ap.add_argument("--changes-only", action="store_true",
+                    help="in --diff, print only actionable lines (mismatches / results-only), "
+                         "hiding matches and expected pre-2024-cohort seats")
     ap.add_argument("--sleep", type=float, default=0.2, help="delay between county fetches")
     args = ap.parse_args()
 
     if args.all:
         print(f"Enumerating counties from {SEATING_SLUG}…", file=sys.stderr)
         shorts = list_counties()
+    elif args.curated:
+        cur = load_curated()
+        shorts = [f"{jid}-county-ga" for jid, j in cur.items()
+                  if isinstance(j, dict) and j.get("type") == "county"]
     else:
         shorts = [f"{s.strip()}-county-ga" for s in args.counties.split(",") if s.strip()]
     print(f"Drafting {len(shorts)} counties from {SEATING_SLUG}…", file=sys.stderr)
 
-    # County display names from the seating election tree (for YAML blocks).
+    # County display names from the seating election tree (needed for YAML blocks).
     names = {}
-    try:
-        tree = _get(f"{API}/elections/Georgia/{SEATING_SLUG}/data")
-        for c in (tree.get("jurisdiction") or {}).get("childLocalities") or []:
-            names[c.get("shortName")] = _text(c.get("name"))
-    except Exception:
-        pass
+    if args.emit in ("yaml", "places-yaml"):
+        try:
+            tree = _get(f"{API}/elections/Georgia/{SEATING_SLUG}/data")
+            for c in (tree.get("jurisdiction") or {}).get("childLocalities") or []:
+                names[c.get("shortName")] = _text(c.get("name"))
+        except Exception:
+            pass
 
     drafts, errors = {}, {}
     for short in shorts:
@@ -377,6 +537,18 @@ def main():
                 "counties": {slug: d for slug, (_s, d) in drafts.items()},
             }
             text = json.dumps(payload, indent=2)
+        elif args.emit == "places-yaml":
+            existing = load_place_slugs()
+            skipped = 0
+            for slug, (short, d) in drafts.items():
+                if slug in existing:
+                    skipped += 1
+                    continue
+                nm = names.get(short) or f"{slug.title()} County"
+                chunks.append(emit_places_yaml(slug, nm))
+            text = "\n\n".join(chunks)
+            print(f"places-yaml: {len(chunks)} stubs, skipped {skipped} already in places.yml",
+                  file=sys.stderr)
         else:
             for slug, (short, d) in drafts.items():
                 nm = names.get(short) or f"{slug.title()} County"
@@ -392,10 +564,23 @@ def main():
     # Diff
     if args.diff:
         curated = load_curated()
-        print(f"\n=== DIFF vs {LOCAL_OFFICIALS_PATH} ({SEATING_SLUG}) ===")
-        print("  =match  ~mismatch  +results-only  -roster-only(pre-2024 cohort)")
+        blocks = []
         for slug, (short, d) in drafts.items():
-            print(diff_county(slug, d, curated))
+            b = diff_county(slug, d, curated, changes_only=args.changes_only)
+            if b:
+                blocks.append(b)
+        if args.changes_only:
+            if blocks:
+                print(f"Results-API drift vs {LOCAL_OFFICIALS_PATH} ({SEATING_SLUG}) — "
+                      f"'~' seat turnover/stale, '+' won a {SEATING_YEAR} seat you don't list:")
+                print("\n".join(blocks))
+            else:
+                print(f"No results-API drift: every curated county's {SEATING_YEAR} winners "
+                      f"match the roster (checked {len(drafts)} counties).")
+        else:
+            print(f"\n=== DIFF vs {LOCAL_OFFICIALS_PATH} ({SEATING_SLUG}) ===")
+            print("  =match  ~mismatch  +results-only  -roster-only(pre-2024 cohort)")
+            print("\n".join(blocks))
 
     if errors:
         print(f"\n{len(errors)} counties errored:", file=sys.stderr)
