@@ -295,6 +295,27 @@ places:
             when: "1st Wednesday of every month, 10:00 a.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: "Commissioner’s Conference Room, 135 W. Cherokee Avenue, Cartersville"            # optional
   
+  - slug: carroll
+    name: Carroll County
+    type: county
+    fips: "13045"
+    parentCounty: null
+    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/carroll/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: civicclerk
+        subdomain: carrollcoga
+        base_url: https://ga-carrollcounty.civicplus.com/182/Board-of-Commissioners
+        agendas_url: "https://carrollcoga.portal.civicclerk.com/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "County Administration Building, 423 College Street, Room 2013, Carrollton"                             # optional
+            
   - slug: cherokee
     name: Cherokee County
     type: county
