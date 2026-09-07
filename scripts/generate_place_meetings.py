@@ -87,7 +87,8 @@ def fetch_meetings(cfg):
     if platform == 'legistar':
         return fetch_legistar_meetings(cfg['client'])
     if platform == 'teammunicode':
-        return fetch_teammunicode_meetings(cfg['base_url'].rstrip('/'))
+        return fetch_teammunicode_meetings(cfg['base_url'].rstrip('/'),
+                                           meetings_path=cfg.get('meetings_path', '/meetings'))
     if platform == 'primegov':
         return fetch_primegov_meetings(cfg['base_url'].rstrip('/'))
     if platform == 'granicus':
@@ -106,7 +107,7 @@ def source_url(cfg):
     if platform == 'legistar':
         return legistar_portal(cfg['client'])
     if platform == 'teammunicode':
-        return cfg['base_url'].rstrip('/') + '/meetings'
+        return cfg['base_url'].rstrip('/') + cfg.get('meetings_path', '/meetings')
     if platform == 'primegov':
         return cfg['base_url'].rstrip('/') + '/public/portal'
     if platform == 'granicus':

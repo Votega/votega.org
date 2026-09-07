@@ -110,13 +110,22 @@ def parse_meetings(html):
     return meetings
 
 
-def fetch_teammunicode_meetings(base_url, timeout=30):
+def fetch_teammunicode_meetings(base_url, meetings_path='/meetings', timeout=30):
     """Fetch and parse a county's Municode meetings table.
+
+    `meetings_path` is the path of the meetings view on this instance. The two
+    Municode variants differ: `<sub>.teammunicode.com` serves it at `/meetings`
+    (Baldwin, Banks — the default), while `<sub>.municodemeetings.com` serves it at
+    the site root (Walton) — set meetings_path: "/" for those. Same Drupal-view
+    markup either way, so only the URL differs.
 
     Returns (meetings, bodies_seen), or (None, None) if the page could not be
     fetched — the caller decides whether a fetch failure should abort (it should:
     never overwrite good data with nothing)."""
-    url = base_url.rstrip('/') + '/meetings'
+    path = meetings_path or '/'
+    if not path.startswith('/'):
+        path = '/' + path
+    url = base_url.rstrip('/') + path
     raw = fetch_bytes(url, label='%s meetings' % base_url, timeout=timeout)
     if raw is None:
         return None, None

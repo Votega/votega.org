@@ -65,6 +65,10 @@
 #                        detail link (boc, commissioners, bc-pc, planning-development
 #                        — varies per county), so ALWAYS scope with a body_map that
 #                        allow-lists + relabels those codes (check the codes first).
+#                        Optional meetings_path: the table's path on this instance —
+#                        "/meetings" (default, the <sub>.teammunicode.com variant) or
+#                        "/" for the <sub>.municodemeetings.com variant that serves it
+#                        at the site root (Walton).
 #       primegov keys:   base_url (the <sub>.primegov.com origin; JSON API at
 #                        /api/v2/PublicPortal/List{Upcoming,Archived}Meetings). `body`
 #                        is the numeric committeeId — a single-committee county
@@ -609,13 +613,23 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: teammunicode   
-        base_url: https://www.waltoncountyga.gov
+        # Walton runs the municodemeetings.com Municode variant, which serves its
+        # meetings table at the site ROOT (meetings_path: "/") rather than /meetings.
+        # base_url MUST be the Municode origin (the adapter fetches base_url + path).
+        platform: teammunicode
+        base_url: https://waltoncounty-ga.municodemeetings.com
+        meetings_path: "/"
         agendas_url: "https://waltoncounty-ga.municodemeetings.com/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # teammunicode `body` is the section code from the detail link; scope to the
+        # legislative/land-use bodies and relabel to clean names.
+        body_map:
+          - { match: "bc-boardofcommissioners", label: "Board of Commissioners" }
+          - { match: "bc-pc", label: "Planning Commission" }
+          - { match: "bc-boa", label: "Board of Appeals" }
         schedule:
           - body: Board of Commissioners
             when: "1st Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
-            location: "Historic walton County Courthouse, 111 S Broad Street, Monroe"            # optional
+            location: "Historic Walton County Courthouse, 111 S Broad Street, Monroe"            # optional
 
   - slug: carrollton
     name: City of Carrollton
