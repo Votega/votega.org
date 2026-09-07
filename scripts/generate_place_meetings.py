@@ -39,13 +39,15 @@ from lib.corecode import fetch_council_meetings, DEFAULT_MEETINGS_PATH  # noqa: 
 from lib.civicclerk import fetch_civicclerk_meetings, portal_url  # noqa: E402
 from lib.legistar import fetch_legistar_meetings, portal_url as legistar_portal  # noqa: E402
 from lib.teammunicode import fetch_teammunicode_meetings  # noqa: E402
+from lib.primegov import fetch_primegov_meetings  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
 OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 
 # Platforms with a scraper adapter (see fetch_meetings' dispatch below).
-ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode'}
+ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
+                     'primegov'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
@@ -82,6 +84,8 @@ def fetch_meetings(cfg):
         return fetch_legistar_meetings(cfg['client'])
     if platform == 'teammunicode':
         return fetch_teammunicode_meetings(cfg['base_url'].rstrip('/'))
+    if platform == 'primegov':
+        return fetch_primegov_meetings(cfg['base_url'].rstrip('/'))
     raise ValueError('unknown meetings platform %r' % platform)
 
 
@@ -97,6 +101,8 @@ def source_url(cfg):
         return legistar_portal(cfg['client'])
     if platform == 'teammunicode':
         return cfg['base_url'].rstrip('/') + '/meetings'
+    if platform == 'primegov':
+        return cfg['base_url'].rstrip('/') + '/public/portal'
     return cfg.get('base_url')
 
 

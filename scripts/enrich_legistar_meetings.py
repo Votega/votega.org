@@ -55,7 +55,14 @@ def legistar_places(slug=None):
             continue
         if slug and p['slug'] != slug:
             continue
-        out.append((p, cfg['client']))
+        client = cfg.get('client')
+        if not client:
+            # A legistar place with no `client` is mis-configured (or mid-onboarding);
+            # skip it rather than crash the whole enrichment run.
+            print('  skip %s: legistar platform but no `client` configured'
+                  % p['slug'], file=sys.stderr)
+            continue
+        out.append((p, client))
     if slug and not out:
         sys.exit('%r is not a (visible) legistar place' % slug)
     return out

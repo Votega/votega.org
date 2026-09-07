@@ -38,7 +38,8 @@ DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 _TODAY = date.today().isoformat()
 # Kept in sync with generate_place_meetings.py. Platforms with a scraper adapter…
-ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode'}
+ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
+                     'primegov'}
 # …and recognized platforms/markers we have NO scraper for (unknown + bespoke CMSs
 # like Revize/Wix/WordPress): they produce no JSON, so there is nothing to validate
 # and they are skipped silently. A value in neither set is a likely typo → warned.

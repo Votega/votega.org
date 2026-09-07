@@ -28,7 +28,7 @@
 #                        unhide. (The officials cross-check still sees the slug.)
 #   domains              per-domain adapter config; supported domain today: meetings
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
-#                        legistar | teammunicode
+#                        legistar | teammunicode | primegov
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
@@ -53,6 +53,11 @@
 #                        detail link (boc, commissioners, bc-pc, planning-development
 #                        — varies per county), so ALWAYS scope with a body_map that
 #                        allow-lists + relabels those codes (check the codes first).
+#       primegov keys:   base_url (the <sub>.primegov.com origin; JSON API at
+#                        /api/v2/PublicPortal/List{Upcoming,Archived}Meetings). `body`
+#                        is the numeric committeeId — a single-committee county
+#                        (Clayton) uses body_label; a multi-committee one needs a
+#                        body_map on the committee ids.
 #     Body scoping (any platform, optional) — POLICY: publish the legislative and
 #     land-use bodies (Board of Commissioners + Planning Commission + zoning
 #     boards, where rezonings / data centers are heard); drop administrative
@@ -216,7 +221,7 @@ places:
     type: county
     fips: "13013"
     parentCounty: null
-    region:                         # optional hub grouping label
+    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/barrow/.
@@ -236,7 +241,7 @@ places:
     type: county
     fips: "13015"
     parentCounty: null
-    region:                         # optional hub grouping label
+    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/bartow/.
@@ -256,7 +261,7 @@ places:
     type: county
     fips: "13057"
     parentCounty: null
-    region:                         # optional hub grouping label
+    region: Atlanta Regional Commission                         # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/cherokee/.
@@ -276,16 +281,19 @@ places:
     type: county
     fips: "13063"
     parentCounty: null
-    region:                         # optional hub grouping label
+    region: Atlanta Regional Commission                        # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/clayton/.
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: legistar
-        base_url: https://www.claytoncountyga.gov/
+        platform: primegov   # PrimeGov JSON API (claytoncountyga.primegov.com)
+        base_url: https://claytoncountyga.primegov.com
         agendas_url: "https://claytoncountyga.primegov.com/public/portal?fromiframe=true"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # PrimeGov `body` is the numeric committeeId; Clayton runs one committee, so
+        # relabel every meeting to the Board of Commissioners.
+        body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
             when: "1st and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
@@ -296,7 +304,7 @@ places:
     type: county
     fips: "13217"
     parentCounty: null
-    region: Metro Atlanta
+    region: Broader Metropolitan Statistical Area
     domains:
       meetings:
         platform: civicplus
@@ -360,7 +368,7 @@ places:
     type: county
     fips: "13097"
     parentCounty: null
-    region: Metro Atlanta
+    region: Atlanta Regional Commission
     domains:
       meetings:
         platform: civicclerk
@@ -385,7 +393,7 @@ places:
     type: county
     fips: "13151"
     parentCounty: null
-    region: Metro Atlanta
+    region: Atlanta Regional Commission
     domains:
       meetings:
         platform: civicclerk
@@ -402,7 +410,7 @@ places:
     type: county
     fips: "13067"
     parentCounty: null
-    region: Metro Atlanta
+    region: Atlanta Regional Commission
     domains:
       meetings:
         platform: civicclerk
@@ -427,7 +435,7 @@ places:
     type: county
     fips: "13121"
     parentCounty: null
-    region: Metro Atlanta
+    region: Atlanta Regional Commission
     domains:
       meetings:
         schedule:
@@ -444,7 +452,7 @@ places:
     type: county
     fips: "13089"
     parentCounty: null
-    region: Metro Atlanta
+    region: Atlanta Regional Commission
     domains:
       meetings:
         platform: legistar
