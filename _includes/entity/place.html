@@ -122,8 +122,8 @@
 {%- comment %} Officials — the precedence domain: server-rendered above meetings,
     matched to this place by slug == jurisdiction id in local_officials.yml. {% endcomment -%}
 {% assign juris = site.data.local_officials.jurisdictions | where: "id", e.slug | first %}
-{% assign role_order = "Mayor,Mayor Pro Tem,Chief Executive Officer,Chair,Commission Chairman,Commission Chairwoman,Vice Chair,Council Member,Commissioner" | split: "," %}
-{% assign presiding_roles = "Mayor,Chief Executive Officer,Chair,Commission Chairman,Commission Chairwoman" | split: "," %}
+{% assign role_order = "Mayor,Mayor Pro Tem,Chair,Vice Chair,Council Member,Commissioner" | split: "," %}
+{% assign presiding_roles = "Mayor,Chair" | split: "," %}
 {% if juris %}
 <section class="po-section" id="officials">
   <h2 class="po-heading">Elected officials</h2>
@@ -156,7 +156,7 @@
   <div class="po-grid">
     {% for m in ordered %}
         <div class="po-card{% if presiding_roles contains m.role %} is-presiding{% endif %}">
-          <span class="po-role">{{ m.role }}</span>
+          <span class="po-role">{{ m.title | default: m.role }}</span>
           <p class="po-name">{% if m.name and m.name != "" %}{{ m.name }}{% else %}<span class="muted">Name TBD</span>{% endif %}</p>
           {% if m.seat and m.seat != "" %}<p class="po-seat">{{ m.seat }}</p>{% endif %}
           {% if juris.partisan and m.party and m.party != "" and m.party != "Nonpartisan" %}

@@ -84,6 +84,15 @@ def validate_member(juris_id, index, member, partisan):
     if role is not None and role not in VALID_ROLES:
         err(context, f"role must be one of {sorted(VALID_ROLES)}, got: {role!r}")
 
+    # `title` is the OPTIONAL verbatim office label shown in place of the canonical
+    # role when a body uses a distinctive name (DeKalb's "Chief Executive Officer",
+    # a county's "Commission Chairman/Chairwoman", a "Sole Commissioner"). It is a
+    # display string only — `role` still carries the canonical function the UI sorts
+    # and the presiding check keys on. If present it must be a non-empty string.
+    title = member.get("title")
+    if title is not None and (not isinstance(title, str) or not title.strip()):
+        err(context, f"title must be a non-empty string when present, got: {title!r}")
+
     party = member.get("party")
     if party in (None, ""):
         # Party is required content, but a blank cell mid-entry is a warning not
