@@ -331,6 +331,26 @@ places:
           - body: Board of Commissioners
             when: "1st and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: "Boardroom, 112 Smith Street, Jonesboro"            # optional
+  
+  - slug: fayette
+    name: Fayette County
+    type: county
+    fips: "13113"
+    parentCounty: null
+    region: Atlanta Regional Commission                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/fayette/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: revize
+        base_url: https://www.fayettecountyga.gov/
+        agendas_url: "https://www.fayettecountyga.gov/government/board_of_commissioners/agendas_minutes.php"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd and 4th Thursday of every month, 5:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "140 Stonewall Avenue West, Public Meeting Room, Fayetteville"            # optional
 
   - slug: newton
     name: Newton County

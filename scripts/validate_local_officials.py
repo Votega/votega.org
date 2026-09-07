@@ -27,7 +27,7 @@ VALID_ROLES = {
     "Council Member",
     "Commissioner",
 }
-VALID_PARTIES = {"Republican", "Democratic", "Nonpartisan"}
+VALID_PARTIES = {"Republican", "Democratic", "Nonpartisan", "Independent"}
 PRESIDING_ROLES = {"Mayor", "Chair"}
 # Structural form of a county's governing body (derivable from the roster titles;
 # emitted by generate_local_officials.py). Optional jurisdiction field.

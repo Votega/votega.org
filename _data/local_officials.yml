@@ -54,8 +54,10 @@
 # ----------------------------------------------------------------------------
 #   type   : city | county
 #   role   : Mayor | Mayor Pro Tem | Chair | Vice Chair | Council Member | Commissioner
-#   party  : Republican | Democratic | Nonpartisan
-#            (use Nonpartisan for municipal seats; set jurisdiction.partisan:false)
+#   party  : Republican | Democratic | Nonpartisan | Independent
+#            (use Nonpartisan for municipal seats; set jurisdiction.partisan:false.
+#            Independent is for a member who holds a PARTISAN seat with no party —
+#            allowed only when jurisdiction.partisan is not false.)
 #
 #   government_form (jurisdiction, optional):
 #            commission | commission-chair | ceo | sole-commissioner
@@ -1054,7 +1056,6 @@ jurisdictions:
     related_pages:
     members:
       - name: "Shane Taylor"
-        full_name: ""   # authoritative full name (matching); site shows `name`
         role: Chair
         seat: "At-Large"
         party: 
@@ -1078,7 +1079,6 @@ jurisdictions:
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/bacon-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
       - name: "Lonann Sweat"
-        full_name: ""   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 3"
         party: 
@@ -1090,7 +1090,6 @@ jurisdictions:
         voting: true
         source: "https://baconcounty.org/administration.php"
       - name: "Corey Tyre"
-        full_name: ""   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 4"
         party: 
@@ -1113,7 +1112,6 @@ jurisdictions:
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/bacon-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
       - name: "Sammy Boatright"
-        full_name: ""   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 6"
         party: 
@@ -1584,7 +1582,79 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.claytoncountyga.gov/government/board-of-commissioners/district-4/"
-        
+  
+  - id: fayette
+    name: Fayette County
+    type: county
+    county: Fayette
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.fayettecountyga.gov/government/board_of_commissioners/index.php"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Eric Maxwell"
+        full_name: "Eric K. Maxwell"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 1"
+        party: Republican
+        email: "Emaxwell@fayettecountyga.gov"
+        phone: "678-684-7094"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/fayette-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Lee Hearn"
+        role: Chair
+        seat: "District 2"
+        party: Republican
+        email: "Lhearn@fayettecountyga.gov"
+        phone: "770-401-0088"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/fayette-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Edward Gibbons"
+        full_name: "Edward G. Gibbons Jr."   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "EGibbons@fayettecountyga.gov"
+        phone: "678-708-1262"
+        last_elected: 2022
+        term_end: 2026 
+        next_election: 2026
+        voting: true
+        source: "https://www.fayettecountyga.gov/business_detail_T3_R14.php"
+      - name: "Charles Rousseau"
+        full_name: "Charles D. Rousseau"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "CRousseau@fayettecountyga.gov"
+        phone: "470-217-2214"
+        last_elected: 2022
+        term_end: 2026 
+        next_election: 2026
+        voting: true
+        source: "https://www.fayettecountyga.gov/business_detail_T3_R15.php"  
+      - name: "Charles Oddo"
+        full_name: "Charles W. Oddo"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 5 (At-Large)"
+        party: Republican
+        email: "COddo@fayettecountyga.gov"
+        phone: "770-843-4034"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/fayette-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      
   - id: henry
     name: Henry County
     type: county
