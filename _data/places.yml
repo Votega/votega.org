@@ -352,6 +352,26 @@ places:
             when: "2nd and 4th Thursday of every month, 5:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: "140 Stonewall Avenue West, Public Meeting Room, Fayetteville"            # optional
 
+  - slug: forsyth
+    name: Forsyth County
+    type: county
+    fips: "13117"
+    parentCounty: null
+    region: Atlanta Regional Commission                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/forsyth/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: unknown
+        base_url: https://www.forsythco.com/government/
+        agendas_url: "https://www.forsythco.com/government/forsyth-county-meetings/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Thursday of every month, 5:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "110 E Main St, Cumming"            # optional
+            
   - slug: newton
     name: Newton County
     type: county

@@ -1654,7 +1654,75 @@ jurisdictions:
         next_election: 2028
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/fayette-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
-      
+  
+  - id: forsyth
+    name: Forsyth County
+    type: county
+    county: Forsyth
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.forsythco.com/government/departments/board-of-commissioners/"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Kerry Hill"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "kmhill@forsythco.com"
+        phone: "678-513-5881"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.forsythco.com/government/departments/board-of-commissioners/district-1/"
+      - name: "Alfred John"
+        role: Commissioner
+        seat: "District 2"
+        party: Republican
+        email: "ajohn@forsythco.com"
+        phone: "770-888-8878"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/forsyth-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Todd Levent"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "tlevent@forsythco.com"
+        phone: "678-513-5883"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.forsythco.com/government/departments/board-of-commissioners/district-3/"
+      - name: "Mendy Moore"
+        role: Commissioner
+        seat: "District 4"
+        party: Republican
+        email: "mpmoore@forsythco.com"
+        phone: "678-513-5884"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/forsyth-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Laura Semanson"
+        role: Commissioner
+        seat: "District 5"
+        party: Republican
+        email: "losemanson@forsythco.com"
+        phone: "678-513-5885"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/forsyth-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+    
   - id: henry
     name: Henry County
     type: county
