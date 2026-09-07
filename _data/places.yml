@@ -228,7 +228,11 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: civicplus
+        # Barrow's site is CivicEngage, but the newer JS-rendered skin: /AgendaCenter
+        # loads rows via AJAX (/AgendaCenter/UpdateCategoryList), so the classic
+        # civicplus adapter parses zero. No CivicClerk instance either. Agendas live
+        # on the Granicus ViewPublisher hub below, which has no scraper adapter.
+        platform: granicus
         base_url: https://barrowga.org/
         agendas_url: "https://barrowga.granicus.com/ViewPublisher.php?view_id=1"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:
@@ -268,7 +272,10 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: legistar
+        # Not on Legistar (webapi.legistar.com has no Cherokee instance — returns
+        # 500). Agendas live on the Granicus ViewPublisher hub below, which has no
+        # scraper adapter. Curated schedule + agendas_url still render.
+        platform: granicus
         base_url: https://www.cherokeecountyga.gov/
         agendas_url: "https://cherokeega.granicus.com/ViewPublisher.php?view_id=1"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:
