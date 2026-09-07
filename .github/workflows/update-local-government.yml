@@ -54,6 +54,12 @@ jobs:
       - name: Enrich PDF-platform meetings (topics + data-center watch)
         run: python scripts/enrich_ocr_meetings.py --months 12 --limit 25
 
+      # Granicus ViewPublisher places (Barrow, Cherokee): the agenda link resolves
+      # to HTML (not a PDF), so this is a text-strip + classify pass — no OCR. Same
+      # guard as the others: never overwrites a good sidecar/flags with nothing.
+      - name: Enrich Granicus meetings (topics + data-center watch)
+        run: python scripts/enrich_granicus_meetings.py --months 12 --limit 25
+
       - name: Commit if changed
         run: |
           set -e
