@@ -536,8 +536,14 @@ def build_justices(records, urls, prior, new_state):
 # ─────────────────────────── Local government (places) ───────────────────────────
 
 def _places_source_fallback(place):
-    """Best public URL to link when data is missing, per meetings platform."""
+    """Best public URL to link when data is missing, per meetings platform.
+
+    Prefer an explicit agendas_url (the county's agenda/minutes hub); else derive
+    from base_url (CivicPlus exposes its hub at /AgendaCenter)."""
     cfg = ((place.get("domains") or {}).get("meetings")) or {}
+    agendas = (cfg.get("agendas_url") or "").strip()
+    if agendas:
+        return agendas
     base = (cfg.get("base_url") or "").rstrip("/")
     if not base:
         return ""

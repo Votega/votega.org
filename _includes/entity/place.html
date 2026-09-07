@@ -214,10 +214,14 @@
       <li><span class="cm-sched-body">{{ s.body }}</span> — {{ s.when }}{% if s.location and s.location != "" %} <span class="cm-sched-loc">&middot; {{ s.location }}</span>{% endif %}</li>
       {% endif %}{% endfor %}
     </ul>
+    {%- comment %} Prefer the direct agenda/minutes hub; fall back to the general
+        meetings base_url; omit the link entirely if neither is set (schedule-only
+        places) rather than linking to nothing. {% endcomment -%}
+    {% assign meet_url = place.domains.meetings.agendas_url | default: place.domains.meetings.base_url %}
     <p class="cm-sched-note">
       Schedules are provided as a guide and can change — holidays and special called
-      meetings may differ. Confirm on the
-      <a href="{{ place.domains.meetings.base_url }}" target="_blank" rel="noopener">official site</a>.
+      meetings may differ.{% if meet_url and meet_url != "" %} Confirm on the
+      <a href="{{ meet_url }}" target="_blank" rel="noopener">official site</a>.{% else %} Confirm on the county's official site.{% endif %}
     </p>
   </div>
   {% endif %}

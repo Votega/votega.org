@@ -290,7 +290,7 @@ def emit_places_yaml(county_slug, county_name):
         "        # Curated recurring schedule -> the \"When they meet\" note on /local/"
         f"{county_slug}/.",
         "        # Fill when: (and optional location:) per body. No scraper adapter needed",
-        "        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to",
+        "        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar) later to",
         "        # auto-aggregate agendas/minutes (see the places.yml header).",
         '        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)',
         "        schedule:",

@@ -27,11 +27,12 @@
 #                        /local/<slug>/ page, no search entry. Flip it back to
 #                        unhide. (The officials cross-check still sees the slug.)
 #   domains              per-domain adapter config; supported domain today: meetings
-#     meetings.platform  civicplus | corecode | civicclerk
+#     meetings.platform  civicplus | corecode | civicclerk | legistar
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
 #       corecode keys:   base_url, meetings_path
 #       civicclerk keys: subdomain (the <sub> in <sub>.api.civicclerk.com)
+#       legistar keys:   client (the <client> in webapi.legistar.com/v1/<client>/Events)
 #     Body scoping (any platform, optional) — POLICY: publish the legislative and
 #     land-use bodies (Board of Commissioners + Planning Commission + zoning
 #     boards, where rezonings / data centers are heard); drop administrative
@@ -154,6 +155,8 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: civicplus
+        base_url: https://www.bankscountyga.org
         agendas_url: "https://www.bankscountyga.org/1228/Agendas-and-Minutes"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:
           - body: Board of Commissioners
