@@ -28,11 +28,11 @@
 #                        unhide. (The officials cross-check still sees the slug.)
 #   domains              per-domain adapter config; supported domain today: meetings
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
-#                        legistar | teammunicode | primegov
+#                        legistar | teammunicode | primegov | granicus
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
-#                          revize | wix | wordpress | granicus | governmentwindow |
+#                          revize | wix | wordpress | governmentwindow |
 #                          custom  = a real but adapter-less system (usually a
 #                                     bespoke CMS that just lists agenda PDFs — e.g.
 #                                     Bartow is Revize; `custom` = a hand-built page
@@ -58,6 +58,14 @@
 #                        is the numeric committeeId — a single-committee county
 #                        (Clayton) uses body_label; a multi-committee one needs a
 #                        body_map on the committee ids.
+#       granicus keys:   agendas_url (the <client>.granicus.com/ViewPublisher.php
+#                        ?view_id=<N> portal — host + view_id are reused by the
+#                        scraper), optional view_ids: [N, ...] for a place that
+#                        splits bodies across several views. This is the Granicus
+#                        ViewPublisher media/agenda portal, NOT Legistar (use the
+#                        legistar platform for the Legistar API). The Name cell mixes
+#                        body + meeting type ("Board of Commissioners Work Session"),
+#                        so ALWAYS scope with a body_map (Barrow, Cherokee).
 #     Body scoping (any platform, optional) — POLICY: publish the legislative and
 #     land-use bodies (Board of Commissioners + Planning Commission + zoning
 #     boards, where rezonings / data centers are heard); drop administrative
@@ -228,13 +236,24 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        # Barrow's site is CivicEngage, but the newer JS-rendered skin: /AgendaCenter
-        # loads rows via AJAX (/AgendaCenter/UpdateCategoryList), so the classic
-        # civicplus adapter parses zero. No CivicClerk instance either. Agendas live
-        # on the Granicus ViewPublisher hub below, which has no scraper adapter.
+        # Barrow's own site is CivicEngage's newer JS-rendered skin (agenda rows
+        # load via AJAX, so the civicplus adapter parses zero) and it has no
+        # CivicClerk instance — but it publishes to a Granicus ViewPublisher portal,
+        # which the lib.granicus adapter scrapes. The Name cell holds body + meeting
+        # type: body_map folds the BOC's Voting/Work/Special sessions into Board of
+        # Commissioners, keeps Planning Commission and Board of Appeals (land use),
+        # and drops the development authorities (administrative).
         platform: granicus
         base_url: https://barrowga.org/
         agendas_url: "https://barrowga.granicus.com/ViewPublisher.php?view_id=1"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Board of Appeals", label: "Board of Appeals" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+          - { match: "Voting Session", label: "Board of Commissioners" }
+          - { match: "Work Session", label: "Board of Commissioners" }
+          - { match: "Special Called", label: "Board of Commissioners" }
+          - { match: "Board Retreat", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
             when: "2nd Tuesday of every month, 5:00 p.m., 4th Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
@@ -272,12 +291,19 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        # Not on Legistar (webapi.legistar.com has no Cherokee instance — returns
-        # 500). Agendas live on the Granicus ViewPublisher hub below, which has no
-        # scraper adapter. Curated schedule + agendas_url still render.
+        # Granicus ViewPublisher portal (not Legistar — webapi.legistar.com has no
+        # Cherokee instance). The lib.granicus adapter scrapes the ViewPublisher
+        # page; view_id comes from agendas_url. The Name cell holds body + meeting
+        # type, so body_map narrows to the legislative/land-use bodies and drops
+        # Board of Elections & Registration (administrative).
         platform: granicus
         base_url: https://www.cherokeecountyga.gov/
         agendas_url: "https://cherokeega.granicus.com/ViewPublisher.php?view_id=1"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Zoning Board of Appeals", label: "Zoning Board of Appeals" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+          - { match: "Planning Retreat", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
             when: "1st Tuesday of every month, 6:00 p.m., and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."

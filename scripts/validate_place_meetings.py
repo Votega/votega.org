@@ -25,25 +25,71 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.error
+import urllib.request
 from datetime import date
 
 import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
-from lib.http import fetch_bytes  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
 DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 _TODAY = date.today().isoformat()
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Return the 3xx response instead of following it."""
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def link_alive(url, timeout=25, retries=2):
+    """Redirect-AWARE liveness check: judge a link by its first response (and,
+    for a 3xx, its Location) rather than following the redirect.
+
+    This matters for Granicus ViewPublisher agenda/minutes links, which 302 to a
+    document on `granicus_production_attachments.s3.amazonaws.com` — a bucket name
+    with underscores, so the host fails TLS hostname verification in Python's
+    urllib (browsers/curl accept it). Following the redirect would spuriously mark
+    a perfectly good link dead. A missing meeting instead 302s to
+    /core/error/NotFound.aspx, so the redirect *target* is the real signal.
+
+    Alive = a 2xx, or a 3xx whose Location is not an error page. Direct-file
+    platforms (Legistar/CivicClerk PDFs) are unaffected: they return 200.
+    Retries on 5xx / network error per the repo's HTTP policy; 4xx is dead.
+    """
+    opener = urllib.request.build_opener(_NoRedirect)
+    req = urllib.request.Request(url, headers={'User-Agent': 'votega.org/1.0'})
+    for attempt in range(retries + 1):
+        try:
+            resp = opener.open(req, timeout=timeout)
+            code, loc = resp.getcode(), resp.headers.get('Location')
+        except urllib.error.HTTPError as e:
+            code, loc = e.code, e.headers.get('Location')
+        except Exception:
+            code, loc = None, None
+        if code is not None:
+            if 200 <= code < 300:
+                return True
+            if 300 <= code < 400:
+                return not (loc and '/core/error/' in loc.lower())
+            if code < 500:
+                return False  # 4xx: non-retryable, dead
+        if attempt < retries:  # None (network) or 5xx: retry
+            time.sleep(3)
+    return False
 # Kept in sync with generate_place_meetings.py. Platforms with a scraper adapter…
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
-                     'primegov'}
+                     'primegov', 'granicus'}
 # …and recognized platforms/markers we have NO scraper for (unknown + bespoke CMSs
 # like Revize/Wix/WordPress): they produce no JSON, so there is nothing to validate
 # and they are skipped silently. A value in neither set is a likely typo → warned.
-NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'revize', 'wix', 'wordpress', 'granicus',
+# (`granicus` is a scraped adapter — the ViewPublisher portal — so it lives above.)
+NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'revize', 'wix', 'wordpress',
                         'governmentwindow'}
 
 
@@ -129,10 +175,10 @@ def check_place(place, min_meetings, sample, network):
             if len(urls) >= sample:
                 break
         for url in urls[:sample]:
-            if fetch_bytes(url, timeout=30, retries=2, verbose=False) is None:
-                errors.append('%s: dead link %s' % (slug, url))
-            else:
+            if link_alive(url):
                 print('  ok: %s' % url)
+            else:
+                errors.append('%s: dead link %s' % (slug, url))
 
     print('%s: %d meetings, %d bodies%s'
           % (slug, len(meetings), len(bodies or []),
