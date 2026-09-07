@@ -1875,3 +1875,50 @@ jurisdictions:
         next_election: 2028
         voting: true
         source: "https://www.henrycountyga.gov/board-of-commissioners"   # party + incumbency confirmed by GA SoS 2026 Qualified Candidates list
+  
+  - id: rockdale
+    name: Rockdale County
+    type: county
+    county: Rockdale
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 3             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "JaNice Van Ness"
+        role: Chair
+        title: County Commission Chairman
+        seat: "At-large"
+        party: Democratic
+        email: "JaNice.VanNess@RockdaleCountyGA.gov"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/rockdale-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Tuwanya Smith"
+        role: Commissioner
+        seat: "Post 1"
+        party: Democratic
+        email: "Tuwanya.Smith@RockdaleCountyGA.gov"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/rockdale-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+      - name: "Doreen Williams"
+        role: Commissioner
+        seat: "Post 2"
+        party: 
+        email: "Doreen.Williams@RockdaleCountyGA.gov"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/"   # SoS results — CONFIRM before merge
