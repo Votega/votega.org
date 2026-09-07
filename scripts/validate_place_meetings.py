@@ -53,9 +53,13 @@ def check_place(place, min_meetings, sample, network):
     if not cfg:
         return [], []  # no meetings domain — nothing to validate
     platform = cfg.get('platform')
-    if not platform:
-        return [], []  # schedule / agendas_url-only — nothing scraped to validate
+    if not platform or platform == 'unknown':
+        # schedule / agendas_url-only, or a deliberate `unknown` "identify later"
+        # marker — nothing scraped, skip silently.
+        return [], []
     if platform not in KNOWN_PLATFORMS:
+        # A typo, or a real platform we haven't built an adapter for — worth a nudge
+        # (unlike the intentional `unknown` marker above).
         return [], ['%s: unrecognized meetings platform %r — no scraper, skipping'
                     % (slug, platform)]
 

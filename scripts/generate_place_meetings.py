@@ -199,10 +199,12 @@ def build_place(place):
     cfg = (place.get('domains') or {}).get('meetings')
     if not cfg:
         return 'skip'  # place has no meetings domain — not an error
-    if not cfg.get('platform'):
-        # A meetings block with only a schedule / agendas_url (no scraper adapter)
-        # is legitimate — the schedule renders from places.yml and the page links
-        # agendas_url. There is nothing to scrape, so skip it (NOT an error).
+    platform = cfg.get('platform')
+    if not platform or platform == 'unknown':
+        # No platform = a schedule / agendas_url-only block (the schedule renders
+        # from places.yml and the page links agendas_url). `unknown` = a deliberate
+        # "identify the meetings platform later" marker. Either way there is nothing
+        # to scrape, so skip silently (NOT an error).
         return 'skip'
 
     print('Fetching meetings for %s (%s)...' % (place['name'], cfg.get('platform')))

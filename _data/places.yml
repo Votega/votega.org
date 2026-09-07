@@ -28,6 +28,11 @@
 #                        unhide. (The officials cross-check still sees the slug.)
 #   domains              per-domain adapter config; supported domain today: meetings
 #     meetings.platform  civicplus | corecode | civicclerk | legistar | teammunicode
+#                        | unknown  (`unknown` = a deliberate "identify the meetings
+#                        platform later" marker: skipped silently by the generator &
+#                        validator, so the schedule / agendas_url still render but
+#                        nothing is scraped. Omitting platform entirely does the same
+#                        for a schedule-only place.)
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
 #       corecode keys:   base_url, meetings_path
@@ -36,7 +41,10 @@
 #       teammunicode keys: base_url (the <sub>.teammunicode.com Municode Meetings
 #                        origin; often iframe-embedded on the county's own site, so
 #                        the county's CivicPlus Agenda Center is an empty stub —
-#                        Banks). Meeting title names the body; scope with body_map.
+#                        Banks, Baldwin). `body` is the section CODE from a meeting's
+#                        detail link (boc, commissioners, bc-pc, planning-development
+#                        — varies per county), so ALWAYS scope with a body_map that
+#                        allow-lists + relabels those codes (check the codes first).
 #     Body scoping (any platform, optional) — POLICY: publish the legislative and
 #     land-use bodies (Board of Commissioners + Planning Commission + zoning
 #     boards, where rezonings / data centers are heard); drop administrative
@@ -151,11 +159,16 @@ places:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/baldwin/.
         # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: civicplus
-        base_url: https://www.baldwincountyga.com
+        # Baldwin's agendas live on Municode Meetings (teammunicode), embedded on
+        # its /1209/Agendas-Minutes page — the CivicPlus Agenda Center is empty.
+        platform: teammunicode
+        base_url: https://baldwincounty.teammunicode.com
         agendas_url: "https://www.baldwincountyga.com/1209/Agendas-Minutes"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # teammunicode `body` is the section code from the detail link; Baldwin's
+        # codes are semantic — allow-list commissioners + planning-development.
+        body_map:
+          - { match: "commissioners", label: "Board of Commissioners" }
+          - { match: "planning-development", label: "Planning Commission" }
         schedule:
           - body: Board of Commissioners
             when: "1st and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
@@ -180,9 +193,11 @@ places:
         platform: teammunicode
         base_url: https://legacybankscountyga.teammunicode.com
         agendas_url: "https://www.bankscountyga.org/1228/Agendas-and-Minutes"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # teammunicode `body` is the section code from the meeting's detail link;
+        # allow-list + relabel Banks' codes (boc, bc-pc) — drops bc-boe / bc-da.
         body_map:
-          - { match: "Board of Commissioners", label: "Board of Commissioners" }
-          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "boc", label: "Board of Commissioners" }
+          - { match: "bc-pc", label: "Planning Commission" }
         schedule:
           - body: Board of Commissioners
             when: "2nd Tuesday every month, 6:30 p.m., and 4th Tuesday of every month, 3:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."

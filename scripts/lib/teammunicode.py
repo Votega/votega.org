@@ -62,6 +62,7 @@ def _parse_row(row):
         return None
     iso_date = date_m.group(1)[:10]  # YYYY-MM-DD from the ISO datetime
     detail = _DETAIL_RE.search(row)
+    code = detail.group(1) if detail else None   # section slug = the body (reliable)
     slug = detail.group(2) if detail else None
     num = re.search(r'-(\d+)$', slug or '')
     meeting_id = num.group(1) if num else (slug or iso_date)
@@ -78,7 +79,10 @@ def _parse_row(row):
     if not (agenda_url or minutes_url or video) and not upcoming:
         return None
     return {
-        'body': title,          # names the body; a place scopes via body_map
+        # The section slug (detail-link code) is the body — reliable across
+        # instances where the title is the body name (Banks) OR just the meeting
+        # type (Baldwin: "Regular Meeting"). A place scopes/relabels it via body_map.
+        'body': code or title,
         'date': iso_date,
         'id': str(meeting_id),
         'title': title,
