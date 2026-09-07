@@ -10,6 +10,7 @@ API. The rest of VoteGA's local governments publish agendas/minutes only as PDFs
     Douglas     CivicClerk (agenda PDFs via GetMeetingFileStream)
     Cobb        CivicClerk
     Henry       CivicClerk
+    Clayton     PrimeGov   (agenda PDFs via CompiledDocument?compileOutputType=1)
 
 This enricher reads the already-generated, already-scoped links file
 assets/data/local-<slug>-meetings.json, downloads each meeting's agenda (falling
@@ -54,9 +55,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
 DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 
-# Platforms this enricher handles — everything PDF-based. Legistar is structured
-# and handled by enrich_legistar_meetings.py, so it is deliberately excluded here.
-OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk'}
+# Platforms this enricher handles — everything whose agenda/minutes links are
+# direct PDFs. Legistar is structured (enrich_legistar_meetings.py) and Granicus
+# ViewPublisher serves HTML (enrich_granicus_meetings.py), so both are excluded.
+# PrimeGov (Clayton) exposes agendas as CompiledDocument PDFs with a text layer,
+# so it rides the same poppler path.
+OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'primegov'}
 
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (meeting-topic-enricher)',
