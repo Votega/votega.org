@@ -268,7 +268,7 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: Legistar
+        platform: legistar
         base_url: https://www.cherokeecountyga.gov/
         agendas_url: "https://cherokeega.granicus.com/ViewPublisher.php?view_id=1"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:
