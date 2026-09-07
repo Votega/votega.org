@@ -56,10 +56,34 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
   .lh-flag { font-size: 0.7rem; font-weight: 700; border-radius: 999px; padding: 0.12rem 0.5rem; }
   .lh-flag-dc { background: #fde8cf; color: #b35a00; }
   .lh-flag-lu { background: #e3f2e4; color: #1b5e20; }
+  /* Legend explaining the agenda flag pills above */
+  .lh-legend {
+    margin: 0 0 1.25rem; padding: 0.75rem 0.9rem; background: #f8f9fb;
+    border: 1px solid #e5e7eb; border-radius: 8px; font-size: 0.82rem; color: #555;
+  }
+  .lh-legend-title { font-weight: 700; color: #333; margin-right: 0.15rem; }
+  .lh-legend-items { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 0.5rem; }
+  .lh-legend-item { display: flex; align-items: baseline; gap: 0.4rem; flex: 1 1 18rem; }
+  .lh-legend-item .lh-flag { flex: none; white-space: nowrap; }
 </style>
 
 <div class="lh-controls">
   <input type="search" id="lhSearch" class="lh-search" placeholder="Search counties and cities…" aria-label="Search places">
+</div>
+
+<div class="lh-legend" aria-label="What the agenda badges mean">
+  <span class="lh-legend-title">What the badges mean.</span>
+  Some places show a badge when we detect certain topics on their recent published meeting agendas:
+  <div class="lh-legend-items">
+    <span class="lh-legend-item">
+      <span class="lh-flag lh-flag-dc">🏭 Data centers on agenda</span>
+      A data-center project came before this government recently — a rezoning, permit, incentive, or moratorium.
+    </span>
+    <span class="lh-legend-item">
+      <span class="lh-flag lh-flag-lu">🏗️ Land use</span>
+      Land-use business on recent agendas — rezonings, variances, special-use permits, annexations, or major developments.
+    </span>
+  </div>
 </div>
 
 {%- comment %} ---- Card renderer (county or city). Sets domain indicators from the
