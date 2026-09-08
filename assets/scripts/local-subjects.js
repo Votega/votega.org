@@ -49,6 +49,21 @@
           html += '</ul></div>';
         }
 
+        var lu = s.landUseItems || [];
+        if (lu.length) {
+          html += '<div class="sub-lu"><strong>🏗️ Land use on recent agendas</strong><ul>';
+          lu.slice(0, 6).forEach(function (it) {
+            var t = esc(cleanTitle(it.title)).slice(0, 150);
+            var tags = (it.tags && it.tags.length)
+              ? ' <span class="sub-lu-tags">(' + esc(it.tags.join(', ').replace(/-/g, ' ')) + ')</span>' : '';
+            html += '<li>' +
+              (it.date ? '<span class="sub-date">' + esc(it.date) + '</span> ' : '') + t + tags +
+              (it.sourceUrl ? ' <a href="' + esc(it.sourceUrl) + '" target="_blank" rel="noopener">source ↗</a>' : '') +
+              '</li>';
+          });
+          html += '</ul></div>';
+        }
+
         var totals = s.topicTotals || {};
         var top = Object.keys(totals).sort(function (a, b) { return totals[b] - totals[a]; }).slice(0, 8);
         if (top.length) {
@@ -59,7 +74,7 @@
         container.innerHTML =
           '<h2 class="po-heading" style="margin-top:2rem;">On recent agendas</h2>' +
           '<p class="place-intro">Subjects that appeared on this government’s recent meeting agendas, ' +
-          'from the published agenda data. Data-center items link to their source.</p>' + html;
+          'from the published agenda data. Data-center and land-use items link to their source.</p>' + html;
         container.hidden = false;
       })
       .catch(function () { /* no enrichment — leave the section hidden */ });

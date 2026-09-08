@@ -96,10 +96,16 @@ def build_summary(enriched):
 
     The Legistar enricher fills dataCenterItems from the structured land-use
     *items*; the OCR enricher fills it at the *meeting* level (one entry per
-    flagged meeting) — either way every entry links a source.
+    flagged meeting) — either way every entry links a source. `landUseItems` is
+    DERIVED here uniformly from each meeting's `topics` (the meeting's title/date/
+    sourceUrl + which land-use subjects it hit), so a Legistar and an OCR place get
+    the same sourced list; data-center meetings are excluded because they already
+    surface in dataCenterItems above.
     """
+    lu_tags = LAND_USE - {'data-center'}
     topic_totals = {}
     dc_items = {}
+    lu_items = {}
     flags = set()
     last = None
     land_use_meetings = 0
@@ -110,16 +116,29 @@ def build_summary(enriched):
         d = m.get('date')
         if d and (last is None or d > last):
             last = d
-        for tag, n in (m.get('topics') or {}).items():
+        mtopics = m.get('topics') or {}
+        for tag, n in mtopics.items():
             topic_totals[tag] = topic_totals.get(tag, 0) + n
         for it in (m.get('dataCenterItems') or []):
             # De-dupe by title so the same recurring item across meetings lists once.
             dc_items.setdefault(it['title'], it)
+        # Land-use citations: a meeting that hit a land-use subject OTHER than
+        # data-center (which has its own list). One entry per distinct meeting.
+        present_lu = sorted(set(mtopics) & lu_tags)
+        if present_lu and 'data-center' not in mtopics:
+            title = m.get('title') or m.get('body') or 'Meeting'
+            key = (m.get('date'), title)
+            lu_items.setdefault(key, {
+                'title': title, 'date': m.get('date'),
+                'sourceUrl': m.get('sourceUrl'), 'tags': present_lu})
+    # Newest first, capped so the committed sidecar stays small.
+    lu_sorted = sorted(lu_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     return {
         'flags': sorted(flags),
         'lastActivity': last,
         'topicTotals': topic_totals,
         'dataCenterItems': list(dc_items.values()),
+        'landUseItems': lu_sorted[:20],
         'landUseMeetings': land_use_meetings,
     }
 
@@ -129,6 +148,7 @@ def flag_entry(summary):
     return {
         'flags': summary['flags'],
         'dataCenterCount': len(summary['dataCenterItems']),
+        'landUseCount': len(summary.get('landUseItems') or []),
         'lastActivity': summary['lastActivity'],
     }
 
