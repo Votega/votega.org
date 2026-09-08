@@ -90,6 +90,34 @@ jobs:
             fi
           fi
 
+      # Split the monolithic votes file into a shared index (with precomputed
+      # per-vote party tallies) + tiny per-member slices, so a legislator detail
+      # page fetches ~14 KB + a cached index instead of the full ~3.7 MB file.
+      # Derived from the just-committed ga-member-votes.json joined with
+      # ga-members.json for party. See scripts/build_member_votes_slices.py.
+      - name: Build per-member vote slices
+        run: python scripts/build_member_votes_slices.py
+
+      - name: Commit per-member vote slices
+        run: |
+          set -e
+          git add -A assets/data/ga-votes-index.json assets/data/ga-votes
+          if git diff --cached --quiet; then
+            echo "No changes to vote slices"
+          else
+            git commit -m "Rebuild per-member vote slices"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - vote slices were NOT committed"
+              exit 1
+            fi
+          fi
+
       - name: Enrich GA bills with party vote tallies
         run: python scripts/enrich_bills_with_party_votes.py assets/data/ga-bills.json assets/data/ga-member-votes.json assets/data/ga-members.json
 
