@@ -178,9 +178,6 @@ const CFG = {
   emptyText: {{ page.empty_section_text | default: 'No races in this section.' | jsonify }},
 };
 
-function getBasePath() {
-  return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
-}
 
 function escHtml(value) { return VoteGA.escapeHtml(value); }
 

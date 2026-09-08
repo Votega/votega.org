@@ -180,9 +180,6 @@
   const OYEZ_TIMEOUT_MS = 8000;   // bound the third-party wait (finding 4.15)
   const PAGE_SIZE     = 15;
 
-  function getBasePath() {
-    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
-  }
 
   function fmt(iso) {
     if (!iso) return '—';

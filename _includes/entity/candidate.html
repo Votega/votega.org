@@ -328,10 +328,6 @@
   const incumbentMemberSource = _params.get('memberSource') || 'congress';
   const incumbentRaceId      = _params.get('raceId');
 
-  function getBasePath() {
-    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
-  }
-
   // Resolve a sitting member's profile to the clean entity URL, falling back to the
   // legacy query-string shell if the id isn't in the map yet. `source === 'congress'`
   // keys on bioguideId (us-congress map); otherwise on OCD id (ga-legislator map).

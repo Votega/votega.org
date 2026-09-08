@@ -242,7 +242,6 @@ members, from the same roll-call record behind each member's page.</p>
   var letter = function (p) { return p === 'Democratic' ? 'D' : p === 'Republican' ? 'R' : 'I'; };
   var partyColor = function (p) { return p === 'Democratic' ? '#2563eb' : p === 'Republican' ? '#dc2626' : '#888'; };
   function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
-  function getBasePath() { return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/'; }
 
   var SORTS = {
     independence: { head: 'Independence', get: function (m) { return m.independenceRate; }, need: 'unity', color: function () { return '#8a6a1c'; } },

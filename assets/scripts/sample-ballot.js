@@ -30,7 +30,7 @@ const CENSUS_PARAMS = 'benchmark=Public_AR_Current&vintage=Current_Current&layer
 const CENSUS_TIMEOUT_MS = 12000;
 
 function sbBasePath() {
-  return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  return '/';
 }
 
 /* ------------------------------------------------------------------ *

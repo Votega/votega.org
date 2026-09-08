@@ -42,7 +42,7 @@ function partyAbbrev(party) {
 }
 
 function getBasePath() {
-  return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+  return '/';
 }
 
 function drawPartyChart(members) {

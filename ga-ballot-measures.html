@@ -146,9 +146,6 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
 <script>
   const DATA_URL = 'assets/data/ga-ballot-measures.json';
 
-  function getBasePath() {
-    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
-  }
 
   function escHtml(value) { return VoteGA.escapeHtml(value); }
 

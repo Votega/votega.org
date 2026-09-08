@@ -512,9 +512,6 @@
   // Clean per-entity URLs set window.VOTEGA_ENTITY; the legacy ?id= URL still works.
   const raceId = new URLSearchParams(window.location.search).get('id') || (window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.id);
 
-  function getBasePath() {
-    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
-  }
 
   // Clean entity-URL maps (bioguideId / OCD id -> "/us-congress/…", "/ga-legislators/…").
   // Linking straight to these skips the legacy member.html?bioguideId= / ga-member.html?id=

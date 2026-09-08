@@ -225,9 +225,6 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
 
     // Hot-topic flags: badge cards whose place has a data-center / land-use item on
     // recent agendas (enrichment sidecar local-flags.json; base-path aware).
-    function getBasePath() {
-      return location.pathname.indexOf('/votega.org-TEST/') !== -1 ? '/votega.org-TEST/' : '/';
-    }
     fetch(getBasePath() + 'assets/data/local-flags.json')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {

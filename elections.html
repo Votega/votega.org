@@ -441,9 +441,6 @@ share-description: "Find candidates running in Georgia's 2026 elections. Statewi
     countySelect.appendChild(opt);
   });
 
-  function getBasePath() {
-    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
-  }
 
   function parseLocalDate(iso) {
     // Parse as a local date, not UTC, so day boundaries match the visitor's calendar.

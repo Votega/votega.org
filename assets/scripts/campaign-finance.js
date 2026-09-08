@@ -21,7 +21,7 @@ window.CampaignFinance = (function () {
   // surfaced as "Finance data unavailable" on every entity-page finance tab.
   // Mirrors the getBasePath() helper the entity includes use for their own data.
   function basePath() {
-    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+    return '/';
   }
   const FEC_DATA_URL   = basePath() + 'assets/data/ga-fec-data.json';
   const GA_FINANCE_URL = basePath() + 'assets/data/ga-campaign-finance.json';

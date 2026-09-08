@@ -10,7 +10,7 @@
   'use strict';
 
   function getBasePath() {
-    return global.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+    return '/';
   }
   function esc(v) { return global.VoteGA.escapeHtml(v); }
 

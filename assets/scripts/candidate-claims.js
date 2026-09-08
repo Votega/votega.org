@@ -19,8 +19,7 @@
   const FORM_BASE  = 'https://tally.so/r/q48agY';
 
   function basePath() {
-    return window.location.pathname.includes('/votega.org-TEST/')
-      ? '/votega.org-TEST/' : '/';
+    return '/';
   }
 
   // race.level -> questionnaire tier, mirroring scripts/build_candidate_claim_links.py

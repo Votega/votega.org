@@ -13,11 +13,9 @@ function formatMemberName(m) {
     : (honorific ? `${honorific} ${fallback}` : fallback);
 }
 
-// Handles both votega.github.io/votega.org-TEST/ and votega.github.io/.
+// Site is served at the domain root (www.votega.org), so the base path is '/'.
 function getBasePath() {
-  return window.location.pathname.includes('/votega.org-TEST/')
-    ? '/votega.org-TEST/'
-    : '/';
+  return '/';
 }
 
 function partyAbbrev(partyName) {
