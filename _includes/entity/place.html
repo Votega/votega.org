@@ -29,6 +29,10 @@
   .cm-pill:hover { background: #f0f5fc; }
   .cm-pill.active { background: #1a56a8; border-color: #1a56a8; color: #fff; }
   .cm-pill .cm-count { opacity: 0.7; font-weight: 500; }
+  /* Secondary year-filter row, shown only when a place spans >1 year */
+  .cm-year-row { flex-basis: 100%; display: flex; align-items: center; gap: 0.55rem; margin-top: 0.15rem; }
+  .cm-facet-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: #8a94a3; flex: none; }
+  .cm-year-row .cm-pill { font-size: 0.78rem; padding: 0.22rem 0.62rem; }
   .cm-toggle {
     font-size: 0.85rem; color: #444; display: inline-flex; align-items: center;
     gap: 0.4rem; margin-left: auto; cursor: pointer;
@@ -253,6 +257,10 @@
   <div id="cmControls" class="cm-controls" hidden>
     <div class="cm-pills" id="cmPills"></div>
     <label class="cm-toggle"><input type="checkbox" id="cmMinutesOnly"> Minutes available only</label>
+    <div id="cmYearRow" class="cm-year-row" hidden>
+      <span class="cm-facet-label">Year</span>
+      <div class="cm-pills" id="cmYearPills"></div>
+    </div>
   </div>
   <div id="cmContainer"><p id="cmLoading">Loading meetings&hellip;</p></div>
   <p id="cmSource"></p>
@@ -274,7 +282,8 @@
       placeName: window.VOTEGA_PLACE.placeName,
       sourceFallback: window.VOTEGA_PLACE.sourceFallback,
       containerId: 'cmContainer', controlsId: 'cmControls', pillsId: 'cmPills',
-      minutesToggleId: 'cmMinutesOnly', sourceId: 'cmSource'
+      minutesToggleId: 'cmMinutesOnly', sourceId: 'cmSource',
+      yearPillsId: 'cmYearPills', yearRowId: 'cmYearRow'
     });
   }
 </script>

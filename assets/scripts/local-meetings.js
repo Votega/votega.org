@@ -43,10 +43,12 @@
     var container = document.getElementById(opts.containerId);
     var controls = document.getElementById(opts.controlsId);
     var pillsEl = document.getElementById(opts.pillsId);
+    var yearPillsEl = opts.yearPillsId ? document.getElementById(opts.yearPillsId) : null;
+    var yearRowEl = opts.yearRowId ? document.getElementById(opts.yearRowId) : null;
     var minutesToggle = document.getElementById(opts.minutesToggleId);
     var sourceEl = document.getElementById(opts.sourceId);
 
-    var state = { body: 'all', minutesOnly: false };
+    var state = { body: 'all', year: 'all', minutesOnly: false };
     var ALL = [];
     var BODIES = [];
 
@@ -74,11 +76,17 @@
       var showChip = state.body === 'all';
       var rows = ALL;
       if (state.body !== 'all') rows = rows.filter(function (m) { return bodySlug(m.body) === state.body; });
+      if (state.year !== 'all') rows = rows.filter(function (m) { return (m.date || '').slice(0, 4) === state.year; });
       if (state.minutesOnly) rows = rows.filter(function (m) { return m.minutesUrl; });
 
-      Array.prototype.forEach.call(document.querySelectorAll('.cm-pill'), function (p) {
+      Array.prototype.forEach.call(pillsEl.querySelectorAll('.cm-pill'), function (p) {
         p.classList.toggle('active', p.dataset.body === state.body);
       });
+      if (yearPillsEl) {
+        Array.prototype.forEach.call(yearPillsEl.querySelectorAll('.cm-pill'), function (p) {
+          p.classList.toggle('active', p.dataset.year === state.year);
+        });
+      }
 
       if (!rows.length) {
         container.innerHTML = '<p class="cm-empty">' +
@@ -122,6 +130,30 @@
       });
     }
 
+    function buildYearPills() {
+      if (!yearPillsEl) return;
+      var counts = {};
+      ALL.forEach(function (m) {
+        var y = (m.date || '').slice(0, 4);
+        if (y) counts[y] = (counts[y] || 0) + 1;
+      });
+      var years = Object.keys(counts).sort().reverse();
+      // Only a useful control when the place spans more than one year.
+      if (years.length < 2) { if (yearRowEl) yearRowEl.hidden = true; return; }
+      if (yearRowEl) yearRowEl.hidden = false;
+
+      var items = [{ year: 'all', label: 'All', n: ALL.length }].concat(
+        years.map(function (y) { return { year: y, label: y, n: counts[y] }; }));
+      yearPillsEl.innerHTML = items.map(function (it) {
+        return '<button class="cm-pill" data-year="' + it.year + '">' +
+          esc(it.label) + ' <span class="cm-count">' + it.n + '</span></button>';
+      }).join('');
+
+      Array.prototype.forEach.call(yearPillsEl.querySelectorAll('.cm-pill'), function (btn) {
+        btn.addEventListener('click', function () { state.year = btn.dataset.year; render(); });
+      });
+    }
+
     function applyHash() {
       var h = (location.hash || '').replace(/^#/, '');
       if (h && BODIES.some(function (b) { return bodySlug(b) === h; })) state.body = h;
@@ -141,6 +173,7 @@
         }
 
         buildPills();
+        buildYearPills();
         applyHash();
         if (controls) controls.hidden = false;
 
