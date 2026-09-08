@@ -3,6 +3,10 @@ layout: default
 title: Georgia General Assembly — Bills & Resolutions
 permalink: /ga-bills.html
 share-description: "Track bills and resolutions in the Georgia General Assembly. Search legislation by keyword, chamber, and status, and see how each party voted."
+breadcrumb:
+  - name: Home
+    url: /
+  - name: Bills & Resolutions
 ---
 
 <h1>Georgia General Assembly: Bills &amp; Resolutions</h1>
@@ -326,6 +330,38 @@ share-description: "Track bills and resolutions in the Georgia General Assembly.
     .bill-title  { font-size: 0.88rem; }
   }
 </style>
+
+{%- comment -%} Server-rendered schema.org Legislation ItemList from the same
+  capped, Liquid-readable snapshot the fallback list uses (site.data.rendered.ga_bills,
+  built by scripts/build_render_data.py). The full 5,656-bill list loads client-side
+  from ga-bills.json; this gives crawlers a structured list without shipping it. {%- endcomment -%}
+{%- assign bills_ld = site.data.rendered.ga_bills -%}
+{%- if bills_ld and bills_ld.rows -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Georgia General Assembly bills and resolutions",
+  "numberOfItems": {{ bills_ld.rows | size }},
+  "itemListElement": [
+    {%- for b in bills_ld.rows -%}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "item": {
+        "@type": "Legislation",
+        "legislationIdentifier": {{ b.identifier | jsonify }},
+        "name": {{ b.title | default: b.identifier | jsonify }},
+        "legislationType": {% if b.billType == "resolution" %}"Resolution"{% else %}"Bill"{% endif %},
+        "legislationJurisdiction": "Georgia, USA"{% if b.statusDate %},
+        "legislationDate": {{ b.statusDate | jsonify }}{% endif %}
+      }
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
 
 <div id="billsStats" class="bills-stats" style="display:none"></div>
 
