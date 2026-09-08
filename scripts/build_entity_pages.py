@@ -405,10 +405,50 @@ def build_races(records, urls, prior, new_state):
         share_title = f"{name} — Candidates & Results"
         desc = (f"Candidates, the incumbent, district information, and results for the "
                 f"{name} race in Georgia.")
+        # Candidates in this race, across phases, deduped by id/name — for an
+        # ItemList of Person so search engines read the page as "who is running
+        # for <office>". We link each Person to their own website (sameAs) when
+        # present, not to a /candidates/ page: that URL map is built by the later
+        # Candidate pass, and not every named candidate gets a page.
+        cands, seen_c = [], set()
+        for phase in (r.get("phases") or {}).values():
+            if not isinstance(phase, dict):
+                continue
+            groups = list((phase.get("ballots") or {}).values()) + [phase.get("candidates") or []]
+            for group in groups:
+                for c in (group or []):
+                    cn = (c.get("name") or "").strip()
+                    key = c.get("id") or cn
+                    if not cn or key in seen_c:
+                        continue
+                    seen_c.add(key)
+                    cands.append(c)
+
+        il = ""
+        if cands:
+            items = []
+            for i, c in enumerate(cands, start=1):
+                person = {"@type": "Person", "name": c["name"].strip()}
+                party = (c.get("party") or "").strip()
+                if party:
+                    person["affiliation"] = party
+                site = (c.get("website") or "").strip()
+                if site.startswith("http"):
+                    person["sameAs"] = site
+                items.append({"@type": "ListItem", "position": i, "item": person})
+            il = json_ld({
+                "@context": "https://schema.org", "@type": "ItemList",
+                "name": f"Candidates for {name}",
+                "numberOfItems": len(items),
+                "itemListElement": items,
+            })
+
         entity = {"type": "race", "id": rid, "name": name, "chamber": chamber,
                   "cycle": cycle, "summary": (level.title() + " race") if level else None}
-        lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
-                                  data_date, prior, new_state)
+        lastmod = resolve_lastmod(
+            permalink,
+            {"e": entity, "t": share_title, "d": desc, "c": [c["name"] for c in cands]},
+            data_date, prior, new_state)
         fm = {
             "layout": "default",
             "title": yaml_quote(name),
@@ -421,7 +461,8 @@ def build_races(records, urls, prior, new_state):
         bc = breadcrumb_ld([("Home", "/"), ("2026 Elections", "/elections/"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(rid)}}};</script>\n'
                 f"{bc}\n"
-                f"{{% include entity/race.html %}}")
+                + (f"{il}\n" if il else "")
+                + "{% include entity/race.html %}")
         write_page("races", slug, fm, body)
         count += 1
     return count
