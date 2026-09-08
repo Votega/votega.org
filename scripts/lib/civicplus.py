@@ -30,11 +30,26 @@ Import from a generator in scripts/ (sys.path[0] is scripts/ when run as
     from lib.civicplus import fetch_agenda_center
 """
 
+import datetime as dt
 import re
+import urllib.error
+import urllib.parse
+import urllib.request
 
 from lib.http import fetch_bytes
 
 AGENDA_MODULE_ID = 65
+# How many years back to pull per category via the year-toggle (see fetch_agenda_center).
+DEFAULT_YEARS = 4
+
+# A category panel header ties a catID to a body name: the <h2>'s
+# aria-controls="category-panel-<catID>" is the same number the year toggle and the
+# UpdateCategoryList POST use. This is what lets us map POSTed rows to their body.
+_CATPANEL_RE = re.compile(
+    r'aria-controls="category-panel-(\d+)"[^>]*>\s*([^<]+?)\s*<', re.I)
+# The year dropdown emits changeYear(<year>, <catID>, ...) for every year that
+# category has data — our menu of which (catID, year) pairs are worth POSTing.
+_CHANGEYEAR_RE = re.compile(r'changeYear\((\d{4})\s*,\s*(\d+)', re.I)
 
 # A meeting row: <tr ... class="catAgendaRow"> ... </tr>. Rows are flat (no
 # nested <tr>), so a non-greedy match to the first </tr> is exact.
@@ -133,18 +148,99 @@ def parse_agenda_center(html, base_url):
     return meetings
 
 
-def fetch_agenda_center(base_url, module_id=AGENDA_MODULE_ID, timeout=30):
+def _category_map(html):
+    """{catID: body_name} from the category-panel headers."""
+    return {int(cid): _clean(name) for cid, name in _CATPANEL_RE.findall(html)}
+
+
+def _category_years(html):
+    """{catID: sorted set of years that category has data} from the year toggles."""
+    years = {}
+    for y, cid in _CHANGEYEAR_RE.findall(html):
+        years.setdefault(int(cid), set()).add(int(y))
+    return years
+
+
+def _post_category(base_url, cat_id, year, timeout, retries=2):
+    """POST /AgendaCenter/UpdateCategoryList {year, catID} → the rows HTML for that
+    category+year (the year-toggle AJAX). Returns '' on failure."""
+    url = _abs(base_url, '/AgendaCenter/UpdateCategoryList')
+    data = urllib.parse.urlencode({'year': year, 'catID': cat_id}).encode()
+    req = urllib.request.Request(url, data=data, headers={
+        'User-Agent': 'votega.org/1.0',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Requested-With': 'XMLHttpRequest'})
+    for attempt in range(retries + 1):
+        try:
+            return urllib.request.urlopen(req, timeout=timeout).read().decode(
+                'utf-8', errors='replace')
+        except urllib.error.HTTPError as e:
+            if e.code < 500:
+                return ''  # 4xx: non-retryable
+        except Exception:
+            pass
+    return ''
+
+
+def _parse_rows(html, base_url, body):
+    """Parse the catAgendaRow blocks in a POST fragment, all under one body."""
+    out = []
+    for m in _ROW_RE.finditer(html):
+        rec = _parse_row(m.group(0), base_url, body)
+        if rec and rec['date']:
+            out.append(rec)
+    return out
+
+
+def fetch_agenda_center(base_url, module_id=AGENDA_MODULE_ID, timeout=30,
+                        years=DEFAULT_YEARS, only_bodies=None):
     """Fetch and parse a county's Agenda Center. Returns (meetings, bodies_seen).
 
-    Returns (None, None) if the page could not be fetched — the caller decides
-    whether a fetch failure should abort (it should: never overwrite good data
-    with nothing).
+    The static /AgendaCenter page shows only the most-recent year *per category*;
+    older years sit behind a year-toggle that fires a POST to UpdateCategoryList.
+    So we parse the static page for the category map (catID → body) and each
+    category's available years, then POST for every (catID, year) within the last
+    `years` years and merge — giving the full recent window with correct body
+    labels, not just whatever single year each category defaulted to. Pass
+    years=0/None to keep only the static default parse (no extra requests).
+
+    `only_bodies` (list of case-insensitive substrings) limits the year-toggle
+    POSTs to categories whose name matches one — pass the place's body_map /
+    include_bodies terms so a place that publishes 3 of 30 boards doesn't fetch
+    history for the 27 it drops. When None, every category is paginated.
+
+    Returns (None, None) only if the initial page fetch fails — the caller decides
+    whether that should abort (it should: never overwrite good data with nothing).
     """
     url = _abs(base_url, '/AgendaCenter')
     raw = fetch_bytes(url, label='%s Agenda Center' % base_url, timeout=timeout)
     if raw is None:
         return None, None
     html = raw.decode('utf-8', errors='replace')
+
+    # Base: the static default rows (labeled by their panel header).
     meetings = parse_agenda_center(html, base_url)
-    bodies_seen = [name for _, name in _header_positions(html)]
+    seen = {(m['body'], m['date'], m['id']) for m in meetings}
+
+    # Fill history: POST each active category's recent years, label by catID → body.
+    if years:
+        cats = _category_map(html)
+        cat_years = _category_years(html)
+        cutoff = dt.date.today().year - (years - 1)
+        wanted = [s.lower() for s in only_bodies] if only_bodies else None
+        for cid, body in cats.items():
+            if wanted and not any(w in body.lower() for w in wanted):
+                continue  # a body this place drops — don't fetch its history
+            for yr in sorted((y for y in cat_years.get(cid, ()) if y >= cutoff),
+                             reverse=True):
+                frag = _post_category(base_url, cid, yr, timeout)
+                for rec in _parse_rows(frag, base_url, body):
+                    key = (rec['body'], rec['date'], rec['id'])
+                    if key not in seen:
+                        seen.add(key)
+                        meetings.append(rec)
+        meetings.sort(key=lambda x: (x['date'], int(x['id'])), reverse=True)
+
+    bodies_seen = sorted({m['body'] for m in meetings}) or \
+        [name for _, name in _header_positions(html)]
     return meetings, bodies_seen

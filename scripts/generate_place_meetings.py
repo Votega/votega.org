@@ -78,8 +78,17 @@ def fetch_meetings(cfg):
     """Dispatch on platform. Returns (meetings, bodies_seen) or (None, None)."""
     platform = cfg.get('platform')
     if platform == 'civicplus':
+        # Only paginate history for the categories this place actually publishes —
+        # the body_map match terms / include_bodies (None = paginate every category,
+        # right for a body_label place that folds them all).
+        only = None
+        if cfg.get('body_map'):
+            only = [str(r['match']) for r in cfg['body_map']]
+        elif cfg.get('include_bodies'):
+            only = list(cfg['include_bodies'])
         return fetch_agenda_center(cfg['base_url'].rstrip('/'),
-                                   module_id=cfg.get('agenda_module_id', 65))
+                                   module_id=cfg.get('agenda_module_id', 65),
+                                   only_bodies=only)
     if platform == 'corecode':
         return fetch_council_meetings(
             cfg['base_url'].rstrip('/'),
