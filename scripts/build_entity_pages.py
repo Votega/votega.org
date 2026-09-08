@@ -132,6 +132,113 @@ def breadcrumb_ld(items):
                     "itemListElement": elements})
 
 
+def _nth_weekday(year, month, weekday, n):
+    """Date of the nth `weekday` (Mon=0…Sun=6) in month; e.g. 2nd Sunday of March."""
+    first = date(year, month, 1)
+    return date(year, month, 1 + (weekday - first.weekday()) % 7 + (n - 1) * 7)
+
+
+def _eastern_offset(d):
+    """UTC offset for America/New_York on date d, per US DST rules (2007+): EDT
+    (-04:00) from the 2nd Sunday of March to the 1st Sunday of November, else EST
+    (-05:00). Computed locally so the build needs no tzdata dependency."""
+    dst_start = _nth_weekday(d.year, 3, 6, 2)   # 2nd Sunday of March
+    dst_end = _nth_weekday(d.year, 11, 6, 1)    # 1st Sunday of November
+    return "-04:00" if dst_start <= d < dst_end else "-05:00"
+
+
+def _parse_clock(when):
+    """Pull a HH:MM:SS 24-hour time from a free-text schedule string like
+    "1st Tuesday of every month, 5:30 p.m." Returns None when no time is present."""
+    if not when:
+        return None
+    m = re.search(r"(\d{1,2})(?::(\d{2}))?\s*([ap])\.?\s*m\.?", when, re.I)
+    if not m:
+        return None
+    hour = int(m.group(1)) % 12
+    if m.group(3).lower() == "p":
+        hour += 12
+    return f"{hour:02d}:{int(m.group(2) or 0):02d}:00"
+
+
+def build_meeting_events(place, slug, name, permalink, org_id, limit=10):
+    """Server-rendered schema.org Event JSON-LD for a place's *upcoming* meetings.
+
+    Joins concrete dates from the meetings sidecar
+    (assets/data/local-<slug>-meetings.json, otherwise loaded client-side) with the
+    time + location from the curated per-body schedule in _data/places.yml, matched
+    on the meeting body. Emits only future-dated meetings (Google favors upcoming
+    events and a long tail of past ones adds no value). Returns (jsonld_str,
+    fingerprint_list); both empty when there is nothing upcoming.
+    """
+    path = os.path.join(SRC_DIR, f"local-{slug}-meetings.json")
+    if not os.path.exists(path):
+        return "", []
+    try:
+        with open(path, encoding="utf-8") as fh:
+            meetings = (json.load(fh) or {}).get("meetings", []) or []
+    except (ValueError, OSError):
+        return "", []
+
+    # Per-body schedule lookup (exact, then case-insensitive) → {when, location}.
+    sched = ((place.get("domains") or {}).get("meetings") or {}).get("schedule") or []
+    by_body = {s.get("body"): s for s in sched if isinstance(s, dict) and s.get("body")}
+    by_body_lc = {b.lower(): s for b, s in by_body.items()}
+
+    today = date.today().isoformat()
+    upcoming = sorted(
+        (m for m in meetings if isinstance(m, dict) and (m.get("date") or "") >= today),
+        key=lambda m: m["date"],
+    )[:limit]
+
+    events, fp = [], []
+    for m in upcoming:
+        d = _date_only(m["date"])
+        body = m.get("body") or ""
+        title = m.get("title") or "Meeting"
+        s = by_body.get(body) or by_body_lc.get(body.lower()) or {}
+        clock = _parse_clock(s.get("when"))
+        try:
+            start = f"{d}T{clock}{_eastern_offset(date.fromisoformat(d))}" if clock else d
+        except ValueError:
+            start = d
+
+        # Build a non-redundant name: some titles already restate the body/place
+        # (e.g. "Banks County Board of Commissioners Meeting"), others are generic
+        # ("Regular Meeting"). Join only when neither string contains the other.
+        base = f"{name} {body}".strip()
+        t = title.strip()
+        if t and t.lower() not in base.lower() and base.lower() not in t.lower():
+            label = f"{base} — {t}"
+        else:
+            label = t if len(t) >= len(base) else base
+
+        cancelled = "cancel" in title.lower()
+        ev = {
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "name": label,
+            "startDate": start,
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "eventStatus": ("https://schema.org/EventCancelled" if cancelled
+                            else "https://schema.org/EventScheduled"),
+            "organizer": {"@id": org_id},
+            "url": SITE_URL + permalink,
+        }
+        loc = (s.get("location") or "").strip()
+        if loc:
+            ev["location"] = {"@type": "Place", "name": loc, "address": loc}
+        agenda = m.get("agendaUrl")
+        if agenda:
+            ev["subjectOf"] = {"@type": "CreativeWork", "name": "Agenda", "url": agenda}
+        events.append(ev)
+        fp.append(f"{start}|{ev['name']}")
+
+    if not events:
+        return "", []
+    return "\n".join(json_ld(e) for e in events), fp
+
+
 # ─────────────────────────── GA Legislators ───────────────────────────
 
 def build_ga_legislators(records, urls, prior, new_state):
@@ -603,13 +710,16 @@ def build_places(records, urls, prior, new_state):
                     f"Board and commission meetings aggregated from the "
                     f"{'city' if ptype == 'city' else 'county'}'s official Agenda Center.")
 
+        org_id = SITE_URL + permalink + "#organization"
         ld = json_ld({
             "@context": "https://schema.org", "@type": "GovernmentOrganization",
+            "@id": org_id,
             "name": name, "url": SITE_URL + permalink,
             "areaServed": {"@type": "AdministrativeArea", "name": name},
             "containedInPlace": {"@type": "State", "name": "Georgia"},
         })
         bc = breadcrumb_ld([("Home", "/"), ("Local Government", "/local/"), (name, None)])
+        events_ld, events_fp = build_meeting_events(p, slug, name, permalink, org_id)
 
         entity = {
             "type": "place", "slug": slug, "placeType": ptype, "name": name,
@@ -618,7 +728,8 @@ def build_places(records, urls, prior, new_state):
             "domains": domains,  # lets place.html branch server-side (officials/meetings)
         }
         lastmod = resolve_lastmod(
-            permalink, {"e": entity, "t": share_title, "d": desc, "dom": domains},
+            permalink,
+            {"e": entity, "t": share_title, "d": desc, "dom": domains, "ev": events_fp},
             data_date, prior, new_state)
 
         place_js = {"slug": slug, "placeName": name,
@@ -632,9 +743,10 @@ def build_places(records, urls, prior, new_state):
             "last_modified_at": lastmod,
             "entity": entity,
         }
-        body = (f"<script>window.VOTEGA_PLACE = {json.dumps(place_js)};</script>\n"
-                f"{ld}\n{bc}\n"
-                f"{{% include entity/place.html %}}")
+        head = f"<script>window.VOTEGA_PLACE = {json.dumps(place_js)};</script>\n{ld}\n{bc}\n"
+        if events_ld:
+            head += f"{events_ld}\n"
+        body = head + "{% include entity/place.html %}"
         write_page("local", slug, fm, body)
         count += 1
     return count
