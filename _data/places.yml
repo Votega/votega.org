@@ -668,11 +668,12 @@ places:
     region: Broader Metropolitan Statistical Area
     domains:
       meetings:
-        # CoreCode CMS: a flat council-meetings table (minutes PDFs + Vimeo
-        # recordings; no agendas published). See scripts/lib/corecode.py.
-        platform: granicus
+        # IQM2 (Accela/Granicus Meeting Manager) — the Citizens portal at
+        # socialcirclecityga.iqm2.com/Citizens/, NOT Granicus ViewPublisher. No
+        # adapter yet, so this is link-only (the Calendar lists agendas/minutes).
+        platform: custom
         base_url: https://www.socialcirclega.gov/departments/mayor-and-council
-        agendas_url: "https://socialcirclecityga.iqm2.com/Citizens/Default.aspx"
+        agendas_url: "https://socialcirclecityga.iqm2.com/Citizens/Calendar.aspx"
         # Fill `when:` to show a "When they meet" note (see Newton for the shape).
         schedule:
           - body: City Council
