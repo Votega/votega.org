@@ -485,11 +485,6 @@
     return null;
   }
 
-  function getBasePath() {
-    const pathname = window.location.pathname;
-    return pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
-  }
-
   // Race / candidate id -> clean entity URL, falling back to the legacy shell route.
   function raceHref(id) {
     const clean = RACE_URLS[id];

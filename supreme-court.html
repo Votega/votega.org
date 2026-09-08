@@ -188,9 +188,6 @@ share-description: "The Supreme Court of the United States - the nine justices, 
   const DECISIONS_URL = 'assets/data/scotus-decisions.json';
   const DECISIONS_PAGE_SIZE = 10;
 
-  function getBasePath() {
-    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
-  }
 
   function fmt(iso) {
     if (!iso) return '—';
