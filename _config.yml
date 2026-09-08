@@ -357,6 +357,11 @@ exclude:
   # Build-time data generation; has no place in the served site
   - scripts/
   - tools/
+  # Executive-order source text: ~3,400 .txt files (~17MB) read only by the EO
+  # enrich/publish scripts at build time. Nothing on the served site links them
+  # (the EO JSON carries sha256/url/archiveUrl, not the text), so keep them in the
+  # repo but stop Jekyll copying them into _site on every build.
+  - assets/data/eo-text/
   # Theme/gem scaffolding inherited from Beautiful Jekyll
   - Appraisals
   - beautiful-jekyll-theme.gemspec
