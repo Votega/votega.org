@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-08T18:11:24.835355+00:00",
+    "generatedAt": "2026-09-08T23:03:31.701811+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,35 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 107,
+    "count": 111,
     "windowDays": 45,
-    "entityTagged": 59,
+    "entityTagged": 60,
     "topicCounts": {
-      "healthcare": 19,
-      "elections": 15,
+      "elections": 16,
+      "budget": 5,
+      "education": 8,
+      "healthcare": 21,
       "courts": 9,
-      "education": 6,
-      "budget": 4,
       "ethics": 5,
       "surveillance": 2
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
+      ]
+    },
+    "vg-ga-p-000335": {
+      "name": "Keisha R. Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
       "url": null,
@@ -68,20 +82,6 @@
       "name": "Andrew S. Clyde",
       "url": null,
       "bioguideId": "C001116"
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
-      ]
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha R. Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
     },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
@@ -159,6 +159,58 @@
     }
   },
   "items": [
+    {
+      "id": "02756ac60bb2",
+      "title": "Dragon Con celebrates 40th anniversary with 75,000 fans in downtown Atlanta",
+      "url": "https://www.gpb.org/news/2026/09/08/dragon-con-celebrates-40th-anniversary-75000-fans-in-downtown-atlanta",
+      "source": "GPB News",
+      "publishedAt": "2026-09-08T20:45:00+00:00",
+      "snippet": "Dragon Con's 40th anniversary five-day convention brought 75,000 fans to downtown Atlanta while giving back to the community through charity fundraising, a children’s book drive and a record-setting b",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "063552651b4e",
+      "title": "Georgia Today: Governor candidates campaign; Measles cases rise; Georgia opens first baby box",
+      "url": "https://www.gpb.org/news/2026/09/08/georgia-today-governor-candidates-campaign-measles-cases-rise-georgia-opens-first",
+      "source": "GPB News",
+      "publishedAt": "2026-09-08T20:34:44+00:00",
+      "snippet": "Georgia gubernatorial candidates Keisha Lance Bottoms and Rick Jackson take their campaigns to small businesses as they outline competing plans for Medicaid, taxes, education and public safety. A prop",
+      "entityIds": [
+        "vg-ga-p-000368",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections",
+        "budget",
+        "education",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "bc0f3073fb10",
+      "title": "How do we know how old sharks are? A new University of Georgia study looks at their DNA",
+      "url": "https://www.gpb.org/news/2026/09/08/how-do-we-know-how-old-sharks-are-new-university-of-georgia-study-looks-at-their",
+      "source": "GPB News",
+      "publishedAt": "2026-09-08T20:01:00+00:00",
+      "snippet": "A new study from the University of Georgia looks to estimate the age of sharks by analyzing their DNA using a blood sample.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "ec625a34f959",
+      "title": "Veterans in Georgia can get mental health help by dialing 988. Too many don't know it",
+      "url": "https://www.gpb.org/news/2026/09/08/veterans-in-georgia-can-get-mental-health-help-by-dialing-988-too-many-dont-know-it",
+      "source": "GPB News",
+      "publishedAt": "2026-09-08T18:50:00+00:00",
+      "snippet": "Data from the U.S. Department of Veterans Affairs says over half of veterans who died by suicide in 2023 were not diagnosed with or treated for mental illness in the last year of their lives.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
     {
       "id": "56270dc33c9b",
       "title": "Public health officials in Georgia trace possible measles exposures after outbreak at a daycare",
