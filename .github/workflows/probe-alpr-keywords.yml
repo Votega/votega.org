@@ -1,0 +1,45 @@
+name: Probe ALPR keywords (diagnostic)
+
+# Measures a candidate ALPR/license-plate-reader keyword set against real agenda
+# PDFs BEFORE an `alpr` subject is added to lib/meeting_topics.py: recall against
+# hand-verified Flock docs, false positives against a control sample. Read-only —
+# writes nothing, commits nothing; the report prints to this job's log. Manual
+# only. Safe to delete once the keywords are tuned and the `alpr` rule ships.
+on:
+  workflow_dispatch:
+    inputs:
+      control:
+        description: 'Control meetings sampled per place (false-positive net)'
+        required: false
+        default: '2'
+      slugs:
+        description: 'Comma-separated place slugs for the control set (blank = a couple from every place)'
+        required: false
+        default: ''
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      # Same tools as update-local-government.yml: pdftotext does the work,
+      # tesseract is the scanned-PDF fallback so image-only agendas still classify.
+      - name: Install PDF text tools
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils tesseract-ocr
+
+      - name: Run ALPR keyword probe
+        run: |
+          python scripts/probe_alpr_keywords.py \
+            --control "${{ inputs.control }}" \
+            ${{ inputs.slugs && format('--slugs {0}', inputs.slugs) || '' }}
