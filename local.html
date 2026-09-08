@@ -65,6 +65,8 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
   .lh-legend-items { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 0.5rem; }
   .lh-legend-item { display: flex; align-items: baseline; gap: 0.4rem; flex: 1 1 18rem; }
   .lh-legend-item .lh-flag { flex: none; white-space: nowrap; }
+  .lh-legend-caveat { margin: 0.7rem 0 0; padding-top: 0.6rem; border-top: 1px solid #e5e7eb; }
+  .lh-legend-caveat strong { color: #333; }
 </style>
 
 <p class="lh-note">
@@ -89,6 +91,13 @@ share-description: "Public meetings, agendas, minutes, and officials for Georgia
       Land-use business on recent agendas — rezonings, variances, special-use permits, annexations, or major developments.
     </span>
   </div>
+  <p class="lh-legend-caveat">
+    <strong>A badge marks discussion, not action.</strong> These badges come from scanning the text of each
+    government's published agendas and minutes for topic keywords. A badge means the subject <em>came up</em>
+    at a recent meeting — it does <strong>not</strong> mean the government approved it, funded it, or plans to.
+    The topic may have been raised by a resident during public comment, mentioned in passing, tabled, or voted
+    down. Open the place and follow the linked agenda or minutes to see the actual context.
+  </p>
 </div>
 
 {%- comment %} ---- Card renderer (county or city). Sets domain indicators from the
