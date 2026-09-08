@@ -1070,26 +1070,6 @@
   // roll call?" One linear pass over the already-loaded vote data; no extra
   // fetch. De-duplicated per member as a defensive measure (the generator
   // already enforces this, so it's normally a no-op).
-  function buildPartyVoteIndex(allMemberVotes, partyMap) {
-    const index = new Map(); // voteId -> { [party]: { yea, nay } }
-    for (const voterId in allMemberVotes) {
-      const party = partyMap.get(voterId);
-      if (!party) continue;
-      const seen = new Set();
-      for (const { voteId, vote } of allMemberVotes[voterId]) {
-        if (vote !== 'Yea' && vote !== 'Nay') continue;
-        if (seen.has(voteId)) continue;
-        seen.add(voteId);
-        let tally = index.get(voteId);
-        if (!tally) { tally = {}; index.set(voteId, tally); }
-        let pt = tally[party];
-        if (!pt) { pt = { yea: 0, nay: 0 }; tally[party] = pt; }
-        pt[vote === 'Yea' ? 'yea' : 'nay']++;
-      }
-    }
-    return index;
-  }
-
   // Party voting alignment: share of this member's own recorded Yea/Nay
   // votes that matched their own party's majority position on that same
   // roll call. Only counted when the party had a clear (non-tied) majority
@@ -1146,30 +1126,30 @@
     const container = document.getElementById('votingHistory');
     if (!member.id || !container) return;
 
-    const VOTES_URL = getBasePath() + 'assets/data/ga-member-votes.json';
+    // Per-entity data slices (build_member_votes_slices.py): a page fetches the
+    // shared vote index (metadata + voteIds + votes, each with a precomputed
+    // partyTally) plus just THIS member's ~14KB compact slice — instead of the
+    // whole ~3.7MB ga-member-votes.json with every member's votes. The slice name
+    // mirrors member_slug() in that script: id → [^a-zA-Z0-9]+ collapsed to '-'.
+    const base       = getBasePath();
+    const INDEX_URL  = base + 'assets/data/ga-votes-index.json';
+    const SLICE_URL  = base + 'assets/data/ga-votes/'
+      + member.id.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '') + '.json';
     try {
-      const res = await fetch(VOTES_URL);
-      if (!res.ok) return; // silently skip if file not yet generated
+      const [idxRes, sliceRes] = await Promise.all([fetch(INDEX_URL), fetch(SLICE_URL)]);
+      if (!idxRes.ok) return; // silently skip if the shared index isn't generated yet
 
-      const data        = await res.json();
-      // ga-member-votes.json uses a compact schema: `voteIds` interns each vote id,
-      // and memberVotes values are { indexString: code } (Y/N/O). Decode the whole
-      // map once, back to the legacy [{voteId, vote}] shape the code below expects,
-      // so every helper stays unchanged. Legacy files (no voteIds) pass through.
-      if (Array.isArray(data.voteIds)) {
-        const CODE = { Y: 'Yea', N: 'Nay', NV: 'Not Voting', P: 'Present', A: 'Absent', E: 'Excused', O: 'Other' };
-        const ids = data.voteIds;
-        const decoded = {};
-        for (const pid in data.memberVotes) {
-          const compact = data.memberVotes[pid];
-          const list = [];
-          for (const i in compact) list.push({ voteId: ids[+i], vote: CODE[compact[i]] || compact[i] });
-          decoded[pid] = list;
-        }
-        data.memberVotes = decoded;
+      const data = await idxRes.json();   // { metadata, voteIds, votes(+partyTally) }
+      const ids  = data.voteIds || [];
+      const CODE = { Y: 'Yea', N: 'Nay', NV: 'Not Voting', P: 'Present', A: 'Absent', E: 'Excused', O: 'Other' };
+      // Decode only this member's compact { index: code } slice into the legacy
+      // [{ voteId, vote }] shape the rest of this function expects.
+      const memberVotes = [];
+      if (sliceRes.ok) {
+        const compact = (await sliceRes.json()).compact || {};
+        for (const i in compact) memberVotes.push({ voteId: ids[+i], vote: CODE[compact[i]] || compact[i] });
       }
-      const memberVotes = (data.memberVotes || {})[member.id];
-      if (!memberVotes || memberVotes.length === 0) {
+      if (memberVotes.length === 0) {
         container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No voting record found for this member in our data for this session. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';
         return;
       }
@@ -1208,8 +1188,12 @@
       const chartHtml = buildVoteChart(yeaCount, nayCount, otherCount, sorted.length);
       const participationHtml = buildParticipationSummary(memberVotes, votesIndex, member.chamber, incomplete);
 
-      const partyMap = new Map((allMembers || []).filter(m => m.party).map(m => [m.id, m.party]));
-      const partyVoteIndex = buildPartyVoteIndex(data.memberVotes || {}, partyMap);
+      // Party-line positions are precomputed at build time (partyTally per vote in
+      // the shared index), so loyalty no longer needs every member's votes here.
+      const partyVoteIndex = new Map();
+      for (const vid in votesIndex) {
+        if (votesIndex[vid].partyTally) partyVoteIndex.set(vid, votesIndex[vid].partyTally);
+      }
       const partyLoyaltyHtml = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex, incomplete);
 
       // Turn this member's own alignment/participation figures into a gateway to the
