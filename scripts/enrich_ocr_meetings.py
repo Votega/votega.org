@@ -64,7 +64,7 @@ DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 # storage, and Gwinnett serves agenda PDFs from its own host — all ride the same
 # poppler path.
 OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'primegov', 'teammunicode',
-                 'gwinnett'}
+                 'gwinnett', 'iqm2'}
 
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (meeting-topic-enricher)',
