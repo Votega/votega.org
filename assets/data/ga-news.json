@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-08T13:10:22.432632+00:00",
+    "generatedAt": "2026-09-08T18:11:24.835355+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -25,17 +25,25 @@
     "windowDays": 45,
     "entityTagged": 59,
     "topicCounts": {
-      "education": 7,
-      "healthcare": 18,
-      "courts": 9,
+      "healthcare": 19,
       "elections": 15,
+      "courts": 9,
+      "education": 6,
       "budget": 4,
-      "ethics": 6,
+      "ethics": 5,
       "surveillance": 2
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
+    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
@@ -79,14 +87,6 @@
       "name": "Raphael G. Warnock",
       "url": null,
       "bioguideId": "W000790"
-    },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
     },
     "vg-ga-p-000256": {
       "name": "Rick W. Allen",
@@ -160,6 +160,42 @@
   },
   "items": [
     {
+      "id": "56270dc33c9b",
+      "title": "Public health officials in Georgia trace possible measles exposures after outbreak at a daycare",
+      "url": "https://www.gpb.org/news/2026/09/08/public-health-officials-in-georgia-trace-possible-measles-exposures-after-outbreak",
+      "source": "GPB News",
+      "publishedAt": "2026-09-08T17:35:00+00:00",
+      "snippet": "Measles infections in an Atlanta-area daycare have been confirmed among eight children who were unvaccinated or not fully vaccinated, according to the Georgia Department of Public Health.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "5cd7743dabcb",
+      "title": "The Cost of Keeping Cool: Georgia Power Customers Struggle With Summer Bills",
+      "url": "https://thecurrentga.org/2026/09/08/the-cost-of-keeping-cool-georgia-power-customers-struggle-with-summer-bills/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-08T15:56:19+00:00",
+      "snippet": "High electricity bills and rising temperatures have led to significant disconnection rates at Georgia Power, disproportionately affecting residents like Donica Odell during extreme summer heat.\nThe Cu",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "5279697f9f4d",
+      "title": "Carr Charges Cobb County Defense Attorney with Pandering and Sexual Battery",
+      "url": "https://law.georgia.gov/press-releases/2026-09-08/carr-charges-cobb-county-defense-attorney-pandering-and-sexual-battery",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-09-08T12:00:00+00:00",
+      "snippet": "COBB COUNTY, GA – Georgia Attorney General Chris Carr today announced that his office has filed a formal accusation in Cobb County charging Roger L. Curry, 77, with Pandering and Sexual Battery. Curry",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
       "id": "fcedeaf34daa",
       "title": "You still can’t smoke medical cannabis in Georgia, but you can vape it. What’s the difference?",
       "url": "https://georgiarecorder.com/2026/09/08/you-still-cant-smoke-medical-cannabis-in-georgia-but-you-can-vape-it-whats-the-difference/",
@@ -178,18 +214,6 @@
       "snippet": "The Georgia Department of Natural Resources removed the name Stephen Foster from a state park, though a spokesman said the name change is unrelated to the 19th century songwriter’s association with ra",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "00fada877c27",
-      "title": "Blue light damage comes from the sun, digital devices. Here's how to protect your eyes.",
-      "url": "https://www.gpb.org/news/2026/09/07/blue-light-damage-comes-the-sun-digital-devices-heres-how-protect-your-eyes",
-      "source": "GPB News",
-      "publishedAt": "2026-09-07T12:30:00+00:00",
-      "snippet": "Blue light exposure, more than any other wavelength, can damage the eyes and vision over time, according to a new study from the University of Georgia.",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
     },
     {
       "id": "2e964c81025c",
@@ -472,18 +496,6 @@
       "snippet": "ATLANTA — A Stone Mountain rapper will spend six years in federal prison after pleading guilty to charges involving the theft of thousands of checks from the mail. Shamarri Tache Brooks, 34, pleaded g",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "557d73f3eea1",
-      "title": "New Georgia news sites draw scrutiny over partisan funding",
-      "url": "https://thecurrentga.org/2026/08/31/new-georgia-news-sites-draw-scrutiny-over-partisan-funding/",
-      "source": "The Current GA",
-      "publishedAt": "2026-08-31T20:39:31+00:00",
-      "snippet": "Two new Georgia news websites, Peach State Post and Courier Georgia, have emerged as partisan platforms utilizing a mix of real reporting and political messaging ahead of critical Senate elections.\nTh",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "e81e209da09f",
@@ -1409,20 +1421,6 @@
       "topics": [
         "elections",
         "healthcare"
-      ]
-    },
-    {
-      "id": "713baa74531e",
-      "title": "Carr Secures New Indictment for Trafficking of Missing Teen in Richmond County",
-      "url": "https://law.georgia.gov/press-releases/2026-08-05/carr-secures-new-indictment-trafficking-missing-teen-richmond-county",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-08-05T12:00:00+00:00",
-      "snippet": "RICHMOND COUNTY, GA – Georgia Attorney General Chris Carr today announced that his Human Trafficking Prosecution Unit has secured the indictment of William Wyche, 34, of Hephzibah, for the trafficking",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": [
-        "ethics"
       ]
     },
     {
