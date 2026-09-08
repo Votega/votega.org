@@ -660,6 +660,25 @@ places:
             when: "1st Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: "Historic Walton County Courthouse, 111 S Broad Street, Monroe"            # optional
 
+  - slug: socialcircle
+    name: City of Social Circle
+    type: city
+    fips: null
+    parentCounty: walton
+    region: Broader Metropolitan Statistical Area
+    domains:
+      meetings:
+        # CoreCode CMS: a flat council-meetings table (minutes PDFs + Vimeo
+        # recordings; no agendas published). See scripts/lib/corecode.py.
+        platform: granicus
+        base_url: https://www.socialcirclega.gov/departments/mayor-and-council
+        agendas_url: "https://socialcirclecityga.iqm2.com/Citizens/Default.aspx"
+        # Fill `when:` to show a "When they meet" note (see Newton for the shape).
+        schedule:
+          - body: City Council
+            when: "1st Thursday of every month, 6:30 p.m."
+            location: "City Community Room, 138 East Hightower Trail, Social Circle"
+
   - slug: carrollton
     name: City of Carrollton
     type: city

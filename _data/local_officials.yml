@@ -2105,3 +2105,72 @@ jurisdictions:
         next_election: 2028
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/walton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+
+  - id: socialcircle
+    name: City of Social Circle
+    type: city                      # city | county
+    county: Walton                  # home county — powers county cross-linking
+    body: City Council
+    partisan: false                 # municipal seats are nonpartisan -> party chip hidden
+    official_url: https://www.socialcirclega.gov/departments/mayor-and-council
+    related_pages:                  # cross-links to existing VoteGA content
+      - { }
+    notes: ""
+    members:
+      - name: "David Keener"
+        role: Mayor
+        title: Mayor
+        seat: "At-large"
+        party: Nonpartisan
+        email: "dkeener@socialcirclega.gov"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: false
+        tie_break_only: true
+        source: "https://www.socialcirclega.gov/departments/mayor-and-council"
+      - name: "Traysa Price"
+        role: Council Member
+        seat: "District 1"
+        party: Nonpartisan
+        email: "tprice@socialcirclega.gov"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.socialcirclega.gov/departments/mayor-and-council"
+      - name: "Tyson Jackson"
+        role: Council Member
+        seat: "District 2"
+        party: Nonpartisan
+        email: "tjackson@socialcirclega.gov"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.socialcirclega.gov/departments/mayor-and-council"
+      - name: "Adam Conavay"
+        role: Council Member
+        seat: "District 3"
+        party: Nonpartisan
+        email: "aconavay@socialcirclega.gov"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.socialcirclega.gov/departments/mayor-and-council"
+      - name: "Steve Shelton"
+        role: Council Member
+        seat: "District 4"
+        party: Nonpartisan
+        email: "jsshelton@socialcirclega.gov"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.socialcirclega.gov/departments/mayor-and-council"
