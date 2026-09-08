@@ -16,7 +16,7 @@
  *   load(ids)                      -> Promise<{vgId, name, items}>
  *   renderCards(items, opts)       -> HTML string (opts: {limit, hubHref, name})
  *   hubHref(base, vgId)            -> deep-link to the hub, pre-filtered
- *   basePath()                     -> '/', or '/votega.org-TEST/' on the test path
+ *   basePath()                     -> '/' (site is served at the domain root)
  */
 window.EntityNews = (function () {
   'use strict';
@@ -25,7 +25,7 @@ window.EntityNews = (function () {
   // A bare-relative fetch resolves under the entity directory on clean URLs
   // (/us-congress/<slug>/, /ga-legislators/<slug>/) and 404s — see CLAUDE.md.
   function basePath() {
-    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+    return '/';
   }
 
   var NEWS_URL = basePath() + 'assets/data/ga-news.json';

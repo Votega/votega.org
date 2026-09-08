@@ -118,7 +118,7 @@ css:
   var GA_URLS  = {{ site.data.entity_urls['ga-legislator'] | jsonify }};
 
   function basePath() {
-    return window.location.pathname.includes('/votega.org-TEST/') ? '/votega.org-TEST/' : '/';
+    return '/';
   }
   // Prefer the clean entity URL; fall back to the legacy query-string shell if the
   // member isn't in the map yet (e.g. a just-seated member before the pages rebuild).
