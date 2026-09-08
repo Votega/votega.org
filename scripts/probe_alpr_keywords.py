@@ -30,11 +30,12 @@ egress, so fetches there fail with a proxy 403, which is not a keyword result.
 """
 
 import argparse
+import glob
 import json
 import os
+import re
 import sys
 import tempfile
-import glob
 
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.http import fetch_bytes  # noqa: E402
@@ -51,10 +52,15 @@ _PDF_HEADERS = {
 # ── Candidate ALPR taxonomy ────────────────────────────────────────────────────
 # Two layers. GENERIC is the recall net: even an unknown vendor's contract almost
 # always contains one of these phrases, so it catches vendors we've never heard
-# of. VENDORS adds attribution. Deliberately conservative on ambiguous tokens:
-# bare 'flock' (flock of geese), ' lpr ' (many acronyms), and lone surnames like
-# 'leonardo' are OMITTED — the probe exists to prove the safe set is enough
-# before anyone reaches for the risky ones.
+# of. VENDORS adds attribution.
+#
+# First real run (recall 1/3) proved the generic net alone under-matches: agenda/
+# minutes language calls the company plain "Flock" and its product "cameras", not
+# "license plate reader" — so bare `flock` is REQUIRED for recall. It carries a
+# false-positive risk ("a flock of geese"), so matching is word-boundary (\bflock\b
+# skips "flocking"/"flocked") and the probe prints context around every hint word
+# so real FPs are caught by eye. Still-omitted ambiguous tokens: bare ' lpr '
+# (many acronyms) and lone vendor surnames like 'leonardo'.
 ALPR_KEYWORDS = {
     # Generic capability language — the workhorse.
     'license plate reader':        'generic',
@@ -64,9 +70,9 @@ ALPR_KEYWORDS = {
     'plate reader':                'generic',
     'lpr camera':                  'generic',
     'alpr':                        'generic',
+    # Flock — bare token, because that is how agendas name it.
+    'flock':                       'flock',
     # Vendors beyond Flock.
-    'flock safety':                'flock',
-    'flock group':                 'flock',
     'vigilant solutions':          'motorola',
     'motorola solutions':          'motorola',
     'mobile-vision':               'motorola',
@@ -84,16 +90,47 @@ ALPR_KEYWORDS = {
     'fusus':                       'axon',
 }
 
+# Compiled word-boundary matchers — \b so 'flock' skips 'flocking', 'alpr' skips
+# larger tokens, and multi-word phrases still match across single spaces.
+_MATCHERS = {p: re.compile(r'\b' + re.escape(p) + r'\b') for p in ALPR_KEYWORDS}
+
+# Diagnostic only: words that HINT at surveillance without being keywords, so a
+# missed known-ALPR doc reveals the actual vocabulary to add. Not used to tag.
+HINT_WORDS = ['flock', 'license plate', 'plate reader', 'lpr', 'alpr', 'camera',
+              'surveillance', 'safer city', 'safe city', 'real-time crime',
+              'security camera', 'genetec', 'rekor', 'motorola', 'vigilant']
+
 
 def classify(text):
-    """Return {vendor_tag: [phrases]} for every keyword present. Substring match,
-    padded so word-ish phrases don't glue onto neighbours."""
-    t = ' ' + (text or '').lower() + ' '
+    """Return {vendor_tag: [phrases]} for every keyword present (word-boundary)."""
+    t = (text or '').lower()
     hits = {}
     for phrase, tag in ALPR_KEYWORDS.items():
-        if phrase in t:
+        if _MATCHERS[phrase].search(t):
             hits.setdefault(tag, []).append(phrase)
     return hits
+
+
+def hint_context(text, width=55, cap=6):
+    """Short snippets around HINT_WORDS — shows the raw language near a hint so we
+    can see WHY a doc matched or missed and what phrasing to add. Deduped, capped."""
+    t = (text or '').lower()
+    seen = set()
+    out = []
+    for w in HINT_WORDS:
+        i = t.find(w)
+        if i < 0:
+            continue
+        a = max(0, i - width)
+        b = min(len(t), i + len(w) + width)
+        snip = ' '.join(t[a:b].split())
+        if snip in seen:
+            continue
+        seen.add(snip)
+        out.append('%-14s …%s…' % (w, snip))
+        if len(out) >= cap:
+            break
+    return out
 
 
 def get_text(url):
@@ -150,9 +187,9 @@ def control_docs(slugs, per_place):
 def run(url):
     r = get_text(url)
     if r is None:
-        return None, None, None
+        return None, None, None, None
     text, method = r
-    return classify(text), len(text), method
+    return classify(text), len(text), method, text
 
 
 def main():
@@ -172,7 +209,7 @@ def main():
     print('=== RECALL — known ALPR docs (every one should match) ===')
     recall_hit = 0
     for name, url in KNOWN_ALPR:
-        hits, chars, method = run(url)
+        hits, chars, method, text = run(url)
         if hits is None:
             print('  [FETCH-FAIL] %s' % name)
             continue
@@ -181,13 +218,17 @@ def main():
         print('  %s chars=%-6s %-9s %s' % (ok, chars, method, name))
         if hits:
             print('           %s' % json.dumps(hits))
+        # Always show the raw language near hint words — reveals the real
+        # vocabulary behind a match, and why a MISS missed.
+        for line in hint_context(text):
+            print('           · %s' % line)
 
     print('\n=== FALSE POSITIVES — control meetings (most should be clean) ===')
     controls = control_docs(slugs, args.control)
     fp = 0
     scanned = 0
     for name, url in controls:
-        hits, chars, method = run(url)
+        hits, chars, method, text = run(url)
         if hits is None:
             print('  [FETCH-FAIL] %s' % name)
             continue
@@ -196,6 +237,8 @@ def main():
             fp += 1
             print('  HIT   chars=%-6s %s' % (chars, name))
             print('           %s' % json.dumps(hits))
+            for line in hint_context(text):
+                print('           · %s' % line)
     print('  (%d control docs clean of %d scanned)' % (scanned - fp, scanned))
 
     print('\n=== SUMMARY ===')
