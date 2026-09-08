@@ -1,12 +1,13 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-08T10:57:26Z",
+  "generatedAt": "2026-09-08T16:02:10Z",
   "source": "Fulton County (Legistar structured API)",
   "place": "Fulton County",
   "count": 19
  },
  "summary": {
   "flags": [
+   "alpr",
    "data-center",
    "land-use",
    "millage-budget"
@@ -17,7 +18,8 @@
    "development": 73,
    "contract": 125,
    "appointment": 76,
-   "data-center": 5
+   "data-center": 5,
+   "alpr": 1
   },
   "dataCenterItems": [
    {
@@ -123,7 +125,16 @@
     ]
    }
   ],
-  "landUseMeetings": 14
+  "landUseMeetings": 14,
+  "alprItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-06-03",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6387&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "terms": []
+   }
+  ],
+  "alprMeetings": 1
  },
  "meetings": [
   {
@@ -199,8 +210,8 @@
    "topics": {
     "appointment": 1,
     "development": 11,
-    "millage-budget": 3,
-    "contract": 20
+    "contract": 20,
+    "millage-budget": 3
    },
    "flags": [
     "land-use",
@@ -646,12 +657,14 @@
     "millage-budget": 2,
     "development": 4,
     "contract": 8,
-    "data-center": 1
+    "data-center": 1,
+    "alpr": 1
    },
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": [
     {

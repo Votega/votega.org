@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-08T10:57:52Z",
+  "generatedAt": "2026-09-08T16:02:30Z",
   "source": "City of Social Circle (iqm2 agenda/minutes PDFs, poppler+OCR)",
   "place": "City of Social Circle",
-  "count": 17
+  "count": 19
  },
  "summary": {
   "flags": [
@@ -11,16 +11,16 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-22",
+  "lastActivity": "2026-09-15",
   "topicTotals": {
-   "variance": 5,
-   "rezoning": 7,
-   "development": 5,
-   "contract": 11,
-   "appointment": 10,
+   "variance": 6,
+   "rezoning": 9,
+   "development": 6,
+   "contract": 12,
+   "appointment": 12,
    "comprehensive-plan": 4,
-   "millage-budget": 4,
-   "data-center": 3,
+   "millage-budget": 5,
+   "data-center": 4,
    "annexation": 3
   },
   "dataCenterItems": [
@@ -42,8 +42,8 @@
   ],
   "landUseItems": [
    {
-    "title": "Planning Commission - Regular Meeting",
-    "date": "2026-09-22",
+    "title": "Mayor and Council - Regular Meeting",
+    "date": "2026-09-15",
     "sourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2163&Inline=True",
     "tags": [
      "variance"
@@ -94,21 +94,32 @@
      "rezoning",
      "variance"
     ]
+   },
+   {
+    "title": "Planning Commission - Regular Meeting",
+    "date": "2026-01-27",
+    "sourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2112&Inline=True",
+    "tags": [
+     "rezoning",
+     "variance"
+    ]
    }
   ],
-  "landUseMeetings": 9
+  "landUseMeetings": 11,
+  "alprItems": [],
+  "alprMeetings": 0
  },
  "meetings": [
   {
-   "id": "2711",
-   "date": "2026-09-22",
-   "body": "Planning Commission",
-   "title": "Planning Commission - Regular Meeting",
+   "id": "2679",
+   "date": "2026-09-15",
+   "body": "City Council",
+   "title": "Mayor and Council - Regular Meeting",
    "sourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2163&Inline=True",
    "textSource": "agenda",
    "textSourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2163&Inline=True",
    "textMethod": "pdftotext",
-   "textChars": 7168,
+   "textChars": 6103,
    "pdfSha256": "7258e60a3f6ef04b09b2e496c89dbbf1038eca03008f4cd6d4176f2d2fb9fb52",
    "topics": {
     "variance": 1
@@ -639,6 +650,85 @@
    "matchedTerms": [],
    "flags": [],
    "dataCenterItems": []
+  },
+  {
+   "id": "2616",
+   "date": "2026-01-27",
+   "body": "Planning Commission",
+   "title": "Planning Commission - Regular Meeting",
+   "sourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2112&Inline=True",
+   "textSource": "agenda",
+   "textSourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2112&Inline=True",
+   "textMethod": "pdftotext",
+   "textChars": 1266,
+   "pdfSha256": "dc5dc715673f73b664a65d16b5a589cd7f748d507178b46dede638ce0b2518f9",
+   "topics": {
+    "appointment": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "rezon",
+    "variance"
+   ],
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2662",
+   "date": "2026-01-20",
+   "body": "City Council",
+   "title": "Mayor and Council - Regular Meeting",
+   "sourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2119&Inline=True",
+   "textSource": "agenda",
+   "textSourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2119&Inline=True",
+   "textMethod": "pdftotext",
+   "textChars": 7198,
+   "pdfSha256": "f9e900afaf97e3be98df86e204d7c498bdcd4353a4ae7b816752a0635b2ab58f",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "data-center": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "data-center",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "data center",
+    "rezon",
+    "warehouse"
+   ],
+   "flags": [
+    "land-use",
+    "data-center",
+    "millage-budget"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Mayor and Council - Regular Meeting",
+     "date": "2026-01-20",
+     "sourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2119&Inline=True"
+    }
+   ]
   }
  ]
 }
