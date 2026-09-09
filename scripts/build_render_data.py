@@ -225,8 +225,15 @@ def build_bills_stats(data, cfg):
     for (label, n), (x, y, w, h) in zip(tiles_in, rects):
         t = (n / mx) ** 0.55  # ramp: darker = more bills
         fill = _lerp_hex("#dce9f7", "#0f3f7a", t)
-        # Title-case the SHOUTING GA code labels for display; keep hover detail full.
-        disp = label.title().replace(" And ", " & ")
+        # Title-case the SHOUTING GA code-title labels for display; keep hover detail
+        # full. "Local / Municipal" is the one non-code-title subject (Open States'
+        # bucket for local/special bills — measures affecting a single named city or
+        # county); relabel it so it doesn't read as a near-duplicate of the "Local
+        # Government" code title (Title 36, statewide local-government law).
+        if label == "Local / Municipal":
+            disp = "Local & Special Bills"
+        else:
+            disp = label.title().replace(" And ", " & ")
         tiles.append({
             "label": disp, "count": n,
             "x": round(x, 1), "y": round(y, 1), "w": round(w, 1), "h": round(h, 1),
