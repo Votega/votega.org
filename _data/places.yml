@@ -726,8 +726,8 @@ places:
         body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
-            when: ""
-            location: ""
+            when: "2nd and 4th Tuesday of every month, 6:00 p.m."
+            location: "Watson Government Complex, Second Floor, Board of Commissioners Meeting Room"
 
   - slug: coweta
     name: Coweta County
@@ -770,8 +770,8 @@ places:
           - { match: "Board of Commission", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
-            when: ""
-            location: ""
+            when: "1st and 3rd Tuesday of every month, 6:00 p.m."
+            location: "Evans Government Center Auditorium, Building A, 630 Ronald Reagan Drive, Evans"
 
   - slug: bibb
     name: Macon-Bibb County
@@ -835,26 +835,6 @@ places:
           - body: Board of Commissioners
             when: "Twice a month on Fridays, 9:30 a.m."
             location: "Commission Chambers of the Old Courthouse, 124 Bull Street, Second Floor,"
-  
-  - slug: columbia
-    name: Columbia County
-    type: county
-    fips: "13073"
-    parentCounty: null
-    region:                         # optional hub grouping label
-    domains:
-      meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/columbia/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: civicclerk
-        subdomain: columbiacoga
-        agendas_url: "https://columbiacoga.portal.civicclerk.com/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
-        schedule:
-          - body: Board of Commissioners
-            when: "1st and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
-            location: "Evans Government Center Auditorium, Building A, 630 Ronald Reagan Drive, Evans"            # optional
 
   - slug: hall
     name: Hall County
@@ -900,22 +880,3 @@ places:
           - body: Mayor & Commission
             when: ""
             location: ""
-  
-  - slug: paulding
-    name: Paulding County
-    type: county
-    fips: "13223"
-    parentCounty: null
-    region:                         # optional hub grouping label
-    domains:
-      meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/paulding/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: municode
-        agendas_url: "https://meetings.municode.com/PublishPage/index?cid=PAULDINGGA&ppid=a023d971-d971-44ac-a411-85d5afa307e1&p=1"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
-        schedule:
-          - body: Board of Commissioners
-            when: "2nd and 4th Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
-            location: "Watson Government Complex, Second Floor, Board of Commissioners Meeting Room"            # optional
