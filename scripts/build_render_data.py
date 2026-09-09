@@ -108,6 +108,23 @@ def build_elections(data, cfg):
             "shown": len(rows), "source": None, "rows": rows}
 
 
+def build_bills_rows(data, cfg):
+    """Same rows as the generic transform, but annotate each with a friendly
+    sessionName (metadata.sessions maps the raw id like "2025_26" to
+    "2025-2026 Regular Session") so ga-bills.html can attach it to the bill's
+    Legislation structured data."""
+    rows, total = rows_from_list(data, cfg["list"], cfg["fields"], cfg["cap"])
+    names = {s.get("id"): s.get("name")
+             for s in (_get(data, "metadata.sessions", []) or []) if isinstance(s, dict)}
+    for row in rows:
+        nm = names.get(row.get("session"))
+        if nm:
+            row["sessionName"] = nm
+    human, iso = _fmt_date(_get(data, cfg["date"]))
+    return {"updated": human, "updatedISO": iso, "count": total,
+            "shown": len(rows), "source": _get(data, "metadata.source"), "rows": rows}
+
+
 def build_majority(data, cfg):
     """Compute per-chamber party balance from ga-members.json for the majority tracker."""
     members = data.get("members", []) or []
@@ -365,7 +382,8 @@ CONFIG = {
     },
     "ga_bills": {
         "src": "ga-bills.json", "date": "metadata.generatedAt", "list": "bills",
-        "fields": ["identifier", "billType", "chamber", "title", "status", "statusDate"], "cap": 100,
+        "fields": ["identifier", "billType", "chamber", "title", "status", "statusDate", "session"],
+        "cap": 100, "builder": build_bills_rows,
     },
     "ga_bills_stats": {
         "src": "ga-bills.json", "date": "metadata.generatedAt", "builder": build_bills_stats,

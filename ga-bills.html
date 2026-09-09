@@ -353,7 +353,9 @@ breadcrumb:
         "legislationIdentifier": {{ b.identifier | jsonify }},
         "name": {{ b.title | default: b.identifier | jsonify }},
         "legislationType": {% if b.billType == "resolution" %}"Resolution"{% else %}"Bill"{% endif %},
-        "legislationJurisdiction": "Georgia, USA"{% if b.statusDate %},
+        "legislationJurisdiction": "Georgia, USA",
+        "legislationPassedBy": { "@type": "GovernmentOrganization", "name": "Georgia General Assembly" }{% if b.sessionName %},
+        "isPartOf": { "@type": "Legislation", "name": {{ b.sessionName | jsonify }} }{% endif %}{% if b.statusDate %},
         "legislationDate": {{ b.statusDate | jsonify }}{% endif %}
       }
     }{%- unless forloop.last -%},{%- endunless -%}
