@@ -167,6 +167,7 @@ def topic_hit(topic: str, meeting: dict):
     return {
         "excerpt": (ex or {}).get("excerpt"),
         "excerptTerm": (ex or {}).get("term"),
+        "context": (ex or {}).get("context"),
         "date": meeting.get("date"),
         "body": meeting.get("body") or meeting.get("title") or "",
         "docType": meeting.get("textSource") or meeting.get("doc_type") or "agenda",

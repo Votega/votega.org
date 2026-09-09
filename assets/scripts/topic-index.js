@@ -45,6 +45,7 @@
       region: p.get('region') || '',
       vendor: p.get('vendor') || '',
       confidence: p.get('confidence') || '',
+      context: p.get('context') || '',
       since: p.get('since') || '',
       sort: p.get('sort') || 'recent'
     };
@@ -81,6 +82,7 @@
       vendorField: document.getElementById('tiVendorField'),
       vendor: document.getElementById('tiVendor'),
       confidence: document.getElementById('tiConfidence'),
+      context: document.getElementById('tiContext'),
       since: document.getElementById('tiSince'),
       sort: document.getElementById('tiSort'),
       csv: document.getElementById('tiCsv')
@@ -147,6 +149,7 @@
       els.region.value = state.region;
       if (vendors.length) els.vendor.value = state.vendor;
       els.confidence.value = state.confidence;
+      els.context.value = state.context;
       els.since.value = state.since;
       els.sort.value = state.sort;
 
@@ -154,8 +157,8 @@
         return {
           type: els.type.value, region: els.region.value,
           vendor: vendors.length ? els.vendor.value : '',
-          confidence: els.confidence.value, since: els.since.value,
-          sort: els.sort.value
+          confidence: els.confidence.value, context: els.context.value,
+          since: els.since.value, sort: els.sort.value
         };
       }
 
@@ -167,6 +170,7 @@
           if (s.region && m.region !== s.region) return false;
           if (s.vendor && (m.vendors || []).indexOf(s.vendor) === -1) return false;
           if (s.confidence && m.confidence !== s.confidence) return false;
+          if (s.context && m.context !== s.context) return false;
           if (cutoff && (!m.date || m.date < cutoff)) return false;
           return true;
         });
@@ -198,10 +202,14 @@
           if ((m.date || '') > g.latest) g.latest = m.date || '';
           var key = (m.date || '') + '|' + (m.body || '');
           var mt = g.meetings[key] || (g.meetings[key] = {
-            date: m.date, body: m.body, confidence: 'medium',
+            date: m.date, body: m.body, confidence: 'medium', context: null,
             tags: {}, terms: {}, excerpts: [], sources: {}
           });
           if (m.confidence === 'high') mt.confidence = 'high';
+          // Context precedence: agenda-action > public-comment > unknown.
+          if (m.context === 'agenda-action') mt.context = 'agenda-action';
+          else if (m.context === 'public-comment' && mt.context !== 'agenda-action') mt.context = 'public-comment';
+          else if (!mt.context && m.context) mt.context = m.context;
           (m.tags || []).forEach(function (t) { mt.tags[t] = true; });
           (m.terms || []).forEach(function (t) { mt.terms[t] = true; });
           (m.sourceUrl ? [m.sourceUrl] : []).forEach(function (u) { mt.sources[u] = true; });
@@ -219,6 +227,12 @@
           var lbl = mt.confidence === 'high' ? 'Vendor-named / explicit' : 'Keyword only';
           confBadge = ' <span class="ti-badge ' + cls + '" title="' + esc(lbl) + '">' + esc(lbl) + '</span>';
         }
+        var ctxBadge = '';
+        if (mt.context === 'agenda-action') {
+          ctxBadge = ' <span class="ti-badge ti-ctx-action" title="Came up as government business — an item, motion, resolution, or public hearing">Agenda item</span>';
+        } else if (mt.context === 'public-comment') {
+          ctxBadge = ' <span class="ti-badge ti-ctx-comment" title="Raised during public comment / citizen sign-up — not a government action">Public comment</span>';
+        }
         var chips = Object.keys(mt.tags).map(function (t) { return t.replace(/-/g, ' '); });
         var evidence = Object.keys(mt.terms).map(prettyTerm).join(', ');
         var srcs = Object.keys(mt.sources);
@@ -230,7 +244,7 @@
           '<div class="ti-row-meta">' +
             (mt.date ? '<span class="ti-date">' + esc(mt.date) + '</span>' : '') +
             (mt.body ? ' <span class="ti-body">' + esc(mt.body) + '</span>' : '') +
-            confBadge +
+            ctxBadge + confBadge +
           '</div>' +
           (chips.length ? '<div class="ti-tags">' + chips.map(function (v) {
             return '<span class="ti-tag">' + esc(v) + '</span>'; }).join('') + '</div>' : '') +
@@ -296,7 +310,7 @@
         Array.prototype.forEach.call(listEl.querySelectorAll('details'), function (d) { d.open = open; });
       });
 
-      [els.type, els.region, els.vendor, els.confidence, els.since, els.sort]
+      [els.type, els.region, els.vendor, els.confidence, els.context, els.since, els.sort]
         .forEach(function (c) { if (c) c.addEventListener('change', draw); });
 
       if (els.csv) els.csv.addEventListener('click', function () { exportCsv(filtered(), cfg.topic); });
@@ -317,7 +331,7 @@
 
   function exportCsv(rows, topic) {
     var cols = ['placeId', 'placeName', 'placeType', 'region', 'date', 'body',
-      'confidence', 'vendors', 'terms', 'tags', 'excerpt', 'sourceUrl'];
+      'confidence', 'context', 'vendors', 'terms', 'tags', 'excerpt', 'sourceUrl'];
     var lines = [cols.join(',')];
     rows.forEach(function (r) {
       lines.push(cols.map(function (c) {

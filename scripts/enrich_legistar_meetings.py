@@ -84,6 +84,12 @@ def enrich_event(client, e):
         # public-comment-roster noise). First item to hit a tag wins; a later item
         # with a stronger ALPR term (named vendor / spelled-out) is preferred.
         for tag, ex in topic_excerpts(blob, tags).items():
+            # A Legistar EventItem IS an agenda item — there is no surrounding
+            # agenda text for classify_context to read a section header from, so an
+            # item with no explicit action verb comes back 'unknown'. Coerce that to
+            # agenda-action (structured items are business, not public comment).
+            if ex.get('context') == 'unknown':
+                ex['context'] = 'agenda-action'
             cur = excerpts.get(tag)
             if cur is None:
                 excerpts[tag] = ex

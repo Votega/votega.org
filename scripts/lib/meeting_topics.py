@@ -172,12 +172,109 @@ def _best_hit(hits, tag):
     return min(hits, key=lambda h: h[0])
 
 
+# ── Public-comment vs agenda-action context ────────────────────────────────────
+# A topic can surface two very different ways on an agenda: as GOVERNMENT BUSINESS
+# (an item, motion, resolution, or a formal public *hearing* on a specific matter),
+# or as PUBLIC COMMENT (a resident sign-up roster / open citizen input). Same words,
+# very different meaning — a data center *approved* vs a neighbor complaining about
+# one. The signal is WHERE in the document the hit falls, so this keys off the
+# nearest preceding section header, with local-cue fallbacks. Used to (a) label the
+# topic pages and (b) decide which OCR excerpts are safe to republish (public-comment
+# rosters name residents; action items don't).
+
+# Open citizen-input sections. Deliberately excludes "public HEARING" — a hearing is
+# a formal action on a specific matter, not open comment (that's ACTION below).
+_PC_HEADER_RE = re.compile(
+    r"public\s+(?:comment|participation|input|forum)s?"
+    r"|(?:audience|citizens?)\s+(?:comment|participation|input)"
+    r"|citizens?\s+to\s+be\s+heard"
+    r"|comments?\s+from\s+(?:the\s+)?(?:public|citizens|audience|floor)"
+    r"|non[-\s]agenda\s+items?"
+    r"|items?\s+from\s+(?:the\s+)?(?:public|citizens|audience)"
+    r"|public\s+address(?:es)?\s+(?:the\s+)?(?:board|commission|council)",
+    re.I)
+
+# Government-business SECTION headers only — structural dividers, NOT content
+# words. Words like "ordinance", "resolution", or "rezoning" are deliberately
+# excluded here: they appear in citizen comment topics too (a resident speaking
+# "re: the Storage Ordinance" is still public comment), so treating them as section
+# headers misfiled roster hits as action. They live in _ACTION_CUE_RE below, which
+# only applies when no section header precedes the hit at all.
+_ACTION_HEADER_RE = re.compile(
+    r"public\s+hearings?"
+    r"|(?:old|new|unfinished|regular|other|commission|county|general)\s+business"
+    r"|consent\s+(?:agenda|calendar)"
+    r"|action\s+items?"
+    r"|regular\s+agenda"
+    r"|first\s+reading|second\s+reading"
+    r"|zoning\s+(?:agenda|cases?)"
+    r"|planning\s+(?:and|&)\s+zoning|planning\s+commission",
+    re.I)
+
+# Strong action verbs — used only as a fallback when no section header precedes the
+# hit (e.g. a short structured Legistar item title with no surrounding agenda).
+_ACTION_CUE_RE = re.compile(
+    r"\bmotion\s+(?:to|by|carried|passed|failed)"
+    r"|\bmoved\s+by\b|\bseconded\b"
+    r"|\bresolution\b|\bordinance\b|\bpublic\s+hearing\b"
+    r"|\brezoning\s+(?:application|petition|request|case)"
+    r"|\bapprov(?:e|ed|al)\s+(?:of\s+)?(?:the\s+)?(?:agreement|contract|resolution|ordinance|rezoning|purchase|intergovernmental)"
+    # land-use petitions: "requesting a variance", "application ... for rezoning"
+    r"|\b(?:request(?:ing|ed)?|petition(?:ing|ed)?|applicant|application)\b[^.]{0,40}"
+    r"\b(?:variance|rezon|special\s+use|special\s+exception|conditional\s+use|annex)"
+    r"|\bfirst\s+reading|\bsecond\s+reading",
+    re.I)
+
+# A public-comment sign-up line: "First Last re:" (a named speaker + their topic).
+_ROSTER_RE = re.compile(r"[A-Z][A-Za-z.'\-]+\s+[A-Z][A-Za-z.'\-]+\s+[Rr]e:\s")
+
+# How far back to look for the governing section header. Long enough to clear a
+# roster of speakers; short enough not to grab a header from a distant section.
+_HEADER_LOOKBACK = 5000
+
+
+def _nearest_header(pre, rx):
+    """The last header match in `pre`, requiring it to be UPPERCASE. Agenda section
+    dividers are set in caps ("PUBLIC HEARING", "NON-AGENDA ITEMS"); a resident's
+    lowercase comment topic ("re: the public hearing") is not — so the caps rule
+    keeps a content word inside a roster from masquerading as a section header, which
+    is what would otherwise leak a public-comment excerpt as an action."""
+    last = None
+    for m in rx.finditer(pre):
+        if m.group().isupper():
+            last = m
+    return last
+
+
+def classify_context(text, start, end):
+    """'public-comment' | 'agenda-action' | 'unknown' for a hit at [start:end).
+
+    Decided by the nearest UPPERCASE section header preceding the hit; if none is
+    within the look-back window, by local cues (an action verb, or a "Name re:"
+    roster line)."""
+    pre = text[max(0, start - _HEADER_LOOKBACK):start]
+    pc = _nearest_header(pre, _PC_HEADER_RE)
+    ac = _nearest_header(pre, _ACTION_HEADER_RE)
+    if pc or ac:
+        if pc and ac:
+            return "public-comment" if pc.start() > ac.start() else "agenda-action"
+        return "public-comment" if pc else "agenda-action"
+    sent = _snip(text, start, end)  # local window around the hit
+    if _ACTION_CUE_RE.search(sent):
+        return "agenda-action"
+    if _ROSTER_RE.search(sent):
+        return "public-comment"
+    return "unknown"
+
+
 def topic_excerpts(text, tags):
-    """{tag: {term, excerpt}} for each tag in `tags` that yields a locatable hit.
+    """{tag: {term, excerpt, context}} for each tag in `tags` that yields a
+    locatable hit.
 
     `text` is the raw extracted page text; `tags` is that meeting's classify()
     result. Returns only tags whose keyword can actually be located (so a tag that
     fired on a keyword the finder can't re-locate is simply omitted, never faked).
+    `context` is public-comment / agenda-action / unknown (see classify_context).
     """
     if not text:
         return {}
@@ -188,7 +285,11 @@ def topic_excerpts(text, tags):
         if not hits:
             continue
         start, end, term = _best_hit(hits, tag)
-        out[tag] = {"term": term, "excerpt": _snip(text, start, end)}
+        out[tag] = {
+            "term": term,
+            "excerpt": _snip(text, start, end),
+            "context": classify_context(text, start, end),
+        }
     return out
 
 # Subjects that make a meeting "land use" — drives the land-use card flag.

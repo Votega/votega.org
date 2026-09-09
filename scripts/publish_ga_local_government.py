@@ -21,14 +21,15 @@ Artifacts published:
   data/coverage.json             per-place: topic counts + last activity
   SUMMARY.md                     human overview + the standing caveats
 
-EXCERPT POLICY (deliberate): a per-mention quoted excerpt is published ONLY for
-STRUCTURED sources — Legistar (agenda items) and Granicus (agenda HTML). Excerpts
-from the OCR PDF places are WITHHELD here: those hits are frequently public-comment
-sign-up rosters that name residents, and bulk-redistributing resident names + their
-stated positions in a downloadable file is a bigger step than an on-site citation.
-OCR mentions still ship with tags, matched terms, vendors, confidence, and source
-URL — everything but the quote. Revisit once a public-comment-vs-action classifier
-can separate an action item from a comment roster.
+EXCERPT POLICY (deliberate): a per-mention quoted excerpt is published ONLY when the
+mention's `context` is "agenda-action" — i.e. the topic surfaced as government
+business (an item, motion, resolution, or a formal public hearing), from ANY source.
+Excerpts whose context is "public-comment" or "unknown" are WITHHELD: public-comment
+hits are frequently sign-up rosters that name residents, and bulk-redistributing
+resident names + their stated positions is a bigger step than an on-site citation.
+Withheld mentions still ship with tags, matched terms, vendors, confidence, context,
+and source URL — everything but the quote. (Context is classified by
+meeting_topics.classify_context from the agenda's own section headers.)
 
 Dry run (no GA_LOCAL_GOVERNMENT_TOKEN): writes artifacts to $OUT_DIR (default
 ./out) instead of pushing. See lib/sibling_publish.
@@ -58,8 +59,8 @@ TOPICS = ["alpr", "data-center", "land-use"]
 TOPIC_LABEL = {"alpr": "ALPR / surveillance", "data-center": "Data centers",
                "land-use": "Land use"}
 
-# Excerpts are published only for these structured source types (see module docstring).
-EXCERPT_SOURCE_TYPES = {"legistar", "granicus"}
+# Excerpts are published only for this context (see module docstring).
+EXCERPT_CONTEXT = "agenda-action"
 
 # places.yml fields that are safe + useful to republish as a directory. Internal
 # scraper scoping (body_map, subdomain, client, agenda_module_id, …) is dropped.
@@ -108,7 +109,7 @@ def load_feed(topic):
 
 def publishable_mention(topic, m):
     """One mention row in the published shape, applying the excerpt policy."""
-    structured = m.get("sourceType") in EXCERPT_SOURCE_TYPES
+    quote = m.get("context") == EXCERPT_CONTEXT
     return {
         "topic": topic,
         "placeId": m["placeId"],
@@ -119,20 +120,21 @@ def publishable_mention(topic, m):
         "date": m.get("date"),
         "body": m.get("body"),
         "confidence": m.get("confidence"),
+        "context": m.get("context"),
         "sourceType": m.get("sourceType"),
         "vendors": m.get("vendors") or [],
         "matchedTerms": m.get("terms") or [],
         "tags": m.get("tags") or [],
-        "excerpt": m.get("excerpt") if structured else None,
-        "excerptTerm": m.get("excerptTerm") if structured else None,
+        "excerpt": m.get("excerpt") if quote else None,
+        "excerptTerm": m.get("excerptTerm") if quote else None,
         "sourceUrl": m.get("sourceUrl"),
     }
 
 
 def mentions_csv(rows):
     cols = ["topic", "placeId", "placeName", "placeType", "fips", "region",
-            "date", "body", "confidence", "sourceType", "vendors", "matchedTerms",
-            "tags", "excerpt", "sourceUrl"]
+            "date", "body", "confidence", "context", "sourceType", "vendors",
+            "matchedTerms", "tags", "excerpt", "sourceUrl"]
     buf = io.StringIO()
     w = csv.DictWriter(buf, fieldnames=cols, extrasaction="ignore", lineterminator="\n")
     w.writeheader()
@@ -162,6 +164,8 @@ def mention_schema():
             "body": {"type": ["string", "null"], "description": "governing body / meeting name"},
             "confidence": {"enum": ["high", "medium"],
                            "description": "high = named vendor or spelled-out capability; medium = keyword only"},
+            "context": {"enum": ["agenda-action", "public-comment", "unknown", None],
+                        "description": "how the topic surfaced; a quoted excerpt is present only for agenda-action"},
             "sourceType": {"enum": ["legistar", "granicus", "ocr"],
                            "description": "how the meeting text was obtained"},
             "vendors": {"type": "array", "items": {"type": "string"}},
@@ -254,10 +258,12 @@ def summary_md(reg, all_mentions, cov_rows, scanned_n, universe, last_scan):
         "means it *came up* — not that the government approved, funded, or plans to "
         "pursue it. It may have been raised in public comment, mentioned in passing, "
         "tabled, or voted down. Follow the `sourceUrl` for context.",
-        "- **Excerpts are only included for structured sources** (Legistar and Granicus "
-        "agenda items). Excerpts from OCR'd PDF agendas are withheld: those hits are "
-        "often public-comment rosters that name residents. OCR mentions still carry "
-        "tags, matched terms, vendors, confidence, and the source URL.",
+        "- **A quoted excerpt is included only when `context` is `agenda-action`** — "
+        "the topic surfaced as government business (an item, motion, resolution, or a "
+        "formal public hearing). Excerpts for `public-comment` and `unknown` context "
+        "are withheld: public-comment hits are often sign-up rosters that name "
+        "residents. Those mentions still carry tags, matched terms, vendors, "
+        "confidence, context, and the source URL — everything but the quote.",
         "- **Confidence.** `high` = a named vendor or a spelled-out capability; "
         "`medium` = a bare keyword. ALPR excerpts are published only for `high`.",
         "- **Accuracy.** Provided as is, no warranty. Spotted an error? Open an issue.",
