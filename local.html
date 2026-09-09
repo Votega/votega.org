@@ -246,8 +246,10 @@ breadcrumb:
           wrap.className = 'lh-flags';
           var html = '';
           // ALPR / surveillance is the headline watch topic, so it shows alongside
-          // land-use / data-center rather than being crowded out by them.
-          if (f.flags.indexOf('alpr') !== -1) {
+          // land-use / data-center rather than being crowded out by them. Key off
+          // the citation count (like data centers) so the badge never appears
+          // without ALPR items behind it on the place page.
+          if (f.alprCount > 0) {
             html += '<span class="lh-flag lh-flag-alpr">📷 ALPR / surveillance</span>';
           }
           if (f.dataCenterCount > 0) {
