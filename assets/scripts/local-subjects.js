@@ -25,6 +25,17 @@
       ' <span class="sub-n">' + n + '</span></span>';
   }
 
+  // Prettify matched ALPR terms for display: "lpr camera" -> "LPR Camera",
+  // "flock" -> "Flock", "safer city" -> "Safer City". LPR/ALPR stay all-caps.
+  function prettyTerms(terms) {
+    return terms.map(function (term) {
+      return term.split(' ').map(function (w) {
+        return (w === 'lpr' || w === 'alpr')
+          ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1);
+      }).join(' ');
+    }).join(', ');
+  }
+
   function init(opts) {
     var container = document.getElementById(opts.containerId);
     if (!container) return;
@@ -35,6 +46,23 @@
         if (!d || !d.summary) return;  // no enriched data for this place — render nothing
         var s = d.summary;
         var html = '';
+
+        // ALPR / surveillance leads, matching the hub badge's prominence. Each
+        // citation carries the concrete vendor/capability terms that fired.
+        var alpr = s.alprItems || [];
+        if (alpr.length) {
+          html += '<div class="sub-alpr"><strong>📷 ALPR / surveillance on recent agendas</strong><ul>';
+          alpr.slice(0, 6).forEach(function (it) {
+            var t = esc(cleanTitle(it.title)).slice(0, 150);
+            var terms = (it.terms && it.terms.length)
+              ? ' <span class="sub-alpr-terms">(' + esc(prettyTerms(it.terms)) + ')</span>' : '';
+            html += '<li>' +
+              (it.date ? '<span class="sub-date">' + esc(it.date) + '</span> ' : '') + t + terms +
+              (it.sourceUrl ? ' <a href="' + esc(it.sourceUrl) + '" target="_blank" rel="noopener">source ↗</a>' : '') +
+              '</li>';
+          });
+          html += '</ul></div>';
+        }
 
         var dc = s.dataCenterItems || [];
         if (dc.length) {
@@ -74,7 +102,7 @@
         container.innerHTML =
           '<h2 class="po-heading" style="margin-top:2rem;">On recent agendas</h2>' +
           '<p class="place-intro">Subjects that appeared on this government’s recent meeting agendas, ' +
-          'from the published agenda data. Data-center and land-use items link to their source.</p>' + html;
+          'from the published agenda data. ALPR, data-center, and land-use items link to their source.</p>' + html;
         container.hidden = false;
       })
       .catch(function () { /* no enrichment — leave the section hidden */ });
