@@ -1,0 +1,102 @@
+{%- comment %}
+  Shared body for a /local/topics/<slug>/ page. The stub page in
+  local/topics/<slug>.html sets `topic: <slug>` in its front matter and includes
+  this. Topic display copy comes from _data/topics.yml; the mention list, stat
+  bar, filters, nothing-found list, coverage footer and exports are all rendered
+  client-side by topic-index.js from assets/data/local-topics-<slug>.json.
+
+  Deliberately NO map here — the choropleth is a later build step. This page is
+  the list + filters, which stands on its own.
+{% endcomment -%}
+{%- assign t = site.data.topics.topics | where: "slug", page.topic | first -%}
+
+<h1>{{ t.emoji }} {{ t.name }} on Georgia local agendas</h1>
+<p class="ti-definition">{{ t.definition }}</p>
+
+<p class="ti-caveat">
+  <strong>A listing marks discussion, not action.</strong> These entries come from
+  scanning the text of each government's published agendas and minutes for topic
+  keywords. An entry means the subject <em>came up</em> at a meeting — it does
+  <strong>not</strong> mean the government approved it, funded it, or plans to. The
+  topic may have been raised by a resident during public comment, mentioned in
+  passing, tabled, or voted down. Follow each linked agenda or minutes to see the
+  actual context.
+  <a href="{{ '/about-the-data#agenda-topic-badges' | relative_url }}">How we match agendas &rsaquo;</a>
+</p>
+
+<div class="ti-stats" id="tiStats" hidden>
+  <div class="ti-stat"><span class="ti-stat-n" data-stat="places">–</span><span class="ti-stat-l">jurisdictions with a mention</span></div>
+  <div class="ti-stat"><span class="ti-stat-n" data-stat="mentions">–</span><span class="ti-stat-l">total mentions</span></div>
+  <div class="ti-stat" data-stat-wrap="vendors" hidden><span class="ti-stat-n" data-stat="vendors">–</span><span class="ti-stat-l">distinct vendors</span></div>
+  <div class="ti-stat"><span class="ti-stat-n" data-stat="recent">–</span><span class="ti-stat-l">mentions in the last 90 days</span></div>
+</div>
+
+<div class="ti-controls" role="group" aria-label="Filter {{ t.name }} mentions">
+  <label class="ti-field">
+    <span>Place type</span>
+    <select id="tiType"><option value="">All</option><option value="county">Counties</option><option value="city">Cities</option></select>
+  </label>
+  <label class="ti-field">
+    <span>Region</span>
+    <select id="tiRegion"><option value="">All regions</option></select>
+  </label>
+  <label class="ti-field" id="tiVendorField" hidden>
+    <span>Vendor</span>
+    <select id="tiVendor"><option value="">Any vendor</option></select>
+  </label>
+  <label class="ti-field">
+    <span>Confidence</span>
+    <select id="tiConfidence">
+      <option value="">Any</option>
+      <option value="high">Vendor-named / explicit</option>
+      <option value="medium">Keyword only</option>
+    </select>
+  </label>
+  <label class="ti-field">
+    <span>Since</span>
+    <select id="tiSince">
+      <option value="">Any date</option>
+      <option value="90">Last 90 days</option>
+      <option value="180">Last 6 months</option>
+      <option value="365">Last year</option>
+    </select>
+  </label>
+  <label class="ti-field">
+    <span>Sort</span>
+    <select id="tiSort">
+      <option value="recent">Most recent</option>
+      <option value="place">By place (A–Z)</option>
+    </select>
+  </label>
+  <div class="ti-exports">
+    <button type="button" id="tiCsv" class="ti-export">Download CSV</button>
+    <a href="{{ '/assets/data/local-topics-' | append: page.topic | append: '.json' | relative_url }}"
+       class="ti-export" download>Raw JSON</a>
+  </div>
+</div>
+
+<p class="ti-count" id="tiCount" aria-live="polite"></p>
+
+<ul id="jurisdiction-list" class="ti-list"><li class="ti-loading">Loading&hellip;</li></ul>
+
+<details class="ti-nothing" id="tiNothing" hidden>
+  <summary><span id="tiNothingCount"></span> covered jurisdictions with no {{ t.name | downcase }} mentions found</summary>
+  <ul id="tiNothingList" class="ti-nothing-list"></ul>
+</details>
+
+<p class="ti-coverage" id="tiCoverage"></p>
+
+<p class="ti-fallback" id="tiFallback" hidden>
+  Couldn’t load the {{ t.name | downcase }} data.
+  <a href="{{ '/local/' | relative_url }}">Browse local governments by place instead &rsaquo;</a>
+</p>
+
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/topic-index.js' | relative_url }}"></script>
+<script>
+  TopicIndex.init({
+    topic: {{ page.topic | jsonify }},
+    name: {{ t.name | jsonify }},
+    emoji: {{ t.emoji | jsonify }}
+  });
+</script>

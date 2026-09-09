@@ -1,0 +1,60 @@
+# Civic-topic index pages. Each entry drives one /local/topics/<slug>/ page
+# (built from the shared _includes/topic-index.html template + the per-topic stub
+# in local/topics/<slug>.html) and a row on the /local/topics/ hub.
+#
+# The `slug` MUST match a topic key in scripts/generate_topic_mentions.py (and,
+# through it, a tag/flag in scripts/lib/meeting_topics.py) — that generator emits
+# assets/data/local-topics-<slug>.json, which the page fetches. Adding a topic
+# here without a matching generator topic yields an empty page; adding a generator
+# topic without an entry here means no page is built for it.
+#
+# Fields:
+#   slug        identity; matches the generator topic + the data file name
+#   name        H1 / hub label
+#   emoji       leading glyph (matches the hub badge + place-page section)
+#   blurb       one-line hub-card description
+#   definition  the plain-language "what is this" paragraph (2-3 sentences) shown
+#               under the H1 for a resident who arrived from a shared link
+#   order       hub sort (lowest first)
+
+topics:
+  - slug: alpr
+    name: ALPR / surveillance
+    emoji: 📷
+    blurb: Automated license plate readers and surveillance cameras on local agendas — Flock and other vendors.
+    definition: >
+      An automated license plate reader (ALPR) is a camera that photographs every
+      passing vehicle's plate, timestamps it, and logs where and when the car was
+      seen — building a searchable history of drivers' movements. Georgia
+      governments most often buy them from Flock Safety, though several vendors
+      compete. This page tracks when ALPR or camera-surveillance contracts,
+      renewals, and policies appear on a local government's published agendas and
+      minutes.
+    order: 1
+
+  - slug: data-center
+    name: Data centers
+    emoji: 🏭
+    blurb: Data-center rezonings, incentives, and infrastructure on local agendas.
+    definition: >
+      A data center is a large building full of computing and storage equipment;
+      the biggest ("hyperscale") sites draw enormous amounts of electricity and
+      water and are often approved through local rezonings and tax incentives. This
+      page tracks when data-center projects appear on a Georgia local government's
+      published agendas and minutes — where the land-use and utility decisions that
+      site them actually get made.
+    order: 2
+
+  - slug: land-use
+    name: Land use
+    emoji: 🏗️
+    blurb: Rezonings, variances, special-use permits, annexations, and major developments.
+    definition: >
+      "Land use" is how a local government decides what can be built where —
+      through rezonings, variances, special-use permits, annexations, and approvals
+      of subdivisions, apartments, warehouses, and other developments. These
+      decisions shape a community's traffic, schools, and character, and they happen
+      at county-commission and city-council meetings. This page tracks when land-use
+      business appears on published agendas and minutes. (Data-center land-use items
+      have their own page.)
+    order: 3

@@ -50,6 +50,7 @@ from lib.http import fetch_bytes  # noqa: E402
 from lib.pdf_text import extract_text, has_ocr  # noqa: E402
 from lib.meeting_topics import (  # noqa: E402
     classify, matched_terms, topic_flags, build_summary, flag_entry, write_flags_file,
+    topic_excerpts,
 )
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -156,6 +157,9 @@ def enrich_meeting(meeting, cache, reclassify=False):
 
     tags = classify(text)
     terms = matched_terms(text)
+    # Phase A per-mention excerpts: capture only from the poppler text layer, never
+    # OCR (OCR text is non-deterministic → noisy diffs, and garbled → misquotes).
+    excerpts = topic_excerpts(text, tags) if method == 'pdftotext' else {}
     topics = {tag: 1 for tag in tags}          # presence-per-meeting (one blob/meeting)
     date = meeting.get('date')
     title = (meeting.get('title') or meeting.get('body') or '').strip()
@@ -179,6 +183,7 @@ def enrich_meeting(meeting, cache, reclassify=False):
         'topics': topics,
         'tags': tags,
         'matchedTerms': terms,
+        'topicExcerpts': excerpts,
         'flags': topic_flags(topics),
         'dataCenterItems': dc_items,
     }

@@ -76,6 +76,13 @@ jobs:
             --months "${{ inputs.months || '12' }}" --limit 25 \
             ${{ (inputs.reclassify == true || inputs.reclassify == 'true') && '--reclassify' || '' }}
 
+      # Per-topic mention feeds for the /local/topics/<topic>/ index pages.
+      # Reads the enriched sidecars above + _data/places.yml and shares the ONE
+      # taxonomy in scripts/lib/meeting_topics.py — no re-fetch, no second keyword
+      # list. Must run AFTER enrichment so it sees this run's fresh classifications.
+      - name: Generate topic mention feeds
+        run: python scripts/generate_topic_mentions.py
+
       - name: Commit if changed
         run: |
           set -e
@@ -83,7 +90,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/data/local-*-meetings.json \
                   assets/data/local-*-meetings-enriched.json \
-                  assets/data/local-flags.json
+                  assets/data/local-flags.json \
+                  assets/data/local-topics-*.json
           if git diff --cached --quiet; then
             echo "No local-government meeting changes"
           else

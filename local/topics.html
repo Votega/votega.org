@@ -1,0 +1,65 @@
+---
+layout: default
+title: Topics on Georgia Local Agendas
+permalink: /local/topics/
+share-description: "Track how often surveillance cameras, data centers, and land-use decisions appear on Georgia local government agendas and minutes."
+breadcrumb:
+  - name: Home
+    url: /
+  - name: Local Government
+    url: /local/
+  - name: Topics
+---
+
+<h1>Topics on local agendas</h1>
+<p class="ti-hub-intro">
+  We scan the published agendas and minutes of Georgia counties and cities for a
+  handful of high-interest civic topics, so you can see where a subject is coming
+  up — across every jurisdiction we cover — in one place. Each topic links to the
+  full, filterable list with sources.
+</p>
+
+<div class="ti-hub" id="tiHub">
+  {%- assign topics = site.data.topics.topics | sort: "order" %}
+  {%- for t in topics %}
+  <a class="ti-hub-card" href="{{ '/local/topics/' | append: t.slug | append: '/' | relative_url }}"
+     data-slug="{{ t.slug }}">
+    <div class="ti-hub-emoji">{{ t.emoji }}</div>
+    <div class="ti-hub-body">
+      <div class="ti-hub-name">{{ t.name }}</div>
+      <div class="ti-hub-blurb">{{ t.blurb }}</div>
+      <div class="ti-hub-stat" data-hub-stat hidden></div>
+    </div>
+  </a>
+  {%- endfor %}
+</div>
+
+<p class="ti-caveat">
+  <strong>A listing marks discussion, not action.</strong> A topic appearing on an
+  agenda means it <em>came up</em> at a meeting — not that the government approved,
+  funded, or plans to pursue it.
+  <a href="{{ '/about-the-data#agenda-topic-badges' | relative_url }}">How we match agendas &rsaquo;</a>
+</p>
+
+<link rel="stylesheet" href="{{ '/assets/css/topic-index.css' | relative_url }}">
+<script>
+  // Progressive enhancement: annotate each hub card with its current mention
+  // count. Base-path aware; silent if a data file is missing.
+  (function () {
+    var base = (typeof window.getBasePath === 'function') ? window.getBasePath() : '/';
+    Array.prototype.forEach.call(document.querySelectorAll('.ti-hub-card[data-slug]'), function (card) {
+      fetch(base + 'assets/data/local-topics-' + card.dataset.slug + '.json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d || !d.metadata) return;
+          var m = d.metadata;
+          var el = card.querySelector('[data-hub-stat]');
+          if (!el) return;
+          el.textContent = (d.mentions ? d.mentions.length : 0) + ' mentions across ' +
+            m.placesWithMentions + ' jurisdiction' + (m.placesWithMentions === 1 ? '' : 's');
+          el.hidden = false;
+        })
+        .catch(function () { /* leave the card without a count */ });
+    });
+  })();
+</script>

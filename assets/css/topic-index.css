@@ -1,0 +1,118 @@
+/* Topic index pages (/local/topics/ and /local/topics/<topic>/).
+   Light theme to match the rest of the local-government hub (see local.html). */
+
+.ti-definition { font-size: 1.05rem; line-height: 1.6; max-width: 46rem; }
+
+.ti-caveat {
+  background: #fffbea; border: 1px solid #f4e2a1; border-radius: 8px;
+  padding: 0.75rem 1rem; font-size: 0.92rem; line-height: 1.55; max-width: 48rem;
+}
+.ti-caveat strong { color: #7a5c00; }
+
+/* ---- stat bar ---- */
+.ti-stats {
+  display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.25rem 0;
+}
+.ti-stat {
+  flex: 1 1 8rem; min-width: 8rem; padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb; border-radius: 8px; background: #fafafa;
+}
+.ti-stat-n { display: block; font-size: 1.6rem; font-weight: 700; line-height: 1.1; }
+.ti-stat-l { display: block; font-size: 0.82rem; color: #555; margin-top: 0.15rem; }
+
+/* ---- filter row ---- */
+.ti-controls {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem 1rem;
+  margin: 1rem 0; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;
+}
+.ti-field { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; }
+.ti-field > span { color: #555; font-weight: 600; }
+.ti-field select { font-size: 0.9rem; padding: 0.4rem 0.5rem; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
+.ti-exports { display: flex; gap: 0.5rem; margin-left: auto; align-items: flex-end; }
+.ti-export {
+  font-size: 0.85rem; padding: 0.45rem 0.7rem; border: 1px solid #ccc;
+  border-radius: 6px; background: #fff; color: #333; cursor: pointer; text-decoration: none;
+}
+.ti-export:hover { background: #f2f2f2; }
+
+.ti-count { font-size: 0.9rem; color: #555; margin: 0.5rem 0; }
+
+/* ---- list (place-grouped accordion) ---- */
+.ti-list { list-style: none; padding: 0; margin: 0; }
+.ti-linkbtn {
+  background: none; border: none; padding: 0; margin: 0; cursor: pointer;
+  color: #3949ab; font: inherit; font-size: 0.88rem; text-decoration: underline;
+}
+.ti-group {
+  border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 0.5rem;
+  background: #fff; overflow: hidden;
+}
+.ti-group > details > summary.ti-group-head {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1rem; cursor: pointer; list-style: none; user-select: none;
+}
+.ti-group > details > summary::-webkit-details-marker { display: none; }
+.ti-group > details > summary::before {
+  content: "▸"; color: #888; font-size: 0.8rem; transition: transform .12s;
+}
+.ti-group > details[open] > summary::before { transform: rotate(90deg); }
+.ti-group > details[open] > summary.ti-group-head { border-bottom: 1px solid #eee; }
+.ti-group-head:hover { background: #fafafa; }
+.ti-group-count {
+  font-size: 0.8rem; font-weight: 700; color: #3949ab;
+  background: #eef2ff; border-radius: 999px; padding: 0.1rem 0.5rem;
+}
+.ti-group-latest { font-size: 0.8rem; color: #666; font-variant-numeric: tabular-nums; }
+.ti-group-vendors { display: inline-flex; flex-wrap: wrap; gap: 0.3rem; margin-left: auto; }
+.ti-meetings { list-style: none; padding: 0.5rem 1rem 0; margin: 0; }
+.ti-meeting { padding: 0.55rem 0; border-top: 1px dashed #eee; }
+.ti-meeting:first-child { border-top: none; }
+.ti-group-link { padding: 0.5rem 1rem 0.85rem; font-size: 0.85rem; }
+.ti-place { font-weight: 700; font-size: 1.05rem; }
+.ti-badge {
+  font-size: 0.72rem; padding: 0.1rem 0.45rem; border-radius: 999px;
+  text-transform: capitalize; border: 1px solid transparent;
+}
+.ti-badge-type { background: #eef2ff; color: #3949ab; }
+.ti-conf-high { background: #e8f5e9; color: #2e7d32; }
+.ti-conf-med { background: #f3f4f6; color: #555; }
+.ti-row-meta { margin-top: 0.3rem; font-size: 0.9rem; color: #444; }
+.ti-date { font-variant-numeric: tabular-nums; font-weight: 600; }
+.ti-body { color: #333; }
+.ti-region { color: #777; font-size: 0.82rem; }
+.ti-tags { margin-top: 0.4rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.ti-tag {
+  font-size: 0.75rem; padding: 0.12rem 0.5rem; border-radius: 999px;
+  background: #fff4e5; color: #9a5b00; border: 1px solid #f3d9b0; text-transform: capitalize;
+}
+.ti-excerpt {
+  margin: 0.5rem 0 0.15rem; padding: 0.4rem 0.75rem; border-left: 3px solid #d0d7de;
+  background: #f8f9fa; color: #333; font-size: 0.88rem; line-height: 1.5;
+  font-style: normal; border-radius: 0 4px 4px 0;
+}
+.ti-excerpt mark { background: #fff2a8; padding: 0 0.1em; border-radius: 2px; }
+.ti-evidence { margin-top: 0.35rem; font-size: 0.8rem; color: #777; }
+.ti-src { margin-top: 0.4rem; font-size: 0.85rem; }
+.ti-empty, .ti-loading { color: #777; font-style: italic; padding: 0.5rem 0; }
+
+/* ---- nothing-found + coverage ---- */
+.ti-nothing { margin: 1.5rem 0 0.5rem; }
+.ti-nothing summary { cursor: pointer; font-weight: 600; color: #444; }
+.ti-nothing-list { columns: 2; font-size: 0.9rem; margin-top: 0.5rem; }
+@media (max-width: 480px) { .ti-nothing-list { columns: 1; } }
+.ti-coverage { font-size: 0.82rem; color: #777; margin-top: 1.25rem; max-width: 48rem; }
+.ti-fallback { font-size: 0.95rem; }
+
+/* ---- hub ---- */
+.ti-hub-intro { font-size: 1.05rem; line-height: 1.6; max-width: 46rem; }
+.ti-hub { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1rem; margin: 1.25rem 0; }
+.ti-hub-card {
+  display: flex; gap: 0.75rem; align-items: flex-start; padding: 1rem;
+  border: 1px solid #e5e7eb; border-radius: 10px; background: #fff;
+  text-decoration: none; color: inherit; transition: box-shadow .12s, border-color .12s;
+}
+.ti-hub-card:hover { border-color: #c7c7c7; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.ti-hub-emoji { font-size: 1.75rem; line-height: 1; }
+.ti-hub-name { font-weight: 700; font-size: 1.1rem; }
+.ti-hub-blurb { font-size: 0.9rem; color: #555; margin-top: 0.25rem; line-height: 1.45; }
+.ti-hub-stat { font-size: 0.82rem; color: #3949ab; margin-top: 0.4rem; font-weight: 600; }

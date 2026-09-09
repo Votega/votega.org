@@ -82,6 +82,115 @@ _WORD_RE = {kw: re.compile(r'\b' + re.escape(kw) + r'\b')
 # actually fired, for the sourced alprItems citations.
 ALPR_TERMS = set(TOPIC_RULES['alpr']) | set(TOPIC_WORD_RULES['alpr'])
 
+# Display labels for the ALPR vendor keywords, so a matched term can be shown as a
+# vendor NAME on the topic index pages (assets/scripts/topic-index.js reads the
+# vendor list the generator derives from these). Kept here, beside the lexicon it
+# maps from, so the vendor identity stays single-source with the keywords — a new
+# ALPR vendor keyword added above gets a label here in the same edit. Only the
+# vendor/brand keywords appear; the generic capability phrases ("plate reader",
+# "alpr", "flock") are evidence terms, not vendor names, and are intentionally
+# absent. 'flock' is the one brand that is also its plain agenda spelling, so it
+# maps to the Flock Safety label.
+ALPR_VENDOR_LABELS = {
+    'flock':              'Flock Safety',
+    'vigilant solutions': 'Vigilant (Motorola)',
+    'genetec':            'Genetec',
+    'autovu':             'Genetec AutoVu',
+    'sharpv':             'Genetec SharpV',
+    'rekor':              'Rekor',
+    'openalpr':           'OpenALPR (Rekor)',
+    'elsag':              'Elsag (Leonardo)',
+    'neology':            'Neology',
+    'jenoptik':           'Jenoptik',
+    'perceptics':         'Perceptics',
+    'verra mobility':     'Verra Mobility',
+    'platesmart':         'PlateSmart',
+}
+
+# The spelled-out capability phrases that, on their own, are unambiguous enough to
+# mark a mention "high" confidence even without a named vendor (mirrors the
+# handoff scanner's high tier). Everything else that trips the alpr rule is
+# "medium" — real, badgeable, but keyword-only.
+ALPR_HIGH_TERMS = {
+    'automated license plate', 'automatic license plate',
+    'license plate recognition', 'license plate reader',
+}
+
+
+def alpr_vendors(terms):
+    """Distinct vendor display names implied by a meeting's matched ALPR terms."""
+    return sorted({ALPR_VENDOR_LABELS[t] for t in terms if t in ALPR_VENDOR_LABELS})
+
+
+# ── Per-mention excerpts (Phase A) ─────────────────────────────────────────────
+# The badges/citations only need to know a tag FIRED; an excerpt needs the match
+# POSITION, so this re-scans the text for offsets (classify/matched_terms answer
+# "which", this answers "where"). Kept here so the one taxonomy owns both. Callers
+# gate on the extraction method — excerpts are captured from the poppler text layer
+# only, never OCR, because OCR text is non-deterministic (noisy git diffs) and
+# often garbled (a misquote in public). See the topic-index rollout notes.
+
+EXCERPT_CHARS = 240  # window of context captured around a matched term
+
+
+def _snip(text, start, end):
+    """A whitespace-collapsed excerpt around [start:end), with … where trimmed.
+
+    Drops U+FFFD replacement chars first: pdftotext decodes with errors='replace',
+    so a byte it can't map as UTF-8 becomes U+FFFD, which we must not quote
+    verbatim in public. Removing it (rather than leaving a stray box glyph) keeps
+    the quote clean; the whitespace collapse tidies the gap it leaves."""
+    lo = max(0, start - EXCERPT_CHARS // 2)
+    hi = min(len(text), end + EXCERPT_CHARS // 2)
+    body = " ".join(text[lo:hi].replace(chr(0xFFFD), " ").split())
+    return ("… " if lo > 0 else "") + body + (" …" if hi < len(text) else "")
+
+
+def _tag_matches(low, tag):
+    """All (start, end, keyword) hits for a tag's keywords, over lowercased text.
+    Offsets are valid in the original text too (lower() preserves length here)."""
+    hits = []
+    for kw in TOPIC_RULES.get(tag, []):
+        i = low.find(kw)
+        if i != -1:
+            hits.append((i, i + len(kw), kw))
+    for kw in TOPIC_WORD_RULES.get(tag, []):
+        m = _WORD_RE[kw].search(low)
+        if m:
+            hits.append((m.start(), m.end(), kw))
+    return hits
+
+
+def _best_hit(hits, tag):
+    """Pick the hit to quote. For ALPR, prefer a vendor / spelled-out capability
+    term (the high-confidence evidence) over a bare acronym; else earliest."""
+    if tag == "alpr":
+        strong = [h for h in hits
+                  if h[2] in ALPR_VENDOR_LABELS or h[2] in ALPR_HIGH_TERMS]
+        if strong:
+            return min(strong, key=lambda h: h[0])
+    return min(hits, key=lambda h: h[0])
+
+
+def topic_excerpts(text, tags):
+    """{tag: {term, excerpt}} for each tag in `tags` that yields a locatable hit.
+
+    `text` is the raw extracted page text; `tags` is that meeting's classify()
+    result. Returns only tags whose keyword can actually be located (so a tag that
+    fired on a keyword the finder can't re-locate is simply omitted, never faked).
+    """
+    if not text:
+        return {}
+    low = text.lower()
+    out = {}
+    for tag in tags:
+        hits = _tag_matches(low, tag)
+        if not hits:
+            continue
+        start, end, term = _best_hit(hits, tag)
+        out[tag] = {"term": term, "excerpt": _snip(text, start, end)}
+    return out
+
 # Subjects that make a meeting "land use" — drives the land-use card flag.
 LAND_USE = {'data-center', 'rezoning', 'special-land-use', 'variance',
             'annexation', 'development', 'comprehensive-plan'}
