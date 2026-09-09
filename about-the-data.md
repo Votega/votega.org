@@ -406,6 +406,28 @@ The [Local Government hub](/local/) covers Georgia counties and cities through t
 - **Public meetings** — agendas, minutes, and video, aggregated weekly from each government's
   official site. We store only links to the source documents, never the documents themselves.
 
+### How agenda topic badges work
+{: #agenda-topic-badges}
+
+Some places on the hub show a small **topic badge** — *Data centers on agenda*, *Land use*, or
+*ALPR / surveillance*. These come from automatically scanning the text of each government's
+published agendas and minutes for a fixed list of topic keywords: data-center projects; land-use
+actions (rezonings, variances, special-use permits, annexations, major developments); and
+automated license plate readers / surveillance cameras, including specific vendors such as Flock,
+Vigilant, and Genetec. When a topic's terms appear in a recent meeting's text, that place gets the
+matching badge, and the specific meeting is recorded as a citation with a link to its source.
+
+**A badge reflects what was on the record, not what was decided.** It tells you a subject was
+*discussed or referenced* at a recent meeting — by an elected official, staff, or a member of the
+public during public comment. It does **not** mean the body approved it, funded it, or plans to:
+the item may have been approved, denied, tabled, or simply raised by someone in the room. Always
+open the linked agenda or minutes for the full context before drawing conclusions.
+
+Because this is automated keyword detection over scanned documents, it can miss an item (unusual
+wording, or an image-only PDF our text extraction can't read) or occasionally flag a passing
+mention. We tune the keyword list against real agendas to keep it accurate, but treat a badge as a
+starting point for your own reading of the primary source, which we link for every flagged meeting.
+
 **Corrections** flow the same way as everywhere else on the site — open an issue or PR. An
 officials correction is verified against its primary source before it merges.
 
