@@ -108,6 +108,23 @@ def build_elections(data, cfg):
             "shown": len(rows), "source": None, "rows": rows}
 
 
+def build_bills_rows(data, cfg):
+    """Same rows as the generic transform, but annotate each with a friendly
+    sessionName (metadata.sessions maps the raw id like "2025_26" to
+    "2025-2026 Regular Session") so ga-bills.html can attach it to the bill's
+    Legislation structured data."""
+    rows, total = rows_from_list(data, cfg["list"], cfg["fields"], cfg["cap"])
+    names = {s.get("id"): s.get("name")
+             for s in (_get(data, "metadata.sessions", []) or []) if isinstance(s, dict)}
+    for row in rows:
+        nm = names.get(row.get("session"))
+        if nm:
+            row["sessionName"] = nm
+    human, iso = _fmt_date(_get(data, cfg["date"]))
+    return {"updated": human, "updatedISO": iso, "count": total,
+            "shown": len(rows), "source": _get(data, "metadata.source"), "rows": rows}
+
+
 def build_majority(data, cfg):
     """Compute per-chamber party balance from ga-members.json for the majority tracker."""
     members = data.get("members", []) or []
@@ -131,6 +148,166 @@ def build_majority(data, cfg):
     human, iso = _fmt_date(_get(data, cfg["date"]))
     return {"updated": human, "updatedISO": iso, "count": sum(r["total"] for r in rows),
             "shown": len(rows), "source": _get(data, "metadata.source"), "rows": rows}
+
+
+def _passed(bill, chamber):
+    return any(v.get("chamber") == chamber and v.get("result") == "pass"
+               for v in (bill.get("passageVotes") or []))
+
+
+def _lerp_hex(a, b, t):
+    """Interpolate between two #rrggbb colors; t in [0,1]."""
+    a = tuple(int(a[i:i + 2], 16) for i in (1, 3, 5))
+    b = tuple(int(b[i:i + 2], 16) for i in (1, 3, 5))
+    return "#" + "".join(f"{round(a[i] + (b[i] - a[i]) * t):02x}" for i in range(3))
+
+
+def _wrap(text, maxchars):
+    """Greedy word-wrap into lines of at most `maxchars` (a long single word is
+    kept whole rather than split)."""
+    lines, cur = [], ""
+    for word in text.split():
+        cand = (cur + " " + word).strip()
+        if not cur or len(cand) <= maxchars:
+            cur = cand
+        else:
+            lines.append(cur); cur = word
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def _squarify(areas, x, y, w, h):
+    """Squarified treemap (Bruls et al.): areas already scaled so sum == w*h.
+    Returns a rect (x, y, w, h) per input area, in the same order."""
+    def worst(row, side):
+        s = sum(a for _, a in row)
+        if s <= 0:
+            return float("inf")
+        mx = max(a for _, a in row); mn = min(a for _, a in row)
+        return max(side * side * mx / (s * s), s * s / (side * side * mn))
+
+    out = {}
+    items = list(enumerate(areas))  # (orig_index, area)
+    while items:
+        side = min(w, h)
+        row = [items[0]]
+        rest = items[1:]
+        while rest and worst(row, side) >= worst(row + [rest[0]], side):
+            row.append(rest[0]); rest = rest[1:]
+        s = sum(a for _, a in row)
+        if w >= h:
+            rw = s / h if h else 0
+            cy = y
+            for idx, a in row:
+                rh = a / rw if rw else 0
+                out[idx] = (x, cy, rw, rh); cy += rh
+            x += rw; w -= rw
+        else:
+            rh = s / w if w else 0
+            cx = x
+            for idx, a in row:
+                rw = a / rh if rh else 0
+                out[idx] = (cx, y, rw, rh); cx += rw
+            y += rh; h -= rh
+        items = rest
+    return [out[i] for i in range(len(areas))]
+
+
+def build_bills_stats(data, cfg):
+    """Session-at-a-glance aggregates for ga-bills.html: a passage funnel and a
+    subject treemap, computed over BILLS ONLY (resolutions excluded — see the
+    page footnote). Rects are precomputed here so the page draws static SVG with
+    no client JS or charting library. Funnel stages are monotonic and derived
+    from passageVotes (chamber passage) and governorAction (signed/vetoed), not
+    from the 160 free-text status strings."""
+    all_items = data.get("bills") or []
+    bills = [b for b in all_items if b.get("billType") == "bill"]
+    total = len(bills)
+    resolutions = sum(1 for b in all_items if b.get("billType") == "resolution")
+
+    # ── Funnel (each bill counted at its furthest stage; stages nest) ──
+    passed_one = sum(1 for b in bills if _passed(b, "lower") or _passed(b, "upper"))
+    passed_both = sum(1 for b in bills if _passed(b, "lower") and _passed(b, "upper"))
+    def gov(b):
+        g = b.get("governorAction")
+        return g.get("status") if isinstance(g, dict) else None
+    signed = sum(1 for b in bills if gov(b) == "Signed")
+    vetoed = sum(1 for b in bills if gov(b) == "Vetoed")
+    stages = [("Introduced", total), ("Passed a chamber", passed_one),
+              ("Passed both chambers", passed_both), ("Signed into law", signed)]
+    funnel = [{"label": lbl, "count": n,
+               "pct": round(100 * n / total) if total else 0}
+              for lbl, n in stages]
+
+    # ── Subject treemap (bills only; a bill counts under each of its subjects) ──
+    # All subjects, no synthetic "Other" bucket (that tile would dominate and read
+    # as a real category). A treemap is built for many tiles; labels show only where
+    # a tile is big enough, and every tile carries a <title> for hover/tap detail.
+    from collections import Counter
+    subj = Counter(s for b in bills for s in (b.get("subjects") or []))
+    tiles_in = subj.most_common()  # all 53, descending
+
+    W, H = 1000.0, 520.0
+    counts = [n for _, n in tiles_in]
+    scale = (W * H) / sum(counts) if counts else 0
+    rects = _squarify([c * scale for c in counts], 0.0, 0.0, W, H)
+    mx = counts[0] if counts else 1
+    LINE_H, PAD, CHAR_W = 15.0, 9.0, 6.4  # px; CHAR_W approximates 13px sans width
+    tiles = []
+    for (label, n), (x, y, w, h) in zip(tiles_in, rects):
+        t = (n / mx) ** 0.55  # ramp: darker = more bills
+        fill = _lerp_hex("#dce9f7", "#0f3f7a", t)
+        # Title-case the SHOUTING GA code-title labels for display; keep hover detail
+        # full. "Local / Municipal" is the one non-code-title subject (Open States'
+        # bucket for local/special bills — measures affecting a single named city or
+        # county); relabel it so it doesn't read as a near-duplicate of the "Local
+        # Government" code title (Title 36, statewide local-government law).
+        if label == "Local / Municipal":
+            disp = "Local & Special Bills"
+        else:
+            disp = label.title().replace(" And ", " & ")
+        txt = "#ffffff" if t > 0.45 else "#12314f"
+
+        # Word-wrap the label to the tile width and emit one <text> line each, with
+        # the "N bills" count on its own line, so labels spill down instead of
+        # clipping. Only where the tile can hold at least one readable line.
+        labels = []
+        n_fit = int((h - 10) / LINE_H)          # text lines that fit vertically
+        maxchars = int((w - 2 * PAD) / CHAR_W)  # chars that fit horizontally
+        if w >= 66 and n_fit >= 1 and maxchars >= 5:
+            want_count = n_fit >= 2
+            room = n_fit - (1 if want_count else 0)
+            wrapped = _wrap(disp, maxchars)
+            if len(wrapped) > room:              # too many lines: clip + ellipsis
+                wrapped = wrapped[:room]
+                wrapped[-1] = wrapped[-1][:max(1, maxchars - 1)].rstrip() + "…"
+            by = y + 18.0
+            for line in wrapped:
+                labels.append({"x": round(x + PAD, 1), "y": round(by, 1),
+                               "t": line, "size": 13, "weight": 600, "op": 1})
+                by += LINE_H
+            if want_count:
+                labels.append({"x": round(x + PAD, 1), "y": round(by, 1),
+                               "t": f"{n} bills", "size": 11, "weight": 400, "op": 0.85})
+
+        tiles.append({
+            "label": disp, "count": n,
+            "x": round(x, 1), "y": round(y, 1), "w": round(w, 1), "h": round(h, 1),
+            "fill": fill, "text": txt, "labels": labels,
+        })
+
+    human, iso = _fmt_date(_get(data, cfg["date"]))
+    return {
+        "updated": human, "updatedISO": iso,
+        "count": total, "shown": len(funnel),
+        "source": _get(data, "metadata.source"),
+        "totalBills": total, "vetoed": vetoed,
+        "resolutionsExcluded": resolutions,
+        "distinctSubjects": len(subj),
+        "funnel": funnel,
+        "treemap": {"width": W, "height": H, "tiles": tiles},
+    }
 
 
 def make_freshness_builder(extra_srcs, date_paths):
@@ -205,7 +382,11 @@ CONFIG = {
     },
     "ga_bills": {
         "src": "ga-bills.json", "date": "metadata.generatedAt", "list": "bills",
-        "fields": ["identifier", "billType", "chamber", "title", "status", "statusDate"], "cap": 100,
+        "fields": ["identifier", "billType", "chamber", "title", "status", "statusDate", "session"],
+        "cap": 100, "builder": build_bills_rows,
+    },
+    "ga_bills_stats": {
+        "src": "ga-bills.json", "date": "metadata.generatedAt", "builder": build_bills_stats,
     },
     "ga_executive_orders": {
         "src": "ga-executive-orders-2026.json", "date": "metadata.updatedAt", "count": "metadata.count",

@@ -534,16 +534,26 @@ def build_candidates(records, urls, prior, new_state):
                       or ((race.get("chamber") or "") + (f" District {dist}" if dist else ""))
                       or rid)
         race_url = urls.get("race", {}).get(rid)
-        party = desc.split("·")[0].strip() if "·" in desc else ""
+        # Party from the structured candidate object; fall back to the desc prefix
+        # ("Republican — U.S. Senate 2026"). The old "·" split never matched (the
+        # separator is an em dash), so affiliation had silently been null.
+        cand_obj = (cand_index.get(cid) or ({}, None))[0] or {}
+        party = (cand_obj.get("party") or "").strip()
+        if not party and "—" in desc:
+            party = desc.split("—")[0].strip()
 
         share_title = f"{name} — Candidate for {race_label}".strip()
         page_desc = desc or f"Candidate profile for {name}."
-        ld = json_ld({
+        person = {
             "@context": "https://schema.org", "@type": "Person", "name": name,
             "url": SITE_URL + permalink,
             "description": desc or None,
-            "affiliation": party or None,
-        })
+        }
+        if race_label:  # office sought — the candidacy context
+            person["jobTitle"] = f"Candidate for {race_label}"
+        if party:       # typed party (schema.org affiliation expects an Organization)
+            person["affiliation"] = {"@type": "PoliticalParty", "name": party}
+        ld = json_ld(person)
         entity = {"type": "candidate", "id": cid, "name": name}
         lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": page_desc},
                                   data_date, prior, new_state)

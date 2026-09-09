@@ -353,7 +353,9 @@ breadcrumb:
         "legislationIdentifier": {{ b.identifier | jsonify }},
         "name": {{ b.title | default: b.identifier | jsonify }},
         "legislationType": {% if b.billType == "resolution" %}"Resolution"{% else %}"Bill"{% endif %},
-        "legislationJurisdiction": "Georgia, USA"{% if b.statusDate %},
+        "legislationJurisdiction": "Georgia, USA",
+        "legislationPassedBy": { "@type": "GovernmentOrganization", "name": "Georgia General Assembly" }{% if b.sessionName %},
+        "isPartOf": { "@type": "Legislation", "name": {{ b.sessionName | jsonify }} }{% endif %}{% if b.statusDate %},
         "legislationDate": {{ b.statusDate | jsonify }}{% endif %}
       }
     }{%- unless forloop.last -%},{%- endunless -%}
@@ -361,6 +363,65 @@ breadcrumb:
   ]
 }
 </script>
+{%- endif -%}
+
+{%- comment -%} Session-at-a-glance: passage funnel + subject treemap, server-rendered
+  as static HTML/SVG from the precomputed sidecar (scripts/build_render_data.py →
+  build_bills_stats). No client JS or charting library. Bills only — see footnote. {%- endcomment -%}
+{%- assign s = site.data.rendered.ga_bills_stats -%}
+{%- if s and s.funnel -%}
+<style>
+  .bpf-wrap { margin: 1.5rem 0 0.5rem; }
+  .bpf-wrap h2 { font-size: 1.15rem; margin: 0 0 0.2rem; }
+  .bpf-sub { font-size: 0.82rem; color: #6b7280; margin: 0 0 1rem; }
+  .bpf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; align-items: start; }
+  @media (max-width: 720px) { .bpf-grid { grid-template-columns: 1fr; } }
+  .bpf-panel-h { font-size: 0.9rem; font-weight: 700; color: #374151; margin: 0 0 0.75rem; }
+  .bpf-row { margin-bottom: 0.7rem; }
+  .bpf-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.85rem; margin-bottom: 3px; }
+  .bpf-label { color: #374151; font-weight: 600; }
+  .bpf-val { color: #111; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .bpf-pct { color: #6b7280; font-weight: 500; font-size: 0.8rem; }
+  .bpf-track { height: 20px; background: #eef2f7; border-radius: 4px; overflow: hidden; }
+  .bpf-fill { height: 100%; background: #1a56a8; border-radius: 4px; min-width: 2px; }
+  .bpf-veto { font-size: 0.8rem; color: #92400e; background: #fff8ec; border: 1px solid #fde7c2;
+              border-radius: 6px; padding: 0.4rem 0.6rem; margin: 0.4rem 0 0; }
+  .btm-svg { width: 100%; height: auto; display: block; border-radius: 6px; overflow: hidden; }
+  .btm-svg text { font-family: inherit; pointer-events: none; }
+  .bpf-foot { font-size: 0.75rem; color: #6b7280; margin: 1rem 0 0; line-height: 1.5; }
+</style>
+<section class="bpf-wrap" aria-label="Session at a glance">
+  <h2>The 2025–2026 session at a glance</h2>
+  <p class="bpf-sub">How far {{ s.totalBills }} bills traveled, and what they were about. Updated {{ s.updated }}.</p>
+  <div class="bpf-grid">
+    <div>
+      <p class="bpf-panel-h">How far bills got</p>
+      {%- for f in s.funnel -%}
+      <div class="bpf-row">
+        <div class="bpf-head"><span class="bpf-label">{{ f.label }}</span><span class="bpf-val">{{ f.count }} <span class="bpf-pct">{{ f.pct }}%</span></span></div>
+        <div class="bpf-track"><div class="bpf-fill" style="width:{{ f.pct }}%"></div></div>
+      </div>
+      {%- endfor -%}
+      {%- if s.vetoed and s.vetoed > 0 -%}
+      <p class="bpf-veto">Of those signed or sent to the Governor, {{ s.vetoed }} bill{% if s.vetoed != 1 %}s were{% else %} was{% endif %} vetoed.</p>
+      {%- endif -%}
+    </div>
+    <div>
+      <p class="bpf-panel-h">What bills were about <span style="font-weight:500;color:#6b7280;">· {{ s.distinctSubjects }} subject areas</span></p>
+      <svg class="btm-svg" viewBox="0 0 {{ s.treemap.width }} {{ s.treemap.height }}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Treemap of bills by subject area; larger tiles are subjects with more bills.">
+        {%- for tile in s.treemap.tiles -%}
+        <g>
+          <rect x="{{ tile.x }}" y="{{ tile.y }}" width="{{ tile.w }}" height="{{ tile.h }}" fill="{{ tile.fill }}" stroke="#ffffff" stroke-width="1.5"><title>{{ tile.label }}: {{ tile.count }} bills</title></rect>
+          {%- for L in tile.labels -%}
+          <text x="{{ L.x }}" y="{{ L.y }}" fill="{{ tile.text }}" font-size="{{ L.size }}" font-weight="{{ L.weight }}"{% if L.op != 1 %} opacity="{{ L.op }}"{% endif %}>{{ L.t }}</text>
+          {%- endfor -%}
+        </g>
+        {%- endfor -%}
+      </svg>
+    </div>
+  </div>
+  <p class="bpf-foot">Bills only. Georgia’s {{ s.distinctSubjects }}-way subject index is applied to substantive bills; the session’s {{ s.resolutionsExcluded }} <em>resolutions</em> — largely ceremonial (commendations, memorials, and the like) — are excluded so the picture reflects lawmaking, not honorifics. A bill counts under each subject it’s tagged with. “Local &amp; Special Bills” are measures affecting a single named city or county; they’re grouped on their own and, unlike general bills, aren’t filed under a policy code title such as “Local Government” (statewide local-government law). Passage stages come from recorded chamber votes and the Governor’s action.</p>
+</section>
 {%- endif -%}
 
 <div id="billsStats" class="bills-stats" style="display:none"></div>
