@@ -1,13 +1,14 @@
-name: Update Local Government data (weekly)
+name: Update Local Government data (twice weekly)
 
 permissions:
   contents: write
 
-# Weekly, NOT daily: local-government sites post infrequently, and the failure
-# this guards against — a place reskinning its site so the scrape breaks —
+# Twice weekly, NOT daily: local-government sites post infrequently, and the
+# failure this guards against — a place reskinning its site so the scrape breaks —
 # originates on the place's server, not in this repo, so only a scheduled run can
-# catch it (a push/PR trigger never would). Manual dispatch for onboarding a new
-# place to _data/places.yml.
+# catch it (a push/PR trigger never would). Mondays catch the start of the week;
+# Thursdays catch the Tuesday commission meetings that most places hold. Manual
+# dispatch for onboarding a new place to _data/places.yml.
 on:
   workflow_dispatch:
     inputs:
@@ -20,7 +21,7 @@ on:
         required: false
         default: '12'
   schedule:
-    - cron: '40 8 * * 1'  # Mondays 08:40 UTC (offset from other update-* jobs)
+    - cron: '40 8 * * 1,4'  # Mondays & Thursdays 08:40 UTC (offset from other update-* jobs)
 
 jobs:
   update:
