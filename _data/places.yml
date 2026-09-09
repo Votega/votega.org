@@ -805,18 +805,18 @@ places:
     region: West Georgia
     domains:
       meetings:
-        # Consolidated Columbus government on Legistar (client: columbus). Keep the
-        # City Council + Zoning Committee (land use).
-        platform: legistar
-        client: columbus
-        agendas_url: "https://columbus.legistar.com/Calendar.aspx"
-        body_map:
-          - { match: "Columbus City Council", label: "City Council" }
-          - { match: "Zoning", label: "Zoning Committee" }
+        platform: teammunicode
+        base_url: "https://columbus-ga.municodemeetings.com/"
+        meetings_path: "/"
+        agendas_url: "https://columbus-ga.municodemeetings.com/"
         schedule:
-          - body: City Council
-            when: ""
-            location: ""
+          - body: Board of Commissioners
+            when: "2nd Tuesday of every month, 9:00 a.m."
+            location: "C. E. “Red” McDaniel City Services Center- Second Floor"
+          - body: Board of Commissioners
+            when: "4th Tuesday of every month, 5:30 p.m."
+            location: "C. E. “Red” McDaniel City Services Center- Second Floor"
+
 
   - slug: chatham
     name: Chatham County

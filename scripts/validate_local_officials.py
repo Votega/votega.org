@@ -29,9 +29,18 @@ VALID_ROLES = {
 }
 VALID_PARTIES = {"Republican", "Democratic", "Nonpartisan", "Independent"}
 PRESIDING_ROLES = {"Mayor", "Chair"}
-# Structural form of a county's governing body (derivable from the roster titles;
-# emitted by generate_local_officials.py). Optional jurisdiction field.
-VALID_GOVERNMENT_FORMS = {"commission", "commission-chair", "ceo", "sole-commissioner"}
+# Structural form of a jurisdiction's governing body. The commission* / ceo /
+# sole-commissioner forms are derivable from the roster titles and emitted by
+# generate_local_officials.py; mayor-council-manager (a consolidated city-county
+# with a Mayor + Council + appointed City Manager, e.g. Columbus-Muscogee) is not
+# derivable from the elected roster and is set by hand. Optional jurisdiction field.
+VALID_GOVERNMENT_FORMS = {
+    "commission",
+    "commission-chair",
+    "ceo",
+    "sole-commissioner",
+    "mayor-council-manager",
+}
 
 # Sanity window for election/term years — catches fat-fingered dates.
 MIN_YEAR = 2000

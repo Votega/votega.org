@@ -60,8 +60,14 @@
 #            allowed only when jurisdiction.partisan is not false.)
 #
 #   government_form (jurisdiction, optional):
-#            commission | commission-chair | ceo | sole-commissioner
-#            (auto-derived from the roster titles by generate_local_officials.py)
+#            commission | commission-chair | ceo | sole-commissioner |
+#            mayor-council-manager
+#            (the commission* / ceo / sole-commissioner forms are auto-derived
+#            from the roster titles by generate_local_officials.py;
+#            mayor-council-manager — a consolidated city-county with a Mayor +
+#            Council + appointed City Manager, e.g. Columbus-Muscogee — is set by
+#            hand, since a City Manager is appointed staff and never appears in the
+#            elected roster.)
 #
 #   OPTIONAL member display/data fields (not enumerated, but validated as non-
 #   empty strings when present):
