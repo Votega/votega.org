@@ -298,6 +298,24 @@
         {%- if e.chamber %}<br><span style="color:#6b7280;">{{ e.chamber | escape }}, Georgia General Assembly</span>{% endif -%}
       </p>
       {%- if e.summary %}<p>{{ e.summary | escape }}</p>{% endif -%}
+      <dl style="margin:0 0 1rem;font-size:0.95rem;color:#374151;">
+        {%- if e.nextElection %}
+        <dt style="font-weight:600;display:inline;">Next election:</dt>
+        <dd style="display:inline;margin:0 0 0 .25rem;">November {{ e.nextElection }} (Georgia General Assembly seats are elected to two-year terms)</dd><br>
+        {%- endif -%}
+        {%- if e.committees and e.committees != empty %}
+        <dt style="font-weight:600;display:inline;">Committees:</dt>
+        <dd style="display:inline;margin:0 0 0 .25rem;">{{ e.committees | join: ", " | escape }}</dd><br>
+        {%- endif -%}
+        {%- if e.phone %}
+        <dt style="font-weight:600;display:inline;">Phone:</dt>
+        <dd style="display:inline;margin:0 0 0 .25rem;"><a href="tel:{{ e.phone | escape }}">{{ e.phone | escape }}</a></dd><br>
+        {%- endif -%}
+        {%- if e.website %}
+        <dt style="font-weight:600;display:inline;">Official website:</dt>
+        <dd style="display:inline;margin:0 0 0 .25rem;"><a href="{{ e.website | escape }}" rel="nofollow" class="url-text">{{ e.website | escape }}</a></dd>
+        {%- endif -%}
+      </dl>
     {%- else -%}
       <p>Loading member information...</p>
     {%- endif -%}

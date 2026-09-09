@@ -241,6 +241,35 @@ def build_meeting_events(place, slug, name, permalink, org_id, limit=10):
 
 # ─────────────────────────── GA Legislators ───────────────────────────
 
+def _ga_general_election_date(year):
+    """Date of the November general election in `year`: the first Tuesday
+    after the first Monday of November (GA follows the federal rule)."""
+    d = date(year, 11, 1)
+    while d.weekday() != 0:            # advance to the first Monday (Mon == 0)
+        d = date(year, 11, d.day + 1)
+    return date(year, 11, d.day + 1)   # the Tuesday immediately after
+
+
+def ga_next_general_election(today=None):
+    """Year of the next Georgia General Assembly general election.
+
+    Both chambers of the GA General Assembly serve two-year terms, so every
+    House and Senate seat is on the ballot at the November general election of
+    each even-numbered year. The *year* is derived from the current date rather
+    than hardcoded, so this never needs a per-cycle edit (cycle-agnostic rule).
+    """
+    today = today or date.today()
+    y = today.year
+    if y % 2 == 1:                     # odd year → next even year
+        return y + 1
+    # Even year: this cycle if the general hasn't happened yet, else the next.
+    return y if today <= _ga_general_election_date(y) else y + 2
+
+
+# Statuses for which a member still holds the seat and is on the next ballot.
+_GA_ACTIVE_STATUSES = (None, "", "Suspended", "Vacant")
+
+
 def build_ga_legislators(records, urls, prior, new_state):
     data = load("ga-members.json")
     members = {m["id"]: m for m in data.get("members", [])}
@@ -276,18 +305,31 @@ def build_ga_legislators(records, urls, prior, new_state):
                 f"loyalty, committee assignments, campaign finance, and contact "
                 f"information for {name}.")
 
+        # High-value, stable facts baked into the page for crawlers / no-JS
+        # readers (the JS profile still overwrites #memberDetails for humans).
+        committees = [c for c in (m.get("committees") or []) if c]
+        phone = m.get("phone") or None
+        website = m.get("officialWebsiteUrl") or None
+        status = m.get("status")
+        next_election = (ga_next_general_election()
+                         if status in _GA_ACTIVE_STATUSES else None)
+
         org = "Georgia State Senate" if is_senate else "Georgia House of Representatives"
-        ld = json_ld({
+        person = {
             "@context": "https://schema.org", "@type": "Person", "name": name,
             "jobTitle": role, "url": SITE_URL + permalink,
             "memberOf": {"@type": "GovernmentOrganization", "name": org,
                          "url": SITE_URL + "/ga-state-reps"},
             "affiliation": party or None,
-        })
+        }
+        if phone:
+            person["telephone"] = phone
+        ld = json_ld(person)
 
         entity = {"type": "ga-legislator", "id": mid, "name": name,
                   "title": role_short, "chamber": chamber, "district": district,
-                  "party": party}
+                  "party": party, "committees": committees, "phone": phone,
+                  "website": website, "nextElection": next_election}
         lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
                                   data_date, prior, new_state)
         fm = {
