@@ -60,6 +60,7 @@ breadcrumb:
   .lh-flag { font-size: 0.7rem; font-weight: 700; border-radius: 999px; padding: 0.12rem 0.5rem; }
   .lh-flag-dc { background: #fde8cf; color: #b35a00; }
   .lh-flag-lu { background: #e3f2e4; color: #1b5e20; }
+  .lh-flag-alpr { background: #fbe0e0; color: #b02020; }
   /* Legend explaining the agenda flag pills above */
   .lh-legend {
     margin: 0 0 1.25rem; padding: 0.75rem 0.9rem; background: #f8f9fb;
@@ -94,6 +95,10 @@ breadcrumb:
       <span class="lh-flag lh-flag-lu">🏗️ Land use</span>
       Land-use business on recent agendas — rezonings, variances, special-use permits, annexations, or major developments.
     </span>
+    <span class="lh-legend-item">
+      <span class="lh-flag lh-flag-alpr">📷 ALPR / surveillance</span>
+      Automated license plate readers or surveillance cameras discussed on recent agendas — Flock and other vendors.
+    </span>
   </div>
   <p class="lh-legend-caveat">
     <strong>A badge marks discussion, not action.</strong> These badges come from scanning the text of each
@@ -101,6 +106,7 @@ breadcrumb:
     at a recent meeting — it does <strong>not</strong> mean the government approved it, funded it, or plans to.
     The topic may have been raised by a resident during public comment, mentioned in passing, tabled, or voted
     down. Open the place and follow the linked agenda or minutes to see the actual context.
+    <a href="{{ '/about-the-data#agenda-topic-badges' | relative_url }}">How we match agendas &rsaquo;</a>
   </p>
 </div>
 
@@ -227,8 +233,8 @@ breadcrumb:
 
     search.addEventListener('input', apply);
 
-    // Hot-topic flags: badge cards whose place has a data-center / land-use item on
-    // recent agendas (enrichment sidecar local-flags.json; base-path aware).
+    // Hot-topic flags: badge cards whose place has an ALPR / data-center / land-use
+    // item on recent agendas (enrichment sidecar local-flags.json; base-path aware).
     fetch(getBasePath() + 'assets/data/local-flags.json')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
@@ -238,11 +244,18 @@ breadcrumb:
           if (!f || !f.flags || !f.flags.length) return;
           var wrap = document.createElement('div');
           wrap.className = 'lh-flags';
-          if (f.dataCenterCount > 0) {
-            wrap.innerHTML = '<span class="lh-flag lh-flag-dc">🏭 Data centers on agenda</span>';
-          } else if (f.flags.indexOf('land-use') !== -1) {
-            wrap.innerHTML = '<span class="lh-flag lh-flag-lu">🏗️ Land use</span>';
+          var html = '';
+          // ALPR / surveillance is the headline watch topic, so it shows alongside
+          // land-use / data-center rather than being crowded out by them.
+          if (f.flags.indexOf('alpr') !== -1) {
+            html += '<span class="lh-flag lh-flag-alpr">📷 ALPR / surveillance</span>';
           }
+          if (f.dataCenterCount > 0) {
+            html += '<span class="lh-flag lh-flag-dc">🏭 Data centers on agenda</span>';
+          } else if (f.flags.indexOf('land-use') !== -1) {
+            html += '<span class="lh-flag lh-flag-lu">🏗️ Land use</span>';
+          }
+          wrap.innerHTML = html;
           if (wrap.children.length) card.appendChild(wrap);
         });
       })
