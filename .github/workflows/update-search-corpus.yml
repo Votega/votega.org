@@ -53,6 +53,10 @@ jobs:
           git add -f assets/data/search-entities.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
+          elif python scripts/only_keys_changed.py assets/data/search-entities.json metadata.generatedAt; then
+            echo "Only metadata.generatedAt changed — skipping redundant commit"
+            git restore --staged assets/data/search-entities.json
+            git checkout -- assets/data/search-entities.json
           else
             git commit -m "Update site search index"
             pushed=0

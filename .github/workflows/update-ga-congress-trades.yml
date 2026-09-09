@@ -42,6 +42,10 @@ jobs:
           git add -f assets/data/ga-congress-trades.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
+          elif python scripts/only_keys_changed.py assets/data/ga-congress-trades.json metadata.generatedAt; then
+            echo "Only metadata.generatedAt changed — skipping redundant commit"
+            git restore --staged assets/data/ga-congress-trades.json
+            git checkout -- assets/data/ga-congress-trades.json
           else
             git commit -m "Update GA Congress stock trades data"
             pushed=0
