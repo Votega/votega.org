@@ -72,10 +72,11 @@ ALPR_KEYWORDS = {
     'alpr':                        'generic',
     # Flock — bare token, because that is how agendas name it.
     'flock':                       'flock',
-    # Vendors beyond Flock.
+    # Vendors beyond Flock — ALPR-specific brands only. The bare 'motorola
+    # solutions' parent brand, 'mobile-vision' (in-car video) and 'fusus' (Axon
+    # RTCC camera aggregator) over-matched non-ALPR contracts in a real run, so
+    # they are omitted; 'vigilant solutions' is Motorola's actual ALPR line.
     'vigilant solutions':          'motorola',
-    'motorola solutions':          'motorola',
-    'mobile-vision':               'motorola',
     'genetec':                     'genetec',
     'autovu':                      'genetec',
     'sharpv':                      'genetec',
@@ -87,7 +88,6 @@ ALPR_KEYWORDS = {
     'perceptics':                  'perceptics',
     'verra mobility':              'verra',
     'platesmart':                  'platesmart',
-    'fusus':                       'axon',
 }
 
 # Compiled word-boundary matchers — \b so 'flock' skips 'flocking', 'alpr' skips

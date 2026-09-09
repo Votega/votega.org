@@ -55,10 +55,15 @@ TOPIC_RULES = {
                            'automated license plate', 'automatic license plate',
                            'plate reader', 'lpr camera', 'alpr', 'safer city',
                            # Vendors beyond Flock (Flock itself is a word-rule below).
-                           'vigilant solutions', 'motorola solutions', 'mobile-vision',
-                           'genetec', 'autovu', 'sharpv', 'rekor', 'openalpr', 'elsag',
-                           'neology', 'jenoptik', 'perceptics', 'verra mobility',
-                           'platesmart', 'fusus'],
+                           # Keyed on ALPR-SPECIFIC brands: 'vigilant solutions' is
+                           # Motorola's ALPR line, but the bare 'motorola solutions'
+                           # parent brand (radios/CAD/body cams) and 'mobile-vision'
+                           # (in-car video) over-matched non-ALPR contracts, so they
+                           # are omitted. 'fusus' (Axon real-time crime center) is a
+                           # camera aggregator, not an ALPR vendor — omitted too.
+                           'vigilant solutions', 'genetec', 'autovu', 'sharpv',
+                           'rekor', 'openalpr', 'elsag', 'neology', 'jenoptik',
+                           'perceptics', 'verra mobility', 'platesmart'],
 }
 
 # Keywords that must match as WHOLE WORDS, not substrings — same tag semantics as
