@@ -168,6 +168,29 @@ def check_place(place, min_meetings, sample, network):
         if _norm(b) not in present:
             warnings.append('%s: registry body absent from output: %s' % (slug, b))
 
+    # Body-scope guardrail: a place configured with a body allow-list should only
+    # emit meetings for those bodies. If out-of-scope bodies show up, scope_bodies
+    # silently didn't apply during generation — the regression that un-scoped
+    # Columbia from 210 (Board of Commissioners + Planning Commission) to 472 across
+    # 11 bodies, burying its ALPR meeting outside the recent-meeting window. A
+    # warning (not a hard error) so one bad regeneration doesn't block the pipeline.
+    present_bodies = sorted({(m.get('body') or '') for m in meetings if m.get('body')})
+    body_map = cfg.get('body_map')
+    inc = cfg.get('include_bodies')
+    if body_map:
+        allowed = {str(r['label']) for r in body_map}
+        stray = [b for b in present_bodies if b not in allowed]
+        if stray:
+            warnings.append('%s: %d body(ies) outside the body_map allow-list %s — '
+                            'scope_bodies may not have applied: %s'
+                            % (slug, len(stray), sorted(allowed), ', '.join(stray)))
+    elif inc and not cfg.get('body_label'):
+        terms = [str(t).lower() for t in inc]
+        stray = [b for b in present_bodies if not any(t in b.lower() for t in terms)]
+        if stray:
+            warnings.append('%s: %d body(ies) outside include_bodies %s: %s'
+                            % (slug, len(stray), terms, ', '.join(stray)))
+
     if network and meetings:
         urls = []
         for m in meetings:
