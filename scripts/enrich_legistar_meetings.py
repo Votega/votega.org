@@ -28,7 +28,8 @@ import yaml
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.legistar import fetch_events, fetch_event_items, fetch_rollcalls  # noqa: E402
 from lib.meeting_topics import (  # noqa: E402
-    LAND_USE, classify, topic_flags, build_summary, flag_entry, write_flags_file,
+    LAND_USE, classify, matched_terms, topic_flags, build_summary, flag_entry,
+    write_flags_file,
 )
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -71,11 +72,13 @@ def legistar_places(slug=None):
 def enrich_event(client, e):
     items = fetch_event_items(client, e.get('EventId'))
     topics = {}
+    terms = set()
     land_use_items = []
     for it in items:
         name = _clean(it.get('EventItemTitle') or it.get('EventItemMatterName') or '')
         blob = ' '.join(filter(None, [name, it.get('EventItemMatterType') or '']))
         tags = classify(blob)
+        terms.update(matched_terms(blob))
         for tg in tags:
             topics[tg] = topics.get(tg, 0) + 1
         if set(tags) & LAND_USE:
@@ -112,6 +115,7 @@ def enrich_event(client, e):
         'sourceUrl': source_url,
         'itemCount': len(items),
         'topics': topics,
+        'matchedTerms': sorted(terms),
         'flags': topic_flags(topics),
         'dataCenterItems': dc_items,
         'landUseItems': land_use_items,

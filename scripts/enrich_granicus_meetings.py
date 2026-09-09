@@ -198,11 +198,14 @@ def text_source(meeting):
     return None, None
 
 
-def enrich_meeting(meeting, cache):
+def enrich_meeting(meeting, cache, reclassify=False):
     """Classify one meeting's agenda HTML. Returns an enriched record, or None.
 
     Reuses the cached record when the viewer URL is unchanged (no re-fetch);
     otherwise resolves + downloads the HTML, classifies, and discards the text.
+
+    `reclassify=True` bypasses that cache reuse so a taxonomy change re-tags
+    already-cached meetings (the text is not stored, so re-classifying re-fetches).
     """
     mid = meeting.get('id')
     url, kind = text_source(meeting)
@@ -210,7 +213,7 @@ def enrich_meeting(meeting, cache):
         return None
 
     cached = cache.get(mid)
-    if cached and cached.get('textSourceUrl') == url and 'tags' in cached:
+    if not reclassify and cached and cached.get('textSourceUrl') == url and 'tags' in cached:
         return cached  # unchanged agenda — keep derived tags, skip the fetch
 
     raw = fetch_agenda_html(url)
@@ -259,6 +262,10 @@ def main():
     ap.add_argument('--slug', help='one place (default: all Granicus places)')
     ap.add_argument('--months', type=int, default=12, help='look-back window')
     ap.add_argument('--limit', type=int, default=40, help='recent meetings per place')
+    ap.add_argument('--reclassify', action='store_true',
+                    help='ignore the incremental cache and re-fetch every meeting '
+                         'in the window — use once after a taxonomy change so already-'
+                         'cached meetings pick up new subject keywords')
     args = ap.parse_args()
 
     since = (datetime.now(timezone.utc) - timedelta(days=30 * args.months)).strftime('%Y-%m-%d')
@@ -278,7 +285,7 @@ def main():
 
         enriched = []
         for m in window:
-            rec = enrich_meeting(m, cache)
+            rec = enrich_meeting(m, cache, reclassify=args.reclassify)
             if rec:
                 enriched.append(rec)
 

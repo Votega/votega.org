@@ -122,12 +122,17 @@ def text_source(meeting):
     return None, None
 
 
-def enrich_meeting(meeting, cache):
+def enrich_meeting(meeting, cache, reclassify=False):
     """Classify one meeting's PDF. Returns an enriched record, or None to skip.
 
     Reuses the cached record when the agenda/minutes URL is unchanged (no
     re-download); otherwise downloads the PDF, extracts text, classifies, and
     discards the text. Never stores raw text.
+
+    `reclassify=True` bypasses that cache reuse and re-fetches every meeting, so a
+    taxonomy change (a new subject keyword in lib/meeting_topics.py) re-tags
+    already-cached meetings that a normal incremental run would leave untouched —
+    the text is not stored, so re-classifying requires re-downloading the PDF.
     """
     mid = meeting.get('id')
     url, kind = text_source(meeting)
@@ -135,7 +140,7 @@ def enrich_meeting(meeting, cache):
         return None  # video-only / nothing to read
 
     cached = cache.get(mid)
-    if cached and cached.get('textSourceUrl') == url and 'tags' in cached:
+    if not reclassify and cached and cached.get('textSourceUrl') == url and 'tags' in cached:
         return cached  # unchanged agenda — keep derived tags, skip the fetch
 
     pdf = fetch_bytes(url, headers=_PDF_HEADERS, retries=3, backoff=5, label=url)
@@ -191,6 +196,10 @@ def main():
     ap.add_argument('--slug', help='one place (default: all PDF-platform places)')
     ap.add_argument('--months', type=int, default=12, help='look-back window')
     ap.add_argument('--limit', type=int, default=40, help='recent meetings per place')
+    ap.add_argument('--reclassify', action='store_true',
+                    help='ignore the incremental cache and re-fetch every meeting '
+                         'in the window — use once after a taxonomy change so already-'
+                         'cached meetings pick up new subject keywords')
     args = ap.parse_args()
 
     since = (datetime.now(timezone.utc) - timedelta(days=30 * args.months)).strftime('%Y-%m-%d')
@@ -213,7 +222,7 @@ def main():
 
         enriched = []
         for m in window:
-            rec = enrich_meeting(m, cache)
+            rec = enrich_meeting(m, cache, reclassify=args.reclassify)
             if rec:
                 enriched.append(rec)
 
