@@ -2140,6 +2140,76 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.gwinnettcounty.com/government/departments/board-of-commissioners/about/district-4-commissioner"
+  
+  - id: hall
+    name: Hall County
+    type: county
+    county: Hall
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.hallcounty.org/409/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "David Gibbs"
+        role: Chair
+        title: Hall County Board of Commissioners Chair
+        seat: "At-large"
+        party: Republican
+        email: "dgibbs@hallcounty.org"
+        phone: "770-535-8288"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.hallcounty.org/m/directory/employee?eid=864" 
+      - name: "Kathy Cooper"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "kcooper@hallcounty.org"
+        phone: "770-535-8288"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.hallcounty.org/m/directory/employee?eid=125" 
+      - name: "Billy Powell"
+        role: Commissioner
+        seat: "District 2"
+        party: Republican
+        email: "bpowell@hallcounty.org"
+        phone: "770-535-8288"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.hallcounty.org/m/directory/employee?eid=126"   
+      - name: "Gregg Poole"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "gpoole@hallcounty.org"
+        phone: "770-535-8288"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.hallcounty.org/m/directory/employee?eid=127" 
+      - name: "Jeff Stowe"
+        full_name: "Jeffrey R. Stowe"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 4"
+        party: Republican
+        email: "jstowe@hallcounty.org"
+        phone: "770-535-8288"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://ga-hallcounty.civicplus.com/m/directory/employee?eid=128"
 
   - id: henry
     name: Henry County
@@ -2225,6 +2295,75 @@ jurisdictions:
         voting: true
         source: "https://www.henrycountyga.gov/board-of-commissioners"   # party + incumbency confirmed by GA SoS 2026 Qualified Candidates list
   
+  - id: paulding
+    name: Paulding County
+    type: county
+    county: Paulding
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.paulding.gov/101/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Tim Estes"
+        role: Chair
+        title: Commission Chair
+        seat: "At-large"
+        party: Republican
+        email: "commissioners@paulding.gov"
+        phone: "770-443-7550"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.paulding.gov/355/Tim-Estes---Commission-Chairman"   
+      - name: "Keith Dunn"
+        role: Commissioner
+        seat: "Post 1"
+        party: Republican
+        email: "commissioners@paulding.gov"
+        phone: "770-443-7550, ext. 4001"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.paulding.gov/356/Keith-Dunn---Post-I-Commissioner"  
+      - name: "Sandy Kaecher"
+        role: Commissioner
+        seat: "Post 2"
+        party: 
+        email: "commissioners@paulding.gov"
+        phone: "770-443-7550, ext. 4007"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.paulding.gov/357/Sandy-Kaecher---Post-II-Commissioner" 
+      - name: "Virginia Galloway"
+        role: Commissioner
+        seat: "Post 3"
+        party: 
+        email: "commissioners@paulding.gov"
+        phone: "770-443-7550, ext. 4008"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.paulding.gov/358/Virginia-Galloway---Post-III-Commissione"
+      - name: "Dean Schneider"
+        role: Commissioner
+        seat: "Post 4"
+        party: 
+        email: "commissioners@paulding.gov"
+        phone: "770-443-7550, ext. 4009"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.paulding.gov/359/Post-IV-Commissioner"
+
   - id: rockdale
     name: Rockdale County
     type: county

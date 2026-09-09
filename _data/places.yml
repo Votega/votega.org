@@ -875,8 +875,8 @@ places:
         body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
-            when: ""
-            location: ""
+            when: "2nd and 4th Thursday of every month, 6:00 p.m."
+            location: "Hall County Government Center, 2875 Browns Bridge Rd Gainesville"
 
   - slug: clarke
     name: Athens-Clarke County
@@ -900,3 +900,22 @@ places:
           - body: Mayor & Commission
             when: ""
             location: ""
+  
+  - slug: paulding
+    name: Paulding County
+    type: county
+    fips: "13223"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/paulding/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: municode
+        agendas_url: "https://meetings.municode.com/PublishPage/index?cid=PAULDINGGA&ppid=a023d971-d971-44ac-a411-85d5afa307e1&p=1"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd and 4th Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Watson Government Complex, Second Floor, Board of Commissioners Meeting Room"            # optional
