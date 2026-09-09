@@ -123,6 +123,41 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
   }
 </style>
 
+{%- comment -%} Server-rendered schema.org Legislation ItemList for the executive
+  orders in the Liquid-readable sidecar (site.data.rendered.ga_executive_orders,
+  built by scripts/build_render_data.py — the most recent year, capped). An
+  executive order is a legal decree, so Legislation with
+  legislationType "ExecutiveOrder" is the accurate type. The full multi-year list
+  loads client-side. {%- endcomment -%}
+{%- assign eo_ld = site.data.rendered.ga_executive_orders -%}
+{%- if eo_ld and eo_ld.rows -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Georgia executive orders",
+  "numberOfItems": {{ eo_ld.rows | size }},
+  "itemListElement": [
+    {%- for o in eo_ld.rows -%}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "item": {
+        "@type": "Legislation",
+        "legislationType": "ExecutiveOrder",
+        "legislationIdentifier": {{ o.number | jsonify }},
+        "name": {{ o.title | jsonify }},
+        "legislationJurisdiction": "Georgia, USA",
+        "legislationPassedBy": { "@type": "GovernmentOrganization", "name": "Office of the Governor of Georgia" }{% if o.date %},
+        "legislationDate": {{ o.date | jsonify }}{% endif %}
+      }
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
 <div class="year-nav" id="yearNav"></div>
 <div class="filter-bar" id="filterBar"></div>
 <div class="order-count" id="orderCount"></div>
