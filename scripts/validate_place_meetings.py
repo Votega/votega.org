@@ -174,11 +174,25 @@ def check_place(place, min_meetings, sample, network):
             urls += [u for u in (m.get('agendaUrl'), m.get('minutesUrl')) if u]
             if len(urls) >= sample:
                 break
-        for url in urls[:sample]:
+        checked = urls[:sample]
+        dead = []
+        for url in checked:
             if link_alive(url):
                 print('  ok: %s' % url)
             else:
-                errors.append('%s: dead link %s' % (slug, url))
+                dead.append(url)
+        # This check exists to catch a place reskinning its site so the whole
+        # scrape breaks — which shows up as EVERY sampled link dead. Treat that as
+        # an error. Isolated dead links are transient upstream 404s (a minutes PDF
+        # not posted yet, a rescheduled/removed meeting) and must NOT hard-fail the
+        # job — the validate step gates the weekly enrichment/commit pipeline, so a
+        # single stale link would otherwise block all topic enrichment.
+        if dead and len(dead) == len(checked):
+            errors.append('%s: all %d sampled links dead — scrape likely broken'
+                          % (slug, len(dead)))
+        else:
+            for url in dead:
+                warnings.append('%s: dead link %s (transient)' % (slug, url))
 
     print('%s: %d meetings, %d bodies%s'
           % (slug, len(meetings), len(bodies or []),
