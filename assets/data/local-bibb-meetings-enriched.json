@@ -1,23 +1,25 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-08T16:02:30Z",
+  "generatedAt": "2026-09-09T11:18:56Z",
   "source": "Macon-Bibb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Macon-Bibb County",
   "count": 25
  },
  "summary": {
   "flags": [
+   "alpr",
    "land-use",
    "millage-budget"
   ],
   "lastActivity": "2026-09-01",
   "topicTotals": {
-   "variance": 10,
-   "millage-budget": 25,
-   "contract": 24,
    "appointment": 24,
-   "development": 16,
+   "contract": 24,
+   "millage-budget": 25,
+   "variance": 10,
+   "alpr": 7,
    "comprehensive-plan": 4,
+   "development": 16,
    "special-land-use": 2,
    "annexation": 2
   },
@@ -199,8 +201,65 @@
    }
   ],
   "landUseMeetings": 20,
-  "alprItems": [],
-  "alprMeetings": 0
+  "alprItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-08-04",
+    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3651,plainText=false)",
+    "terms": [
+     "flock"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-07-21",
+    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3633,plainText=false)",
+    "terms": [
+     "flock"
+    ]
+   },
+   {
+    "title": "Pre-Commission Meeting",
+    "date": "2026-06-16",
+    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3600,plainText=false)",
+    "terms": [
+     "flock"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-03-18",
+    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3430,plainText=false)",
+    "terms": [
+     "alpr"
+    ]
+   },
+   {
+    "title": "Special Called Pre-Commission Meeting",
+    "date": "2026-03-18",
+    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3428,plainText=false)",
+    "terms": [
+     "alpr"
+    ]
+   },
+   {
+    "title": "Pre-Commission Meeting",
+    "date": "2026-01-20",
+    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3360,plainText=false)",
+    "terms": [
+     "alpr"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-01-20",
+    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3362,plainText=false)",
+    "terms": [
+     "alpr"
+    ]
+   }
+  ],
+  "alprMeetings": 7
  },
  "meetings": [
   {
@@ -212,19 +271,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3691,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 322759,
+   "textChars": 321244,
    "pdfSha256": "65f30066af32cb7e61ea61e7f3c0c7752f7a07b735fb994e57a269dadefdd1d2",
    "topics": {
-    "variance": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1,
+    "variance": 1
    },
    "tags": [
-    "variance",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget",
+    "variance"
    ],
    "matchedTerms": [
     "ad valorem",
@@ -254,19 +313,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3685,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 346039,
+   "textChars": 345607,
    "pdfSha256": "bd6660538d86becc6f3d0f77f8d40eaf02512f558d219919c08d93b3b7b76d55",
    "topics": {
-    "variance": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1,
+    "variance": 1
    },
    "tags": [
-    "variance",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget",
+    "variance"
    ],
    "matchedTerms": [
     "ad valorem",
@@ -296,23 +355,25 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3651,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 492106,
+   "textChars": 552973,
    "pdfSha256": "2fcbef53b388ad9ad8a19d14aef32be0632b83fbb1b09676da123a5a297b7158",
    "topics": {
-    "variance": 1,
-    "development": 1,
+    "alpr": 1,
+    "appointment": 1,
     "comprehensive-plan": 1,
-    "millage-budget": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1,
+    "variance": 1
    },
    "tags": [
-    "variance",
-    "development",
+    "alpr",
+    "appointment",
     "comprehensive-plan",
-    "millage-budget",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget",
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -321,6 +382,7 @@
     "comprehensive plan",
     "contract",
     "fiscal year",
+    "flock",
     "procurement",
     "purchase order",
     "subdivision",
@@ -328,7 +390,8 @@
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -341,23 +404,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3649,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 509404,
+   "textChars": 571606,
    "pdfSha256": "66180d8507cbeccd22046f7be37fab6dd83b8141dbaa298a481d3d6aa186fe84",
    "topics": {
-    "variance": 1,
-    "development": 1,
+    "appointment": 1,
     "comprehensive-plan": 1,
-    "millage-budget": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1,
+    "variance": 1
    },
    "tags": [
-    "variance",
-    "development",
+    "appointment",
     "comprehensive-plan",
-    "millage-budget",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget",
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -386,21 +449,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3633,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 671226,
+   "textChars": 697475,
    "pdfSha256": "ce46cc5c012733f051641ae96b97db5c221f0c31b45b4e8c01645d723b4f3b26",
    "topics": {
-    "development": 1,
+    "alpr": 1,
+    "appointment": 1,
     "comprehensive-plan": 1,
-    "millage-budget": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
+    "alpr",
+    "appointment",
     "comprehensive-plan",
-    "millage-budget",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "ad valorem",
@@ -410,6 +475,7 @@
     "comprehensive plan",
     "contract",
     "fiscal year",
+    "flock",
     "future land use",
     "land use plan",
     "mixed-use",
@@ -421,7 +487,8 @@
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -434,21 +501,21 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3630,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 678074,
+   "textChars": 703667,
    "pdfSha256": "1a427e8c129cc4a54bc7e525c1b5f804977817a703a59dbe3ff50d64ad918460",
    "topics": {
-    "development": 1,
+    "appointment": 1,
     "comprehensive-plan": 1,
-    "millage-budget": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
+    "appointment",
     "comprehensive-plan",
-    "millage-budget",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "ad valorem",
@@ -482,19 +549,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3599,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 226382,
+   "textChars": 240097,
    "pdfSha256": "06f1debdd05bd3ab00a30f0c1bd9d65046589c3bd4d3a77efcb6cbbbdeeb6a9a",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "apartment",
@@ -523,19 +590,21 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3600,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 223795,
+   "textChars": 239842,
    "pdfSha256": "5196926f52e852b8b20be58ce124304aafc369732b04f89d534b5e3243f7eb05",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "alpr": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "alpr",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "apartment",
@@ -544,6 +613,7 @@
     "budget",
     "contract",
     "fiscal year",
+    "flock",
     "multifamily",
     "procurement",
     "purchase order",
@@ -551,7 +621,8 @@
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -564,23 +635,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3550,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 453658,
+   "textChars": 458930,
    "pdfSha256": "162ad31f213a0e278e75126b8df29de90dedc4489040d7a339d77e7f8325b89b",
    "topics": {
-    "special-land-use": 1,
-    "variance": 1,
+    "appointment": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1,
-    "appointment": 1
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
-    "special-land-use",
-    "variance",
+    "appointment",
+    "contract",
     "development",
     "millage-budget",
-    "contract",
-    "appointment"
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -610,23 +681,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3536,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 456116,
+   "textChars": 461490,
    "pdfSha256": "2cc1c01e40d369fa222d512afed7acfc6ba121daa8c7d5d0386b1a50d77d6985",
    "topics": {
-    "special-land-use": 1,
-    "variance": 1,
+    "appointment": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1,
-    "appointment": 1
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
-    "special-land-use",
-    "variance",
+    "appointment",
+    "contract",
     "development",
     "millage-budget",
-    "contract",
-    "appointment"
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -656,7 +727,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3507,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 954,
+   "textChars": 796,
    "pdfSha256": "5675c6c0109b05d16e2e3f4e96f682c791b8215d562f20f6e216e30421fb7bfb",
    "topics": {
     "millage-budget": 1
@@ -681,19 +752,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3488,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1212647,
+   "textChars": 1160278,
    "pdfSha256": "81f67141edaf6a71c94f55a386ae10db662d07f53de709fa6fa852e441910c1e",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -723,19 +794,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3484,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1241389,
+   "textChars": 1187961,
    "pdfSha256": "60f3601f598d190e1e00efeeaae29276d11109ff2c7486c35950c059939cee14",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -765,19 +836,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3470,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1184870,
+   "textChars": 1261368,
    "pdfSha256": "2845caa40b87906d85a375b7c7574456f682c67ad1a4fd789a341cbcac3dc31a",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "apartment",
@@ -804,17 +875,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3455,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 201719,
+   "textChars": 200658,
    "pdfSha256": "0d8de328f6105ec78cac72188bb90015ae8321d44f107ddd8d17d0bf778070c6",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "ad valorem",
@@ -840,17 +911,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3453,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 202196,
+   "textChars": 200918,
    "pdfSha256": "6b1d772fa070996ed4096cb9709446e40e80080ed0101607b82d1eedd7e43fb7",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "ad valorem",
@@ -876,25 +947,28 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3430,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2532679,
+   "textChars": 3189331,
    "pdfSha256": "364104e995d82ae71e519952f51c8f5cc261290c67410c86d4da537f902b7ff1",
    "topics": {
-    "variance": 1,
+    "alpr": 1,
     "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1,
-    "appointment": 1
+    "variance": 1
    },
    "tags": [
-    "variance",
+    "alpr",
     "annexation",
+    "appointment",
+    "contract",
     "development",
     "millage-budget",
-    "contract",
-    "appointment"
+    "variance"
    ],
    "matchedTerms": [
+    "alpr",
     "annex",
     "apartment",
     "appoint",
@@ -909,7 +983,8 @@
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -922,26 +997,29 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3428,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2632642,
+   "textChars": 3290074,
    "pdfSha256": "6ce23427f43742ca513eb4343428f753c5265da1fc88ac39ad3ed9e387b7f873",
    "topics": {
-    "variance": 1,
+    "alpr": 1,
     "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1,
-    "appointment": 1
+    "variance": 1
    },
    "tags": [
-    "variance",
+    "alpr",
     "annexation",
+    "appointment",
+    "contract",
     "development",
     "millage-budget",
-    "contract",
-    "appointment"
+    "variance"
    ],
    "matchedTerms": [
     "ad valorem",
+    "alpr",
     "annex",
     "apartment",
     "appoint",
@@ -957,7 +1035,8 @@
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -970,17 +1049,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3392,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 70165,
+   "textChars": 69580,
    "pdfSha256": "0756ebd480ce499fca7dd80c6b8b9d86aeaddf0c3e8efd92af0159ad97305a42",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -1004,17 +1083,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3394,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 76921,
+   "textChars": 75998,
    "pdfSha256": "6bfc0fead6901891b0b1f62364dc017235b06df2aab5e0b9ddb94bb7bd50b0e9",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -1038,19 +1117,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3381,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 247026,
+   "textChars": 242076,
    "pdfSha256": "7a6dbfc2912080aa482fd7b6766e4cd3e7c87684b8e81d1d1ebfdfe1fe19014f",
    "topics": {
-    "variance": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1,
+    "variance": 1
    },
    "tags": [
-    "variance",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget",
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -1076,19 +1155,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3379,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 269433,
+   "textChars": 262744,
    "pdfSha256": "97bfd04c12ddc92bc1331e41f774160850fa64f13518b7f377ea65e505281c99",
    "topics": {
-    "variance": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1,
+    "variance": 1
    },
    "tags": [
-    "variance",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget",
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -1114,21 +1193,24 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3360,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 782362,
+   "textChars": 794574,
    "pdfSha256": "c65482095572e448c712c9709542b1ee2e73b338897c3656653728a8226cf168",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "alpr": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "alpr",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
+    "alpr",
     "apartment",
     "appoint",
     "award of",
@@ -1142,7 +1224,8 @@
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -1155,21 +1238,24 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3362,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 766747,
+   "textChars": 779337,
    "pdfSha256": "43e7200d5f3f46efc9e5a4e262992c94ce691008f064c30002e490dea43d0d9d",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "alpr": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "alpr",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
+    "alpr",
     "apartment",
     "appoint",
     "award of",
@@ -1182,7 +1268,8 @@
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -1195,19 +1282,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3339,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 37929,
+   "textChars": 38940,
    "pdfSha256": "93ecdf3bf427987c7f59805da16ea559c0113c66348b0007a54f7bb35fca9c7d",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",

@@ -1,31 +1,33 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-08T16:02:30Z",
+  "generatedAt": "2026-09-09T11:17:03Z",
   "source": "Paulding County (municode agenda/minutes PDFs, poppler+OCR)",
   "place": "Paulding County",
   "count": 25
  },
  "summary": {
   "flags": [
+   "alpr",
    "data-center",
    "land-use",
    "millage-budget"
   ],
   "lastActivity": "2026-09-08",
   "topicTotals": {
-   "data-center": 17,
    "contract": 20,
+   "data-center": 18,
+   "rezoning": 9,
+   "variance": 5,
+   "alpr": 7,
    "appointment": 7,
    "development": 5,
-   "millage-budget": 10,
-   "rezoning": 8,
-   "variance": 4
+   "millage-budget": 10
   },
   "dataCenterItems": [
    {
     "title": "Board of Commissioners",
     "date": "2026-09-08",
-    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-689e9b7312de4e6b8cc046eb7f67c817.pdf"
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-ce977a5ef5a9430eab33c2ceb54e17b1.pdf"
    }
   ],
   "landUseItems": [
@@ -47,11 +49,101 @@
     ]
    }
   ],
-  "landUseMeetings": 21,
-  "alprItems": [],
-  "alprMeetings": 0
+  "landUseMeetings": 22,
+  "alprItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-09-08",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-689e9b7312de4e6b8cc046eb7f67c817.pdf",
+    "terms": [
+     "flock"
+    ]
+   },
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-08-25",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-b6a87c16e180419890a5f6ca730a9ba2.pdf",
+    "terms": [
+     "flock"
+    ]
+   },
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-08-11",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-c83f3a2f035a4feda43980d8f6d2b7e5.pdf",
+    "terms": [
+     "flock"
+    ]
+   },
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-07-28",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-00107d3a3e4a42c3af2a7d720e3553dc.pdf",
+    "terms": [
+     "flock"
+    ]
+   },
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-07-14",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-ebd41cb0ecd343a0adf29c6de6088edc.pdf",
+    "terms": [
+     "flock"
+    ]
+   },
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-06-23",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-697c3fb244314fa4bb0bc05ca489576f.pdf",
+    "terms": [
+     "flock"
+    ]
+   }
+  ],
+  "alprMeetings": 7
  },
  "meetings": [
+  {
+   "id": "ce977a5ef5a9430eab33c2ceb54e17b1",
+   "date": "2026-09-08",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-ce977a5ef5a9430eab33c2ceb54e17b1.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-ce977a5ef5a9430eab33c2ceb54e17b1.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 11764,
+   "pdfSha256": "a5f171d57f78cef67baf395ca24551a191c14920971826a9a76639ffc982fcb9",
+   "topics": {
+    "contract": 1,
+    "data-center": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "data-center",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "contract",
+    "data center",
+    "rezon",
+    "variance"
+   ],
+   "flags": [
+    "land-use",
+    "data-center"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Board of Commissioners",
+     "date": "2026-09-08",
+     "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-ce977a5ef5a9430eab33c2ceb54e17b1.pdf"
+    }
+   ]
+  },
   {
    "id": "689e9b7312de4e6b8cc046eb7f67c817",
    "date": "2026-09-08",
@@ -61,23 +153,27 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-689e9b7312de4e6b8cc046eb7f67c817.pdf",
    "textMethod": "pdftotext",
-   "textChars": 4549,
-   "pdfSha256": "f98ba9e36aa03880c67860a537f03b45c1eaac8a8c334a676052102d6e6091d3",
+   "textChars": 4374,
+   "pdfSha256": "e0502cfb1fcd6eb1de185231edaa52c73b812e479bcd4277c13bc41e4cd2aea0",
    "topics": {
-    "data-center": 1,
-    "contract": 1
+    "alpr": 1,
+    "contract": 1,
+    "data-center": 1
    },
    "tags": [
-    "data-center",
-    "contract"
+    "alpr",
+    "contract",
+    "data-center"
    ],
    "matchedTerms": [
     "contract",
-    "data center"
+    "data center",
+    "flock"
    ],
    "flags": [
     "land-use",
-    "data-center"
+    "data-center",
+    "alpr"
    ],
    "dataCenterItems": [
     {
@@ -96,20 +192,24 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-b6a87c16e180419890a5f6ca730a9ba2.pdf",
    "textMethod": "pdftotext",
-   "textChars": 6751,
+   "textChars": 7327,
    "pdfSha256": "8afdc7f11a1064616a215a5203d83c8958c2cbe6ec8f64853881a9074b570ab3",
    "topics": {
+    "alpr": 1,
     "data-center": 1
    },
    "tags": [
+    "alpr",
     "data-center"
    ],
    "matchedTerms": [
-    "data center"
+    "data center",
+    "flock"
    ],
    "flags": [
     "land-use",
-    "data-center"
+    "data-center",
+    "alpr"
    ],
    "dataCenterItems": [
     {
@@ -128,23 +228,27 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-4b05fa3853ec4025a61f8ba195b42275.pdf",
    "textMethod": "pdftotext",
-   "textChars": 4531,
+   "textChars": 4721,
    "pdfSha256": "997137b946845bf6334c94da8e9572531845174b585ed4bb13c229e2762d1046",
    "topics": {
-    "data-center": 1,
-    "appointment": 1
+    "alpr": 1,
+    "appointment": 1,
+    "data-center": 1
    },
    "tags": [
-    "data-center",
-    "appointment"
+    "alpr",
+    "appointment",
+    "data-center"
    ],
    "matchedTerms": [
     "appoint",
-    "data center"
+    "data center",
+    "flock"
    ],
    "flags": [
     "land-use",
-    "data-center"
+    "data-center",
+    "alpr"
    ],
    "dataCenterItems": [
     {
@@ -163,14 +267,16 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-c83f3a2f035a4feda43980d8f6d2b7e5.pdf",
    "textMethod": "pdftotext",
-   "textChars": 3906,
+   "textChars": 4250,
    "pdfSha256": "eaf6e23678b73f7e337de3a27e94bf301c72c2e8639146892bc91a53822bfd54",
    "topics": {
+    "alpr": 1,
     "data-center": 1,
     "development": 1,
     "millage-budget": 1
    },
    "tags": [
+    "alpr",
     "data-center",
     "development",
     "millage-budget"
@@ -178,13 +284,15 @@
    "matchedTerms": [
     "budget",
     "data center",
+    "flock",
     "millage",
     "subdivision"
    ],
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": [
     {
@@ -203,19 +311,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-140b84c276c443a1870d10104604b0d7.pdf",
    "textMethod": "pdftotext",
-   "textChars": 8585,
+   "textChars": 8924,
    "pdfSha256": "19046d8ef62ad799c7b3a8bac7558e1349b57862734caa835ccf8743318151eb",
    "topics": {
     "data-center": 1,
-    "rezoning": 1,
     "development": 1,
-    "millage-budget": 1
+    "millage-budget": 1,
+    "rezoning": 1
    },
    "tags": [
     "data-center",
-    "rezoning",
     "development",
-    "millage-budget"
+    "millage-budget",
+    "rezoning"
    ],
    "matchedTerms": [
     "budget",
@@ -246,15 +354,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-e68ca477bd394b17a8f2c3c0ef70d803.pdf",
    "textMethod": "pdftotext",
-   "textChars": 8471,
+   "textChars": 9028,
    "pdfSha256": "65ceec8a25d0ba6ecc1cc887f792937c93533910f3593b73543a199d4d668d1d",
    "topics": {
-    "data-center": 1,
-    "contract": 1
+    "contract": 1,
+    "data-center": 1
    },
    "tags": [
-    "data-center",
-    "contract"
+    "contract",
+    "data-center"
    ],
    "matchedTerms": [
     "contract",
@@ -281,27 +389,31 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-00107d3a3e4a42c3af2a7d720e3553dc.pdf",
    "textMethod": "pdftotext",
-   "textChars": 7078,
+   "textChars": 7425,
    "pdfSha256": "5537a55c7fc0ba08ddba1770ec949db4cb65bc7b02b30d38749d6e473c44dfd8",
    "topics": {
+    "alpr": 1,
+    "contract": 1,
     "data-center": 1,
-    "millage-budget": 1,
-    "contract": 1
+    "millage-budget": 1
    },
    "tags": [
+    "alpr",
+    "contract",
     "data-center",
-    "millage-budget",
-    "contract"
+    "millage-budget"
    ],
    "matchedTerms": [
     "budget",
     "contract",
-    "data center"
+    "data center",
+    "flock"
    ],
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": [
     {
@@ -320,27 +432,31 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-ebd41cb0ecd343a0adf29c6de6088edc.pdf",
    "textMethod": "pdftotext",
-   "textChars": 6304,
+   "textChars": 6581,
    "pdfSha256": "2f211f9ea08a62eba68692deef82760f76d58454955f9b1615d8923dc39a8657",
    "topics": {
+    "alpr": 1,
+    "contract": 1,
     "data-center": 1,
-    "millage-budget": 1,
-    "contract": 1
+    "millage-budget": 1
    },
    "tags": [
+    "alpr",
+    "contract",
     "data-center",
-    "millage-budget",
-    "contract"
+    "millage-budget"
    ],
    "matchedTerms": [
     "budget",
     "contract",
-    "data center"
+    "data center",
+    "flock"
    ],
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": [
     {
@@ -359,19 +475,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-a1c7758398e84dcd984b9089d676195f.pdf",
    "textMethod": "pdftotext",
-   "textChars": 16285,
+   "textChars": 16766,
    "pdfSha256": "204fd33a4985f863fe5a0fc8952495868c6f24c137c20e761e59bce48d9ad6d1",
    "topics": {
+    "contract": 1,
     "data-center": 1,
-    "rezoning": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1
    },
    "tags": [
+    "contract",
     "data-center",
-    "rezoning",
     "millage-budget",
-    "contract"
+    "rezoning"
    ],
    "matchedTerms": [
     "budget",
@@ -401,19 +517,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-b503389bc6cc4d04944776b3feda712d.pdf",
    "textMethod": "pdftotext",
-   "textChars": 8923,
+   "textChars": 9363,
    "pdfSha256": "ea0c30cf042abbdfbe465b30c77d9577408be092af0611f5c19a42b5c583baa0",
    "topics": {
+    "contract": 1,
     "data-center": 1,
     "rezoning": 1,
-    "variance": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
+    "contract",
     "data-center",
     "rezoning",
-    "variance",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "contract",
@@ -442,29 +558,33 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-697c3fb244314fa4bb0bc05ca489576f.pdf",
    "textMethod": "pdftotext",
-   "textChars": 7658,
+   "textChars": 8029,
    "pdfSha256": "b46fda1e9e0ab8eea62c7c1b7ecd2f69dbe604f9b4da235bce4707a29d9da734",
    "topics": {
+    "alpr": 1,
+    "contract": 1,
     "data-center": 1,
     "rezoning": 1,
-    "variance": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
+    "alpr",
+    "contract",
     "data-center",
     "rezoning",
-    "variance",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "contract",
     "data center",
+    "flock",
     "rezon",
     "variance"
    ],
    "flags": [
     "land-use",
-    "data-center"
+    "data-center",
+    "alpr"
    ],
    "dataCenterItems": [
     {
@@ -483,23 +603,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-d5fe02f4dfb840ea8a925eabc7469a2e.pdf",
    "textMethod": "pdftotext",
-   "textChars": 14880,
+   "textChars": 14810,
    "pdfSha256": "fb59cc48093d90fe5be97096b437c4311d23b8b17f47fcf8e748e2209d374f28",
    "topics": {
-    "data-center": 1,
-    "rezoning": 1,
-    "variance": 1,
-    "development": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "data-center": 1,
+    "development": 1,
+    "rezoning": 1,
+    "variance": 1
    },
    "tags": [
-    "data-center",
-    "rezoning",
-    "variance",
-    "development",
+    "appointment",
     "contract",
-    "appointment"
+    "data-center",
+    "development",
+    "rezoning",
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -530,19 +650,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-53c50a9b577e4da3ac29045ac55a9117.pdf",
    "textMethod": "pdftotext",
-   "textChars": 8338,
+   "textChars": 8592,
    "pdfSha256": "38c49a13ca05091adf3c455adf9bd7077cc43471dfc2d51a8ad1d0b097f551b8",
    "topics": {
-    "data-center": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "data-center": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "data-center",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "data-center",
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -572,7 +692,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-155bd2dfb58249ff9617a51ff72a5c2b.pdf",
    "textMethod": "pdftotext",
-   "textChars": 1742,
+   "textChars": 1855,
    "pdfSha256": "bb38dd986a2244ade5db82e78eb6eb060860dd62fd9e45374af6f79d5ae69db5",
    "topics": {
     "data-center": 1
@@ -604,15 +724,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-d425b224e96b419bb8f4a7d83ddc4330.pdf",
    "textMethod": "pdftotext",
-   "textChars": 9580,
+   "textChars": 9900,
    "pdfSha256": "da52d1702e1fb2233c9214c10f5f2d9f47c5919e7a884239376fa67e231557a2",
    "topics": {
-    "millage-budget": 1,
-    "contract": 1
+    "contract": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
-    "contract"
+    "contract",
+    "millage-budget"
    ],
    "matchedTerms": [
     "budget",
@@ -632,15 +752,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-0708ef2a5131475ea93da3fb1765c3b2.pdf",
    "textMethod": "pdftotext",
-   "textChars": 7833,
+   "textChars": 8221,
    "pdfSha256": "09d7b238f1b0175fbc73be78ded96ea9ab119df6fa6bd4263dab2ef8366a2324",
    "topics": {
-    "millage-budget": 1,
-    "contract": 1
+    "contract": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
-    "contract"
+    "contract",
+    "millage-budget"
    ],
    "matchedTerms": [
     "budget",
@@ -660,15 +780,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-2f7f15ede2484c06b95fd7021a78329a.pdf",
    "textMethod": "pdftotext",
-   "textChars": 4553,
+   "textChars": 4684,
    "pdfSha256": "5c4fa5ab281fe79ddde3818484331e61b5305a67f1dda3bda2e1114956f78fc6",
    "topics": {
-    "data-center": 1,
-    "contract": 1
+    "contract": 1,
+    "data-center": 1
    },
    "tags": [
-    "data-center",
-    "contract"
+    "contract",
+    "data-center"
    ],
    "matchedTerms": [
     "contract",
@@ -695,15 +815,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-2e86c3dea75349e59c23de3d9b71384b.pdf",
    "textMethod": "pdftotext",
-   "textChars": 5748,
+   "textChars": 5810,
    "pdfSha256": "b33022d1851d76c95cd0386ae018443e8d9c4fc2a195275c24ca834c6a56346b",
    "topics": {
-    "data-center": 1,
-    "contract": 1
+    "contract": 1,
+    "data-center": 1
    },
    "tags": [
-    "data-center",
-    "contract"
+    "contract",
+    "data-center"
    ],
    "matchedTerms": [
     "contract",
@@ -730,17 +850,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-8b49cef7e2f04e02b6a068772d978ecb.pdf",
    "textMethod": "pdftotext",
-   "textChars": 9329,
+   "textChars": 9767,
    "pdfSha256": "30ba4aeccec4a5582b7cebb2c4b207d62f7e2f8e41ca2f953c9017d848c14943",
    "topics": {
-    "rezoning": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "rezoning": 1
    },
    "tags": [
-    "rezoning",
+    "appointment",
     "contract",
-    "appointment"
+    "rezoning"
    ],
    "matchedTerms": [
     "appoint",
@@ -761,19 +881,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-17453c2f44b641d6b8cdab849b6021a9.pdf",
    "textMethod": "pdftotext",
-   "textChars": 16827,
+   "textChars": 17582,
    "pdfSha256": "d9f2b325abca13bb3ed20c9b69085e336d155c1f4e3c8cd56b343681dc2fb096",
    "topics": {
-    "rezoning": 1,
-    "variance": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "rezoning": 1,
+    "variance": 1
    },
    "tags": [
-    "rezoning",
-    "variance",
+    "appointment",
     "contract",
-    "appointment"
+    "rezoning",
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -795,17 +915,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-7887febb3bdc481c8279d90c46d9120d.pdf",
    "textMethod": "pdftotext",
-   "textChars": 7086,
+   "textChars": 7393,
    "pdfSha256": "ee822ec3b3c0e88fed6039d3df69f4888d28661737c14030f97464a66c9af16b",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -826,19 +946,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-2a85e3a9089548aeaa7e339b11edcddb.pdf",
    "textMethod": "pdftotext",
-   "textChars": 8349,
+   "textChars": 8720,
    "pdfSha256": "efc41203c43a8044b5dbee28043ba9a1e460fc3c607b134c6603c8e6918edfac",
    "topics": {
-    "data-center": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "data-center": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "data-center",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "data-center",
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -868,17 +988,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-b6d6b1ace90f4b0fb741f45276d5f267.pdf",
    "textMethod": "pdftotext",
-   "textChars": 12861,
+   "textChars": 13227,
    "pdfSha256": "201e22847cdf386af255dbd27180ba4833c8f498e39fc02d55d5ed57d3f2cc61",
    "topics": {
-    "rezoning": 1,
+    "contract": 1,
     "development": 1,
-    "contract": 1
+    "rezoning": 1
    },
    "tags": [
-    "rezoning",
+    "contract",
     "development",
-    "contract"
+    "rezoning"
    ],
    "matchedTerms": [
     "contract",
@@ -899,15 +1019,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-481082a89b7e43f085289854ed0f0c13.pdf",
    "textMethod": "pdftotext",
-   "textChars": 8171,
+   "textChars": 8520,
    "pdfSha256": "45af880537e942665356dc48f17d9248176eed882789c89726e1c0aa5a5987e6",
    "topics": {
-    "development": 1,
-    "contract": 1
+    "contract": 1,
+    "development": 1
    },
    "tags": [
-    "development",
-    "contract"
+    "contract",
+    "development"
    ],
    "matchedTerms": [
     "contract",
@@ -916,29 +1036,6 @@
    "flags": [
     "land-use"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "b6922025e5fa4f81851b83cff4e35931",
-   "date": "2026-02-24",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-b6922025e5fa4f81851b83cff4e35931.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-b6922025e5fa4f81851b83cff4e35931.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 5971,
-   "pdfSha256": "0e83dacf9a2d45ee14e3cf7c8ffe7cee5ca763b56831535008cb99b1624b3dc7",
-   "topics": {
-    "contract": 1
-   },
-   "tags": [
-    "contract"
-   ],
-   "matchedTerms": [
-    "contract"
-   ],
-   "flags": [],
    "dataCenterItems": []
   }
  ]

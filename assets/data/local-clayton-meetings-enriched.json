@@ -1,26 +1,28 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-08T16:02:27Z",
+  "generatedAt": "2026-09-09T11:14:36Z",
   "source": "Clayton County (primegov agenda/minutes PDFs, poppler+OCR)",
   "place": "Clayton County",
-  "count": 24
+  "count": 25
  },
  "summary": {
   "flags": [
+   "alpr",
    "data-center",
    "land-use",
    "millage-budget"
   ],
   "lastActivity": "2026-09-01",
   "topicTotals": {
-   "millage-budget": 18,
-   "contract": 12,
    "appointment": 10,
+   "contract": 12,
+   "millage-budget": 19,
+   "comprehensive-plan": 4,
+   "development": 6,
    "rezoning": 3,
    "special-land-use": 5,
    "variance": 3,
-   "development": 6,
-   "comprehensive-plan": 4,
+   "alpr": 2,
    "data-center": 4
   },
   "dataCenterItems": [
@@ -90,8 +92,25 @@
    }
   ],
   "landUseMeetings": 9,
-  "alprItems": [],
-  "alprMeetings": 0
+  "alprItems": [
+   {
+    "title": "Regular Business Meeting",
+    "date": "2026-08-04",
+    "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5391&compileOutputType=1",
+    "terms": [
+     "fusus"
+    ]
+   },
+   {
+    "title": "Regular Business Meeting",
+    "date": "2026-05-19",
+    "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5351&compileOutputType=1",
+    "terms": [
+     "fusus"
+    ]
+   }
+  ],
+  "alprMeetings": 2
  },
  "meetings": [
   {
@@ -103,17 +122,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5407&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 20517,
+   "textChars": 20372,
    "pdfSha256": "5dd8fa946df98498e6ccf389ca398b68ade6936d58c7aad3d2aa18cd3454afee",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -135,27 +154,27 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5399&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 39874,
+   "textChars": 39516,
    "pdfSha256": "d6bd5fa73b3120d5f479aa47672c14d08356bc5d61f3c8830746073565b828d1",
    "topics": {
+    "appointment": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
-    "variance": 1,
-    "development": 1,
-    "comprehensive-plan": 1,
-    "millage-budget": 1,
-    "contract": 1,
-    "appointment": 1
+    "variance": 1
    },
    "tags": [
+    "appointment",
+    "comprehensive-plan",
+    "contract",
+    "development",
+    "millage-budget",
     "rezoning",
     "special-land-use",
-    "variance",
-    "development",
-    "comprehensive-plan",
-    "millage-budget",
-    "contract",
-    "appointment"
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -190,7 +209,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5599&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 607,
+   "textChars": 811,
    "pdfSha256": "fa71a09a37fd7078f21a9a2659ae938ccfb49f268ca23530aa2b847f524f678d",
    "topics": {},
    "tags": [],
@@ -207,7 +226,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5592&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 713,
+   "textChars": 716,
    "pdfSha256": "13ed16e6cd1e828357f42b56ab4b2eb651bb362a06e3300ba1368fcb1277b68a",
    "topics": {},
    "tags": [],
@@ -224,15 +243,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5188&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 2364,
+   "textChars": 2387,
    "pdfSha256": "d304f706110cfd9c83a980a90cfbe29f300c921ddfaa77358557ab97a4b026be",
    "topics": {
-    "contract": 1,
-    "appointment": 1
+    "appointment": 1,
+    "contract": 1
    },
    "tags": [
-    "contract",
-    "appointment"
+    "appointment",
+    "contract"
    ],
    "matchedTerms": [
     "appoint",
@@ -250,31 +269,35 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5391&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 22650,
+   "textChars": 22249,
    "pdfSha256": "11070b9e80eb9dac4c307ab06d88a8e8e99ce151807b0272022f66e2677eddff",
    "topics": {
-    "data-center": 1,
-    "millage-budget": 1,
+    "alpr": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "data-center": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "data-center",
-    "millage-budget",
+    "alpr",
+    "appointment",
     "contract",
-    "appointment"
+    "data-center",
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
     "contract",
     "data center",
+    "fusus",
     "procurement"
    ],
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": [
     {
@@ -293,23 +316,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5383&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 19244,
+   "textChars": 18828,
    "pdfSha256": "ae843f7f6bd5b34ce8eddc00ac0958bbdebba6ba072f62dc7b4f2a5fbb99b86a",
    "topics": {
-    "special-land-use": 1,
-    "variance": 1,
-    "development": 1,
     "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
-    "special-land-use",
-    "variance",
-    "development",
     "comprehensive-plan",
+    "contract",
+    "development",
     "millage-budget",
-    "contract"
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
     "budget",
@@ -336,7 +359,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5167&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 1538,
+   "textChars": 1592,
    "pdfSha256": "eeb56a8183c5ae71248d5531b5d7d7d9e956134a3e7dffb0dd6237480c7b370c",
    "topics": {},
    "tags": [],
@@ -353,17 +376,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5375&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 25489,
+   "textChars": 25171,
    "pdfSha256": "c98b8a9f2435ec828ee4dae8e5332c8ade4854f0490c890d0669307f56508b93",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "ad valorem",
@@ -387,7 +410,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5538&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 1806,
+   "textChars": 1828,
    "pdfSha256": "2f4013cedbb22335d079d5ee158518598b03f8e7fce4d8fd0bba95709eec7fbc",
    "topics": {
     "millage-budget": 1
@@ -413,27 +436,27 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5367&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 54176,
+   "textChars": 52751,
    "pdfSha256": "24c7d074bc386aac22ab93e08b91c55e9198060231ebb255346a3edb1c4ebc12",
    "topics": {
-    "data-center": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "development": 1,
+    "appointment": 1,
     "comprehensive-plan": 1,
-    "millage-budget": 1,
     "contract": 1,
-    "appointment": 1
+    "data-center": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "special-land-use": 1
    },
    "tags": [
-    "data-center",
-    "rezoning",
-    "special-land-use",
-    "development",
+    "appointment",
     "comprehensive-plan",
-    "millage-budget",
     "contract",
-    "appointment"
+    "data-center",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "special-land-use"
    ],
    "matchedTerms": [
     "appoint",
@@ -474,7 +497,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5554&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 245,
+   "textChars": 302,
    "pdfSha256": "6899212fe6e7f82023926a80ed1e0fe8605c37d3f52c0bee84403bd7b2bf4b09",
    "topics": {
     "millage-budget": 1
@@ -499,7 +522,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5146&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 1449,
+   "textChars": 1520,
    "pdfSha256": "801d0a02ac594eeed8f1eb6137388468c533a5334fbf87bf912f4ac03d54793e",
    "topics": {
     "data-center": 1
@@ -531,19 +554,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5359&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 19328,
+   "textChars": 19032,
    "pdfSha256": "c5423eaab5d20b394a92d25adbbe82a3af8c5dd21b6ba34c074bde0655107c38",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -569,31 +592,35 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5351&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 34375,
+   "textChars": 34070,
    "pdfSha256": "01415fb42154dc1995ee9756bcb3840d3b4e47a2df532d79a93bcd10f15dd353",
    "topics": {
-    "special-land-use": 1,
+    "alpr": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "special-land-use": 1
    },
    "tags": [
-    "special-land-use",
+    "alpr",
+    "contract",
     "development",
     "millage-budget",
-    "contract"
+    "special-land-use"
    ],
    "matchedTerms": [
     "budget",
     "conditional use",
     "contract",
     "fiscal year",
+    "fusus",
     "mixed use",
     "procurement"
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -606,7 +633,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5343&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 1236,
+   "textChars": 1306,
    "pdfSha256": "5799dc7b2848654511847e46ab38ffd5b3c8de5ed91ff96d06c5eeb16486970b",
    "topics": {
     "data-center": 1
@@ -638,17 +665,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5335&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 23082,
+   "textChars": 23016,
    "pdfSha256": "80ac8cb0a17ab41a1db804e0e7aaa502390244c62122779f11fbc0ad416405b6",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -670,7 +697,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5522&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 239,
+   "textChars": 319,
    "pdfSha256": "90ddaaf9b39bd994419babaff9771f4a326a789c3b8ee8ca6763faf6dced9a7f",
    "topics": {
     "millage-budget": 1
@@ -695,7 +722,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5487&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 240,
+   "textChars": 318,
    "pdfSha256": "3b3da02525860f7b8fbd8b788693c034dd83805762a681892a487cd7d0da3209",
    "topics": {
     "millage-budget": 1
@@ -720,7 +747,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5479&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 241,
+   "textChars": 320,
    "pdfSha256": "04ccf50a47ad2cf9d7eca73c19c3dad3a3f68ffd6229ff90ce7fbdc29fba7087",
    "topics": {
     "millage-budget": 1
@@ -745,27 +772,27 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5111&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 45189,
+   "textChars": 44156,
    "pdfSha256": "40beb0277c5c61e89d53cbab0ae2283dc4554997fe5b504466aec1c8cc1f365a",
    "topics": {
+    "appointment": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
-    "variance": 1,
-    "development": 1,
-    "comprehensive-plan": 1,
-    "millage-budget": 1,
-    "contract": 1,
-    "appointment": 1
+    "variance": 1
    },
    "tags": [
+    "appointment",
+    "comprehensive-plan",
+    "contract",
+    "development",
+    "millage-budget",
     "rezoning",
     "special-land-use",
-    "variance",
-    "development",
-    "comprehensive-plan",
-    "millage-budget",
-    "contract",
-    "appointment"
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -798,7 +825,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5471&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 241,
+   "textChars": 321,
    "pdfSha256": "47063efc53bc8dee0f00c74b592bfe869b0192fd6de709b9d7bf0377ec6174b2",
    "topics": {
     "millage-budget": 1
@@ -823,7 +850,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5104&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 1343,
+   "textChars": 1386,
    "pdfSha256": "9c1ebab1426a80aa34fd4a49692ee7220c044f4c0173670ad73a70e7b2b364bd",
    "topics": {
     "millage-budget": 1
@@ -848,17 +875,17 @@
    "textSource": "minutes",
    "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5067&compileOutputType=1",
    "textMethod": "pdftotext",
-   "textChars": 37580,
+   "textChars": 37435,
    "pdfSha256": "bb5d158942782c5df113d6d5182041b85b80a4bb4c0db275bd8f193f21fd86a2",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -867,6 +894,31 @@
     "fiscal year",
     "millage",
     "procurement"
+   ],
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "677",
+   "date": "2026-03-30",
+   "body": "Board of Commissioners",
+   "title": "Special Called Meeting",
+   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5328&compileOutputType=1",
+   "textSource": "agenda",
+   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5328&compileOutputType=1",
+   "textMethod": "pdftotext",
+   "textChars": 1393,
+   "pdfSha256": "754cd4e5e33aa9fa0db556051a3c8f3e508e437c858fabe31e4284e3c071d23d",
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget"
    ],
    "flags": [
     "millage-budget"
