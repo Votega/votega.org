@@ -41,6 +41,10 @@ jobs:
           git add -f assets/data/scotus-decisions.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
+          elif python scripts/only_keys_changed.py assets/data/scotus-decisions.json metadata.generatedAt; then
+            echo "Only metadata.generatedAt changed — skipping redundant commit"
+            git restore --staged assets/data/scotus-decisions.json
+            git checkout -- assets/data/scotus-decisions.json
           else
             git commit -m "Update SCOTUS decisions data"
             pushed=0
