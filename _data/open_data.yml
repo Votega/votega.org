@@ -136,6 +136,29 @@ datasets:
     docs: /about-the-data#2026-election-races--candidates
     contribute: https://github.com/Votega/ga-races-elections/issues
 
+  - id: ga-local-government
+    title: Georgia Local Government Agenda Topics
+    hosting: repo
+    summary: >
+      What Georgia county and city governments are discussing on their published
+      agendas and minutes — surveillance cameras (ALPR), data centers, and land
+      use — classified by keyword, with the source document for every mention,
+      plus the jurisdiction registry and per-place coverage. Excerpts are included
+      only for structured sources (Legistar / Granicus); OCR public-comment
+      excerpts are withheld.
+    source: Published agendas &amp; minutes of Georgia county and municipal governments
+    scope: Georgia counties &amp; cities with an automated agenda feed
+    cadence: Twice weekly
+    repo_url: https://github.com/Votega/ga-local-government
+    files:
+      - { name: "latest.json", desc: "Start here — indexes every file, coverage, and last scan", url: "https://github.com/Votega/ga-local-government/blob/main/latest.json" }
+      - { name: "data/mentions.json", desc: "Every topic mention (ALPR, data centers, land use), with source", url: "https://github.com/Votega/ga-local-government/blob/main/data/mentions.json" }
+      - { name: "data/mentions.csv", desc: "Same, flat for spreadsheets", url: "https://github.com/Votega/ga-local-government/blob/main/data/mentions.csv" }
+      - { name: "data/places.json", desc: "Jurisdiction registry — official agenda links + meeting schedule", url: "https://github.com/Votega/ga-local-government/blob/main/data/places.json" }
+      - { name: "data/coverage.json", desc: "Per-place topic counts and last activity", url: "https://github.com/Votega/ga-local-government/blob/main/data/coverage.json" }
+    docs: /about-the-data#agenda-topic-badges
+    contribute: https://github.com/Votega/ga-local-government/issues
+
   # --------------------------------------------------------------------------
   # ON VOTEGA.ORG (direct JSON — no dedicated repo yet)
   # --------------------------------------------------------------------------
