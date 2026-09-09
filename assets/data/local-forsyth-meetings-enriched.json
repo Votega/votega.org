@@ -1,25 +1,27 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-08T16:02:27Z",
+  "generatedAt": "2026-09-09T11:14:44Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
  },
  "summary": {
   "flags": [
+   "alpr",
    "land-use",
    "millage-budget"
   ],
   "lastActivity": "2026-09-08",
   "topicTotals": {
-   "millage-budget": 20,
    "contract": 23,
+   "millage-budget": 20,
+   "development": 12,
    "rezoning": 15,
    "variance": 11,
-   "development": 12,
    "appointment": 5,
    "comprehensive-plan": 4,
    "special-land-use": 6,
+   "alpr": 3,
    "annexation": 3
   },
   "dataCenterItems": [],
@@ -210,8 +212,33 @@
    }
   ],
   "landUseMeetings": 19,
-  "alprItems": [],
-  "alprMeetings": 0
+  "alprItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-06-18",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5174,plainText=false)",
+    "terms": [
+     "motorola solutions"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Work Session",
+    "date": "2026-06-09",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5154,plainText=false)",
+    "terms": [
+     "motorola solutions"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Work Session",
+    "date": "2026-04-28",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5076,plainText=false)",
+    "terms": [
+     "motorola solutions"
+    ]
+   }
+  ],
+  "alprMeetings": 3
  },
  "meetings": [
   {
@@ -223,15 +250,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5311,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7687,
+   "textChars": 8079,
    "pdfSha256": "7c78a37a5b29a7026dd93f8d5b9f3e54cbd66f5b4d05b68b1b7753d7d41b810a",
    "topics": {
-    "millage-budget": 1,
-    "contract": 1
+    "contract": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
-    "contract"
+    "contract",
+    "millage-budget"
    ],
    "matchedTerms": [
     "award of",
@@ -254,21 +281,21 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5298,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13061,
+   "textChars": 14823,
    "pdfSha256": "28c7f3769bae0c97d3f60fad539b8c2d37f8320213b21c2819bed9364356b0c9",
    "topics": {
-    "rezoning": 1,
-    "variance": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1,
+    "variance": 1
    },
    "tags": [
-    "rezoning",
-    "variance",
+    "contract",
     "development",
     "millage-budget",
-    "contract"
+    "rezoning",
+    "variance"
    ],
    "matchedTerms": [
     "budget",
@@ -294,19 +321,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5290,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10719,
+   "textChars": 11298,
    "pdfSha256": "9eae057d5915277a3e1414095f3314c5a9ea01d0cb26b5fd91dddde730ee4783",
    "topics": {
-    "development": 1,
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "development",
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -330,21 +357,21 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5276,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 12446,
+   "textChars": 13103,
    "pdfSha256": "b6cb922162b8c10b017294b7efc111f2ec048b6bacb3d8db71fa383dd84108c5",
    "topics": {
-    "rezoning": 1,
-    "variance": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1,
+    "variance": 1
    },
    "tags": [
-    "rezoning",
-    "variance",
+    "contract",
     "development",
     "millage-budget",
-    "contract"
+    "rezoning",
+    "variance"
    ],
    "matchedTerms": [
     "budget",
@@ -370,15 +397,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5258,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7131,
+   "textChars": 7464,
    "pdfSha256": "10fe4dea47b011531c5a9b5856951222ce63faa88875146da0dc1fbf68c4d1b6",
    "topics": {
-    "rezoning": 1,
-    "contract": 1
+    "contract": 1,
+    "rezoning": 1
    },
    "tags": [
-    "rezoning",
-    "contract"
+    "contract",
+    "rezoning"
    ],
    "matchedTerms": [
     "contract",
@@ -399,23 +426,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5247,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 19295,
+   "textChars": 20615,
    "pdfSha256": "a579f53e83d8206b8138679373e608deb3c6c6cfe08e432c8280d00019dbc283",
    "topics": {
-    "rezoning": 1,
-    "variance": 1,
-    "development": 1,
     "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1,
+    "variance": 1
    },
    "tags": [
-    "rezoning",
-    "variance",
-    "development",
     "comprehensive-plan",
+    "contract",
+    "development",
     "millage-budget",
-    "contract"
+    "rezoning",
+    "variance"
    ],
    "matchedTerms": [
     "budget",
@@ -442,23 +469,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5239,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10402,
+   "textChars": 11032,
    "pdfSha256": "d40e3125dca1eb212d477b223dbc0e94e46d56961f170ba54515e05cf74e1262",
    "topics": {
-    "rezoning": 1,
-    "development": 1,
+    "appointment": 1,
     "comprehensive-plan": 1,
-    "millage-budget": 1,
     "contract": 1,
-    "appointment": 1
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
    },
    "tags": [
-    "rezoning",
-    "development",
+    "appointment",
     "comprehensive-plan",
-    "millage-budget",
     "contract",
-    "appointment"
+    "development",
+    "millage-budget",
+    "rezoning"
    ],
    "matchedTerms": [
     "appoint",
@@ -485,23 +512,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5227,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 14192,
+   "textChars": 15189,
    "pdfSha256": "465c26f4193303f99e943c490bb350a1982863137ae59fd82e604a40ff22137b",
    "topics": {
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
-    "rezoning",
-    "special-land-use",
-    "variance",
+    "contract",
     "development",
     "millage-budget",
-    "contract"
+    "rezoning",
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
     "award of",
@@ -530,15 +557,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5219,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 12497,
+   "textChars": 13178,
    "pdfSha256": "9be3689543af62f10841089d94370b6462857013615283ce7cafae89bfb6b099",
    "topics": {
-    "millage-budget": 1,
-    "contract": 1
+    "contract": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
-    "contract"
+    "contract",
+    "millage-budget"
    ],
    "matchedTerms": [
     "award of",
@@ -561,23 +588,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5202,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 16744,
+   "textChars": 18567,
    "pdfSha256": "7f663d63309675b38e8e3767cb1ad68995f590614c3eebf4573245038a78a183",
    "topics": {
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
-    "rezoning",
-    "special-land-use",
-    "variance",
+    "contract",
     "development",
     "millage-budget",
-    "contract"
+    "rezoning",
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
     "budget",
@@ -604,17 +631,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5188,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11263,
+   "textChars": 11839,
    "pdfSha256": "7f61f7e0687398ea2285388b30bb8ba498be1f92e1a78ba406fb533c4c0cba05",
    "topics": {
-    "millage-budget": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
@@ -636,29 +663,32 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5174,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 15408,
+   "textChars": 16620,
    "pdfSha256": "ee9133af52d3095f087939de97b3d9e06fd2758f1f1d59a342cb9dd4c7048132",
    "topics": {
+    "alpr": 1,
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
-    "variance": 1,
-    "millage-budget": 1,
-    "contract": 1,
-    "appointment": 1
+    "variance": 1
    },
    "tags": [
+    "alpr",
+    "appointment",
+    "contract",
+    "millage-budget",
     "rezoning",
     "special-land-use",
-    "variance",
-    "millage-budget",
-    "contract",
-    "appointment"
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
     "conditional use",
     "contract",
+    "motorola solutions",
     "reappoint",
     "rezon",
     "task order",
@@ -666,7 +696,8 @@
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -679,31 +710,35 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5154,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 9942,
+   "textChars": 10533,
    "pdfSha256": "be4bb01aad8fb0e19bac7f6aa980612776339571a0209e48059c4f1ba4f0b439",
    "topics": {
-    "special-land-use": 1,
-    "millage-budget": 1,
+    "alpr": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "millage-budget": 1,
+    "special-land-use": 1
    },
    "tags": [
-    "special-land-use",
-    "millage-budget",
+    "alpr",
+    "appointment",
     "contract",
-    "appointment"
+    "millage-budget",
+    "special-land-use"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
     "conditional use",
     "contract",
+    "motorola solutions",
     "reappoint",
     "task order"
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -716,15 +751,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5141,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7173,
+   "textChars": 8003,
    "pdfSha256": "de4b286394f30a85d42fbf571a2b39490201385b93d6bebac9f3c310cb236629",
    "topics": {
-    "millage-budget": 1,
-    "contract": 1
+    "contract": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
-    "contract"
+    "contract",
+    "millage-budget"
    ],
    "matchedTerms": [
     "budget",
@@ -745,15 +780,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5130,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8055,
+   "textChars": 8427,
    "pdfSha256": "c9c8800343a2199731ef8bdc7ecbeabb94833582a3c097d69b9ecb38f1a8b21e",
    "topics": {
-    "millage-budget": 1,
-    "contract": 1
+    "contract": 1,
+    "millage-budget": 1
    },
    "tags": [
-    "millage-budget",
-    "contract"
+    "contract",
+    "millage-budget"
    ],
    "matchedTerms": [
     "budget",
@@ -774,21 +809,21 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5113,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 9676,
+   "textChars": 10625,
    "pdfSha256": "fd21028362d65bbadc797ed76771a6472789370034fb4945d6c1610508a346de",
    "topics": {
-    "rezoning": 1,
-    "variance": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1,
+    "variance": 1
    },
    "tags": [
-    "rezoning",
-    "variance",
+    "contract",
     "development",
     "millage-budget",
-    "contract"
+    "rezoning",
+    "variance"
    ],
    "matchedTerms": [
     "budget",
@@ -812,17 +847,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5101,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6404,
+   "textChars": 6635,
    "pdfSha256": "c4fc65f9a2b95522934e74a7eea3a900e677d55842e0839e4be2c50f1850a152",
    "topics": {
-    "rezoning": 1,
+    "contract": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1
    },
    "tags": [
-    "rezoning",
+    "contract",
     "millage-budget",
-    "contract"
+    "rezoning"
    ],
    "matchedTerms": [
     "budget",
@@ -844,23 +879,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5092,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 22231,
+   "textChars": 25173,
    "pdfSha256": "a04c8eae8790c5ed99296c615502216b5b2c5e709171ffb4665620f38fe270d5",
    "topics": {
-    "rezoning": 1,
-    "variance": 1,
     "annexation": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1,
+    "variance": 1
    },
    "tags": [
-    "rezoning",
-    "variance",
     "annexation",
+    "contract",
     "development",
     "millage-budget",
-    "contract"
+    "rezoning",
+    "variance"
    ],
    "matchedTerms": [
     "annex",
@@ -886,7 +921,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5049,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 949,
+   "textChars": 964,
    "pdfSha256": "3bee6b0e1483a4eccd71f8692511e4d2488ebc481b1b9abf04f799a1ce370960",
    "topics": {
     "rezoning": 1
@@ -911,28 +946,32 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5076,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 20083,
+   "textChars": 21028,
    "pdfSha256": "ad96974f585fe7d0b5368c326f2c179339fb3419fcb3d9e5b87466a750e74a46",
    "topics": {
+    "alpr": 1,
     "annexation": 1,
-    "millage-budget": 1,
-    "contract": 1
+    "contract": 1,
+    "millage-budget": 1
    },
    "tags": [
+    "alpr",
     "annexation",
-    "millage-budget",
-    "contract"
+    "contract",
+    "millage-budget"
    ],
    "matchedTerms": [
     "annex",
     "budget",
     "contract",
+    "motorola solutions",
     "purchase order",
     "task order"
    ],
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
@@ -945,7 +984,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5066,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 553,
+   "textChars": 581,
    "pdfSha256": "75ed08c62dc358c8c3c7ae720d4b67bcf2f4318363ba9190548c6b18c7d87e47",
    "topics": {},
    "tags": [],
@@ -962,17 +1001,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5060,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8410,
+   "textChars": 8775,
    "pdfSha256": "415da63b1f48b96ce89b863918567165f8aa2fa4597db190b4f0d9b924ad6e16",
    "topics": {
-    "variance": 1,
+    "contract": 1,
     "development": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
-    "variance",
+    "contract",
     "development",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "apartment",
@@ -995,23 +1034,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5039,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 17441,
+   "textChars": 19343,
    "pdfSha256": "32c6489cc44e029a81f771e486b0e6d488ad2c4abeca167f8764003e4820d6cd",
    "topics": {
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
     "rezoning": 1,
     "special-land-use": 1,
-    "variance": 1,
-    "development": 1,
-    "comprehensive-plan": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
+    "comprehensive-plan",
+    "contract",
+    "development",
     "rezoning",
     "special-land-use",
-    "variance",
-    "development",
-    "comprehensive-plan",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "comprehensive plan",
@@ -1037,21 +1076,21 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5031,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 14112,
+   "textChars": 15033,
    "pdfSha256": "d71e636e56522ce58bc200b9c87400e1f574c85e7e624fd207210ec7d27722cb",
    "topics": {
-    "rezoning": 1,
-    "special-land-use": 1,
     "comprehensive-plan": 1,
+    "contract": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1,
+    "special-land-use": 1
    },
    "tags": [
-    "rezoning",
-    "special-land-use",
     "comprehensive-plan",
+    "contract",
     "millage-budget",
-    "contract"
+    "rezoning",
+    "special-land-use"
    ],
    "matchedTerms": [
     "budget",
@@ -1077,23 +1116,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5025,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 16728,
+   "textChars": 18640,
    "pdfSha256": "bf182bf532a68331350a7542bc4ac609062cb0d17bb72889b34a05d487e2b430",
    "topics": {
-    "rezoning": 1,
-    "variance": 1,
     "annexation": 1,
+    "contract": 1,
     "development": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1,
+    "variance": 1
    },
    "tags": [
-    "rezoning",
-    "variance",
     "annexation",
+    "contract",
     "development",
     "millage-budget",
-    "contract"
+    "rezoning",
+    "variance"
    ],
    "matchedTerms": [
     "annex",

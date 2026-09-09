@@ -1,12 +1,13 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-08T16:02:30Z",
+  "generatedAt": "2026-09-09T11:17:18Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
  },
  "summary": {
   "flags": [
+   "alpr",
    "data-center",
    "land-use",
    "millage-budget"
@@ -20,6 +21,7 @@
    "millage-budget": 6,
    "development": 3,
    "appointment": 2,
+   "alpr": 1,
    "data-center": 1
   },
   "dataCenterItems": [
@@ -206,8 +208,17 @@
    }
   ],
   "landUseMeetings": 20,
-  "alprItems": [],
-  "alprMeetings": 0
+  "alprItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-06-16",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13650,plainText=false)",
+    "terms": [
+     "genetec"
+    ]
+   }
+  ],
+  "alprMeetings": 1
  },
  "meetings": [
   {
@@ -219,7 +230,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13787,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2972,
+   "textChars": 3479,
    "pdfSha256": "336da34a7979792c7cac25b365e936ef011aeb742d670f8e2735a3e1f77d5a20",
    "topics": {},
    "tags": [],
@@ -236,7 +247,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13784,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4170,
+   "textChars": 4825,
    "pdfSha256": "b2c3dae205e79996dccc3ddd687925e74b9ccf7840c7d6841df059019714c394",
    "topics": {
     "rezoning": 1,
@@ -267,19 +278,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13789,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8872,
+   "textChars": 10771,
    "pdfSha256": "a2a34b462dd0f9043af6905a6c41ba22d28ac581ba0bed691a94c9b8693200c7",
    "topics": {
+    "contract": 1,
     "rezoning": 1,
     "special-land-use": 1,
-    "variance": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
+    "contract",
     "rezoning",
     "special-land-use",
-    "variance",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "conditional use",
@@ -301,7 +312,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13750,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4735,
+   "textChars": 5352,
    "pdfSha256": "7498ea16b60fb64d7e9fa1b7e1a3ad344812587c66a3138f873ae53fd4e9e50f",
    "topics": {
     "rezoning": 1,
@@ -332,21 +343,21 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13761,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 9329,
+   "textChars": 10929,
    "pdfSha256": "3669529fdbbcee055134ee6058e4ef055a52fbf89e6d530ffef84d12c44ec289",
    "topics": {
+    "contract": 1,
+    "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
-    "variance": 1,
-    "millage-budget": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
+    "contract",
+    "millage-budget",
     "rezoning",
     "special-land-use",
-    "variance",
-    "millage-budget",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "conditional use",
@@ -370,7 +381,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13728,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6116,
+   "textChars": 6908,
    "pdfSha256": "291c50e67fbab2047009fe39a4e6689c3b5b26689a762b437de3ef9c424d25aa",
    "topics": {
     "rezoning": 1,
@@ -401,17 +412,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13734,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8019,
+   "textChars": 9537,
    "pdfSha256": "b3b272e6bf13b07c5697b8a35304c35c942f5a5652d108060d1e85d8b33458d2",
    "topics": {
-    "variance": 1,
+    "contract": 1,
     "development": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
-    "variance",
+    "contract",
     "development",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "apartment",
@@ -432,17 +443,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13704,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6719,
+   "textChars": 8081,
    "pdfSha256": "684b7a1269de7fb556b99349f51d6cf694479eae32d2bad9eb451824beefba71",
    "topics": {
-    "variance": 1,
+    "appointment": 1,
     "contract": 1,
-    "appointment": 1
+    "variance": 1
    },
    "tags": [
-    "variance",
+    "appointment",
     "contract",
-    "appointment"
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
@@ -464,17 +475,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13692,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3447,
+   "textChars": 3941,
    "pdfSha256": "b6ec5f5eb7b5f96b8287715f322086bd75315470093df57c095cc74952dd59f3",
    "topics": {
+    "development": 1,
     "rezoning": 1,
-    "variance": 1,
-    "development": 1
+    "variance": 1
    },
    "tags": [
+    "development",
     "rezoning",
-    "variance",
-    "development"
+    "variance"
    ],
    "matchedTerms": [
     "apartment",
@@ -495,15 +506,15 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13685,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10457,
+   "textChars": 12368,
    "pdfSha256": "4310f07f59864dfca4b76b487808f26b0afd04868a1f4dedca5c544396f4ddb9",
    "topics": {
-    "variance": 1,
-    "contract": 1
+    "contract": 1,
+    "variance": 1
    },
    "tags": [
-    "variance",
-    "contract"
+    "contract",
+    "variance"
    ],
    "matchedTerms": [
     "contract",
@@ -523,7 +534,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13672,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3619,
+   "textChars": 4154,
    "pdfSha256": "3a3e3365a7637b9783e5e1942a6843b015898d9dbbe93472be038e735e852d53",
    "topics": {
     "variance": 1
@@ -548,7 +559,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13644,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4383,
+   "textChars": 5051,
    "pdfSha256": "412ab282ee04f30a92f4518c5135b1b2c3caa175aae091e4be7912b88fa23396",
    "topics": {
     "variance": 1
@@ -573,19 +584,24 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13650,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7717,
+   "textChars": 9077,
    "pdfSha256": "5bd48bd335c2c716e78668a104d472c6b0ef4332a4a8c314f45b8b6641e4290e",
    "topics": {
+    "alpr": 1,
     "contract": 1
    },
    "tags": [
+    "alpr",
     "contract"
    ],
    "matchedTerms": [
     "contract",
+    "genetec",
     "procurement"
    ],
-   "flags": [],
+   "flags": [
+    "alpr"
+   ],
    "dataCenterItems": []
   },
   {
@@ -597,7 +613,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13626,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2767,
+   "textChars": 3449,
    "pdfSha256": "2362feda64796be3b4e65831f31a1c7edb36511143005f3a3eabea825dd82c28",
    "topics": {
     "contract": 1
@@ -620,7 +636,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13606,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2628,
+   "textChars": 2983,
    "pdfSha256": "8c653c45cb0043605aac64ae4b6df88d5123f790e362f50db376875d0e950087",
    "topics": {},
    "tags": [],
@@ -637,21 +653,21 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13623,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 9950,
+   "textChars": 11903,
    "pdfSha256": "f900bf8221907b961017a7e02091baaaf4811c4980aa17a8e2802e20b6b2a9e9",
    "topics": {
+    "contract": 1,
+    "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
-    "variance": 1,
-    "millage-budget": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
+    "contract",
+    "millage-budget",
     "rezoning",
     "special-land-use",
-    "variance",
-    "millage-budget",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "budget",
@@ -676,7 +692,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13574,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2687,
+   "textChars": 3068,
    "pdfSha256": "e65ad0128feef5a81446925d752bd213bcbea6845e041ba81248433af9d8245c",
    "topics": {
     "rezoning": 1,
@@ -704,21 +720,21 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13582,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 9270,
+   "textChars": 11084,
    "pdfSha256": "f7180644e278d9bab7e6c4fb376cbc0d75d86682f55b6432b5a3eceb0654652f",
    "topics": {
+    "contract": 1,
+    "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
-    "variance": 1,
-    "millage-budget": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
+    "contract",
+    "millage-budget",
     "rezoning",
     "special-land-use",
-    "variance",
-    "millage-budget",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "budget",
@@ -742,7 +758,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13540,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6108,
+   "textChars": 6880,
    "pdfSha256": "9b5d0ff221780e48adfbe0e469abf65ea8406eb7b6dbc5e7e7413bac8d70ea4f",
    "topics": {
     "rezoning": 1,
@@ -773,7 +789,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13526,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1492,
+   "textChars": 1864,
    "pdfSha256": "d680a1598231c0ac40b7dfda84487abdb371cd9a44e7fa76f63aafdce596c074",
    "topics": {
     "millage-budget": 1
@@ -799,17 +815,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13547,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8484,
+   "textChars": 9978,
    "pdfSha256": "935a570912b8fe75dfc490b870d22d74ec6ad73c4a825c26a411934d79d9be5e",
    "topics": {
-    "variance": 1,
+    "contract": 1,
     "development": 1,
-    "contract": 1
+    "variance": 1
    },
    "tags": [
-    "variance",
+    "contract",
     "development",
-    "contract"
+    "variance"
    ],
    "matchedTerms": [
     "contract",
@@ -830,17 +846,17 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13501,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 14616,
+   "textChars": 16566,
    "pdfSha256": "7842414c3c3ba6c006ea2a187467750b4c74bc77f5b79f99e4a31a785d62ad3e",
    "topics": {
-    "rezoning": 1,
+    "contract": 1,
     "millage-budget": 1,
-    "contract": 1
+    "rezoning": 1
    },
    "tags": [
-    "rezoning",
+    "contract",
     "millage-budget",
-    "contract"
+    "rezoning"
    ],
    "matchedTerms": [
     "budget",
@@ -862,7 +878,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13478,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4358,
+   "textChars": 4984,
    "pdfSha256": "d01aa6287a340c25818e1af3ba2b66d2511d681036b140e24bf50a91ddfc778c",
    "topics": {
     "rezoning": 1,
@@ -890,7 +906,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13437,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4481,
+   "textChars": 5165,
    "pdfSha256": "108438a2aed97ce503f8d99944e409425c8ae7044a75e33f2b2091e949d29621",
    "topics": {
     "rezoning": 1
@@ -915,25 +931,25 @@
    "textSource": "agenda",
    "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13446,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11881,
+   "textChars": 13809,
    "pdfSha256": "39e38ce41a44e9f1aa4977ae27b9e1991a096360452180ab89a02f32d8664193",
    "topics": {
+    "appointment": 1,
+    "contract": 1,
     "data-center": 1,
+    "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
-    "variance": 1,
-    "millage-budget": 1,
-    "contract": 1,
-    "appointment": 1
+    "variance": 1
    },
    "tags": [
+    "appointment",
+    "contract",
     "data-center",
+    "millage-budget",
     "rezoning",
     "special-land-use",
-    "variance",
-    "millage-budget",
-    "contract",
-    "appointment"
+    "variance"
    ],
    "matchedTerms": [
     "appoint",
