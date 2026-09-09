@@ -1858,6 +1858,79 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners"  
+  
+  - id: coweta
+    name: Coweta County
+    type: county
+    county: Coweta
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.coweta.ga.us/169/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Jeff Fisher"
+        full_name: "Jeffrey Fisher"
+        role: Commissioner
+        seat: "District 1"
+        party: Republican
+        email: "jfisher@coweta.ga.us"
+        phone: "678-621-9409"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.coweta.ga.us/169/Board-of-Commissioners"   
+      - name: "Bill McKenzie"
+        full_name: "Bill McKenzie"
+        role: Commissioner
+        seat: "District 2"
+        party: 
+        email: "bpmckenzie@coweta.ga.us"
+        phone: "770-780-3962"
+        last_elected: 2023
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.coweta.ga.us/169/Board-of-Commissioners"
+      - name: "Bob Blackburn"
+        full_name: "Bob Blackburn"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "bblackburn@coweta.ga.us"
+        phone: "404-630-4351"
+        last_elected: 2023
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.coweta.ga.us/169/Board-of-Commissioners"
+      - name: "John Reidelbach"
+        full_name: "John J. Reidelbach"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 4"
+        party: Republican
+        email: "jreidelbach@coweta.ga.us"
+        phone: "943-242-2234"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.coweta.ga.us/169/Board-of-Commissioners"   
+      - name: "Al Smith"
+        full_name: "Alphonso \"Al\" Smith"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 5"
+        party: Democratic
+        email: "alsmith@coweta.ga.us"
+        phone: "404-409-7557"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.coweta.ga.us/169/Board-of-Commissioners"
 
   - id: fayette
     name: Fayette County

@@ -734,21 +734,23 @@ places:
     type: county
     fips: "13077"
     parentCounty: null
-    region: Atlanta Regional Commission
+    region:                         # optional hub grouping label
     domains:
       meetings:
-        # CivicClerk (portal: cowetacoga.portal.civicclerk.com). Keep BOC + Zoning
-        # Appeals; drop Tax Assessors / Airport / pension / elections boards.
+        # Curated recurring schedule -> the "When they meet" note on /local/coweta/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
         platform: civicclerk
         subdomain: cowetacoga
-        agendas_url: "https://cowetacoga.portal.civicclerk.com/"
+        agendas_url: "https://cowetacoga.portal.civicclerk.com/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         body_map:
           - { match: "Board of Zoning Appeals", label: "Board of Zoning Appeals" }
           - { match: "Board of Commissioners", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
-            when: ""
-            location: ""
+            when: "2nd and 4th Tuesday every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Commission Chambers, 37 Perry Street, Newnan"
 
   - slug: columbia
     name: Columbia County
