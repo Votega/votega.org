@@ -1536,7 +1536,122 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.carrollcountyga.gov/816/District-6-Commissioner"
-        
+
+  - id: chatham
+    name: Chatham County
+    type: county
+    county: Chatham
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 9             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair  # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.chathamcountyga.gov/Commission/Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Chester Ellis"
+        full_name: "Chester A. Ellis"   # authoritative full name (matching); site shows `name`
+        role: Chair
+        title: County Commission Chair
+        seat: "At-large"
+        party: Democratic
+        email: "chairman@chathamcounty.org"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.chathamcountyga.gov/commission/Detail/chairman"
+      - name: "Anthony Wayne Noha"
+        role: Commissioner
+        seat: "1st District"
+        party: Republican
+        email: "district1@chathamcounty.org"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.chathamcountyga.gov/Commission/Detail/1st"
+      - name: "Malinda Scott Hodge"
+        role: Commissioner
+        seat: "2nd District"
+        party: Democratic
+        email: "district2@chathamcounty.org"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.chathamcountyga.gov/Commission/Detail/2nd"
+      - name: "Bobby Lockett"
+        role: Commissioner
+        seat: "3rd District"
+        party: Democratic
+        email: "district3@chathamcounty.org"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.chathamcountyga.gov/Commission/Detail/3rd"
+      - name: "Brian Hussey"
+        role: Commissioner
+        seat: "4th District"
+        party: 
+        email: "district4@chathamcounty.org"
+        phone: ""
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.chathamcountyga.gov/Commission/Detail/4th"
+      - name: "Tanya Milton"
+        role: Commissioner
+        seat: "5th District"
+        party: Democratic
+        email: "district5@chathamcounty.org"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.chathamcountyga.gov/Commission/Detail/5th"   # SoS results — CONFIRM before merge
+      - name: "Aaron Adot Whitely"
+        full_name: "Aaron \"Adot\" Whitely"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "6th District"
+        party: Democratic
+        email: "district6@chathamcounty.org"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.chathamcountyga.gov/Commission/Detail/6th"   # SoS results — CONFIRM before merge
+      - name: "Dean Kicklighter"
+        role: Commissioner
+        seat: "7th District"
+        party: Republican
+        email: "deankicklighter@yahoo.com"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.chathamcountyga.gov/Commission/Detail/7th"   # SoS results — CONFIRM before merge
+      - name: "Marsha Buford"
+        role: Commissioner
+        seat: "8th District"
+        party: Democratic
+        email: "district8@chathamcounty.org"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.chathamcountyga.gov/Commission/Detail/8th"
+
   - id: cherokee
     name: Cherokee County
     type: county
