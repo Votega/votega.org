@@ -1789,6 +1789,76 @@ jurisdictions:
         voting: true
         source: "https://www.claytoncountyga.gov/government/board-of-commissioners/district-4/"
   
+  - id: columbia
+    name: Columbia County
+    type: county
+    county: Columbia
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.columbiacountyga.gov/304/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Doug Duncan"
+        role: Chair
+        seat: "At-Large"
+        party: 
+        email: "commissioners@columbiacountyga.gov"
+        phone: "706-868-3379"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners"
+      - name: "Connie Melear"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "commissioners@columbiacountyga.gov"
+        phone: "706-868-3379"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners"
+      - name: "Jim Steed"
+        role: Commissioner
+        seat: "District 2"
+        party: 
+        email: "commissioners@columbiacountyga.gov"
+        phone: "706-868-3379"
+        last_elected: 2026
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners" 
+      - name: "Michael Carraway"
+        full_name: "Michael W. Carraway"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 3"
+        party: Republican
+        email: "commissioners@columbiacountyga.gov"
+        phone: "706-868-3379"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners"
+      - name: "Alison Couch"
+        full_name: "Alison Couch"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "commissioners@columbiacountyga.gov"
+        phone: "706-868-3379"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners"  
+
   - id: fayette
     name: Fayette County
     type: county

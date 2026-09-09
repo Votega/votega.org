@@ -833,6 +833,26 @@ places:
           - body: Board of Commissioners
             when: "Twice a month on Fridays, 9:30 a.m."
             location: "Commission Chambers of the Old Courthouse, 124 Bull Street, Second Floor,"
+  
+  - slug: columbia
+    name: Columbia County
+    type: county
+    fips: "13073"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/columbia/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: civicclerk
+        subdomain: columbiacoga
+        agendas_url: "https://columbiacoga.portal.civicclerk.com/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Evans Government Center Auditorium, Building A, 630 Ronald Reagan Drive, Evans"            # optional
 
   - slug: hall
     name: Hall County
