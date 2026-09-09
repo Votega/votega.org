@@ -145,6 +145,21 @@ def _lerp_hex(a, b, t):
     return "#" + "".join(f"{round(a[i] + (b[i] - a[i]) * t):02x}" for i in range(3))
 
 
+def _wrap(text, maxchars):
+    """Greedy word-wrap into lines of at most `maxchars` (a long single word is
+    kept whole rather than split)."""
+    lines, cur = [], ""
+    for word in text.split():
+        cand = (cur + " " + word).strip()
+        if not cur or len(cand) <= maxchars:
+            cur = cand
+        else:
+            lines.append(cur); cur = word
+    if cur:
+        lines.append(cur)
+    return lines
+
+
 def _squarify(areas, x, y, w, h):
     """Squarified treemap (Bruls et al.): areas already scaled so sum == w*h.
     Returns a rect (x, y, w, h) per input area, in the same order."""
@@ -221,6 +236,7 @@ def build_bills_stats(data, cfg):
     scale = (W * H) / sum(counts) if counts else 0
     rects = _squarify([c * scale for c in counts], 0.0, 0.0, W, H)
     mx = counts[0] if counts else 1
+    LINE_H, PAD, CHAR_W = 15.0, 9.0, 6.4  # px; CHAR_W approximates 13px sans width
     tiles = []
     for (label, n), (x, y, w, h) in zip(tiles_in, rects):
         t = (n / mx) ** 0.55  # ramp: darker = more bills
@@ -234,11 +250,34 @@ def build_bills_stats(data, cfg):
             disp = "Local & Special Bills"
         else:
             disp = label.title().replace(" And ", " & ")
+        txt = "#ffffff" if t > 0.45 else "#12314f"
+
+        # Word-wrap the label to the tile width and emit one <text> line each, with
+        # the "N bills" count on its own line, so labels spill down instead of
+        # clipping. Only where the tile can hold at least one readable line.
+        labels = []
+        n_fit = int((h - 10) / LINE_H)          # text lines that fit vertically
+        maxchars = int((w - 2 * PAD) / CHAR_W)  # chars that fit horizontally
+        if w >= 66 and n_fit >= 1 and maxchars >= 5:
+            want_count = n_fit >= 2
+            room = n_fit - (1 if want_count else 0)
+            wrapped = _wrap(disp, maxchars)
+            if len(wrapped) > room:              # too many lines: clip + ellipsis
+                wrapped = wrapped[:room]
+                wrapped[-1] = wrapped[-1][:max(1, maxchars - 1)].rstrip() + "…"
+            by = y + 18.0
+            for line in wrapped:
+                labels.append({"x": round(x + PAD, 1), "y": round(by, 1),
+                               "t": line, "size": 13, "weight": 600, "op": 1})
+                by += LINE_H
+            if want_count:
+                labels.append({"x": round(x + PAD, 1), "y": round(by, 1),
+                               "t": f"{n} bills", "size": 11, "weight": 400, "op": 0.85})
+
         tiles.append({
             "label": disp, "count": n,
             "x": round(x, 1), "y": round(y, 1), "w": round(w, 1), "h": round(h, 1),
-            "fill": fill, "text": "#ffffff" if t > 0.45 else "#12314f",
-            "showLabel": w >= 92 and h >= 34,
+            "fill": fill, "text": txt, "labels": labels,
         })
 
     human, iso = _fmt_date(_get(data, cfg["date"]))
