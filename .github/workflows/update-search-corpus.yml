@@ -24,6 +24,9 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install dependencies
+        run: pip install pyyaml
+
       - name: Generate search entity index
         run: python scripts/generate_search_corpus.py
 
