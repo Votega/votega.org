@@ -57,6 +57,7 @@ import yaml
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.meeting_topics import (  # noqa: E402
     classify, matched_terms, topic_flags, build_summary, flag_entry, write_flags_file,
+    topic_excerpts,
 )
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -224,6 +225,9 @@ def enrich_meeting(meeting, cache, reclassify=False):
     text = html_to_text(raw)
     tags = classify(text)
     terms = matched_terms(text)
+    # Per-mention excerpts: the Granicus source is HTML-stripped text (never OCR),
+    # so it's safe to quote — same single-source matcher as the other enrichers.
+    excerpts = topic_excerpts(text, tags)
     topics = {tag: 1 for tag in tags}          # presence-per-meeting (one blob/meeting)
     date = meeting.get('date')
     title = (meeting.get('title') or meeting.get('body') or '').strip()
@@ -245,6 +249,7 @@ def enrich_meeting(meeting, cache, reclassify=False):
         'topics': topics,
         'tags': tags,
         'matchedTerms': terms,
+        'topicExcerpts': excerpts,
         'flags': topic_flags(topics),
         'dataCenterItems': dc_items,
     }

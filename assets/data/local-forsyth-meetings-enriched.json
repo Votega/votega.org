@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-09T12:53:57Z",
+  "generatedAt": "2026-09-09T18:18:12Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
-  "count": 25
+  "count": 40
  },
  "summary": {
   "flags": [
@@ -12,15 +12,15 @@
   ],
   "lastActivity": "2026-09-08",
   "topicTotals": {
-   "contract": 23,
-   "millage-budget": 20,
-   "development": 12,
-   "rezoning": 15,
-   "variance": 11,
-   "appointment": 5,
-   "comprehensive-plan": 4,
-   "special-land-use": 6,
-   "annexation": 3
+   "contract": 36,
+   "millage-budget": 31,
+   "development": 22,
+   "rezoning": 26,
+   "variance": 19,
+   "appointment": 8,
+   "comprehensive-plan": 5,
+   "special-land-use": 9,
+   "annexation": 8
   },
   "dataCenterItems": [],
   "landUseItems": [
@@ -207,9 +207,18 @@
      "rezoning",
      "variance"
     ]
+   },
+   {
+    "title": "Special Called Meeting",
+    "date": "2026-03-16",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5019,plainText=false)",
+    "tags": [
+     "annexation",
+     "comprehensive-plan"
+    ]
    }
   ],
-  "landUseMeetings": 19,
+  "landUseMeetings": 34,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -223,7 +232,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5311,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8079,
+   "textChars": 7687,
    "pdfSha256": "7c78a37a5b29a7026dd93f8d5b9f3e54cbd66f5b4d05b68b1b7753d7d41b810a",
    "topics": {
     "contract": 1,
@@ -240,6 +249,16 @@
     "purchase order",
     "task order"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… authorization for the Employment Services Director to move forward with the Broker on all related contractual and administrative tasks - Director, Department of Employment Services (2) Board considerati …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ector, Department of Fleet and Environmental Services (5) Board consideration and approval of a Budget Resolution in the amount of $400,000.00 for Roads and Bridges for additional funding for asphalt - CFO, …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -254,7 +273,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5298,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 14823,
+   "textChars": 13061,
    "pdfSha256": "28c7f3769bae0c97d3f60fad539b8c2d37f8320213b21c2819bed9364356b0c9",
    "topics": {
     "contract": 1,
@@ -279,6 +298,28 @@
     "variance",
     "warehouse"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ) Board approval of the final project close out of Change Order No. 2 to the Construction Service Agreement (Contract No. 1202400018) with Vertical Earth, Inc. for the State Route 9 Gravity Sewer Main and Low Pressure …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… TING ENGINEERS, for Additional Design Services in the amount of $54,105.00 for the Water & Sewer Maintenance Warehouse project - Vertical Capital Projects Manager, Department of Capital Projects Regular Meeting / Public Hearin …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ternal Defibrillators (AED), with Regular Meeting / Public Hearings Agenda Page 2 September 3, 2026 approval of a Budget Resolution and authorization for the Grants Manager to accept the award in the DOJ's JustGrants system - Chief of Staf …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… County Clerk VIII. Public Hearings (1) Public Hearing and possible vote regarding the County-Initiated request to rezone from Single Family Residential District (RES3) to Single Family Residential District (RES1) - Pa …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Amendment of Zoning Conditions on ZA1013 (Bobby Trammel) by Forsyth County Board of Commissioners with a variance to: 1. Reduce the required number of parking spaces from 232 to 87 (UDC Table 17.1) - Parcel 191-024 - A …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -294,7 +335,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5290,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11298,
+   "textChars": 10719,
    "pdfSha256": "9eae057d5915277a3e1414095f3314c5a9ea01d0cb26b5fd91dddde730ee4783",
    "topics": {
     "appointment": 1,
@@ -315,6 +356,24 @@
     "task order",
     "warehouse"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… approval of the Board of Commissioners' 2027 Meeting Schedule - County Clerk (25) Board consideration and appointment of a Forsyth County Voting Delegate for the ACCG Legislative Leadership Conference October 7-9, 2026. St …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… and authorization for the Employment Services Director to move forward with the broker on all contractual and administrative tasks - Director, Department of Employment Services (5) Board considerati …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… TING ENGINEERS, for Additional Design Services in the amount of $54,105.00 for the Water & Sewer Maintenance Warehouse project - Vertical Capital Projects Manager, Department of Capital Projects (20) Board consideration and …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… required match to purchase ten Automatic External Defibrillators (AED), with approval of a Budget Resolution and authorization for the Grants Manager to accept the award in the DOJ's JustGrants system …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -330,7 +389,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5276,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13103,
+   "textChars": 12446,
    "pdfSha256": "b6cb922162b8c10b017294b7efc111f2ec048b6bacb3d8db71fa383dd84108c5",
    "topics": {
     "contract": 1,
@@ -355,6 +414,28 @@
     "variance",
     "warehouse"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "task order",
+     "excerpt": "… Construction Agreement - Director, Department of Water and Sewer (F) Board approval of Task Order 26-03 with Precision Planning, Inc. under the Standard Services Agreement for Water and Sewer Engi …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… nc. - CP260013 - to operate an open storage yard with an overall site including a contractor's establishment/warehouse/wholesale in existing buildings totaling 17,638 sq. ft. with 19 parking spaces on 6.70 acres zoned Restricte …"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… - Grants Manager, Department of Finance VIII. Public Hearings (1) Public Hearing regarding the Forsyth County Fiscal Year 2027 proposed Budget - CFO, Department of Finance (2) Public Hearing regarding the Forsyth County …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Depot - Deputy Director, Department of Engineering (B) Board approval to postpone a Board generated rezoning for ZA4161, NP Square LLC to a Work Session Meeting in 6 months (February 2027). In …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ation and possible vote regarding the approval of a Sketch Plat for CTO22 Forsyth LLC with the following variance to: 1. Increase the maximum number of parking spaces from 166 to 285 (UDC 17-2.7); 2. Reduce the landsca …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -370,7 +451,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5258,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7464,
+   "textChars": 7131,
    "pdfSha256": "10fe4dea47b011531c5a9b5856951222ce63faa88875146da0dc1fbf68c4d1b6",
    "topics": {
     "contract": 1,
@@ -385,6 +466,16 @@
     "rezon",
     "task order"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… n and Discussion (1) Board consideration and approval of Change Order #3 to the Greater Georgia Contracting, Inc. Agreement in the amount of $37,611.90 to move and install new HVAC units per updated design as …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… rants Manager, Department of Finance (10) Board consideration and possible direction of a Board generated rezoning for ZA4161, NP Square LLC. In accordance with UDC 8-5.5(I), if an application for a land distu …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -399,7 +490,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5247,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 20615,
+   "textChars": 19295,
    "pdfSha256": "a579f53e83d8206b8138679373e608deb3c6c6cfe08e432c8280d00019dbc283",
    "topics": {
     "comprehensive-plan": 1,
@@ -427,6 +518,32 @@
     "subdivision",
     "variance"
    ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… ward RFP 26-60-1630 to Blue Cypress Consulting, LLC in the amount of $254,200.00 for Consultant Services for Comprehensive Plan Update (2026) with GIS Services for the Department of Planning and Community Development with app …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… 0386) - Director, Department of Public Facilities (F) Board approval of a Memorandum of Understanding for contractors to provide treatment services, substance screening, and 4th Amendment waiver searches (Clack) …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… syth County, Georgia with respect to conservation areas located in Silverwood Subdivision, Phase 1 and Phase 2 - County Attorney (R) Board authorization for staff to move forward with the Public He …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… July 28, 2026 (as anticipated by Board Rule 1.07.01): (A) Board authorization to advertise the FY 2027 Proposed Budget and 2027- 2031 Capital Improvement Program (CIP), Public Hearing and possible Board ado …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… , Department of Planning and Community Development (I) Board authorization to postpone a Board-generated rezoning for ZA4135, Athena Learning LLC, to the Work Session meeting of October 20, 2026. In accordance with …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ing and possible vote regarding an Alternate Design for Red Oak Sanitation, LLC with the following variance to: 1. Increase the maximum number of parking spaces from 104 to 150 (UDC 17-2.7) - Parcel 009-075 …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -442,7 +559,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5239,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11032,
+   "textChars": 10402,
    "pdfSha256": "d40e3125dca1eb212d477b223dbc0e94e46d56961f170ba54515e05cf74e1262",
    "topics": {
     "appointment": 1,
@@ -470,6 +587,32 @@
     "subdivision",
     "task order"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ime Sensitive\" basis - Director of Engineering / County Attorney (26) Board consideration of a Resolution appointing counsel to provide legal guidance and support to the Forsyth County Ethics Panel Clerk and the Forsyth Co …"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… -60-1630 to Blue Cypress Consulting, LLC in the amount of $254,200.00 for Consultant Services for Comprehensive Plan Update (2026) with GIS Services for the Department of Planning and Community Development with approval of th …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… asis - CIO, Department of IS&T (10) Board consideration and approval of a Memorandum of Understanding for contractors to provide treatment services, substance screening, and 4th Amendment waiver searches (Clack) with author …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… wners Association, Inc. and Forsyth County, Georgia with respect to conservation areas located in Silverwood Subdivision, Phase 1 and Phase 2 - County Attorney (25) Board ratification of a Right To Enter Agreement with Castill …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… dit - Chief Financial Officer, Department of Finance (2) Presentation of the FY 2027 Proposed Budget with the request for authorization to advertise the FY 2027 Proposed Budget and 2027-2031 Capital Impro …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… f Planning and Community Development (13) Board consideration and possible direction of a Board-generated rezoning for ZA4135, Athena Learning LLC. In accordance with UDC 8-5.5(I), if an application for a land …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -485,7 +628,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5227,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 15189,
+   "textChars": 14192,
    "pdfSha256": "465c26f4193303f99e943c490bb350a1982863137ae59fd82e604a40ff22137b",
    "topics": {
     "contract": 1,
@@ -515,6 +658,32 @@
     "variance",
     "warehouse"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… (G) Board approval of Amendment No. 1 to the CIPP lining of sewer pipes and laterals as needed agreement (Contract 1202500009) with Gulf Coast Underground, LLC to add additional bid items to Exhibit \"B\" (Compensation …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… from Agricultural District (A1) and Restricted Industrial District (M1) to Restricted Industrial District (M1) for warehouses with a variance to: 1. Reduce the zoning buffer adjacent to tax map/parcel 130-012 from 40 ft. to 20 ft. (UDC Tab …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… k Session held on July 14, 2026 (as anticipated by Board Rule 1.07.01): (A) Board approval of a Budget Resolution for the replacement of total loss Units #100 and #138 - Chief of Staff, Sheriff's Office …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… g and Community Development (2) Public Hearing and possible vote regarding the County-Initiated request to rezone Regular Meeting / Public Hearings Agenda Page 4 July 23, 2026 from Agricultural District (A1) and Restricted …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… t of Planning and Community Development (3) Public Hearing and possible vote regarding the County-Initiated Conditional Use Permit to conduct around the clock business zoned Commercial Business District (CBD) - Pa …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… District (A1) and Restricted Industrial District (M1) to Restricted Industrial District (M1) for warehouses with a variance to: 1. Reduce the zoning buffer adjacent to tax map/parcel 130-012 from 40 ft. to 20 ft. (UDC Table 14.2). - …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -530,7 +699,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5219,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13178,
+   "textChars": 12497,
    "pdfSha256": "9be3689543af62f10841089d94370b6462857013615283ce7cafae89bfb6b099",
    "topics": {
     "contract": 1,
@@ -547,6 +716,16 @@
     "fiscal year",
     "task order"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "award of",
+     "excerpt": "… ief of Staff, Sheriff's Office (2) Board consideration and authorization for the Sheriff's Office to accept the award of the BJA FY25 Byrne Discretionary Community Project Funding in the amount of $277,598.00 …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… nnouncements and Reports V. Items for Consideration and Discussion (1) Board approval of a Budget Resolution for the replacement of total loss Units #100 and #138 - Chief of Staff, Sheriff's Office …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -561,7 +740,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5202,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 18567,
+   "textChars": 16744,
    "pdfSha256": "7f663d63309675b38e8e3767cb1ad68995f590614c3eebf4573245038a78a183",
    "topics": {
     "contract": 1,
@@ -589,6 +768,32 @@
     "variance",
     "warehouse"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "task order",
+     "excerpt": "… ction Services Agreement - Director, Department of Parks and Recreation (B) Board approval of a Task Order with Hussey, Gay, Bell, & DeYoung Inc. under the Architectural and Engineering Services As-Needed agree …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… ning, with potential to include associated land use applications as necessary, for the industrial warehouse project on Piney Grove Road as discussed - Director, Department of Planning & Community Development (2) B …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… r Meeting / Public Hearings Agenda Page 2 July 9, 2026 (D) Board approval of a Budget Resolution in the amount of $197,500.00 to implement business process improvements and enhanced security w …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… tment of Planning and Community Development (U) Board authorization for staff to begin a County initiated rezoning, with potential to include associated land use applications as necessary, for the industrial w …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… Department of Planning and Community Development (4) Public Hearing and possible vote regarding the County-Initiated Conditional Use Permit to operate a private school on property zoned Agricultural District (A1) with conditions a …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… (2) Public Hearing and possible vote regarding an Alternate Design for ECK-CUMMING, LLC with the following variance to: 1. Reduce the percentage of exterior building materials consisting of brick, natural or pre-cast stone, …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -604,7 +809,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5188,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11839,
+   "textChars": 11263,
    "pdfSha256": "7f61f7e0687398ea2285388b30bb8ba498be1f92e1a78ba406fb533c4c0cba05",
    "topics": {
     "appointment": 1,
@@ -622,6 +827,20 @@
     "contract",
     "task order"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… d the clock business hours - Parcel 112-212 - District 5 - Semanson / John (31) Board consideration of an appointment to the Library Board of Trustees for District 5 for a four-year term to begin on July 1, 2026, and expir …"
+    },
+    "contract": {
+     "term": "task order",
+     "excerpt": "… Agreement - Director, Department of Parks and Recreation (4) Board consideration and approval of a Task Order with Townley Construction Company, Inc., under the Emergency Water & Sewer Line Repairs As-Needed …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… (WISP) for Forsyth County - CIO, Department of IS&T (8) Board consideration and approval of a Budget Resolution in the amount of $197,500.00 to implement business process improvements and enhanced security …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -636,7 +855,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5174,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 16620,
+   "textChars": 15408,
    "pdfSha256": "ee9133af52d3095f087939de97b3d9e06fd2758f1f1d59a342cb9dd4c7048132",
    "topics": {
     "appointment": 1,
@@ -664,6 +883,32 @@
     "task order",
     "variance"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Unit #372 - Chief of Staff of Business Operations, Sheriff's Office (B) Board appointment of Justin Suggs as the County-Appointed Representative to serve on the North Georgia Region 2 EMS …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… iated Construction Services Agreement - Director, Department of Public Facilities (N) Board approval of a contract with Generac Power Systems, Inc. and Energy Systems Southeast, LLC under the Sourcewell 092222-GNR Electrica …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… rk Session held on June 9, 2026 (as anticipated by Board Rule 1.07.01): (A) Board approval of a Budget Resolution for the replacement of a total loss for Unit #372 - Chief of Staff of Business Operations, …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Development (5) Public Hearing and possible vote regarding the County-Initiated request to rezone from Single Family Residential District (RES3) to Single Family Residential District …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… nce (P) Board authorization for staff to commence the Public Hearing process regarding a County-Initiated Conditional Use Permit (CUP) to operate a private school on property zoned Agricultural District (A1) - Parcel 192-071 - …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ing and possible vote regarding an Alternate Design for Red Oak Sanitation, LLC with the following variance to: 1. Increase the maximum number of parking spaces from 104 to 150 (UDC 17-2.7) - Parcel 009-075 …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -679,7 +924,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5154,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10533,
+   "textChars": 9942,
    "pdfSha256": "be4bb01aad8fb0e19bac7f6aa980612776339571a0209e48059c4f1ba4f0b439",
    "topics": {
     "appointment": 1,
@@ -701,6 +946,24 @@
     "reappoint",
     "task order"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… - Chief of Staff of Business Operations, Sheriff's Office (2) Board consideration and possible appointment of Justin Suggs as the County- Appointed Representative to serve on the North Georgia Region 2 EM …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Services Agreement - Director, Department of Public Facilities (16) Board consideration and approval of a contract with Generac Power Systems, Inc. and Energy Systems Southeast, LLC under the Sourcewell 092222-GNR Electrica …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… eports V. Items for Consideration and Discussion (1) Board consideration and approval of a Budget Resolution for the replacement of a total loss for Unit #372 - Chief of Staff of Business Operations, …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… District 1 - Hill / Moore (19) Board consideration and possible direction regarding the revocation of the Conditional Use Permit (CUP) for CP230037, Viral Lalit Chhadua. In accordance with UDC 8-5.5(I), if an application for a lan …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -716,7 +979,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5141,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8003,
+   "textChars": 7173,
    "pdfSha256": "de4b286394f30a85d42fbf571a2b39490201385b93d6bebac9f3c310cb236629",
    "topics": {
     "contract": 1,
@@ -731,6 +994,16 @@
     "contract",
     "task order"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "task order",
+     "excerpt": "… renovations at Fire Stations #1 & #12 - Director, Department of Public Facilities (F) Board approval of Task Order HS-19 with Hazen and Sawyer under the Standard Service Agreement for Water and Sewer Engineering Services As …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ons for the Emergency Management Agency/911 Department, with approval of the associated Budget Resolution - Director, Department of Emergency Management Agency (B) Board authorization for th …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -745,7 +1018,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5130,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8427,
+   "textChars": 8055,
    "pdfSha256": "c9c8800343a2199731ef8bdc7ecbeabb94833582a3c097d69b9ecb38f1a8b21e",
    "topics": {
     "contract": 1,
@@ -760,6 +1033,16 @@
     "contract",
     "task order"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… application documents - Chief of Staff, Sheriff's Office (3) Board consideration and approval to engage in a contract in the amount of $393,218.00 with Tyler Technologies to migrate the Enterprise Assessment & …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… for the Emergency Management Agency/911 Department, with approval of the associated Budget Resolution - Director, Department of Emergency Management Agency (2) Board consideration and authorization for …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -774,7 +1057,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5113,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10625,
+   "textChars": 9676,
    "pdfSha256": "fd21028362d65bbadc797ed76771a6472789370034fb4945d6c1610508a346de",
    "topics": {
     "contract": 1,
@@ -797,6 +1080,28 @@
     "subdivision",
     "variance"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… genda Page 2 May 21, 2026 (D) Board approval of Change Order #1 to the General Services Contract No. 25-24-5211 with Tri Scapes, LLC for additional Landscaping, Ground Maintenance, and Detention …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 25MPH on Grand Meadow Run, Nora Court and all other property and property rights as shown on the Subdivision Plat for Glory Meadows, recorded in Plat Book 226, Pages 1-27, Forsyth County, Georgia Records - Distric …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Work Session held on May 12, 2026 (as anticipated by Board Rule 1.07.01): (A) Board approval of a Budget Resolution for the replacement of a total loss for unit #392 - Chief of Staff of Business Operations, S …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ge Park - Director, Department of Parks & Recreation Department (E) Board approval to County-Initiate the rezoning of Parcel 118-200 from Res3 to Res1 -- District 1 - Planner II, Department of Planning and Community …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… arking spaces on 1.881 acres zoned Restricted Industrial District (M1) with the following variance to: 1. Reduce the zoning buffer from 40 ft. to 0 ft. (UDC Table 14.2); 2. Reduce the zoning setback adja …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -812,7 +1117,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5101,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6635,
+   "textChars": 6404,
    "pdfSha256": "c4fc65f9a2b95522934e74a7eea3a900e677d55842e0839e4be2c50f1850a152",
    "topics": {
     "contract": 1,
@@ -829,6 +1134,20 @@
     "contract",
     "rezon"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… and Sewer (4) Board consideration and approval of Change Order #1 to the General Services Contract No. 25-24-5211 with Tri Scapes, LLC for additional Landscaping, Ground Maintenance, and Detention Pond …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… nnouncements and Reports V. Items for Consideration and Discussion (1) Board consideration and approval of a Budget Resolution for the replacement of a total loss for unit #392 - Chief of Staff of Business Operations, S …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… on a \"Time Sensitive\" basis - CIO, Department of IS&T (6) Board consideration and possible direction regarding rezoning of Parcel 118-200 from Res3 to Res1 -- District 1 - Planner II, Department of Planning and Community …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -844,7 +1163,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5092,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 25173,
+   "textChars": 22231,
    "pdfSha256": "a04c8eae8790c5ed99296c615502216b5b2c5e709171ffb4665620f38fe270d5",
    "topics": {
     "annexation": 1,
@@ -871,6 +1190,32 @@
     "task order",
     "variance"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… cho Design Group, LLC, for the Main Courthouse, Sheriff's Office Headquarters, and the Courthouse Annex Remodel Concept Plans and master programming development design services in the amount of $419,004.00 - …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… or the Fire Department Training Center, with a Pre-Construction Phase Cost of $8,218,311.00 and a Contractor's Fee of 17.66% for the Department of Capital Projects, with approval of the associated Progressive Design …"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… Agendas) XI. New Business (1) Robin Kemper - CP250053 - to operate a 1,425 sq. ft. detached accessory apartment with an overall site including an existing 2,451 sq. ft. single-family dwelling on 1.313 acres zoned Single …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… for the purpose of providing security at World Cup events in the Atlanta Metro area and approval of the corresponding Budget Resolution and authorization for the Chairman to sign the documents required to accept the award - Chief of Staff, Sh …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ebruary 5, 2026 and March 5, 2026 Agendas) IX. Public Comments X. Old Business (1) Rishi Gankidi - ZA4230 - to rezone from Single Family Residential Restricted District (R2R) and Agricultural District (A1) to Single Family Re …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… gs (1) Public Hearing and possible vote regarding an Alternate Design for Teresa Curry with the following variance to: 1. Increase the maximum percentage of accent materials per vertical wall plane from 25% to 46% (UDC 21-8 …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -886,7 +1231,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5049,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 964,
+   "textChars": 949,
    "pdfSha256": "3bee6b0e1483a4eccd71f8692511e4d2488ebc481b1b9abf04f799a1ce370960",
    "topics": {
     "rezoning": 1
@@ -897,6 +1242,12 @@
    "matchedTerms": [
     "rezon"
    ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ing an Extension of a Moratorium prohibiting Forsyth County from receiving applications for Residential Rezonings as defined in UDC Chapter 11 and 20(B), except for applications seeking to rezone to …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -911,7 +1262,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5076,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 21028,
+   "textChars": 20083,
    "pdfSha256": "ad96974f585fe7d0b5368c326f2c179339fb3419fcb3d9e5b87466a750e74a46",
    "topics": {
     "annexation": 1,
@@ -930,6 +1281,20 @@
     "purchase order",
     "task order"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… with Jericho Design Group, LLC, for the Main Courthouse, Sheriff's Office Headquarters, and the Courthouse Annex Remodel Concept Plans and master programming development design services in the amount of $419,004.00 - Vert …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… match required - Deputy Director, Department of Engineering (12) Board consideration and approval of AT&T Contract ID 5513330, (AT&T MA Reference No. 148822UA, AT&T PS Contract ID ABVVHV6PT1), for a replacement o …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… security at World Cup events in the Atlanta Metro area and approval of the corresponding Budget Resolution and authorization for the Chairman to sign the documents required to accept the award - Chie …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -945,11 +1310,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5066,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 581,
+   "textChars": 553,
    "pdfSha256": "75ed08c62dc358c8c3c7ae720d4b67bcf2f4318363ba9190548c6b18c7d87e47",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -962,7 +1328,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5060,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8775,
+   "textChars": 8410,
    "pdfSha256": "415da63b1f48b96ce89b863918567165f8aa2fa4597db190b4f0d9b924ad6e16",
    "topics": {
     "contract": 1,
@@ -981,6 +1347,20 @@
     "variance",
     "warehouse"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… nly, to the April 16, 2026 Agenda). XI. New Business (1) Jason Creech - CP250027 - to operate a 2,218 sq. ft. contractor's establishment in an existing building with 8 parking spaces, an open storage yard and a container …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… PH on Old Wayt Place, Belshire Way, Ansted Court and all other property and property rights as shown on Subdivision Plat for Wayt Farm Phase 1, recorded in Plat Book 224, Pages 183-198, Forsyth County, Georgia Records - …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… (1) Board consideration and possible vote regarding a request made by Chase Fulbright for: 1. A lot-size variance of 0.038 acres in order for an A1 lot to be 0.962 acres rather than the required 1 acre, and 2. A lot-wi …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -995,7 +1375,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5039,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 19343,
+   "textChars": 17441,
    "pdfSha256": "32c6489cc44e029a81f771e486b0e6d488ad2c4abeca167f8764003e4820d6cd",
    "topics": {
     "comprehensive-plan": 1,
@@ -1023,6 +1403,32 @@
     "task order",
     "variance"
    ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… evelopment (M) Board direction for staff to move forward with a solicitation to update the Forsyth County Comprehensive Plan for the Department of Planning and Community Development - Director, Department of Planning and Community …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… equirement to be used to purchase two AquaEye Handheld Sonar Devices - Fire Chief (C) Board approval of a contract with Weatherproofing Technologies, Inc. and National Building Contractors, Inc. under the OMNIA R230404 Cont …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… e, Wemedge Way, Nicolo Drive, Maggiore Lane, Barnes Court and all other property rights as shown on the Subdivision Plat for Hemingway Farm Phase 2B, recorded in Plat Book 223, Pages 52-66, Forsyth Regular Meeting / Pu …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… rector, Department of Planning and Community Development (L) Board approval to postpone a Board generated rezoning for ZA4163, Tipton Development LLC. to a Work Session in six (6) months. In accordance with UD …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… genda Page 3 April 2, 2026 (K) Board approval for no action to be taken regarding the revocation of the Conditional Use Permit (CUP) for CP240005, Forsyth County Board of Commissioners (Owner-Anthony M. Gold). In accordance with …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… endment of Zoning Condition on ZA2957 (SF PROPERTIES INC) by Aqua Design Pools & Spas, LLC with a variance to: 1. Reduce the exterior setback from 50 ft. to 35 ft. (UDC Table 11.2(b)) - Parcel 074-307 - AZ260006 - D …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -1037,7 +1443,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5031,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 15033,
+   "textChars": 14112,
    "pdfSha256": "d71e636e56522ce58bc200b9c87400e1f574c85e7e624fd207210ec7d27722cb",
    "topics": {
     "comprehensive-plan": 1,
@@ -1062,6 +1468,28 @@
     "rezon",
     "task order"
    ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… nt (17) Board consideration and approval to move forward with a solicitation to update the Forsyth County Comprehensive Plan for the Department of Planning and Community Development - Director, Department of Planning and Community …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… on a \"Time Sensitive\" basis - Deputy Director, Department of Engineering (7) Board consideration and approval of a contract with Weatherproofing Technologies, Inc. and National Building Contractors, Inc. under the OMNIA R230404 Cont …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Work Session Agenda Page 2 March 24, 2026 Old Federal Bridge. In addition, staff seeks approval of an associated budget resolution to cover the cost of additional aggregate materials and repairs necessitated by recent significant weather …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… epartment of Planning and Community Development (16) Board consideration and possible direction of a Board generated rezoning for ZA4163, Tipton Development LLC. In accordance with UDC 8-5.5(I), if an application for a l …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… of Public Transportation (15) Board consideration and possible direction regarding the revocation of the Conditional Use Permit (CUP) for CP240005, Forsyth County Board of Commissioners (Owner-Anthony M. Gold). In accordance with …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -1077,7 +1505,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5025,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 18640,
+   "textChars": 16728,
    "pdfSha256": "bf182bf532a68331350a7542bc4ac609062cb0d17bb72889b34a05d487e2b430",
    "topics": {
     "annexation": 1,
@@ -1106,6 +1534,885 @@
     "variance",
     "warehouse"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… stry tower site (Parcel 125 095) - County Attorney (W) Board approval of withdrawal of objection to Providence Group Annex annexation, in light of the annexation application being withdrawn - County Attorney (X) Board …"
+    },
+    "contract": {
+     "term": "procurement",
+     "excerpt": "… tion for staff to declare a presented list of items as surplus with authorization for the Department of Procurement to dispose of accordingly - Director, Department of Procurement (C) Board approval of a Master …"
+    },
+    "development": {
+     "term": "townhome",
+     "excerpt": "… greement Regular Meeting / Public Hearings Agenda Page 4 March 19, 2026 between Forsyth County and Halcyon Garden Townhome Association, Inc. related to Encroachments to a water and sewer utility easement - County Attorney (V) Board accep …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 026 amount of $20,600.00 with authorization for the CIO to sign programmatic documents; and approval of a Budget Resolution for the IS&T Department - CIO, Department of IS&T (D) Board approval of Change Order No. 1 to the 2 …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… - District 5 - Director, Department of Planning and Community Development (6) 2152 Peachtree Pkwy LLC - ZA4264 - to rezone from Single Family Residential District (R1) to Commercial Business District (CBD) on 3.351 acres for …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… nt of Zoning Conditions on ZA3552 (431 Commerce Park Drive, LLC) by TOMCO2 Systems Company with a variance to: 1. Reduce the landscape strip abutting Ridgeland Parkway from 15 ft. to 8 ft. as shown on the site plan …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "465",
+   "date": "2026-03-16",
+   "body": "Board of Commissioners",
+   "title": "Special Called Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5019,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5019,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1994,
+   "pdfSha256": "752b49cd7a281e8f2e3c8be2c5ef3f5afb64a7291e118dffbbba3b10c55ab829",
+   "topics": {
+    "annexation": 1,
+    "comprehensive-plan": 1
+   },
+   "tags": [
+    "annexation",
+    "comprehensive-plan"
+   ],
+   "matchedTerms": [
+    "annex",
+    "comprehensive plan"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… Framework Intergovernmental Agreement between Forsyth County and the City of Cumming for Annexation and Public Transportation Purposes, which, in material part, will cause the City of Cumming to ann …"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… nd (ii) the City of Cumming Multi-Modal Trail Project are Projects in Alignment with the Forsyth County Comprehensive Plan and the Funding, Construction and Operation of same are in the Best Interests of the Ci …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "425",
+   "date": "2026-03-10",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5000,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5000,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 10201,
+   "pdfSha256": "502810a18aeb5d596cf9bbe8015a69204ae8f95f1148be6fe865beb309c77353",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "development",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "annex",
+    "budget",
+    "contract",
+    "procurement",
+    "task order",
+    "townhome"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… o sign requisite documents - County Attorney (27) Board of Commissioners withdrawal of objection to Providence Group Annex annexation, in light of the annexation application being withdrawn - County Attorney (28) Updates to the …"
+    },
+    "contract": {
+     "term": "procurement",
+     "excerpt": "… tion for staff to declare a presented list of items as surplus with authorization for the Department of Procurement to dispose of accordingly - Director, Department of Procurement (3) Board consideration and app …"
+    },
+    "development": {
+     "term": "townhome",
+     "excerpt": "… tion and approval of an Encroachment and Indemnification Agreement between Forsyth County and Halcyon Garden Townhome Association, Inc. related to Encroachments to a water and sewer utility easement - County Attorne …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… $20,600.00 with authorization for the CIO to sign programmatic documents; and approval of a Budget Resolution for the IS&T Department - CIO, Department of IS&T (4) Board consideration and approv …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "445",
+   "date": "2026-03-05",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4985,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4985,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 14174,
+   "pdfSha256": "42f53526935bfd0af40e99f28795b5df2c8beb62c09c4e27a3184e94ee3490f0",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "rezon",
+    "subdivision",
+    "task order",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ment of Finance (D) Board approval of Deductive Change Order #19 with G.P.'s Enterprises, Inc. (Contract #1202000014) to reduce the final contract value by $1,223,051.94 Regular Meeting / Public Hearings Agenda Page 2 Mar …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… a speed limit of 25MPH on Reins Ridge and all other property and property rights as shown on the Subdivision Plat for Bridlefield Phase 1C, recorded in Plat Book 224, Pages 1-10, Forsyth County, Georgia Records - Dist …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ellness initiatives through Parks and Recreation facilities and programs and approval of the associated Budget Resolution - Director, Department of Parks and Recreation (B) Board approval of the FY 2026-202 …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… oned from the February 5,2026 Agenda) IX. Public Comments X. Old Business (1) Rishi Gankidi - ZA4230 - to rezone from Single Family Residential Restricted District (R2R) and Agricultural District (A1) to Single Famil …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… oning Conditions on ZA4175 (Priyanka Patel) by YOGI REAL ESTATE HIGHWAY 53 LLC with the following variance to: 1. Reduce the zoning setback from 50 ft. to 20 ft. as shown on the site plan (UDC Table 12.2); 2. Reduce …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "421",
+   "date": "2026-02-24",
+   "body": "Board of Commissioners",
+   "title": "February 24, 2026 BOC Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3978,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3978,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 12226,
+   "pdfSha256": "2e4d35d028d454265571df6c144db661cfd8b5f1dad9203e820152527d5266db",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "annex",
+    "budget",
+    "contract",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… of $3,260,758.00 with a match of $1,086,919.00 for construction of the new 911 center at the Courthouse Annex. Staff requests this Item be considered on a \"Time Sensitive\" basis - County Manager / Vertical Capital …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… inance (10) Board consideration and approval of Deductive Change Order #19 with G.P.'s Enterprises, Inc. (Contract #1202000014) to reduce the final contract value by $1,223,051.94 for the Ronald Reagan Boulevard Extension P …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… wellness initiatives through Parks and Recreation facilities and programs and approval of the associated Budget Resolution - Director, Department of Parks and Recreation (8) Board consideration and approval of the FY …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "444",
+   "date": "2026-02-19",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2969,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2969,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 12570,
+   "pdfSha256": "805389c3a49800473dba47969dc51b12aad743bc6dc3dd6f3455470d567e1ea8",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "award of",
+    "budget",
+    "contract",
+    "rezon",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… y Drive - Deputy Director, Department of Engineering (E) Board approval of Change Order #004 to Contract 20221130 with Hussey, Gay, Bell & Deyoung, Inc. in the amount of $17,644.80 for additional site …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… mpany - CP250036 - to operate an open storage yard with an overall site including an existing 77,383 sq. ft. warehouse with 85 parking spaces on 6.434 acres zoned Restricted Industrial District (M1) with the following variance …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Work Session held on February 10, 2026 (as anticipated by Board Rule 1.07.01): (A) Board approval of a Budget Resolution in the amount of $450,000.00 for the purchase of a Sheriff's Office SWAT vehicle - Chief of …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… al Park - Accountant, Department of Senior Services (M) Board authorization to postpone a Board generated rezoning for ZA4153, Anamaria Hazard Meanes for six (6) months. In accordance with UDC 8- 5.5(I), if an …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ning Conditions on ZA3552 (431 Commerce Park Drive, LLC) by TOMCO2 Systems Company with a variance to: 1. Reduce the landscape strip abutting Ridgeland Parkway from 15 ft. to 8 ft. as shown on the site p …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "424",
+   "date": "2026-02-10",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2954,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2954,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 6956,
+   "pdfSha256": "887c898d33631271a6a292118a12dd6f2b234be701c5ba19ad8bd76b264f3acc",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "award of",
+    "budget",
+    "contract",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Drive - Deputy Director, Department of Engineering (5) Board consideration and approval of Change Order #004 to Contract 20221130 with Hussey, Gay, Bell & Deyoung, Inc. in the amount of $17,644.80 for additional site …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ouncements and Reports V. Items for Consideration and Discussion (1) Board consideration and approval of a Budget Resolution in the amount of $450,000.00 for the purchase of a Sheriff's Office SWAT vehicle - Chief of …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ark - Accountant, Department of Senior Services (14) Board consideration and possible direction of a Board generated rezoning for ZA4153, Anamaria Hazard Meanes. In accordance with UDC 8-5.5(I), if an application for a l …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "443",
+   "date": "2026-02-05",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2941,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2941,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 13514,
+   "pdfSha256": "f6c6e4ab68b004de010d0e9da69c853624d4fb9da45331d16501041c62ec7485",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "contract",
+    "procurement",
+    "rezon",
+    "task order",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "procurement",
+     "excerpt": "… tion for staff to declare a presented list of items as surplus with authorization for the Department of Procurement to dispose of accordingly - Director, Department of Procurement (B) Board approval of a Memoran …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… trict (A1) and Commercial Business District (CBD) to Restricted Industrial District (M1) on 21.239 acres for warehouses in buildings totaling 243,520 sq. ft. with 224 parking spaces with the following variance to: 1. Reduce the …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ress Code - Director, Department of Employment Services (I) Board approval to postpone a Board-generated rezoning for ZA4141, SSL Ventures, LLC to a Work Session in 36 months. In accordance with UDC 8- 5.5(I), if a …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… (1) Public Hearing and possible vote regarding a request made by Chase Fulbright for: 1. A lot-size variance of 0.038 acres in order for an A1 lot to be 0.962 acres rather than the required 1 acre, and 2. A lot-wi …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "423",
+   "date": "2026-01-27",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2927,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2927,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 9073,
+   "pdfSha256": "0aac143f4ddac86c31db9cf418c43b302b38eaf493db0000b2333f1d4568fb93",
+   "topics": {
+    "contract": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "contract",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "contract",
+    "procurement",
+    "rezon",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "procurement",
+     "excerpt": "… tion for staff to declare a presented list of items as surplus with authorization for the Department of Procurement to dispose of accordingly - Director, Department of Procurement (5) Board discussion of a propo …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Page 3 January 27, 2026 (16) Board consideration and possible direction of a Board-generated rezoning for ZA4141, SSL Ventures, LLC. In accordance with UDC 8-5.5(I), if an application for a land d …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "419",
+   "date": "2026-01-22",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2915,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2915,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 13155,
+   "pdfSha256": "a8a5c4f086a9ec8f4f39a73180d5b20b161fe663bbee71251e1b58719306a55e",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "fiscal year",
+    "procurement",
+    "reappoint",
+    "rezon",
+    "task order",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… usage by Board members during Board of Commissioners meetings - Board of Commissioners (BB) Board reappointment of Dr. Shannon Mize to the Board of Health Department for a six (6) year term expiring December 31, …"
+    },
+    "contract": {
+     "term": "procurement",
+     "excerpt": "… Officer, Department of IS&T (M) Board approval of a Budget Resolution in the amount of $27,039.60 for the procurement of Text Archival Services - Chief Information Officer, Department of IS&T (N) Board approval to award Bid …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… 250036 - to operate an open storage yard with an overall site including an existing 77,383 sq. ft. warehouse with 85 parking spaces on 6.434 acres zoned Restricted Industrial District (M1) with the following …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… e associated General Services Agreement - Director, Department of Fleet Services (I) Board approval of a Budget Resolution in the amount of $35,569.00 for the replacement of total loss Unit #1900 for the District Attorney's …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Director, Forsyth County Extension Services (E) Board approval to bring back a Board generated rezoning for CP210024, Regular Meeting / Public Hearings Agenda Page 2 January 22, 2026 Gary R Bagley, to a Wor …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ning Conditions on ZA3552 (431 Commerce Park Drive, LLC) by TOMCO2 Systems Company with a variance to: 1. Reduce the landscape strip abutting Ridgeland Parkway from 15 ft. to 8 ft. as shown on the site p …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "422",
+   "date": "2026-01-13",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2900,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2900,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 15274,
+   "pdfSha256": "903c5e9e08c4966924aeb024cf53ef343959cea507e708f9330f723bdf5e9ae4",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "fiscal year",
+    "procurement",
+    "rezon",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "procurement",
+     "excerpt": "… partment (20) Board consideration and approval of a Budget Resolution in the amount of $27,039.60 for the procurement of Text Archival Services - Chief Information Officer, Department of IS&T (21) Board consideration and ap …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… gram in the amount of $46,451.00 with no match required for the Victim Advocate Unit with approval of a Budget Resolution and with authorization for the Finance Director or Assistant Finance Director to sign progra …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… e\" basis - Director, Emergency Management Agency (9) Board consideration and possible direction of a Board generated rezoning for CP210024, Gary R Bagley. In accordance with UDC 8-5.5(I), if an application for a land dis …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "418",
+   "date": "2026-01-08",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2885,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2885,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 7261,
+   "pdfSha256": "302c8266822a286fb1f538be5fd7cd4fcec883ee7c13b228085913549043e591",
+   "topics": {
+    "appointment": 1,
+    "development": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "development",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "conditional use",
+    "rezon",
+    "subdivision",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… administrative cost of $7,600.00 - Senior Project Manager, Department of Capital Projects (2) Board appointment of two (2) Commissioners to serve on the Water and Sewer Committee for 2026 - County Manager (3) Boar …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 25MPH on Promise Mill Lane, Dell Way, and all other property and property rights as shown on Subdivision Plat for Ansley at Pilgrim Mill Phase 4, recorded in PLat Book 224, Pages 151-173, Forsyth County, Geor …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Community Development (3) Public Hearing and possible vote regarding the County-Initiated request to rezone from Agricultural District (A1) to Restricted Industrial District (M1) on 6.63 acres - …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… Public Hearing and possible vote regarding the County-Initiated request for revocation of the existing Conditional Use Permit (CUP) for ZA3954 - Parcel 076- 125 - District 1 - Director, Department of Planning and Community …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ning Conditions on ZA2957 (Amy Smith) by Aqua Design Pools & Spas, LLC with a variance to: 1. Reduce the exterior setback from 50 ft. to 40 ft. (UDC Table 11.2(b)) - Parcel 074-306 - AZ …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "412",
+   "date": "2025-12-18",
+   "body": "Board of Commissioners",
+   "title": "12.18.2025 Board of Commissioners Regular Meeting/Public Hearings",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2873,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2873,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 23661,
+   "pdfSha256": "d151008ae192bc39d8a42c479640e55f5d130e885a137faf1ab1036c55711e11",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "annex",
+    "budget",
+    "conditional use",
+    "contract",
+    "procurement",
+    "rezon",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… P) Board authorization for County Attorney to prepare a letter of objection to the City of Cumming regarding annexation of parcels C01-004, C01-005, C01- 006, C01-007, C02-004, and C02-005 (+/- 21.567 acres of land) and to …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… es Agreement - Director, Department of Water and Sewer (G) Board approval of Change Order 001 to IDQ-055 with Lanier Contracting Company under the Indefinite Quantity Mechanical Contractor Contract (1202500002) in the amoun …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… of a Non-Residential Gas Extension Contract with Atlanta Gas Light Company for the Water & Sewer Maintenance Warehouse addition project - Vertical Capital Projects Manager, Department of Capital Projects (Q) Board approval o …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ces provided in the local act creating the Forsyth County State Court with approval of associated budget resolution. Effective Date January 1, 2026 - County Attorney (MM) Board approval of salary supplement ad …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… (GEFA). VIII. Public Hearings (1) Public Hearing and possible vote regarding the County-Initiated request to rezone parcels 201-073 and 201-150 from Single Family Residential District (RES6) to Commercial …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… ent (L) Board authorization for staff to commence the Public Hearing process regarding a County-Initiated Conditional Use Permit (CUP) to expand an existing place of worship on property zoned Agricultural District (A1) and Regula …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… nd Regular Meeting / Public Hearings Agenda Page 3 December 18, 2025 Single Family Residential District (R1) with variances to: 1. Increase the required number of parking spaces from 450 to 919 (UDC Table 17.1); 2. Reduce the impervious set …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "411",
+   "date": "2025-12-09",
+   "body": "Board of Commissioners",
+   "title": "12.09.2025 Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2861,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2861,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 16775,
+   "pdfSha256": "bcfd2ce6ac55f4fb4523201782882eaa3f9009fec3f28df14a1cf1b03dd0c4a6",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "variance": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "development",
+    "millage-budget",
+    "variance"
+   ],
+   "matchedTerms": [
+    "annex",
+    "budget",
+    "contract",
+    "procurement",
+    "task order",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… ratorium - Planner II, Department of Planning and Community Development (48) Board consideration of City of Cumming annexation of parcels C01-004, C01-005, C01-006, C01-007, C02-004, and C02-005 (+/- 21.567 acres of land) - County …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Water and Sewer (7) Board consideration and approval of Change Order 001 to IDQ-055 with Lanier Contracting Company under the Indefinite Quantity Mechanical Contractor Contract (1202500002) in the amount of $ …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… of a Non-Residential Gas Extension Contract with Atlanta Gas Light Company for the Water & Sewer Maintenance Warehouse Work Session Agenda Page 3 December 9, 2025 addition project - Vertical Capital Projects Manager, Department of C …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… virtual and onsite health and wellness services for County employees with approval of a corresponding budget resolution. Staff requests this Item be considered on a \"Time Sensitive\" basis - Director, Department of Emp …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ace of worship on property zoned Agricultural District (A1) and Single Family Residential District (R1) with variances to: 1. Increase the required number of parking spaces from 450 to 919 (UDC Table 17.1); 2. Reduc …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "410",
+   "date": "2025-12-04",
+   "body": "Board of Commissioners",
+   "title": "12.04.2025 Board of Commissioners Regular Meeting/Public Hearings",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2850,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2850,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 21122,
+   "pdfSha256": "66c4fa10ef9cfa27531fa6a27a5ebb02d5e43ace0f211961860a5186ab50a3fa",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "conditional use",
+    "contract",
+    "fiscal year",
+    "rezon",
+    "subdivision",
+    "task order",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… rsyth County, Georgia Records - District 1 - Director, Department of Engineering (3) Resolution appointing attorney Chris Balch, Esq. to provide legal guidance to the Ethics Clerk and the ethics panel on cer …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… nager to sign - Deputy Director, Department of Water and Sewer (E) Board approval of IDQ-045 with Lanier Contracting Co. under the Indefinite Quantity Mechanical Contractor Contract (Contract No. 1202500002) in the …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 25MPH on Thalley Creek Drive, Cornel Lane and all other property and property rights as shown on Subdivision Plat for Thalley Creek Estates Phase 1, recorded in Plat Book 221, Pages 192-213, Forsyth County, Georg …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Work Session held on November 25, 2025 (as anticipated by Board Rule 1.07.01): (A) Board approval of a Budget Resolution for replacement of total loss Unit Regular Meeting / Public Hearings Agenda …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ste (M) Board authorization for Staff to commence the Public Hearing process regarding a County-Initiated rezoning of 6.63 acres from Agricultural District (A1) to Restricted Industrial District (M1), Tax Parcel No. 130- …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… of Planning and Community Development (3) Public Hearing and possible vote regarding the County-Initiated Conditional Use Permit to operate a personal service establishment (tutoring) on property zoned Office and Instit …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… aring and possible vote regarding an Alternate Design for EK Engineering Consultants, LLC with the following variance to: 1. Reduce the front setback from 40 ft. to 6 ft. (UDC Table 21.6); 2. Reduce the side setback from 10 ft …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "409",
+   "date": "2025-11-25",
+   "body": "Board of Commissioners",
+   "title": "11.25.2025 Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2843,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2843,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 24869,
+   "pdfSha256": "a993940461df3a52de4ca4b55c0fab3f3cfb856986b908ca0629a50bbddae550",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "fiscal year",
+    "rezon",
+    "task order",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ctor, Department of Water and Sewer (7) Board consideration and approval of IDQ-045 with Lanier Contracting Co. under the Indefinite Quantity Mechanical Contractor Contract (Contract No. 1202500002) in …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… 7,540.00 for Commissioning Services at the Water & Sewer Work Session Agenda Page 5 November 25, 2025 Maintenance Warehouse for the Department of Capital Projects - Director, Department of Capital Projects (36) Board consideration and appr …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Agenda IV. Announcements and Reports V. Items for Consideration and Discussion (1) Board approval of a Budget Resolution for replacement of total loss Unit #040 -- Director of Business Operations, Sheriff's Office …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Department of Recycling & Solid Waste (16) Board consideration and possible direction regarding a County-Initiated rezoning of 6.63 acres from Agricultural District (A1) to Restricted Industrial District (M1), Tax Parc …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"

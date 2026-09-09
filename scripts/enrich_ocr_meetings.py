@@ -155,6 +155,13 @@ def enrich_meeting(meeting, cache, reclassify=False):
             f.write(pdf)
         text, method = extract_text(pdf_path)
 
+    # If no text could be extracted now (image-only PDF and OCR unavailable, e.g. a
+    # local run without tesseract), keep any prior derived tags rather than wiping
+    # them to empty — same "never overwrite good data with nothing" discipline as
+    # the batch-level guard. A genuine reclassify still re-tags every readable PDF.
+    if method == 'none' and cached and cached.get('tags'):
+        return cached
+
     tags = classify(text)
     terms = matched_terms(text)
     # Phase A per-mention excerpts: capture only from the poppler text layer, never

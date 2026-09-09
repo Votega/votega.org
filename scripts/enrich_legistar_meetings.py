@@ -29,7 +29,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from lib.legistar import fetch_events, fetch_event_items, fetch_rollcalls  # noqa: E402
 from lib.meeting_topics import (  # noqa: E402
     LAND_USE, classify, matched_terms, topic_flags, build_summary, flag_entry,
-    write_flags_file,
+    write_flags_file, topic_excerpts,
 )
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,12 +73,22 @@ def enrich_event(client, e):
     items = fetch_event_items(client, e.get('EventId'))
     topics = {}
     terms = set()
+    excerpts = {}          # {tag: {term, excerpt}} — first matching item per tag
     land_use_items = []
     for it in items:
         name = _clean(it.get('EventItemTitle') or it.get('EventItemMatterName') or '')
         blob = ' '.join(filter(None, [name, it.get('EventItemMatterType') or '']))
         tags = classify(blob)
         terms.update(matched_terms(blob))
+        # Excerpt is the matching agenda item's own text (structured, so no OCR /
+        # public-comment-roster noise). First item to hit a tag wins; a later item
+        # with a stronger ALPR term (named vendor / spelled-out) is preferred.
+        for tag, ex in topic_excerpts(blob, tags).items():
+            cur = excerpts.get(tag)
+            if cur is None:
+                excerpts[tag] = ex
+            elif tag == 'alpr' and cur['term'] == 'alpr' and ex['term'] != 'alpr':
+                excerpts[tag] = ex
         for tg in tags:
             topics[tg] = topics.get(tg, 0) + 1
         if set(tags) & LAND_USE:
@@ -116,6 +126,7 @@ def enrich_event(client, e):
         'itemCount': len(items),
         'topics': topics,
         'matchedTerms': sorted(terms),
+        'topicExcerpts': excerpts,
         'flags': topic_flags(topics),
         'dataCenterItems': dc_items,
         'landUseItems': land_use_items,

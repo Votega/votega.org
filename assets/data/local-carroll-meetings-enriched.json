@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-09T12:53:31Z",
+  "generatedAt": "2026-09-09T18:17:15Z",
   "source": "Carroll County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Carroll County",
-  "count": 25
+  "count": 40
  },
  "summary": {
   "flags": [
@@ -13,15 +13,15 @@
   ],
   "lastActivity": "2026-09-15",
   "topicTotals": {
-   "special-land-use": 5,
-   "variance": 6,
-   "appointment": 3,
-   "contract": 9,
-   "millage-budget": 7,
-   "annexation": 3,
+   "special-land-use": 6,
+   "variance": 9,
+   "appointment": 5,
+   "contract": 12,
+   "millage-budget": 9,
+   "annexation": 4,
    "data-center": 2,
-   "rezoning": 7,
-   "development": 1
+   "rezoning": 12,
+   "development": 3
   },
   "dataCenterItems": [
    {
@@ -147,9 +147,60 @@
     "tags": [
      "variance"
     ]
+   },
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-03-03",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2866,plainText=false)",
+    "tags": [
+     "annexation",
+     "development",
+     "rezoning"
+    ]
+   },
+   {
+    "title": "Planning & Zoning Commission",
+    "date": "2026-02-17",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1849,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning"
+    ]
+   },
+   {
+    "title": "Board of Appeals",
+    "date": "2026-01-15",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1826,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
+   {
+    "title": "Board of Appeals",
+    "date": "2025-12-11",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1793,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2025-12-02",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1824,plainText=false)",
+    "tags": [
+     "rezoning"
+    ]
+   },
+   {
+    "title": "Planning & Zoning Commission",
+    "date": "2025-11-18",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1782,plainText=false)",
+    "tags": [
+     "rezoning"
+    ]
    }
   ],
-  "landUseMeetings": 16,
+  "landUseMeetings": 24,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -163,7 +214,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3010,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1164,
+   "textChars": 1176,
    "pdfSha256": "91f337ab34b4cdab9ef7b0936a343b4745a621cec7ace1718463caa0d83f88c2",
    "topics": {
     "special-land-use": 1
@@ -174,6 +225,12 @@
    "matchedTerms": [
     "conditional use"
    ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… o The applicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. C-26-09-01: Conditional Use request, zoned Agriculture, for dog kennels at 2199 Horsley Mill Rd. Parcel #157-0059, Land Lot 104 of the 5th Distric …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -188,7 +245,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2997,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1265,
+   "textChars": 1293,
    "pdfSha256": "06299976cb23cec0a11e90665dcef880d16f1997c9773dfecacac6ee5b21b0b7",
    "topics": {
     "variance": 1
@@ -199,6 +256,12 @@
    "matchedTerms": [
     "variance"
    ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ll then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-09-01: Intrafamily-Lot Size Variance, zoned Agriculture, to split off 2 acres from 17.26 acres, which is less than the required 4 acre minimum. This proper …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -213,7 +276,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3008,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6113,
+   "textChars": 6531,
    "pdfSha256": "82dadbc09033eebfac70a1207be931f575b5e386d92dcb4e23c6c47202e3665c",
    "topics": {
     "appointment": 1,
@@ -230,6 +293,20 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ssary for the transaction. -Stacey Blackmon, County Attorney 11.V. Appointment - Three Rivers Workforce Development Consideration of the appointment of Jason Powell to the vacat …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… al Project (SPLOST) for FY 2026-2027, authorize the Chairman to negotiate and execute the contract and to take all necessary actions in connection with the project. -Brad Robinson, Deputy C …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… IANCE - Commissioner Fuller 5. APPROVAL OF AGENDA 6. APPROVAL OF MINUTES 6.I. Approval of Minutes for BOC Budget Work Session on July 30, 2026 6.II. Approval of Minutes for BOC Regular Meeting on August 4, 2026 7. FINANCI …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -244,11 +321,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2999,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 929,
+   "textChars": 1003,
    "pdfSha256": "14358e741194a61c57ef68a82b42a4183286261271a856125097fd71c5ea004e",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -261,7 +339,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2987,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5230,
+   "textChars": 5498,
    "pdfSha256": "4d0fb75613c1d2dbd312a0007f90b60c63fee11da2428a6f0633e4aa64f4eeda",
    "topics": {
     "annexation": 1,
@@ -284,6 +362,28 @@
     "data center",
     "rezon"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… in connection with the project. -Danny Yates, Director, Public Works 10.IV. Request for Annexation into the City of Carrollton, Georgia Consideration to Object to the Proposed Annexation of Parcel #0 …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… rebuttal. 9.I. Z-26-06-02: Rezoning request for 4.52 acres from Commercial to Industrial for a contractor yard at 931 Carrollton Hwy. Parcel #125-0001, Land Lot 116 of the 6th District. Applicant/Owner: Elite …"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… uance of Land Disturbance Permits, and the Issuance of Other Permits for Development of Any Data Center, Batter Energy Storage System, and Solar Power Farms; and for Other Lawful Purposes (ADDED) …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ICA - Commissioner Chance 5. APPROVAL OF AGENDA 6. APPROVAL OF MINUTES 6.I. Approval of Minutes for Budget Work Session June 25, 2026 6.II. Approval of Minutes for BOC Regular Meeting July 7, 2026 7. SPECIAL PRESENT …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… r against the application shall be allowed a TOTAL of five minutes to speak in rebuttal. 9.I. Z-26-06-02: Rezoning request for 4.52 acres from Commercial to Industrial for a contractor yard at 931 Carrollton Hwy. Pa …"
+    }
+   },
    "flags": [
     "land-use",
     "data-center",
@@ -306,11 +406,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2978,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1375,
+   "textChars": 1478,
    "pdfSha256": "43f0ae0c82cd987d9ecd73b8c7732b133c1b42c1b5dba677c835b5df7a05a584",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -323,7 +424,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2935,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1290,
+   "textChars": 1318,
    "pdfSha256": "bcc30351da9efedd1ae002ad01702b640ab13c00d715aeda972bc0bc643bf27a",
    "topics": {
     "variance": 1
@@ -334,6 +435,12 @@
    "matchedTerms": [
     "variance"
    ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… applicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-07-01: Setback Variance, zoned Agriculture, to reduce the 100 ft front setback requirement to approximately 41 ft for a workshop. This propert …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -348,7 +455,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2961,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4603,
+   "textChars": 4876,
    "pdfSha256": "5d8a62eac68cc52a621c7d018886b75396255e871ec456bb82772b0349d8d401",
    "topics": {
     "annexation": 1,
@@ -371,6 +478,28 @@
     "contract",
     "rezon"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… Development Authority. -Montrell McClendon, Commissioner District 1 10.IV. Request for Annexation into the City of Carrollton Consideration of Notice of Proposed Annexation of Parcel #089 0911, 089 …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… xecute the Agreement -Hubert Sparks, Chief Tax Appraiser 10.II. Hospital Authority Appointment Approve the submission of the nominees on the attached list for the available positions o …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… velopment 9.II. Z-26-06-02: Rezoning request for 4.52 acres from Commercial to Industrial for a contractor yard at 931 Carrollton Hwy. Parcel #125-0001, Land Lot 116 of the 6th District. Applicant/Owner: Elite …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… - Commissioner McClendon 5. APPROVAL OF AGENDA 6. APPROVAL OF MINUTES 6.I. Approval of Minutes for Budget Work Session May 28, 2026 6.II. Approval of Minutes from BOC Regular Meeting June 2, 2026 7. SPECIAL PRESENT …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… r against the application shall be allowed a TOTAL of five minutes to speak in rebuttal. 9.I. Z-26-06-01: Rezoning request for 1.51 acres from Agriculture to Commercial for a special events facility at 30 Dot Rd. Pa …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -385,12 +514,13 @@
    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2947,plainText=false)",
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2947,plainText=false)",
-   "textMethod": "ocr",
-   "textChars": 352,
+   "textMethod": "none",
+   "textChars": 0,
    "pdfSha256": "760ed432d0303d62cffb79d664abdba0e03403fa0efa339d62968a03b3e464fd",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -403,7 +533,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2930,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1267,
+   "textChars": 1279,
    "pdfSha256": "d0ef6c5c8fb4b50fd6043265da8fb5bd107b4087281de5cc7cf0b2f4ff9e457f",
    "topics": {
     "contract": 1,
@@ -417,6 +547,16 @@
     "contract",
     "rezon"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Holloway. Commission District 6. 5.II. Z-26-06-02: Rezoning request for 4.52 acres from Commercial to Industrial for a contractor yard at 931 Carrollton Hwy. Parcel #125-0001, Land Lot 116 of the 6th District. Applicant/Owner: Elite Engineering/ …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… o The applicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-06-01: Rezoning request for 1.51 acres from Agriculture to Commercial for a special events facility at 30 Dot Rd. Parcel #018-0100, …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -431,7 +571,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2928,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1714,
+   "textChars": 1748,
    "pdfSha256": "bc691ca2f35ca95015e79eab24bf990b82c36dd9f01d6032d6980e8b0f32d6a7",
    "topics": {
     "variance": 1
@@ -442,6 +582,12 @@
    "matchedTerms": [
     "variance"
    ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… cant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-06-01: Tower Height Variance, zoned Agriculture, to build a 259 ft telecommunication tower on 12.55 acres, which is over the maximum height of 150 …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -456,7 +602,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2936,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6437,
+   "textChars": 6868,
    "pdfSha256": "a00145495028e0bd4ab30f50a26247f9b00a47ba1d29504588f2ea157b47261b",
    "topics": {
     "appointment": 1,
@@ -480,6 +626,28 @@
     "data center",
     "fiscal year"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… an Effective Date; And for Other Purposes. -Alecia Searcy, Finance Director 10.VI. Appointment - Department of Family and Children Services Advisory Board Consideration for the appointment of S …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… District 1 position is vacant. Members are appointed for a term of four (4) years. 10.IX. Transit Contract Renewal FY 26-27 Consideration of Section 5311/5307 Public Transportation Service Agreement for the …"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… tions, the Issuance of Land Disturbance Permits, and the Issuance of Other Permits for Development of Any Data Center, Battery Energy Storage System, and Solar Power Farms; and for Other Lawful Purposes …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… LLEGIANCE - Commissioner Bailey 5. APPROVAL OF AGENDA 6. APPROVAL OF MINUTES 6.I. Approval of Minutes for Budget Work Session I 4-15-2026 6.II. Approval of Budget Work Session II 4-29-2026 6.III. Approval of Minutes …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… nst the application shall be allowed a TOTAL of five minutes to speak in rebuttal. 9.I. 5.11. C-26-05-02: Conditional Use request to construct a 225 ft tall telecommunication tower facility at 4212 W HWY 166. Parcel #060-0096 …"
+    }
+   },
    "flags": [
     "land-use",
     "data-center",
@@ -502,11 +670,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2963,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 865,
+   "textChars": 940,
    "pdfSha256": "f8296322e5db159963b138d1b8de5631c6c504b0014208a296b2ba5ced99fe67",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -519,7 +688,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2926,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1267,
+   "textChars": 1282,
    "pdfSha256": "5d03758ca333b71d29c16919e9af62df8454e36d8b35be185a72621d65b238ae",
    "topics": {
     "special-land-use": 1
@@ -530,6 +699,12 @@
    "matchedTerms": [
     "conditional use"
    ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… o The applicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. C-26-05-01: Conditional Use request to construct a 259 ft tall telecommunication tower facility at 23 Powell Chapel Rd. Parcel #170-0060, Land Lot …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -544,7 +719,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2922,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1593,
+   "textChars": 1625,
    "pdfSha256": "b83025ad05d52aac8db4eb25a053c79f557c7489a7c330bb75494849737f9210",
    "topics": {
     "variance": 1
@@ -555,6 +730,12 @@
    "matchedTerms": [
     "variance"
    ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ll then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-04-01: Intrafamily-Lot Size Variance, zoned Agriculture, to split off 2 acres from 22.82 acres, which is less than the required 4 acre minimum. This proper …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -569,7 +750,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2919,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6375,
+   "textChars": 6822,
    "pdfSha256": "7826b826890bbdb4a708c718a93dfdda41095808fce396fb009d09c2a05ddf44",
    "topics": {
     "annexation": 1,
@@ -592,6 +773,28 @@
     "contract",
     "rezon"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… Sheriff's Office of Emergency Management 11. BUSINESS SESSION 11.I. Request for Annexation into the City of Mount Zion Consideration of Notice of Proposed Annexation of Parcel #037 0108 loc …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… he Structural Engineer and authorize the Chairman to negotiate and approve the Engineer's contract and take all necessary action in connection therewith. -Danny Yates, Public Works Directo …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ed in District 6) - Commissioner Danny Bailey 11.II. FY 2026 - 2027 Carroll County Budget Notice to the Commission of the advertisement for the proposed FY2025-2026 Carroll Coun …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… pplication shall be allowed a TOTAL of five minutes to speak in rebuttal. 9.I. Z-26-04-01 and C-26-04-01: Rezoning request with a Conditional Use to rezone 1 acre from Agriculture to Industrial for bulk storage of p …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… wed a TOTAL of five minutes to speak in rebuttal. 9.I. Z-26-04-01 and C-26-04-01: Rezoning request with a Conditional Use to rezone 1 acre from Agriculture to Industrial for bulk storage of propane at 2904 S Hwy 27. Parcel #0 …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -607,11 +810,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2908,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1013,
+   "textChars": 1080,
    "pdfSha256": "1ae4affa1ef9be56209c7c652c0d9d94140a3e825fc8397a48bdf16b6f67fc45",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -624,7 +828,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2901,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 864,
+   "textChars": 930,
    "pdfSha256": "70171d50a724b76624bc03e68134f7dfce7a8daf6c4bc331097d7a0013390342",
    "topics": {
     "contract": 1,
@@ -638,6 +842,16 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… K SESSION 1.I. 1.1 Discussion of the FY 2026-2027 Proposed Budget, including Capital Projects and Contracts -Alecia Searcy, Finance Director Persons with special needs relating to handicapped accessi …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 9:00 AM WORK SESSION 1. FY 2026-2027 BUDGET WORK SESSION 1.I. 1.1 Discussion of the FY 2026-2027 Proposed Budget, including Capital Projects …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -652,7 +866,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2879,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1013,
+   "textChars": 1023,
    "pdfSha256": "3e8921cc967a72bdcc010823bd7ba5efd2028e113fbe9090b15a680649dc0d11",
    "topics": {
     "rezoning": 1,
@@ -666,6 +880,16 @@
     "conditional use",
     "rezon"
    ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… licant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-04-01 and C-26-04-01: Rezoning request with a Conditional Use to rezone 1 acre from Agriculture to Industrial for bulk storage of propane at 2904 …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… owed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-04-01 and C-26-04-01: Rezoning request with a Conditional Use to rezone 1 acre from Agriculture to Industrial for bulk storage of propane at 2904 S Hwy 27. Parcel #092-0126, Land …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -680,7 +904,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2897,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 809,
+   "textChars": 869,
    "pdfSha256": "d0f96e59f91b26df95c849bc0471fd23b377ed85a50b6cc2dbbffca215263f98",
    "topics": {
     "contract": 1,
@@ -694,6 +918,16 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… WORK SESSION 1.I. Discussion of the FY 2026-2027 Proposed Budget, including capital projects and contracts Persons with special needs relating to handicapped accessibility, disability, or foreign language shall contact th …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 9:00 AM WORK SESSION 1. FY 2026-2027 BUDGET WORK SESSION 1.I. Discussion of the FY 2026-2027 Proposed Budget, including capital projects and …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -708,7 +942,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2895,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4608,
+   "textChars": 4820,
    "pdfSha256": "5cf7961e14219cc699a9e82def764de68596b8b8fd93b13a555da2b8227aedd1",
    "topics": {
     "contract": 1,
@@ -722,6 +956,16 @@
     "contract",
     "rezon"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… olid Waste Hauling Services from convenience centers to the transfer station and termination of renewal of contract with the current vendor, and authorize the Chairman to negotiate and execute the contract and to take all …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… any action on the comments....... speakers are limited to 3 minutes. 9. ZONING SESSION 9.I. Z-26-03-02: Rezoning request for 3.5 acres from Agriculture to Residential (2.5 acres) and Commercial (1 acre), for an existi …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -736,7 +980,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2873,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 998,
+   "textChars": 1011,
    "pdfSha256": "e49d972361f3fede69dfd6c8e1c005ec16d35e433cfeddc3c38cf7f39b10c9b2",
    "topics": {
     "variance": 1
@@ -747,6 +991,12 @@
    "matchedTerms": [
     "variance"
    ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… hall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-04-01: Intrafamily-Lot Size Variance, zoned Agriculture, to split off 2 acres from 22.82 acres, which is less than the required 4 acre minimum. This proper …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -761,11 +1011,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2885,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 863,
+   "textChars": 926,
    "pdfSha256": "aab44f37e41c74b817e3f961a19f9d1141a1dec6a647bb0943ce9ff275a45674",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -778,7 +1029,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2875,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1372,
+   "textChars": 1385,
    "pdfSha256": "0971555fe1a440e85e1c06b90e8f8bb6dd478dfd9a068aa1db5fb3e9dec9e69d",
    "topics": {
     "development": 1,
@@ -792,6 +1043,16 @@
     "rezon",
     "subdivision"
    ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… al. 5. Requests 5.I. Z-26-03-01: Rezoning request for 28.44 acres from Agriculture to Residential, for a residential subdivision with a minimum of 1 acre lots at 297 Roy North Rd. Parcel #091-0030, Land Lot 30 of the 10th District. Applicant/Owner …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… o The applicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-03-01: Rezoning request for 28.44 acres from Agriculture to Residential, for a residential subdivision with a minimum of 1 acre lot …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -806,7 +1067,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1848,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1290,
+   "textChars": 1318,
    "pdfSha256": "fd49813428aeca19272ee0e56095ff11a1c7e26c7ea91ee47120848386a7fd7a",
    "topics": {
     "variance": 1
@@ -817,6 +1078,480 @@
    "matchedTerms": [
     "variance"
    ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ll then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-25-12-01: Intrafamily-Lot Size Variance, zoned Agriculture, to split off 1.66 acres from 4.36 acres, which is less than the required 4 acre minimum. This prop …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "781",
+   "date": "2026-03-03",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2866,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2866,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 5131,
+   "pdfSha256": "bd12b0b616ed84de9eeeebfb807f5957ac3ebd6335fdcb73d01bce2a497fd71c",
+   "topics": {
+    "annexation": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "annexation",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "annex",
+    "rezon",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… ty Development Director 8.III. Letter to Local Legislative Delegation - Need for Reform of Georgia Annexation Laws Approval of SB 496 -Michelle Morgan, Chairman 9. BUSINESS SESSION 9.I. Aut …"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… oning request for approximately 80 acres from Agriculture and Commercial to Industrial, for five industrial warehouses at 2990, 2905, 2821 N Hwy 27. Parcels #072 0028, 073 0007, 073 0008, Land Lot 230 and 220 of the …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… r against the application shall be allowed a TOTAL of five minutes to speak in rebuttal. 8.I. Z-26-01-01: Rezoning request for approximately 80 acres from Agriculture and Commercial to Industrial, for five industrial wa …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "592",
+   "date": "2026-02-26",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2857,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2857,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1572,
+   "pdfSha256": "e82fc0653128cab50a7d1b5ea6e60ef6b42b5684a8e31e9c80b8fc21f27c3dd9",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "649",
+   "date": "2026-02-17",
+   "body": "Planning & Zoning",
+   "title": "Planning & Zoning Commission",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1849,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1849,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1188,
+   "pdfSha256": "11303f56255ca374072669de2419d6b71bc4def38927d55a532bedae4748d384",
+   "topics": {
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… -01-01: Rezoning request for approximately 80 acres from Agriculture and Commercial to Industrial, for five industrial warehouses at 2990, 2905, 2821 N Hwy 27. Parcels #072 0028, 073 0007, 073 0008, Land Lot 230 and 220 of the 10th District. Appli …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… o The applicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-01-01: Rezoning request for approximately 80 acres from Agriculture and Commercial to Industrial, for five industrial warehouses at …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "791",
+   "date": "2026-02-10",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Retreat Meeting February 10-11, 2026",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1853,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1853,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 938,
+   "pdfSha256": "9454c82b3c5b58f5711bb7b006578d5be4eecffe9c931e58a5c4a34a5cd81d8d",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "699",
+   "date": "2026-02-03",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1851,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1851,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4721,
+   "pdfSha256": "2c170285d8bf2df5e7e6d7f9fe28dd5f10eb7044ecf544dd6ae75e86bbce9e10",
+   "topics": {
+    "contract": 1
+   },
+   "tags": [
+    "contract"
+   ],
+   "matchedTerms": [
+    "contract"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… or $2,338,000 and the 2021 SPLOST for $1,130,000, and authorize the Chairman to negotiate and execute the contract and take all other actions in connection with the project. -Thad Furguson, Dire …"
+    }
+   },
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "711",
+   "date": "2026-01-29",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1844,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1844,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 967,
+   "pdfSha256": "3cd191694c982c27c6ae91abc54ba68d62545681677ad0ee02f906d04800429b",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "661",
+   "date": "2026-01-15",
+   "body": "Board of Appeals",
+   "title": "Board of Appeals",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1826,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1826,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1335,
+   "pdfSha256": "8dfd04d790c86e15d69e34154eea6b3cc0ce70dad21df85fc207ce2cb1321fea",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ll then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-01-01: Intrafamily-Lot Size Variance, zoned Agriculture, to split off 1 acre from 18.31 acres, which is less than the required 4 acre minimum. This propert …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "698",
+   "date": "2026-01-06",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1841,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1841,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4605,
+   "pdfSha256": "b9c4eb190053495ea15f5a7a2bcfdfd1afa9fea3a08938eaf15a2b302d81e83a",
+   "topics": {
+    "appointment": 1,
+    "contract": 1
+   },
+   "tags": [
+    "appointment",
+    "contract"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "reappoint"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… s for the 2026 Elections. -Avery Jackson, Carroll County Attorney 11.VIII. Appointment - WARRS Consideration for the reappointment of Craig Dodson to the Board of WARRS to fi …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… USINESS SESSION 11.I. Resolution to approve the Program Manager Agreement, Requests for Proposals, Contracts, Total Project Cost, and other Necessary actions for the Sheriff's Office Replacement and Jail Modernizat …"
+    }
+   },
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "779",
+   "date": "2025-12-17",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Special Called Meeting",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1832,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1832,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1151,
+   "pdfSha256": "2e64a4bc827d4451b99986b9dcf4f940d54a92a5e48d60289b320170295ff0c7",
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget"
+   ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… December 17, 2025 - 4:00 PM 1. CALL TO ORDER 2. ROLL CALL 3. APPROVAL OF AGENDA 4. FINANCIAL REVIEW 4.I. Budget Amendment FY 2025 Consideration to Approve an Advertised Budget Amendment -Ale …"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "660",
+   "date": "2025-12-11",
+   "body": "Board of Appeals",
+   "title": "Board of Appeals",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1793,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1793,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1709,
+   "pdfSha256": "99f0eb9ed2a05eb09068084f2df0c240c7678776a1db1748ed02e1ebed81c8b4",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ll then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-25-12-01: Intrafamily-Lot Size Variance, zoned Agriculture, to split off 1.66 acres from 4.36 acres, which is less than the required 4 acre minimum. This prop …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "697",
+   "date": "2025-12-02",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1824,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1824,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 6197,
+   "pdfSha256": "42995de8237a13175972b22dc578975f5ad023a02696d0304649f243bd853111",
+   "topics": {
+    "appointment": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "reappoint",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Obligation Debt and for Other Related Purposes. Stacey Blackmon, County Attorney 11.IV. Appointment - 20-27 Corridor Joint Development Authority Reappointment of Jeff Matthews (Appointee 2) to the 20-27 Co …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 5.I. Financial Recap - October 2025 -Alecia Searcy, Finance Director 5.II. Year End Budget Amendment Review -Alecia Searcy, Finance Director 6. APPROVAL OF AGENDA 7. APPROVAL OF MI …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… against the application shall be allowed a TOTAL of five minutes to speak in rebuttal. 10.I. Z-25-11-01: Rezoning request for 4 acres from Agriculture to Commercial, for a tree service business at 4169 W Hwy 166. Parc …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "709",
+   "date": "2025-11-18",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1798,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1798,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 803,
+   "pdfSha256": "65beb5404cc9bac653a1be62c15aadb53c8838d4ee1aaa703191c79c9534ab3a",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "646",
+   "date": "2025-11-18",
+   "body": "Planning & Zoning",
+   "title": "Planning & Zoning Commission",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1782,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1782,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1235,
+   "pdfSha256": "d852918a6584f7e6b658f08e0c725d05ffdb77baa12db11003d8d3cbb6a1500e",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… o The applicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-25-11-01: Rezoning request for 4 acres from Agriculture to Commercial, for a tree service business at 4169 W Hwy 166. Parcel #060-0029 …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "659",
+   "date": "2025-11-06",
+   "body": "Board of Appeals",
+   "title": "Board of Appeals",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1753,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1753,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1155,
+   "pdfSha256": "1727c1353e0b5305410acf8723211aa06d347c08324a75c7bcb668107756f17f",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ion shall be allowed a TOTAL of five minutes to speak in rebuttal. 5. Requests 5.I. V-25-11-01: Setback Variance, zoned Agriculture, to reduce the 100 ft front setback requirement to 70 ft for a garage. This property is located at …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "696",
+   "date": "2025-11-04",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1785,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1785,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 7076,
+   "pdfSha256": "e4aec49eb00f4ac0454b3d6bdb63b421a594febb0ffbf477ab6b6c9b957f3f99",
+   "topics": {
+    "contract": 1,
+    "rezoning": 1,
+    "special-land-use": 1
+   },
+   "tags": [
+    "contract",
+    "rezoning",
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "contract",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… total cost of $149,172.00 taken from SPLOST21, and to authorize the Chairman to negotiate and execute the contract and to take all necessary actions in connection with the project. -Danny Yates, …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… . Owner/Applicant: Sunbelt of Alabama, LLC/Tower Co, LLC. Commission District 5. 9.III. Z-25-10_01: Rezoning request for 50.5 acres from Industrial to Agriculture, for farming and livestock at 200 Ross St. Parcel …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… r against the application shall be allowed a TOTAL of five minutes to speak in rebuttal. 9.I. C-25-10-01: Conditional Use request to construct a 245 ft tall telecommunication tower facility at 950 Duncan Rd. Parcel #140-0141, Lan …"
+    }
+   },
    "flags": [
     "land-use"
    ],

@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-09T12:56:00Z",
+  "generatedAt": "2026-09-09T18:19:55Z",
   "source": "Henry County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Henry County",
-  "count": 25
+  "count": 38
  },
  "summary": {
   "flags": [
@@ -14,17 +14,17 @@
   ],
   "lastActivity": "2026-09-10",
   "topicTotals": {
-   "development": 10,
-   "rezoning": 10,
-   "special-land-use": 2,
-   "variance": 4,
-   "annexation": 4,
-   "contract": 14,
-   "millage-budget": 16,
+   "development": 19,
+   "rezoning": 17,
+   "special-land-use": 5,
+   "variance": 5,
+   "annexation": 10,
+   "contract": 22,
+   "millage-budget": 23,
    "alpr": 2,
-   "comprehensive-plan": 5,
-   "appointment": 4,
-   "data-center": 1
+   "comprehensive-plan": 8,
+   "appointment": 9,
+   "data-center": 3
   },
   "dataCenterItems": [
    {
@@ -173,9 +173,57 @@
      "comprehensive-plan",
      "rezoning"
     ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-02-03",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2409,plainText=false)",
+    "tags": [
+     "annexation",
+     "comprehensive-plan",
+     "development",
+     "rezoning"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-01-20",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2413,plainText=false)",
+    "tags": [
+     "annexation",
+     "development",
+     "rezoning"
+    ]
+   },
+   {
+    "title": "Zoning Advisory Board Meeting: January 8, 2026",
+    "date": "2026-01-08",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2381,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning",
+     "special-land-use"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Called Meeting, re: Legislative Priorities",
+    "date": "2026-01-06",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2402,plainText=false)",
+    "tags": [
+     "annexation"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2025-12-02",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2372,plainText=false)",
+    "tags": [
+     "annexation",
+     "development"
+    ]
    }
   ],
-  "landUseMeetings": 16,
+  "landUseMeetings": 28,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting (Meeting rescheduled from July 21, 2026)",
@@ -206,7 +254,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2631,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3225,
+   "textChars": 3076,
    "pdfSha256": "51c3644e3c4ffd4a8303472d349814cec130ca4aa7830fd892324c2b2dd36ca9",
    "topics": {
     "development": 1,
@@ -226,6 +274,24 @@
     "subdivision",
     "variance"
    ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… District. The property consists of 181.791 +/- acres, and the request is for a conservation subdivision. District 3"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… VII. ASSOCIATED CASES A. RZ-26-05 InLine Communities, LLC of Atlanta, GA requests a rezoning from R-A (Residential Agricultural) and R-2 (Single Family Residential) to R-3 (Single …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… be heard at a later date: CU-26-02 (Postponed by Applicant) TowerCom of Charleston, SC requests a conditional use for property located on King Mill Road east of Iris Lake Road in Land Lot 216 of the 7th District. …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… sists of 69.28 +/- acres, and the request is for a new wireless communications facility. District 1 VI. VARIANCES A. VR-26-04 Marcia Clark of Stockbridge, GA requests a variance for property located at …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -240,7 +306,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2634,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10642,
+   "textChars": 10551,
    "pdfSha256": "7fe45dc46fcceb30d7120d8ecb1b7c4fa7942c6ea19ef5f5c8142a20a708f3b4",
    "topics": {
     "annexation": 1,
@@ -254,6 +320,16 @@
     "annex",
     "contract"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… Planning and Zoning A. AX-26-02 Resubmittal The City of McDonough has resubmitted a request for annexation of properties at 820 and 964 Racetrack Road, consisting of 79.04 +/- acres in Land Lot 169 of the 7th …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… A. Resolution Awarding RFP 26-42 for On-Call Right-of-Way Negotiation Services (Annual Contract) to Beckham Land Acquisitions, LLC; Colliers Engineering & Design; and Booker Real Estate Services, L …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -268,7 +344,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2619,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8719,
+   "textChars": 8403,
    "pdfSha256": "79f44e8cdb73670ecf01b239e019c7f7a3e9dcc1f68e6e21b2184d0932ea2aa5",
    "topics": {
     "annexation": 1,
@@ -289,6 +365,24 @@
     "millage",
     "rezon"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… Resolution 26-329 B. (Not a Public Hearing: AX-26-03) The City of Hampton has received a request for annexation of property at 65 Minter Drive, consisting of 3.897 +/- acres in Land Lots 84 of the 3rd District. Dist …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… rom Georgia Dolphins of Henry County for the Age Group Competitive Swim Team Association's Annual Contract. (Presenter: Jonathon Penn, Henry County Parks and Recreation Director)(Exhibit 3) Resolution 26- …"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… A. Resolution for the execution of the renewal of the L3Harris Radio System Maintenance Agreement for fiscal year 2026/2027 at a cost of $652,891.52 to be funded through Repairs and Maintenance Account 21500120-522200. (Pr …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 28 IX. Planning & Zoning A. (Public Hearing: RZ-26-01) John Valdivieso of McDonough, GA requests a rezoning from RA (Residential- Agricultural) to C-2 (General Commercial) for property located Southwest of the …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -304,7 +398,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2608,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 16643,
+   "textChars": 15806,
    "pdfSha256": "c9ec63a544dc430d9d72626272f09e6b494f26c49671e2ecec9f165902f2b309",
    "topics": {
     "contract": 1,
@@ -323,6 +417,20 @@
     "procurement",
     "subdivision"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "procurement",
+     "excerpt": "… Resolution 26-309 SPLOST A. Resolution approving adoption of the GDOT Procurement Policy for the Procurement, Management, and Administration of Engineering and Design …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… A. Resolution authorizing the installation of speed humps within the Summit at Scarborough Subdivision. The estimated cost of the project is $80,000; with funding available within the Department of Tran …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 0; with funding available within the Department of Transportation (DOT) Asphalt Budget. (Presenter: Steven Cariola, Engineer II)(Exhibit 4) Resolution 26-306 Juvenile C …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -338,7 +446,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2600,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 16816,
+   "textChars": 16323,
    "pdfSha256": "9d11df7da2fd748f33db4a42ffa41eaabf98ddd30702b52562f5e916deefcee3",
    "topics": {
     "alpr": 1,
@@ -361,6 +469,28 @@
     "rezon",
     "subdivision"
    ],
+   "topicExcerpts": {
+    "alpr": {
+     "term": "flock",
+     "excerpt": "… e persons. Police Department A. Resolution amending Resolution No. 23-197 regarding the Flock Safety agreement for product replacement. (Presenter: Captain Anthony Militello, …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… medical examiner services for the Henry County Coroner's Office for a one-year contract in the amount of $200,000, with two mutually agreed upon annual renewals. Funding is available with …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… A. Resolution approving a request for a new streetlight district for the King Oaks Subdivision on Campground Road. District 3 (Presenter: Kamryn Bowen, Planner I)(Exhibit 6) …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 000, with two mutually agreed upon annual renewals. Funding is available within the Coroner's FY 27 Budget. (Presenter: Donald Cleveland, Coroner)(Exhibit 4) Resolution 26-288 …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… : (Public Hearing: RZ-26-01) Rescheduled to August 17, 2026 John Valdivieso of McDonough, GA requests a rezoning from RA (Residential- Agricultural) to C-2 (General Commercial) for property located southwest of the …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget",
@@ -377,7 +507,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2596,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 14245,
+   "textChars": 13727,
    "pdfSha256": "6f4696f761ee2e492fc65d60f44a319d34e0a6c4be637c84904d9ee73f0496e4",
    "topics": {
     "alpr": 1,
@@ -400,6 +530,28 @@
     "rezon",
     "subdivision"
    ],
+   "topicExcerpts": {
+    "alpr": {
+     "term": "flock",
+     "excerpt": "… hibit 8) Police Department A. Resolution amending Resolution No. 23-197 regarding the Flock Safety agreement for product replacement. (Presenter: Captain Anthony Militello, …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… icine Associates for medical examiner services for the Henry County Coroner's Office for a one-year contract in the amount of $200,000, with two mutually agreed upon annual renewals. Fundi …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… A. Resolution approving a request for a new streetlight district for the King Oaks Subdivision on Campground Road. District 3 (Presenter: Kamryn Bowen, Planner I)(Exhibit 6) B. …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 000, with two mutually agreed upon annual renewals. Funding is available within the Coroner's FY 27 Budget. (Presenter: Donald Cleveland, Coroner)(Exhibit 4) County Attorney …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… XI. Planning & Zoning A. (Public Hearing: RZ-26-01) John Valdivieso of McDonough, GA requests a rezoning from RA (Residential- Agricultural) to C-2 (General Commercial) for property located southwest of the …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget",
@@ -416,7 +568,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2579,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3441,
+   "textChars": 3143,
    "pdfSha256": "55689b2e3a99da9ab3d8ec00a0e2a7cd348dcf361402cab0712e3bb1ef117833",
    "topics": {
     "comprehensive-plan": 1,
@@ -434,6 +586,20 @@
     "rezon",
     "variance"
    ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… A. COMP-AM-23-07 EPL Enterprises, Inc. of Lithonia, GA requests an amendment to the Comprehensive Plan for property located on Highway 155 North to the west of Valley Road in Land Lot 133 of the 11th District. T …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… on from Low Density Suburban to Village. District 3 RZ-23-15 EPL Enterprises, Inc. of Lithonia, GA requests a rezoning from R-A (Residential Agricultural) to C-2 (General Commercial) for property located on Highway 155 North …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… INVOCATION II. PLEDGE OF ALLEGIANCE III. ACCEPTANCE OF THE AGENDA IV. PLANNING STAFF COMMENTS V. VARIANCES A. VR-26-01 Ben and Paige Hopkins of Locust Grove, GA requests a variance for property …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -448,7 +614,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2585,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13463,
+   "textChars": 12847,
    "pdfSha256": "746d65096511181ad4365f45d73dbd25a9046e0c9a3a47732d9217c3112b013e",
    "topics": {
     "annexation": 1,
@@ -462,6 +628,16 @@
     "annex",
     "contract"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… e Director)(Exhibit 2) Resolution 26-273 Planning and Zoning A. Resolution to Approve the Annexation Agreement Settlement between Henry County and the City of McDonough. (Presenter: Kamau As-Salaam, …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… veway Easement more or less, in Land Lot 201 of the 2nd District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3 …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -476,7 +652,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2573,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3913,
+   "textChars": 3718,
    "pdfSha256": "4f457fabcd842d2edea86baae4bb8d69ef59a4e8c9af06c3b07ea0ff8b2e8b74",
    "topics": {
     "millage-budget": 1
@@ -487,6 +663,12 @@
    "matchedTerms": [
     "budget"
    ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… anager at 770-288-6418 promptly to allow the County to make reasonable accommodations for those persons. B. FY 25 Budget Amendment for Audit Submission (Presenter: Bernita Campbell, Budget Director) Vice Chair Anglyn made …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -501,7 +683,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2566,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8757,
+   "textChars": 8625,
    "pdfSha256": "36ad3a6a85ec57f7b31b621629bf78d6502e9c796ecddcbd1cf0b6fb03f47602",
    "topics": {
     "contract": 1,
@@ -518,6 +700,20 @@
     "contract",
     "subdivision"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Easement more or less, in Land Lot 190 of the 11th District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19 (Fairview Road - Ph …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… DOT A. Resolution authorizing the installation of speed humps within the Hudson Bridge Estates Subdivision. The estimated cost of the project is $60,000, with funding available within the Department of Transportat …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… st of the project is $60,000, with funding available within the Department of Transportation (DOT) Asphalt Budget. (Presenter: Steven Cariola, Engineer II DOT)(Exhibit 7) Resolution 26-263 E-911 …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -533,11 +729,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2555,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6892,
+   "textChars": 6621,
    "pdfSha256": "6eaef48622948d268ce1b5d54502e95d3b7d2e6f43df6918aecc57f5cc20f48b",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -550,7 +747,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2548,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7757,
+   "textChars": 7467,
    "pdfSha256": "9953e6c5b5e1a85d10fb2e6fb043dc31704949bec4d72fcd12f4ee2b132e65db",
    "topics": {
     "appointment": 1,
@@ -565,6 +762,16 @@
     "budget",
     "fiscal year"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… 2026 as National Homeownership Month (Presenter: Raven Bodine, Community Development Specialist II) VII. Appointments A. Chair Appointment to Henry County Building & Facilities Authority: Lavezza Zanders (Term …"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… 00 of Freight Cluster Plan Grant from the Atlanta Regional Commission and Providing $75,000 Local Match in Fiscal Year 2027 (Presenter: Sam Baker, Director of Transportation Planning)(Exhibit 6) Commissioner Le …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -579,7 +786,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2529,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 12532,
+   "textChars": 12199,
    "pdfSha256": "7c53c5a4867bfa14b5138ec71b410b01cfcf2dd0e9be3e39e88c45066c125000",
    "topics": {
     "appointment": 1,
@@ -601,6 +808,24 @@
     "reappoint",
     "subdivision"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Risk Manager at 770-288-6418 promptly to allow the County to make reasonable accommodations for those persons. VII. Appointments A. Georgia Department of Behavioral Health & Developmental Disabilities (DBHDD) Regional 6 …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… 8) Resolution 26-243 Senior Services A. Resolution approving a contract with the Georgia Department of Human Services (DHS), utilizing the Community Services Block Grant ( …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… A. Resolution approving a request for a new streetlight district for Brighton (Phase 1) Subdivision on Locust Road. District 1 (Presenter: Kamryn Bowen, Planner I)(Exhibit 6) R …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… s (not to exceed $450,000/annually) for Henry County Fire Rescue. Funds available in the department budget. (Presenter: Deron \"Pat\" Wilon, Fire Chief, HCFR)(Exhibit 5) Resolution 26-2 …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -616,7 +841,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2523,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3616,
+   "textChars": 3464,
    "pdfSha256": "5ef861a34269f94d681959eb93d137e529fd41ddb1e1b3f8abb135124f6e6ba9",
    "topics": {
     "millage-budget": 1
@@ -627,6 +852,12 @@
    "matchedTerms": [
     "budget"
    ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Pledge of Allegiance III. Call to Order IV. Financial Services A. (Public Hearing) FY 2027 Proposed Budget (*No pre-registration required to participate in Public Hearing) (Presenter: Bernita Campbell, Budget …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -641,7 +872,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2507,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4024,
+   "textChars": 3739,
    "pdfSha256": "490a7a7afec7a565596ab56081c3636f53a8acdc9e8348f41b1ffef98e479be7",
    "topics": {
     "development": 1,
@@ -658,6 +889,20 @@
     "subdivision",
     "variance"
    ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… of the 8th District. The property consists of 209.15 +/- acres and the request is for a single-family subdivision District 3 V. VARIANCES A. VR-26-02 Robert Cooper of Hampton, GA requests a vari …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… . District 2 RZ-26-02 (Postponed by Staff) Sawgrass Development, LLC, of Atlanta, GA requests a rezoning from RA (Residential Agricultural) to R-4 (Single Family Residential) for property south of Ho …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… VR-26-01 (Withdrawn by Applicant) Sun Rise Brothers Properties, LLC, of Sugar Hill, GA requests a variance for property located at 830 McCullough Road in Land Lot 87 of the 6th District. The property cons …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -672,7 +917,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2515,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10841,
+   "textChars": 10945,
    "pdfSha256": "df9f66c65f7ef14000821e713655090ada44d58597e31420f3c3f862ecf231c2",
    "topics": {
     "contract": 1,
@@ -686,6 +931,16 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… horizing Henry County, Georgia (The \"County\") to execute the Intergovernmental Water and Sewer Availability Contract (The \"Agreement\") between the County and the Henry County Water Authority (The \"Authority\") for …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… . Pledge of Allegiance (Pastor Leonard Himes) V. Call to Order Announcements: 1) The Budget Hearing listed on the agenda has been rescheduled to May 18, 2026 at 6:00 p.m. 2) The Presentation fr …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -700,7 +955,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2499,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4419,
+   "textChars": 4086,
    "pdfSha256": "74ef0b3d7fc8f33972fbdbacda01678a4b4c9da0f541012ba4ef053ef71c2676",
    "topics": {
     "millage-budget": 1
@@ -711,6 +966,12 @@
    "matchedTerms": [
     "budget"
    ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… .gov Kevin J. Lewis, District V Henry County Board of Commissioners Called Budget Workshop Meeting 4:00 PM, Tuesday, April 28, 2026 NOTICE: This is a public in-person meeting he …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -725,11 +986,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2514,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3887,
+   "textChars": 3721,
    "pdfSha256": "e278c721aa9a3ab17b21dcf3d46756ce301ecd9fb9f78445e24c5dd72935ef73",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -742,7 +1004,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2489,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13400,
+   "textChars": 13449,
    "pdfSha256": "71e9a276c47cf66a6c05cc0a9e12dd7f31d6e8e0b85bc52048780bb3bd809ca1",
    "topics": {
     "annexation": 1,
@@ -770,6 +1032,32 @@
     "rezon",
     "subdivision"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… NSENT TO REGULAR AGENDA) AX-26-02 (Not a Public Hearing) The City of McDonough has received a request for annexation of properties at 820 and 964 Racetrack Road, consisting of 79.04 +/- acres in Land Lot 169 of the 7th Distr …"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… d)COMP-AM-23-07 (Public Hearing) EPL Enterprises, Inc. of Lithonia, GA requests an amendment to the Comprehensive Plan for property located on Highway 155 North to the west of Valley Road in Land Lot 133 of the 11th District. Th …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ay Easement more or less, in Land Lot 190 of the 11th District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19 …"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… Land Lot 109 of the 6th District. The property consists of 22.287 +/- acres and the request is for a horizontal multifamily development. District 5 The following Planning & Zoning Item was advertised for the April 14, 2026 BOC …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… A. April 15, 2026 is a Called FLOST Joint Meeting with the Cities at 8:30 a.m. B. April 28, 2026 is a Called Budget Workshop Meeting at 4:00 p.m. C. May 5, 2026 is a Regular BOC Meeting at 9:00 a.m. Adjournment …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… poned by the applicant: RZ-25-04 (Public Hearing) (POSTPONED) Minerva USA LLC of Atlanta, GA requests a rezoning from RA (Residential Agricultural) & OI (Office Institutional) to R-5 (Single-Family Residence) for pr …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -785,7 +1073,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2475,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10316,
+   "textChars": 9918,
    "pdfSha256": "d6ee97d7799e93f994d0010a75891b3dfee721c5f26a9beaf390ab44c98d24b9",
    "topics": {
     "contract": 1,
@@ -799,6 +1087,16 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Easement, more or less, in Land Lots 190 of the 12th District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19 …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ST Transportation Director)(Exhibit 2) Resolution 26-105 C. Resolution approving a Budget Amendment to reallocate available SPLOST II project funds and commit remaining funds to the Fire Sta …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -813,7 +1111,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2463,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 15632,
+   "textChars": 15794,
    "pdfSha256": "06a8233a3d3a869af6533fa0d9e0dc5f48e83a56bd85111d6ea19b3c115d661c",
    "topics": {
     "appointment": 1,
@@ -840,6 +1138,32 @@
     "rezon",
     "subdivision"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ector) E. Safe Haven Baby Boxes Presentation (Presenter: Deputy Chief Frank Robinson/HCFR) VIII. Appointments A. Council on Aging Appointment(s): 4-year term 1) BOC Chair - Reappointment of Joni McR …"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… Ordinance 26-01 B. COMP-AM-26-01 (Public Hearing) Resolution to amend the Henry County Comprehensive Plan to modify text and policy language to ensure consistency with the adopted 2026 Unified Land D …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… t of Driveway Easement, more or less, in Land Lots 191 of the 12th District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19 (Fairview Road - P …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… of the 7th District. The property consists of 143.41 +/- acres and the request is for single-family residential subdivision. District 1. Announcement #2: We have updated Exhibit 2 which is an ARC Grant. We will be authorizing a …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… A. March 31, 2026 is a regularly-scheduled BOC Meeting at 9:00 a.m. B. April 14, 2026 is a Called Budget Workshop Meeting at 4:00 p.m. C. April 14, 2026 is a regularly-scheduled BOC Meeting at 6:30 p.m. …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… bled by the applicant: RZ-24-31 (Public Hearing) TABLED Dean Conn of Grovetown, GA requests a rezoning from RA (Residential Agricultural) to RA (Residential Agricultural) and R-1 (Single-Family Residential) …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -855,7 +1179,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2435,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4552,
+   "textChars": 4315,
    "pdfSha256": "c8cd56737a3da3f8bee053183b035ee725c550c8ca69e9489709dfd3211e6ca8",
    "topics": {
     "comprehensive-plan": 1,
@@ -880,6 +1204,28 @@
     "townhome",
     "variance"
    ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… +/- acres, and the request is for the expansion of a religious facility. District 5 VII. REZONING VIII. COMPREHENSIVE PLAN AMENDMENT IX. UNIFIED LAND DEVELOPMENT CODE AMENDMENT X. ASSOCIATED CASES A. COMP-AM-25-02 H …"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… Investments, LLC, of McDonough, GA requests a rezoning from RA (Residential Agricultural) to RM (Multifamily Residential) for property located at 1916 Highway 155 S in Land Lot 254 of the 2nd District. The …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 25-03 (Postponed by the applicant) Professional Property Investments, LLC, of McDonough, GA requests a rezoning from RA (Residential Agricultural) to RM (Multifamily Residential) for property lo …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… is for a townhome development. District 5 IV. PLANNING STAFF COMMENTS V. VARIANCES VI. CONDITIONAL USE A. CU-25-09 Hoon Jae Lee of Loganville, GA requests a conditional use for property located at …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… es and the request is for a townhome development. District 5 IV. PLANNING STAFF COMMENTS V. VARIANCES VI. CONDITIONAL USE A. CU-25-09 Hoon Jae Lee of Loganville, GA requests a conditional use for pro …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -894,7 +1240,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2432,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 12588,
+   "textChars": 12796,
    "pdfSha256": "d0e1cdbaa5a735ac18d29278abcc23d6c0a37a6a17bb187088be6013cbd45000",
    "topics": {
     "comprehensive-plan": 1,
@@ -912,6 +1258,20 @@
     "future land use",
     "rezon"
    ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… M-23-07 (Public Hearing - POSTPONED) EPL Enterprises, Inc. of Lithonia, GA requests an amendment to the Comprehensive Plan for property located on Highway 155 North to the west of Valley Road in Land Lot 133 of the 11th District. The …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ent, more or less, in Land Lots 179, 206, and 211 of the 2nd District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19 (Bill Gardner Parkway, P …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ff: A. RZ-23-15 (Public Hearing - POSTPONED) EPL Enterprises, Inc. of Lithonia, GA requests a rezoning from RA (Residential- Agricultural) to C-2 (General Commercial) for property located on Highway 155 …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -926,7 +1286,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2424,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10912,
+   "textChars": 11001,
    "pdfSha256": "06c33131ba4894cff5921ec47013a34934bdc761b36825eb5cee24671ed60abe",
    "topics": {
     "appointment": 1,
@@ -946,6 +1306,24 @@
     "data center",
     "fiscal year"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ng February as Spay/Neuter Awareness Month (Presenter: Amber Smith, Public Relations Specialist) VII. Appointments A. Hospital Authority Submittals: District I: Brian Andrews; Shannan Brown; and Gwen Presle …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ecreation A. Resolution awarding Bid #26-16 to EdTech Group, LLC, for a portable toilet rental services annual contract in the amount of $32,685.60. (Presenter: Jonathon Penn, Executive Director)(Exhibit 9) Resolution 26-62 SP …"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… Unified Land Development Code (ULDC) to provide for new definitions and regulating standards for data centers. Countywide (Presenter: Kamau As- Salaam, Deputy Director)(Exhibit 17) No action taken. X …"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… ineer II)(Exhibit 7) Resolution 26-60 Financial Services A. Resolution approving a Letter of Engagement for Fiscal Year 2025 Audit Services between Henry County, GA and Mauldin & Jenkins CPA(s) and Advisor(s). (Presenter: Joy R …"
+    }
+   },
    "flags": [
     "land-use",
     "data-center",
@@ -968,7 +1346,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2422,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4016,
+   "textChars": 3845,
    "pdfSha256": "d2aa9ef99647875fbc1db81d47897bac01b3318328ea36f4fbf633a970c2c005",
    "topics": {
     "millage-budget": 1
@@ -979,7 +1357,718 @@
    "matchedTerms": [
     "budget"
    ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… hief Mike Ireland. Directors/Assistant Directors: Joy Robinson, Deputy Chief Finance Officer and Bernita Campbell, Budget Director. Leadership Staff: Dr. Chalonda Smith, Chief of Staff to Chair Harrell; Ashley Larrow, Chief of Staff to t …"
+    }
+   },
    "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "804",
+   "date": "2026-02-03",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2409,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2409,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 15862,
+   "pdfSha256": "901554e0878f59edb93053932a1fb954e032988c7151bc0f1cb7e943e1f71701",
+   "topics": {
+    "annexation": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "annexation",
+    "comprehensive-plan",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "annex",
+    "budget",
+    "comprehensive plan",
+    "contract",
+    "fiscal year",
+    "future land use",
+    "mixed use",
+    "rezon",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… 770-288-6418 promptly to allow the County to make reasonable accommodations for those persons. REGULAR AGENDA IX. Annexation A. AX-26-01 The City of Hampton has received a request for annexation of subject property locat …"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… VED from Agenda) J&P Synergy, LLC of McDonough, GA requests an amendment to the Comprehensive Plan for property located at 1099 Airline Road in Land Lot 74 of …"
+    },
+    "contract": {
+     "term": "task order",
+     "excerpt": "… odations for those persons. VIII. CONSENT AGENDA Airport A. Resolution approving Croy Engineering Task Order #22 for Engineering Design Services for a MALSR Lighting System at the Atlanta Speedway Airport in the …"
+    },
+    "development": {
+     "term": "mixed use",
+     "excerpt": "… +/- acres, and the request is to amend the Future Land Use Map designation from Commercial to Low Density Mixed Use. District 3. Announcement #2: Added: Executive Session to discuss Litigation. Announcement #3: Added: …"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… $126,556.00 from the Office of the Governor/Criminal Justice Coordinating Council for Fiscal Year 2026. (Presenter: Craig Ogilvie, Director of Henry County Accountability Court)(Exhibit 2) …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… dvertised for the February 3, 2026 BOC Meeting, but has been removed by Staff. Please note that the Rezoning for this property (RZ-24-18) will still be heard: COMP-AM-24-04 (REMOVED f …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "764",
+   "date": "2026-01-20",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2413,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2413,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 13366,
+   "pdfSha256": "f64fb34b7887b470d8638d2e7bf28d062d9743691a080d0bb500f162fc5e88ab",
+   "topics": {
+    "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "annexation",
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "annex",
+    "appoint",
+    "contract",
+    "fiscal year",
+    "multifamily",
+    "rezon",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… Resolution 26-24 (Year-End Board of Commissioners Video Played) VIII. CONSENT AGENDA Deannexation(s) A. DE-AX-25-01 (Not a Public Hearing) Henry County has received a request for deannexati …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… eation of the Henry County Police Department (Presenter: Amber Smith, Public Relations Specialist) VII. Appointments A. Resolution appointing citizens to the Transportation Special Purpose Option Sales Tax (TSP …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… emporary Easement, more or less, in Land Lot 193 of the 2nd District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19. (Burg …"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… Land Lot 109 of the 6th District. The property consists of 22.287 +/- acres and the request is for a horizontal multifamily development. District 5. ANNOUNCEMENT #2 - Chair Harrell amended the agenda as follows: 1 …"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… deactivation of four Constituent Aide positions (covering Districts 1, 3, 4 and 5) for the current fiscal year in order to take care of the $125,000 deficiency in health insurance costs, contingent upon the following …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… OC Meeting, but has been postponed by the applicant: RZ-25-04: Minerva USA, LLC of Atlanta, GA requests a rezoning from RA (Residential Agricultural) & OI (Office Institutional) to R-5 (Single-Family Residen …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "757",
+   "date": "2026-01-08",
+   "body": "Zoning Advisory Board",
+   "title": "Zoning Advisory Board Meeting: January 8, 2026",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2381,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2381,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 3805,
+   "pdfSha256": "ad3d32859f7a670eeb5f940de2eaf6b7e33862d73d6b663d9b62bf8cb845e879",
+   "topics": {
+    "development": 1,
+    "rezoning": 1,
+    "special-land-use": 1
+   },
+   "tags": [
+    "development",
+    "rezoning",
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "multifamily",
+    "rezon",
+    "townhome"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… al Property Investments, LLC, of McDonough, GA requests a rezoning from RA (Residential Agricultural) to RM (Multifamily Residential) for property located at 1916 Highway 155 S in Land Lot 254 of the 2nd District. The prope …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… (Postponed by the Applicant) Professional Property Investments, LLC, of McDonough, GA requests a rezoning from RA (Residential Agricultural) to RM (Multifamily Residential) for property located at 1916 Highway 1 …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… District. The property consists of 10 +/- acres and the request is for a townhome development. District 5 VI. CONDITIONAL USE A. CU-25-03 (Not a Public Hearing) Binta Bin-Wahad and Muhammad Qasmi of McDonough, GA requests a …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "790",
+   "date": "2026-01-06",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Called Meeting, re: Legislative Priorities",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2402,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2402,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4286,
+   "pdfSha256": "c16b0a2f072e196aca7fe62aba39f51dfdf19d2bab7b57e09e745a2a3fda71aa",
+   "topics": {
+    "annexation": 1
+   },
+   "tags": [
+    "annexation"
+   ],
+   "matchedTerms": [
+    "annex"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… ice)(Exhibit 1) Senate Bill 22, re: Board of Ethics HB 581, re: Deannexations 2 Individuals with disabilities who require …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "763",
+   "date": "2026-01-06",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2394,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2394,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 23188,
+   "pdfSha256": "804671b8b1e0be3a5d62332d58c85ed56158c9bff92a0f8bbee7ea85f03c0caa",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "data-center": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "data-center",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "data center"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… mended Adoption Agreement regarding Retiree's COLA (Exhibit 6) to the Regular Agenda; and Move both appointments up on agenda prior to Proclamations/Recognitions. …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… orgia Kenworth, LLC for Henry County Stormwater Department in the amount of $232,884.00 through Sourcewell Contract #032824-KTC using Capital Improvement Plan (CIP) Funds. (Presenter: Josue DeJesus, Stormwater …"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… Unified Land Development Code (ULDC) to provide for new definitions and regulating standards for data centers. Countywide (Presenter: Kamau As- Salaam, Deputy Director)(Exhibit 23) *First reading of t …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… d 6-0-0. VI. Upcoming Meetings and Events A. January 20, 2026 at 4:00 p.m. is a Called BOC Meeting, re: Budget Kickoff; and B. January 20, 2026 at 6:30 p.m. is a Regularly-Scheduled BOC Meeting; and C. February …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center",
+    "millage-budget"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Board of Commissioners Meeting",
+     "date": "2026-01-06",
+     "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2394,plainText=false)"
+    }
+   ]
+  },
+  {
+   "id": "777",
+   "date": "2025-12-29",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Called Meeting, re; Year-End Budget Amendment",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2384,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2384,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 3103,
+   "pdfSha256": "cc3ccd1c3c4d55a2ba8b8581e1e58e291157df02daacabaac76bc20504bf4a65",
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget"
+   ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… II. Pledge of Allegiance III. Call to Order IV. Financial Services A. Resolution approving Year-End Budget Amendment. (Presenter: Bernita Campbell, Budget Director) Vice Chair Robinson made a motion to …"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "686",
+   "date": "2025-12-02",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2372,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2372,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 18299,
+   "pdfSha256": "5247e5907c5cbde471280912eed386eab6010e623c9ee11d4c17624d5a5c1774",
+   "topics": {
+    "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "annexation",
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "annex",
+    "appoint",
+    "budget",
+    "contract",
+    "fiscal year",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… solution approving the Quote from Com-Tech for Low Voltage Data Cabling Installation at the Henry County Judicial Annex (District 3) 12 N. Zack Hinton Pkwy., McDonough, in the amount of $129,923.00 through Contract #RFP 22-60 u …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… PLOST Update (Presenter: Clayton Carte, Senior Public Relations Specialists Henry County SPLOST) VIII. Appointments A. Resolution appointing members to the Henry County Building & Facilities Authority: (Term …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ENDA (County Manager will read Consent Agenda) Capital Projects A. Resolution approving a contract with RoofConnect National Roofing Services for a new membrane roof at Fire Station #7 (District 3) 1800 GA …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… ing & Zoning A. Resolution approving a request for a new streetlight district for the Norman Estates (Phase 1) Subdivision on Highway 81 East. District 3 (Presenter: Kamau As-Salaam, Deputy Director)(Exhibit 10) Resolution 25-374 …"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… a Georgia Department of Transportation Local Maintenance & Improvement Grant (LMIG) Application for fiscal year 2026. (Bert Bivins, Interim SPLOST Director)(Exhibit 23) Commissioner Price made a motion to appr …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "696",
+   "date": "2025-11-13",
+   "body": "Zoning Advisory Board",
+   "title": "Zoning Advisory Board Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2362,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2362,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4068,
+   "pdfSha256": "e9b481400b97f9aa7eea1b5416b74d59950dbfcef1ed720c419bb9ed483093d1",
+   "topics": {
+    "development": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "multifamily",
+    "rezon",
+    "townhome",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… perty Investments, LLC, of McDonough, GA requests a rezoning from RA (Residential Agricultural) to RM (Multifamily Residential) for property located at 1916 Highway 155 S in Land Lot 254 of the 2nd Di …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… strict 2 RZ-25-02 (Postponed by Staff) Anthony Whitmore of Jonesboro, GA requests a rezoning from RA (Residential Agricultural) to R-2 (Single Family Residence) for property l …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… poned: CU-25-01 (Postponed by the Applicant) LDF Development, Inc., of Ellenwood, GA requests a conditional use for property located at 5490 Flakes Mill Road in Land Lot 220 of the 12th District. T …"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… he property consists of 10 +/- acres and the request is for a townhome development. District 5 VII. VARIANCES A. VR-25-05 Ronald Holbrook Jr. of Stockbridge, GA requests a variance for property …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "756",
+   "date": "2025-11-04",
+   "body": "Board of Commissioners",
+   "title": "Called BOC Meeting, re: Planning and Zoning Matters",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2346,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2346,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 5440,
+   "pdfSha256": "72cf1ff22065938a8330a06e9a262619670cda2af883a5baf97a030edbcf92a2",
+   "topics": {
+    "comprehensive-plan": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "apartment",
+    "comprehensive plan",
+    "future land use",
+    "multi-family",
+    "multifamily",
+    "rezon",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… CP McDonough II, LLC, of Atlanta, GA; and VCP McDonough PCB, LLC of Atlanta, GA request an amendment to the Comprehensive Plan for property located north of Highway 20/81 West at International Avenue in Land Lots 157 and 1 …"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… f tax-exempt revenue bonds for the benefit of Fairview Terrace, LP (re: TEFRA Hearing for Fairview Terrace Apartment Project) (Presenter: Rod Meadows, HCDA Attorney)(Exhibit 1) VI. Planning & Zoning A. RZ-24 …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… nning & Zoning A. RZ-24-09 (Public Hearing) Hybrass Properties, LLC of Greensboro, GA requests a rezoning from RA (Residential Agricultural) and R-3 (Single-Family Residential) to R-5 (Single- Fam …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "684",
+   "date": "2025-11-04",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2355,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2355,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 16468,
+   "pdfSha256": "d33d7277a65881bd23c3b08580f0284b64a2c903af6ea3ff36eed30f5eb71380",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "data-center": 1,
+    "millage-budget": 1,
+    "special-land-use": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "data-center",
+    "millage-budget",
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "annex",
+    "budget",
+    "conditional use",
+    "contract",
+    "data center"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… Allegiance V. Call to Order ADDED WALK ON ITEMS: 1) Fountain on the Square; 2) City of Hampton Annexation; and 3) Data Center/Discussion Only VOTE: Commissioner Lewis made a motion to approve the added items; …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… echnology Services Director)(Exhibit 2) Resolution 25-345 C. Resolution approving a contract with RoofConnect National Roofing Services for a new membrane roof at Fire Station #3 (located at 3030 Sta …"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… Call to Order ADDED WALK ON ITEMS: 1) Fountain on the Square; 2) City of Hampton Annexation; and 3) Data Center/Discussion Only VOTE: Commissioner Lewis made a motion to approve the added items; Commissioner Price s …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ority utility relocation estimated cost for Mill Road Widening in the amount of $566,913.22 and a Budget Amendment in the amount of $386,992.22. TSPLOST District 5. (Presenter: Bert Bivins, SPLOST Deputy Director) …"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… -03 (Public Hearing) Remigius Idaewor of Ellenwood, GA, requests an appeal to the denial of a conditional use for property located at 585 Scarborough Road in Land Lot 222 of the 12th District. The property consists o …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center",
+    "millage-budget"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Board of Commissioners Meeting",
+     "date": "2025-11-04",
+     "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2355,plainText=false)"
+    }
+   ]
+  },
+  {
+   "id": "683",
+   "date": "2025-10-21",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2373,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2373,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 14703,
+   "pdfSha256": "c6180c845edf598a4716e3919bc0fa437d44ba0ca14d77da2ff3b9ac3fba0944",
+   "topics": {
+    "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "annexation",
+    "appointment",
+    "contract",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "annex",
+    "appoint",
+    "contract",
+    "rezon",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… Ordinance 25-10 B. AX-25-07 (Not a Public Hearing) The City of Hampton has received a request for annexation of properties along Fortson Drive, north of Lower Woosley Drive, consisting of 158.37 +/- acres in …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… cognizing October as Fire Prevention Month (Presenter: Amber Smith, Public Relations Specialist) VII. Appointment A. Council on Aging (District II): Sarah Billups (Term: 10/21/25 - 10/21/29) Vice Chair Robi …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… B. Resolution approving Bid Award #26-01 for Countywide apparel (uniforms) to United Apparel as an annual contract, one (1) year with two (2) mutually agreed upon one-year terms. (Presenter: Ashley Larrow, County Manager' …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… th District. The property consists of 108.49 +/- acres and the request is for a single- family residential subdivision. District 5 (Presenter: Tayla Solomon, Planner III)(Exhibit 19) Commissioner Lewis made a m …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 5-341 D. RZ-24-29 (Public Hearing) Templar Development Group, LLC of Fayetteville, GA requests a rezoning from RA (Residential-Agricultural) to R-5 (Single-Family Residential) for property located …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "682",
+   "date": "2025-10-07",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2326,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2326,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 12112,
+   "pdfSha256": "4f25d04de715498c31d35928baa5e88e7d469ec1c4076641e11f7dfda3f59359",
+   "topics": {
+    "contract": 1,
+    "development": 1
+   },
+   "tags": [
+    "contract",
+    "development"
+   ],
+   "matchedTerms": [
+    "contract",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… t of 1,306.80 square feet in Land Lot 109 of the 6th District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provisions of O.C.G.A. Section 32-3-4 through Secti …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Hecht Walker Jordan, PC of Stockbridge, GA requests a modification to zoning conditions for the Newberry Subdivision located north of Mount Carmel Road in Land Lots 115 & 142 of the 6th District. The property consists of 96 …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "681",
+   "date": "2025-09-23",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2323,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2323,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 14424,
+   "pdfSha256": "0bfda040bb487479d70b4ebe39ba204777da152ad778b99e7572631686c4c6d0",
+   "topics": {
+    "appointment": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "comprehensive-plan",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "comprehensive plan",
+    "contract",
+    "future land use",
+    "millage",
+    "mixed use",
+    "multifamily",
+    "rezon",
+    "subdivision",
+    "townhome"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… er VI. Presentations A. Parks Master Plan Update (Presenter: Jonathon Penn, Executive Director) VII. Appointments A. District IV appointment to the Zoning Advisory Board: Katy Bell (Filing Unexpired Term: …"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… ution 25-311 B. COMP-AM-25-01 (Public Hearing) DR Horton of Conyers, GA requests an amendment to the Comprehensive Plan for property located south of Mount Carmel Road and west of Jones Road in Land Lots 150 and 151 of the 6th …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ountywide) to Nova Technology Solutions. This is a 60-month (five-year) lease as a unit/price contract. (Presenter: Susan Harris, Purchasing Director)(Exhibit 2) Resolution 25-299 Henry County Police …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… d 151 of the 6th District. The property consists of 110.885 +/- acres and the request is for a single-family subdivision on septic. District 5 (Presenter: Tayla Solomon, Planner III)(Exhibit 16) Commissioner Lewis made …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… seconded. The motion carried 6-0-0. Resolution 25-309 X. SPLOST A. Resolution to approve a Budget Amendment in the amount of $2,000,000 ($ 1,580,547.00) available in the SPLOST V Tax Collections; and a Supp …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… on carried 6-0-0. Resolution 25-312 C. RZ-24-16 (Public Hearing) DR Horton of Conyers, GA requests a rezoning from RA (Residential Agricultural) to R-2 (Single-Family Residence) for property located south …"
+    }
+   },
+   "flags": [
+    "land-use",
     "millage-budget"
    ],
    "dataCenterItems": []

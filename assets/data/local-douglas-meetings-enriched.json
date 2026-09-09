@@ -1,27 +1,29 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-09T12:55:41Z",
+  "generatedAt": "2026-09-09T18:19:17Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
-  "count": 25
+  "count": 40
  },
  "summary": {
   "flags": [
+   "alpr",
    "data-center",
    "land-use",
    "millage-budget"
   ],
   "lastActivity": "2026-09-01",
   "topicTotals": {
-   "rezoning": 4,
-   "contract": 16,
-   "millage-budget": 17,
-   "annexation": 2,
-   "appointment": 13,
-   "data-center": 2,
-   "variance": 3,
+   "rezoning": 9,
+   "contract": 27,
+   "millage-budget": 27,
+   "annexation": 6,
+   "appointment": 19,
+   "data-center": 3,
+   "variance": 4,
    "comprehensive-plan": 1,
-   "development": 1
+   "development": 5,
+   "alpr": 2
   },
   "dataCenterItems": [
    {
@@ -91,11 +93,89 @@
     "tags": [
      "variance"
     ]
+   },
+   {
+    "title": "Planning Zoning and BOC",
+    "date": "2026-05-05",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7290,plainText=false)",
+    "tags": [
+     "rezoning"
+    ]
+   },
+   {
+    "title": "BOC Commission Meeting",
+    "date": "2026-05-05",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7303,plainText=false)",
+    "tags": [
+     "annexation",
+     "development",
+     "rezoning"
+    ]
+   },
+   {
+    "title": "BOC Work Session",
+    "date": "2026-05-04",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7300,plainText=false)",
+    "tags": [
+     "annexation",
+     "development",
+     "rezoning"
+    ]
+   },
+   {
+    "title": "Planning Zoning and BOC",
+    "date": "2026-03-31",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7236,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning"
+    ]
+   },
+   {
+    "title": "Planning Zoning Variance",
+    "date": "2026-03-16",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7210,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
+   {
+    "title": "BOC Commission Meeting",
+    "date": "2026-03-03",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7202,plainText=false)",
+    "tags": [
+     "annexation"
+    ]
+   },
+   {
+    "title": "BOC Work Session",
+    "date": "2026-03-02",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7198,plainText=false)",
+    "tags": [
+     "annexation"
+    ]
    }
   ],
-  "landUseMeetings": 9,
-  "alprItems": [],
-  "alprMeetings": 0
+  "landUseMeetings": 17,
+  "alprItems": [
+   {
+    "title": "BOC Commission Meeting",
+    "date": "2026-03-17",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7229,plainText=false)",
+    "terms": [
+     "alpr"
+    ]
+   },
+   {
+    "title": "BOC Work Session",
+    "date": "2026-03-16",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7223,plainText=false)",
+    "terms": [
+     "alpr"
+    ]
+   }
+  ],
+  "alprMeetings": 2
  },
  "meetings": [
   {
@@ -107,7 +187,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7504,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3892,
+   "textChars": 3822,
    "pdfSha256": "21e779107ef85c2448c2c4e45746d8468fc202753e7124db2dc80ff0c921af66",
    "topics": {
     "rezoning": 1
@@ -118,6 +198,12 @@
    "matchedTerms": [
     "rezon"
    ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ed by Lisa Bradshaw Small. Commission District #3. City of Douglasville - a request for a rezoning from R-A (residential agriculture) to PSP (public semi-public) for a safety driving course and …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -132,7 +218,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7525,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11062,
+   "textChars": 11194,
    "pdfSha256": "b9a59146dae86aa5a9476044dffd76655afef238c4a293e9cae4846a91beef9e",
    "topics": {
     "contract": 1,
@@ -147,6 +233,16 @@
     "contract",
     "millage"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… sign all related documents pending legal review. Commission Meeting 3 September 1, 2026 9. Approval to renew the contract with Mobile Communications America for Outdoor Siren Maintenance for $14,862.00 to be funded by the EMA budget …"
+    },
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… ust 17, 2026. 3. Executive Session Minutes of August 17, 2026 and August 18, 2026. 4. Special Called Meeting Minutes (Millage Rate) of August 10, 2026 and August 18, 2026. FINANCIAL REPORT 5. Acceptance of the monthly Financial/Bu …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -161,7 +257,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7517,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5921,
+   "textChars": 6025,
    "pdfSha256": "4cafa86e636c654e3a525bc7c34c6db1b6e11c63c1053842dfcb8dd8d40a5f91",
    "topics": {
     "contract": 1,
@@ -176,6 +272,16 @@
     "contract",
     "millage"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… he Chairman to sign all related documents pending final legal review. (Steve Balfour) 15. Approval to renew the contract with Mobile Communications America for Outdoor Siren Maintenance for $14,862.00 to be funded by the EMA budget, an …"
+    },
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… , 2026. () 3. Executive Session Minutes of August 17, 2026 and August 18, 2026. () 4. Special Called Meeting Minutes (Millage Rate) of August 10, 2026 and August 18, 2026. () FINANCIAL REPORT 5. Acceptance of the monthly Financial/Bud …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -190,7 +296,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7495,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11478,
+   "textChars": 11641,
    "pdfSha256": "820362c5f3680e2a8e5943428e18fb5a9f126afa0fbb51015c72704a234d2dd4",
    "topics": {
     "annexation": 1,
@@ -214,6 +320,28 @@
     "data center",
     "millage"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… pending final legal review. Commission Meeting 2 August 18, 2026 9. Decision on whether to raise an objection for annexation of 1.52 acres from unincorporated Douglas County to the City of Douglasville at the south-west corner of …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… sign all related documents pending final legal review. 11 Motion to proceed as discussed in Executive Session appointing Tiffany Stewart- . Stanley as interim County Administrator as of September 9, 2026 and approve an amendment …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… mission District #2. 10 Motion to proceed as discussed in Executive Session accepting the resignation of . Terminus Contract and authorize the Chairman to sign all related documents pending final legal review. 11 Motion to proceed as …"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… eate a legacy of awareness, prevention, and hope for future generations. Commissioner Henry Mitchell III will host \"Data Centers and Douglas County: Separating Fact from Fiction\" on Wednesday, August 26, from 6 p.m. to 8 p.m. in Citizens Hall. T …"
+    },
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… 3, 2026. FINANCIAL REPORT 4. Approval of the Financial Report for the month of July 2026. () PUBLIC HEARING 5. Millage Rate (Dominic Ochei) NEW BUSINESS 6. Resolution to adopt the Douglas County Board of Education's 2026 Millage Rate. …"
+    }
+   },
    "flags": [
     "land-use",
     "data-center",
@@ -236,7 +364,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7482,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 280,
+   "textChars": 344,
    "pdfSha256": "c5fab05b9876170fef9d71c86783acae356e33d74ee6693dbec38af437b8f174",
    "topics": {
     "millage-budget": 1
@@ -247,6 +375,12 @@
    "matchedTerms": [
     "millage"
    ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) RECESS"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -261,11 +395,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7470,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1345,
+   "textChars": 1324,
    "pdfSha256": "23d6bb4dd11670d92fd3a478abab7aa0362ea7799c0e66736184115114b6a849",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
+   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   },
@@ -278,7 +413,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7477,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7201,
+   "textChars": 7360,
    "pdfSha256": "e880a436b101c1eef01169703373b5c015efcaa82ca45f0c35ee65e2eef4124c",
    "topics": {
     "annexation": 1,
@@ -298,6 +433,24 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… horize . the Chairman to sign all related documents pending final legal review. (Jill Hopson) 13 Request for annexation of 1.52 acres from unincorporated Douglas County to City . of Douglasville at the southwest corner of Lee Road an …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… SPLOST 2022 and authorize the Chairman to sign all related documents pending final legal review. (Julia Janka) 24 Appointment of Leonora Thompson to the Animal Control Advisory Board and . authorize the Chairman to sign all related document …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… the Chairman to sign all related documents pending final legal review. (Justin Ricks) 16 Approval of an annual contract with Front Line Mobile Health under Solicitation# 26- . 003 to provide 28 Hazmat team specific physicals and 220 NFPA …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Assistance Grant (JAG) (15PBJA-25-GG-02974-JAGX) in the amount of $19,072 with no match required, amend the budget and authorize the Chairman to sign all related documents subject to final legal review. (Jamie Dapremont) 8. Auth …"
+    }
+   },
    "flags": [
     "land-use",
     "millage-budget"
@@ -313,7 +466,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7466,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 279,
+   "textChars": 344,
    "pdfSha256": "5af608dd5c94cccaf1822fa83983653b433d1f8f91f5099165639b776b1d9174",
    "topics": {
     "millage-budget": 1
@@ -324,6 +477,12 @@
    "matchedTerms": [
     "millage"
    ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) ADJOURN"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -338,7 +497,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7445,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2645,
+   "textChars": 2659,
    "pdfSha256": "0cbf69dbf26a5817333a0bf587eb5b06129d767f2e36e5a5d5cf8082baca28c1",
    "topics": {
     "contract": 1,
@@ -352,6 +511,16 @@
     "contract",
     "rezon"
    ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… (planned unit development w/conditions) to LI (light industrial) and a Special Use Permit to allow a contractor's office with outdoor storage and equipment rental located at 1340 N. County Line Road, Lithia …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… he minutes from the July 7, 2026 Zoning Meeting. AGENDA Terry Boomer/GA 5 Land Holdings, LLC - a request for a rezoning Z2026- from C-G(general commercial) to C-H(heavy commercial) and a 47/S2026-48 Special Use Permit to allow …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -366,7 +535,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7453,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11406,
+   "textChars": 11551,
    "pdfSha256": "81b7af444df9950a2a42f32b94230bd719fbf33798ee88fc79a636580d83bbc3",
    "topics": {
     "appointment": 1,
@@ -383,6 +552,20 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ct to the budget and authorize the Chairman to sign all related documents, pending final legal review. 23. Appointment of Herschel Clark and Jarrett Mitchell to the Assessors Board. 24. Motion to proceed as discussed in Executive S …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ish the budget and authorize the Chairman to sign all related documents pending legal review. 10. Approval of a contract between the Superior Accountability Courts and Talitrix for GPS tracking services for the period of August 1, 2026 …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ACFP-27-018) in the amount of $363,848 with a match of $64,208 to be funded through the department's existing budget for the Drug Court/Veterans Court Program, establish the budget and authorize the Chairman to sign all related doc …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -397,7 +580,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7449,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7664,
+   "textChars": 7796,
    "pdfSha256": "5757db8e3ccaf917562b17ba1c2ce3059dc16dddf17ae25b83877133cda239fb",
    "topics": {
     "appointment": 1,
@@ -414,6 +597,20 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… t and authorize the Chairman to sign all related documents, pending final legal review. (Suleman Rana) 23. Appointment of Herschel Clark and Jarrett Mitchell to the Assessors Board. (Sherri Mathis) COMMISSIONER COMMENTS EXE …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Chairman to sign all related documents pending legal review. (Karen Alexander) BUSINESS ITEMS 10. Approval of a contract between the Superior Accountability Courts and Talitrix for GPS tracking services for the period of August 1, 2026 …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ACFP-27-018) in the amount of $363,848 with a match of $64,208 to be funded through the department's existing budget for the Drug Court/Veterans Court Program, establish the budget and Work Session 2 August 3, 2026 authorize t …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -428,7 +625,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7439,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10842,
+   "textChars": 10964,
    "pdfSha256": "cb5dfed5f66b50972c542fb84c719e1a828b0ddb8d717b537db5442d153e7bfd",
    "topics": {
     "appointment": 1,
@@ -445,6 +642,20 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… appropriations account and authorize the Chairman to sign all related documents pending final legal review. 21. Appointment of Jerry Williams and Lisa McIntyre to the Douglas County Housing Authority. 22. Motion to proceed as discu …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… le Court and authorize the Chairman to sign all related documents pending final legal review. 13. Approval of a contract with Daikin Applied Americas, Inc. for a maintenance agreement at the Boundary Waters Aquatic Center in the amount …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… riod of July 1, 2026 through June Commission Meeting 2 July 21, 2026 30, 2027 for Douglas CORE, establish the budget and authorize the Chairman to sign all related documents pending final legal review. 8. Approval to accept the …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -459,7 +670,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7427,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1703,
+   "textChars": 1623,
    "pdfSha256": "c3d978afb539bb84f2519794de1034cb4a1788aee5528b5e338069c713136ae6",
    "topics": {
     "variance": 1
@@ -470,6 +681,12 @@
    "matchedTerms": [
     "variance"
    ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "DOUGLAS COUNTY ZONING VARIANCE HEARING AGENDA July 20, 2026 Call to Order - Planning & Zo …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -484,7 +701,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7435,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6512,
+   "textChars": 6628,
    "pdfSha256": "b09bd8b93476941ffae653e8792c726f17447ea6d5d2d5a0c79733fd34428126",
    "topics": {
     "appointment": 1,
@@ -501,6 +718,20 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… count and authorize the Chairman to sign all related documents pending final legal review. (Anthony Choice) 21. Appointment to the Douglas County Housing Authority. (Sherri Mathis) APPROVAL OF EXPENSES 22. Approval of Commissioner Wh …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… thorize the Chairman to sign all related documents pending final legal review. (Justin Ricks) 13. Approval of a contract with Daikin Applied Americas, Inc. for a maintenance agreement at the Boundary Waters Aquatic Center in the amount …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… the period of July 1, 2026 through June Work Session 2 July 20, 2026 30, 2027 for Douglas CORE, establish the budget and authorize the Chairman to sign all related documents pending final legal review. (Jill Hopson) 8. Approval …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -515,7 +746,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7422,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 15327,
+   "textChars": 15420,
    "pdfSha256": "faeba0ac7df0a9393047661c66e789844dea654ee7e52ecdc3a6e93f05746df8",
    "topics": {
     "appointment": 1,
@@ -536,6 +767,20 @@
     "reappoint",
     "task order"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… ed by SPLOST 2022 and authorize the Chairman to sign all related documents pending final legal review. 29. Reappointment of Randi Hurd to the Douglas County Housing Authority and authorize the Chairman to sign all related documents …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… m Meeting and authorize the Chairman to sign all related documents pending final legal review. 8. Approval of a contract for an Assistant County Attorney and authorize the Chairman to sign all related documents pending final legal revi …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… in the amount of $141,479 with a match of $24,967 to be funded by the Juvenile Programs Administration's existing budget for the Family Treatment Court, amend the budget and authorize the Chairman to sign all related documents pen …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -550,7 +795,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7412,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4627,
+   "textChars": 4568,
    "pdfSha256": "cb5b49e3bef364d5db150108eca8bc7e94020906a2763718f93a90ab75080261",
    "topics": {
     "comprehensive-plan": 1,
@@ -570,6 +815,24 @@
     "rezon",
     "subdivision"
    ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "future land use",
+     "excerpt": "… on was deferred from 56/S2026-57 the June 2, 2026 meeting. Z2026- East Village Dothan, LLC - a request for a Future Land Use Map 41/S2026-42 amendment from RP(rural places) to CC (commerce center), a rezoning from R-A (residenti …"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… oning from R-A (residential agriculture) to PUD (planned unit Z2026- development) and a Special Use Permit for a data center and 47/S2026-48 substation located on Poole, East & West Tyson Roads, Villa Rica, 30180. Land lot(s) 11 …"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… agriculture) to R-MD (residential mid density) & PSP (public semi- public) for a residential subdivision located at 2391 Mt. Vernon Road, Lithia Springs, 30122. Land lot(s) 978, District 18, Section 2 & …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… equest for a Future Land Use Map 41/S2026-42 amendment from RP(rural places) to CC (commerce center), a rezoning from R-A (residential agriculture) to PUD (planned unit Z2026- development) and a Special Use Permit for a da …"
+    }
+   },
    "flags": [
     "land-use",
     "data-center"
@@ -591,7 +854,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7415,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10800,
+   "textChars": 10851,
    "pdfSha256": "3e74b5a443e749a6a45bb3c31c036ef6d6228413224327ccfd77e45202e3218a",
    "topics": {
     "appointment": 1,
@@ -612,6 +875,20 @@
     "reappoint",
     "task order"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… 2022 and authorize the Chairman to sign all related documents pending final legal review. (Julia Janka) 28. Appointment/Reappoiontment to the Douglas County Housing Authority. (Sherri Mathis) 29. Appointment/Reappointment to An …"
+    },
+    "contract": {
+     "term": "task order",
+     "excerpt": "… by the Personnel Review Board during the 2026 Q2 Merit System Meeting. (Danielle Nichols) 20. Approval of Task Order 2026-6 Atlantic Coast Consulting for general service consulting in an amount not to exceed $10,000 to be funded by …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… match of $24,967 to be Work Session 2 July 6, 2026 funded by the Juvenile Programs Administration's existing budget for the Family Treatment Court, amend the budget and authorize the Chairman to sign all related documents pen …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -626,7 +903,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7384,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7070,
+   "textChars": 7163,
    "pdfSha256": "da57b47674ad8ad7bbbb0c6eb2b53a9af249f17323386aecdaf4798a4df176d3",
    "topics": {
     "appointment": 1,
@@ -643,6 +920,20 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ll related documents pending final legal review. Commission Meeting 3 June 16, 2026 18. Authorization to appoint District 4 Commissioner Mark Alcarez to the City of Douglasville's Tax Allocation District Advisory Committee. …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… t and authorize the Chairman to sign all related documents pending final legal review. 13. Approval of the contract with UES for $15,000 for construction special inspections needed for the DOT Storage Facility to be funded by SPLO …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ouncil (CJCC) with a cash match of $28,931 to be funded from a portion of the salary of Melissa Leblond, amend the budget and authorize the Chairman to sign all related documents pending final legal review. 11. Approval for Douglas C …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -657,7 +948,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7362,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 803,
+   "textChars": 768,
    "pdfSha256": "844f1d235aadc5183fa92b630bfefe1073842003f73beb70c5cfa3e851cedf93",
    "topics": {
     "variance": 1
@@ -668,6 +959,12 @@
    "matchedTerms": [
     "variance"
    ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "DOUGLAS COUNTY ZONING VARIANCE HEARING AGENDA June 15, 2026 Call to Order - Planning & Zo …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -682,7 +979,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7378,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5188,
+   "textChars": 5252,
    "pdfSha256": "14842213d6d368f126004bea0e3e91b4f83f2639e66cb8a98972a1c1f849bccf",
    "topics": {
     "appointment": 1,
@@ -699,6 +996,20 @@
     "budget",
     "contract"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ize the Chairman to sign all related documents pending final legal review. (Elliott Buggs) 18. Authorization to appoint District 4 Commissioner Mark Alcarez to the City of Douglasville's Tax Allocation District Advisory Committee. () …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… the Chairman to sign all related documents pending final legal review. (Yvette Jones) 13. Approval of the contract with UES for $15,000 for construction special inspections needed for the DOT Storage Facility to be funded by SPLO …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ouncil (CJCC) with a cash match of $28,931 to be funded from a portion of the salary of Melissa Leblond, amend the budget and authorize the Chairman to sign all related documents pending final legal review. (Melissa Leblond) Work Sessi …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -713,7 +1024,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7332,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4400,
+   "textChars": 4282,
    "pdfSha256": "a5e4574663d44d57ca6d83b6aa3fe3aa60a1f90403b6be89b86b1cb253ded741",
    "topics": {
     "rezoning": 1
@@ -724,6 +1035,12 @@
    "matchedTerms": [
     "rezon"
    ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… APPROVAL of MINUTES Approve the minutes from the May 5, 2026 meeting AGENDA Aleene Duff - A request for a rezoning from R-LD (residential low Z2026- density) to R-A (residential agriculture) and a Special Use Permit to 31/S …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -738,7 +1055,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7359,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 16710,
+   "textChars": 16854,
    "pdfSha256": "8670bae1dcfbf5be860a1b13b418ecbfb872c9f9148944a33eab4dc6dfbdd53b",
    "topics": {
     "appointment": 1,
@@ -757,6 +1074,20 @@
     "fiscal year",
     "reappoint"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… nd for other purposes, and authorize the Chairman to sign all related documents pending final legal review. 36. Reappointment of Brig Simmons as an At-Large Member and Chair of the Planning and Zoning Board. 37. Appointment of Brando …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… s related to retail recruitment strategies in the amount of $50,000.00 annually for a three-year term, for a total contract amount of $150,000.00. The 2026 annual cost will be funded through the Unincorporated Fund Balance. Funding for C …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… for Commission Meeting 2 June 2, 2026 each subsequent year shall be subject to Board of Commissioners' approved budget allocations and waive the County's adopted Financial Policy regarding budget amendments, and authorize the Chairman to …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -771,7 +1102,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7356,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13989,
+   "textChars": 14132,
    "pdfSha256": "98f84dca8af9da210a3b654b6fb17457d2b7f58d4dbfe4470c50b33610e19cd2",
    "topics": {
     "appointment": 1,
@@ -790,6 +1121,20 @@
     "fiscal year",
     "reappoint"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… and authorize the Chairman to sign all related documents pending final legal review. (Breezy Stratton) 38. Reappointment of Brig Simmons as an At-Large Member and Chair of the Planning and Zoning Board. () 39. Appointment of Bra …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ze the Chairman to sign all related documents pending legal review. (Col. Pounds) 10. Approval of an employment contract with Christian Bonet as an Assistant Public Defender for State Court, to fill a vacant position already approved i …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ,514.81 for the purchase of a desktop computer for Judge Brian Fortner's bench, amend the State Court general fund budget and authorize the Chairman to sign all related documents pending final legal review. (Judge Brian Fortner) 8. A …"
+    }
+   },
    "flags": [
     "millage-budget"
    ],
@@ -804,7 +1149,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7315,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 620,
+   "textChars": 592,
    "pdfSha256": "486ecef63b79c23b9fd90a7180e8412e2fec927a3b5c3cb9d845b192884c5179",
    "topics": {
     "variance": 1
@@ -815,6 +1160,12 @@
    "matchedTerms": [
     "variance"
    ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "DOUGLAS COUNTY ZONING VARIANCE HEARING AGENDA May 18, 2026 Call to Order - Planning & Zon …"
+    }
+   },
    "flags": [
     "land-use"
    ],
@@ -829,7 +1180,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7324,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13658,
+   "textChars": 13788,
    "pdfSha256": "f0597a05aed5b41dd4652a43e136dd02c1ab25ab4596cd3f39831671dfcb668a",
    "topics": {
     "appointment": 1,
@@ -848,7 +1199,702 @@
     "procurement",
     "task order"
    ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ations and authorize the Chairman to sign all related documents pending final legal review. (Elliott Buggs) 29. Appointment of Mr. Randi Hurd to the Housing Authority of Douglas County and authorize the Chairman to sign all related do …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ent for roof restoration at the Douglas County Courthouse with Eskola Roofing & Waterproofing under Omnia Partners Contract #23-04 for $1,444,507 to be funded by the department's budget and authorize the Chairman to sign all related …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ) 7. Approval to accept funds from the State Court Technology Fund and amend the Solicitor-General's general fund budget in the amount of $11,480.64 for the purchase of computer equipment that is needed to support Court operations for …"
+    }
+   },
    "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1287",
+   "date": "2026-05-05",
+   "body": "Planning & Zoning",
+   "title": "Planning Zoning and BOC",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7290,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7290,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2733,
+   "pdfSha256": "3d6fbdca3b6c26236f5fe92a46979bd621758b8370b529397779eec466427f75",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… on signed by J. Franklin Lee. Commission District #1. Laxminarayan, LLC - A request for a rezoning from R-A (residential agriculture) to C-H (heavy commercial) to bring property into comp …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1148",
+   "date": "2026-05-05",
+   "body": "Board of Commissioners",
+   "title": "BOC Commission Meeting",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7303,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7303,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 14371,
+   "pdfSha256": "c59b1a6c56d8eb02c52d8e704b876b74d2903c13082e7deefba25f5697de4fac",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "annex",
+    "apartment",
+    "budget",
+    "contract",
+    "rezon",
+    "townhome"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… he Chairman to sign all related documents pending final legal review. 10. Recommendation of no objection to the annexation and rezoning Petition for 3154 Bright Star Road, Parcel 01310250077 for 67 townhomes on 9.30 acres (Comm …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… all related documents pending final legal review. 21. Approval of non-renewal of Department of Human Services (DHS) contract for FY27, and authorize the Chairman to sign a non-renewal letter for the DHS FY27 contract for drug screenin …"
+    },
+    "development": {
+     "term": "townhome",
+     "excerpt": "… ation of no objection to the annexation and rezoning Petition for 3154 Bright Star Road, Parcel 01310250077 for 67 townhomes on 9.30 acres (Commission District 4) and authorize the Chairman to sign all related documents pending final …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 14, 2026.. 2. Executive Session Minutes of April 14, 2026. FINANCIAL REPORT 3. Acceptance of the monthly Financial/Budget Report for March 2026. () PROCLAMATIONS 4. Proclaiming May as ALS Month in Douglas County. 5. Proclaiming May 4, 2 …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… sign all related documents pending final legal review. 10. Recommendation of no objection to the annexation and rezoning Petition for 3154 Bright Star Road, Parcel 01310250077 for 67 townhomes on 9.30 acres (Commission District …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1191",
+   "date": "2026-05-04",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Session",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7300,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7300,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 8070,
+   "pdfSha256": "aed6308117eab2254ea657ea0545f0340a6e35b4f2df2c1b57445895370d2b7f",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "annex",
+    "apartment",
+    "budget",
+    "contract",
+    "rezon",
+    "townhome"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… o sign all related documents pending final legal review. (Joe Fowler) 13. Recommendation of no objection to the annexation and rezoning Petition for 3154 Bright Star Road, Parcel 01310250077 for 67 townhomes on 9.30 acres (Comm …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… pending final legal review. (Allison Duncan) 14. Approval of non-renewal of Department of Human Services (DHS) contract for FY27, and authorize the Chairman to sign a non-renewal letter for the DHS FY27 contract for drug screenin …"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… eview. (Lisa Crossman) 12. Approval of a TEFRA on tax-exempt funding for acquisition of Sweetwater Creek Apartments and Villas at West Ridge Apartments for workforce housing, and authorize the Chairman to sign all related documen …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… () 2. Executive Session Minutes of April 14, 2026. () FINANCIAL REPORT 3. Acceptance of the monthly Financial/Budget Report for March 2026. () PROCLAMATIONS 4. Proclaiming May as ALS Month in Douglas County. (Mark Alcarez) 5. Procl …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ted documents pending final legal review. (Joe Fowler) 13. Recommendation of no objection to the annexation and rezoning Petition for 3154 Bright Star Road, Parcel 01310250077 for 67 townhomes on 9.30 acres (Commission District …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1286",
+   "date": "2026-04-14",
+   "body": "Board of Commissioners",
+   "title": "BOC Combined Commission Meeting & Work Session 04-14-26",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7285,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7285,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 5491,
+   "pdfSha256": "827011d49bf89529d2bd78bc4d7ef075d4fc806809e3738f645f6e983d0e4821",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "procurement"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… and authorized the Chairman to sign all related documents pending final legal review. (Anthony Choice) 9. Appointment of Laquetta Quails Peters to the Douglas County Audit Advisory Committee and authorize the Chairman to sign al …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… irman to sign all related documents pending final legal review. (Jill Hopson) 8. Approval of the Year 2 renewal contract with BidNet Direct for the Source-to- Contract module, in the amount of $21,639.89 to be funded by General Ap …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… he amount of $4,880.00 from the Georgia Trauma Commission with no match required, amend the Fire Department budget and authorize the Chairman to sign all related documents pending final legal review. (Chief Allen) 7. Approval to …"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1285",
+   "date": "2026-04-13",
+   "body": "Board of Commissioners",
+   "title": "VOID BOC Combined Work Session  and Commission Meeting 04-14-26",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7279,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7279,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2715,
+   "pdfSha256": "4ca979c5ce640b755be193020b5a770473da389d019cd6be28b7ba28084de2c7",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "procurement"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… and authorized the Chairman to sign all related documents pending final legal review. (Anthony Choice) 9. Appointment of Laquetta Quails Peters to the Douglas County Audit Advisory Committee and authorize the Chairman to sign al …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… irman to sign all related documents pending final legal review. (Jill Hopson) 8. Approval of the Year 2 renewal contract with BidNet Direct for the Source-to- Contract module, in the amount of $21,639.89 to be funded by General Ap …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… he amount of $4,880.00 from the Georgia Trauma Commission with no match required, amend the Fire Department budget and authorize the Chairman to sign all related documents pending final legal review. (Chief Allen) BUSINESS ITE …"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1223",
+   "date": "2026-03-31",
+   "body": "Planning & Zoning",
+   "title": "Planning Zoning and BOC",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7236,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7236,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2811,
+   "pdfSha256": "5494f3b1bf20e85a889d5bc4f1d8fc0a7ef5eee0ef139db527eca813b337cb95",
+   "topics": {
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… ing from R-A (residential agriculture) to PRD (planned residential development) for a residential subdivision located on Maroney Mill Road, Douglasville, 30134. Land lot(s) 455, District 18, Section 2 & Parcel(s) 1. La …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… mission District #2. Z2026-22 Harry E. Kitchen, Jr. on behalf of Foxfield Douglas, LLC - a request for a rezoning to amend the PUD(planned unit development) to S2026-24 allow for fast food restaurants located at 2595 & 2631 Hwy. …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1147",
+   "date": "2026-03-31",
+   "body": "Board of Commissioners",
+   "title": "BOC Commission Meeting",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7248,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7248,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 9766,
+   "pdfSha256": "0d69800117b4ca1a9bfe869d62928ae94ae7bb475549ef9d4696606e2212de6c",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… nsee is Arpitkumar Patel. BUSINESS ITEMS Commission Meeting 2 March 31, 2026 8. Approval to extend the current contract with Transitions Commute Solutions in the amount of $150,000 for a one-month period from April 30, 2026 through Ma …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… il 30, 2026 through May 31, 2026, to allow for completion of the RFP process to be funded by Connect Douglas' budget and to authorize the Chairman to sign all related documents pending final legal review. 9. Approval of Revised …"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1119",
+   "date": "2026-03-30",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Session",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7245,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7245,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 6346,
+   "pdfSha256": "f0bf811858e5890c0cc433433b10b1b633db7b8442ddc03af43dfba794d5c137",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… gn all related documents pending final legal review. (Suleman Rana) 12. Approval to award a consultant services contract to Keck & Wood, Inc, in connection with PI 0021205, Riverside Parkway Trail/Sidewalk Project, pursuant to RFP …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ,264.00 due to a price increase after renewing expired quotes for the lender, to be funded by the Sheriff's Office budget and authorize the Chairman to sign all related documents pending legal review. (Chief Deputy Conner) 9. Approva …"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1172",
+   "date": "2026-03-17",
+   "body": "Board of Commissioners",
+   "title": "BOC Commission Meeting",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7229,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7229,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 14063,
+   "pdfSha256": "34a4e7f678fd4dce1034ca5c179a04b428589caa63f28ef4d51082b45fa563cf",
+   "topics": {
+    "alpr": 1,
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "alpr",
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "alpr",
+    "appoint",
+    "budget",
+    "contract",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "alpr": {
+     "term": "alpr",
+     "excerpt": "… lated documents pending final legal review. 18. Approval to renew a professional services contract with AppraisalPro Solution, LLC for appraisal consulting at $56 per hour to be funded from the existing Appraisal Department's …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ransportation projects and authorize the Chairman to sign all related documents pending final legal review. 32. Appointment of Angelia O'Neal to the Douglasville-Douglas County Water & Sewer Authority Board effective April 3, 2026. …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ve-year equipment lease with Lease Serving Center, Inc., dba NCL Government Capital (NCL), through Sourcewell Contract #092424-NCL, in an amount not to exceed $250,000 per year,(first year to be funded by Sheriff Office budget) for t …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… . Executive Session Minutes of March 2, 2026 and March 3, 2026. FINANCIAL REPORT 4. Acceptance of monthly Financial/Budget Report for the month of February 2026. () PROCLAMATIONS 5. Proclaiming March 18, 2026 as Transit Employee Appreciat …"
+    }
+   },
+   "flags": [
+    "millage-budget",
+    "alpr"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1222",
+   "date": "2026-03-16",
+   "body": "Planning & Zoning",
+   "title": "Planning Zoning Variance",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7210,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7210,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 617,
+   "pdfSha256": "bd7724d748e3d9c6941c296996ae22e63a18d70ddd4bd39c0bafe2491d458e29",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "DOUGLAS COUNTY ZONING VARIANCE HEARING AGENDA March 16, 2026 Call to Order - Planning & Zo …"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1131",
+   "date": "2026-03-16",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Session",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7223,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7223,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 11844,
+   "pdfSha256": "dc8a67abd2a58d3b5ab57db16b456cc4c0083d310defb69d3e8f48323b23134d",
+   "topics": {
+    "alpr": 1,
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "alpr",
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "alpr",
+    "appoint",
+    "budget",
+    "contract",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "alpr": {
+     "term": "alpr",
+     "excerpt": "… pending final legal review. (Steve Balfour) 18. Approval to renew a professional services contract with AppraisalPro Solution, LLC for appraisal consulting at $56 per hour to be funded from the existing Appraisal Department's …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… authorize the Chairman to sign all related documents pending final legal review. (Tiffany Stewart-Stanley) 32. Appointment of Angelia O'Neal to the Douglasville-Douglas County Water & Sewer Authority Board effective April 3, 2026. …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ve-year equipment lease with Lease Serving Center, Inc., dba NCL Government Capital (NCL), through Sourcewell Contract #092424-NCL, in an amount not to exceed $250,000 per year,(first year to be funded by Sheriff Office budget) for t …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… xecutive Session Minutes of March 2, 2026 and March 3, 2026. () FINANCIAL REPORT 4. Acceptance of monthly Financial/Budget Report for the month of February 2026. () PROCLAMATIONS 5. Proclaiming March 18, 2026 as Transit Employee Appreciat …"
+    }
+   },
+   "flags": [
+    "millage-budget",
+    "alpr"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1221",
+   "date": "2026-03-11",
+   "body": "Board of Commissioners",
+   "title": "BOC SCM 03-11-26",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7219,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7219,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 443,
+   "pdfSha256": "0a48f9030d4a91db26dc484ab0dd155ef80fd4804a0fc11e933dbd442612d360",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1217",
+   "date": "2026-03-03",
+   "body": "Planning & Zoning",
+   "title": "Planning Zoning and BOC",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7192,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7192,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 3864,
+   "pdfSha256": "7486068372e113f977c5c41ed6fd1215e3f5f848b7064995dbe6d6a5cf820917",
+   "topics": {
+    "contract": 1,
+    "data-center": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "contract",
+    "data-center",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "contract",
+    "data center",
+    "rezon",
+    "townhome"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… strict #2. 6615 Harper, LLC - a request for a special use permit to allow a contractor's yard with outdoor storage located at 6615 Harper Road, Lithia Springs, 30122. Land lot(s) 362, Distri …"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… 3, 2026 meeting. AGENDA Big Power Developments 5, LLC - a request for a Special Use S2025-13 Permit for a data center exceeding 50,000 square feet and an electrical substation located at 2250 Rockhouse Road, 30122. Land lot …"
+    },
+    "development": {
+     "term": "townhome",
+     "excerpt": "… C-G (general commercial) and LI (light industrial) to R-HD (residential high density) for a townhome community located on Veterans Memorial Highway, 30122. Land lot(s) 318, District 18, Section 2 & Parcel(s …"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… was deferred from the February 3, 2026 meeting. Lithia Investments, LLC - a request for a rezoning from R-LD (residential low density), C-H (heavy commercial), C-G (general commercial) an …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Planning Zoning and BOC",
+     "date": "2026-03-03",
+     "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7192,plainText=false)"
+    }
+   ]
+  },
+  {
+   "id": "1146",
+   "date": "2026-03-03",
+   "body": "Board of Commissioners",
+   "title": "BOC Commission Meeting",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7202,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7202,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 9928,
+   "pdfSha256": "1a0a51e9737617fabd8bb9cf36ea68829147dd2d07015137b57e7c3680d6dd51",
+   "topics": {
+    "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "annexation",
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "annex",
+    "appoint",
+    "budget",
+    "contract"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… final legal review. 11. Approval of staff recommendation to not file an objection in regard to the request for annexation by the City of Austell for approximately 1.03 acres at 208 Maxham Road (parcel ID 02581820001) and authorize …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… congressional offices and authorize the Chairman to sign all related documents pending final legal review. 8. Appointment of Andrew Jordan and Stacie Tucker to the Douglas County Audit Advisory Committee and authorize the Chairman t …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… and authorize the Chairman to sign all related documents pending final legal review. 14. Approval to amend the contract with Servpro of Douglasville for the repairs to the Fire Department Headquarters building in the amount of $12,763 …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Critical/Test Genius Suite, a public safety dispatcher pre- employment assessment tool, to be funded by the E-911 budget, and authorize the Chairman to sign all related documents, pending final legal review. 11. Approval of staff re …"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1203",
+   "date": "2026-03-02",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Session",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7198,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7198,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 6050,
+   "pdfSha256": "1d735617e3afac2d6286736e24211743e3e6006ff272ea0c8d718266835fba14",
+   "topics": {
+    "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "annexation",
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "annex",
+    "appoint",
+    "budget",
+    "contract"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annex",
+     "excerpt": "… 2026 Chairman to sign all related documents, pending final legal review. (Katrina Harley) 9. Request for annexation by the City of Austell for approximately 1.03 acres at 208 Maxham Road (parcel ID 02581820001) (Allison Dunca …"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… rman to sign all related documents pending final legal review. () Work Session 3 March 2, 2026 20. Appointments to the Douglas County Audit Advisory Committee. () 21. Approval to ratify the signature on support letters for …"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… the Chairman to sign all related documents pending final legal review. (James Queen) 12. Approval to amend the contract with Servpro of Douglasville for the repairs to the Fire Department Headquarters building in the amount of $12,763 …"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Critical/Test Genius Suite, a public safety dispatcher pre- employment assessment tool, to be funded by the E-911 budget, and authorize the Work Session 2 March 2, 2026 Chairman to sign all related documents, pending final legal r …"
+    }
+   },
+   "flags": [
+    "land-use",
     "millage-budget"
    ],
    "dataCenterItems": []
