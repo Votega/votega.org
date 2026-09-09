@@ -848,6 +848,35 @@ places:
           - body: Board of Commissioners
             when: "Twice a month on Fridays, 9:30 a.m."
             location: "Commission Chambers of the Old Courthouse, 124 Bull Street, Second Floor,"
+  
+  - slug: dawson
+    name: Dawson County
+    type: county
+    fips: "13085"
+    parentCounty: null
+    domains:
+      meetings:
+        platform: municode
+        agendas_url: "https://meetings.municode.com/PublishPage/index?cid=DAGA&ppid=d6a9cb0f-51b2-4f2b-9c12-76e9ed0e66e5"
+        body_map:
+          - match: "Planning Commission"          # also catches "Special Called Planning Commission"
+            label: "Planning Commission"
+          - match: "Voting Session"               # BOC Voting Session + legacy "Voting Session"
+            label: "Board of Commissioners"
+          - match: "Work Session"                 # BOC Work Session + legacy "Work Session"
+            label: "Board of Commissioners"
+          - match: "Development Authority"
+            label: "Development Authority"
+          - match: "Industrial Building Authority"
+            label: "Development Authority"
+          - match: "BOC"                          # BOC Workshop / Goal-Development / Joint, etc.
+            label: "Board of Commissioners"
+          - match: "Special Called"               # bare "Special Called Meeting" (BOC)
+            label: "Board of Commissioners"
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Thursday of every month, 6:00 p.m."
+            location: "Dawson County Government Center, 2nd Floor Assembly Room, 25 Justice Way, Dawsonville"
 
   - slug: hall
     name: Hall County
