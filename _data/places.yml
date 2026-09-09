@@ -751,6 +751,23 @@ places:
           - body: Board of Commissioners
             when: "2nd and 4th Tuesday every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: "Commission Chambers, 37 Perry Street, Newnan"
+  
+  - slug: butts
+    name: Butts County
+    type: county
+    fips: "13035"
+    parentCounty: null
+    domains:
+      meetings:
+        platform: civicclerk
+        subdomain: "buttsco"
+        agendas_url: "https://buttsco.portal.civicclerk.com/"
+        include_bodies:
+          - "Board of Commissioners"
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd Thursday of every month, 6:00 p.m."
+            location: "County Administrative Office Building, Courtroom B, 625 West 3rd Street Jackson"
 
   - slug: columbia
     name: Columbia County
