@@ -862,17 +862,19 @@ places:
     region: Northeast Georgia
     domains:
       meetings:
-        # Consolidated Athens-Clarke government on classic CivicPlus AgendaCenter.
-        # Keep Mayor & Commission + Planning + Historic Preservation; drop the many
-        # advisory boards (SPLOST/TSPLOST, Cultural Affairs, Elections, etc.).
         platform: civicplus
-        base_url: https://www.accgov.com
+        base_url: "https://www.accgov.com"
         agendas_url: "https://www.accgov.com/AgendaCenter"
-        body_map:
-          - { match: "Mayor & Commission", label: "Mayor & Commission" }
-          - { match: "Planning Commission", label: "Planning Commission" }
-          - { match: "Historic Preservation", label: "Historic Preservation Commission" }
+        include_bodies:
+          - "Mayor & Commission"
+          - "Planning Commission"
+          - "Historic Preservation"
         schedule:
-          - body: Mayor & Commission
-            when: ""
-            location: ""
+          - body: Mayor & Commission (Regular Session)
+            when: "1st Tuesday of every month, 6:00 p.m."
+          - body: Mayor & Commission (Agenda Setting Session)
+            when: "3rd Tuesday of every month, 6:00 p.m."
+            location: "City Hall, 301 College Avenue, Athens"
+          - body: Mayor & Commission (Work Session)
+            when: "2nd Tuesday of every month, 1:00 p.m."
+            location: "Planning Auditorium, 120 W. Dougherty Street, Athens"
