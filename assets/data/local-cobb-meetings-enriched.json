@@ -1,13 +1,12 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-09T11:16:23Z",
+  "generatedAt": "2026-09-09T12:09:43Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
  },
  "summary": {
   "flags": [
-   "alpr",
    "data-center",
    "land-use",
    "millage-budget"
@@ -22,8 +21,7 @@
    "appointment": 5,
    "development": 2,
    "data-center": 2,
-   "rezoning": 3,
-   "alpr": 1
+   "rezoning": 3
   },
   "dataCenterItems": [
    {
@@ -174,17 +172,8 @@
    }
   ],
   "landUseMeetings": 18,
-  "alprItems": [
-   {
-    "title": "BOC Regular Meeting",
-    "date": "2026-07-14",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9043,plainText=false)",
-    "terms": [
-     "motorola solutions"
-    ]
-   }
-  ],
-  "alprMeetings": 1
+  "alprItems": [],
+  "alprMeetings": 0
  },
  "meetings": [
   {
@@ -707,7 +696,6 @@
    "textChars": 15608,
    "pdfSha256": "d386eecca2ad267efcdd710b9482f25aaf31880060b29c9e313eb42263c7174d",
    "topics": {
-    "alpr": 1,
     "annexation": 1,
     "appointment": 1,
     "contract": 1,
@@ -715,7 +703,6 @@
     "millage-budget": 1
    },
    "tags": [
-    "alpr",
     "annexation",
     "appointment",
     "contract",
@@ -727,15 +714,13 @@
     "appoint",
     "budget",
     "contract",
-    "motorola solutions",
     "procurement",
     "task order",
     "warehouse"
    ],
    "flags": [
     "land-use",
-    "millage-budget",
-    "alpr"
+    "millage-budget"
    ],
    "dataCenterItems": []
   },
