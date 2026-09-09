@@ -781,12 +781,8 @@ places:
     region: Middle Georgia
     domains:
       meetings:
-        # Consolidated Macon-Bibb government on CivicClerk
-        # (maconbibbcoga.portal.civicclerk.com). Fold the BOC's Committee of the Whole
-        # and Pre-Commission work sessions into the Board of Commissioners; drop the
-        # pension / advisory boards.
         platform: civicclerk
-        subdomain: maconbibbcoga
+        subdomain: "maconbibbcoga"
         agendas_url: "https://maconbibbcoga.portal.civicclerk.com/"
         body_map:
           - { match: "Board of Commissioners", label: "Board of Commissioners" }
@@ -794,8 +790,8 @@ places:
           - { match: "Pre-Commission", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
-            when: ""
-            location: ""
+            when: "1st and 3rd Tuesday of every month, 6:00 p.m."
+            location: "Commission Chambers, City Hall, 700 Poplar Street, Macon"
 
   - slug: muscogee
     name: Columbus-Muscogee County
