@@ -152,12 +152,25 @@ def topic_hit(topic: str, meeting: dict):
     else:
         return None
 
+    # Source type, from how the meeting was enriched — Legistar records carry no
+    # textMethod, Granicus is 'html', the OCR enricher is pdftotext/ocr/none. Lets
+    # a consumer (e.g. the sibling-repo publisher) treat a structured agenda-item
+    # excerpt differently from an OCR public-comment-roster one.
+    tm = meeting.get("textMethod")
+    if tm is None:
+        source_type = "legistar"
+    elif tm == "html":
+        source_type = "granicus"
+    else:
+        source_type = "ocr"
+
     return {
         "excerpt": (ex or {}).get("excerpt"),
         "excerptTerm": (ex or {}).get("term"),
         "date": meeting.get("date"),
         "body": meeting.get("body") or meeting.get("title") or "",
         "docType": meeting.get("textSource") or meeting.get("doc_type") or "agenda",
+        "sourceType": source_type,
         "sourceUrl": meeting.get("sourceUrl") or meeting.get("textSourceUrl"),
         "confidence": confidence,
         "vendors": vendors,

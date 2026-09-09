@@ -61,6 +61,8 @@ REPO_SOURCES = {
     "Votega/ga-races-elections": "the Georgia Secretary of State",
     "Votega/ga-executive-orders": "the Office of the Governor of Georgia "
                                   "(gov.georgia.gov)",
+    "Votega/ga-local-government": "the published agendas and minutes of Georgia "
+                                  "county and municipal governments",
 }
 
 # Published under CC BY-SA 4.0: a data license, matching the attribution + share-alike

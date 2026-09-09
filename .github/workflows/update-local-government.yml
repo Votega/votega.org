@@ -107,3 +107,15 @@ jobs:
               exit 1
             fi
           fi
+
+      # Mirror the enriched topic data out to the public open-data repo
+      # Votega/ga-local-government. INLINE (not a separate publish-*.yml on push)
+      # because the commit above is a github-actions[bot] commit, which does not
+      # fire push-triggered workflows — see the sibling-publish trigger gotcha.
+      # Without the secret this dry-runs to ./out (no push), so it is safe before
+      # the repo + token exist; it starts publishing once GA_LOCAL_GOVERNMENT_TOKEN
+      # (Contents: write on Votega/ga-local-government) is added.
+      - name: Publish ga-local-government open-data
+        env:
+          GA_LOCAL_GOVERNMENT_TOKEN: ${{ secrets.GA_LOCAL_GOVERNMENT_TOKEN }}
+        run: python scripts/publish_ga_local_government.py
