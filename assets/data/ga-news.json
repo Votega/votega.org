@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-09T13:15:13.858935+00:00",
+    "generatedAt": "2026-09-09T18:10:28.513220+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,16 +21,16 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 110,
+    "count": 108,
     "windowDays": 45,
     "entityTagged": 61,
     "topicCounts": {
-      "elections": 17,
+      "elections": 16,
+      "ethics": 6,
       "healthcare": 20,
-      "budget": 5,
-      "education": 8,
       "courts": 9,
-      "ethics": 5,
+      "education": 6,
+      "budget": 4,
       "surveillance": 2
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
@@ -160,6 +160,46 @@
   },
   "items": [
     {
+      "id": "5b91150dfca9",
+      "title": "Atlanta-born Ben Shelton ends Carlos Alcaraz’s title reign in late-night marathon, will face Tiafoe in US Open semis",
+      "url": "https://www.gpb.org/news/2026/09/09/atlanta-born-ben-shelton-ends-carlos-alcarazs-title-reign-in-late-night-marathon",
+      "source": "GPB News",
+      "publishedAt": "2026-09-09T13:27:30+00:00",
+      "snippet": "Ben Shelton ended Carlos Alcaraz’s title reign in the latest-finishing match in U.S. Open history as he pulled out a 6-7, 6-1, 6-3, 1-6, 7-6 victory in a marathon tussle that ended at 3:33 a.m. Alcara",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "d3e76f6c43c6",
+      "title": "GPB morning headlines for September 9, 2026",
+      "url": "https://www.gpb.org/news/2026/09/09/gpb-morning-headlines-for-september-9-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-09T13:21:55+00:00",
+      "snippet": "Gubernatorial candidates — Democrat Keisha Lance Bottoms and Republican Rick Jackson — campaigned in the Atlanta area Tuesday; Data from the U.S. Department of Veterans’ Affairs show roughly well over",
+      "entityIds": [
+        "vg-ga-p-000368",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "15d0a7fe713e",
+      "title": "Carr Indicts Two for Hiring Caretakers with Criminal Records",
+      "url": "https://law.georgia.gov/press-releases/2026-09-09/carr-indicts-two-hiring-caretakers-criminal-records",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-09-09T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr today announced that his Medicaid Fraud and Patient Protection Division has secured two new indictments in Cobb and Fulton counties charging two indiv",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics",
+        "healthcare"
+      ]
+    },
+    {
       "id": "855e707b7f9d",
       "title": "National Guard member arrested in DC, accused of drawing gun on fellow Guard member",
       "url": "https://www.gpb.org/news/2026/09/09/national-guard-member-arrested-in-dc-accused-of-drawing-gun-on-fellow-guard-member",
@@ -182,46 +222,6 @@
       "topics": [
         "elections",
         "healthcare"
-      ]
-    },
-    {
-      "id": "02756ac60bb2",
-      "title": "Dragon Con celebrates 40th anniversary with 75,000 fans in downtown Atlanta",
-      "url": "https://www.gpb.org/news/2026/09/08/dragon-con-celebrates-40th-anniversary-75000-fans-in-downtown-atlanta",
-      "source": "GPB News",
-      "publishedAt": "2026-09-08T20:45:00+00:00",
-      "snippet": "Dragon Con's 40th anniversary five-day convention brought 75,000 fans to downtown Atlanta while giving back to the community through charity fundraising, a children’s book drive and a record-setting b",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "063552651b4e",
-      "title": "Georgia Today: Governor candidates campaign; Measles cases rise; Georgia opens first baby box",
-      "url": "https://www.gpb.org/news/2026/09/08/georgia-today-governor-candidates-campaign-measles-cases-rise-georgia-opens-first",
-      "source": "GPB News",
-      "publishedAt": "2026-09-08T20:34:44+00:00",
-      "snippet": "Georgia gubernatorial candidates Keisha Lance Bottoms and Rick Jackson take their campaigns to small businesses as they outline competing plans for Medicaid, taxes, education and public safety. A prop",
-      "entityIds": [
-        "vg-ga-p-000368",
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections",
-        "budget",
-        "education",
-        "healthcare"
-      ]
-    },
-    {
-      "id": "bc0f3073fb10",
-      "title": "How do we know how old sharks are? A new University of Georgia study looks at their DNA",
-      "url": "https://www.gpb.org/news/2026/09/08/how-do-we-know-how-old-sharks-are-new-university-of-georgia-study-looks-at-their",
-      "source": "GPB News",
-      "publishedAt": "2026-09-08T20:01:00+00:00",
-      "snippet": "A new study from the University of Georgia looks to estimate the age of sharks by analyzing their DNA using a blood sample.",
-      "entityIds": [],
-      "topics": [
-        "education"
       ]
     },
     {
@@ -1452,18 +1452,6 @@
       ]
     },
     {
-      "id": "46115a77a460",
-      "title": "Carr Leads 15-State Coalition Urging Congress to Strengthen Federal Penalties for ATM Robberies",
-      "url": "https://law.georgia.gov/press-releases/2026-08-06/carr-leads-15-state-coalition-urging-congress-strengthen-federal",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-08-06T12:00:00+00:00",
-      "snippet": "ATLANTA, GA – Attorney General Chris Carr is leading a 15-state coalition in urging Congress to pass the Safe Access to Cash Act (S. 3798/H.R. 1631), critical legislation that would help to prosecute ",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
       "id": "5e51445d525f",
       "title": "Bottoms, Jackson offer competing visions on data centers, Medicaid expansion at business luncheon",
       "url": "https://georgiarecorder.com/2026/08/05/bottoms-jackson-offer-competing-visions-on-data-centers-medicaid-expansion-at-business-luncheon/",
@@ -1485,18 +1473,6 @@
       "snippet": "Georgia’s medical cannabis program experienced an unprecedented surge of new registered patients over the past month after the law changed significantly to ease access. The patient registry grew from ",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "c64031b67122",
-      "title": "Expert says Georgia water system attack highlights critical security deficiencies",
-      "url": "https://georgiarecorder.com/2026/08/04/expert-says-georgia-water-system-attack-highlights-critical-security-deficiencies/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-04T20:39:45+00:00",
-      "snippet": "Clayton County authorities say a boil water advisory and low water pressure may have been part of a multistate cyber campaign targeting water infrastructure that could be linked to Iran. Rex Democrati",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "03f520502bda",
