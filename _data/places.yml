@@ -818,10 +818,15 @@ places:
     region: West Georgia
     domains:
       meetings:
-        platform: teammunicode
-        base_url: "https://columbus-ga.municodemeetings.com/"
-        meetings_path: "/"
-        agendas_url: "https://columbus-ga.municodemeetings.com/"
+        # Consolidated Columbus government on Legistar (client: columbus). Keep the
+        # City Council + Zoning Committee (land use). The municodemeetings.com
+        # variant serves dead document links for Columbus, so Legistar is the source.
+        platform: legistar
+        client: columbus
+        agendas_url: "https://columbus.legistar.com/Calendar.aspx"
+        body_map:
+          - { match: "Columbus City Council", label: "City Council" }
+          - { match: "Zoning", label: "Zoning Committee" }
         schedule:
           - body: City Council
             when: "2nd Tuesday of every month, 9:00 a.m."
