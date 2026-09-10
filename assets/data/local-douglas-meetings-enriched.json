@@ -1,13 +1,12 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-10T15:39:34Z",
+  "generatedAt": "2026-09-10T18:32:25Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 40
  },
  "summary": {
   "flags": [
-   "alpr",
    "data-center",
    "land-use",
    "millage-budget"
@@ -22,8 +21,7 @@
    "data-center": 3,
    "variance": 4,
    "comprehensive-plan": 1,
-   "development": 5,
-   "alpr": 2
+   "development": 5
   },
   "dataCenterItems": [
    {
@@ -175,27 +173,8 @@
    }
   ],
   "landUseMeetings": 17,
-  "alprItems": [
-   {
-    "title": "BOC Commission Meeting",
-    "date": "2026-03-17",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7229,plainText=false)",
-    "terms": [
-     "alpr"
-    ],
-    "excerpt": "… lated documents pending final legal review. 18. Approval to renew a professional services contract with AppraisalPro Solution, LLC for appraisal consulting at $56 per hour to be funded from the existing Appraisal Department's …",
-    "excerptTerm": "alpr"
-   },
-   {
-    "title": "BOC Work Session",
-    "date": "2026-03-16",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7223,plainText=false)",
-    "terms": [
-     "alpr"
-    ]
-   }
-  ],
-  "alprMeetings": 2
+  "alprItems": [],
+  "alprMeetings": 0
  },
  "meetings": [
   {
@@ -1693,30 +1672,22 @@
    "textChars": 14063,
    "pdfSha256": "34a4e7f678fd4dce1034ca5c179a04b428589caa63f28ef4d51082b45fa563cf",
    "topics": {
-    "alpr": 1,
     "appointment": 1,
     "contract": 1,
     "millage-budget": 1
    },
    "tags": [
-    "alpr",
     "appointment",
     "contract",
     "millage-budget"
    ],
    "matchedTerms": [
-    "alpr",
     "appoint",
     "budget",
     "contract",
     "task order"
    ],
    "topicExcerpts": {
-    "alpr": {
-     "term": "alpr",
-     "excerpt": "… lated documents pending final legal review. 18. Approval to renew a professional services contract with AppraisalPro Solution, LLC for appraisal consulting at $56 per hour to be funded from the existing Appraisal Department's …",
-     "context": "agenda-action"
-    },
     "appointment": {
      "term": "appoint",
      "excerpt": "… ransportation projects and authorize the Chairman to sign all related documents pending final legal review. 32. Appointment of Angelia O'Neal to the Douglasville-Douglas County Water & Sewer Authority Board effective April 3, 2026. …",
@@ -1734,8 +1705,7 @@
     }
    },
    "flags": [
-    "millage-budget",
-    "alpr"
+    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -1783,30 +1753,22 @@
    "textChars": 11844,
    "pdfSha256": "dc8a67abd2a58d3b5ab57db16b456cc4c0083d310defb69d3e8f48323b23134d",
    "topics": {
-    "alpr": 1,
     "appointment": 1,
     "contract": 1,
     "millage-budget": 1
    },
    "tags": [
-    "alpr",
     "appointment",
     "contract",
     "millage-budget"
    ],
    "matchedTerms": [
-    "alpr",
     "appoint",
     "budget",
     "contract",
     "task order"
    ],
    "topicExcerpts": {
-    "alpr": {
-     "term": "alpr",
-     "excerpt": "… pending final legal review. (Steve Balfour) 18. Approval to renew a professional services contract with AppraisalPro Solution, LLC for appraisal consulting at $56 per hour to be funded from the existing Appraisal Department's …",
-     "context": "unknown"
-    },
     "appointment": {
      "term": "appoint",
      "excerpt": "… authorize the Chairman to sign all related documents pending final legal review. (Tiffany Stewart-Stanley) 32. Appointment of Angelia O'Neal to the Douglasville-Douglas County Water & Sewer Authority Board effective April 3, 2026. …",
@@ -1824,8 +1786,7 @@
     }
    },
    "flags": [
-    "millage-budget",
-    "alpr"
+    "millage-budget"
    ],
    "dataCenterItems": []
   },

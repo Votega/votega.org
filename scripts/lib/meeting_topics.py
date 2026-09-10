@@ -53,7 +53,7 @@ TOPIC_RULES = {
     'appointment':        ['appoint', 'reappoint'],
     'alpr':               ['license plate reader', 'license plate recognition',
                            'automated license plate', 'automatic license plate',
-                           'plate reader', 'lpr camera', 'alpr', 'safer city',
+                           'plate reader', 'lpr camera', 'safer city',
                            # Vendors beyond Flock (Flock itself is a word-rule below).
                            # Keyed on ALPR-SPECIFIC brands: 'vigilant solutions' is
                            # Motorola's ALPR line, but the bare 'motorola solutions'
@@ -69,10 +69,15 @@ TOPIC_RULES = {
 # Keywords that must match as WHOLE WORDS, not substrings — same tag semantics as
 # TOPIC_RULES but matched with a word boundary. 'flock' is how agendas name Flock
 # Safety, but a bare substring would also fire on "flocking"/"flocked"; \bflock\b
-# skips those while still catching "flock", "flock cameras", "flock/axon". (The
-# substring rules above deliberately keep prefix behaviour like 'rezon'/'annex'.)
+# skips those while still catching "flock", "flock cameras", "flock/axon". 'alpr'
+# is the acronym itself: as a substring it fired INSIDE unrelated words — a real
+# case was "AppraisalPro" (apprais·ALPR·o), which flagged an appraisal-services
+# contract as surveillance. \balpr\b still catches "ALPR", "ALPR cameras",
+# "ALPR/LPR". (The substring rules above deliberately keep prefix behaviour like
+# 'rezon'/'annex'; the multi-word ALPR phrases there — "plate reader", "lpr camera"
+# — are space-delimited and can't hide inside a single word.)
 TOPIC_WORD_RULES = {
-    'alpr': ['flock'],
+    'alpr': ['flock', 'alpr'],
 }
 _WORD_RE = {kw: re.compile(r'\b' + re.escape(kw) + r'\b')
             for kws in TOPIC_WORD_RULES.values() for kw in kws}
