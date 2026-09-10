@@ -6,7 +6,8 @@ VoteGA publishes accessible, accurate information about Georgia elections, elect
 officials, legislation, and executive action — and releases the underlying data as
 free, machine-readable, openly licensed files that anyone can use.
 
-No party affiliation. No endorsements. No visitor profiling or data sales.
+No party affiliation. No endorsements. No visitor profiling or data sales. VoteGA is nonpartisan. Contributions must be sourced to official
+records and free of advocacy framing.
 
 ---
 
@@ -74,15 +75,12 @@ on the next scheduled run.
 We accept: data corrections, schema suggestions, bug reports, new source ideas.
 We don't accept: partisan framing, endorsements, or advocacy content.
 
-## Contact
+Data corrections are the most valuable contribution — open an issue with the source
+you're citing. 
 
-[admin@votega.org](mailto:admin@votega.org)
-2. Votega/votega.org/README.md (site repo)
-markdown
 # votega.org
 
-Source for [votega.org](https://www.votega.org) — a nonpartisan civic information site
-for Georgia voters. Static Jekyll site on GitHub Pages, with all data prebuilt by
+Static Jekyll site on GitHub Pages, with all data prebuilt by
 scheduled GitHub Actions workflows.
 
 [![Site](https://img.shields.io/website?url=https%3A%2F%2Fwww.votega.org)](https://www.votega.org)
@@ -110,12 +108,6 @@ img/, docs/ Images, PDFs
 scripts/ Build-time Python generators (run by Actions)
 .github/workflows/ Scheduled data pipelines
 
-
-**Design rule:** no API keys ever reach the browser. Every keyed source is fetched
-server-side by a scheduled workflow, written to `assets/data/*.json`, and committed
-back to the repo. Pages read the static JSON. Keyless public APIs
-(Federal Register, FEC, Oyez) are the only things fetched live at page load.
-
 ## Data pipeline
 
 | Workflow | Generates | Schedule |
@@ -128,35 +120,6 @@ back to the repo. Pages read the static JSON. Keyless public APIs
 
 Several of these also publish to the public
 [community data repos](https://github.com/Votega) so the data is usable outside this site.
-
-## Local development
-
-```bash
-bundle install
-bundle exec jekyll serve
-# → http://localhost:4000
-```
-
-To regenerate data locally (optional — generated JSON is committed):
-
-```bash
-export CONGRESS_API_KEY=...   # api.congress.gov
-export OPENSTATES_API_KEY=... # openstates.org
-python3 scripts/generate_current_members_data.py
-python3 scripts/generate_ga_members_data.py
-```
-
-Keys live in repo secrets and are never committed.
-
-## Contributing
-
-Data corrections are the most valuable contribution — open an issue with the source
-you're citing. Please file legislator/bill/EO corrections on the relevant
-[community repo](https://github.com/Votega) rather than here, so the fix flows into
-both the data feed and the site.
-
-**Editorial standard:** VoteGA is nonpartisan. Contributions must be sourced to official
-records and free of advocacy framing.
 
 ## License
 
