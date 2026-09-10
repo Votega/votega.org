@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-10T13:12:53.695792+00:00",
+    "generatedAt": "2026-09-10T17:57:17.154379+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,44 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 107,
+    "count": 109,
     "windowDays": 45,
-    "entityTagged": 62,
+    "entityTagged": 65,
     "topicCounts": {
+      "elections": 17,
+      "budget": 5,
+      "education": 7,
       "courts": 10,
-      "ethics": 6,
+      "ethics": 5,
       "healthcare": 19,
-      "elections": 15,
-      "education": 6,
-      "budget": 4,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
+      "url": null,
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
+    },
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000252": {
       "name": "Richard McCormick",
       "url": null,
@@ -63,25 +86,10 @@
         "challenger-keisha-bottoms-gov-2026"
       ]
     },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
-    },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
     },
     "vg-ga-p-000255": {
       "name": "Andrew S. Clyde",
@@ -146,14 +154,6 @@
         "ga-senate-32-2026-r-1"
       ]
     },
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
-      "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
-    },
     "vg-ga-p-000021": {
       "name": "Brad Raffensperger",
       "url": null,
@@ -164,6 +164,83 @@
     }
   },
   "items": [
+    {
+      "id": "8bd054708fcd",
+      "title": "Savannah’s 4th annual 9/11 climb honors 343 fallen NYC firefighters",
+      "url": "https://thecurrentga.org/2026/09/10/savannahs-4th-annual-9-11-climb-honors-343-fallen-nyc-firefighters/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-10T15:59:00+00:00",
+      "snippet": "Nearly 500 participants, including firefighters, completed 110 flights of stairs at Savannah's Enmarket Arena on Sept. 6, 2026, to honor those lost in the 25th anniversary of the Sept. 11, 2001, terro",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "009bfcffdb9a",
+      "title": "U.S. Rep. Mike Collins touts his record on immigration at first GOP midterm convention",
+      "url": "https://www.gpb.org/news/2026/09/10/us-rep-mike-collins-touts-his-record-on-immigration-at-first-gop-midterm-convention",
+      "source": "GPB News",
+      "publishedAt": "2026-09-10T15:01:00+00:00",
+      "snippet": "On Wednesday, U.S. Rep. Mike Collins of Georgia addressed Republican voters at the party’s first-ever midterm convention.",
+      "entityIds": [
+        "vg-ga-p-000253"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "b3466cf2f7c4",
+      "title": "ICYMI: Congressmembers Nikema Williams Announces $700,000 in Federal Support for Community Schoolyards",
+      "url": "https://nikemawilliams.house.gov/posts/icymi-congressmembers-nikema-williams-announces-700000-in-federal-support-for-community-schoolyards",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-09-10T14:38:49+00:00",
+      "snippet": "ATLANTA, G.A. — Congresswoman Nikema Williams (GA-05) announced that Atlanta Public Schools has received $700,000 in congressionally directed spending to support future community schoolyard projects i",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "budget",
+        "education"
+      ]
+    },
+    {
+      "id": "099fe180bdc0",
+      "title": "Sen. Ossoff Working Across the Aisle to Lower Fertilizer Costs for Georgia Farmers",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-lower-fertilizer-costs-for-georgia-farmers/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-10T13:55:56+00:00",
+      "snippet": "Washington, D.C. — As the war in Iran continues, U.S. Senator Jon Ossoff is working with Republicans and Democrats to lower fertilizer costs for Georgia farmers. Sen. Ossoff recently cosponsored the H",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "7744834a9399",
+      "title": "GPB morning headlines for September 10, 2026",
+      "url": "https://www.gpb.org/news/2026/09/10/gpb-morning-headlines-for-september-10-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-10T13:27:32+00:00",
+      "snippet": "U.S. Rep. Mike Collins addressed Republican voters at the party’s first-ever midterm convention Wednesday night; the National Park Service has approved a new plan which would more than double the numb",
+      "entityIds": [
+        "vg-ga-p-000253"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "206c80438dea",
+      "title": "Gov. Kemp: Georgia Awarded $500 Million in Water Infrastructure Grants",
+      "url": "https://gov.georgia.gov/press-releases/2026-09-10/gov-kemp-georgia-awarded-500-million-water-infrastructure-grants",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-09-10T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that the U.S. Environmental Protection Agency (EPA) has awarded the state $499,385,000 to help communities impacted by Hurricane Helene strengthen the ",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
     {
       "id": "edeced9ae58e",
       "title": "West Nile virus is entering its peak season. Here’s how you can protect yourself.",
@@ -199,24 +276,18 @@
       ]
     },
     {
-      "id": "82777a6f4681",
-      "title": "National Guard member arrested after drawing gun on fellow soldier in D.C.",
-      "url": "https://www.gpb.org/news/2026/09/09/national-guard-member-arrested-after-drawing-gun-on-fellow-soldier-in-dc",
-      "source": "GPB News",
-      "publishedAt": "2026-09-09T18:50:21+00:00",
-      "snippet": "A member of the Georgia National Guard deployed in Washington, D.C., as part of a task force to fight crime, has been arrested for pulling a gun on a fellow Guard member in an alleged dispute over reg",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "146ee3fd59f6",
-      "title": "Georgia Today: Atlanta parking; Dekalb cow sculptures; Cumberland Island visitor traffic",
-      "url": "https://www.gpb.org/news/2026/09/09/georgia-today-atlanta-parking-dekalb-cow-sculptures-cumberland-island-visitor",
-      "source": "GPB News",
-      "publishedAt": "2026-09-09T18:07:44+00:00",
-      "snippet": "On the September 9th edition: The Atlanta City Council sets up a parking bill of rights; Cow sculptures are coming to DeKalb County; And the National Park Service approves a plan to increase visitor t",
-      "entityIds": [],
-      "topics": []
+      "id": "40d629e5e04e",
+      "title": "Gov. Kemp: August Net Tax Revenues Up 3.5%",
+      "url": "https://gov.georgia.gov/press-releases/2026-09-09/gov-kemp-august-net-tax-revenues-35",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-09-09T12:00:00+00:00",
+      "snippet": "ATLANTA – The State of Georgia’s net tax collections for the month of August approached $2.50 billion, for an increase of $85.4 million, or 3.5%, from August 2025 (FY 2026), when net tax collections t",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "budget"
+      ]
     },
     {
       "id": "2b425218c2c5",
@@ -1233,20 +1304,6 @@
       "topics": []
     },
     {
-      "id": "2a7e0db51074",
-      "title": "MS NOW: “Jon Ossoff Has a Congressional Superpower”",
-      "url": "https://www.ossoff.senate.gov/press-releases/ms-now-jon-ossoff-has-a-congressional-superpower/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-08-14T14:41:26+00:00",
-      "snippet": "MS NOW: While some of the most “contentious partisan exchanges get the most attention,” Ossoff argued, the “investigation into corruption and civil rights abuses in our prison system,” the “mistreatme",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "ethics"
-      ]
-    },
-    {
       "id": "ae299ec389b3",
       "title": "Gov. Kemp: DeltaX to Establish North American HQ in Walton County",
       "url": "https://gov.georgia.gov/press-releases/2026-08-14/gov-kemp-deltax-establish-north-american-hq-walton-county",
@@ -1428,32 +1485,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "7a63da2ed554",
-      "title": "July Net Tax Revenues Up 3.1%",
-      "url": "https://gov.georgia.gov/press-releases/2026-08-07/july-net-tax-revenues-31",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-08-07T12:00:00+00:00",
-      "snippet": "ATLANTA – The State of Georgia’s net tax collections for the first month of Fiscal Year (FY) 2027 totaled $2.57 billion, an increase of $78.1 million, or 3.1%, compared to July of last year (FY 2026) ",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "budget"
-      ]
-    },
-    {
-      "id": "642f47c256b8",
-      "title": "Gov. Kemp: Siemens Plans 1,400+ New Jobs in Jackson County",
-      "url": "https://gov.georgia.gov/press-releases/2026-08-07/gov-kemp-siemens-plans-1400-new-jobs-jackson-county",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-08-07T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that Siemens is planning to create more than 1,400 jobs at its new advanced manufacturing facility in Pendergrass over the next three years. The projec",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
     },
     {
       "id": "ac1313fb6a6d",
