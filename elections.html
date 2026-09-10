@@ -294,6 +294,9 @@ breadcrumb:
   const pageDesc       = document.getElementById('pageDesc');
   const phaseToggle    = document.getElementById('phaseToggle');
 
+  // Race.status values that retire a race from the active directory (see loadData).
+  const DECIDED_STATUSES = new Set(['certified', 'complete']);
+
   let allRaces    = [];
   let activeTab   = 'executive';
   let activeCycle = null;   // newest cycle present in races.json, set by loadData()
@@ -767,7 +770,15 @@ breadcrumb:
       const cycles = [...new Set(races.map(r => r.cycle).filter(Boolean))].sort((a, b) => b - a);
       activeCycle = cycles[0] ?? null;
 
-      allRaces = races.filter(r => r.cycle === activeCycle);
+      // A race is dropped from the active candidate directory once it is decided —
+      // status "certified" (SoS-official) or "complete" (result known). The record
+      // stays in races.json (and on its own results page) for history; it just no
+      // longer contributes a phase tab or a row here. This is what retires a
+      // concluded contest with no further phase — e.g. a special election that ends
+      // at its runoff (ga-13-special-2026) — so its past-dated phase does not linger
+      // as a stale tab. Absent/other status = still active. Kept in sync with the
+      // "manual switch after certification" model in RECURRING-TASKS.md.
+      allRaces = races.filter(r => r.cycle === activeCycle && !DECIDED_STATUSES.has(r.status));
       buildPhaseToggle();
       applyURLParams();
 
