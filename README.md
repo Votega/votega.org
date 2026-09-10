@@ -22,10 +22,12 @@ no signup, no rate limit.
 | [ga-legislation](https://github.com/Votega/ga-legislation) | GA General Assembly bills, 2025–26 session (adapted from Open States) | JSON | Daily |
 | [ga-executive-orders](https://github.com/Votega/ga-executive-orders) | Georgia Governor's executive orders, 2023–present — date, number, title, category, PDF link | One JSON file per year | On publication |
 | [ga-races-elections](https://github.com/Votega/ga-races-elections) | 2026 Georgia races and candidates | JSON | As SOS publishes |
+| [ga-local-government](https://github.com/Votega/ga-local-government) | What Georgia county & city governments are discussing on their published agendas & minutes — license-plate readers (ALPR), data centers, and land use — classified by keyword, with the source document for every mention, plus the jurisdiction registry and per-place coverage (CC BY-SA 4.0) | `data/mentions.json`, `data/mentions.csv`, `data/places.json` (+ JSON Schema) | Twice weekly |
 
 **Sources:** [Open States](https://openstates.org/) (Plural Policy) · [Congress.gov](https://api.congress.gov/) ·
 [Federal Register](https://www.federalregister.gov/developers/api/v1) · [FEC](https://api.open.fec.gov/) ·
-[Oyez](https://api.oyez.org/) · [gov.georgia.gov](https://gov.georgia.gov/) · [Georgia Secretary of State](https://sos.ga.gov/)
+[Oyez](https://api.oyez.org/) · [gov.georgia.gov](https://gov.georgia.gov/) · [Georgia Secretary of State](https://sos.ga.gov/) ·
+Georgia county & municipal governments (published agendas & minutes)
 
 Full methodology and update schedules: [votega.org/about-the-data](https://www.votega.org/about-the-data)
 
