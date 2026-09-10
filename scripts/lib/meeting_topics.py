@@ -44,7 +44,13 @@ TOPIC_RULES = {
     'special-land-use':   ['special land use', 'special-use', 'slup', 'conditional use',
                            'land use permit'],
     'variance':           ['variance'],
-    'annexation':         ['annex'],
+    # Not the bare prefix 'annex': it fired on the building noun "Annex" in meeting
+    # location headers ("Courthouse Annex Boardroom | 150 Hudson Ridge …"), which
+    # sits on every agenda, so a place like Banks looked wall-to-wall annexation.
+    # The land-use action is always spelled "annexation" (noun) or annexed/annexing
+    # (verb) — none of which is the building word — and in a mixed doc these skip the
+    # header "Annex" and anchor on the real body item.
+    'annexation':         ['annexation', 'annexed', 'annexing'],
     'development':        ['apartment', 'subdivision', 'warehouse', 'mixed use',
                            'mixed-use', 'townhome', 'multifamily', 'multi-family'],
     'comprehensive-plan': ['comprehensive plan', 'future land use', 'land use plan'],
