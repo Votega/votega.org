@@ -1,28 +1,36 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-09T20:25:48Z",
+  "generatedAt": "2026-09-10T13:18:36Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
-  "count": 40
+  "count": 25
  },
  "summary": {
   "flags": [
    "alpr",
+   "data-center",
    "land-use",
    "millage-budget"
   ],
   "lastActivity": "2026-09-08",
   "topicTotals": {
-   "contract": 20,
-   "millage-budget": 14,
-   "rezoning": 8,
-   "special-land-use": 7,
-   "variance": 13,
-   "development": 2,
-   "appointment": 1,
-   "alpr": 2
+   "rezoning": 14,
+   "special-land-use": 10,
+   "variance": 17,
+   "contract": 12,
+   "millage-budget": 6,
+   "development": 3,
+   "appointment": 2,
+   "alpr": 1,
+   "data-center": 1
   },
-  "dataCenterItems": [],
+  "dataCenterItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-03-17",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13446,plainText=false)"
+   }
+  ],
   "landUseItems": [
    {
     "title": "Planning Commission",
@@ -136,14 +144,6 @@
     ]
    },
    {
-    "title": "Public Works and Engineer Services",
-    "date": "2026-05-26",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13591,plainText=false)",
-    "tags": [
-     "variance"
-    ]
-   },
-   {
     "title": "Planning Commission",
     "date": "2026-05-21",
     "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13574,plainText=false)",
@@ -151,9 +151,63 @@
      "rezoning",
      "special-land-use"
     ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-05-19",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13582,plainText=false)",
+    "tags": [
+     "rezoning",
+     "special-land-use",
+     "variance"
+    ]
+   },
+   {
+    "title": "Planning Commission",
+    "date": "2026-05-07",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13540,plainText=false)",
+    "tags": [
+     "rezoning",
+     "special-land-use",
+     "variance"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-05-05",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13547,plainText=false)",
+    "tags": [
+     "development",
+     "variance"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-04-21",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13501,plainText=false)",
+    "tags": [
+     "rezoning"
+    ]
+   },
+   {
+    "title": "Planning Commission",
+    "date": "2026-04-16",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13478,plainText=false)",
+    "tags": [
+     "rezoning",
+     "variance"
+    ]
+   },
+   {
+    "title": "Planning Commission",
+    "date": "2026-03-19",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13437,plainText=false)",
+    "tags": [
+     "rezoning"
+    ]
    }
   ],
-  "landUseMeetings": 14,
+  "landUseMeetings": 20,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting",
@@ -162,55 +216,11 @@
     "terms": [
      "genetec"
     ]
-   },
-   {
-    "title": "Management and Internal Services",
-    "date": "2026-06-09",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13628,plainText=false)",
-    "terms": [
-     "genetec"
-    ]
    }
   ],
-  "alprMeetings": 2
+  "alprMeetings": 1
  },
  "meetings": [
-  {
-   "id": "2633",
-   "date": "2026-09-08",
-   "body": "Hospital Authority",
-   "title": "Columbia County Hospital Authority",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13794,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13794,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 952,
-   "pdfSha256": "b04b3071293c9596b4cd34d13148e6372e56f39121759404f5b6821ad8875092",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2607",
-   "date": "2026-09-08",
-   "body": "Public Facilities Authority",
-   "title": "Columbia County Public Facilities Authority",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13796,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13796,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1103,
-   "pdfSha256": "fd15270e4ff0e254b3399486895e748b98021304194acddb3c2e43790c40f859",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
   {
    "id": "2563",
    "date": "2026-09-08",
@@ -227,68 +237,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2530",
-   "date": "2026-09-08",
-   "body": "Development and Engineering Services",
-   "title": "Development and Planning Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13800,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13800,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5764,
-   "pdfSha256": "add9e84a5c362669482099f2a443cfaf4c93f912c8cb0f01e748947f77f69b80",
-   "topics": {
-    "contract": 1
-   },
-   "tags": [
-    "contract"
-   ],
-   "matchedTerms": [
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ovements on John Deere Parkway and the Corrective Quitclaim Deed 2. (I1a2) Bid# 2026029-BID3313 and Contract# 2026-3701 with JHC Corporation for the Boardwalk Replacement at Reed Creek Interpretive Center 3. …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2518",
-   "date": "2026-09-08",
-   "body": "Management and Internal Services",
-   "title": "Management and Internal Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13802,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13802,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5745,
-   "pdfSha256": "737210972f13988e8618b417464393188197625193051de8e977f489989ca1ed",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Chairman Couch 1. Financial Services a. (K1a) Year to Date Budget Report b. (K1b) SPLOST Update c. (K1c) Investment Report L. COMMISSIONERS' AND PUBLIC COMMEN …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
    "dataCenterItems": []
   },
   {
@@ -337,24 +285,6 @@
    "flags": [
     "land-use"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2611",
-   "date": "2026-09-01",
-   "body": "Board of Assessors",
-   "title": "Board of Assessors",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13775,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13775,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4938,
-   "pdfSha256": "be60862568cec2cab40c82d959eb9b7c0c6bb249d9dcb29f72a759a30ca5fd3b",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   },
   {
@@ -410,78 +340,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2555",
-   "date": "2026-08-25",
-   "body": "Public Works Services",
-   "title": "Public Works and Engineer Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13766,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13766,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 6654,
-   "pdfSha256": "57ffe9a9c998870d1b3a75336efefa8ed7854b4c938fa84ba0dce67451ec2260",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… the Construction of the Hereford Farm Rd Widening Project, PI 0012865 4. (I1c4) Contract #2026-3683 with East Coast Grading, Inc. for Building B & C Parking Lot Repairs/Overlay and …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Chairman Carraway 1. Water Utility a. (K1a) Year to Date Budget Report b. (K1b) Water and Sewer Construction Projects Report 2. Engineering Services a. ( …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2542",
-   "date": "2026-08-25",
-   "body": "Community and Emergency Services",
-   "title": "Community and Emergency Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13768,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13768,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4392,
-   "pdfSha256": "60dd3231fdc972b6e3f3f9fae0073a987f239c63b4508a28d4b4b271c34cc2cd",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… 70. Page 1 of 2 c. (K1c) Year to Date Budget Report L. COMMISSIONERS' AND PUBLIC COMMENTS Chairman Steed Anyone desiring to speak before the Committee on an …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -599,64 +457,6 @@
    "dataCenterItems": []
   },
   {
-   "id": "2529",
-   "date": "2026-08-11",
-   "body": "Development and Engineering Services",
-   "title": "Development and Planning Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13741,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13741,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4868,
-   "pdfSha256": "c3f7b73707251bde544b9f4d5f8d0dad2e272014b75a5d3502244263b5a30572",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2517",
-   "date": "2026-08-11",
-   "body": "Management and Internal Services",
-   "title": "Management and Internal Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13739,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13739,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5821,
-   "pdfSha256": "54af0f3abe5bfb53a046811a80d65383e41cf3eea849ae3441030f111dab858c",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… 2. (I1b2) Reimbursement to GEMA/FEMA for Helene Project Number 806591 c. Financial Services 1. (I1c1) Independent Contractor Agreement with Arthur J. Gallagher Risk Management Services, LLC. for Risk Management Consulting and …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Chairman Couch 1. Financial Services a. (K1a) Year to Date Budget Report b. (K1b) SPLOST Update c. (K1c) Investment Report L. COMMISSIONERS' AND PUBLIC COMMEN …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
    "id": "2622",
    "date": "2026-08-06",
    "body": "Planning Commission",
@@ -705,24 +505,6 @@
    "dataCenterItems": []
   },
   {
-   "id": "2610",
-   "date": "2026-08-04",
-   "body": "Board of Assessors",
-   "title": "Board of Assessors",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13722,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13722,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 3701,
-   "pdfSha256": "7ce198b173124ac9b1e154bbbe59489a941d43e57c0819bdffe1599e4f5fcf66",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
    "id": "2573",
    "date": "2026-08-04",
    "body": "Board of Commission",
@@ -767,86 +549,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2554",
-   "date": "2026-07-28",
-   "body": "Public Works Services",
-   "title": "Public Works and Engineer Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13709,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13709,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 7265,
-   "pdfSha256": "6ceb51bdb1e3e3ab65e500fd00dd1c0e03672a7b51f43a3ba0d4e958821785c6",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… le Generator for Fleet Services from Nixon Power Services 2. (I1a2) Award Bid # 2026021-BID3289 and Contract to Coleman Construction, Inc. for the Construction of the Columbia County Emergency Back-up Generators …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Chairman Carraway 1. Water Utility a. (K1a) Year to Date Budget Report b. (K1b) Water and Sewer Construction Projects Report 2. Engineering Services a. ( …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2541",
-   "date": "2026-07-28",
-   "body": "Community and Emergency Services",
-   "title": "Community and Emergency Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13707,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13707,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4942,
-   "pdfSha256": "febd5d3547be6bc2630607beadac869396cd868d648f5c57b7fe72774141af53",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… . (I1c3) Masters Services Agreement with RapiedSOS, Inc. for IAmResponding Software 4. (I1c4) Independent Contractor Agreement with Telemedicine Group for the HeartStart+ Cardiovascular & Metabolic Screenin …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… (K1a) Fire Response Summary Report b. (K1b) Fire Response Monthly Report c. (K1c) Year to Date Budget Report L. COMMISSIONERS' AND PUBLIC COMMENTS Chairman Steed Anyone desiring to speak before the Commi …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -948,82 +650,6 @@
    "dataCenterItems": []
   },
   {
-   "id": "2528",
-   "date": "2026-07-14",
-   "body": "Development and Engineering Services",
-   "title": "Development and Planning Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13690,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13690,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5195,
-   "pdfSha256": "d684e4b9059b35693f8c51dae631b4ecd8f409ae2fa38950955b78489da53d13",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2516",
-   "date": "2026-07-14",
-   "body": "Management and Internal Services",
-   "title": "Management and Internal Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13688,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13688,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5224,
-   "pdfSha256": "7766a294fca088b8ba86c96ce23964908b759cc826a003d038820c9074d80c75",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ia County Sheriff's Office to replace the Detention Center plumbing fixtures. 2. (I1d2) Independent Contractor Agreement with WSP USA Inc. for the Special Inspections and Material Testing Services at Evans Towne …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… AFF REPORTS Chairman Couch 1. Financial Services a. (K1a) Year to Date Budget Report b. (K1b) SPLOST Update c. (K1c) Investment Report L. COMMISSIONERS' AND PUBLIC COMMEN …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2621",
-   "date": "2026-07-07",
-   "body": "Board of Assessors",
-   "title": "Board of Assessors",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13671,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13671,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 3260,
-   "pdfSha256": "81e473ec478d4bc28f7191245b80803a01b94ae20343f28fdddbf7109db321f7",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
    "id": "2572",
    "date": "2026-07-07",
    "body": "Board of Commission",
@@ -1092,86 +718,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2553",
-   "date": "2026-06-23",
-   "body": "Public Works Services",
-   "title": "Public Works and Engineer Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13657,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13657,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 6769,
-   "pdfSha256": "dfa39019914b667bebd3fe7930cf8375a92957620b212b6dcf0b5e048b15c926",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… 1. (I1a1) Implementation of FM Live Fuel Point Hardware and Software with FuelMaster 2. (I1a2) Professional Services Contract with Booker + Vick Architects for the Columbia County Roads and Bridges Administration Office b. Wa …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Chairman Carraway 1. Water Utility a. (K1a) Year to Date Budget Report b. (K1b) Water and Sewer Construction Projects Report 2. Engineering Services a. ( …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2540",
-   "date": "2026-06-23",
-   "body": "Community and Emergency Services",
-   "title": "Community and Emergency Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13655,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13655,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4847,
-   "pdfSha256": "0e96ea3baf37d9d3a75fd70a6af052ad0b1dc15f4b391fec54bc803e2a868c09",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… a. County Manager Scott Johnson 1. (I1a1) Columbia Judicial Circuit Independent Contractor Agreement with CSRA Probation Services, Inc. 2. (I1a2) Rental Agreement with State Properties Com …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… (K1a) Fire Response Summary Report b. (K1b) Fire Response Monthly Report c. (K1c) Year to Date Budget Report L. COMMISSIONERS' AND PUBLIC COMMENTS Chairman Steed Anyone desiring to speak before the Commi …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -1279,87 +825,6 @@
    "dataCenterItems": []
   },
   {
-   "id": "2527",
-   "date": "2026-06-09",
-   "body": "Development and Engineering Services",
-   "title": "Development and Planning Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13630,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13630,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5335,
-   "pdfSha256": "0ce09ec7285de1f9816e8d70c55ef103f836589c19ef87f023592cbb1fa245a7",
-   "topics": {
-    "contract": 1
-   },
-   "tags": [
-    "contract"
-   ],
-   "matchedTerms": [
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… reement with GDOT for the Wrightsboro Rd Widening Project, PI# 0008348 2. (I1a2) Amendment No. 1 to Contract 2025-3215 with Alfred Benesch & Company for Wrightsboro Rd Widening Project, PI# 0008348 3. (I1a3) …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2515",
-   "date": "2026-06-09",
-   "body": "Management and Internal Services",
-   "title": "Management and Internal Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13628,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13628,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 6678,
-   "pdfSha256": "651d9a92bc0b4113d961ef17fb505d57201986df8249c1ea13b17448b3a9d02a",
-   "topics": {
-    "alpr": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "alpr",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "fiscal year",
-    "genetec",
-    "procurement"
-   ],
-   "topicExcerpts": {
-    "alpr": {
-     "term": "genetec",
-     "excerpt": "… Page 1 of 3 2. (I1c2) Agreement Renewal Number Four with A3 Communications for Genetec Video Management System Support 3. (I1c3) Agreement Renewal Number Two with Structure Media Solutio …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "procurement",
-     "excerpt": "… 027 ACCG Property and Liability Insurance Renewal 3. (I1b3) Revision of the Comprehensive Policy Manual Number 603.1 Procurement 4. (I1b4) Uniform Rental Services Agreement with Cintas Corporation c. Technology Services 1. (I1c1) Tyler Mun …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… ancial Services 1. (I1b1) Columbia County Community Connections Provisions of Service Agreement for Fiscal Year 2027 2. (I1b2) FY 2026/2027 ACCG Property and Liability Insurance Renewal 3. (I1b3) Revision of the Comprehensive …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget",
-    "alpr"
-   ],
-   "dataCenterItems": []
-  },
-  {
    "id": "2600",
    "date": "2026-06-04",
    "body": "Planning Commission",
@@ -1444,132 +909,6 @@
    "dataCenterItems": []
   },
   {
-   "id": "2456",
-   "date": "2026-06-02",
-   "body": "Board of Assessors",
-   "title": "Board of Assessors",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13616,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13616,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4438,
-   "pdfSha256": "fdfbc2de21a2bc20433619d37b769c2e94f9f48dae15589a76cb71da630ff261",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2608",
-   "date": "2026-05-28",
-   "body": "Hospital Authority",
-   "title": "Columbia County Hospital Authority",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13586,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13586,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1107,
-   "pdfSha256": "2c1e057472788da0a5c2043b865eb974b24f1bf25077779ab74a84612df15b34",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2552",
-   "date": "2026-05-26",
-   "body": "Public Works Services",
-   "title": "Public Works and Engineer Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13591,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13591,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 7415,
-   "pdfSha256": "9276f06cf928d424769e90f7694d5fc6a267f4880badbbf78b273bf5bd769a6d",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget",
-    "variance"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… er Upfitters, LLC. b. Water Utility 1. (I1b1) Payment to Cayenta for Annual Subscription 2. (I1b2) Independent Contractor Agreement with Bluewater Engineering for W. Milledgeville Rd Sewer Modification 3. (I1b3) AT&T En …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Chairman Carraway 1. Water Utility a. (K1a) Year to Date Budget Report b. (K1b) Water and Sewer Construction Projects Report 2. Engineering Services a. ( …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… puty County Manager Matt Schlachter 1. (I1a1) Ancillary Dwelling Variance, 5314 Magnolia Lane, Tax map 060 Parcel 142, 3.0 +/- acres, and currently zoned R-A (Residential Agric …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2539",
-   "date": "2026-05-26",
-   "body": "Community and Emergency Services",
-   "title": "Community and Emergency Services",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13595,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13595,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5018,
-   "pdfSha256": "f53c61738702e55c941c27d5cd79cb94609d1d15abcfff48c1dacd17df21d869",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "fiscal year"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ing the Anniversary of First Mount Moriah Baptist Church 2. (I1b2) Animal Services Donation 3. (I1b3) Independent Contractor Agreement with 1 to 4 Pickleball Services 4. (I1b4) Library Services Agreement with the Columbia County Library Sy …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… g and Annual Financial Agreement with UGA Cooperative Extension for Personnel Salary Reimbursement for Fiscal Year 2027 c. Fire and Emergency Services Information provided to the Board of Commissioners is subject to open records …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
    "id": "2599",
    "date": "2026-05-21",
    "body": "Planning Commission",
@@ -1608,6 +947,409 @@
     "land-use"
    ],
    "dataCenterItems": []
+  },
+  {
+   "id": "2584",
+   "date": "2026-05-19",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13582,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13582,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 11084,
+   "pdfSha256": "f7180644e278d9bab7e6c4fb376cbc0d75d86682f55b6432b5a3eceb0654652f",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "budget",
+    "conditional use",
+    "contract",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… of Clariti Permitting and Licensing Solution g. (H1g) Award Bid # 2026015-BID3000 and Contract to Sommers Construction, LLC for the Construction of the Restroom Facilities at Evans Towne Center …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Chairman Duncan 1. (E1) May 05, 2025 Commission Minutes 2. (E2) May 05, 2026 Budget Public Hearing F. PRESENTATION AND APPROVAL OF THE AGENDA …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… zoned R-2 (Single Family Residential). 3. (I1a3) RZ26-05-01, Rezoning from R-A (Residential Agricultural) to PRD (Planned Residential Development), 5703 …",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… rrently zoned C-2 (General Commercial). 6. (I1a6) RZ26-05-03, Conditional Use for Indoor Recreation, 3001 McCrary Court, Tax Map 072 Parcel 231G, 1.95 +/- acres, a …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Commissioner Melear 1. (I1a1) VA26-05-01, Variance to Section 90-53 List of lot and structure requirements, 417 Hastings Place, Tax Map …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2505",
+   "date": "2026-05-07",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13540,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13540,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 6880,
+   "pdfSha256": "9b5d0ff221780e48adfbe0e469abf65ea8406eb7b6dbc5e7e7413bac8d70ea4f",
+   "topics": {
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Commission District 1. Staff Assignment Dylan Douglas. 3. (H1c3) RZ26-05-01, Rezoning from R-A (Residential Agricultural) to PRD (Planned Residential Development), 5703 Wrightsbor …",
+     "context": "unknown"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… Commission District 4. Staff Assignment Danielle Montgomery. 6. (H1c6) RZ26-05-03, Conditional Use for Indoor Recreation, 3001 McCrary Court, Tax Map 072 Parcel 231G, 1.95 +/- acres, and currentl …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… sion District 4. Staff Assignment Danielle Montgomery. c. Public Hearing 1. (H1c1) VA26-05-01, Variance to Section 90-53 List of lot and structure requirements, 417 Hastings Place, Tax Map 082I Parc …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2605",
+   "date": "2026-05-05",
+   "body": "Board of Commissioners",
+   "title": "Budget Public Hearing For Fiscal Year 2027",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13526,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13526,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1864,
+   "pdfSha256": "d680a1598231c0ac40b7dfda84487abdb371cd9a44e7fa76f63aafdce596c074",
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "fiscal year"
+   ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "Columbia County Board of Commissioners Budget Public Hearing For Fiscal Year 2027 Agenda for May 5, 2026 at 5:30 …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2570",
+   "date": "2026-05-05",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13547,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13547,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 9978,
+   "pdfSha256": "935a570912b8fe75dfc490b870d22d74ec6ad73c4a825c26a411934d79d9be5e",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "variance"
+   ],
+   "matchedTerms": [
+    "contract",
+    "townhome",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Agreement with SBA Structures, LLC. for 580 Stevens Creek Road b. (H2b) Award Bid# 2026010-BID5100 and contract to Blair Construction for Sawdust Rd Waterline project c. (H2c) Independent Contractor A …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "townhome",
+     "excerpt": "… pending or threatened lawsuits, and other matters as permitted by law. 1. Property a. (M1a) Highlands Townhomes HOA, Inc. parcel 061 081l for permanent easement for Ivey Falls sewer line improvement project. N …",
+     "context": "public-comment"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Commissioner Melear 1. (I1a1) VA26-04-01, Variance to Section 90-135 Signs, 212 Bobby Jones Expressway, Tax Map 078D Parcel 024, 0.598 +/ …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2583",
+   "date": "2026-04-21",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13501,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13501,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 16566,
+   "pdfSha256": "7842414c3c3ba6c006ea2a187467750b4c74bc77f5b79f99e4a31a785d62ad3e",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ith Columbia County Cares, Inc. c. (H1c) Proclamation Observing May 1, 2026 as Loyalty Day d. (H1d) Contract Renewal Number 8 with Columbia County Convention & Visitors Bureau, Inc. e. (H1e) Independent Contractor Agre …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Chairman Duncan 1. (E1) March 17, 2026 2. (E2) March 17, 2026 Budget Work Session F. PRESENTATION AND APPROVAL OF THE AGENDA …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… y zoned PUD (Planned Unit Development). 2. (I2b2) RZ26-03-09, Rezoning from M-1 (Light Industrial) to C-2 (General Commercial), 475 Lewiston Road, for a …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2504",
+   "date": "2026-04-16",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13478,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13478,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4984,
+   "pdfSha256": "d01aa6287a340c25818e1af3ba2b66d2511d681036b140e24bf50a91ddfc778c",
+   "topics": {
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… elle Montgomery. b. (H1b) Architectural Review 1. (H1b1) Condition of Rezoning - Lewiston Plaza, 426 Lewiston Road, Tax Map 068 Parcel 095A, 1.64 +/- acres, and currently …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ercial). Commission District 4. Staff Assignment Will Butler. 5. (H1c5) VA26-04-01, Variance to Section 90-135 Signs, 212 Bobby Jones Expressway, Tax Map 078D Parcel 024, 0.598 +/- acres, a …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2502",
+   "date": "2026-03-19",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13437,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13437,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 5165,
+   "pdfSha256": "108438a2aed97ce503f8d99944e409425c8ae7044a75e33f2b2091e949d29621",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… sion District 1. Staff Assignment Danielle Montgomery. 7. (H1b7) RZ26-03-09, Rezoning from M-1 (Light Industrial) to C-2 (General Commercial), 475 Lewiston Road, for a 1.0 +/- acr …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2582",
+   "date": "2026-03-17",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13446,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13446,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 13809,
+   "pdfSha256": "39e38ce41a44e9f1aa4977ae27b9e1991a096360452180ab89a02f32d8664193",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "data-center": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "data-center",
+    "millage-budget",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "conditional use",
+    "contract",
+    "data center",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ical Case Manager for the Columbia Judicial Circuit 2. (I2a2) Appointment of Donald Skinner Jr. to Serve on the Hospital Authority 3. (I2a3) Commercial Lease Agreeme …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ttee Commissioner Couch a. (H1a) Independent Contractor Agreement with Christopher Caudell to serve as a Staff Attorney for the Columbia Judicial Circuit …",
+     "context": "agenda-action"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… -03-04, Rezoning from R-A (Residential Agricultural) & M-1 (Light Industrial) to D-C (Data Center), off Morris Calloway Road, Tax map 019 Parcel 002C, 37.03 +/- acres, and currently z …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… r Couch 1. (E1) March 03, 2026 Board of Commissioners 2. (E2) March 10, 2026 Elected Officials Budget Work Session F. PRESENTATION AND APPROVAL OF THE AGENDA …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ice Chair Couch a. Development and Planning Services Committee 1. (I1a1) RZ25-12-04, Rezoning from C-C (Community Commercial) to R-2 (Single Family Residential), 309 & 311 Sout …",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… and currently zoned R-1 (Single Family Residential). 4. (I2b4) RZ26-03-03, Conditional Use for Massage, 218 Oak Street North, Tax map 078D Parcel 128, 1.07 +/- acres, and curre …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… +/- acres, and currently zoned R-A (Residential Agricultural). 2. (I2b2) VA26-03-01, Variance to Section 90-53 List of lot & structure requirements, 1422 Old Appling Harlem Highwa …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center",
+    "millage-budget"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Board of Commissioners Meeting",
+     "date": "2026-03-17",
+     "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13446,plainText=false)"
+    }
+   ]
   }
  ]
 }

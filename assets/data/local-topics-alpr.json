@@ -25,6 +25,12 @@
    "region": "Broader Metropolitan Statistical Area"
   },
   {
+   "placeId": "butts",
+   "placeName": "Butts County",
+   "placeType": "county",
+   "region": ""
+  },
+  {
    "placeId": "carroll",
    "placeName": "Carroll County",
    "placeType": "county",
@@ -61,8 +67,20 @@
    "region": ""
   },
   {
+   "placeId": "dawson",
+   "placeName": "Dawson County",
+   "placeType": "county",
+   "region": ""
+  },
+  {
    "placeId": "dekalb",
    "placeName": "DeKalb County",
+   "placeType": "county",
+   "region": "Atlanta Regional Commission"
+  },
+  {
+   "placeId": "douglas",
+   "placeName": "Douglas County",
    "placeType": "county",
    "region": "Atlanta Regional Commission"
   },
@@ -75,6 +93,12 @@
   {
    "placeId": "fulton",
    "placeName": "Fulton County",
+   "placeType": "county",
+   "region": "Atlanta Regional Commission"
+  },
+  {
+   "placeId": "gwinnett",
+   "placeName": "Gwinnett County",
    "placeType": "county",
    "region": "Atlanta Regional Commission"
   },
@@ -423,97 +447,26 @@
    ]
   },
   {
-   "body": "Management and Internal Services",
+   "body": "Columbus City Council",
    "confidence": "high",
    "context": "agenda-action",
-   "date": "2026-06-09",
-   "docType": "agenda",
-   "excerpt": "… Page 1 of 3 2. (I1c2) Agreement Renewal Number Four with A3 Communications for Genetec Video Management System Support 3. (I1c3) Agreement Renewal Number Two with Structure Media Solutio …",
-   "excerptTerm": "genetec",
-   "fips": "13073",
-   "placeId": "columbia",
-   "placeName": "Columbia County",
-   "placeType": "county",
-   "region": "Central Savannah River Area",
-   "sourceType": "ocr",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13628,plainText=false)",
-   "tags": [],
-   "terms": [
-    "genetec"
-   ],
-   "vendors": [
-    "Genetec"
-   ]
-  },
-  {
-   "body": "City Council",
-   "confidence": "high",
-   "context": "unknown",
    "date": "2026-06-01",
    "docType": "agenda",
-   "excerpt": "… Director of the Department of Public Safety to enter into contract with Motorola Solutions, DBA Vigilant Solutions, for the purchase of commercial license subscriptions for the Investigative Data Platform; to …",
+   "excerpt": "To authorize the Director of the Department of Public Safety to enter into contract with Motorola Solutions, DBA Vigilant Solutions, for the purchase of commercial license subscriptions for the Investigative Data Platform; to waive the competitive bid …",
    "excerptTerm": "vigilant solutions",
    "fips": "13215",
    "placeId": "muscogee",
    "placeName": "Columbus-Muscogee County",
    "placeType": "county",
    "region": "West Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://legistar3.granicus.com/Columbus/meetings/2026/6/6187_A_Columbus_City_Council_26-06-01_Agenda.pdf",
+   "sourceType": "legistar",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6187&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
    "tags": [],
    "terms": [
     "vigilant solutions"
    ],
    "vendors": [
     "Vigilant (Motorola)"
-   ]
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-04-14",
-   "docType": "agenda",
-   "excerpt": "… mmendation: Approval) 12. Sheriff/Keybo Taylor 2026-0386 Award SS008-26, provision of ELSAG license plate recognition systems, to Thomas J. Madden & Associates, amount not to exceed …",
-   "excerptTerm": "elsag",
-   "fips": "13135",
-   "placeId": "gwinnett",
-   "placeName": "Gwinnett County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260414/a_82718_2026.04.14___Work_Session_Agenda.pdf",
-   "tags": [],
-   "terms": [
-    "elsag",
-    "license plate recognition"
-   ],
-   "vendors": [
-    "Elsag (Leonardo)"
-   ]
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-04-14",
-   "docType": "agenda",
-   "excerpt": "… al) 12. Sheriff/Keybo Taylor 2026-0386 Award SS008-26, provision of ELSAG license plate recognition systems, to Thomas J. Madden & Associates, amount not to exceed …",
-   "excerptTerm": "elsag",
-   "fips": "13135",
-   "placeId": "gwinnett",
-   "placeName": "Gwinnett County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260414/a_7698_2026.04.14___Business_Session_Agenda.pdf",
-   "tags": [],
-   "terms": [
-    "elsag",
-    "license plate recognition"
-   ],
-   "vendors": [
-    "Elsag (Leonardo)"
    ]
   },
   {
@@ -552,48 +505,6 @@
    "region": "Middle Georgia",
    "sourceType": "ocr",
    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3428,plainText=false)",
-   "tags": [],
-   "terms": [
-    "alpr"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-03-17",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13097",
-   "placeId": "douglas",
-   "placeName": "Douglas County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission",
-   "sourceType": "ocr",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7229,plainText=false)",
-   "tags": [],
-   "terms": [
-    "alpr"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-03-16",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13097",
-   "placeId": "douglas",
-   "placeName": "Douglas County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission",
-   "sourceType": "ocr",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7223,plainText=false)",
    "tags": [],
    "terms": [
     "alpr"
@@ -666,29 +577,6 @@
    ]
   },
   {
-   "body": "Board of Commissioners Board Meeting",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2025-10-14",
-   "docType": "agenda",
-   "excerpt": "… /14/2025 1 10/14/2025 Board Meeting Agenda 8. Award the five-year renewal of the Genetec License Renewal to Comsec Systems, Inc., in the amount of $91,101.85. 9. Authorize th …",
-   "excerptTerm": "genetec",
-   "fips": "13223",
-   "placeId": "paulding",
-   "placeName": "Paulding County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission",
-   "sourceType": "ocr",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-636df2b77f5c4521bd3370c49b9e62b3.pdf",
-   "tags": [],
-   "terms": [
-    "genetec"
-   ],
-   "vendors": [
-    "Genetec"
-   ]
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
@@ -714,15 +602,14 @@
  ],
  "metadata": {
   "emoji": "📷",
-  "generatedAt": "2026-09-09T20:49:23Z",
+  "generatedAt": "2026-09-10T13:18:47Z",
   "label": "ALPR / surveillance",
-  "placesScanned": 25,
-  "placesWithMentions": 9,
+  "placesScanned": 27,
+  "placesWithMentions": 7,
   "topic": "alpr",
   "universeCities": 537,
   "universeCounties": 159,
   "vendors": [
-   "Elsag (Leonardo)",
    "Flock Safety",
    "Genetec",
    "Vigilant (Motorola)"
