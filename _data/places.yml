@@ -228,6 +228,29 @@ places:
             when: "1st and 3rd Tuesday of every month, 6:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: "Baldwin County Government Building"            # optional
 
+  - slug: milledgeville
+    name: City of Milledgeville
+    type: city
+    fips:
+    parentCounty: baldwin
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # No scraper adapter: Milledgeville runs a bespoke WordPress site that lists
+        # agenda/minutes PDFs directly from /wp-content/uploads/<year>/<month>/, with
+        # inconsistent filename conventions (Council: MM-DD-YY-Agenda.pdf; boards:
+        # HPC-AGENDA-Month-DD-YYYY.pdf, "PZ-...") and non-meeting PDFs mixed in — so
+        # it needs a dedicated adapter, not a config add. Tracked as `unknown` so the
+        # schedule + agendas_url render on /local/milledgeville/ while nothing scrapes.
+        # Detected by scripts/detect_meeting_platform.py (fingerprint: WordPress, no portal).
+        platform: unknown
+        agendas_url: "https://www.milledgevillega.us/index.php/agendas-and-minutes/"
+        schedule:
+          - body: City Council
+            # Inferred from posted agenda dates (regular agendas fall on 2nd & 4th
+            # Tuesdays); the site does not state a time or location.
+            when: "2nd and 4th Tuesday of every month"
+
   - slug: banks
     name: Banks County
     type: county
