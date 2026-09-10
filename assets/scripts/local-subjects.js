@@ -25,6 +25,20 @@
       ' <span class="sub-n">' + n + '</span></span>';
   }
 
+  // A quoted excerpt for an item, or '' when none. build_summary attaches an
+  // `excerpt` only for agenda-action context (never public comment), so its mere
+  // presence means the topic surfaced as government business. Escape BEFORE
+  // inserting <mark> so PDF-sourced text can't inject HTML.
+  function excerptHtml(it) {
+    if (!it.excerpt) return '';
+    var safe = esc(it.excerpt);
+    if (it.excerptTerm) {
+      var safeTerm = esc(it.excerptTerm).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      safe = safe.replace(new RegExp(safeTerm, 'i'), function (m) { return '<mark>' + m + '</mark>'; });
+    }
+    return '<blockquote class="sub-excerpt">' + safe + '</blockquote>';
+  }
+
   // Prettify matched ALPR terms for display: "lpr camera" -> "LPR Camera",
   // "flock" -> "Flock", "safer city" -> "Safer City". LPR/ALPR stay all-caps.
   function prettyTerms(terms) {
@@ -59,6 +73,7 @@
             html += '<li>' +
               (it.date ? '<span class="sub-date">' + esc(it.date) + '</span> ' : '') + t + terms +
               (it.sourceUrl ? ' <a href="' + esc(it.sourceUrl) + '" target="_blank" rel="noopener">source ↗</a>' : '') +
+              excerptHtml(it) +
               '</li>';
           });
           html += '</ul></div>';
@@ -72,6 +87,7 @@
             html += '<li>' +
               (it.date ? '<span class="sub-date">' + esc(it.date) + '</span> ' : '') + t +
               (it.sourceUrl ? ' <a href="' + esc(it.sourceUrl) + '" target="_blank" rel="noopener">source ↗</a>' : '') +
+              excerptHtml(it) +
               '</li>';
           });
           html += '</ul></div>';
@@ -87,6 +103,7 @@
             html += '<li>' +
               (it.date ? '<span class="sub-date">' + esc(it.date) + '</span> ' : '') + t + tags +
               (it.sourceUrl ? ' <a href="' + esc(it.sourceUrl) + '" target="_blank" rel="noopener">source ↗</a>' : '') +
+              excerptHtml(it) +
               '</li>';
           });
           html += '</ul></div>';

@@ -102,6 +102,12 @@
   .sub-chip { font-size: 0.78rem; background: #eef2f7; color: #33415a; border-radius: 999px;
     padding: 0.2rem 0.6rem; text-transform: capitalize; }
   .sub-chip .sub-n { color: #8894a8; font-weight: 600; }
+  /* A quoted agenda excerpt under an item (agenda-action only; never public
+     comment). Neutral so it reads inside any of the colored topic boxes. */
+  .sub-excerpt { margin: 0.3rem 0 0.1rem; padding: 0.35rem 0.6rem; font-size: 0.85rem;
+    line-height: 1.45; color: #333; background: rgba(255,255,255,0.65);
+    border-left: 3px solid rgba(0,0,0,0.18); border-radius: 0 4px 4px 0; font-style: normal; }
+  .sub-excerpt mark { background: #fff2a8; padding: 0 0.1em; border-radius: 2px; }
 
   /* Officials domain — the precedence section, server-rendered above meetings. */
   .po-section { margin: 1.5rem 0 2.5rem; }

@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-10T13:18:36Z",
+  "generatedAt": "2026-09-10T15:43:11Z",
   "source": "Macon-Bibb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Macon-Bibb County",
-  "count": 25
+  "count": 37
  },
  "summary": {
   "flags": [
@@ -13,13 +13,13 @@
   ],
   "lastActivity": "2026-09-01",
   "topicTotals": {
-   "appointment": 24,
-   "contract": 24,
-   "millage-budget": 25,
-   "variance": 10,
+   "appointment": 36,
+   "contract": 36,
+   "millage-budget": 37,
+   "variance": 12,
    "alpr": 7,
    "comprehensive-plan": 4,
-   "development": 16,
+   "development": 22,
    "special-land-use": 2,
    "annexation": 2
   },
@@ -103,7 +103,9 @@
      "development",
      "special-land-use",
      "variance"
-    ]
+    ],
+    "excerpt": "… Solid waste handling facilities are excluded from any area that is not zoned to allow, either as a permitted or conditional use, a solid waste facility of the type proposed. According to the Comprehensive Land Development Resolution of Maco …",
+    "excerptTerm": "conditional use"
    },
    {
     "title": "Pre-Commission Meeting",
@@ -113,7 +115,9 @@
      "development",
      "special-land-use",
      "variance"
-    ]
+    ],
+    "excerpt": "… Solid waste handling facilities are excluded from any area that is not zoned to allow, either as a permitted or conditional use, a solid waste facility of the type proposed. According to the Comprehensive Land Development Resolution of Maco …",
+    "excerptTerm": "conditional use"
    },
    {
     "title": "Board of Commissioners Meeting",
@@ -200,7 +204,7 @@
     ]
    }
   ],
-  "landUseMeetings": 20,
+  "landUseMeetings": 26,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting",
@@ -224,7 +228,9 @@
     "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3600,plainText=false)",
     "terms": [
      "flock"
-    ]
+    ],
+    "excerpt": "… (Sponsored by: Lester M. Miller, Mayor) The following citizens spoke in favor of removing the Flock cameras from the FY27 Budget: Angelia Hoomes Rhiannon Wimer …",
+    "excerptTerm": "flock"
    },
    {
     "title": "Board of Commissioners Meeting",
@@ -1923,6 +1929,703 @@
      "term": "budget",
      "excerpt": "… Hulett, Commissioner) d. An Ordinance Of The Macon Bibb County Commission To Amend The Fy2025 General Fund Budget To $242,375,011 In Total Revenues And $242,375,011 In Total Expenditures And Other Year End Adjustments …",
      "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2163",
+   "date": "2026-01-06",
+   "body": "Board of Commissioners",
+   "title": "Pre-Commission Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3337,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3337,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 47061,
+   "pdfSha256": "1a672e7fcecf22e8bcc59e12484bf4ca4ee040dbe574a509c59c4f7e50d9d284",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "multifamily",
+    "procurement",
+    "purchase order",
+    "reappoint"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… nutes from the December 16, 2025 Pre-Commission meeting (Sponsored by: Lester M. Miller, Mayor) 6. Appointments to Authorities, Boards and Committees a. A Resolution Of The Macon-Bibb County Commission Reappointing Ro …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ing Units In The Houston Avenue Corridor Of South Macon; (Sponsored by: Lester M. Miller, Mayor) 8. Contracts a. An Ordinance Of The Macon-Bibb County Commission Authorizing The Mayor To Enter Into An In …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… Mayor To Execute An Independent Contractor Agreement With Pleasant Hill Landing, Lp, For The Construction Of A MultiFamily Housing Development At 151 Madison Street, In The Amount Of $1,400,000.00, To Be Paid From 2025 Home …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… uthority was approved. c. An Ordinance Of The Macon Bibb County Commission To Amend The Fy2025 General Fund Budget To $242,375,011 In Total Revenues And $242,375,011 In Total Expenditures And Other Year End Adjustments …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2186",
+   "date": "2025-12-16",
+   "body": "Board of Commissioners",
+   "title": "Pre-Commission Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3305,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3305,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 367705,
+   "pdfSha256": "db7d323469ef201c8c6cb98334ea6439b66d28a4681bc8c2ad9ecc7e4d1097a7",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget",
+    "variance"
+   ],
+   "matchedTerms": [
+    "apartment",
+    "appoint",
+    "award of",
+    "budget",
+    "contract",
+    "fiscal year",
+    "multi-family",
+    "multifamily",
+    "procurement",
+    "purchase order",
+    "reappoint",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… e of, or lease property as provided in O.C.G.A. 50-14-3(b)(1)(E); and Discussion or deliberation on the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a c …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "purchase order",
+     "excerpt": "… rom The Fund Balances Of Multiple Funds In The Fy26 Budget To Account For Outstanding Purchase Orders (Sponsored by: Lester M. Miller, Mayor) e. An Ordinance Of The Macon-Bibb County Commission To Authorize A …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… Execute An Independent Contractor Agreement With Pleasant Hill Landing, Lp, For The Construction Of A MultiFamily Housing Development At 151 Madison Street, In The Amount Of $1,400,000.00, To Be Paid From 2025 Home F …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… sioner) c. An Ordinance Of The Macon Bibb County Commission To Amend The Fy2025 General Fund Budget To $242,375,011 In Total Revenues And $242,375,011 In Total Expenditures And Other Year End Adjustmen …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… overning body; WHEREAS, the FY 2025 amended budget differs from the FY 2025 actual budget, reflecting said variance; and WHEREAS, said information is reflected in the FY 2025 Budget Amendment Summary hereto attached as Exh …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2174",
+   "date": "2025-12-16",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3307,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3307,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 430805,
+   "pdfSha256": "df2cef9121f9fe3ef4d5c421eea01d0f73e7876c97f22e9a593ebe25f829a031",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget",
+    "variance"
+   ],
+   "matchedTerms": [
+    "apartment",
+    "appoint",
+    "award of",
+    "budget",
+    "contract",
+    "fiscal year",
+    "multi-family",
+    "multifamily",
+    "procurement",
+    "purchase order",
+    "reappoint",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… e of, or lease property as provided in O.C.G.A. 50-14-3(b)(1)(E); and Discussion or deliberation on the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a c …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "purchase order",
+     "excerpt": "… $62,252,626.00 From The Fund Balances Of Multiple Funds In The Fy26 Budget To Account For Outstanding Purchase Orders (Sponsored by: Lester M. Miller, Mayor) f. An Ordinance Of The Macon-Bibb County Commission To Authorize A …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… Execute An Independent Contractor Agreement With Pleasant Hill Landing, Lp, For The Construction Of A MultiFamily Housing Development At 151 Madison Street, In The Amount Of $1,400,000.00, To Be Paid From 2025 Home F …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Hulett, Commissioner) d. An Ordinance Of The Macon Bibb County Commission To Amend The Fy2025 General Fund Budget To $242,375,011 In Total Revenues And $242,375,011 In Total Expenditures And Other Year End Adjustments (Spons …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… overning body; WHEREAS, the FY 2025 amended budget differs from the FY 2025 actual budget, reflecting said variance; and WHEREAS, said information is reflected in the FY 2025 Budget Amendment Summary hereto attached as Exh …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2335",
+   "date": "2025-12-02",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3288,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3288,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 192577,
+   "pdfSha256": "8796a5dbe3f7d36dda9fe40e637e7adbbd00fe66e90952a246f8cb77995d01f3",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "procurement",
+    "purchase order",
+    "reappoint",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… ., Macon, Georgia (Sponsored by: Lester M. Miller, Mayor) d. A Resolution Of The Macon-Bibb County Commission Reappointing Dr. Y. Monique Davis-Smith To The Board Of Directors Of River Edge Behavioral Heal …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… account or individual retirement annuity. For these purposes, an eligible retirement plan shall also mean an annuity contract described in section 403(b) of the Internal Revenue Code and an eligible plan under section 457(b) of the Internal Rev …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Page 77 of 137 subdivision of a state, or any agency or instrumentality of a state or political subdivision of a state and which agrees to separa …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… WHEREAS, on June 17, 2025, the Macon-Bibb County Commission adopted ordinance O-25-0022, establishing the FY26 budget, said ordinance to become effective on July 1, 2025; and WHEREAS, various budget amendments are necessary t …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2162",
+   "date": "2025-12-02",
+   "body": "Board of Commissioners",
+   "title": "Pre-Commission Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3286,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3286,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 198232,
+   "pdfSha256": "34273ac6ba1e896e132a14ad5d5714bba6e2d2a0c25278831a7e4f19868b14a0",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "procurement",
+    "purchase order",
+    "reappoint",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… 2022 LLC located at 3565 Pio Nono Ave., Macon, Georgia (Sponsored by: Lester M. Miller, Mayor) 4. Appointments to Boards, Commissions and Authorities a. A Resolution Of The Macon-Bibb County Commission Reappointing D …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Of $500,000.00, For County-Wide Telephone Expenses; (Sponsored by: Lester M. Miller, Mayor) 7. Contracts and Purchase Orders a. A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Page 78 of 138 subdivision of a state, or any agency or instrumentality of a state or political subdivision of a state and which agrees to separa …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… WHEREAS, on June 17, 2025, the Macon-Bibb County Commission adopted ordinance O-25-0022, establishing the FY26 budget, said ordinance to become effective on July 1, 2025; and WHEREAS, various budget amendments are necessary t …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2185",
+   "date": "2025-11-18",
+   "body": "Board of Commissioners",
+   "title": "Pre-Commission Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3272,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3272,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 104823,
+   "pdfSha256": "ab88f1fa0164e1553ac91f553c1bbb279866b0f6acecd96862aafdc66db842db",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "ad valorem",
+    "appoint",
+    "budget",
+    "contract",
+    "procurement",
+    "purchase order"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… e of, or lease property as provided in O.C.G.A. 50-14-3(b)(1)(E); and Discussion or deliberation on the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a c …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… onville Road 31217 Legal recommends approval (Sponsored by: Lester M. Miller, Mayor) 4. Agreements, Contracts and Purchase Orders a. A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ware Equipment From Dell Marketing, LP In The Amount Of $104,400.00, Payable From The I.T. Department Budget, Repairs & Maintenance - Computer Hardware Line Item; (Sponsored by: Lester M. Miller, Mayor) On mo …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2173",
+   "date": "2025-11-18",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3268,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3268,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 93629,
+   "pdfSha256": "48a7168119cfad4398a10e1a4e9602ba90832484ee2fa2fcb37d0bf6d7863e9f",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "procurement",
+    "purchase order"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… hase, dispose of, or lease property as provided in O.C.G.A. 50-14-3(b)(1)(E); and Discussion or deliberation on the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a county …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "purchase order",
+     "excerpt": "… Lester M. Miller, Mayor) f. A Resolution Of The Macon-Bibb County Commission Authorizing The Issuance Of A Purchase Order For Computers And Hardware Equipment From Dell Marketing, LP In The Amount Of $104,400.00, Payable From …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ware Equipment From Dell Marketing, LP In The Amount Of $104,400.00, Payable From The I.T. Department Budget, Repairs & Maintenance - Computer Hardware Line Item; (Sponsored by: Lester M. Miller, Mayor) g. A Resoluti …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2334",
+   "date": "2025-11-04",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3232,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3232,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 205501,
+   "pdfSha256": "19bbeb9a06722406bdea89e4599aa12be62e787db8d002776c303cbbe936f096",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "award of",
+    "budget",
+    "contract",
+    "fiscal year",
+    "procurement",
+    "purchase order"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… e of, or lease property as provided in O.C.G.A. 50-14-3(b)(1)(E); and Discussion or deliberation on the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a c …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "purchase order",
+     "excerpt": "… Lester M. Miller, Mayor) f. A Resolution Of The Macon-Bibb County Commission Authorizing The Issuance Of A Purchase Order For Computers And Hardware Equipment From Dell Marketing, LP In The Amount Of $104,400.00, Payable From The I. …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ware Equipment From Dell Marketing, LP In The Amount Of $104,400.00, Payable From The I.T. Department Budget, Repairs & Maintenance - Computer Hardware Line Item; (Sponsored by: Lester M. Miller, Mayor) g. A Resoluti …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2161",
+   "date": "2025-11-04",
+   "body": "Board of Commissioners",
+   "title": "Pre-Commission Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3234,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3234,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 243190,
+   "pdfSha256": "0a7288e3d3bb65c36ac94d1d535c5430460c0a41845e04676f7da563cbc8b3d3",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "award of",
+    "budget",
+    "contract",
+    "fiscal year",
+    "procurement",
+    "purchase order"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… e of, or lease property as provided in O.C.G.A. 50-14-3(b)(1)(E); and Discussion or deliberation on the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a c …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… , Macon, GA 31201 Legal recommends approval. (Sponsored by: Lester M. Miller, Mayor) 4. Agreements, Contracts and Purchase Orders a. A Resolution Of The Macon-Bibb County Commission Authorizing The Issuance …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… rom Dell Marketing, LP In The Amount Of $104,400.00, Payable From The I.T. Department Budget, Repairs & Maintenance - Computer Hardware Line Item; (Sponsored by: Lester M. Miller, Mayor) …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2196",
+   "date": "2025-10-21",
+   "body": "Board of Commissioners",
+   "title": "Pre-Commission Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3202,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3202,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 78633,
+   "pdfSha256": "e18ccc494c28895b3198767e728f220725422e047def12986f979a7037e410da",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "procurement",
+    "purchase order",
+    "reappoint"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ell Commissioner Donice Bryant Commissioner Brendalyn Bailey 1. Call to Order Mayor Lester M. Miller 2. Appointment to Authorities, Boards and Commissions a. A Resolution Of The Macon-Bibb County Commission Appointing West …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Of The Macon-Bibb County Transit Authority (Sponsored by: Lester M. Miller, Mayor) 3. Agreements, Contracts and Purchase Orders a. Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… he SPLOST referendum; and WHEREAS, on September 23, 2025, in Ordinance O-25-0044, the Commission adopted a budget for the $50,000,000.00 2025 SPLOST Bond, plus the additional $5,302,329.00 in bond premiums received by the County, bu …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2172",
+   "date": "2025-10-21",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3204,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3204,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 96100,
+   "pdfSha256": "0d4ed65c1f1936cd18d21a6582f1e524b3a07782663e0b4fa1c3387e61b9455d",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "ad valorem",
+    "appoint",
+    "budget",
+    "contract",
+    "procurement",
+    "purchase order",
+    "reappoint"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Page 1 of 47 a. A Resolution Of The Macon-Bibb County Commission Appointing Weston Stroud To Serve As A Member Of The Macon-Bibb County Transit Authority (Sponsored …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… on Of Afterschool Program Services, Payable From The Macon Violence Prevention Fund - Contract Labor Contractual Services Line Item (Sponsored by: Lester M. Miller, Mayor) c. A Resolution …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Charise Merriweather, Dir. Small Business Sherita Jones, Dir, budget and Grants 1. Call to Order Mayor Lester M. Miller 2. Presentations a. Proclamation honoring His …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2259",
+   "date": "2025-10-14",
+   "body": "Board of Commissioners",
+   "title": "Special Called Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3195,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3195,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 259933,
+   "pdfSha256": "1b24d41494bb34d2f3bd1e5ec61ba40106e4ac4ac9b42e942fa9e3063f778d58",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "ad valorem",
+    "appoint",
+    "award of",
+    "budget",
+    "contract",
+    "fiscal year",
+    "procurement",
+    "purchase order",
+    "reappoint",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… utes from the September 23, 2025 Special Called Meeting (Sponsored by: Lester M. Miller, Mayor) 4. Appointment to Authorities, Boards and Commissions a. A Resolution Of The Macon-Bibb County Commission Appointing West …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… d. A Resolution Of The Macon-Bibb County Commission To Authorize The Mayor To Execute An Independent Contractor Agreement With River Edge Foundation, Inc., For The Construction Of Two Adult Community Residential …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… ng To Be Bound By An Anticipated Memorandum Of Understanding Between The State Of Georgia And Georgia Subdivisions Regarding Such Settlements; To Authorize The Application, Acceptance, And Use Of State Block Grant Funds From …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "ad valorem",
+     "excerpt": "… Community Redevelopment Tax Incentive (\"Blight Tax\") Program, For The Purpose Of Amending The Ad Valorem Tax Multiplier Applied To Blighted Structures In Macon-Bibb County; To Include Board Of Education's Ad …",
+     "context": "unknown"
     }
    },
    "flags": [

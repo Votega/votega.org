@@ -340,6 +340,18 @@ def topic_flags(topics):
 
 # ── Place-level rollup ────────────────────────────────────────────────────────
 
+def _agenda_excerpt(m, tag):
+    """The agenda-action excerpt {excerpt, excerptTerm} for `tag` on meeting `m`,
+    or None. Mirrors the site/dataset policy: quote only government business
+    (agenda-action); never public-comment/unknown, whose text can name private
+    residents from sign-up rosters. So an excerpt on a summary item always means
+    the topic surfaced as an item/motion/hearing, not during public comment."""
+    te = (m.get('topicExcerpts') or {}).get(tag)
+    if isinstance(te, dict) and te.get('context') == 'agenda-action' and te.get('excerpt'):
+        return {'excerpt': te['excerpt'], 'excerptTerm': te.get('term')}
+    return None
+
+
 def build_summary(enriched):
     """Roll per-meeting enrichment up into the place-level `summary` the UI reads.
 
@@ -378,6 +390,12 @@ def build_summary(enriched):
         for tag, n in mtopics.items():
             topic_totals[tag] = topic_totals.get(tag, 0) + n
         for it in (m.get('dataCenterItems') or []):
+            # Attach this meeting's agenda-action data-center excerpt (if any) so
+            # the place page can quote it, matching the topic page / dataset.
+            ex = _agenda_excerpt(m, 'data-center')
+            if ex:
+                it.setdefault('excerpt', ex['excerpt'])
+                it.setdefault('excerptTerm', ex['excerptTerm'])
             # De-dupe by title so the same recurring item across meetings lists once.
             dc_items.setdefault(it['title'], it)
         # Land-use citations: a meeting that hit a land-use subject OTHER than
@@ -386,9 +404,17 @@ def build_summary(enriched):
         if present_lu and 'data-center' not in mtopics:
             title = m.get('title') or m.get('body') or 'Meeting'
             key = (m.get('date'), title)
-            lu_items.setdefault(key, {
+            entry = {
                 'title': title, 'date': m.get('date'),
-                'sourceUrl': m.get('sourceUrl'), 'tags': present_lu})
+                'sourceUrl': m.get('sourceUrl'), 'tags': present_lu}
+            # First present land-use subtag with an agenda-action excerpt wins.
+            for tg in present_lu:
+                ex = _agenda_excerpt(m, tg)
+                if ex:
+                    entry['excerpt'] = ex['excerpt']
+                    entry['excerptTerm'] = ex['excerptTerm']
+                    break
+            lu_items.setdefault(key, entry)
         # ALPR citations: one entry per distinct meeting that hit the alpr subject,
         # carrying the concrete vendor/capability terms that fired (from the
         # meeting's matchedTerms) as the evidence — the same sourced-list shape as
@@ -398,9 +424,14 @@ def build_summary(enriched):
             title = m.get('title') or m.get('body') or 'Meeting'
             terms = sorted(set(m.get('matchedTerms') or []) & ALPR_TERMS)
             key = (m.get('date'), title)
-            alpr_items.setdefault(key, {
+            entry = {
                 'title': title, 'date': m.get('date'),
-                'sourceUrl': m.get('sourceUrl'), 'terms': terms})
+                'sourceUrl': m.get('sourceUrl'), 'terms': terms}
+            ex = _agenda_excerpt(m, 'alpr')
+            if ex:
+                entry['excerpt'] = ex['excerpt']
+                entry['excerptTerm'] = ex['excerptTerm']
+            alpr_items.setdefault(key, entry)
     # Newest first, capped so the committed sidecar stays small.
     lu_sorted = sorted(lu_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     alpr_sorted = sorted(alpr_items.values(), key=lambda x: x.get('date') or '', reverse=True)
