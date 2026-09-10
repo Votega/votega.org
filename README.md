@@ -123,7 +123,7 @@ Several of these also publish to the public
 
 ## License
 
-Site code: MIT. Published datasets are licensed in their own repositories.
+Site code: MIT. Published datasets are licensed [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) — attribute VoteGA and license any adaptations you distribute under the same terms (see each repository's `LICENSE`).
 Underlying data remains subject to the terms of its original sources.
 
 ## Contact
