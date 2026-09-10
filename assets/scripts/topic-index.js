@@ -213,7 +213,13 @@
           (m.tags || []).forEach(function (t) { mt.tags[t] = true; });
           (m.terms || []).forEach(function (t) { mt.terms[t] = true; });
           (m.sourceUrl ? [m.sourceUrl] : []).forEach(function (u) { mt.sources[u] = true; });
-          if (m.excerpt && !mt.excerpts.some(function (e) { return e.excerpt === m.excerpt; })) {
+          // Quote only government business (agenda-action) — matching the open
+          // dataset's policy. Public-comment / unknown excerpts can name private
+          // residents from sign-up rosters, so their verbatim quote is withheld;
+          // the matched term, context chip, and source link below still render, so
+          // voters still see WHAT surfaced and can open the source to read it.
+          if (m.context === 'agenda-action' && m.excerpt &&
+              !mt.excerpts.some(function (e) { return e.excerpt === m.excerpt; })) {
             mt.excerpts.push({ excerpt: m.excerpt, term: m.excerptTerm });
           }
         });

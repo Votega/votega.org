@@ -173,7 +173,7 @@ def mention_schema():
             "tags": {"type": "array", "items": {"type": "string"},
                      "description": "granular land-use subtags (rezoning, variance, …)"},
             "excerpt": {"type": ["string", "null"],
-                        "description": "quoted context; only for structured (legistar/granicus) sources"},
+                        "description": "quoted context; present only when context is agenda-action (any source)"},
             "excerptTerm": {"type": ["string", "null"]},
             "sourceUrl": {"type": ["string", "null"], "description": "the agenda/minutes document"},
         },
