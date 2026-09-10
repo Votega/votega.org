@@ -1,0 +1,18 @@
+{%- comment -%}
+  PWA (Progressive Web App) head tags — Phase 0.
+  Makes the site installable to a phone home screen and gives it an app-like
+  shell. Included from head.html. Service-worker registration lives in
+  pwa-register.html (loaded from footer-scripts.html).
+{%- endcomment -%}
+<link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
+{%- comment -%} theme-color only emitted here if not already set via site.mobile-theme-col {%- endcomment -%}
+{% unless site.mobile-theme-col %}
+<meta name="theme-color" content="#0085a1">
+{% endunless %}
+
+{%- comment -%} iOS: enable standalone launch + status bar styling + touch icon {%- endcomment -%}
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vote GA">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="{{ '/assets/img/pwa/apple-touch-icon.png' | relative_url }}">

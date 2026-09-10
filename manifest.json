@@ -1,0 +1,55 @@
+{
+  "name": "Vote GA — Georgia Voter Info",
+  "short_name": "Vote GA",
+  "description": "Nonpartisan civic information for Georgia voters — reps, ballots, bills, and elections.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#0085a1",
+  "categories": ["government", "news", "education"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/assets/img/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/img/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/img/pwa/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Find my representatives",
+      "short_name": "My reps",
+      "url": "/find-my-reps/?source=pwa-shortcut",
+      "icons": [{ "src": "/assets/img/pwa/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Sample ballot",
+      "short_name": "Ballot",
+      "url": "/sample-ballot/?source=pwa-shortcut",
+      "icons": [{ "src": "/assets/img/pwa/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Elections",
+      "short_name": "Elections",
+      "url": "/elections-hub/?source=pwa-shortcut",
+      "icons": [{ "src": "/assets/img/pwa/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

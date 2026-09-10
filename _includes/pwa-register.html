@@ -1,0 +1,20 @@
+{%- comment -%}
+  Registers the Vote GA service worker (Phase 0). Loaded from footer-scripts.html.
+  Progressive enhancement: if the browser has no service-worker support, nothing
+  happens and the site behaves exactly as before.
+{%- endcomment -%}
+<script>
+  (function () {
+    if (!('serviceWorker' in navigator)) return;
+    window.addEventListener('load', function () {
+      navigator.serviceWorker
+        .register('{{ "/sw.js" | relative_url }}', { scope: '{{ "/" | relative_url }}' })
+        .catch(function (err) {
+          // Non-fatal: the site works without the SW; log for debugging only.
+          if (window.console && console.warn) {
+            console.warn('Vote GA service worker registration failed:', err);
+          }
+        });
+    });
+  })();
+</script>
