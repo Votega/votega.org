@@ -558,6 +558,21 @@ places:
           - body: Board of Commissioners
             when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: ""            # optional
+  
+  - slug: conyers
+    name: City of Conyers
+    type: city
+    fips: null
+    parentCounty: rockdale
+    region: Atlanta Regional Commission                         # optional hub grouping label
+    domains:
+      meetings:
+        platform: custom
+        agendas_url: "https://www.conyersga.com/government/city-government/council-agendas-and-minutes"
+        schedule:
+          - body: City Council
+            when: "1st Wednesday of every month, 6:00 p.m."
+            location: "Council Chambers, 901 O'Kelly Street, Conyers"
 
   # CivicClerk prototype (JSON API, not HTML). Douglas is on the newer CivicPlus
   # platform whose Agenda Center is JS-rendered — the classic civicplus adapter
