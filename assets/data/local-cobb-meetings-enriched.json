@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-10T22:53:12Z",
+  "generatedAt": "2026-09-11T03:30:20Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
-  "count": 40
+  "count": 25
  },
  "summary": {
   "flags": [
@@ -13,16 +13,15 @@
   ],
   "lastActivity": "2026-10-14",
   "topicTotals": {
-   "variance": 13,
-   "special-land-use": 12,
-   "annexation": 7,
-   "contract": 13,
-   "millage-budget": 14,
-   "appointment": 9,
-   "development": 8,
-   "data-center": 2,
-   "rezoning": 8,
-   "comprehensive-plan": 1
+   "variance": 8,
+   "special-land-use": 7,
+   "appointment": 6,
+   "contract": 7,
+   "development": 3,
+   "rezoning": 4,
+   "annexation": 4,
+   "millage-budget": 8,
+   "data-center": 2
   },
   "dataCenterItems": [
    {
@@ -60,12 +59,15 @@
    {
     "title": "BOC Zoning Hearing",
     "date": "2026-09-15",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10206,plainText=false)",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10219,plainText=false)",
     "tags": [
-     "special-land-use"
+     "development",
+     "rezoning",
+     "special-land-use",
+     "variance"
     ],
-    "excerpt": "… 20-2026 District 1 - 1863 Ruby Mountain Street 12. LUP-26-2026 District 4 - 1117 Woodleigh Road 13. SLUP-3-2026 District 2 - 1284 Kennestone Circle BOC REGULAR CASES AND NEW BUSINESS 14. Z-1-2026 District 3 - 89 …",
-    "excerptTerm": "slup"
+    "excerpt": "… rship, Owner) requesting rezoning from RSL (supportive) to RSL (non-supportive) for senior living apartments in land lot 55 of the 20th district. Property is located on the north side of Hickory Grove Road, and on th …",
+    "excerptTerm": "apartment"
    },
    {
     "title": "Board of Zoning Appeals Variance Hearing",
@@ -190,53 +192,9 @@
     "tags": [
      "variance"
     ]
-   },
-   {
-    "title": "BOC Regular Meeting",
-    "date": "2026-06-09",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8968,plainText=false)",
-    "tags": [
-     "development"
-    ],
-    "excerpt": "… e the purchase of roofing materials from Garland/DBS, Inc. for the Department of Public Safety Supply Warehouse roof replacement, under the provision of an OMNIA Partners Contract, MICPA # PW1925. Public Safety …",
-    "excerptTerm": "warehouse"
-   },
-   {
-    "title": "Planning Commission Zoning Hearing",
-    "date": "2026-06-02",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8946,plainText=false)",
-    "tags": [
-     "development",
-     "rezoning",
-     "special-land-use",
-     "variance"
-    ],
-    "excerpt": "… Z-20 (2026) MANOR RESTORATIONS, LLC (Estate of Joan Tate Wadsworth, owner) requests a rezoning for a townhome community in Land Lots 208 and 209 of the 20th District. Located on the west side of Greers …",
-    "excerptTerm": "townhome"
-   },
-   {
-    "title": "BOC Regular Meeting",
-    "date": "2026-05-26",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8936,plainText=false)",
-    "tags": [
-     "annexation"
-    ]
-   },
-   {
-    "title": "BOC Zoning Hearing",
-    "date": "2026-05-19",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8895,plainText=false)",
-    "tags": [
-     "development",
-     "rezoning",
-     "special-land-use",
-     "variance"
-    ],
-    "excerpt": "… y, with all storage being incidental to permitted uses and within the building; 3. No warehouse or wholesale trade as a primary use; 4. Water and Sewer Division comments and recommendations; …",
-    "excerptTerm": "warehouse"
    }
   ],
-  "landUseMeetings": 30,
+  "landUseMeetings": 18,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -310,25 +268,66 @@
    "date": "2026-09-15",
    "body": "Board of Commissioners",
    "title": "BOC Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10206,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10219,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10206,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10219,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2808,
-   "pdfSha256": "c7e171c03ecb849a04f13d51e4be19389dfaaac18aa432e8b08229a8617704dd",
+   "textChars": 18438,
+   "pdfSha256": "112e852643aab0245ed6f15feff5259e3945a9325b7197e285bdc91dc01f3206",
    "topics": {
-    "special-land-use": 1
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
-    "special-land-use"
+    "appointment",
+    "contract",
+    "development",
+    "rezoning",
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
-    "slup"
+    "apartment",
+    "appoint",
+    "contract",
+    "land use permit",
+    "rezon",
+    "slup",
+    "variance"
    ],
    "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… approval of LUP-24 for 24 months, subject to: 1. No more than three clients a day 2. Appointment hours shall be from 8:30 a.m. until 12:30 p.m. 3. All parking shall be in the driveway, no parking on …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ons Z-32 TWO WINDY HILLS, LLC (Two Windy Hills, LLC, Owner) requesting rezoning from GC to LI for a contractor office in land lot 370 of the 17th district. Property is located on the south side of Atlanta Road, …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… rship, Owner) requesting rezoning from RSL (supportive) to RSL (non-supportive) for senior living apartments in land lot 55 of the 20th district. Property is located on the north side of Hickory Grove Road, and on th …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… COUNTY BOARD OF COMMISSIONERS ZONING HEARING CONSENT AGENDA September 15, 2026 Rezoning cases Z-13 PRESTWICK COMPANIES (WG-75 Partnership, Owner) requesting rezoning from RSL (supportive …",
+     "context": "agenda-action"
+    },
     "special-land-use": {
      "term": "slup",
-     "excerpt": "… 20-2026 District 1 - 1863 Ruby Mountain Street 12. LUP-26-2026 District 4 - 1117 Woodleigh Road 13. SLUP-3-2026 District 2 - 1284 Kennestone Circle BOC REGULAR CASES AND NEW BUSINESS 14. Z-1-2026 District 3 - 89 …",
+     "excerpt": "… nning Commission from the September 1, 2026 hearing until the October, 6, 2026 hearing.) 2 SLUP-3-2026 JOE DIRT DEVELOPMENT (Continued by the Planning Commission from the April 7, 2026 Plan …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… arcel and shall not be subdivided to create separate lots for the individual dwelling units 3. Variances as outlined in the Zoning Division comments and recommendations 4. Department of Transportation comments an …",
      "context": "agenda-action"
     }
    },
@@ -1201,720 +1200,6 @@
    "flags": [
     "land-use"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1187",
-   "date": "2026-06-09",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8968,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8968,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 10231,
-   "pdfSha256": "6506893e087f0f4bcc58569d5c9f1b6eb1fc65f5cce597638de7dc0063283d90",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "procurement",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Against Women Act to support the District Attorney's Victim Witness Unit. 4. To approve a contract with the Georgia Department of Human Services and the Cobb Judicial Circuit District Attorney to prov …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… e the purchase of roofing materials from Garland/DBS, Inc. for the Department of Public Safety Supply Warehouse roof replacement, under the provision of an OMNIA Partners Contract, MICPA # PW1925. Public Safety …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Page 4 of 6 Finance 22. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. County Clerk 23. To approve minutes …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1260",
-   "date": "2026-06-02",
-   "body": "Planning Commission",
-   "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8946,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8946,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5611,
-   "pdfSha256": "62530abc8c77d8d14d448735d2f421d0467d8c93e1dc8e7d5741ba4dd889d83e",
-   "topics": {
-    "development": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "development",
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "rezon",
-    "slup",
-    "townhome",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "townhome",
-     "excerpt": "… Z-20 (2026) MANOR RESTORATIONS, LLC (Estate of Joan Tate Wadsworth, owner) requests a rezoning for a townhome community in Land Lots 208 and 209 of the 20th District. Located on the west side of Greers …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… DA JUNE 2, 2026 Zoning Cases Z-19 (2026) DAVID ALLISON (David Anthony Allison, Owner) requesting rezoning from R-20 to R-12 for an additional single-family residence in Land Lot 372 of the 17t …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "slup",
-     "excerpt": "… rom the June 2, 4 LUP-12-2026 2025 Planning Commission Hearing until the July 7, 2026 Planning Commission 1 SLUP-6-2026 Hearing) TASHA TOLBERT AND ALICIA STEEL (Held by the Planning Commission from …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… . Final Site Plan and building elevations to be approved by District Commissioner; 2. Variances stated in the Zoning comments; 3. Letter of agreeable stipulations from Kevin Moore dated May 22, …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1235",
-   "date": "2026-05-26",
-   "body": "Board of Commissioners",
-   "title": "BOC Work Session",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8917,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8917,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 426,
-   "pdfSha256": "a8332ae1257d19a7aa72dc1213956c89de7593f5ba289d471aac77b3e28cbc8c",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1198",
-   "date": "2026-05-26",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8936,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8936,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 10393,
-   "pdfSha256": "0a31e5d14c0cd114a099a0971c099e8cf2cd46ce2626d411c912e67a94a8eb18",
-   "topics": {
-    "annexation": 1,
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "annexation",
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "appoint",
-    "budget",
-    "contract",
-    "fiscal year",
-    "procurement",
-    "reappoint"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… and a future fire department comprehensive wellness facility. Community Development 22. To approve an annexation notice of Non-Objection with Stipulation per HB 489 Intergovernmental Agreement and HB 2 regarding a …",
-     "context": "unknown"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… o present a proclamation to recognize the 35th Anniversary of the Juvenile Court of Cobb County Court Appointed Special Advocate (CASA) program. PUBLIC COMMENT Those persons wishing to address the Board of Commissioners wil …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… am No. S1148. 8. To approve a work order under FY25-FY26 Stormwater Management Unit Price Contract with Chatfield Contracting Inc. for 6415 Ivey Terrace Drive, Program No. SW2390. 9. To ap …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… dentification, tracking, and mitigation, and Drone as a First Responder (DFR) systems, as part of the Fiscal Year 2026 Counter-Unmanned Aircraft Systems Grant Program Between the Georgia Emergency Management and Hom …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1271",
-   "date": "2026-05-19",
-   "body": "Board of Commissioners",
-   "title": "BOC Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8895,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8895,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 6151,
-   "pdfSha256": "938cb218ef5c0249502c30b9baa4e3f81b19cc48e4e0f99e2685b55539ff4ec1",
-   "topics": {
-    "development": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "development",
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "land use permit",
-    "rezon",
-    "slup",
-    "variance",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… y, with all storage being incidental to permitted uses and within the building; 3. No warehouse or wholesale trade as a primary use; 4. Water and Sewer Division comments and recommendations; …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… 2026 Zoning Cases Z-18(2026) WADDI INVESTMENTS, LLC (Waddi Investments, LLC, Owner) requesting rezoning from GC to NRC for a Flooring Showroon with Storage in Land Lot 733 of the 16th District. The propert …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "slup",
-     "excerpt": "… ay 5, 2026 hearing; Continued by the Planning 3 LUP-6-2026 Commission until the June 2, 2026 hearing). 1 SLUP-6-2026 DENNIS TIDWELL (Held by the Planning Commission until the May 5, 2026 1 OB-13-2026 hearing; Con …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… ge 2 ITEM OB-24-2026 To consider a lot size reduction from required 80,000 square-feet to 47,585 square-feet and variances for Fernando Melo. The property is located on the west side of Gus Robinson Road, north of Macland Road in Land Lot 4 …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1248",
-   "date": "2026-05-13",
-   "body": "Board of Zoning Appeals",
-   "title": "Board of Zoning Appeals Variance Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8891,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8891,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 12689,
-   "pdfSha256": "4645d5a29476204c2c35019f30bc01b4a625de17313577ac69a2c7a0b4a2f55b",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING SUMMARY AGENDA May 13, 2026 District Case Held case- Not to be heard 3 V-36 …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1186",
-   "date": "2026-05-12",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8881,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8881,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 9845,
-   "pdfSha256": "781963a57d5d37b4349081aa0f29e46a28abb422eec88a465d9c61493032ce07",
-   "topics": {
-    "annexation": 1,
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "annexation",
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "appoint",
-    "budget",
-    "contract",
-    "fiscal year",
-    "procurement",
-    "purchase order",
-    "reappoint"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… for Mada Kitchen & Bakery, LLC doing business as Mada Kitchen & Bakery. 17. To approve an annexation notice of Non-Objection per HB 489 Intergovernmental Agreement and HB 2 regarding a petition for the …",
-     "context": "agenda-action"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… will be allotted a maximum of three (3) minutes. Speakers should address their comments toward the Chairwoman only. APPOINTMENTS 31. To announce the reappointment of Patti Zachary to the Animal Services Board. 32. To ap …",
-     "context": "public-comment"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Truist Park and The Battery. PUBLIC HEARING 9. To conduct a public hearing prior to the establishment of a contract where the fees will likely exceed $200,000.00 for a consulting firm to provide professional legislati …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… he Chairwoman only. CONSENT AGENDA Magistrate Court 10. To authorize the appropriation of prior year budget savings into the FY2026 budget. Public Services Agency PARKS 11. To approve the Second Amend …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1259",
-   "date": "2026-05-05",
-   "body": "Planning Commission",
-   "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8868,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8868,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4312,
-   "pdfSha256": "a36ed5767136384a320b8cefecfc0bf9927f61490c4ff6e6d2bccb44d6cee2ca",
-   "topics": {
-    "development": 1,
-    "rezoning": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "development",
-    "rezoning",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "land use permit",
-    "rezon",
-    "slup",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… y, with all storage being incidental to permitted uses and within the building; 3. No warehouse or wholesale trade as a primary use; 4. Water and Sewer Division comments and recommendations; …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… 2026 Zoning Cases Z-18(2026) WADDI INVESTMENTS, LLC (Waddi Investments, LLC, Owner) requesting rezoning from GC to NRC for a Flooring Showroon with Storage in Land Lot 733 of the 16th District. The propert …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "slup",
-     "excerpt": "… rings until the April 7, 2026 hearing; 4 LUP-10-2026 Continued by Staff until the May 5, 2026 hearing). 2 SLUP-3-2026 RACETRAC, INC. (Held by the Planning Commission until the May 5, 2026 hearing) …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1234",
-   "date": "2026-04-28",
-   "body": "Board of Commissioners",
-   "title": "BOC Work Session",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8845,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8845,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 387,
-   "pdfSha256": "99f0432cbbb66672474f1268d9f055acc2c1e0506884599156c37b27d7c9ee1c",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… 1. To present a summary of the departmental and agency request for the FY2027-2028 Biennial Budget cycle. ADJOURNMENT",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1197",
-   "date": "2026-04-28",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8847,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8847,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 9162,
-   "pdfSha256": "d0747683d79561cd87d90b715d7c7530b0297e4629ae5e29400d64ed18e7e874",
-   "topics": {
-    "appointment": 1,
-    "comprehensive-plan": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "comprehensive-plan",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "comprehensive plan",
-    "contract",
-    "reappoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… rporation (Carahsoft). Public Safety Agency Fire and Emergency Services 18. To authorize the appointment of Tim George, EMS Director of Smyrna Fire, and the reappointment of Dr. Marvin E. Nix to the Geo …",
-     "context": "agenda-action"
-    },
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… ice district. 6. To conduct a public hearing and brief the community on the launch of the Comprehensive Plan update to solicit comments and input on the development of the plan and proposed planning process. …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… er System 7. To approve a work order under the FY25-FY26 Stormwater Management Unit Price Contract with HD Excavations & Utilities LLC for 4256 Shipyard Trace, Program SW2393. …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… by House Bill 92, signed into law by the Governor on April 1, 2025. 24. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1270",
-   "date": "2026-04-21",
-   "body": "Board of Commissioners",
-   "title": "BOC Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8813,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8813,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 15908,
-   "pdfSha256": "83216c6af796c3c613bc6bf1a98004ac66a037e5f76a57c9808cd15179380014",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "contract",
-    "land use permit",
-    "rezon",
-    "slup",
-    "special land use",
-    "variance",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… 17, 2026 and the March 17, 2026 hearings until the April 21, 2026 hearing). DANE CONTRACTING, LLC (Held by the Planning Commission from the February 3, 2026 Planning Commission hearing; Cont …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… 26 Z-14(2026) LOYD DEVELOPMENT SERVICES (Steve McGuire, Owner) requesting rezoning from R-20 to LI for warehouses in Land Lot 50 of the 20th District. The property is located on the south side of Hickory Grove …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… NDA April 21, 2026 Zoning Cases Z-11(2026) NOBIS WORKS, INC (Nobis Works, Inc., Owner) requesting rezoning from O&I to CRC for used car sales in Land Lot 944 of the 17th District. The property is l …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "slup",
-     "excerpt": "… 026 DENNIS TIDWELL (Held by the Planning Commission until the May 5, 2026 4 LUP-10-2026 hearing) 2 SLUP-3-2026 PRESTWICK COMPANIES (Held by the Planning Commission until the May 3 OB-20-2026 5, 2026 hearing …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… ing, or transporting donated vehicles to be stored on site; 2. No vehicle sales on site; 3. Variances as stated in the Zoning comments and recommendations; 4. Fire Department comments and r …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1247",
-   "date": "2026-04-15",
-   "body": "Board of Zoning Appeals",
-   "title": "Board of Zoning Appeals Variance Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8806,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8806,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 8198,
-   "pdfSha256": "3552dc6dddbed4007f36a6ab67781fe7d9fa4b3877e8b8b40064ec920cda1545",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING SUMMARY AGENDA April 15, 2026 District Case Held case- Not to be heard 3 V- …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1185",
-   "date": "2026-04-14",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8804,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8804,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 16435,
-   "pdfSha256": "d8b405c4fc9b9afb5ecee200fa0a40aea1ea6aa63e945942f2cc66e294611942",
-   "topics": {
-    "annexation": 1,
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "annexation",
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "appoint",
-    "budget",
-    "contract",
-    "procurement",
-    "task order"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… 19, 2026, by the Cobb County License Review Board for Heather Eichler. 30. To approve an annexation notice of Non-Objection per HB 489 Intergovernmental Agreement and HB 2 regarding a petition for the …",
-     "context": "unknown"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Clerk 38. To approve minutes. 39. To authorize the correction of the term expiration date for the appointment of Judy Boyce to the Public Library Board of Trustees. REGULAR AGENDA BOARD OF COMMISSIONERS …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… er System 5. To approve a work order under the FY25-FY26 Stormwater Management Unit Price Contract with W.E. Contracting Co., Inc. for 1436 Lucky Lane, Program No. SW2376. 6. To approve Change Order No. 1 ( …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… purchasing, and animal control services. Finance 37. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. County Clerk 38. To approve minutes. …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1258",
-   "date": "2026-04-07",
-   "body": "Planning Commission",
-   "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8779,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8779,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 9906,
-   "pdfSha256": "4723ef6e0cff27a1c3d4aa5dda3fd78f4a00ae4b60709fd3ad74b2b8794b351d",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "contract",
-    "land use permit",
-    "rezon",
-    "slup",
-    "special land use",
-    "variance",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… nued by Staff from the March 3, 2026 Planning Commission hearing). DANE CONTRACTING, LLC (Held by the Planning Commission from the February 3, 2026 Planning Commission hearing; …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… Z-14(2026) LOYD DEVELOPMENT SERVICES (Steve McGuire, Owner) requesting rezoning from R-20 to LI for warehouses in Land Lot 50 of the 20th District. The property is located on the south side of Hickory Grove …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… DA April 7, 2026 Zoning Cases Z-11(2026) NOBIS WORKS, INC (Nobis Works, Inc., Owner) requesting rezoning from O&I to CRC for used car sales in Land Lot 944 of the 17th District. The property …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "slup",
-     "excerpt": "… NOBIS WORKS, INC. 1 Z-14-2026 LOYD DEVELOPMENT SERVICES 2 Z-15-2026 CAMERON NEARY 2 SLUP-2-2026 NOBIS WORKS, INC. 2 SLUP-3-2026 JOE DIRT DEVELOPMENT 2 SLUP-4-2026 HANDICAPPED DRIVER SERVI …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… or transporting donated vehicles to be stored on site; 2. No vehicle sales on site; 3. Variances as stated in the Zoning comments and recommendations; 4. Fire Department comments a …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1233",
-   "date": "2026-03-24",
-   "body": "Board of Commissioners",
-   "title": "BOC Work Session",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8746,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8746,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 464,
-   "pdfSha256": "96751c64fd70a5079001ade96a2c07387c6d7a735e09d74c3b5f4525400fd400",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   }
  ]

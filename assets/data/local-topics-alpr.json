@@ -97,16 +97,46 @@
    "region": "Atlanta Regional Commission"
   },
   {
+   "placeId": "gwinnett",
+   "placeName": "Gwinnett County",
+   "placeType": "county",
+   "region": "Atlanta Regional Commission"
+  },
+  {
    "placeId": "hall",
    "placeName": "Hall County",
    "placeType": "county",
    "region": "Northeast Georgia"
   },
   {
+   "placeId": "lumpkin",
+   "placeName": "Lumpkin County",
+   "placeType": "county",
+   "region": ""
+  },
+  {
+   "placeId": "meriwether",
+   "placeName": "Meriwether County",
+   "placeType": "county",
+   "region": ""
+  },
+  {
    "placeId": "newton",
    "placeName": "Newton County",
    "placeType": "county",
    "region": "Broader Metropolitan Statistical Area"
+  },
+  {
+   "placeId": "pickens",
+   "placeName": "Pickens County",
+   "placeType": "county",
+   "region": ""
+  },
+  {
+   "placeId": "spalding",
+   "placeName": "Spalding County",
+   "placeType": "county",
+   "region": ""
   },
   {
    "placeId": "walton",
@@ -184,6 +214,27 @@
    "vendors": [
     "Flock Safety"
    ]
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-08-18",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13211",
+   "placeId": "morgan",
+   "placeName": "Morgan County",
+   "placeType": "county",
+   "region": "",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.morgancountyga.gov/AgendaCenter/ViewFile/Agenda/_08182026-870",
+   "tags": [],
+   "terms": [
+    "lpr camera"
+   ],
+   "vendors": []
   },
   {
    "body": "Board of Commissioners",
@@ -464,54 +515,6 @@
    ]
   },
   {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-04-14",
-   "docType": "agenda",
-   "excerpt": "… mmendation: Approval) 12. Sheriff/Keybo Taylor 2026-0386 Award SS008-26, provision of ELSAG license plate recognition systems, to Thomas J. Madden & Associates, amount not to exceed …",
-   "excerptTerm": "elsag",
-   "fips": "13135",
-   "placeId": "gwinnett",
-   "placeName": "Gwinnett County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260414/a_82718_2026.04.14___Work_Session_Agenda.pdf",
-   "tags": [],
-   "terms": [
-    "elsag",
-    "license plate recognition"
-   ],
-   "vendors": [
-    "Elsag (Leonardo)"
-   ]
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-04-14",
-   "docType": "agenda",
-   "excerpt": "… al) 12. Sheriff/Keybo Taylor 2026-0386 Award SS008-26, provision of ELSAG license plate recognition systems, to Thomas J. Madden & Associates, amount not to exceed …",
-   "excerptTerm": "elsag",
-   "fips": "13135",
-   "placeId": "gwinnett",
-   "placeName": "Gwinnett County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260414/a_7698_2026.04.14___Business_Session_Agenda.pdf",
-   "tags": [],
-   "terms": [
-    "elsag",
-    "license plate recognition"
-   ],
-   "vendors": [
-    "Elsag (Leonardo)"
-   ]
-  },
-  {
    "body": "City Council",
    "confidence": "high",
    "context": "agenda-action",
@@ -532,29 +535,6 @@
    ],
    "vendors": [
     "Flock Safety"
-   ]
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2025-10-14",
-   "docType": "agenda",
-   "excerpt": "… /14/2025 1 10/14/2025 Board Meeting Agenda 8. Award the five-year renewal of the Genetec License Renewal to Comsec Systems, Inc., in the amount of $91,101.85. 9. Authorize th …",
-   "excerptTerm": "genetec",
-   "fips": "13223",
-   "placeId": "paulding",
-   "placeName": "Paulding County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission",
-   "sourceType": "ocr",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-636df2b77f5c4521bd3370c49b9e62b3.pdf",
-   "tags": [],
-   "terms": [
-    "genetec"
-   ],
-   "vendors": [
-    "Genetec"
    ]
   },
   {
@@ -583,15 +563,14 @@
  ],
  "metadata": {
   "emoji": "📷",
-  "generatedAt": "2026-09-10T22:59:08Z",
+  "generatedAt": "2026-09-11T03:31:36Z",
   "label": "ALPR / surveillance",
-  "placesScanned": 27,
+  "placesScanned": 32,
   "placesWithMentions": 8,
   "topic": "alpr",
   "universeCities": 537,
   "universeCounties": 159,
   "vendors": [
-   "Elsag (Leonardo)",
    "Flock Safety",
    "Genetec",
    "Vigilant (Motorola)"
