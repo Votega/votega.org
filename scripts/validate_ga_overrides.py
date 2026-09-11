@@ -17,7 +17,7 @@ VALID_STATUSES = {"Resigned", "Suspended", "Removed", "Deceased", "Vacant"}
 VALID_CHAMBERS = {"House of Representatives", "Senate"}
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 OCD_ID_RE = re.compile(r"^ocd-person/[0-9a-f-]{36}$")
-RESERVED_KEYS = {"_note", "_inject", "_example_by_id", "_example_by_name"}
+RESERVED_KEYS = {"_note", "_inject", "_retired", "_example_by_id", "_example_by_name"}
 
 errors = []
 
