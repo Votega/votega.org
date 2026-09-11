@@ -952,3 +952,121 @@ places:
           - body: Mayor & Commission (Work Session)
             when: "2nd Tuesday of every month, 1:00 p.m."
             location: "Planning Auditorium, 120 W. Dougherty Street, Athens"
+  
+    - slug: lumpkin
+    name: Lumpkin County
+    type: county
+    fips: "13187"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # CivicClerk portal (lumpkincoga.portal.civicclerk.com). Bodies arrive as
+        # clean names, so an include-list scopes to the legislative + land-use
+        # bodies and drops the administrative/advisory ones (Assessors, Elections,
+        # Water & Sewerage / Development / Airport / Hospital authorities, Park & Rec,
+        # Veterans Affairs, etc.). Validated 2026-09-10: 385 meetings.
+        platform: civicclerk
+        subdomain: lumpkincoga
+        agendas_url: "https://lumpkincoga.portal.civicclerk.com/"
+        include_bodies:
+          - "Board of Commissioners"
+          - "Planning Commission"
+          - "Land Use & Development Regulations Review"
+        schedule:
+          - body: Board of Commissioners
+            when: "3rd Tuesday of every month, 6:00 p.m."                # TODO: confirm from posted notices
+            location: "Lumpkin County Administration Building, Commissioners Boardroom, 99 Courthouse Hill, Dahlonega"            # optional
+
+  - slug: spalding
+    name: Spalding County
+    type: county
+    fips: "13255"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Granicus ViewPublisher portal. The Name cell mixes body + meeting type
+        # (Work Session, Zoning Public Hearing, Extraordinary Session, ...), so a
+        # body_map folds the BOC variants into one body and keeps Planning Commission
+        # + Board of Zoning Appeals; unmatched rows (Parks & Leisure, Assessors,
+        # GSATC, Naming Committee, Airport Stakeholder) are dropped.
+        # Validated 2026-09-10: 395 meetings.
+        platform: granicus
+        base_url: https://www.spaldingcounty.com/
+        agendas_url: "https://spaldingcounty.granicus.com/ViewPublisher.php?view_id=1"
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Board of Zoning Appeals", label: "Board of Zoning Appeals" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd and 3rd Monday of each month, 6:00 p.m. "                # TODO: confirm from posted notices
+            location: "Room 108, Annex Building 119 E. Solomon Street Griffin"            # optional
+
+  - slug: meriwether
+    name: Meriwether County
+    type: county
+    fips: "13199"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # CivicPlus Agenda Center (real, populated — not an empty iframe shell).
+        # Validated 2026-09-10: 135 meetings, single "Board of Commissioners" category.
+        # body_map relabels to a clean name and future-proofs against a new admin
+        # category being added.
+        platform: civicplus
+        base_url: https://www.meriwethercountyga.gov
+        agendas_url: "https://www.meriwethercountyga.gov/AgendaCenter"
+        body_map:
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # TODO: confirm from posted notices
+            location: ""            # optional
+
+  - slug: morgan
+    name: Morgan County
+    type: county
+    fips: "13211"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # CivicPlus Agenda Center (real, populated). Validated 2026-09-10: 194 meetings.
+        # Keep BOC (category is "Board of Commissioners & Bldg. Authority") + Planning
+        # Commission; drop Board of Assessors and Parks & Recreation (administrative).
+        platform: civicplus
+        base_url: https://www.morgancountyga.gov
+        agendas_url: "https://www.morgancountyga.gov/AgendaCenter"
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # TODO: confirm from posted notices
+            location: ""            # optional
+
+  - slug: pickens
+    name: Pickens County
+    type: county
+    fips: "13227"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # CivicPlus Agenda Center. Newer/re-skinned front-end, but the underlying
+        # AgendaCenter boilerplate is intact so lib.civicplus parses it cleanly.
+        # Validated 2026-09-10: 126 meetings (Board of Commissioners + Planning
+        # Commission — both kept). validate_place_meetings.py guards a future reskin.
+        platform: civicplus
+        base_url: https://www.pickenscountyga.gov
+        agendas_url: "https://www.pickenscountyga.gov/AgendaCenter"
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "3rd Monday of every month, 5:30 p.m."                # TODO: confirm from posted notices
+            location: "Administration Building, Commissioners' meeting room, 1266 East Church Street, Jasper"            # optional
