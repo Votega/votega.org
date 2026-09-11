@@ -2820,6 +2820,212 @@ jurisdictions:
         voting: true
         source: "https://www.henrycountyga.gov/board-of-commissioners"   # party + incumbency confirmed by GA SoS 2026 Qualified Candidates list
   
+  - id: lumpkin
+    name: Lumpkin County
+    type: county
+    county: Lumpkin
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.lumpkincounty.gov/188/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Rhett Stringer"
+        role: Chair
+        title: County Commission Chairperson
+        seat: "At-large"
+        party: Republican
+        email: "rhett.stringer@lumpkincounty.gov"
+        phone: "770-540-2436"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.lumpkincounty.gov/188/Board-of-Commissioners"   
+      - name: "Tucker Greene"
+        role: Commissioner
+        seat: "District 1"
+        party: Republican
+        email: "tucker.greene@lumpkincounty.gov"
+        phone: "706-864-3742"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.lumpkincounty.gov/188/Board-of-Commissioners"   
+      - name: "Bobby Mayfield"
+        role: Commissioner
+        seat: "District 2"
+        party: Republican
+        email: "bobby.mayfield@lumpkincounty.gov"
+        phone: "706-864-3742"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.lumpkincounty.gov/188/Board-of-Commissioners"  
+      - name: "Nathan Davis"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "nathan.davis@lumpkincounty.gov"
+        phone: "706-864-3742"
+        last_elected:
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.lumpkincounty.gov/188/Board-of-Commissioners"
+      - name: "Jeff Moran"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "jeff.moran@lumpkincounty.gov"
+        phone: "706-864-3742"
+        last_elected:
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.lumpkincounty.gov/188/Board-of-Commissioners"
+  
+  - id: meriwether
+    name: Meriwether County
+    type: county
+    county: Meriwether
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.meriwethercountyga.gov/215/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Gene King"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "g.king@meriwethercountyga.gov"
+        phone: "706-672-1314"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.meriwethercountyga.gov/215/Board-of-Commissioners"
+      - name: "Jennifer Snelson"
+        role: Vice Chairman - Commissioner
+        seat: "District 2"
+        party: Republican
+        email: "j.snelson@meriwethercountyga.gov"
+        phone: "706-672-1314"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.meriwethercountyga.gov/215/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+      - name: "Emmett Collins"
+        role: Chairman - Commissioner
+        seat: "District 3"
+        party: 
+        email: "e.collins@meriwethercountyga.gov"
+        phone: "706-672-1314"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.meriwethercountyga.gov/215/Board-of-Commissioners"
+      - name: "Bryan Threadgill"
+        role: Commissioner
+        seat: "District 4"
+        party: Nonpartisan
+        email: "b.threadgill@meriwethercountyga.gov"
+        phone: "706-672-1314"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.meriwethercountyga.gov/215/Board-of-Commissioners"   
+      - name: "Adam Worsley"
+        role: Commissioner
+        seat: "District 5"
+        party: 
+        email: "a.worsley@meriwethercountyga.gov"
+        phone: "706-672-1314"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.meriwethercountyga.gov/215/Board-of-Commissioners"
+  
+  - id: morgan
+    name: Morgan County
+    type: county
+    county: Morgan
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.morgancountyga.gov/m/directory/department?did=7"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Carl Jones"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "carl.jones@morgancountyga.gov"
+        phone: "706-342-0725"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.morgancountyga.gov/m/directory/department?did=7"
+      - name: "Blake McCormack"
+        role: Commissioner
+        seat: "District 2"
+        party: 
+        email: "bmccormack@morgancountyga.gov"
+        phone: "706-342-0725"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.morgancountyga.gov/m/directory/department?did=7"
+      - name: "Ben Riden"
+        full_name: "Ben M. Riden, Jr."   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 3"
+        party: Republican
+        email: "briden@morgancountyga.gov"
+        phone: "706-342-0725"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.morgancountyga.gov/m/directory/department?did=7" 
+      - name: "Philipp von Hanstein"
+        role: Commissioner
+        seat: "District 4"
+        party: Republican
+        email: ""
+        phone: "706-342-0725"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.morgancountyga.gov/m/directory/department?did=7"
+      - name: "Nathan Park"
+        role: Commissioner
+        seat: "District 5"
+        party: 
+        email: "nathan.park@morgancountyga.gov"
+        phone: "706-342-0725"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.morgancountyga.gov/m/directory/department?did=7"
+
   - id: paulding
     name: Paulding County
     type: county
@@ -2888,6 +3094,54 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.paulding.gov/359/Post-IV-Commissioner"
+  
+  - id: pickens
+    name: Pickens County
+    type: county
+    county: Pickens
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 3             # auto: current roster size — verify against authorized seats
+    government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.pickenscountyga.gov/167/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Kris Stancill"
+        full_name: "Kristopher \"Kris\" Stancill"   # authoritative full name (matching); site shows `name`
+        role: Chair
+        title: County Commission Chair
+        seat: "At-large"
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.pickenscountyga.gov/167/Board-of-Commissioners"
+      - name: "Josh Tippens"
+        role: Commissioner
+        seat: "Post 1 (West)"
+        party: 
+        email: ""
+        phone: ""
+        last_elected: 
+        term_end:
+        next_election: 
+        voting: true
+        source: "https://www.pickenscountyga.gov/167/Board-of-Commissioners"
+      - name: "Josh Tatum"
+        role: Commissioner
+        seat: "Post 2 (East)"
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.pickenscountyga.gov/167/Board-of-Commissioners"
 
   - id: rockdale
     name: Rockdale County
@@ -2936,6 +3190,74 @@ jurisdictions:
         voting: true
         source: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/"   # SoS results — CONFIRM before merge
   
+  - id: spalding
+    name: Spalding County
+    type: county
+    county: Spalding
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    board_size: 5             # auto: current roster size — verify against authorized seats
+    government_form: commission   # ceo | sole-commissioner | commission-chair | commission
+    official_url: "https://www.spaldingcounty.com/government/board-of-commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Gwen Flowers-Taylor"
+        role: Commissioner
+        seat: "District 1"
+        party: Democratic
+        email: "gflowers-taylor@spaldingcounty.com"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.spaldingcounty.com/government/board-of-commissioners"   # SoS results — CONFIRM before merge
+      - name: "James R. Dutton"
+        role: Vice Chairman - Commissioner
+        seat: "District 2"
+        party: 
+        email: "jrdutton@spaldingcounty.com"
+        phone: "770-467-4280"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.spaldingcounty.com/government/board-of-commissioners"   # SoS results — CONFIRM before merge
+      - name: "Reginald Watts"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "rwatts@spaldingcounty.com"
+        phone: "770-467-4280"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.spaldingcounty.com/government/board-of-commissioners"
+      - name: "Ryan Bowlden"
+        role: Commissioner
+        seat: "District 4"
+        party: Republican
+        email: "rbowlden@spaldingcounty.com"
+        phone: "770-467-4280"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.spaldingcounty.com/government/board-of-commissioners"
+      - name: "Clay Davis III"
+        role: Chairman
+        seat: "District 5"
+        party: 
+        email: "cwdavis@spaldingcounty.com"
+        phone: "770-467-4280"
+        last_elected: 2022
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.spaldingcounty.com/government/board-of-commissioners"
+
   - id: walton
     name: Walton County
     type: county
