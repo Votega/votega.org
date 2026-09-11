@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-11T03:30:19Z",
+  "generatedAt": "2026-09-11T18:35:33Z",
   "source": "Clayton County (primegov agenda/minutes PDFs, poppler+OCR)",
   "place": "Clayton County",
   "count": 24
@@ -11,15 +11,15 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-01",
+  "lastActivity": "2026-09-15",
   "topicTotals": {
+   "millage-budget": 18,
    "appointment": 10,
    "contract": 12,
-   "millage-budget": 18,
+   "special-land-use": 6,
    "comprehensive-plan": 4,
    "development": 6,
    "rezoning": 3,
-   "special-land-use": 5,
    "variance": 3,
    "data-center": 4
   },
@@ -38,6 +38,14 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Regular Business Meeting",
+    "date": "2026-09-15",
+    "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5415&compileOutputType=1",
+    "tags": [
+     "special-land-use"
+    ]
+   },
    {
     "title": "Regular Business Meeting",
     "date": "2026-08-18",
@@ -99,11 +107,134 @@
     "excerptTerm": "warehouse"
    }
   ],
-  "landUseMeetings": 9,
+  "landUseMeetings": 10,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "708",
+   "date": "2026-09-15",
+   "body": "Board of Commissioners",
+   "title": "Second Millage Rate Hearing",
+   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5578&compileOutputType=1",
+   "textSource": "agenda",
+   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5578&compileOutputType=1",
+   "textMethod": "pdftotext",
+   "textChars": 463,
+   "pdfSha256": "68245119f33d7570e0dd9dd241fd9a5770c4db7b52c606de385d6a3b9d0e9422",
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "millage"
+   ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "CLAYTON COUNTY BOARD OF COMMISSIONERS Millage Rate Hearing September 15, 2026 05:30 PM …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "707",
+   "date": "2026-09-15",
+   "body": "Board of Commissioners",
+   "title": "First Millage Rate Hearing",
+   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5571&compileOutputType=1",
+   "textSource": "agenda",
+   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5571&compileOutputType=1",
+   "textMethod": "pdftotext",
+   "textChars": 463,
+   "pdfSha256": "dc846e8f20b1e2071b9754afb42460ef96625358d6a319591579f9f138db07f4",
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "millage"
+   ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "CLAYTON COUNTY BOARD OF COMMISSIONERS Millage Rate Hearing September 15, 2026 10:00 AM …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "688",
+   "date": "2026-09-15",
+   "body": "Board of Commissioners",
+   "title": "Regular Business Meeting",
+   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5415&compileOutputType=1",
+   "textSource": "agenda",
+   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5415&compileOutputType=1",
+   "textMethod": "pdftotext",
+   "textChars": 24014,
+   "pdfSha256": "abafd95c60b8dd19c5f933b0e97a32ac78b2059903288d40875d182690c13e4e",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1,
+    "special-land-use": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget",
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "conditional use",
+    "contract",
+    "fiscal year",
+    "procurement"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… 7,504.00 Option Year 2 $27,504.00 Option Year 3 $27,504.00 20. Board Appointment: Airport South CID (Full Board At-Large) Grant Walker was removed from the Airport South CID pursuant t …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… NDA: 1. Approval of September 1, 2026, Regular Business Board Meeting Minutes. 2. Monthly report of contracts, contract modifications, and/or change orders authorized by the Chief Procurement Officer of Central Servi …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… al amount of $158,153.90. Funding is available through the Information Technology Department’s General fund. 7. Budget Amendment 2-71 To provide funding for salaries, fees, and retirement benefits for fiscal year 2026 in the am …",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… ommissioner Reaves will appoint a person to serve the upcoming term. 39. Decision Only - BOC-2505-0500 (CUP) – Conditional Use Permit for a Barber shop/Beauty salon at 9526 S Main St, Unit B, Jonesboro GA 30236 (Commission District 4 – DeMo …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "687",
    "date": "2026-09-01",
@@ -1138,121 +1269,6 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "695",
-   "date": "2026-04-20",
-   "body": "Board of Commissioners",
-   "title": "Budget Meetings",
-   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5471&compileOutputType=1",
-   "textSource": "agenda",
-   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5471&compileOutputType=1",
-   "textMethod": "pdftotext",
-   "textChars": 241,
-   "pdfSha256": "47063efc53bc8dee0f00c74b592bfe869b0192fd6de709b9d7bf0377ec6174b2",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Budget Hearing CLAYTON COUNTY BOARD OF April 20, 2026 09:00 AM COMMISSIONERS …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "645",
-   "date": "2026-04-14",
-   "body": "Board of Commissioners",
-   "title": "Work Session",
-   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5104&compileOutputType=1",
-   "textSource": "agenda",
-   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5104&compileOutputType=1",
-   "textMethod": "pdftotext",
-   "textChars": 1343,
-   "pdfSha256": "9c1ebab1426a80aa34fd4a49692ee7220c044f4c0173670ad73a70e7b2b364bd",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ss. PlanSource will enhance services with improved functionality at an annual cost of $236,100 (with no budget impact), and Board approval is requested at the April 21, 2026, RBM to allow time for i …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "639",
-   "date": "2026-04-07",
-   "body": "Board of Commissioners",
-   "title": "Regular Business Meeting",
-   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5067&compileOutputType=1",
-   "textSource": "minutes",
-   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5067&compileOutputType=1",
-   "textMethod": "pdftotext",
-   "textChars": 37580,
-   "pdfSha256": "bb5d158942782c5df113d6d5182041b85b80a4bb4c0db275bd8f193f21fd86a2",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "fiscal year",
-    "millage",
-    "procurement"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… lling the long-vacant CFO position as the County prepares for the FY2027 budget process and emphasized that the appointment supports increased transparency and financial accountability. Commissioner Reaves welcomed Mr. Jack …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… mendation is for award to the lowest, responsive, and responsible Bidder meeting the specifications: E.R. Snell Contractor, Inc. located in Snellville, Georgia in the amount of $8,887,650.65. Funding is available through the 2025 an …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… or Court judge effective January 1, 2027, subject to funding. He noted that partial funding is included in the current budget, with full funding anticipated in a supplemental budget. He also advised that updates on House and Senate study commi …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
     "millage-budget"
    ],
    "dataCenterItems": []

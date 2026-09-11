@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-11T03:30:21Z",
+  "generatedAt": "2026-09-11T18:35:35Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -8,30 +8,30 @@
  "summary": {
   "flags": [
    "alpr",
-   "data-center",
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-08",
+  "lastActivity": "2026-09-17",
   "topicTotals": {
    "rezoning": 14,
-   "special-land-use": 10,
-   "variance": 17,
-   "contract": 12,
-   "millage-budget": 6,
+   "special-land-use": 9,
+   "variance": 16,
+   "contract": 11,
+   "millage-budget": 5,
    "development": 3,
-   "appointment": 2,
-   "alpr": 1,
-   "data-center": 1
+   "appointment": 1,
+   "alpr": 1
   },
-  "dataCenterItems": [
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-03-17",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13446,plainText=false)"
-   }
-  ],
+  "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-09-17",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13811,plainText=false)",
+    "tags": [
+     "rezoning"
+    ]
+   },
    {
     "title": "Planning Commission",
     "date": "2026-09-03",
@@ -251,6 +251,38 @@
   "alprMeetings": 1
  },
  "meetings": [
+  {
+   "id": "2625",
+   "date": "2026-09-17",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13811,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13811,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4309,
+   "pdfSha256": "59bfb3def8a120322e824cba955cb2e77457f1d1d1e42b076c2ad0072f66a412",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… mission District 4. Staff Assignment Danielle Montgomery. 3. (H1b3) RZ26-09-04, Rezoning from R-1 (Single Family Residential) to C-3 (Heavy Commercial), 5125 & 5147 Columbia Road, …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2563",
    "date": "2026-09-08",
@@ -1292,94 +1324,6 @@
     "land-use"
    ],
    "dataCenterItems": []
-  },
-  {
-   "id": "2582",
-   "date": "2026-03-17",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13446,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13446,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 11881,
-   "pdfSha256": "39e38ce41a44e9f1aa4977ae27b9e1991a096360452180ab89a02f32d8664193",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "data-center": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "data-center",
-    "millage-budget",
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "conditional use",
-    "contract",
-    "data center",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… with Kawahna McFadden to serve as Clinical Case Manager for the Columbia Judicial Circuit 2. (I2a2) Appointment of Donald Skinner Jr. to Serve on the Hospital Authority 3. (I2a3) Commercial Lease Agreement Between Columbia C …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… s. 1. Management and Internal Services Committee Commissioner Couch a. (H1a) Independent Contractor Agreement with Christopher Caudell to serve as a Staff Attorney for the Columbia Judicial Circuit b …",
-     "context": "agenda-action"
-    },
-    "data-center": {
-     "term": "data center",
-     "excerpt": "… ) RZ26-03-04, Rezoning from R-A (Residential Agricultural) & M-1 (Light Industrial) to D-C (Data Center), off Morris Calloway Road, Tax map 019 Parcel 002C, 37.03 +/- acres, and currently zoned R …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Vice Chair Couch 1. (E1) March 03, 2026 Board of Commissioners 2. (E2) March 10, 2026 Elected Officials Budget Work Session F. PRESENTATION AND APPROVAL OF THE AGENDA Vice Chair Couch The Chairper …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… Vice Chair Couch a. Development and Planning Services Committee 1. (I1a1) RZ25-12-04, Rezoning from C-C (Community Commercial) to R-2 (Single Family Residential), 309 & 311 South Belair Road, Ta …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… d, and currently zoned R-1 (Single Family Residential). 4. (I2b4) RZ26-03-03, Conditional Use for Massage, 218 Oak Street North, Tax map 078D Parcel 128, 1.07 +/- acres, and currently z …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… +/- acres, and currently zoned R-A (Residential Agricultural). 2. (I2b2) VA26-03-01, Variance to Section 90-53 List of lot & structure requirements, 1422 Old Appling Harlem Highway, Tax …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "data-center",
-    "millage-budget"
-   ],
-   "dataCenterItems": [
-    {
-     "title": "Board of Commissioners Meeting",
-     "date": "2026-03-17",
-     "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13446,plainText=false)"
-    }
-   ]
   }
  ]
 }

@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-11T03:30:06Z",
+  "generatedAt": "2026-09-11T18:35:16Z",
   "source": "Fulton County (Legistar structured API)",
   "place": "Fulton County",
-  "count": 19
+  "count": 20
  },
  "summary": {
   "flags": [
@@ -11,11 +11,11 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-02",
+  "lastActivity": "2026-09-16",
   "topicTotals": {
-   "millage-budget": 35,
-   "development": 73,
-   "contract": 125,
+   "contract": 150,
+   "development": 75,
+   "millage-budget": 38,
    "appointment": 76,
    "data-center": 5
   },
@@ -50,6 +50,16 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-09-16",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6396&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "tags": [
+     "development"
+    ],
+    "excerpt": "… ntenance, and Land Use Agreement for Private Improvement (Indemnification Agreement) between Fulton County, a political subdivision of the State of Georgia, and City of Alpharetta, for the purpose of granting conditional approval to allow storm water …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Board of Commissioners",
     "date": "2026-09-02",
@@ -151,11 +161,78 @@
     "excerptTerm": "subdivision"
    }
   ],
-  "landUseMeetings": 14,
+  "landUseMeetings": 15,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "eventId": 6396,
+   "date": "2026-09-16",
+   "body": "Board of Commissioners",
+   "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6396&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+   "itemCount": 82,
+   "topics": {
+    "contract": 25,
+    "development": 2,
+    "millage-budget": 3
+   },
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "fiscal year",
+    "millage",
+    "multifamily",
+    "procurement",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "Request approval to renew an existing contract - Department of Real Estate and Asset Management, RFP#22RFP136202K-DB, Real Estate Development Consultant Services, in …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… ntenance, and Land Use Agreement for Private Improvement (Indemnification Agreement) between Fulton County, a political subdivision of the State of Georgia, and City of Alpharetta, for the purpose of granting conditional approval to allow storm water …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "Presentation, review, and approval of September 16, 2026, Budget Soundings and Resolution. CM Action Item - Open & Responsible Government",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement (Indemnification Agreement) between Fulton County, a political subdivision of th",
+     "matterFile": "26-0566",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of Resolution to support affordable housing in the English Avenue neighborhood by approving a grant from funds previously set aside to aid in the construction of a",
+     "matterFile": "26-0603",
+     "matterType": "Commissioners Action Item",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
   {
    "eventId": 6394,
    "date": "2026-09-02",
