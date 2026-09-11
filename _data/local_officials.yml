@@ -1267,6 +1267,97 @@ jurisdictions:
         next_election: 2028
         voting: true
         source: "https://www.baldwincountyga.com/1194/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+  
+  - id: milledgeville
+    name: City of Milledgeville
+    type: city                      # city | county
+    county: Baldwin                  # home county — powers county cross-linking
+    body: City Council
+    partisan: false                 # municipal seats are nonpartisan -> party chip hidden
+    official_url: https://www.milledgevillega.us/index.php/city-council/
+    related_pages:                  # cross-links to existing VoteGA content
+      - { }
+    notes: ""
+    members:
+      - name: "Mary Parham-Copelan"
+        role: Mayor
+        title: Mayor
+        seat: "At-Large"
+        party: Nonpartisan
+        email: "mayorcopelan@milledgevillega.us"
+        phone: "478-414-4092"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: false
+        tie_break_only: true
+        source: "https://www.milledgevillega.us/index.php/mayor/"
+      - name: "Dr. Collinda J. Lee"
+        role: Council Member
+        seat: "District 1"
+        party: Nonpartisan
+        email: "collinda.lee@milledgevillega.us"
+        phone: "478-452-4217"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.milledgevillega.us/index.php/city-council/"
+      - name: "Ariene Simmons"
+        role: Council Member
+        seat: "District 2"
+        party: Nonpartisan
+        email: "arlene.simmons@milledgevillega.us"
+        phone: "478-363-5539"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.milledgevillega.us/index.php/city-council/"
+      - name: "Denese R. Shinholster"
+        role: Council Member
+        seat: "District 3"
+        party: Nonpartisan
+        email: "denese.shinholster@milledgevillega.us"
+        phone: "478-363-4585"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.milledgevillega.us/index.php/city-council/"
+      - name: "Morgan Pendergast"
+        role: Council Member
+        seat: "District 4"
+        party: Nonpartisan
+        email: "morgan.pendergast@milledgevillega.us"
+        phone: "478-363-3539"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.milledgevillega.us/index.php/city-council/"
+      - name: "Shonya A. Mapp"
+        role: Council Member
+        seat: "District 5"
+        party: Nonpartisan
+        email: "shonyamapp@milledgevillega.us"
+        phone: "478-251-5409"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.milledgevillega.us/index.php/city-council"
+      - name: "Dr. Jeffery Wells"
+        role: Council Member
+        seat: "District 6"
+        party: Nonpartisan
+        email: "jeffery.wells@milledgevillega.us"
+        phone: "478-363-7534"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.milledgevillega.us/index.php/city-council"
 
   - id: banks
     name: Banks County
