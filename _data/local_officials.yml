@@ -3279,7 +3279,87 @@ jurisdictions:
         term_end: 
         next_election: 
         voting: true
-        source: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/"   # SoS results — CONFIRM before merge
+        source: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/"
+  
+  - id: conyers
+    name: City of Conyers
+    type: city                      # city | county
+    county: Rockdale                  # home county — powers county cross-linking
+    body: City Council
+    partisan: false                 # municipal seats are nonpartisan -> party chip hidden
+    official_url: https://www.conyersga.com/government/city-government/city-council
+    related_pages:                  # cross-links to existing VoteGA content
+      - { }
+    notes: ""
+    members:
+      - name: "Connie Alsobrook"
+        role: Mayor
+        title: Mayor
+        seat: "At-Large"
+        party: Nonpartisan
+        email: "connie.alsobrook@conyersga.gov"
+        phone: ""
+        last_elected: 2025
+        term_end: 
+        next_election: 
+        voting: false
+        tie_break_only: true
+        source: "https://www.conyersga.com/government/city-government/mayor-connie-alsobrook"
+      - name: "Anthony Pacheco"
+        role: Council Member
+        seat: "District 1"
+        party: Nonpartisan
+        email: ""
+        phone: ""
+        last_elected:
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.conyersga.com/government/city-government/city-council"
+      - name: "Charlie Bryant"
+        role: Council Member
+        seat: "District 2, Post 1"
+        party: Nonpartisan
+        email: ""
+        phone: ""
+        last_elected: 2025
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.conyersga.com/government/city-government/city-council"
+      - name: "Sherri L. Washington"
+        role: Council Member
+        seat: "District 2, Post 2"
+        party: Nonpartisan
+        email: "sherri.washington@conyersga.gov"
+        phone: ""
+        last_elected: 2025
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.conyersga.com/government/city-government/city-council"
+      - name: "Gerald A. Hinesley, Sr."
+        role: Council Member
+        seat: "District 3"
+        party: Nonpartisan
+        email: ""
+        phone: ""
+        last_elected:
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.conyersga.com/government/city-government/city-council"
+      - name: "Valyncia Smith"
+        role: Council Member
+        seat: "District 4"
+        party: Nonpartisan
+        email: ""
+        phone: ""
+        last_elected:
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.conyersga.com/government/city-government/city-council"   
   
   - id: spalding
     name: Spalding County
