@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-11T18:35:35Z",
+  "generatedAt": "2026-09-11T19:17:49Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -14,9 +14,9 @@
   "lastActivity": "2026-09-17",
   "topicTotals": {
    "rezoning": 14,
-   "special-land-use": 9,
-   "variance": 16,
-   "contract": 11,
+   "contract": 12,
+   "special-land-use": 10,
+   "variance": 17,
    "millage-budget": 5,
    "development": 3,
    "appointment": 1,
@@ -31,6 +31,18 @@
     "tags": [
      "rezoning"
     ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-09-15",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13813,plainText=false)",
+    "tags": [
+     "rezoning",
+     "special-land-use",
+     "variance"
+    ],
+    "excerpt": "… 082 Parcel 079H, 0.51 +/- acres, and currently zoned P-1 (Professional). 2. (I2b2) RZ26-09-02, Rezoning from R-A (Residential Agricultural) to S-1 (Special), off Old Appling Harlem Highw …",
+    "excerptTerm": "rezon"
    },
    {
     "title": "Planning Commission",
@@ -225,14 +237,6 @@
      "rezoning",
      "variance"
     ]
-   },
-   {
-    "title": "Planning Commission",
-    "date": "2026-03-19",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13437,plainText=false)",
-    "tags": [
-     "rezoning"
-    ]
    }
   ],
   "landUseMeetings": 20,
@@ -275,6 +279,62 @@
     "rezoning": {
      "term": "rezon",
      "excerpt": "… mission District 4. Staff Assignment Danielle Montgomery. 3. (H1b3) RZ26-09-04, Rezoning from R-1 (Single Family Residential) to C-3 (Heavy Commercial), 5125 & 5147 Columbia Road, …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2588",
+   "date": "2026-09-15",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13813,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13813,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 9595,
+   "pdfSha256": "bfa3ae8bd47b95fe2a61e469d25470a59b1392ae107a8f9f16620ebab7a419c2",
+   "topics": {
+    "contract": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "contract",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… n John Deere Parkway and the Corrective Quitclaim Deed b. (H2b) Bid# 2026029-BID3313 and Contract# 2026-3701 with JHC Corporation for the Boardwalk Replacement at Reed Creek Interpretive Center …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 082 Parcel 079H, 0.51 +/- acres, and currently zoned P-1 (Professional). 2. (I2b2) RZ26-09-02, Rezoning from R-A (Residential Agricultural) to S-1 (Special), off Old Appling Harlem Highw …",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… Commissioner Melear 1. (I2b1) RZ26-09-01, Conditional Use for Therapeutic Massage, 501 Blackburn Drive, Tax Map 082 Parcel 079H, 0.51 +/- acres …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… y zoned R-A (Residential Agricultural). 3. (I2b3) VA26-09-01, Variance to Section 90-147(g)(10)(b)(2)(v) Use Provisions, 5549 Columbia Road, Tax Map 050 Par …",
      "context": "unknown"
     }
    },
@@ -1285,38 +1345,6 @@
     "variance": {
      "term": "variance",
      "excerpt": "… -2 (General Commercial). Commission District 4. Staff Assignment Will Butler. 5. (H1c5) VA26-04-01, Variance to Section 90-135 Signs, 212 Bobby Jones Expressway, Tax Map 078D Parcel 024, 0.598 +/- acres, and cur …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2502",
-   "date": "2026-03-19",
-   "body": "Planning Commission",
-   "title": "Planning Commission",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13437,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13437,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4481,
-   "pdfSha256": "108438a2aed97ce503f8d99944e409425c8ae7044a75e33f2b2091e949d29621",
-   "topics": {
-    "rezoning": 1
-   },
-   "tags": [
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… it Development). Commission District 1. Staff Assignment Danielle Montgomery. 7. (H1b7) RZ26-03-09, Rezoning from M-1 (Light Industrial) to C-2 (General Commercial), 475 Lewiston Road, for a 1.0 +/- acre port …",
      "context": "unknown"
     }
    },
