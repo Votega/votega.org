@@ -1894,7 +1894,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/cherokee-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.cherokeecountyga.gov/BOC/"  
       - name: "Benny Carter"
         role: Commissioner
         seat: "District 3"
@@ -1905,7 +1905,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/cherokee-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.cherokeecountyga.gov/BOC/"  
       - name: "Corey Ragsdale"
         role: Commissioner
         seat: "District 4"
@@ -2062,7 +2062,7 @@ jurisdictions:
     term_years: 4            # GA terms are per-county local act; most are 4 — override if different
     board_size: 3             # auto: current roster size — verify against authorized seats
     government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
-    official_url: "https://www.claytoncountyga.gov/government/board-of-commissioners/"            # TODO: county government site
+    official_url: https://www.claytoncountyga.gov/government/board-of-commissioners/            # TODO: county government site
     related_pages:
     members:
       - name: "Dr. Alieka Anderson-Henry"
@@ -2076,7 +2076,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/clayton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.claytoncountyga.gov/government/board-of-commissioners/"
       - name: "Alaina Reaves"
         role: Commissioner
         seat: "District 1"
@@ -2098,7 +2098,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/clayton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.claytoncountyga.gov/government/board-of-commissioners/"
       - name: "Tashe Allen"
         role: Commissioner
         seat: "District 3"
@@ -2109,7 +2109,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/clayton-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.claytoncountyga.gov/government/board-of-commissioners/"
       - name: "DeMont Davis"
         role: Commissioner
         seat: "District 4"
@@ -2480,7 +2480,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/fayette-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.fayettecountyga.gov/government/board_of_commissioners/index.php"    # SoS results — CONFIRM before merge
       - name: "Lee Hearn"
         role: Chair
         seat: "District 2"
@@ -2491,7 +2491,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/fayette-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.fayettecountyga.gov/government/board_of_commissioners/index.php"   # SoS results — CONFIRM before merge
       - name: "Edward Gibbons"
         full_name: "Edward G. Gibbons Jr."   # authoritative full name (matching); site shows `name`
         role: Commissioner
@@ -2527,7 +2527,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/fayette-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.fayettecountyga.gov/government/board_of_commissioners/index.php"   # SoS results — CONFIRM before merge
   
   - id: forsyth
     name: Forsyth County
@@ -2562,7 +2562,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/forsyth-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.forsythco.com/government/departments/board-of-commissioners/district-2/"   # SoS results — CONFIRM before merge
       - name: "Todd Levent"
         role: Commissioner
         seat: "District 3"
@@ -2584,7 +2584,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/forsyth-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.forsythco.com/government/departments/board-of-commissioners/district-4/"   # SoS results — CONFIRM before merge
       - name: "Laura Semanson"
         role: Commissioner
         seat: "District 5"
@@ -2595,7 +2595,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/forsyth-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.forsythco.com/government/departments/board-of-commissioners/district-5/"   # SoS results — CONFIRM before merge
   
   - id: gwinnett
     name: Gwinnett County
@@ -2620,7 +2620,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/gwinnett-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.gwinnettcounty.com/government/departments/board-of-commissioners"
       - name: "Kirkland Dion Carden"
         role: Commissioner
         seat: "District 1"
@@ -2631,7 +2631,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/gwinnett-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.gwinnettcounty.com/government/departments/board-of-commissioners"
       - name: "Ben Ku"
         role: Commissioner
         seat: "District 2"
@@ -2653,7 +2653,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/gwinnett-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.gwinnettcounty.com/government/departments/board-of-commissioners"
       - name: "Matthew Holtkamp"
         role: Commissioner
         seat: "District 4"
@@ -2664,7 +2664,7 @@ jurisdictions:
         term_end: 
         next_election: 
         voting: true
-        source: "https://www.gwinnettcounty.com/government/departments/board-of-commissioners/about/district-4-commissioner"
+        source: "https://www.gwinnettcounty.com/government/departments/board-of-commissioners"
   
   - id: hall
     name: Hall County
@@ -2759,7 +2759,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/henry-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.henrycountyga.gov/board-of-commissioners" 
       - name: "Johnny Wilson"
         full_name: "Johnny R. Wilson"   # authoritative full name (matching); site shows `name`
         role: Commissioner
@@ -2771,7 +2771,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/henry-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.henrycountyga.gov/board-of-commissioners" 
       - name: "Neat Robinson"
         role: Commissioner
         seat: "District 2"
@@ -2782,7 +2782,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/henry-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.henrycountyga.gov/board-of-commissioners" 
       - name: "Dee Anglyn III"
         full_name: "Derrell Winsor Anglyn III"   # GA SoS 2026 qualifying list
         role: Commissioner
@@ -2806,7 +2806,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/henry-county-ga/2024NovGen/data"   # incumbency confirmed by GA SoS 2026 Qualified Candidates list
+        source: "https://www.henrycountyga.gov/board-of-commissioners"    # incumbency confirmed by GA SoS 2026 Qualified Candidates list
       - name: "Kevin Lewis"   # D5 incumbency confirmed by GA SoS 2026 Qualified Candidates list
         full_name: "Kevin Jeremaine Lewis"
         role: Commissioner
@@ -2912,7 +2912,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/rockdale-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/"    
       - name: "Tuwanya Smith"
         role: Commissioner
         seat: "Post 1"
@@ -2923,7 +2923,7 @@ jurisdictions:
         term_end: 2028
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/rockdale-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/"    
       - name: "Doreen Williams"
         role: Commissioner
         seat: "Post 2"
