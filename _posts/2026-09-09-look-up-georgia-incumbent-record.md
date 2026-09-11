@@ -11,13 +11,13 @@ tags: [accountability, voting records, congress, georgia general assembly, 2026 
 
 When you fill out your ballot on **November 3, 2026**, a lot of the names will be familiar because they're already in office. Incumbents win most of the time, and one big reason is that their actual record is hard to find. Campaign mail tells you what a candidate wants you to think. Public records tell you what they did.
 
-VoteGA exists to close that gap. Everything below is built from official, public sources and updated automatically. So, before you vote, you can check the record yourself.
+VoteGA exists to close that gap. Everything on the site is built from official, public sources and updated automatically. So, before you vote, you can check the record yourself.
 
 ## How your legislators actually voted
 
-Every roll-call vote in the Georgia General Assembly is public, but almost nobody reads floor votes bill by bill. We do it for you. Look up any state senator or representative and you can see the individual votes behind the headlines.
+Every roll-call vote in the Georgia General Assembly is public, but almost nobody reads floor votes bill by bill. We do it for you. Look up your Georgia state Senator or Representative and you can see the individual votes behind the headlines.
 
-Two tools make the pattern legible:
+Two tools that help: 
 
 - **[Party Unity]({{ '/ga-party-unity.html' | relative_url }})** measures how often each member votes with their own party and, just as revealing, how often they break from it. A legislator who claims to be independent-minded either has the votes to show it or doesn't.
 - **[Majority Tracker]({{ '/ga-majority-tracker.html' | relative_url }})** shows who actually controls each chamber and how close the balance is. This is useful context for why a single state House or Senate race can matter far more than its size suggests.
@@ -28,18 +28,18 @@ Prefer to start from the bills themselves? The [Georgia Bills tracker]({{ '/ga-b
 
 Under the **STOCK Act**, every member of Congress must publicly disclose their stock transactions within 45 days. It's one of the most direct windows into potential conflicts of interest. Lawmakers voting on policy that moves the very markets they're invested in but the disclosures are scattered and awkward to search. We collect Georgia's into one place.
 
-As of our reporting earlier this year, Georgia's six trading members of Congress had filed **more than 1,000 disclosed stock trades** since taking office, heavily concentrated in a handful of members. The concentrations are telling: defense contractors, regional banks, and energy companies whose fortunes are shaped by federal policy.
+Georgia's five trading members of Congress had filed **more than 500 disclosed stock trades** since taking office, **267 of which were filed late**, heavily concentrated in a handful of members. The concentrations are telling: defense contractors, regional banks, and energy companies whose fortunes are shaped by federal policy.
 
 {: .box-note}
 Totals grow every reporting period. For the current, up-to-date figures by member and by holding, see the live [Congressional Trades tracker]({{ '/ga-congress-trades.html' | relative_url }}).
 
-If one of these members is on your November ballot, their trading history is part of their record and it's a matter of public record you can read in minutes.
+If one of these members is on your November ballot, their trading history is part of their record and you deserve to know it. 
 
 ## Why this matters in a general election
 
 Down-ballot races decide who writes Georgia's laws, and they're routinely won by a few hundred votes. An informed vote on a state House seat or a U.S. House seat starts with a simple question: *what has this person actually done in office?* The answer shouldn't require a records request.
 
-Here's the two-minute version:
+Check out the following resources: 
 
 1. **[Find My Reps]({{ '/find-my-reps' | relative_url }})**: enter your address to see every incumbent who represents you.
 2. Open each member's page to read their **voting record** and **party-loyalty** score.
