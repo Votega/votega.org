@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-11T13:06:34.278550+00:00",
+    "generatedAt": "2026-09-11T18:00:03.379702+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,9 +21,9 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 108,
+    "count": 110,
     "windowDays": 45,
-    "entityTagged": 63,
+    "entityTagged": 64,
     "topicCounts": {
       "elections": 15,
       "budget": 5,
@@ -36,15 +36,25 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
-    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
+    },
+    "vg-ga-p-000257": {
+      "name": "Barry Loudermilk",
+      "url": null,
+      "bioguideId": "L000583"
+    },
+    "vg-ga-p-000256": {
+      "name": "Rick W. Allen",
+      "url": null,
+      "bioguideId": "A000372"
+    },
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
     },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
@@ -93,11 +103,6 @@
       "url": null,
       "bioguideId": "C001116"
     },
-    "vg-ga-p-000256": {
-      "name": "Rick W. Allen",
-      "url": null,
-      "bioguideId": "A000372"
-    },
     "vg-ga-p-000685": {
       "name": "Everton Blair",
       "url": null,
@@ -133,11 +138,6 @@
         "challenger-tricia-pridemore-ga11-2026"
       ]
     },
-    "vg-ga-p-000257": {
-      "name": "Barry Loudermilk",
-      "url": null,
-      "bioguideId": "L000583"
-    },
     "vg-ga-p-000123": {
       "name": "Kay Kirkpatrick",
       "url": null,
@@ -165,6 +165,40 @@
   },
   "items": [
     {
+      "id": "a208663fc515",
+      "title": "WATCH: Sen. Ossoff Commemorates 25th Anniversary of September 11th Terrorist Attacks",
+      "url": "https://www.ossoff.senate.gov/press-releases/watch-sen-ossoff-commemorates-25th-anniversary-of-september-11th-terrorist-attacks/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-11T13:50:32+00:00",
+      "snippet": "Atlanta, Ga. — U.S. Senator Jon Ossoff is commemorating the 25th Anniversary of the September 11th terrorist attacks. “Today, I would like to pause and honor and remember all of those who were killed ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "da7e10206977",
+      "title": "Remembering 9/11/01",
+      "url": "https://loudermilk.house.gov/2026/09/11/remembering-9-11-01/",
+      "source": "Rep. Barry Loudermilk (GA-11, press)",
+      "publishedAt": "2026-09-11T13:37:30+00:00",
+      "snippet": "We Will Not Forget Washington, D.C. (September 11, 2026) | Rep. Barry Loudermilk (GA-11), issued the following statement in rememberance of the 25th Anniversary of the attacks on September 11, 2001. “",
+      "entityIds": [
+        "vg-ga-p-000257"
+      ],
+      "topics": []
+    },
+    {
+      "id": "aba6adf1bf9e",
+      "title": "GPB morning headlines for September 11, 2026",
+      "url": "https://www.gpb.org/news/2026/09/11/gpb-morning-headlines-for-september-11-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-11T13:01:42+00:00",
+      "snippet": "A Georgia Power solar farm in middle Georgia, already considered an asset by the U.S. Air Force, now has an upgrade; $218 million – that’s what Georgia has to work with in the first year of the federa",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "6a1703b3f4cf",
       "title": "Brahms, Beach or Frankenstein? Plan a night at the symphony with one of these Georgia orchestras",
       "url": "https://www.gpb.org/news/2026/09/11/brahms-beach-or-frankenstein-plan-night-at-the-symphony-one-of-these-georgia",
@@ -185,6 +219,18 @@
       "topics": [
         "elections"
       ]
+    },
+    {
+      "id": "50e97b945b65",
+      "title": "Congressman Allen Commemorates 25th Anniversary of September 11th in Columbia County",
+      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7381",
+      "source": "Rep. Rick Allen (GA-12, press)",
+      "publishedAt": "2026-09-11T04:00:00+00:00",
+      "snippet": "Today, on the 25th anniversary of the September 11, 2001 terrorist attacks, Congressman Rick W. Allen (GA-12) attended the annual 9/11 Remembrance Ceremony and Memorial Stair Climb in Evans, Georgia. ",
+      "entityIds": [
+        "vg-ga-p-000256"
+      ],
+      "topics": []
     },
     {
       "id": "e5ed7da02555",
@@ -836,18 +882,6 @@
       "topics": []
     },
     {
-      "id": "50e97b945b65",
-      "title": "Congressman Allen Announces September Community Office Hours",
-      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7373",
-      "source": "Rep. Rick Allen (GA-12, press)",
-      "publishedAt": "2026-08-27T04:00:00+00:00",
-      "snippet": "Today, Congressman Rick W. Allen (GA-12) announced members of his staff will host Community Office Hours across Georgia’s 12th District during the month of September.\n\nDuring these events, members of ",
-      "entityIds": [
-        "vg-ga-p-000256"
-      ],
-      "topics": []
-    },
-    {
       "id": "ea7e81e48d89",
       "title": "Meta settlement would require new teen safeguards and could deliver up to $135 million to Georgia",
       "url": "https://capitol-beat.org/2026/08/meta-settlement-would-require-new-teen-safeguards-and-could-deliver-up-to-135-million-to-georgia/?utm_source=rss&utm_medium=rss&utm_campaign=meta-settlement-would-require-new-teen-safeguards-and-could-deliver-up-to-135-million-to-georgia",
@@ -1161,18 +1195,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "14b818187896",
-      "title": "Sen. Ossoff Working Across the Aisle to Strengthen Lung Cancer Prevention",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-strengthen-lung-cancer-prevention/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-08-20T13:48:48+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working across the aisle to strengthen lung cancer prevention for Georgia families. Sen. Ossoff is cosponsoring the bipartisan Women and Lung Cancer Resea",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "c4e3a35310e7",
