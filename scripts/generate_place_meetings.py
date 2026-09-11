@@ -45,6 +45,7 @@ from lib.gwinnett import fetch_gwinnett_meetings  # noqa: E402
 from lib.iqm2 import fetch_iqm2_meetings  # noqa: E402
 from lib.municode import fetch_municode_meetings  # noqa: E402
 from lib.agendapub import fetch_agendapub_meetings  # noqa: E402
+from lib.revize import fetch_revize_meetings  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -52,17 +53,20 @@ OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 
 # Platforms with a scraper adapter (see fetch_meetings' dispatch below).
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
-                     'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub'}
+                     'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
+                     'revize'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
-# systems, mostly bespoke CMSs that just list agenda PDFs (Revize, Wix, WordPress,
-# Granicus, GovernmentWindow). Add a value here to register it as a silent no-op;
+# systems, mostly bespoke CMSs that just list agenda PDFs (Wix, WordPress,
+# GovernmentWindow). Add a value here to register it as a silent no-op;
 # anything NOT in either set is treated as a typo and warned about.
-# NOTE: `granicus` is NOT here — it now has a ViewPublisher adapter (lib.granicus).
-# A Granicus-hosted site that is a bespoke CMS rather than a ViewPublisher portal
-# should use `unknown`/`custom`, not `granicus`.
-NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'revize', 'wix', 'wordpress',
+# NOTE: `granicus` is NOT here — it has a ViewPublisher adapter (lib.granicus).
+# `revize` is NOT here either — it now has a link-harvesting adapter (lib.revize)
+# for the county Agendas & Minutes pages. A Granicus- or Revize-hosted site that is
+# a truly bespoke CMS rather than one of those recognized surfaces should use
+# `unknown`/`custom`.
+NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'wix', 'wordpress',
                         'governmentwindow'}
 
 
@@ -114,6 +118,9 @@ def fetch_meetings(cfg):
         return fetch_municode_meetings(cfg['agendas_url'])
     if platform == 'agendapub':
         return fetch_agendapub_meetings(cfg['agendas_url'])
+    if platform == 'revize':
+        return fetch_revize_meetings(cfg['agendas_url'],
+                                     base_url=cfg.get('base_url'))
     raise ValueError('unknown meetings platform %r' % platform)
 
 
@@ -140,6 +147,8 @@ def source_url(cfg):
     if platform == 'municode':
         return cfg['agendas_url']
     if platform == 'agendapub':
+        return cfg['agendas_url']
+    if platform == 'revize':
         return cfg['agendas_url']
     return cfg.get('base_url')
 

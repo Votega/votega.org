@@ -96,6 +96,13 @@ def _agendapub(m, page):
     return {'platform': 'agendapub', 'agendas_url': _origin(m.group(0))}
 
 
+def _revize(m, page):
+    # Revize is a CMS, not a portal: the page you fed in IS the agendas page, and
+    # lib.revize harvests its PDF links. Reuse that URL as agendas_url and the
+    # origin as the <base>-fallback base_url.
+    return {'platform': 'revize', 'agendas_url': page, 'base_url': _origin(page)}
+
+
 def _teammunicode(m, page):
     origin = _origin(m.group(0))
     # teammunicode.com serves the view at /meetings; municodemeetings.com at root.
@@ -115,13 +122,15 @@ SIGNATURES = [
     ('primegov', re.compile(r'https?://[a-z0-9-]+\.primegov\.com[^"\'\s<>]*', re.I), _primegov),
     ('agendapub', re.compile(r'https?://agendapub\.[a-z0-9.-]+', re.I), _agendapub),
     ('teammunicode', re.compile(r'https?://[a-z0-9-]+\.(?:teammunicode\.com|municodemeetings\.com)[^"\'\s<>]*', re.I), _teammunicode),
+    # Revize is a CMS fingerprint (checked last, so any embedded third-party portal
+    # above wins). lib.revize scrapes the page's own agenda/minutes PDF links.
+    ('revize', re.compile(r'revize\.com|Revize', re.I), _revize),
 ]
 
 # CivicPlus (real Agenda Center, not an empty shell) — only if no portal above hit.
 _CIVICPLUS_HINT = re.compile(r'/AgendaCenter|cpTextResizeOn|connect\.civicplus\.com|CivicEngage', re.I)
 # Adapter-less CMSs we recognise but can't scrape — flag so time isn't wasted.
 _NO_SCRAPER = [
-    ('revize', re.compile(r'revize\.com|Revize', re.I)),
     ('governmentwindow', re.compile(r'governmentwindow\.com', re.I)),
     ('boarddocs', re.compile(r'boarddocs\.com|go\.boarddocs', re.I)),
     ('escribe', re.compile(r'escribemeetings\.com|pub-[a-z0-9-]+\.escribe', re.I)),

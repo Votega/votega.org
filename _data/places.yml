@@ -29,15 +29,14 @@
 #   domains              per-domain adapter config; supported domain today: meetings
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
 #                        legistar | teammunicode | primegov | granicus | gwinnett | iqm2 |
-#                        municode | agendapub
+#                        municode | agendapub | revize
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
-#                          revize | wix | wordpress | governmentwindow |
-#                          custom  = a real but adapter-less system (usually a
-#                                     bespoke CMS that just lists agenda PDFs — e.g.
-#                                     Bartow is Revize; `custom` = a hand-built page
-#                                     with no CMS name, e.g. Bacon's PHP). Register in
+#                          wix | wordpress | governmentwindow |
+#                          custom  = a real but adapter-less system: a hand-built
+#                                     page with no CMS name, e.g. Bacon's PHP.
+#                                     (Revize now HAS an adapter — see below.) Register in
 #                                     NO_SCRAPER_PLATFORMS in generate_place_meetings.py
 #                                     + validate_place_meetings.py before using it,
 #                                     else it is flagged as a typo.
@@ -99,6 +98,14 @@
 #                        reused). A calendar API + one detail fetch per meeting (heavier,
 #                        windowed ~15 months). Hall's BOC (embedded via iframe on its
 #                        CivicPlus page). `body` is the event title → body_label.
+#       revize keys:     agendas_url (the county's Agendas & Minutes page). Revize is a
+#                        CMS, not a portal — no API, no uniform markup — so lib.revize
+#                        harvests the agenda/minutes PDF <a> links whose filename/text
+#                        carries a date + "Agenda"/"Minutes", grouping them by meeting
+#                        date. Links resolve against the page's <base href> (site root),
+#                        so a bare-filename href lands at the domain root, NOT under the
+#                        page dir — base_url is only the fallback when no <base> exists.
+#                        Emits one body (county BOC page) — set body_label. Bartow, Fayette.
 #     Body scoping (any platform, optional) — POLICY: publish the legislative and
 #     land-use bodies (Board of Commissioners + Planning Commission + zoning
 #     boards, where rezonings / data centers are heard); drop administrative
@@ -323,13 +330,15 @@ places:
     region: Broader Metropolitan Statistical Area                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/bartow/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: revize   # Revize CMS (no scraper adapter) — agendas are PDFs on the page
+        # Revize CMS. Not a meeting portal — lib.revize harvests the agenda/minutes
+        # PDF links off this page (filenames encode the date + AGENDA/MINUTES, e.g.
+        # AGENDA.PUBLIC_MEETING_9-2-2026.pdf) and groups them by meeting date. Links
+        # resolve against the page's <base href> (site root). base_url is only the
+        # fallback when no <base> is present. body_label names the single board.
+        platform: revize
         base_url: https://www.bartowcountyga.gov/index.php
-        agendas_url: "https://www.bartowcountyga.gov/departments/county_commissioner/public_meeting_minutes/index.php"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        agendas_url: "https://www.bartowcountyga.gov/departments/county_commissioner/public_meeting_minutes/index.php"            # scraped: agenda/minutes PDF hub
+        body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
             when: "1st Wednesday of every month, 10:00 a.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
@@ -423,13 +432,18 @@ places:
     region: Atlanta Regional Commission                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/fayette/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
+        # Revize CMS. lib.revize harvests the agenda/minutes PDF links off this page
+        # (date-prefixed filenames, e.g. "09-10-2026 BOC Agenda.pdf" /
+        # "08-13-2026 Minutes.pdf") and groups them by meeting date; an "Action
+        # Agenda" is only used as agendaUrl when no primary "BOC Agenda" link exists
+        # for that date. Links resolve against the page's <base href> (site root),
+        # so bare-filename hrefs land at the domain root, not under this page's dir.
+        # The page statically links only recent agendas but minutes going back years,
+        # so most older records are minutes-only — expected. body_label names the board.
         platform: revize
         base_url: https://www.fayettecountyga.gov/
-        agendas_url: "https://www.fayettecountyga.gov/government/board_of_commissioners/agendas_minutes.php"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        agendas_url: "https://www.fayettecountyga.gov/government/board_of_commissioners/agendas_minutes.php"            # scraped: agenda/minutes PDF hub
+        body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
             when: "2nd and 4th Thursday of every month, 5:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
