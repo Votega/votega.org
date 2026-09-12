@@ -146,14 +146,18 @@
           else { countiesScanned++; }
         });
       }
-      var coverage = 'Scanning ' + countiesScanned + ' of Georgia’s ' +
-        (md.universeCounties || 0) + ' counties and ' + citiesScanned + ' of ~' +
-        (md.universeCities || 0) + ' cities';
+      // Consolidated city-county governments are a subset of the 159 counties,
+      // so roll them into the county total for the headline number and break
+      // them out parenthetically rather than listing them as a parallel pool.
+      var countyScanned = (countiesScanned || 0) + (consolidatedScanned || 0);
+      var coverage = 'Scanning ' + countyScanned + ' of Georgia’s ' +
+        (md.universeCounties || 0) + ' counties';
       if (md.universeConsolidated || consolidatedScanned) {
-        coverage += ', plus ' + (consolidatedScanned || 0) + ' of ' +
-          (md.universeConsolidated || 0) + ' consolidated city-county governments';
+        coverage += ' — including ' + (consolidatedScanned || 0) + ' of ' +
+          (md.universeConsolidated || 0) + ' consolidated city-county governments —';
       }
-      coverage += '. ' +
+      coverage += ' and ' + citiesScanned + ' of ~' + (md.universeCities || 0) +
+        ' cities. ' +
         (md.generatedAt ? 'Last scan ' + esc(md.generatedAt.slice(0, 10)) + '. ' : '') +
         'Only jurisdictions with an automated agenda feed are scanned; a place we don’t yet cover is absent, not “nothing found.”';
       els.coverage.innerHTML = coverage;
