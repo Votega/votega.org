@@ -123,12 +123,14 @@
       }
       els.stats.hidden = false;
 
-      // Coverage footer. Break the scanned count into counties and cities so
-      // the ~537-city universe doesn't read as "we scan every city." Prefer the
-      // counts the generator emits; fall back to deriving them from the data
-      // (unique scanned places = mentions ∪ coveredNoMention, keyed by placeId).
+      // Coverage footer. Break the scanned count into counties, cities, and
+      // consolidated city-county governments so the ~537-city universe doesn't
+      // read as "we scan every city." Prefer the counts the generator emits;
+      // fall back to deriving them from the data (unique scanned places =
+      // mentions ∪ coveredNoMention, keyed by placeId).
       var countiesScanned = md.countiesScanned;
       var citiesScanned = md.citiesScanned;
+      var consolidatedScanned = md.consolidatedScanned;
       if (countiesScanned == null || citiesScanned == null) {
         var typeById = {};
         mentions.forEach(function (m) { if (m.placeId) typeById[m.placeId] = m.placeType; });
@@ -137,15 +139,24 @@
         });
         countiesScanned = 0;
         citiesScanned = 0;
+        consolidatedScanned = 0;
         Object.keys(typeById).forEach(function (id) {
-          if (typeById[id] === 'city') { citiesScanned++; } else { countiesScanned++; }
+          if (typeById[id] === 'city') { citiesScanned++; }
+          else if (typeById[id] === 'consolidated') { consolidatedScanned++; }
+          else { countiesScanned++; }
         });
       }
-      els.coverage.innerHTML = 'Scanning ' + countiesScanned + ' of Georgia’s ' +
+      var coverage = 'Scanning ' + countiesScanned + ' of Georgia’s ' +
         (md.universeCounties || 0) + ' counties and ' + citiesScanned + ' of ~' +
-        (md.universeCities || 0) + ' cities. ' +
+        (md.universeCities || 0) + ' cities';
+      if (md.universeConsolidated || consolidatedScanned) {
+        coverage += ', plus ' + (consolidatedScanned || 0) + ' of ' +
+          (md.universeConsolidated || 0) + ' consolidated city-county governments';
+      }
+      coverage += '. ' +
         (md.generatedAt ? 'Last scan ' + esc(md.generatedAt.slice(0, 10)) + '. ' : '') +
         'Only jurisdictions with an automated agenda feed are scanned; a place we don’t yet cover is absent, not “nothing found.”';
+      els.coverage.innerHTML = coverage;
 
       // Nothing-found list.
       var none = data.coveredNoMention || [];

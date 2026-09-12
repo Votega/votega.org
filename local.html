@@ -119,7 +119,9 @@ breadcrumb:
     meetings from the place's domains.meetings. ---- {% endcomment -%}
 
 {% assign all = site.data.places.places %}
-{% assign counties = all | where: "type", "county" | sort: "name" %}
+{%- comment %} Consolidated city-county governments (Macon-Bibb, etc.) group with
+    the counties in the hub — same display, own `consolidated` type elsewhere. {% endcomment -%}
+{% assign counties = all | where_exp: "p", "p.type == 'county' or p.type == 'consolidated'" | sort: "name" %}
 {% assign cities = all | where: "type", "city" %}
 
 {%- comment %} Slug set of real (non-hidden) counties, for orphan detection. {% endcomment -%}

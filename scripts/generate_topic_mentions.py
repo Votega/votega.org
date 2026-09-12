@@ -27,8 +27,9 @@ Output: one file per topic, assets/data/local-topics-<slug>.json, shape
 
     {
       "metadata": { generatedAt, topic, label, emoji, placesScanned,
-                    countiesScanned, citiesScanned, placesWithMentions,
-                    vendors[], universeCounties, universeCities },
+                    countiesScanned, citiesScanned, consolidatedScanned,
+                    placesWithMentions, vendors[], universeCounties,
+                    universeCities, universeConsolidated },
       "mentions": [ { placeId, placeName, placeType, fips, region, date, body,
                       docType, sourceUrl, confidence, vendors[], terms[],
                       tags[] }, ... ],           # newest first
@@ -75,8 +76,16 @@ except ImportError:  # pragma: no cover
 # Georgia's full local-government universe, for the coverage footer's
 # denominator (CLAUDE.md / handoff). Counties are fixed; the city count is the
 # commonly cited "~537 active municipalities".
+#
+# Consolidated city-county governments (Macon-Bibb, Columbus-Muscogee,
+# Athens-Clarke, …) are their own category: they aren't a standalone county or
+# city government, so a place typed "consolidated" is counted here, not under
+# counties. The 159/537 figures are left as the recognized geographic and
+# municipal universe sizes — the consolidated counties still sit within the 159
+# as territory, but their *government* is scanned under the consolidated bucket.
 UNIVERSE_COUNTIES = 159
 UNIVERSE_CITIES = 537
+UNIVERSE_CONSOLIDATED = 9  # Georgia city-county consolidated governments
 
 # Land-use subjects shown on the land-use page. Data centers are a land-use
 # subject too, but they get their own page (mirrors build_summary's split), so
@@ -236,12 +245,15 @@ def build_topic(topic: str, enriched_files: list[str], places: dict) -> dict:
             "label": cfg["label"],
             "emoji": cfg["emoji"],
             "placesScanned": len({s for (s, *_ ) in scanned}),
-            "countiesScanned": len({s for (s, _, t, _) in scanned if t != "city"}),
+            "countiesScanned": len({s for (s, _, t, _) in scanned if t == "county"}),
             "citiesScanned": len({s for (s, _, t, _) in scanned if t == "city"}),
+            "consolidatedScanned":
+                len({s for (s, _, t, _) in scanned if t == "consolidated"}),
             "placesWithMentions": len(with_mentions),
             "vendors": sorted(vendors_seen),
             "universeCounties": UNIVERSE_COUNTIES,
             "universeCities": UNIVERSE_CITIES,
+            "universeConsolidated": UNIVERSE_CONSOLIDATED,
         },
         "mentions": mentions,
         "coveredNoMention": covered_no_mention,

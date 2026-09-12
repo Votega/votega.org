@@ -3,7 +3,7 @@
   {
    "placeId": "clarke",
    "placeName": "Athens-Clarke County",
-   "placeType": "county",
+   "placeType": "consolidated",
    "region": "Northeast Georgia"
   },
   {
@@ -63,7 +63,7 @@
   {
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
-   "placeType": "county",
+   "placeType": "consolidated",
    "region": "Middle Georgia"
   },
   {
@@ -922,7 +922,7 @@
    "fips": "13215",
    "placeId": "muscogee",
    "placeName": "Columbus-Muscogee County",
-   "placeType": "county",
+   "placeType": "consolidated",
    "region": "West Georgia",
    "sourceType": "legistar",
    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6193&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
@@ -1174,7 +1174,7 @@
    "fips": "13215",
    "placeId": "muscogee",
    "placeName": "Columbus-Muscogee County",
-   "placeType": "county",
+   "placeType": "consolidated",
    "region": "West Georgia",
    "sourceType": "legistar",
    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6187&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
@@ -1258,7 +1258,7 @@
    "fips": "13215",
    "placeId": "muscogee",
    "placeName": "Columbus-Muscogee County",
-   "placeType": "county",
+   "placeType": "consolidated",
    "region": "West Georgia",
    "sourceType": "legistar",
    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6184&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
@@ -1669,13 +1669,17 @@
   }
  ],
  "metadata": {
+  "citiesScanned": 2,
+  "consolidatedScanned": 3,
+  "countiesScanned": 27,
   "emoji": "🏭",
-  "generatedAt": "2026-09-11T19:17:51Z",
+  "generatedAt": "2026-09-12T14:26:34Z",
   "label": "Data centers",
   "placesScanned": 32,
   "placesWithMentions": 17,
   "topic": "data-center",
   "universeCities": 537,
+  "universeConsolidated": 9,
   "universeCounties": 159,
   "vendors": []
  }
