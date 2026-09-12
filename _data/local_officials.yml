@@ -81,6 +81,12 @@
 #                 it for confidence). The site always displays `name` (the short
 #                 form), so full_name never appears on a page — e.g.
 #                 name: "Lisa Cupid"  +  full_name: "Lisa N. Cupid".
+#     term_provenance : how term_end / next_election were established —
+#                 verified | assumed | unknown. DORMANT: nothing renders or exports it
+#                 yet; it exists so provenance can be recorded one member at a time.
+#                 `verified` = a human confirmed the dates against `source`;
+#                 `assumed`  = derived (e.g. last_elected + term_years); `unknown` = no
+#                 basis. Omit while a roster is unreviewed. See LOCALDATAEXPORT.md.
 #
 #   OPTIONAL jurisdiction structural fields (feed an eventual sibling-repo publish;
 #   a publisher DERIVES counts/vacancies from members[] — don't store those):

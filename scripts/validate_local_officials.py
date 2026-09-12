@@ -46,6 +46,12 @@ VALID_GOVERNMENT_FORMS = {
 MIN_YEAR = 2000
 MAX_YEAR = date.today().year + 12
 
+# OPTIONAL provenance flag for term_end / next_election. Absent = not yet reviewed
+# (the exporter's future default is documented in LOCALDATAEXPORT.md). Validated
+# only when present, so it can be filled in incrementally without a bulk backfill.
+# NOTHING renders or exports it yet — a dormant field.
+VALID_TERM_PROVENANCE = {"verified", "assumed", "unknown"}
+
 REQUIRED_MEMBER_FIELDS = [
     "name",
     "role",
@@ -124,6 +130,13 @@ def validate_member(juris_id, index, member, partisan):
         err(context, f"jurisdiction is nonpartisan but member party is {party!r}")
     elif partisan is True and party == "Nonpartisan":
         warn(context, "jurisdiction is partisan but member party is Nonpartisan")
+
+    # OPTIONAL: how the term_end / next_election dates were established. Validated
+    # only when present so the roster can adopt it one member at a time.
+    provenance = member.get("term_provenance")
+    if provenance is not None and provenance not in VALID_TERM_PROVENANCE:
+        err(context, f"term_provenance must be one of {sorted(VALID_TERM_PROVENANCE)}, "
+                     f"got: {provenance!r}")
 
     last_elected = check_year(context, "last_elected", member.get("last_elected"))
     term_end = check_year(context, "term_end", member.get("term_end"))
