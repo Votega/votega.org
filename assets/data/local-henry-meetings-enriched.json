@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-11T19:17:47Z",
+  "generatedAt": "2026-09-12T18:11:43Z",
   "source": "Henry County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Henry County",
   "count": 25
@@ -8,33 +8,23 @@
  "summary": {
   "flags": [
    "alpr",
-   "data-center",
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-15",
+  "lastActivity": "2026-09-21",
   "topicTotals": {
-   "appointment": 5,
-   "contract": 15,
+   "appointment": 4,
+   "contract": 14,
    "development": 10,
    "rezoning": 10,
    "special-land-use": 2,
    "variance": 4,
    "annexation": 4,
-   "millage-budget": 15,
+   "millage-budget": 14,
    "alpr": 2,
-   "comprehensive-plan": 5,
-   "data-center": 1
+   "comprehensive-plan": 5
   },
-  "dataCenterItems": [
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-02-17",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2424,plainText=false)",
-    "excerpt": "… Unified Land Development Code (ULDC) to provide for new definitions and regulating standards for data centers. Countywide (Presenter: Kamau As- Salaam, Deputy Director)(Exhibit 17) No action taken. X …",
-    "excerptTerm": "data center"
-   }
-  ],
+  "dataCenterItems": [],
   "landUseItems": [
    {
     "title": "Zoning Advisory Board  Meeting",
@@ -201,7 +191,7 @@
     "excerptTerm": "comprehensive plan"
    }
   ],
-  "landUseMeetings": 16,
+  "landUseMeetings": 15,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting (Meeting rescheduled from July 21, 2026)",
@@ -227,6 +217,24 @@
   "alprMeetings": 2
  },
  "meetings": [
+  {
+   "id": "855",
+   "date": "2026-09-21",
+   "body": "Board of Commissioners",
+   "title": "Called Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2648,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2648,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2698,
+   "pdfSha256": "7c75a10c00f6d3dc83d74fdc4606421de33724e85b71227a93988a48c1e15e18",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "819",
    "date": "2026-09-15",
@@ -1364,72 +1372,6 @@
     "land-use"
    ],
    "dataCenterItems": []
-  },
-  {
-   "id": "805",
-   "date": "2026-02-17",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2424,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2424,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 11001,
-   "pdfSha256": "06c33131ba4894cff5921ec47013a34934bdc761b36825eb5cee24671ed60abe",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "data-center": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "data-center",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "data center",
-    "fiscal year"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… ng February as Spay/Neuter Awareness Month (Presenter: Amber Smith, Public Relations Specialist) VII. Appointments A. Hospital Authority Submittals: District I: Brian Andrews; Shannan Brown; and Gwen Presle …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ecreation A. Resolution awarding Bid #26-16 to EdTech Group, LLC, for a portable toilet rental services annual contract in the amount of $32,685.60. (Presenter: Jonathon Penn, Executive Director)(Exhibit 9) Resolution 26-62 SP …",
-     "context": "agenda-action"
-    },
-    "data-center": {
-     "term": "data center",
-     "excerpt": "… Unified Land Development Code (ULDC) to provide for new definitions and regulating standards for data centers. Countywide (Presenter: Kamau As- Salaam, Deputy Director)(Exhibit 17) No action taken. X …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… ineer II)(Exhibit 7) Resolution 26-60 Financial Services A. Resolution approving a Letter of Engagement for Fiscal Year 2025 Audit Services between Henry County, GA and Mauldin & Jenkins CPA(s) and Advisor(s). (Presenter: Joy R …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "data-center",
-    "millage-budget"
-   ],
-   "dataCenterItems": [
-    {
-     "title": "Board of Commissioners Meeting",
-     "date": "2026-02-17",
-     "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2424,plainText=false)",
-     "excerpt": "… Unified Land Development Code (ULDC) to provide for new definitions and regulating standards for data centers. Countywide (Presenter: Kamau As- Salaam, Deputy Director)(Exhibit 17) No action taken. X …",
-     "excerptTerm": "data center"
-    }
-   ]
   }
  ]
 }
