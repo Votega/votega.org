@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-11T19:17:47Z",
+  "generatedAt": "2026-09-12T18:11:42Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -11,13 +11,13 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-01",
+  "lastActivity": "2026-09-14",
   "topicTotals": {
-   "rezoning": 4,
    "contract": 16,
    "millage-budget": 17,
+   "rezoning": 4,
    "annexation": 2,
-   "appointment": 13,
+   "appointment": 12,
    "data-center": 2,
    "variance": 3,
    "comprehensive-plan": 1,
@@ -106,6 +106,48 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1137",
+   "date": "2026-09-14",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Session",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7542,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7542,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 7895,
+   "pdfSha256": "e184e27ee7277da299d65a04eea50d6a99289f0135133f9398ff57d100ba26de",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "millage",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ending final legal review. (Chadwick Griffin) BUSINESS ITEMS 12. Approval for Parks and Recreation to enter into a contract with the American Red Cross for lifeguard training services in the amount of $250 for new certification and $15 …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… , 2026. () 3. Executive Session Minutes of August 31, 2026. () FINANCIAL REPORT 4. Acceptance of the monthly Financial/Budget Report for August 2026. (Dominic Ochei) PROCLAMATIONS 5. Proclaiming September 14-18, 2026 as National Construction …",
+     "context": "public-comment"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1316",
    "date": "2026-09-01",
@@ -1154,56 +1196,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1288",
-   "date": "2026-05-18",
-   "body": "Board of Commissioners",
-   "title": "SCM BOC COMBINED WORK SESSION & COMMISSION MEETING",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7324,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7324,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 13788,
-   "pdfSha256": "f0597a05aed5b41dd4652a43e136dd02c1ab25ab4596cd3f39831671dfcb668a",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "procurement",
-    "task order"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… ations and authorize the Chairman to sign all related documents pending final legal review. (Elliott Buggs) 29. Appointment of Mr. Randi Hurd to the Housing Authority of Douglas County and authorize the Chairman to sign all related do …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ent for roof restoration at the Douglas County Courthouse with Eskola Roofing & Waterproofing under Omnia Partners Contract #23-04 for $1,444,507 to be funded by the department's budget and authorize the Chairman to sign all related …",
-     "context": "public-comment"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ) 7. Approval to accept funds from the State Court Technology Fund and amend the Solicitor-General's general fund budget in the amount of $11,480.64 for the purchase of computer equipment that is needed to support Court operations for …",
-     "context": "public-comment"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   }
