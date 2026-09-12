@@ -27,8 +27,8 @@ Output: one file per topic, assets/data/local-topics-<slug>.json, shape
 
     {
       "metadata": { generatedAt, topic, label, emoji, placesScanned,
-                    placesWithMentions, vendors[], universeCounties,
-                    universeCities },
+                    countiesScanned, citiesScanned, placesWithMentions,
+                    vendors[], universeCounties, universeCities },
       "mentions": [ { placeId, placeName, placeType, fips, region, date, body,
                       docType, sourceUrl, confidence, vendors[], terms[],
                       tags[] }, ... ],           # newest first
@@ -236,6 +236,8 @@ def build_topic(topic: str, enriched_files: list[str], places: dict) -> dict:
             "label": cfg["label"],
             "emoji": cfg["emoji"],
             "placesScanned": len({s for (s, *_ ) in scanned}),
+            "countiesScanned": len({s for (s, _, t, _) in scanned if t != "city"}),
+            "citiesScanned": len({s for (s, _, t, _) in scanned if t == "city"}),
             "placesWithMentions": len(with_mentions),
             "vendors": sorted(vendors_seen),
             "universeCounties": UNIVERSE_COUNTIES,

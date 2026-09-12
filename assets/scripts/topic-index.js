@@ -123,12 +123,27 @@
       }
       els.stats.hidden = false;
 
-      // Coverage footer.
-      var scanned = md.placesScanned || 0;
-      var universe = (md.universeCounties || 0) + (md.universeCities || 0);
-      els.coverage.innerHTML = 'Scanning ' + scanned + ' of Georgia’s ' +
-        (md.universeCounties || 0) + ' counties and ~' + (md.universeCities || 0) +
-        ' cities' + (universe ? '' : '') + '. ' +
+      // Coverage footer. Break the scanned count into counties and cities so
+      // the ~537-city universe doesn't read as "we scan every city." Prefer the
+      // counts the generator emits; fall back to deriving them from the data
+      // (unique scanned places = mentions ∪ coveredNoMention, keyed by placeId).
+      var countiesScanned = md.countiesScanned;
+      var citiesScanned = md.citiesScanned;
+      if (countiesScanned == null || citiesScanned == null) {
+        var typeById = {};
+        mentions.forEach(function (m) { if (m.placeId) typeById[m.placeId] = m.placeType; });
+        (data.coveredNoMention || []).forEach(function (p) {
+          if (p.placeId && !(p.placeId in typeById)) typeById[p.placeId] = p.placeType;
+        });
+        countiesScanned = 0;
+        citiesScanned = 0;
+        Object.keys(typeById).forEach(function (id) {
+          if (typeById[id] === 'city') { citiesScanned++; } else { countiesScanned++; }
+        });
+      }
+      els.coverage.innerHTML = 'Scanning ' + countiesScanned + ' of Georgia’s ' +
+        (md.universeCounties || 0) + ' counties and ' + citiesScanned + ' of ~' +
+        (md.universeCities || 0) + ' cities. ' +
         (md.generatedAt ? 'Last scan ' + esc(md.generatedAt.slice(0, 10)) + '. ' : '') +
         'Only jurisdictions with an automated agenda feed are scanned; a place we don’t yet cover is absent, not “nothing found.”';
 
