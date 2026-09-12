@@ -18,7 +18,7 @@ import yaml
 DATA_PATH = "_data/local_officials.yml"
 PLACES_PATH = "_data/places.yml"
 
-VALID_TYPES = {"city", "county"}
+VALID_TYPES = {"city", "county", "consolidated"}
 VALID_ROLES = {
     "Mayor",
     "Mayor Pro Tem",
