@@ -268,7 +268,7 @@ def load_place_slugs():
     return {p.get("slug") for p in (data.get("places") or []) if isinstance(p, dict)}
 
 
-def emit_places_yaml(county_slug, county_name):
+def emit_places_yaml(county_slug, county_name, jtype="county"):
     """A _data/places.yml stub: identity + an empty meeting-schedule scaffold. The
     schedule (body/when/location) is HAND-entered from the county site — it is not
     in any API. FIPS comes from the Census (scripts/lib/ga_county_fips.py)."""
@@ -281,7 +281,7 @@ def emit_places_yaml(county_slug, county_name):
     return "\n".join([
         f"  - slug: {county_slug}",
         f"    name: {county_name}",
-        "    type: county",
+        f"    type: {jtype}",
         fips_line,
         "    parentCounty: null",
         "    region:                         # optional hub grouping label",
@@ -318,12 +318,12 @@ def derive_government_form(members):
     return "commission"
 
 
-def emit_yaml(county_slug, county_name, draft):
+def emit_yaml(county_slug, county_name, draft, jtype="county"):
     members = draft["members"]
     lines = []
     lines.append(f"  - id: {county_slug}")
     lines.append(f"    name: {county_name}")
-    lines.append("    type: county")
+    lines.append(f"    type: {jtype}")
     lines.append(f"    county: {county_name.replace(' County', '')}")
     lines.append("    body: Board of Commissioners")
     lines.append("    partisan: true")
@@ -496,8 +496,11 @@ def main():
         shorts = list_counties()
     elif args.curated:
         cur = load_curated()
+        # Consolidated city-county governments (type "consolidated", e.g.
+        # Macon-Bibb) still have a county-side commission board in the SoS API
+        # under their "<slug>-county-ga" short name, so draft them like counties.
         shorts = [f"{jid}-county-ga" for jid, j in cur.items()
-                  if isinstance(j, dict) and j.get("type") == "county"]
+                  if isinstance(j, dict) and j.get("type") in ("county", "consolidated")]
     else:
         shorts = [f"{s.strip()}-county-ga" for s in args.counties.split(",") if s.strip()]
     print(f"Drafting {len(shorts)} counties from {SEATING_SLUG}…", file=sys.stderr)
@@ -524,6 +527,11 @@ def main():
     # Emit drafts
     if args.emit != "none":
         chunks = []
+        # Preserve a jurisdiction's curated type (e.g. "consolidated" for
+        # Macon-Bibb) so regenerated scaffolding doesn't reset it to "county"
+        # and trip the places.yml ↔ local_officials.yml type cross-check.
+        curated_types = {jid: (j.get("type") or "county")
+                         for jid, j in load_curated().items()}
         if args.emit == "json":
             payload = {
                 "metadata": {
@@ -545,14 +553,14 @@ def main():
                     skipped += 1
                     continue
                 nm = names.get(short) or f"{slug.title()} County"
-                chunks.append(emit_places_yaml(slug, nm))
+                chunks.append(emit_places_yaml(slug, nm, curated_types.get(slug, "county")))
             text = "\n\n".join(chunks)
             print(f"places-yaml: {len(chunks)} stubs, skipped {skipped} already in places.yml",
                   file=sys.stderr)
         else:
             for slug, (short, d) in drafts.items():
                 nm = names.get(short) or f"{slug.title()} County"
-                chunks.append(emit_yaml(slug, nm, d))
+                chunks.append(emit_yaml(slug, nm, d, curated_types.get(slug, "county")))
             text = "\n\n".join(chunks)
         if args.out:
             with open(args.out, "w", encoding="utf-8") as f:
