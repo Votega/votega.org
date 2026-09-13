@@ -2,8 +2,8 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-09-06T12:51:20+00:00",
-  "count": 746,
+  "generatedAt": "2026-09-13T13:47:07+00:00",
+  "count": 745,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
    "Open States (Plural Policy) — ocdPersonId, legisGaGovId",
@@ -23,12 +23,12 @@
    "out-of-scope": "this identifier does not apply to this person"
   },
   "coverage": {
-   "people": 746,
+   "people": 745,
    "officeholders": 265,
-   "candidateOnly": 481,
-   "withVgId": 680,
-   "unkeyed": 66,
-   "withAnyFiling": 664,
+   "candidateOnly": 480,
+   "withVgId": 678,
+   "unkeyed": 67,
+   "withAnyFiling": 662,
    "candidacies": 716,
    "ambiguous": []
   }
@@ -16030,89 +16030,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000238",
-   "name": {
-    "full": "Adrienne White Carden",
-    "first": "Adrienne",
-    "last": "White Carden"
-   },
-   "role": {
-    "level": "state",
-    "office": "legislator",
-    "chamber": "Senate",
-    "district": 7,
-    "party": "Democratic",
-    "status": null
-   },
-   "ids": {
-    "ocdPersonId": "ga-senate-7-carden",
-    "legisGaGovId": 5097,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "104715"
-    ],
-    "votegaCandidateIds": []
-   },
-   "candidacies": [],
-   "provenance": {
-    "ocdPersonId": {
-     "method": "authoritative",
-     "source": "Open States"
-    },
-    "peachfileFilerEntityIds": {
-     "method": "reviewed",
-     "confidence": "high",
-     "source": "assets/data/id-crosswalk-overrides.json",
-     "note": "Won the 2026 Senate 7 Special Election and was sworn in June 26, 2026 (injected member, synthetic id — too new for Open States); not seeking re-election. Qualified with the SoS and filed in PeachFile under her name 'White, Adrienne' (SoS qualifying name Adrienne Annice White) for the Senate 7 Special Election, committee 'Adrienne for Georgia', party DEM. Surname on the filing (White) differs from her officeholder surname (Carden), so seat+surname could not match it."
-    },
-    "legisGaGovId": {
-     "method": "authoritative",
-     "source": "Open States"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000239",
-   "name": {
-    "full": "Vacant",
-    "first": null,
-    "last": null
-   },
-   "role": {
-    "level": "state",
-    "office": "legislator",
-    "chamber": "House of Representatives",
-    "district": 177,
-    "party": null,
-    "status": "Vacant"
-   },
-   "ids": {
-    "ocdPersonId": "ga-house-177-vacant",
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": []
-   },
-   "candidacies": [],
-   "provenance": {
-    "ocdPersonId": {
-     "method": "authoritative",
-     "source": "Open States"
-    },
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "no-match",
-     "note": "no filing matched this person's seat or the office they seek"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000240",
    "name": {
     "full": "Freddie Powell Sims",
@@ -16817,7 +16734,7 @@
      "level": "federal",
      "office": "U.S. House",
      "district": 5,
-     "party": "Democratic",
+     "party": "Democrat",
      "phases": [
       "primary",
       "general"
@@ -17176,7 +17093,7 @@
      "level": "federal",
      "office": "U.S. House",
      "district": 4,
-     "party": "Democratic",
+     "party": "Democrat",
      "phases": [
       "primary",
       "general"
@@ -17239,7 +17156,7 @@
      "level": "federal",
      "office": "U.S. House",
      "district": 2,
-     "party": "Democratic",
+     "party": "Democrat",
      "phases": [
       "primary",
       "general"
@@ -17302,7 +17219,7 @@
      "level": "federal",
      "office": "U.S. House",
      "district": 6,
-     "party": "Democratic",
+     "party": "Democrat",
      "phases": [
       "primary",
       "general"
@@ -29140,60 +29057,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000482",
-   "name": {
-    "full": "Alvin Payton Jr",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "105191"
-    ],
-    "votegaCandidateIds": [
-     "ga-house-177-2026-d-1"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-house-177-2026",
-     "candidateId": "ga-house-177-2026-d-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 177,
-     "party": "Democrat",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "105191",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000483",
    "name": {
     "full": "Blake Alexander Robinson",
@@ -32950,60 +32813,6 @@
      "withdrawn": false,
      "disqualified": false,
      "peachfileFilerEntityId": "101420",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000552",
-   "name": {
-    "full": "Willie Horace Roseberry",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "104797"
-    ],
-    "votegaCandidateIds": [
-     "ga-house-62-2026-d-4"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-house-62-2026",
-     "candidateId": "ga-house-62-2026-d-4",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 62,
-     "party": "Democrat",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "104797",
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "seat+surname",
@@ -40168,6 +39977,113 @@
    }
   },
   {
+   "vgId": "vg-ga-p-000686",
+   "name": {
+    "full": "Adrienne White Carden",
+    "first": "Adrienne",
+    "last": "White Carden"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "Senate",
+    "district": 7,
+    "party": "Democratic",
+    "status": null
+   },
+   "ids": {
+    "ocdPersonId": "ocd-person/3cfc8d4f-68d4-44b2-81f4-a162465e1aed",
+    "legisGaGovId": 5097,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "ocdPersonId": {
+     "method": "authoritative",
+     "source": "Open States"
+    },
+    "peachfileFilerEntityIds": {
+     "method": "seat+surname",
+     "confidence": "no-match",
+     "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000687",
+   "name": {
+    "full": "Alvin Payton",
+    "first": "Alvin",
+    "last": "Payton"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 177,
+    "party": "Democratic",
+    "status": null
+   },
+   "ids": {
+    "ocdPersonId": "ocd-person/8aa7ee05-bf64-4c51-8821-ad905d25741b",
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [
+     "105191"
+    ],
+    "votegaCandidateIds": [
+     "ga-house-177-2026-d-1"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-177-2026",
+     "candidateId": "ga-house-177-2026-d-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 177,
+     "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "105191",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
+   "provenance": {
+    "ocdPersonId": {
+     "method": "authoritative",
+     "source": "Open States"
+    },
+    "peachfileFilerEntityIds": {
+     "method": "seat+surname",
+     "confidence": "high",
+     "source": "scripts/lib/ga_match.py"
+    }
+   }
+  },
+  {
    "vgId": null,
    "name": {
     "full": "Alisha Adams Johnson",
@@ -41698,8 +41614,8 @@
       "method": "district+surname",
       "confidence": "ambiguous",
       "candidates": [
-       "H6GA08153",
-       "H6GA08146"
+       "H6GA08146",
+       "H6GA08153"
       ]
      }
     }
@@ -43564,6 +43480,56 @@
       "confidence": "confirmed-none",
       "source": "assets/data/ga-campaign-finance-overrides.json",
       "key": "ga-house-114-2026-r-2"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Willie Horace Roseberry",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "ga-house-62-2026-d-4"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-62-2026",
+     "candidateId": "ga-house-62-2026-d-4",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 62,
+     "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
      }
     }
    ],
