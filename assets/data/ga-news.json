@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-14T08:17:49.305811+00:00",
+    "generatedAt": "2026-09-14T15:25:51.855560+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,16 +21,16 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 111,
+    "count": 115,
     "windowDays": 45,
-    "entityTagged": 64,
+    "entityTagged": 68,
     "topicCounts": {
+      "elections": 20,
+      "healthcare": 19,
+      "ethics": 6,
       "courts": 9,
-      "elections": 16,
       "budget": 6,
       "education": 6,
-      "ethics": 5,
-      "healthcare": 18,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
@@ -40,6 +40,28 @@
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
+    },
+    "vg-ga-p-000335": {
+      "name": "Keisha R. Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
+      ]
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
     },
     "vg-ga-p-000257": {
       "name": "Barry Loudermilk",
@@ -75,28 +97,6 @@
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
-    },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
-      ]
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha R. Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
     },
     "vg-ga-p-000255": {
       "name": "Andrew S. Clyde",
@@ -164,6 +164,103 @@
     }
   },
   "items": [
+    {
+      "id": "f3a5888cf684",
+      "title": "Sen. Ossoff and former Atlanta Mayor Bottoms rally Athens Democrats with one month before polls open",
+      "url": "https://www.gpb.org/news/2026/09/14/sen-ossoff-and-former-atlanta-mayor-bottoms-rally-athens-democrats-one-month-polls",
+      "source": "GPB News",
+      "publishedAt": "2026-09-14T15:15:00+00:00",
+      "snippet": "On Sunday, Sen. Jon Ossoff and former Atlanta Mayor Keisha Lance Bottoms held a joint rally in Athens.",
+      "entityIds": [
+        "vg-ga-p-000264",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "da83be2be5cb",
+      "title": "Jackson vows to close coverage gap; federal law poses challenge",
+      "url": "https://thecurrentga.org/2026/09/14/jackson-vows-to-close-coverage-gap-federal-law-poses-challenge/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-14T13:52:54+00:00",
+      "snippet": "Republican gubernatorial nominee Rick Jackson recently unveiled the Jackson Action Plan, a proposal aimed at closing Georgia's healthcare coverage gap through intelligent Medicaid expansion while navi",
+      "entityIds": [
+        "vg-ga-p-000368"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "0b849c086c3b",
+      "title": "The secret ballot has been an article of faith in US elections. That’s being tested in Georgia",
+      "url": "https://thecurrentga.org/2026/09/14/the-secret-ballot-has-been-an-article-of-faith-in-us-elections-thats-being-tested-in-georgia/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-14T13:39:49+00:00",
+      "snippet": "Election security advocates are warning that a software flaw in Georgia's voting equipment could allow individuals to link voters to their ballots, potentially violating constitutional rights to secre",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "edc705f2e86b",
+      "title": "GPB morning headlines for September 14, 2026",
+      "url": "https://www.gpb.org/news/2026/09/14/gpb-morning-headlines-for-september-14-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-14T13:22:49+00:00",
+      "snippet": "Senator Jon Ossoff and gubernatorial candidate Keisha Lance Bottoms held a joint rally in Athens Sunday; A nonprofit group studying eviction filings reports the Atlanta area has more cases than larger",
+      "entityIds": [
+        "vg-ga-p-000264",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "ea0388b6ce0c",
+      "title": "Carr’s Gang Prosecution Unit Indicts Six in Chatham County Following Multistate Drug Trafficking Investigation",
+      "url": "https://law.georgia.gov/press-releases/2026-09-14/carrs-gang-prosecution-unit-indicts-six-chatham-county-following",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-09-14T12:00:00+00:00",
+      "snippet": "CHATHAM COUNTY, GA – Georgia Attorney General Chris Carr today announced that his Gang Prosecution Unit has secured the indictment of six individuals in Chatham County following a multistate investiga",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics"
+      ]
+    },
+    {
+      "id": "b7e73988d1d5",
+      "title": "Georgia’s voter registration deadline is approaching. Here are five things you need to know.",
+      "url": "https://georgiarecorder.com/2026/09/14/georgias-voter-registration-deadline-is-approaching-here-are-five-things-you-need-to-know/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-14T09:10:38+00:00",
+      "snippet": "The midterm elections are less than two months away, which means now is the time for Georgia residents to register to vote or ensure that an existing voter registration is up to date. A number of comp",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "0fbed65e36dd",
+      "title": "Is Jackson’s ‘Intelligent Medicaid Expansion’ weak tea – or a revolutionary fix?",
+      "url": "https://georgiarecorder.com/2026/09/14/is-rick-jacksons-intelligent-medicaid-expansion-weak-tea-or-a-revolutionary-fix-for-vulnerable-georgians/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-14T09:00:58+00:00",
+      "snippet": "A high-stakes mystery is unfolding in the Georgia governor’s race, potentially affecting health insurance for hundreds of thousands of Georgians. Republican gubernatorial nominee Rick Jackson released",
+      "entityIds": [
+        "vg-ga-p-000368"
+      ],
+      "topics": [
+        "elections",
+        "healthcare"
+      ]
+    },
     {
       "id": "5480170c764a",
       "title": "Safe housing helps sex trafficking survivors rebuild in Coastal Georgia",
@@ -475,18 +572,6 @@
         "vg-ga-p-000368",
         "vg-ga-p-000335"
       ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "5cd7743dabcb",
-      "title": "The cost of keeping cool: Georgia Power customers struggle with summer bills",
-      "url": "https://thecurrentga.org/2026/09/08/the-cost-of-keeping-cool-georgia-power-customers-struggle-with-summer-bills/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-08T15:56:19+00:00",
-      "snippet": "High electricity bills and rising temperatures have led to significant disconnection rates at Georgia Power, disproportionately affecting residents like Donica Odell during extreme summer heat.\nThe Cu",
-      "entityIds": [],
       "topics": [
         "elections"
       ]
@@ -1277,18 +1362,6 @@
       ]
     },
     {
-      "id": "e3487e73907d",
-      "title": "Carr Appoints New Chief of Statewide Human Trafficking Prosecution Unit",
-      "url": "https://law.georgia.gov/press-releases/2026-08-18/carr-appoints-new-chief-statewide-human-trafficking-prosecution-unit",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-08-18T12:00:00+00:00",
-      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr today announced that Chris Keegan has been appointed as the new Section Chief of the office’s Human Trafficking Prosecution Unit. He fills the role of",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
       "id": "d2f6c9890d31",
       "title": "How this Georgia factory is surviving America’s solar policy whiplash",
       "url": "https://georgiarecorder.com/2026/08/17/how-this-georgia-factory-is-surviving-americas-solar-policy-whiplash/",
@@ -1500,18 +1573,6 @@
         "vg-ga-p-000254"
       ],
       "topics": []
-    },
-    {
-      "id": "6cc88fbf9f57",
-      "title": "Lawmakers say data loss is keeping hurricane-harmed Georgia farmers from insurance payments",
-      "url": "https://georgiarecorder.com/2026/08/10/lawmakers-say-data-loss-is-keeping-hurricane-harmed-georgia-farmers-from-insurance-payments/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-10T08:00:10+00:00",
-      "snippet": "Nearly two years after Hurricane Helene unleashed flooding and fierce winds across the South, some Georgia farmers say they still haven’t received compensation for damages, despite efforts from both s",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
     },
     {
       "id": "03f520502bda",
