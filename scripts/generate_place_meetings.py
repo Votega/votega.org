@@ -46,6 +46,7 @@ from lib.iqm2 import fetch_iqm2_meetings  # noqa: E402
 from lib.municode import fetch_municode_meetings  # noqa: E402
 from lib.agendapub import fetch_agendapub_meetings  # noqa: E402
 from lib.revize import fetch_revize_meetings  # noqa: E402
+from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -54,7 +55,7 @@ OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 # Platforms with a scraper adapter (see fetch_meetings' dispatch below).
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
                      'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
-                     'revize'}
+                     'revize', 'gdrive'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
@@ -121,6 +122,9 @@ def fetch_meetings(cfg):
     if platform == 'revize':
         return fetch_revize_meetings(cfg['agendas_url'],
                                      base_url=cfg.get('base_url'))
+    if platform == 'gdrive':
+        return fetch_gdrive_meetings(cfg['folder_id'],
+                                     body=cfg.get('body_label', 'City Council'))
     raise ValueError('unknown meetings platform %r' % platform)
 
 
@@ -150,6 +154,10 @@ def source_url(cfg):
         return cfg['agendas_url']
     if platform == 'revize':
         return cfg['agendas_url']
+    if platform == 'gdrive':
+        # The friendly city page, not the raw Drive folder — it's the stable,
+        # human-facing home for these documents.
+        return cfg.get('agendas_url') or cfg.get('base_url')
     return cfg.get('base_url')
 
 

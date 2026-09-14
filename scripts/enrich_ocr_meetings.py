@@ -52,6 +52,7 @@ from lib.meeting_topics import (  # noqa: E402
     classify, matched_terms, topic_flags, build_summary, flag_entry, write_flags_file,
     topic_excerpts,
 )
+from lib.gdrive import drive_download_url  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -65,8 +66,11 @@ DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 # storage, Gwinnett serves agenda PDFs from its own host, and Revize (Bartow/
 # Fayette) harvests direct agenda/minutes PDF links — all ride the same poppler
 # path.
+# Google Drive (Carrollton) stores agenda/minutes as PDFs in a public folder; the
+# meeting URL is the Drive /file/d/<id>/view page, which drive_download_url() rewrites
+# to the direct-download endpoint before fetching (the view page is HTML, not the PDF).
 OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'primegov', 'teammunicode',
-                 'gwinnett', 'iqm2', 'municode', 'agendapub', 'revize'}
+                 'gwinnett', 'iqm2', 'municode', 'agendapub', 'revize', 'gdrive'}
 
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (meeting-topic-enricher)',
@@ -145,7 +149,10 @@ def enrich_meeting(meeting, cache, reclassify=False):
     if not reclassify and cached and cached.get('textSourceUrl') == url and 'tags' in cached:
         return cached  # unchanged agenda — keep derived tags, skip the fetch
 
-    pdf = fetch_bytes(url, headers=_PDF_HEADERS, retries=3, backoff=5, label=url)
+    # A Google Drive view URL (Carrollton) is an HTML page, not the PDF — rewrite it
+    # to the direct-download endpoint. Non-Drive URLs pass through unchanged.
+    pdf = fetch_bytes(drive_download_url(url), headers=_PDF_HEADERS,
+                      retries=3, backoff=5, label=url)
     if pdf is None:
         print('    %s: PDF fetch failed (%s) — skipping' % (mid, kind))
         return cached  # keep any prior derived data rather than dropping the meeting

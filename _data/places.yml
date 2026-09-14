@@ -761,16 +761,21 @@ places:
     region: West Georgia
     domains:
       meetings:
-        platform: unknown
+        # Public Google Drive folder of agenda/summary/minutes PDFs, linked from the
+        # city page. lib.gdrive discovers the agenda/minutes/summary SUBFOLDERS under
+        # folder_id by name (so a new "1-2027 ..." folder next year needs no edit) and
+        # harvests each dated file. Single board -> body_label names it. agendas_url is
+        # the friendly city page shown as the source; base_url is unused by the adapter.
+        platform: gdrive
         base_url: https://carrolltonga.com/
         agendas_url: "https://carrolltonga.com/agendas-minutes-and-summaries/"
-        body_map:
-          - { match: "Mayor and Council", label: "City Council" }
+        folder_id: "1mrwMnbT03f5BK7vA-qB546rb3wmKGU12"
+        body_label: "City Council"
         schedule:
           - body: City Council
             when: "1st Monday of every month, 6:00 p.m."
-            location: "115 W. Center St, Carrollton"             
-    hidden: false                    
+            location: "115 W. Center St, Carrollton"
+    hidden: false
 
   - slug: paulding
     name: Paulding County
