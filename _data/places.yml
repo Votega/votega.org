@@ -771,6 +771,12 @@ places:
         agendas_url: "https://carrolltonga.com/agendas-minutes-and-summaries/"
         folder_id: "1mrwMnbT03f5BK7vA-qB546rb3wmKGU12"
         body_label: "City Council"
+        # Carrollton's "Agenda Packet" PDFs bundle the PRIOR meetings' full minutes in
+        # after the agenda (approved under the agenda's MINUTES item). Trim to the
+        # agenda proper when classifying so those embedded minutes don't tag THIS
+        # meeting with topics discussed at earlier ones (the earlier meetings are
+        # enriched from their own minutes files). See enrich_ocr_meetings.py.
+        agenda_packet: true
         schedule:
           - body: City Council
             when: "1st Monday of every month, 6:00 p.m."

@@ -308,6 +308,37 @@ LAND_USE = {'data-center', 'rezoning', 'special-land-use', 'variance',
             'annexation', 'development', 'comprehensive-plan'}
 
 
+# ── Combined "agenda packet" trimming ─────────────────────────────────────────
+# Some governments (City of Carrollton) publish the meeting AGENDA as a full
+# "packet" PDF: the one-page agenda outline followed by every supporting document —
+# INCLUDING the complete minutes of the PRIOR meetings being approved under the
+# agenda's "MINUTES" item. Classifying the whole packet then stamps the CURRENT
+# meeting with topics that were actually discussed at those earlier meetings — a
+# Flock/ALPR contract or a data center from last month's embedded minutes surfaces
+# as this month's agenda. (Those earlier meetings are enriched correctly and
+# independently from their OWN minutes files, so nothing is lost by excluding them
+# here.)
+#
+# The agenda proper always ends at its ADJOURN item; the bundled prior minutes —
+# each a meeting in its own right, with its own ADJOURN — follow after it. So for a
+# packet source, classify only the head up to and including the first ADJOURN. A
+# plain (non-packet) agenda carries its single ADJOURN at the very end, so the trim
+# is a harmless no-op there; a document with no ADJOURN at all is returned
+# unchanged. Opt in per place via domains.meetings.agenda_packet, applied by the
+# enricher to AGENDA text only (minutes files are already single-meeting).
+_ADJOURN_RE = re.compile(r'\badjourn(?:ment|ed|ing|s)?\b', re.I)
+
+
+def agenda_head(text):
+    """The agenda proper: text up to and including the first ADJOURN token, with any
+    documents bundled after it (notably embedded prior-meeting minutes) dropped.
+    Returns `text` unchanged when no ADJOURN token is present."""
+    if not text:
+        return text
+    m = _ADJOURN_RE.search(text)
+    return text[:m.end()] if m else text
+
+
 def classify(text):
     """Return the sorted list of subject tags whose keywords appear in `text`."""
     t = (text or '').lower()

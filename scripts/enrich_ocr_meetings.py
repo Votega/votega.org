@@ -50,7 +50,7 @@ from lib.http import fetch_bytes  # noqa: E402
 from lib.pdf_text import extract_text, has_ocr  # noqa: E402
 from lib.meeting_topics import (  # noqa: E402
     classify, matched_terms, topic_flags, build_summary, flag_entry, write_flags_file,
-    topic_excerpts,
+    topic_excerpts, agenda_head,
 )
 from lib.gdrive import drive_download_url  # noqa: E402
 
@@ -128,7 +128,7 @@ def text_source(meeting):
     return None, None
 
 
-def enrich_meeting(meeting, cache, reclassify=False):
+def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False):
     """Classify one meeting's PDF. Returns an enriched record, or None to skip.
 
     Reuses the cached record when the agenda/minutes URL is unchanged (no
@@ -139,6 +139,12 @@ def enrich_meeting(meeting, cache, reclassify=False):
     taxonomy change (a new subject keyword in lib/meeting_topics.py) re-tags
     already-cached meetings that a normal incremental run would leave untouched —
     the text is not stored, so re-classifying requires re-downloading the PDF.
+
+    `agenda_packet=True` (a per-place setting) marks a source whose AGENDA file is a
+    full packet with the prior meetings' minutes bundled in after the agenda; the
+    agenda text is trimmed to its head (agenda_head) so those embedded minutes don't
+    tag THIS meeting with topics discussed at earlier ones. Minutes sources are left
+    whole — they are already single-meeting.
     """
     mid = meeting.get('id')
     url, kind = text_source(meeting)
@@ -169,6 +175,13 @@ def enrich_meeting(meeting, cache, reclassify=False):
     # the batch-level guard. A genuine reclassify still re-tags every readable PDF.
     if method == 'none' and cached and cached.get('tags'):
         return cached
+
+    # Combined agenda packet: classify only the agenda proper, not the prior-meeting
+    # minutes bundled in after it (which belong to — and are enriched as — those
+    # earlier meetings). Minutes sources are already single-meeting, so leave them.
+    trimmed = agenda_packet and kind == 'agenda'
+    if trimmed:
+        text = agenda_head(text)
 
     tags = classify(text)
     terms = matched_terms(text)
@@ -201,6 +214,9 @@ def enrich_meeting(meeting, cache, reclassify=False):
         'topicExcerpts': excerpts,
         'flags': topic_flags(topics),
         'dataCenterItems': dc_items,
+        # Present only when the agenda packet was trimmed to its head — a signal that
+        # textChars reflects the agenda proper, not the (much larger) full packet.
+        **({'agendaPacketTrimmed': True} if trimmed else {}),
     }
 
 
@@ -240,9 +256,11 @@ def main():
         print('Enriching %s (%s): %d of %d meeting(s) since %s ...'
               % (place['name'], cfg.get('platform'), len(window), len(data['meetings']), since))
 
+        agenda_packet = bool(cfg.get('agenda_packet'))
         enriched = []
         for m in window:
-            rec = enrich_meeting(m, cache, reclassify=args.reclassify)
+            rec = enrich_meeting(m, cache, reclassify=args.reclassify,
+                                 agenda_packet=agenda_packet)
             if rec:
                 enriched.append(rec)
 
