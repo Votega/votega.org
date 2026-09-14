@@ -62,10 +62,11 @@ DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 # ViewPublisher serves HTML (enrich_granicus_meetings.py), so both are excluded.
 # PrimeGov (Clayton) exposes agendas as CompiledDocument PDFs with a text layer,
 # TeamMunicode (Baldwin/Banks/Walton) serves direct agenda PDFs on Azure blob
-# storage, and Gwinnett serves agenda PDFs from its own host — all ride the same
-# poppler path.
+# storage, Gwinnett serves agenda PDFs from its own host, and Revize (Bartow/
+# Fayette) harvests direct agenda/minutes PDF links — all ride the same poppler
+# path.
 OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'primegov', 'teammunicode',
-                 'gwinnett', 'iqm2', 'municode', 'agendapub'}
+                 'gwinnett', 'iqm2', 'municode', 'agendapub', 'revize'}
 
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (meeting-topic-enricher)',
