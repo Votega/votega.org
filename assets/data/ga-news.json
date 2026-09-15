@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-15T13:58:53.212245+00:00",
+    "generatedAt": "2026-09-15T18:35:20.673727+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -23,19 +23,29 @@
     ],
     "count": 111,
     "windowDays": 45,
-    "entityTagged": 66,
+    "entityTagged": 67,
     "topicCounts": {
-      "elections": 20,
       "education": 7,
-      "healthcare": 19,
+      "elections": 20,
+      "healthcare": 20,
       "ethics": 6,
-      "courts": 9,
+      "courts": 8,
       "budget": 6,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
+    "vg-ga-p-000255": {
+      "name": "Andrew S. Clyde",
+      "url": null,
+      "bioguideId": "C001116"
+    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
@@ -84,11 +94,6 @@
       "url": null,
       "bioguideId": "W000790"
     },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
-    },
     "vg-ga-p-000252": {
       "name": "Richard McCormick",
       "url": null,
@@ -105,11 +110,6 @@
       "candidateIds": [
         "challenger-keisha-bottoms-gov-2026"
       ]
-    },
-    "vg-ga-p-000255": {
-      "name": "Andrew S. Clyde",
-      "url": null,
-      "bioguideId": "C001116"
     },
     "vg-ga-p-000685": {
       "name": "Everton Blair",
@@ -165,16 +165,16 @@
   },
   "items": [
     {
-      "id": "3899d5009eee",
-      "title": "GPB morning headlines for September 15, 2026",
-      "url": "https://www.gpb.org/news/2026/09/15/gpb-morning-headlines-for-september-15-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-09-15T13:14:05+00:00",
-      "snippet": "Both Georgia candidates for governor are attacking each other over data centers and transparency with less than a month to go until early voting; Republicans running for statewide office fired up supp",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
+      "id": "8ace02f954e8",
+      "title": "Williams, Merkley, Booker Lead Push to Close Constitutional Loophole Allowing for Slavery",
+      "url": "https://nikemawilliams.house.gov/posts/williams-merkley-booker-lead-push-to-close-constitutional-loophole-allowing-for-slavery",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-09-15T18:14:46+00:00",
+      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) and U.S. Senator Jeff Merkley (OR) today teamed up with New Jersey’s U.S. Senator Cory Booker to reintroduce the End the Exception Amendment. T",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": []
     },
     {
       "id": "0f9b52a9730e",
@@ -189,14 +189,18 @@
       ]
     },
     {
-      "id": "2fb048234aae",
-      "title": "Manufacturing Danger: The BioLab Story - Season Three Trailer",
-      "url": "https://www.gpb.org/news/2026/09/15/manufacturing-danger-the-biolab-story-season-three-trailer",
-      "source": "GPB News",
-      "publishedAt": "2026-09-15T08:00:00+00:00",
-      "snippet": "Two years after the BioLab fire sent a massive plume of toxic smoke across metro Atlanta, questions remain about what people in Conyers were actually exposed to. Now, new scientific research is offeri",
-      "entityIds": [],
-      "topics": []
+      "id": "d3aea21deed7",
+      "title": "Rep. Clyde Introduces MAGA Act to Safeguard U.S. Elections & Representation Prior to 2028 Election",
+      "url": "http://clyde.house.gov/news/documentsingle.aspx?DocumentID=3781",
+      "source": "Rep. Andrew Clyde (GA-09, press)",
+      "publishedAt": "2026-09-15T04:00:00+00:00",
+      "snippet": "WASHINGTON, D.C. — Today, Congressman Andrew Clyde (GA-09) led more than 40 House Republicans in introducing the Make Apportionment Great Again (MAGA) Act, legislation to require a reapportionment pri",
+      "entityIds": [
+        "vg-ga-p-000255"
+      ],
+      "topics": [
+        "elections"
+      ]
     },
     {
       "id": "b9bb4db8db50",
@@ -341,6 +345,16 @@
       "topics": []
     },
     {
+      "id": "0fb97197ec96",
+      "title": "Helene-ravaged communities to learn whether water projects will get federal funding",
+      "url": "https://thecurrentga.org/2026/09/12/helene-ravaged-communities-to-learn-whether-water-projects-will-get-federal-funding/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-12T16:47:35+00:00",
+      "snippet": "Georgia communities affected by Hurricane Helene will learn in November if they will receive a portion of nearly $500 million in federal relief funding for water infrastructure projects.\nThe Current i",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "b7cab039471a",
       "title": "Georgia Supreme Court mandates compensation for police-damaged property",
       "url": "https://thecurrentga.org/2026/09/12/georgia-supreme-court-mandates-compensation-for-police-damaged-property/",
@@ -351,16 +365,6 @@
       "topics": [
         "courts"
       ]
-    },
-    {
-      "id": "ab5b80e86cab",
-      "title": "Helene-ravaged communities to learn whether water projects will get federal funding",
-      "url": "https://capitol-beat.org/2026/09/helene-ravaged-communities-to-learn-whether-water-projects-will-get-federal-funding/?utm_source=rss&utm_medium=rss&utm_campaign=helene-ravaged-communities-to-learn-whether-water-projects-will-get-federal-funding",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-11T20:47:34+00:00",
-      "snippet": "ATLANTA — Communities across Georgia that were hit hard by Hurricane Helene will begin learning in November whether they will get a share of federal relief funding earmarked for water projects. The U.",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "a208663fc515",
@@ -768,20 +772,6 @@
       ]
     },
     {
-      "id": "d3aea21deed7",
-      "title": "Rep. Clyde Files Amicus Brief in Defense of Americans’ Second Amendment Freedoms",
-      "url": "http://clyde.house.gov/news/documentsingle.aspx?DocumentID=3765",
-      "source": "Rep. Andrew Clyde (GA-09, press)",
-      "publishedAt": "2026-09-03T04:00:00+00:00",
-      "snippet": "WASHINGTON, D.C. — Today, Congressman Andrew Clyde (GA-09), in partnership with the American Center for Law & Justice (ACLJ), filed a Supreme Court amicus brief in the case Viramontes v. Cook County (",
-      "entityIds": [
-        "vg-ga-p-000255"
-      ],
-      "topics": [
-        "courts"
-      ]
-    },
-    {
       "id": "f40c797c1a18",
       "title": "Bottoms’ affordability plan: encourage cities and counties to eliminate their taxes on groceries",
       "url": "https://capitol-beat.org/2026/09/bottoms-affordability-plan-encourage-cities-and-counties-to-eliminate-their-taxes-on-groceries/?utm_source=rss&utm_medium=rss&utm_campaign=bottoms-affordability-plan-encourage-cities-and-counties-to-eliminate-their-taxes-on-groceries",
@@ -992,6 +982,18 @@
       "snippet": "ATLANTA — Georgia will execute Stacey Ian Humphreys on Sept. 16 after postponing a prior execution scheduled for late last year. Humphreys was convicted of murder and other crimes in in the 2003 death",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "615d10887228",
+      "title": "Federal government completing distribution of first-year grants to Georgia to bolster rural hospitals",
+      "url": "https://capitol-beat.org/2026/08/federal-government-completing-distribution-of-first-year-grants-to-georgia-to-bolster-rural-hospitals/?utm_source=rss&utm_medium=rss&utm_campaign=federal-government-completing-distribution-of-first-year-grants-to-georgia-to-bolster-rural-hospitals",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-08-27T20:38:27+00:00",
+      "snippet": "ATLANTA — The federal government announced the delivery Thursday of the rest of a $218 million award to Georgia to support rural hospitals. The $93.3 million completes the first fiscal year of a five-",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
     },
     {
       "id": "93e614a76826",
