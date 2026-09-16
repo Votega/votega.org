@@ -13,6 +13,7 @@ then updates races.json:
 Usage: python scripts/update_general_from_runoff.py
 """
 
+import copy
 import csv
 import json
 import os
@@ -21,6 +22,7 @@ import unicodedata
 from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
+from lib.races_guard import assert_phase_transitions
 
 BASE          = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RUNOFF_CSV    = os.path.join(BASE, "_sources", "election_results", "ga-primary-runoff-results.csv")
@@ -287,6 +289,7 @@ def main():
 
     with open(RACES_PATH, encoding="utf-8") as f:
         races_data = json.load(f)
+    before_doc = copy.deepcopy(races_data)
 
     before = sum(1 for r in races_data["races"] if r["activePhase"] == "runoff")
     print(f"\nRaces at 'runoff' before: {before}")
@@ -305,6 +308,11 @@ def main():
         print("\nNo warnings — all races resolved cleanly.")
 
     races_data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # Only runoff->general flips are legitimate here; abort before overwriting on a
+    # dropped race, an emptied ballot, or an unexpected phase move.
+    assert_phase_transitions(before_doc, races_data,
+                             allowed={("runoff", "general")}, expected_count=updated)
 
     write_json_atomic(RACES_PATH, races_data, indent=2)
     print(f"\nWrote {RACES_PATH}")

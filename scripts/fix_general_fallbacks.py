@@ -9,11 +9,13 @@ Each fix copies the proper candidate object from primary.ballots into general.ba
 Run once after update_general_from_primary.py.
 """
 
+import copy
 import json
 import os
 from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
+from lib.races_guard import assert_active_phases_unchanged
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RACES_PATH = os.path.join(BASE, "assets", "data", "races.json")
@@ -139,10 +141,15 @@ def fix(races_data):
 def main():
     with open(RACES_PATH, encoding="utf-8") as f:
         races_data = json.load(f)
+    before = copy.deepcopy(races_data)
 
     fixes = fix(races_data)
 
     races_data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # This only swaps candidate objects inside existing general ballots — no phase
+    # should move and no race should appear/disappear.
+    assert_active_phases_unchanged(before, races_data)
 
     write_json_atomic(RACES_PATH, races_data, indent=2)
 

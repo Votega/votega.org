@@ -7,6 +7,7 @@ then updates races.json:
   - Leaves "runoff" and "general" races untouched
 """
 
+import copy
 import csv
 import json
 import os
@@ -15,6 +16,7 @@ import unicodedata
 from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
+from lib.races_guard import assert_phase_transitions
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CSV_PATH = os.path.join(BASE, "_sources", "election_results", "ga-primary-results-official.csv")
@@ -357,6 +359,7 @@ def main():
 
     with open(RACES_PATH, encoding="utf-8") as f:
         races_data = json.load(f)
+    before = copy.deepcopy(races_data)
 
     total_primary_before = sum(1 for r in races_data["races"] if r["activePhase"] == "primary")
     print(f"  Races at 'primary' before update: {total_primary_before}")
@@ -373,6 +376,11 @@ def main():
             print(f"  - {s}")
 
     races_data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # Only primary->general flips are legitimate here; abort before overwriting if a
+    # race was dropped, a ballot came out empty, or an unexpected phase moved.
+    assert_phase_transitions(before, races_data,
+                             allowed={("primary", "general")}, expected_count=updated)
 
     write_json_atomic(RACES_PATH, races_data, indent=2)
     print(f"\nWrote {RACES_PATH}")

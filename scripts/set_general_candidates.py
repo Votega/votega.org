@@ -24,12 +24,14 @@ To add a candidate not already in any phase (e.g. a write-in or independent),
 pass their full JSON on stdin instead — see --help for details.
 """
 
+import copy
 import json
 import sys
 import os
 from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
+from lib.races_guard import assert_only_race_changed
 
 # Cycle whose races this helper lists/promotes — change at a rollover (finding 5.9).
 CYCLE = 2026
@@ -73,6 +75,7 @@ def main():
 
     with open(RACES_PATH, encoding='utf-8') as f:
         data = json.load(f)
+    before = copy.deepcopy(data)
 
     # Find the race
     race = next((r for r in data['races'] if r['id'] == race_id), None)
@@ -109,6 +112,9 @@ def main():
     race['phases']['general'].pop('candidates', None)
 
     data['updatedAt'] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # Only the named race may change, and its general ballot must be populated.
+    assert_only_race_changed(before, data, race_id, require_populated_phase='general')
 
     write_json_atomic(RACES_PATH, data, indent=2)
 

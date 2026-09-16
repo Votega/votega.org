@@ -42,6 +42,7 @@ Usage:
     python scripts/sync_candidate_profiles.py --check    # exit 1 if out of step
 """
 
+import copy
 import json
 import re
 import sys
@@ -49,6 +50,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from lib.atomic_io import write_json_atomic
+from lib.races_guard import assert_active_phases_unchanged, assert_membership_preserved
 
 RACES = Path("assets/data/races.json")
 RESULTS_DIR = Path("_data/election_results")
@@ -210,6 +212,7 @@ def main():
 
     with open(RACES, encoding="utf-8") as f:
         data = json.load(f)
+    before = copy.deepcopy(data)
 
     ballot_keys = ballot_name_keys()
     all_changes = []
@@ -245,6 +248,11 @@ def main():
     if check_only:
         print("\nOut of step. Re-run without --check to reconcile.")
         return 1
+
+    # A field-level reconcile: no phase should move, and no candidate should be
+    # added, dropped, re-slotted, or have its type changed.
+    assert_active_phases_unchanged(before, data)
+    assert_membership_preserved(before, data)
 
     write_json_atomic(RACES, data, indent=2)
     print(f"\nWrote: {RACES}")

@@ -33,6 +33,7 @@ content change, so re-running is a no-op — the workflow can't loop.
 import argparse
 import json
 from lib.atomic_io import atomic_write
+from lib.races_guard import assert_equal_except
 import re
 import subprocess
 import sys
@@ -123,6 +124,9 @@ def main(argv=None):
     if n != 1:
         print("::error::could not locate a single updatedAt field to rewrite", file=sys.stderr)
         return 2
+    # The only legitimate change is the timestamp: guard against the regex ever
+    # rewriting anything else in the document.
+    assert_equal_except(json.loads(working), json.loads(updated), "updatedAt")
     with atomic_write(RACES_PATH, newline="") as f:
         f.write(updated)
     print(f"races.json updatedAt bumped {old} -> {new}")
