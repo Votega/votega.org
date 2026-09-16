@@ -90,6 +90,38 @@ def yaml_quote(s):
     return '"' + str(s).replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
+# Compact office/chamber labels used ONLY in the SEO <title> tag (share-title),
+# which head.html appends " | Vote GA" to. Bing flags titles over 70 characters,
+# and the verbose forms below blow past that on every districted entity page. The
+# full names stay in page.title (the H1) and in descriptions — this only trims the
+# browser-tab/search-result title. Longest replacement wins, so order isn't load-
+# bearing, but keep specific phrases (e.g. "of Representatives") intact.
+_OFFICE_ABBREV = (
+    ("Georgia House of Representatives", "GA House"),
+    ("U.S. House of Representatives", "U.S. House"),
+    ("Georgia State Senate", "GA Senate"),
+    ("Insurance & Fire Safety Commissioner", "Insurance Commissioner"),
+    ("Public Service Commissioner", "PSC"),
+    ("State School Superintendent", "School Superintendent"),
+    ("Commissioner of Agriculture", "Agriculture Commissioner"),
+    ("Secretary of Health and Human Services", "HHS Secretary"),
+    ("Director of the Office of Management and Budget", "OMB Director"),
+    ("Supreme Court of Georgia", "GA Supreme Court"),
+    ("Georgia Court of Appeals", "GA Court of Appeals"),
+    ("District Attorney", "DA"),
+    ("Judicial Circuit", "Circuit"),
+)
+
+
+def abbrev_office(s):
+    """Shorten verbose office/chamber names for the SEO <title> only (see above)."""
+    if not s:
+        return s
+    for long, short in _OFFICE_ABBREV:
+        s = s.replace(long, short)
+    return s
+
+
 def qs_id(url, key="id"):
     return (parse_qs(urlparse(url).query).get(key) or [None])[0]
 
@@ -301,7 +333,11 @@ def build_ga_legislators(records, urls, prior, new_state):
         urls.setdefault("ga-legislator", {})[mid] = permalink
 
         dist_txt = f", District {district}" if district else ""
-        share_title = f"{name} — Georgia {role}{dist_txt}"
+        # <title> uses the compact "GA House/Senate District N" form to stay under
+        # 70 chars; the full "Georgia State Representative, District N" lives in the
+        # description below and the page H1.
+        share_title = (f"{name} — GA {'Senate' if is_senate else 'House'} District {district}"
+                       if district else f"{name} — Georgia {role}")
         desc = (f"{rec.get('desc') or (role + dist_txt)}. Voting record, party-line "
                 f"loyalty, committee assignments, campaign finance, and contact "
                 f"information for {name}.")
@@ -445,7 +481,7 @@ def build_races(records, urls, prior, new_state):
         permalink = f"/races/{slug}/"
         urls.setdefault("race", {})[rid] = permalink
 
-        share_title = f"{name} — Candidates & Results"
+        share_title = f"{abbrev_office(name)} — Candidates & Results"
         desc = (f"Candidates, the incumbent, district information, and results for the "
                 f"{name} race in Georgia.")
         # Candidates in this race, across phases, deduped by id/name — for an
@@ -585,7 +621,9 @@ def build_candidates(records, urls, prior, new_state):
         if not party and "—" in desc:
             party = desc.split("—")[0].strip()
 
-        share_title = f"{name} — Candidate for {race_label}".strip()
+        # Compact office label + "Candidate," (not "Candidate for") keeps the
+        # <title> under 70 chars; the full race_label stays in jobTitle/description.
+        share_title = f"{name} — Candidate, {abbrev_office(race_label)}".strip()
         page_desc = desc or f"Candidate profile for {name}."
         person = {
             "@context": "https://schema.org", "@type": "Person", "name": name,
@@ -652,7 +690,7 @@ def build_federal_executives(records, urls, prior, new_state):
         permalink = f"/federal-executives/{slug}/"
         urls.setdefault("federal-executive", {})[oid] = permalink
 
-        share_title = f"{name} — {role}" if role else name
+        share_title = f"{name} — {abbrev_office(role)}" if role else name
         desc = (f"{role}. Profile, background, and official actions for {name} in the "
                 f"U.S. federal executive branch.") if role else f"Profile of {name}."
         ld = json_ld({
@@ -793,7 +831,7 @@ def build_places(records, urls, prior, new_state):
 
         kind = "City" if ptype == "city" else "County"
         has_officials = slug in officials_slugs
-        share_title = f"{name}, Georgia — Local Officials & Government"
+        share_title = f"{name}, Georgia — Local Government"
         if has_officials:
             desc = (f"Elected officials, plus public meeting agendas and minutes, for "
                     f"{name}, Georgia — who represents you locally, their seats, terms, "

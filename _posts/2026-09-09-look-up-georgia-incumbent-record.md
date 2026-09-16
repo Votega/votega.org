@@ -2,7 +2,7 @@
 layout: post
 title: Before You Vote... Look Up Any Georgia Incumbent's Record
 subtitle: Voting records, party-line loyalty, and stock trades for the incumbents on your November ballot
-share-title: Look Up Any Georgia Incumbent's Voting Record Before You Vote
+share-title: Look Up Any Georgia Incumbent's Voting Record
 share-description: Many names on Georgia's November 2026 ballot are incumbents. VoteGA lets you look up how they actually voted, how often they broke with their party, and what stocks they traded; all from public records.
 tags: [accountability, voting records, congress, georgia general assembly, 2026 general election, open data]
 ---
