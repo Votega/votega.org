@@ -45,7 +45,7 @@ from datetime import datetime, timezone
 import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
-from lib.sibling_publish import build_json, publish_or_dry_run  # noqa: E402
+from lib.sibling_publish import build_json, publish_or_dry_run, min_items  # noqa: E402
 
 REPO = "Votega/ga-local-government"
 TOKEN_ENV = "GA_LOCAL_GOVERNMENT_TOKEN"
@@ -327,7 +327,8 @@ def main():
             {"metadata": {**meta, "topic": t, "count": len(per_topic[t])},
              "mentions": per_topic[t]})
 
-    publish_or_dry_run(REPO, artifacts, TOKEN_ENV)
+    publish_or_dry_run(REPO, artifacts, TOKEN_ENV,
+                       validate=min_items("data/places.json", "places"))
 
 
 if __name__ == "__main__":

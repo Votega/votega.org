@@ -17,7 +17,7 @@ import io
 import json
 import os
 
-from lib.sibling_publish import build_json, publish_or_dry_run
+from lib.sibling_publish import build_json, publish_or_dry_run, min_items
 
 REPO = "Votega/ga-legislation"
 TOKEN_ENV = "GA_BALLOT_MEASURES_TOKEN"  # unused in git-based publishing; enables API dry-run override
@@ -107,7 +107,8 @@ def build_artifacts():
 
 
 def main():
-    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV)
+    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV,
+                       validate=min_items("ga-ballot-measures.json", "measures"))
 
 
 if __name__ == "__main__":
