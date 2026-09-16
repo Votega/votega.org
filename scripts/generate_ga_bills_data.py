@@ -31,6 +31,7 @@ import urllib.parse
 from datetime import datetime, timedelta, timezone
 
 from lib.http import fetch_json
+from lib.atomic_io import write_json_atomic, atomic_write
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              session_name, tag_session)
 
@@ -530,16 +531,13 @@ def main():
         'bills': bills,
     }
 
-    os.makedirs(os.path.dirname(OUTPUT_FILE) or '.', exist_ok=True)
     print(f'Writing {OUTPUT_FILE} ...')
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        json.dump(output, f, separators=(',', ':'), ensure_ascii=False)
+    write_json_atomic(OUTPUT_FILE, output, separators=(',', ':'))
 
     # Write review CSV for any remaining untagged actual bills
     untagged_bills = [b for b in bills_only if not b['subjects']]
     if untagged_bills:
-        os.makedirs(os.path.dirname(REVIEW_CSV_FILE) or '.', exist_ok=True)
-        with open(REVIEW_CSV_FILE, 'w', newline='', encoding='utf-8') as f:
+        with atomic_write(REVIEW_CSV_FILE, newline='') as f:
             w = csv.writer(f)
             w.writerow(['identifier', 'chamber', 'title', 'status'])
             for b in untagged_bills:

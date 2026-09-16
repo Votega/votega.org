@@ -15,6 +15,7 @@ import urllib.parse
 from datetime import datetime
 
 from lib.http import fetch_json
+from lib.atomic_io import write_json_atomic
 
 OCD_ID_RE = re.compile(r'^ocd-person/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$')
 
@@ -266,10 +267,7 @@ def main():
         'members': members,
     }
 
-    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
-
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        json.dump(output_data, f, indent=2, ensure_ascii=False)
+    write_json_atomic(OUTPUT_FILE, output_data, indent=2)
 
     print(f"Successfully wrote {len(members)} GA members to {OUTPUT_FILE}")
 

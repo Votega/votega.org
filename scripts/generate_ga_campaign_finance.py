@@ -31,6 +31,7 @@ Notes on the API, all learned the hard way:
 """
 
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
@@ -275,9 +276,7 @@ def main():
         "byOffice":         by_office,
     }
 
-    os.makedirs(os.path.dirname(OUTPUT_FILE) or ".", exist_ok=True)
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
+    write_json_atomic(OUTPUT_FILE, output, indent=2)
 
     size_kb = os.path.getsize(OUTPUT_FILE) // 1024
     print(f"\nDone. {len(filers)} filers for cycle {cycle} "

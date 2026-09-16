@@ -22,6 +22,7 @@ Usage:
 """
 
 import json
+from lib.atomic_io import write_json_atomic
 import sys
 from datetime import datetime, timezone
 
@@ -147,8 +148,7 @@ def main():
         print(f"{OUT_FILE} is up to date ({result['unopposed']} of {result['total']} seats unopposed).")
         return
 
-    with open(OUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(result, f, indent=2, ensure_ascii=False)
+    write_json_atomic(OUT_FILE, result, indent=2)
     print(f"Wrote {OUT_FILE}: {result['unopposed']} of {result['total']} legislative seats "
           f"have no major-party opponent ({result['unopposedPct']}%) — "
           f"{result['republicanSafe']} R-safe, {result['democraticSafe']} D-safe.")

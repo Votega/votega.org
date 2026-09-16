@@ -37,6 +37,7 @@ from datetime import datetime, timezone
 # scripts/ is sys.path[0] when run as `python scripts/generate_party_unity.py`
 from lib.ga_voters import VOTING_CHAMBERS
 from lib.votes_schema import member_votes_map
+from lib.atomic_io import write_json_atomic
 
 VOTES_FILE = "assets/data/ga-member-votes.json"
 MEMBERS_FILE = "assets/data/ga-members.json"
@@ -243,8 +244,7 @@ def main():
         "members": results,
     }
 
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(out, f, indent=2, ensure_ascii=False)
+    write_json_atomic(out_path, out, indent=2)
 
     print(f"Wrote {out_path}: {len(results)} members ({len(scored)} with a party-unity score)")
 

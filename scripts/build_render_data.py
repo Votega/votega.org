@@ -21,6 +21,7 @@ Run locally before `jekyll serve` to preview the server-rendered blocks:
 from __future__ import annotations
 
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import sys
 from datetime import datetime, date
@@ -299,8 +300,7 @@ def main():
         if payload is None:
             continue
         out_path = os.path.join(OUT_DIR, f"{name}.json")
-        with open(out_path, "w", encoding="utf-8") as fh:
-            json.dump(payload, fh, ensure_ascii=False, separators=(",", ":"))
+        write_json_atomic(out_path, payload, separators=(",", ":"))
         print(f"  wrote _data/rendered/{name}.json  ({payload['shown']}/{payload['count']} rows, updated {payload['updated']})")
         written += 1
     print(f"build_render_data: {written}/{len(CONFIG)} sidecars written")

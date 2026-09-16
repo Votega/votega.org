@@ -20,6 +20,7 @@ file). Exits non-zero on fatal errors so CI catches failures.
 """
 
 import json
+from lib.atomic_io import write_json_atomic
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -370,8 +371,7 @@ def main():
         },
         "records": records,
     }
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=1)
+    write_json_atomic(OUTPUT_PATH, output, indent=1)
     print(f"Wrote {OUTPUT_PATH.relative_to(REPO_ROOT)}")
 
 

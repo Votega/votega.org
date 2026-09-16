@@ -47,6 +47,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.http import fetch_bytes  # noqa: E402
+from lib.atomic_io import write_json_atomic  # noqa: E402
 from lib.pdf_text import extract_text, has_ocr  # noqa: E402
 from lib.meeting_topics import (  # noqa: E402
     classify, matched_terms, topic_flags, build_summary, flag_entry, write_flags_file,
@@ -282,9 +283,8 @@ def main():
             'summary': summary,
             'meetings': enriched,
         }
-        with open(os.path.join(DATA_DIR, 'local-%s-meetings-enriched.json' % slug),
-                  'w', encoding='utf-8') as f:
-            json.dump(out, f, ensure_ascii=False, indent=1)
+        write_json_atomic(os.path.join(DATA_DIR, 'local-%s-meetings-enriched.json' % slug),
+                          out, indent=1)
         flag_updates[slug] = flag_entry(summary)
         print('  %s: flags=%s, %d data-center meeting(s)'
               % (slug, ','.join(summary['flags']) or '-', len(summary['dataCenterItems'])))

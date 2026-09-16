@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
@@ -880,10 +881,8 @@ def main():
             continue
         print(f"  {label}: {n} pages")
         total += n
-    with open(ENTITY_URLS_PATH, "w", encoding="utf-8") as fh:
-        json.dump(urls, fh, ensure_ascii=False, separators=(",", ":"))
-    with open(LASTMOD_STATE_PATH, "w", encoding="utf-8") as fh:
-        json.dump(new_state, fh, ensure_ascii=False, separators=(",", ":"))
+    write_json_atomic(ENTITY_URLS_PATH, urls, separators=(",", ":"))
+    write_json_atomic(LASTMOD_STATE_PATH, new_state, separators=(",", ":"))
     changed = sum(1 for k, v in new_state.items() if prior.get(k, {}).get("h") != v["h"])
     print(f"build_entity_pages: {total} pages, {sum(len(v) for v in urls.values())} URL mappings, "
           f"{changed} changed since last run")

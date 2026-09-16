@@ -60,6 +60,7 @@ import sys
 from datetime import datetime, timezone
 
 from lib.ga_match import CHAMBER_TO_PEACHFILE, find_filers, member_scope, toks
+from lib.atomic_io import write_json_atomic, atomic_write
 
 SCHEMA_VERSION = 2
 
@@ -139,7 +140,7 @@ class Ledger:
             "nextSeq": self.next_seq,
             "assign": dict(sorted(self.assign.items())),
         }
-        with open(self.path, "w", encoding="utf-8") as f:
+        with atomic_write(self.path) as f:
             json.dump(payload, f, ensure_ascii=False, indent=1)
             f.write("\n")
 
@@ -619,7 +620,7 @@ def main():
         "people": records,
     }
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    with atomic_write(OUTPUT_FILE) as f:
         json.dump(payload, f, ensure_ascii=False, indent=1)
         f.write("\n")
     ledger.save()

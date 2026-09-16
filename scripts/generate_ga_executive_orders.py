@@ -5,6 +5,7 @@ Usage: python scripts/generate_ga_executive_orders.py
 """
 
 import json
+from lib.atomic_io import write_json_atomic
 import re
 import os
 from datetime import datetime
@@ -123,8 +124,7 @@ def write_json(year, orders, governor="Brian P. Kemp"):
         "orders": orders
     }
     out_path = os.path.join(OUTPUT_DIR, f"ga-executive-orders-{year}.json")
-    with open(out_path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    write_json_atomic(out_path, data, indent=2)
     print(f"Wrote {len(orders)} orders to {out_path}")
 
 

@@ -11,6 +11,7 @@ Order numbers:  MM.DD.YY.NN
 """
 
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
@@ -300,8 +301,7 @@ def load_existing(year):
 def save(year, data):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     path = os.path.join(OUTPUT_DIR, f"ga-executive-orders-{year}.json")
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    write_json_atomic(path, data, indent=2)
     return path
 
 

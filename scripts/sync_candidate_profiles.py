@@ -48,6 +48,8 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+from lib.atomic_io import write_json_atomic
+
 RACES = Path("assets/data/races.json")
 RESULTS_DIR = Path("_data/election_results")
 
@@ -244,8 +246,7 @@ def main():
         print("\nOut of step. Re-run without --check to reconcile.")
         return 1
 
-    with open(RACES, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    write_json_atomic(RACES, data, indent=2)
     print(f"\nWrote: {RACES}")
     return 0
 

@@ -64,6 +64,7 @@ Usage:
 """
 
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
@@ -352,9 +353,7 @@ def main():
         "byNormalizedName": by_name,
     }
 
-    os.makedirs(os.path.dirname(outfile) or ".", exist_ok=True)
-    with open(outfile, "w", encoding="utf-8") as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
+    write_json_atomic(outfile, output, indent=2)
 
     size_kb = os.path.getsize(outfile) // 1024
     print(f"\nDone. {len(filers)} filers | {size_kb} KB -> {outfile}")

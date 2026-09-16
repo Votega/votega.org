@@ -29,6 +29,7 @@ Environment:
 from __future__ import annotations
 
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import sys
 import urllib.request
@@ -115,9 +116,7 @@ def main():
         reason = "first run (bulk)"
 
     # Always record the current {loc: lastmod} for the next run's diff.
-    os.makedirs(os.path.dirname(OUT_LOCS) or ".", exist_ok=True)
-    with open(OUT_LOCS, "w", encoding="utf-8") as fh:
-        json.dump(current, fh, separators=(",", ":"))
+    write_json_atomic(OUT_LOCS, current, ensure_ascii=True, separators=(",", ":"))
 
     if not submit:
         print("nothing new to submit")
