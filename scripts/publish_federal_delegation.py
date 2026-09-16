@@ -29,7 +29,7 @@ import os
 import sys
 from datetime import datetime, timezone
 
-from lib.sibling_publish import build_json, publish_or_dry_run
+from lib.sibling_publish import build_json, publish_or_dry_run, min_items
 
 REPO = "Votega/ga-federal-legislators"
 TOKEN_ENV = "GA_FEDERAL_LEGISLATORS"
@@ -328,7 +328,8 @@ def build_artifacts():
 
 
 def main():
-    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV)
+    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV,
+                       validate=min_items("data/members.json", "members"))
 
 
 if __name__ == "__main__":

@@ -50,7 +50,7 @@ import sys
 from lib.ga_voters import VOTING_CHAMBERS
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              session_name, session_slug, tag_session)
-from lib.sibling_publish import build_json, publish_or_dry_run
+from lib.sibling_publish import build_json, publish_or_dry_run, min_items
 from lib.votes_schema import member_votes_map
 
 REPO = "Votega/ga-legislators"
@@ -476,8 +476,13 @@ def resolve_slug(explicit):
 
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else ""
+    # Record floor only for the flat roster (data/all.json is the full ga-members.json).
+    # votes/scorecard/freeze-roster are session-partitioned and emit empty sessions by
+    # design, so a >0 floor would false-positive; the universal artifact gate still runs.
+    validate = None
     if mode == "members":
         artifacts = build_members()
+        validate = min_items("data/all.json", "members")
     elif mode == "votes":
         artifacts = build_votes()
     elif mode == "scorecard":
@@ -487,7 +492,7 @@ def main():
         artifacts = build_freeze_roster(slug)
     else:
         sys.exit("usage: publish_ga_legislators.py <members|votes|scorecard|freeze-roster> [session-slug]")
-    publish_or_dry_run(REPO, artifacts, TOKEN_ENV)
+    publish_or_dry_run(REPO, artifacts, TOKEN_ENV, validate=validate)
 
 
 if __name__ == "__main__":

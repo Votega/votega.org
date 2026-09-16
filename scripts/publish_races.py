@@ -20,7 +20,7 @@ import os
 import sys
 from collections import Counter
 
-from lib.sibling_publish import build_json, publish_or_dry_run
+from lib.sibling_publish import build_json, publish_or_dry_run, min_items
 
 REPO = "Votega/ga-races-elections"
 TOKEN_ENV = "GA_RACES_TOKEN"
@@ -244,7 +244,8 @@ def build_artifacts():
 
 
 def main():
-    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV)
+    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV,
+                       validate=min_items("races.json", "races"))
 
 
 if __name__ == "__main__":

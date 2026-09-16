@@ -126,6 +126,56 @@ def build_json(obj):
     return json.dumps(obj, ensure_ascii=False, indent=1).encode()
 
 
+def _assert_artifacts_sane(artifacts):
+    """Universal pre-publish gate: never mirror an empty or corrupt blob to a public repo.
+
+    Publishers `json.load` local disk, transform, and PUT the result to a sibling
+    repo with a standing write-PAT. Nothing re-checks the bytes before they go out
+    (PIPELINE-AUDIT.md #1), so a broken transform or a truncated source file (the
+    class #2's atomic writes guard against) would propagate automatically. This runs
+    inside the one path every publisher calls — before both live publish and dry-run,
+    so local/CI runs fail the same way — and refuses to push:
+      * an empty artifact set,
+      * any artifact that is missing/empty bytes,
+      * any *.json artifact that does not parse.
+    Dataset-specific record floors are the caller's `validate` hook (see min_items)."""
+    if not artifacts:
+        raise ValueError("refusing to publish: no artifacts were built")
+    for path, data in artifacts.items():
+        if not isinstance(data, (bytes, bytearray)):
+            raise TypeError(f"refusing to publish: artifact {path!r} is {type(data).__name__}, not bytes")
+        if len(data) == 0:
+            raise ValueError(f"refusing to publish: artifact {path!r} is empty")
+        if path.endswith(".json"):
+            try:
+                json.loads(data)
+            except (ValueError, UnicodeDecodeError) as e:
+                raise ValueError(f"refusing to publish: artifact {path!r} is not valid JSON: {e}")
+
+
+def min_items(remote_path, collection="", *, minimum=1):
+    """Build a `validate` callback asserting a JSON artifact holds enough records.
+
+    `collection` is a dotted path to a list/dict inside the parsed artifact ("" = the
+    whole document). The floor is corpus-independent (default: non-empty), mirroring the
+    standalone publish workflows' `len(...) == 0` guard so a transform that emits a
+    well-formed-but-empty dataset (valid JSON, so `_assert_artifacts_sane` passes) cannot
+    wipe a public repo's content. Only for flat, always-populated datasets — NOT the
+    session-partitioned publishers (bills/votes), which emit empty sessions by design."""
+    def _validate(artifacts):
+        if remote_path not in artifacts:
+            raise ValueError(f"refusing to publish: expected artifact {remote_path!r} was not built")
+        node = json.loads(artifacts[remote_path])
+        for part in filter(None, collection.split(".")):
+            node = node[part]
+        n = len(node)
+        if n < minimum:
+            where = collection or "<document>"
+            raise ValueError(
+                f"refusing to publish: {remote_path} {where} has {n} item(s), need >= {minimum}")
+    return _validate
+
+
 def _get_sha(url, headers):
     """Current blob sha for a Contents API path, or None if the file doesn't exist."""
     try:
@@ -191,15 +241,23 @@ def _dry_run(artifacts, out_dir):
         print(f"  wrote {dest} ({len(data):,} bytes)")
 
 
-def publish_or_dry_run(repo, artifacts, token_env):
+def publish_or_dry_run(repo, artifacts, token_env, validate=None):
     """Publish `artifacts` to `repo` if os.environ[token_env] is set, else dry-run to disk.
 
     The reuse terms (LICENSE + NOTICE.md) are injected here, so no publisher can omit
     them and all publishers targeting one repo emit byte-identical copies. A caller that
     supplies its own LICENSE or NOTICE.md keeps it.
+
+    Every artifact is gated before it can leave: `_assert_artifacts_sane` always runs, and
+    an optional `validate(artifacts)` callback (see min_items) adds a dataset record floor.
+    Both run before publish AND dry-run, so a broken build fails fast everywhere rather than
+    mirroring bad data to a public repo. A failing check raises, aborting the publish.
     """
     for path, data in license_artifacts(repo).items():
         artifacts.setdefault(path, data)
+    _assert_artifacts_sane(artifacts)
+    if validate is not None:
+        validate(artifacts)
     token = os.environ.get(token_env)
     if token:
         print(f"Publishing {len(artifacts)} artifacts to {repo}:")
