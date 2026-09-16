@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-16T18:33:13.154362+00:00",
+    "generatedAt": "2026-09-16T23:24:15.173673+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,30 +21,55 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 110,
+    "count": 114,
     "windowDays": 45,
-    "entityTagged": 64,
+    "entityTagged": 66,
     "topicCounts": {
-      "elections": 20,
+      "education": 9,
+      "elections": 22,
+      "budget": 7,
+      "surveillance": 3,
       "courts": 9,
-      "education": 8,
       "healthcare": 19,
-      "ethics": 6,
-      "budget": 6,
-      "surveillance": 1
+      "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
+    "vg-ga-p-000684": {
+      "name": "Tricia R. Pridemore",
       "url": null,
-      "bioguideId": "W000788"
+      "candidateIds": [
+        "challenger-tricia-pridemore-ga11-2026"
+      ]
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
     },
     "vg-ga-p-000255": {
       "name": "Andrew S. Clyde",
       "url": null,
       "bioguideId": "C001116"
+    },
+    "vg-ga-p-000256": {
+      "name": "Rick W. Allen",
+      "url": null,
+      "bioguideId": "A000372"
+    },
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
+    "vg-ga-p-000262": {
+      "name": "Lucy McBath",
+      "url": null,
+      "bioguideId": "M001208"
     },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
@@ -71,23 +96,10 @@
         "challenger-rick-jackson-gov-2026"
       ]
     },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
-    },
     "vg-ga-p-000257": {
       "name": "Barry Loudermilk",
       "url": null,
       "bioguideId": "L000583"
-    },
-    "vg-ga-p-000256": {
-      "name": "Rick W. Allen",
-      "url": null,
-      "bioguideId": "A000372"
     },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
@@ -98,11 +110,6 @@
       "name": "Richard McCormick",
       "url": null,
       "bioguideId": "M001218"
-    },
-    "vg-ga-p-000262": {
-      "name": "Lucy McBath",
-      "url": null,
-      "bioguideId": "M001208"
     },
     "vg-ga-p-000335": {
       "name": "Keisha R. Lance Bottoms",
@@ -138,16 +145,83 @@
       "candidateIds": [
         "challenger-tyler-harper-agcom-2026"
       ]
-    },
-    "vg-ga-p-000684": {
-      "name": "Tricia R. Pridemore",
-      "url": null,
-      "candidateIds": [
-        "challenger-tricia-pridemore-ga11-2026"
-      ]
     }
   },
   "items": [
+    {
+      "id": "c762c44373a0",
+      "title": "Former business executive to lead Georgia’s public colleges and universities",
+      "url": "https://capitol-beat.org/2026/09/former-business-executive-to-lead-georgias-public-colleges-and-universities/?utm_source=rss&utm_medium=rss&utm_campaign=former-business-executive-to-lead-georgias-public-colleges-and-universities",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-09-16T22:10:05+00:00",
+      "snippet": "ATLANTA — It took five months to find a successor to University System of Georgia Chancellor Sonny Perdue, and after looking far and wide the Board of Regents picked someone close to home. The new uni",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "dd523bfd1f5d",
+      "title": "Former Georgia regulator who helped set policy for data centers now works for company building them",
+      "url": "https://georgiarecorder.com/2026/09/16/former-georgia-regulator-who-helped-set-policy-for-data-centers-now-works-for-company-building-them/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-16T21:41:18+00:00",
+      "snippet": "Tricia Pridemore, who until recently served as an elected utility regulator in Georgia, is now working for a corporation that builds data centers primarily in the southeast.  Pridemore, who is a Repub",
+      "entityIds": [
+        "vg-ga-p-000684"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "75e4759249e0",
+      "title": "This state is spending more on lethal injections. A law tries to keep the details secret",
+      "url": "https://www.gpb.org/news/2026/09/16/state-spending-more-on-lethal-injections-law-tries-keep-the-details-secret",
+      "source": "GPB News",
+      "publishedAt": "2026-09-16T20:31:00+00:00",
+      "snippet": "As Georgia plans for its first execution in two years, a trove of records provides us with new information — and raises new questions — about the state’s lethal injection process.",
+      "entityIds": [],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "8b67302a2d75",
+      "title": "GPB evening headlines for September 16, 2026",
+      "url": "https://www.gpb.org/news/2026/09/16/gpb-evening-headlines-for-september-16-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-16T19:30:51+00:00",
+      "snippet": "Ballots for November’s midterm elections are being sent to Georgians living overseas. Atlanta plans to make rules for Flock camera use.",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "surveillance"
+      ]
+    },
+    {
+      "id": "80124bb56936",
+      "title": "Report: Key details of Georgia executions are shrouded in secrecy",
+      "url": "https://www.gpb.org/news/2026/09/16/report-key-details-of-georgia-executions-are-shrouded-in-secrecy",
+      "source": "GPB News",
+      "publishedAt": "2026-09-16T18:46:00+00:00",
+      "snippet": "A ProPublica investigation found the nature of Georgia's lethal injection drugs and the identities of doctors involved in executions are by law kept secret.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "a08d27ccc95b",
+      "title": "Georgia Today: Flock camera rules; West Nile virus death; Get-out-the-vote efforts",
+      "url": "https://www.gpb.org/news/2026/09/16/georgia-today-flock-camera-rules-west-nile-virus-death-get-out-the-vote-efforts",
+      "source": "GPB News",
+      "publishedAt": "2026-09-16T18:09:08+00:00",
+      "snippet": "On the September 16th edition: Atlanta promises rules on Flock cameras; One Georgian has died of West Nile Virus; And get-out-the-vote efforts are underway ahead of the November midterms.",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "surveillance"
+      ]
+    },
     {
       "id": "71ab1a25b619",
       "title": "One day after the Supreme Court weighed in on mail-in voting, ballots ship to Georgians overseas",
@@ -162,13 +236,39 @@
       ]
     },
     {
-      "id": "8bffeade106b",
-      "title": "How the EPA rollback of carbon emission rules could play out in Georgia's coal-fired power plants",
-      "url": "https://www.gpb.org/news/2026/09/16/how-the-epa-rollback-of-carbon-emission-rules-could-play-out-in-georgias-coal-fired",
-      "source": "GPB News",
-      "publishedAt": "2026-09-16T14:10:00+00:00",
-      "snippet": "A rollback of Biden-era carbon rules by the EPA gives a new lease on life to Georgia Power's massive coal-fired power plants.",
-      "entityIds": [],
+      "id": "fe4be11295d4",
+      "title": "Carr: Decatur Woman Sentenced for Involvement in $158k Business Email Compromise Scam",
+      "url": "https://law.georgia.gov/press-releases/2026-09-16/carr-decatur-woman-sentenced-involvement-158k-business-email-compromise",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-09-16T12:00:00+00:00",
+      "snippet": "GWINNETT COUNTY, GA – Georgia Attorney General Chris Carr today announced that Ogechi Urenna Udunka, 44, of Decatur, has pleaded to two counts each of Theft by Taking and Money Laundering for her invo",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
+      "id": "d3aea21deed7",
+      "title": "Rep. Clyde Honors Winton Machine Company as Special Georgian of the Ninth",
+      "url": "http://clyde.house.gov/news/documentsingle.aspx?DocumentID=3783",
+      "source": "Rep. Andrew Clyde (GA-09, press)",
+      "publishedAt": "2026-09-16T04:00:00+00:00",
+      "snippet": "WASHINGTON, D.C. — Today, Congressman Andrew Clyde (GA-09) recognized Winton Machine of Suwanee, Georgia as a Special Georgian of the Ninth in celebration of the company’s selection as one of the five",
+      "entityIds": [
+        "vg-ga-p-000255"
+      ],
+      "topics": []
+    },
+    {
+      "id": "50e97b945b65",
+      "title": "Funding for Veterans Cemetery in Augusta Officially Awarded",
+      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7386",
+      "source": "Rep. Rick Allen (GA-12, press)",
+      "publishedAt": "2026-09-16T04:00:00+00:00",
+      "snippet": "Today, the Department of Veterans Affairs (VA) National Cemetery Administration (NCA) officially awarded a grant of up to $13,610,908 to the State of Georgia for the establishment of the Georgia Memor",
+      "entityIds": [
+        "vg-ga-p-000256"
+      ],
       "topics": []
     },
     {
@@ -220,6 +320,18 @@
       "topics": []
     },
     {
+      "id": "d2073a090b7c",
+      "title": "McBath Introduces Bipartisan Bill to Increase Transparency in Prescription Drug Market",
+      "url": "https://mcbath.house.gov/2026/09/15/mcbath-introduces-bipartisan-bill-to-increase-transparency-in-prescription-drug-market/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-09-15T13:35:00+00:00",
+      "snippet": "Washington, DC — This week, Congresswoman Lucy McBath (GA-06) introduced the bipartisan Net Effective Cost Transparency and Prescription Drug Affordability Act of 2026, legislation to increase transpa",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": []
+    },
+    {
       "id": "0f9b52a9730e",
       "title": "Georgia music education programs play on despite challenges",
       "url": "https://georgiarecorder.com/2026/09/15/georgia-music-education-programs-play-on-despite-challenges/",
@@ -229,20 +341,6 @@
       "entityIds": [],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "d3aea21deed7",
-      "title": "Rep. Clyde Introduces MAGA Act to Safeguard U.S. Elections & Representation Prior to 2028 Election",
-      "url": "http://clyde.house.gov/news/documentsingle.aspx?DocumentID=3781",
-      "source": "Rep. Andrew Clyde (GA-09, press)",
-      "publishedAt": "2026-09-15T04:00:00+00:00",
-      "snippet": "WASHINGTON, D.C. — Today, Congressman Andrew Clyde (GA-09) led more than 40 House Republicans in introducing the Make Apportionment Great Again (MAGA) Act, legislation to require a reapportionment pri",
-      "entityIds": [
-        "vg-ga-p-000255"
-      ],
-      "topics": [
-        "elections"
       ]
     },
     {
@@ -432,18 +530,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "50e97b945b65",
-      "title": "Congressman Allen Commemorates 25th Anniversary of September 11th in Columbia County",
-      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7381",
-      "source": "Rep. Rick Allen (GA-12, press)",
-      "publishedAt": "2026-09-11T04:00:00+00:00",
-      "snippet": "Today, on the 25th anniversary of the September 11, 2001 terrorist attacks, Congressman Rick W. Allen (GA-12) attended the annual 9/11 Remembrance Ceremony and Memorial Stair Climb in Evans, Georgia. ",
-      "entityIds": [
-        "vg-ga-p-000256"
-      ],
-      "topics": []
     },
     {
       "id": "e5ed7da02555",
@@ -945,16 +1031,6 @@
       ]
     },
     {
-      "id": "aea84463d6f6",
-      "title": "New partisan-linked Georgia sites mix news with divergent political messages",
-      "url": "https://capitol-beat.org/2026/08/new-partisan-linked-georgia-sites-mix-news-with-divergent-political-messages/?utm_source=rss&utm_medium=rss&utm_campaign=new-partisan-linked-georgia-sites-mix-news-with-divergent-political-messages",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-08-28T23:26:15+00:00",
-      "snippet": "ATLANTA — In late July, a new website popped online carrying local news stories from Georgia. There was an article about a disgraced former Atlanta City Council member, another about President Donald ",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "e49d54dd4b74",
       "title": "Warnock calls for Georgia data center moratorium",
       "url": "https://georgiarecorder.com/2026/08/28/warnock-calls-for-georgia-data-center-moratorium/",
@@ -1349,20 +1425,6 @@
       ]
     },
     {
-      "id": "7de61e18c4e1",
-      "title": "Carr Secures New Indictment for Trafficking of 16-Year-Old Following Operation “Global Chain”",
-      "url": "https://law.georgia.gov/press-releases/2026-08-18/carr-secures-new-indictment-trafficking-16-year-old-following-operation",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-08-18T12:00:00+00:00",
-      "snippet": "International operation resulted in the recovery of 11 missing children in Georgia FULTON COUNTY, GA – Georgia Attorney General Chris Carr today announced that his Human Trafficking Prosecution Unit h",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": [
-        "ethics"
-      ]
-    },
-    {
       "id": "d2f6c9890d31",
       "title": "How this Georgia factory is surviving America’s solar policy whiplash",
       "url": "https://georgiarecorder.com/2026/08/17/how-this-georgia-factory-is-surviving-americas-solar-policy-whiplash/",
@@ -1465,16 +1527,6 @@
       "topics": [
         "healthcare"
       ]
-    },
-    {
-      "id": "6ce65c4cfb66",
-      "title": "Potent, mislabeled and easy to buy: Inside Georgia’s kratom market",
-      "url": "https://georgiarecorder.com/2026/08/13/potent-mislabeled-and-easy-to-buy-inside-georgias-kratom-market/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-13T20:33:09+00:00",
-      "snippet": "On a chilly night this past February, Andrew Wood died alone in his bed after consuming a kratom product purchased legally at a Brunswick vape shop. He was 24. According to his mother and girlfriend, ",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "faea478e22b4",
