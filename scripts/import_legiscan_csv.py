@@ -24,6 +24,7 @@ from datetime import datetime
 
 # scripts/ is sys.path[0] when run as `python scripts/import_legiscan_csv.py`
 from lib.votes_schema import encode_member_votes
+from lib.atomic_io import write_json_atomic
 
 CSV_DIR      = sys.argv[1] if len(sys.argv) > 1 else "assets/data/legiscan-csv"
 OUTPUT_FILE  = sys.argv[2] if len(sys.argv) > 2 else "assets/data/ga-member-votes.json"
@@ -264,9 +265,7 @@ def main():
         "memberVotes": member_votes_compact,
     }
 
-    os.makedirs(os.path.dirname(OUTPUT_FILE) or ".", exist_ok=True)
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(output, f, separators=(",", ":"), ensure_ascii=False)
+    write_json_atomic(OUTPUT_FILE, output, separators=(",", ":"))
 
     size_kb = os.path.getsize(OUTPUT_FILE) // 1024
     print(f"\nDone. {len(votes_meta)} roll calls · {len(member_votes)} members · {size_kb} KB → {OUTPUT_FILE}")

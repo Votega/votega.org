@@ -24,6 +24,8 @@ import os
 import re
 from datetime import datetime, timezone
 
+from lib.atomic_io import write_json_atomic
+
 # ── Subject taxonomy ──────────────────────────────────────────────────────────
 # Keyword rules over the meeting/agenda-item text. Matched case-insensitively as
 # plain substrings (see classify). Data-center / land-use is the killer app —
@@ -516,6 +518,5 @@ def write_flags_file(out_dir, updates):
             pass
     doc.setdefault('places', {}).update(updates)
     doc['metadata'] = {'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(doc, f, ensure_ascii=False, indent=1)
+    write_json_atomic(path, doc, indent=1)
     return path

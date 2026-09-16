@@ -32,6 +32,7 @@ content change, so re-running is a no-op — the workflow can't loop.
 """
 import argparse
 import json
+from lib.atomic_io import atomic_write
 import re
 import subprocess
 import sys
@@ -122,7 +123,7 @@ def main(argv=None):
     if n != 1:
         print("::error::could not locate a single updatedAt field to rewrite", file=sys.stderr)
         return 2
-    with open(RACES_PATH, "w", encoding="utf-8", newline="") as f:
+    with atomic_write(RACES_PATH, newline="") as f:
         f.write(updated)
     print(f"races.json updatedAt bumped {old} -> {new}")
     return 0

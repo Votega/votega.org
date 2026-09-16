@@ -27,6 +27,7 @@ Usage:
 
 import glob
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
@@ -418,8 +419,7 @@ def main():
         },
         'races': index,
     }
-    with open(OUT_PATH, 'w', encoding='utf-8') as f:
-        json.dump(out, f, ensure_ascii=False, separators=(',', ':'))
+    write_json_atomic(OUT_PATH, out, separators=(',', ':'))
 
     print(f"\nMatched — exact office: {stats['office']}, "
           f"normalized office: {stats['office~']}, candidate names: {stats['name']}, "

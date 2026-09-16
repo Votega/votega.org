@@ -47,6 +47,7 @@ from lib.municode import fetch_municode_meetings  # noqa: E402
 from lib.agendapub import fetch_agendapub_meetings  # noqa: E402
 from lib.revize import fetch_revize_meetings  # noqa: E402
 from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
+from lib.atomic_io import write_json_atomic  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -330,8 +331,7 @@ def build_place(place):
 def write_place(slug, payload):
     os.makedirs(OUT_DIR, exist_ok=True)
     out_path = os.path.join(OUT_DIR, 'local-%s-meetings.json' % slug)
-    with open(out_path, 'w', encoding='utf-8') as f:
-        json.dump(payload, f, ensure_ascii=False, separators=(',', ':'))
+    write_json_atomic(out_path, payload, separators=(',', ':'))
     print('  Wrote %s' % out_path)
 
 

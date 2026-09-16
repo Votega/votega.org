@@ -31,6 +31,7 @@ Run: python scripts/enrich_laws_with_govinfo.py [path-to-presidential-laws.json]
 """
 
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
@@ -189,8 +190,7 @@ def main(argv=None):
     if changed:
         data.setdefault('metadata', {})['govinfoEnrichedAt'] = \
             datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+        write_json_atomic(path, data, indent=2)
         print(f"Enriched {changed} law(s); wrote {path}")
     else:
         print("No laws enriched (already done, unmapped, or not yet published in GovInfo).")

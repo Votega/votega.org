@@ -66,6 +66,7 @@ from lib.meeting_topics import (  # noqa: E402
     ALPR_HIGH_TERMS,
     alpr_vendors,
 )
+from lib.atomic_io import atomic_write  # noqa: E402
 
 try:
     import yaml
@@ -261,8 +262,7 @@ def build_topic(topic: str, enriched_files: list[str], places: dict) -> dict:
 
 
 def write_json(path: str, data) -> None:
-    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-    with open(path, "w", encoding="utf-8") as fh:
+    with atomic_write(path) as fh:
         json.dump(data, fh, indent=1, sort_keys=True, ensure_ascii=False)
         fh.write("\n")
 

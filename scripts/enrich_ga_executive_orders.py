@@ -29,6 +29,7 @@ dev laptop); CI installs poppler-utils and tesseract-ocr.
 
 import hashlib
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import shutil
@@ -425,8 +426,7 @@ def enrich_year(year):
             print(f"    {order.get('number')}: enrichment error (non-fatal): {exc}")
 
     if changed:
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+        write_json_atomic(path, data, indent=2)
         print(f"  Wrote {changed} enriched order(s) -> {path}")
     else:
         print(f"  No JSON changes for {year}")

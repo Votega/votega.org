@@ -37,6 +37,7 @@ USAGE
 
 import argparse
 import json
+from lib.atomic_io import atomic_write
 import re
 import sys
 import time
@@ -563,7 +564,7 @@ def main():
                 chunks.append(emit_yaml(slug, nm, d, curated_types.get(slug, "county")))
             text = "\n\n".join(chunks)
         if args.out:
-            with open(args.out, "w", encoding="utf-8") as f:
+            with atomic_write(args.out) as f:
                 f.write(text + "\n")
             print(f"Wrote {args.emit} for {len(drafts)} counties -> {args.out}", file=sys.stderr)
         else:

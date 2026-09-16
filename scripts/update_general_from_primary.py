@@ -14,6 +14,8 @@ import re
 import unicodedata
 from datetime import datetime, timezone
 
+from lib.atomic_io import write_json_atomic
+
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CSV_PATH = os.path.join(BASE, "_sources", "election_results", "ga-primary-results-official.csv")
 RACES_PATH = os.path.join(BASE, "assets", "data", "races.json")
@@ -372,8 +374,7 @@ def main():
 
     races_data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    with open(RACES_PATH, "w", encoding="utf-8") as f:
-        json.dump(races_data, f, ensure_ascii=False, indent=2)
+    write_json_atomic(RACES_PATH, races_data, indent=2)
     print(f"\nWrote {RACES_PATH}")
 
 

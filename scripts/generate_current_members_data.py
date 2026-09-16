@@ -14,6 +14,7 @@ import yaml
 from datetime import datetime
 
 from lib.http import fetch_bytes, fetch_json
+from lib.atomic_io import write_json_atomic
 
 # Configuration
 API_KEY = os.environ.get('CONGRESS_API_KEY')
@@ -439,8 +440,7 @@ def main():
     
     # Write to file
     try:
-        with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-            json.dump(output_data, f, indent=2, ensure_ascii=False)
+        write_json_atomic(OUTPUT_FILE, output_data, indent=2)
         print(f"Successfully wrote {len(enriched_members)} members to {OUTPUT_FILE}")
     except Exception as e:
         print(f"Error writing file: {e}")

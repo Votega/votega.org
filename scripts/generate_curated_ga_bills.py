@@ -7,6 +7,7 @@ Requires OPENSTATES_API_KEY environment variable.
 """
 
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
@@ -316,9 +317,7 @@ def main():
         'bills': results,
     }
 
-    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
+    write_json_atomic(OUTPUT_FILE, output, indent=2)
 
     print(f"\nWrote {len(results)} bill records to {OUTPUT_FILE}")
     print(f"Voter resolution: {summarize(voter_stats)}")

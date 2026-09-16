@@ -29,6 +29,8 @@ import sys
 import os
 from datetime import datetime, timezone
 
+from lib.atomic_io import write_json_atomic
+
 # Cycle whose races this helper lists/promotes — change at a rollover (finding 5.9).
 CYCLE = 2026
 GENERAL_DATE = "2026-11-03"
@@ -108,8 +110,7 @@ def main():
 
     data['updatedAt'] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    with open(RACES_PATH, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    write_json_atomic(RACES_PATH, data, indent=2)
 
     print(f"Updated '{race_id}' -> activePhase: general")
     for party, cands in ballots.items():

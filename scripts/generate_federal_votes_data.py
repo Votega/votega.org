@@ -13,6 +13,7 @@ Output: assets/data/federal-member-votes.json
 """
 
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
@@ -514,9 +515,7 @@ def main():
         "memberVotes": member_votes,
     }
 
-    os.makedirs(os.path.dirname(OUTPUT_FILE) or ".", exist_ok=True)
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(output, f, separators=(",", ":"), ensure_ascii=False)
+    write_json_atomic(OUTPUT_FILE, output, separators=(",", ":"))
 
     size_kb = os.path.getsize(OUTPUT_FILE) // 1024
     print(f"\nDone. {len(votes_meta)} votes · {len(member_votes)} GA members · {size_kb} KB → {OUTPUT_FILE}")

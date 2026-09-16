@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 
 # scripts/ is sys.path[0] when run as `python scripts/enrich_bills_with_party_votes.py`
 from lib.votes_schema import member_votes_map
+from lib.atomic_io import write_json_atomic
 
 
 def main():
@@ -129,8 +130,7 @@ def main():
     # writer (it runs after generate in update-ga-bills.yml), so an indent=2 here
     # was what left the committed file pretty-printed at ~9 MB. It is a large,
     # generated, client-fetched blob, not a human-reviewed diff.
-    with open(bills_path, 'w', encoding='utf-8') as f:
-        json.dump(bills_data, f, separators=(',', ':'), ensure_ascii=False)
+    write_json_atomic(bills_path, bills_data, separators=(',', ':'))
 
     print(f"Done — {matched} passageVotes enriched, {unmatched} unmatched")
     print(f"Written: {bills_path}")

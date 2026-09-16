@@ -27,6 +27,7 @@ non-partisan card with party labels on each candidate.
 
 import csv
 import json
+from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
@@ -205,8 +206,7 @@ if __name__ == '__main__':
     sections = build_sections(contests)
     os.makedirs(OUT_DIR, exist_ok=True)
     out_path = os.path.join(OUT_DIR, f"{data_key}.json")
-    with open(out_path, 'w', encoding='utf-8') as f:
-        json.dump(sections, f, ensure_ascii=False, separators=(',', ':'))
+    write_json_atomic(out_path, sections, separators=(',', ':'))
     counts = {s['id']: len(s['races']) for s in sections}
     print(f"  Races per section: {counts}")
     print(f"Wrote: {out_path}")

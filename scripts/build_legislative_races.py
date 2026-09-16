@@ -26,6 +26,8 @@ import json, re, string, sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from lib.atomic_io import write_json_atomic
+
 SRC       = Path("assets/data/ga-legislative-candidates.json")
 DEST      = Path("assets/data/races.json")
 GA_MEMBERS = Path("assets/data/ga-members.json")
@@ -556,8 +558,7 @@ def main():
     dest["races"] = out_races
     dest["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    with open(DEST, "w", encoding="utf-8") as f:
-        json.dump(dest, f, indent=2, ensure_ascii=False)
+    write_json_atomic(DEST, dest, indent=2)
 
     # Stats
     house  = [r for r in new_races if r["chamber"] == "Georgia House of Representatives"]

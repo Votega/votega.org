@@ -47,6 +47,7 @@ import urllib.parse
 from datetime import datetime, timedelta, timezone
 
 from lib.http import fetch_json
+from lib.atomic_io import write_json_atomic
 from lib.ga_voters import (LEGACY_PERSON_ID_MAP, MemberIndex,
                            assign_remaining_by_surname, event_chamber,
                            normalize_voter_name, resolve_voter)
@@ -176,8 +177,7 @@ def sanitize_existing(path):
     meta['duplicateVotesDropped'] = stats['duplicateVotesDropped']
     meta['crossChamberDropped']   = stats['crossChamberDropped']
 
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, separators=(',', ':'), ensure_ascii=False)
+    write_json_atomic(path, data, separators=(',', ':'))
 
     print(f"Sanitized {path}: dropped {stats['duplicateVotesDropped']} duplicate "
           f"and {stats['crossChamberDropped']} cross-chamber entries; "
@@ -584,9 +584,7 @@ def main():
         preserved['generatedAt'] = output['metadata']['generatedAt']
         output['metadata'] = preserved
 
-    os.makedirs(os.path.dirname(OUTPUT_FILE) or '.', exist_ok=True)
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        json.dump(output, f, separators=(',', ':'), ensure_ascii=False)
+    write_json_atomic(OUTPUT_FILE, output, separators=(',', ':'))
 
     size_kb = os.path.getsize(OUTPUT_FILE) // 1024
     print(f"\nDone. {len(votes_meta)} passage votes · {len(member_votes)} members · {size_kb} KB -> {OUTPUT_FILE}")

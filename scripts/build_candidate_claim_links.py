@@ -28,6 +28,7 @@ Usage:
 import argparse
 import csv
 import json
+from lib.atomic_io import atomic_write
 import sys
 from urllib.parse import urlencode
 
@@ -173,7 +174,7 @@ def main():
         "candidate_key", "key_type", "member_source", "race_id",
         "email", "onfile_email_hint", "has_email", "claim_url",
     ]
-    with open(args.out, "w", encoding="utf-8", newline="") as fh:
+    with atomic_write(args.out, newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=fieldnames)
         w.writeheader()
         w.writerows(rows)

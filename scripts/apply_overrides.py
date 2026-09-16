@@ -19,6 +19,8 @@ import json
 import sys
 from pathlib import Path
 
+from lib.atomic_io import write_json_atomic
+
 RACES     = Path("assets/data/races.json")
 OVERRIDES = Path("assets/data/ga-race-candidate-overrides.json")
 
@@ -29,8 +31,7 @@ def load_json(path: Path) -> dict:
 
 
 def save_json(path: Path, data: dict):
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    write_json_atomic(path, data, indent=2)
 
 
 # --- Name matching (mirrors build_legislative_races.py; keep the two in sync) ---

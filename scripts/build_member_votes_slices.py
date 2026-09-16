@@ -31,6 +31,8 @@ import json
 import os
 import re
 
+from lib.atomic_io import write_json_atomic
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT, "assets", "data")
 VOTES_FILE = os.path.join(DATA_DIR, "ga-member-votes.json")
@@ -111,8 +113,7 @@ def main() -> int:
         "voteIds": vote_ids,
         "votes": votes_with_tally,
     }
-    with open(INDEX_OUT, "w", encoding="utf-8") as fh:
-        json.dump(index, fh, separators=(",", ":"), ensure_ascii=False)
+    write_json_atomic(INDEX_OUT, index, separators=(",", ":"))
 
     # Per-member slices — just the member's compact map. Clear stale slices first
     # so a member who leaves the dataset does not keep a dangling file.
@@ -124,9 +125,9 @@ def main() -> int:
         slug = member_slug(member_id)
         if not slug:
             continue
-        with open(os.path.join(SLICES_DIR, slug + ".json"), "w", encoding="utf-8") as fh:
-            json.dump({"id": member_id, "compact": compact},
-                      fh, separators=(",", ":"), ensure_ascii=False)
+        write_json_atomic(os.path.join(SLICES_DIR, slug + ".json"),
+                          {"id": member_id, "compact": compact},
+                          separators=(",", ":"))
 
     idx_kb = os.path.getsize(INDEX_OUT) / 1024
     print(f"build_member_votes_slices: index {idx_kb:.0f}KB, "
