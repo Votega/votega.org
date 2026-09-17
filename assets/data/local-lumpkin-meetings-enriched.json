@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-12T18:11:45Z",
+  "generatedAt": "2026-09-17T13:57:41Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -10,16 +10,24 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-15",
+  "lastActivity": "2026-09-21",
   "topicTotals": {
+   "development": 12,
    "millage-budget": 8,
    "appointment": 9,
    "contract": 9,
-   "development": 12,
    "variance": 3
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Land Use & Development Regulations Review Committee Meeting",
+    "date": "2026-09-21",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4329,plainText=false)",
+    "tags": [
+     "development"
+    ]
+   },
    {
     "title": "Planning Commission Regular Meeting",
     "date": "2026-09-14",
@@ -118,14 +126,6 @@
     ],
     "excerpt": "… et of Suggested Ordinance Changes 3. Review Article I & II of Chapter 26 Land Development 4. Review Article III - Subdivision Classes • ADJOURNMENT",
     "excerptTerm": "subdivision"
-   },
-   {
-    "title": "Land Use & Development Regulations Review Committee Meeting",
-    "date": "2026-06-23",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3069,plainText=false)",
-    "tags": [
-     "development"
-    ]
    }
   ],
   "landUseMeetings": 12,
@@ -134,16 +134,49 @@
  },
  "meetings": [
   {
+   "id": "1310",
+   "date": "2026-09-21",
+   "body": "Land Use & Development Regulations Review Committee",
+   "title": "Land Use & Development Regulations Review Committee Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4329,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4329,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 780,
+   "pdfSha256": "d59a1edadbc7a347bd9219bc1ec261c6111ca901d81db2d5b2fe55bb3135173c",
+   "topics": {
+    "development": 1
+   },
+   "tags": [
+    "development"
+   ],
+   "matchedTerms": [
+    "multi-family",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… pprove the September 8 2026 Land Use & Development Regulations Committee Meeting 2. Review Class V and Class Vi subdivision classes in Chapter 26 Land Use Development 3. Review Multi-Family Housing Chapter 26 — Article XXI • PUBLIC C …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
    "id": "1307",
    "date": "2026-09-15",
    "body": "Board of Commissioners",
    "title": "Board of Commissioners Special Called Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4323,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4333,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4323,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4333,plainText=false)",
    "textMethod": "pdftotext",
    "textChars": 613,
-   "pdfSha256": "ea6608ebf24b453e4e32a4ae43a7bf517f8390a74aa44b359e314fb9b8480102",
+   "pdfSha256": "c6214d29395bf5b22c9d7c5f9c0f06a2425a4b1822a9fd02d71cff9568922880",
    "topics": {
     "millage-budget": 1
    },
@@ -172,12 +205,12 @@
    "date": "2026-09-15",
    "body": "Board of Commissioners",
    "title": "Lumpkin County Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4310,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4335,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4310,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4335,plainText=false)",
    "textMethod": "pdftotext",
    "textChars": 2039,
-   "pdfSha256": "7a91921e3656b72062672dba00da8bee685cc965f0177ceca16942cb93cb494f",
+   "pdfSha256": "34f1df28ed84d8febb0a85b03f4199ab3e49638d23776845b1e3c9e6d60a9d72",
    "topics": {
     "appointment": 1,
     "contract": 1
@@ -1014,38 +1047,6 @@
      "term": "subdivision",
      "excerpt": "… et of Suggested Ordinance Changes 3. Review Article I & II of Chapter 26 Land Development 4. Review Article III - Subdivision Classes • ADJOURNMENT",
      "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1294",
-   "date": "2026-06-23",
-   "body": "Land Use & Development Regulations Review Committee",
-   "title": "Land Use & Development Regulations Review Committee Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3069,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3069,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 846,
-   "pdfSha256": "f36e7e8d76b95d9b18539ae80babed862a8eff3caa4c2ab888f3c9a02b634282",
-   "topics": {
-    "development": 1
-   },
-   "tags": [
-    "development"
-   ],
-   "matchedTerms": [
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… TABLISH PRIORITIES • PUBLIC COMMENTS • SECTIONS TO REVIEW 2. Article I & II Minus Definitions 3. Artcle II Subdivision Classes • OTHER ITEMS • ADJOURNMENT",
-     "context": "public-comment"
     }
    },
    "flags": [

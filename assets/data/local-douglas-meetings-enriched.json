@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-12T18:11:42Z",
+  "generatedAt": "2026-09-17T13:56:59Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -11,19 +11,24 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-14",
+  "lastActivity": "2026-09-21",
   "topicTotals": {
-   "contract": 16,
+   "variance": 4,
    "millage-budget": 17,
+   "appointment": 11,
+   "comprehensive-plan": 2,
+   "contract": 15,
+   "data-center": 3,
+   "development": 2,
    "rezoning": 4,
-   "annexation": 2,
-   "appointment": 12,
-   "data-center": 2,
-   "variance": 3,
-   "comprehensive-plan": 1,
-   "development": 1
+   "annexation": 2
   },
   "dataCenterItems": [
+   {
+    "title": "BOC Commission Meeting",
+    "date": "2026-09-15",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7551,plainText=false)"
+   },
    {
     "title": "BOC Commission Meeting 08-18-26.",
     "date": "2026-08-18",
@@ -38,6 +43,14 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Planning Zoning Variance",
+    "date": "2026-09-21",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7554,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
    {
     "title": "Planning Zoning and BOC",
     "date": "2026-09-01",
@@ -91,21 +104,175 @@
     ],
     "excerpt": "… APPROVAL of MINUTES Approve the minutes from the May 5, 2026 meeting AGENDA Aleene Duff - A request for a rezoning from R-LD (residential low Z2026- density) to R-A (residential agriculture) and a Special Use Permit to 31/S …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Planning Zoning Variance",
-    "date": "2026-05-18",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7315,plainText=false)",
-    "tags": [
-     "variance"
-    ]
    }
   ],
-  "landUseMeetings": 9,
+  "landUseMeetings": 10,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1320",
+   "date": "2026-09-21",
+   "body": "Planning & Zoning",
+   "title": "Planning Zoning Variance",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7554,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7554,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 957,
+   "pdfSha256": "7967e5d831bbb0d5e5cf28ec47eff58fd0dd4c4c1ab939455ddab0ed8687de8c",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "DOUGLAS COUNTY ZONING VARIANCE HEARING AGENDA September 21, 2026 Call to Order - Planni …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1319",
+   "date": "2026-09-15",
+   "body": "Board of Commissioners",
+   "title": "BOC SCM Millage Rate Public Hearing",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7545,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7545,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 282,
+   "pdfSha256": "c3b5243d3cc7587eeaa901e6a263ec2f90b954d40dcb77213139cc52976d20f5",
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "millage"
+   ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) RECESS",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1178",
+   "date": "2026-09-15",
+   "body": "Board of Commissioners",
+   "title": "BOC Commission Meeting",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7551,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7551,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1033195,
+   "pdfSha256": "a36eba8b1953ef56ad671ebc57d7d712e19297bd8712c38b51110a57a476f19b",
+   "topics": {
+    "appointment": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "data-center": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "comprehensive-plan",
+    "contract",
+    "data-center",
+    "development",
+    "millage-budget",
+    "variance"
+   ],
+   "matchedTerms": [
+    "ad valorem",
+    "apartment",
+    "appoint",
+    "award of",
+    "budget",
+    "comprehensive plan",
+    "contract",
+    "data center",
+    "fiscal year",
+    "millage",
+    "multi-family",
+    "procurement",
+    "purchase order",
+    "subdivision",
+    "task order",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… arest emergency vet hospital or pet-friendly hotels. You can customize multiple pet profiles and set veterinary appointments. Interactive quizzes allow you to earn badges that you can share with your friends. Download from iTunes o …",
+     "context": "unknown"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… e them. Sec. 23-5. - Intent. This article is intended to implement and be consistent with the Douglas County Comprehensive Plan, as it has been adopted or may be amended in accord with the Georgia Comprehensive Planning Act (O.C.G.A. 50- 8-1 et se …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… man to sign all related documents pending final legal review. 11. Approval for Parks and Recreation to enter into a contract with the American Red Cross for lifeguard training services in the amount of $250 for new certification and $15 …",
+     "context": "agenda-action"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… 0.1918 $ 0.0110 $ 0.0592 $ 0.0526 $ 0.0409 $ 0.0105 $ 0.3661 per square foot Data Center $ - $ - $ - $ 0.1633 $ 0.0094 $ 0 …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… GA Pwr Land Exchange - Grading for Fire Sta. # 9 182,000 Stone Haven Subdivision - Unassigned …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 31, 2026. 3. Executive Session Minutes of August 31, 2026. FINANCIAL REPORT • Acceptance of the monthly Financial/Budget Report for August 2026. (Dominic Ochei) PROCLAMATIONS Commission Meeting 2 …",
+     "context": "public-comment"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… $ 98,267 $ 25,248 $ 360,000 7.01% Zoning/Land Use/Variance Apps - (13,150) - 0.00% Sign Permit …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center",
+    "millage-budget"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "BOC Commission Meeting",
+     "date": "2026-09-15",
+     "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7551,plainText=false)"
+    }
+   ]
+  },
   {
    "id": "1137",
    "date": "2026-09-14",
@@ -1060,138 +1227,6 @@
      "term": "rezon",
      "excerpt": "… APPROVAL of MINUTES Approve the minutes from the May 5, 2026 meeting AGENDA Aleene Duff - A request for a rezoning from R-LD (residential low Z2026- density) to R-A (residential agriculture) and a Special Use Permit to 31/S …",
      "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1149",
-   "date": "2026-06-02",
-   "body": "Board of Commissioners",
-   "title": "BOC Commission Meeting",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7359,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7359,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 16854,
-   "pdfSha256": "8670bae1dcfbf5be860a1b13b418ecbfb872c9f9148944a33eab4dc6dfbdd53b",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "fiscal year",
-    "reappoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "reappoint",
-     "excerpt": "… nd for other purposes, and authorize the Chairman to sign all related documents pending final legal review. 36. Reappointment of Brig Simmons as an At-Large Member and Chair of the Planning and Zoning Board. 37. Appointment of Brando …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… s related to retail recruitment strategies in the amount of $50,000.00 annually for a three-year term, for a total contract amount of $150,000.00. The 2026 annual cost will be funded through the Unincorporated Fund Balance. Funding for C …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… for Commission Meeting 2 June 2, 2026 each subsequent year shall be subject to Board of Commissioners' approved budget allocations and waive the County's adopted Financial Policy regarding budget amendments, and authorize the Chairman to …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1192",
-   "date": "2026-06-01",
-   "body": "Board of Commissioners",
-   "title": "BOC Work Session",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7356,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7356,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 14132,
-   "pdfSha256": "98f84dca8af9da210a3b654b6fb17457d2b7f58d4dbfe4470c50b33610e19cd2",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "fiscal year",
-    "reappoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "reappoint",
-     "excerpt": "… and authorize the Chairman to sign all related documents pending final legal review. (Breezy Stratton) 38. Reappointment of Brig Simmons as an At-Large Member and Chair of the Planning and Zoning Board. () 39. Appointment of Bra …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ze the Chairman to sign all related documents pending legal review. (Col. Pounds) 10. Approval of an employment contract with Christian Bonet as an Assistant Public Defender for State Court, to fill a vacant position already approved i …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ,514.81 for the purchase of a desktop computer for Judge Brian Fortner's bench, amend the State Court general fund budget and authorize the Chairman to sign all related documents pending final legal review. (Judge Brian Fortner) 8. A …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1289",
-   "date": "2026-05-18",
-   "body": "Planning & Zoning",
-   "title": "Planning Zoning Variance",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7315,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7315,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 592,
-   "pdfSha256": "486ecef63b79c23b9fd90a7180e8412e2fec927a3b5c3cb9d845b192884c5179",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "DOUGLAS COUNTY ZONING VARIANCE HEARING AGENDA May 18, 2026 Call to Order - Planning & Zon …",
-     "context": "unknown"
     }
    },
    "flags": [

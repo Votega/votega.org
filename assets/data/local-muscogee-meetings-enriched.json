@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-12T18:11:36Z",
+  "generatedAt": "2026-09-17T13:56:49Z",
   "source": "Columbus-Muscogee County (Legistar structured API)",
   "place": "Columbus-Muscogee County",
   "count": 25
@@ -12,15 +12,15 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-14",
+  "lastActivity": "2026-09-28",
   "topicTotals": {
-   "rezoning": 76,
-   "variance": 206,
+   "rezoning": 77,
+   "variance": 198,
+   "development": 102,
    "millage-budget": 312,
    "contract": 758,
    "annexation": 35,
    "appointment": 117,
-   "development": 102,
    "data-center": 3,
    "alpr": 1
   },
@@ -41,6 +41,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Zoning Committee",
+    "date": "2026-09-28",
+    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6210&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… eight and area regulations, of the Columbus City codes; for the property located at 966 DUBLIN RD. (43215), to allow an apartment complex with reduced development standards in the M, Manufacturing District and the CPD, Commercial Planned Development …",
+    "excerptTerm": "apartment"
+   },
    {
     "title": "Zoning Committee",
     "date": "2026-09-14",
@@ -258,17 +270,6 @@
     ],
     "excerpt": "To accept the application (AN25-026) of TCG OCP Rohr Management LLC, c/o David Pizzotti for the annexation of certain territory containing 46.8± acres in Hamilton Township. ($0.00) Ordinance",
     "excerptTerm": "annexation"
-   },
-   {
-    "title": "Zoning Committee",
-    "date": "2026-04-13",
-    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6167&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-    "tags": [
-     "development",
-     "variance"
-    ],
-    "excerpt": "… ntial Landscape Buffer, of the Columbus City Codes; for the property located at 2295 S. HIGH ST. (43207), to allow flex warehouse and storage uses with reduced development standards in the CAC, Community Activity Center District (Council Variance #C …",
-    "excerptTerm": "warehouse"
    }
   ],
   "landUseMeetings": 25,
@@ -288,14 +289,110 @@
  },
  "meetings": [
   {
+   "eventId": 6210,
+   "date": "2026-09-28",
+   "body": "Zoning Committee",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6210&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "itemCount": 13,
+   "topics": {
+    "rezoning": 2,
+    "variance": 3,
+    "development": 1
+   },
+   "matchedTerms": [
+    "apartment",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "REZONINGS/AMENDMENTS",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "VARIANCES",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… eight and area regulations, of the Columbus City codes; for the property located at 966 DUBLIN RD. (43215), to allow an apartment complex with reduced development standards in the M, Manufacturing District and the CPD, Commercial Planned Development …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "REZONINGS/AMENDMENTS",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To amend Ordinance #3112-2016, passed February 13, 2017 (Z16-016), for property located at 5300 AVERY RD. (43016), by repealing Section 3 and replacing with a new Section 3 to modi",
+     "matterFile": "2828-2025",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "VARIANCES",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; 3312.49(C), Required parking; and 3332.05(A)(4), Area district lot width requirements, of th",
+     "matterFile": "2581-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3363.01, M-manufacturing districts; 3309.14, Height districts; 3312.49(C), Required Parking; 3361.07, Affect of development plan",
+     "matterFile": "2588-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
+  {
    "eventId": 6206,
    "date": "2026-09-14",
    "body": "Zoning Committee",
    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6206&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 12,
+   "itemCount": 16,
    "topics": {
-    "rezoning": 2,
-    "variance": 2
+    "rezoning": 3,
+    "variance": 5
    },
    "matchedTerms": [
     "rezon",
@@ -336,9 +433,9 @@
      "tags": [
       "rezoning"
      ],
-     "passed": null,
-     "action": null,
-     "mover": null
+     "passed": "Pass",
+     "action": "Waive the 2nd Reading",
+     "mover": "Rob Dorans"
     },
     {
      "title": "VARIANCES",
@@ -358,9 +455,53 @@
      "tags": [
       "variance"
      ],
-     "passed": null,
-     "action": null,
-     "mover": null
+     "passed": "Pass",
+     "action": "Waive the 2nd Reading",
+     "mover": "Rob Dorans"
+    },
+    {
+     "title": "To rezone 600 STIMMEL RD. (43223), being 21.3± acres located on the north side of Stimmel Road, 310± feet east of Harmon Avenue, From: R, Rural District, R-3, Residential District,",
+     "matterFile": "2452-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": "Pass",
+     "action": "Approved",
+     "mover": "Rob Dorans"
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 3312.09, Aisle; 3312.13(B), Driveway; 3312.25, Maneuvering; 3312.39, Striping and marking; 3312.",
+     "matterFile": "2253-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": "Pass",
+     "action": "Accept entire staff report into evidence as an exhibit",
+     "mover": "Rob Dorans"
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 3312.09, Aisle; 3312.13(B), Driveway; 3312.25, Maneuvering; 3312.39, Striping and marking; 3312.",
+     "matterFile": "2253-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": "Pass",
+     "action": "Adopt the findings of staff as the findings of Council",
+     "mover": "Rob Dorans"
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 3312.09, Aisle; 3312.13(B), Driveway; 3312.25, Maneuvering; 3312.39, Striping and marking; 3312.",
+     "matterFile": "2253-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": "Pass",
+     "action": "Approved",
+     "mover": "Rob Dorans"
     }
    ]
   },
@@ -369,7 +510,7 @@
    "date": "2026-09-14",
    "body": "Columbus City Council",
    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6209&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 144,
+   "itemCount": 149,
    "topics": {
     "millage-budget": 10,
     "contract": 39,
@@ -419,7 +560,7 @@
       "annexation"
      ],
      "passed": null,
-     "action": null,
+     "action": "Read for the First Time",
      "mover": null
     },
     {
@@ -430,7 +571,7 @@
       "annexation"
      ],
      "passed": null,
-     "action": null,
+     "action": "Read for the First Time",
      "mover": null
     },
     {
@@ -440,9 +581,9 @@
      "tags": [
       "annexation"
      ],
-     "passed": null,
-     "action": null,
-     "mover": null
+     "passed": "Pass",
+     "action": "Approved",
+     "mover": "Christopher Wyche"
     }
    ]
   },
@@ -5080,223 +5221,6 @@
      "passed": null,
      "action": "Read for the First Time",
      "mover": null
-    }
-   ]
-  },
-  {
-   "eventId": 6165,
-   "date": "2026-03-30",
-   "body": "Zoning Committee",
-   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6165&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 23,
-   "topics": {
-    "rezoning": 2,
-    "development": 1,
-    "variance": 14
-   },
-   "matchedTerms": [
-    "apartment",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "REZONINGS/AMENDMENTS",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "apartment",
-     "excerpt": "… ER RD. (43228), being 0.35± acres located on the south side of Renner Road; 275± feet west of Atlas Street, From: ARLD, Apartment Residential District, To: L-I, Limited Institutional District (Rezoning #Z25-041). Ordinance",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "VARIANCES",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": [],
-   "landUseItems": [
-    {
-     "title": "REZONINGS/AMENDMENTS",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "rezoning"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To rezone 5311-5313 RENNER RD. (43228), being 0.35± acres located on the south side of Renner Road; 275± feet west of Atlas Street, From: ARLD, Apartment Residential District, To: ",
-     "matterFile": "0838-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "rezoning"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "VARIANCES",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3, residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property located at 1",
-     "matterFile": "0815-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.02, R-rural district; 3321.05(B)(2), Vision clearance; and 3332.06, R-rural area district requirements, of the Columbus Cit",
-     "matterFile": "0818-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3349.04(a)(c), Height, area and yard regulations, of the Columbus City Codes; for the property located at 5311-5313 RENNER RD. (4",
-     "matterFile": "0839-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3353.03, Permitted Uses, of the Columbus City Codes; for the property located at 2515 LOCKBOURNE RD. (43207), to allow accessory",
-     "matterFile": "0841-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3, residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property located at 1",
-     "matterFile": "0815-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3, residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property located at 1",
-     "matterFile": "0815-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.02, R-rural district; 3321.05(B)(2), Vision clearance; and 3332.06, R-rural area district requirements, of the Columbus Cit",
-     "matterFile": "0818-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.02, R-rural district; 3321.05(B)(2), Vision clearance; and 3332.06, R-rural area district requirements, of the Columbus Cit",
-     "matterFile": "0818-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3349.04(a)(c), Height, area and yard regulations, of the Columbus City Codes; for the property located at 5311-5313 RENNER RD. (4",
-     "matterFile": "0839-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3349.04(a)(c), Height, area and yard regulations, of the Columbus City Codes; for the property located at 5311-5313 RENNER RD. (4",
-     "matterFile": "0839-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3353.03, Permitted Uses, of the Columbus City Codes; for the property located at 2515 LOCKBOURNE RD. (43207), to allow accessory",
-     "matterFile": "0841-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3353.03, Permitted Uses, of the Columbus City Codes; for the property located at 2515 LOCKBOURNE RD. (43207), to allow accessory",
-     "matterFile": "0841-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Amended to Emergency",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3353.03, Permitted Uses, of the Columbus City Codes; for the property located at 2515 LOCKBOURNE RD. (43207), to allow accessory",
-     "matterFile": "0841-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved as Amended",
-     "mover": "Rob Dorans"
     }
    ]
   }

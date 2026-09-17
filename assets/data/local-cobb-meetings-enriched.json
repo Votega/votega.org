@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-12T18:11:43Z",
+  "generatedAt": "2026-09-17T13:57:01Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -11,10 +11,10 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-14",
+  "lastActivity": "2026-11-03",
   "topicTotals": {
-   "variance": 8,
-   "special-land-use": 7,
+   "special-land-use": 8,
+   "variance": 7,
    "appointment": 6,
    "contract": 7,
    "development": 3,
@@ -38,6 +38,16 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Planning Commission Zoning Hearing",
+    "date": "2026-11-03",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10226,plainText=false)",
+    "tags": [
+     "special-land-use"
+    ],
+    "excerpt": "… LUP-37-2026 District 3 - 230 Rocky Top Court 10. LUP-38-2026 District 3 - 568 Tate Creek Court 11. SLUP-10-2026 District 1 - 3261 Ernest Barrett Parkway 12. SLUP-11-2026 District 2 - 465 Big Shanty Road Other Busi …",
+    "excerptTerm": "slup"
+   },
    {
     "title": "Board of Zoning Appeals Variance Hearing",
     "date": "2026-10-14",
@@ -184,14 +194,6 @@
     ],
     "excerpt": "… June 16, 2026 Zoning Cases Z-19 (2026) DAVID ALLISON (David Anthony Allison, Owner) requesting rezoning from R-20 to R-12 for an additional single-family residence in Land Lot 372 of the 17t …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Board of Zoning Appeals Variance Hearing",
-    "date": "2026-06-10",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8967,plainText=false)",
-    "tags": [
-     "variance"
-    ]
    }
   ],
   "landUseMeetings": 18,
@@ -199,6 +201,38 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1265",
+   "date": "2026-11-03",
+   "body": "Planning Commission",
+   "title": "Planning Commission Zoning Hearing",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10226,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10226,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 969,
+   "pdfSha256": "8a5e69a9c26728a281d5e30e5fd27f2c20beb26ae5377a8df2e620c5333b18c4",
+   "topics": {
+    "special-land-use": 1
+   },
+   "tags": [
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "slup"
+   ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "slup",
+     "excerpt": "… LUP-37-2026 District 3 - 230 Rocky Top Court 10. LUP-38-2026 District 3 - 568 Tate Creek Court 11. SLUP-10-2026 District 1 - 3261 Ernest Barrett Parkway 12. SLUP-11-2026 District 2 - 465 Big Shanty Road Other Busi …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1253",
    "date": "2026-10-14",
@@ -1163,38 +1197,6 @@
      "term": "variance",
      "excerpt": "… ts contained in the Other Business packet. ITEM OB-32-2026 To consider amending the site plan and a stream buffer variance for Dominion Christian School regarding application SLUP-10 of 2000. The property is located at the south side of Bur …",
      "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1249",
-   "date": "2026-06-10",
-   "body": "Board of Zoning Appeals",
-   "title": "Board of Zoning Appeals Variance Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8967,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8967,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 14227,
-   "pdfSha256": "b7a733748e426cc380915e478d14b1a596423ff4d3eb59e1650c41cfff834ac0",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING SUMMARY AGENDA June 10, 2026 District Case Held case- Not to be heard 3 V-3 …",
-     "context": "unknown"
     }
    },
    "flags": [

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-12T18:11:37Z",
+  "generatedAt": "2026-09-17T13:56:52Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -10,20 +10,29 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-08",
+  "lastActivity": "2026-09-17",
   "topicTotals": {
    "contract": 23,
-   "millage-budget": 20,
    "development": 12,
+   "millage-budget": 20,
    "rezoning": 15,
    "variance": 11,
    "appointment": 5,
    "comprehensive-plan": 4,
-   "special-land-use": 6,
-   "annexation": 1
+   "special-land-use": 6
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-09-17",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5329,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ]
+   },
    {
     "title": "Board of Commissioners Regular Meeting",
     "date": "2026-09-03",
@@ -197,17 +206,6 @@
      "rezoning",
      "special-land-use"
     ]
-   },
-   {
-    "title": "Board of Commissioners Regular Meeting",
-    "date": "2026-03-19",
-    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5025,plainText=false)",
-    "tags": [
-     "annexation",
-     "development",
-     "rezoning",
-     "variance"
-    ]
    }
   ],
   "landUseMeetings": 18,
@@ -215,6 +213,73 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "458",
+   "date": "2026-09-17",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5329,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5329,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 18218,
+   "pdfSha256": "13275845c73f7c542bfe0ce2ad11b421a90edd4aca435bf64ffd29b13e1634bb",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "purchase order",
+    "rezon",
+    "subdivision",
+    "task order",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… authorization for the Employment Services Director to move forward with the Broker on all related contractual and administrative tasks – Director, Department of Employment Services (B) Bo …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Page 3 September 17, 2026 Court and all other property and property rights as shown on Subdivision Plat for Etowah Landing, recorded in Plat Book 227, Pages 141-187, Forsyth County, Georgi …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… system - Director, Department of Fleet and Environmental Services (D) Board approval of a Budget Resolution in the amount of $400,000.00 for Roads and Bridges for additional funding for asphalt …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… District 3 - Director, Department of Planning and Community Development (8) Russ Pendley - ZA4291 - to rezone from Single Family Residential District (R1) to Agricultural District (A1) on 1.005 acres for 1 residen …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ns on ZA2147 (Atlantic Gulf Communities Corporation) by the Forsyth County Board of Commissioners with a variance to: 1. Reduce the front setback from 30 ft. to 16 ft. for lot 481 (UDC Table 11.2(a)) - Parcel …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "436",
    "date": "2026-09-08",
@@ -1555,82 +1620,6 @@
     "special-land-use": {
      "term": "conditional use",
      "excerpt": "… of Public Transportation (15) Board consideration and possible direction regarding the revocation of the Conditional Use Permit (CUP) for CP240005, Forsyth County Board of Commissioners (Owner-Anthony M. Gold). In accordance with …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "446",
-   "date": "2026-03-19",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5025,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5025,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 16728,
-   "pdfSha256": "bf182bf532a68331350a7542bc4ac609062cb0d17bb72889b34a05d487e2b430",
-   "topics": {
-    "annexation": 1,
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "annexation",
-    "contract",
-    "development",
-    "millage-budget",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "budget",
-    "contract",
-    "procurement",
-    "rezon",
-    "task order",
-    "townhome",
-    "variance",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… Parcel 125 095) - County Attorney (W) Board approval of withdrawal of objection to Providence Group Annex annexation, in light of the annexation application being withdrawn - County Attorney (X) Board approval of a March 9 …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "procurement",
-     "excerpt": "… tion for staff to declare a presented list of items as surplus with authorization for the Department of Procurement to dispose of accordingly - Director, Department of Procurement (C) Board approval of a Master …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "townhome",
-     "excerpt": "… greement Regular Meeting / Public Hearings Agenda Page 4 March 19, 2026 between Forsyth County and Halcyon Garden Townhome Association, Inc. related to Encroachments to a water and sewer utility easement - County Attorney (V) Board accep …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… 026 amount of $20,600.00 with authorization for the CIO to sign programmatic documents; and approval of a Budget Resolution for the IS&T Department - CIO, Department of IS&T (D) Board approval of Change Order No. 1 to the 2 …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… - District 5 - Director, Department of Planning and Community Development (6) 2152 Peachtree Pkwy LLC - ZA4264 - to rezone from Single Family Residential District (R1) to Commercial Business District (CBD) on 3.351 acres for …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… nt of Zoning Conditions on ZA3552 (431 Commerce Park Drive, LLC) by TOMCO2 Systems Company with a variance to: 1. Reduce the landscape strip abutting Ridgeland Parkway from 15 ft. to 8 ft. as shown on the site plan …",
      "context": "unknown"
     }
    },
