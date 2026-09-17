@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-16T23:24:15.173673+00:00",
+    "generatedAt": "2026-09-17T02:25:35.750230+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -25,17 +25,27 @@
     "windowDays": 45,
     "entityTagged": 66,
     "topicCounts": {
+      "courts": 10,
       "education": 9,
       "elections": 22,
       "budget": 7,
       "surveillance": 3,
-      "courts": 9,
-      "healthcare": 19,
+      "healthcare": 17,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000684": {
       "name": "Tricia R. Pridemore",
       "url": null,
@@ -71,11 +81,6 @@
       "url": null,
       "bioguideId": "M001208"
     },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
       "url": null,
@@ -100,11 +105,6 @@
       "name": "Barry Loudermilk",
       "url": null,
       "bioguideId": "L000583"
-    },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
     },
     "vg-ga-p-000252": {
       "name": "Richard McCormick",
@@ -149,6 +149,18 @@
   },
   "items": [
     {
+      "id": "2e4141d02a0a",
+      "title": "Execution of Georgia death row inmate delayed in light of new state law",
+      "url": "https://georgiarecorder.com/2026/09/16/execution-of-georgia-death-row-inmate-delayed-in-light-of-new-state-law/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-17T01:07:17+00:00",
+      "snippet": "Convicted murderer Stacey Humphreys was not executed Wednesday night as scheduled after the Georgia Supreme Court upheld a Cobb County judge’s order temporarily halting the execution. The pause is for",
+      "entityIds": [],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
       "id": "c762c44373a0",
       "title": "Former business executive to lead Georgia’s public colleges and universities",
       "url": "https://capitol-beat.org/2026/09/former-business-executive-to-lead-georgias-public-colleges-and-universities/?utm_source=rss&utm_medium=rss&utm_campaign=former-business-executive-to-lead-georgias-public-colleges-and-universities",
@@ -159,6 +171,19 @@
       "topics": [
         "education"
       ]
+    },
+    {
+      "id": "cf0c998b8add",
+      "title": "Sens. Ossoff, Rev. Warnock Delivering $12 Million in Federal Funds to Support Tybee Island Beach Renourishment Project",
+      "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-12-million-in-federal-funds-to-support-tybee-island-beach-renourishment-project/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-16T21:44:50+00:00",
+      "snippet": "In 2022, Sens. Ossoff and Rev. Warnock passed into law their “Tybee Island Storm Risk Management Act” to support ongoing renourishment & storm risk management projects In March, Sen. Ossoff and Rev. W",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
     },
     {
       "id": "dd523bfd1f5d",
@@ -1131,20 +1156,6 @@
       ]
     },
     {
-      "id": "4de8e7ffe482",
-      "title": "Sen. Ossoff Working Across the Aisle to Improve Maternal Health in Georgia",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-improve-maternal-health-in-georgia/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-08-26T13:56:30+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working across the aisle to improve maternal health in Georgia. Sen. Ossoff is cosponsoring the NIH Implementing a Maternal health and PRegnancy Outcomes ",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
       "id": "3dc664aef942",
       "title": "Gov. Kemp Announces Gwinnett Superior Court Appointments",
       "url": "https://gov.georgia.gov/press-releases/2026-08-26/gov-kemp-announces-gwinnett-superior-court-appointments",
@@ -1515,18 +1526,6 @@
         "vg-ga-p-000264"
       ],
       "topics": []
-    },
-    {
-      "id": "78e944c7062a",
-      "title": "Georgia board adds certain HIV diagnoses to conditions that can bypass Medicaid work requirements",
-      "url": "https://georgiarecorder.com/2026/08/13/georgia-board-adds-certain-hiv-diagnoses-to-conditions-that-can-bypass-medicaid-work-requirements/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-13T22:56:02+00:00",
-      "snippet": "Georgia health officials moved to include low-income people living with certain HIV diagnoses among those considered “medically frail,” meaning they would not have to satisfy work requirements to qual",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
     },
     {
       "id": "faea478e22b4",
