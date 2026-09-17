@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-17T08:09:45.365079+00:00",
+    "generatedAt": "2026-09-17T13:56:21.721114+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,33 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 113,
+    "count": 110,
     "windowDays": 45,
-    "entityTagged": 66,
+    "entityTagged": 67,
     "topicCounts": {
+      "elections": 20,
       "courts": 9,
       "education": 9,
-      "elections": 21,
-      "budget": 7,
-      "surveillance": 3,
       "healthcare": 17,
-      "ethics": 5
+      "ethics": 5,
+      "budget": 6,
+      "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
+      ]
+    },
+    "vg-ga-p-000256": {
+      "name": "Rick W. Allen",
+      "url": null,
+      "bioguideId": "A000372"
+    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
@@ -66,11 +78,6 @@
       "url": null,
       "bioguideId": "C001116"
     },
-    "vg-ga-p-000256": {
-      "name": "Rick W. Allen",
-      "url": null,
-      "bioguideId": "A000372"
-    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
@@ -92,13 +99,6 @@
       "bioguideId": "C001129",
       "candidateIds": [
         "challenger-mike-collins-senate-2026"
-      ]
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
       ]
     },
     "vg-ga-p-000257": {
@@ -148,6 +148,32 @@
     }
   },
   "items": [
+    {
+      "id": "ac30b1b26847",
+      "title": "GPB morning headlines for September 17, 2026",
+      "url": "https://www.gpb.org/news/2026/09/17/gpb-morning-headlines-for-september-17-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-17T13:21:17+00:00",
+      "snippet": "The Public Service Commission visited Savannah this week, just miles away from OpenAI’s proposed data center, to host a public forum; Republican gubernatorial candidate Rick Jackson Wednesday announce",
+      "entityIds": [
+        "vg-ga-p-000368"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "50e97b945b65",
+      "title": "Congressman Allen's Retire through Ownership Act Headed to President Trump's Desk",
+      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7387",
+      "source": "Rep. Rick Allen (GA-12, press)",
+      "publishedAt": "2026-09-17T04:00:00+00:00",
+      "snippet": "Yesterday, the U.S. House of Representatives passed S. 2403, the Retire through Ownership Act. Congressman Rick W. Allen (GA-12) introduced the House version of this bill last year, which would provid",
+      "entityIds": [
+        "vg-ga-p-000256"
+      ],
+      "topics": []
+    },
     {
       "id": "2e4141d02a0a",
       "title": "Execution of Georgia death row inmate delayed in light of new state law",
@@ -200,54 +226,6 @@
       ]
     },
     {
-      "id": "75e4759249e0",
-      "title": "This state is spending more on lethal injections. A law tries to keep the details secret",
-      "url": "https://www.gpb.org/news/2026/09/16/state-spending-more-on-lethal-injections-law-tries-keep-the-details-secret",
-      "source": "GPB News",
-      "publishedAt": "2026-09-16T20:31:00+00:00",
-      "snippet": "As Georgia plans for its first execution in two years, a trove of records provides us with new information — and raises new questions — about the state’s lethal injection process.",
-      "entityIds": [],
-      "topics": [
-        "budget"
-      ]
-    },
-    {
-      "id": "8b67302a2d75",
-      "title": "GPB evening headlines for September 16, 2026",
-      "url": "https://www.gpb.org/news/2026/09/16/gpb-evening-headlines-for-september-16-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-09-16T19:30:51+00:00",
-      "snippet": "Ballots for November’s midterm elections are being sent to Georgians living overseas. Atlanta plans to make rules for Flock camera use.",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "surveillance"
-      ]
-    },
-    {
-      "id": "80124bb56936",
-      "title": "Report: Key details of Georgia executions are shrouded in secrecy",
-      "url": "https://www.gpb.org/news/2026/09/16/report-key-details-of-georgia-executions-are-shrouded-in-secrecy",
-      "source": "GPB News",
-      "publishedAt": "2026-09-16T18:46:00+00:00",
-      "snippet": "A ProPublica investigation found the nature of Georgia's lethal injection drugs and the identities of doctors involved in executions are by law kept secret.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "a08d27ccc95b",
-      "title": "Georgia Today: Flock camera rules; West Nile virus death; Get-out-the-vote efforts",
-      "url": "https://www.gpb.org/news/2026/09/16/georgia-today-flock-camera-rules-west-nile-virus-death-get-out-the-vote-efforts",
-      "source": "GPB News",
-      "publishedAt": "2026-09-16T18:09:08+00:00",
-      "snippet": "On the September 16th edition: Atlanta promises rules on Flock cameras; One Georgian has died of West Nile Virus; And get-out-the-vote efforts are underway ahead of the November midterms.",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "surveillance"
-      ]
-    },
-    {
       "id": "fe4be11295d4",
       "title": "Carr: Decatur Woman Sentenced for Involvement in $158k Business Email Compromise Scam",
       "url": "https://law.georgia.gov/press-releases/2026-09-16/carr-decatur-woman-sentenced-involvement-158k-business-email-compromise",
@@ -268,18 +246,6 @@
       "snippet": "WASHINGTON, D.C. — Today, Congressman Andrew Clyde (GA-09) recognized Winton Machine of Suwanee, Georgia as a Special Georgian of the Ninth in celebration of the company’s selection as one of the five",
       "entityIds": [
         "vg-ga-p-000255"
-      ],
-      "topics": []
-    },
-    {
-      "id": "50e97b945b65",
-      "title": "Funding for Veterans Cemetery in Augusta Officially Awarded",
-      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7386",
-      "source": "Rep. Rick Allen (GA-12, press)",
-      "publishedAt": "2026-09-16T04:00:00+00:00",
-      "snippet": "Today, the Department of Veterans Affairs (VA) National Cemetery Administration (NCA) officially awarded a grant of up to $13,610,908 to the State of Georgia for the establishment of the Georgia Memor",
-      "entityIds": [
-        "vg-ga-p-000256"
       ],
       "topics": []
     },
