@@ -68,8 +68,10 @@ jobs:
             ${{ (inputs.reclassify == true || inputs.reclassify == 'true') && '--reclassify' || '' }}
 
       # Granicus ViewPublisher places (Barrow, Cherokee): the agenda link resolves
-      # to HTML (not a PDF), so this is a text-strip + classify pass — no OCR. Same
-      # guard as the others: never overwrites a good sidecar/flags with nothing.
+      # to HTML, so this is a text-strip + classify pass. Some instances (Spalding)
+      # return a native PDF from the same viewer — those are detected and routed
+      # through the poppler/OCR path. Same guard as the others: never overwrites a
+      # good sidecar/flags with nothing.
       - name: Enrich Granicus meetings (topics + data-center watch)
         run: |
           python scripts/enrich_granicus_meetings.py \

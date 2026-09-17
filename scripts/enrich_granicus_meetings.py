@@ -16,9 +16,17 @@ back to minutes) to that HTML, strips it to text, and runs the SAME keyword
 taxonomy as the other two (lib.meeting_topics: TOPIC_RULES → data-center,
 rezoning, …). It emits the SAME enriched sidecar + local-flags.json shape, so the
 place page's "On recent agendas" section and the /local/ hub's data-center badge
-light up with no UI change. No poppler/OCR — the source is already text.
+light up with no UI change.
 
-Two Granicus quirks handled here:
+Most Granicus ViewPublisher places (Barrow, Cherokee) serve the agenda as HTML, so
+the default path just strips it to text. Some instances (Spalding) instead have
+`AgendaViewer.php` return a native **PDF** with a direct 2xx — no HTML at all. That
+is detected here by the `%PDF-` magic bytes and routed through the shared poppler /
+Tesseract path (lib.pdf_text.extract_text), exactly like enrich_ocr_meetings.py;
+without that check the PDF bytes were fed to the HTML stripper and classified as
+binary garbage, tagging zero topics.
+
+Three Granicus quirks handled here:
 
   * The AgendaViewer redirect points at
     `https://<bucket>.s3.amazonaws.com/...` where the bucket name contains
@@ -47,6 +55,7 @@ import json
 import os
 import re
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -60,6 +69,7 @@ from lib.meeting_topics import (  # noqa: E402
     topic_excerpts,
 )
 from lib.atomic_io import write_json_atomic  # noqa: E402
+from lib.pdf_text import extract_text  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -223,12 +233,31 @@ def enrich_meeting(meeting, cache, reclassify=False):
         print('    %s: agenda fetch failed/unpublished (%s) — skipping' % (mid, kind))
         return cached  # keep any prior derived data rather than dropping the meeting
 
-    text = html_to_text(raw)
+    # Most instances serve HTML; some (Spalding) return a native PDF from the same
+    # AgendaViewer.php. Detect the PDF and extract its text with poppler/OCR rather
+    # than feeding binary bytes to the HTML stripper (which yields unclassifiable
+    # garbage — the original Spalding "0 topics" bug).
+    if raw[:5] == b'%PDF-':
+        with tempfile.TemporaryDirectory() as tmp:
+            pdf_path = os.path.join(tmp, 'meeting.pdf')
+            with open(pdf_path, 'wb') as f:
+                f.write(raw)
+            text, method = extract_text(pdf_path)
+        # Image-only PDF with OCR unavailable (e.g. a dev run without tesseract):
+        # keep prior tags rather than wiping them to empty. A reclassify still re-tags
+        # every readable PDF.
+        if method == 'none' and cached and cached.get('tags'):
+            return cached
+        if method == 'none':
+            print('    %s: no text extracted (image-only PDF, OCR unavailable)' % mid)
+    else:
+        text, method = html_to_text(raw), 'html'
+
     tags = classify(text)
     terms = matched_terms(text)
-    # Per-mention excerpts: the Granicus source is HTML-stripped text (never OCR),
-    # so it's safe to quote — same single-source matcher as the other enrichers.
-    excerpts = topic_excerpts(text, tags)
+    # Per-mention excerpts: safe to quote from HTML-stripped text or the poppler text
+    # layer, but never from OCR (non-deterministic → noisy diffs, garbled → misquotes).
+    excerpts = topic_excerpts(text, tags) if method in ('html', 'pdftotext') else {}
     topics = {tag: 1 for tag in tags}          # presence-per-meeting (one blob/meeting)
     date = meeting.get('date')
     title = (meeting.get('title') or meeting.get('body') or '').strip()
@@ -244,7 +273,7 @@ def enrich_meeting(meeting, cache, reclassify=False):
         'sourceUrl': url,
         'textSource': kind,
         'textSourceUrl': url,
-        'textMethod': 'html',
+        'textMethod': method,
         'textChars': len(text),
         'contentSha256': hashlib.sha256(raw).hexdigest(),
         'topics': topics,
