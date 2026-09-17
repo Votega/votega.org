@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-17T18:41:17.620235+00:00",
+    "generatedAt": "2026-09-17T23:15:41.351241+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,11 +21,11 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 112,
+    "count": 114,
     "windowDays": 45,
-    "entityTagged": 68,
+    "entityTagged": 70,
     "topicCounts": {
-      "elections": 20,
+      "elections": 22,
       "courts": 9,
       "education": 9,
       "healthcare": 17,
@@ -36,6 +36,18 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000684": {
+      "name": "Tricia R. Pridemore",
+      "url": null,
+      "candidateIds": [
+        "challenger-tricia-pridemore-ga11-2026"
+      ]
+    },
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
+    },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
       "url": null,
@@ -53,22 +65,10 @@
       "url": null,
       "bioguideId": "A000372"
     },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
-    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
-    },
-    "vg-ga-p-000684": {
-      "name": "Tricia R. Pridemore",
-      "url": null,
-      "candidateIds": [
-        "challenger-tricia-pridemore-ga11-2026"
-      ]
     },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
@@ -148,6 +148,66 @@
     }
   },
   "items": [
+    {
+      "id": "45f76a65e89b",
+      "title": "AI raising questions about who writes the rules",
+      "url": "https://capitol-beat.org/2026/09/ai-raising-questions-about-who-writes-the-rules/?utm_source=rss&utm_medium=rss&utm_campaign=ai-raising-questions-about-who-writes-the-rules",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-09-17T20:06:01+00:00",
+      "snippet": "ATLANTA — Some worry artificial intelligence could one day rule humanity. Robots have not taken over yet, but AI may be helping with a core function of democracy in Georgia’s largest county: writing o",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "8e1e06842838",
+      "title": "Ex-Georgia PSC commissioner joins firm constructing data centers she once regulated",
+      "url": "https://thecurrentga.org/2026/09/17/ex-georgia-psc-commissioner-joins-firm-constructing-data-centers-she-once-regulated/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-17T19:42:48+00:00",
+      "snippet": "Former Georgia utility regulator Tricia Pridemore has joined DC BLOX as executive vice president of energy, regulatory and policy following her resignation from the state Public Service Commission.\nTh",
+      "entityIds": [
+        "vg-ga-p-000684"
+      ],
+      "topics": []
+    },
+    {
+      "id": "cd140332fcbe",
+      "title": "Georgia Today: Airport sewer spill; Raphael Warnock calls for AI regulation; Data Center Protest",
+      "url": "https://www.gpb.org/news/2026/09/17/georgia-today-airport-sewer-spill-raphael-warnock-calls-for-ai-regulation-data",
+      "source": "GPB News",
+      "publishedAt": "2026-09-17T19:31:04+00:00",
+      "snippet": "On the Sept. 17 edition: A recent sewage spill at Hartsfield-Jackson is sparking worry about airport pollution; Raphael Warnock is calling for more AI regulation; and Effingham County residents have b",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "6b917827432c",
+      "title": "GPB evening headlines for September 17, 2026",
+      "url": "https://www.gpb.org/news/2026/09/17/gpb-evening-headlines-for-september-17-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-17T19:24:06+00:00",
+      "snippet": "Sen. Raphael Warnock calls for regulation of AI-generated content on social media. AT&T offers a reward for copper theft.",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": []
+    },
+    {
+      "id": "f46160f7e04d",
+      "title": "How the EPA rollback of carbon emission rules could play out in Georgia’s coal-fired power plants",
+      "url": "https://georgiarecorder.com/2026/09/17/how-the-epa-rollback-of-carbon-emission-rules-could-play-out-in-georgias-coal-fired-power-plants/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-17T18:48:41+00:00",
+      "snippet": "The federal Environmental Protection Agency has rolled back rules restricting climate warming emissions at electrical power plants, including those in Georgia. The rules the EPA ended this week date f",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
     {
       "id": "1ff645bdeac4",
       "title": "McBath, Thompson, Klobuchar, Cassidy Introduce Bipartisan, Bicameral Resolution Honoring Connie Clery",
@@ -474,16 +534,6 @@
         "elections",
         "healthcare"
       ]
-    },
-    {
-      "id": "5480170c764a",
-      "title": "Safe housing helps sex trafficking survivors rebuild in Coastal Georgia",
-      "url": "https://thecurrentga.org/2026/09/12/safe-housing-helps-sex-trafficking-survivors-rebuild-in-coastal-georgia/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-12T18:09:34+00:00",
-      "snippet": "Leaving a trafficker doesn't always mean finding safety. Across Georgia, organizations are helping survivors rebuild their lives with stable housing and trauma-informed care.\nThe Current is an inclusi",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "ab5b80e86cab",
@@ -983,16 +1033,6 @@
       ]
     },
     {
-      "id": "0ecc5e73ec4d",
-      "title": "Rapper stole checks and sold the recipe for others to copy him",
-      "url": "https://capitol-beat.org/2026/08/rapper-stole-checks-and-the-recipe-for-others-to-copy-him/?utm_source=rss&utm_medium=rss&utm_campaign=rapper-stole-checks-and-the-recipe-for-others-to-copy-him",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-08-31T21:14:50+00:00",
-      "snippet": "ATLANTA — A Stone Mountain rapper will spend six years in federal prison after pleading guilty to charges involving the theft of thousands of checks from the mail. Shamarri Tache Brooks, 34, pleaded g",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "e81e209da09f",
       "title": "NEW REPORT: Georgians Report Insurance Companies Are Denying or Delaying Care Doctors Say They Need",
       "url": "https://www.ossoff.senate.gov/press-releases/new-report-georgians-report-insurance-companies-are-denying-or-delaying-care-doctors-say-they-need/",
@@ -1487,18 +1527,6 @@
       "snippet": "ATLANTA – Governor Brian P. Kemp today announced that DeltaX, a global provider of advanced battery energy storage solutions (BESS), will create approximately 250 new jobs and invest $141 million to e",
       "entityIds": [
         "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
-      "id": "6d3f8489039e",
-      "title": "Bookman: Years of low-key ‘grunt work’ are paying off for Ossoff",
-      "url": "https://georgiarecorder.com/2026/08/14/bookman-years-of-low-key-grunt-work-are-paying-off-for-ossoff/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-14T08:00:06+00:00",
-      "snippet": "“We the people of the United States of America ….” That phrase from the preamble to the Constitution seems a quaint, almost archaic notion in these divisive times, times in which we’ve lost faith in o",
-      "entityIds": [
-        "vg-ga-p-000264"
       ],
       "topics": []
     },
