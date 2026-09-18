@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-18T20:22:02.583118+00:00",
+    "generatedAt": "2026-09-18T22:55:00.730299+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -25,11 +25,11 @@
     "windowDays": 45,
     "entityTagged": 67,
     "topicCounts": {
+      "elections": 20,
       "education": 12,
       "healthcare": 15,
-      "elections": 19,
-      "courts": 9,
       "ethics": 5,
+      "courts": 8,
       "budget": 6,
       "surveillance": 1
     },
@@ -51,6 +51,14 @@
       "url": null,
       "bioguideId": "M001208"
     },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
+    },
     "vg-ga-p-000684": {
       "name": "Tricia R. Pridemore",
       "url": null,
@@ -67,14 +75,6 @@
       "name": "Raphael G. Warnock",
       "url": null,
       "bioguideId": "W000790"
-    },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
     },
     "vg-ga-p-000255": {
       "name": "Andrew S. Clyde",
@@ -148,6 +148,18 @@
     }
   },
   "items": [
+    {
+      "id": "24aae5ea3b30",
+      "title": "Three Georgia counties flagged by Trump administration for using non-English election materials",
+      "url": "https://georgiarecorder.com/2026/09/18/three-georgia-counties-flagged-by-trump-administration-for-using-non-english-election-materials/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-18T21:52:34+00:00",
+      "snippet": "At least three Georgia counties were listed on an internal memo of jurisdictions across the country that offer election materials in languages other than English, according to internal records from th",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
     {
       "id": "b3e32675051b",
       "title": "Thomas Fanning, ex-Southern Company CEO, appointed to lead Georgia universities",
@@ -303,6 +315,20 @@
       "snippet": "A committee of state lawmakers considering new voting systems for Georgia met for the third time Thursday.",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "ed4238d708b5",
+      "title": "Carr: 11 Indicted in Chatham County Following Multistate Organized Retail Crime Investigation",
+      "url": "https://law.georgia.gov/press-releases/2026-09-18/carr-11-indicted-chatham-county-following-multistate-organized-retail",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-09-18T12:00:00+00:00",
+      "snippet": "CHATHAM COUNTY, GA – Georgia Attorney General Chris Carr today announced that his Organized Retail Crime Unit has secured a new indictment in Chatham County charging 11 individuals in connection with ",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics"
+      ]
     },
     {
       "id": "ce32627de272",
@@ -1461,20 +1487,6 @@
       ]
     },
     {
-      "id": "c4e3a35310e7",
-      "title": "Carr Indicts Eight Following Multi-County Human Trafficking and Gang Investigation",
-      "url": "https://law.georgia.gov/press-releases/2026-08-20/carr-indicts-eight-following-multi-county-human-trafficking-and-gang",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-08-20T12:00:00+00:00",
-      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr today announced that his Human Trafficking and Gang Prosecution Units have secured three separate indictments charging eight individuals in Richmond, ",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": [
-        "ethics"
-      ]
-    },
-    {
       "id": "76f4df75a758",
       "title": "Would Gov. Brian Kemp really shut down his Pathways Medicaid program?",
       "url": "https://georgiarecorder.com/2026/08/20/would-gov-brian-kemp-really-shut-down-his-pathways-medicaid-program/",
@@ -1545,18 +1557,6 @@
         "vg-ga-p-000024"
       ],
       "topics": []
-    },
-    {
-      "id": "59f12dfedb61",
-      "title": "Georgia Supreme Court to stop hearing most murder cases by 2028",
-      "url": "https://georgiarecorder.com/2026/08/17/georgia-supreme-court-to-stop-hearing-most-murder-cases-by-2028/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-17T08:00:32+00:00",
-      "snippet": "Starting next summer, Georgia’s highest court will no longer routinely hear appeals in murder cases. The decision was announced Thursday as part of a concurring opinion from Chief Justice Nels Peterso",
-      "entityIds": [],
-      "topics": [
-        "courts"
-      ]
     },
     {
       "id": "da3a88fefe55",
