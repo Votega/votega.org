@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-18T17:57:46.321003+00:00",
+    "generatedAt": "2026-09-18T20:22:02.583118+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,13 +21,13 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 115,
+    "count": 119,
     "windowDays": 45,
     "entityTagged": 67,
     "topicCounts": {
-      "education": 11,
-      "healthcare": 16,
-      "elections": 20,
+      "education": 12,
+      "healthcare": 15,
+      "elections": 19,
       "courts": 9,
       "ethics": 5,
       "budget": 6,
@@ -36,6 +36,11 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
@@ -62,11 +67,6 @@
       "name": "Raphael G. Warnock",
       "url": null,
       "bioguideId": "W000790"
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
     },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
@@ -149,6 +149,70 @@
   },
   "items": [
     {
+      "id": "b3e32675051b",
+      "title": "Thomas Fanning, ex-Southern Company CEO, appointed to lead Georgia universities",
+      "url": "https://thecurrentga.org/2026/09/18/thomas-fanning-ex-southern-company-ceo-appointed-to-lead-georgia-universities/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-18T20:07:19+00:00",
+      "snippet": "The University System of Georgia Board of Regents has selected Thomas A. Fanning, a former Southern Company CEO, as the sole finalist to succeed Sonny Perdue as chancellor.\nThe Current is an inclusive",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "b21246e8613e",
+      "title": "VIDEO: Sen. Ossoff Celebrates Hispanic Heritage Month",
+      "url": "https://www.ossoff.senate.gov/press-releases/video-sen-ossoff-celebrates-hispanic-heritage-month/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-18T19:20:32+00:00",
+      "snippet": "Atlanta, Ga, — U.S. Senator Jon Ossoff is celebrating Hispanic Heritage Month with a new video message. “This is U.S. Senator Jon Ossoff, and it is my pleasure to join with Georgians across our state ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "18130434e139",
+      "title": "Atlanta measles outbreak puts under-vaccinated kids at risk. Here's how to manage it",
+      "url": "https://www.gpb.org/news/2026/09/18/atlanta-measles-outbreak-puts-under-vaccinated-kids-at-risk-heres-how-manage-it",
+      "source": "GPB News",
+      "publishedAt": "2026-09-18T19:08:00+00:00",
+      "snippet": "Measles is extremely contagious and the virus can linger in the air for up to 2 hours. So how do you protect yourself and your kids?",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "ec7e43dd6152",
+      "title": "GPB evening headlines for September 19, 2026",
+      "url": "https://www.gpb.org/news/2026/09/18/gpb-evening-headlines-for-september-19-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-18T19:06:32+00:00",
+      "snippet": "Atlanta has an alarming percentage of overdue water bills. Measles outbreak puts undervaccinated kids at risk.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "763802f1cbd1",
+      "title": "What does a rate hike mean for Georgia consumers, businesses?",
+      "url": "https://thecurrentga.org/2026/09/18/what-does-a-rate-hike-mean-for-georgia-consumers-businesses/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-18T18:15:19+00:00",
+      "snippet": "The Federal Reserve raised interest rates by a quarter-point to a target range of 3.75-4% to combat elevated inflation, a move that local economists say signals independent policymaking despite potent",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "fdb52ba08fab",
+      "title": "Georgia Today: New voting system update; Water bill delinquency; Blackout prep",
+      "url": "https://www.gpb.org/news/2026/09/18/georgia-today-new-voting-system-update-water-bill-delinquency-blackout-prep",
+      "source": "GPB News",
+      "publishedAt": "2026-09-18T18:03:52+00:00",
+      "snippet": "On the September 18 edition: Atlanta is owed $236 million dollars in overdue water bills; amid a measles outbreak in Atlanta, under-vaccinated kids may be at risk; and an emergency preparedness challe",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "38f190eda780",
       "title": "ICYMI: Congresswoman Nikema Williams Speaks and Introduces Fighting Fifth Small Business Owner at “Fighting for an Affordable America”",
       "url": "https://nikemawilliams.house.gov/posts/icymi-congresswoman-nikema-williams-speaks-and-introduces-fighting-fifth-small-business-owner-at-fighting-for-an-affordable-america",
@@ -194,6 +258,20 @@
       ],
       "topics": [
         "education"
+      ]
+    },
+    {
+      "id": "bef27bb14747",
+      "title": "NEW: Georgians Report Experiencing Prolonged Pain as Insurance Companies Deny or Delay Care Doctors Say They Need",
+      "url": "https://www.ossoff.senate.gov/press-releases/new-georgians-report-experiencing-prolonged-pain-as-insurance-companies-deny-or-delay-care-doctors-say-they-need/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-18T14:13:37+00:00",
+      "snippet": "Click here to read Sen. Ossoff’s third report from his ongoing investigation into health care costs, loss of services, and delays or denials of needed care Washington, D.C. — A new report from U.S. Se",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
       ]
     },
     {
@@ -462,18 +540,6 @@
       "source": "The Current GA",
       "publishedAt": "2026-09-15T02:17:57+00:00",
       "snippet": "Chatham County elections supervisor Brook Schreiner resigned effective Tuesday, citing friction with the board over her efforts to address perceived problems within the election system.\nThe Current is",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "16769032697b",
-      "title": "Georgia’s voter registration deadline is approaching. Here are 5 things you need to know.",
-      "url": "https://thecurrentga.org/2026/09/14/georgias-voter-registration-deadline-is-approaching-here-are-5-things-you-need-to-know/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-14T20:54:17+00:00",
-      "snippet": "With the midterm elections approaching, Georgia residents are urged to register to vote or update their information before the October 5 deadline.\nThe Current is an inclusive nonprofit, non-partisan n",
       "entityIds": [],
       "topics": [
         "elections"
@@ -994,20 +1060,6 @@
       ]
     },
     {
-      "id": "d3a23ebae10b",
-      "title": "Sen. Ossoff Pressing CDC Director to Restore Decimated Maternal and Infant Health Programs",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-pressing-cdc-director-to-restore-decimated-maternal-and-infant-health-programs/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-02T19:12:31+00:00",
-      "snippet": "Washington, D.C. — After massive cuts last spring, U.S. Senator Jon Ossoff is pressing Centers for Disease Control and Prevention (CDC) Director Erica Schwartz to restore maternal and infant health pr",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
       "id": "56c6041a5eb0",
       "title": "Congresswoman Nikema Williams Reintroduces the Equal Pay for Equal Work Act",
       "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-reintroduces-the-equal-pay-for-equal-work-act",
@@ -1056,20 +1108,6 @@
       ],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "e81e209da09f",
-      "title": "NEW REPORT: Georgians Report Insurance Companies Are Denying or Delaying Care Doctors Say They Need",
-      "url": "https://www.ossoff.senate.gov/press-releases/new-report-georgians-report-insurance-companies-are-denying-or-delaying-care-doctors-say-they-need/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-08-31T19:48:52+00:00",
-      "snippet": "Click here to read Sen. Ossoff’s new report on insurance companies denying or delaying Georgians care their doctors say they need Atlanta, Ga. — A new report from U.S. Senator Jon Ossoff reveals insur",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
       ]
     },
     {
