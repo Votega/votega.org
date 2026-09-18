@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-18T13:15:29.355303+00:00",
+    "generatedAt": "2026-09-18T17:57:46.321003+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,14 +21,14 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 113,
+    "count": 115,
     "windowDays": 45,
     "entityTagged": 67,
     "topicCounts": {
-      "healthcare": 17,
-      "elections": 21,
+      "education": 11,
+      "healthcare": 16,
+      "elections": 20,
       "courts": 9,
-      "education": 9,
       "ethics": 5,
       "budget": 6,
       "surveillance": 1
@@ -36,17 +36,22 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
+    "vg-ga-p-000262": {
+      "name": "Lucy McBath",
+      "url": null,
+      "bioguideId": "M001208"
+    },
     "vg-ga-p-000684": {
       "name": "Tricia R. Pridemore",
       "url": null,
       "candidateIds": [
         "challenger-tricia-pridemore-ga11-2026"
       ]
-    },
-    "vg-ga-p-000262": {
-      "name": "Lucy McBath",
-      "url": null,
-      "bioguideId": "M001208"
     },
     "vg-ga-p-000256": {
       "name": "Rick W. Allen",
@@ -75,11 +80,6 @@
       "name": "Andrew S. Clyde",
       "url": null,
       "bioguideId": "C001116"
-    },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
     },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
@@ -149,9 +149,67 @@
   },
   "items": [
     {
-      "id": "95ed58c7478f",
-      "title": "'We just want the problem fixed' after Atlanta airport 'major spill' of sewage into Sullivan Creek",
-      "url": "https://www.gpb.org/news/2026/09/18/we-just-want-the-problem-fixed-after-atlanta-airport-major-spill-of-sewage-sullivan",
+      "id": "38f190eda780",
+      "title": "ICYMI: Congresswoman Nikema Williams Speaks and Introduces Fighting Fifth Small Business Owner at “Fighting for an Affordable America”",
+      "url": "https://nikemawilliams.house.gov/posts/icymi-congresswoman-nikema-williams-speaks-and-introduces-fighting-fifth-small-business-owner-at-fighting-for-an-affordable-america",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-09-18T17:48:49+00:00",
+      "snippet": "WASHINGTON, D.C. — Congresswoman Nikema Williams (GA-05) joined House Democrats for the “Fighting for an Affordable America” press conference to speak about the affordability crisis and introduce a sm",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": []
+    },
+    {
+      "id": "740ad15b2682",
+      "title": "Blackout Atlanta event tests residents’ emergency preparedness with overnight challenge",
+      "url": "https://www.gpb.org/news/2026/09/18/blackout-atlanta-event-tests-residents-emergency-preparedness-overnight-challenge",
+      "source": "GPB News",
+      "publishedAt": "2026-09-18T17:28:00+00:00",
+      "snippet": "Nearly 300 Atlanta residents will participate in an overnight emergency preparedness challenge hosted by a local nonprofit.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "7840ba4511e8",
+      "title": "Georgia’s first need-based aid comes to campus this fall — but is it enough?",
+      "url": "https://www.gpb.org/news/2026/09/18/georgias-first-need-based-aid-comes-campus-fall-it-enough",
+      "source": "GPB News",
+      "publishedAt": "2026-09-18T15:44:00+00:00",
+      "snippet": "Though the General Assembly has allocated millions of dollars to establish a new need-based scholarship, experts warn that it won’t cover the cost for low-income and rural students.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "d40072b59055",
+      "title": "Bipartisan Coalition Introduce Resolution Designating “National Adult Education and Family Literacy Week”",
+      "url": "https://mcbath.house.gov/2026/09/18/bipartisan-coalition-introduce-resolution-designating-national-adult-education-and-family-literacy-week/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-09-18T15:12:41+00:00",
+      "snippet": "Resolution promotes adult foundational education, workforce development, and family literacy programs Washington, DC – Representatives Lucy McBath (GA-06), Brian Fitzpatrick (PA-01), Frank Mrvan (D-IN",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "981b5932eddc",
+      "title": "GPB morning headlines for September 18, 2026",
+      "url": "https://www.gpb.org/news/2026/09/18/gpb-morning-headlines-for-september-18-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-18T13:16:00+00:00",
+      "snippet": "A committee of state lawmakers considering new voting systems for Georgia met for the third time Thursday; A recent member of the state body regulating much of Georgia’s data center build out has foun",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "0d2870d8e8c0",
+      "title": "'We just want the problem fixed' after Atlanta airport's 'major spill' of sewage into Sullivan Creek",
+      "url": "https://www.gpb.org/news/2026/09/18/we-just-want-the-problem-fixed-after-atlanta-airports-major-spill-of-sewage",
       "source": "GPB News",
       "publishedAt": "2026-09-18T13:05:00+00:00",
       "snippet": "Georgia's Environmental Protection Division says about 30,000 gallons of untreated sewage reached Sullivan Creek after a major spill at Atlanta’s airport. The creek feeds into the Flint River.",
@@ -458,32 +516,6 @@
         "vg-ga-p-000024",
         "vg-ga-p-000253"
       ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "da83be2be5cb",
-      "title": "Jackson vows to close coverage gap; federal law poses challenge",
-      "url": "https://thecurrentga.org/2026/09/14/jackson-vows-to-close-coverage-gap-federal-law-poses-challenge/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-14T13:52:54+00:00",
-      "snippet": "Republican gubernatorial nominee Rick Jackson recently unveiled the Jackson Action Plan, a proposal aimed at closing Georgia's healthcare coverage gap through intelligent Medicaid expansion while navi",
-      "entityIds": [
-        "vg-ga-p-000368"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "0b849c086c3b",
-      "title": "The secret ballot has been an article of faith in US elections. That’s being tested in Georgia",
-      "url": "https://thecurrentga.org/2026/09/14/the-secret-ballot-has-been-an-article-of-faith-in-us-elections-thats-being-tested-in-georgia/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-14T13:39:49+00:00",
-      "snippet": "Election security advocates are warning that a software flaw in Georgia's voting equipment could allow individuals to link voters to their ballots, potentially violating constitutional rights to secre",
-      "entityIds": [],
       "topics": [
         "elections"
       ]
@@ -1534,18 +1566,6 @@
       "snippet": "Washington, D.C. – Congresswoman Nikema Williams (GA-05) co-sponsored the No TSA Data for ICE Act, introduced by Rep. Rashida Tlaib (MI-12), that would prevent the two agencies from coordinating to en",
       "entityIds": [
         "vg-ga-p-000254"
-      ],
-      "topics": []
-    },
-    {
-      "id": "03f520502bda",
-      "title": "McBath Leads House Introduction of Bipartisan READ Act",
-      "url": "https://mcbath.house.gov/2026/08/04/mcbath-leads-house-introduction-of-bipartisan-read-act/",
-      "source": "Rep. Lucy McBath (GA-06, press)",
-      "publishedAt": "2026-08-04T14:06:49+00:00",
-      "snippet": "Washington, D.C. — Yesterday, Congresswoman Lucy McBath (GA-06) led the House introduction of the bipartisan and bicameral Reading Excellence and Achievement for Development (READ) Act, legislation wh",
-      "entityIds": [
-        "vg-ga-p-000262"
       ],
       "topics": []
     }
