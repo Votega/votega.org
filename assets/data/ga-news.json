@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-19T12:46:20.993423+00:00",
+    "generatedAt": "2026-09-19T17:35:36.072733+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,26 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 103,
+    "count": 112,
     "windowDays": 45,
-    "entityTagged": 57,
+    "entityTagged": 67,
     "topicCounts": {
-      "budget": 6,
+      "budget": 9,
       "education": 12,
-      "elections": 20,
+      "elections": 19,
+      "healthcare": 15,
       "ethics": 5,
-      "healthcare": 13,
       "courts": 8,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
@@ -65,6 +70,11 @@
       "name": "Rick W. Allen",
       "url": null,
       "bioguideId": "A000372"
+    },
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
     },
     "vg-ga-p-000255": {
       "name": "Andrew S. Clyde",
@@ -108,11 +118,6 @@
         "challenger-keisha-bottoms-gov-2026"
       ]
     },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
-    },
     "vg-ga-p-000685": {
       "name": "Everton Blair",
       "url": null,
@@ -143,6 +148,31 @@
     }
   },
   "items": [
+    {
+      "id": "c53a0c7713ea",
+      "title": "Government 101: Legislature created development authorities, but oversight remains limited",
+      "url": "https://thecurrentga.org/2026/09/19/government-101-legislature-created-development-authorities-but-oversight-remains-limited/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-19T17:01:47+00:00",
+      "snippet": "Georgia's local development authorities have drawn criticism for operating with little transparency and oversight while granting significant tax breaks to corporations like OpenAI.\nThe Current is an i",
+      "entityIds": [],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "8481303ad447",
+      "title": "Georgia’s first need-based aid comes to campus this fall — is it enough?",
+      "url": "https://thecurrentga.org/2026/09/19/georgias-first-need-based-aid-comes-to-campus-this-fall-is-it-enough/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-19T16:14:17+00:00",
+      "snippet": "The Georgia General Assembly has appropriated $325 million to establish the DREAMS scholarship, a new need-based aid program intended to support low-income and rural students despite concerns that the",
+      "entityIds": [],
+      "topics": [
+        "budget",
+        "education"
+      ]
+    },
     {
       "id": "a27baf0a6efc",
       "title": "Georgia school system abruptly bans Toni Morrison’s ‘The Bluest Eye’",
@@ -181,22 +211,24 @@
       ]
     },
     {
+      "id": "b21246e8613e",
+      "title": "VIDEO: Sen. Ossoff Celebrates Hispanic Heritage Month",
+      "url": "https://www.ossoff.senate.gov/press-releases/video-sen-ossoff-celebrates-hispanic-heritage-month/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-18T19:20:32+00:00",
+      "snippet": "Atlanta, Ga, — U.S. Senator Jon Ossoff is celebrating Hispanic Heritage Month with a new video message. “This is U.S. Senator Jon Ossoff, and it is my pleasure to join with Georgians across our state ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
       "id": "18130434e139",
       "title": "Atlanta measles outbreak puts under-vaccinated kids at risk. Here's how to manage it",
       "url": "https://www.gpb.org/news/2026/09/18/atlanta-measles-outbreak-puts-under-vaccinated-kids-at-risk-heres-how-manage-it",
       "source": "GPB News",
       "publishedAt": "2026-09-18T19:08:00+00:00",
       "snippet": "Measles is extremely contagious and the virus can linger in the air for up to 2 hours. So how do you protect yourself and your kids?",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "ec7e43dd6152",
-      "title": "GPB evening headlines for September 19, 2026",
-      "url": "https://www.gpb.org/news/2026/09/18/gpb-evening-headlines-for-september-19-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-09-18T19:06:32+00:00",
-      "snippet": "Atlanta has an alarming percentage of overdue water bills. Measles outbreak puts undervaccinated kids at risk.",
       "entityIds": [],
       "topics": []
     },
@@ -234,6 +266,20 @@
       ],
       "topics": [
         "education"
+      ]
+    },
+    {
+      "id": "bef27bb14747",
+      "title": "NEW: Georgians Report Experiencing Prolonged Pain as Insurance Companies Deny or Delay Care Doctors Say They Need",
+      "url": "https://www.ossoff.senate.gov/press-releases/new-georgians-report-experiencing-prolonged-pain-as-insurance-companies-deny-or-delay-care-doctors-say-they-need/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-18T14:13:37+00:00",
+      "snippet": "Click here to read Sen. Ossoff’s third report from his ongoing investigation into health care costs, loss of services, and delays or denials of needed care Washington, D.C. — A new report from U.S. Se",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
       ]
     },
     {
@@ -357,6 +403,19 @@
       ]
     },
     {
+      "id": "cf0c998b8add",
+      "title": "Sens. Ossoff, Rev. Warnock Delivering $12 Million in Federal Funds to Support Tybee Island Beach Renourishment Project",
+      "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-12-million-in-federal-funds-to-support-tybee-island-beach-renourishment-project/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-16T21:44:50+00:00",
+      "snippet": "In 2022, Sens. Ossoff and Rev. Warnock passed into law their “Tybee Island Storm Risk Management Act” to support ongoing renourishment & storm risk management projects In March, Sen. Ossoff and Rev. W",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
       "id": "dd523bfd1f5d",
       "title": "Former Georgia regulator who helped set policy for data centers now works for company building them",
       "url": "https://georgiarecorder.com/2026/09/16/former-georgia-regulator-who-helped-set-policy-for-data-centers-now-works-for-company-building-them/",
@@ -419,18 +478,6 @@
       ]
     },
     {
-      "id": "99d7328f523f",
-      "title": "Photo gallery: More than 6,000 people pack stands for HBCU Battle of the Bands at Savannah State",
-      "url": "https://thecurrentga.org/2026/09/15/photo-gallery-more-than-6000-people-pack-stands-for-hbcu-battle-of-the-bands-at-savannah-state/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-15T22:24:39+00:00",
-      "snippet": "Nine Historically Black Colleges and Universities showcased their musical talents at Savannah State University's Ted Wright Stadium during the 2026 HBCU Battle of the Bands on September 14.\nThe Curren",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
       "id": "8ace02f954e8",
       "title": "Williams, Merkley, Booker Lead Push to Close Constitutional Loophole Allowing for Slavery",
       "url": "https://nikemawilliams.house.gov/posts/williams-merkley-booker-lead-push-to-close-constitutional-loophole-allowing-for-slavery",
@@ -467,16 +514,30 @@
       ]
     },
     {
-      "id": "b9bb4db8db50",
-      "title": "Chatham County elections supervisor resigns",
-      "url": "https://thecurrentga.org/2026/09/14/chatham-county-elections-supervisor-resigns/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-15T02:17:57+00:00",
-      "snippet": "Chatham County elections supervisor Brook Schreiner resigned effective Tuesday, citing friction with the board over her efforts to address perceived problems within the election system.\nThe Current is",
-      "entityIds": [],
+      "id": "2da9cc5ac6c3",
+      "title": "After GOP’s Historic Medicaid Cuts, Sen. Ossoff Delivering Federal Funding to Strengthen Georgia’s Rural Hospitals",
+      "url": "https://www.ossoff.senate.gov/press-releases/after-gops-historic-medicaid-cuts-sen-ossoff-delivering-federal-funding-to-strengthen-georgias-rural-hospitals/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-14T19:22:31+00:00",
+      "snippet": "Washington, D.C. — After Congressional Republican’s historic cuts to Medicaid last year, U.S. Senator Jon Ossoff is delivering Federal funding to strengthen Georgia’s rural hospitals. Sen. Ossoff is d",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
       "topics": [
-        "elections"
+        "healthcare"
       ]
+    },
+    {
+      "id": "53e7c2caf3d7",
+      "title": "Sen. Ossoff Working Across the Aisle to Lower Price of Medicine for Georgia Families",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-lower-price-of-medicine-for-georgia-families/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-14T18:46:20+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working across the aisle to lower the price of life-saving medicine. Sen. Ossoff recently cosponsored the bipartisan Biosimilar Red Tape Elimination Act t",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
     },
     {
       "id": "09e8fb5d0e60",
@@ -545,6 +606,18 @@
       "topics": []
     },
     {
+      "id": "a208663fc515",
+      "title": "WATCH: Sen. Ossoff Commemorates 25th Anniversary of September 11th Terrorist Attacks",
+      "url": "https://www.ossoff.senate.gov/press-releases/watch-sen-ossoff-commemorates-25th-anniversary-of-september-11th-terrorist-attacks/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-11T13:50:32+00:00",
+      "snippet": "Atlanta, Ga. — U.S. Senator Jon Ossoff is commemorating the 25th Anniversary of the September 11th terrorist attacks. “Today, I would like to pause and honor and remember all of those who were killed ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
       "id": "da7e10206977",
       "title": "Remembering 9/11/01",
       "url": "https://loudermilk.house.gov/2026/09/11/remembering-9-11-01/",
@@ -567,6 +640,19 @@
       "topics": [
         "elections"
       ]
+    },
+    {
+      "id": "e5ed7da02555",
+      "title": "Sens. Ossoff, Rev. Warnock Delivering Nearly $500 Million to Improve Water Infrastructure Damaged by Hurricane Helene",
+      "url": "https://www.ossoff.senate.gov/press-releases/sens-ossoff-rev-warnock-delivering-nearly-500-million-to-improve-water-infrastructure-damaged-by-hurricane-helene/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-10T19:14:09+00:00",
+      "snippet": "Washington, D.C. — U.S. Senators Reverend Raphael Warnock and Jon Ossoff today announced they are delivering nearly $500 million in Federal funding to upgrade water infrastructure impacted by Hurrican",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
     },
     {
       "id": "b7cbad466d72",
@@ -606,6 +692,18 @@
         "budget",
         "education"
       ]
+    },
+    {
+      "id": "099fe180bdc0",
+      "title": "Sen. Ossoff Working Across the Aisle to Lower Fertilizer Costs for Georgia Farmers",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-lower-fertilizer-costs-for-georgia-farmers/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-10T13:55:56+00:00",
+      "snippet": "Washington, D.C. — As the war in Iran continues, U.S. Senator Jon Ossoff is working with Republicans and Democrats to lower fertilizer costs for Georgia farmers. Sen. Ossoff recently cosponsored the H",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
     },
     {
       "id": "206c80438dea",
@@ -865,6 +963,18 @@
       "topics": []
     },
     {
+      "id": "a21943573d59",
+      "title": "Sen. Ossoff Backing Bipartisan Bill to Expand Technical Skills Training Programs",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-backing-bipartisan-bill-to-expand-technical-skills-training-programs/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-03T14:38:37+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is backing a bipartisan bill to expand housing construction training programs in Georgia. Sen. Ossoff is cosponsoring the bipartisan Creating Opportunities f",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
       "id": "5891e3d2099a",
       "title": "Gov. Kemp Announces Another Record-Breaking Year for Economic Development Investments",
       "url": "https://gov.georgia.gov/press-releases/2026-09-03/gov-kemp-announces-another-record-breaking-year-economic-development",
@@ -900,6 +1010,20 @@
       ],
       "topics": [
         "elections",
+        "budget"
+      ]
+    },
+    {
+      "id": "c77ef9f03a36",
+      "title": "Sen. Ossoff Delivering Nearly $50 Million to Upgrade Robins Air Force Base",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-delivering-nearly-50-million-to-upgrade-robins-air-force-base/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-02T19:14:53+00:00",
+      "snippet": "Robins AFB, Ga. — U.S. Senator Jon Ossoff is delivering Federal funding to upgrade Robins Air Force Base. Sen. Ossoff, the top Democrat on the U.S. Senate Appropriations Military Construction and VA S",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
         "budget"
       ]
     },
