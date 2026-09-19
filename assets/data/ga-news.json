@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-18T22:55:00.730299+00:00",
+    "generatedAt": "2026-09-19T02:14:18.664362+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,26 +21,21 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 119,
+    "count": 109,
     "windowDays": 45,
-    "entityTagged": 67,
+    "entityTagged": 57,
     "topicCounts": {
-      "elections": 20,
-      "education": 12,
-      "healthcare": 15,
-      "ethics": 5,
-      "courts": 8,
       "budget": 6,
+      "education": 13,
+      "elections": 20,
+      "ethics": 5,
+      "healthcare": 13,
+      "courts": 8,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
@@ -70,11 +65,6 @@
       "name": "Rick W. Allen",
       "url": null,
       "bioguideId": "A000372"
-    },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
     },
     "vg-ga-p-000255": {
       "name": "Andrew S. Clyde",
@@ -118,6 +108,11 @@
         "challenger-keisha-bottoms-gov-2026"
       ]
     },
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
+    },
     "vg-ga-p-000685": {
       "name": "Everton Blair",
       "url": null,
@@ -149,6 +144,19 @@
   },
   "items": [
     {
+      "id": "a27baf0a6efc",
+      "title": "Georgia school system abruptly bans Toni Morrison’s ‘The Bluest Eye’",
+      "url": "https://georgiarecorder.com/2026/09/18/georgia-school-system-abruptly-bans-toni-morrisons-the-bluest-eye/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-19T01:23:36+00:00",
+      "snippet": "Georgia’s second-largest school district is once again at the center of a political controversy over the appropriateness of school materials. Cobb County Schools Superintendent Chris Ragsdale announce",
+      "entityIds": [],
+      "topics": [
+        "budget",
+        "education"
+      ]
+    },
+    {
       "id": "24aae5ea3b30",
       "title": "Three Georgia counties flagged by Trump administration for using non-English election materials",
       "url": "https://georgiarecorder.com/2026/09/18/three-georgia-counties-flagged-by-trump-administration-for-using-non-english-election-materials/",
@@ -171,18 +179,6 @@
       "topics": [
         "education"
       ]
-    },
-    {
-      "id": "b21246e8613e",
-      "title": "VIDEO: Sen. Ossoff Celebrates Hispanic Heritage Month",
-      "url": "https://www.ossoff.senate.gov/press-releases/video-sen-ossoff-celebrates-hispanic-heritage-month/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-18T19:20:32+00:00",
-      "snippet": "Atlanta, Ga, — U.S. Senator Jon Ossoff is celebrating Hispanic Heritage Month with a new video message. “This is U.S. Senator Jon Ossoff, and it is my pleasure to join with Georgians across our state ",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "18130434e139",
@@ -270,20 +266,6 @@
       ],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "bef27bb14747",
-      "title": "NEW: Georgians Report Experiencing Prolonged Pain as Insurance Companies Deny or Delay Care Doctors Say They Need",
-      "url": "https://www.ossoff.senate.gov/press-releases/new-georgians-report-experiencing-prolonged-pain-as-insurance-companies-deny-or-delay-care-doctors-say-they-need/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-18T14:13:37+00:00",
-      "snippet": "Click here to read Sen. Ossoff’s third report from his ongoing investigation into health care costs, loss of services, and delays or denials of needed care Washington, D.C. — A new report from U.S. Se",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
       ]
     },
     {
@@ -437,19 +419,6 @@
       ]
     },
     {
-      "id": "cf0c998b8add",
-      "title": "Sens. Ossoff, Rev. Warnock Delivering $12 Million in Federal Funds to Support Tybee Island Beach Renourishment Project",
-      "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-12-million-in-federal-funds-to-support-tybee-island-beach-renourishment-project/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-16T21:44:50+00:00",
-      "snippet": "In 2022, Sens. Ossoff and Rev. Warnock passed into law their “Tybee Island Storm Risk Management Act” to support ongoing renourishment & storm risk management projects In March, Sen. Ossoff and Rev. W",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "dd523bfd1f5d",
       "title": "Former Georgia regulator who helped set policy for data centers now works for company building them",
       "url": "https://georgiarecorder.com/2026/09/16/former-georgia-regulator-who-helped-set-policy-for-data-centers-now-works-for-company-building-them/",
@@ -572,32 +541,6 @@
       ]
     },
     {
-      "id": "2da9cc5ac6c3",
-      "title": "After GOP’s Historic Medicaid Cuts, Sen. Ossoff Delivering Federal Funding to Strengthen Georgia’s Rural Hospitals",
-      "url": "https://www.ossoff.senate.gov/press-releases/after-gops-historic-medicaid-cuts-sen-ossoff-delivering-federal-funding-to-strengthen-georgias-rural-hospitals/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-14T19:22:31+00:00",
-      "snippet": "Washington, D.C. — After Congressional Republican’s historic cuts to Medicaid last year, U.S. Senator Jon Ossoff is delivering Federal funding to strengthen Georgia’s rural hospitals. Sen. Ossoff is d",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "53e7c2caf3d7",
-      "title": "Sen. Ossoff Working Across the Aisle to Lower Price of Medicine for Georgia Families",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-lower-price-of-medicine-for-georgia-families/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-14T18:46:20+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working across the aisle to lower the price of life-saving medicine. Sen. Ossoff recently cosponsored the bipartisan Biosimilar Red Tape Elimination Act t",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "09e8fb5d0e60",
       "title": "Kemp backs Mike Collins in Georgia’s U.S. Senate race with election less than two months away",
       "url": "https://georgiarecorder.com/2026/09/14/kemp-backs-mike-collins-in-georgias-u-s-senate-race-with-election-less-than-two-months-away/",
@@ -664,18 +607,6 @@
       "topics": []
     },
     {
-      "id": "a208663fc515",
-      "title": "WATCH: Sen. Ossoff Commemorates 25th Anniversary of September 11th Terrorist Attacks",
-      "url": "https://www.ossoff.senate.gov/press-releases/watch-sen-ossoff-commemorates-25th-anniversary-of-september-11th-terrorist-attacks/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-11T13:50:32+00:00",
-      "snippet": "Atlanta, Ga. — U.S. Senator Jon Ossoff is commemorating the 25th Anniversary of the September 11th terrorist attacks. “Today, I would like to pause and honor and remember all of those who were killed ",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "da7e10206977",
       "title": "Remembering 9/11/01",
       "url": "https://loudermilk.house.gov/2026/09/11/remembering-9-11-01/",
@@ -698,19 +629,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "e5ed7da02555",
-      "title": "Sens. Ossoff, Rev. Warnock Delivering Nearly $500 Million to Improve Water Infrastructure Damaged by Hurricane Helene",
-      "url": "https://www.ossoff.senate.gov/press-releases/sens-ossoff-rev-warnock-delivering-nearly-500-million-to-improve-water-infrastructure-damaged-by-hurricane-helene/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-10T19:14:09+00:00",
-      "snippet": "Washington, D.C. — U.S. Senators Reverend Raphael Warnock and Jon Ossoff today announced they are delivering nearly $500 million in Federal funding to upgrade water infrastructure impacted by Hurrican",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "b7cbad466d72",
@@ -750,18 +668,6 @@
         "budget",
         "education"
       ]
-    },
-    {
-      "id": "099fe180bdc0",
-      "title": "Sen. Ossoff Working Across the Aisle to Lower Fertilizer Costs for Georgia Farmers",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-lower-fertilizer-costs-for-georgia-farmers/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-10T13:55:56+00:00",
-      "snippet": "Washington, D.C. — As the war in Iran continues, U.S. Senator Jon Ossoff is working with Republicans and Democrats to lower fertilizer costs for Georgia farmers. Sen. Ossoff recently cosponsored the H",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "206c80438dea",
@@ -1021,18 +927,6 @@
       "topics": []
     },
     {
-      "id": "a21943573d59",
-      "title": "Sen. Ossoff Backing Bipartisan Bill to Expand Technical Skills Training Programs",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-backing-bipartisan-bill-to-expand-technical-skills-training-programs/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-03T14:38:37+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is backing a bipartisan bill to expand housing construction training programs in Georgia. Sen. Ossoff is cosponsoring the bipartisan Creating Opportunities f",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "5891e3d2099a",
       "title": "Gov. Kemp Announces Another Record-Breaking Year for Economic Development Investments",
       "url": "https://gov.georgia.gov/press-releases/2026-09-03/gov-kemp-announces-another-record-breaking-year-economic-development",
@@ -1068,20 +962,6 @@
       ],
       "topics": [
         "elections",
-        "budget"
-      ]
-    },
-    {
-      "id": "c77ef9f03a36",
-      "title": "Sen. Ossoff Delivering Nearly $50 Million to Upgrade Robins Air Force Base",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-delivering-nearly-50-million-to-upgrade-robins-air-force-base/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-02T19:14:53+00:00",
-      "snippet": "Robins AFB, Ga. — U.S. Senator Jon Ossoff is delivering Federal funding to upgrade Robins Air Force Base. Sen. Ossoff, the top Democrat on the U.S. Senate Appropriations Military Construction and VA S",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
         "budget"
       ]
     },
@@ -1533,16 +1413,6 @@
       "source": "Georgia Recorder",
       "publishedAt": "2026-08-17T23:49:06+00:00",
       "snippet": "Inside the vast QCells factory in Cartersville, Georgia, workers — and a bevy of robots — move ultra-thin slices of polysilicon through a lengthy series of machines and chemical baths to transform the",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "0f35f04e165d",
-      "title": "Kindergarten vaccine rates still below 90% in Georgia, with exemptions on the rise",
-      "url": "https://georgiarecorder.com/2026/08/17/kindergarten-vaccine-rates-still-below-90-in-georgia-with-exemptions-on-the-rise/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-17T23:41:27+00:00",
-      "snippet": "Kindergarten immunization rates are falling and vaccine exemptions are on the rise, according to data from the Centers for Disease Control and Prevention released this week. In a press release, the CD",
       "entityIds": [],
       "topics": []
     },
