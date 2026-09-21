@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-21T08:21:40.070120+00:00",
+    "generatedAt": "2026-09-21T15:28:49.626380+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,12 +21,12 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 110,
+    "count": 111,
     "windowDays": 45,
-    "entityTagged": 67,
+    "entityTagged": 66,
     "topicCounts": {
       "budget": 9,
-      "education": 12,
+      "education": 11,
       "elections": 19,
       "healthcare": 15,
       "ethics": 5,
@@ -36,6 +36,19 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
+    },
+    "vg-ga-p-000256": {
+      "name": "Rick W. Allen",
+      "url": null,
+      "bioguideId": "A000372"
+    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
@@ -51,25 +64,12 @@
       "url": null,
       "bioguideId": "M001208"
     },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
-    },
     "vg-ga-p-000684": {
       "name": "Tricia R. Pridemore",
       "url": null,
       "candidateIds": [
         "challenger-tricia-pridemore-ga11-2026"
       ]
-    },
-    "vg-ga-p-000256": {
-      "name": "Rick W. Allen",
-      "url": null,
-      "bioguideId": "A000372"
     },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
@@ -148,6 +148,50 @@
     }
   },
   "items": [
+    {
+      "id": "837e829c7d02",
+      "title": "What to know as world leaders converge at the United Nations this week",
+      "url": "https://www.gpb.org/news/2026/09/21/what-know-world-leaders-converge-at-the-united-nations-week",
+      "source": "GPB News",
+      "publishedAt": "2026-09-21T15:07:20+00:00",
+      "snippet": "United Nations head António Guterres returns to New York for his final U.N. General Assembly as diplomacy falters over wars in Ukraine and the Middle East, and the global body faces deep divisions.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "096e1c52a455",
+      "title": "Carr: Three Convicted of Gang and Drug Charges in Fulton County Following Operation Heatwave",
+      "url": "https://law.georgia.gov/press-releases/2026-09-21/carr-three-convicted-gang-and-drug-charges-fulton-county-following",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-09-21T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr today announced that Chiquille Bell, Marcus Thornton and Contrellis Brooks have pleaded guilty to charges related to criminal street gang activity and",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
+      "id": "3b843dd04e90",
+      "title": "World leaders convene for UNGA. And, Trump says D.C. arch will be a 'military complex'",
+      "url": "https://www.gpb.org/news/2026/09/21/world-leaders-convene-for-unga-and-trump-says-dc-arch-will-be-military-complex",
+      "source": "GPB News",
+      "publishedAt": "2026-09-21T11:24:27+00:00",
+      "snippet": "This week, world leaders convene for the U.N. General Assembly as war continues in Ukraine and the Gulf. And, President Trump has proposed that his arch serve as a military complex.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "50e97b945b65",
+      "title": "Augusta veterans cemetery lands $13.6M grant, project moves ahead",
+      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7392",
+      "source": "Rep. Rick Allen (GA-12, press)",
+      "publishedAt": "2026-09-21T04:00:00+00:00",
+      "snippet": "Originally Published in The Augusta Chronicle\nBy: Joe Hotchkiss\nThe project to create Georgia's largest veterans cemetery in Augusta has been awarded more than $13.6 million in federal funding.\nThe ce",
+      "entityIds": [
+        "vg-ga-p-000256"
+      ],
+      "topics": []
+    },
     {
       "id": "c53a0c7713ea",
       "title": "Government 101: Legislature created development authorities, but oversight remains limited",
@@ -353,18 +397,6 @@
       "snippet": "Washington, DC— Representatives Lucy McBath (D-GA) and GT Thompson (R-PA) introduced a bipartisan, bicameral resolution to honor the life of Connie Clery during National Campus Safety Awareness Month.",
       "entityIds": [
         "vg-ga-p-000262"
-      ],
-      "topics": []
-    },
-    {
-      "id": "50e97b945b65",
-      "title": "Congressman Allen's Retire through Ownership Act Headed to President Trump's Desk",
-      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7387",
-      "source": "Rep. Rick Allen (GA-12, press)",
-      "publishedAt": "2026-09-17T04:00:00+00:00",
-      "snippet": "Yesterday, the U.S. House of Representatives passed S. 2403, the Retire through Ownership Act. Congressman Rick W. Allen (GA-12) introduced the House version of this bill last year, which would provid",
-      "entityIds": [
-        "vg-ga-p-000256"
       ],
       "topics": []
     },
@@ -1281,18 +1313,6 @@
       ]
     },
     {
-      "id": "fe790812e91e",
-      "title": "Carr Returns Stolen Crypto to Investment Fraud Victim in Cobb County",
-      "url": "https://law.georgia.gov/press-releases/2026-08-25/carr-returns-stolen-crypto-investment-fraud-victim-cobb-county",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-08-25T12:00:00+00:00",
-      "snippet": "COBB COUNTY, GA – Georgia Attorney General Chris Carr today announced that his White Collar and Cyber Crime Unit has seized and returned cryptocurrency to a victim of an investment scam in Cobb County",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
       "id": "fea757ac2ac7",
       "title": "Rep. Carter, Southern Healthcare Collaborative announce HHS grants for Rural Health Services",
       "url": "http://buddycarter.house.gov/news/documentsingle.aspx?DocumentID=16623",
@@ -1442,20 +1462,6 @@
       "entityIds": [],
       "topics": [
         "healthcare"
-      ]
-    },
-    {
-      "id": "c1c9911c92e0",
-      "title": "An entire school board in central Georgia is fired, kicking off search for new members",
-      "url": "https://georgiarecorder.com/2026/08/18/an-entire-school-board-in-central-georgia-is-fired-kicking-off-search-for-new-members/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-18T20:33:25+00:00",
-      "snippet": "Gov. Brian Kemp hopes a newly appointed panel can help clean up a financial mess in Dublin City Schools. Kemp suspended all seven of the board’s members via an executive order Monday and appointed fiv",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "education"
       ]
     },
     {
