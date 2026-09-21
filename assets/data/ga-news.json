@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-21T15:28:49.626380+00:00",
+    "generatedAt": "2026-09-21T21:24:10.604942+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,36 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 111,
+    "count": 115,
     "windowDays": 45,
     "entityTagged": 66,
     "topicCounts": {
-      "budget": 9,
-      "education": 11,
-      "elections": 19,
-      "healthcare": 15,
+      "elections": 20,
+      "education": 13,
+      "healthcare": 16,
+      "courts": 10,
+      "budget": 8,
       "ethics": 5,
-      "courts": 8,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
       "url": null,
@@ -49,20 +64,15 @@
       "url": null,
       "bioguideId": "A000372"
     },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
-    },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
+    },
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
     },
     "vg-ga-p-000684": {
       "name": "Tricia R. Pridemore",
@@ -71,20 +81,10 @@
         "challenger-tricia-pridemore-ga11-2026"
       ]
     },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
-    },
     "vg-ga-p-000255": {
       "name": "Andrew S. Clyde",
       "url": null,
       "bioguideId": "C001116"
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
@@ -149,14 +149,101 @@
   },
   "items": [
     {
+      "id": "d0af533f0b1b",
+      "title": "Georgia Today: Beltline light rail; Banned books; Weasel study",
+      "url": "https://www.gpb.org/news/2026/09/21/georgia-today-beltline-light-rail-banned-books-weasel-study",
+      "source": "GPB News",
+      "publishedAt": "2026-09-21T19:35:23+00:00",
+      "snippet": "On the Sept. 21 edition: Cobb County Schools bans a Toni Morrison novel; Atlanta advocates push for Beltline rail; And the first known Muslim woman ever elected to the Georgia House challenges Republi",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "education"
+      ]
+    },
+    {
+      "id": "7e59473da39c",
+      "title": "See highlights from Atlanta's Shaky Knees Music Festival — and meet an Athens band who rocked it",
+      "url": "https://www.gpb.org/news/2026/09/21/see-highlights-atlantas-shaky-knees-music-festival-and-meet-athens-band-who-rocked",
+      "source": "GPB News",
+      "publishedAt": "2026-09-21T19:35:00+00:00",
+      "snippet": "The 14th edition of the annual Shaky Knees Music Festival filled Atlanta’s Piedmont Park over the weekend, with a total estimated crowd of 50,000 across three sold-out days of music.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "128fb2dac8a2",
+      "title": "Congresswoman Nikema Williams, Hernandez, and Wilson Call on Secretary Robert F. Kennedy to Expand Access to Colonoscopy Screenings to Fight Colon Cancer",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-hernandez-and-wilson-call-on-secretary-robert-f-kennedy-to-expand-access-to-colonoscopy-screenings-to-fight-colon-cancer",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-09-21T18:44:10+00:00",
+      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05), Rep. Pablo Hernandez (PR), and Rep. Joe Wilson (SC-02) sent a congressional oversight letter to U.S. Department of Health and Human Services S",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "7096fca5c3ed",
+      "title": "Weasels are hard to monitor. But a new method of detecting them might aid conservation efforts",
+      "url": "https://www.gpb.org/news/2026/09/21/weasels-are-hard-monitor-new-method-of-detecting-them-might-aid-conservation",
+      "source": "GPB News",
+      "publishedAt": "2026-09-21T18:16:00+00:00",
+      "snippet": "Even if you spend a lot of time outdoors in Georgia, spotting a weasel is still rare. And that can make studying them a challenge for researchers. But now scientists at the University of Georgia have ",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
       "id": "837e829c7d02",
       "title": "What to know as world leaders converge at the United Nations this week",
       "url": "https://www.gpb.org/news/2026/09/21/what-know-world-leaders-converge-at-the-united-nations-week",
       "source": "GPB News",
-      "publishedAt": "2026-09-21T15:07:20+00:00",
+      "publishedAt": "2026-09-21T16:45:09+00:00",
       "snippet": "United Nations head António Guterres returns to New York for his final U.N. General Assembly as diplomacy falters over wars in Ukraine and the Middle East, and the global body faces deep divisions.",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "ac8f4bd08d82",
+      "title": "New lawsuit alleges unfair secrecy around Effingham data center",
+      "url": "https://thecurrentga.org/2026/09/21/new-lawsuit-alleges-unfair-secrecy-around-effingham-data-center/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-21T15:38:15+00:00",
+      "snippet": "Lawsuit asks judge to void key parts of data center deal\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth watchdog journalism for Savannah and Coastal Georgia’s",
+      "entityIds": [],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "7344344f66e7",
+      "title": "Sen. Ossoff Working to Improve Public Transportation Across Georgia",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-to-improve-public-transportation-across-georgia/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-21T14:37:34+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working with Republicans and Democrats to improve public transportation across Georgia. Sen. Ossoff is cosponsoring the bipartisan Streamline Transit Proj",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "27c942ec0fdf",
+      "title": "Gov. Kemp Announces Superior Court Appointment",
+      "url": "https://gov.georgia.gov/press-releases/2026-09-21/gov-kemp-announces-superior-court-appointment",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-09-21T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced the appointment of Marilyn P. Bennett to the Superior Court of the Waycross Judicial Circuit, filling the vacancy created by the resignation of the Hon",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "courts"
+      ]
     },
     {
       "id": "096e1c52a455",
@@ -362,18 +449,6 @@
       "publishedAt": "2026-09-17T20:06:01+00:00",
       "snippet": "ATLANTA — Some worry artificial intelligence could one day rule humanity. Robots have not taken over yet, but AI may be helping with a core function of democracy in Georgia’s largest county: writing o",
       "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "8e1e06842838",
-      "title": "Ex-Georgia PSC commissioner joins firm constructing data centers she once regulated",
-      "url": "https://thecurrentga.org/2026/09/17/ex-georgia-psc-commissioner-joins-firm-constructing-data-centers-she-once-regulated/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-17T19:42:48+00:00",
-      "snippet": "Former Georgia utility regulator Tricia Pridemore has joined DC BLOX as executive vice president of energy, regulatory and policy following her resignation from the state Public Service Commission.\nTh",
-      "entityIds": [
-        "vg-ga-p-000684"
-      ],
       "topics": []
     },
     {
@@ -1036,20 +1111,6 @@
       ]
     },
     {
-      "id": "c77ef9f03a36",
-      "title": "Sen. Ossoff Delivering Nearly $50 Million to Upgrade Robins Air Force Base",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-delivering-nearly-50-million-to-upgrade-robins-air-force-base/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-02T19:14:53+00:00",
-      "snippet": "Robins AFB, Ga. — U.S. Senator Jon Ossoff is delivering Federal funding to upgrade Robins Air Force Base. Sen. Ossoff, the top Democrat on the U.S. Senate Appropriations Military Construction and VA S",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "budget"
-      ]
-    },
-    {
       "id": "56c6041a5eb0",
       "title": "Congresswoman Nikema Williams Reintroduces the Equal Pay for Equal Work Act",
       "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-reintroduces-the-equal-pay-for-equal-work-act",
@@ -1485,18 +1546,6 @@
       "snippet": "Friends, I hope you have had a great week! As your Representative in Congress, it’s a priority to keep you informed of how we’re serving you. If you would like to stay up to date, check out our websit",
       "entityIds": [
         "vg-ga-p-000257"
-      ],
-      "topics": []
-    },
-    {
-      "id": "ae299ec389b3",
-      "title": "Gov. Kemp: DeltaX to Establish North American HQ in Walton County",
-      "url": "https://gov.georgia.gov/press-releases/2026-08-14/gov-kemp-deltax-establish-north-american-hq-walton-county",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-08-14T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that DeltaX, a global provider of advanced battery energy storage solutions (BESS), will create approximately 250 new jobs and invest $141 million to e",
-      "entityIds": [
-        "vg-ga-p-000024"
       ],
       "topics": []
     },
