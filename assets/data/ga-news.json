@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-22T13:46:38.888487+00:00",
+    "generatedAt": "2026-09-22T18:25:02.919081+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -25,10 +25,10 @@
     "windowDays": 45,
     "entityTagged": 65,
     "topicCounts": {
-      "education": 14,
-      "elections": 22,
+      "education": 13,
+      "elections": 21,
       "courts": 11,
-      "healthcare": 15,
+      "healthcare": 14,
       "budget": 7,
       "ethics": 5,
       "surveillance": 1
@@ -36,6 +36,19 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000258": {
+      "name": "Earl L. \"Buddy\" Carter",
+      "url": null,
+      "bioguideId": "C001103",
+      "candidateIds": [
+        "challenger-buddy-carter-senate-2026"
+      ]
+    },
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
@@ -45,11 +58,6 @@
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
@@ -126,14 +134,6 @@
         "challenger-everton-blair-ga13-2026"
       ]
     },
-    "vg-ga-p-000258": {
-      "name": "Earl L. \"Buddy\" Carter",
-      "url": null,
-      "bioguideId": "C001103",
-      "candidateIds": [
-        "challenger-buddy-carter-senate-2026"
-      ]
-    },
     "vg-ga-p-000261": {
       "name": "Sanford D. Bishop",
       "url": null,
@@ -148,6 +148,38 @@
     }
   },
   "items": [
+    {
+      "id": "fea757ac2ac7",
+      "title": "RELEASE: Carter welcomes new 14-day red snapper season following efforts to expand fishing access",
+      "url": "http://buddycarter.house.gov/news/documentsingle.aspx?DocumentID=16654",
+      "source": "Rep. Buddy Carter (GA-01, press)",
+      "publishedAt": "2026-09-22T17:48:36+00:00",
+      "snippet": "For Immediate Release\n                                    \n                                    \n                                    \n                                    \n                              ",
+      "entityIds": [
+        "vg-ga-p-000258"
+      ],
+      "topics": []
+    },
+    {
+      "id": "643d41000c68",
+      "title": "Flint Riverkeeper finds high E. coli levels after Atlanta airport sewage spill",
+      "url": "https://www.gpb.org/news/2026/09/22/flint-riverkeeper-finds-high-e-coli-levels-after-atlanta-airport-sewage-spill",
+      "source": "GPB News",
+      "publishedAt": "2026-09-22T15:43:00+00:00",
+      "snippet": "According to the Flint Riverkeeper, the E. coli levels in the river were too much to count downstream of a major sewage spill from Atlanta’s airport.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "5d25014e2b9d",
+      "title": "Trump’s EPA rule repeal could double Georgia’s greenhouse gas emissions",
+      "url": "https://thecurrentga.org/2026/09/22/trumps-epa-rule-repeal-could-double-georgias-greenhouse-gas-emissions/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-22T14:11:51+00:00",
+      "snippet": "Environmental groups are challenging a Trump administration proposal to repeal Biden-era greenhouse gas rules for power plants, a move that advocates warn could significantly increase emissions in Geo",
+      "entityIds": [],
+      "topics": []
+    },
     {
       "id": "6ddbfa3bd980",
       "title": "New research aims to document Georgia weasels after decades-long data gap",
@@ -171,6 +203,18 @@
       "topics": [
         "education"
       ]
+    },
+    {
+      "id": "3b494fd16989",
+      "title": "Gov. Kemp: Pirelli to Invest $1.2 Billion in Georgia Expansion",
+      "url": "https://gov.georgia.gov/press-releases/2026-09-22/gov-kemp-pirelli-invest-12-billion-georgia-expansion",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-09-22T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that Pirelli, a world leader in tire production, will create 1,000 new jobs as part of a multi-year, $1.2 billion expansion of its existing facility in",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
     },
     {
       "id": "4b752920bec4",
@@ -207,19 +251,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "d0af533f0b1b",
-      "title": "Georgia Today: Beltline light rail; Banned books; Weasel study",
-      "url": "https://www.gpb.org/news/2026/09/21/georgia-today-beltline-light-rail-banned-books-weasel-study",
-      "source": "GPB News",
-      "publishedAt": "2026-09-21T19:35:23+00:00",
-      "snippet": "On the Sept. 21 edition: Cobb County Schools bans a Toni Morrison novel; Atlanta advocates push for Beltline rail; And the first known Muslim woman ever elected to the Georgia House challenges Republi",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "education"
       ]
     },
     {
@@ -370,16 +401,6 @@
       "entityIds": [
         "vg-ga-p-000264"
       ],
-      "topics": []
-    },
-    {
-      "id": "763802f1cbd1",
-      "title": "What does a Fed interest rate hike mean for Georgia consumers, businesses?",
-      "url": "https://thecurrentga.org/2026/09/18/what-does-a-rate-hike-mean-for-georgia-consumers-businesses/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-18T18:15:19+00:00",
-      "snippet": "The Federal Reserve raised interest rates by a quarter-point to a target range of 3.75-4% to combat elevated inflation, a move that local economists say signals independent policymaking despite potent",
-      "entityIds": [],
       "topics": []
     },
     {
@@ -1378,20 +1399,6 @@
       ]
     },
     {
-      "id": "fea757ac2ac7",
-      "title": "Rep. Carter, Southern Healthcare Collaborative announce HHS grants for Rural Health Services",
-      "url": "http://buddycarter.house.gov/news/documentsingle.aspx?DocumentID=16623",
-      "source": "Rep. Buddy Carter (GA-01, press)",
-      "publishedAt": "2026-08-24T20:30:00+00:00",
-      "snippet": "WASHINGTON, D.C. – Rep. Earl L. “Buddy” Carter (R-GA) today released the following statement after joining Southern Healthcare Collaboration leaders and local officials in Baxley to announce new feder",
-      "entityIds": [
-        "vg-ga-p-000258"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
       "id": "950ab1a2c16d",
       "title": "How Georgia farms’ fame (and favor) outpace their place in the economy",
       "url": "https://georgiarecorder.com/2026/08/24/how-georgia-farms-fame-and-favor-outpace-their-place-in-the-economy/",
@@ -1516,18 +1523,6 @@
       "topics": [
         "healthcare"
       ]
-    },
-    {
-      "id": "75dd8e1f0cda",
-      "title": "Gov. Kemp: Cirkla to Bring 140 New Jobs to Hall County",
-      "url": "https://gov.georgia.gov/press-releases/2026-08-17/gov-kemp-cirkla-bring-140-new-jobs-hall-county",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-08-17T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that Cirkla will invest more than $5 million to establish a new food packaging manufacturing facility in Gainesville, Georgia. The project is expected ",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
     },
     {
       "id": "da3a88fefe55",
