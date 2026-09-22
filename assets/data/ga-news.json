@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-22T18:25:02.919081+00:00",
+    "generatedAt": "2026-09-22T23:22:45.178476+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,34 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 114,
+    "count": 117,
     "windowDays": 45,
     "entityTagged": 65,
     "topicCounts": {
-      "education": 13,
-      "elections": 21,
-      "courts": 11,
+      "courts": 12,
       "healthcare": 14,
+      "education": 11,
+      "elections": 21,
       "budget": 7,
-      "ethics": 5,
+      "ethics": 4,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
+      "url": null,
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000258": {
       "name": "Earl L. \"Buddy\" Carter",
       "url": null,
@@ -49,16 +62,6 @@
       "url": null,
       "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
       "url": null,
@@ -66,6 +69,11 @@
       "candidateIds": [
         "challenger-chris-carr-gov-2026"
       ]
+    },
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
     },
     "vg-ga-p-000256": {
       "name": "Rick W. Allen",
@@ -93,14 +101,6 @@
       "name": "Andrew S. Clyde",
       "url": null,
       "bioguideId": "C001116"
-    },
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
-      "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
     },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
@@ -149,6 +149,85 @@
   },
   "items": [
     {
+      "id": "d68ff52c6777",
+      "title": "‘Drive them into hell’: Trump ponders destruction of Iran at United Nations",
+      "url": "https://georgiarecorder.com/2026/09/22/repub/drive-them-into-hell-trump-ponders-destruction-of-iran-at-united-nations/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-22T21:52:03+00:00",
+      "snippet": "WASHINGTON — President Donald Trump faces a “big decision” to make a deal with Iran or “annihilate” the country, he told the United Nations General Assembly on Tuesday.  During a 37-minute speech to h",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "967c2b930950",
+      "title": "Lights over Buc-ee’s interstate exit dimmer – but not to help baby turtles",
+      "url": "https://thecurrentga.org/2026/09/22/lights-over-buc-ees-interstate-exit-dimmer-but-not-to-help-baby-turtles/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-22T21:07:57+00:00",
+      "snippet": "Dimmer lights at the Exit 42 Buc-ee's in Georgia resulted from power outages caused by lightning strikes rather than environmental conservation efforts for sea turtle hatchlings.\nThe Current is an inc",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "53fd796daa8f",
+      "title": "Ossoff renews calls for his opponent to answer for former staffer's ties to extremists",
+      "url": "https://www.gpb.org/news/2026/09/22/ossoff-renews-calls-for-his-opponent-answer-for-former-staffers-ties-extremists",
+      "source": "GPB News",
+      "publishedAt": "2026-09-22T20:30:00+00:00",
+      "snippet": "Democratic U.S. Sen. Jon Ossoff is calling on his opponent, Republican U.S. Rep. Mike Collins, to release communications between a former member of his staff and the Department of Justice and the FBI.",
+      "entityIds": [
+        "vg-ga-p-000253",
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "2c24f53e7db3",
+      "title": "Atlanta City Council unanimously supports light rail on entire Beltline trail",
+      "url": "https://www.gpb.org/news/2026/09/22/atlanta-city-council-unanimously-supports-light-rail-on-entire-beltline-trail",
+      "source": "GPB News",
+      "publishedAt": "2026-09-22T20:17:00+00:00",
+      "snippet": "Atlanta City Council members are demanding a report from the Atlanta Mayor’s Office and MARTA explaining how the light rail will be funded and a timeline for completion.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "2c444f454038",
+      "title": "Georgia hospitals face fines for not posting price information for services on their websites",
+      "url": "https://www.gpb.org/news/2026/09/22/georgia-hospitals-face-fines-for-not-posting-price-information-for-services-on",
+      "source": "GPB News",
+      "publishedAt": "2026-09-22T19:41:00+00:00",
+      "snippet": "A new report from the nonprofit Patient Rights Advocate finds that — five years after the federal Hospital Price Transparency Rule took effect — 65% of Georgia’s hospitals are complying.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "cf538f805f6b",
+      "title": "Georgia Today: E. coli found in Flint River; Ponce City Market Celebration; Hospital transparency",
+      "url": "https://www.gpb.org/news/2026/09/22/georgia-today-e-coli-found-in-flint-river-ponce-city-market-celebration-hospital",
+      "source": "GPB News",
+      "publishedAt": "2026-09-22T19:02:00+00:00",
+      "snippet": "On the September 22nd edition: High levels of E. coli have been found in the Flint River; The Atlanta building hosting Ponce City Market celebrates 100 years; And two-thirds of Georgia hospitals seem ",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "d3c4b6add09c",
+      "title": "GPB evening headlines for September 22, 2026",
+      "url": "https://www.gpb.org/news/2026/09/22/gpb-evening-headlines-for-september-22-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-22T18:54:04+00:00",
+      "snippet": "Most businesses aren't passing along tariff refunds to customers. Atlanta's Ponce City Market building celebrates 100 years.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "fea757ac2ac7",
       "title": "RELEASE: Carter welcomes new 14-day red snapper season following efforts to expand fishing access",
       "url": "http://buddycarter.house.gov/news/documentsingle.aspx?DocumentID=16654",
@@ -158,16 +237,6 @@
       "entityIds": [
         "vg-ga-p-000258"
       ],
-      "topics": []
-    },
-    {
-      "id": "643d41000c68",
-      "title": "Flint Riverkeeper finds high E. coli levels after Atlanta airport sewage spill",
-      "url": "https://www.gpb.org/news/2026/09/22/flint-riverkeeper-finds-high-e-coli-levels-after-atlanta-airport-sewage-spill",
-      "source": "GPB News",
-      "publishedAt": "2026-09-22T15:43:00+00:00",
-      "snippet": "According to the Flint Riverkeeper, the E. coli levels in the river were too much to count downstream of a major sewage spill from Atlanta’s airport.",
-      "entityIds": [],
       "topics": []
     },
     {
@@ -193,18 +262,6 @@
       ]
     },
     {
-      "id": "1fccd9c805f1",
-      "title": "GPB morning headlines for September 22, 2026",
-      "url": "https://www.gpb.org/news/2026/09/22/gpb-morning-headlines-for-september-22-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-09-22T13:12:51+00:00",
-      "snippet": "The Atlanta City Council unanimously approved a resolution Monday supporting light rail on all 22 miles of the Beltline trail; Toni Morrison’s The Bluest Eye has been removed from school libraries in ",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
       "id": "3b494fd16989",
       "title": "Gov. Kemp: Pirelli to Invest $1.2 Billion in Georgia Expansion",
       "url": "https://gov.georgia.gov/press-releases/2026-09-22/gov-kemp-pirelli-invest-12-billion-georgia-expansion",
@@ -213,6 +270,18 @@
       "snippet": "ATLANTA – Governor Brian P. Kemp today announced that Pirelli, a world leader in tire production, will create 1,000 new jobs as part of a multi-year, $1.2 billion expansion of its existing facility in",
       "entityIds": [
         "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "4041aeefefdc",
+      "title": "Carr Secures New Conviction for Shooting Death at Athens Apartment Complex",
+      "url": "https://law.georgia.gov/press-releases/2026-09-22/carr-secures-new-conviction-shooting-death-athens-apartment-complex",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-09-22T12:00:00+00:00",
+      "snippet": "ATHENS, GA – Georgia Attorney General Chris Carr today announced that his Gang Prosecution Unit has secured the conviction of Zyquavious Thomas, 18, of Athens, in connection with the May 27, 2024, fat",
+      "entityIds": [
+        "vg-ga-p-000039"
       ],
       "topics": []
     },
@@ -377,18 +446,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "b3e32675051b",
-      "title": "Thomas Fanning, ex-Southern Company CEO, appointed to lead Georgia universities",
-      "url": "https://thecurrentga.org/2026/09/18/thomas-fanning-ex-southern-company-ceo-appointed-to-lead-georgia-universities/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-18T20:07:19+00:00",
-      "snippet": "The University System of Georgia Board of Regents has selected Thomas A. Fanning, a former Southern Company CEO, as the sole finalist to succeed Sonny Perdue as chancellor.\nThe Current is an inclusive",
-      "entityIds": [],
-      "topics": [
-        "education"
       ]
     },
     {
@@ -1384,21 +1441,6 @@
       "topics": []
     },
     {
-      "id": "be7c077469b2",
-      "title": "Carr: Owner of Therapy Center Charged with $88k Medicaid Fraud in Fulton County",
-      "url": "https://law.georgia.gov/press-releases/2026-08-25/carr-owner-therapy-center-charged-88k-medicaid-fraud-fulton-county",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-08-25T12:00:00+00:00",
-      "snippet": "FULTON COUNTY, GA – Georgia Attorney General Chris Carr today announced that Desmond Maul, 74, of Conyers, has been indicted in Fulton County on one count of Medicaid Fraud and 32 counts of False Stat",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": [
-        "ethics",
-        "healthcare"
-      ]
-    },
-    {
       "id": "950ab1a2c16d",
       "title": "How Georgia farms’ fame (and favor) outpace their place in the economy",
       "url": "https://georgiarecorder.com/2026/08/24/how-georgia-farms-fame-and-favor-outpace-their-place-in-the-economy/",
@@ -1508,20 +1550,6 @@
       ],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "76f4df75a758",
-      "title": "Would Gov. Brian Kemp really shut down his Pathways Medicaid program?",
-      "url": "https://georgiarecorder.com/2026/08/20/would-gov-brian-kemp-really-shut-down-his-pathways-medicaid-program/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-20T08:00:27+00:00",
-      "snippet": "Patient advocates reacted with alarm this week at the suggestion by the administration of Gov. Brian Kemp that it could end Georgia Pathways to Coverage, his signature Medicaid program that gives heal",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "healthcare"
       ]
     },
     {
