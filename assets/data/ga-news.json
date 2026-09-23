@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-23T18:44:07.015612+00:00",
+    "generatedAt": "2026-09-23T23:20:02.600770+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,31 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 114,
+    "count": 116,
     "windowDays": 45,
-    "entityTagged": 62,
+    "entityTagged": 64,
     "topicCounts": {
-      "education": 12,
       "healthcare": 13,
-      "elections": 21,
-      "courts": 12,
+      "surveillance": 4,
+      "courts": 13,
+      "education": 12,
+      "elections": 20,
       "budget": 7,
-      "ethics": 4,
-      "surveillance": 1
+      "ethics": 4
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
       "url": null,
@@ -62,11 +72,6 @@
       "url": null,
       "bioguideId": "W000788"
     },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
     "vg-ga-p-000256": {
       "name": "Rick W. Allen",
       "url": null,
@@ -76,11 +81,6 @@
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
-    },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
     },
     "vg-ga-p-000684": {
       "name": "Tricia R. Pridemore",
@@ -149,14 +149,79 @@
   },
   "items": [
     {
+      "id": "da3ed11fb7c3",
+      "title": "Handful of noncitizens accused of voting in Georgia",
+      "url": "https://capitol-beat.org/2026/09/handful-of-noncitizens-accused-of-voting-in-georgia/?utm_source=rss&utm_medium=rss&utm_campaign=handful-of-noncitizens-accused-of-voting-in-georgia",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-09-23T21:42:53+00:00",
+      "snippet": "ATLANTA — After federal prosecutors charged three noncitizens with voting illegally in Georgia, the man who oversees voting in the state pointed to an audit he ordered four years ago. Last week, the U",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "8417c4b8f5fb",
+      "title": "Most Georgians struggle with cost of living, researchers say",
+      "url": "https://georgiarecorder.com/2026/09/23/most-georgians-struggle-with-cost-of-living-researchers-say/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-23T21:00:24+00:00",
+      "snippet": "As many as 70% of Georgia residents are struggling to afford basic necessities, such as food, housing, healthcare or childcare, according to new data from the Georgetown Center on Poverty and Inequali",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "7ba16180aeca",
+      "title": "Warnock urges greater federal oversight of automatic license plate readers",
+      "url": "https://georgiarecorder.com/2026/09/23/warnock-urges-greater-federal-oversight-of-automatic-license-plate-readers/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-23T19:40:25+00:00",
+      "snippet": "U.S. Sen. Raphael Warnock is calling for federal guardrails around the use of automatic license plate readers, citing multiple cases of law enforcement misusing the cameras to stalk and harass U.S. ci",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "surveillance"
+      ]
+    },
+    {
+      "id": "976a532532e7",
+      "title": "Sen. Warnock calls for guardrails around Flock surveillance camera use",
+      "url": "https://www.gpb.org/news/2026/09/23/sen-warnock-calls-for-guardrails-around-flock-surveillance-camera-use",
+      "source": "GPB News",
+      "publishedAt": "2026-09-23T19:32:00+00:00",
+      "snippet": "U.S. Sen. Raphael Warnock is calling on the Department of Justice to regulate Flock camera use.",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "surveillance",
+        "courts"
+      ]
+    },
+    {
       "id": "574e99e04ef4",
       "title": "Iran's president gives a rare wartime speech at the U.N.",
       "url": "https://www.gpb.org/news/2026/09/23/irans-president-gives-rare-wartime-speech-at-the-un",
       "source": "GPB News",
-      "publishedAt": "2026-09-23T18:16:02+00:00",
+      "publishedAt": "2026-09-23T19:20:33+00:00",
       "snippet": "Iranian President Masoud Pezeshkian addressed the U.N. General Assembly a day after President Trump threatened from the same podium to \"annihilate\" Iran.",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "15c694793aff",
+      "title": "Georgia Today: Canceled debate; Emory PFAS trial; Sen. Warnock calls for Flock guardrails",
+      "url": "https://www.gpb.org/news/2026/09/23/georgia-today-canceled-debate-emory-pfas-trial-sen-warnock-calls-for-flock",
+      "source": "GPB News",
+      "publishedAt": "2026-09-23T18:30:15+00:00",
+      "snippet": "On the September 23 edition: A gubernatorial debate set for last night was canceled; A clinical trial tests whether PFAS chemicals can be removed from your body; And National Park Service officials wi",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "surveillance"
+      ]
     },
     {
       "id": "1ebefb53e5a3",
@@ -166,6 +231,18 @@
       "publishedAt": "2026-09-23T15:56:19+00:00",
       "snippet": "Every day at United Way, we meet families who are doing everything right. They’re working, raising children, contributing to their communities and still struggling to find housing they can afford. For",
       "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "f24761915773",
+      "title": "Sen. Ossoff Working Across the Aisle to Improve Sewer and Stormwater Infrastructure Across Georgia",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-improve-sewer-and-stormwater-infrastructure-across-georgia/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-23T14:42:10+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working to improve sewer and stormwater infrastructure across Georgia. Sen. Ossoff is cosponsoring the bipartisan Clean Water Allotment Modernization Act ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
       "topics": []
     },
     {
@@ -1080,18 +1157,6 @@
       "topics": []
     },
     {
-      "id": "15fc074c6dd2",
-      "title": "They may look like book drops, but some believe ‘baby boxes’ can save lives",
-      "url": "https://capitol-beat.org/2026/09/they-may-look-like-book-drops-but-some-believe-baby-boxes-can-save-lives/?utm_source=rss&utm_medium=rss&utm_campaign=they-may-look-like-book-drops-but-some-believe-baby-boxes-can-save-lives",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-05T14:59:47+00:00",
-      "snippet": "ATLANTA — Amie Anderson’s first instinct was rage. Her daughter, a nurse, had just told her how a young mother had walked into the hospital and surrendered her infant. Under Georgia law, hospitals are",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
       "id": "dca2d08515b3",
       "title": "Congresswoman Nikema Williams Reintroduces Legislation to Increase Access to Child Care",
       "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-reintroduces-legislation-to-increase-access-to-child-care",
@@ -1150,18 +1215,6 @@
       "snippet": "Washington, DC – Today, Representative Lucy McBath (GA-06) and Congresswoman Laurel Lee (FL-15) introduced the FEMA for Safe Recovery Act, legislation that strengthens federal disaster response by ens",
       "entityIds": [
         "vg-ga-p-000262"
-      ],
-      "topics": []
-    },
-    {
-      "id": "a21943573d59",
-      "title": "Sen. Ossoff Backing Bipartisan Bill to Expand Technical Skills Training Programs",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-backing-bipartisan-bill-to-expand-technical-skills-training-programs/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-03T14:38:37+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is backing a bipartisan bill to expand housing construction training programs in Georgia. Sen. Ossoff is cosponsoring the bipartisan Creating Opportunities f",
-      "entityIds": [
-        "vg-ga-p-000264"
       ],
       "topics": []
     },
@@ -1486,31 +1539,6 @@
       "topics": [
         "courts",
         "healthcare"
-      ]
-    },
-    {
-      "id": "a65bc643bd68",
-      "title": "Democratic lawmakers call for closure of ICE detention center in southwest Georgia",
-      "url": "https://georgiarecorder.com/2026/08/21/democratic-lawmakers-call-for-closure-of-ice-detention-center-in-southwest-georgia/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-21T19:58:25+00:00",
-      "snippet": "LUMPKIN, Ga. — Democratic members of Congress are calling for an immigration detention center in southwest Georgia to be shut down after conducting an oversight visit this week, describing conditions ",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "2e609648d685",
-      "title": "Republican PSC commissioner resigns from rate-setting regulatory board",
-      "url": "https://georgiarecorder.com/2026/08/21/republican-psc-commissioner-resigns-from-rate-setting-regulatory-board/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-21T19:36:35+00:00",
-      "snippet": "Republican Public Service Commissioner Tricia Pridemore is stepping down early next month, 60 days before the election to replace her. In an Aug. 18 email to Republican Gov. Brian Kemp, Pridemore anno",
-      "entityIds": [
-        "vg-ga-p-000024",
-        "vg-ga-p-000684"
-      ],
-      "topics": [
-        "elections"
       ]
     },
     {
