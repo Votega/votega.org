@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-23T08:06:05.017640+00:00",
+    "generatedAt": "2026-09-23T13:57:49.211201+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,14 +21,14 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 117,
+    "count": 112,
     "windowDays": 45,
-    "entityTagged": 65,
+    "entityTagged": 62,
     "topicCounts": {
-      "courts": 12,
-      "healthcare": 14,
-      "education": 11,
       "elections": 21,
+      "courts": 12,
+      "education": 11,
+      "healthcare": 12,
       "budget": 7,
       "ethics": 4,
       "surveillance": 1
@@ -36,18 +36,10 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
       "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000258": {
       "name": "Earl L. \"Buddy\" Carter",
@@ -56,11 +48,6 @@
       "candidateIds": [
         "challenger-buddy-carter-senate-2026"
       ]
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
@@ -74,6 +61,11 @@
       "name": "Nikema Williams",
       "url": null,
       "bioguideId": "W000788"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
     },
     "vg-ga-p-000256": {
       "name": "Rick W. Allen",
@@ -101,6 +93,14 @@
       "name": "Andrew S. Clyde",
       "url": null,
       "bioguideId": "C001116"
+    },
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
+      "url": null,
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
     },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
@@ -149,6 +149,31 @@
   },
   "items": [
     {
+      "id": "71711e09b41d",
+      "title": "Gov. Kemp: Georgia Remains No. 1 for Business",
+      "url": "https://gov.georgia.gov/press-releases/2026-09-23/gov-kemp-georgia-remains-no-1-business",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-09-23T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp, in conjunction with the Georgia Department of Economic Development (GDEcD), today announced that the state has again secured the No. 1 state for business ranking by A",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "afec11a3fdc7",
+      "title": "Ballot question in November would make Georgia’s probate judges nonpartisan",
+      "url": "https://georgiarecorder.com/2026/09/23/ballot-question-in-november-would-make-georgias-probate-judges-nonpartisan/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-23T08:00:54+00:00",
+      "snippet": "Do you want to know what political party the judge who validates your last will and testament belongs to? A measure up for a vote on the November ballot would require all Georgia probate judges, who o",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
       "id": "d68ff52c6777",
       "title": "‘Drive them into hell’: Trump ponders destruction of Iran at United Nations",
       "url": "https://georgiarecorder.com/2026/09/22/repub/drive-them-into-hell-trump-ponders-destruction-of-iran-at-united-nations/",
@@ -159,71 +184,22 @@
       "topics": []
     },
     {
+      "id": "df1bcd367a20",
+      "title": "Major tire company to expand in northwest Georgia",
+      "url": "https://capitol-beat.org/2026/09/major-tire-company-to-expand-in-northwest-georgia/?utm_source=rss&utm_medium=rss&utm_campaign=major-tire-company-to-expand-in-northwest-georgia",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-09-22T21:45:35+00:00",
+      "snippet": "ATLANTA — A global leader in tire production will invest $1.2 billion to expand in Georgia, bringing 1,000 jobs by 2033, according to Gov. Brian Kemp’s office. “This historic investment will expand Pi",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "967c2b930950",
       "title": "Lights over Buc-ee’s interstate exit dimmer – but not to help baby turtles",
       "url": "https://thecurrentga.org/2026/09/22/lights-over-buc-ees-interstate-exit-dimmer-but-not-to-help-baby-turtles/",
       "source": "The Current GA",
       "publishedAt": "2026-09-22T21:07:57+00:00",
       "snippet": "Dimmer lights at the Exit 42 Buc-ee's in Georgia resulted from power outages caused by lightning strikes rather than environmental conservation efforts for sea turtle hatchlings.\nThe Current is an inc",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "53fd796daa8f",
-      "title": "Ossoff renews calls for his opponent to answer for former staffer's ties to extremists",
-      "url": "https://www.gpb.org/news/2026/09/22/ossoff-renews-calls-for-his-opponent-answer-for-former-staffers-ties-extremists",
-      "source": "GPB News",
-      "publishedAt": "2026-09-22T20:30:00+00:00",
-      "snippet": "Democratic U.S. Sen. Jon Ossoff is calling on his opponent, Republican U.S. Rep. Mike Collins, to release communications between a former member of his staff and the Department of Justice and the FBI.",
-      "entityIds": [
-        "vg-ga-p-000253",
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "courts"
-      ]
-    },
-    {
-      "id": "2c24f53e7db3",
-      "title": "Atlanta City Council unanimously supports light rail on entire Beltline trail",
-      "url": "https://www.gpb.org/news/2026/09/22/atlanta-city-council-unanimously-supports-light-rail-on-entire-beltline-trail",
-      "source": "GPB News",
-      "publishedAt": "2026-09-22T20:17:00+00:00",
-      "snippet": "Atlanta City Council members are demanding a report from the Atlanta Mayor’s Office and MARTA explaining how the light rail will be funded and a timeline for completion.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "2c444f454038",
-      "title": "Georgia hospitals face fines for not posting price information for services on their websites",
-      "url": "https://www.gpb.org/news/2026/09/22/georgia-hospitals-face-fines-for-not-posting-price-information-for-services-on",
-      "source": "GPB News",
-      "publishedAt": "2026-09-22T19:41:00+00:00",
-      "snippet": "A new report from the nonprofit Patient Rights Advocate finds that — five years after the federal Hospital Price Transparency Rule took effect — 65% of Georgia’s hospitals are complying.",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "cf538f805f6b",
-      "title": "Georgia Today: E. coli found in Flint River; Ponce City Market Celebration; Hospital transparency",
-      "url": "https://www.gpb.org/news/2026/09/22/georgia-today-e-coli-found-in-flint-river-ponce-city-market-celebration-hospital",
-      "source": "GPB News",
-      "publishedAt": "2026-09-22T19:02:00+00:00",
-      "snippet": "On the September 22nd edition: High levels of E. coli have been found in the Flint River; The Atlanta building hosting Ponce City Market celebrates 100 years; And two-thirds of Georgia hospitals seem ",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "d3c4b6add09c",
-      "title": "GPB evening headlines for September 22, 2026",
-      "url": "https://www.gpb.org/news/2026/09/22/gpb-evening-headlines-for-september-22-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-09-22T18:54:04+00:00",
-      "snippet": "Most businesses aren't passing along tariff refunds to customers. Atlanta's Ponce City Market building celebrates 100 years.",
       "entityIds": [],
       "topics": []
     },
@@ -1133,18 +1109,6 @@
       ]
     },
     {
-      "id": "11a8f41f2f21",
-      "title": "Another record breaker for business expansions and job growth in Georgia",
-      "url": "https://capitol-beat.org/2026/09/another-record-breaker-for-business-expansions-and-job-growth-in-georgia/?utm_source=rss&utm_medium=rss&utm_campaign=another-record-breaker-for-business-expansions-and-job-growth-in-georgia",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-03T21:38:10+00:00",
-      "snippet": "ATLANTA — The economic boom continued in Georgia last year, with a second record-topping year of business investment and job growth. Gov. Brian Kemp and the state Department of Economic Development an",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
       "id": "e3eada056def",
       "title": "McBath, Lee Introduce Bill To Protect Vulnerable Communities From Violence and Exploitation During Disasters",
       "url": "https://mcbath.house.gov/2026/09/03/mcbath-lee-introduce-bill-to-protect-vulnerable-communities-from-violence-and-exploitation-during-disasters/",
@@ -1517,18 +1481,6 @@
       ]
     },
     {
-      "id": "0c0bcbcfbc40",
-      "title": "Gov. Kemp Announces New Public Service Commissioner",
-      "url": "https://gov.georgia.gov/press-releases/2026-08-21/gov-kemp-announces-new-public-service-commissioner",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-08-21T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced he will appoint Stan Wise to the District 5 seat of the Georgia Public Service Commission (PSC), following the resignation of Commissioner Tricia Pride",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
       "id": "5aaec8a34d61",
       "title": "Atlanta left off the shortlist of 2028 DNC host cities",
       "url": "https://georgiarecorder.com/2026/08/20/atlanta-left-off-the-shortlist-of-2028-dnc-host-cities/",
@@ -1537,20 +1489,6 @@
       "snippet": "The Democratic National Committee has narrowed its list of host cities for its 2028 national convention — and Atlanta did not make the cut. The Democratic and Republican national conventions are held ",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "3cf300ca3132",
-      "title": "Jackson says he will cancel newly extended state contract if elected Georgia’s next governor",
-      "url": "https://georgiarecorder.com/2026/08/20/jackson-says-he-will-cancel-newly-extended-state-contract-if-elected-georgias-next-governor/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-20T21:00:54+00:00",
-      "snippet": "Republican gubernatorial candidate Rick Jackson says he will terminate his companies’ contracts with the state if he is elected in November, but he did not rule out extending contracts before the elec",
-      "entityIds": [
-        "vg-ga-p-000368"
-      ],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "da3a88fefe55",
