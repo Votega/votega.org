@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-24T18:45:01.215431+00:00",
+    "generatedAt": "2026-09-24T23:40:45.864322+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,33 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 112,
+    "count": 114,
     "windowDays": 45,
-    "entityTagged": 61,
+    "entityTagged": 62,
     "topicCounts": {
+      "elections": 20,
       "education": 12,
-      "healthcare": 13,
+      "healthcare": 15,
       "surveillance": 2,
       "ethics": 5,
-      "elections": 19,
       "courts": 10,
-      "budget": 7
+      "budget": 4
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
+      ]
+    },
+    "vg-ga-p-000262": {
+      "name": "Lucy McBath",
+      "url": null,
+      "bioguideId": "M001208"
+    },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
       "url": null,
@@ -77,11 +89,6 @@
       "url": null,
       "bioguideId": "A000372"
     },
-    "vg-ga-p-000262": {
-      "name": "Lucy McBath",
-      "url": null,
-      "bioguideId": "M001208"
-    },
     "vg-ga-p-000684": {
       "name": "Tricia R. Pridemore",
       "url": null,
@@ -100,13 +107,6 @@
       "bioguideId": "C001129",
       "candidateIds": [
         "challenger-mike-collins-senate-2026"
-      ]
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
       ]
     },
     "vg-ga-p-000257": {
@@ -136,6 +136,77 @@
     }
   },
   "items": [
+    {
+      "id": "c055cc669717",
+      "title": "Google to help fund upgrades for Georgia Power nuclear reactors",
+      "url": "https://thecurrentga.org/2026/09/24/google-to-help-fund-upgrades-for-georgia-power-nuclear-reactors/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-24T21:20:13+00:00",
+      "snippet": "Google has agreed to help fund upgrades for four aging nuclear reactors at Georgia Power's Plant Vogtle and Plant Hatch sites through a new subscription program designed to increase energy capacity an",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "990768d4b4b5",
+      "title": "Georgia Power, Google announce deal to pay for nuclear upgrades",
+      "url": "https://georgiarecorder.com/2026/09/24/georgia-power-google-announce-deal-to-pay-for-nuclear-upgrades/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-24T21:03:26+00:00",
+      "snippet": "This coverage is made possible through a partnership between WABE and Grist, a nonprofit environmental media organization. Google would help pay for upgrades to Georgia’s nuclear reactors under an agr",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "011faaaeda4c",
+      "title": "In Georgia’s race for governor, focus shifts to farms",
+      "url": "https://capitol-beat.org/2026/09/in-georgias-race-for-governor-focus-shifts-to-farms/?utm_source=rss&utm_medium=rss&utm_campaign=in-georgias-race-for-governor-focus-shifts-to-farms",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-09-24T20:54:27+00:00",
+      "snippet": "ATLANTA — Pledging to fight for farmers, Republican Rick Jackson unveiled his plan to support Georgia’s agricultural industry as the sector gets squeezed by rising prices for diesel, fertilizer and ot",
+      "entityIds": [
+        "vg-ga-p-000368"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "cfdb9fe6271a",
+      "title": "Representatives McBath, Thompson and Senators Klobuchar, Cassidy Introduce National Hazing Awareness Week Resolution",
+      "url": "https://mcbath.house.gov/2026/09/24/representatives-mcbath-thompson-and-senators-klobuchar-cassidy-introduce-national-hazing-awareness-week-resolution/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-09-24T20:09:42+00:00",
+      "snippet": "Washington, DC – This week, Representatives Lucy McBath (D-GA-06) and Glen “GT” Thompson (R-PA-15) are leading a resolution to recognize September 21-25, 2026 as “National Hazing Awareness Week.” The ",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": []
+    },
+    {
+      "id": "61a68584a3a9",
+      "title": "Study: Georgians struggle more than most Americans to afford food, healthcare",
+      "url": "https://thecurrentga.org/2026/09/24/study-georgians-struggle-more-than-most-americans-to-afford-food-healthcare/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-24T19:01:42+00:00",
+      "snippet": "New research from a Georgetown University policy organization reveals that Georgians are struggling more than the national average to afford food and healthcare according to the latest Family Economic",
+      "entityIds": [],
+      "topics": [
+        "education",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "bfd00b95b311",
+      "title": "Georgia Today: Zoo Atlanta pandas; Brian Kemp's last workplace summit; Healthcare companies merge",
+      "url": "https://www.gpb.org/news/2026/09/24/georgia-today-zoo-atlanta-pandas-brian-kemps-last-workplace-summit-healthcare",
+      "source": "GPB News",
+      "publishedAt": "2026-09-24T18:45:56+00:00",
+      "snippet": "On the September 24th edition: Two new pandas are coming to the Atlanta Zoo; Two top behavioral health service providers in middle Georgia have merged; And Governor Kemp says workers need to get ready",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
     {
       "id": "b39a0d6b8376",
       "title": "Gov. Brian Kemp addresses his last governor's workforce summit",
@@ -503,31 +574,6 @@
         "vg-ga-p-000256"
       ],
       "topics": []
-    },
-    {
-      "id": "c53a0c7713ea",
-      "title": "Government 101: Legislature created development authorities, but oversight remains limited",
-      "url": "https://thecurrentga.org/2026/09/19/government-101-legislature-created-development-authorities-but-oversight-remains-limited/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-19T17:01:47+00:00",
-      "snippet": "Georgia's local development authorities have drawn criticism for operating with little transparency and oversight while granting significant tax breaks to corporations like OpenAI.\nThe Current is an i",
-      "entityIds": [],
-      "topics": [
-        "budget"
-      ]
-    },
-    {
-      "id": "8481303ad447",
-      "title": "Georgia’s first need-based aid comes to campus this fall — is it enough?",
-      "url": "https://thecurrentga.org/2026/09/19/georgias-first-need-based-aid-comes-to-campus-this-fall-is-it-enough/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-19T16:14:17+00:00",
-      "snippet": "The Georgia General Assembly has appropriated $325 million to establish the DREAMS scholarship, a new need-based aid program intended to support low-income and rural students despite concerns that the",
-      "entityIds": [],
-      "topics": [
-        "budget",
-        "education"
-      ]
     },
     {
       "id": "a27baf0a6efc",
@@ -964,18 +1010,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "aa182a1c2dd4",
-      "title": "Growth in income and sales taxes boosts state coffers in August",
-      "url": "https://capitol-beat.org/2026/09/growth-in-income-and-sales-taxes-boosts-state-coffers-in-august/?utm_source=rss&utm_medium=rss&utm_campaign=growth-in-income-and-sales-taxes-boosts-state-coffers-in-august",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-10T18:52:03+00:00",
-      "snippet": "ATLANTA — Georgia collected nearly $2.5 billion in net tax revenue in August, a 3.5% increase from August 2025, extending the overall year-over-year gains recorded in July. The August increase was dri",
-      "entityIds": [],
-      "topics": [
-        "budget"
       ]
     },
     {
@@ -1493,18 +1527,6 @@
       "entityIds": [
         "vg-ga-p-000024",
         "vg-ga-p-000262"
-      ],
-      "topics": []
-    },
-    {
-      "id": "6654681b41bc",
-      "title": "Congresswoman Nikema Williams Joins Legislation to Ban ICE from Using TSA Data",
-      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-joins-legislation-to-ban-ice-from-using-tsa-data",
-      "source": "Rep. Nikema Williams (GA-05, press)",
-      "publishedAt": "2026-08-10T20:13:22+00:00",
-      "snippet": "Washington, D.C. – Congresswoman Nikema Williams (GA-05) co-sponsored the No TSA Data for ICE Act, introduced by Rep. Rashida Tlaib (MI-12), that would prevent the two agencies from coordinating to en",
-      "entityIds": [
-        "vg-ga-p-000254"
       ],
       "topics": []
     }
