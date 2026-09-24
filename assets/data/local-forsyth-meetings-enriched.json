@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-17T13:56:52Z",
+  "generatedAt": "2026-09-24T14:02:08Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -10,19 +10,28 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-17",
+  "lastActivity": "2026-09-22",
   "topicTotals": {
-   "contract": 23,
-   "development": 12,
-   "millage-budget": 20,
-   "rezoning": 15,
-   "variance": 11,
-   "appointment": 5,
+   "appointment": 6,
    "comprehensive-plan": 4,
-   "special-land-use": 6
+   "contract": 23,
+   "rezoning": 15,
+   "development": 12,
+   "millage-budget": 19,
+   "variance": 11,
+   "special-land-use": 5
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Work Session",
+    "date": "2026-09-22",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5347,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "rezoning"
+    ]
+   },
    {
     "title": "Board of Commissioners Regular Meeting",
     "date": "2026-09-17",
@@ -196,16 +205,6 @@
      "special-land-use",
      "variance"
     ]
-   },
-   {
-    "title": "Board of Commissioners Work Session",
-    "date": "2026-03-24",
-    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5031,plainText=false)",
-    "tags": [
-     "comprehensive-plan",
-     "rezoning",
-     "special-land-use"
-    ]
    }
   ],
   "landUseMeetings": 18,
@@ -213,6 +212,63 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "437",
+   "date": "2026-09-22",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5347,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5347,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 7370,
+   "pdfSha256": "940c2811a098e444d31aefdc420b21bac7c1efb02a00291e21d44456764424a4",
+   "topics": {
+    "appointment": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "comprehensive-plan",
+    "contract",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "comprehensive plan",
+    "contract",
+    "rezon",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ty to Google, LLC at no cost - CIO, Department of IS&T (4) Board consideration and adoption of a Resolution appointing Tom Brown to the Administrative Committee as the Employee At-Large Member upon Maria Villalon’s …",
+     "context": "agenda-action"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… 13) Board consideration and possible direction regarding Steering Committee appointments related to the Comprehensive Plan 2027 update - Comprehensive Planning Manager, Department of Planning and Community Development (1 …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Anoxic Zone Cover Replacement project (IDQ-053) with R2T, Inc. under the Indefinite Quantity Mechanical Contractor Contract (Contract No. 1202500014) in the amount of $445,456.89 for the replacement of anoxic and pre-a …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… nt of Planning and Community Development (14) Board consideration and possible direction of a Board generated rezoning for ZA4163, Tipton Development LLC. In accordance with UDC 8-5.5(I), if an application f …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "458",
    "date": "2026-09-17",
@@ -1559,73 +1615,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "426",
-   "date": "2026-03-24",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Work Session",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5031,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5031,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 14112,
-   "pdfSha256": "d71e636e56522ce58bc200b9c87400e1f574c85e7e624fd207210ec7d27722cb",
-   "topics": {
-    "comprehensive-plan": 1,
-    "contract": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "comprehensive-plan",
-    "contract",
-    "millage-budget",
-    "rezoning",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "budget",
-    "comprehensive plan",
-    "conditional use",
-    "contract",
-    "procurement",
-    "rezon",
-    "task order"
-   ],
-   "topicExcerpts": {
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… nt (17) Board consideration and approval to move forward with a solicitation to update the Forsyth County Comprehensive Plan for the Department of Planning and Community Development - Director, Department of Planning and Community …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… on a \"Time Sensitive\" basis - Deputy Director, Department of Engineering (7) Board consideration and approval of a contract with Weatherproofing Technologies, Inc. and National Building Contractors, Inc. under the OMNIA R230404 Cont …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Work Session Agenda Page 2 March 24, 2026 Old Federal Bridge. In addition, staff seeks approval of an associated budget resolution to cover the cost of additional aggregate materials and repairs necessitated by recent significant weather …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… epartment of Planning and Community Development (16) Board consideration and possible direction of a Board generated rezoning for ZA4163, Tipton Development LLC. In accordance with UDC 8-5.5(I), if an application for a l …",
-     "context": "unknown"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… of Public Transportation (15) Board consideration and possible direction regarding the revocation of the Conditional Use Permit (CUP) for CP240005, Forsyth County Board of Commissioners (Owner-Anthony M. Gold). In accordance with …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

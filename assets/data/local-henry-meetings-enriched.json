@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-17T13:57:00Z",
+  "generatedAt": "2026-09-24T14:02:12Z",
   "source": "Henry County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Henry County",
   "count": 25
@@ -11,18 +11,18 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-21",
+  "lastActivity": "2026-09-29",
   "topicTotals": {
-   "appointment": 4,
    "contract": 14,
+   "millage-budget": 15,
+   "appointment": 4,
    "development": 10,
-   "rezoning": 10,
+   "rezoning": 9,
    "special-land-use": 2,
    "variance": 4,
    "annexation": 4,
-   "millage-budget": 14,
    "alpr": 2,
-   "comprehensive-plan": 5
+   "comprehensive-plan": 4
   },
   "dataCenterItems": [],
   "landUseItems": [
@@ -178,20 +178,9 @@
      "special-land-use",
      "variance"
     ]
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-03-03",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2432,plainText=false)",
-    "tags": [
-     "comprehensive-plan",
-     "rezoning"
-    ],
-    "excerpt": "… M-23-07 (Public Hearing - POSTPONED) EPL Enterprises, Inc. of Lithonia, GA requests an amendment to the Comprehensive Plan for property located on Highway 155 North to the west of Valley Road in Land Lot 133 of the 11th District. The …",
-    "excerptTerm": "comprehensive plan"
    }
   ],
-  "landUseMeetings": 15,
+  "landUseMeetings": 14,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting (Meeting rescheduled from July 21, 2026)",
@@ -218,16 +207,57 @@
  },
  "meetings": [
   {
+   "id": "820",
+   "date": "2026-09-29",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2655,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2655,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 9807,
+   "pdfSha256": "843edfa9266dcf847218037ed3b06e9cf0b6b57e89ea13bd372f6fcec7368bf1",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "fiscal year"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… B. Resolution Awarding RFP 27-06 for Aquatic Center and Water Park Pool Maintenance Services (Annual Contract) to DC Pool Service LLC at a Rate of $380 per Hour, in an Amount Not to Exceed $52,000. (Presenter: J …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… ement)(Exhibit 2) Finance Department A. Resolution Approving a Letter of Engagement for Fiscal Year 2026 Audit Services Between Henry County, Georgia, and Mauldin & Jenkins, CPAs & Ad …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
    "id": "855",
    "date": "2026-09-21",
    "body": "Board of Commissioners",
    "title": "Called Board of Commissioners Meeting",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2648,plainText=false)",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2652,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2648,plainText=false)",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2652,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2698,
-   "pdfSha256": "7c75a10c00f6d3dc83d74fdc4606421de33724e85b71227a93988a48c1e15e18",
+   "textChars": 3941,
+   "pdfSha256": "a59a372a9d2ec0e4a11dcee14fc9571d6529f4d786bd2edf1fd324c5c466f008",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
@@ -1317,55 +1347,6 @@
      "term": "variance",
      "excerpt": "… es and the request is for a townhome development. District 5 IV. PLANNING STAFF COMMENTS V. VARIANCES VI. CONDITIONAL USE A. CU-25-09 Hoon Jae Lee of Loganville, GA requests a conditional use for pro …",
      "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "803",
-   "date": "2026-03-03",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2432,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2432,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 12796,
-   "pdfSha256": "d0e1cdbaa5a735ac18d29278abcc23d6c0a37a6a17bb187088be6013cbd45000",
-   "topics": {
-    "comprehensive-plan": 1,
-    "contract": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "comprehensive-plan",
-    "contract",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "comprehensive plan",
-    "contract",
-    "future land use",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… M-23-07 (Public Hearing - POSTPONED) EPL Enterprises, Inc. of Lithonia, GA requests an amendment to the Comprehensive Plan for property located on Highway 155 North to the west of Valley Road in Land Lot 133 of the 11th District. The …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ent, more or less, in Land Lots 179, 206, and 211 of the 2nd District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19 (Bill Gardner Parkway, P …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… ff: A. RZ-23-15 (Public Hearing - POSTPONED) EPL Enterprises, Inc. of Lithonia, GA requests a rezoning from RA (Residential- Agricultural) to C-2 (General Commercial) for property located on Highway 155 …",
-     "context": "agenda-action"
     }
    },
    "flags": [

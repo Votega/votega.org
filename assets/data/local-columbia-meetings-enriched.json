@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-17T13:57:37Z",
+  "generatedAt": "2026-09-24T14:03:18Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -11,12 +11,12 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-17",
+  "lastActivity": "2026-10-01",
   "topicTotals": {
    "rezoning": 14,
    "contract": 12,
    "special-land-use": 10,
-   "variance": 17,
+   "variance": 16,
    "millage-budget": 5,
    "development": 3,
    "appointment": 1,
@@ -24,6 +24,14 @@
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-10-01",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13833,plainText=false)",
+    "tags": [
+     "rezoning"
+    ]
+   },
    {
     "title": "Planning Commission",
     "date": "2026-09-17",
@@ -228,15 +236,6 @@
     "tags": [
      "rezoning"
     ]
-   },
-   {
-    "title": "Planning Commission",
-    "date": "2026-04-16",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13478,plainText=false)",
-    "tags": [
-     "rezoning",
-     "variance"
-    ]
    }
   ],
   "landUseMeetings": 20,
@@ -255,6 +254,38 @@
   "alprMeetings": 1
  },
  "meetings": [
+  {
+   "id": "2626",
+   "date": "2026-10-01",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13833,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13833,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 3947,
+   "pdfSha256": "8e60015a6563fad1e388dbb66e619fc63a361040c05549953ec3c69308ee64e2",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… mission District 4. Staff Assignment Danielle Montgomery. 2. (H1a2) RZ26-10-01, Rezoning from R-2 (Single Family Residential) to C-1 (Neighborhood Commercial), 4391 Hereford Farm R …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2625",
    "date": "2026-09-17",
@@ -1310,46 +1341,6 @@
    "flags": [
     "land-use",
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2504",
-   "date": "2026-04-16",
-   "body": "Planning Commission",
-   "title": "Planning Commission",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13478,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13478,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4358,
-   "pdfSha256": "d01aa6287a340c25818e1af3ba2b66d2511d681036b140e24bf50a91ddfc778c",
-   "topics": {
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… Assignment Danielle Montgomery. b. (H1b) Architectural Review 1. (H1b1) Condition of Rezoning - Lewiston Plaza, 426 Lewiston Road, Tax Map 068 Parcel 095A, 1.64 +/- acres, and currently z …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… -2 (General Commercial). Commission District 4. Staff Assignment Will Butler. 5. (H1c5) VA26-04-01, Variance to Section 90-135 Signs, 212 Bobby Jones Expressway, Tax Map 078D Parcel 024, 0.598 +/- acres, and cur …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

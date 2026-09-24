@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-17T13:57:01Z",
+  "generatedAt": "2026-09-24T14:02:14Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -11,16 +11,16 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-03",
+  "lastActivity": "2026-11-12",
   "topicTotals": {
-   "special-land-use": 8,
    "variance": 7,
-   "appointment": 6,
+   "special-land-use": 6,
+   "appointment": 5,
    "contract": 7,
+   "millage-budget": 7,
    "development": 3,
-   "rezoning": 4,
-   "annexation": 4,
-   "millage-budget": 8,
+   "rezoning": 3,
+   "annexation": 3,
    "data-center": 2
   },
   "dataCenterItems": [
@@ -39,13 +39,21 @@
   ],
   "landUseItems": [
    {
+    "title": "Board of Zoning Appeals Variance Hearing",
+    "date": "2026-11-12",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10237,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
+   {
     "title": "Planning Commission Zoning Hearing",
     "date": "2026-11-03",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10226,plainText=false)",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10241,plainText=false)",
     "tags": [
      "special-land-use"
     ],
-    "excerpt": "… LUP-37-2026 District 3 - 230 Rocky Top Court 10. LUP-38-2026 District 3 - 568 Tate Creek Court 11. SLUP-10-2026 District 1 - 3261 Ernest Barrett Parkway 12. SLUP-11-2026 District 2 - 465 Big Shanty Road Other Busi …",
+    "excerpt": "… LUP-37-2026 District 3 - 230 Rocky Top Court 11. LUP-38-2026 District 3 - 568 Tate Creek Court 12. SLUP-10-2026 District 1 - 3261 Ernest Barrett Parkway 13. SLUP-11-2026 District 2 - 465 Big Shanty Road Other Busi …",
     "excerptTerm": "slup"
    },
    {
@@ -164,54 +172,56 @@
     ],
     "excerpt": "… Edwards, LLC. to provide the labor for the roof replacement at the Department of Public Safety Supply Warehouse located 1596 County Services Parkway, Marietta, GA 30008. Public Safety Agency Police …",
     "excerptTerm": "warehouse"
-   },
-   {
-    "title": "Planning Commission Zoning Hearing",
-    "date": "2026-07-07",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9032,plainText=false)",
-    "tags": [
-     "special-land-use"
-    ],
-    "excerpt": "… y 5, 2026 Planning 1 Z-27-2026 Commission hearing until the June 2, 2026 Planning Commission hearing; 1 SLUP-6-2026 Continued by staff until the September 1, 2026 Planning Commission hearing) PRESTW …",
-    "excerptTerm": "slup"
-   },
-   {
-    "title": "BOC Regular Meeting",
-    "date": "2026-06-23",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9011,plainText=false)",
-    "tags": [
-     "annexation"
-    ]
-   },
-   {
-    "title": "BOC Zoning Hearing",
-    "date": "2026-06-16",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8981,plainText=false)",
-    "tags": [
-     "rezoning",
-     "special-land-use",
-     "variance"
-    ],
-    "excerpt": "… June 16, 2026 Zoning Cases Z-19 (2026) DAVID ALLISON (David Anthony Allison, Owner) requesting rezoning from R-20 to R-12 for an additional single-family residence in Land Lot 372 of the 17t …",
-    "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 18,
+  "landUseMeetings": 16,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
   {
+   "id": "1254",
+   "date": "2026-11-12",
+   "body": "Board of Zoning Appeals",
+   "title": "Board of Zoning Appeals Variance Hearing",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10237,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10237,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2004,
+   "pdfSha256": "124eef26ffeb9e882f7f772d1af7565c14f079a7564ea0041d6347c0669ea2ce",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING AGENDA November 12, 2026 AGENDA AND MINUTES HELD AND CONTINUED CASES …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
    "id": "1265",
    "date": "2026-11-03",
    "body": "Planning Commission",
    "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10226,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10241,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10226,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10241,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 969,
-   "pdfSha256": "8a5e69a9c26728a281d5e30e5fd27f2c20beb26ae5377a8df2e620c5333b18c4",
+   "textChars": 1027,
+   "pdfSha256": "9099f0fdbaa1656048e4517b78e71322695889e3f9f2d2aee67d526267758a05",
    "topics": {
     "special-land-use": 1
    },
@@ -224,13 +234,31 @@
    "topicExcerpts": {
     "special-land-use": {
      "term": "slup",
-     "excerpt": "… LUP-37-2026 District 3 - 230 Rocky Top Court 10. LUP-38-2026 District 3 - 568 Tate Creek Court 11. SLUP-10-2026 District 1 - 3261 Ernest Barrett Parkway 12. SLUP-11-2026 District 2 - 465 Big Shanty Road Other Busi …",
+     "excerpt": "… LUP-37-2026 District 3 - 230 Rocky Top Court 11. LUP-38-2026 District 3 - 568 Tate Creek Court 12. SLUP-10-2026 District 1 - 3261 Ernest Barrett Parkway 13. SLUP-11-2026 District 2 - 465 Big Shanty Road Other Busi …",
      "context": "agenda-action"
     }
    },
    "flags": [
     "land-use"
    ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1276",
+   "date": "2026-10-20",
+   "body": "Board of Commissioners",
+   "title": "BOC Zoning Hearing",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10239,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10239,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 711,
+   "pdfSha256": "007c410f9d17880a495efa5456242cfcefde700ef5f9a81679247fd7f2dee902",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
    "dataCenterItems": []
   },
   {
@@ -294,6 +322,73 @@
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1239",
+   "date": "2026-09-22",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Session",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10231,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10231,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 330,
+   "pdfSha256": "01feaec2a8cde03084b72babbb3a6a08cf8df12e737b5b5728b8ad32870a5014",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1202",
+   "date": "2026-09-22",
+   "body": "Board of Commissioners",
+   "title": "BOC Regular Meeting",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10246,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10246,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 9705,
+   "pdfSha256": "60baab4021ac331222b68603413fb9a9327a771ee40e05adee5ab876ddb65802",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… DRESS Per Section 2.01.01 of the Rules of Procedure of the Board ADJOURNMENT NON AGENDA 35. To approve the appointment of Marlon Longacre to the Region 1 Behavioral Health and Developmental Disabilities Planning Board. …",
+     "context": "public-comment"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Court Clerk, to include one-time operating and capital purchases. Water System 5. To approve a construction contract with IHC Construction Companies, LLC for the South Cobb Water Reclamation Facility Secondary Clarifier Reha …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ty Insurance coverage effective October 1, 2026. Finance 16. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. 17. To approve the carry forward of previousl …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -1022,185 +1117,6 @@
    "flags": [
     "land-use",
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1261",
-   "date": "2026-07-07",
-   "body": "Planning Commission",
-   "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9032,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9032,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4508,
-   "pdfSha256": "440318e66cea6d49e72c17c74e28cdc35b7018f173b71778dae903ca32a446f3",
-   "topics": {
-    "appointment": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "appointment",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "land use permit",
-    "slup"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… trict Commissioner; 3. Clients to park in driveway; 4. Maximum of five clients per day by appointment only; 5. Fire Department comments and recommendations; 6. Stormwater comments and rec …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "slup",
-     "excerpt": "… y 5, 2026 Planning 1 Z-27-2026 Commission hearing until the June 2, 2026 Planning Commission hearing; 1 SLUP-6-2026 Continued by staff until the September 1, 2026 Planning Commission hearing) PRESTW …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1236",
-   "date": "2026-06-23",
-   "body": "Board of Commissioners",
-   "title": "BOC Work Session",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8999,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8999,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 373,
-   "pdfSha256": "dae6015dec14afcb3343c42575fed6606bdd24f829863eec9c737d2bb088110c",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… JUNE 23, 2026 - 1:30 PM CALL TO ORDER PRESENTATIONS 1. To present the Proposed FY 2027 Budget. 2. To present an update on the Communications Call Center. ADJOURNMENT",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1199",
-   "date": "2026-06-23",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9011,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9011,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 12781,
-   "pdfSha256": "ea4b9c657162071d84894de7bf6401952c0bea54438c8ac0df2ef8fb963359d9",
-   "topics": {
-    "annexation": 1,
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "annexation",
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "appoint",
-    "budget",
-    "contract",
-    "fiscal year"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… on May 28, 2026, for EUG Alpha 2, LLC doing business as Eggs Up Grill. 25. To approve an annexation notice of Non-Objection with Stipulations per HB 489 Intergovernmental Agreement and HB 2 regarding a …",
-     "context": "unknown"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… will be allotted a maximum of three (3) minutes. Speakers should address their comments toward the Chairwoman only. APPOINTMENTS 42. To approve the appointment of Taniesha Whorton to the Recreation Board. 43. To approve …",
-     "context": "public-comment"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… the Solicitor General's Office Water System 9. To approve Change Order No. 1 (final) to the construction contract with IHC Construction Companies, LLC for the FY23 Noonday Creek Water Reclamation Facility …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ffective 07/01/2026 through 07/01/2027. Finance 29. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. CDBG 30. To authorize the acceptanc …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1272",
-   "date": "2026-06-16",
-   "body": "Board of Commissioners",
-   "title": "BOC Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8981,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=8981,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 7332,
-   "pdfSha256": "8c16270591bf2dd6a7c71899baf13217299a7dda749d63830db15efb2f5797fc",
-   "topics": {
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "rezon",
-    "slup",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… June 16, 2026 Zoning Cases Z-19 (2026) DAVID ALLISON (David Anthony Allison, Owner) requesting rezoning from R-20 to R-12 for an additional single-family residence in Land Lot 372 of the 17t …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "slup",
-     "excerpt": "… ne 2, 2026 hearing; 4 LUP-12-2026 Continued by Staff until the July 7, 2026 Planning Commission hearing) 1 SLUP-6-2026 JAIRO MURILLO (Held by the Planning Commission until the July 7, 2026 1 OB-13-2026 Planning Commi …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… ts contained in the Other Business packet. ITEM OB-32-2026 To consider amending the site plan and a stream buffer variance for Dominion Christian School regarding application SLUP-10 of 2000. The property is located at the south side of Bur …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

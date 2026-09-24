@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-17T13:56:52Z",
+  "generatedAt": "2026-09-24T14:02:09Z",
   "source": "Newton County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Newton County",
   "count": 25
@@ -10,20 +10,30 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-17",
+  "lastActivity": "2026-09-29",
   "topicTotals": {
-   "appointment": 5,
-   "development": 2,
-   "millage-budget": 10,
-   "annexation": 1,
-   "comprehensive-plan": 9,
-   "contract": 5,
+   "comprehensive-plan": 10,
    "rezoning": 11,
-   "special-land-use": 8,
+   "special-land-use": 9,
+   "appointment": 4,
+   "development": 2,
+   "millage-budget": 9,
+   "annexation": 1,
+   "contract": 4,
    "variance": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Special Called Planning Commission Meeting",
+    "date": "2026-09-29",
+    "sourceUrl": "https://www.newtoncountyga.gov/AgendaCenter/ViewFile/Agenda/_09292026-1004",
+    "tags": [
+     "comprehensive-plan",
+     "rezoning",
+     "special-land-use"
+    ]
+   },
    {
     "title": "BOC Regular Meeting",
     "date": "2026-09-15",
@@ -167,16 +177,6 @@
      "rezoning",
      "special-land-use"
     ]
-   },
-   {
-    "title": "BOC Regular Meeting",
-    "date": "2026-06-16",
-    "sourceUrl": "https://www.newtoncountyga.gov/AgendaCenter/ViewFile/Agenda/_06162026-973",
-    "tags": [
-     "rezoning"
-    ],
-    "excerpt": "… ND FOR OTHER RELATED PURPOSES. 7:30 PM ZONING AGENDA AND PUBLIC HEARING 1. Zoning Case: REZ26-000004 (Rezoning) Applicant: Hayley Todd (PEC+) Location: Hwy 81 Map & Parcel Number: 0016-030 …",
-    "excerptTerm": "rezon"
    }
   ],
   "landUseMeetings": 15,
@@ -184,6 +184,55 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1004",
+   "date": "2026-09-29",
+   "body": "Planning Commission",
+   "title": "Special Called Planning Commission Meeting",
+   "sourceUrl": "https://www.newtoncountyga.gov/AgendaCenter/ViewFile/Agenda/_09292026-1004",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.newtoncountyga.gov/AgendaCenter/ViewFile/Agenda/_09292026-1004",
+   "textMethod": "pdftotext",
+   "textChars": 1704,
+   "pdfSha256": "ce8f74950ff2433d2e4c375edfef70951746ab7686a58e6386fb32141d0d45ce",
+   "topics": {
+    "comprehensive-plan": 1,
+    "rezoning": 1,
+    "special-land-use": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "rezoning",
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "comprehensive plan",
+    "conditional use",
+    "future land use",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "future land use",
+     "excerpt": "… 2026 at 7:00 PM 3rd Floor Boardroom of the Historic Courthouse REZONING, FUTURE LAND USE MAP AMENDMENT, CONDITIONAL USE PERMIT PETITIONS Tuesday, September 29, 2026 – Special Called Planning Comm …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… tember 29, 2026 at 7:00 PM 3rd Floor Boardroom of the Historic Courthouse REZONING, FUTURE LAND USE MAP AMENDMENT, CONDITIONAL USE PERMIT PETITIONS Tuesday, September 29, 2026 – Special …",
+     "context": "unknown"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… 3rd Floor Boardroom of the Historic Courthouse REZONING, FUTURE LAND USE MAP AMENDMENT, CONDITIONAL USE PERMIT PETITIONS Tuesday, September 29, 2026 – Special Called Planning Commission Meeting PETIT …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1003",
    "date": "2026-09-17",
@@ -1119,64 +1168,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "973",
-   "date": "2026-06-16",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://www.newtoncountyga.gov/AgendaCenter/ViewFile/Agenda/_06162026-973",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.newtoncountyga.gov/AgendaCenter/ViewFile/Agenda/_06162026-973",
-   "textMethod": "pdftotext",
-   "textChars": 7432,
-   "pdfSha256": "70b90ea6a73bf91c55cbff06dc8381f49f51488b205f4536f053ed31a97655ff",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "fiscal year",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Proposed Budget Public Hearing) 7f. Correction of Term - Newton County Elections Board Brenden Cherry (Republican Appointment) -- To serve the unexpired term of Kimberly Shue This is the end of the consent agenda. NEW BUSINESS 8. …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ere is no match required. Presenter: James Brown Action item 17. Consideration of Georgia Food Contract Renewal for 2026 (Senior Services). This is an annual contract in partnership with Northeast Georgia Regional Commis …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ng - May 28, 2026 7b. Executive Session - May 28, 2026 7c. Special Called Meeting - June 2, 2026 (FY2027 Proposed Budget Presentation) 7d. . Regular Board Meeting - June 2, 2026 7e. Special Called Meeting - June 9, 2026 (FY2027 Propos …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… ND FOR OTHER RELATED PURPOSES. 7:30 PM ZONING AGENDA AND PUBLIC HEARING 1. Zoning Case: REZ26-000004 (Rezoning) Applicant: Hayley Todd (PEC+) Location: Hwy 81 Map & Parcel Number: 0016-030 …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

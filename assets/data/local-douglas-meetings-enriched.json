@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-17T13:56:59Z",
+  "generatedAt": "2026-09-24T14:02:09Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -11,16 +11,16 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-21",
+  "lastActivity": "2026-09-24",
   "topicTotals": {
+   "millage-budget": 18,
    "variance": 4,
-   "millage-budget": 17,
    "appointment": 11,
    "comprehensive-plan": 2,
    "contract": 15,
    "data-center": 3,
    "development": 2,
-   "rezoning": 4,
+   "rezoning": 3,
    "annexation": 2
   },
   "dataCenterItems": [
@@ -94,23 +94,45 @@
     "tags": [
      "variance"
     ]
-   },
-   {
-    "title": "Planning Zoning and BOC",
-    "date": "2026-06-02",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7332,plainText=false)",
-    "tags": [
-     "rezoning"
-    ],
-    "excerpt": "… APPROVAL of MINUTES Approve the minutes from the May 5, 2026 meeting AGENDA Aleene Duff - A request for a rezoning from R-LD (residential low Z2026- density) to R-A (residential agriculture) and a Special Use Permit to 31/S …",
-    "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 10,
+  "landUseMeetings": 9,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1321",
+   "date": "2026-09-24",
+   "body": "Board of Commissioners",
+   "title": "BOC SCM Millage Rate Public Hearing and Adoption",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7561,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7561,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 512,
+   "pdfSha256": "e569de258febffb9c6aef1cf2c2c653fbcbccdce8bb58bf3ea1db85737ca7724",
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "millage"
+   ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… 10:00 AM -- CITIZENS HALL COMMISSION MEETING CALL TO ORDER PUBLIC HEARING 1. Millage Rate NEW BUSINESS 2. Resolution to adopt the Douglas County Board of Commissioner's 2026 Millage Rate and authorize …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1320",
    "date": "2026-09-21",
@@ -1199,38 +1221,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1291",
-   "date": "2026-06-02",
-   "body": "Planning & Zoning",
-   "title": "Planning Zoning and BOC",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7332,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7332,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4282,
-   "pdfSha256": "a5e4574663d44d57ca6d83b6aa3fe3aa60a1f90403b6be89b86b1cb253ded741",
-   "topics": {
-    "rezoning": 1
-   },
-   "tags": [
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… APPROVAL of MINUTES Approve the minutes from the May 5, 2026 meeting AGENDA Aleene Duff - A request for a rezoning from R-LD (residential low Z2026- density) to R-A (residential agriculture) and a Special Use Permit to 31/S …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-17T13:57:35Z",
+  "generatedAt": "2026-09-24T14:03:17Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -11,16 +11,16 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-08",
+  "lastActivity": "2026-09-24",
   "topicTotals": {
+   "special-land-use": 8,
+   "variance": 13,
    "appointment": 13,
-   "contract": 14,
-   "development": 6,
-   "millage-budget": 15,
    "comprehensive-plan": 4,
+   "contract": 14,
+   "millage-budget": 15,
    "rezoning": 9,
-   "special-land-use": 6,
-   "variance": 12,
+   "development": 6,
    "data-center": 3
   },
   "dataCenterItems": [
@@ -40,6 +40,30 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Zoning Appeals - Public Hearing",
+    "date": "2026-09-24",
+    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3657,plainText=false)",
+    "tags": [
+     "special-land-use",
+     "variance"
+    ],
+    "excerpt": "… Petitions 2. Public Hearing Regarding Petition # CONDUSE 26-004 Filed by Frenchies and Scots, LLC Requesting a Conditional Use Permit for Property Located off Hwy 54, Sharpsburg - District 1 - WITHDRAWN BY THE APPLICANT REPRESENTATIVE ON SE …",
+    "excerptTerm": "conditional use"
+   },
+   {
+    "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
+    "date": "2026-09-22",
+    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3659,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "rezoning",
+     "special-land-use",
+     "variance"
+    ],
+    "excerpt": "… ill call for any comments regarding the following items after each item is presented) 3. Public Hearing Regarding the Comprehensive Plan Update 4. Public Hearing Regarding Petition # REZ 26-13 Filed by J. Neal Shepard, Jr. and Phillip M. Shepard Re …",
+    "excerptTerm": "comprehensive plan"
+   },
    {
     "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
     "date": "2026-09-08",
@@ -218,25 +242,135 @@
     ],
     "excerpt": "… rsection of Interstate Way and Hwy 34 E, Newnan - District 3 4. Request to Cancel Public Hearing Regarding Potential Rezoning of Property Located at 3218 Roscoe Road, Newnan Associated with Condition # 15 of Previous Petition # REZ 22- …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-    "date": "2026-02-17",
-    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3215,plainText=false)",
-    "tags": [
-     "comprehensive-plan",
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "… state Way and Hwy 34 E, Newnan - District 3 7. Request to Set a Public Hearing on March 17, 2026 Regarding the Draft Comprehensive Plan Update Unfinished Business 8. Request Appointments to Various Boards/Authorities New Business Bids and Cont …",
-    "excerptTerm": "comprehensive plan"
    }
   ],
-  "landUseMeetings": 21,
+  "landUseMeetings": 22,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1151",
+   "date": "2026-09-24",
+   "body": "Board of Zoning Appeals",
+   "title": "Board of Zoning Appeals - Public Hearing",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3657,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3657,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1928,
+   "pdfSha256": "9231962e4e06f58da73d3fdd49a8a71d90461d38d49abdf1465f34b74df33744",
+   "topics": {
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… Petitions 2. Public Hearing Regarding Petition # CONDUSE 26-004 Filed by Frenchies and Scots, LLC Requesting a Conditional Use Permit for Property Located off Hwy 54, Sharpsburg - District 1 - WITHDRAWN BY THE APPLICANT REPRESENTATIVE ON SE …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… arding Petition # VAR 26-022 Filed by Lichty Building Group, Inc. for Daryl Myers Requesting a Front Yard Setback Variance for Property Located at 3 Norma Lane, Newnan - District 3 Additional Business Adjournment As set forth in the Americ …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1094",
+   "date": "2026-09-22",
+   "body": "Board of Commissioners",
+   "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3659,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3659,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 6607,
+   "pdfSha256": "98367faaf93ae26c7ae7251ad8d0765e41450700363e746df21cdd6d555cdc51",
+   "topics": {
+    "appointment": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "comprehensive-plan",
+    "contract",
+    "millage-budget",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "comprehensive plan",
+    "conditional use",
+    "contract",
+    "fiscal year",
+    "procurement",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… District 1 12. Request Acceptance of Hollz Parkway Extension - Districts 3 and 4 Unfinished Business 13. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts 14. Request Approval/ …",
+     "context": "unknown"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… ill call for any comments regarding the following items after each item is presented) 3. Public Hearing Regarding the Comprehensive Plan Update 4. Public Hearing Regarding Petition # REZ 26-13 Filed by J. Neal Shepard, Jr. and Phillip M. Shepard Re …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ed Business 13. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts 14. Request Approval/Execution of Amendment to the Indigent Defense Services Agreement with the Superior Court Pub …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… iagnostics Applications and Hardware Additional Action Items 17. Request Approval of an Updated Employee Pay Scale for Fiscal Year 2027 18. Request Approval to Renew Employee Life, Short Term Disability, and Long Term Disability Insurance Covera …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Public Hearing Regarding Petition # REZ 26-13 Filed by J. Neal Shepard, Jr. and Phillip M. Shepard Requesting to Rezone Property Located at Lynhaven Drive and Thomas Way, Newnan - District 5 Coweta County Board of Commissioners …",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… Public Hearing Regarding Petition # CONDUSE 26-03 Filed by Dee Robinson (Sand to Significance, LLC) Requesting a Conditional Use Permit for Property Located off Copeland Road — District 3 6. Public Hearing Regarding Petition # SPUSE 26-02 Filed …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Plan 8. Recommend Approval of Petition # VAR 26-21 Filed by Gary Adams Requesting a Distance Between Buildings Variance for Property Located at 253 Timber Creek Estates Drive, Sharpsburg - District 4 9. Request Direction from the Board …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1093",
    "date": "2026-09-08",
@@ -1433,97 +1567,6 @@
     "variance": {
      "term": "variance",
      "excerpt": "… y Yamaha Motor Manufacturing Company [dba DHL Supply Chain (USA)] Requesting an Exterior Architectural Standards Variance for Property Located at the Northeast Intersection of Interstate Way and Hwy 34 E, Newnan - District 3 4. Req …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1144",
-   "date": "2026-02-26",
-   "body": "Board of Zoning Appeals",
-   "title": "Board of Zoning Appeals - Public Hearing",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3218,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3218,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1195,
-   "pdfSha256": "9c810c41c9a6289779a1644c227814561afea46558be547fc3a8bcbae20086f7",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1066",
-   "date": "2026-02-17",
-   "body": "Board of Commissioners",
-   "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3215,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3215,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5770,
-   "pdfSha256": "f1d9d81acefdf7904fb272ba1e97683a0d3da389e084ca2a70a569bd537a4750",
-   "topics": {
-    "appointment": 1,
-    "comprehensive-plan": 1,
-    "contract": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "appointment",
-    "comprehensive-plan",
-    "contract",
-    "millage-budget",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "comprehensive plan",
-    "contract",
-    "fiscal year",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… t a Public Hearing on March 17, 2026 Regarding the Draft Comprehensive Plan Update Unfinished Business 8. Request Appointments to Various Boards/Authorities New Business Bids and Contracts 9. Bid Award Associated with the Public Saf …",
-     "context": "agenda-action"
-    },
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… state Way and Hwy 34 E, Newnan - District 3 7. Request to Set a Public Hearing on March 17, 2026 Regarding the Draft Comprehensive Plan Update Unfinished Business 8. Request Appointments to Various Boards/Authorities New Business Bids and Cont …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Plan Update Unfinished Business 8. Request Appointments to Various Boards/Authorities New Business Bids and Contracts 9. Bid Award Associated with the Public Safety Training Center, Phase 1 (F2020.2) 10. Request Approval/Execution …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… ed with the Issuance of Revenue Bonds for the Coweta County Government Center 17. Request Approval to Submit Fiscal Year 2027 Accountability Court Operating Grant Applications 18. Request Approval to Submit Fiscal Year 2027 Family Treatm …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… each item is presented) 3. Public Hearing Regarding Petition # REZ 25-13 Filed by Brent Holdings, LLC Requesting to Rezone Property Located at 1612 South Highway 29, Newnan - District 2 - WITHDRAWN BY APPLICANT ON FEBRUARY 10 …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… AFF ON FEBRUARY 12, 2026 5. Recommend Approval of Petition # VAR 25-30 Filed by Sam Bowers Requesting a Barn Setback Variance for Property Located on Sid Hunter Road, Senoia - District 1 6. Recommend Denial of Petition # VAR 25-22 File …",
      "context": "agenda-action"
     }
    },

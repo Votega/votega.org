@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-17T13:56:51Z",
+  "generatedAt": "2026-09-24T14:02:07Z",
   "source": "Fayette County (revize agenda/minutes PDFs, poppler+OCR)",
   "place": "Fayette County",
   "count": 24
@@ -11,18 +11,18 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-10",
+  "lastActivity": "2026-09-24",
   "topicTotals": {
-   "appointment": 18,
    "comprehensive-plan": 18,
    "contract": 21,
-   "development": 15,
    "millage-budget": 20,
-   "rezoning": 16,
+   "rezoning": 17,
+   "variance": 11,
+   "appointment": 17,
+   "development": 14,
    "data-center": 7,
    "special-land-use": 10,
-   "variance": 11,
-   "annexation": 7
+   "annexation": 6
   },
   "dataCenterItems": [
    {
@@ -37,6 +37,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Agenda",
+    "date": "2026-09-24",
+    "sourceUrl": "https://www.fayettecountyga.gov/09-24-2026%20BOC%20Agenda.pdf",
+    "tags": [
+     "comprehensive-plan",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… ng for the Agenda: Public Hearing to brief the community on the process of the Full Plan Update of the Fayette County Comprehensive Plan. Background/History/Details: Rules of Georgia Department of Community Affairs, Chapter 110-12-1-.04 Procedures, …",
+    "excerptTerm": "comprehensive plan"
+   },
    {
     "title": "Agenda",
     "date": "2026-09-10",
@@ -190,19 +202,6 @@
     ],
     "excerpt": "… citizens whose lives were taken in acts of racial violence. (pages 44-45) 5. Approval to add Eva Gardens subdivision to Fayette County's Street Light Program.(pages 46-48) Agenda November 13, 2025 Page Number 2 6. Approval of …",
     "excerptTerm": "subdivision"
-   },
-   {
-    "title": "Agenda",
-    "date": "2025-09-25",
-    "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2025/Agenda/09-25-2025%20BOC%20Agenda-tps.pdf",
-    "tags": [
-     "annexation",
-     "comprehensive-plan",
-     "development",
-     "variance"
-    ],
-    "excerpt": "… mmissioners meeting. Commissioner Oddo seconded. The motion passed 5-0. NEW BUSINESS: 5. Consideration of an Annexation Notification from the Town of Brooks regarding a request to annex Parcel No. 0407 013 and Parcel No. 0407 013 …",
-    "excerptTerm": "annexation"
    }
   ],
   "landUseMeetings": 21,
@@ -210,6 +209,77 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "2026-09-24",
+   "date": "2026-09-24",
+   "body": "Board of Commissioners",
+   "title": "Agenda",
+   "sourceUrl": "https://www.fayettecountyga.gov/09-24-2026%20BOC%20Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.fayettecountyga.gov/09-24-2026%20BOC%20Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 174014,
+   "pdfSha256": "74a1dc193631aae46b82d2a5a53340f7c343ec903a09e4eadced9b450d14bd91",
+   "topics": {
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "contract",
+    "millage-budget",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "award of",
+    "budget",
+    "comprehensive plan",
+    "contract",
+    "fiscal year",
+    "land use plan",
+    "procurement",
+    "purchase order",
+    "rezon",
+    "task order",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… ng for the Agenda: Public Hearing to brief the community on the process of the Full Plan Update of the Fayette County Comprehensive Plan. Background/History/Details: Rules of Georgia Department of Community Affairs, Chapter 110-12-1-.04 Procedures, …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… 10, 2026, Board of Commissioners Meeting Minutes. (pages 52-56) OLD BUSINESS: NEW BUSINESS: 8. Request to award Contract #27039-S to the U.S. Department of the Interior Geological Survey (USGS) for surface water monitoring in the am …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Responses are reserved at the discretion of the Board. CONSENT AGENDA: 2. Approval to adopt final supplemental budget adjustments for the fiscal year ended June 30, 2026, and authorization to adjust and close capital projects, m …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… OMMUNITY-BASED COUNTY’S GUIDE FOR A DAY-TO-DAY TOOL FOR A STATE OF GEORGIA VISION FOR FAYETTE REZONING AND FUTURE LAND USE-RELATED REQUIREMENT FOR ALL COUNTY’S FUTURE DEVELOPMENT …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… s governmental funds. Staff is recommending budget adjustments for each fund and each department with an unfavorable variance between budget and actual expenditures. Staff is also recommending to close projects that have been completed and to …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-09-10",
    "date": "2026-09-10",
@@ -2019,91 +2089,6 @@
      "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2025/Agenda/10-23-2025%20BOC%20Agenda.pdf"
     }
    ]
-  },
-  {
-   "id": "2025-09-25",
-   "date": "2025-09-25",
-   "body": "Board of Commissioners",
-   "title": "Agenda",
-   "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2025/Agenda/09-25-2025%20BOC%20Agenda-tps.pdf",
-   "textSource": "minutes",
-   "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2025/Agenda/09-25-2025%20BOC%20Agenda-tps.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 244817,
-   "pdfSha256": "55d4ebc1bf501eeb836e9b2ca0c19c41b9dd7af3b10334ea87fd51ab84b55822",
-   "topics": {
-    "annexation": 1,
-    "appointment": 1,
-    "comprehensive-plan": 1,
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1,
-    "variance": 1
-   },
-   "tags": [
-    "annexation",
-    "appointment",
-    "comprehensive-plan",
-    "contract",
-    "development",
-    "millage-budget",
-    "variance"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "appoint",
-    "budget",
-    "comprehensive plan",
-    "contract",
-    "fiscal year",
-    "procurement",
-    "purchase order",
-    "reappoint",
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… mmissioners meeting. Commissioner Oddo seconded. The motion passed 5-0. NEW BUSINESS: 5. Consideration of an Annexation Notification from the Town of Brooks regarding a request to annex Parcel No. 0407 013 and Parcel No. 0407 013 …",
-     "context": "agenda-action"
-    },
-    "appointment": {
-     "term": "reappoint",
-     "excerpt": "… : NEW BUSINESS: 8. Request to approve the Public Facilities Authority Selection Committee's recommendation to reappoint Thomas Gray to the Public Facilities Authority for a term beginning July 24, 2025 and expiring July 23, 2026, …",
-     "context": "agenda-action"
-    },
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… The provisions of Section 36-70-20 et seq. of the Official Code of Georgia, relating to the \"Coordinated And Comprehensive Planning And Service Delivery By Counties And Municipalities\", as amended, has been complied with throughout the c …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ty-seven (57) vehicles and miscellaneous equipment as un-serviceable, and to sell the assets online utilizing contracted auction services and for all proceeds to be returned to the vehicle replacement fund. (pages 52-54) Agenda …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… the Consent Agenda. Vice Chairman Gibbons seconded. The motion passed 5-0. 1. Approval to add Arbrovale Phase II Subdivision to Fayette County's Street Light Program. 2. Approval of the proposed 2026 Local Maintenance & Improvement Grant …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Redlich in the amount of $126.13 for tax year 2024. (pages 13-14) 3. Approval to adopt final supplemental budget adjustments for the fiscal year ended June 30, 2025, and authorization to adjust and close capital projects, …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… rs and Duties. This amendment addresses the powers and duties of the Zoning Board of Appeals. It provides criteria for variances for unimproved nonconforming lots. Please refer to the attached staff report for details of the proposed amended lang …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
   }
  ]
 }

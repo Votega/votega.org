@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-17T13:57:41Z",
+  "generatedAt": "2026-09-24T14:03:32Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -10,16 +10,27 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-21",
+  "lastActivity": "2026-10-12",
   "topicTotals": {
    "development": 12,
+   "variance": 4,
    "millage-budget": 8,
    "appointment": 9,
-   "contract": 9,
-   "variance": 3
+   "contract": 9
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission Regular Meeting",
+    "date": "2026-10-12",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4351,plainText=false)",
+    "tags": [
+     "development",
+     "variance"
+    ],
+    "excerpt": "… arcel Number: 048-060 Character Area: Commerce Corridor Case 194 is a request for a Final Plat of a Class VII subdivision entitled The Oaks at Auraria (Phase 2) (12 lots) Per Sec 26-66 & 26-164 3. Location: 1049 BEN HIGGINS ROAD; DAH …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Land Use & Development Regulations Review Committee Meeting",
     "date": "2026-09-21",
@@ -116,16 +127,6 @@
     "tags": [
      "development"
     ]
-   },
-   {
-    "title": "Land Use & Development Regulations Review Committee Meeting",
-    "date": "2026-06-29",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3082,plainText=false)",
-    "tags": [
-     "development"
-    ],
-    "excerpt": "… et of Suggested Ordinance Changes 3. Review Article I & II of Chapter 26 Land Development 4. Review Article III - Subdivision Classes • ADJOURNMENT",
-    "excerptTerm": "subdivision"
    }
   ],
   "landUseMeetings": 12,
@@ -133,6 +134,47 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1155",
+   "date": "2026-10-12",
+   "body": "Planning Commission",
+   "title": "Planning Commission Regular Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4351,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4351,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1883,
+   "pdfSha256": "833f3e640eaf879273ae3841b6024af320a8280f9d7d771dd4d624da4546ac5e",
+   "topics": {
+    "development": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "variance"
+   ],
+   "matchedTerms": [
+    "multifamily",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… arcel Number: 048-060 Character Area: Commerce Corridor Case 194 is a request for a Final Plat of a Class VII subdivision entitled The Oaks at Auraria (Phase 2) (12 lots) Per Sec 26-66 & 26-164 3. Location: 1049 BEN HIGGINS ROAD; DAH …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Harvey & Brian Slagle Parcel Number: 059A 058 Character Area: Residential Growth Case 197 is a 0.16-acre variance to Sec 27-2.2.3 Chart of Performance Standards Table 1: Performance Standards Chart to allow a home occupation …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1310",
    "date": "2026-09-21",
@@ -205,12 +247,12 @@
    "date": "2026-09-15",
    "body": "Board of Commissioners",
    "title": "Lumpkin County Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4335,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4337,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4335,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4337,plainText=false)",
    "textMethod": "pdftotext",
    "textChars": 2039,
-   "pdfSha256": "34f1df28ed84d8febb0a85b03f4199ab3e49638d23776845b1e3c9e6d60a9d72",
+   "pdfSha256": "88e6e23608820f62f426ae1719261db912caee402a751f3d3b56ba52cf6979f9",
    "topics": {
     "appointment": 1,
     "contract": 1
@@ -1020,38 +1062,6 @@
     }
    },
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1295",
-   "date": "2026-06-29",
-   "body": "Land Use & Development Regulations Review Committee",
-   "title": "Land Use & Development Regulations Review Committee Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3082,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3082,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 727,
-   "pdfSha256": "1a97ef314f2d944aed9ab9f39b5bbe335d7754b65546e5d6c6708c1cd4bd9d72",
-   "topics": {
-    "development": 1
-   },
-   "tags": [
-    "development"
-   ],
-   "matchedTerms": [
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… et of Suggested Ordinance Changes 3. Review Article I & II of Chapter 26 Land Development 4. Review Article III - Subdivision Classes • ADJOURNMENT",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]
