@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-25T19:02:12.869883+00:00",
+    "generatedAt": "2026-09-25T23:41:46.035283+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,25 +21,38 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 116,
+    "count": 117,
     "windowDays": 45,
-    "entityTagged": 61,
+    "entityTagged": 64,
     "topicCounts": {
+      "elections": 24,
+      "budget": 5,
       "healthcare": 16,
-      "courts": 12,
-      "elections": 20,
-      "education": 11,
+      "courts": 14,
+      "education": 12,
       "ethics": 5,
-      "surveillance": 2,
-      "budget": 4
+      "surveillance": 2
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
       "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
     },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
@@ -61,15 +74,15 @@
       "url": null,
       "bioguideId": "M001208"
     },
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
       "bioguideId": "W000790"
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
     },
     "vg-ga-p-000258": {
       "name": "Earl L. \"Buddy\" Carter",
@@ -78,11 +91,6 @@
       "candidateIds": [
         "challenger-buddy-carter-senate-2026"
       ]
-    },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
     },
     "vg-ga-p-000256": {
       "name": "Rick W. Allen",
@@ -100,14 +108,6 @@
       "name": "Andrew S. Clyde",
       "url": null,
       "bioguideId": "C001116"
-    },
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
-      "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
     },
     "vg-ga-p-000257": {
       "name": "Barry Loudermilk",
@@ -137,6 +137,91 @@
   },
   "items": [
     {
+      "id": "6ed19b8fa788",
+      "title": "Thune says GOP still backs spending to support Collins campaign",
+      "url": "https://capitol-beat.org/2026/09/thune-says-gop-still-backs-spending-to-support-collins-campaign/?utm_source=rss&utm_medium=rss&utm_campaign=thune-says-gop-still-backs-spending-to-support-collins-campaign",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-09-25T22:19:53+00:00",
+      "snippet": "ATLANTA — Republican leaders rallied behind U.S. Rep. Mike Collins and his bid to unseat U.S. Sen. Jon Ossoff Friday, after a news report that the GOP was moving money to other states to support candi",
+      "entityIds": [
+        "vg-ga-p-000253",
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "elections",
+        "budget"
+      ]
+    },
+    {
+      "id": "07655f0616f0",
+      "title": "Senate Majority Leader John Thune campaigns for Mike Collins",
+      "url": "https://www.gpb.org/news/2026/09/25/senate-majority-leader-john-thune-campaigns-for-mike-collins",
+      "source": "GPB News",
+      "publishedAt": "2026-09-25T20:35:00+00:00",
+      "snippet": "U.S. Senate Majority Leader John Thune campaigned with Republican U.S. Rep. Mike Collins in Atlanta this week.",
+      "entityIds": [
+        "vg-ga-p-000253"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "9432882513a2",
+      "title": "Top U.S. Senate Republican stumps with Collins in Georgia as seat appears to slip out of reach",
+      "url": "https://georgiarecorder.com/2026/09/25/top-u-s-senate-republican-stumps-with-collins-in-georgia-as-seat-appears-to-slip-out-of-reach/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-25T20:28:09+00:00",
+      "snippet": "U.S. Senate Majority Leader John Thune came to Atlanta to keep hope alive for the Mike Collins campaign as Collins challenges Democratic U.S. Sen. Jon Ossoff in the Nov. 3 midterm election. Thune’s vi",
+      "entityIds": [
+        "vg-ga-p-000253",
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "a08f53444134",
+      "title": "Two Middle Georgia mental health providers merge as the state streamlines its safety net care",
+      "url": "https://www.gpb.org/news/2026/09/25/two-middle-georgia-mental-health-providers-merge-the-state-streamlines-its-safety",
+      "source": "GPB News",
+      "publishedAt": "2026-09-25T19:53:00+00:00",
+      "snippet": "There are 21 community service boards in Georgia, born out of an effort to standardize mental health care out of regional hospitals and back into communities.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "364ade2c18e7",
+      "title": "Congresswoman Nikema Williams’ Statement on the Supreme Court Permitting Trump Administration to Use Expanded Database for Potential Voter Purges",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-statement-on-the-supreme-court-permitting-trump-administration-to-use-expanded-database-for-potential-voter-purges",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-09-25T18:51:47+00:00",
+      "snippet": "ATLANTA, GA – Congresswoman Nikema Williams (GA-05) released the following statement in response to the Supreme Court permitting the Trump administration to use an expanded federal database to purge v",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
+      "id": "d78115c39c48",
+      "title": "Georgia Today: School safety; Hurricane Helene recovery continues; Hotel trafficking verdict",
+      "url": "https://www.gpb.org/news/2026/09/25/georgia-today-school-safety-hurricane-helene-recovery-continues-hotel-trafficking",
+      "source": "GPB News",
+      "publishedAt": "2026-09-25T18:19:20+00:00",
+      "snippet": "On the Sept. 25 edition: Two years after Hurricane Helene hit, parts of Georgia are still recovering; Emergency management officials attempt to help schools stop violence before it starts; And Senate ",
+      "entityIds": [],
+      "topics": [
+        "courts",
+        "education"
+      ]
+    },
+    {
       "id": "692d2aab4b3e",
       "title": "Netanyahu rages against critics, including Mamdani, at the U.N. General Assembly",
       "url": "https://www.gpb.org/news/2026/09/25/netanyahu-rages-against-critics-including-mamdani-at-the-un-general-assembly",
@@ -157,30 +242,6 @@
       "topics": []
     },
     {
-      "id": "20df5cc327c3",
-      "title": "Xi says 2 giant pandas from China will arrive at Atlanta's zoo in the coming days",
-      "url": "https://www.gpb.org/news/2026/09/25/xi-says-2-giant-pandas-china-will-arrive-at-atlantas-zoo-in-the-coming-days",
-      "source": "GPB News",
-      "publishedAt": "2026-09-25T14:12:15+00:00",
-      "snippet": "Chinese President Xi Jinping says two giant pandas from China will arrive at Zoo Atlanta in the coming days.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "8d2e9ad1100f",
-      "title": "GPB morning headlines for September 25, 2026",
-      "url": "https://www.gpb.org/news/2026/09/25/gpb-morning-headlines-for-september-25-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-09-25T13:16:33+00:00",
-      "snippet": "Gov. Brian Kemp spoke at his last governor’s workforce summit Thursday and left the crowd with advice on artificial intelligence; Two top behavioral health service providers in Middle Georgia have mer",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
       "id": "94e77d5f4cfd",
       "title": "Carr Files Suit Against SDG Impact Fund",
       "url": "https://law.georgia.gov/press-releases/2026-09-25/carr-files-suit-against-sdg-impact-fund",
@@ -193,16 +254,6 @@
       "topics": [
         "courts"
       ]
-    },
-    {
-      "id": "be5de58c250f",
-      "title": "Trump and Xi strike cordial tone at summit. And, Netanyahu gives defiant UNGA speech",
-      "url": "https://www.gpb.org/news/2026/09/25/trump-and-xi-strike-cordial-tone-at-summit-and-netanyahu-gives-defiant-unga-speech",
-      "source": "GPB News",
-      "publishedAt": "2026-09-25T11:18:52+00:00",
-      "snippet": "Trump and Xi's U.S. summit continues after a state dinner Thursday night. And, Netanyahu returns to Israel after giving a defensive and defiant speech at the U.N. General Assembly.",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "478997f2ba31",
@@ -1001,16 +1052,6 @@
       ]
     },
     {
-      "id": "ab5b80e86cab",
-      "title": "Helene-ravaged communities to learn whether water projects will get federal funding",
-      "url": "https://capitol-beat.org/2026/09/helene-ravaged-communities-to-learn-whether-water-projects-will-get-federal-funding/?utm_source=rss&utm_medium=rss&utm_campaign=helene-ravaged-communities-to-learn-whether-water-projects-will-get-federal-funding",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-11T20:47:34+00:00",
-      "snippet": "ATLANTA — Communities across Georgia that were hit hard by Hurricane Helene will begin learning in November whether they will get a share of federal relief funding earmarked for water projects. The U.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "a208663fc515",
       "title": "WATCH: Sen. Ossoff Commemorates 25th Anniversary of September 11th Terrorist Attacks",
       "url": "https://www.ossoff.senate.gov/press-releases/watch-sen-ossoff-commemorates-25th-anniversary-of-september-11th-terrorist-attacks/",
@@ -1527,16 +1568,6 @@
       "topics": [
         "surveillance"
       ]
-    },
-    {
-      "id": "3869f3b36f1b",
-      "title": "Dozens of threatened plant and animal species could gain state protection in Georgia",
-      "url": "https://georgiarecorder.com/2026/08/25/dozens-of-threatened-plant-and-animal-species-could-gain-state-protection-in-georgia/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-25T22:21:32+00:00",
-      "snippet": "Georgia is set to update its list of protected plants and animals for the first time in two decades, and the number of protected species is set to grow by more than 100. On the bright side, 40 species",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "da3a88fefe55",
