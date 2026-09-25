@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-25T08:20:01.664927+00:00",
+    "generatedAt": "2026-09-25T14:18:11.356053+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -23,12 +23,12 @@
     ],
     "count": 115,
     "windowDays": 45,
-    "entityTagged": 62,
+    "entityTagged": 61,
     "topicCounts": {
-      "courts": 11,
       "healthcare": 16,
+      "courts": 11,
       "elections": 20,
-      "education": 12,
+      "education": 11,
       "surveillance": 2,
       "ethics": 5,
       "budget": 4
@@ -36,6 +36,11 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
@@ -47,11 +52,6 @@
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
@@ -137,6 +137,50 @@
   },
   "items": [
     {
+      "id": "20df5cc327c3",
+      "title": "Xi says 2 giant pandas from China will arrive at Atlanta's zoo in the coming days",
+      "url": "https://www.gpb.org/news/2026/09/25/xi-says-2-giant-pandas-china-will-arrive-at-atlantas-zoo-in-the-coming-days",
+      "source": "GPB News",
+      "publishedAt": "2026-09-25T14:12:15+00:00",
+      "snippet": "Chinese President Xi Jinping says two giant pandas from China will arrive at Zoo Atlanta in the coming days.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "692d2aab4b3e",
+      "title": "Netanyahu rages against critics, including Mamdani, at the U.N. General Assembly",
+      "url": "https://www.gpb.org/news/2026/09/25/netanyahu-rages-against-critics-including-mamdani-at-the-un-general-assembly",
+      "source": "GPB News",
+      "publishedAt": "2026-09-25T13:59:18+00:00",
+      "snippet": "Middle East crises draw major focus as the U.N. General Assembly hears from Israel, the Palestinian Authority and Yemen.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "8d2e9ad1100f",
+      "title": "GPB morning headlines for September 25, 2026",
+      "url": "https://www.gpb.org/news/2026/09/25/gpb-morning-headlines-for-september-25-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-25T13:16:33+00:00",
+      "snippet": "Gov. Brian Kemp spoke at his last governor’s workforce summit Thursday and left the crowd with advice on artificial intelligence; Two top behavioral health service providers in middle Georgia have mer",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "be5de58c250f",
+      "title": "Trump and Xi strike cordial tone at summit. And, Netanyahu gives defiant UNGA speech",
+      "url": "https://www.gpb.org/news/2026/09/25/trump-and-xi-strike-cordial-tone-at-summit-and-netanyahu-gives-defiant-unga-speech",
+      "source": "GPB News",
+      "publishedAt": "2026-09-25T11:18:52+00:00",
+      "snippet": "Trump and Xi's U.S. summit continues after a state dinner Thursday night. And, Netanyahu returns to Israel after giving a defensive and defiant speech at the U.N. General Assembly.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "478997f2ba31",
       "title": "Justices sound skeptical of Georgia agency’s decision to remove children from their home",
       "url": "https://georgiarecorder.com/2026/09/25/justices-sound-skeptical-of-georgia-agencys-decision-to-remove-children-from-their-home/",
@@ -206,42 +250,6 @@
       "topics": [
         "education",
         "healthcare"
-      ]
-    },
-    {
-      "id": "bfd00b95b311",
-      "title": "Georgia Today: Zoo Atlanta pandas; Brian Kemp's last workplace summit; Healthcare companies merge",
-      "url": "https://www.gpb.org/news/2026/09/24/georgia-today-zoo-atlanta-pandas-brian-kemps-last-workplace-summit-healthcare",
-      "source": "GPB News",
-      "publishedAt": "2026-09-24T18:45:56+00:00",
-      "snippet": "On the September 24th edition: Two new pandas are coming to the Atlanta Zoo; Two top behavioral health service providers in middle Georgia have merged; And Governor Kemp says workers need to get ready",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "b39a0d6b8376",
-      "title": "Gov. Brian Kemp addresses his last governor's workforce summit",
-      "url": "https://www.gpb.org/news/2026/09/24/gov-brian-kemp-addresses-his-last-governors-workforce-summit",
-      "source": "GPB News",
-      "publishedAt": "2026-09-24T18:16:00+00:00",
-      "snippet": "Gov. Brian Kemp spoke at his last governor’s workforce summit and left the crowd with advice on artificial intelligence.",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
-      "id": "98993c7280bd",
-      "title": "Tubman Museum teams up with Bibb schools to provide beds",
-      "url": "https://www.gpb.org/news/2026/09/24/tubman-museum-teams-bibb-schools-provide-beds",
-      "source": "GPB News",
-      "publishedAt": "2026-09-24T16:02:00+00:00",
-      "snippet": "Good things tend to happen when Macon’s arts community joins with others to help fill a community need. Sometimes it can be very practical, as with The Tubman African American Museum’s decision to par",
-      "entityIds": [],
-      "topics": [
-        "education"
       ]
     },
     {
@@ -1527,19 +1535,6 @@
       "snippet": "Friends, I hope you have had a great week! As your Representative in Congress, it’s a priority to keep you informed of how we’re serving you. If you would like to stay up to date, check out our websit",
       "entityIds": [
         "vg-ga-p-000257"
-      ],
-      "topics": []
-    },
-    {
-      "id": "faea478e22b4",
-      "title": "McBath, Georgia Dems Highlight Governor Brian Kemp’s Final Opportunity to Participate in Summer Meal Program for Hungry Children",
-      "url": "https://mcbath.house.gov/2026/08/11/mcbath-georgia-dems-highlight-governor-brian-kemps-final-opportunity-to-participate-in-summer-meal-program-for-hungry-children/",
-      "source": "Rep. Lucy McBath (GA-06, press)",
-      "publishedAt": "2026-08-11T14:12:15+00:00",
-      "snippet": "Atlanta, GA — Representative Lucy McBath (D-GA-06) is once again leading the Democratic members of Georgia’s congressional delegation in urging Governor Brian Kemp to allow Georgia families to partici",
-      "entityIds": [
-        "vg-ga-p-000024",
-        "vg-ga-p-000262"
       ],
       "topics": []
     }
