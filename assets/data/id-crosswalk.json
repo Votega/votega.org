@@ -2,7 +2,7 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-09-20T13:33:47+00:00",
+  "generatedAt": "2026-09-27T14:40:17+00:00",
   "count": 745,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
@@ -26,9 +26,9 @@
    "people": 745,
    "officeholders": 265,
    "candidateOnly": 480,
-   "withVgId": 678,
-   "unkeyed": 67,
-   "withAnyFiling": 662,
+   "withVgId": 677,
+   "unkeyed": 68,
+   "withAnyFiling": 661,
    "candidacies": 716,
    "ambiguous": []
   }
@@ -29497,60 +29497,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000491",
-   "name": {
-    "full": "Christian Michael Hurd",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "103475"
-    ],
-    "votegaCandidateIds": [
-     "ga-house-2-2026-r-1"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-house-2-2026",
-     "candidateId": "ga-house-2-2026-r-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 2,
-     "party": "Republican",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "103475",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000492",
    "name": {
     "full": "Erik Zeil",
@@ -40520,6 +40466,56 @@
      "office": "Labor Commissioner",
      "district": null,
      "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Christian Michael Hurd",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "ga-house-2-2026-r-1"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-2-2026",
+     "candidateId": "ga-house-2-2026-r-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 2,
+     "party": "Republican",
      "phases": [
       "primary"
      ],
