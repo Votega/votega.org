@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-24T14:02:05Z",
+  "generatedAt": "2026-09-28T17:04:30Z",
   "source": "Carroll County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Carroll County",
   "count": 25
@@ -11,17 +11,16 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-15",
+  "lastActivity": "2026-10-06",
   "topicTotals": {
-   "special-land-use": 5,
-   "variance": 6,
+   "special-land-use": 6,
+   "variance": 5,
    "appointment": 3,
    "contract": 9,
    "millage-budget": 7,
    "annexation": 3,
    "data-center": 2,
-   "rezoning": 7,
-   "development": 1
+   "rezoning": 6
   },
   "dataCenterItems": [
    {
@@ -33,6 +32,14 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-10-06",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3017,plainText=false)",
+    "tags": [
+     "special-land-use"
+    ]
+   },
    {
     "title": "Planning & Zoning Commission",
     "date": "2026-09-15",
@@ -140,32 +147,63 @@
     "tags": [
      "variance"
     ]
-   },
-   {
-    "title": "Planning & Zoning Commission",
-    "date": "2026-03-17",
-    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2875,plainText=false)",
-    "tags": [
-     "development",
-     "rezoning"
-    ],
-    "excerpt": "… al. 5. Requests 5.I. Z-26-03-01: Rezoning request for 28.44 acres from Agriculture to Residential, for a residential subdivision with a minimum of 1 acre lots at 297 Roy North Rd. Parcel #091-0030, Land Lot 30 of the 10th District. Applicant/Owner …",
-    "excerptTerm": "subdivision"
-   },
-   {
-    "title": "Board of Appeals",
-    "date": "2026-03-05",
-    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1848,plainText=false)",
-    "tags": [
-     "variance"
-    ]
    }
   ],
-  "landUseMeetings": 16,
+  "landUseMeetings": 15,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "837",
+   "date": "2026-10-06",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3017,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3017,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 3574,
+   "pdfSha256": "1e98b75e2f362a8b1c90bb5969d0da691bef933bc2ddb30b96c3d85324126cca",
+   "topics": {
+    "special-land-use": 1
+   },
+   "tags": [
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "conditional use"
+   ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… ng for or against the application shall be allowed a TOTAL of five minutes to speak in rebuttal. 9.I. C-26-09-01:Conditional Use request, zoned Agriculture, for dog kennels at 2199 Horsley Mill Rd. Parcel #157-0059, Land Lot 104 of the 5th …",
+     "context": "public-comment"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "824",
+   "date": "2026-10-01",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3015,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3015,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 921,
+   "pdfSha256": "abcc8d0cc463142732b86e366c2edea7a39adc8eac8052d7c7147e49bac15514",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "901",
    "date": "2026-09-15",
@@ -1021,78 +1059,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "767",
-   "date": "2026-03-17",
-   "body": "Planning & Zoning",
-   "title": "Planning & Zoning Commission",
-   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2875,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2875,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1385,
-   "pdfSha256": "0971555fe1a440e85e1c06b90e8f8bb6dd478dfd9a068aa1db5fb3e9dec9e69d",
-   "topics": {
-    "development": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "development",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "rezon",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… al. 5. Requests 5.I. Z-26-03-01: Rezoning request for 28.44 acres from Agriculture to Residential, for a residential subdivision with a minimum of 1 acre lots at 297 Roy North Rd. Parcel #091-0030, Land Lot 30 of the 10th District. Applicant/Owner …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… o The applicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-03-01: Rezoning request for 28.44 acres from Agriculture to Residential, for a residential subdivision with a minimum of 1 acre lot …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "756",
-   "date": "2026-03-05",
-   "body": "Board of Appeals",
-   "title": "Board of Appeals",
-   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1848,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1848,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1318,
-   "pdfSha256": "fd49813428aeca19272ee0e56095ff11a1c7e26c7ea91ee47120848386a7fd7a",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "… ll then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-25-12-01: Intrafamily-Lot Size Variance, zoned Agriculture, to split off 1.66 acres from 4.36 acres, which is less than the required 4 acre minimum. This prop …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]
