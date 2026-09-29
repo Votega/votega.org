@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-29T17:16:05.925731+00:00",
+    "generatedAt": "2026-09-29T21:39:14.623844+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,38 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 115,
+    "count": 118,
     "windowDays": 45,
-    "entityTagged": 67,
+    "entityTagged": 68,
     "topicCounts": {
-      "healthcare": 16,
-      "surveillance": 4,
       "elections": 26,
-      "education": 12,
+      "surveillance": 4,
+      "budget": 9,
+      "healthcare": 16,
       "courts": 13,
-      "budget": 8,
+      "education": 11,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000251": {
+      "name": "Brian Jack",
+      "url": null,
+      "bioguideId": "J000311"
+    },
+    "vg-ga-p-000466": {
+      "name": "David Dillie",
+      "url": null,
+      "candidateIds": [
+        "ga-house-161-2026-d-1"
+      ]
+    },
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000080": {
       "name": "Eric Gisler",
       "url": null,
@@ -44,23 +61,24 @@
         "ga-house-121-2026-d-1"
       ]
     },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
       "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+      "bioguideId": "O000174"
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
     },
     "vg-ga-p-000335": {
       "name": "Keisha R. Lance Bottoms",
       "url": null,
       "candidateIds": [
         "challenger-keisha-bottoms-gov-2026"
-      ]
-    },
-    "vg-ga-p-000466": {
-      "name": "David Dillie",
-      "url": null,
-      "candidateIds": [
-        "ga-house-161-2026-d-1"
       ]
     },
     "vg-ga-p-000262": {
@@ -76,23 +94,10 @@
         "challenger-mike-collins-senate-2026"
       ]
     },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
       "bioguideId": "W000788"
-    },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
     },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
@@ -144,6 +149,99 @@
   },
   "items": [
     {
+      "id": "faf023c5ccec",
+      "title": "GOP senator bungles accusation against former special counsel Jack Smith in heated hearing",
+      "url": "https://georgiarecorder.com/2026/09/29/repub/gop-senator-bungles-accusation-against-former-special-counsel-jack-smith-in-heated-hearing/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-29T21:22:45+00:00",
+      "snippet": "WASHINGTON — Former special counsel Jack Smith on Tuesday defended before a U.S. Senate panel his past investigations of President Donald Trump’s possession of classified documents and alleged role in",
+      "entityIds": [
+        "vg-ga-p-000251"
+      ],
+      "topics": []
+    },
+    {
+      "id": "eb60f5baff85",
+      "title": "Georgia probes House candidate for allegedly voting in two states",
+      "url": "https://georgiarecorder.com/2026/09/29/georgia-probes-house-candidate-for-allegedly-voting-in-two-states/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-29T21:17:23+00:00",
+      "snippet": "Georgia’s secretary of state is investigating allegations that David Dillie, a Democratic candidate for state House District 161, may have voted in two state primaries this year in a violation of stat",
+      "entityIds": [
+        "vg-ga-p-000466"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "d171fe7bd163",
+      "title": "Private interests overshadow stakeholders for new DNR dock rules",
+      "url": "https://thecurrentga.org/2026/09/29/private-interests-overshadow-stakeholders-for-new-dnr-dock-rules/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-29T20:35:53+00:00",
+      "snippet": "While a 12-member stakeholder group worked for months to craft new rules for private recreational docks in Coastal Georgia, draft regulations allowing docks up to 1,500 feet long are being shaped by b",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "0823f80349ab",
+      "title": "Georgia scientists take stock of male sea turtles",
+      "url": "https://thecurrentga.org/2026/09/29/georgia-scientists-begin-tracking-elusive-male-sea-turtles/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-29T20:15:56+00:00",
+      "snippet": "Researchers in Georgia have begun using a new nuclear DNA extraction method to track the elusive male sea turtle population and determine if rising sand temperatures are skewing sex ratios.\nThe Curren",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "f10142f92160",
+      "title": "Georgia scientists snip fins to figure out if sea turtle males are in trouble",
+      "url": "https://www.gpb.org/news/2026/09/29/georgia-scientists-snip-fins-figure-out-if-sea-turtle-males-are-in-trouble",
+      "source": "GPB News",
+      "publishedAt": "2026-09-29T18:45:00+00:00",
+      "snippet": "Sea turtle numbers are recovering in Georgia, but scientists are now concerned that warming temperatures may be feminizing the population.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "ecffda77327a",
+      "title": "GPB evening headlines for September 29, 2026",
+      "url": "https://www.gpb.org/news/2026/09/29/gpb-evening-headlines-for-september-29-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-29T18:06:52+00:00",
+      "snippet": "The U.S. Marshals Service plans to move hundreds of people awaiting trial at a detention center near Atlanta to a facility in South Georgia.\nThe State Election Board passed a resolution on Monday aimi",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "97e41e07825a",
+      "title": "What we know about Georgia's recovery from Hurricane Helene two years later",
+      "url": "https://www.gpb.org/news/2026/09/29/what-we-know-about-georgias-recovery-hurricane-helene-two-years-later",
+      "source": "GPB News",
+      "publishedAt": "2026-09-29T17:44:00+00:00",
+      "snippet": "This week marks two years after Helene damaged and destroyed homes and forests across a swath of 63 Georgia counties.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "93caf7260472",
+      "title": "Georgia Today: Gas tax suspended; People awaiting trial will be moved; Athens Flock cameras concerns",
+      "url": "https://www.gpb.org/news/2026/09/29/georgia-today-gas-tax-suspended-people-awaiting-trial-will-be-moved-athens-flock",
+      "source": "GPB News",
+      "publishedAt": "2026-09-29T17:28:25+00:00",
+      "snippet": "On the Sept. 29 edition: Gov. Brian Kemp suspends the gas tax for the third time this year; hundreds of people awaiting trial will be moved from a detention center in Atlanta to a facility in South Ge",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "surveillance",
+        "budget"
+      ]
+    },
+    {
       "id": "07e7ba50ee28",
       "title": "New report on obesity rates shows adult rates stable under 40% in Georgia — but still too high",
       "url": "https://www.gpb.org/news/2026/09/29/new-report-on-obesity-rates-shows-adult-rates-stable-under-40-in-georgia-still-too",
@@ -180,16 +278,31 @@
       ]
     },
     {
-      "id": "d68190d010f8",
-      "title": "GPB morning headlines for September 29, 2026",
-      "url": "https://www.gpb.org/news/2026/09/29/gpb-morning-headlines-for-september-29-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-09-29T13:17:01+00:00",
-      "snippet": "The State Election Board passed a resolution Monday aiming to address voter privacy concerns; Athens residents voiced their concerns about Flock cameras during a town hall hosted by state Rep. Eric Gi",
-      "entityIds": [],
+      "id": "d955e5924ea4",
+      "title": "11Alive: “Gwinnett woman highlights struggles with health insurance authorization”",
+      "url": "https://www.ossoff.senate.gov/press-releases/11alive-gwinnett-woman-highlights-struggles-with-health-insurance-authorization/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-29T14:50:12+00:00",
+      "snippet": "11Alive: “Ossoff reportedly received dozens of reports from Georgia patients, who have reported that prior authorization issues with their insurance companies have resulted in delays and denials of me",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
       "topics": [
-        "elections",
-        "surveillance"
+        "healthcare"
+      ]
+    },
+    {
+      "id": "5051a9c6ce76",
+      "title": "Gov. Kemp Announces Superior Court Appointment",
+      "url": "https://gov.georgia.gov/press-releases/2026-09-29/gov-kemp-announces-superior-court-appointment",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-09-29T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced the appointment of Ronald “Ron” E. Daniels to the Superior Court of the Oconee Judicial Circuit, filling a vacancy created by the passing of the Honora",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "courts"
       ]
     },
     {
@@ -207,6 +320,21 @@
       ]
     },
     {
+      "id": "7a28a5460c51",
+      "title": "Carr Indicts Caregiver for Neglect of Disabled Adults in Savannah Group Home",
+      "url": "https://law.georgia.gov/press-releases/2026-09-29/carr-indicts-caregiver-neglect-disabled-adults-savannah-group-home",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-09-29T12:00:00+00:00",
+      "snippet": "CHATHAM COUNTY, GEORGIA – Georgia Attorney General Chris Carr today announced that his Medicaid Fraud and Patient Protection Division has obtained a new indictment in Chatham County charging Latisha B",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics",
+        "healthcare"
+      ]
+    },
+    {
       "id": "023ee3fd1bc9",
       "title": "Debate over data center growth in Georgia heats up race for governor",
       "url": "https://georgiarecorder.com/2026/09/29/debate-over-data-center-growth-in-georgia-heats-up-race-for-governor/",
@@ -217,16 +345,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "e7df08183f24",
-      "title": "Manufacturing Danger: The BioLab Story - Still Worth Looking",
-      "url": "https://www.gpb.org/news/2026/09/29/manufacturing-danger-the-biolab-story-still-worth-looking",
-      "source": "GPB News",
-      "publishedAt": "2026-09-29T08:00:00+00:00",
-      "snippet": "Two years after the BioLab fire in Conyers, Georgia, we return to a question that has followed this investigation from the beginning: what were people actually exposed to? You’ll hear why environmenta",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "2817427438a1",
@@ -318,20 +436,6 @@
       "entityIds": [],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "f43631e447db",
-      "title": "Georgia probes House candidate for allegedly voting in two states",
-      "url": "https://thecurrentga.org/2026/09/28/georgia-probes-house-candidate-from-effingham-county-for-allegedly-voting-in-two-states/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-28T19:04:21+00:00",
-      "snippet": "Georgia's secretary of state is investigating allegations that Democratic state House District 161 candidate David Dillie violated state law by voting in both Georgia and Nevada primaries earlier this",
-      "entityIds": [
-        "vg-ga-p-000466"
-      ],
-      "topics": [
-        "elections"
       ]
     },
     {
@@ -505,19 +609,6 @@
         "vg-ga-p-000262"
       ],
       "topics": []
-    },
-    {
-      "id": "61a68584a3a9",
-      "title": "Study: Georgians struggle more than most Americans to afford food, healthcare",
-      "url": "https://thecurrentga.org/2026/09/24/study-georgians-struggle-more-than-most-americans-to-afford-food-healthcare/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-24T19:01:42+00:00",
-      "snippet": "New research from a Georgetown University policy organization reveals that Georgians are struggling more than the national average to afford food and healthcare according to the latest Family Economic",
-      "entityIds": [],
-      "topics": [
-        "education",
-        "healthcare"
-      ]
     },
     {
       "id": "e4869ae8c778",
@@ -782,20 +873,6 @@
         "vg-ga-p-000264"
       ],
       "topics": []
-    },
-    {
-      "id": "27c942ec0fdf",
-      "title": "Gov. Kemp Announces Superior Court Appointment",
-      "url": "https://gov.georgia.gov/press-releases/2026-09-21/gov-kemp-announces-superior-court-appointment",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-09-21T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced the appointment of Marilyn P. Bennett to the Superior Court of the Waycross Judicial Circuit, filling the vacancy created by the resignation of the Hon",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "courts"
-      ]
     },
     {
       "id": "096e1c52a455",
@@ -1230,18 +1307,6 @@
       ]
     },
     {
-      "id": "099fe180bdc0",
-      "title": "Sen. Ossoff Working Across the Aisle to Lower Fertilizer Costs for Georgia Farmers",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-lower-fertilizer-costs-for-georgia-farmers/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-10T13:55:56+00:00",
-      "snippet": "Washington, D.C. — As the war in Iran continues, U.S. Senator Jon Ossoff is working with Republicans and Democrats to lower fertilizer costs for Georgia farmers. Sen. Ossoff recently cosponsored the H",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "206c80438dea",
       "title": "Gov. Kemp: Georgia Awarded $500 Million in Water Infrastructure Grants",
       "url": "https://gov.georgia.gov/press-releases/2026-09-10/gov-kemp-georgia-awarded-500-million-water-infrastructure-grants",
@@ -1312,21 +1377,6 @@
         "vg-ga-p-000039"
       ],
       "topics": []
-    },
-    {
-      "id": "15d0a7fe713e",
-      "title": "Carr Indicts Two for Hiring Caretakers with Criminal Records",
-      "url": "https://law.georgia.gov/press-releases/2026-09-09/carr-indicts-two-hiring-caretakers-criminal-records",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-09-09T12:00:00+00:00",
-      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr today announced that his Medicaid Fraud and Patient Protection Division has secured two new indictments in Cobb and Fulton counties charging two indiv",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": [
-        "ethics",
-        "healthcare"
-      ]
     },
     {
       "id": "6935b4c3ff83",
@@ -1432,18 +1482,6 @@
       "snippet": "Washington, DC – Today, Representative Lucy McBath (GA-06) and Congresswoman Laurel Lee (FL-15) introduced the FEMA for Safe Recovery Act, legislation that strengthens federal disaster response by ens",
       "entityIds": [
         "vg-ga-p-000262"
-      ],
-      "topics": []
-    },
-    {
-      "id": "5891e3d2099a",
-      "title": "Gov. Kemp Announces Another Record-Breaking Year for Economic Development Investments",
-      "url": "https://gov.georgia.gov/press-releases/2026-09-03/gov-kemp-announces-another-record-breaking-year-economic-development",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-09-03T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp, in conjunction with the Georgia Department of Economic Development (GDEcD), today announced a new record in Fiscal Year 2026 with roughly $35.2 billion in project inv",
-      "entityIds": [
-        "vg-ga-p-000024"
       ],
       "topics": []
     },
