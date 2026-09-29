@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-28T18:57:07.875957+00:00",
+    "generatedAt": "2026-09-29T00:44:15.746976+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,40 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 112,
+    "count": 114,
     "windowDays": 45,
-    "entityTagged": 61,
+    "entityTagged": 64,
     "topicCounts": {
-      "elections": 23,
+      "budget": 8,
+      "surveillance": 2,
+      "education": 11,
+      "elections": 24,
       "courts": 13,
-      "budget": 5,
       "healthcare": 15,
-      "education": 10,
-      "ethics": 5,
-      "surveillance": 1
+      "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
+    "vg-ga-p-000335": {
+      "name": "Keisha R. Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
+    "vg-ga-p-000466": {
+      "name": "David Dillie",
+      "url": null,
+      "candidateIds": [
+        "ga-house-161-2026-d-1"
+      ]
+    },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
       "url": null,
@@ -73,11 +92,6 @@
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
@@ -118,16 +132,124 @@
       "name": "Richard McCormick",
       "url": null,
       "bioguideId": "M001218"
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha R. Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
     }
   },
   "items": [
+    {
+      "id": "385bfd9ce882",
+      "title": "Kemp temporarily suspends the state fuel tax as prices at the pump continue to soar",
+      "url": "https://georgiarecorder.com/2026/09/28/kemp-temporarily-suspends-the-state-fuel-tax-as-prices-at-the-pump-continue-to-soar/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-28T22:44:46+00:00",
+      "snippet": "Georgia drivers may soon see a little temporary relief at the pump after Gov. Brian Kemp suspended the state’s motor fuel tax as gas prices continued to surge. Kemp issued an executive order Monday de",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "48b6d8f9f31f",
+      "title": "Savannah, Chatham Police chiefs offer public safety snapshots at NAACP meeting",
+      "url": "https://thecurrentga.org/2026/09/28/savannah-chatham-police-chiefs-offer-public-safety-snapshots-at-naacp-meeting/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-28T21:33:58+00:00",
+      "snippet": "The police chiefs of Savannah and Chatham County updated some 70 county residents on Sunday about the state of public safety, while neglecting to touch on issues of surveillance technology and recent ",
+      "entityIds": [],
+      "topics": [
+        "surveillance"
+      ]
+    },
+    {
+      "id": "bffdd456e3a5",
+      "title": "Bottoms proposes housing fund, free technical and community college",
+      "url": "https://capitol-beat.org/2026/09/bottoms-proposes-housing-fund-free-technical-and-community-college/?utm_source=rss&utm_medium=rss&utm_campaign=bottoms-proposes-housing-fund-free-technical-and-community-college",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-09-28T21:25:38+00:00",
+      "snippet": "ATLANTA — Former Atlanta Mayor Keisha Lance Bottoms pitched more proposals to help Georgians cover major expenses in her bid to be the state’s next governor. Last week, the Democrat and her Republican",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "2ed87b532db8",
+      "title": "Kemp suspends state gas tax for 30 days",
+      "url": "https://www.gpb.org/news/2026/09/28/kemp-suspends-state-gas-tax-for-30-days",
+      "source": "GPB News",
+      "publishedAt": "2026-09-28T20:43:04+00:00",
+      "snippet": "Georgia drivers can expect to see lower prices at the gas pump soon.",
+      "entityIds": [],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "36b42ebb0f8c",
+      "title": "Mail-in voting remains option for this year’s midterms. Here’s what voters should know.",
+      "url": "https://thecurrentga.org/2026/09/28/mail-in-voting-remains-option-for-this-years-midterms-heres-what-voters-should-know/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-28T19:54:19+00:00",
+      "snippet": "Despite a U.S. Supreme Court ruling blocking restrictions on mail-in voting, Georgia election officials are reminding citizens to follow specific rules and deadlines to ensure their absentee ballots a",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
+      "id": "ae0cb8d6f480",
+      "title": "Georgia preschool students become 'junior journalists' for World News Day",
+      "url": "https://www.gpb.org/news/2026/09/28/georgia-preschool-students-become-junior-journalists-for-world-news-day",
+      "source": "GPB News",
+      "publishedAt": "2026-09-28T19:51:00+00:00",
+      "snippet": "Students conducted interviews and answered questions in a hands-on news desk activity designed to foster their curiosity and appreciation for journalism.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "48710a92e3dd",
+      "title": "Most Georgia school districts graduated at least nine out of 10 students",
+      "url": "https://capitol-beat.org/2026/09/most-georgia-school-districts-graduated-at-least-nine-out-of-10-students/?utm_source=rss&utm_medium=rss&utm_campaign=most-georgia-school-districts-graduated-at-least-nine-out-of-10-students",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-09-28T19:25:39+00:00",
+      "snippet": "ATLANTA — The public high school on-time graduation rate continued its nearly nonstop rise last school year, reaching an 88.5% statewide rate, the Georgia Department of Education announced Monday. Tha",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "f43631e447db",
+      "title": "Georgia probes House candidate for allegedly voting in two states",
+      "url": "https://thecurrentga.org/2026/09/28/georgia-probes-house-candidate-from-effingham-county-for-allegedly-voting-in-two-states/",
+      "source": "The Current GA",
+      "publishedAt": "2026-09-28T19:04:21+00:00",
+      "snippet": "Georgia's secretary of state is investigating allegations that Democratic state House District 161 candidate David Dillie violated state law by voting in both Georgia and Nevada primaries earlier this",
+      "entityIds": [
+        "vg-ga-p-000466"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "291700052788",
+      "title": "Georgia Today: BioLab lawsuits; Macon shooting; Giant pandas arrive at Zoo Atlanta",
+      "url": "https://www.gpb.org/news/2026/09/28/georgia-today-biolab-lawsuits-macon-shooting-giant-pandas-arrive-at-zoo-atlanta",
+      "source": "GPB News",
+      "publishedAt": "2026-09-28T18:29:50+00:00",
+      "snippet": "On the September 28 edition: Twelve people are wounded at a birthday party shooting in Macon; this week marks the second anniversary of Hurricane Helene as recovery efforts continue; and there's a wee",
+      "entityIds": [],
+      "topics": [
+        "courts"
+      ]
+    },
     {
       "id": "80130fdfefd5",
       "title": "Howard, Reese help Dream rally from 11-point deficit, beat Mystics 92-77 in Game 1 of playoff series",
@@ -157,6 +279,20 @@
       "snippet": "Investigators in Bibb County are looking for the people who shot and wounded 12 teenagers a little after midnight Sunday morning during an 18th birthday party in a Macon park; This week marks two year",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "3db03c6fac46",
+      "title": "Gov. Kemp Suspends Gas Tax, Provides Relief to Hardworking Georgians",
+      "url": "https://gov.georgia.gov/press-releases/2026-09-28/gov-kemp-suspends-gas-tax-provides-relief-hardworking-georgians",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-09-28T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today declared a state of emergency due to global market volatility and suspended the state's motor fuel excise tax for a period of 30 days.The suspension will take ef",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "budget"
+      ]
     },
     {
       "id": "21dbccffe2de",
@@ -493,16 +629,6 @@
       "topics": []
     },
     {
-      "id": "967c2b930950",
-      "title": "Lights over Buc-ee’s interstate exit dimmer – but not to help baby turtles",
-      "url": "https://thecurrentga.org/2026/09/22/lights-over-buc-ees-interstate-exit-dimmer-but-not-to-help-baby-turtles/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-22T21:07:57+00:00",
-      "snippet": "Dimmer lights at the Exit 42 Buc-ee's in Georgia resulted from power outages caused by lightning strikes rather than environmental conservation efforts for sea turtle hatchlings.\nThe Current is an inc",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "fea757ac2ac7",
       "title": "RELEASE: Carter welcomes new 14-day red snapper season following efforts to expand fishing access",
       "url": "http://buddycarter.house.gov/news/documentsingle.aspx?DocumentID=16654",
@@ -513,28 +639,6 @@
         "vg-ga-p-000258"
       ],
       "topics": []
-    },
-    {
-      "id": "5d25014e2b9d",
-      "title": "Trump’s EPA rule repeal could double Georgia’s greenhouse gas emissions",
-      "url": "https://thecurrentga.org/2026/09/22/trumps-epa-rule-repeal-could-double-georgias-greenhouse-gas-emissions/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-22T14:11:51+00:00",
-      "snippet": "Environmental groups are challenging a Trump administration proposal to repeal Biden-era greenhouse gas rules for power plants, a move that advocates warn could significantly increase emissions in Geo",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "6ddbfa3bd980",
-      "title": "New research aims to document Georgia weasels after decades-long data gap",
-      "url": "https://thecurrentga.org/2026/09/22/new-research-aims-to-document-georgia-weasels-after-decades-long-data-gap/",
-      "source": "The Current GA",
-      "publishedAt": "2026-09-22T13:42:35+00:00",
-      "snippet": "Researchers at the University of Georgia have developed a new method using scent-detecting dogs to assist in documenting elusive weasel populations across the state.\nThe Current is an inclusive nonpro",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
     },
     {
       "id": "3b494fd16989",
@@ -811,18 +915,6 @@
       ]
     },
     {
-      "id": "c762c44373a0",
-      "title": "Former business executive to lead Georgia’s public colleges and universities",
-      "url": "https://capitol-beat.org/2026/09/former-business-executive-to-lead-georgias-public-colleges-and-universities/?utm_source=rss&utm_medium=rss&utm_campaign=former-business-executive-to-lead-georgias-public-colleges-and-universities",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-16T22:10:05+00:00",
-      "snippet": "ATLANTA — It took five months to find a successor to University System of Georgia Chancellor Sonny Perdue, and after looking far and wide the Board of Regents picked someone close to home. The new uni",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
       "id": "cf0c998b8add",
       "title": "Sens. Ossoff, Rev. Warnock Delivering $12 Million in Federal Funds to Support Tybee Island Beach Renourishment Project",
       "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-12-million-in-federal-funds-to-support-tybee-island-beach-renourishment-project/",
@@ -883,18 +975,6 @@
       "entityIds": [],
       "topics": [
         "courts"
-      ]
-    },
-    {
-      "id": "4a587b2acdd9",
-      "title": "Georgia candidates sharpen contrasts in campaign events ahead of early voting",
-      "url": "https://capitol-beat.org/2026/09/georgia-candidates-sharpen-contrasts-in-campaign-events-ahead-of-early-voting/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-candidates-sharpen-contrasts-in-campaign-events-ahead-of-early-voting",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-15T23:04:32+00:00",
-      "snippet": "At separate events over the past few days, contenders atop Georgia’s general election ballot pushed their campaigns ahead of the final weeks of electioneering. With control of the U.S. Senate at stake",
-      "entityIds": [],
-      "topics": [
-        "elections"
       ]
     },
     {
@@ -1468,42 +1548,6 @@
       "entityIds": [
         "vg-ga-p-000262"
       ],
-      "topics": []
-    },
-    {
-      "id": "7b571ef96378",
-      "title": "Federal appeals court voids ruling that Georgia’s political maps violated Voting Rights Act",
-      "url": "https://georgiarecorder.com/2026/08/26/federal-appeals-court-voids-2023-ruling-that-georgias-political-maps-violated-voting-rights-act/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-26T14:27:33+00:00",
-      "snippet": "The 11th U.S. Circuit Court of Appeals is sending a lawsuit over Georgia’s 2021 political maps back to a lower court, ordering it to reexamine an earlier ruling that concluded the state’s maps were ra",
-      "entityIds": [],
-      "topics": [
-        "courts"
-      ]
-    },
-    {
-      "id": "3dc664aef942",
-      "title": "Gov. Kemp Announces Gwinnett Superior Court Appointments",
-      "url": "https://gov.georgia.gov/press-releases/2026-08-26/gov-kemp-announces-gwinnett-superior-court-appointments",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-08-26T12:00:00+00:00",
-      "snippet": "SANTIAGO, CHILE – Governor Brian P. Kemp today, while on an economic development mission in South America, announced the following judicial appointments to the Superior Court of the Gwinnett Judicial ",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "courts"
-      ]
-    },
-    {
-      "id": "9fa36c605c3c",
-      "title": "With drug prices on the rise, Georgia lawmakers examine role of industry players",
-      "url": "https://georgiarecorder.com/2026/08/26/with-drug-prices-on-the-rise-georgia-lawmakers-examine-role-of-industry-players/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-26T08:00:34+00:00",
-      "snippet": "A business rep was on the phone telling Hugh Chancey’s pharmacy in southwest Georgia to transfer all of an elderly patient’s prescriptions away to another pharmacy.  The patient herself said that’s no",
-      "entityIds": [],
       "topics": []
     }
   ]
