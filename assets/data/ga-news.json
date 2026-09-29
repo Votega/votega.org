@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-29T09:16:37.647645+00:00",
+    "generatedAt": "2026-09-29T17:16:05.925731+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -23,19 +23,27 @@
     ],
     "count": 115,
     "windowDays": 45,
-    "entityTagged": 64,
+    "entityTagged": 67,
     "topicCounts": {
-      "elections": 25,
-      "courts": 14,
+      "healthcare": 16,
+      "surveillance": 4,
+      "elections": 26,
+      "education": 12,
+      "courts": 13,
       "budget": 8,
-      "surveillance": 2,
-      "education": 11,
-      "healthcare": 15,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000080": {
+      "name": "Eric Gisler",
+      "url": null,
+      "ocdPersonId": "ocd-person/abece831-30a8-4cf8-94ff-d41f7f48197f",
+      "candidateIds": [
+        "ga-house-121-2026-d-1"
+      ]
+    },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
       "url": null,
@@ -54,6 +62,11 @@
       "candidateIds": [
         "ga-house-161-2026-d-1"
       ]
+    },
+    "vg-ga-p-000262": {
+      "name": "Lucy McBath",
+      "url": null,
+      "bioguideId": "M001208"
     },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
@@ -87,11 +100,6 @@
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
       ]
-    },
-    "vg-ga-p-000262": {
-      "name": "Lucy McBath",
-      "url": null,
-      "bioguideId": "M001208"
     },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
@@ -135,6 +143,69 @@
     }
   },
   "items": [
+    {
+      "id": "07e7ba50ee28",
+      "title": "New report on obesity rates shows adult rates stable under 40% in Georgia — but still too high",
+      "url": "https://www.gpb.org/news/2026/09/29/new-report-on-obesity-rates-shows-adult-rates-stable-under-40-in-georgia-still-too",
+      "source": "GPB News",
+      "publishedAt": "2026-09-29T16:28:31+00:00",
+      "snippet": "A new report from the nonprofit Trust for America’s Health shows obesity rates among adults in Georgia are stabilizing but still too high.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "22a464821a36",
+      "title": "2028 Olympic torch relay to begin in Atlanta and travel through all 50 states before arriving in LA",
+      "url": "https://www.gpb.org/news/2026/09/29/2028-olympic-torch-relay-begin-in-atlanta-and-travel-through-all-50-states-arriving",
+      "source": "GPB News",
+      "publishedAt": "2026-09-29T16:02:00+00:00",
+      "snippet": "Organizers say the torch relay for the 2028 Los Angeles Olympics will begin in Atlanta, the site of the last U.S. Summer Games in 1996. The relay will travel through all 50 states.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "ed13e5b523d6",
+      "title": "At an Athens town hall, residents voice their concerns about Flock camera abuses",
+      "url": "https://www.gpb.org/news/2026/09/29/at-athens-town-hall-residents-voice-their-concerns-about-flock-camera-abuses",
+      "source": "GPB News",
+      "publishedAt": "2026-09-29T15:31:00+00:00",
+      "snippet": "Athens residents voiced their concerns about Flock cameras during a town hall hosted by State Rep. Eric Gisler on Monday night.",
+      "entityIds": [
+        "vg-ga-p-000080"
+      ],
+      "topics": [
+        "surveillance"
+      ]
+    },
+    {
+      "id": "d68190d010f8",
+      "title": "GPB morning headlines for September 29, 2026",
+      "url": "https://www.gpb.org/news/2026/09/29/gpb-morning-headlines-for-september-29-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-09-29T13:17:01+00:00",
+      "snippet": "The State Election Board passed a resolution Monday aiming to address voter privacy concerns; Athens residents voiced their concerns about Flock cameras during a town hall hosted by state Rep. Eric Gi",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "surveillance"
+      ]
+    },
+    {
+      "id": "9eaa922aa234",
+      "title": "Top State for Talent Award Winners Announced at Governor’s Workforce Summit",
+      "url": "https://gov.georgia.gov/press-releases/2026-09-29/top-state-talent-award-winners-announced-governors-workforce-summit",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-09-29T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp, in conjunction with the Technical College System of Georgia (TCSG), the University System of Georgia (USG), the Georgia Student Finance Commission (GSFC), and the Gov",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "education"
+      ]
+    },
     {
       "id": "023ee3fd1bc9",
       "title": "Debate over data center growth in Georgia heats up race for governor",
@@ -185,6 +256,20 @@
       ]
     },
     {
+      "id": "3a22ed3cc69f",
+      "title": "Another fuel tax suspension as gas prices continue to hit pocketbooks",
+      "url": "https://capitol-beat.org/2026/09/another-fuel-tax-suspension-as-gas-prices-continue-to-hit-pocketbooks/?utm_source=rss&utm_medium=rss&utm_campaign=another-fuel-tax-suspension-as-gas-prices-continue-to-hit-pocketbooks",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-09-28T22:32:52+00:00",
+      "snippet": "ATLANTA — For the third time this year, Gov. Brian Kemp ordered a suspension of Georgia’s fuel tax, as prices at the pump keep rising with no sign of relief. The 30-day suspension order, which Kemp si",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
       "id": "48b6d8f9f31f",
       "title": "Savannah, Chatham Police chiefs offer public safety snapshots at NAACP meeting",
       "url": "https://thecurrentga.org/2026/09/28/savannah-chatham-police-chiefs-offer-public-safety-snapshots-at-naacp-meeting/",
@@ -211,18 +296,6 @@
       ]
     },
     {
-      "id": "2ed87b532db8",
-      "title": "Kemp suspends state gas tax for 30 days",
-      "url": "https://www.gpb.org/news/2026/09/28/kemp-suspends-state-gas-tax-for-30-days",
-      "source": "GPB News",
-      "publishedAt": "2026-09-28T20:43:04+00:00",
-      "snippet": "Georgia drivers can expect to see lower prices at the gas pump soon.",
-      "entityIds": [],
-      "topics": [
-        "budget"
-      ]
-    },
-    {
       "id": "36b42ebb0f8c",
       "title": "Mail-in voting remains option for this year’s midterms. Here’s what voters should know.",
       "url": "https://thecurrentga.org/2026/09/28/mail-in-voting-remains-option-for-this-years-midterms-heres-what-voters-should-know/",
@@ -233,18 +306,6 @@
       "topics": [
         "elections",
         "courts"
-      ]
-    },
-    {
-      "id": "ae0cb8d6f480",
-      "title": "Georgia preschool students become 'junior journalists' for World News Day",
-      "url": "https://www.gpb.org/news/2026/09/28/georgia-preschool-students-become-junior-journalists-for-world-news-day",
-      "source": "GPB News",
-      "publishedAt": "2026-09-28T19:51:00+00:00",
-      "snippet": "Students conducted interviews and answered questions in a hands-on news desk activity designed to foster their curiosity and appreciation for journalism.",
-      "entityIds": [],
-      "topics": [
-        "education"
       ]
     },
     {
@@ -274,36 +335,18 @@
       ]
     },
     {
-      "id": "291700052788",
-      "title": "Georgia Today: BioLab lawsuits; Macon shooting; Giant pandas arrive at Zoo Atlanta",
-      "url": "https://www.gpb.org/news/2026/09/28/georgia-today-biolab-lawsuits-macon-shooting-giant-pandas-arrive-at-zoo-atlanta",
-      "source": "GPB News",
-      "publishedAt": "2026-09-28T18:29:50+00:00",
-      "snippet": "On the September 28 edition: Twelve people are wounded at a birthday party shooting in Macon; this week marks the second anniversary of Hurricane Helene as recovery efforts continue; and there's a wee",
-      "entityIds": [],
+      "id": "2213b2217b03",
+      "title": "McBath, Merkley, Brown Champion Legislation to Improve Educational Outcomes and Experiences",
+      "url": "https://mcbath.house.gov/2026/09/28/mcbath-merkley-brown-champion-legislation-to-improve-educational-outcomes-and-experiences/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-09-28T16:42:00+00:00",
+      "snippet": "Washington, DC—U.S. Representatives Lucy McBath (GA-06) and Shontel Brown (OH-11) have joined U.S. Senator Jeff Merkley (OR) to introduce H.R. 10631, the Smaller Class Sizes for Students and Educators",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
       "topics": [
-        "courts"
+        "education"
       ]
-    },
-    {
-      "id": "80130fdfefd5",
-      "title": "Howard, Reese help Dream rally from 11-point deficit, beat Mystics 92-77 in Game 1 of playoff series",
-      "url": "https://www.gpb.org/news/2026/09/28/howard-reese-help-dream-rally-11-point-deficit-beat-mystics-92-77-in-game-1-of",
-      "source": "GPB News",
-      "publishedAt": "2026-09-28T14:49:37+00:00",
-      "snippet": "Rhyne Howard had 26 points and five steals, Angel Reese added 13 points and 12 rebounds in her first career playoff game, and the Atlanta Dream beat the Washington Mystics 92-77 in Game 1 of their fir",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "6335eab9eaa0",
-      "title": "Bibb County investigators looking for suspects in mass shooting that wounded 12",
-      "url": "https://www.gpb.org/news/2026/09/28/bibb-county-investigators-looking-for-suspects-in-mass-shooting-wounded-12",
-      "source": "GPB News",
-      "publishedAt": "2026-09-28T14:49:00+00:00",
-      "snippet": "Investigators want to find the people who wounded a dozen teenagers during a 30-second barrage of gunfire during a late-night party in a Macon park.",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "3db03c6fac46",
@@ -892,16 +935,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "45f76a65e89b",
-      "title": "AI raising questions about who writes the rules",
-      "url": "https://capitol-beat.org/2026/09/ai-raising-questions-about-who-writes-the-rules/?utm_source=rss&utm_medium=rss&utm_campaign=ai-raising-questions-about-who-writes-the-rules",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-17T20:06:01+00:00",
-      "snippet": "ATLANTA — Some worry artificial intelligence could one day rule humanity. Robots have not taken over yet, but AI may be helping with a core function of democracy in Georgia’s largest county: writing o",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "f46160f7e04d",
@@ -1524,18 +1557,6 @@
       "topics": [
         "healthcare"
       ]
-    },
-    {
-      "id": "93e614a76826",
-      "title": "Gov. Kemp: Walmart to Bring 1,000 Jobs, Next-Gen Fulfillment Center to Carnesville",
-      "url": "https://gov.georgia.gov/press-releases/2026-08-27/gov-kemp-walmart-bring-1000-jobs-next-gen-fulfillment-center-carnesville",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-08-27T12:00:00+00:00",
-      "snippet": "LIMA, PERU – Governor Brian P. Kemp today, while continuing an economic development mission in South America, announced that Walmart, Inc. plans to build a high-tech, next-generation fulfillment cente",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
     },
     {
       "id": "de8aa9b974c4",
