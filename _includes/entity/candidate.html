@@ -3,7 +3,16 @@
      /candidate.html shell (?id= / ?raceId=&memberId= routes). Keep all data/asset
      URLs base-path-aware (getBasePath() for fetches, relative_url for <script src>)
      so it works on the clean entity URL, not just the site root. -->
-<div id="candidateContent"><p>Loading candidate information…</p></div>
+<div id="candidateContent">
+  {%- if page.entity -%}
+    {%- assign e = page.entity -%}
+    <h1 style="margin:0 0 .5rem;">{{ e.name | escape }}</h1>
+    {%- if e.about %}{% for para in e.about %}<p>{{ para | escape }}</p>{% endfor %}{% endif %}
+    <p><a href="{{ '/elections/' | relative_url }}">2026 Georgia elections</a> · <a href="{{ '/sample-ballot' | relative_url }}">Sample ballot</a></p>
+  {%- else -%}
+    <p>Loading candidate information…</p>
+  {%- endif -%}
+</div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>

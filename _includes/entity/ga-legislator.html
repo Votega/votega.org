@@ -298,6 +298,7 @@
         {%- if e.chamber %}<br><span style="color:#6b7280;">{{ e.chamber | escape }}, Georgia General Assembly</span>{% endif -%}
       </p>
       {%- if e.summary %}<p>{{ e.summary | escape }}</p>{% endif -%}
+      {%- if e.about %}{% for para in e.about %}<p>{{ para | escape }}</p>{% endfor %}{% endif -%}
       <dl style="margin:0 0 1rem;font-size:0.95rem;color:#374151;">
         {%- if e.nextElection %}
         <dt style="font-weight:600;display:inline;">Next election:</dt>
