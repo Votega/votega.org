@@ -87,7 +87,10 @@ def slugify(*parts):
 
 def yaml_quote(s):
     """Double-quote a scalar for YAML front matter, escaping backslashes and quotes."""
-    return '"' + str(s).replace("\\", "\\\\").replace('"', '\\"') + '"'
+    # Collapse newlines/tabs and drop control characters: scraped bios can carry
+    # them, and a raw one makes the front matter unparseable for Jekyll.
+    s = re.sub(r"[\x00-\x1f\x7f]+", " ", str(s)).strip()
+    return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
 # Compact office/chamber labels used ONLY in the SEO <title> tag (share-title),
@@ -120,6 +123,187 @@ def abbrev_office(s):
     for long, short in _OFFICE_ABBREV:
         s = s.replace(long, short)
     return s
+
+
+# ─────────────────────── Server-rendered "about" copy ───────────────────────
+# Bing Webmaster flags pages with too few words. Candidate / race / legislator
+# pages hydrate their real content client-side, so the crawlable HTML was a
+# one-line stub. These helpers build a few factual paragraphs from the same
+# data (no invented claims) and hand them to the include as entity.about; the
+# JS profile still overwrites the container for human visitors.
+
+def _fmt_date(iso):
+    try:
+        d = datetime.fromisoformat(str(iso)[:10]).date()
+        return f"{d.strftime('%B')} {d.day}, {d.year}"
+    except (ValueError, TypeError):
+        return None
+
+
+def _office_blurb(race):
+    ch = (race.get("chamber") or "").lower()
+    if ch == "georgia house of representatives":
+        return ("The Georgia House of Representatives has 180 members, each elected "
+                "from a single district to a two-year term. Representatives vote on "
+                "state laws, the annual state budget, and how tax dollars are spent.")
+    if ch == "georgia state senate":
+        return ("The Georgia State Senate has 56 members, each elected from a single "
+                "district to a two-year term. Senators vote on state laws and the "
+                "state budget, and confirm certain appointments.")
+    if ch == "superior court":
+        return ("Superior Court judges hear felony criminal cases, major civil disputes, "
+                "and land title cases in Georgia's judicial circuits. Judges are elected "
+                "in nonpartisan elections to four-year terms.")
+    if ch == "district attorney":
+        return ("A District Attorney prosecutes felony cases on behalf of the state "
+                "within a judicial circuit and is elected to a four-year term.")
+    if ch == "u.s. house":
+        return ("Georgia sends 14 members to the U.S. House of Representatives. "
+                "Members serve two-year terms and vote on federal legislation and spending.")
+    if ch == "u.s. senate":
+        return ("Georgia's two U.S. senators serve six-year terms and vote on federal "
+                "legislation, treaties, and confirmations of judges and cabinet officials.")
+    if ch in ("georgia court of appeals", "supreme court of georgia"):
+        return ("Georgia appellate judges and justices are elected statewide in "
+                "nonpartisan elections and review decisions made by lower courts.")
+    if (race.get("level") or "") == "state-executive":
+        return ("This is a statewide executive office, so every Georgia voter "
+                "can vote in this race regardless of where in the state they live.")
+    return ""
+
+
+def _race_active_candidates(race):
+    """(phase_key, candidates) for the race's active phase (else the latest with candidates)."""
+    phases = {k: v for k, v in (race.get("phases") or {}).items() if isinstance(v, dict)}
+    order = [race.get("activePhase")] + ["general", "runoff", "primary"]
+    for key in order:
+        ph = phases.get(key)
+        if not ph:
+            continue
+        out, seen = [], set()
+        groups = list((ph.get("ballots") or {}).values()) + [ph.get("candidates") or []]
+        for g in groups:
+            for c in (g or []):
+                cn = (c.get("name") or "").strip()
+                k = c.get("id") or cn
+                if cn and k not in seen and not c.get("withdrawn") and not c.get("disqualified"):
+                    seen.add(k)
+                    out.append(c)
+        if out:
+            return key, out
+    return None, []
+
+
+def _party_txt(c):
+    p = (c.get("party") or "").strip()
+    return "nonpartisan" if p.lower() in ("non-partisan", "nonpartisan") else p
+
+
+def _cand_phrase(c):
+    tags = [t for t in (_party_txt(c), "incumbent" if c.get("isIncumbent") else "") if t]
+    txt = c["name"].strip() + (f" ({', '.join(tags)})" if tags else "")
+    bits = []
+    if c.get("occupation"):
+        bits.append(c["occupation"].strip().lower() if c["occupation"].isupper() else c["occupation"].strip())
+    if c.get("county"):
+        bits.append(f"{c['county'].strip()} County")
+    return txt + (f", {', '.join(bits)}" if bits else "")
+
+
+def _election_dates_txt(race):
+    ph = race.get("phases") or {}
+    bits = []
+    for key, label in (("primary", "primary"), ("runoff", "runoff"), ("general", "general election")):
+        d = _fmt_date((ph.get(key) or {}).get("electionDate")) if isinstance(ph.get(key), dict) else None
+        if d:
+            bits.append(f"the {label} on {d}")
+    return bits
+
+
+_VOTE_HOWTO = ("To vote in Georgia, you must be registered by the state's registration deadline "
+               "ahead of each election. You can check your registration, find your polling place, "
+               "and see your personal sample ballot on the Georgia Secretary of State's My Voter "
+               "Page (mvp.sos.ga.gov), or vote early in person or by absentee ballot.")
+
+
+def race_about(name, race):
+    paras = []
+    seat = race.get("displayTitle") or name
+    paras.append(f"This page covers the {seat} race on Georgia's {race.get('cycle') or ''} ballot. "
+                 "Georgia voters choose who fills this office in the elections listed below, and "
+                 "the candidate list is updated as the Georgia Secretary of State and campaigns "
+                 "publish new information.")
+    dates = _election_dates_txt(race)
+    if dates:
+        paras.append("Key dates for this race: " + "; ".join(dates) + ". Early voting runs "
+                     "before each election, and voters can confirm their registration and "
+                     "polling place on the Georgia Secretary of State's My Voter Page.")
+    key, cands = _race_active_candidates(race)
+    if cands:
+        label = {"general": "general election", "runoff": "runoff", "primary": "primary"}.get(key, "ballot")
+        paras.append(f"Candidates on the {label} ballot: " + "; ".join(_cand_phrase(c) for c in cands) + ".")
+    blurb = _office_blurb(race)
+    if blurb:
+        paras.append(blurb)
+    paras.append(_VOTE_HOWTO)
+    return paras
+
+
+def candidate_about(name, race, cand, race_label):
+    paras = []
+    party = _party_txt(cand)
+    seat = race_label or "office"
+    role = "the incumbent" if cand.get("isIncumbent") else "a candidate"
+    art = "an" if party[:1].upper() in "AEIOU" else "a"
+    paras.append(f"{name} is {role} for {seat} in Georgia's {race.get('cycle') or ''} elections"
+                 f"{', running as ' + art + ' ' + party + ' candidate' if party and party != 'nonpartisan' else ''}"
+                 f"{', on the nonpartisan ballot' if party == 'nonpartisan' else ''}.")
+    facts = []
+    if cand.get("occupation"):
+        facts.append(f"Listed occupation: {cand['occupation'].strip()}")
+    if cand.get("county"):
+        facts.append(f"County of residence: {cand['county'].strip()}")
+    if facts:
+        paras.append("; ".join(facts) + ". This information comes from the candidate's "
+                     "qualifying paperwork with the Georgia Secretary of State.")
+    bio = (cand.get("bio") or "").strip()
+    if bio:
+        paras.append(bio)
+    dates = _election_dates_txt(race)
+    if dates:
+        paras.append("Election dates for this race: " + "; ".join(dates) + ".")
+    others = [c for c in _race_active_candidates(race)[1] if (c.get("id") or c["name"]) != (cand.get("id") or name)]
+    if others:
+        paras.append("Also on the ballot in this race: " + "; ".join(_cand_phrase(c) for c in others) + ".")
+    blurb = _office_blurb(race)
+    if blurb:
+        paras.append(blurb)
+    paras.append(_VOTE_HOWTO)
+    return paras
+
+
+def ga_legislator_about(name, role, m, is_senate):
+    chamber = "State Senate" if is_senate else "House of Representatives"
+    party = (m.get("party") or "").strip()
+    d = m.get("district")
+    paras = [f"{name} is a{'n' if party[:1].upper() in 'AEIOU' and party else ''} "
+             f"{party + ' ' if party else ''}member of the Georgia {chamber}"
+             f"{', representing District ' + str(d) if d else ''}."
+             + (f" {name} has served in the General Assembly since {m['termStartYear']}." if m.get("termStartYear") else "")]
+    comms = [c for c in (m.get("committees") or []) if c]
+    if comms:
+        paras.append(f"Committee assignments: {', '.join(comms)}. Committees review bills in their "
+                     "subject area before those bills reach a vote of the full chamber.")
+    if m.get("address"):
+        paras.append(f"Capitol office: {m['address'].strip()}.")
+    paras.append(("The Georgia State Senate has 56 members" if is_senate else
+                  "The Georgia House of Representatives has 180 members")
+                 + ", each elected from a single district to a two-year term. This profile also "
+                 "shows voting record, party-line loyalty, campaign finance, and contact "
+                 "information once the interactive profile loads.")
+    paras.append("Not sure who represents you? Use VoteGA's Find My Representatives tool to look up "
+                 "your U.S. Congress members and your Georgia House and Senate districts by address.")
+    return paras
 
 
 def qs_id(url, key="id"):
@@ -366,7 +550,8 @@ def build_ga_legislators(records, urls, prior, new_state):
         entity = {"type": "ga-legislator", "id": mid, "name": name,
                   "title": role_short, "chamber": chamber, "district": district,
                   "party": party, "committees": committees, "phone": phone,
-                  "website": website, "nextElection": next_election}
+                  "website": website, "nextElection": next_election,
+                  "about": ga_legislator_about(name, role, m, is_senate)}
         lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
                                   data_date, prior, new_state)
         fm = {
@@ -523,7 +708,8 @@ def build_races(records, urls, prior, new_state):
             })
 
         entity = {"type": "race", "id": rid, "name": name, "chamber": chamber,
-                  "cycle": cycle, "summary": (level.title() + " race") if level else None}
+                  "cycle": cycle, "summary": (level.title() + " race") if level else None,
+                  "about": race_about(name, r)}
         lastmod = resolve_lastmod(
             permalink,
             {"e": entity, "t": share_title, "d": desc, "c": [c["name"] for c in cands]},
@@ -635,7 +821,8 @@ def build_candidates(records, urls, prior, new_state):
         if party:       # typed party (schema.org affiliation expects an Organization)
             person["affiliation"] = {"@type": "PoliticalParty", "name": party}
         ld = json_ld(person)
-        entity = {"type": "candidate", "id": cid, "name": name}
+        entity = {"type": "candidate", "id": cid, "name": name,
+                  "about": candidate_about(name, race, cand_obj, race_label)}
         lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": page_desc},
                                   data_date, prior, new_state)
         fm = {

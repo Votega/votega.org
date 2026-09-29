@@ -8,6 +8,8 @@
       {%- if e.chamber %}{{ e.chamber | escape }}{% endif %}{% if e.cycle %} · {{ e.cycle }} election{% endif %}
       {%- if e.summary %}<br><span style="color:#6b7280;">{{ e.summary | escape }}</span>{% endif -%}
     </p>
+      {%- if e.about %}{% for para in e.about %}<p>{{ para | escape }}</p>{% endfor %}{% endif -%}
+    <p><a href="{{ '/elections/' | relative_url }}">2026 Georgia elections</a> · <a href="{{ '/sample-ballot' | relative_url }}">Sample ballot</a> · <a href="{{ '/ga-voter-access' | relative_url }}">Voter access</a></p>
   {%- else -%}
     <p>Loading race information…</p>
   {%- endif -%}
