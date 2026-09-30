@@ -263,7 +263,24 @@ def publish_or_dry_run(repo, artifacts, token_env, validate=None):
         print(f"Publishing {len(artifacts)} artifacts to {repo}:")
         _publish(repo, artifacts, token)
     else:
-        out_dir = os.environ.get("OUT_DIR", "out")
+        # Guard against a silent dry-run in CI. An API publisher (no OUT_DIR set)
+        # that reaches here has lost its token — the step still exits 0, so the
+        # sibling repo silently stops updating while the workflow stays green.
+        # (GA_LOCAL_GOVERNMENT_TOKEN went empty this way and ga-local-government
+        # went stale for three weeks, 2026-09.) Fail loudly instead. Git-based
+        # publishers set OUT_DIR on purpose to write artifacts to a checkout and
+        # push them separately — that is a real dry-run, so it is allowed. Local
+        # runs (no GITHUB_ACTIONS) always dry-run, for testing.
+        in_ci = os.environ.get("GITHUB_ACTIONS") == "true"
+        out_dir = os.environ.get("OUT_DIR")
+        if in_ci and out_dir is None:
+            raise RuntimeError(
+                f"refusing to dry-run in CI: {token_env} is empty. This publisher "
+                f"pushes to {repo} via the GitHub Contents API and needs the token. "
+                f"Set the {token_env} secret on this repository, or set OUT_DIR to "
+                f"write artifacts to disk on purpose."
+            )
+        out_dir = out_dir or "out"
         print(f"DRY RUN (no {token_env}) — writing {len(artifacts)} artifacts to {out_dir}/:")
         _dry_run(artifacts, out_dir)
     print("Done.")
