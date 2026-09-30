@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-28T17:04:30Z",
+  "generatedAt": "2026-09-30T10:19:25Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -10,19 +10,29 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-22",
+  "lastActivity": "2026-10-01",
   "topicTotals": {
-   "appointment": 6,
+   "appointment": 7,
    "comprehensive-plan": 4,
    "contract": 23,
    "rezoning": 15,
-   "development": 12,
-   "millage-budget": 19,
    "variance": 11,
-   "special-land-use": 5
+   "development": 11,
+   "millage-budget": 19,
+   "special-land-use": 4
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-10-01",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5354,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "rezoning",
+     "variance"
+    ]
+   },
    {
     "title": "Board of Commissioners Work Session",
     "date": "2026-09-22",
@@ -193,18 +203,6 @@
      "development",
      "variance"
     ]
-   },
-   {
-    "title": "Board of Commissioners Regular Meeting",
-    "date": "2026-04-02",
-    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5039,plainText=false)",
-    "tags": [
-     "comprehensive-plan",
-     "development",
-     "rezoning",
-     "special-land-use",
-     "variance"
-    ]
    }
   ],
   "landUseMeetings": 18,
@@ -212,6 +210,71 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "459",
+   "date": "2026-10-01",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5354,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5354,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 10562,
+   "pdfSha256": "f71de035940ce4ed5f0d3f518068580522d540867097f1eeb1b15292d6266150",
+   "topics": {
+    "appointment": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "comprehensive-plan",
+    "contract",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "comprehensive plan",
+    "contract",
+    "rezon",
+    "task order",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Page 2 October 1, 2026 (D) Board adoption of a Resolution appointing Tom Brown to the Administrative Committee as the Employee At-Large Member upon Maria Villalon’ …",
+     "context": "agenda-action"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… Commissioner Moore as the Board of Commissioners member on the Steering Committee related to the Comprehensive Plan 2027 update - Comprehensive Planning Manager, Department of Planning and Co …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Cover Replacement project (IDQ-053) with R2T, Inc. under the Indefinite Quantity Mechanical Contractor Contract (Contract No. 1202500014) in the amount of $445,456.89 for the replacement of anoxic a …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ing and Community Development (N) Board approval to postpone a Board generated rezoning for ZA4163, Tipton Development LLC, to the October 20, 2026, Work Session meeting. In …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ent of Zoning Conditions on ZA4234 (SVS Traders LLC) by SVS Retail Real Estate LLC with a variance to: 1. Reduce the required number of off-street loading spaces from 4 to 3 (UDC 17-3.3) - Parcel 053-038 …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "437",
    "date": "2026-09-22",
@@ -1536,80 +1599,6 @@
     "variance": {
      "term": "variance",
      "excerpt": "… (1) Board consideration and possible vote regarding a request made by Chase Fulbright for: 1. A lot-size variance of 0.038 acres in order for an A1 lot to be 0.962 acres rather than the required 1 acre, and 2. A lot-wi …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "447",
-   "date": "2026-04-02",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5039,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5039,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 17441,
-   "pdfSha256": "32c6489cc44e029a81f771e486b0e6d488ad2c4abeca167f8764003e4820d6cd",
-   "topics": {
-    "comprehensive-plan": 1,
-    "contract": 1,
-    "development": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "comprehensive-plan",
-    "contract",
-    "development",
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "comprehensive plan",
-    "conditional use",
-    "contract",
-    "procurement",
-    "rezon",
-    "subdivision",
-    "task order",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… evelopment (M) Board direction for staff to move forward with a solicitation to update the Forsyth County Comprehensive Plan for the Department of Planning and Community Development - Director, Department of Planning and Community …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… equirement to be used to purchase two AquaEye Handheld Sonar Devices - Fire Chief (C) Board approval of a contract with Weatherproofing Technologies, Inc. and National Building Contractors, Inc. under the OMNIA R230404 Cont …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… e, Wemedge Way, Nicolo Drive, Maggiore Lane, Barnes Court and all other property rights as shown on the Subdivision Plat for Hemingway Farm Phase 2B, recorded in Plat Book 223, Pages 52-66, Forsyth Regular Meeting / Pu …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… rector, Department of Planning and Community Development (L) Board approval to postpone a Board generated rezoning for ZA4163, Tipton Development LLC. to a Work Session in six (6) months. In accordance with UD …",
-     "context": "unknown"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… genda Page 3 April 2, 2026 (K) Board approval for no action to be taken regarding the revocation of the Conditional Use Permit (CUP) for CP240005, Forsyth County Board of Commissioners (Owner-Anthony M. Gold). In accordance with …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… endment of Zoning Condition on ZA2957 (SF PROPERTIES INC) by Aqua Design Pools & Spas, LLC with a variance to: 1. Reduce the exterior setback from 50 ft. to 35 ft. (UDC Table 11.2(b)) - Parcel 074-307 - AZ260006 - D …",
      "context": "unknown"
     }
    },

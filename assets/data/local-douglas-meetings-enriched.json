@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-28T17:04:30Z",
+  "generatedAt": "2026-09-30T10:19:25Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -11,16 +11,16 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-24",
+  "lastActivity": "2026-10-06",
   "topicTotals": {
-   "millage-budget": 18,
+   "rezoning": 4,
+   "millage-budget": 17,
    "variance": 4,
-   "appointment": 11,
+   "appointment": 10,
    "comprehensive-plan": 2,
-   "contract": 15,
+   "contract": 14,
    "data-center": 3,
    "development": 2,
-   "rezoning": 3,
    "annexation": 2
   },
   "dataCenterItems": [
@@ -43,6 +43,16 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Planning Zoning and BOC",
+    "date": "2026-10-06",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7572,plainText=false)",
+    "tags": [
+     "rezoning"
+    ],
+    "excerpt": "… igned by Alexander Dike. Commission District: #3. Z2026-81 Anmi De La Rosa Lugo – a request for a rezoning from R-LD-C (residential low-density w/conditions) to C-H (heavy commercial) for a 5,0 …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Planning Zoning Variance",
     "date": "2026-09-21",
@@ -96,11 +106,43 @@
     ]
    }
   ],
-  "landUseMeetings": 9,
+  "landUseMeetings": 10,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1322",
+   "date": "2026-10-06",
+   "body": "Planning & Zoning",
+   "title": "Planning Zoning and BOC",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7572,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7572,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2474,
+   "pdfSha256": "1976d8b71b6a5779a0c434b93f0433522cac0c8088b440331321e1d5dd1d3e2a",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… igned by Alexander Dike. Commission District: #3. Z2026-81 Anmi De La Rosa Lugo – a request for a rezoning from R-LD-C (residential low-density w/conditions) to C-H (heavy commercial) for a 5,0 …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1321",
    "date": "2026-09-24",
@@ -1173,54 +1215,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1134",
-   "date": "2026-06-15",
-   "body": "Board of Commissioners",
-   "title": "BOC Work Session",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7378,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7378,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5252,
-   "pdfSha256": "14842213d6d368f126004bea0e3e91b4f83f2639e66cb8a98972a1c1f849bccf",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… ize the Chairman to sign all related documents pending final legal review. (Elliott Buggs) 18. Authorization to appoint District 4 Commissioner Mark Alcarez to the City of Douglasville's Tax Allocation District Advisory Committee. () …",
-     "context": "public-comment"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… the Chairman to sign all related documents pending final legal review. (Yvette Jones) 13. Approval of the contract with UES for $15,000 for construction special inspections needed for the DOT Storage Facility to be funded by SPLO …",
-     "context": "public-comment"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ouncil (CJCC) with a cash match of $28,931 to be funded from a portion of the salary of Melissa Leblond, amend the budget and authorize the Chairman to sign all related documents pending final legal review. (Melissa Leblond) Work Sessi …",
-     "context": "public-comment"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

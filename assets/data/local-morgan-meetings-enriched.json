@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-28T17:04:43Z",
+  "generatedAt": "2026-09-30T10:19:28Z",
   "source": "Morgan County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Morgan County",
   "count": 25
@@ -14,11 +14,11 @@
   ],
   "lastActivity": "2026-10-02",
   "topicTotals": {
+   "special-land-use": 16,
    "appointment": 6,
    "contract": 15,
    "development": 12,
    "millage-budget": 17,
-   "special-land-use": 16,
    "variance": 14,
    "comprehensive-plan": 7,
    "data-center": 5,
@@ -60,6 +60,16 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Meeting Agenda for October 1, 2026",
+    "date": "2026-10-01",
+    "sourceUrl": "https://www.morgancountyga.gov/AgendaCenter/ViewFile/Agenda/_10012026-880",
+    "tags": [
+     "special-land-use"
+    ],
+    "excerpt": "… located on Buckhead Road (Tax Parcels 044-045 and 043-058). II. Evan Bowles, on behalf of Inman Solar, is requesting conditional use approval for a 35 acres solar farm located on Buckhead Road (Tax Parcels 044-045 and 043-058). III. Morgan …",
+    "excerptTerm": "conditional use"
+   },
    {
     "title": "9-29-2026 BOC Meeting",
     "date": "2026-09-29",
@@ -192,16 +202,6 @@
     ],
     "excerpt": "… Equipment 9. Consideration of extending the temporary moratorium on receiving applications and plats for Major Subdivisions under the Morgan County Zoning Ordinance and the Morgan County Development Regulations -2025-RES-016 10. Propo …",
     "excerptTerm": "subdivision"
-   },
-   {
-    "title": "Meeting Agenda for April 2, 2026",
-    "date": "2026-04-02",
-    "sourceUrl": "https://www.morgancountyga.gov/AgendaCenter/ViewFile/Agenda/_04022026-845",
-    "tags": [
-     "special-land-use"
-    ],
-    "excerpt": "… t on past zoning decisions UNFINISHED BUSINESS: I. Ty Snyder, on behalf of Madison Methodist Church, is requesting conditional use approval for a childcare learning center on 24.42 acres located at 1091 Confederate Road (Tax Parcel 036-039B) …",
-    "excerptTerm": "conditional use"
    }
   ],
   "landUseMeetings": 17,
@@ -234,6 +234,38 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "880",
+   "date": "2026-10-01",
+   "body": "Planning Commission",
+   "title": "Meeting Agenda for October 1, 2026",
+   "sourceUrl": "https://www.morgancountyga.gov/AgendaCenter/ViewFile/Agenda/_10012026-880",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.morgancountyga.gov/AgendaCenter/ViewFile/Agenda/_10012026-880",
+   "textMethod": "pdftotext",
+   "textChars": 1203,
+   "pdfSha256": "931ab886963cb70a01060aad68d6287dcecb53c4faef398becba27c01df8cc8b",
+   "topics": {
+    "special-land-use": 1
+   },
+   "tags": [
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "conditional use"
+   ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… located on Buckhead Road (Tax Parcels 044-045 and 043-058). II. Evan Bowles, on behalf of Inman Solar, is requesting conditional use approval for a 35 acres solar farm located on Buckhead Road (Tax Parcels 044-045 and 043-058). III. Morgan …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
    "dataCenterItems": []
   },
   {
@@ -1688,38 +1720,6 @@
    "flags": [
     "land-use",
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "845",
-   "date": "2026-04-02",
-   "body": "Planning Commission",
-   "title": "Meeting Agenda for April 2, 2026",
-   "sourceUrl": "https://www.morgancountyga.gov/AgendaCenter/ViewFile/Agenda/_04022026-845",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.morgancountyga.gov/AgendaCenter/ViewFile/Agenda/_04022026-845",
-   "textMethod": "pdftotext",
-   "textChars": 1338,
-   "pdfSha256": "c27c5ba067f1ac06ecf7d2e275f4886872ecb99a74727203bc5fac16e8e5e262",
-   "topics": {
-    "special-land-use": 1
-   },
-   "tags": [
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "conditional use"
-   ],
-   "topicExcerpts": {
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… t on past zoning decisions UNFINISHED BUSINESS: I. Ty Snyder, on behalf of Madison Methodist Church, is requesting conditional use approval for a childcare learning center on 24.42 acres located at 1091 Confederate Road (Tax Parcel 036-039B) …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }
