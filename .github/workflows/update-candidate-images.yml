@@ -1,0 +1,73 @@
+name: Cache government candidate portraits (weekly, Sun 11:00 UTC)
+
+permissions:
+  contents: write
+
+# Downloads government-hosted portraits (congress.gov, legis.ga.gov), resizes
+# them, and commits the local copies plus candidate-image-cache.json. The script
+# is idempotent — it skips any portrait already cached — so a week with no new
+# candidates or members commits nothing. Non-government photos are never cached
+# here (see scripts/fetch_candidate_images.py and CLAUDE.md); they stay
+# hot-linked and are only lazy-loaded by the render layer.
+#
+# Weekly is plenty: portraits change far less often than the rosters do, and the
+# rosters (which this scans) are refreshed by their own daily workflows first.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 11 * * 0'  # weekly, Sunday 11:00 UTC (after the Sunday data jobs)
+
+jobs:
+  cache-portraits:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Pillow
+        run: pip install Pillow
+
+      - name: Cache government portraits
+        run: python scripts/fetch_candidate_images.py
+
+      - name: Validate manifest
+        run: |
+          python -c "
+          import json
+          d = json.load(open('assets/data/candidate-image-cache.json'))
+          count = d['metadata']['count']
+          images = d['images']
+          assert count == len(images), f'metadata.count {count} != {len(images)} entries'
+          import os
+          for url, rel in images.items():
+              assert os.path.exists(rel), f'manifest points at missing file: {rel}'
+          print(f'Validated: {count} cached portraits, all files present')
+          "
+
+      - name: Commit and push cached portraits
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/img/candidates assets/data/candidate-image-cache.json
+          if git diff --cached --quiet; then
+            echo "No new portraits to commit"
+          else
+            git commit -m "Cache government candidate portraits"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - portraits were NOT committed"
+              exit 1
+            fi
+          fi

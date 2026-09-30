@@ -465,6 +465,9 @@
         electionDataUnavailable = true;
       }
 
+      // Non-fatal: without the manifest the portrait renders from its original
+      // (uncached) legis.ga.gov URL, exactly as before this cache existed.
+      await VotegaPortraits.load(getBasePath());
       displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable, electionDataUnavailable);
       // Resigned/Removed/Deceased entries are historical records kept only so
       // ga-member-votes.json can still join their earlier votes by OCD id —
@@ -682,7 +685,7 @@
     const name    = member.name || 'Unknown';
     document.title = `${name} — ${member.title || (member.chamber === 'Senate' ? 'State Senator' : 'State Representative')}`;
     const imageHtml = member.imageUrl
-      ? `<img src="${escHtml(member.imageUrl)}" alt="${escHtml(name)}" style="max-width:200px;margin-bottom:1rem;border-radius:8px;">`
+      ? `<img src="${escHtml(VotegaPortraits.src(member.imageUrl))}" alt="${escHtml(name)}" loading="lazy" decoding="async" style="max-width:200px;margin-bottom:1rem;border-radius:8px;">`
       : '';
 
     const leadershipHtml = member.leadershipRole

@@ -558,7 +558,12 @@
   }
 
   function photoEl(url, name) {
-    if (url) return `<img class="candidate-photo" src="${url}" alt="${name}">`;
+    if (url) {
+      const src = VotegaPortraits.src(url);
+      return `<img class="candidate-photo" src="${src}" alt="${name}" ` +
+             `loading="lazy" decoding="async" width="120" height="120" ` +
+             `onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',textContent:'👤'}))">`;
+    }
     return `<div class="candidate-photo-placeholder">👤</div>`;
   }
 
@@ -1025,6 +1030,10 @@
       }
 
       CLAIMS = await CandidateClaims.fetchClaims(getBasePath());
+
+      // Non-fatal: without the manifest, portraits render from their original
+      // (uncached) URLs, exactly as before this cache existed.
+      await VotegaPortraits.load(getBasePath());
 
       renderRace(race, members);
     } catch (err) {
