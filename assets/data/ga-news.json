@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-09-30T02:59:48.133797+00:00",
+    "generatedAt": "2026-09-30T09:26:25.898012+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,17 +21,17 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 118,
+    "count": 112,
     "windowDays": 45,
-    "entityTagged": 69,
+    "entityTagged": 66,
     "topicCounts": {
-      "elections": 26,
-      "surveillance": 4,
-      "budget": 9,
-      "healthcare": 16,
+      "elections": 27,
+      "ethics": 6,
+      "healthcare": 14,
       "courts": 13,
       "education": 11,
-      "ethics": 5
+      "budget": 8,
+      "surveillance": 2
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
@@ -51,14 +51,6 @@
       "url": null,
       "candidateIds": [
         "ga-house-161-2026-d-1"
-      ]
-    },
-    "vg-ga-p-000080": {
-      "name": "Eric Gisler",
-      "url": null,
-      "ocdPersonId": "ocd-person/abece831-30a8-4cf8-94ff-d41f7f48197f",
-      "candidateIds": [
-        "ga-house-121-2026-d-1"
       ]
     },
     "vg-ga-p-000264": {
@@ -149,6 +141,19 @@
   },
   "items": [
     {
+      "id": "cc24115457a9",
+      "title": "Bookman: Whatever came of that urgent FBI probe into the 2020 election in Fulton County?",
+      "url": "https://georgiarecorder.com/2026/09/30/bookman-so-how-about-that-fbi-probe-into-2020-election-in-fulton-county/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-09-30T08:00:31+00:00",
+      "snippet": "Nine months ago this week, FBI agents raided the Fulton County elections office, seizing hundreds of boxes of ballots cast in the 2020 election. According to the subpoena authorizing that seizure, fed",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "ethics"
+      ]
+    },
+    {
       "id": "a7dc959922ff",
       "title": "Georgia Republican candidates at rally target Bottoms, rarely mention Trump",
       "url": "https://capitol-beat.org/2026/09/georgia-republican-candidates-at-rally-target-bottoms-rarely-mention-trump/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-republican-candidates-at-rally-target-bottoms-rarely-mention-trump",
@@ -228,67 +233,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "97e41e07825a",
-      "title": "What we know about Georgia's recovery from Hurricane Helene two years later",
-      "url": "https://www.gpb.org/news/2026/09/29/what-we-know-about-georgias-recovery-hurricane-helene-two-years-later",
-      "source": "GPB News",
-      "publishedAt": "2026-09-29T17:44:00+00:00",
-      "snippet": "This week marks two years after Helene damaged and destroyed homes and forests across a swath of 63 Georgia counties.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "93caf7260472",
-      "title": "Georgia Today: Gas tax suspended; People awaiting trial will be moved; Athens Flock cameras concerns",
-      "url": "https://www.gpb.org/news/2026/09/29/georgia-today-gas-tax-suspended-people-awaiting-trial-will-be-moved-athens-flock",
-      "source": "GPB News",
-      "publishedAt": "2026-09-29T17:28:25+00:00",
-      "snippet": "On the Sept. 29 edition: Gov. Brian Kemp suspends the gas tax for the third time this year; hundreds of people awaiting trial will be moved from a detention center in Atlanta to a facility in South Ge",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "surveillance",
-        "budget"
-      ]
-    },
-    {
-      "id": "07e7ba50ee28",
-      "title": "New report on obesity rates shows adult rates stable under 40% in Georgia — but still too high",
-      "url": "https://www.gpb.org/news/2026/09/29/new-report-on-obesity-rates-shows-adult-rates-stable-under-40-in-georgia-still-too",
-      "source": "GPB News",
-      "publishedAt": "2026-09-29T16:28:31+00:00",
-      "snippet": "A new report from the nonprofit Trust for America’s Health shows obesity rates among adults in Georgia are stabilizing but still too high.",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "22a464821a36",
-      "title": "2028 Olympic torch relay to begin in Atlanta and travel through all 50 states before arriving in LA",
-      "url": "https://www.gpb.org/news/2026/09/29/2028-olympic-torch-relay-begin-in-atlanta-and-travel-through-all-50-states-arriving",
-      "source": "GPB News",
-      "publishedAt": "2026-09-29T16:02:00+00:00",
-      "snippet": "Organizers say the torch relay for the 2028 Los Angeles Olympics will begin in Atlanta, the site of the last U.S. Summer Games in 1996. The relay will travel through all 50 states.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "ed13e5b523d6",
-      "title": "At an Athens town hall, residents voice their concerns about Flock camera abuses",
-      "url": "https://www.gpb.org/news/2026/09/29/at-athens-town-hall-residents-voice-their-concerns-about-flock-camera-abuses",
-      "source": "GPB News",
-      "publishedAt": "2026-09-29T15:31:00+00:00",
-      "snippet": "Athens residents voiced their concerns about Flock cameras during a town hall hosted by State Rep. Eric Gisler on Monday night.",
-      "entityIds": [
-        "vg-ga-p-000080"
-      ],
-      "topics": [
-        "surveillance"
       ]
     },
     {
@@ -1572,30 +1516,6 @@
       "entityIds": [],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "e49d54dd4b74",
-      "title": "Warnock calls for Georgia data center moratorium",
-      "url": "https://georgiarecorder.com/2026/08/28/warnock-calls-for-georgia-data-center-moratorium/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-28T20:38:25+00:00",
-      "snippet": "This coverage is made possible through a partnership between WABE and Grist, a nonprofit environmental media organization. U.S. Sen. Raphael Warnock is calling for a statewide moratorium on data cente",
-      "entityIds": [
-        "vg-ga-p-000263"
-      ],
-      "topics": []
-    },
-    {
-      "id": "14eb7a7bae38",
-      "title": "Trump stronghold feels healthcare cuts, but political shift remains unlikely",
-      "url": "https://georgiarecorder.com/2026/08/28/trump-stronghold-feels-healthcare-cuts-but-political-shift-remains-unlikely/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-08-28T08:00:01+00:00",
-      "snippet": "Amber Bates of Cohutta, Georgia, is one of thousands of people without health insurance in the 14th Congressional District, home to about 765,000 people in the northwestern corner of the state. She an",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
       ]
     },
     {
