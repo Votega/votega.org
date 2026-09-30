@@ -14,8 +14,8 @@
   {%- endif -%}
 </div>
 
-<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
 <p id="dataStamp" class="data-stamp"></p>
 
@@ -312,9 +312,9 @@
 
 </style>
 
-<script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/entity-news.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/candidate-claims.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/entity-news.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/candidate-claims.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   const RACES_URL       = 'assets/data/races.json';
   const CONGRESS_URL    = 'assets/data/current-members.json';

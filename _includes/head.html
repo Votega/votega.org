@@ -214,6 +214,6 @@
 
   {%- comment %} Shared front-end helpers (getBasePath, …). Loaded synchronously in
       <head> so it is defined before any page's inline scripts run. {% endcomment -%}
-  <script src="{{ '/assets/scripts/votega-core.js' | relative_url }}"></script>
+  <script src="{{ '/assets/scripts/votega-core.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
 </head>

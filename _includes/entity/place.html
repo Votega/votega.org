@@ -289,10 +289,10 @@
 </section>
 {% endif %}
 
-<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/local-subjects.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/local-meetings.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/local-subjects.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/local-meetings.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   // window.VOTEGA_PLACE is emitted by build_entity_pages.py above this include.
   if (window.VOTEGA_PLACE) {

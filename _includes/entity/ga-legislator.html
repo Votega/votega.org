@@ -331,11 +331,11 @@
 
 <p id="dataStamp" class="data-stamp"></p>
 
-<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/entity-news.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/entity-news.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   const DATA_URL  = getBasePath() + 'assets/data/ga-members.json';
   const RACES_URL = getBasePath() + 'assets/data/races.json';
@@ -1291,4 +1291,4 @@
   }
 </script>
 
-<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

@@ -47,7 +47,7 @@
   </a>
 </div>
 
-<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
 (function () {
   const CARDS = document.getElementById('electionCards');

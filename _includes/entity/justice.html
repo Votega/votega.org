@@ -172,7 +172,7 @@
   <p style="color:#777;font-size:0.9rem;">Loading...</p>
 </div>
 
-<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   const COURT_URL     = 'assets/data/supreme-court.json';
   const DECISIONS_URL = 'assets/data/scotus-decisions.json';
@@ -426,4 +426,4 @@
   })();
 </script>
 
-<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

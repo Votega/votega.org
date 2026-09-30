@@ -208,7 +208,7 @@ breadcrumb:
   or check <a href="{{ '/results' | relative_url }}">election results</a>.
 </p>
 
-<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   const DATA_URL = 'assets/data/ga-election-calendar.json';
 
@@ -378,4 +378,4 @@ breadcrumb:
   loadCalendar();
 </script>
 
-<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

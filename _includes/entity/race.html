@@ -15,9 +15,9 @@
   {%- endif -%}
 </div>
 
-<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/results-contest.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/results-contest.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
 <p id="dataStamp" class="data-stamp"></p>
 
@@ -342,8 +342,8 @@
   }
 </style>
 
-<script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}"></script>
-<script src="{{ '/assets/scripts/candidate-claims.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/candidate-claims.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   const RACES_URL       = getBasePath() + 'assets/data/races.json';
   const GA_MEMBERS_URL  = getBasePath() + 'assets/data/ga-members.json';
@@ -1048,4 +1048,4 @@
   init();
 </script>
 
-<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

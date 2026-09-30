@@ -142,7 +142,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   or check <a href="{{ '/results' | relative_url }}">election results</a>.
 </p>
 
-<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   const DATA_URL = 'assets/data/ga-ballot-measures.json';
 
@@ -278,4 +278,4 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   loadMeasures();
 </script>
 
-<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

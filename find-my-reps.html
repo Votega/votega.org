@@ -97,7 +97,7 @@ css:
 <!-- Reuses the tested Census geocoder from the sample-ballot module (address ->
      county + US House + state House + state Senate districts, via JSONP). No
      boundary files needed: Census resolves these districts server-side. -->
-<script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}"></script>
+<script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
 (function () {
   'use strict';
