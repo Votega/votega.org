@@ -401,7 +401,7 @@
       ? `https://bioguide.congress.gov/bioguide/photo/${existingMemberId[0]}/${existingMemberId}.jpg`
       : '');
     const photoHtml = photoSrc
-      ? `<img class="candidate-photo" src="${escHtmlGa(VotegaPortraits.src(photoSrc))}" alt="${escHtmlGa(candidate.name)}" loading="lazy" decoding="async" width="120" height="120" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',textContent:'👤'}))">`
+      ? `<img class="candidate-photo" src="${escHtmlGa(window.VotegaPortraits ? VotegaPortraits.src(photoSrc) : photoSrc)}" alt="${escHtmlGa(candidate.name)}" loading="lazy" decoding="async" width="120" height="120" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',textContent:'👤'}))">`
       : `<div class="candidate-photo-placeholder">👤</div>`;
 
     // Role and party badges
@@ -852,7 +852,7 @@
       candidate._claimMemberSource = memberSource;
       candidate._claimEmail = incumbentEntry?.email || '';
 
-      await VotegaPortraits.load(getBasePath());
+      if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
       renderCandidate(candidate, race, race.activePhase);
       loadCampaignFinance(candidate, race);
       loadEntityNews(candidate);
@@ -955,7 +955,7 @@
       found._claimKeyType = 'id';
       found._claimEmail = found.email || '';
 
-      await VotegaPortraits.load(getBasePath());
+      if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
       renderCandidate(found, foundRace, foundPhase);
       loadCampaignFinance(found, foundRace);
       loadEntityNews(found);

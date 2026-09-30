@@ -559,7 +559,9 @@
 
   function photoEl(url, name) {
     if (url) {
-      const src = VotegaPortraits.src(url);
+      // Guarded: a stale/failed votega-core.js must not blank the page — fall
+      // back to the original (uncached) URL rather than throwing.
+      const src = window.VotegaPortraits ? VotegaPortraits.src(url) : url;
       return `<img class="candidate-photo" src="${src}" alt="${name}" ` +
              `loading="lazy" decoding="async" width="120" height="120" ` +
              `onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',textContent:'👤'}))">`;
@@ -1033,7 +1035,7 @@
 
       // Non-fatal: without the manifest, portraits render from their original
       // (uncached) URLs, exactly as before this cache existed.
-      await VotegaPortraits.load(getBasePath());
+      if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
 
       renderRace(race, members);
     } catch (err) {
