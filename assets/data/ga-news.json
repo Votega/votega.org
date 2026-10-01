@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-01T12:04:21.371797+00:00",
+    "generatedAt": "2026-10-01T19:58:30.602957+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,15 +21,15 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 111,
+    "count": 107,
     "windowDays": 45,
-    "entityTagged": 68,
+    "entityTagged": 60,
     "topicCounts": {
-      "elections": 29,
+      "elections": 32,
+      "healthcare": 13,
+      "education": 12,
       "courts": 14,
-      "budget": 9,
-      "healthcare": 14,
-      "education": 11,
+      "budget": 8,
       "ethics": 6,
       "surveillance": 2
     },
@@ -42,6 +42,18 @@
       "bioguideId": "C001129",
       "candidateIds": [
         "challenger-mike-collins-senate-2026"
+      ]
+    },
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
       ]
     },
     "vg-ga-p-000335": {
@@ -76,27 +88,15 @@
         "ga-house-161-2026-d-1"
       ]
     },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
     },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
       "url": null,
-      "bioguideId": "W000788"
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
-      ]
+      "bioguideId": "O000174"
     },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
@@ -141,11 +141,24 @@
   },
   "items": [
     {
+      "id": "435ae71690d1",
+      "title": "GPB evening headlines for October 1, 2026",
+      "url": "https://www.gpb.org/news/2026/10/01/gpb-evening-headlines-for-october-1-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-01T19:37:05+00:00",
+      "snippet": "Gas and auto insurance prices are taking center stage in Georgia's gubernatorial race.\nThe State Election Board is considering a last-minute change less than two weeks before the start of early voting",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "healthcare"
+      ]
+    },
+    {
       "id": "dbf3edef8d1f",
       "title": "Along U.S. Route 1, Maine voters worry about heating oil, gas and Canadian tariffs",
       "url": "https://www.gpb.org/news/2026/10/01/along-us-route-1-maine-voters-worry-about-heating-oil-gas-and-canadian-tariffs",
       "source": "GPB News",
-      "publishedAt": "2026-10-01T09:00:22+00:00",
+      "publishedAt": "2026-10-01T18:50:27+00:00",
       "snippet": "Home to both Republican Sen. Susan Collins and Democratic candidate Troy Jackson, Maine's senate race has put rural Aroostook County in the spotlight.",
       "entityIds": [
         "vg-ga-p-000253"
@@ -153,6 +166,91 @@
       "topics": [
         "elections"
       ]
+    },
+    {
+      "id": "bbd2c29e3ba6",
+      "title": "Plan to move hundreds of pretrial detainees from Atlanta area to South Georgia draws challenges",
+      "url": "https://www.gpb.org/news/2026/10/01/plan-move-hundreds-of-pretrial-detainees-atlanta-area-south-georgia-draws",
+      "source": "GPB News",
+      "publishedAt": "2026-10-01T17:44:43+00:00",
+      "snippet": "The plan to move about 400 federal detainees from a facility near Lovejoy to a facility near Ocilla — almost 200 miles away — is drawing sharp criticism and a legal challenge.\nPlan to move hundreds of",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "a92bd88790ea",
+      "title": "Georgia regents name former Southern Company leader Fanning as next chancellor",
+      "url": "https://capitol-beat.org/2026/10/georgia-regents-name-former-southern-company-leader-fanning-as-next-chancellor/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-regents-name-former-southern-company-leader-fanning-as-next-chancellor",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-10-01T16:57:33+00:00",
+      "snippet": "ATLANTA — Georgia’s Board of Regents formalized the hiring Thursday of the next leader of the state’s 25 public colleges and universities, naming Thomas A. Fanning as chancellor. The former president ",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "d47dc85253e2",
+      "title": "Congresswomen Nikema Williams & Ashley Hinson Call for Technology Improvements to be Utilized to Advance Maternal Health",
+      "url": "https://nikemawilliams.house.gov/posts/congresswomen-nikema-williams-ashley-hinson-call-for-technology-improvements-to-be-utilized-to-advance-maternal-health",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-10-01T15:13:47+00:00",
+      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) and Congresswoman Ashely Hinson (IA-02) led a bipartisan congressional letter to Centers for Medicare & Medicaid Services (CMS) Administrator M",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "d9fd1a859fd4",
+      "title": "Allisha Gray and Jordin Canada lead Dream into WNBA semifinals with 93-75 win over Mystics",
+      "url": "https://www.gpb.org/news/2026/10/01/allisha-gray-and-jordin-canada-lead-dream-wnba-semifinals-93-75-win-over-mystics",
+      "source": "GPB News",
+      "publishedAt": "2026-10-01T14:58:33+00:00",
+      "snippet": "The Atlanta Dream are heading to the semifinals of the WNBA playoffs.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "542ba758cbc7",
+      "title": "Gubernatorial candidates promote affordability agendas as early voting nears",
+      "url": "https://www.gpb.org/news/2026/10/01/gubernatorial-candidates-promote-affordability-agendas-early-voting-nears",
+      "source": "GPB News",
+      "publishedAt": "2026-10-01T14:39:00+00:00",
+      "snippet": "Georgia’s candidates for governor, Democrat Keisha Lance Bottoms and Republican Rick Jackson, are traversing the state touting their plans to address some of the economic challenges people are facing.",
+      "entityIds": [
+        "vg-ga-p-000368",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "7c2b9fb13649",
+      "title": "GPB morning headlines for October 1, 2026",
+      "url": "https://www.gpb.org/news/2026/10/01/gpb-morning-headlines-for-october-1-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-01T13:17:46+00:00",
+      "snippet": "The Federal Emergency Management Agency has yet to release federal assistance due for Hurricane Helene two years after the storm hit Georgia; Georgia’s candidates for governor, Democrat Keisha Lance B",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "60bd9686483f",
+      "title": "Gov. Kemp: MEC Plans Approximately 140 New Jobs in Thomson",
+      "url": "https://gov.georgia.gov/press-releases/2026-10-01/gov-kemp-mec-plans-approximately-140-new-jobs-thomson",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-10-01T12:00:00+00:00",
+      "snippet": "Governor Brian P. Kemp today announced that Mayville Engineering Company (MEC) plans to create approximately 140 new jobs and invest an estimated $26 million over the next several years to establish a",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
     },
     {
       "id": "0ef07198d184",
@@ -315,20 +413,6 @@
       "snippet": "Researchers in Georgia have begun using a new nuclear DNA extraction method to track the elusive male sea turtle population and determine if rising sand temperatures are skewing sex ratios.\nThe Curren",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "d955e5924ea4",
-      "title": "11Alive: “Gwinnett woman highlights struggles with health insurance authorization”",
-      "url": "https://www.ossoff.senate.gov/press-releases/11alive-gwinnett-woman-highlights-struggles-with-health-insurance-authorization/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-29T14:50:12+00:00",
-      "snippet": "11Alive: “Ossoff reportedly received dozens of reports from Georgia patients, who have reported that prior authorization issues with their insurance companies have resulted in delays and denials of me",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
     },
     {
       "id": "5051a9c6ce76",
@@ -687,16 +771,6 @@
       ]
     },
     {
-      "id": "da3ed11fb7c3",
-      "title": "Handful of noncitizens accused of voting in Georgia",
-      "url": "https://capitol-beat.org/2026/09/handful-of-noncitizens-accused-of-voting-in-georgia/?utm_source=rss&utm_medium=rss&utm_campaign=handful-of-noncitizens-accused-of-voting-in-georgia",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-23T21:42:53+00:00",
-      "snippet": "ATLANTA — After federal prosecutors charged three noncitizens with voting illegally in Georgia, the man who oversees voting in the state pointed to an audit he ordered four years ago. Last week, the U",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "8417c4b8f5fb",
       "title": "Most Georgians struggle with cost of living, researchers say",
       "url": "https://georgiarecorder.com/2026/09/23/most-georgians-struggle-with-cost-of-living-researchers-say/",
@@ -730,18 +804,6 @@
       "publishedAt": "2026-09-23T15:56:19+00:00",
       "snippet": "Every day at United Way, we meet families who are doing everything right. They’re working, raising children, contributing to their communities and still struggling to find housing they can afford. For",
       "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "f24761915773",
-      "title": "Sen. Ossoff Working Across the Aisle to Improve Sewer and Stormwater Infrastructure Across Georgia",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-improve-sewer-and-stormwater-infrastructure-across-georgia/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-23T14:42:10+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working to improve sewer and stormwater infrastructure across Georgia. Sen. Ossoff is cosponsoring the bipartisan Clean Water Allotment Modernization Act ",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
       "topics": []
     },
     {
@@ -858,18 +920,6 @@
       ]
     },
     {
-      "id": "7344344f66e7",
-      "title": "Sen. Ossoff Working to Improve Public Transportation Across Georgia",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-to-improve-public-transportation-across-georgia/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-21T14:37:34+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working with Republicans and Democrats to improve public transportation across Georgia. Sen. Ossoff is cosponsoring the bipartisan Streamline Transit Proj",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "096e1c52a455",
       "title": "Carr: Three Convicted of Gang and Drug Charges in Fulton County Following Operation Heatwave",
       "url": "https://law.georgia.gov/press-releases/2026-09-21/carr-three-convicted-gang-and-drug-charges-fulton-county-following",
@@ -919,18 +969,6 @@
       ]
     },
     {
-      "id": "b21246e8613e",
-      "title": "VIDEO: Sen. Ossoff Celebrates Hispanic Heritage Month",
-      "url": "https://www.ossoff.senate.gov/press-releases/video-sen-ossoff-celebrates-hispanic-heritage-month/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-18T19:20:32+00:00",
-      "snippet": "Atlanta, Ga, — U.S. Senator Jon Ossoff is celebrating Hispanic Heritage Month with a new video message. “This is U.S. Senator Jon Ossoff, and it is my pleasure to join with Georgians across our state ",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "38f190eda780",
       "title": "ICYMI: Congresswoman Nikema Williams Speaks and Introduces Fighting Fifth Small Business Owner at “Fighting for an Affordable America”",
       "url": "https://nikemawilliams.house.gov/posts/icymi-congresswoman-nikema-williams-speaks-and-introduces-fighting-fifth-small-business-owner-at-fighting-for-an-affordable-america",
@@ -954,20 +992,6 @@
       ],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "bef27bb14747",
-      "title": "NEW: Georgians Report Experiencing Prolonged Pain as Insurance Companies Deny or Delay Care Doctors Say They Need",
-      "url": "https://www.ossoff.senate.gov/press-releases/new-georgians-report-experiencing-prolonged-pain-as-insurance-companies-deny-or-delay-care-doctors-say-they-need/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-18T14:13:37+00:00",
-      "snippet": "Click here to read Sen. Ossoff’s third report from his ongoing investigation into health care costs, loss of services, and delays or denials of needed care Washington, D.C. — A new report from U.S. Se",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
       ]
     },
     {
@@ -1043,19 +1067,6 @@
       "topics": [
         "courts"
       ]
-    },
-    {
-      "id": "cf0c998b8add",
-      "title": "Sens. Ossoff, Rev. Warnock Delivering $12 Million in Federal Funds to Support Tybee Island Beach Renourishment Project",
-      "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-12-million-in-federal-funds-to-support-tybee-island-beach-renourishment-project/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-16T21:44:50+00:00",
-      "snippet": "In 2022, Sens. Ossoff and Rev. Warnock passed into law their “Tybee Island Storm Risk Management Act” to support ongoing renourishment & storm risk management projects In March, Sen. Ossoff and Rev. W",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "dd523bfd1f5d",
@@ -1144,32 +1155,6 @@
       ]
     },
     {
-      "id": "2da9cc5ac6c3",
-      "title": "After GOP’s Historic Medicaid Cuts, Sen. Ossoff Delivering Federal Funding to Strengthen Georgia’s Rural Hospitals",
-      "url": "https://www.ossoff.senate.gov/press-releases/after-gops-historic-medicaid-cuts-sen-ossoff-delivering-federal-funding-to-strengthen-georgias-rural-hospitals/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-14T19:22:31+00:00",
-      "snippet": "Washington, D.C. — After Congressional Republican’s historic cuts to Medicaid last year, U.S. Senator Jon Ossoff is delivering Federal funding to strengthen Georgia’s rural hospitals. Sen. Ossoff is d",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "53e7c2caf3d7",
-      "title": "Sen. Ossoff Working Across the Aisle to Lower Price of Medicine for Georgia Families",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-lower-price-of-medicine-for-georgia-families/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-14T18:46:20+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working across the aisle to lower the price of life-saving medicine. Sen. Ossoff recently cosponsored the bipartisan Biosimilar Red Tape Elimination Act t",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "09e8fb5d0e60",
       "title": "Kemp backs Mike Collins in Georgia’s U.S. Senate race with election less than two months away",
       "url": "https://georgiarecorder.com/2026/09/14/kemp-backs-mike-collins-in-georgias-u-s-senate-race-with-election-less-than-two-months-away/",
@@ -1226,18 +1211,6 @@
       ]
     },
     {
-      "id": "a208663fc515",
-      "title": "WATCH: Sen. Ossoff Commemorates 25th Anniversary of September 11th Terrorist Attacks",
-      "url": "https://www.ossoff.senate.gov/press-releases/watch-sen-ossoff-commemorates-25th-anniversary-of-september-11th-terrorist-attacks/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-11T13:50:32+00:00",
-      "snippet": "Atlanta, Ga. — U.S. Senator Jon Ossoff is commemorating the 25th Anniversary of the September 11th terrorist attacks. “Today, I would like to pause and honor and remember all of those who were killed ",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "da7e10206977",
       "title": "Remembering 9/11/01",
       "url": "https://loudermilk.house.gov/2026/09/11/remembering-9-11-01/",
@@ -1260,19 +1233,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "e5ed7da02555",
-      "title": "Sens. Ossoff, Rev. Warnock Delivering Nearly $500 Million to Improve Water Infrastructure Damaged by Hurricane Helene",
-      "url": "https://www.ossoff.senate.gov/press-releases/sens-ossoff-rev-warnock-delivering-nearly-500-million-to-improve-water-infrastructure-damaged-by-hurricane-helene/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-10T19:14:09+00:00",
-      "snippet": "Washington, D.C. — U.S. Senators Reverend Raphael Warnock and Jon Ossoff today announced they are delivering nearly $500 million in Federal funding to upgrade water infrastructure impacted by Hurrican",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "b7cbad466d72",
@@ -1346,20 +1306,6 @@
         "vg-ga-p-000262"
       ],
       "topics": []
-    },
-    {
-      "id": "40d629e5e04e",
-      "title": "Gov. Kemp: August Net Tax Revenues Up 3.5%",
-      "url": "https://gov.georgia.gov/press-releases/2026-09-09/gov-kemp-august-net-tax-revenues-35",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-09-09T12:00:00+00:00",
-      "snippet": "ATLANTA – The State of Georgia’s net tax collections for the month of August approached $2.50 billion, for an increase of $85.4 million, or 3.5%, from August 2025 (FY 2026), when net tax collections t",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "budget"
-      ]
     },
     {
       "id": "6935b4c3ff83",
