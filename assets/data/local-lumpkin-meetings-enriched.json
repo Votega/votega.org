@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-30T10:33:48Z",
+  "generatedAt": "2026-10-01T15:49:14Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -12,11 +12,11 @@
   ],
   "lastActivity": "2026-10-12",
   "topicTotals": {
-   "development": 12,
+   "development": 13,
    "variance": 4,
    "millage-budget": 8,
-   "appointment": 9,
-   "contract": 9
+   "appointment": 8,
+   "contract": 8
   },
   "dataCenterItems": [],
   "landUseItems": [
@@ -30,6 +30,14 @@
     ],
     "excerpt": "… arcel Number: 048-060 Character Area: Commerce Corridor Case 194 is a request for a Final Plat of a Class VII subdivision entitled The Oaks at Auraria (Phase 2) (12 lots) Per Sec 26-66 & 26-164 3. Location: 1049 BEN HIGGINS ROAD; DAH …",
     "excerptTerm": "subdivision"
+   },
+   {
+    "title": "Land Use & Development Regulations Review Committee Meeting",
+    "date": "2026-10-05",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4355,plainText=false)",
+    "tags": [
+     "development"
+    ]
    },
    {
     "title": "Land Use & Development Regulations Review Committee Meeting",
@@ -129,7 +137,7 @@
     ]
    }
   ],
-  "landUseMeetings": 12,
+  "landUseMeetings": 13,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -168,6 +176,39 @@
      "term": "variance",
      "excerpt": "… Harvey & Brian Slagle Parcel Number: 059A 058 Character Area: Residential Growth Case 197 is a 0.16-acre variance to Sec 27-2.2.3 Chart of Performance Standards Table 1: Performance Standards Chart to allow a home occupation …",
      "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1313",
+   "date": "2026-10-05",
+   "body": "Land Use & Development Regulations Review Committee",
+   "title": "Land Use & Development Regulations Review Committee Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4355,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4355,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 752,
+   "pdfSha256": "dd403aac0025e25bc809e539e5eac595cae73265e4d8c67af93d8e4b1af8277f",
+   "topics": {
+    "development": 1
+   },
+   "tags": [
+    "development"
+   ],
+   "matchedTerms": [
+    "multi-family",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… R ITEMS 1. Approval of September 21, 2026, Land Use & Development Regulations Committee Minutes 2. Class VI Subdivision class in Chapter 26 Land Development 3. Review Multi-Family Housing Chapter 26 — Article XXI • PUBLIC COMMENTS …",
+     "context": "unknown"
     }
    },
    "flags": [
@@ -1023,45 +1064,6 @@
    "flags": [
     "land-use"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1094",
-   "date": "2026-07-07",
-   "body": "Board of Commissioners",
-   "title": "Lumpkin County Board of Commissioners Work Session",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3115,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3115,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 2740,
-   "pdfSha256": "a86cf688d446f0322f4c76657c7bc4d18080453191608e4a05ddd2cb24b2e287",
-   "topics": {
-    "appointment": 1,
-    "contract": 1
-   },
-   "tags": [
-    "appointment",
-    "contract"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "reappoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "reappoint",
-     "excerpt": "… 6. Board of Commissioners - Special Called Work Session - June 17, 2026 9:00 AM • RESOLUTIONS 7. 2026-42 Reappoint Members to Lumpkin County Planning Commission - Chris Adams to Seat 3, and Derek Runyon to Seat 4, both with terms …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… CWSA Sanitary Sewer Service Area/Watershed Protection Area Map (Water & Sewerage Authority Director Sean Phipps) • CONTRACTS/AGREEMENTS 10. 2026-066 DebtBook Contract Renewal (Finance Director Abby Branan) 11. 2026-067 Enotah Accountability …",
-     "context": "unknown"
-    }
-   },
-   "flags": [],
    "dataCenterItems": []
   }
  ]

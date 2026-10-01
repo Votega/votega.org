@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-09-30T10:33:47Z",
+  "generatedAt": "2026-10-01T15:49:04Z",
   "source": "Carroll County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Carroll County",
   "count": 25
@@ -11,10 +11,10 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-06",
+  "lastActivity": "2026-11-05",
   "topicTotals": {
+   "variance": 6,
    "special-land-use": 6,
-   "variance": 5,
    "appointment": 3,
    "contract": 9,
    "millage-budget": 7,
@@ -33,9 +33,17 @@
   ],
   "landUseItems": [
    {
+    "title": "Board of Appeals",
+    "date": "2026-11-05",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3025,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
+   {
     "title": "Board of Commissioners Meeting",
     "date": "2026-10-06",
-    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3021,plainText=false)",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3023,plainText=false)",
     "tags": [
      "special-land-use"
     ]
@@ -149,22 +157,54 @@
     ]
    }
   ],
-  "landUseMeetings": 15,
+  "landUseMeetings": 16,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
   {
+   "id": "764",
+   "date": "2026-11-05",
+   "body": "Board of Appeals",
+   "title": "Board of Appeals",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3025,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3025,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1215,
+   "pdfSha256": "a1f3a30c9e4b858e913632ace55f731fb5e8d4117f27dbecbc9bed64c400cd52",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-11-01: Intrafamily-Lot Size Variance, zoned Agriculture, to split off 3 acres from 6.03 acres, which is less than the required 4 acre minimum. This property …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
    "id": "837",
    "date": "2026-10-06",
    "body": "Board of Commissioners",
    "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3021,plainText=false)",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3023,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3021,plainText=false)",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3023,plainText=false)",
    "textMethod": "pdftotext",
    "textChars": 3611,
-   "pdfSha256": "48b22b04f03b419f6b2d82f3d8935498724c1fbcf11d59bff00ed4cd922a0464",
+   "pdfSha256": "50080004078f413884e0cd414be20f943fdaee7637e40c097b34ff605ce2bb59",
    "topics": {
     "special-land-use": 1
    },
@@ -1041,24 +1081,6 @@
    "flags": [
     "land-use"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "806",
-   "date": "2026-04-02",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Work Session",
-   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2885,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2885,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 926,
-   "pdfSha256": "aab44f37e41c74b817e3f961a19f9d1141a1dec6a647bb0943ce9ff275a45674",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   }
  ]
