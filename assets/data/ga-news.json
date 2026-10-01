@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-01T03:06:27.378200+00:00",
+    "generatedAt": "2026-10-01T12:04:21.371797+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,14 +21,14 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 114,
+    "count": 111,
     "windowDays": 45,
-    "entityTagged": 67,
+    "entityTagged": 68,
     "topicCounts": {
-      "elections": 28,
+      "elections": 29,
       "courts": 14,
       "budget": 9,
-      "healthcare": 17,
+      "healthcare": 14,
       "education": 11,
       "ethics": 6,
       "surveillance": 2
@@ -36,6 +36,14 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
+      "url": null,
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
+    },
     "vg-ga-p-000335": {
       "name": "Keisha R. Lance Bottoms",
       "url": null,
@@ -77,14 +85,6 @@
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
-    },
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
-      "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
     },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
@@ -141,6 +141,20 @@
   },
   "items": [
     {
+      "id": "dbf3edef8d1f",
+      "title": "Along U.S. Route 1, Maine voters worry about heating oil, gas and Canadian tariffs",
+      "url": "https://www.gpb.org/news/2026/10/01/along-us-route-1-maine-voters-worry-about-heating-oil-gas-and-canadian-tariffs",
+      "source": "GPB News",
+      "publishedAt": "2026-10-01T09:00:22+00:00",
+      "snippet": "Home to both Republican Sen. Susan Collins and Democratic candidate Troy Jackson, Maine's senate race has put rural Aroostook County in the spotlight.",
+      "entityIds": [
+        "vg-ga-p-000253"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
       "id": "0ef07198d184",
       "title": "DOJ lawsuit seeking Georgia voters’ unredacted data dismissed, again",
       "url": "https://georgiarecorder.com/2026/09/30/doj-lawsuit-seeking-georgia-voters-unredacted-data-dismissed-again/",
@@ -181,30 +195,6 @@
       ]
     },
     {
-      "id": "ce6ac0d6f39e",
-      "title": "GPB evening headlines for September 30, 2026",
-      "url": "https://www.gpb.org/news/2026/09/30/gpb-evening-headlines-for-september-30-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-09-30T19:46:40+00:00",
-      "snippet": "The Georgia Department of Public Health is reporting five new measles cases among members of one family living in Middle Georgia's Jasper County. \nAs the cost of fuel continues to rise, a coalition of",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "be59eae44100",
-      "title": "5 new cases of measles found in state — this time in Jasper County",
-      "url": "https://www.gpb.org/news/2026/09/30/5-new-cases-of-measles-found-in-state-time-in-jasper-county",
-      "source": "GPB News",
-      "publishedAt": "2026-09-30T19:15:12+00:00",
-      "snippet": "The Georgia Department of Public Health is reporting five additional measles cases among members of one family living about an hour southeast of Atlanta.",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
       "id": "50f3a5191ed9",
       "title": "Demand rises in second year of Georgia school voucher program",
       "url": "https://thecurrentga.org/2026/09/30/demand-rises-in-second-year-of-georgia-school-voucher-program/",
@@ -214,28 +204,6 @@
       "entityIds": [],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "88dd8e53a4f8",
-      "title": "'NU AFRICANS' exhibition puts Black women's beauty on full display at Hammonds House",
-      "url": "https://www.gpb.org/news/2026/09/30/nu-africans-exhibition-puts-black-womens-beauty-on-full-display-at-hammonds-house",
-      "source": "GPB News",
-      "publishedAt": "2026-09-30T18:42:00+00:00",
-      "snippet": "“NU AFRICANS” returns to Atlanta’s Hammonds House Museum with new portraits, sculptures and costumes celebrating Black women across the diaspora.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "2cced4b444e2",
-      "title": "Georgia Today: BioLab anniversary; More measles; FEMA funds",
-      "url": "https://www.gpb.org/news/2026/09/30/georgia-today-biolab-anniversary-more-measles-fema-funds",
-      "source": "GPB News",
-      "publishedAt": "2026-09-30T18:39:44+00:00",
-      "snippet": "On the September 30 edition: It's been two years since the BioLab chemical fire in Conyers and residents are still worried about their health; the Georgia Department of Public Health is reporting five",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
       ]
     },
     {
