@@ -24,6 +24,7 @@ phases via the CATEGORY_BUILDERS table.
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 from lib.atomic_io import write_json_atomic
 import os
@@ -487,6 +488,44 @@ def ga_next_general_election(today=None):
 _GA_ACTIVE_STATUSES = (None, "", "Suspended", "Vacant")
 
 
+# ─────────────────────────── Directory / browse index pages ───────────────────────────
+# WHY: every entity page was reachable only via sitemap.xml — the finder/hub pages
+# build their lists client-side, so Googlebot saw no internal <a href> to any of the
+# ~1,400 profiles. GSC reported them all as "Discovered – currently not indexed"
+# (Referring page: None detected, Last crawl: N/A). These server-rendered directory
+# pages give every profile a real inbound link, and are themselves linked site-wide
+# from the footer sitemap, turning sitemap-only orphans into a crawlable graph.
+#
+# Each builder appends one record here as it already computes name/permalink/group,
+# so the directory never drifts from the pages it lists. build_directory_pages()
+# consumes it after all builders run.
+_DIRECTORY = []
+
+
+def _dir_add(section, group, group_order, sort_key, name, url, group_url=None):
+    _DIRECTORY.append({"section": section, "group": group, "group_order": group_order,
+                       "sort": sort_key, "name": name, "url": url, "group_url": group_url})
+
+
+def _race_category(chamber):
+    """(section-heading label, order) bucket for a race/candidate's office."""
+    cl = (chamber or "").strip().lower()
+    if cl in ("u.s. senate", "u.s. house"):
+        return ("U.S. Congress", 1)
+    if cl == "georgia state senate":
+        return ("Georgia State Senate", 2)
+    if cl == "georgia house of representatives":
+        return ("Georgia House of Representatives", 3)
+    if "court" in cl:  # Supreme Court of Georgia, Court of Appeals, Superior Court
+        return ("Judicial", 4)
+    if cl == "district attorney":
+        return ("District Attorney", 5)
+    if any(x in cl for x in ("governor", "lieutenant", "attorney general", "commissioner",
+                             "secretary of state", "superintendent")):
+        return ("Statewide Executive", 0)
+    return ("Other Races", 6)
+
+
 def build_ga_legislators(records, urls, prior, new_state):
     data = load("ga-members.json")
     members = {m["id"]: m for m in data.get("members", [])}
@@ -515,6 +554,10 @@ def build_ga_legislators(records, urls, prior, new_state):
         seen.add(slug)
         permalink = f"/ga-legislators/{slug}/"
         urls.setdefault("ga-legislator", {})[mid] = permalink
+        _dir_add("legislators",
+                 "Georgia State Senate" if is_senate else "Georgia House of Representatives",
+                 0 if is_senate else 1, (district if isinstance(district, int) else 9999, name),
+                 (f"District {district} — {name}" if district else name), permalink)
 
         dist_txt = f", District {district}" if district else ""
         # <title> uses the compact "GA House/Senate District N" form to stay under
@@ -605,6 +648,10 @@ def build_federal_legislators(records, urls, prior, new_state):
         seen.add(slug)
         permalink = f"/us-congress/{slug}/"
         urls.setdefault("us-congress", {})[bid] = permalink
+        _dir_add("congress", "U.S. Senate" if is_senate else "U.S. House",
+                 0 if is_senate else 1, (district if isinstance(district, int) else 0, name),
+                 (f"{name} — District {district}" if district and not is_senate else name),
+                 permalink)
 
         dist_txt = f", Georgia District {district}" if district and not is_senate else " for Georgia"
         share_title = f"{name} — {role}{dist_txt}"
@@ -665,6 +712,8 @@ def build_races(records, urls, prior, new_state):
         seen.add(slug)
         permalink = f"/races/{slug}/"
         urls.setdefault("race", {})[rid] = permalink
+        _rcat, _rorder = _race_category(chamber)
+        _dir_add("races", _rcat, _rorder, name, name, permalink)
 
         share_title = f"{abbrev_office(name)} — Candidates & Results"
         desc = (f"Candidates, the incumbent, district information, and results for the "
@@ -799,6 +848,9 @@ def build_candidates(records, urls, prior, new_state):
                       or ((race.get("chamber") or "") + (f" District {dist}" if dist else ""))
                       or rid)
         race_url = urls.get("race", {}).get(rid)
+        _ccat_order = _race_category(race.get("chamber"))[1]
+        _dir_add("candidates", race_label, (_ccat_order, race_label), name, name, permalink,
+                 group_url=race_url)
         # Party from the structured candidate object; fall back to the desc prefix
         # ("Republican — U.S. Senate 2026"). The old "·" split never matched (the
         # separator is an em dash), so affiliation had silently been null.
@@ -876,6 +928,7 @@ def build_federal_executives(records, urls, prior, new_state):
         seen.add(slug)
         permalink = f"/federal-executives/{slug}/"
         urls.setdefault("federal-executive", {})[oid] = permalink
+        _dir_add("executive", "Federal Executive Branch", 0, name, name, permalink)
 
         share_title = f"{name} — {abbrev_office(role)}" if role else name
         desc = (f"{role}. Profile, background, and official actions for {name} in the "
@@ -928,6 +981,7 @@ def build_justices(records, urls, prior, new_state):
         seen.add(slug)
         permalink = f"/justices/{slug}/"
         urls.setdefault("justice", {})[jid] = permalink
+        _dir_add("judges", "U.S. Supreme Court", 0, name, name, permalink)
 
         share_title = f"{name} — U.S. Supreme Court"
         desc = (f"{role}. Appointment, tenure, and voting record for {name} on the "
@@ -1071,6 +1125,110 @@ def build_places(records, urls, prior, new_state):
     return count
 
 
+_DIRECTORY_CSS = (
+    "<style>\n"
+    "  .dir-lede { font-size: 1.05rem; color: #444; line-height: 1.6; max-width: 46rem; margin: 0 0 1.5rem; }\n"
+    "  .dir-group { font-size: 1.1rem; color: #1a2733; margin: 1.6rem 0 0.4rem; border-bottom: 1px solid #eee; padding-bottom: 0.25rem; }\n"
+    "  .dir-group a { color: #1a56a8; }\n"
+    "  .dir-count { font-size: 0.8rem; font-weight: 600; color: #8894a8; }\n"
+    "  .dir-list { list-style: none; padding: 0; margin: 0.4rem 0 0; columns: 3 14rem; column-gap: 1.5rem; }\n"
+    "  .dir-list li { margin: 0 0 0.3rem; break-inside: avoid; line-height: 1.4; }\n"
+    "  .dir-list a { color: #1a56a8; text-decoration: none; }\n"
+    "  .dir-list a:hover { text-decoration: underline; }\n"
+    "  .dir-hub { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.6rem; max-width: 34rem; }\n"
+    "  .dir-hub li { font-size: 1.1rem; }\n"
+    "</style>"
+)
+
+# (section-key, url-slug, <h1>/title, lede paragraph) — order = order on the hub page.
+_DIR_SECTIONS = [
+    ("candidates", "candidates", "All 2026 Georgia Candidates",
+     "Every candidate on Georgia's 2026 ballot with a VoteGA profile, grouped by the office they are running for. Each race heading links to that race's full page."),
+    ("races", "races", "All 2026 Georgia Races",
+     "Every race on Georgia's 2026 ballot — federal, statewide executive, state legislative, judicial, and district attorney."),
+    ("legislators", "legislators", "All Georgia Legislators",
+     "Every current member of the Georgia General Assembly, by chamber and district."),
+    ("congress", "congress", "Georgia's Members of U.S. Congress",
+     "Georgia's delegation to the U.S. House and Senate."),
+    ("executive", "executive", "Federal Executive Officials",
+     "Officials of the U.S. federal executive branch profiled on VoteGA."),
+    ("judges", "judges", "U.S. Supreme Court Justices",
+     "The justices of the Supreme Court of the United States."),
+]
+
+
+def _dir_section_page(section, slug, title, lede, rows, prior, new_state):
+    """Render one directory section into a grouped list of entity links."""
+    groups = {}
+    for r in rows:
+        groups.setdefault((r["group_order"], r["group"], r.get("group_url")), []).append(r)
+    parts = [f'<p class="dir-lede">{html.escape(lede)}</p>']
+    fp = []
+    for key in sorted(groups, key=lambda k: (k[0], str(k[1]))):
+        _order, gname, gurl = key
+        items = sorted(groups[key], key=lambda r: r["sort"])
+        heading = f'<a href="{gurl}">{html.escape(gname)}</a>' if gurl else html.escape(gname)
+        parts.append(f'<h2 class="dir-group">{heading} <span class="dir-count">{len(items)}</span></h2>')
+        parts.append('<ul class="dir-list">')
+        for it in items:
+            parts.append(f'<li><a href="{it["url"]}">{html.escape(it["name"])}</a></li>')
+            fp.append(it["url"])
+        parts.append('</ul>')
+    permalink = f"/directory/{slug}/"
+    lastmod = resolve_lastmod(permalink, {"items": fp}, date.today().isoformat(), prior, new_state)
+    fm = {
+        "layout": "default",
+        "title": yaml_quote(title),
+        "share-title": yaml_quote(f"{title} — VoteGA"),
+        "share-description": yaml_quote(lede),
+        "permalink": permalink,
+        "last_modified_at": lastmod,
+    }
+    bc = breadcrumb_ld([("Home", "/"), ("Directory", "/directory/"), (title, None)])
+    body = f"{bc}\n{_DIRECTORY_CSS}\n" + "\n".join(parts)
+    write_page("directory", slug, fm, body)
+
+
+def build_directory_pages(prior, new_state):
+    """Server-rendered browse/index pages that link every entity profile, plus a hub
+    at /directory/. Consumes the records each builder appended to _DIRECTORY."""
+    by_section = {}
+    for rec in _DIRECTORY:
+        by_section.setdefault(rec["section"], []).append(rec)
+
+    hub = []
+    for section, slug, title, lede in _DIR_SECTIONS:
+        rows = by_section.get(section) or []
+        if not rows:
+            continue
+        _dir_section_page(section, slug, title, lede, rows, prior, new_state)
+        hub.append((title, f"/directory/{slug}/", len(rows)))
+
+    if not hub:
+        return 0
+
+    parts = ['<p class="dir-lede">Browse every person and race profiled on VoteGA. '
+             'These pages link to each profile so readers &mdash; and search engines &mdash; can reach them all.</p>',
+             '<ul class="dir-hub">']
+    for title, url, n in hub:
+        parts.append(f'<li><a href="{url}">{html.escape(title)}</a> <span class="dir-count">{n}</span></li>')
+    parts.append('</ul>')
+    lastmod = resolve_lastmod("/directory/", {"hub": [u for _t, u, _n in hub]},
+                              date.today().isoformat(), prior, new_state)
+    fm = {
+        "layout": "default",
+        "title": yaml_quote("Site Directory"),
+        "share-title": yaml_quote("Site Directory — VoteGA"),
+        "share-description": yaml_quote("Browse every candidate, race, legislator, and official profiled on VoteGA."),
+        "permalink": "/directory/",
+        "last_modified_at": lastmod,
+    }
+    bc = breadcrumb_ld([("Home", "/"), ("Directory", None)])
+    body = f"{bc}\n{_DIRECTORY_CSS}\n" + "\n".join(parts)
+    write_page("directory", "index", fm, body)
+    return len(hub) + 1
+
+
 CATEGORY_BUILDERS = [
     ("GA Legislator", build_ga_legislators),
     ("U.S. Congress", build_federal_legislators),
@@ -1098,6 +1256,7 @@ def main():
 
     urls = {}
     total = 0
+    _DIRECTORY[:] = []  # reset the cross-builder directory accumulator
     for label, builder in CATEGORY_BUILDERS:
         try:
             n = builder(records, urls, prior, new_state)
@@ -1106,6 +1265,12 @@ def main():
             continue
         print(f"  {label}: {n} pages")
         total += n
+    try:
+        n = build_directory_pages(prior, new_state)
+        print(f"  Directory: {n} pages")
+        total += n
+    except Exception as exc:
+        print(f"  Directory: FAILED — {exc}", file=sys.stderr)
     write_json_atomic(ENTITY_URLS_PATH, urls, separators=(",", ":"))
     write_json_atomic(LASTMOD_STATE_PATH, new_state, separators=(",", ":"))
     changed = sum(1 for k, v in new_state.items() if prior.get(k, {}).get("h") != v["h"])
