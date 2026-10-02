@@ -119,6 +119,14 @@
   .po-card.is-presiding { border-color: #008AFF; box-shadow: 0 2px 10px rgba(0,138,255,0.10); }
   /* A flagged seat (status set) overrides the presiding tint so the exception reads first. */
   .po-card.is-flagged { border-color: #ffca28; box-shadow: 0 2px 10px rgba(255,202,40,0.12); }
+  /* Member portrait — hot-linked + lazy; falls back to an initials monogram when
+     there is no photo (or the link 404s). object-position:top keeps faces in frame. */
+  .po-avatar { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; object-position: top center;
+    background: #eef2f7; flex-shrink: 0; align-self: flex-start; }
+  .po-avatar-fallback { display: flex; align-items: center; justify-content: center; font-weight: 700;
+    font-size: 1.3rem; color: #5b6b85; text-transform: uppercase; letter-spacing: 0.02em; }
+  .po-card.is-presiding .po-avatar { box-shadow: 0 0 0 2px #008AFF; }
+  .po-card.is-flagged .po-avatar { box-shadow: 0 0 0 2px #ffca28; }
   .po-role { align-self: flex-start; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.03em;
     text-transform: uppercase; color: #1a56a8; background: #f0f4ff; border-radius: 20px; padding: 0.15rem 0.6rem; }
   .po-card.is-presiding .po-role { color: #fff; background: #008AFF; }
@@ -195,7 +203,21 @@
   {% assign ordered = ordered | uniq %}
   <div class="po-grid">
     {% for m in ordered %}
+        {%- comment %} Initials monogram for the no-photo / broken-photo fallback:
+            first letter of the first and last name tokens. {% endcomment -%}
+        {%- assign nm = m.name | default: "" | strip -%}
+        {%- assign parts = nm | split: " " -%}
+        {%- assign initials = "" -%}
+        {%- if nm != "" -%}{%- assign initials = parts.first | slice: 0 -%}{%- endif -%}
+        {%- if parts.size > 1 -%}{%- assign lastinit = parts.last | slice: 0 -%}{%- assign initials = initials | append: lastinit -%}{%- endif -%}
         <div class="po-card{% if presiding_roles contains m.role %} is-presiding{% endif %}{% if m.status %} is-flagged{% endif %}">
+          {%- if m.photo and m.photo != "" %}
+          <img class="po-avatar" src="{{ m.photo }}" alt="{{ m.name | escape }}" loading="lazy" width="64" height="64"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <span class="po-avatar po-avatar-fallback" aria-hidden="true" style="display:none">{{ initials | default: "?" }}</span>
+          {%- else %}
+          <span class="po-avatar po-avatar-fallback" aria-hidden="true">{{ initials | default: "?" }}</span>
+          {%- endif %}
           <span class="po-role">{{ m.title | default: m.role }}</span>
           {% if m.status %}<span class="po-status {{ m.status }}">{{ m.status }}</span>{% endif %}
           <p class="po-name">{% if m.name and m.name != "" %}{{ m.name }}{% else %}<span class="muted">Name TBD</span>{% endif %}</p>
