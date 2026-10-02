@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-02T09:09:45.210927+00:00",
+    "generatedAt": "2026-10-02T17:02:33.327671+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -25,25 +25,17 @@
     "windowDays": 45,
     "entityTagged": 68,
     "topicCounts": {
-      "elections": 33,
+      "elections": 32,
+      "courts": 17,
       "surveillance": 3,
-      "courts": 16,
-      "healthcare": 17,
-      "education": 11,
+      "education": 12,
+      "healthcare": 14,
       "budget": 8,
       "ethics": 6
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
-      "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
-    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
@@ -86,10 +78,23 @@
         "ga-house-161-2026-d-1"
       ]
     },
+    "vg-ga-p-000261": {
+      "name": "Sanford D. Bishop",
+      "url": null,
+      "bioguideId": "B000490"
+    },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
+    },
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
+      "url": null,
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
     },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
@@ -141,17 +146,61 @@
   },
   "items": [
     {
-      "id": "dbf3edef8d1f",
-      "title": "Along U.S. Route 1, Maine voters worry about heating oil, gas and Canadian tariffs",
-      "url": "https://www.gpb.org/news/2026/10/01/along-us-route-1-maine-voters-worry-about-heating-oil-gas-and-canadian-tariffs",
+      "id": "5f69e955305d",
+      "title": "Macon copper thefts leaves churches vulnerable to damage, costly repairs",
+      "url": "https://www.gpb.org/news/2026/10/02/macon-copper-thefts-leaves-churches-vulnerable-damage-costly-repairs",
       "source": "GPB News",
-      "publishedAt": "2026-10-01T22:27:21+00:00",
-      "snippet": "Home to both Republican Sen. Susan Collins and Democratic candidate Troy Jackson, Maine's senate race has put rural Aroostook County in the spotlight.",
-      "entityIds": [
-        "vg-ga-p-000253"
-      ],
+      "publishedAt": "2026-10-02T15:34:00+00:00",
+      "snippet": "To a utility company, copper is the essential metal component that delivers power. To a thief, however, the thick wiring in the power box and the cooling tubes inside an air conditioner just mean fast",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "c79dafebd4bd",
+      "title": "Atlanta Dream star forward Angel Reese voted WNBA Defensive Player of the Year",
+      "url": "https://www.gpb.org/news/2026/10/02/atlanta-dream-star-forward-angel-reese-voted-wnba-defensive-player-of-the-year",
+      "source": "GPB News",
+      "publishedAt": "2026-10-02T14:24:36+00:00",
+      "snippet": "Atlanta Dream star forward Angel Reese was voted WNBA Defensive Player of the Year on Thursday, receiving 46 votes from 72 media members.",
+      "entityIds": [],
       "topics": [
         "elections"
+      ]
+    },
+    {
+      "id": "fca3dc3af778",
+      "title": "Atlanta City FC will reveal team colors, crest at free event on Oct. 4",
+      "url": "https://www.gpb.org/news/2026/10/02/atlanta-city-fc-will-reveal-team-colors-crest-at-free-event-on-oct-4",
+      "source": "GPB News",
+      "publishedAt": "2026-10-02T13:16:04+00:00",
+      "snippet": "Women’s professional soccer is coming to Downtown as Atlanta City FC prepares to take the pitch at Mercedes-Benz Stadium, sharing space with Atlanta United and Atlanta Falcons.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "96a247921206",
+      "title": "GPB morning headlines for October 2, 2026",
+      "url": "https://www.gpb.org/news/2026/10/02/gpb-morning-headlines-for-october-2-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-02T13:14:22+00:00",
+      "snippet": "The Georgia State Election Board sent letters to the Department of Homeland Security and the Department of Justice, asking them to declare Georgia’s voting system illegal and compel the secretary of s",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
+      "id": "0ba621cdf831",
+      "title": "State Election Board seeks DOJ, DHS  intervention in election equipment update",
+      "url": "https://www.gpb.org/news/2026/10/02/state-election-board-seeks-doj-dhs-intervention-in-election-equipment-update",
+      "source": "GPB News",
+      "publishedAt": "2026-10-02T12:41:00+00:00",
+      "snippet": "The Georgia State Election Board sent letters to the Department of Homeland Security and the Department of Justice, asking them to declare Georgia’s voting system illegal and compel the secretary of s",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
       ]
     },
     {
@@ -179,16 +228,6 @@
       "topics": []
     },
     {
-      "id": "5d5e230fa6ba",
-      "title": "Aviation, agriculture leaders form new group researching sustainable jet fuel production",
-      "url": "https://www.gpb.org/news/2026/10/01/aviation-agriculture-leaders-form-new-group-researching-sustainable-jet-fuel",
-      "source": "GPB News",
-      "publishedAt": "2026-10-01T20:44:00+00:00",
-      "snippet": "The Sustainable Aviation Fuel Coalition includes major airlines and agriculture groups from around Georgia working together on research, development, and production of biofuel.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "eb5786435492",
       "title": "Proposal requiring Georgia election workers to ‘shuffle’ ballots at the polls fails to find support",
       "url": "https://georgiarecorder.com/2026/10/01/proposal-requiring-georgia-election-workers-to-shuffle-ballots-at-the-polls-fails-to-find-support/",
@@ -198,56 +237,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "7b9a4208972b",
-      "title": "Medicaid work requirements are here to stay, no matter who wins Georgia governor's race",
-      "url": "https://www.gpb.org/news/2026/10/01/medicaid-work-requirements-are-here-stay-no-matter-who-wins-georgia-governors-race",
-      "source": "GPB News",
-      "publishedAt": "2026-10-01T20:24:00+00:00",
-      "snippet": "Both candidates have pinned healthcare reform at the top of their to do list.",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "healthcare"
-      ]
-    },
-    {
-      "id": "435ae71690d1",
-      "title": "GPB evening headlines for October 1, 2026",
-      "url": "https://www.gpb.org/news/2026/10/01/gpb-evening-headlines-for-october-1-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-10-01T19:37:05+00:00",
-      "snippet": "Gas and auto insurance prices are taking center stage in Georgia's gubernatorial race.\nThe State Election Board is considering a last-minute change less than two weeks before the start of early voting",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "healthcare"
-      ]
-    },
-    {
-      "id": "bbd2c29e3ba6",
-      "title": "Plan to move hundreds of pretrial detainees from Atlanta area to South Georgia draws challenges",
-      "url": "https://www.gpb.org/news/2026/10/01/plan-move-hundreds-of-pretrial-detainees-atlanta-area-south-georgia-draws",
-      "source": "GPB News",
-      "publishedAt": "2026-10-01T17:44:43+00:00",
-      "snippet": "The plan to move about 400 federal detainees from a facility near Lovejoy to a facility near Ocilla — almost 200 miles away — is drawing sharp criticism and a legal challenge.\nPlan to move hundreds of",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "555b2462ab43",
-      "title": "Georgia Today: Voter lawsuit tossed; Candidates focus on health care; Jimmy Carter's birthday",
-      "url": "https://www.gpb.org/news/2026/10/01/georgia-today-voter-lawsuit-tossed-candidates-focus-on-health-care-jimmy-carters",
-      "source": "GPB News",
-      "publishedAt": "2026-10-01T17:27:57+00:00",
-      "snippet": "On the Oct. 1 edition: Healthcare and affordability take center stage in the Georgia governor's race; the Atlanta Braves face elimination in the wild card series; the State Election Board considers a ",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "courts",
-        "healthcare"
       ]
     },
     {
@@ -593,6 +582,20 @@
       "snippet": "ATLANTA — Former Atlanta Mayor Keisha Lance Bottoms pitched more proposals to help Georgians cover major expenses in her bid to be the state’s next governor. Last week, the Democrat and her Republican",
       "entityIds": [
         "vg-ga-p-000335"
+      ],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "af6f45b3c894",
+      "title": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!",
+      "url": "http://bishop.house.gov/node/8471",
+      "source": "Rep. Sanford Bishop (GA-02, press)",
+      "publishedAt": "2026-09-28T20:56:13+00:00",
+      "snippet": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!\n\n  \n    \n      Image or Video    \n                  \n\n  \n  \n  \n    \n      Image    \n        ",
+      "entityIds": [
+        "vg-ga-p-000261"
       ],
       "topics": [
         "education"
