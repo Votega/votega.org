@@ -11,7 +11,7 @@ Exit code 0 = valid. Exit code 1 = one or more errors (details printed to stdout
 """
 
 import sys
-from datetime import date
+from datetime import date, datetime
 
 import yaml
 
@@ -51,6 +51,17 @@ MAX_YEAR = date.today().year + 12
 # only when present, so it can be filled in incrementally without a bulk backfill.
 # NOTHING renders or exports it yet — a dormant field.
 VALID_TERM_PROVENANCE = {"verified", "assumed", "unknown"}
+
+# OPTIONAL member status — mirrors the ga-members.json vocab (see CLAUDE.md) so a
+# local seat that is not in normal service can be flagged and badged. Absent/None
+# = sitting normally. A "Suspended" member STILL HOLDS the seat (badged, kept in
+# the roster — e.g. a chair suspended by executive order pending an interim
+# appointment); "Resigned"/"Removed"/"Deceased" are historical exits and "Vacant"
+# marks an empty seat. The companions statusDate (ISO date), statusNote (free
+# text) and statusSource (a URL to the order/news backing the status, rendered as
+# a link in the note) are validated only when present, so a status can be adopted
+# incrementally.
+VALID_STATUSES = {"Vacant", "Suspended", "Resigned", "Removed", "Deceased"}
 
 REQUIRED_MEMBER_FIELDS = [
     "name",
@@ -137,6 +148,28 @@ def validate_member(juris_id, index, member, partisan):
     if provenance is not None and provenance not in VALID_TERM_PROVENANCE:
         err(context, f"term_provenance must be one of {sorted(VALID_TERM_PROVENANCE)}, "
                      f"got: {provenance!r}")
+
+    # OPTIONAL service status + its companions. Validated only when present.
+    status = member.get("status")
+    if status is not None and status not in VALID_STATUSES:
+        err(context, f"status must be one of {sorted(VALID_STATUSES)}, got: {status!r}")
+    status_note = member.get("statusNote")
+    if status_note is not None and (not isinstance(status_note, str) or not status_note.strip()):
+        err(context, f"statusNote must be a non-empty string when present, got: {status_note!r}")
+    status_source = member.get("statusSource")
+    if status_source is not None and (not isinstance(status_source, str) or not status_source.strip()):
+        err(context, f"statusSource must be a non-empty string (URL) when present, got: {status_source!r}")
+    status_date = member.get("statusDate")
+    if status_date is not None:
+        ok = isinstance(status_date, date)  # PyYAML parses a bare YYYY-MM-DD to date
+        if not ok and isinstance(status_date, str):
+            try:
+                datetime.strptime(status_date, "%Y-%m-%d")
+                ok = True
+            except ValueError:
+                ok = False
+        if not ok:
+            err(context, f"statusDate must be an ISO date (YYYY-MM-DD) when present, got: {status_date!r}")
 
     last_elected = check_year(context, "last_elected", member.get("last_elected"))
     term_end = check_year(context, "term_end", member.get("term_end"))

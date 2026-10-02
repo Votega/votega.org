@@ -117,6 +117,8 @@
   .po-card { border: 1px solid #ddd; border-radius: 10px; padding: 1.1rem; background: #fff;
     display: flex; flex-direction: column; gap: 0.45rem; }
   .po-card.is-presiding { border-color: #008AFF; box-shadow: 0 2px 10px rgba(0,138,255,0.10); }
+  /* A flagged seat (status set) overrides the presiding tint so the exception reads first. */
+  .po-card.is-flagged { border-color: #ffca28; box-shadow: 0 2px 10px rgba(255,202,40,0.12); }
   .po-role { align-self: flex-start; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.03em;
     text-transform: uppercase; color: #1a56a8; background: #f0f4ff; border-radius: 20px; padding: 0.15rem 0.6rem; }
   .po-card.is-presiding .po-role { color: #fff; background: #008AFF; }
@@ -129,6 +131,16 @@
   .po-terms { font-size: 0.84rem; color: #444; margin: 0.1rem 0 0; line-height: 1.6; }
   .po-terms .po-next { font-weight: 600; color: #1a56a8; }
   .po-tiebreak { font-size: 0.78rem; color: #777; font-style: italic; margin: 0; }
+  /* Service-status badge + note (mirrors the ga-legislator status colors). */
+  .po-status { align-self: flex-start; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.03em;
+    text-transform: uppercase; border-radius: 20px; padding: 0.15rem 0.6rem; border: 1px solid; }
+  .po-status.Suspended { background: #fff8e1; border-color: #ffca28; color: #4a3500; }
+  .po-status.Resigned, .po-status.Removed { background: #fff3cd; border-color: #f0ad00; color: #5a3e00; }
+  .po-status.Deceased { background: #f5f5f5; border-color: #999; color: #444; }
+  .po-status.Vacant { background: #e8f0fe; border-color: #1a56a8; color: #1a3a6b; }
+  .po-statusnote { font-size: 0.8rem; color: #5a4600; background: #fffdf5; border-left: 3px solid #ffca28;
+    padding: 0.35rem 0.55rem; border-radius: 0 4px 4px 0; margin: 0; line-height: 1.45; }
+  .po-statusnote .po-statusdate { color: #8a7500; font-weight: 600; }
   .po-contact { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.2rem; font-size: 0.85rem; }
   .po-contact a { color: #008AFF; font-weight: 600; }
   .po-source { font-size: 0.75rem; margin-top: auto; }
@@ -183,8 +195,9 @@
   {% assign ordered = ordered | uniq %}
   <div class="po-grid">
     {% for m in ordered %}
-        <div class="po-card{% if presiding_roles contains m.role %} is-presiding{% endif %}">
+        <div class="po-card{% if presiding_roles contains m.role %} is-presiding{% endif %}{% if m.status %} is-flagged{% endif %}">
           <span class="po-role">{{ m.title | default: m.role }}</span>
+          {% if m.status %}<span class="po-status {{ m.status }}">{{ m.status }}</span>{% endif %}
           <p class="po-name">{% if m.name and m.name != "" %}{{ m.name }}{% else %}<span class="muted">Name TBD</span>{% endif %}</p>
           {% if m.seat and m.seat != "" %}<p class="po-seat">{{ m.seat }}</p>{% endif %}
           {% if juris.partisan and m.party and m.party != "" and m.party != "Nonpartisan" %}
@@ -198,6 +211,11 @@
           </p>
           {% endif %}
           {% if m.tie_break_only %}<p class="po-tiebreak">Votes only to break ties</p>{% endif %}
+          {% if m.statusNote and m.statusNote != "" %}
+          <p class="po-statusnote">{{ m.statusNote }}
+            {%- if m.statusSource and m.statusSource != "" %} <a href="{{ m.statusSource }}" target="_blank" rel="noopener">Order ↗</a>{% endif %}
+            {%- if m.statusDate %} <span class="po-statusdate">({{ m.statusDate | date: "%b %-d, %Y" }})</span>{% endif %}</p>
+          {% endif %}
           {% if m.email != "" or m.phone != "" %}
           <div class="po-contact">
             {% if m.email != "" %}<a href="mailto:{{ m.email }}">Email</a>{% endif %}
