@@ -276,6 +276,7 @@ is closed, so the gap is frozen rather than growing.
   the canonical Open States taxonomy, except the site's own `"Local / Municipal"`), then re-run
   `generate_ga_bills_data.py` to apply. `python scripts/list_untagged_bills.py --show "SB 30"` prints
   a bill's current subjects + title when deciding a correction. As of 2026-08-31, 0 are untagged.
+- **Open Seat badges** — the "Open Seat" badge on race pages appears only when a race has a hand-written open-seat `_note` (`_includes/entity/race.html`); there is no automatic detection, so any open race without a note gets no badge. After each candidate-list build/refresh (new SoS export, post-qualifying), look for GA legislative races with no incumbent on any ballot and no `_note` (2026-10 found seven: Senate 14, 27, 42, 46; House 117, 157, 165). Add the note in `assets/data/ga-race-candidate-overrides.json`, then patch only the `_note` into `races.json` — **don't** do a full `build_legislative_races.py` rebuild for this; it rewrote unrelated candidate data when tried. Keep the diff to just the notes.
 - **State campaign finance coverage** — `update-ga-campaign-finance` pulls only the cycle
   matching the newest `cycle` in `races.json`. After an election, check that sitting
   legislators still resolve: a member with no filing shows "no filing found", which is
