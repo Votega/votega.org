@@ -2,8 +2,8 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-10-03T14:12:58+00:00",
-  "count": 746,
+  "generatedAt": "2026-10-03T18:53:13+00:00",
+  "count": 747,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
    "Open States (Plural Policy) — ocdPersonId, legisGaGovId",
@@ -23,10 +23,10 @@
    "out-of-scope": "this identifier does not apply to this person"
   },
   "coverage": {
-   "people": 746,
-   "officeholders": 266,
+   "people": 747,
+   "officeholders": 267,
    "candidateOnly": 480,
-   "withVgId": 678,
+   "withVgId": 679,
    "unkeyed": 68,
    "withAnyFiling": 661,
    "candidacies": 716,
@@ -40207,6 +40207,48 @@
    "ids": {
     "ocdPersonId": "ocd-person/6ebda9ee-2203-4b66-9bb3-64d2307157a0",
     "legisGaGovId": 4933,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "ocdPersonId": {
+     "method": "authoritative",
+     "source": "Open States"
+    },
+    "peachfileFilerEntityIds": {
+     "method": "seat+surname",
+     "confidence": "no-match",
+     "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000689",
+   "name": {
+    "full": "Shelly Hutchinson",
+    "first": "Shelly",
+    "last": "Hutchinson"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 106,
+    "party": "Democratic",
+    "status": "Resigned"
+   },
+   "ids": {
+    "ocdPersonId": "ocd-person/4161e949-6ea2-4df9-8248-cabcf40286ae",
+    "legisGaGovId": 4952,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
