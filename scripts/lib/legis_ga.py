@@ -185,7 +185,12 @@ class LegisGaClient:
                 raw = self._raw_request(method, url, body=body, token=token)
                 if self.sleep:
                     time.sleep(self.sleep)
-                return json.loads(raw.decode("utf-8"))
+                text = raw.decode("utf-8")
+                # An empty 200 body is how this API signals "no content" (e.g. a
+                # paginated endpoint asked past its last page). Return None rather
+                # than letting json.loads choke on "" — callers treat None as "no
+                # data"/end-of-results instead of crashing mid-run.
+                return json.loads(text) if text.strip() else None
             except urllib.error.HTTPError as exc:
                 if exc.code == 401 and not auth_refreshed:
                     # Token expired or rejected: re-mint once and retry immediately.
@@ -236,9 +241,11 @@ class LegisGaClient:
         return self._request("GET", "/members/detail/%s" % member_id,
                              params={"session": session_id, "chamber": chamber})
 
-    def legislation_search(self, session_id, page_size=50, offset=0, **filters):
+    def legislation_search(self, session_id, page_size=50, page=0, **filters):
         """One page of the bill list for a session. Returns
-        {results:[{legislationId, ...}], resultCount:int}."""
+        {results:[{legislationId, ...}], resultCount:int} or None past the last
+        page. The URL path is /Legislation/Search/{pageSize}/{pageIndex} — the
+        second segment is a 0-based PAGE INDEX, not a row offset."""
         body = {
             "committeeIds": [], "documentTypes": [], "legislationTypes": [],
             "chamberTypes": [], "keywords": None, "legislationNumber": None,
@@ -246,24 +253,25 @@ class LegisGaClient:
             "currentStatus": None,
         }
         body.update(filters)
-        return self._request("POST", "/Legislation/Search/%d/%d" % (page_size, offset),
+        return self._request("POST", "/Legislation/Search/%d/%d" % (page_size, page),
                              body=body)
 
     def iter_legislation(self, session_id, page_size=50):
-        """Yield every bill record for a session, paginating Legislation/Search."""
-        offset = 0
+        """Yield every bill record for a session, paginating Legislation/Search by
+        PAGE INDEX. Stops when a page is empty/None or the known total is reached."""
+        page = 0
         total = None
         while True:
-            page = self.legislation_search(session_id, page_size=page_size, offset=offset)
-            results = page.get("results") or []
+            resp = self.legislation_search(session_id, page_size=page_size, page=page)
+            results = (resp or {}).get("results") or []
             if total is None:
-                total = page.get("resultCount", 0)
+                total = (resp or {}).get("resultCount", 0)
             if not results:
                 break
             for row in results:
                 yield row
-            offset += len(results)
-            if offset >= (total or 0):
+            page += 1
+            if page * page_size >= (total or 0):
                 break
 
     def legislation_detail(self, legislation_id):

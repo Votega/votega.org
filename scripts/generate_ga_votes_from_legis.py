@@ -190,7 +190,7 @@ def build(client, our_session, by_legis_id, by_chamber_district, verbose=True,
             continue
         detail = client.legislation_detail(legislation_id)
         vids = vote_ids(detail)
-        if not vids:
+        if not detail or not vids:
             continue
         bills_with_votes += 1
         meta_rows = {}
@@ -209,6 +209,8 @@ def build(client, our_session, by_legis_id, by_chamber_district, verbose=True,
                 continue
             seen_votes.add(key)
             vote = client.vote_detail(vid)
+            if not vote:
+                continue
             meta = extract_vote_meta(vote, meta_rows.get(vid), our_session, detail)
             # Chamber for the district fallback. Vote/detail did not expose a
             # chamber field in the spike sample; this reads it if present (confirm
