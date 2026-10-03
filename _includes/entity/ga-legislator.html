@@ -1096,7 +1096,17 @@
   // lone party member would trivially "match" their own vote 100% of the
   // time. Independent of chamber control; a member can have a high loyalty
   // score whether their party holds the majority or the minority.
-  function buildPartyLoyaltySummary(memberVotes, votesIndex, memberChamber, member, partyVoteIndex, incomplete) {
+  // Last name of a member, folded to match scripts/lib/ga_voters.py surname_key:
+  // lowercased, punctuation and a trailing generational suffix stripped, last
+  // token kept. Used only to detect surname collisions within a chamber.
+  function surnameKey(name) {
+    const n = (name || '').toLowerCase().replace(/[.,]/g, '')
+      .replace(/\b(jr|sr|ii|iii|iv|v)\b\.?\s*$/,'').trim();
+    const parts = n.split(/\s+/).filter(Boolean);
+    return parts.length ? parts[parts.length - 1] : '';
+  }
+
+  function buildPartyLoyaltySummary(memberVotes, votesIndex, memberChamber, member, partyVoteIndex, incomplete, allMembers) {
     if (!member.party) return '';
 
     const seen = new Map();
@@ -1126,6 +1136,50 @@
     }
 
     if (considered === 0) return '';
+
+    // Guard against a misleading figure for surname-collision members. Georgia's
+    // roll calls identify a voter by bare surname with no id exactly when that
+    // surname is shared by another member of the same chamber, and our matcher
+    // can only attribute such a row when everyone of that surname voted alike
+    // (see scripts/lib/ga_voters.py, assign_remaining_by_surname). Party-line
+    // votes are, by definition, the ones where members split — so when those
+    // rows arrive as bare surnames, almost every contested vote goes unmatched
+    // for the whole surname group, leaving a handful that are themselves biased
+    // toward the cross-party votes that happened to be unanimous within the
+    // group. That produced figures like "0% (0 of 1 votes)". We only suppress
+    // when BOTH signals hold: the member shares a surname with a chamber
+    // colleague AND we matched only a small share of the chamber's party-line
+    // calls. Surname-collision members whose rows do carry ids (or full names)
+    // keep near-complete coverage and are left untouched, as are resigned or
+    // partial-term members, whose smaller samples are real rather than broken.
+    const chamber = memberChamber || member.chamber;
+    const myKey = surnameKey(member.name);
+    const hasSurnameTwin = myKey && Array.isArray(allMembers) && allMembers.some(o =>
+      o && o.id !== member.id && (o.chamber || '') === (chamber || '') && surnameKey(o.name) === myKey);
+
+    if (hasSurnameTwin) {
+      let chamberPartyLine = 0;
+      for (const [voteId, tally] of partyVoteIndex) {
+        const vc = voteChamber(votesIndex[voteId]);
+        if (chamber && vc && vc !== chamber) continue;
+        const dem = tally['Democratic'], rep = tally['Republican'];
+        if (!dem || !rep) continue;
+        if (dem.yea + dem.nay < 2 || dem.yea === dem.nay) continue;
+        if (rep.yea + rep.nay === 0 || rep.yea === rep.nay) continue;
+        if ((dem.yea > dem.nay) === (rep.yea > rep.nay)) continue; // caucuses agreed
+        chamberPartyLine++;
+      }
+      if (chamberPartyLine > 0 && considered < chamberPartyLine * 0.5) {
+        const note = `Not shown: this member shares a surname with another member of their chamber, and Georgia's roll calls identify such voters by surname alone, so our record misses most of their contested, party-line votes — too few remain to produce a meaningful figure`
+          + (incomplete ? '. The partial session data noted above compounds this.' : '.');
+        return `
+      <div class="participation-box" style="border-left-color:#9ca3af;">
+        <div class="participation-head">Party Voting Alignment</div>
+        <div class="participation-note">${note}</div>
+      </div>`;
+      }
+    }
+
     const rate = Math.round(aligned / considered * 100);
     const accent = member.party === 'Democratic' ? '#2563eb' : member.party === 'Republican' ? '#dc2626' : '#1a56a8';
     const methodology = `Share of this member's votes on <strong>party-line roll calls</strong>. Where a majority of ${escHtml(member.party)}s voted opposite a majority of the other party that matched their own caucus's position. Excludes votes where both parties largely agreed, so this reflects behavior specifically on contested, partisan votes.`
@@ -1213,7 +1267,7 @@
       for (const vid in votesIndex) {
         if (votesIndex[vid].partyTally) partyVoteIndex.set(vid, votesIndex[vid].partyTally);
       }
-      const partyLoyaltyHtml = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex, incomplete);
+      const partyLoyaltyHtml = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex, incomplete, allMembers);
 
       // Turn this member's own alignment/participation figures into a gateway to the
       // full ranking: the scorecard opens scrolled to and highlighting this member.
