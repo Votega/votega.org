@@ -116,22 +116,54 @@ class LegisGaClient:
                 "No legis.ga.gov client key. Set LEGIS_GA_CLIENT_KEY (the public "
                 "SPA client key) to auto-mint, or inject a pre-minted LEGIS_GA_TOKEN."
             )
-        url = "%s%s?%s" % (self.base_url, TOKEN_ENDPOINT, urllib.parse.urlencode(
-            {"key": self._client_key, "ms": int(time.time() * 1000)}))
-        raw = self._raw_request("GET", url)
-        body = raw.decode("utf-8").strip()
-        # Response may be a bare JWT, a quoted string, or {token: ...}.
-        try:
-            parsed = json.loads(body)
-            token = parsed if isinstance(parsed, str) else (
-                parsed.get("token") or parsed.get("accessToken") or parsed.get("value"))
-        except (ValueError, AttributeError):
-            token = body
-        if not token:
-            raise TokenUnavailable("Token endpoint returned an unrecognized body.")
-        self._token = token
-        self._minted_at = time.monotonic()
-        return token
+        # Retry the mint itself. It is the single point of failure for a whole run
+        # and a long run re-mints every ~5 min, so a transient hiccup on the token
+        # endpoint (an intermittent 401, a 429 masquerading as 401, a 5xx, or a
+        # network blip) must not abort everything. A PERSISTENT 401 (rotated key)
+        # still surfaces clearly after the retries are exhausted.
+        last = None
+        for attempt in range(1, self.retries + 1):
+            url = "%s%s?%s" % (self.base_url, TOKEN_ENDPOINT, urllib.parse.urlencode(
+                {"key": self._client_key, "ms": int(time.time() * 1000)}))  # fresh ms
+            try:
+                raw = self._raw_request("GET", url)
+                body = raw.decode("utf-8").strip()
+                # Response may be a bare JWT, a quoted string, or {token: ...}.
+                try:
+                    parsed = json.loads(body)
+                    token = parsed if isinstance(parsed, str) else (
+                        parsed.get("token") or parsed.get("accessToken")
+                        or parsed.get("value"))
+                except (ValueError, AttributeError):
+                    token = body
+                if not token:
+                    raise TokenUnavailable("Token endpoint returned an unrecognized body.")
+                self._token = token
+                self._minted_at = time.monotonic()
+                return token
+            except urllib.error.HTTPError as exc:
+                last = exc
+                # 401 is retryable HERE specifically: the endpoint has been seen to
+                # return it transiently, and a bad key fails the same way every time
+                # so it just exhausts the retries and raises.
+                if attempt < self.retries and (exc.code in (401, 429) or exc.code >= 500):
+                    wait = self.backoff * attempt
+                    self._log("  token mint HTTP %s — retrying in %ss (%s/%s)"
+                              % (exc.code, wait, attempt, self.retries))
+                    time.sleep(wait)
+                    continue
+                raise LegisGaError("token mint failed: HTTP %s" % exc.code) from exc
+            except (urllib.error.URLError, TimeoutError) as exc:
+                last = exc
+                if attempt < self.retries:
+                    wait = self.backoff * attempt
+                    self._log("  token mint error: %s — retrying in %ss (%s/%s)"
+                              % (exc, wait, attempt, self.retries))
+                    time.sleep(wait)
+                    continue
+                raise LegisGaError("token mint failed: %s" % exc) from exc
+        raise LegisGaError("token mint failed after %d attempts: %s"
+                           % (self.retries, last))
 
     def _ensure_token(self, force=False):
         """Return a usable token, minting/refreshing when needed.
