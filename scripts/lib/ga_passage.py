@@ -9,27 +9,33 @@ reproduce that set. Two signals:
   * Open States passage overlay (authoritative): the existing OS ga-member-votes.json
     is already the passage set, so a legis roll call whose (bill, date) matches an OS
     entry is passage — and the match carries the authoritative result (Pass/Fail).
-  * Native legis fields (future-proof): each legislation.votes[] row has `isRollCall`
-    and a `caption` motion. `native_is_passage()` encodes a first-guess rule; the
-    `--classify-report` diagnostic calibrates it against the OS labels before we rely
-    on it (same evidence-first method used to pin the memberVoted map).
+  * Native legis fields: each legislation.votes[] row has a `caption` motion.
+    `native_is_passage()` encodes the rule; the `--classify-report` diagnostic
+    calibrates it against the OS labels (same evidence-first method used to pin the
+    memberVoted map).
 
-The caption patterns below are a STARTING POINT, to be tightened from the
-calibration report's caption breakdown (the real passage captions aren't yet known
-— the only live caption seen so far is "Local Calendar").
+Caption vocabulary learned from the 2025_26 calibration run (2026-10-03):
+  passage motions   : "PASSAGE", "PASSAGE BY SUBSTITUTE", "PASSAGE AS AMENDED",
+                      "AGREE TO SENATE SUBSTITUTE", "AGREE TO SENATE SUB AS AM",
+                      "AGREE TO HOUSE AMENDMENT TO SENATE SUBSTITUTE" (final action /
+                      concurrence — all start with PASSAGE or AGREE TO).
+  procedural motions: "ADOPTION OF AMENDMENT #N BY ...", "MOTION TO TABLE/ENGROSS",
+                      "SHALL THE RULING OF THE CHAIR BE SUSTAINED".
+NOTE: the `isRollCall` field was a red herring — it is False on EVERY roll call
+(passage and procedural alike), so it is NOT used. The caption is the signal.
 """
 
 import json
 import re
 
-#: Motions that ARE final passage of a measure.
-PASSAGE_CAPTION = re.compile(
-    r"\b(passage|adopt(?:ion)?|agree)\b", re.IGNORECASE)
+#: Final-passage / concurrence motions — all begin "PASSAGE…" or "AGREE TO…".
+PASSAGE_CAPTION = re.compile(r"^\s*(passage|agree\s+to)\b", re.IGNORECASE)
 
-#: Motions that are procedural / not final passage (override PASSAGE on overlap).
+#: Procedural motions that must NOT count as passage even if they slip past the
+#: above (floor-amendment adoptions, table/engross motions, chair rulings).
 PROCEDURAL_CAPTION = re.compile(
-    r"(local calendar|motion to|table|recommit|reconsider|previous question|"
-    r"postpone|adjourn|amendment|committee substitute report|point of order)",
+    r"^\s*(adoption of (an? )?amend|motion to|shall the ruling|previous question|"
+    r"point of order|reconsider)",
     re.IGNORECASE)
 
 
@@ -38,13 +44,31 @@ def normalize_bill(identifier):
     return re.sub(r"\s+", "", (identifier or "")).upper()
 
 
-def native_is_passage(is_roll_call, caption):
-    """First-guess native rule: a recorded roll call whose caption reads as passage
-    and not as a procedural motion. Calibrate against the overlay before relying."""
+def native_is_passage(caption):
+    """Caption-only native rule: a final-passage/concurrence motion, not a
+    procedural one. (No isRollCall — it is uniformly False and carries no signal.)"""
     cap = caption or ""
-    return (bool(is_roll_call)
-            and bool(PASSAGE_CAPTION.search(cap))
-            and not PROCEDURAL_CAPTION.search(cap))
+    return bool(PASSAGE_CAPTION.search(cap)) and not PROCEDURAL_CAPTION.search(cap)
+
+
+def classify(caption, bills, date, os_index):
+    """Decide whether a roll call is passage. Overlay-primary (design §5.3):
+
+    * If any of the roll call's bundled `bills` has a (bill, date) in the OS passage
+      index, it is passage and we borrow OS's authoritative result (source "overlay").
+    * Else if the caption reads as passage, it is passage with no result yet
+      (source "native" — fills gaps OS missed; result comes later).
+    * Else it is not passage.
+
+    Returns (is_passage: bool, result: str|None, source: str|None).
+    """
+    for bill in bills:
+        hit = os_index.get((normalize_bill(bill), date))
+        if hit:
+            return True, hit.get("result"), "overlay"
+    if native_is_passage(caption):
+        return True, None, "native"
+    return False, None, None
 
 
 def load_os_passage_index(path, session):
