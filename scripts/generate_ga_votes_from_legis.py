@@ -20,14 +20,13 @@ pure helpers are unit-testable offline.
      isRollCall}`. So motionText=caption, date=date, yea/nay are authoritative; and
      there is NO result field (pass/fail comes from the passage overlay).
 
-One thing remains, a design decision rather than an unknown:
-
-  1. Passage classification. legis exposes ALL roll calls (incl. local-calendar /
-     procedural votes — e.g. the "Local Calendar" vote has `isRollCall: false`),
-     but today's site shows "passage only". `isRollCall` is a promising native
-     filter; the robust path is still to overlay the Open States passage set at
-     cutover (design §5.3). This scaffold emits every roll call tagged; the
-     --inspect `isRollCall` distribution is there to inform that design.
+  [DONE] Passage classification (lib/ga_passage.classify, overlay-primary). The
+     producer now KEEPS passage roll calls and drops procedural ones: a roll call
+     is passage if any bundled bill's (bill, date) matches the Open States passage
+     overlay (borrowing OS's result) or its caption reads as passage (fills OS
+     gaps). Calibrated on 2025_26 (2026-10-03): the overlay matched 243/300 and the
+     `isRollCall` field proved a red herring (always False), so classification is
+     caption/overlay based. `--classify-report` remains for re-calibration.
 
 Auth: needs a legis.ga.gov token. In CI/local set LEGIS_GA_CLIENT_KEY (the public
 SPA client key) to auto-mint+refresh; for offline testing inject LEGIS_GA_TOKEN.
@@ -57,7 +56,7 @@ from datetime import datetime
 
 from lib.atomic_io import write_json_atomic
 from lib.legis_ga import CHAMBER, LegisGaClient, vote_ids
-from lib.ga_passage import (load_os_passage_index, native_is_passage,
+from lib.ga_passage import (classify, load_os_passage_index, native_is_passage,
                             normalize_bill)
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              legis_session_id, legis_session_library,
@@ -194,19 +193,25 @@ def extract_vote_meta(vote_detail, vote_row, our_session, legislation_detail):
 
 
 def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
-          verbose=True, sample=None):
-    """Walk the active session's bills -> details -> roll calls, resolving each
-    per-member row to an OCD id. Returns (votes_meta, member_votes, stats).
+          os_index, verbose=True, sample=None):
+    """Walk the active session's bills -> details -> roll calls, keeping the PASSAGE
+    votes (design §5.3, overlay-primary) and resolving each per-member row to an OCD
+    id. Returns (votes_meta, member_votes, stats).
 
-    `sample` caps the number of roll calls processed (used by --sample/--inspect
-    to make the first live run cheap and purpose-built for confirmation). The raw
-    `memberVoted` code distribution and a few sample resolutions are always
-    accumulated into stats so the code->option map can be checked from the logs.
+    `os_index` is the Open States passage overlay (lib.ga_passage.load_os_passage_index):
+    a roll call is kept if it matches the overlay (borrowing OS's result) or its
+    caption reads as passage; procedural roll calls are dropped. Pass an empty dict
+    to fall back to caption-only (native) classification.
+
+    `sample` caps the number of roll calls EXAMINED (used by --sample/--inspect to
+    make a run cheap). The raw `memberVoted` code distribution and a few sample
+    resolutions are accumulated into stats so the code->option map can be re-checked.
     """
     legis_session = legis_session_id(our_session)
     votes_meta, member_votes = {}, {}
     seen_votes = set()
     resolved_rows = district_rows = unresolved_rows = bills_with_votes = 0
+    passage_overlay = passage_native = dropped_non_passage = 0
     code_dist = Counter()        # raw memberVoted code -> count, across all rows
     code_samples = []            # a few (name, code) pairs for eyeballing the map
     sample_vote_row = None       # first raw legislation.votes[] item (to learn its keys)
@@ -246,6 +251,23 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
             meta_row = meta_rows.get(vid)
             isrollcall_dist[(meta_row or {}).get("isRollCall")] += 1
             meta = extract_vote_meta(vote, meta_row, our_session, detail)
+
+            # Passage classification (overlay-primary, design §5.3). Classify from
+            # the caption + ALL bundled bills (Vote/detail legislation[]) BEFORE
+            # resolving members, so procedural roll calls cost nothing extra.
+            bundled = [l.get("description") for l in (vote.get("legislation") or [])
+                       if l.get("description")]
+            is_passage, result, source = classify(
+                meta["motionText"], bundled, meta["date"], os_index)
+            if not is_passage:
+                dropped_non_passage += 1
+                continue
+            if result is not None:
+                meta["result"] = result
+            if source == "overlay":
+                passage_overlay += 1
+            else:
+                passage_native += 1
             rows = vote.get("votes") or []
 
             # Pass 1 — resolve by numeric id (collision-proof) and tally the
@@ -315,6 +337,9 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
         "resolvedRows": resolved_rows,
         "districtFallbackRows": district_rows,
         "unresolvedRows": unresolved_rows,
+        "passageByOverlay": passage_overlay,
+        "passageByNative": passage_native,
+        "droppedNonPassage": dropped_non_passage,
         "codeDistribution": dict(code_dist),
         "codeSamples": code_samples,
         "sampleVoteRow": sample_vote_row,
@@ -374,7 +399,7 @@ def classify_report(client, our_session, os_path=OS_VOTES_FILE, sample=None):
                        if l.get("description")]
         rc["os_passage"] = any((normalize_bill(b), rc["date"]) in os_index
                                for b in rc["bills"])
-        rc["native"] = native_is_passage(rc["isRollCall"], rc["caption"])
+        rc["native"] = native_is_passage(rc["caption"])
 
     # --- report ---
     tp = fp = fn = tn = 0
@@ -520,21 +545,33 @@ def main():
     print("Loaded crosswalk: %d legisGaGovId joins, %d (chamber,district) fallbacks"
           % (len(by_legis_id), len(by_chamber_district)))
 
+    # Passage overlay (design §5.3). Degrade to caption-only if OS file is absent.
+    try:
+        os_index = load_os_passage_index(OS_VOTES_FILE, our_session)
+        print("Loaded OS passage overlay: %d (bill,date) keys for %s"
+              % (len(os_index), our_session))
+    except FileNotFoundError:
+        os_index = {}
+        print("No OS votes file at %s — falling back to caption-only passage "
+              "classification." % OS_VOTES_FILE)
+
     client = LegisGaClient()
     print("Fetching legis.ga.gov roll calls for %s (legis session %d)%s..."
           % (our_session, legis_session_id(our_session),
              " [sample=%d]" % sample if sample else ""))
     votes_meta, member_votes, stats = build(
         client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
-        sample=sample)
+        os_index, sample=sample)
 
     if inspect:
         print_inspection(stats, votes_meta)
-        print("Inspection run — nothing written. Resolved %d/%d rows (%d via district "
-              "fallback) across %d roll calls."
-              % (stats["resolvedRows"],
+        print("Inspection run — nothing written. Kept %d passage roll calls "
+              "(%d overlay, %d native; %d non-passage dropped); resolved %d/%d rows "
+              "(%d via district fallback)."
+              % (len(votes_meta), stats["passageByOverlay"], stats["passageByNative"],
+                 stats["droppedNonPassage"], stats["resolvedRows"],
                  stats["resolvedRows"] + stats["unresolvedRows"],
-                 stats["districtFallbackRows"], len(votes_meta)))
+                 stats["districtFallbackRows"]))
         return
 
     if not votes_meta:
@@ -573,9 +610,13 @@ def main():
             "resolvedRows": stats["resolvedRows"],
             "districtFallbackRows": stats["districtFallbackRows"],
             "unresolvedRows": stats["unresolvedRows"],
-            # ⚠ Honesty flags — clear these as the first-run confirmations land.
             "memberVotedMapConfirmed": MEMBER_VOTED_CONFIRMED,
-            "passageClassified": False,   # all roll calls emitted; no passage filter yet
+            # Passage-only (design §5.3): overlay-primary, caption (native) fills gaps.
+            "passageClassified": True,
+            "passageByOverlay": stats["passageByOverlay"],
+            "passageByNative": stats["passageByNative"],
+            "droppedNonPassage": stats["droppedNonPassage"],
+            "passageOverlaySource": OS_VOTES_FILE if os_index else None,
         },
         "voteIds": vote_id_index,
         "votes": votes_meta,
@@ -584,8 +625,10 @@ def main():
 
     write_json_atomic(output_file, output, separators=(",", ":"))
     size_kb = os.path.getsize(output_file) // 1024
-    print("\nDone. %d roll calls · %d members · %d KB -> %s"
+    print("\nDone. %d passage roll calls · %d members · %d KB -> %s"
           % (len(votes_meta), len(member_votes), size_kb, output_file))
+    print("  passage: %d via OS overlay, %d via caption (native); %d non-passage dropped"
+          % (stats["passageByOverlay"], stats["passageByNative"], stats["droppedNonPassage"]))
     print("  resolved %d rows, %d unresolved" % (stats["resolvedRows"], stats["unresolvedRows"]))
     if not MEMBER_VOTED_CONFIRMED:
         print("  WARNING: memberVoted code map is PROVISIONAL — cross-check against a "
