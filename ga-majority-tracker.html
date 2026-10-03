@@ -74,6 +74,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .bar-v { background: #9ca3af; }
   .seat-bar-legend {
     display: flex;
+    justify-content: space-between;
     gap: 1rem;
     font-size: 0.72rem;
     color: #555;
@@ -545,9 +546,8 @@ function renderCard(el, title, dCount, rCount, vCount, majority) {
     </div>
     <div class="seat-bar-legend">
       <span><span class="dot" style="background:${COLOR.D}"></span>D ${dCount}</span>
-      <span><span class="dot" style="background:${COLOR.R}"></span>R ${rCount}</span>
       ${vCount ? `<span><span class="dot" style="background:${COLOR.V}"></span>Vacant ${vCount}</span>` : ''}
-      <span style="margin-left:auto;color:#888">Majority: ${majority}</span>
+      <span>R ${rCount}<span class="dot" style="background:${COLOR.R};margin:0 0 0 3px"></span></span>
     </div>
     <div class="chamber-stats" style="margin-top:1rem">
       <div class="stat-block">
@@ -563,6 +563,7 @@ function renderCard(el, title, dCount, rCount, vCount, majority) {
     </div>
     <div style="text-align:center;margin-top:1rem;padding-top:0.75rem;border-top:1px solid #e0e0e0;font-size:0.78rem;color:#888;">
       Total in Chamber: <strong style="color:#444">${total}</strong>
+      <div style="margin-top:0.3rem">Majority threshold: <strong style="color:#444">${majority}</strong></div>
     </div>
   `;
 }
