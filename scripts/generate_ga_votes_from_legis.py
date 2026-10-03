@@ -161,11 +161,15 @@ def extract_vote_meta(vote_detail, vote_row, our_session, legislation_detail):
                     if legislation_id else None),
         "title": (legislation_detail or {}).get("title") or "",
         "session": our_session,
-        "motionText": row.get("caption") or row.get("motion") or row.get("description") or "",
+        "motionText": (row.get("caption") or row.get("motion")
+                       or row.get("description") or "").strip(),
         "date": (row.get("date") or row.get("voteDate") or "")[:10] or None,
         "yea": row.get("yeas"),   # may be None -> filled from counts below
         "nay": row.get("nays"),
-        "result": row.get("result"),
+        # ⚠ `result` key not yet confirmed (came back null on the first live run).
+        # Try the likely names; the --inspect raw-row dump reveals the real one.
+        "result": (row.get("result") or row.get("voteResult") or row.get("outcome")
+                   or row.get("passed") or row.get("resultText")),
     }
 
 
@@ -185,6 +189,7 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
     resolved_rows = district_rows = unresolved_rows = bills_with_votes = 0
     code_dist = Counter()        # raw memberVoted code -> count, across all rows
     code_samples = []            # a few (name, code) pairs for eyeballing the map
+    sample_vote_row = None       # first raw legislation.votes[] item (to learn its keys)
 
     # Index legislation_detail votes[] rows by vote id so extract_vote_meta can
     # reach the per-vote metadata that Vote/detail itself does not carry.
@@ -200,6 +205,8 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
         meta_rows = {}
         for r in (detail.get("votes") or []):
             if isinstance(r, dict):
+                if sample_vote_row is None:
+                    sample_vote_row = r
                 rid = r.get("voteId") or r.get("id") or r.get("voteNumber")
                 if rid is not None:
                     meta_rows[rid] = r
@@ -287,6 +294,7 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
         "unresolvedRows": unresolved_rows,
         "codeDistribution": dict(code_dist),
         "codeSamples": code_samples,
+        "sampleVoteRow": sample_vote_row,
     }
     return votes_meta, member_votes, stats
 
@@ -316,6 +324,9 @@ def print_inspection(stats, votes_meta=None):
     print("\n  Sample rows (name, code):")
     for name, code in stats["codeSamples"]:
         print("    %-24s %s" % (name, code))
+    if stats.get("sampleVoteRow") is not None:
+        print("\n  RAW legislation.votes[] item (reveals the real keys, e.g. result):")
+        print("    %s" % json.dumps(stats["sampleVoteRow"]))
     if votes_meta:
         print("\n  Sample votes_meta record (checks the legislation votes[] shape):")
         sample_key = next(iter(votes_meta))
