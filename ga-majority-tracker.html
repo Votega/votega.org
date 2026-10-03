@@ -26,10 +26,19 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .tracker-card h2 {
     margin: 0 0 1rem 0;
     font-size: 0.85rem;
+    line-height: 1.25;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #555;
     font-weight: 600;
+  }
+  /* Reserve two title lines so the single-line "Senate" heading and the
+     two-line "House of Representatives" heading occupy the same height —
+     that keeps the seat bar, stat numbers and totals in the two cards on
+     the same rows. Only while the cards sit side by side; when they stack
+     on narrow screens this would just add dead space. */
+  @media (min-width: 561px) {
+    .tracker-card h2 { min-height: 2.5em; }
   }
   .chamber-stats {
     display: flex;
