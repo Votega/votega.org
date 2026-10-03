@@ -188,6 +188,18 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     color: #6b7280;
     line-height: 1;
   }
+  /* Seats with no major-party opponent this cycle get an amber ring plus a
+     star glyph, so the cue is not colour-only (WCAG 1.4.1). outline (not
+     box-shadow) survives the hover box-shadow/scale without being overridden. */
+  .senate-seat.unopposed-seat { outline: 2px solid #f59e0b; outline-offset: 1px; }
+  .seat-flag {
+    position: absolute;
+    top: 1px; right: 3px;
+    font-size: 0.6rem;
+    color: #d97706;
+    line-height: 1;
+  }
+  .legend-star { color: #d97706; margin-right: 3px; font-size: 0.85rem; vertical-align: middle; }
 
   /* ── House SVG ────────────────────────────────────────────────────────── */
   .house-chamber {
@@ -289,9 +301,22 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     color: #555; font-weight: 700; margin: 0 0 0.35rem;
   }
   .unopposed-detail { font-size: 0.9rem; color: #444; margin: 0; line-height: 1.5; }
-  .unopposed-detail .safe-d { color: #2563eb; font-weight: 700; }
-  .unopposed-detail .safe-r { color: #dc2626; font-weight: 700; }
-  .unopposed-source { font-size: 0.72rem; color: #888; margin: 0.4rem 0 0; }
+  .unopposed-breakdown { margin: 0.7rem 0 0; max-width: 380px; }
+  .unopposed-safe { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .unopposed-safe span {
+    font-size: 0.85rem; padding: 0.2rem 0.65rem; border-radius: 999px;
+    background: #fff; border: 1px solid #e3e3e3; white-space: nowrap;
+  }
+  .unopposed-safe strong { font-weight: 800; }
+  .unopposed-safe .safe-d strong { color: #2563eb; }
+  .unopposed-safe .safe-r strong { color: #dc2626; }
+  .unopposed-chambers {
+    display: flex; justify-content: space-between; gap: 1rem;
+    margin-top: 0.55rem; padding-top: 0.5rem; border-top: 1px solid #e8e8e8;
+    font-size: 0.85rem; color: #555;
+  }
+  .unopposed-chambers strong { color: #333; font-weight: 700; }
+  .unopposed-source { font-size: 0.72rem; color: #888; margin: 0.55rem 0 0; }
 </style>
 <div class="unopposed-callout">
   <div class="unopposed-figure">
@@ -302,12 +327,18 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     <p class="unopposed-label">No major-party opponent in {{ u.cycle }}</p>
     <p class="unopposed-detail">
       {{ u.unopposedPct }}% of the General Assembly has no contest between the two major
-      parties on the November ballot —
-      <span class="safe-d">{{ u.democraticSafe }} Democratic-safe</span> ·
-      <span class="safe-r">{{ u.republicanSafe }} Republican-safe</span>.
-      House {{ u.byChamber.house.unopposed }} of {{ u.byChamber.house.total }} ·
-      Senate {{ u.byChamber.senate.unopposed }} of {{ u.byChamber.senate.total }}.
+      parties on the November ballot.
     </p>
+    <div class="unopposed-breakdown">
+      <div class="unopposed-safe">
+        <span class="safe-d"><strong>{{ u.democraticSafe }}</strong> Democratic-safe</span>
+        <span class="safe-r"><strong>{{ u.republicanSafe }}</strong> Republican-safe</span>
+      </div>
+      <div class="unopposed-chambers">
+        <span>House <strong>{{ u.byChamber.house.unopposed }}</strong> of {{ u.byChamber.house.total }}</span>
+        <span>Senate <strong>{{ u.byChamber.senate.unopposed }}</strong> of {{ u.byChamber.senate.total }}</span>
+      </div>
+    </div>
     <p class="unopposed-source">A seat counts as unopposed when at most one major party fields a
       general-election candidate. Derived from official <a href="{{ '/elections' | relative_url }}">2026 race data</a>.</p>
   </div>
@@ -352,6 +383,15 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
 </p>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script>
+// Districts with no major-party opponent this cycle, rendered from
+// _data/ga_unopposed_seats.json (the same file that feeds the callout above).
+// Shape: { senate: { <district>: "Democrat"|"Republican" }, house: {...} }.
+window.UNOPPOSED_SEATS = {
+  senate: { {%- for s in u.seats -%}{%- if s.chamber == 'senate' -%}{{ s.district }}: {{ s.party | jsonify }}, {% endif %}{%- endfor -%} },
+  house:  { {%- for s in u.seats -%}{%- if s.chamber == 'house'  -%}{{ s.district }}: {{ s.party | jsonify }}, {% endif %}{%- endfor -%} }
+};
+</script>
 <script>
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -437,12 +477,24 @@ function partyOf(member) {
   return 'V';
 }
 
-function legendHtml(d, r, v) {
+const UNOPPOSED = window.UNOPPOSED_SEATS || { senate: {}, house: {} };
+const UNOPPOSED_AMBER = '#f59e0b';
+
+// Returns the sole major party on the ballot for an unopposed district, or
+// null if the seat has a two-major-party contest. `chamber` is the
+// ga-members.json value ("Senate" / "House of Representatives").
+function unopposedPartyFor(chamber, district) {
+  const map = chamber === 'Senate' ? UNOPPOSED.senate : UNOPPOSED.house;
+  return (map && Object.prototype.hasOwnProperty.call(map, district)) ? map[district] : null;
+}
+
+function legendHtml(d, r, v, uCount) {
   // Marks mirror the seat shapes so the non-colour cue is decodable.
   return `
     <span><span class="dot" style="background:${COLOR.D}"></span>Democrat (${d})</span>
     <span><span class="dot dot-square" style="background:${COLOR.R}"></span>Republican (${r})</span>
     ${v ? `<span><span class="dot dot-hollow" style="border-color:${COLOR.V}"></span>Vacant (${v})</span>` : ''}
+    ${uCount ? `<span><span class="legend-star">★</span>No major-party opponent (${uCount})</span>` : ''}
   `;
 }
 
@@ -524,7 +576,7 @@ function renderSenate(byDistrict) {
     if (p === 'D') d++; else if (p === 'R') r++; else v++;
   });
 
-  document.getElementById('senateLegend').innerHTML = legendHtml(d, r, v);
+  document.getElementById('senateLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.senate || {}).length);
 }
 
 function makeSeneateSeat(dist, byDistrict) {
@@ -551,20 +603,26 @@ function makeSeneateSeat(dist, byDistrict) {
   const partyLabel = party === 'D' ? 'Democrat' : party === 'R' ? 'Republican' : 'Vacant';
   const partyMark  = party === 'V' ? '—' : party;
 
+  const unopposed = unopposedPartyFor('Senate', dist);
+  if (unopposed) el.classList.add('unopposed-seat');
+
   // The party letter means the seat does not rely on its background colour
   // alone (WCAG 1.4.1), and the aria-label gives the link a real name instead
   // of a bare surname. See CODEBASE-REVIEW-2026-08-18.md finding 4.2.
   el.innerHTML = `
     <div class="seat-party" aria-hidden="true">${partyMark}</div>
+    ${unopposed ? '<div class="seat-flag" aria-hidden="true" title="No major-party opponent">★</div>' : ''}
     <div class="seat-name">${escHtml(lastName)}</div>
     <div class="seat-dist">${dist}</div>
   `;
-  el.setAttribute('aria-label', `District ${dist}, ${fullName}, ${partyLabel}`);
+  const unopposedLabel = unopposed ? `, no major-party opponent (${unopposed} unopposed)` : '';
+  el.setAttribute('aria-label', `District ${dist}, ${fullName}, ${partyLabel}${unopposedLabel}`);
 
   // The "View 2026 race" link used to live inside the hover tooltip, where it
   // was unreachable by keyboard or touch. A filled seat leads to the member
   // page, which already surfaces that race; a vacancy links to the race direct.
-  attachTooltip(el, `District ${dist}<br>${escHtml(fullName)}<br>${partyLabel}`);
+  const unopposedTip = unopposed ? `<br><span style="color:${UNOPPOSED_AMBER}">★ No major-party opponent (${unopposed})</span>` : '';
+  attachTooltip(el, `District ${dist}<br>${escHtml(fullName)}<br>${partyLabel}${unopposedTip}`);
   return el;
 }
 
@@ -620,6 +678,7 @@ function renderHouse(members) {
         const partyLabel = party === 'D' ? 'Democrat'
                          : party === 'R' ? 'Republican' : 'Vacant';
         const who = (member && !isVacant) ? member.name : 'Vacant';
+        const unopposed = unopposedPartyFor('House of Representatives', district);
         const link = svgEl('a', {
           href: (member && !isVacant) ? memberUrl(member.id) : raceUrl('House', district),
           style: 'cursor:pointer',
@@ -627,10 +686,14 @@ function renderHouse(members) {
         // <title> is the accessible name of an SVG node — this is what makes
         // all 180 seats readable instead of one chart-level aria-label.
         const title = svgEl('title', {});
-        title.textContent = `District ${district}, ${who}, ${partyLabel}`;
+        title.textContent = `District ${district}, ${who}, ${partyLabel}`
+          + (unopposed ? `, no major-party opponent (${unopposed} unopposed)` : '');
         link.appendChild(title);
+        // Halo first, so the party shape draws on top of it.
+        if (unopposed) link.appendChild(seatHalo(party, x, y, seatSize));
         link.appendChild(circle);
-        attachTooltip(link, `District ${district}<br>${escHtml(who)}<br>${partyLabel}`);
+        const unopposedTip = unopposed ? `<br><span style="color:${UNOPPOSED_AMBER}">★ No major-party opponent (${unopposed})</span>` : '';
+        attachTooltip(link, `District ${district}<br>${escHtml(who)}<br>${partyLabel}${unopposedTip}`);
         seatNode = link;
       }
 
@@ -647,7 +710,7 @@ function renderHouse(members) {
     }
   });
 
-  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v);
+  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.house || {}).length);
 }
 
 // ── Seat marks ─────────────────────────────────────────────────────────────
@@ -674,6 +737,23 @@ function seatShape(party, x, y, size) {
   }
   return svgEl('circle', Object.assign({
     cx: x.toFixed(1), cy: y.toFixed(1), r: size / 2,
+  }, common));
+}
+
+// An amber halo marking a seat with no major-party opponent. A hollow ring one
+// size larger than the seat, so it reads as an added mark rather than a recolour
+// of the party shape. Matches the Senate grid's amber outline + the legend star.
+function seatHalo(party, x, y, size) {
+  const common = { fill: 'none', stroke: UNOPPOSED_AMBER, 'stroke-width': '1.8', opacity: '0.95' };
+  if (party === 'R') {
+    const s = size + 4;
+    return svgEl('rect', Object.assign({
+      x: (x - s / 2).toFixed(1), y: (y - s / 2).toFixed(1),
+      width: s, height: s, rx: 2,
+    }, common));
+  }
+  return svgEl('circle', Object.assign({
+    cx: x.toFixed(1), cy: y.toFixed(1), r: (size / 2 + 2).toFixed(1),
   }, common));
 }
 
