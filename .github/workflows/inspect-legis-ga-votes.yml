@@ -19,12 +19,13 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "inspect = diagnostics; sample = capped parallel file + upload; classify = passage calibration vs Open States; list = show sessions"
+        description: "inspect = diagnostics; sample = capped parallel file + upload; classify = passage calibration vs Open States; backfill = propose legisGaGovId fills (all sessions) + upload; list = show sessions"
         type: choice
         options:
           - inspect
           - sample
           - classify
+          - backfill
           - list
         default: inspect
       session:
@@ -84,6 +85,11 @@ jobs:
             python scripts/generate_ga_votes_from_legis.py --inspect $SESSION_ARG
           elif [ "$MODE" = "classify" ]; then
             python scripts/generate_ga_votes_from_legis.py --classify-report $SESSION_ARG --sample "$SAMPLE_SIZE"
+          elif [ "$MODE" = "backfill" ]; then
+            # Always sweep ALL configured sessions: a legisGaGovId is session-independent,
+            # and union coverage is what makes resolution turnover-safe. The `session`
+            # input is ignored here. Emits a review proposal (writes no override).
+            python scripts/backfill_legis_ids.py --all-sessions --out out/legis-id-backfill.json
           else
             python scripts/generate_ga_votes_from_legis.py $SESSION_ARG --sample "$SAMPLE_SIZE" out/ga-member-votes.legis.json
           fi
@@ -94,4 +100,12 @@ jobs:
         with:
           name: ga-member-votes-legis
           path: out/ga-member-votes.legis.json
+          if-no-files-found: error
+
+      - name: Upload the backfill proposal (backfill mode)
+        if: ${{ inputs.mode == 'backfill' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: legis-id-backfill
+          path: out/legis-id-backfill.json
           if-no-files-found: error
