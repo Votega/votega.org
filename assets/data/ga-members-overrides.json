@@ -49,7 +49,7 @@
       "termStart": null,
       "termStartYear": 2026,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 5096
     },
     {
       "_provenance": "Injected under her REAL historic OCD id so ga-member-votes.json's memberVotes join succeeds (Open States dropped her as a ghost id). She is the SITTING Senator for District 12 — the legis.ga.gov Senate roster shows her currently seated with no departure (verified 2026-08-23). An earlier record here marked her Resigned 2026-03-23 in error; corrected to active.",
@@ -99,7 +99,7 @@
       "termStart": null,
       "termStartYear": null,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 5015
     },
     {
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology.",
@@ -124,7 +124,7 @@
       "termStart": null,
       "termStartYear": null,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 831
     },
     {
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. Departure date corrected 2026-08-23 to the legis.ga.gov Senate roster's 'Until' date.",
@@ -149,7 +149,7 @@
       "termStart": null,
       "termStartYear": null,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 5014
     },
     {
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. Departure date corrected 2026-08-23 to the legis.ga.gov Senate roster's 'Until' date.",
@@ -174,7 +174,7 @@
       "termStart": null,
       "termStartYear": null,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 852
     },
     {
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. Departure date corrected 2026-08-23 to the legis.ga.gov Senate roster's 'Until' date.",
@@ -199,7 +199,7 @@
       "termStart": null,
       "termStartYear": null,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 840
     },
     {
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. statusDate is an UPPER BOUND (successor's swearing-in date), not a confirmed departure date — verify against legis.ga.gov before relying on it.",
@@ -224,7 +224,7 @@
       "termStart": null,
       "termStartYear": null,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 5048
     },
     {
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. statusDate is an UPPER BOUND (successor's swearing-in date), not a confirmed departure date — verify against legis.ga.gov before relying on it.",
@@ -249,7 +249,7 @@
       "termStart": null,
       "termStartYear": null,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 810
     },
     {
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. statusDate is an UPPER BOUND (successor's swearing-in date), not a confirmed departure date — verify against legis.ga.gov before relying on it.",
@@ -274,7 +274,7 @@
       "termStart": null,
       "termStartYear": null,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 808
     },
     {
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. statusDate is an UPPER BOUND (successor's swearing-in date), not a confirmed departure date — verify against legis.ga.gov before relying on it.",
@@ -299,7 +299,32 @@
       "termStart": null,
       "termStartYear": null,
       "committees": [],
-      "legisGaGovId": null
+      "legisGaGovId": 4956
+    },
+    {
+      "_provenance": "Injected under his REAL OCD id (openstates/people retired record, verified 2026-10-03) so his 2025-2026 session roll-call votes attribute to HIM, not his successor. legis.ga.gov shows him resigned January 13, 2026 (Senate 53, legisGaGovId 4933); Open States dropped him on resignation. Surfaced by the legis-id backfill: the vote producer rejected the S53 proposal (legisId 4933 matched successor Lanny Thomas by seat), revealing Moore was absent from ga-members.json. Remove once Open States serves him again.",
+      "id": "ocd-person/6ebda9ee-2203-4b66-9bb3-64d2307157a0",
+      "name": "Colton Moore",
+      "firstName": "Colton",
+      "lastName": "Moore",
+      "party": "Republican",
+      "chamber": "Senate",
+      "district": 53,
+      "title": "Senator",
+      "status": "Resigned",
+      "statusDate": "2026-01-13",
+      "statusNote": "Resigned effective January 13, 2026 (per legis.ga.gov member page). Retained under this OCD id so votes recorded earlier in the 2025-2026 session still attribute correctly; successor Lanny Thomas now holds Senate District 53.",
+      "imageUrl": null,
+      "phone": null,
+      "address": null,
+      "email": null,
+      "officialWebsiteUrl": null,
+      "birthDate": null,
+      "birthYear": null,
+      "termStart": null,
+      "termStartYear": null,
+      "committees": [],
+      "legisGaGovId": 4933
     }
   ],
   "_retired": [
@@ -671,7 +696,8 @@
   "ocd-person/37602f7b-947e-4067-8f2e-b2fec620643e": {
     "_name": "Jaclyn Ford",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5085
   },
   "ocd-person/bad14891-c7bc-4ac4-b23a-fb5ae3878d67": {
     "_name": "Miriam Paris",
@@ -680,7 +706,8 @@
   },
   "ocd-person/55074030-4d64-4da0-b68a-5e3945d00f25": {
     "_name": "Nissa Jones",
-    "termStartYear": 2024
+    "termStartYear": 2024,
+    "legisGaGovId": 5081
   },
   "ocd-person/ec6cf250-ebcc-4dda-89a5-12da9ebbe51a": {
     "_name": "Dale Washburn",
@@ -689,12 +716,14 @@
   },
   "ocd-person/c5766526-3a5a-4d33-b5ff-a0d1d358d7ae": {
     "_name": "Tangie Herring",
-    "termStartYear": 2024
+    "termStartYear": 2024,
+    "legisGaGovId": 5082
   },
   "ocd-person/516cb969-9467-490f-9a05-02c3e7decae3": {
     "_name": "Steven McNeel",
     "termStart": "2026-02-24",
-    "termStartYear": 2026
+    "termStartYear": 2026,
+    "legisGaGovId": 5093
   },
   "ocd-person/4b05e770-4423-4b64-8ae1-9600e8c73244": {
     "_name": "David Lucas",
@@ -702,7 +731,8 @@
     "termStartYear": 2013
   },
   "Floyd Griffin": {
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5083
   },
   "John Corbett": {
     "termStart": "2015-01-12",
@@ -745,7 +775,8 @@
   },
   "L.C. Myles": {
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5079
   },
   "Max Burns": {
     "termStart": "2021-01-11",
@@ -768,14 +799,16 @@
     "termStartYear": 1997
   },
   "Jutt Howard": {
-    "termStartYear": 2024
+    "termStartYear": 2024,
+    "legisGaGovId": 5073
   },
   "David Huddleston": {
     "termStartYear": 2022
   },
   "Tim Bearden": {
     "termStart": "2024-02-20",
-    "termStartYear": 2024
+    "termStartYear": 2024,
+    "legisGaGovId": 62
   },
   "Steve Tarvin": {
     "termStart": "2014-02-11",
@@ -813,7 +846,8 @@
   "RaShaun Kemp": {
     "_name": "RaShaun Kemp",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5066
   },
   "Doc Rhett": {
     "_name": "Doc Rhett",
@@ -823,12 +857,14 @@
   "Kenya Wicks": {
     "_name": "Kenya Wicks",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5065
   },
   "Jaha Howard": {
     "_name": "Jaha Howard",
     "termStart": "2025-12-31",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5090
   },
   "Sally Harrell": {
     "_name": "Sally Harrell",
@@ -843,7 +879,8 @@
   "Drew Echols": {
     "_name": "Drew Echols",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5067
   },
   "Steve Gooch": {
     "_name": "Steve Gooch",
@@ -858,7 +895,8 @@
   "Randal Mangham": {
     "_name": "Randal Mangham",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 161
   },
   "John Albers": {
     "_name": "John Albers",
@@ -898,7 +936,8 @@
   "ocd-person/584267b0-e40b-4d6e-a7fe-4c076eb6214c": {
     "_name": "Jason Dickerson",
     "termStart": "2025-10-14",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5088
   },
   "ocd-person/e11cecf4-f2e5-49d9-ba9e-47681f779438": {
     "_name": "Lee Anderson",
@@ -1003,7 +1042,8 @@
   "ocd-person/f2444048-8c14-45b2-b700-37f7899fa5bb": {
     "_name": "Bill Fincher",
     "termStart": "2026-01-10",
-    "termStartYear": 2026
+    "termStartYear": 2026,
+    "legisGaGovId": 5092
   },
   "ocd-person/72370a62-92f4-46f1-ab7b-193a643085b8": {
     "_name": "Carter Barrett",
@@ -1091,7 +1131,8 @@
   "ocd-person/bd990496-ea34-4b79-8d6f-68cfed424c15": {
     "_name": "Gabriel Sanchez",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5068
   },
   "ocd-person/81dde544-49e9-4fb0-9313-32eacaf6194b": {
     "_name": "Don Parsons",
@@ -1155,7 +1196,8 @@
   "ocd-person/b1187e7a-8cea-4e91-9c9f-7c7c61df3c85": {
     "_name": "Bryce Berry",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5069
   },
   "ocd-person/fa5d8d09-a0b9-4ba4-93da-a24902530416": {
     "_name": "Stacey Evans",
@@ -1175,7 +1217,8 @@
   "ocd-person/f0af2586-d535-4e44-bcaa-65239f9390b1": {
     "_name": "Mekyah McQueen",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5070
   },
   "ocd-person/eff357d0-3187-4a7b-93fe-2d54d010b093": {
     "_name": "Kim Schofield",
@@ -1185,12 +1228,14 @@
   "ocd-person/cabc1e6f-ba7c-4063-a778-707579f91ec8": {
     "_name": "Sylvia Wayfer",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5071
   },
   "ocd-person/5d77204f-89e7-43df-bccb-a08b9956132d": {
     "_name": "Robert Dawson",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5072
   },
   "ocd-person/275b772e-6407-4aaa-8bd6-ceddad1da7fa": {
     "_name": "Kimberly Alexander",
@@ -1220,7 +1265,8 @@
   "ocd-person/32c3fbdd-4034-47d0-b7ab-0411bd200737": {
     "_name": "Robert Flournoy",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5074
   },
   "ocd-person/fe4b934e-8976-4c62-bcb0-ed8ae9782560": {
     "_name": "Eric Bell",
@@ -1255,7 +1301,8 @@
   "ocd-person/fdf78e39-985f-48c3-8ed3-ccf15946871f": {
     "_name": "Noelle Kahaian",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5075
   },
   "ocd-person/f8db50e0-08ab-406c-ac8b-39c7038ef5ca": {
     "_name": "Karen Mathiak",
@@ -1312,7 +1359,8 @@
     "termStart": "2026-04-18",
     "termStartYear": 2026,
     "imageUrl": "https://www.legis.ga.gov/api/images/default-source/portraits/mason-venola-5095.jpg",
-    "officialWebsiteUrl": "https://www.legis.ga.gov/members/house/5095"
+    "officialWebsiteUrl": "https://www.legis.ga.gov/members/house/5095",
+    "legisGaGovId": 5095
   },
   "ocd-person/1f94316e-fb58-401f-bbfc-5ada0a717b6b": {
     "_name": "Dar'shun Kendrick",
@@ -1322,7 +1370,8 @@
   "ocd-person/3b3da57c-2f96-4a94-a7bc-eb6a814cc627": {
     "_name": "Arlene Beckles",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5076
   },
   "ocd-person/d291834f-70cd-48b5-b7db-b05d23d74a4c": {
     "_name": "Ruwa Romman",
@@ -1359,12 +1408,14 @@
   "ocd-person/4ab15127-5b7a-40bc-8807-26e8e8a73397": {
     "_name": "Sandy Donatucci",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5077
   },
   "ocd-person/938f2479-c51f-446a-87f0-76d4f07c61e5": {
     "_name": "Akbar Ali",
     "termStart": "2025-12-18",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5089
   },
   "ocd-person/8afda706-7afa-462c-89f2-0d6d5da010ff": {
     "_name": "Dewey McClain",
@@ -1399,12 +1450,14 @@
   "ocd-person/7deae3f1-5548-4afe-9018-e8112945fd8d": {
     "_name": "Mary Ann Santos",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5078
   },
   "ocd-person/abece831-30a8-4cf8-94ff-d41f7f48197f": {
     "_name": "Eric Gisler",
     "termStart": "2026-01-08",
-    "termStartYear": 2026
+    "termStartYear": 2026,
+    "legisGaGovId": 5091
   },
   "ocd-person/9dfc8ec3-0935-4d1d-877d-e05cf7a5dca5": {
     "_name": "Trey Rhodes",
@@ -1414,7 +1467,8 @@
   "ocd-person/47fd36f3-f5d4-4ef6-a429-1ffc7681e233": {
     "_name": "Gary Richardson",
     "termStart": "2024-03-20",
-    "termStartYear": 2024
+    "termStartYear": 2024,
+    "legisGaGovId": 5063
   },
   "ocd-person/5e12fb82-1f69-46df-9ac5-a09ce51dd95b": {
     "_name": "Mark Newton",
@@ -1434,7 +1488,8 @@
   "ocd-person/84eb7371-a332-4534-b3b3-542500c798f8": {
     "_name": "Rob Clifton",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5080
   },
   "ocd-person/a53e6bbd-a5b8-436b-94ae-bebf957c5b61": {
     "_name": "Brian Prince",
@@ -1469,7 +1524,8 @@
   "ocd-person/3646e872-85a6-4383-97c5-36ff96ca7113": {
     "_name": "Carmen Rice",
     "termStart": "2024-05-15",
-    "termStartYear": 2024
+    "termStartYear": 2024,
+    "legisGaGovId": 5064
   },
   "ocd-person/9fe70ed7-31a0-4732-92b1-54d2a79a4654": {
     "_name": "Teddy Reese",
@@ -1519,7 +1575,8 @@
   "ocd-person/1d0deded-daaa-425b-b6aa-3612492dca5b": {
     "_name": "Angie O'Steen",
     "termStart": "2025-01-13",
-    "termStartYear": 2025
+    "termStartYear": 2025,
+    "legisGaGovId": 5084
   },
   "ocd-person/c862c17f-ed00-41d7-97e5-1138f451a96c": {
     "_name": "Joe Campbell",

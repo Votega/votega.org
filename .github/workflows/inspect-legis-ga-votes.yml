@@ -92,6 +92,13 @@ jobs:
             python scripts/backfill_legis_ids.py --all-sessions --out out/legis-id-backfill.json
           else
             python scripts/generate_ga_votes_from_legis.py $SESSION_ARG --sample "$SAMPLE_SIZE" out/ga-member-votes.legis.json
+            # Tally-aware diff vs Open States (cutover go/no-go). Only meaningful
+            # on a FULL sweep — a small --sample inflates "OS-only" roll calls
+            # because legis saw only a slice. Needs the COMMITTED id-crosswalk.json
+            # to already carry the backfilled ids (run update-ga-members +
+            # build-id-crosswalk first), else resolution regresses to unresolved.
+            echo "=== tally-aware diff: legis vs Open States ==="
+            python scripts/diff_legis_vs_os_votes.py $SESSION_ARG --legis out/ga-member-votes.legis.json || true
           fi
 
       - name: Upload the parallel output (sample mode)

@@ -49,13 +49,12 @@ Usage:
 import argparse
 import json
 import os
-import re
 import sys
 from collections import Counter
 from datetime import datetime
 
 from lib.atomic_io import write_json_atomic
-from lib.legis_ga import CHAMBER, LegisGaClient, vote_ids
+from lib.legis_ga import LegisGaClient, vote_ids
 from lib.ga_passage import (classify, load_os_passage_index, native_is_passage,
                             normalize_bill)
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
@@ -97,18 +96,16 @@ MEMBER_VOTED_CONFIRMED = True
 
 
 def build_crosswalk(path=CROSSWALK_FILE):
-    """Return (by_legis_id, by_chamber_district, chamber_by_ocd).
+    """Return (by_legis_id, chamber_by_ocd).
 
-    by_legis_id[int]            -> ocdPersonId   (primary, collision-proof join)
-    by_chamber_district[(c,d)]  -> ocdPersonId   (fallback for members whose
-                                   legisGaGovId is still null in the crosswalk;
-                                   `c` is the chamber STRING, `d` the int district)
-    chamber_by_ocd[ocd]         -> chamber STRING (to derive a roll call's chamber
-                                   from its id-resolved members)
+    by_legis_id[int]     -> ocdPersonId   (the ONLY join — collision- AND
+                            turnover-proof, see resolve_member)
+    chamber_by_ocd[ocd]  -> chamber STRING (to derive a roll call's chamber from
+                            its id-resolved members, for reporting only)
     """
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
-    by_legis_id, by_chamber_district, chamber_by_ocd = {}, {}, {}
+    by_legis_id, chamber_by_ocd = {}, {}
     for person in data.get("people", []):
         ocd = (person.get("ids") or {}).get("ocdPersonId")
         if not ocd:
@@ -117,36 +114,27 @@ def build_crosswalk(path=CROSSWALK_FILE):
         if legis_id is not None:
             by_legis_id[int(legis_id)] = ocd
         role = person.get("role") or {}
-        chamber, district = role.get("chamber"), role.get("district")
-        if chamber:
-            chamber_by_ocd[ocd] = chamber
-            if district is not None:
-                by_chamber_district.setdefault((chamber, int(district)), ocd)
-    return by_legis_id, by_chamber_district, chamber_by_ocd
+        if role.get("chamber"):
+            chamber_by_ocd[ocd] = role["chamber"]
+    return by_legis_id, chamber_by_ocd
 
 
-#: "ADESANYA, 43RD" / "CLARK, 100TH" -> district number.
-_NAME_DISTRICT = re.compile(r",\s*(\d+)\s*(?:ST|ND|RD|TH)\s*$", re.IGNORECASE)
+def resolve_member(member, by_legis_id):
+    """Resolve a Vote/detail `member` object to an OCD person id — ID-ONLY.
 
+    The numeric member id IS the legisGaGovId, so this join is both collision-proof
+    (the two Clarks separate on id) and turnover-proof. A member whose id is not in
+    the crosswalk stays UNRESOLVED on purpose: the old (chamber, district) fallback
+    mis-attributed a resigned member's votes to the seat's current holder (Karen
+    Bennett H94 -> Venola Mason, etc., confirmed 2026-10-03), because both share a
+    district. Fix the gap by backfilling that member's legisGaGovId
+    (scripts/backfill_legis_ids.py) — never by guessing from the district.
 
-def resolve_member(member, by_legis_id, by_chamber_district, chamber=None):
-    """Resolve a Vote/detail `member` object to an OCD person id.
-
-    Primary: numeric member id (== legisGaGovId) — never ambiguous. Fallback (for
-    a freshman whose legisGaGovId is still null in the crosswalk): parse the
-    district out of the "SURNAME, 43RD" name string and match on (chamber,
-    district). The fallback only fires when the roll call's chamber is known;
-    returns (ocd_id_or_None, how) where how is 'id' | 'district' | 'unresolved'.
+    Returns (ocd_id_or_None, how) where how is 'id' | 'unresolved'.
     """
     mid = member.get("id")
     if mid is not None and int(mid) in by_legis_id:
         return by_legis_id[int(mid)], "id"
-    if chamber:
-        m = _NAME_DISTRICT.search(member.get("name") or "")
-        if m:
-            ocd = by_chamber_district.get((chamber, int(m.group(1))))
-            if ocd:
-                return ocd, "district"
     return None, "unresolved"
 
 
@@ -192,11 +180,12 @@ def extract_vote_meta(vote_detail, vote_row, our_session, legislation_detail):
     }
 
 
-def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
+def build(client, our_session, by_legis_id, chamber_by_ocd,
           os_index, verbose=True, sample=None):
     """Walk the active session's bills -> details -> roll calls, keeping the PASSAGE
     votes (design §5.3, overlay-primary) and resolving each per-member row to an OCD
-    id. Returns (votes_meta, member_votes, stats).
+    id by numeric id ONLY (resolve_member — turnover-proof). Returns
+    (votes_meta, member_votes, stats).
 
     `os_index` is the Open States passage overlay (lib.ga_passage.load_os_passage_index):
     a roll call is kept if it matches the overlay (borrowing OS's result) or its
@@ -210,7 +199,9 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
     legis_session = legis_session_id(our_session)
     votes_meta, member_votes = {}, {}
     seen_votes = set()
-    resolved_rows = district_rows = unresolved_rows = bills_with_votes = 0
+    resolved_rows = unresolved_rows = bills_with_votes = 0
+    unresolved_members = Counter()  # legis member id -> row count (the backfill gap)
+    unresolved_names = {}           # legis member id -> name string (for the gap log)
     passage_overlay = passage_native = dropped_non_passage = 0
     code_dist = Counter()        # raw memberVoted code -> count, across all rows
     code_samples = []            # a few (name, code) pairs for eyeballing the map
@@ -270,13 +261,12 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
                 passage_native += 1
             rows = vote.get("votes") or []
 
-            # Pass 1 — resolve by numeric id (collision-proof) and tally the
-            # chambers of the resolved members. A roll call is single-chamber, so
-            # that majority IS this vote's chamber; Vote/detail exposes no chamber
-            # field of its own (vote.get("chamber") is only a last-ditch fallback).
+            # Resolve each per-member row by numeric id ONLY (resolve_member).
+            # A row whose member id is not in the crosswalk stays UNRESOLVED by
+            # design — never guessed from the district (that mis-attributed a
+            # resigned member's votes to the seat's successor; see resolve_member).
+            # Unresolved ids are logged so the backfill gap stays visible.
             resolved = []           # (ocd, option) to record
-            pending = []            # (member, option) unresolved by id
-            chamber_tally = Counter()
             yea = nay = 0
             for pv in rows:
                 member = pv.get("member") or {}
@@ -289,30 +279,15 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
                     yea += 1
                 elif option == "Nay":
                     nay += 1
-                mid = member.get("id")
-                ocd = by_legis_id.get(int(mid)) if mid is not None else None
+                ocd, _how = resolve_member(member, by_legis_id)
                 if ocd:
                     resolved.append((ocd, option))
-                    ch = chamber_by_ocd.get(ocd)
-                    if ch:
-                        chamber_tally[ch] += 1
-                else:
-                    pending.append((member, option))
-
-            roll_chamber = (chamber_tally.most_common(1)[0][0]
-                            if chamber_tally else CHAMBER.get(vote.get("chamber")))
-
-            # Pass 2 — resolve the rest (freshmen whose legisGaGovId is still null
-            # in the crosswalk) by (chamber, district) parsed from the name string.
-            for member, option in pending:
-                ocd, how = resolve_member(member, by_legis_id, by_chamber_district,
-                                          chamber=roll_chamber)
-                if ocd:
-                    resolved.append((ocd, option))
-                    if how == "district":
-                        district_rows += 1
                 else:
                     unresolved_rows += 1
+                    mid = member.get("id")
+                    if mid is not None:
+                        unresolved_members[int(mid)] += 1
+                        unresolved_names.setdefault(int(mid), member.get("name"))
 
             for ocd, option in resolved:
                 member_votes.setdefault(ocd, []).append({"voteId": key, "vote": option})
@@ -332,11 +307,19 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
             print("  --sample limit reached (%d roll calls)" % len(seen_votes))
             break
 
+    # The backfill gap: distinct legis member ids whose votes could not be
+    # resolved (no legisGaGovId in the crosswalk). Each needs a backfill — fix via
+    # scripts/backfill_legis_ids.py, never a district guess.
+    unresolved_gap = sorted(
+        ({"legisId": mid, "name": unresolved_names.get(mid), "rows": n}
+         for mid, n in unresolved_members.items()),
+        key=lambda r: -r["rows"])
     stats = {
         "billsWithVotes": bills_with_votes,
         "resolvedRows": resolved_rows,
-        "districtFallbackRows": district_rows,
         "unresolvedRows": unresolved_rows,
+        "unresolvedMembers": len(unresolved_members),
+        "unresolvedGap": unresolved_gap,
         "passageByOverlay": passage_overlay,
         "passageByNative": passage_native,
         "droppedNonPassage": dropped_non_passage,
@@ -497,6 +480,11 @@ def print_inspection(stats, votes_meta=None):
     print("\n  Sample rows (name, code):")
     for name, code in stats["codeSamples"]:
         print("    %-24s %s" % (name, code))
+    if stats.get("unresolvedGap"):
+        print("\n  UNRESOLVED members (id not in crosswalk — backfill legisGaGovId, "
+              "never district-guess):")
+        for g in stats["unresolvedGap"][:15]:
+            print("    legisId %-6s %-26s %d rows" % (g["legisId"], g["name"], g["rows"]))
     if stats.get("isRollCallDistribution"):
         print("\n  votes[].isRollCall distribution (passage-classification signal): %s"
               % stats["isRollCallDistribution"])
@@ -541,9 +529,9 @@ def main():
         classify_report(LegisGaClient(), our_session, sample=sample)
         return
 
-    by_legis_id, by_chamber_district, chamber_by_ocd = build_crosswalk()
-    print("Loaded crosswalk: %d legisGaGovId joins, %d (chamber,district) fallbacks"
-          % (len(by_legis_id), len(by_chamber_district)))
+    by_legis_id, chamber_by_ocd = build_crosswalk()
+    print("Loaded crosswalk: %d legisGaGovId joins (id-only resolution — no district "
+          "fallback)" % len(by_legis_id))
 
     # Passage overlay (design §5.3). Degrade to caption-only if OS file is absent.
     try:
@@ -560,18 +548,17 @@ def main():
           % (our_session, legis_session_id(our_session),
              " [sample=%d]" % sample if sample else ""))
     votes_meta, member_votes, stats = build(
-        client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
-        os_index, sample=sample)
+        client, our_session, by_legis_id, chamber_by_ocd, os_index, sample=sample)
 
     if inspect:
         print_inspection(stats, votes_meta)
         print("Inspection run — nothing written. Kept %d passage roll calls "
               "(%d overlay, %d native; %d non-passage dropped); resolved %d/%d rows "
-              "(%d via district fallback)."
+              "(%d rows unresolved across %d members — id-only, no district fallback)."
               % (len(votes_meta), stats["passageByOverlay"], stats["passageByNative"],
                  stats["droppedNonPassage"], stats["resolvedRows"],
                  stats["resolvedRows"] + stats["unresolvedRows"],
-                 stats["districtFallbackRows"]))
+                 stats["unresolvedRows"], stats["unresolvedMembers"]))
         return
 
     if not votes_meta:
@@ -608,8 +595,8 @@ def main():
             "totalVotes": len(votes_meta),
             "billsWithVotes": stats["billsWithVotes"],
             "resolvedRows": stats["resolvedRows"],
-            "districtFallbackRows": stats["districtFallbackRows"],
             "unresolvedRows": stats["unresolvedRows"],
+            "unresolvedMembers": stats["unresolvedMembers"],
             "memberVotedMapConfirmed": MEMBER_VOTED_CONFIRMED,
             # Passage-only (design §5.3): overlay-primary, caption (native) fills gaps.
             "passageClassified": True,
@@ -629,7 +616,12 @@ def main():
           % (len(votes_meta), len(member_votes), size_kb, output_file))
     print("  passage: %d via OS overlay, %d via caption (native); %d non-passage dropped"
           % (stats["passageByOverlay"], stats["passageByNative"], stats["droppedNonPassage"]))
-    print("  resolved %d rows, %d unresolved" % (stats["resolvedRows"], stats["unresolvedRows"]))
+    print("  resolved %d rows, %d unresolved across %d members (id-only resolution)"
+          % (stats["resolvedRows"], stats["unresolvedRows"], stats["unresolvedMembers"]))
+    if stats.get("unresolvedGap"):
+        print("  unresolved members (backfill legisGaGovId — scripts/backfill_legis_ids.py):")
+        for g in stats["unresolvedGap"][:15]:
+            print("    legisId %-6s %-26s %d rows" % (g["legisId"], g["name"], g["rows"]))
     if not MEMBER_VOTED_CONFIRMED:
         print("  WARNING: memberVoted code map is PROVISIONAL — cross-check against a "
               "known tally before trusting Yea/Nay (see module docstring).")
