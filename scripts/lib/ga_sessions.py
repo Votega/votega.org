@@ -12,10 +12,13 @@ combined file back into per-session archive directories.
 
 Update when a special session is convened, or at a biennium changeover:
   - add the new session id -> name to SESSION_NAMES,
+  - add the new session id -> legis.ga.gov numeric id to LEGIS_SESSIONS (so the
+    legis vote producer can target it),
   - point ACTIVE_SESSION at whichever session is currently in progress,
   - set UNTAGGED_SESSION to the session that untagged on-file records belong to.
-Get the exact identifier from `inspect_ga_sessions.py` — don't guess it. See
-RECURRING-TASKS.md §3.
+Get the Open States identifier from `inspect_ga_sessions.py` and the legis.ga.gov
+id/library from `generate_ga_votes_from_legis.py --list-sessions` — don't guess
+them. See RECURRING-TASKS.md §3.
 """
 import re
 
@@ -36,6 +39,29 @@ UNTAGGED_SESSION = "2025_26"
 
 # Label for the biennium as a whole, for UI copy ("the 2025-2026 General Assembly").
 BIENNIUM = "2025-2026"
+
+# legis.ga.gov numeric session id per tag, used by the direct legis vote producer
+# (generate_ga_votes_from_legis.py). `id` is legis's numeric session id and `library`
+# its string form — both come from legis `/api/sessions` (list them with
+# `generate_ga_votes_from_legis.py --list-sessions`). A session with no entry here
+# simply can't be sourced from legis yet. Open States uses the SESSION_NAMES tags
+# above; this is the separate legis mapping.
+LEGIS_SESSIONS = {
+    "2025_26": {"id": 1033, "library": "20252026"},
+    "2026_ss": {"id": 1034, "library": "2026EX"},
+}
+
+
+def legis_session_id(session_id):
+    """legis.ga.gov numeric session id for our tag, or None if not mapped."""
+    s = LEGIS_SESSIONS.get(session_id)
+    return s["id"] if s else None
+
+
+def legis_session_library(session_id):
+    """legis.ga.gov session `library` string for our tag, or None if not mapped."""
+    s = LEGIS_SESSIONS.get(session_id)
+    return s["library"] if s else None
 
 
 def session_name(session_id):

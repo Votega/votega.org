@@ -35,11 +35,12 @@ Live minting is blocked inside the Claude Code agent sandbox (credential
 guardrail) — run this in CI or locally, and unit-test the parsing in-agent.
 
 Usage:
-  python generate_ga_votes_from_legis.py            # -> ga-member-votes.legis.json
+  python generate_ga_votes_from_legis.py            # active session -> ga-member-votes.legis.json
   python generate_ga_votes_from_legis.py OUT.json   # explicit output path
-  python generate_ga_votes_from_legis.py --inspect  # fetch ~5 roll calls, print the
-                                                    # memberVoted code distribution,
-                                                    # write NOTHING (confirm the map)
+  python generate_ga_votes_from_legis.py --session 2025_26   # a specific session (calibration)
+  python generate_ga_votes_from_legis.py --list-sessions     # show configured + live sessions
+  python generate_ga_votes_from_legis.py --inspect  # fetch ~5 roll calls, print diagnostics,
+                                                    # write NOTHING
   python generate_ga_votes_from_legis.py --sample 50  # cap roll calls (cheap run)
 """
 
@@ -54,6 +55,7 @@ from datetime import datetime
 from lib.atomic_io import write_json_atomic
 from lib.legis_ga import CHAMBER, LegisGaClient, vote_ids
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
+                             legis_session_id, legis_session_library,
                              session_name)
 from lib.votes_schema import encode_member_votes
 
@@ -63,13 +65,8 @@ CROSSWALK_FILE = "assets/data/id-crosswalk.json"
 # until that validation passes.
 DEFAULT_OUTPUT = "assets/data/ga-member-votes.legis.json"
 
-#: Our session tag  <->  legis.ga.gov numeric session id (its `library` in parens).
-#: Confirmed: 1033 = 20252026 (regular), 1034 = 2026EX (special). Keep in step with
-#: lib/ga_sessions.py when a session is added.
-LEGIS_SESSION_ID = {
-    "2025_26": 1033,
-    "2026_ss": 1034,
-}
+#: The legis.ga.gov session-id mapping lives in lib/ga_sessions.py
+#: (LEGIS_SESSIONS / legis_session_id) — one place to edit when a session rolls.
 
 #: legis.ga.gov `memberVoted` code -> option string (option strings must be keys
 #: of lib/votes_schema.VOTE_CODES).
@@ -150,16 +147,23 @@ def resolve_member(member, by_legis_id, by_chamber_district, chamber=None):
 def extract_vote_meta(vote_detail, vote_row, our_session, legislation_detail):
     """Assemble a votes_meta record for one roll call.
 
-    Pulls per-vote metadata (date, motion, totals, result) from the
-    legislation_detail `votes[]` item (`vote_row`) when present — ⚠ its exact keys
-    are unconfirmed (see docstring #2), so every field is read defensively. yea/nay
-    fall back to counts computed from the per-member rows once MEMBER_VOTED is
-    confirmed. `bill` comes from Vote/detail's own `legislation[]` description.
+    Pulls per-vote metadata (date, motion, totals) from the legislation_detail
+    `votes[]` item (`vote_row`). `result` is not in legis and is left None (the
+    Open States passage overlay supplies Pass/Fail — design §5.3).
+
+    `bill` and `title` must describe the SAME bill: a roll call can BUNDLE many
+    bills (Vote/detail `legislation[]` lists them all — common on local-calendar
+    votes), so we pick the bundled entry matching the bill we iterated to reach
+    this vote (`legislation_detail.id`), not just `legislation[0]`. That keeps the
+    `bill` identifier paired with its `title`.
     """
     row = vote_row or {}
-    legn = (vote_detail.get("legislation") or [{}])
-    desc = (legn[0].get("description") if legn else None) or ""
-    legislation_id = (legn[0].get("legislationId") if legn else None)
+    legn = vote_detail.get("legislation") or []
+    this_id = (legislation_detail or {}).get("id")
+    entry = (next((l for l in legn if l.get("legislationId") == this_id), None)
+             or (legn[0] if legn else {}))
+    desc = entry.get("description") or ""
+    legislation_id = entry.get("legislationId") or this_id
     return {
         "bill": desc,
         "billUrl": ("https://www.legis.ga.gov/legislation/%s" % legislation_id
@@ -192,7 +196,7 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
     `memberVoted` code distribution and a few sample resolutions are always
     accumulated into stats so the code->option map can be checked from the logs.
     """
-    legis_session = LEGIS_SESSION_ID[our_session]
+    legis_session = legis_session_id(our_session)
     votes_meta, member_votes = {}, {}
     seen_votes = set()
     resolved_rows = district_rows = unresolved_rows = bills_with_votes = 0
@@ -319,11 +323,38 @@ def parse_args(argv=None):
         description="Generate ga-member-votes.json from legis.ga.gov (official source).")
     p.add_argument("output_file", nargs="?", default=DEFAULT_OUTPUT,
                    help="output path (default: %(default)s)")
+    p.add_argument("--session", default=None, metavar="TAG",
+                   help="session tag to run (default: the active session, %s). Must "
+                        "be a session configured in lib/ga_sessions.py." % ACTIVE_SESSION)
+    p.add_argument("--list-sessions", action="store_true",
+                   help="print the configured sessions (and the live legis list), then exit")
     p.add_argument("--inspect", action="store_true",
                    help="fetch a few roll calls, print diagnostics, write nothing")
     p.add_argument("--sample", type=int, default=None, metavar="N",
                    help="cap the number of roll calls processed")
     return p.parse_args(argv)
+
+
+def list_sessions():
+    """Show the sessions configured in lib/ga_sessions.py and, if a token can be
+    minted, the live legis.ga.gov /api/sessions list — so rolling a session is a
+    matter of copying the right id across, not guessing it."""
+    print("Configured sessions (lib/ga_sessions.py):")
+    for tag in all_session_ids():
+        lid = legis_session_id(tag)
+        flags = " [ACTIVE]" if tag == ACTIVE_SESSION else ""
+        legis = ("legis id=%s library=%s" % (lid, legis_session_library(tag))
+                 if lid is not None else "legis id=UNMAPPED")
+        print("  %-10s %-28s %s%s" % (tag, session_name(tag), legis, flags))
+    print("\nLive legis.ga.gov /api/sessions:")
+    try:
+        for s in LegisGaClient().sessions() or []:
+            print("  id=%-6s library=%-10s isCurrent=%-5s %s"
+                  % (s.get("id"), s.get("library"), s.get("isCurrent"),
+                     s.get("description")))
+    except Exception as exc:
+        print("  (unavailable: %s)" % exc)
+        print("  Set LEGIS_GA_CLIENT_KEY to fetch the live list.")
 
 
 def print_inspection(stats, votes_meta=None):
@@ -361,14 +392,24 @@ def print_inspection(stats, votes_meta=None):
 
 def main():
     args = parse_args()
+    if args.list_sessions:
+        list_sessions()
+        return
+
     output_file = args.output_file
     inspect = args.inspect
     sample = args.sample if args.sample is not None else (5 if inspect else None)
 
-    our_session = ACTIVE_SESSION
-    if our_session not in LEGIS_SESSION_ID:
-        print("Error: no legis.ga.gov session id mapped for active session "
-              "'%s'. Add it to LEGIS_SESSION_ID." % our_session, file=sys.stderr)
+    # Default to the active session; --session targets a specific one (e.g. the
+    # regular session for calibration). The legis id comes from lib/ga_sessions.py.
+    our_session = args.session or ACTIVE_SESSION
+    if our_session not in all_session_ids():
+        print("Error: unknown session '%s'. Configured: %s. (Run --list-sessions.)"
+              % (our_session, ", ".join(all_session_ids())), file=sys.stderr)
+        sys.exit(1)
+    if legis_session_id(our_session) is None:
+        print("Error: session '%s' has no legis.ga.gov id in lib/ga_sessions.py "
+              "(LEGIS_SESSIONS). Add it, then re-run." % our_session, file=sys.stderr)
         sys.exit(1)
 
     by_legis_id, by_chamber_district, chamber_by_ocd = build_crosswalk()
@@ -377,7 +418,7 @@ def main():
 
     client = LegisGaClient()
     print("Fetching legis.ga.gov roll calls for %s (legis session %d)%s..."
-          % (our_session, LEGIS_SESSION_ID[our_session],
+          % (our_session, legis_session_id(our_session),
              " [sample=%d]" % sample if sample else ""))
     votes_meta, member_votes, stats = build(
         client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
