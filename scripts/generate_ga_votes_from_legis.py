@@ -43,6 +43,7 @@ Usage:
   python generate_ga_votes_from_legis.py --sample 50  # cap roll calls (cheap run)
 """
 
+import argparse
 import json
 import os
 import re
@@ -311,14 +312,18 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
     return votes_meta, member_votes, stats
 
 
-def _arg_value(flag, default=None):
-    """Read `--flag value` (or `--flag=value`) from argv."""
-    for i, a in enumerate(sys.argv):
-        if a == flag and i + 1 < len(sys.argv):
-            return sys.argv[i + 1]
-        if a.startswith(flag + "="):
-            return a.split("=", 1)[1]
-    return default
+def parse_args(argv=None):
+    """CLI args. argparse (not hand-rolled) so `--sample N OUT` parses correctly —
+    a bare value after --sample must not be mistaken for the positional output."""
+    p = argparse.ArgumentParser(
+        description="Generate ga-member-votes.json from legis.ga.gov (official source).")
+    p.add_argument("output_file", nargs="?", default=DEFAULT_OUTPUT,
+                   help="output path (default: %(default)s)")
+    p.add_argument("--inspect", action="store_true",
+                   help="fetch a few roll calls, print diagnostics, write nothing")
+    p.add_argument("--sample", type=int, default=None, metavar="N",
+                   help="cap the number of roll calls processed")
+    return p.parse_args(argv)
 
 
 def print_inspection(stats, votes_meta=None):
@@ -355,11 +360,10 @@ def print_inspection(stats, votes_meta=None):
 
 
 def main():
-    positional = [a for a in sys.argv[1:] if not a.startswith("--")]
-    output_file = positional[0] if positional else DEFAULT_OUTPUT
-    inspect = "--inspect" in sys.argv
-    sample = _arg_value("--sample")
-    sample = int(sample) if sample else (5 if inspect else None)
+    args = parse_args()
+    output_file = args.output_file
+    inspect = args.inspect
+    sample = args.sample if args.sample is not None else (5 if inspect else None)
 
     our_session = ACTIVE_SESSION
     if our_session not in LEGIS_SESSION_ID:
