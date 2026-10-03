@@ -26,10 +26,19 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .tracker-card h2 {
     margin: 0 0 1rem 0;
     font-size: 0.85rem;
+    line-height: 1.25;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #555;
     font-weight: 600;
+  }
+  /* Reserve two title lines so the single-line "Senate" heading and the
+     two-line "House of Representatives" heading occupy the same height —
+     that keeps the seat bar, stat numbers and totals in the two cards on
+     the same rows. Only while the cards sit side by side; when they stack
+     on narrow screens this would just add dead space. */
+  @media (min-width: 561px) {
+    .tracker-card h2 { min-height: 2.5em; }
   }
   .chamber-stats {
     display: flex;
@@ -501,16 +510,23 @@ function legendHtml(d, r, v, uCount) {
 // ── Stats banner ───────────────────────────────────────────────────────────
 
 function renderCard(el, title, dCount, rCount, vCount, majority) {
-  const total  = dCount + rCount + vCount;
-  const dShort = Math.max(0, majority - dCount);
-  const rShort = Math.max(0, majority - rCount);
+  const total = dCount + rCount + vCount;
 
-  const dSub = dShort === 0
-    ? `Democrats hold the majority by ${dCount - majority} seat${(dCount - majority) !== 1 ? 's' : ''}`
-    : `Democrats need ${dShort} more seat${dShort !== 1 ? 's' : ''} for a majority`;
-  const rSub = rShort === 0
-    ? `Republicans hold the majority by ${rCount - majority} seat${(rCount - majority) !== 1 ? 's' : ''}`
-    : `Republicans need ${rShort} more seat${rShort !== 1 ? 's' : ''} for a majority`;
+  // Signed distance from the majority line: a positive number means the party
+  // holds the majority by that many seats, negative means it is that many
+  // short. The sign carries what the old "need N more / holds by N" sentences
+  // spelled out, so the label and sub can stay terse.
+  const dDiff = dCount - majority;
+  const rDiff = rCount - majority;
+  const signed = n => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : '0');
+  const diffSub = n => n > 0 ? 'seats above majority'
+                     : n < 0 ? 'seats below majority'
+                     : 'exactly at majority';
+  // Accessible label spells the sign out so a screen reader doesn't read a bare
+  // "minus 6" with no frame.
+  const diffAria = (party, n) => n > 0 ? `${party} hold the majority by ${n} seat${n !== 1 ? 's' : ''}`
+                     : n < 0 ? `${party} are ${-n} seat${-n !== 1 ? 's' : ''} short of a majority`
+                     : `${party} are exactly at the majority line`;
 
   el.innerHTML = `
     <h2>${title}</h2>
@@ -527,14 +543,14 @@ function renderCard(el, title, dCount, rCount, vCount, majority) {
     </div>
     <div class="chamber-stats" style="margin-top:1rem">
       <div class="stat-block">
-        <div class="stat-label">Democrats — Seats Short of Majority</div>
-        <div class="stat-num" style="color:${COLOR.D}">${dShort}</div>
-        <div class="stat-sub">${dSub}</div>
+        <div class="stat-label">Democrats</div>
+        <div class="stat-num" style="color:${COLOR.D}" aria-label="${diffAria('Democrats', dDiff)}">${signed(dDiff)}</div>
+        <div class="stat-sub">${diffSub(dDiff)}</div>
       </div>
       <div class="stat-block">
-        <div class="stat-label">Republicans — Seats Short of Majority</div>
-        <div class="stat-num" style="color:${COLOR.R}">${rShort}</div>
-        <div class="stat-sub">${rSub}</div>
+        <div class="stat-label">Republicans</div>
+        <div class="stat-num" style="color:${COLOR.R}" aria-label="${diffAria('Republicans', rDiff)}">${signed(rDiff)}</div>
+        <div class="stat-sub">${diffSub(rDiff)}</div>
       </div>
     </div>
     <div style="text-align:center;margin-top:1rem;padding-top:0.75rem;border-top:1px solid #e0e0e0;font-size:0.78rem;color:#888;">
