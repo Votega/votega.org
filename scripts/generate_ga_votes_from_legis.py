@@ -15,15 +15,19 @@ pure helpers are unit-testable offline.
      2026-10-02 by cross-referencing against the existing Open States 2026_ss
      data: 0=Yea, 1=Nay (131 members, zero disagreement). See MEMBER_VOTED.
 
-Two things still need a live run to confirm (each flagged in-code and in
-metadata), because every bill captured during the spike had no roll call yet:
+  [DONE] Populated legislation_detail `votes[]` shape CONFIRMED 2026-10-02 from a
+     live row: `{id, number, caption, date, name, yea, nay, notVoting, excused,
+     isRollCall}`. So motionText=caption, date=date, yea/nay are authoritative; and
+     there is NO result field (pass/fail comes from the passage overlay).
 
-  1. The shape of a POPULATED legislation_detail `votes[]` item — assumed to carry
-     per-vote metadata (date, caption/motion, totals, result). extract_vote_meta()
-     pulls these defensively; confirm the real keys and tighten it.
-  2. Passage classification. legis exposes ALL roll calls; today's site shows
-     "passage only". This scaffold emits every roll call tagged; overlay the Open
-     States passage set at cutover (design §5.3, recommended option (a)).
+One thing remains, a design decision rather than an unknown:
+
+  1. Passage classification. legis exposes ALL roll calls (incl. local-calendar /
+     procedural votes — e.g. the "Local Calendar" vote has `isRollCall: false`),
+     but today's site shows "passage only". `isRollCall` is a promising native
+     filter; the robust path is still to overlay the Open States passage set at
+     cutover (design §5.3). This scaffold emits every roll call tagged; the
+     --inspect `isRollCall` distribution is there to inform that design.
 
 Auth: needs a legis.ga.gov token. In CI/local set LEGIS_GA_CLIENT_KEY (the public
 SPA client key) to auto-mint+refresh; for offline testing inject LEGIS_GA_TOKEN.
@@ -164,12 +168,16 @@ def extract_vote_meta(vote_detail, vote_row, our_session, legislation_detail):
         "motionText": (row.get("caption") or row.get("motion")
                        or row.get("description") or "").strip(),
         "date": (row.get("date") or row.get("voteDate") or "")[:10] or None,
-        "yea": row.get("yeas"),   # may be None -> filled from counts below
-        "nay": row.get("nays"),
-        # ⚠ `result` key not yet confirmed (came back null on the first live run).
-        # Try the likely names; the --inspect raw-row dump reveals the real one.
-        "result": (row.get("result") or row.get("voteResult") or row.get("outcome")
-                   or row.get("passed") or row.get("resultText")),
+        # Authoritative tallies straight from the votes[] row (keys confirmed from a
+        # live sample: `yea`/`nay`, alongside `notVoting`/`excused`). May be None on
+        # a malformed row -> filled from the computed count in build().
+        "yea": row.get("yea"),
+        "nay": row.get("nay"),
+        # legis.ga.gov votes[] carries NO pass/fail field (confirmed from the raw
+        # row: yea/nay/notVoting/excused/isRollCall, no result). Left None here;
+        # authoritative Pass/Fail is supplied by the Open States passage overlay at
+        # cutover (design §5.3), which is where result belongs anyway.
+        "result": None,
     }
 
 
@@ -190,6 +198,7 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
     code_dist = Counter()        # raw memberVoted code -> count, across all rows
     code_samples = []            # a few (name, code) pairs for eyeballing the map
     sample_vote_row = None       # first raw legislation.votes[] item (to learn its keys)
+    isrollcall_dist = Counter()  # votes[].isRollCall value -> count (passage signal, #3)
 
     # Index legislation_detail votes[] rows by vote id so extract_vote_meta can
     # reach the per-vote metadata that Vote/detail itself does not carry.
@@ -222,7 +231,9 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
             vote = client.vote_detail(vid)
             if not vote:
                 continue
-            meta = extract_vote_meta(vote, meta_rows.get(vid), our_session, detail)
+            meta_row = meta_rows.get(vid)
+            isrollcall_dist[(meta_row or {}).get("isRollCall")] += 1
+            meta = extract_vote_meta(vote, meta_row, our_session, detail)
             rows = vote.get("votes") or []
 
             # Pass 1 — resolve by numeric id (collision-proof) and tally the
@@ -295,6 +306,7 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
         "codeDistribution": dict(code_dist),
         "codeSamples": code_samples,
         "sampleVoteRow": sample_vote_row,
+        "isRollCallDistribution": {str(k): v for k, v in isrollcall_dist.items()},
     }
     return votes_meta, member_votes, stats
 
@@ -324,6 +336,9 @@ def print_inspection(stats, votes_meta=None):
     print("\n  Sample rows (name, code):")
     for name, code in stats["codeSamples"]:
         print("    %-24s %s" % (name, code))
+    if stats.get("isRollCallDistribution"):
+        print("\n  votes[].isRollCall distribution (passage-classification signal): %s"
+              % stats["isRollCallDistribution"])
     if stats.get("sampleVoteRow") is not None:
         print("\n  RAW legislation.votes[] item (reveals the real keys, e.g. result):")
         print("    %s" % json.dumps(stats["sampleVoteRow"]))
