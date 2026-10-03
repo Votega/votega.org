@@ -270,6 +270,12 @@ def build(client, our_session, by_legis_id, chamber_by_ocd,
             yea = nay = 0
             for pv in rows:
                 member = pv.get("member") or {}
+                # legis uses member id 0 ("VACANT") as a placeholder for an empty
+                # seat on a roll call — not a person. Skip it entirely so it never
+                # tallies, resolves, or shows up as an "unresolved member".
+                mid0 = member.get("id")
+                if mid0 is not None and int(mid0) == 0:
+                    continue
                 code = pv.get("memberVoted")
                 code_dist[code] += 1
                 if len(code_samples) < 24:
