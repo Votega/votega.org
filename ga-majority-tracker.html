@@ -269,18 +269,18 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
 {%- assign sen = maj.rows | where: "chamber", "Senate" | first -%}
 {%- assign hou = maj.rows | where: "chamber", "House of Representatives" | first -%}
 <div class="tracker-banner" id="trackerBanner">
-  <div class="tracker-card" id="senateCard">
-    <h2>Senate</h2>
-    {%- if sen -%}
-      <div>{{ sen.republican }} Republican · {{ sen.democratic }} Democratic{% if sen.other and sen.other > 0 %} · {{ sen.other }} other{% endif %} <span style="color:#6b7280;">({{ sen.total }} seats)</span></div>
-    {%- else -%}
-      <div class="loading">Loading…</div>
-    {%- endif -%}
-  </div>
   <div class="tracker-card" id="houseCard">
     <h2>House of Representatives</h2>
     {%- if hou -%}
       <div>{{ hou.republican }} Republican · {{ hou.democratic }} Democratic{% if hou.other and hou.other > 0 %} · {{ hou.other }} other{% endif %} <span style="color:#6b7280;">({{ hou.total }} seats)</span></div>
+    {%- else -%}
+      <div class="loading">Loading…</div>
+    {%- endif -%}
+  </div>
+  <div class="tracker-card" id="senateCard">
+    <h2>Senate</h2>
+    {%- if sen -%}
+      <div>{{ sen.republican }} Republican · {{ sen.democratic }} Democratic{% if sen.other and sen.other > 0 %} · {{ sen.other }} other{% endif %} <span style="color:#6b7280;">({{ sen.total }} seats)</span></div>
     {%- else -%}
       <div class="loading">Loading…</div>
     {%- endif -%}
@@ -366,24 +366,24 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
 <!-- Chamber tabs -->
 <div class="chamber-tabs" role="tablist" aria-label="Chamber"
      data-tabs data-tab-attr="data-chamber" data-tab-panel-suffix="View">
-  <button class="chamber-tab active" data-chamber="senate">Senate Chamber</button>
-  <button class="chamber-tab" data-chamber="house">House Chamber</button>
+  <button class="chamber-tab active" data-chamber="house">House Chamber</button>
+  <button class="chamber-tab" data-chamber="senate">Senate Chamber</button>
 </div>
 
-<div class="chamber-view active" id="senateView">
-  <div class="senate-chamber">
-    <div class="senate-grid" id="senateGrid"><div class="loading">Loading…</div></div>
-  </div>
-  <div class="chart-legend" id="senateLegend"></div>
-</div>
-
-<div class="chamber-view" id="houseView">
+<div class="chamber-view active" id="houseView">
   <div class="house-chamber">
     <div class="house-svg-wrap">
       <svg id="houseSvg" width="100%" height="300" viewBox="80 158 560 222" aria-label="House of Representatives seating chart"></svg>
     </div>
   </div>
   <div class="chart-legend" id="houseLegend"></div>
+</div>
+
+<div class="chamber-view" id="senateView">
+  <div class="senate-chamber">
+    <div class="senate-grid" id="senateGrid"><div class="loading">Loading…</div></div>
+  </div>
+  <div class="chart-legend" id="senateLegend"></div>
 </div>
 
 <div id="seatTooltip"></div>
