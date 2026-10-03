@@ -89,16 +89,18 @@ MEMBER_VOTED_CONFIRMED = True
 
 
 def build_crosswalk(path=CROSSWALK_FILE):
-    """Return (by_legis_id, by_chamber_district) mapping to OCD person ids.
+    """Return (by_legis_id, by_chamber_district, chamber_by_ocd).
 
     by_legis_id[int]            -> ocdPersonId   (primary, collision-proof join)
     by_chamber_district[(c,d)]  -> ocdPersonId   (fallback for members whose
                                    legisGaGovId is still null in the crosswalk;
                                    `c` is the chamber STRING, `d` the int district)
+    chamber_by_ocd[ocd]         -> chamber STRING (to derive a roll call's chamber
+                                   from its id-resolved members)
     """
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
-    by_legis_id, by_chamber_district = {}, {}
+    by_legis_id, by_chamber_district, chamber_by_ocd = {}, {}, {}
     for person in data.get("people", []):
         ocd = (person.get("ids") or {}).get("ocdPersonId")
         if not ocd:
@@ -108,9 +110,11 @@ def build_crosswalk(path=CROSSWALK_FILE):
             by_legis_id[int(legis_id)] = ocd
         role = person.get("role") or {}
         chamber, district = role.get("chamber"), role.get("district")
-        if chamber and district is not None:
-            by_chamber_district.setdefault((chamber, int(district)), ocd)
-    return by_legis_id, by_chamber_district
+        if chamber:
+            chamber_by_ocd[ocd] = chamber
+            if district is not None:
+                by_chamber_district.setdefault((chamber, int(district)), ocd)
+    return by_legis_id, by_chamber_district, chamber_by_ocd
 
 
 #: "ADESANYA, 43RD" / "CLARK, 100TH" -> district number.
@@ -165,8 +169,8 @@ def extract_vote_meta(vote_detail, vote_row, our_session, legislation_detail):
     }
 
 
-def build(client, our_session, by_legis_id, by_chamber_district, verbose=True,
-          sample=None):
+def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
+          verbose=True, sample=None):
     """Walk the active session's bills -> details -> roll calls, resolving each
     per-member row to an OCD id. Returns (votes_meta, member_votes, stats).
 
@@ -212,33 +216,56 @@ def build(client, our_session, by_legis_id, by_chamber_district, verbose=True,
             if not vote:
                 continue
             meta = extract_vote_meta(vote, meta_rows.get(vid), our_session, detail)
-            # Chamber for the district fallback. Vote/detail did not expose a
-            # chamber field in the spike sample; this reads it if present (confirm
-            # the key on first run) and otherwise disables the fallback safely.
-            roll_chamber = CHAMBER.get(vote.get("chamber"))
+            rows = vote.get("votes") or []
 
+            # Pass 1 — resolve by numeric id (collision-proof) and tally the
+            # chambers of the resolved members. A roll call is single-chamber, so
+            # that majority IS this vote's chamber; Vote/detail exposes no chamber
+            # field of its own (vote.get("chamber") is only a last-ditch fallback).
+            resolved = []           # (ocd, option) to record
+            pending = []            # (member, option) unresolved by id
+            chamber_tally = Counter()
             yea = nay = 0
-            for pv in (vote.get("votes") or []):
+            for pv in rows:
                 member = pv.get("member") or {}
                 code = pv.get("memberVoted")
                 code_dist[code] += 1
                 if len(code_samples) < 24:
                     code_samples.append((member.get("name"), code))
                 option = MEMBER_VOTED.get(code, "Other")
-                ocd, how = resolve_member(member, by_legis_id, by_chamber_district,
-                                          chamber=roll_chamber)
-                if ocd:
-                    resolved_rows += 1
-                    if how == "district":
-                        district_rows += 1
-                    member_votes.setdefault(ocd, []).append(
-                        {"voteId": key, "vote": option})
-                else:
-                    unresolved_rows += 1
                 if option == "Yea":
                     yea += 1
                 elif option == "Nay":
                     nay += 1
+                mid = member.get("id")
+                ocd = by_legis_id.get(int(mid)) if mid is not None else None
+                if ocd:
+                    resolved.append((ocd, option))
+                    ch = chamber_by_ocd.get(ocd)
+                    if ch:
+                        chamber_tally[ch] += 1
+                else:
+                    pending.append((member, option))
+
+            roll_chamber = (chamber_tally.most_common(1)[0][0]
+                            if chamber_tally else CHAMBER.get(vote.get("chamber")))
+
+            # Pass 2 — resolve the rest (freshmen whose legisGaGovId is still null
+            # in the crosswalk) by (chamber, district) parsed from the name string.
+            for member, option in pending:
+                ocd, how = resolve_member(member, by_legis_id, by_chamber_district,
+                                          chamber=roll_chamber)
+                if ocd:
+                    resolved.append((ocd, option))
+                    if how == "district":
+                        district_rows += 1
+                else:
+                    unresolved_rows += 1
+
+            for ocd, option in resolved:
+                member_votes.setdefault(ocd, []).append({"voteId": key, "vote": option})
+            resolved_rows += len(resolved)
+
             # Prefer legis's own tally; fall back to the computed count.
             if meta.get("yea") is None:
                 meta["yea"] = yea
@@ -274,20 +301,31 @@ def _arg_value(flag, default=None):
     return default
 
 
-def print_inspection(stats):
-    """Dump the memberVoted code distribution + sample resolutions, so the
-    code->option map (and the current guess in MEMBER_VOTED) can be verified
-    against a known tally from the logs. See module docstring #1."""
+def print_inspection(stats, votes_meta=None):
+    """Dump the memberVoted code distribution, sample resolutions, and one sample
+    votes_meta record — so the (confirmed) code->option map can be re-checked and
+    the populated legislation votes[] shape (date/motion/result) can be seen from
+    the logs. See module docstring."""
     print("\n=== INSPECTION: memberVoted code distribution ===")
     for code in sorted(stats["codeDistribution"], key=lambda c: (c is None, c)):
         n = stats["codeDistribution"][code]
-        guess = MEMBER_VOTED.get(code, "Other")
-        print("  code %-5s -> %-11s (current guess)   count=%d" % (code, guess, n))
+        label = MEMBER_VOTED.get(code, "Other")
+        print("  code %-5s -> %-11s   count=%d" % (code, label, n))
+    print("  (map %s)" % ("CONFIRMED 0=Yea/1=Nay" if MEMBER_VOTED_CONFIRMED
+                          else "PROVISIONAL — verify against an official tally"))
     print("\n  Sample rows (name, code):")
     for name, code in stats["codeSamples"]:
         print("    %-24s %s" % (name, code))
-    print("\n  WARNING: confirm the map against one roll call's OFFICIAL tally, then "
-          "set MEMBER_VOTED + MEMBER_VOTED_CONFIRMED=True.\n")
+    if votes_meta:
+        print("\n  Sample votes_meta record (checks the legislation votes[] shape):")
+        sample_key = next(iter(votes_meta))
+        print("    %s -> %s" % (sample_key, json.dumps(votes_meta[sample_key])))
+        populated = [k for k in ("date", "motionText", "result")
+                     if votes_meta[sample_key].get(k)]
+        print("    votes[]-sourced fields populated: %s"
+              % (", ".join(populated) if populated else
+                 "NONE (date/motion/result still empty — confirm the votes[] keys)"))
+    print()
 
 
 def main():
@@ -303,7 +341,7 @@ def main():
               "'%s'. Add it to LEGIS_SESSION_ID." % our_session, file=sys.stderr)
         sys.exit(1)
 
-    by_legis_id, by_chamber_district = build_crosswalk()
+    by_legis_id, by_chamber_district, chamber_by_ocd = build_crosswalk()
     print("Loaded crosswalk: %d legisGaGovId joins, %d (chamber,district) fallbacks"
           % (len(by_legis_id), len(by_chamber_district)))
 
@@ -312,13 +350,16 @@ def main():
           % (our_session, LEGIS_SESSION_ID[our_session],
              " [sample=%d]" % sample if sample else ""))
     votes_meta, member_votes, stats = build(
-        client, our_session, by_legis_id, by_chamber_district, sample=sample)
+        client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
+        sample=sample)
 
     if inspect:
-        print_inspection(stats)
-        print("Inspection run — nothing written. Resolved %d/%d rows across %d roll calls."
+        print_inspection(stats, votes_meta)
+        print("Inspection run — nothing written. Resolved %d/%d rows (%d via district "
+              "fallback) across %d roll calls."
               % (stats["resolvedRows"],
-                 stats["resolvedRows"] + stats["unresolvedRows"], len(votes_meta)))
+                 stats["resolvedRows"] + stats["unresolvedRows"],
+                 stats["districtFallbackRows"], len(votes_meta)))
         return
 
     if not votes_meta:
