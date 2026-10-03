@@ -19,12 +19,21 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "inspect = dump the memberVoted code distribution and write nothing; sample = produce a capped parallel file and upload it"
+        description: "inspect = dump diagnostics, write nothing; sample = produce a capped parallel file + upload it; list = show configured/live sessions"
         type: choice
         options:
           - inspect
           - sample
+          - list
         default: inspect
+      session:
+        description: "Session to run (active = the current ACTIVE_SESSION). Add new tags here AND in lib/ga_sessions.py when a session rolls."
+        type: choice
+        options:
+          - active
+          - "2026_ss"
+          - "2025_26"
+        default: active
       sample_size:
         description: "Roll calls to process in sample mode"
         default: "50"
@@ -60,13 +69,20 @@ jobs:
         env:
           LEGIS_GA_CLIENT_KEY: ${{ secrets.LEGIS_GA_CLIENT_KEY }}
           MODE: ${{ inputs.mode }}
+          SESSION: ${{ inputs.session }}
           SAMPLE_SIZE: ${{ inputs.sample_size }}
         run: |
           mkdir -p out
-          if [ "$MODE" = "inspect" ]; then
-            python scripts/generate_ga_votes_from_legis.py --inspect
+          # "active" means let the producer use its default (ACTIVE_SESSION); any
+          # other value is passed through as an explicit --session.
+          SESSION_ARG=""
+          if [ "$SESSION" != "active" ]; then SESSION_ARG="--session $SESSION"; fi
+          if [ "$MODE" = "list" ]; then
+            python scripts/generate_ga_votes_from_legis.py --list-sessions
+          elif [ "$MODE" = "inspect" ]; then
+            python scripts/generate_ga_votes_from_legis.py --inspect $SESSION_ARG
           else
-            python scripts/generate_ga_votes_from_legis.py --sample "$SAMPLE_SIZE" out/ga-member-votes.legis.json
+            python scripts/generate_ga_votes_from_legis.py $SESSION_ARG --sample "$SAMPLE_SIZE" out/ga-member-votes.legis.json
           fi
 
       - name: Upload the parallel output (sample mode)
