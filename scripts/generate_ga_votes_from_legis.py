@@ -9,18 +9,19 @@ win: legis.ga.gov keys every roll call by the legislature's own numeric member i
 matcher introduces (the two Clarks) are resolved by construction.
 
 Status: SCAFFOLD. The control flow, join, and schema output are complete and the
-pure helpers are unit-testable offline. Three things must be confirmed on the
-FIRST live run (each is flagged in-code and recorded in metadata), because every
-bill captured during the spike had no roll call yet:
+pure helpers are unit-testable offline.
 
-  1. memberVoted code -> option map (MEMBER_VOTED below). Observed codes {0,1,2,3}
-     but Vote/detail carries NO yea/nay totals, so the map can't be self-derived —
-     cross-check one roll call against Open States' counts (or the GA site's
-     displayed tally) and lock it in.
-  2. The shape of a POPULATED legislation_detail `votes[]` item — assumed to carry
+  [DONE] memberVoted code -> option map (MEMBER_VOTED below) CONFIRMED offline
+     2026-10-02 by cross-referencing against the existing Open States 2026_ss
+     data: 0=Yea, 1=Nay (131 members, zero disagreement). See MEMBER_VOTED.
+
+Two things still need a live run to confirm (each flagged in-code and in
+metadata), because every bill captured during the spike had no roll call yet:
+
+  1. The shape of a POPULATED legislation_detail `votes[]` item — assumed to carry
      per-vote metadata (date, caption/motion, totals, result). extract_vote_meta()
      pulls these defensively; confirm the real keys and tighten it.
-  3. Passage classification. legis exposes ALL roll calls; today's site shows
+  2. Passage classification. legis exposes ALL roll calls; today's site shows
      "passage only". This scaffold emits every roll call tagged; overlay the Open
      States passage set at cutover (design §5.3, recommended option (a)).
 
@@ -32,12 +33,17 @@ guardrail) — run this in CI or locally, and unit-test the parsing in-agent.
 Usage:
   python generate_ga_votes_from_legis.py            # -> ga-member-votes.legis.json
   python generate_ga_votes_from_legis.py OUT.json   # explicit output path
+  python generate_ga_votes_from_legis.py --inspect  # fetch ~5 roll calls, print the
+                                                    # memberVoted code distribution,
+                                                    # write NOTHING (confirm the map)
+  python generate_ga_votes_from_legis.py --sample 50  # cap roll calls (cheap run)
 """
 
 import json
 import os
 import re
 import sys
+from collections import Counter
 from datetime import datetime
 
 from lib.atomic_io import write_json_atomic
@@ -60,16 +66,26 @@ LEGIS_SESSION_ID = {
     "2026_ss": 1034,
 }
 
-#: ⚠ PROVISIONAL — CONFIRM ON FIRST LIVE RUN (see module docstring #1).
-#: legis.ga.gov `memberVoted` code -> option string (option strings must be the
-#: keys of lib/votes_schema.VOTE_CODES). Best-guess pending a tally cross-check.
+#: legis.ga.gov `memberVoted` code -> option string (option strings must be keys
+#: of lib/votes_schema.VOTE_CODES).
+#:
+#: Yea/Nay CONFIRMED 2026-10-02 by cross-referencing legis Vote/detail 26674
+#: against the existing Open States 2026_ss roll calls: across 131 overlapping
+#: members, code 0 was Yea and code 1 was Nay with ZERO disagreement (0=Yea/1=Nay
+#: held perfectly on HB 7/8/9/65/66/67, all party-line special-session votes).
+#: Codes 2 and 3 are non-Yea/Nay (Open States records both as "Other"): code 3 is
+#: the Speaker's abstention (Burns -> "Other" throughout), code 2 is members
+#: absent/excused on a given roll call. The exact Excused-vs-Not-Voting label for
+#: 2/3 can't be split from OS and does not affect tallies (only Yea/Nay count).
 MEMBER_VOTED = {
-    1: "Yea",
-    0: "Nay",
+    0: "Yea",
+    1: "Nay",
     2: "Excused",
     3: "Not Voting",
 }
-MEMBER_VOTED_CONFIRMED = False  # flip to True (and fix the map) after cross-check
+#: True = the Yea/Nay axis is confirmed (see above). The 2/3 labels remain a
+#: best-effort split of non-voting options, which no downstream tally depends on.
+MEMBER_VOTED_CONFIRMED = True
 
 
 def build_crosswalk(path=CROSSWALK_FILE):
@@ -149,13 +165,22 @@ def extract_vote_meta(vote_detail, vote_row, our_session, legislation_detail):
     }
 
 
-def build(client, our_session, by_legis_id, by_chamber_district, verbose=True):
+def build(client, our_session, by_legis_id, by_chamber_district, verbose=True,
+          sample=None):
     """Walk the active session's bills -> details -> roll calls, resolving each
-    per-member row to an OCD id. Returns (votes_meta, member_votes, stats)."""
+    per-member row to an OCD id. Returns (votes_meta, member_votes, stats).
+
+    `sample` caps the number of roll calls processed (used by --sample/--inspect
+    to make the first live run cheap and purpose-built for confirmation). The raw
+    `memberVoted` code distribution and a few sample resolutions are always
+    accumulated into stats so the code->option map can be checked from the logs.
+    """
     legis_session = LEGIS_SESSION_ID[our_session]
     votes_meta, member_votes = {}, {}
     seen_votes = set()
     resolved_rows = district_rows = unresolved_rows = bills_with_votes = 0
+    code_dist = Counter()        # raw memberVoted code -> count, across all rows
+    code_samples = []            # a few (name, code) pairs for eyeballing the map
 
     # Index legislation_detail votes[] rows by vote id so extract_vote_meta can
     # reach the per-vote metadata that Vote/detail itself does not carry.
@@ -193,7 +218,11 @@ def build(client, our_session, by_legis_id, by_chamber_district, verbose=True):
             yea = nay = 0
             for pv in (vote.get("votes") or []):
                 member = pv.get("member") or {}
-                option = MEMBER_VOTED.get(pv.get("memberVoted"), "Other")
+                code = pv.get("memberVoted")
+                code_dist[code] += 1
+                if len(code_samples) < 24:
+                    code_samples.append((member.get("name"), code))
+                option = MEMBER_VOTED.get(code, "Other")
                 ocd, how = resolve_member(member, by_legis_id, by_chamber_district,
                                           chamber=roll_chamber)
                 if ocd:
@@ -218,19 +247,53 @@ def build(client, our_session, by_legis_id, by_chamber_district, verbose=True):
         if verbose and i % 200 == 0:
             print("  scanned %d bills — %d with roll calls, %d votes, %d members"
                   % (i, bills_with_votes, len(votes_meta), len(member_votes)))
+        if sample is not None and len(seen_votes) >= sample:
+            print("  --sample limit reached (%d roll calls)" % len(seen_votes))
+            break
 
     stats = {
         "billsWithVotes": bills_with_votes,
         "resolvedRows": resolved_rows,
         "districtFallbackRows": district_rows,
         "unresolvedRows": unresolved_rows,
+        "codeDistribution": dict(code_dist),
+        "codeSamples": code_samples,
     }
     return votes_meta, member_votes, stats
+
+
+def _arg_value(flag, default=None):
+    """Read `--flag value` (or `--flag=value`) from argv."""
+    for i, a in enumerate(sys.argv):
+        if a == flag and i + 1 < len(sys.argv):
+            return sys.argv[i + 1]
+        if a.startswith(flag + "="):
+            return a.split("=", 1)[1]
+    return default
+
+
+def print_inspection(stats):
+    """Dump the memberVoted code distribution + sample resolutions, so the
+    code->option map (and the current guess in MEMBER_VOTED) can be verified
+    against a known tally from the logs. See module docstring #1."""
+    print("\n=== INSPECTION: memberVoted code distribution ===")
+    for code in sorted(stats["codeDistribution"], key=lambda c: (c is None, c)):
+        n = stats["codeDistribution"][code]
+        guess = MEMBER_VOTED.get(code, "Other")
+        print("  code %-5s -> %-11s (current guess)   count=%d" % (code, guess, n))
+    print("\n  Sample rows (name, code):")
+    for name, code in stats["codeSamples"]:
+        print("    %-24s %s" % (name, code))
+    print("\n  WARNING: confirm the map against one roll call's OFFICIAL tally, then "
+          "set MEMBER_VOTED + MEMBER_VOTED_CONFIRMED=True.\n")
 
 
 def main():
     positional = [a for a in sys.argv[1:] if not a.startswith("--")]
     output_file = positional[0] if positional else DEFAULT_OUTPUT
+    inspect = "--inspect" in sys.argv
+    sample = _arg_value("--sample")
+    sample = int(sample) if sample else (5 if inspect else None)
 
     our_session = ACTIVE_SESSION
     if our_session not in LEGIS_SESSION_ID:
@@ -243,10 +306,18 @@ def main():
           % (len(by_legis_id), len(by_chamber_district)))
 
     client = LegisGaClient()
-    print("Fetching legis.ga.gov roll calls for %s (legis session %d)..."
-          % (our_session, LEGIS_SESSION_ID[our_session]))
+    print("Fetching legis.ga.gov roll calls for %s (legis session %d)%s..."
+          % (our_session, LEGIS_SESSION_ID[our_session],
+             " [sample=%d]" % sample if sample else ""))
     votes_meta, member_votes, stats = build(
-        client, our_session, by_legis_id, by_chamber_district)
+        client, our_session, by_legis_id, by_chamber_district, sample=sample)
+
+    if inspect:
+        print_inspection(stats)
+        print("Inspection run — nothing written. Resolved %d/%d rows across %d roll calls."
+              % (stats["resolvedRows"],
+                 stats["resolvedRows"] + stats["unresolvedRows"], len(votes_meta)))
+        return
 
     if not votes_meta:
         print("Error: collected zero roll calls — refusing to write. Either the "
@@ -299,8 +370,8 @@ def main():
           % (len(votes_meta), len(member_votes), size_kb, output_file))
     print("  resolved %d rows, %d unresolved" % (stats["resolvedRows"], stats["unresolvedRows"]))
     if not MEMBER_VOTED_CONFIRMED:
-        print("  ⚠ memberVoted code map is PROVISIONAL — cross-check against a known "
-              "tally before trusting Yea/Nay (see module docstring).")
+        print("  WARNING: memberVoted code map is PROVISIONAL — cross-check against a "
+              "known tally before trusting Yea/Nay (see module docstring).")
 
 
 if __name__ == "__main__":
