@@ -1,0 +1,78 @@
+name: Inspect legis.ga.gov vote source (manual)
+
+# Manual, NON-COMMITTING trial of the official-source vote producer
+# (scripts/generate_ga_votes_from_legis.py). This does NOT update the site — it
+# exists to confirm the remaining live-only unknowns and to produce the parallel
+# file for diffing against the Open States output before any cutover.
+#
+# Requires the repo secret LEGIS_GA_CLIENT_KEY — the PUBLIC client key from the
+# legis.ga.gov SPA bundle (the `obscureKey` constant). It is not a user credential;
+# the API mints an anonymous ~5-min token from it. Live minting can't run inside the
+# Claude Code agent sandbox (credential guardrail), so this CI job is how the first
+# real fetch happens.
+#
+# Manual-only (workflow_dispatch), so it is intentionally NOT listed in
+# notify-workflow-failure.yml — that notifier + validate-workflows.yml only require
+# SCHEDULED workflows to be watched.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "inspect = dump the memberVoted code distribution and write nothing; sample = produce a capped parallel file and upload it"
+        type: choice
+        options:
+          - inspect
+          - sample
+        default: inspect
+      sample_size:
+        description: "Roll calls to process in sample mode"
+        default: "50"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Check the client key is configured
+        env:
+          LEGIS_GA_CLIENT_KEY: ${{ secrets.LEGIS_GA_CLIENT_KEY }}
+        run: |
+          if [ -z "$LEGIS_GA_CLIENT_KEY" ]; then
+            echo "::error::Secret LEGIS_GA_CLIENT_KEY is not set. Add it (the public" \
+                 "legis.ga.gov SPA client key) under Settings > Secrets and variables" \
+                 "> Actions, then re-run."
+            exit 1
+          fi
+
+      - name: Run the legis.ga.gov vote producer (non-committing)
+        env:
+          LEGIS_GA_CLIENT_KEY: ${{ secrets.LEGIS_GA_CLIENT_KEY }}
+          MODE: ${{ inputs.mode }}
+          SAMPLE_SIZE: ${{ inputs.sample_size }}
+        run: |
+          mkdir -p out
+          if [ "$MODE" = "inspect" ]; then
+            python scripts/generate_ga_votes_from_legis.py --inspect
+          else
+            python scripts/generate_ga_votes_from_legis.py --sample "$SAMPLE_SIZE" out/ga-member-votes.legis.json
+          fi
+
+      - name: Upload the parallel output (sample mode)
+        if: ${{ inputs.mode == 'sample' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ga-member-votes-legis
+          path: out/ga-member-votes.legis.json
+          if-no-files-found: error
