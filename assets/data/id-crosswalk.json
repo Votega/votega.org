@@ -2,8 +2,8 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-09-27T14:40:17+00:00",
-  "count": 745,
+  "generatedAt": "2026-10-03T14:12:58+00:00",
+  "count": 746,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
    "Open States (Plural Policy) — ocdPersonId, legisGaGovId",
@@ -23,10 +23,10 @@
    "out-of-scope": "this identifier does not apply to this person"
   },
   "coverage": {
-   "people": 745,
-   "officeholders": 265,
+   "people": 746,
+   "officeholders": 266,
    "candidateOnly": 480,
-   "withVgId": 677,
+   "withVgId": 678,
    "unkeyed": 68,
    "withAnyFiling": 661,
    "candidacies": 716,
@@ -51,7 +51,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/938f2479-c51f-446a-87f0-76d4f07c61e5",
-    "legisGaGovId": null,
+    "legisGaGovId": 5089,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -97,6 +97,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -327,7 +331,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/1d0deded-daaa-425b-b6aa-3612492dca5b",
-    "legisGaGovId": null,
+    "legisGaGovId": 5084,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -375,6 +379,10 @@
      "confidence": "high",
      "source": "assets/data/ga-campaign-finance-overrides.json",
      "key": "ga-house-169-2026-r-1"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -465,7 +473,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/3b3da57c-2f96-4a94-a7bc-eb6a814cc627",
-    "legisGaGovId": null,
+    "legisGaGovId": 5076,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -511,6 +519,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -855,7 +867,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/f2444048-8c14-45b2-b700-37f7899fa5bb",
-    "legisGaGovId": null,
+    "legisGaGovId": 5092,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -901,6 +913,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -1842,7 +1858,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/b1187e7a-8cea-4e91-9c9f-7c7c61df3c85",
-    "legisGaGovId": null,
+    "legisGaGovId": 5069,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -1888,6 +1904,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -2233,7 +2253,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/3646e872-85a6-4383-97c5-36ff96ca7113",
-    "legisGaGovId": null,
+    "legisGaGovId": 5064,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -2279,6 +2299,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -4693,7 +4717,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/6be704ef-6250-4e08-86d3-f5fa2e1eebf3",
-    "legisGaGovId": null,
+    "legisGaGovId": 5067,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -4739,6 +4763,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -5309,7 +5337,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/abece831-30a8-4cf8-94ff-d41f7f48197f",
-    "legisGaGovId": null,
+    "legisGaGovId": 5091,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -5355,6 +5383,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -5445,7 +5477,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/b261086c-7b16-4a8e-82a6-22df4445af84",
-    "legisGaGovId": null,
+    "legisGaGovId": 5083,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -5491,6 +5523,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -5651,7 +5687,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/bd990496-ea34-4b79-8d6f-68cfed424c15",
-    "legisGaGovId": null,
+    "legisGaGovId": 5068,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -5697,6 +5733,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -5787,7 +5827,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/47fd36f3-f5d4-4ef6-a429-1ffc7681e233",
-    "legisGaGovId": null,
+    "legisGaGovId": 5063,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -5833,6 +5873,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -6361,7 +6405,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/37602f7b-947e-4067-8f2e-b2fec620643e",
-    "legisGaGovId": null,
+    "legisGaGovId": 5085,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -6407,6 +6451,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -6427,7 +6475,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/fcd57129-480c-4fba-a0d1-7fb369706611",
-    "legisGaGovId": null,
+    "legisGaGovId": 5090,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -6473,6 +6521,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -6747,7 +6799,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/584267b0-e40b-4d6e-a7fe-4c076eb6214c",
-    "legisGaGovId": null,
+    "legisGaGovId": 5088,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -6793,6 +6845,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -7725,7 +7781,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/8b62e64b-bf80-4967-832b-8fb92cd6c4b3",
-    "legisGaGovId": null,
+    "legisGaGovId": 5073,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -7771,6 +7827,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -8281,7 +8341,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b",
-    "legisGaGovId": null,
+    "legisGaGovId": 5065,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -8327,6 +8387,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -8627,7 +8691,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/1d9bb111-bf4f-4e4f-aa63-a2f6a94b566c",
-    "legisGaGovId": null,
+    "legisGaGovId": 5079,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -8673,6 +8737,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -9757,7 +9825,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/7deae3f1-5548-4afe-9018-e8112945fd8d",
-    "legisGaGovId": null,
+    "legisGaGovId": 5078,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -9802,6 +9870,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -10452,7 +10524,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/f0af2586-d535-4e44-bcaa-65239f9390b1",
-    "legisGaGovId": null,
+    "legisGaGovId": 5070,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -10498,6 +10570,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -11218,7 +11294,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/55074030-4d64-4da0-b68a-5e3945d00f25",
-    "legisGaGovId": null,
+    "legisGaGovId": 5081,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -11264,6 +11340,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -11354,7 +11434,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/fdf78e39-985f-48c3-8ed3-ccf15946871f",
-    "legisGaGovId": null,
+    "legisGaGovId": 5075,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -11400,6 +11480,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -11674,7 +11758,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/069fb4fa-766b-40e4-90b7-ce96b4fa2ace",
-    "legisGaGovId": null,
+    "legisGaGovId": 5066,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -11720,6 +11804,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -11740,7 +11828,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/8798a822-fee8-4546-bcdd-455f788bef44",
-    "legisGaGovId": null,
+    "legisGaGovId": 161,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -11786,6 +11874,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -12366,7 +12458,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/84eb7371-a332-4534-b3b3-542500c798f8",
-    "legisGaGovId": null,
+    "legisGaGovId": 5080,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -12412,6 +12504,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -12502,7 +12598,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/5d77204f-89e7-43df-bccb-a08b9956132d",
-    "legisGaGovId": null,
+    "legisGaGovId": 5072,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -12548,6 +12644,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -12638,7 +12738,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/32c3fbdd-4034-47d0-b7ab-0411bd200737",
-    "legisGaGovId": null,
+    "legisGaGovId": 5074,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -12684,6 +12784,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -13242,7 +13346,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/4ab15127-5b7a-40bc-8807-26e8e8a73397",
-    "legisGaGovId": null,
+    "legisGaGovId": 5077,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -13288,6 +13392,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -14640,7 +14748,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/516cb969-9467-490f-9a05-02c3e7decae3",
-    "legisGaGovId": null,
+    "legisGaGovId": 5093,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -14686,6 +14794,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -14846,7 +14958,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/cabc1e6f-ba7c-4063-a778-707579f91ec8",
-    "legisGaGovId": null,
+    "legisGaGovId": 5071,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -14894,6 +15006,10 @@
      "confidence": "high",
      "source": "assets/data/ga-campaign-finance-overrides.json",
      "key": "ga-house-64-2026-d-1"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -14914,7 +15030,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/c5766526-3a5a-4d33-b5ff-a0d1d358d7ae",
-    "legisGaGovId": null,
+    "legisGaGovId": 5082,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -14960,6 +15076,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -15138,7 +15258,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/93f45299-bfa2-4458-844a-5c6b9bdd8c1d",
-    "legisGaGovId": null,
+    "legisGaGovId": 62,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -15184,6 +15304,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -15699,7 +15823,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/b9050158-4a6d-4332-8ad2-769472f52e3e",
-    "legisGaGovId": null,
+    "legisGaGovId": 5095,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -15745,6 +15869,10 @@
      "confidence": "confirmed-none",
      "source": "assets/data/ga-campaign-finance-overrides.json",
      "key": "ga-house-94-2026-d-5"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -16117,7 +16245,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/23ffff2b-3ce6-46dc-996c-7b4fd71607bc",
-    "legisGaGovId": null,
+    "legisGaGovId": 5015,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16135,6 +16263,10 @@
      "method": "seat+surname",
      "confidence": "no-match",
      "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -16155,7 +16287,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/b0587620-8c43-45b8-8212-285a13a4d47c",
-    "legisGaGovId": null,
+    "legisGaGovId": 831,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16173,6 +16305,10 @@
      "method": "seat+surname",
      "confidence": "no-match",
      "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -16193,7 +16329,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/e6dcaefd-8ecd-4f08-990f-e4443ae53ee8",
-    "legisGaGovId": null,
+    "legisGaGovId": 5014,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16211,6 +16347,10 @@
      "method": "seat+surname",
      "confidence": "no-match",
      "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -16231,7 +16371,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/ffa17688-2ca9-40ba-9eb3-3991f930bf53",
-    "legisGaGovId": null,
+    "legisGaGovId": 852,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16249,6 +16389,10 @@
      "method": "seat+surname",
      "confidence": "no-match",
      "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -16269,7 +16413,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/8d6562cb-cdd0-405f-a165-8463cde26594",
-    "legisGaGovId": null,
+    "legisGaGovId": 840,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16287,6 +16431,10 @@
      "method": "seat+surname",
      "confidence": "no-match",
      "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -16307,7 +16455,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/031b880f-171c-448f-b1c1-62ac47693909",
-    "legisGaGovId": null,
+    "legisGaGovId": 5048,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16325,6 +16473,10 @@
      "method": "seat+surname",
      "confidence": "no-match",
      "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -16345,7 +16497,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/cabee039-e73e-4dc6-95ec-3e22d8e529ff",
-    "legisGaGovId": null,
+    "legisGaGovId": 810,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16365,6 +16517,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -16385,7 +16541,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/d6a8848d-a637-4c2e-ae37-84440c614400",
-    "legisGaGovId": null,
+    "legisGaGovId": 808,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16403,6 +16559,10 @@
      "method": "seat+surname",
      "confidence": "no-match",
      "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -16423,7 +16583,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/ff24cea3-8582-4cfe-b015-74ee7c5ebeef",
-    "legisGaGovId": null,
+    "legisGaGovId": 4956,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16441,6 +16601,10 @@
      "method": "seat+surname",
      "confidence": "no-match",
      "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -38280,7 +38444,7 @@
   {
    "vgId": "vg-ga-p-000654",
    "name": {
-    "full": "Eric W. Lee Sr",
+    "full": "Eric Lee",
     "first": null,
     "last": null
    },
@@ -39939,7 +40103,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/3cfc8d4f-68d4-44b2-81f4-a162465e1aed",
-    "legisGaGovId": 5097,
+    "legisGaGovId": null,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -39957,10 +40121,6 @@
      "method": "seat+surname",
      "confidence": "no-match",
      "note": "no filing matched this person's seat or the office they seek"
-    },
-    "legisGaGovId": {
-     "method": "authoritative",
-     "source": "Open States"
     }
    }
   },
@@ -40026,6 +40186,48 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000688",
+   "name": {
+    "full": "Colton Moore",
+    "first": "Colton",
+    "last": "Moore"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "Senate",
+    "district": 53,
+    "party": "Republican",
+    "status": "Resigned"
+   },
+   "ids": {
+    "ocdPersonId": "ocd-person/6ebda9ee-2203-4b66-9bb3-64d2307157a0",
+    "legisGaGovId": 4933,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "ocdPersonId": {
+     "method": "authoritative",
+     "source": "Open States"
+    },
+    "peachfileFilerEntityIds": {
+     "method": "seat+surname",
+     "confidence": "no-match",
+     "note": "no filing matched this person's seat or the office they seek"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
