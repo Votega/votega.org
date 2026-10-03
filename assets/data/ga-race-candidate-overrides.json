@@ -2,6 +2,27 @@
   "_note": "Manual overrides for GA legislative race candidates, applied after build_legislative_races.py generates from source data. Keys are candidate IDs (e.g. 'ga-house-1-2026-r-1'). Use _name for human-readability only — it is stripped before merging. Fields here override the auto-generated values. Incumbents get imageUrl auto-populated from ga-members.json; use this file to correct bad source data or add fields for challengers.",
   "_raceOverrides": {
     "_note": "Race-level field overrides keyed by race ID. Applied by build_legislative_races.py after building each race. Use '_note' to set the Open Seat banner text (format: 'Open seat — Reason.').",
+    "ga-senate-42-2026": {
+      "_note": "Open Seat - Brian Strickland (R) is not running for reelection to this seat."
+    },
+    "ga-senate-14-2026": {
+      "_note": "Open Seat - Josh McLaurin (D) is not running for reelection to this seat."
+    },
+    "ga-senate-27-2026": {
+      "_note": "Open Seat - Greg Dolezal (R) is not running for reelection to this seat."
+    },
+    "ga-senate-46-2026": {
+      "_note": "Open Seat - Bill Cowsert (R) is not running for reelection to this seat."
+    },
+    "ga-house-117-2026": {
+      "_note": "Open Seat - Mary Ann Santos (D) is not running for reelection to this seat."
+    },
+    "ga-house-157-2026": {
+      "_note": "Open Seat - Bill Werkheiser (R) is not running for reelection to this seat."
+    },
+    "ga-house-165-2026": {
+      "_note": "Open Seat - Edna Jackson (D) is not running for reelection to this seat."
+    },
     "ga-senate-7-2026": {
       "_note": "Open seat — Nabilah Parkes (D) resigned effective March 13, 2026."
     },
