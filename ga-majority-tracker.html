@@ -74,6 +74,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .bar-v { background: #9ca3af; }
   .seat-bar-legend {
     display: flex;
+    justify-content: space-between;
     gap: 1rem;
     font-size: 0.72rem;
     color: #555;
@@ -296,61 +297,69 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     border-radius: 8px;
     background: #f8f8f8;
     padding: 1.25rem 1.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.25rem 2rem;
-    align-items: center;
+    text-align: center;
   }
-  .unopposed-figure { display: flex; align-items: baseline; gap: 0.5rem; flex-shrink: 0; }
-  .unopposed-num { font-size: 2.8rem; font-weight: 800; line-height: 1; }
-  .unopposed-den { font-size: 0.95rem; color: #666; }
-  .unopposed-body { flex: 1; min-width: 240px; }
   .unopposed-label {
     font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em;
     color: #555; font-weight: 700; margin: 0 0 0.35rem;
   }
-  .unopposed-detail { font-size: 0.9rem; color: #444; margin: 0; line-height: 1.5; }
-  .unopposed-breakdown { margin: 0.7rem 0 0; max-width: 380px; }
-  .unopposed-safe { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .unopposed-safe span {
-    font-size: 0.85rem; padding: 0.2rem 0.65rem; border-radius: 999px;
-    background: #fff; border: 1px solid #e3e3e3; white-space: nowrap;
-  }
-  .unopposed-safe strong { font-weight: 800; }
-  .unopposed-safe .safe-d strong { color: #2563eb; }
-  .unopposed-safe .safe-r strong { color: #dc2626; }
-  .unopposed-chambers {
-    display: flex; justify-content: space-between; gap: 1rem;
-    margin-top: 0.55rem; padding-top: 0.5rem; border-top: 1px solid #e8e8e8;
-    font-size: 0.85rem; color: #555;
-  }
-  .unopposed-chambers strong { color: #333; font-weight: 700; }
-  .unopposed-source { font-size: 0.72rem; color: #888; margin: 0.55rem 0 0; }
+  .unopposed-detail { font-size: 0.9rem; color: #444; margin: 0 auto 0.95rem; line-height: 1.5; max-width: 540px; }
+  /* Two chamber tiles: a Dem/Rep safe-share bar, the party counts justified
+     to the bar's two ends, then the chamber total — so the total reads as the
+     sum of the two safe counts above it. */
+  .unopposed-chambers { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; max-width: 460px; margin: 0 auto; }
+  .unopposed-ch { border: 1px solid #e3e3e3; border-radius: 6px; background: #fff; padding: 0.6rem 0.8rem; }
+  .unopposed-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 0 0 0.45rem; background: #e5e7eb; }
+  .unopposed-bar i { display: block; }
+  .unopposed-bar .bar-d { background: #2563eb; }
+  .unopposed-bar .bar-r { background: #dc2626; }
+  .unopposed-split { display: flex; justify-content: space-between; font-size: 0.78rem; color: #555; margin-bottom: 0.5rem; }
+  .unopposed-split .safe-d { color: #2563eb; font-weight: 700; }
+  .unopposed-split .safe-r { color: #dc2626; font-weight: 700; }
+  .unopposed-chtotal { font-size: 0.8rem; color: #555; border-top: 1px solid #eee; padding-top: 0.45rem; }
+  .unopposed-chtotal strong { color: #333; font-weight: 700; font-size: 0.95rem; }
+  .unopposed-grand { display: flex; align-items: baseline; justify-content: center; gap: 0.5rem; margin-top: 0.95rem; padding-top: 0.8rem; border-top: 1px solid #e0e0e0; }
+  .unopposed-num { font-size: 2.4rem; font-weight: 800; line-height: 1; color: #333; }
+  .unopposed-den { font-size: 0.9rem; color: #666; }
+  .unopposed-source { font-size: 0.72rem; color: #888; margin: 0.8rem auto 0; max-width: 540px; }
+  @media (max-width: 420px) { .unopposed-chambers { grid-template-columns: 1fr; } }
 </style>
+{%- assign uh = u.byChamber.house -%}
+{%- assign us = u.byChamber.senate -%}
+{%- assign uhD = 0 -%}{%- assign uhR = 0 -%}
+{%- if uh.unopposed > 0 -%}
+  {%- assign uhD = uh.democraticSafe | times: 100.0 | divided_by: uh.unopposed | round: 1 -%}
+  {%- assign uhR = uh.republicanSafe | times: 100.0 | divided_by: uh.unopposed | round: 1 -%}
+{%- endif -%}
+{%- assign usD = 0 -%}{%- assign usR = 0 -%}
+{%- if us.unopposed > 0 -%}
+  {%- assign usD = us.democraticSafe | times: 100.0 | divided_by: us.unopposed | round: 1 -%}
+  {%- assign usR = us.republicanSafe | times: 100.0 | divided_by: us.unopposed | round: 1 -%}
+{%- endif -%}
 <div class="unopposed-callout">
-  <div class="unopposed-figure">
-    <span class="unopposed-num">{{ u.unopposed }}</span>
-    <span class="unopposed-den">of {{ u.total }} seats</span>
-  </div>
-  <div class="unopposed-body">
-    <p class="unopposed-label">No major-party opponent in {{ u.cycle }}</p>
-    <p class="unopposed-detail">
-      {{ u.unopposedPct }}% of the General Assembly has no contest between the two major
-      parties on the November ballot.
-    </p>
-    <div class="unopposed-breakdown">
-      <div class="unopposed-safe">
-        <span class="safe-d"><strong>{{ u.democraticSafe }}</strong> Democratic-safe</span>
-        <span class="safe-r"><strong>{{ u.republicanSafe }}</strong> Republican-safe</span>
-      </div>
-      <div class="unopposed-chambers">
-        <span>House <strong>{{ u.byChamber.house.unopposed }}</strong> of {{ u.byChamber.house.total }}</span>
-        <span>Senate <strong>{{ u.byChamber.senate.unopposed }}</strong> of {{ u.byChamber.senate.total }}</span>
-      </div>
+  <p class="unopposed-label">No major-party opponent in {{ u.cycle }}</p>
+  <p class="unopposed-detail">
+    {{ u.unopposedPct }}% of the General Assembly has no contest between the two major
+    parties on the November ballot.
+  </p>
+  <div class="unopposed-chambers">
+    <div class="unopposed-ch">
+      <div class="unopposed-bar"><i class="bar-d" style="width:{{ uhD }}%"></i><i class="bar-r" style="width:{{ uhR }}%"></i></div>
+      <div class="unopposed-split"><span class="safe-d">{{ uh.democraticSafe }} Dem-safe</span><span class="safe-r">{{ uh.republicanSafe }} Rep-safe</span></div>
+      <div class="unopposed-chtotal">House <strong>{{ uh.unopposed }}</strong> of {{ uh.total }}</div>
     </div>
-    <p class="unopposed-source">A seat counts as unopposed when at most one major party fields a
-      general-election candidate. Derived from official <a href="{{ '/elections' | relative_url }}">2026 race data</a>.</p>
+    <div class="unopposed-ch">
+      <div class="unopposed-bar"><i class="bar-d" style="width:{{ usD }}%"></i><i class="bar-r" style="width:{{ usR }}%"></i></div>
+      <div class="unopposed-split"><span class="safe-d">{{ us.democraticSafe }} Dem-safe</span><span class="safe-r">{{ us.republicanSafe }} Rep-safe</span></div>
+      <div class="unopposed-chtotal">Senate <strong>{{ us.unopposed }}</strong> of {{ us.total }}</div>
+    </div>
   </div>
+  <div class="unopposed-grand">
+    <span class="unopposed-num">{{ u.unopposed }}</span>
+    <span class="unopposed-den">of {{ u.total }} seats statewide</span>
+  </div>
+  <p class="unopposed-source">A seat counts as unopposed when at most one major party fields a
+    general-election candidate. Derived from official <a href="{{ '/elections' | relative_url }}">2026 race data</a>.</p>
 </div>
 {% endif %}
 
@@ -537,9 +546,8 @@ function renderCard(el, title, dCount, rCount, vCount, majority) {
     </div>
     <div class="seat-bar-legend">
       <span><span class="dot" style="background:${COLOR.D}"></span>D ${dCount}</span>
-      <span><span class="dot" style="background:${COLOR.R}"></span>R ${rCount}</span>
       ${vCount ? `<span><span class="dot" style="background:${COLOR.V}"></span>Vacant ${vCount}</span>` : ''}
-      <span style="margin-left:auto;color:#888">Majority: ${majority}</span>
+      <span>R ${rCount}<span class="dot" style="background:${COLOR.R};margin:0 0 0 3px"></span></span>
     </div>
     <div class="chamber-stats" style="margin-top:1rem">
       <div class="stat-block">
@@ -555,6 +563,7 @@ function renderCard(el, title, dCount, rCount, vCount, majority) {
     </div>
     <div style="text-align:center;margin-top:1rem;padding-top:0.75rem;border-top:1px solid #e0e0e0;font-size:0.78rem;color:#888;">
       Total in Chamber: <strong style="color:#444">${total}</strong>
+      <div style="margin-top:0.3rem">Majority threshold: <strong style="color:#444">${majority}</strong></div>
     </div>
   `;
 }
