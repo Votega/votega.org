@@ -138,44 +138,39 @@ def resolve_member(member, by_legis_id):
     return None, "unresolved"
 
 
-def extract_vote_meta(vote_detail, vote_row, our_session, legislation_detail):
-    """Assemble a votes_meta record for one roll call.
+def bill_meta(entry, title, vote_row, our_session):
+    """Assemble a votes_meta record for ONE bundled bill of a roll call.
 
-    Pulls per-vote metadata (date, motion, totals) from the legislation_detail
-    `votes[]` item (`vote_row`). `result` is not in legis and is left None (the
-    Open States passage overlay supplies Pass/Fail — design §5.3).
+    A single legis roll call (Vote/detail) can BUNDLE many bills — its
+    `legislation[]` lists them all (observed up to 65 on a local-calendar batch).
+    Open States records one passage vote PER bill, so the producer explodes each
+    roll call into one record per bundled bill (design §6 per-bill parity); this
+    builds the record for `entry` (one `legislation[]` item).
 
-    `bill` and `title` must describe the SAME bill: a roll call can BUNDLE many
-    bills (Vote/detail `legislation[]` lists them all — common on local-calendar
-    votes), so we pick the bundled entry matching the bill we iterated to reach
-    this vote (`legislation_detail.id`), not just `legislation[0]`. That keeps the
-    `bill` identifier paired with its `title`.
+    Per-bill fields come from `entry` (identifier) + `title` (from the bill-detail
+    title index — legis's bundled `legislation[]` entries carry NO title, only
+    `description`+`legislationId`). The shared roll-call fields (date, motion,
+    tallies) come from the legislation_detail `votes[]` item (`vote_row`). `result`
+    is filled per-bill from the Open States passage overlay by the caller.
     """
     row = vote_row or {}
-    legn = vote_detail.get("legislation") or []
-    this_id = (legislation_detail or {}).get("id")
-    entry = (next((l for l in legn if l.get("legislationId") == this_id), None)
-             or (legn[0] if legn else {}))
-    desc = entry.get("description") or ""
-    legislation_id = entry.get("legislationId") or this_id
+    legislation_id = entry.get("legislationId")
     return {
-        "bill": desc,
+        "bill": entry.get("description") or "",
         "billUrl": ("https://www.legis.ga.gov/legislation/%s" % legislation_id
                     if legislation_id else None),
-        "title": (legislation_detail or {}).get("title") or "",
+        "title": title or "",
         "session": our_session,
         "motionText": (row.get("caption") or row.get("motion")
                        or row.get("description") or "").strip(),
         "date": (row.get("date") or row.get("voteDate") or "")[:10] or None,
         # Authoritative tallies straight from the votes[] row (keys confirmed from a
-        # live sample: `yea`/`nay`, alongside `notVoting`/`excused`). May be None on
-        # a malformed row -> filled from the computed count in build().
+        # live sample: `yea`/`nay`). May be None on a malformed row -> filled from
+        # the computed count in build(). Shared across a roll call's bundled bills.
         "yea": row.get("yea"),
         "nay": row.get("nay"),
-        # legis.ga.gov votes[] carries NO pass/fail field (confirmed from the raw
-        # row: yea/nay/notVoting/excused/isRollCall, no result). Left None here;
-        # authoritative Pass/Fail is supplied by the Open States passage overlay at
-        # cutover (design §5.3), which is where result belongs anyway.
+        # Pass/Fail is not in legis; supplied per-bill from the OS passage overlay
+        # (design §5.3) by the caller. Left None otherwise.
         "result": None,
     }
 
@@ -183,14 +178,22 @@ def extract_vote_meta(vote_detail, vote_row, our_session, legislation_detail):
 def build(client, our_session, by_legis_id, chamber_by_ocd,
           os_index, verbose=True, sample=None):
     """Walk the active session's bills -> details -> roll calls, keeping the PASSAGE
-    votes (design §5.3, overlay-primary) and resolving each per-member row to an OCD
-    id by numeric id ONLY (resolve_member — turnover-proof). Returns
-    (votes_meta, member_votes, stats).
+    votes (design §5.3, overlay-primary), resolving each per-member row to an OCD id
+    by numeric id ONLY (resolve_member — turnover-proof), and EXPLODING each roll
+    call into one record per bundled bill (design §6 — Open States granularity).
+    Returns (votes_meta, member_votes, stats).
 
     `os_index` is the Open States passage overlay (lib.ga_passage.load_os_passage_index):
     a roll call is kept if it matches the overlay (borrowing OS's result) or its
     caption reads as passage; procedural roll calls are dropped. Pass an empty dict
     to fall back to caption-only (native) classification.
+
+    Explosion: a single legis roll call can bundle many bills (Vote/detail
+    `legislation[]`, up to ~65 on a local calendar). Open States records one passage
+    vote per bill, so each kept roll call emits one votes_meta record per bundled
+    bill, keyed `"{voteId}-{legislationId}"`, all sharing the roll call's resolved
+    members and tally. `stats["rollCalls"]` counts unique roll calls; `len(votes_meta)`
+    (== stats["billVotes"]) counts the per-bill records.
 
     `sample` caps the number of roll calls EXAMINED (used by --sample/--inspect to
     make a run cheap). The raw `memberVoted` code distribution and a few sample
@@ -198,8 +201,10 @@ def build(client, our_session, by_legis_id, chamber_by_ocd,
     """
     legis_session = legis_session_id(our_session)
     votes_meta, member_votes = {}, {}
-    seen_votes = set()
-    resolved_rows = unresolved_rows = bills_with_votes = 0
+    seen_votes = set()           # raw voteIds already exploded (dedup across bills)
+    bill_legid = {}              # votes_meta key -> legislationId (for title end-fill)
+    title_by_id = {}             # legislationId -> title (filled across the bill pass)
+    resolved_rows = unresolved_rows = bills_with_votes = roll_calls = 0
     unresolved_members = Counter()  # legis member id -> row count (the backfill gap)
     unresolved_names = {}           # legis member id -> name string (for the gap log)
     passage_overlay = passage_native = dropped_non_passage = 0
@@ -208,13 +213,16 @@ def build(client, our_session, by_legis_id, chamber_by_ocd,
     sample_vote_row = None       # first raw legislation.votes[] item (to learn its keys)
     isrollcall_dist = Counter()  # votes[].isRollCall value -> count (passage signal, #3)
 
-    # Index legislation_detail votes[] rows by vote id so extract_vote_meta can
-    # reach the per-vote metadata that Vote/detail itself does not carry.
     for i, bill in enumerate(client.iter_legislation(legis_session), 1):
         legislation_id = bill.get("legislationId")
         if legislation_id is None:
             continue
         detail = client.legislation_detail(legislation_id)
+        # Record every bill's title as we pass it — a roll call's bundled bills
+        # carry no title (only description+legislationId), so titles are filled from
+        # this index after the pass (end-fill below), by which point it is complete.
+        if detail is not None:
+            title_by_id[legislation_id] = detail.get("title")
         vids = vote_ids(detail)
         if not detail or not vids:
             continue
@@ -229,50 +237,44 @@ def build(client, our_session, by_legis_id, chamber_by_ocd,
                     meta_rows[rid] = r
 
         for vid in vids:
-            # `vid` stays raw for the API call + meta_rows lookup; `key` is the
-            # canonical STRING id used for every stored key (votes_meta, member
-            # entries, seen set) so the compact index never sees int/str dupes.
-            key = str(vid)
-            if key in seen_votes:
-                continue
-            seen_votes.add(key)
+            if vid in seen_votes:
+                continue  # already exploded (a bundled voteId recurs across bills)
+            seen_votes.add(vid)
             vote = client.vote_detail(vid)
             if not vote:
                 continue
             meta_row = meta_rows.get(vid)
             isrollcall_dist[(meta_row or {}).get("isRollCall")] += 1
-            meta = extract_vote_meta(vote, meta_row, our_session, detail)
 
-            # Passage classification (overlay-primary, design §5.3). Classify from
-            # the caption + ALL bundled bills (Vote/detail legislation[]) BEFORE
-            # resolving members, so procedural roll calls cost nothing extra.
-            bundled = [l.get("description") for l in (vote.get("legislation") or [])
-                       if l.get("description")]
-            is_passage, result, source = classify(
-                meta["motionText"], bundled, meta["date"], os_index)
+            # Passage classification (overlay-primary, design §5.3) — ONCE per roll
+            # call, from the caption + ALL bundled bills, BEFORE resolving members.
+            legn = vote.get("legislation") or []
+            bundled = [l.get("description") for l in legn if l.get("description")]
+            row = meta_row or {}
+            motion = (row.get("caption") or row.get("motion")
+                      or row.get("description") or "").strip()
+            date = (row.get("date") or row.get("voteDate") or "")[:10] or None
+            is_passage, _result, source = classify(motion, bundled, date, os_index)
             if not is_passage:
                 dropped_non_passage += 1
                 continue
-            if result is not None:
-                meta["result"] = result
+            roll_calls += 1
             if source == "overlay":
                 passage_overlay += 1
             else:
                 passage_native += 1
-            rows = vote.get("votes") or []
 
-            # Resolve each per-member row by numeric id ONLY (resolve_member).
-            # A row whose member id is not in the crosswalk stays UNRESOLVED by
-            # design — never guessed from the district (that mis-attributed a
-            # resigned member's votes to the seat's successor; see resolve_member).
-            # Unresolved ids are logged so the backfill gap stays visible.
-            resolved = []           # (ocd, option) to record
+            # Resolve each per-member row by numeric id ONLY (resolve_member) — once
+            # per roll call; the resolved set is SHARED across the roll call's bundled
+            # bills. A row whose member id is not in the crosswalk stays UNRESOLVED by
+            # design (never district-guessed — that mis-attributed a resigned member's
+            # votes to the seat's successor); unresolved ids are logged as the gap.
+            resolved = []           # (ocd, option) shared across bundled bills
             yea = nay = 0
-            for pv in rows:
+            for pv in (vote.get("votes") or []):
                 member = pv.get("member") or {}
                 # legis uses member id 0 ("VACANT") as a placeholder for an empty
-                # seat on a roll call — not a person. Skip it entirely so it never
-                # tallies, resolves, or shows up as an "unresolved member".
+                # seat — not a person. Skip so it never tallies/resolves/logs.
                 mid0 = member.get("id")
                 if mid0 is not None and int(mid0) == 0:
                     continue
@@ -294,24 +296,46 @@ def build(client, our_session, by_legis_id, chamber_by_ocd,
                     if mid is not None:
                         unresolved_members[int(mid)] += 1
                         unresolved_names.setdefault(int(mid), member.get("name"))
-
-            for ocd, option in resolved:
-                member_votes.setdefault(ocd, []).append({"voteId": key, "vote": option})
             resolved_rows += len(resolved)
 
-            # Prefer legis's own tally; fall back to the computed count.
-            if meta.get("yea") is None:
-                meta["yea"] = yea
-            if meta.get("nay") is None:
-                meta["nay"] = nay
-            votes_meta[key] = meta
+            # EXPLODE: one votes_meta record per bundled bill, all sharing this roll
+            # call's members + tally (design §6). Open States records a passage vote
+            # per bill, so this matches its granularity — every bundled bill's page
+            # gets its vote, and per-member scorecard counts line up with OS.
+            for entry in legn:
+                lid = entry.get("legislationId")
+                if lid is None:
+                    continue
+                key = "%s-%s" % (vid, lid)  # per-bill vote key (opaque downstream)
+                if key in votes_meta:
+                    continue
+                meta = bill_meta(entry, title_by_id.get(lid), meta_row, our_session)
+                if meta.get("yea") is None:
+                    meta["yea"] = yea
+                if meta.get("nay") is None:
+                    meta["nay"] = nay
+                hit = os_index.get((normalize_bill(meta["bill"]), date))
+                if hit:
+                    meta["result"] = hit.get("result")  # per-bill OS overlay result
+                votes_meta[key] = meta
+                bill_legid[key] = lid
+                for ocd, option in resolved:
+                    member_votes.setdefault(ocd, []).append({"voteId": key, "vote": option})
 
         if verbose and i % 200 == 0:
-            print("  scanned %d bills — %d with roll calls, %d votes, %d members"
-                  % (i, bills_with_votes, len(votes_meta), len(member_votes)))
+            print("  scanned %d bills — %d with roll calls, %d roll calls, %d bill-votes, %d members"
+                  % (i, bills_with_votes, roll_calls, len(votes_meta), len(member_votes)))
         if sample is not None and len(seen_votes) >= sample:
             print("  --sample limit reached (%d roll calls)" % len(seen_votes))
             break
+
+    # Title end-fill: any record whose bundled bill had not yet been iterated when
+    # its roll call was exploded now gets its title from the (complete) index.
+    for key, meta in votes_meta.items():
+        if not meta.get("title"):
+            lid = bill_legid.get(key)
+            if lid is not None:
+                meta["title"] = title_by_id.get(lid) or ""
 
     # The backfill gap: distinct legis member ids whose votes could not be
     # resolved (no legisGaGovId in the crosswalk). Each needs a backfill — fix via
@@ -322,7 +346,9 @@ def build(client, our_session, by_legis_id, chamber_by_ocd,
         key=lambda r: -r["rows"])
     stats = {
         "billsWithVotes": bills_with_votes,
-        "resolvedRows": resolved_rows,
+        "rollCalls": roll_calls,          # unique passage roll calls (pre-explosion)
+        "billVotes": len(votes_meta),     # per-bill records written (OS-comparable)
+        "resolvedRows": resolved_rows,    # resolved member-rows, at roll-call level
         "unresolvedRows": unresolved_rows,
         "unresolvedMembers": len(unresolved_members),
         "unresolvedGap": unresolved_gap,
@@ -559,11 +585,12 @@ def main():
     if inspect:
         print_inspection(stats, votes_meta)
         print("Inspection run — nothing written. Kept %d passage roll calls "
-              "(%d overlay, %d native; %d non-passage dropped); resolved %d/%d rows "
-              "(%d rows unresolved across %d members — id-only, no district fallback)."
-              % (len(votes_meta), stats["passageByOverlay"], stats["passageByNative"],
-                 stats["droppedNonPassage"], stats["resolvedRows"],
-                 stats["resolvedRows"] + stats["unresolvedRows"],
+              "exploded to %d bill-votes (%d overlay, %d native; %d non-passage "
+              "dropped); resolved %d/%d member-rows (%d unresolved across %d members "
+              "— id-only, no district fallback)."
+              % (stats["rollCalls"], stats["billVotes"], stats["passageByOverlay"],
+                 stats["passageByNative"], stats["droppedNonPassage"],
+                 stats["resolvedRows"], stats["resolvedRows"] + stats["unresolvedRows"],
                  stats["unresolvedRows"], stats["unresolvedMembers"]))
         return
 
@@ -599,6 +626,8 @@ def main():
             "sessionName": session_name(our_session),
             "source": "legis.ga.gov API",
             "totalVotes": len(votes_meta),
+            "rollCalls": stats["rollCalls"],
+            "billVotes": stats["billVotes"],
             "billsWithVotes": stats["billsWithVotes"],
             "resolvedRows": stats["resolvedRows"],
             "unresolvedRows": stats["unresolvedRows"],
@@ -618,8 +647,9 @@ def main():
 
     write_json_atomic(output_file, output, separators=(",", ":"))
     size_kb = os.path.getsize(output_file) // 1024
-    print("\nDone. %d passage roll calls · %d members · %d KB -> %s"
-          % (len(votes_meta), len(member_votes), size_kb, output_file))
+    print("\nDone. %d passage roll calls -> %d bill-votes · %d members · %d KB -> %s"
+          % (stats["rollCalls"], stats["billVotes"], len(member_votes), size_kb,
+             output_file))
     print("  passage: %d via OS overlay, %d via caption (native); %d non-passage dropped"
           % (stats["passageByOverlay"], stats["passageByNative"], stats["droppedNonPassage"]))
     print("  resolved %d rows, %d unresolved across %d members (id-only resolution)"
