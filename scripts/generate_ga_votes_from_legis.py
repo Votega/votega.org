@@ -41,6 +41,9 @@ Usage:
   python generate_ga_votes_from_legis.py --list-sessions     # show configured + live sessions
   python generate_ga_votes_from_legis.py --inspect  # fetch ~5 roll calls, print diagnostics,
                                                     # write NOTHING
+  python generate_ga_votes_from_legis.py --classify-report --session 2025_26 --sample 300
+                                                    # calibrate passage classification vs
+                                                    # Open States (precision/recall), write NOTHING
   python generate_ga_votes_from_legis.py --sample 50  # cap roll calls (cheap run)
 """
 
@@ -54,12 +57,16 @@ from datetime import datetime
 
 from lib.atomic_io import write_json_atomic
 from lib.legis_ga import CHAMBER, LegisGaClient, vote_ids
+from lib.ga_passage import (load_os_passage_index, native_is_passage,
+                            normalize_bill)
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              legis_session_id, legis_session_library,
                              session_name)
 from lib.votes_schema import encode_member_votes
 
 CROSSWALK_FILE = "assets/data/id-crosswalk.json"
+# The live Open States votes file — used as the passage overlay / calibration oracle.
+OS_VOTES_FILE = "assets/data/ga-member-votes.json"
 # Parallel output by default — the migration plan (design §7) diffs this against
 # the live Open States file before any cutover. Never overwrite the canonical file
 # until that validation passes.
@@ -316,6 +323,97 @@ def build(client, our_session, by_legis_id, by_chamber_district, chamber_by_ocd,
     return votes_meta, member_votes, stats
 
 
+def classify_report(client, our_session, os_path=OS_VOTES_FILE, sample=None):
+    """Calibrate passage classification for a session (design §5.3).
+
+    Walks the session's roll calls (no per-member fetch needed for the metadata),
+    pulls each roll call's bundled bills from Vote/detail, then cross-tabs two
+    passage signals against the authoritative Open States passage set:
+      * OS overlay  — any (bill, date) of the roll call is in the OS passage index.
+      * native rule — isRollCall + caption (lib/ga_passage.native_is_passage).
+    Prints precision/recall of the native rule, the isRollCall split, and the
+    caption breakdown so the rule (and the overlay match) can be tightened from
+    real data. Writes nothing.
+    """
+    from collections import Counter
+
+    os_index = load_os_passage_index(os_path, our_session)
+    print("OS passage index (%s): %d (bill,date) keys" % (our_session, len(os_index)))
+
+    legis_session = legis_session_id(our_session)
+    # Pass 1 — unique roll calls + their votes[] metadata (caption/date/isRollCall).
+    rollcalls = {}
+    for bill in client.iter_legislation(legis_session):
+        lid = bill.get("legislationId")
+        if lid is None:
+            continue
+        detail = client.legislation_detail(lid)
+        for r in ((detail or {}).get("votes") or []):
+            if not isinstance(r, dict):
+                continue
+            vid = r.get("id") or r.get("voteId")
+            if vid is None or vid in rollcalls:
+                continue
+            rollcalls[vid] = {
+                "caption": (r.get("caption") or "").strip(),
+                "date": (r.get("date") or "")[:10],
+                "isRollCall": bool(r.get("isRollCall")),
+                "yea": r.get("yea"), "nay": r.get("nay"),
+            }
+            if sample is not None and len(rollcalls) >= sample:
+                break
+        if sample is not None and len(rollcalls) >= sample:
+            break
+    print("legis roll calls collected: %d%s"
+          % (len(rollcalls), " (--sample cap)" if sample else ""))
+
+    # Pass 2 — bundled bills per roll call (Vote/detail legislation[]), then label.
+    for vid, rc in rollcalls.items():
+        vd = client.vote_detail(vid)
+        rc["bills"] = [l.get("description") for l in ((vd or {}).get("legislation") or [])
+                       if l.get("description")]
+        rc["os_passage"] = any((normalize_bill(b), rc["date"]) in os_index
+                               for b in rc["bills"])
+        rc["native"] = native_is_passage(rc["isRollCall"], rc["caption"])
+
+    # --- report ---
+    tp = fp = fn = tn = 0
+    for rc in rollcalls.values():
+        o, n = rc["os_passage"], rc["native"]
+        tp += o and n; fp += n and not o; fn += o and not n; tn += not o and not n
+    os_pass = sum(1 for rc in rollcalls.values() if rc["os_passage"])
+    print("\n=== PASSAGE CALIBRATION (%s) ===" % our_session)
+    print("roll calls: %d | OS-overlay passage: %d | native passage: %d"
+          % (len(rollcalls), os_pass, tp + fp))
+    print("native vs OS overlay:  TP=%d FP=%d FN=%d TN=%d" % (tp, fp, fn, tn))
+    if tp + fp:
+        print("  native precision: %.1f%%" % (100.0 * tp / (tp + fp)))
+    if tp + fn:
+        print("  native recall:    %.1f%%" % (100.0 * tp / (tp + fn)))
+
+    irc = Counter((rc["isRollCall"], rc["os_passage"]) for rc in rollcalls.values())
+    print("\nisRollCall x OS-passage (isRollCall, isPassage) -> count:")
+    for k in sorted(irc, key=lambda t: (not t[0], not t[1])):
+        print("  %s -> %d" % (k, irc[k]))
+
+    print("\ncaptions on OS-passage roll calls:")
+    for cap, c in Counter(rc["caption"] for rc in rollcalls.values()
+                          if rc["os_passage"]).most_common(12):
+        print("  %4d  %r" % (c, cap))
+    print("captions on NON-OS-passage roll calls:")
+    for cap, c in Counter(rc["caption"] for rc in rollcalls.values()
+                          if not rc["os_passage"]).most_common(12):
+        print("  %4d  %r" % (c, cap))
+
+    legis_keys = {(normalize_bill(b), rc["date"])
+                  for rc in rollcalls.values() for b in rc["bills"]}
+    os_only = set(os_index) - legis_keys
+    print("\nOS-passage (bill,date) not matched by any legis roll call: %d%s"
+          % (len(os_only), " (inflated by --sample cap)" if sample else ""))
+    for k in sorted(os_only)[:10]:
+        print("   ", k)
+
+
 def parse_args(argv=None):
     """CLI args. argparse (not hand-rolled) so `--sample N OUT` parses correctly —
     a bare value after --sample must not be mistaken for the positional output."""
@@ -330,6 +428,8 @@ def parse_args(argv=None):
                    help="print the configured sessions (and the live legis list), then exit")
     p.add_argument("--inspect", action="store_true",
                    help="fetch a few roll calls, print diagnostics, write nothing")
+    p.add_argument("--classify-report", action="store_true", dest="classify_report",
+                   help="calibrate passage classification against Open States, write nothing")
     p.add_argument("--sample", type=int, default=None, metavar="N",
                    help="cap the number of roll calls processed")
     return p.parse_args(argv)
@@ -411,6 +511,10 @@ def main():
         print("Error: session '%s' has no legis.ga.gov id in lib/ga_sessions.py "
               "(LEGIS_SESSIONS). Add it, then re-run." % our_session, file=sys.stderr)
         sys.exit(1)
+
+    if args.classify_report:
+        classify_report(LegisGaClient(), our_session, sample=sample)
+        return
 
     by_legis_id, by_chamber_district, chamber_by_ocd = build_crosswalk()
     print("Loaded crosswalk: %d legisGaGovId joins, %d (chamber,district) fallbacks"

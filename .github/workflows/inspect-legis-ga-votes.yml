@@ -19,11 +19,12 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "inspect = dump diagnostics, write nothing; sample = produce a capped parallel file + upload it; list = show configured/live sessions"
+        description: "inspect = diagnostics; sample = capped parallel file + upload; classify = passage calibration vs Open States; list = show sessions"
         type: choice
         options:
           - inspect
           - sample
+          - classify
           - list
         default: inspect
       session:
@@ -81,6 +82,8 @@ jobs:
             python scripts/generate_ga_votes_from_legis.py --list-sessions
           elif [ "$MODE" = "inspect" ]; then
             python scripts/generate_ga_votes_from_legis.py --inspect $SESSION_ARG
+          elif [ "$MODE" = "classify" ]; then
+            python scripts/generate_ga_votes_from_legis.py --classify-report $SESSION_ARG --sample "$SAMPLE_SIZE"
           else
             python scripts/generate_ga_votes_from_legis.py $SESSION_ARG --sample "$SAMPLE_SIZE" out/ga-member-votes.legis.json
           fi
