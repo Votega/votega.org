@@ -54,7 +54,7 @@ from collections import Counter
 from datetime import datetime
 
 from lib.atomic_io import write_json_atomic
-from lib.legis_ga import LegisGaClient, vote_ids
+from lib.legis_ga import LegisGaClient, LegisGaError, vote_ids
 from lib.ga_passage import (classify, load_os_passage_index, native_is_passage,
                             normalize_bill)
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
@@ -213,7 +213,10 @@ def build(client, our_session, by_legis_id, chamber_by_ocd,
     sample_vote_row = None       # first raw legislation.votes[] item (to learn its keys)
     isrollcall_dist = Counter()  # votes[].isRollCall value -> count (passage signal, #3)
 
-    for i, bill in enumerate(client.iter_legislation(legis_session), 1):
+    i = 0
+    incomplete = None  # set when a fatal error cuts the sweep short (partial save)
+    try:
+      for i, bill in enumerate(client.iter_legislation(legis_session), 1):
         legislation_id = bill.get("legislationId")
         if legislation_id is None:
             continue
@@ -328,6 +331,15 @@ def build(client, our_session, by_legis_id, chamber_by_ocd,
         if sample is not None and len(seen_votes) >= sample:
             print("  --sample limit reached (%d roll calls)" % len(seen_votes))
             break
+    except (LegisGaError, KeyboardInterrupt) as exc:
+        # A fatal error mid-sweep (e.g. the token endpoint 401ing past its retry
+        # budget, or Ctrl-C) must not throw away hours of collected roll calls. Keep
+        # everything gathered so far, flag the run INCOMPLETE, and let main() write
+        # the partial file (gated by --allow-partial so a committing job won't ship it).
+        incomplete = "%s: %s" % (type(exc).__name__, exc)
+        print("\n  !! sweep cut short after ~%d bills (%s)\n     saving PARTIAL data: "
+              "%d roll calls, %d bill-votes, %d members so far."
+              % (i, incomplete, roll_calls, len(votes_meta), len(member_votes)))
 
     # Title end-fill: any record whose bundled bill had not yet been iterated when
     # its roll call was exploded now gets its title from the (complete) index.
@@ -345,6 +357,7 @@ def build(client, our_session, by_legis_id, chamber_by_ocd,
          for mid, n in unresolved_members.items()),
         key=lambda r: -r["rows"])
     stats = {
+        "incomplete": incomplete,         # None, or the reason the sweep ended early
         "billsWithVotes": bills_with_votes,
         "rollCalls": roll_calls,          # unique passage roll calls (pre-explosion)
         "billVotes": len(votes_meta),     # per-bill records written (OS-comparable)
@@ -472,6 +485,11 @@ def parse_args(argv=None):
                    help="calibrate passage classification against Open States, write nothing")
     p.add_argument("--sample", type=int, default=None, metavar="N",
                    help="cap the number of roll calls processed")
+    p.add_argument("--allow-partial", action="store_true", dest="allow_partial",
+                   help="if the sweep is cut short (e.g. token endpoint dies), write "
+                        "the PARTIAL data and exit 0 instead of failing. For the "
+                        "non-committing inspect workflow only — never for a job that "
+                        "commits, which must not ship a partial sweep.")
     return p.parse_args(argv)
 
 
@@ -625,6 +643,9 @@ def main():
             "session": our_session,
             "sessionName": session_name(our_session),
             "source": "legis.ga.gov API",
+            # None on a complete sweep; the reason string when the run was cut short
+            # and this file holds PARTIAL data (a committing job must refuse to ship it).
+            "incomplete": stats.get("incomplete"),
             "totalVotes": len(votes_meta),
             "rollCalls": stats["rollCalls"],
             "billVotes": stats["billVotes"],
@@ -661,6 +682,16 @@ def main():
     if not MEMBER_VOTED_CONFIRMED:
         print("  WARNING: memberVoted code map is PROVISIONAL — cross-check against a "
               "known tally before trusting Yea/Nay (see module docstring).")
+
+    if stats.get("incomplete"):
+        print("\n!! INCOMPLETE RUN (%s). Wrote PARTIAL data: %d bill-votes from %d "
+              "roll calls. Do NOT treat this as a full session."
+              % (stats["incomplete"], stats["billVotes"], stats["rollCalls"]))
+        if not args.allow_partial:
+            print("   Exiting non-zero — pass --allow-partial to accept partial output "
+                  "(the inspect workflow does; a committing job must not).",
+                  file=sys.stderr)
+            sys.exit(1)
 
 
 if __name__ == "__main__":

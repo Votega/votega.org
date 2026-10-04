@@ -91,7 +91,11 @@ jobs:
             # input is ignored here. Emits a review proposal (writes no override).
             python scripts/backfill_legis_ids.py --all-sessions --out out/legis-id-backfill.json
           else
-            python scripts/generate_ga_votes_from_legis.py $SESSION_ARG --sample "$SAMPLE_SIZE" out/ga-member-votes.legis.json
+            # --allow-partial: if the token endpoint dies mid-sweep, keep the data
+            # gathered so far (write + diff + upload it) instead of losing a ~2h run.
+            # Safe here because this workflow never commits; a committing cutover job
+            # must OMIT the flag so a partial sweep fails loudly instead of shipping.
+            python scripts/generate_ga_votes_from_legis.py $SESSION_ARG --sample "$SAMPLE_SIZE" --allow-partial out/ga-member-votes.legis.json
             # Tally-aware diff vs Open States (cutover go/no-go). Only meaningful
             # on a FULL sweep — a small --sample inflates "OS-only" roll calls
             # because legis saw only a slice. Needs the COMMITTED id-crosswalk.json
