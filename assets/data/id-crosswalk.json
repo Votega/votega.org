@@ -2,7 +2,7 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-10-04T14:45:48+00:00",
+  "generatedAt": "2026-10-04T23:17:48+00:00",
   "count": 747,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
@@ -8761,7 +8761,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/ae6e08e3-6971-4cd2-982a-48d650a343d5",
-    "legisGaGovId": null,
+    "legisGaGovId": 5094,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -8807,6 +8807,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
@@ -40087,7 +40091,7 @@
    },
    "ids": {
     "ocdPersonId": "ocd-person/8aa7ee05-bf64-4c51-8821-ad905d25741b",
-    "legisGaGovId": null,
+    "legisGaGovId": 5096,
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -40132,6 +40136,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "Open States"
     }
    }
   },
