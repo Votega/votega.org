@@ -2,7 +2,7 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-10-03T18:53:13+00:00",
+  "generatedAt": "2026-10-04T14:45:48+00:00",
   "count": 747,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
@@ -26,9 +26,9 @@
    "people": 747,
    "officeholders": 267,
    "candidateOnly": 480,
-   "withVgId": 679,
-   "unkeyed": 68,
-   "withAnyFiling": 661,
+   "withVgId": 678,
+   "unkeyed": 69,
+   "withAnyFiling": 660,
    "candidacies": 716,
    "ambiguous": []
   }
@@ -30099,60 +30099,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000500",
-   "name": {
-    "full": "Muhammed Metin Vargonen",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "104213"
-    ],
-    "votegaCandidateIds": [
-     "ga-house-25-2026-d-2"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-house-25-2026",
-     "candidateId": "ga-house-25-2026-d-2",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 25,
-     "party": "Democrat",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "104213",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000501",
    "name": {
     "full": "Mathew Philip",
@@ -41854,8 +41800,8 @@
       "method": "district+surname",
       "confidence": "ambiguous",
       "candidates": [
-       "H6GA08146",
-       "H6GA08153"
+       "H6GA08153",
+       "H6GA08146"
       ]
      }
     }
@@ -42531,6 +42477,56 @@
       "confidence": "confirmed-none",
       "source": "assets/data/ga-campaign-finance-overrides.json",
       "key": "ga-senate-9-2026-r-1"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Muhammed Metin Vargonen",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "ga-house-25-2026-d-2"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-25-2026",
+     "candidateId": "ga-house-25-2026-d-2",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 25,
+     "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
      }
     }
    ],
