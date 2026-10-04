@@ -33,7 +33,10 @@ Parity with the other producers (so the three files diff cleanly, design §6/§7
   * Passage classification is the shared overlay-primary rule (lib/ga_passage.classify):
     a roll call is kept if any bundled (bill, date) matches the Open States passage
     overlay (borrowing OS's authoritative Pass/Fail) OR its caption reads as passage
-    (fills OS gaps, result left None); procedural roll calls are dropped. Attendance
+    (fills OS gaps; Pass/Fail then derived from the tally via derive_result, which
+    reproduces OS's rule exactly — see that function); procedural roll calls are
+    dropped. (The overlay is a cross-check, NOT a hard dependency — result stands on
+    the SOAP tally alone, so OS can be retired.) Attendance
     listings are skipped before the GetVote call; unpublished roll calls (attendance that
     reaches GetVote) fault with RollCallNotPublishedFault and are counted, not fatal.
   * Each kept roll call EXPLODES into one votes_meta record per bundled bill, keyed
@@ -103,6 +106,19 @@ DEFAULT_OUTPUT = "assets/data/ga-member-votes.soap.json"
 
 class RollCallNotPublished(Exception):
     """GetVote faulted: this roll call isn't published (attendance / procedural)."""
+
+
+def derive_result(yea, nay):
+    """Pass/Fail from the tally. Open States' `result` field is empirically a SIMPLE
+    majority of those voting — `yea > nay` reproduces OS's Pass/Fail on 2503/2503
+    (100%) of the biennium's votes, while the GA constitutional-majority rule
+    (House 91 / Senate 29 of elected) only matches 98.56% because resolutions and
+    procedural motions pass on a present-majority. Matching OS exactly keeps the
+    rendered Pass/Fail byte-identical across a cutover; a future "true constitutional
+    result" would be a separate, deliberate change. Returns None if the tally is absent."""
+    if yea is None or nay is None:
+        return None
+    return "Pass" if yea > nay else "Fail"
 
 
 # --------------------------------------------------------------------------- SOAP
@@ -301,7 +317,7 @@ def build_session(our_session, by_legis_id, os_index, title_index,
             caption, date10, legn, rows = detail
 
             bundled = [l["description"] for l in legn if l["description"]]
-            is_passage, result, source = classify(caption, bundled, date10, os_index)
+            is_passage, _result, source = classify(caption, bundled, date10, os_index)
             if not is_passage:
                 stats["droppedNonPassage"] += 1
                 continue
@@ -335,7 +351,6 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                 if key in votes_meta:
                     continue
                 bill = entry["description"] or ""
-                hit = os_index.get((normalize_bill(bill), date10))
                 votes_meta[key] = {
                     "bill": bill,
                     "billUrl": ("https://www.legis.ga.gov/legislation/%d" % lid),
@@ -345,9 +360,13 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                     "date": date10,
                     "yea": yea,
                     "nay": nay,
-                    # Pass/Fail is not in the SOAP data — filled per-bill from the OS
-                    # passage overlay where it matches; None otherwise (native gap-fill).
-                    "result": hit.get("result") if hit else result,
+                    # Pass/Fail derived from THIS roll call's tally (derive_result —
+                    # reproduces OS's rule exactly). Deliberately NOT the OS overlay:
+                    # the overlay indexes on (bill, date) only, so when a bill has two
+                    # roll calls the same day both would inherit ONE roll call's result
+                    # (67 such mis-assignments observed). The per-roll-call tally is
+                    # correct for each, and fully decouples result from OS.
+                    "result": derive_result(yea, nay),
                 }
                 for ocd, option in resolved:
                     member_votes.setdefault(ocd, []).append({"voteId": key, "vote": option})
@@ -383,6 +402,10 @@ def parse_args(argv=None):
                    help="fetch a few roll calls, print diagnostics, write nothing")
     p.add_argument("--no-titles", action="store_true", dest="no_titles",
                    help="skip the per-session GetLegislationForSession title index")
+    p.add_argument("--no-overlay", action="store_true", dest="no_overlay",
+                   help="OS-free cutover mode: classify passage by the native caption "
+                        "rule ONLY (lib.ga_passage), without the Open States overlay. "
+                        "Default keeps the overlay as a validation cross-check.")
     return p.parse_args(argv)
 
 
@@ -414,14 +437,19 @@ def main():
     unresolved_gap = {}
     for our_session in sessions:
         legis_session = legis_session_id(our_session)
-        try:
-            os_index = load_os_passage_index(OS_VOTES_FILE, our_session)
-            print("Session %s (legis %d): OS passage overlay = %d (bill,date) keys"
-                  % (our_session, legis_session, len(os_index)))
-        except FileNotFoundError:
+        if args.no_overlay:
             os_index = {}
-            print("Session %s: no OS votes file — caption-only passage classification."
-                  % our_session)
+            print("Session %s (legis %d): OS overlay DISABLED (--no-overlay) — native "
+                  "caption classification only." % (our_session, legis_session))
+        else:
+            try:
+                os_index = load_os_passage_index(OS_VOTES_FILE, our_session)
+                print("Session %s (legis %d): OS passage overlay = %d (bill,date) keys"
+                      % (our_session, legis_session, len(os_index)))
+            except FileNotFoundError:
+                os_index = {}
+                print("Session %s: no OS votes file — caption-only passage classification."
+                      % our_session)
         title_index = {} if args.no_titles else get_title_index(legis_session)
         if title_index:
             print("  title index: %d bills" % len(title_index))
@@ -505,7 +533,7 @@ def main():
             "passageByOverlay": agg["passageByOverlay"],
             "passageByNative": agg["passageByNative"],
             "droppedNonPassage": agg["droppedNonPassage"],
-            "passageOverlaySource": OS_VOTES_FILE,
+            "passageOverlaySource": None if args.no_overlay else OS_VOTES_FILE,
         },
         "voteIds": vote_id_index,
         "votes": votes_meta,

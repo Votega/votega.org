@@ -14,13 +14,20 @@ reproduce that set. Two signals:
     calibrates it against the OS labels (same evidence-first method used to pin the
     memberVoted map).
 
-Caption vocabulary learned from the 2025_26 calibration run (2026-10-03):
+Caption vocabulary learned from the 2025_26 calibration (2026-10-03) and extended
+from the full caption universe (2026-10-04, cross-checked against the SOAP source):
   passage motions   : "PASSAGE", "PASSAGE BY SUBSTITUTE", "PASSAGE AS AMENDED",
                       "AGREE TO SENATE SUBSTITUTE", "AGREE TO SENATE SUB AS AM",
                       "AGREE TO HOUSE AMENDMENT TO SENATE SUBSTITUTE" (final action /
                       concurrence — all start with PASSAGE or AGREE TO).
-  procedural motions: "ADOPTION OF AMENDMENT #N BY ...", "MOTION TO TABLE/ENGROSS",
-                      "SHALL THE RULING OF THE CHAIR BE SUSTAINED".
+  local batches     : "LOCAL CALENDAR", "LOCAL CONSENT CALENDAR", "SUPPLEMENTAL LOCAL
+                      CALENDAR" — en-masse passage of local (single county/city) bills.
+  resolution adopt. : "ADOPT", "ADOPTION", "ADOPTION BY SUBSTITUTE", "ADOPT CONFERENCE
+                      COMMITTEE REPORT", "ADOPTION OF CONSTITUTIONAL AMENDMENT" — a
+                      resolution's final action (GA "adopts" resolutions).
+  procedural motions: "ADOPTION OF (THE/AN) AMENDMENT #N BY ..." (floor amendments),
+                      "MOTION TO TABLE/ENGROSS", "MOTION FOR THE PREVIOUS QUESTION",
+                      "RECONSIDER", "SHALL THE RULING OF THE CHAIR BE SUSTAINED".
 NOTE: the `isRollCall` field was a red herring — it is False on EVERY roll call
 (passage and procedural alike), so it is NOT used. The caption is the signal.
 """
@@ -28,14 +35,27 @@ NOTE: the `isRollCall` field was a red herring — it is False on EVERY roll cal
 import json
 import re
 
-#: Final-passage / concurrence motions — all begin "PASSAGE…" or "AGREE TO…".
-PASSAGE_CAPTION = re.compile(r"^\s*(passage|agree\s+to)\b", re.IGNORECASE)
+#: Final-action captions, anchored at the start:
+#:   passage / agree to  — a bill's passage or concurrence in the other chamber's changes
+#:   adopt(ion)          — a RESOLUTION's final action (GA "adopts" resolutions, incl.
+#:                         "ADOPT CONFERENCE COMMITTEE REPORT" and "ADOPTION OF
+#:                         CONSTITUTIONAL AMENDMENT") — the floor-AMENDMENT adoptions are
+#:                         carved back out by PROCEDURAL_CAPTION below.
+PASSAGE_CAPTION = re.compile(r"^\s*(passage|agree\s+to|adopt)", re.IGNORECASE)
 
-#: Procedural motions that must NOT count as passage even if they slip past the
-#: above (floor-amendment adoptions, table/engross motions, chair rulings).
+#: Local/consent-calendar batches — the mechanism by which LOCAL legislation (bills
+#: affecting a single county/city) is passed en masse, so each is a real passage vote.
+#: Matched anywhere (not anchored) to catch "Supplemental Local Calendar",
+#: "Local Calendar Without HBs 851 & 852", "Supplemental Local Consent Calendar", etc.
+LOCAL_CALENDAR = re.compile(r"local\s+(consent\s+)?calendar", re.IGNORECASE)
+
+#: Procedural motions that must NOT count as passage even if they match the above
+#: (floor-amendment adoptions, table/engross motions, chair rulings, reconsiderations).
+#: "adoption of (the|a|an)? amend…" carves floor-amendment adoptions back out of the
+#: broadened `adopt` rule — including "ADOPTION OF THE AMENDMENT BY THE SENATOR…".
 PROCEDURAL_CAPTION = re.compile(
-    r"^\s*(adoption of (an? )?amend|motion to|shall the ruling|previous question|"
-    r"point of order|reconsider)",
+    r"^\s*(adoption of (the\s+|an?\s+)?amend|motion to|motion for|shall the ruling|"
+    r"previous question|point of order|reconsider)",
     re.IGNORECASE)
 
 
@@ -45,10 +65,14 @@ def normalize_bill(identifier):
 
 
 def native_is_passage(caption):
-    """Caption-only native rule: a final-passage/concurrence motion, not a
-    procedural one. (No isRollCall — it is uniformly False and carries no signal.)"""
+    """Caption-only native rule: a final-action vote (bill passage/concurrence, local-
+    calendar batch, or resolution adoption), not a procedural motion. A procedural
+    caption disqualifies it even if it matches a final-action pattern (e.g. a floor
+    amendment's adoption). (No isRollCall — it is uniformly False and carries no signal.)"""
     cap = caption or ""
-    return bool(PASSAGE_CAPTION.search(cap)) and not PROCEDURAL_CAPTION.search(cap)
+    if PROCEDURAL_CAPTION.search(cap):
+        return False
+    return bool(PASSAGE_CAPTION.search(cap) or LOCAL_CALENDAR.search(cap))
 
 
 def classify(caption, bills, date, os_index):
