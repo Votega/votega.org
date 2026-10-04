@@ -724,6 +724,16 @@
     "termStartYear": 2025,
     "legisGaGovId": 5085
   },
+  "ocd-person/ae6e08e3-6971-4cd2-982a-48d650a343d5": {
+    "_name": "Lanny Thomas",
+    "_note": "Backfill legisGaGovId. SD 53 successor to Colton Moore (legisGaGovId 4933, resigned 2026-01-13); Thomas cast the 2026 special-session votes. Confirmed via legis.ga.gov/members/senate/5094 and corroborated by the SOAP + legis /api vote feeds (both left member id 5094 unresolved for want of this id). Id-only resolution keeps Moore and Thomas separate on the shared SD 53.",
+    "legisGaGovId": 5094
+  },
+  "ocd-person/8aa7ee05-bf64-4c51-8821-ad905d25741b": {
+    "_name": "Alvin Payton",
+    "_note": "Backfill legisGaGovId. HD 177 (succeeded Dexter Sharper). The _inject bridge entry carries 5096 too, but now auto-skips because the Open States API serves Payton WITHOUT a georgia_id — so this top-level override is what actually stamps his id onto the API-sourced record. Confirmed via legis.ga.gov/members/house/5096; both official vote feeds left id 5096 unresolved for want of this id.",
+    "legisGaGovId": 5096
+  },
   "ocd-person/bad14891-c7bc-4ac4-b23a-fb5ae3878d67": {
     "_name": "Miriam Paris",
     "termStart": "2017-01-09",
