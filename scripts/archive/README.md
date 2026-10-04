@@ -28,3 +28,27 @@ so nothing downstream needs to change on a fallback. The one caveat is the voteI
 format (`"<voteId>-<legislationId>"` for SOAP vs `"ocd-vote/<uuid>"` for Open States) —
 opaque to consumers, but a mixed-history file is avoided by letting the next full run
 rewrite it entirely.
+
+## `generate_ga_bills_data.py` — retired 2026-10-04
+
+The Open States producer of `assets/data/ga-bills.json`. **Replaced by
+`scripts/generate_ga_bills_soap.py`** (legis.ga.gov SOAP `GetLegislationDetail`), so bills
+and votes share one source and the party-tally enrichment join is exact (was ~77% across
+sources, now 100%). SOAP is also richer: sponsor `legisGaGovId`, act number, full status
+history, bill-text versions. Output schema is identical (plus a bonus `legislationId`
+field). Topical **subjects** — which SOAP lacks — come from the frozen overlay
+`assets/data/ga-bills-subjects-base.json` (snapshot of OS tags at cutover) + manual
+`ga-bills-subjects.json` + local-bill inference (`scripts/lib/ga_bill_subjects.py`).
+
+### To fall back to Open States
+
+1. `git mv scripts/archive/generate_ga_bills_data.py scripts/generate_ga_bills_data.py`.
+2. In `.github/workflows/update-ga-bills.yml`, revert the "Generate GA bills data" step to
+   `python scripts/generate_ga_bills_data.py assets/data/ga-bills.json` with its
+   `env: OPENSTATES_API_KEY`, and restore the `paginationComplete` assertion in the
+   validate step.
+3. Confirm the `OPENSTATES_API_KEY` repo secret is still set.
+
+This file keeps its own copy of the local-subject inference (`GA_COUNTIES`,
+`infer_local_subject`, …); the live SOAP producer uses the shared
+`scripts/lib/ga_bill_subjects.py` extracted from it.

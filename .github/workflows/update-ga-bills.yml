@@ -23,10 +23,12 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Generate GA bills data
-        run: python scripts/generate_ga_bills_data.py assets/data/ga-bills.json
-        env:
-          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
+      # Official source: the legis.ga.gov SOAP web service (no auth, no quota). Bills now
+      # share a source with the votes (generate_ga_votes_soap.py), so the party-tally
+      # enrichment below joins exactly. The retired Open States producer is kept at
+      # scripts/archive/generate_ga_bills_data.py (see its README to fall back).
+      - name: Generate GA bills data (legis.ga.gov SOAP source)
+        run: python scripts/generate_ga_bills_soap.py assets/data/ga-bills.json
 
       - name: Validate generated data
         run: |
@@ -52,7 +54,9 @@ jobs:
           meta  = d.get('metadata', {})
           print(f'Validated: {len(bills)} bills (metadata.totalBills={meta.get(\"totalBills\")})')
           assert meta.get('totalBills') == len(bills), 'metadata.totalBills does not match actual bill count'
-          assert meta.get('paginationComplete') is True, 'Pagination did not complete — refusing stale/partial data'
+          # (The SOAP producer does a single full fetch — no pagination — and refuses to
+          # write below 100 bills itself, so the relative-floor check above is the guard
+          # against a truncated sweep; there is no paginationComplete flag to assert.)
           required = ['id', 'identifier', 'chamber', 'title', 'billUrl']
           for b in bills:
               for field in required:
