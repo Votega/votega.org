@@ -55,6 +55,13 @@ USER_AGENT = "votega.org/1.0 (+https://votega.org)"
 DEFAULT_TIMEOUT = 45
 DEFAULT_RETRIES = 3
 DEFAULT_BACKOFF = 5
+#: The token mint is the single point of failure for a whole (multi-hour) run, and
+#: the endpoint 401s/5xxs in sustained bursts, not just one-off blips — so the mint
+#: gets its OWN, larger budget with exponential backoff (capped). 8 attempts at
+#: 5,10,20,40,60,60,60s ride out a ~4-min flaky window before giving up. A genuinely
+#: rotated key still fails every attempt and surfaces clearly after the budget.
+MINT_RETRIES = 8
+MINT_BACKOFF_CAP = 60
 #: Tokens live ~5 min; re-mint a little early so a call never races the expiry.
 TOKEN_TTL_SECONDS = 240
 #: Courtesy pause between calls — this is an undocumented site API; be gentle.
@@ -116,13 +123,14 @@ class LegisGaClient:
                 "No legis.ga.gov client key. Set LEGIS_GA_CLIENT_KEY (the public "
                 "SPA client key) to auto-mint, or inject a pre-minted LEGIS_GA_TOKEN."
             )
-        # Retry the mint itself. It is the single point of failure for a whole run
-        # and a long run re-mints every ~5 min, so a transient hiccup on the token
-        # endpoint (an intermittent 401, a 429 masquerading as 401, a 5xx, or a
-        # network blip) must not abort everything. A PERSISTENT 401 (rotated key)
-        # still surfaces clearly after the retries are exhausted.
+        # Retry the mint itself, generously. It is the single point of failure for a
+        # whole run and a long run re-mints every ~5 min, and the endpoint 401s/5xxs
+        # in SUSTAINED bursts (observed exhausting the old 3-attempt budget mid-run),
+        # not just one-off blips — so use MINT_RETRIES attempts with EXPONENTIAL
+        # backoff (capped). A PERSISTENT 401 (rotated key) still surfaces clearly
+        # after the budget is spent.
         last = None
-        for attempt in range(1, self.retries + 1):
+        for attempt in range(1, MINT_RETRIES + 1):
             url = "%s%s?%s" % (self.base_url, TOKEN_ENDPOINT, urllib.parse.urlencode(
                 {"key": self._client_key, "ms": int(time.time() * 1000)}))  # fresh ms
             try:
@@ -144,26 +152,26 @@ class LegisGaClient:
             except urllib.error.HTTPError as exc:
                 last = exc
                 # 401 is retryable HERE specifically: the endpoint has been seen to
-                # return it transiently, and a bad key fails the same way every time
-                # so it just exhausts the retries and raises.
-                if attempt < self.retries and (exc.code in (401, 429) or exc.code >= 500):
-                    wait = self.backoff * attempt
+                # return it transiently (in bursts), and a bad key fails the same way
+                # every time so it just exhausts the retries and raises.
+                if attempt < MINT_RETRIES and (exc.code in (401, 429) or exc.code >= 500):
+                    wait = min(MINT_BACKOFF_CAP, self.backoff * (2 ** (attempt - 1)))
                     self._log("  token mint HTTP %s — retrying in %ss (%s/%s)"
-                              % (exc.code, wait, attempt, self.retries))
+                              % (exc.code, wait, attempt, MINT_RETRIES))
                     time.sleep(wait)
                     continue
                 raise LegisGaError("token mint failed: HTTP %s" % exc.code) from exc
             except (urllib.error.URLError, TimeoutError) as exc:
                 last = exc
-                if attempt < self.retries:
-                    wait = self.backoff * attempt
+                if attempt < MINT_RETRIES:
+                    wait = min(MINT_BACKOFF_CAP, self.backoff * (2 ** (attempt - 1)))
                     self._log("  token mint error: %s — retrying in %ss (%s/%s)"
-                              % (exc, wait, attempt, self.retries))
+                              % (exc, wait, attempt, MINT_RETRIES))
                     time.sleep(wait)
                     continue
                 raise LegisGaError("token mint failed: %s" % exc) from exc
         raise LegisGaError("token mint failed after %d attempts: %s"
-                           % (self.retries, last))
+                           % (MINT_RETRIES, last))
 
     def _ensure_token(self, force=False):
         """Return a usable token, minting/refreshing when needed.
