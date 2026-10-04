@@ -1106,8 +1106,13 @@
     return parts.length ? parts[parts.length - 1] : '';
   }
 
+  // Returns { html, suppressed }. `suppressed` is true when this member is a
+  // surname-collision casualty whose party-alignment figure we refuse to show
+  // (see the guard below) — the caller uses it to also drop the "ranks among
+  // other legislators" link, since the ranking those profiles would point at is
+  // built from the same broken figure.
   function buildPartyLoyaltySummary(memberVotes, votesIndex, memberChamber, member, partyVoteIndex, incomplete, allMembers) {
-    if (!member.party) return '';
+    if (!member.party) return { html: '', suppressed: false };
 
     const seen = new Map();
     for (const { voteId, vote } of memberVotes) {
@@ -1135,8 +1140,6 @@
       if (vote === ownDir) aligned++;
     }
 
-    if (considered === 0) return '';
-
     // Guard against a misleading figure for surname-collision members. Georgia's
     // roll calls identify a voter by bare surname with no id exactly when that
     // surname is shared by another member of the same chamber, and our matcher
@@ -1152,6 +1155,11 @@
     // calls. Surname-collision members whose rows do carry ids (or full names)
     // keep near-complete coverage and are left untouched, as are resigned or
     // partial-term members, whose smaller samples are real rather than broken.
+    //
+    // This runs BEFORE the considered===0 return so the worst cases — where the
+    // collision has swallowed the member's entire contested record, leaving zero
+    // usable party-line votes (e.g. both Andersons) — still get the note rather
+    // than a silent blank.
     const chamber = memberChamber || member.chamber;
     const myKey = surnameKey(member.name);
     const hasSurnameTwin = myKey && Array.isArray(allMembers) && allMembers.some(o =>
@@ -1172,25 +1180,27 @@
       if (chamberPartyLine > 0 && considered < chamberPartyLine * 0.5) {
         const note = `Not shown: this member shares a surname with another member of their chamber, and Georgia's roll calls identify such voters by surname alone, so our record misses most of their contested, party-line votes — too few remain to produce a meaningful figure`
           + (incomplete ? '. The partial session data noted above compounds this.' : '.');
-        return `
+        return { html: `
       <div class="participation-box" style="border-left-color:#9ca3af;">
         <div class="participation-head">Party Voting Alignment</div>
         <div class="participation-note">${note}</div>
-      </div>`;
+      </div>`, suppressed: true };
       }
     }
+
+    if (considered === 0) return { html: '', suppressed: false };
 
     const rate = Math.round(aligned / considered * 100);
     const accent = member.party === 'Democratic' ? '#2563eb' : member.party === 'Republican' ? '#dc2626' : '#1a56a8';
     const methodology = `Share of this member's votes on <strong>party-line roll calls</strong>. Where a majority of ${escHtml(member.party)}s voted opposite a majority of the other party that matched their own caucus's position. Excludes votes where both parties largely agreed, so this reflects behavior specifically on contested, partisan votes.`
       + (incomplete ? ' Based on the partial session data noted above, so this figure may shift as more bills are fetched.' : '');
 
-    return `
+    return { html: `
       <div class="participation-box" style="border-left-color:${accent};">
         <div class="participation-head">Party Voting Alignment</div>
         <div class="participation-figure">${rate}% <span class="participation-frac">(${aligned} of ${considered} votes)</span></div>
         <div class="participation-note">${methodology}</div>
-      </div>`;
+      </div>`, suppressed: false };
   }
 
   function escHtml(value) { return VoteGA.escapeHtml(value); }
@@ -1267,11 +1277,15 @@
       for (const vid in votesIndex) {
         if (votesIndex[vid].partyTally) partyVoteIndex.set(vid, votesIndex[vid].partyTally);
       }
-      const partyLoyaltyHtml = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex, incomplete, allMembers);
+      const partyLoyalty = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex, incomplete, allMembers);
+      const partyLoyaltyHtml = partyLoyalty.html;
 
       // Turn this member's own alignment/participation figures into a gateway to the
       // full ranking: the scorecard opens scrolled to and highlighting this member.
-      const scorecardLink = (participationHtml || partyLoyaltyHtml)
+      // Withheld for surname-collision members: the ranking is built from the same
+      // broken party-alignment figure the note above explains we won't show, so
+      // pointing there would just surface it in another place.
+      const scorecardLink = ((participationHtml || partyLoyaltyHtml) && !partyLoyalty.suppressed)
         ? `<p style="margin:0.35rem 0 1rem 0;font-size:0.85rem;">
              <a href="${getBasePath()}ga-party-unity.html#${encodeURIComponent(member.id)}">See how this ranks among other GA legislators&nbsp;&rarr;</a>
            </p>`
