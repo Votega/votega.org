@@ -5,21 +5,11 @@ permissions:
 
 on:
   workflow_dispatch:
-    inputs:
-      full_refresh:
-        description: >-
-          Rebuild every roll call from scratch instead of only those changed since
-          the last run. Needed to backfill members whose votes were previously
-          dropped (see CODEBASE-REVIEW-2026-08-18.md 1.5). Costs more than one
-          day of the 250-request Open States quota, so run it on a day nothing
-          else uses the key; partial progress is merged and resumes next run.
-        type: boolean
-        required: false
-        default: false
   schedule:
-    # Monday, not Sunday: this paginates the same Open States /bills endpoint as
-    # update-ga-bills, and the 250 requests/day quota is shared across every job
-    # using the key. Running both on Sunday starved this one to zero results.
+    # Monday 07:30 UTC. The source is now the legis.ga.gov SOAP web service
+    # (generate_ga_votes_soap.py) — no Open States key and no shared 250/day quota,
+    # so the old "stagger off update-ga-bills" constraint no longer applies; the day
+    # is kept only for continuity.
     - cron: '30 7 * * 1'
 
 jobs:
@@ -35,11 +25,12 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Generate GA vote data
-        run: python scripts/generate_ga_votes_data.py assets/data/ga-member-votes.json
-        env:
-          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
-          FULL_REFRESH: ${{ inputs.full_refresh && '1' || '' }}
+      # Official source: the legis.ga.gov SOAP web service (no auth, no quota). --no-overlay
+      # classifies passage by the native caption rule only, with zero Open States input, so
+      # this pipeline is fully OS-independent. The retired Open States producer is kept at
+      # scripts/archive/generate_ga_votes_data.py (see its README to fall back).
+      - name: Generate GA vote data (legis.ga.gov SOAP source)
+        run: python scripts/generate_ga_votes_soap.py --no-overlay assets/data/ga-member-votes.json
 
       - name: Validate generated data
         run: |
@@ -52,13 +43,19 @@ jobs:
           d = json.load(open('assets/data/ga-member-votes.json'))
           votes   = len(d.get('votes', {}))
           members = len(d.get('memberVotes', {}))
+          meta    = d.get('metadata', {})
           size_kb = os.path.getsize('assets/data/ga-member-votes.json') // 1024
-          print(f'Validated: {votes} votes, {members} members with vote records, {size_kb} KB')
-          assert votes > 0, 'Expected at least one vote — this data comes from the Open States API (/bills). Check the OPENSTATES_API_KEY secret and the GA_SESSION identifier in generate_ga_votes_data.py, and see the HTTP status in the generate step above.'
-          assert members > 0, 'memberVotes is empty — Open States returned roll calls without per-legislator detail. See the generate step output above.'
+          print(f'Validated: {votes} bill-votes, {members} members with vote records, {size_kb} KB')
+          # Floors well under a healthy biennium (~2.4k bill-votes, ~240 members) but well
+          # above anything a partial/failed SOAP sweep would leave.
+          assert votes >= 1000, f'Only {votes} bill-votes — expected ~2400 for the biennium. The SOAP sweep likely failed; see the generate step above.'
+          assert members >= 150, f'Only {members} members with votes — the crosswalk join or the SOAP fetch is broken.'
           vote_ids = d.get('voteIds')
           assert isinstance(vote_ids, list) and len(vote_ids) >= votes, 'voteIds index missing or shorter than votes — the compact schema was not written correctly (see scripts/lib/votes_schema.py).'
           assert all(isinstance(v, dict) for v in d['memberVotes'].values()), 'memberVotes must be {index: code} maps (compact schema).'
+          assert meta.get('passageOverlaySource') is None, 'Expected --no-overlay (OS-free) output: passageOverlaySource should be null.'
+          bad = [k for k, v in d['votes'].items() if v.get('result') not in ('Pass', 'Fail')]
+          assert not bad, f'{len(bad)} vote record(s) missing Pass/Fail result (e.g. {bad[:3]}).'
           "
 
       - name: Commit and push generated data

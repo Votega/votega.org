@@ -18,6 +18,20 @@ from datetime import datetime, timezone
 # scripts/ is sys.path[0] when run as `python scripts/enrich_bills_with_party_votes.py`
 from lib.votes_schema import member_votes_map
 from lib.atomic_io import write_json_atomic
+from lib.ga_passage import normalize_bill
+
+
+def _rollcall_key(bill, date, yea, nay):
+    """Source-agnostic join key for a single roll call: normalized bill identifier,
+    ISO date, and the yea/nay tally. The tally disambiguates a bill with more than one
+    roll call on the same day. This replaces the old (bill, motionText) key, which only
+    worked when the bills file and the votes file both came from Open States (identical
+    motion phrasing). The votes now come from the legis.ga.gov SOAP producer, whose
+    `motionText` is the official caption ("PASSAGE", "Local Calendar", …) and never
+    matches OS's "House Vote #N …" phrasing — so the join must key on data both sources
+    agree on. ga-bills.json passageVotes and both vote producers all carry date + yea +
+    nay, and the SOAP tally equals the official tally for the same roll call."""
+    return (normalize_bill(bill), (date or "")[:10], yea, nay)
 
 
 def main():
@@ -39,10 +53,10 @@ def main():
     with open(votes_path, encoding='utf-8') as f:
         votes_data = json.load(f)
 
-    # Build vote_index: {(bill_identifier, motionText): voteId}
+    # Build vote_index: {(normalized bill, date, yea, nay): voteId}. See _rollcall_key.
     vote_index = {}
     for vote_id, v in votes_data.get('votes', {}).items():
-        key = (v.get('bill', ''), v.get('motionText', ''))
+        key = _rollcall_key(v.get('bill', ''), v.get('date', ''), v.get('yea'), v.get('nay'))
         vote_index[key] = vote_id
 
     # Invert memberVotes into vote_roster: {voteId: {personId: vote_option}}.
@@ -77,7 +91,7 @@ def main():
     for bill in bills_data.get('bills', []):
         identifier = bill.get('identifier', '')
         for pv in bill.get('passageVotes', []):
-            key = (identifier, pv.get('motionText', ''))
+            key = _rollcall_key(identifier, pv.get('date', ''), pv.get('yea'), pv.get('nay'))
             vote_id = vote_index.get(key)
             if not vote_id:
                 unmatched += 1
