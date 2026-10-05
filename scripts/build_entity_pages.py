@@ -63,13 +63,29 @@ def _date_only(s):
 
 
 def resolve_lastmod(permalink, fingerprint, data_date, prior, new_state):
-    """Return a page's last-modified date: the stored date when its content hash is
-    unchanged, else data_date (the date the source data was produced)."""
+    """Return a page's last-modified date.
+
+    - Content hash unchanged vs the prior deploy: keep the stored date.
+    - Content changed vs a KNOWN prior: stamp today. The rendered output changed
+      now, even when the change came from a code/template edit rather than fresh
+      source data. Using data_date here (the date the *source* was produced) left
+      lastmod in the past for copy/template changes, so the sitemap never advanced
+      and indexnow_submit.py — which diffs on lastmod — never re-pinged those
+      pages (that stranded the 2026-09 server-rendered-copy fix: pages were fixed
+      but Bing kept its old "insufficient content" verdict because it was never
+      told to re-crawl).
+    - No prior record (new page, or a cache miss): fall back to data_date, which
+      is deterministic from the inputs so a lost lastmod cache doesn't spuriously
+      bump every page to today.
+    """
     h = hashlib.sha1(
         json.dumps(fingerprint, sort_keys=True, ensure_ascii=False).encode("utf-8")
     ).hexdigest()[:16]
     prev = prior.get(permalink)
-    d = prev["d"] if (prev and prev.get("h") == h and prev.get("d")) else data_date
+    if prev and prev.get("d"):
+        d = prev["d"] if prev.get("h") == h else date.today().isoformat()
+    else:
+        d = data_date
     new_state[permalink] = {"h": h, "d": d}
     return d
 
@@ -230,7 +246,15 @@ _VOTE_HOWTO = ("To vote in Georgia, you must be registered by the state's regist
 def race_about(name, race):
     paras = []
     seat = race.get("displayTitle") or name
-    paras.append(f"This page covers the {seat} race on Georgia's {race.get('cycle') or ''} ballot. "
+    # The manifest-derived name has the cycle baked in (e.g. "Labor Commissioner
+    # 2026"), so the sentence below would read "…2026 race on Georgia's 2026
+    # ballot". Strip a trailing cycle year from the seat for the prose only; the
+    # page <title> still carries the year. displayTitles never end in the cycle,
+    # so clean labels (legislative seats) are untouched.
+    cycle = str(race.get("cycle") or "").strip()
+    if cycle and seat.endswith(cycle):
+        seat = seat[: -len(cycle)].rstrip(" -–—")
+    paras.append(f"This page covers the {seat} race on Georgia's {cycle} ballot. "
                  "Georgia voters choose who fills this office in the elections listed below, and "
                  "the candidate list is updated as the Georgia Secretary of State and campaigns "
                  "publish new information.")
