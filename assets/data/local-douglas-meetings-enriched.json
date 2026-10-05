@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-01T15:49:04Z",
+  "generatedAt": "2026-10-05T17:30:05Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -14,14 +14,14 @@
   "lastActivity": "2026-10-06",
   "topicTotals": {
    "rezoning": 4,
-   "millage-budget": 17,
-   "variance": 4,
+   "annexation": 3,
+   "contract": 15,
+   "development": 3,
+   "millage-budget": 18,
+   "variance": 3,
    "appointment": 10,
    "comprehensive-plan": 2,
-   "contract": 14,
-   "data-center": 3,
-   "development": 2,
-   "annexation": 2
+   "data-center": 3
   },
   "dataCenterItems": [
    {
@@ -52,6 +52,15 @@
     ],
     "excerpt": "… igned by Alexander Dike. Commission District: #3. Z2026-81 Anmi De La Rosa Lugo – a request for a rezoning from R-LD-C (residential low-density w/conditions) to C-H (heavy commercial) for a 5,0 …",
     "excerptTerm": "rezon"
+   },
+   {
+    "title": "BOC Work Session",
+    "date": "2026-10-05",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7583,plainText=false)",
+    "tags": [
+     "annexation",
+     "development"
+    ]
    },
    {
     "title": "Planning Zoning Variance",
@@ -96,14 +105,6 @@
     "tags": [
      "variance"
     ]
-   },
-   {
-    "title": "Planning Zoning Variance",
-    "date": "2026-06-15",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7362,plainText=false)",
-    "tags": [
-     "variance"
-    ]
    }
   ],
   "landUseMeetings": 10,
@@ -140,6 +141,64 @@
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1196",
+   "date": "2026-10-05",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Session",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7583,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7583,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 7780,
+   "pdfSha256": "fbd0090a6691ce33d0db630b5a4a3bfda8ac33fc6dd1279c75c5421a6d5872b3",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "development",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "annexed",
+    "budget",
+    "contract",
+    "millage",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annexed",
+     "excerpt": "… rsche Volante) 15. Approval for the Board of Elections & Voter Registration to enter into a Lease Agreement for annexed office space in the amount of $2,895 per month to be funded by the Board of Elections budget and authorize the Chai …",
+     "context": "public-comment"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… thorizing the Chairman to sign all related documents pending final legal review. (Katrina Harley) 13. Approval of a contract between the Superior and State Court Accountability Courts and Ascension Counseling & Mental Health, LLC for Substa …",
+     "context": "public-comment"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… a Jennings) 16. Approval for the Board of Elections & Voter Registration is to enter into a Lease Agreement for warehouse storage space in the Amount of $1,051.33 per month to be funded through the Board of Elections budget and authorize …",
+     "context": "public-comment"
+    },
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… Work Session Minutes of September 14, 2026. () 3. Executive Session Minutes of September 14, 2026. () 4. Special Called Millage Rate Public Hearing Minutes of September 15, 2026 and September 24, 2026. () PROCLAMATIONS 5. Proclaiming October 4 …",
+     "context": "public-comment"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -1183,38 +1242,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1292",
-   "date": "2026-06-15",
-   "body": "Planning & Zoning",
-   "title": "Planning Zoning Variance",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7362,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7362,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 768,
-   "pdfSha256": "844f1d235aadc5183fa92b630bfefe1073842003f73beb70c5cfa3e851cedf93",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "DOUGLAS COUNTY ZONING VARIANCE HEARING AGENDA June 15, 2026 Call to Order - Planning & Zo …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

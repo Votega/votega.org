@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-01T15:49:04Z",
+  "generatedAt": "2026-10-05T17:29:57Z",
   "source": "Clayton County (primegov agenda/minutes PDFs, poppler+OCR)",
   "place": "Clayton County",
   "count": 25
@@ -11,14 +11,14 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-24",
+  "lastActivity": "2026-10-06",
   "topicTotals": {
+   "appointment": 10,
+   "contract": 12,
+   "development": 6,
    "millage-budget": 19,
-   "appointment": 9,
-   "contract": 11,
    "special-land-use": 5,
    "comprehensive-plan": 3,
-   "development": 5,
    "rezoning": 2,
    "variance": 2,
    "data-center": 4
@@ -38,6 +38,16 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Regular Business Meeting",
+    "date": "2026-10-06",
+    "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5423&compileOutputType=1",
+    "tags": [
+     "development"
+    ],
+    "excerpt": "… , 2026, in the amount of $140,094. 7. LS-2604-0214 - Final Plat - Street Acceptance for Cash's Crossing Phase 1 Subdivision (Commission District 1 - Alaina Reaves) Sec. 86-129. - Acceptance of public improvements requires final plat …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Regular Business Meeting",
     "date": "2026-09-15",
@@ -93,11 +103,72 @@
     "excerptTerm": "mixed use"
    }
   ],
-  "landUseMeetings": 9,
+  "landUseMeetings": 10,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "689",
+   "date": "2026-10-06",
+   "body": "Board of Commissioners",
+   "title": "Regular Business Meeting",
+   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5423&compileOutputType=1",
+   "textSource": "agenda",
+   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5423&compileOutputType=1",
+   "textMethod": "pdftotext",
+   "textChars": 37584,
+   "pdfSha256": "9306e419d12c77088ae4802ee61e616e7bf56dea22fbb37270fc2e42cd3a7e29",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "fiscal year",
+    "millage",
+    "procurement",
+    "subdivision",
+    "townhome"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… rdinance amends the residency affidavit requirement to require proof of continuing qualifications to remain as an appointee to a Board or Authority during each calendar year. 26. Resolution 2026-232: A resolution authorizing Clayto …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Hearing Minutes. Approval of September 15, 2026, 05:30 PM Millage Rate Hearing Minutes. 2. Request for Contract Amendment: SP #26-138 Record Management System for Employee Training for Clayton County, Georgia. (Fire Depart …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… , 2026, in the amount of $140,094. 7. LS-2604-0214 - Final Plat - Street Acceptance for Cash's Crossing Phase 1 Subdivision (Commission District 1 - Alaina Reaves) Sec. 86-129. - Acceptance of public improvements requires final plat …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… proval of September 15, 2026, Regular Business Board Meeting Minutes. Approval of September 15, 2026, 10:00 AM Millage Rate Hearing Minutes. Approval of September 15, 2026, 05:30 PM Millage Rate Hearing Minutes. 2. Request …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "712",
    "date": "2026-09-24",
@@ -1188,38 +1259,6 @@
     "millage-budget": {
      "term": "budget",
      "excerpt": "Budget Hearing CLAYTON COUNTY BOARD OF April 28, 2026 09:00 AM COMMISSIONERS …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "696",
-   "date": "2026-04-27",
-   "body": "Board of Commissioners",
-   "title": "Budget Meeting",
-   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5479&compileOutputType=1",
-   "textSource": "agenda",
-   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5479&compileOutputType=1",
-   "textMethod": "pdftotext",
-   "textChars": 241,
-   "pdfSha256": "04ccf50a47ad2cf9d7eca73c19c3dad3a3f68ffd6229ff90ce7fbdc29fba7087",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Budget Hearing CLAYTON COUNTY BOARD OF April 27, 2026 09:00 AM COMMISSIONERS …",
      "context": "unknown"
     }
    },

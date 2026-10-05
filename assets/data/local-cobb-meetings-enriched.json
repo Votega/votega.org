@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-01T15:49:05Z",
+  "generatedAt": "2026-10-05T17:30:05Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -13,13 +13,13 @@
   ],
   "lastActivity": "2026-11-12",
   "topicTotals": {
-   "variance": 7,
+   "variance": 8,
    "special-land-use": 6,
+   "contract": 8,
+   "rezoning": 4,
    "appointment": 5,
-   "contract": 7,
    "millage-budget": 7,
    "development": 3,
-   "rezoning": 3,
    "annexation": 3,
    "data-center": 2
   },
@@ -59,7 +59,7 @@
    {
     "title": "Board of Zoning Appeals Variance Hearing",
     "date": "2026-10-14",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10167,plainText=false)",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10260,plainText=false)",
     "tags": [
      "variance"
     ]
@@ -67,12 +67,14 @@
    {
     "title": "Planning Commission Zoning Hearing",
     "date": "2026-10-06",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10253,plainText=false)",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10264,plainText=false)",
     "tags": [
-     "special-land-use"
+     "rezoning",
+     "special-land-use",
+     "variance"
     ],
-    "excerpt": "… 29. LUP-34-2026 District 3 - 4047 Devonshire Drive 30. LUP-35-2026 District 4 - 448 Hurt Road 31. SLUP-8-2026 District 2 - 2967 Olympic Industrial Drive 32. SLUP-9-2026 District 2 - 114 Townpark Drive Other Busine …",
-    "excerptTerm": "slup"
+    "excerpt": "… AND ISRAEL NAVA RIVERA (Alex Brandon Nava Cruz and Israel Nava Rivera, Owners) requesting rezoning from CF to CRC for a Landscaping Business in Land Lot 279 of the 17th District. The property is Locat …",
+    "excerptTerm": "rezon"
    },
    {
     "title": "BOC Zoning Hearing",
@@ -266,12 +268,12 @@
    "date": "2026-10-14",
    "body": "Board of Zoning Appeals",
    "title": "Board of Zoning Appeals Variance Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10167,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10260,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10167,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10260,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1951,
-   "pdfSha256": "fe4565049f8d4abe1f85b7bfe97bf1a8049cad03167e42ff78307048250e9832",
+   "textChars": 2164,
+   "pdfSha256": "9b762f05341a04451a84084891a9352f6ce0fb1e60d9e9424800247ef0b35970",
    "topics": {
     "variance": 1
    },
@@ -284,7 +286,7 @@
    "topicExcerpts": {
     "variance": {
      "term": "variance",
-     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING AGENDA October 14, 2026 AGENDA AND MINUTES HELD AND CONTINUED CASES REGU …",
+     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING AGENDA October 14, 2026 AGENDA AND MINUTES BZA Variance Agenda 10-14-2026 HELD A …",
      "context": "unknown"
     }
    },
@@ -298,25 +300,50 @@
    "date": "2026-10-06",
    "body": "Planning Commission",
    "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10253,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10264,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10253,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10264,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2258,
-   "pdfSha256": "f0336a94634ee82c3a5b47a741e95ee69e04f8c0df8e59a2dbeb8a3caae7f51c",
+   "textChars": 13694,
+   "pdfSha256": "d5e84a4c6e541690e6f7f85258c6c322b017d9924a6040ca2cc3e9e59c0a2aa2",
    "topics": {
-    "special-land-use": 1
+    "contract": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
-    "special-land-use"
+    "contract",
+    "rezoning",
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
-    "slup"
+    "contract",
+    "land use permit",
+    "rezon",
+    "slup",
+    "variance"
    ],
    "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Joyner Avenue). Staff recommends Approval subject to: 1. This Applicant’s landscaping contractor office use only, any other use to come back to the Board of Commissioners for approval; …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… AND ISRAEL NAVA RIVERA (Alex Brandon Nava Cruz and Israel Nava Rivera, Owners) requesting rezoning from CF to CRC for a Landscaping Business in Land Lot 279 of the 17th District. The property is Locat …",
+     "context": "agenda-action"
+    },
     "special-land-use": {
      "term": "slup",
-     "excerpt": "… 29. LUP-34-2026 District 3 - 4047 Devonshire Drive 30. LUP-35-2026 District 4 - 448 Hurt Road 31. SLUP-8-2026 District 2 - 2967 Olympic Industrial Drive 32. SLUP-9-2026 District 2 - 114 Townpark Drive Other Busine …",
+     "excerpt": "… ued by Staff from the October 6, 2026 PC hearing until the November 3, 2026 PC hearing.) 2 SLUP-8-2026 RICK KUHLMAN (Continued by Staff from the October 6, 2026 PC hearing until the Novembe …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… ined within completely enclosed facilities; 8. No noxious odors, fumes, or sounds; 9. Variances as stated in Zoning comments, not otherwise in conflict; 10. Fire Department comments and recommendat …",
      "context": "agenda-action"
     }
    },

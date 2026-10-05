@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-01T15:49:06Z",
+  "generatedAt": "2026-10-05T17:30:21Z",
   "source": "Macon-Bibb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Macon-Bibb County",
   "count": 25
@@ -11,7 +11,7 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-01",
+  "lastActivity": "2026-10-06",
   "topicTotals": {
    "appointment": 24,
    "contract": 24,
@@ -19,7 +19,7 @@
    "variance": 10,
    "alpr": 3,
    "comprehensive-plan": 4,
-   "development": 16,
+   "development": 14,
    "special-land-use": 2
   },
   "dataCenterItems": [],
@@ -183,25 +183,9 @@
     "tags": [
      "development"
     ]
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-01-20",
-    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3362,plainText=false)",
-    "tags": [
-     "development"
-    ]
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-01-06",
-    "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3339,plainText=false)",
-    "tags": [
-     "development"
-    ]
    }
   ],
-  "landUseMeetings": 20,
+  "landUseMeetings": 18,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting",
@@ -233,6 +217,110 @@
   "alprMeetings": 3
  },
  "meetings": [
+  {
+   "id": "2395",
+   "date": "2026-10-06",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3726,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3726,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 147294,
+   "pdfSha256": "7e4a9a192907e9159a7c9e817bb82401cda1b8f4def26317e3a91c42e5487041",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "fiscal year",
+    "millage",
+    "purchase order",
+    "reappoint"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… spose of, or lease property as provided in O.C.G.A. § 50-14-3(b)(1)(E); and Discussion or deliberation on the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a cou …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ervices In The Amount Of Up To $59,500.00, To Be Paid From The Tobesofkee Recreation Area Fund – Lake Tobesofkee – Contract Labor – Contractual Services Line Item (Sponsored by: ) f. A Resolution Of The Macon-Bibb County Commission Auth …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… look into that program. • Renoalda Scott addressed the Commission asking them not to increase the millage 6. Approval of Minutes On motion of Commissioner Cooke, seconded by Commissioner Bailey and carried unani …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2136",
+   "date": "2026-10-06",
+   "body": "Board of Commissioners",
+   "title": "Pre-Commission Meeting",
+   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3724,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3724,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 167682,
+   "pdfSha256": "e1d109daeb9370ee6c218cec78ddd753d28d8f9b3e5754d0388a70f92ba34cf1",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "fiscal year",
+    "millage",
+    "purchase order",
+    "reappoint"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… spose of, or lease property as provided in O.C.G.A. § 50-14-3(b)(1)(E); and Discussion or deliberation on the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a cou …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Page 1 of 259 4. Agreements, Contracts and Purchase Orders a. A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Ex …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… Lester M. Miller Mayor Lester M. Miller called the Public Hearing to order and gave a brief overview of the millage rates since 2021. 2. Notice of Property Tax a. The Macon-Bibb County Commission has tentatively adopted a …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2394",
    "date": "2026-09-01",
@@ -1720,128 +1808,6 @@
      "term": "fiscal year",
      "excerpt": "… l Justice Coordinating Council Victims Of Crime Act (\"VOCA\") Continuation Award Allocation For Federal Fiscal Year 2026, In A Total Amount Of $78,980.00, With Local Match Fund Requirements Having Been …",
      "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2175",
-   "date": "2026-01-20",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3362,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3362,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 766747,
-   "pdfSha256": "43e7200d5f3f46efc9e5a4e262992c94ce691008f064c30002e490dea43d0d9d",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "development",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "apartment",
-    "appoint",
-    "award of",
-    "budget",
-    "contract",
-    "fiscal year",
-    "procurement",
-    "reappoint",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… M. Miller, Mayor) 6. Consent Agenda a. A Resolution Of The Macon-Bibb County Commission Appointing Louis Frank Tompkins To The Macon-Bibb County Fire Civil Service Board; (Sponsored by: …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ssioner) g. A Resolution Of The Macon-Bibb County Commission To Authorize The Mayor To Execute An Independent Contractor Agreement With Mcleroy, Inc., For Asphalt Resurfacing & Parking Paving Services, In The Amount Of $228,528.5 …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… 40, et. seq., the _______________ County Board of Commissioners (hereinafter referred to as the \"County\"), a political subdivision of this State and the (District Attorney) (Solicitor-General) for the __________________ (Judicial Circuit) (County) …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… Criminal Justice Coordinating Council Victims Of Crime Act (\"VOCA\") Continuation Award Allocation For Federal Fiscal Year 2026, In A Total Amount Of $78,980.00, With Local Match Fund Requirements Having Been Waived For This …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2336",
-   "date": "2026-01-06",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3339,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3339,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 37929,
-   "pdfSha256": "93ecdf3bf427987c7f59805da16ea559c0113c66348b0007a54f7bb35fca9c7d",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "development",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "multifamily",
-    "procurement",
-    "purchase order",
-    "reappoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "reappoint",
-     "excerpt": "… nsored by: Lester M. Miller, Mayor) 6. Consent Agenda a. A Resolution Of The Macon-Bibb County Commission Reappointing Robert Redmond To The Macon-Bibb County Planning And Zoning Commission; (Sponsor …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… d. An Ordinance Of The Macon-Bibb County Commission Authorizing The Mayor To Enter Into An Independent Contract Agreement With Buxton Construction, LLC For The Construction Of Roadway And Parking Improvements On Wa …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "multifamily",
-     "excerpt": "… Mayor To Execute An Independent Contractor Agreement With Pleasant Hill Landing, Lp, For The Construction Of A MultiFamily Housing Development At 151 Madison Street, In The Amount Of $1,400,000.00, To Be Paid From 2025 Home …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Hulett, Commissioner) d. An Ordinance Of The Macon Bibb County Commission To Amend The Fy2025 General Fund Budget To $242,375,011 In Total Revenues And $242,375,011 In Total Expenditures And Other Year End Adjustments …",
-     "context": "agenda-action"
     }
    },
    "flags": [

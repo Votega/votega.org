@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-01T15:49:14Z",
+  "generatedAt": "2026-10-05T17:30:22Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -10,13 +10,13 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-12",
+  "lastActivity": "2026-10-20",
   "topicTotals": {
-   "development": 13,
-   "variance": 4,
+   "development": 11,
+   "variance": 3,
+   "contract": 9,
    "millage-budget": 8,
-   "appointment": 8,
-   "contract": 8
+   "appointment": 8
   },
   "dataCenterItems": [],
   "landUseItems": [
@@ -116,32 +116,31 @@
     "tags": [
      "development"
     ]
-   },
-   {
-    "title": "Planning Commission Regular Meeting",
-    "date": "2026-07-13",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3074,plainText=false)",
-    "tags": [
-     "development",
-     "variance"
-    ],
-    "excerpt": "… • APPROVAL OF MINUTES 1. May 11, 2026 Planning Commission Regular Meeting Minutes • OLD BUSINESS 2. 149 - Subdivision of Lot 62 of the Chesterra Subdivision (Plat Book 13, Page 92, 1 lot into 2 lots (1 parcel into 2 parcels), per Ch …",
-    "excerptTerm": "subdivision"
-   },
-   {
-    "title": "Land Use & Development Regulations Review Committee Meeting",
-    "date": "2026-07-07",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3094,plainText=false)",
-    "tags": [
-     "development"
-    ]
    }
   ],
-  "landUseMeetings": 13,
+  "landUseMeetings": 11,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1315",
+   "date": "2026-10-20",
+   "body": "Board of Commissioners",
+   "title": "BOC Public Hearing",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4366,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4366,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 535,
+   "pdfSha256": "8cd28a7d82e6a4de1bb1afb8fdc287db79514793b42d1d28473c8ddb5cbb1897",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "1155",
    "date": "2026-10-12",
@@ -181,6 +180,36 @@
    "flags": [
     "land-use"
    ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1097",
+   "date": "2026-10-06",
+   "body": "Board of Commissioners",
+   "title": "Lumpkin County Board of Commissioners Work Session",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4368,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4368,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2527,
+   "pdfSha256": "b166e1feb8fac347d2a0ae8cd7f50e520ad2b47b409e67aa9989efc312c18fab",
+   "topics": {
+    "contract": 1
+   },
+   "tags": [
+    "contract"
+   ],
+   "matchedTerms": [
+    "contract"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ution Establishing a Code of Conduct for Boards, Authorities, & Committee Members (County Clerk Melissa Witcher) • CONTRACTS/AGREEMENTS 10. 2026-085 Animal Services Professional Vet Services (Animal Services Manager Wayne Marshall) 11. …",
+     "context": "unknown"
+    }
+   },
+   "flags": [],
    "dataCenterItems": []
   },
   {
@@ -986,78 +1015,6 @@
     "development": {
      "term": "subdivision",
      "excerpt": "… 5:00 PM • CALL TO ORDER • OTHER ITEMS 1. Approve July 7, 2026 Meeting Minutes 2. Review Article III Subdivision Classes & Article IV Platting Jurisdiction • ADJOURNMENT",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1152",
-   "date": "2026-07-13",
-   "body": "Planning Commission",
-   "title": "Planning Commission Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3074,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3074,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1838,
-   "pdfSha256": "8bfc20002c587464881ec932e16c0f74a869ae893dced47e521845c6a16a0994",
-   "topics": {
-    "development": 1,
-    "variance": 1
-   },
-   "tags": [
-    "development",
-    "variance"
-   ],
-   "matchedTerms": [
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… • APPROVAL OF MINUTES 1. May 11, 2026 Planning Commission Regular Meeting Minutes • OLD BUSINESS 2. 149 - Subdivision of Lot 62 of the Chesterra Subdivision (Plat Book 13, Page 92, 1 lot into 2 lots (1 parcel into 2 parcels), per Ch …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… a. • NEW BUSINESS 3. 165 - Vertical Bridge c/o Baker Donelson is requesting a 100 ft rear setback and buffer variance to Section 27-2.2.3 (Chart of Performance Standards) Table 1: Performance Standards requiring a telecommunication …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1296",
-   "date": "2026-07-07",
-   "body": "Land Use & Development Regulations Review Committee",
-   "title": "Land Use & Development Regulations Review Committee Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3094,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3094,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 668,
-   "pdfSha256": "c8e2a81d676422d3b9a3ac114c3ac0423a6567777c46fe34e191b9acd241384f",
-   "topics": {
-    "development": 1
-   },
-   "tags": [
-    "development"
-   ],
-   "matchedTerms": [
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… 5:30 PM • CALL TO ORDER • OTHER ITEMS 1. Approve June 29, 2026 Minutes 2. Review Article III - Subdivision Classes 3. Review Article IV - Platting Jurisdiction • ADJOURNMENT",
      "context": "unknown"
     }
    },

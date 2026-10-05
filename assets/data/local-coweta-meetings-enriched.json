@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-01T15:49:06Z",
+  "generatedAt": "2026-10-05T17:30:16Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -11,15 +11,15 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-24",
+  "lastActivity": "2026-10-06",
   "topicTotals": {
-   "special-land-use": 8,
-   "variance": 13,
    "appointment": 13,
-   "comprehensive-plan": 4,
    "contract": 14,
    "millage-budget": 15,
-   "rezoning": 9,
+   "special-land-use": 8,
+   "variance": 12,
+   "comprehensive-plan": 4,
+   "rezoning": 8,
    "development": 6,
    "data-center": 3
   },
@@ -231,24 +231,61 @@
     ],
     "excerpt": "… for Property Located at 1071 Boone Road, Newnan - District 2 6. Second Public Hearing Regarding the Coweta County Comprehensive Plan Update Regular Session Public Comments Regarding Items On the Agenda - This is also time for anyone that wishes …",
     "excerptTerm": "comprehensive plan"
-   },
-   {
-    "title": "Coweta County Board of Commissioners - Regular Meeting",
-    "date": "2026-03-03",
-    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3257,plainText=false)",
-    "tags": [
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "… rsection of Interstate Way and Hwy 34 E, Newnan - District 3 4. Request to Cancel Public Hearing Regarding Potential Rezoning of Property Located at 3218 Roscoe Road, Newnan Associated with Condition # 15 of Previous Petition # REZ 22- …",
-    "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 22,
+  "landUseMeetings": 21,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1095",
+   "date": "2026-10-06",
+   "body": "Board of Commissioners",
+   "title": "Coweta County Board of Commissioners - Regular Meeting Session",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3673,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3673,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4748,
+   "pdfSha256": "13f74c5cf921ee96fbf069311294da0dca2c7ff354740c2242f02f0f883e133c",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "fiscal year"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… d by Amlajack Industrial (Now Under Central Coweta Industrial Ownership) - District 3 Unfinished Business 5. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts 6. Request Approval …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… d Business 5. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts 6. Request Approval/Execution of an Agreement with Jet Dental 7. Request Approval/Execution of Supplemental Agree …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… ll Project 13. Request Approval to Submit a 5307 Transit Funding Request to the Atlanta Transit Link Authority for Fiscal Year 2028 14. Request Approval forTemporary Closure of the State Court Clerk's Office Supplemental and Non-Agenda Items P …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1151",
    "date": "2026-09-24",
@@ -1508,71 +1545,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1067",
-   "date": "2026-03-03",
-   "body": "Board of Commissioners",
-   "title": "Coweta County Board of Commissioners - Regular Meeting",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3257,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3257,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4101,
-   "pdfSha256": "8a48a753553be0c02bf833694ac4d41107eb6a1fac816faf5fefe43c16d15c03",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "fiscal year",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… # 15 of Previous Petition # REZ 22-19 Filed by Hetty Jane, LLC - District 3 Unfinished Business 5. Request Appointments to Various Boards/Authorities New Business Bids and Contracts 6. Request Approval/Execution of a Suppleme …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… District 3 Unfinished Business 5. Request Appointments to Various Boards/Authorities New Business Bids and Contracts 6. Request Approval/Execution of a Supplemental Agreement with F. S. Scarbrough, LLC Associated with Phase 1 …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… with Internet at New Fire Station # 10 - District 1 Additional Action Items 10. Request Acceptance of the Fiscal Year 2023 State and Local Cybersecurity Program Grant Award Public Comments Regarding Items Not on the Agenda - This sect …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… rsection of Interstate Way and Hwy 34 E, Newnan - District 3 4. Request to Cancel Public Hearing Regarding Potential Rezoning of Property Located at 3218 Roscoe Road, Newnan Associated with Condition # 15 of Previous Petition # REZ 22- …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… y Yamaha Motor Manufacturing Company [dba DHL Supply Chain (USA)] Requesting an Exterior Architectural Standards Variance for Property Located at the Northeast Intersection of Interstate Way and Hwy 34 E, Newnan - District 3 4. Req …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

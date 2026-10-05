@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-01T15:49:06Z",
+  "generatedAt": "2026-10-05T17:30:16Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -11,19 +11,29 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-01",
+  "lastActivity": "2026-10-06",
   "topicTotals": {
-   "rezoning": 14,
+   "appointment": 2,
    "contract": 12,
+   "rezoning": 14,
    "special-land-use": 10,
    "variance": 16,
-   "millage-budget": 5,
+   "millage-budget": 4,
    "development": 3,
-   "appointment": 1,
    "alpr": 1
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-10-06",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13842,plainText=false)",
+    "tags": [
+     "rezoning"
+    ],
+    "excerpt": "… and currently zoned PRD (Planned Residential Development). 2. (I1b2) RZ26-09-04, Rezoning from R-1 (Single Family Residential) to C-3 (Heavy Commercial), 5125 & 5147 Columb …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Planning Commission",
     "date": "2026-10-01",
@@ -228,14 +238,6 @@
     ],
     "excerpt": "… ncan a. Development and Planning Services Committee Commissioner Melear 1. (I1a1) VA26-04-01, Variance to Section 90-135 Signs, 212 Bobby Jones Expressway, Tax Map 078D Parcel 024, 0.598 +/- acres, and cur …",
     "excerptTerm": "variance"
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-04-21",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13501,plainText=false)",
-    "tags": [
-     "rezoning"
-    ]
    }
   ],
   "landUseMeetings": 20,
@@ -254,6 +256,55 @@
   "alprMeetings": 1
  },
  "meetings": [
+  {
+   "id": "2575",
+   "date": "2026-10-06",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13842,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13842,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 8627,
+   "pdfSha256": "83c00609f986d79e08b6323343cb3b4d091b7f3af2e3b2d9f8a0470f57b9dc86",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "reappoint",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… ttee Commissioner Steed a. (H1a) Chairman's Reappointment to the Columbia Judicial Circuit Public Defender Supervisory Panel b. (H1b) New Acco …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Equipment for 5105M Tractor and Single Wing Mower Attachment b. (H2b) Change Order #1 to Contract#2025-3123 with Goodwyn Mills Cawood for the Design of the Euchee Creek Greenway All Remaining Phase …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… and currently zoned PRD (Planned Residential Development). 2. (I1b2) RZ26-09-04, Rezoning from R-1 (Single Family Residential) to C-3 (Heavy Commercial), 5125 & 5147 Columb …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2626",
    "date": "2026-10-01",
@@ -1292,55 +1343,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2583",
-   "date": "2026-04-21",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13501,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13501,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 14616,
-   "pdfSha256": "7842414c3c3ba6c006ea2a187467750b4c74bc77f5b79f99e4a31a785d62ad3e",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… (H1b) Lease with Columbia County Cares, Inc. c. (H1c) Proclamation Observing May 1, 2026 as Loyalty Day d. (H1d) Contract Renewal Number 8 with Columbia County Convention & Visitors Bureau, Inc. e. (H1e) Independent Contractor Agreement w …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… NUTES OF PREVIOUS MEETING Chairman Duncan 1. (E1) March 17, 2026 2. (E2) March 17, 2026 Budget Work Session F. PRESENTATION AND APPROVAL OF THE AGENDA Chairman Duncan The Chairpe …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… cel 1081, 0.28 +/- acres, and currently zoned PUD (Planned Unit Development). 2. (I2b2) RZ26-03-09, Rezoning from M-1 (Light Industrial) to C-2 (General Commercial), 475 Lewiston Road, for a 1.0 +/- acre port …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

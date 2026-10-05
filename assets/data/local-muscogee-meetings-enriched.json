@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-01T15:49:01Z",
+  "generatedAt": "2026-10-05T17:29:55Z",
   "source": "Columbus-Muscogee County (Legistar structured API)",
   "place": "Columbus-Muscogee County",
   "count": 25
@@ -12,15 +12,15 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-28",
+  "lastActivity": "2026-10-05",
   "topicTotals": {
-   "rezoning": 78,
-   "variance": 201,
-   "development": 106,
-   "millage-budget": 306,
-   "contract": 747,
-   "annexation": 36,
-   "appointment": 124,
+   "contract": 750,
+   "appointment": 128,
+   "millage-budget": 297,
+   "rezoning": 74,
+   "variance": 181,
+   "development": 93,
+   "annexation": 35,
    "data-center": 3,
    "alpr": 1
   },
@@ -269,7 +269,7 @@
     "excerptTerm": "variance"
    }
   ],
-  "landUseMeetings": 25,
+  "landUseMeetings": 23,
   "alprItems": [
    {
     "title": "Columbus City Council",
@@ -285,6 +285,60 @@
   "alprMeetings": 1
  },
  "meetings": [
+  {
+   "eventId": 6212,
+   "date": "2026-10-05",
+   "body": "Columbus City Council",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6212&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "itemCount": 116,
+   "topics": {
+    "contract": 32,
+    "appointment": 7,
+    "millage-budget": 6
+   },
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "purchase order",
+    "reappoint"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "To authorize the Director of the Department of Development to enter into a planned modification of a service contract with Mann Roofing & Construction LLC to extend the agreement term from December 31, 2026 to December 31, 2027 in order …",
+     "context": "agenda-action"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "APPOINTMENTS",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… o authorize the Director of Finance and Management, on behalf of the Department of Technology, to associate all general budget reservations resulting from this ordinance with the appropriate purchase agreement with Brown Enterprise Solutions, LLC …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": []
+  },
+  {
+   "eventId": 6215,
+   "date": "2026-10-05",
+   "body": "Zoning Committee",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6215&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "itemCount": 14,
+   "topics": {},
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": [],
+   "landUseItems": []
+  },
   {
    "eventId": 6210,
    "date": "2026-09-28",
@@ -4856,420 +4910,6 @@
     {
      "title": "To grant a Variance from the provisions of Sections 3332.037, R-2F residential district; 3312.49(C), Required Parking; 3332.14, R-2F area district requirements; 3332.19, Fronting; ",
      "matterFile": "1034-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    }
-   ]
-  },
-  {
-   "eventId": 6175,
-   "date": "2026-04-20",
-   "body": "Columbus City Council",
-   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6175&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 120,
-   "topics": {
-    "contract": 29,
-    "millage-budget": 15,
-    "appointment": 3,
-    "development": 9,
-    "annexation": 1,
-    "rezoning": 4,
-    "variance": 7
-   },
-   "matchedTerms": [
-    "annexation",
-    "apartment",
-    "appoint",
-    "budget",
-    "contract",
-    "multifamily",
-    "procurement",
-    "purchase order",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… riate funds within the Street and Highway Improvement Fund; to authorize the Director of Public Service to enter into a contract modification with Kimley-Horn and Associates, Inc. in connection with the Intersection - Hilliard Rome Road at Renner R …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "To amend the 2025 Capital Improvement Budget; to appropriate funds within the Street and Highway Improvement Fund; to authorize the Director of Public Service to en …",
-     "context": "agenda-action"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "APPOINTMENTS",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "apartment",
-     "excerpt": "Appointment of Abe Van Helmond, 1369 Forsythe Avenue, Apartment 1, Columbus, OH 43201, to serve on the University Area Commission, replacing Michael Kehlmeier, with a new term start d …",
-     "context": "agenda-action"
-    },
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "To accept the application (AN25-026) of TCG OCP Rohr Management LLC, c/o David Pizzotti for the annexation of certain territory containing 46.8± acres in Hamilton Township. ($0.00) Ordinance",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "REZONINGS/AMENDMENTS",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "VARIANCES",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": [],
-   "landUseItems": [
-    {
-     "title": "Appointment of Abe Van Helmond, 1369 Forsythe Avenue, Apartment 1, Columbus, OH 43201, to serve on the University Area Commission, replacing Michael Kehlmeier, with a new term star",
-     "matterFile": "A0080-2026",
-     "matterType": "Appointment",
-     "tags": [
-      "appointment",
-      "development"
-     ],
-     "passed": "Pass",
-     "action": "Read and Approved",
-     "mover": "Emmanuel V. Remy"
-    },
-    {
-     "title": "To accept the application (AN25-026) of TCG OCP Rohr Management LLC, c/o David Pizzotti for the annexation of certain territory containing 46.8± acres in Hamilton Township. ($0.00)",
-     "matterFile": "0961-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "annexation"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Emmanuel V. Remy"
-    },
-    {
-     "title": "REZONINGS/AMENDMENTS",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "rezoning"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To rezone 2100 HARD RD. (43123), being 5.0± acres located on the north side of Hard Road, 150± feet west of Stoneford Drive, From: L-RR, Limited Rural Residential District, To: AR-",
-     "matterFile": "0290-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "rezoning"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To rezone 7801 & 7809 OLENTANGY RIVER RD. (43235), being 5.82± acres located on the west side of Olentangy River Road, 370± feet south of Clubview Boulevard, From: R-1, Residential",
-     "matterFile": "1035-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "rezoning"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To rezone 6955-6999 HARLEM RD. (43081), being 4.40± acres located on the west side of Harlem Road, 880± feet north of Central College Road, From: L-M, Limited Manufacturing Distric",
-     "matterFile": "1136-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "rezoning"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "VARIANCES",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3312.27, Parking setback line; 3333.18, Building lines; and 3332.255, Perimeter yard, of the Columbus City Codes; for the propert",
-     "matterFile": "0291-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3333.02(5), AR-12, ARLD and AR-1 apartment residential district use; 3333.41(H)(I)(J), Standards, of the Columbus City codes; fo",
-     "matterFile": "1036-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; 3312.49(C), Required parking; 3332.05(A)(4), Area district lot width requirements; and 3332.",
-     "matterFile": "1116-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3309.14(A), Height districts; 3312.21(D), Landscaping and screening; 3332.06; R-rural area district requirements; 3333.18, Build",
-     "matterFile": "1137-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.037, R-2F residential district; 3332.18(D), Basis of computing area; and 3332.25(A)(B), Required side yard, of the Columbus",
-     "matterFile": "1139-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3332.035, R-3 residential district, of the Columbus City Codes; for the property located at 2930-2932 MEDINA AVE. (43224), to all",
-     "matterFile": "1143-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To recognize the meaningful work of Habitat for Humanity-MidOhio and celebrate the historic groundbreaking of the Devon Triangle Multifamily Neighborhood Housing Development.",
-     "matterFile": "0106X-2026",
-     "matterType": "Ceremonial Resolution",
-     "tags": [
-      "development"
-     ],
-     "passed": "Pass",
-     "action": "Adopted",
-     "mover": "Emmanuel V. Remy"
-    }
-   ]
-  },
-  {
-   "eventId": 6167,
-   "date": "2026-04-13",
-   "body": "Zoning Committee",
-   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6167&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 21,
-   "topics": {
-    "variance": 13,
-    "development": 4
-   },
-   "matchedTerms": [
-    "variance",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "VARIANCES",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… ntial Landscape Buffer, of the Columbus City Codes; for the property located at 2295 S. HIGH ST. (43207), to allow flex warehouse and storage uses with reduced development standards in the CAC, Community Activity Center District (Council Variance #C …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": [],
-   "landUseItems": [
-    {
-     "title": "VARIANCES",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 34.G.20.030.D.1, Landscaping, Parking Lot Shade Trees; and 34.G.20.040.B.4, Screening, Dumpster ",
-     "matterFile": "0967-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Waive the 2nd Reading",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 34.E.20.030.C.1.a, General Requirements, Ground Floor Design; 34.E.20.030.J.2, General Requireme",
-     "matterFile": "0971-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Waive the 2nd Reading",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3332.039, R-4 residential district, of the Columbus City Codes; for the property located at 1828 E. HUDSON ST. (43211), to allow ",
-     "matterFile": "0979-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Waive the 2nd Reading",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 34.G.20.030.D.1, Landscaping, Parking Lot Shade Trees; and 34.G.20.040.B.4, Screening, Dumpster ",
-     "matterFile": "0967-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 34.G.20.030.D.1, Landscaping, Parking Lot Shade Trees; and 34.G.20.040.B.4, Screening, Dumpster ",
-     "matterFile": "0967-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 34.G.20.030.D.1, Landscaping, Parking Lot Shade Trees; and 34.G.20.040.B.4, Screening, Dumpster ",
-     "matterFile": "0967-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 34.E.20.030.C.1.a, General Requirements, Ground Floor Design; 34.E.20.030.J.2, General Requireme",
-     "matterFile": "0971-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 34.E.20.030.C.1.a, General Requirements, Ground Floor Design; 34.E.20.030.J.2, General Requireme",
-     "matterFile": "0971-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 34.E.20.030.C.1.a, General Requirements, Ground Floor Design; 34.E.20.030.J.2, General Requireme",
-     "matterFile": "0971-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3332.039, R-4 residential district, of the Columbus City Codes; for the property located at 1828 E. HUDSON ST. (43211), to allow ",
-     "matterFile": "0979-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3332.039, R-4 residential district, of the Columbus City Codes; for the property located at 1828 E. HUDSON ST. (43211), to allow ",
-     "matterFile": "0979-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3332.039, R-4 residential district, of the Columbus City Codes; for the property located at 1828 E. HUDSON ST. (43211), to allow ",
-     "matterFile": "0979-2026",
      "matterType": "Ordinance",
      "tags": [
       "variance"

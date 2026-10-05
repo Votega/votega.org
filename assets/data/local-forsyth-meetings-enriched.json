@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-01T15:49:04Z",
+  "generatedAt": "2026-10-05T17:30:00Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -10,19 +10,28 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-01",
+  "lastActivity": "2026-10-06",
   "topicTotals": {
-   "appointment": 7,
-   "comprehensive-plan": 4,
+   "comprehensive-plan": 5,
    "contract": 23,
-   "rezoning": 15,
-   "variance": 11,
-   "development": 11,
-   "millage-budget": 19,
+   "millage-budget": 20,
+   "rezoning": 16,
+   "appointment": 7,
+   "variance": 10,
+   "development": 10,
    "special-land-use": 4
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Work Session",
+    "date": "2026-10-06",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5364,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "rezoning"
+    ]
+   },
    {
     "title": "Board of Commissioners Regular Meeting",
     "date": "2026-10-01",
@@ -194,15 +203,6 @@
     "tags": [
      "rezoning"
     ]
-   },
-   {
-    "title": "Board of Commissioners Regular Meeting",
-    "date": "2026-04-16",
-    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5060,plainText=false)",
-    "tags": [
-     "development",
-     "variance"
-    ]
    }
   ],
   "landUseMeetings": 18,
@@ -210,6 +210,66 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "438",
+   "date": "2026-10-06",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5364,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5364,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 8028,
+   "pdfSha256": "c963a557a0df2b2b530b5ce82900eac098f0716f7835d4e31b058179690217de",
+   "topics": {
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "contract",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "award of",
+    "budget",
+    "comprehensive plan",
+    "contract",
+    "fiscal year",
+    "rezon",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… approval, the Board may consider rezoning to a constitutional zoning designation - District 1 – Comprehensive Planning Manager, Department of Planning and Community Development (Postponed from the April 8, …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "task order",
+     "excerpt": "… sidered on a \"Time Sensitive\" basis – Chief of Staff, Sheriff’s Office (4) Board approval of a Task Order with Steele & Associates, Inc. in the amount of $191,659.00 to provide services under the Trails Repair a …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… the associated services agreement – Fire Chief, Fire Department (2) Board consideration and approval of a Budget Resolution for replacement of total loss Unit #399 - Chief of Staff, Sheriff's Office (3) Boar …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ctor, Department of Parks and Recreation (5) Board consideration and possible direction of a Board generated rezoning for ZA4108, Vijay Garlapati. In accordance with UDC 8-5.5(I), if an application for a la …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "459",
    "date": "2026-10-01",
@@ -1555,56 +1615,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "448",
-   "date": "2026-04-16",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5060,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5060,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 8410,
-   "pdfSha256": "415da63b1f48b96ce89b863918567165f8aa2fa4597db190b4f0d9b924ad6e16",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "variance"
-   ],
-   "matchedTerms": [
-    "apartment",
-    "contract",
-    "subdivision",
-    "variance",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… nly, to the April 16, 2026 Agenda). XI. New Business (1) Jason Creech - CP250027 - to operate a 2,218 sq. ft. contractor's establishment in an existing building with 8 parking spaces, an open storage yard and a container …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… PH on Old Wayt Place, Belshire Way, Ansted Court and all other property and property rights as shown on Subdivision Plat for Wayt Farm Phase 1, recorded in Plat Book 224, Pages 183-198, Forsyth County, Georgia Records - …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… (1) Board consideration and possible vote regarding a request made by Chase Fulbright for: 1. A lot-size variance of 0.038 acres in order for an A1 lot to be 0.962 acres rather than the required 1 acre, and 2. A lot-wi …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]
