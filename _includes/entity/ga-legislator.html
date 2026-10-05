@@ -1244,10 +1244,11 @@
       const sessionNames = {};
       (data.metadata?.sessions || []).forEach(s => { if (s.id) sessionNames[s.id] = s.name || s.id; });
       const activeSession = data.metadata?.activeSession || '';
-      // paginationComplete === false is a known, frozen coverage gap: our roll-call
-      // record covers most — but not all — of the regular session's bills (a full
-      // re-pull exceeds the Open States daily quota and the session is closed, so the
-      // gap no longer grows). Describe it as a bounded gap, not an in-progress backfill.
+      // Legacy coverage-gap flag. The former Open States source could leave the
+      // roll-call record short of the full session (a quota-bounded gap); the current
+      // legis.ga.gov official source fetches every published roll call, so it sets no
+      // paginationComplete flag and this stays false. Kept as a defensive guard in case
+      // a future source reintroduces a bounded gap.
       const incomplete = data.metadata?.paginationComplete === false;
       const incompleteNote = incomplete
         ? '<p style="font-size:0.78rem;color:#a35b00;background:#fff8ec;border:1px solid #fde7c2;border-radius:6px;padding:0.5rem 0.75rem;margin:0 0 0.75rem 0;">Note: our roll-call record covers most, but not all, of the regular session\'s bills, so some passage votes are missing. The participation, party-alignment, and chart figures below are based on the votes we have and may understate a member\'s totals.</p>'

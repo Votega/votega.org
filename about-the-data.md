@@ -10,7 +10,7 @@ VoteGA.org is a static website. We run automated workflows that pull data from t
 {: .box-note}
 **Looking to _reuse_ our data?** Our machine-readable datasets are open for anyone to use and are catalogued on the **[Open Data](https://www.votega.org/open-data)** page.
 
-**Federal legislator** (U.S. House & Senate) data comes from the Congress.gov API. **Georgia legislator** (General Assembly) data comes from the Open States API. 
+**Federal legislator** (U.S. House & Senate) data comes from the Congress.gov API. The **Georgia legislator** roster (names, parties, districts, committees) comes from the Open States API, while Georgia **bills and roll-call votes** come from the Georgia General Assembly's own official web service at legis.ga.gov. 
 
 Each source covers only its own level of government.
 
@@ -71,13 +71,13 @@ Open States is a nonpartisan, nonprofit project that collects and standardizes l
 
 ## Georgia State Legislator Voting History
 
-**Source:** [Open States API](https://openstates.org/) (Plural Policy)
+**Source:** [legis.ga.gov](https://www.legis.ga.gov/) — the Georgia General Assembly's official web service
 
 Voting history is displayed on each Georgia state legislator's profile page, showing how they voted on passage votes during the current General Assembly session (2025–2026).
 
 **How it works:**
 
-We leverage the Open States API and scrape all Georgia bills in the current session, collecting vote events where the motion was passed (classification is `passage` basically the final up-or-down votes on a bill). For each passage vote, individual member votes are recorded using each legislator's Open States identifier. This is the same identifier used throughout our member data, so no name matching or bridging is required.
+We fetch every published roll call for the session directly from the Georgia General Assembly's official web service (`webservices.legis.ga.gov`) and keep the passage votes (final floor votes on a bill, concurrences in the other chamber's changes, and resolution adoptions). Each member's vote is keyed by the legislature's own numeric member ID — the same ID used throughout our member data — so attribution is an exact integer join with no name matching or bridging. That eliminates the surname-collision errors that name-based matching introduces (Georgia has had multiple sitting legislators who share a surname), and the official record reaches back to 2001.
 
 - **Scope:** Passage votes only (final floor votes on a bill). Procedural motions, amendments, and committee votes are not included.
 - **Coverage:** All current members of the Georgia House of Representatives and Georgia Senate.
@@ -95,18 +95,18 @@ If a member was non-voting, abstained, absent, excused, or had a vote recorded a
 
 ## [Georgia General Assembly Bills & Resolutions](https://github.com/Votega/ga-legislation)
 
-**Source:** [Open States](https://openstates.org/) (Plural Policy)
+**Source:** [legis.ga.gov](https://www.legis.ga.gov/) — the Georgia General Assembly's official web service
 
 The [GA Bills & Resolutions](https://github.com/Votega/ga-legislation) tracker covers all 5,480+ bills and resolutions introduced during the 2025–26 regular session of the Georgia General Assembly.
 
 **How it works:**
 
-Fetched weekly, pulls every bill for the session directly from the Open States API and writes a compact static file that the browser loads directly. The script:
+Fetched weekly from the Georgia General Assembly's official web service (`webservices.legis.ga.gov`) — one call lists the session's legislation, then a detail call per bill returns its sponsors, status history, and roll calls — and written to a compact static file the browser loads directly. The script:
 
 - Strips the full per-bill action history (too large for client-side use), leaving only the latest action as `status` / `statusDate`.
-- Derives the Governor's action (signed, vetoed, or sent and still pending) as a structured `governorAction` field (see below), read from Open States' explicit action classifications rather than guessed from free text.
-- Keeps passage vote counts (yes/no/not voting) and the roll call motion text (i.e., Senate Vote #148) for each chamber vote.
-- Preserves Open States subject tags where available. For bills with no subject tag, which are predominantly county-specific local legislation, we auto-assign a **"Local / Municipal"** tag when the bill title starts with a Georgia county name.
+- Derives the Governor's action (signed, vetoed, or sent and still pending) as a structured `governorAction` field (see below), read from the bill's official legis.ga.gov status history rather than guessed from free text.
+- Keeps passage vote counts (yes/no/not voting) and the roll call motion text (i.e., Senate Vote #148) for each chamber vote. Because bills and votes now come from the same official source, every bill's recorded votes line up exactly with the roll-call data.
+- Assigns subject tags from the O.C.G.A. Code Title(s) each bill amends — the official legislative subject classification — parsed from the bill summary and named from the legislature's own title taxonomy. Bills citing no code title, predominantly county-specific local legislation, get a **"Local / Municipal"** tag when the bill title starts with a Georgia county name.
 
 **What's included per bill:**
 
@@ -119,14 +119,14 @@ Fetched weekly, pulls every bill for the session directly from the Open States A
 | `abstract` | Bill description (up to 500 characters) |
 | `status` | Last recorded action (free text, e.g. "Effective Date") |
 | `statusDate` | Date of last action |
-| `subjects` | Subject tags from Open States, or `["Local / Municipal"]` if auto-tagged |
+| `subjects` | Subject tags (O.C.G.A. Code Title names the bill amends), or `["Local / Municipal"]` if auto-tagged |
 | `sponsors` | Array of sponsor names; first entry is the lead/introducing legislator |
 | `passageVotes` | Passage vote counts per chamber, with roll call motion text |
 | `governorAction` | Governor's disposition, `null` if not yet sent to the Governor |
 | `billUrl` | Link to the bill on legis.ga.gov |
 | `textUrl` | Link to the bill text (PDF, where available) |
 
-**Governor's Action:** Georgia bills that pass both chambers are sent to the Governor, who signs, vetoes, or lets a bill become law without signature. The `governorAction` field is derived from Open States' `executive-receipt`, `executive-signature`, and `executive-veto` action tags.
+**Governor's Action:** Georgia bills that pass both chambers are sent to the Governor, who signs, vetoes, or lets a bill become law without signature. The `governorAction` field is derived from the bill's official legis.ga.gov status history — the "Sent to Governor", "Date Signed by Governor" / "Act N", and veto status entries — plus the act/veto number.
 
 ```
 { "status": "Signed" | "Vetoed" | "Sent to Governor",
@@ -134,7 +134,7 @@ Fetched weekly, pulls every bill for the session directly from the Open States A
   "actNumber": 484 | null }
 ```
 
-A quirk: a vetoed bill's transmittal record still carries an "executive-signature"-tagged action dated the same day as the veto. So, a veto always takes precedence when both are present for the same bill.
+When a bill's status history shows both a veto and a signing entry for the same period, the veto always takes precedence.
 
 **Status classification** Derived client-side, `governorAction` takes precedence, with the free-text `status` field as a fallback for bills not yet sent to the Governor:
 
@@ -146,7 +146,7 @@ A quirk: a vetoed bill's transmittal record still carries an "executive-signatur
 - **Passed**: passage votes exist for both chambers but not yet sent to the Governor 
 - **In progress**: all other bills
 
-**Subjects:** Open States provides subject tags for approximately 81% of actual bills. The auto-tagger adds "Local/Municipal" for a further 9%, bringing total coverage to around 90% of bills (excluding resolutions, which are separated into their own tab).
+**Subjects:** Each bill's subject tags are the O.C.G.A. Code Title(s) it amends, parsed from the bill summary (e.g. "to amend Title 20…" or "Code Section 20-2-165…" → *Education*) and named from the legislature's official 53-title taxonomy. This captures essentially all substantive code-amending bills; county-specific local bills are tagged "Local / Municipal", and the handful citing no code title (and most resolutions) are left untagged and flagged for manual review. Historical tags for the 2025–26 session are preserved from the prior snapshot so nothing already classified regresses.
 
 **Party-line classification:** We then join each `passageVotes` entry with individual member votes and party affiliation (from `ga-member-votes.json` and `ga-members.json`) to add a `partyTally`,the Yea/Nay count by party, to each recorded vote. VoteGA's [Bills Tracker](https://www.votega.org/ga-bills) uses this to flag **party-line votes**: roll calls where a majority of Republicans voted opposite a majority of Democrats. 
 
@@ -450,9 +450,9 @@ officials correction is verified against its primary source before it merges.
 | Georgia state legislators | Open States API | Daily, 07:00 UTC |
 | GA legislators community repo | Published from above | Daily, after GA member update |
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
-| GA state legislator voting history | Open States API | Weekly, Sundays 08:00 UTC |
+| GA state legislator voting history | legis.ga.gov official web service | Weekly, Mondays 07:30 UTC |
 | GA legislator voting scorecard (party unity + participation) | Derived from GA voting history + roster | Weekly, with the voting-history update |
-| GA bills & resolutions (2025–26 session) | Open States API | Weekly, Sundays 07:30 UTC |
+| GA bills & resolutions (2025–26 session) | legis.ga.gov official web service | Weekly, Sundays 07:30 UTC |
 | GA curated bills (Key Votes) | Open States API | Daily, 08:00 UTC |
 | GA executive orders | gov.georgia.gov (scraped) | Daily, 08:15 UTC (committed when new orders are found) |
 | GA congressional stock trades | House/Senate eFD via kadoa-org/congress-trading-monitor | Weekly, Sundays 10:00 UTC |
