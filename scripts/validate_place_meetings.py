@@ -10,7 +10,9 @@ Checks per place file (assets/data/local-<slug>-meetings.json):
   - structural: metadata / bodies / meetings present, metadata.count == len(meetings)
   - non-empty, and count >= --min-meetings (default 1)
   - each meeting: body set, date is YYYY-MM-DD, has an agenda or minutes URL
-  - link liveness: a small sample of file URLs return HTTP 200
+  - link liveness: a small sample of file URLs return HTTP 200 — skipped for a
+    place flagged `bot_protected` in the registry, whose origin 403s every
+    non-browser client (the sample would measure our own blocking, not the links)
   - coverage: warn (not fail) on a registry body absent from the file
 
 Usage:
@@ -28,7 +30,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from datetime import date
+from datetime import date, datetime, timezone
 
 import yaml
 
@@ -96,6 +98,16 @@ NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'wix', 'wordpress',
 
 def _norm(name):
     return ' '.join((name or '').lower().split())
+
+
+def _age_days(generated_at):
+    """Days since an ISO `metadata.generatedAt`, or None if unparseable."""
+    try:
+        stamp = (generated_at or '').replace('Z', '+00:00')
+        return (datetime.now(timezone.utc)
+                - datetime.fromisoformat(stamp)).days
+    except Exception:
+        return None
 
 
 def check_place(place, min_meetings, sample, network):
@@ -192,7 +204,18 @@ def check_place(place, min_meetings, sample, network):
             warnings.append('%s: %d body(ies) outside include_bodies %s: %s'
                             % (slug, len(stray), terms, ', '.join(stray)))
 
-    if network and meetings:
+    protected = bool(cfg.get('bot_protected'))
+    if protected:
+        # The origin 403s every non-browser client (see the registry note), so
+        # a liveness sample measures our own blocking, not the links. Skip it and
+        # surface the file's age instead — otherwise a permanently-blocked place
+        # would hard-fail every scheduled run and discard every other place's
+        # fresh data. Structural checks above still apply to the committed file.
+        age = _age_days(meta.get('generatedAt'))
+        warnings.append(
+            '%s: bot_protected - link liveness skipped; data is %s old'
+            % (slug, '%d day(s)' % age if age is not None else 'of unknown age'))
+    if network and meetings and not protected:
         urls = []
         for m in meetings:
             urls += [u for u in (m.get('agendaUrl'), m.get('minutesUrl')) if u]

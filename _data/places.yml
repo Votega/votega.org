@@ -503,6 +503,19 @@ places:
         platform: civicplus
         base_url: https://www.newtoncountyga.gov
         agenda_module_id: 65
+        # Cloudflare bot protection went up on this origin between 2026-10-01 and
+        # 2026-10-05: EVERY path (AgendaCenter, the agenda PDFs, even robots.txt)
+        # returns 403 to any non-browser client, from any IP, regardless of
+        # User-Agent. The site is healthy and current in a browser, and the
+        # already-committed links still resolve for visitors — only programmatic
+        # access is cut off, so the fix is a human allowlist request to the county /
+        # CivicPlus, not a code change. Until then the scrape 403s and the committed
+        # file is left unchanged (correct), but the link-liveness sample would 403
+        # too and read as "scrape broken", hard-failing the whole twice-weekly run
+        # and discarding 34 other counties' fresh data. This flag tells
+        # validate_place_meetings.py to skip link liveness here and report staleness
+        # as a warning instead. Remove it the moment the 403s stop.
+        bot_protected: true
         exclude_bodies:                 # keep BOC + Planning + Zoning Appeals;
           - Recreation                  # drop the administrative bodies
           - Solid Waste

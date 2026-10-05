@@ -352,18 +352,28 @@ def main():
             sys.exit('No place with slug %r in %s' % (args.slug, args.registry))
 
     failed = []
+    blocked = []
     built = 0
     for place in places:
         payload = build_place(place)
         if payload == 'skip':
             continue
         if payload is None:
-            failed.append(place['slug'])
+            # A place whose origin blocks non-browser clients outright (Cloudflare
+            # bot protection; see the registry's bot_protected note) fails every run
+            # until a human gets us allowlisted. Report it separately so the run
+            # annotation does not read as a scraper regression someone should debug.
+            cfg = (place.get('domains') or {}).get('meetings') or {}
+            (blocked if cfg.get('bot_protected') else failed).append(place['slug'])
             continue
         write_place(place['slug'], payload)  # good ones are written as we go
         built += 1
 
-    print('Done (%d place(s) with meetings, %d failed).' % (built, len(failed)))
+    print('Done (%d place(s) with meetings, %d failed, %d bot-blocked).'
+          % (built, len(failed), len(blocked)))
+    if blocked:
+        print('NOTE: %d place(s) left unchanged - origin blocks non-browser '
+              'clients (bot_protected): %s' % (len(blocked), ', '.join(blocked)))
     if failed:
         msg = '%d place(s) failed to scrape and were left unchanged: %s' % (
             len(failed), ', '.join(failed))
