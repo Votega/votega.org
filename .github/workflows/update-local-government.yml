@@ -48,8 +48,52 @@ jobs:
       - name: Generate local-government meeting data
         run: python scripts/generate_place_meetings.py
 
+      # Validation does NOT abort the run. It used to: `exit 1` here skipped the
+      # enrich/commit/publish steps entirely, so ONE place breaking threw away every
+      # other place's fresh data for the week (a Cloudflare bot block on one county
+      # discarded 34 healthy ones). Instead: annotate, quarantine just the failing
+      # places below, carry on with the good data, and fail the job at the very end
+      # so notify-workflow-failure still opens an issue.
       - name: Validate output
-        run: python scripts/validate_place_meetings.py
+        id: validate
+        continue-on-error: true
+        run: |
+          python scripts/validate_place_meetings.py \
+            --failed-slugs-out "$RUNNER_TEMP/failed-places.txt"
+
+      # Discard the regenerated JSON of any place that failed validation, so the
+      # enrichers and the commit below only ever see trees that passed. This is the
+      # safety property the old hard `exit 1` provided, kept: the failure mode that
+      # check guards against is an adapter matching GARBAGE after a site reskin —
+      # valid JSON, non-empty, wrong — and that must not be committed. git restore
+      # puts the last known-good committed file back; for a place that was already
+      # stale at HEAD it is a no-op.
+      - name: Quarantine places that failed validation
+        if: steps.validate.outcome == 'failure'
+        run: |
+          set -e
+          list="$RUNNER_TEMP/failed-places.txt"
+          if [ ! -s "$list" ]; then
+            echo "::error::validation failed but no slug list was written -" \
+              "cannot tell which places are bad; restoring ALL meeting data"
+            git restore --source=HEAD -- 'assets/data/local-*-meetings.json'
+            exit 0
+          fi
+          while read -r slug; do
+            [ -n "$slug" ] || continue
+            echo "::warning::quarantining $slug - failed validation, keeping the" \
+              "last known-good committed data"
+            f="assets/data/local-$slug-meetings.json"
+            # Tracked: restore the committed version. Untracked (a place added this
+            # run, whose very first output is bad): delete it, so nothing that never
+            # passed validation reaches the commit.
+            if git ls-files --error-unmatch "$f" >/dev/null 2>&1; then
+              git restore --source=HEAD -- "$f"
+            else
+              rm -f "$f"
+            fi
+          done < "$list"
+          git status --short assets/data/ | head -40
 
       # Topic / data-center enrichment. Both writers guard like the steps above —
       # they never overwrite a good sidecar or good flags with an empty result —
@@ -121,3 +165,14 @@ jobs:
         env:
           GA_LOCAL_GOVERNMENT_TOKEN: ${{ secrets.GA_LOCAL_GOVERNMENT_TOKEN }}
         run: python scripts/publish_ga_local_government.py
+
+      # Everything above ran and the good data is committed; now surface the
+      # validation failure as a job failure. This is the LAST step on purpose —
+      # failing earlier is what used to discard the healthy places' data.
+      - name: Fail the job if validation failed
+        if: steps.validate.outcome == 'failure'
+        run: |
+          echo "::error::validate_place_meetings.py failed - see the annotations" \
+            "above. The failing place(s) were quarantined; every other place's" \
+            "data was committed and published normally."
+          exit 1

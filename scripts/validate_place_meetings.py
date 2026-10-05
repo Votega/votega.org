@@ -255,6 +255,12 @@ def main():
                     help='file links to liveness-check per place')
     ap.add_argument('--no-network', action='store_true',
                     help='skip link-liveness checks (offline/CI-lite)')
+    ap.add_argument('--failed-slugs-out', metavar='PATH',
+                    help='write the slug of every place that FAILED, one per line, '
+                         'so the workflow can quarantine (git restore) just those '
+                         'places before the enrich/commit steps run. Always written '
+                         'when given, even when empty, so the caller can tell "no '
+                         'failures" from "the validator never ran".')
     args = ap.parse_args()
 
     with open(REGISTRY, encoding='utf-8') as f:
@@ -264,12 +270,20 @@ def main():
         if not places:
             sys.exit('No place with slug %r' % args.slug)
 
-    all_errors, all_warnings = [], []
+    all_errors, all_warnings, failed_slugs = [], [], []
     for place in places:
         errors, warnings = check_place(
             place, args.min_meetings, args.sample, not args.no_network)
         all_errors += errors
         all_warnings += warnings
+        if errors:
+            failed_slugs.append(place['slug'])
+
+    if args.failed_slugs_out:
+        with open(args.failed_slugs_out, 'w', encoding='utf-8',
+                  newline=chr(10)) as fh:   # LF even on Windows; CI reads it
+            for slug in failed_slugs:
+                print(slug, file=fh)
 
     for w in all_warnings:
         print('WARNING: %s' % w)
@@ -277,6 +291,11 @@ def main():
         print('\n%d error(s):' % len(all_errors))
         for e in all_errors:
             print('  - %s' % e)
+            # Annotation so the failure is visible on the run summary even though
+            # update-local-government.yml lets this step continue: it quarantines
+            # only the failing places and fails the job at the end, so one broken
+            # source cannot discard every other place's fresh data.
+            print('::error::validate_place_meetings: %s' % e)
         sys.exit(1)
     print('\nAll place meeting files valid.')
 
