@@ -2,6 +2,16 @@
 layout: default
 title: Search
 permalink: /search/
+# Internal search-results page: Google advises against indexing these, and the
+# SearchAction sitelinks-searchbox target (/search/?q={search_term_string} in
+# _includes/structured-data.html) was crawled literally and reported as a Soft
+# 404 (GSC, 2026-10-05) because the no-query page is just a search box. noindex
+# (meta, not a robots.txt Disallow — Google must still crawl the SearchAction
+# target to honor it) + sitemap:false keeps the searchbox working while removing
+# the empty-query variants from indexing. search:false keeps it out of on-site search.
+noindex: true
+sitemap: false
+search: false
 share-description: "Search VoteGA.org — Georgia legislators, members of Congress, races, candidates, bills, and civic data."
 breadcrumb:
   - name: Home
