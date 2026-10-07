@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-06T19:54:15.969045+00:00",
+    "generatedAt": "2026-10-07T00:13:51.517283+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,14 +21,14 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 113,
+    "count": 116,
     "windowDays": 45,
-    "entityTagged": 68,
+    "entityTagged": 70,
     "topicCounts": {
-      "elections": 30,
-      "courts": 14,
-      "education": 11,
+      "elections": 29,
+      "education": 12,
       "surveillance": 2,
+      "courts": 12,
       "healthcare": 14,
       "budget": 7,
       "ethics": 6
@@ -36,6 +36,39 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
+    "vg-ga-p-000030": {
+      "name": "Burt Jones",
+      "url": null,
+      "ocdPersonId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
+      "candidateIds": [
+        "challenger-burt-jones-gov-2026"
+      ]
+    },
+    "vg-ga-p-000111": {
+      "name": "Jon Burns",
+      "url": null,
+      "ocdPersonId": "ocd-person/64012657-d026-411c-9525-3232524a5145",
+      "candidateIds": [
+        "ga-house-159-2026-r-1"
+      ]
+    },
+    "vg-ga-p-000384": {
+      "name": "Tyler J. Harper",
+      "url": null,
+      "candidateIds": [
+        "challenger-tyler-harper-agcom-2026"
+      ]
+    },
     "vg-ga-p-000261": {
       "name": "Sanford D. Bishop",
       "url": null,
@@ -55,20 +88,10 @@
         "challenger-jim-kingston-ga01-2026"
       ]
     },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
-    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000335": {
       "name": "Keisha R. Lance Bottoms",
@@ -160,12 +183,76 @@
   },
   "items": [
     {
+      "id": "a61a6f10533f",
+      "title": "Kemp suspends penalties for on-road dyed diesel after USDA secretary urges states to act",
+      "url": "https://georgiarecorder.com/2026/10/06/kemp-suspends-penalties-for-on-road-dyed-diesel-after-usda-secretary-urges-states-to-act/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-06T23:34:42+00:00",
+      "snippet": "Gov. Brian Kemp announced Tuesday evening that he will suspend penalties for dyed diesel after U.S. Secretary of Agriculture Brooke Rollins urged governors to follow the president’s move to suspend pe",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "0f1f9da4b72c",
+      "title": "Peek inside Georgia’s record-setting sea turtle nesting season",
+      "url": "https://thecurrentga.org/2026/10/06/peek-inside-georgias-record-setting-sea-turtle-nesting-season/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-06T22:57:37+00:00",
+      "snippet": "Georgia beaches recorded a record 4,292 loggerhead sea turtle nests this season, rebounding from a low in 2004.\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "ef6db7721017",
+      "title": "ICYMI: Congresswoman Nikema Williams Urges HUD to Implement Whole Home Repairs Law",
+      "url": "https://nikemawilliams.house.gov/posts/icymi-congresswoman-nikema-williams-urges-hud-to-implement-whole-home-repairs-law",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-10-06T21:23:11+00:00",
+      "snippet": "WASHINGTON, D.C. — Congresswoman Nikema Williams (GA-05) joined U.S. Senator John Fetterman (D-PA) and U.S. Senator Cynthia Lummis (R-WY) in a letter to U.S. Department of Housing and Urban Developmen",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": []
+    },
+    {
+      "id": "de076ae9c6bd",
+      "title": "Social services for violent crime victims to be made accessible to all in Macon",
+      "url": "https://www.gpb.org/news/2026/10/06/social-services-for-violent-crime-victims-be-made-accessible-all-in-macon",
+      "source": "GPB News",
+      "publishedAt": "2026-10-06T20:10:00+00:00",
+      "snippet": "The Bibb County Sheriff’s Office is inviting residents to a resource fair offering social services normally offered to victims of violent crime.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "738549640df5",
       "title": "GPB evening headlines for October 6, 2026",
       "url": "https://www.gpb.org/news/2026/10/06/gpb-evening-headlines-for-october-6-2026",
       "source": "GPB News",
       "publishedAt": "2026-10-06T19:09:27+00:00",
       "snippet": "The Paramount-Warner Brothers merger that closed today could have a big impact at the company's studios in Georgia.\nPlans for new natural gas pipelines running 500 miles from Mississippi to Georgia ar",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "fc77a58c5a5c",
+      "title": "Georgia Today: Georgia Power hacked; Pipeline legal challenge; Bibb County trauma resources",
+      "url": "https://www.gpb.org/news/2026/10/06/georgia-today-georgia-power-hacked-pipeline-legal-challenge-bibb-county-trauma",
+      "source": "GPB News",
+      "publishedAt": "2026-10-06T18:24:06+00:00",
+      "snippet": "On the October 6 edition: Hackers gain access to account information for 300,000 Georgia Power customers; a new legal challenge emerges for a pipeline running from Georgia to Mississippi; and The Bibb",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "7632f30c7afc",
+      "title": "Fictional Georgia island frames magical realist novel exploring grief, family bonds, forgiveness",
+      "url": "https://www.gpb.org/news/2026/10/06/fictional-georgia-island-frames-magical-realist-novel-exploring-grief-family-bonds",
+      "source": "GPB News",
+      "publishedAt": "2026-10-06T16:44:00+00:00",
+      "snippet": "Paige Harbison talks with GPB's Orlando Montoya about her book Destination Funeral, a magical realism novel that uses a Groundhog Day-style time loop to examine grief, friendship, family conflict, for",
       "entityIds": [],
       "topics": []
     },
@@ -182,26 +269,19 @@
       ]
     },
     {
-      "id": "7632f30c7afc",
-      "title": "Fictional Georgia island frames magical realist novel exploring grief, family bonds, forgiveness",
-      "url": "https://www.gpb.org/news/2026/10/06/fictional-georgia-island-frames-magical-realist-novel-exploring-grief-family-bonds",
-      "source": "GPB News",
-      "publishedAt": "2026-10-06T15:17:00+00:00",
-      "snippet": "Paige Harbison talks with GPB's Orlando Montoya about her book Destination Funeral, a magical realism novel that uses a Groundhog Day-style time loop to examine grief, friendship, family conflict, for",
-      "entityIds": [],
+      "id": "60058159a24e",
+      "title": "Gov. Kemp Suspends Penalties for Off-Road “Dyed” Diesel Use, Provides Further Relief for Truckers and Farmers",
+      "url": "https://gov.georgia.gov/press-releases/2026-10-06/gov-kemp-suspends-penalties-road-dyed-diesel-use-provides-further-relief",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-10-06T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that, in consultation with Lt. Governor Burt Jones, Speaker of the House Jon Burns, and Commissioner of Agriculture Tyler Harper, he has amended the St",
+      "entityIds": [
+        "vg-ga-p-000024",
+        "vg-ga-p-000030",
+        "vg-ga-p-000111",
+        "vg-ga-p-000384"
+      ],
       "topics": []
-    },
-    {
-      "id": "0c112cc56755",
-      "title": "GPB morning headlines for October 6, 2026",
-      "url": "https://www.gpb.org/news/2026/10/06/gpb-morning-headlines-for-october-6-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-10-06T13:11:38+00:00",
-      "snippet": "This summer, the Federal Energy Regulatory Commission approved 500 miles of pipeline from Mississippi to Georgia. Now, it's being sued for its decision; nearly 8% of adolescents in Georgia are regular",
-      "entityIds": [],
-      "topics": [
-        "courts"
-      ]
     },
     {
       "id": "dbc56630e477",
@@ -608,6 +688,20 @@
       "snippet": "ATLANTA — Former Atlanta Mayor Keisha Lance Bottoms pitched more proposals to help Georgians cover major expenses in her bid to be the state’s next governor. Last week, the Democrat and her Republican",
       "entityIds": [
         "vg-ga-p-000335"
+      ],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "af6f45b3c894",
+      "title": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!",
+      "url": "http://bishop.house.gov/node/8471",
+      "source": "Rep. Sanford Bishop (GA-02, press)",
+      "publishedAt": "2026-09-28T20:56:13+00:00",
+      "snippet": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!\n\n  \n    \n      Image or Video    \n                  \n\n  \n  \n  \n    \n      Image    \n        ",
+      "entityIds": [
+        "vg-ga-p-000261"
       ],
       "topics": [
         "education"
@@ -1390,18 +1484,6 @@
       ]
     },
     {
-      "id": "206c80438dea",
-      "title": "Gov. Kemp: Georgia Awarded $500 Million in Water Infrastructure Grants",
-      "url": "https://gov.georgia.gov/press-releases/2026-09-10/gov-kemp-georgia-awarded-500-million-water-infrastructure-grants",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-09-10T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that the U.S. Environmental Protection Agency (EPA) has awarded the state $499,385,000 to help communities impacted by Hurricane Helene strengthen the ",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
       "id": "edeced9ae58e",
       "title": "West Nile virus is entering its peak season. Here’s how you can protect yourself.",
       "url": "https://georgiarecorder.com/2026/09/10/west-nile-virus-is-entering-its-peak-season-heres-how-you-can-protect-yourself/",
@@ -1505,18 +1587,6 @@
       ]
     },
     {
-      "id": "7a529f805d26",
-      "title": "Lawmakers consider how to protect voting access for people with disabilities, non-English speakers",
-      "url": "https://georgiarecorder.com/2026/09/03/lawmakers-consider-how-to-protect-voting-access-for-people-with-disabilities-non-english-speakers/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-03T21:58:05+00:00",
-      "snippet": "Accessibility advocates are urging state leaders to prioritize access for voters with disabilities and those who require language assistance as lawmakers prepare to overhaul Georgia’s election equipme",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "e3eada056def",
       "title": "McBath, Lee Introduce Bill To Protect Vulnerable Communities From Violence and Exploitation During Disasters",
       "url": "https://mcbath.house.gov/2026/09/03/mcbath-lee-introduce-bill-to-protect-vulnerable-communities-from-violence-and-exploitation-during-disasters/",
@@ -1552,20 +1622,6 @@
       ],
       "topics": [
         "healthcare"
-      ]
-    },
-    {
-      "id": "de8aa9b974c4",
-      "title": "Congresswoman Nikema Williams’ Statement on the Eleventh Circuit Court’s Decision on Georgia District Maps",
-      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-statement-on-the-eleventh-circuit-courts-decision-on-georgia-district-maps",
-      "source": "Rep. Nikema Williams (GA-05, press)",
-      "publishedAt": "2026-08-26T18:41:15+00:00",
-      "snippet": "ATLANTA, GA – Congresswoman Nikema Williams (GA-05) released the following statement in response to the 11th Circuit Court of Appeals ordering a review of Georgia’s district maps under new voting righ",
-      "entityIds": [
-        "vg-ga-p-000254"
-      ],
-      "topics": [
-        "courts"
       ]
     },
     {
