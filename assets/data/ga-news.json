@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-07T18:07:47.573225+00:00",
+    "generatedAt": "2026-10-08T00:34:26.576490+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -23,19 +23,24 @@
     ],
     "count": 116,
     "windowDays": 45,
-    "entityTagged": 72,
+    "entityTagged": 74,
     "topicCounts": {
+      "budget": 8,
+      "education": 12,
       "elections": 32,
       "healthcare": 16,
-      "education": 11,
       "surveillance": 2,
       "courts": 12,
-      "budget": 6,
       "ethics": 6
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
@@ -54,11 +59,6 @@
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
@@ -183,6 +183,49 @@
   },
   "items": [
     {
+      "id": "a9559f6787c1",
+      "title": "GPB evening headlines for October 7, 2025",
+      "url": "https://www.gpb.org/news/2026/10/07/gpb-evening-headlines-for-october-7-2025",
+      "source": "GPB News",
+      "publishedAt": "2026-10-07T19:28:08+00:00",
+      "snippet": "Democrat Keisha Lance Bottoms and Republican Rick Jackson met for their first and only gubernatorial debate Tuesday.\nGov. Brian Kemp has extended the suspension of the state's gas tax until Nov. 5 and",
+      "entityIds": [
+        "vg-ga-p-000024",
+        "vg-ga-p-000368",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "21f9777a2809",
+      "title": "Tropical storm threat churns planning for Georgia-Alabama game with Trump set to attend",
+      "url": "https://www.gpb.org/news/2026/10/07/tropical-storm-threat-churns-planning-for-georgia-alabama-game-trump-set-attend",
+      "source": "GPB News",
+      "publishedAt": "2026-10-07T18:35:15+00:00",
+      "snippet": "Tropical Storm Isaias could hit the U.S. Gulf Coast as a hurricane this weekend, just before a major college football game between Georgia and Alabama. President Trump plans to attend the game on Satu",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "161e38314954",
+      "title": "Georgia Today: Gas tax extended; Gubernatorial debate; CDC layoffs",
+      "url": "https://www.gpb.org/news/2026/10/07/georgia-today-gas-tax-extended-gubernatorial-debate-cdc-layoffs",
+      "source": "GPB News",
+      "publishedAt": "2026-10-07T18:18:35+00:00",
+      "snippet": "On the October 7 edition: Gov. Kemp extends the suspension of the state's gas tax; parts of the state could get heavy rain this weekend; and Republican candidate for governor Rick Jackson avoided Pres",
+      "entityIds": [
+        "vg-ga-p-000368"
+      ],
+      "topics": [
+        "elections",
+        "budget"
+      ]
+    },
+    {
       "id": "bb85939d4d15",
       "title": "Zoo Atlanta's Arthur M. Blank Panda Grove giant panda habitat opens to public in November",
       "url": "https://www.gpb.org/news/2026/10/07/zoo-atlantas-arthur-m-blank-panda-grove-giant-panda-habitat-opens-public-in",
@@ -241,18 +284,6 @@
         "vg-ga-p-000264"
       ],
       "topics": []
-    },
-    {
-      "id": "ca0fea25dece",
-      "title": "Bottoms and Jackson face off in gubernatorial town hall debate",
-      "url": "https://www.gpb.org/news/2026/10/07/bottoms-and-jackson-face-off-in-gubernatorial-town-hall-debate",
-      "source": "GPB News",
-      "publishedAt": "2026-10-07T12:12:00+00:00",
-      "snippet": "Georgia’s candidates for governor met for their first and likely only debate Tuesday.",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "905254ba92ea",
@@ -1562,26 +1593,6 @@
       "source": "Georgia Recorder",
       "publishedAt": "2026-09-08T09:05:35+00:00",
       "snippet": "Medical cannabis dispensaries are now selling the flower form of the drug in Georgia, but a new state law that took effect this summer has created some confusion over how it can be legally consumed.  ",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "b487a5b207c4",
-      "title": "Georgia renames park named after minstrel songwriter, ‘father of American music’",
-      "url": "https://georgiarecorder.com/2026/09/08/georgia-renames-park-named-after-minstrel-songwriter-father-of-american-music/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-08T05:00:52+00:00",
-      "snippet": "The Georgia Department of Natural Resources removed the name Stephen Foster from a state park, though a spokesman said the name change is unrelated to the 19th century songwriter’s association with ra",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "2e964c81025c",
-      "title": "Report: Georgia continues to rank near the bottom of nation on worker’s rights",
-      "url": "https://georgiarecorder.com/2026/09/07/report-georgia-continues-to-rank-near-the-bottom-of-nation-on-workers-rights/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-07T05:00:53+00:00",
-      "snippet": "Georgia has made modest gains, but remains one of the worst states to be a worker in 2026, according to a new report from Oxfam America. The state’s top leaders often tout Georgia’s credentials as “th",
       "entityIds": [],
       "topics": []
     },
