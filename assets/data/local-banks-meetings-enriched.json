@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-05T17:29:56Z",
+  "generatedAt": "2026-10-08T15:54:48Z",
   "source": "Banks County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Banks County",
-  "count": 22
+  "count": 23
  },
  "summary": {
   "flags": [
@@ -11,16 +11,16 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-22",
+  "lastActivity": "2026-10-06",
   "topicTotals": {
+   "contract": 15,
+   "development": 6,
+   "special-land-use": 8,
    "appointment": 3,
-   "contract": 14,
    "comprehensive-plan": 1,
    "data-center": 2,
-   "development": 5,
    "millage-budget": 7,
-   "rezoning": 5,
-   "special-land-use": 7
+   "rezoning": 5
   },
   "dataCenterItems": [
    {
@@ -37,6 +37,17 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Banks County Planning Commission Meeting",
+    "date": "2026-10-06",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-6f6a5b2a62824f30b63641d58280e605.pdf",
+    "tags": [
+     "development",
+     "special-land-use"
+    ],
+    "excerpt": "… essory structure for mechanical contractor. 5. PUBLIC HEARING: CODE REVIEW a. Landfills b. R2 Multi-Family Housing 6. ROUNDTABLE DISCUSSION 7. ADJOURNMENT",
+    "excerptTerm": "multi-family"
+   },
    {
     "title": "Banks County Planning Commission Meeting",
     "date": "2026-09-01",
@@ -148,11 +159,59 @@
     "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 13,
+  "landUseMeetings": 14,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "64",
+   "date": "2026-10-06",
+   "body": "Planning Commission",
+   "title": "Banks County Planning Commission Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-6f6a5b2a62824f30b63641d58280e605.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-6f6a5b2a62824f30b63641d58280e605.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 753,
+   "pdfSha256": "1baa8b87da5d5d17abf888498a8780e63938e8e93bb1978d5d07df60854e9b7f",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "special-land-use": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "contract",
+    "multi-family"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… SE a. CU-26-20- Kenneth Munday to operate a home occupation from an accessory structure for mechanical contractor. 5. PUBLIC HEARING: CODE REVIEW a. Landfills b. R2 Multi-Family Housing 6. ROUNDTABLE DISCUSSION 7. …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "multi-family",
+     "excerpt": "… essory structure for mechanical contractor. 5. PUBLIC HEARING: CODE REVIEW a. Landfills b. R2 Multi-Family Housing 6. ROUNDTABLE DISCUSSION 7. ADJOURNMENT",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… 2. APPROVAL OF AGENDA 3. APPROVAL OF MINUTES a. Minutes from September 1, 2026 Meeting 4. APPLICATIONS FOR CONDITIONAL USE a. CU-26-20- Kenneth Munday to operate a home occupation from an accessory structure for mechanical co …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "86",
    "date": "2026-09-22",

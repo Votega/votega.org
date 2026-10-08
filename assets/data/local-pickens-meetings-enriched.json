@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-05T17:30:22Z",
+  "generatedAt": "2026-10-08T15:55:06Z",
   "source": "Pickens County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Pickens County",
   "count": 25
@@ -10,17 +10,27 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-05",
+  "lastActivity": "2026-10-13",
   "topicTotals": {
-   "millage-budget": 4,
    "rezoning": 17,
+   "millage-budget": 4,
    "appointment": 5,
    "contract": 3,
-   "special-land-use": 6,
+   "special-land-use": 5,
    "development": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission Meeting Agenda",
+    "date": "2026-10-13",
+    "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_10132026-197",
+    "tags": [
+     "rezoning"
+    ],
+    "excerpt": "… IANCE II. READING AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS IV. NEW BUSINESS A. REZONES • RZ-191208 – Big South Real Estate Holdings, LLC 734 Harmony Scho …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Commissioners Work Session and Regular Meeting Agenda",
     "date": "2026-09-21",
@@ -171,17 +181,6 @@
      "rezoning",
      "special-land-use"
     ]
-   },
-   {
-    "title": "Planning Commission Meeting Agenda",
-    "date": "2026-01-12",
-    "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_01122026-163",
-    "tags": [
-     "rezoning",
-     "special-land-use"
-    ],
-    "excerpt": "… READING AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS: IV. NEW BUSINESS: A. Rezones and Conditional Uses: RZ - 191082 Hankins Properties AG to HB …",
-    "excerptTerm": "rezon"
    }
   ],
   "landUseMeetings": 17,
@@ -189,6 +188,38 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "197",
+   "date": "2026-10-13",
+   "body": "Planning Commission",
+   "title": "Planning Commission Meeting Agenda",
+   "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_10132026-197",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_10132026-197",
+   "textMethod": "pdftotext",
+   "textChars": 925,
+   "pdfSha256": "b19d7002c9a5dc36626013e777b37beab195b4a3a58d6f47612bda44bd8c5895",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… IANCE II. READING AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS IV. NEW BUSINESS A. REZONES • RZ-191208 – Big South Real Estate Holdings, LLC 734 Harmony Scho …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "196",
    "date": "2026-10-05",
@@ -1006,46 +1037,6 @@
      "term": "conditional use",
      "excerpt": "… • CU-191050 – Karyn Smith 834 Worley Crossroads Conditional Use 20.0-acres Parcel #065 010 • RZ-191052 – Dani …",
      "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "163",
-   "date": "2026-01-12",
-   "body": "Planning Commission",
-   "title": "Planning Commission Meeting Agenda",
-   "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_01122026-163",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_01122026-163",
-   "textMethod": "pdftotext",
-   "textChars": 837,
-   "pdfSha256": "cc8b81a2421e0db65e2fc587765d725523eb2de4a83b420ff99d0a2baf8312d1",
-   "topics": {
-    "rezoning": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "rezoning",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "conditional use",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… READING AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS: IV. NEW BUSINESS: A. Rezones and Conditional Uses: RZ - 191082 Hankins Properties AG to HB …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS: IV. NEW BUSINESS: A. Rezones and Conditional Uses: RZ - 191082 Hankins Properties AG to HB …",
-     "context": "agenda-action"
     }
    },
    "flags": [

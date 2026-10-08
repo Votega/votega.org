@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-05T17:29:55Z",
+  "generatedAt": "2026-10-08T15:54:46Z",
   "source": "Columbus-Muscogee County (Legistar structured API)",
   "place": "Columbus-Muscogee County",
   "count": 25
@@ -12,14 +12,14 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-05",
+  "lastActivity": "2026-10-19",
   "topicTotals": {
+   "rezoning": 76,
+   "development": 94,
+   "variance": 174,
    "contract": 750,
    "appointment": 128,
    "millage-budget": 297,
-   "rezoning": 74,
-   "variance": 181,
-   "development": 93,
    "annexation": 35,
    "data-center": 3,
    "alpr": 1
@@ -41,6 +41,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Zoning Committee",
+    "date": "2026-10-19",
+    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6216&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… d on the west side of Demorest Road; 460± feet north of White Spruce Lane, From: R, Rural District, To: L-AR-1, Limited Apartment Residential District (Rezoning #Z25-055). Ordinance",
+    "excerptTerm": "apartment"
+   },
    {
     "title": "Zoning Committee",
     "date": "2026-09-28",
@@ -257,16 +269,6 @@
     ],
     "excerpt": "To accept the application (AN25-021) of Dublin MHP LLC for the annexation of certain territory containing 4.46± acres in Washington Township. ($0.00) Ordinance",
     "excerptTerm": "annexation"
-   },
-   {
-    "title": "Zoning Committee",
-    "date": "2026-04-20",
-    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6173&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-    "tags": [
-     "variance"
-    ],
-    "excerpt": "VARIANCES",
-    "excerptTerm": "variance"
    }
   ],
   "landUseMeetings": 23,
@@ -286,11 +288,118 @@
  },
  "meetings": [
   {
+   "eventId": 6216,
+   "date": "2026-10-19",
+   "body": "Zoning Committee",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6216&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "itemCount": 14,
+   "topics": {
+    "rezoning": 2,
+    "development": 1,
+    "variance": 4
+   },
+   "matchedTerms": [
+    "apartment",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "REZONINGS/AMENDMENTS",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… d on the west side of Demorest Road; 460± feet north of White Spruce Lane, From: R, Rural District, To: L-AR-1, Limited Apartment Residential District (Rezoning #Z25-055). Ordinance",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "VARIANCES",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "REZONINGS/AMENDMENTS",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To rezone 2345 DEMOREST RD. (43123), being 11.49± acres located on the west side of Demorest Road; 460± feet north of White Spruce Lane, From: R, Rural District, To: L-AR-1, Limite",
+     "matterFile": "1607-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "VARIANCES",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 34.E.20.100.A, Uses, Use Table; 3312.09, Aisle; 3312.25, Maneuvering; 34.E.20.060.G, Urban Center (UCT), On-Site Parking; 34.G.2",
+     "matterFile": "2570-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3, residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property located at 1",
+     "matterFile": "2814-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property located at 37",
+     "matterFile": "2815-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
+  {
    "eventId": 6212,
    "date": "2026-10-05",
    "body": "Columbus City Council",
    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6212&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 116,
+   "itemCount": 121,
    "topics": {
     "contract": 32,
     "appointment": 7,
@@ -331,7 +440,7 @@
    "date": "2026-10-05",
    "body": "Zoning Committee",
    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6215&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 14,
+   "itemCount": 20,
    "topics": {},
    "matchedTerms": [],
    "topicExcerpts": {},
@@ -4770,153 +4879,6 @@
      "passed": "Pass",
      "action": "Approved",
      "mover": "Emmanuel V. Remy"
-    }
-   ]
-  },
-  {
-   "eventId": 6173,
-   "date": "2026-04-20",
-   "body": "Zoning Committee",
-   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6173&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 19,
-   "topics": {
-    "variance": 11
-   },
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "VARIANCES",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": [],
-   "landUseItems": [
-    {
-     "title": "VARIANCES",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 34.E.20.100.A, Uses, Use Table, of the Columbus City Codes; for the property located at 3616 E. BROAD ST. (43213), to allow for a",
-     "matterFile": "1006-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3353.03, Permitted uses; 3361.02, Permitted uses; 3361.03, Development plan; and 3361.04(B), Performance criteria, of the Columb",
-     "matterFile": "1033-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.037, R-2F residential district; 3312.49(C), Required Parking; 3332.14, R-2F area district requirements; 3332.19, Fronting; ",
-     "matterFile": "1034-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 34.E.20.100.A, Uses, Use Table, of the Columbus City Codes; for the property located at 3616 E. BROAD ST. (43213), to allow for a",
-     "matterFile": "1006-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 34.E.20.100.A, Uses, Use Table, of the Columbus City Codes; for the property located at 3616 E. BROAD ST. (43213), to allow for a",
-     "matterFile": "1006-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Amended as submitted to the Clerk",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 34.E.20.100.A, Uses, Use Table, of the Columbus City Codes; for the property located at 3616 E. BROAD ST. (43213), to allow for a",
-     "matterFile": "1006-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved as Amended",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3353.03, Permitted uses; 3361.02, Permitted uses; 3361.03, Development plan; and 3361.04(B), Performance criteria, of the Columb",
-     "matterFile": "1033-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3353.03, Permitted uses; 3361.02, Permitted uses; 3361.03, Development plan; and 3361.04(B), Performance criteria, of the Columb",
-     "matterFile": "1033-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.037, R-2F residential district; 3312.49(C), Required Parking; 3332.14, R-2F area district requirements; 3332.19, Fronting; ",
-     "matterFile": "1034-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.037, R-2F residential district; 3312.49(C), Required Parking; 3332.14, R-2F area district requirements; 3332.19, Fronting; ",
-     "matterFile": "1034-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
     }
    ]
   }

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-05T17:30:21Z",
+  "generatedAt": "2026-10-08T15:55:05Z",
   "source": "Dawson County (municode agenda/minutes PDFs, poppler+OCR)",
   "place": "Dawson County",
   "count": 25
@@ -10,18 +10,30 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-01",
+  "lastActivity": "2026-10-20",
   "topicTotals": {
+   "comprehensive-plan": 5,
+   "development": 4,
+   "rezoning": 5,
    "appointment": 9,
    "millage-budget": 6,
    "contract": 9,
-   "comprehensive-plan": 4,
-   "development": 3,
-   "rezoning": 4,
    "variance": 4
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-10-20",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-4650fd4d999a4967b406a4d47bbbba6f.pdf",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning"
+    ],
+    "excerpt": "… 055 028). 2. ZA 26-24: Harold Nissley has submitted an application to the proper authorities to amend the Future land Use/Character Area designation of 2.1 acres from Rural Living to Lanier, followed by a rezoning from RRE (Resident …",
+    "excerptTerm": "future land use"
+   },
    {
     "title": "Planning Commission",
     "date": "2026-09-15",
@@ -92,11 +104,59 @@
     "excerptTerm": "future land use"
    }
   ],
-  "landUseMeetings": 6,
+  "landUseMeetings": 7,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "4650fd4d999a4967b406a4d47bbbba6f",
+   "date": "2026-10-20",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-4650fd4d999a4967b406a4d47bbbba6f.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-4650fd4d999a4967b406a4d47bbbba6f.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 4488,
+   "pdfSha256": "19303e9efb3bd0a9b122daafabdb513223c8322f1ab34fdf29a2bc13c4b86ed5",
+   "topics": {
+    "comprehensive-plan": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "future land use",
+    "mixed use",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "future land use",
+     "excerpt": "… 055 028). 2. ZA 26-24: Harold Nissley has submitted an application to the proper authorities to amend the Future land Use/Character Area designation of 2.1 acres from Rural Living to Lanier, followed by a rezoning from RRE (Resident …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "mixed use",
+     "excerpt": "… amend the Future land Use/Character Area designation of 5.93 acres from North 400 Corporate Park to GA 400 Mixed Use, followed by a rezoning from RSR (Residential Sub-Rural) to C-HI (Commercial Highway Business I …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… cted official is required to complete a Disclosure of Campaign Contribution Form. H. NEW BUSINESS: Application for Rezoning: 1. ZA 26-23: Kerry Ward has submitted an application to the proper authorities requesting a rezoning …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "ceb25cc5fb5d4baa9d4d3fcef55b05a7",
    "date": "2026-10-01",
@@ -951,24 +1011,6 @@
      "context": "agenda-action"
     }
    },
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "6a186a01fb934bc1a29aa9258c3db896",
-   "date": "2026-05-27",
-   "body": "Development Authority",
-   "title": "Development Authority",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-6a186a01fb934bc1a29aa9258c3db896.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-6a186a01fb934bc1a29aa9258c3db896.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 649,
-   "pdfSha256": "c4c55fd13c8abcf0999d08a1f2db6a77c9dc0c3da121c18e38d61b63c58f1585",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   }

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-05T17:30:05Z",
+  "generatedAt": "2026-10-08T15:54:55Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -14,12 +14,12 @@
   "lastActivity": "2026-10-06",
   "topicTotals": {
    "rezoning": 4,
-   "annexation": 3,
+   "annexation": 4,
    "contract": 15,
-   "development": 3,
+   "development": 4,
    "millage-budget": 18,
    "variance": 3,
-   "appointment": 10,
+   "appointment": 9,
    "comprehensive-plan": 2,
    "data-center": 3
   },
@@ -52,6 +52,17 @@
     ],
     "excerpt": "… igned by Alexander Dike. Commission District: #3. Z2026-81 Anmi De La Rosa Lugo – a request for a rezoning from R-LD-C (residential low-density w/conditions) to C-H (heavy commercial) for a 5,0 …",
     "excerptTerm": "rezon"
+   },
+   {
+    "title": "BOC Commission Meeting",
+    "date": "2026-10-06",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7587,plainText=false)",
+    "tags": [
+     "annexation",
+     "development"
+    ],
+    "excerpt": "… inal legal review. 17. Approval for the Board of Elections & Voter Registration to enter into a Lease Agreement for annexed office space in the amount of $2,895 per month to be funded by the Board of Elections budget and authorize the Chai …",
+    "excerptTerm": "annexed"
    },
    {
     "title": "BOC Work Session",
@@ -107,7 +118,7 @@
     ]
    }
   ],
-  "landUseMeetings": 10,
+  "landUseMeetings": 11,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -141,6 +152,64 @@
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1297",
+   "date": "2026-10-06",
+   "body": "Board of Commissioners",
+   "title": "BOC Commission Meeting",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7587,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7587,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 11231,
+   "pdfSha256": "7510f1715fdbeedebb083c4970a21a41cc3e0ceab3b65f9466fde74d1dc3630e",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "development",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "annexed",
+    "budget",
+    "contract",
+    "millage",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annexed",
+     "excerpt": "… inal legal review. 17. Approval for the Board of Elections & Voter Registration to enter into a Lease Agreement for annexed office space in the amount of $2,895 per month to be funded by the Board of Elections budget and authorize the Chai …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… mation and authorizing the Chairman to sign all related documents pending final legal review. 15. Approval of a contract between the Superior and State Court Accountability Courts and Ascension Counseling & Mental Health, LLC for Substa …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… l legal review. 18. Approval for the Board of Elections & Voter Registration is to enter into a Lease Agreement for warehouse storage space in the Amount of $1,051.33 per month to be funded through the Board of Elections budget and authorize …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "… 6. 2. Work Session Minutes of September 14, 2026. 3. Executive Session Minutes of September 14, 2026. 4. Special Called Millage Rate Public Hearing Minutes of September 15, 2026 and September 24, 2026. PROCLAMATIONS 5. Proclaiming October 4 - …",
+     "context": "public-comment"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -1189,54 +1258,6 @@
     "millage-budget": {
      "term": "budget",
      "excerpt": "… match of $24,967 to be Work Session 2 July 6, 2026 funded by the Juvenile Programs Administration's existing budget for the Family Treatment Court, amend the budget and authorize the Chairman to sign all related documents pen …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1175",
-   "date": "2026-06-16",
-   "body": "Board of Commissioners",
-   "title": "BOC Commission Meeting",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7384,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7384,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 7163,
-   "pdfSha256": "da57b47674ad8ad7bbbb0c6eb2b53a9af249f17323386aecdaf4798a4df176d3",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… ll related documents pending final legal review. Commission Meeting 3 June 16, 2026 18. Authorization to appoint District 4 Commissioner Mark Alcarez to the City of Douglasville's Tax Allocation District Advisory Committee. …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… t and authorize the Chairman to sign all related documents pending final legal review. 13. Approval of the contract with UES for $15,000 for construction special inspections needed for the DOT Storage Facility to be funded by SPLO …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ouncil (CJCC) with a cash match of $28,931 to be funded from a portion of the salary of Melissa Leblond, amend the budget and authorize the Chairman to sign all related documents pending final legal review. 11. Approval for Douglas C …",
      "context": "agenda-action"
     }
    },
