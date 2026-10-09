@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-09T00:49:31.984286+00:00",
+    "generatedAt": "2026-10-09T09:48:18.642219+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,13 +21,13 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 118,
+    "count": 116,
     "windowDays": 45,
-    "entityTagged": 77,
+    "entityTagged": 78,
     "topicCounts": {
-      "elections": 32,
-      "education": 13,
       "healthcare": 16,
+      "elections": 31,
+      "education": 11,
       "surveillance": 2,
       "courts": 12,
       "budget": 6,
@@ -36,6 +36,19 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
+      "url": null,
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
       "url": null,
@@ -47,11 +60,6 @@
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
       ]
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
     },
     "vg-ga-p-000335": {
       "name": "Keisha R. Lance Bottoms",
@@ -132,14 +140,6 @@
         "ga-house-161-2026-d-1"
       ]
     },
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
-      "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
-    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
@@ -182,6 +182,34 @@
     }
   },
   "items": [
+    {
+      "id": "5e1c764d1f2a",
+      "title": "Trump and accusations of extremism were dominant themes in Georgia’s U.S. Senate debate",
+      "url": "https://capitol-beat.org/2026/10/trump-and-accusations-of-extremism-were-dominant-themes-in-georgias-u-s-senate-debate/?utm_source=rss&utm_medium=rss&utm_campaign=trump-and-accusations-of-extremism-were-dominant-themes-in-georgias-u-s-senate-debate",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-10-09T04:56:14+00:00",
+      "snippet": "ATLANTA — The first debate between Democratic U.S. Sen. Jon Ossoff and U.S. Rep. Mike Collins, the Republican nominee challenging him, centered on President Donald Trump. It was also an opportunity fo",
+      "entityIds": [
+        "vg-ga-p-000253",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "751938fd872e",
+      "title": "Collins, Ossoff trade personal insults during Georgia’s first U.S. Senate debate",
+      "url": "https://georgiarecorder.com/2026/10/08/collins-ossoff-trade-personal-insults-during-georgias-first-u-s-senate-debate/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-09T02:10:56+00:00",
+      "snippet": "Democratic U.S. Sen. Jon Ossoff and Republican Congressman Mike Collins came out swinging on the debate stage Thursday night, discussing topics like the economy, healthcare and data centers in between",
+      "entityIds": [
+        "vg-ga-p-000253",
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
     {
       "id": "390ad8125b3c",
       "title": "NHC forecasts: Hurricane Isaias on track to bring heavy rain to Coastal Georgia",
@@ -229,18 +257,6 @@
       ]
     },
     {
-      "id": "51560d381e1c",
-      "title": "Georgia Today: Hurricane warnings; ICE detains graduate student; Atlanta Braves lose",
-      "url": "https://www.gpb.org/news/2026/10/08/georgia-today-hurricane-warnings-ice-detains-graduate-student-atlanta-braves-lose",
-      "source": "GPB News",
-      "publishedAt": "2026-10-08T19:24:22+00:00",
-      "snippet": "On the Oct. 8 edition: A Georgia State graduate was taken into ICE custody; Southwestern Georgia could see strong winds and heavy rain starting Friday; and energy efficiency advocates are working with",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
       "id": "5e0c7a1ef24b",
       "title": "Obama featured in videos boosting Bottoms, Ossoff in Georgia",
       "url": "https://georgiarecorder.com/2026/10/08/obama-featured-in-videos-boosting-bottoms-ossoff-in-georgia/",
@@ -254,16 +270,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "175c40883265",
-      "title": "Ronald Acuña Jr. fights back tears after the Braves' Division Series elimination by the Dodgers",
-      "url": "https://www.gpb.org/news/2026/10/08/ronald-acuna-jr-fights-back-tears-after-the-braves-division-series-elimination-by",
-      "source": "GPB News",
-      "publishedAt": "2026-10-08T14:49:49+00:00",
-      "snippet": "Ronald Acuña Jr. fought back tears and cut his postgame interview session short after the Atlanta Braves were eliminated from the playoffs by the Los Angeles Dodgers.",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "7f8060702add",
@@ -843,18 +849,6 @@
       "entityIds": [
         "vg-ga-p-000261"
       ],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "48710a92e3dd",
-      "title": "Most Georgia school districts graduated at least nine out of 10 students",
-      "url": "https://capitol-beat.org/2026/09/most-georgia-school-districts-graduated-at-least-nine-out-of-10-students/?utm_source=rss&utm_medium=rss&utm_campaign=most-georgia-school-districts-graduated-at-least-nine-out-of-10-students",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-28T19:25:39+00:00",
-      "snippet": "ATLANTA — The public high school on-time graduation rate continued its nearly nonstop rise last school year, reaching an 88.5% statewide rate, the Georgia Department of Education announced Monday. Tha",
-      "entityIds": [],
       "topics": [
         "education"
       ]
@@ -1602,21 +1596,6 @@
         "vg-ga-p-000262"
       ],
       "topics": []
-    },
-    {
-      "id": "6935b4c3ff83",
-      "title": "Rick Jackson pledges ‘intelligent’ Medicaid expansion, but offers few specifics",
-      "url": "https://georgiarecorder.com/2026/09/09/rick-jackson-pledges-intelligent-medicaid-expansion-but-offers-few-specifics/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-09T09:00:51+00:00",
-      "snippet": "Republican candidate for governor Rick Jackson unveiled a health insurance plan he said will cover more Georgians and reduce healthcare costs, but how he would achieve that remains unclear. “On day on",
-      "entityIds": [
-        "vg-ga-p-000368"
-      ],
-      "topics": [
-        "elections",
-        "healthcare"
-      ]
     },
     {
       "id": "dca2d08515b3",
