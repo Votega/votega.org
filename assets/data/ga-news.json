@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-09T09:48:18.642219+00:00",
+    "generatedAt": "2026-10-09T17:43:34.579429+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,13 +21,13 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 116,
+    "count": 117,
     "windowDays": 45,
-    "entityTagged": 78,
+    "entityTagged": 79,
     "topicCounts": {
-      "healthcare": 16,
+      "healthcare": 17,
+      "education": 12,
       "elections": 31,
-      "education": 11,
       "surveillance": 2,
       "courts": 12,
       "budget": 6,
@@ -49,10 +49,18 @@
       "url": null,
       "bioguideId": "O000174"
     },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
       "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
+    },
+    "vg-ga-p-000256": {
+      "name": "Rick W. Allen",
+      "url": null,
+      "bioguideId": "A000372"
     },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
@@ -68,13 +76,10 @@
         "challenger-keisha-bottoms-gov-2026"
       ]
     },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
       "url": null,
-      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
+      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
@@ -153,11 +158,6 @@
         "challenger-buddy-carter-senate-2026"
       ]
     },
-    "vg-ga-p-000256": {
-      "name": "Rick W. Allen",
-      "url": null,
-      "bioguideId": "A000372"
-    },
     "vg-ga-p-000684": {
       "name": "Tricia R. Pridemore",
       "url": null,
@@ -183,6 +183,56 @@
   },
   "items": [
     {
+      "id": "f4b1c6cc5cbe",
+      "title": "Trump, accusations of extremism were dominant themes in Georgia’s U.S. Senate debate",
+      "url": "https://thecurrentga.org/2026/10/09/trump-accusations-of-extremism-were-dominant-themes-in-georgias-u-s-senate-debate/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-09T16:13:55+00:00",
+      "snippet": "Democratic incumbent Jon Ossoff and Republican challenger Mike Collins clashed during their first televised debate in Georgia, focusing on topics such as Donald Trump, economic policies, and alleged c",
+      "entityIds": [
+        "vg-ga-p-000253",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "25b3faadc1eb",
+      "title": "The Waffle House Index helps Southerners — and FEMA — gauge a storm's severity",
+      "url": "https://www.gpb.org/news/2026/10/09/the-waffle-house-index-helps-southerners-and-fema-gauge-storms-severity",
+      "source": "GPB News",
+      "publishedAt": "2026-10-09T15:12:11+00:00",
+      "snippet": "For some residents of storm-prone Southeastern states, the best indicator of a hurricane’s severity can be found at the local Waffle House. If the Georgia-based restaurant chain stays open in town, ne",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "beca7ca6d793",
+      "title": "Ossoff and Collins spar over tariffs, Iran, and healthcare in first debate",
+      "url": "https://www.gpb.org/news/2026/10/09/ossoff-and-collins-spar-over-tariffs-iran-and-healthcare-in-first-debate",
+      "source": "GPB News",
+      "publishedAt": "2026-10-09T13:59:47+00:00",
+      "snippet": "Senator Jon Ossoff and his challenger, Congressman Mike Collins, took the stage for a debate Thursday night hosted by Atlanta News First.",
+      "entityIds": [
+        "vg-ga-p-000253",
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "6ee499ffe32c",
+      "title": "Carr Warns Georgians of Price Gouging and Scams in Anticipation of Hurricane Isaias",
+      "url": "https://law.georgia.gov/press-releases/2026-10-09/carr-warns-georgians-price-gouging-and-scams-anticipation-hurricane",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-10-09T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr is warning Georgians to be on the lookout for price gouging and scams related to Hurricane Isaias.",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
       "id": "5e1c764d1f2a",
       "title": "Trump and accusations of extremism were dominant themes in Georgia’s U.S. Senate debate",
       "url": "https://capitol-beat.org/2026/10/trump-and-accusations-of-extremism-were-dominant-themes-in-georgias-u-s-senate-debate/?utm_source=rss&utm_medium=rss&utm_campaign=trump-and-accusations-of-extremism-were-dominant-themes-in-georgias-u-s-senate-debate",
@@ -194,6 +244,20 @@
         "vg-ga-p-000264"
       ],
       "topics": []
+    },
+    {
+      "id": "50e97b945b65",
+      "title": "ICYMI: Congressman Rick Allen Hosts 2026 Youth Leadership Summit",
+      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7412",
+      "source": "Rep. Rick Allen (GA-12, press)",
+      "publishedAt": "2026-10-09T04:00:00+00:00",
+      "snippet": "Yesterday, Congressman Rick W. Allen (GA-12) hosted 11th-12th grade students and community leaders from the 12th District for his biennial Youth Leadership Summit.\n\nThe event was held at the Columbia ",
+      "entityIds": [
+        "vg-ga-p-000256"
+      ],
+      "topics": [
+        "education"
+      ]
     },
     {
       "id": "751938fd872e",
@@ -218,28 +282,6 @@
       "publishedAt": "2026-10-08T21:04:03+00:00",
       "snippet": "Updated tropical storm/hurricane outlook showing location, discussion of Hurricane Isaias\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth watchdog journalism f",
       "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "804a2b6a96fb",
-      "title": "Hurricane Isaias could bring flooding, isolated tornadoes to Georgia",
-      "url": "https://www.gpb.org/news/2026/10/08/hurricane-isaias-could-bring-flooding-isolated-tornadoes-georgia",
-      "source": "GPB News",
-      "publishedAt": "2026-10-08T20:21:59+00:00",
-      "snippet": "Hurricane Isaias is forecast to make landfall on the Gulf Coast along the Florida Panhandle and coastal Alabama on Friday night, with potential flooding and isolated tornadoes in southwestern Georgia ",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "302fe8614b7c",
-      "title": "GPB evening headlines for October 8, 2026",
-      "url": "https://www.gpb.org/news/2026/10/08/gpb-evening-headlines-for-october-8-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-10-08T20:05:08+00:00",
-      "snippet": "Hurricane Isaias could bring misery to Georgia cotton and peanut producers but relief to drought-stricken water supplies.\nGovernor Brian Kemp has declared a state of emergency ahead of the storms' arr",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
       "topics": []
     },
     {
@@ -1183,18 +1225,6 @@
       "topics": []
     },
     {
-      "id": "50e97b945b65",
-      "title": "Augusta veterans cemetery lands $13.6M grant, project moves ahead",
-      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7392",
-      "source": "Rep. Rick Allen (GA-12, press)",
-      "publishedAt": "2026-09-21T04:00:00+00:00",
-      "snippet": "Originally Published in The Augusta Chronicle\nBy: Joe Hotchkiss\nThe project to create Georgia's largest veterans cemetery in Augusta has been awarded more than $13.6 million in federal funding.\nThe ce",
-      "entityIds": [
-        "vg-ga-p-000256"
-      ],
-      "topics": []
-    },
-    {
       "id": "a27baf0a6efc",
       "title": "Georgia school system abruptly bans Toni Morrison’s ‘The Bluest Eye’",
       "url": "https://georgiarecorder.com/2026/09/18/georgia-school-system-abruptly-bans-toni-morrisons-the-bluest-eye/",
@@ -1371,18 +1401,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "fe4be11295d4",
-      "title": "Carr: Decatur Woman Sentenced for Involvement in $158k Business Email Compromise Scam",
-      "url": "https://law.georgia.gov/press-releases/2026-09-16/carr-decatur-woman-sentenced-involvement-158k-business-email-compromise",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-09-16T12:00:00+00:00",
-      "snippet": "GWINNETT COUNTY, GA – Georgia Attorney General Chris Carr today announced that Ogechi Urenna Udunka, 44, of Decatur, has pleaded to two counts each of Theft by Taking and Money Laundering for her invo",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
     },
     {
       "id": "d3aea21deed7",
