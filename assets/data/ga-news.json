@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-08T18:10:05.928272+00:00",
+    "generatedAt": "2026-10-09T00:49:31.984286+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,15 +21,15 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 113,
+    "count": 118,
     "windowDays": 45,
-    "entityTagged": 73,
+    "entityTagged": 77,
     "topicCounts": {
-      "courts": 13,
-      "elections": 31,
+      "elections": 32,
+      "education": 13,
       "healthcare": 16,
-      "education": 11,
       "surveillance": 2,
+      "courts": 12,
       "budget": 6,
       "ethics": 5
     },
@@ -41,20 +41,17 @@
       "url": null,
       "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
-    },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
       ]
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
     },
     "vg-ga-p-000335": {
       "name": "Keisha R. Lance Bottoms",
@@ -63,10 +60,13 @@
         "challenger-keisha-bottoms-gov-2026"
       ]
     },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
       "url": null,
-      "bioguideId": "O000174"
+      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
     },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
@@ -101,6 +101,11 @@
       "url": null,
       "bioguideId": "B000490"
     },
+    "vg-ga-p-000262": {
+      "name": "Lucy McBath",
+      "url": null,
+      "bioguideId": "M001208"
+    },
     "vg-ga-p-000267": {
       "name": "Amanda Hollowell",
       "url": null,
@@ -126,11 +131,6 @@
       "candidateIds": [
         "ga-house-161-2026-d-1"
       ]
-    },
-    "vg-ga-p-000262": {
-      "name": "Lucy McBath",
-      "url": null,
-      "bioguideId": "M001208"
     },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
@@ -183,6 +183,79 @@
   },
   "items": [
     {
+      "id": "390ad8125b3c",
+      "title": "NHC forecasts: Hurricane Isaias on track to bring heavy rain to Coastal Georgia",
+      "url": "https://thecurrentga.org/2026/10/08/nhc-forecasts-hurricane-isaias-on-track-to-bring-heavy-rain-to-coastal-georgia/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-08T21:04:03+00:00",
+      "snippet": "Updated tropical storm/hurricane outlook showing location, discussion of Hurricane Isaias\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth watchdog journalism f",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "804a2b6a96fb",
+      "title": "Hurricane Isaias could bring flooding, isolated tornadoes to Georgia",
+      "url": "https://www.gpb.org/news/2026/10/08/hurricane-isaias-could-bring-flooding-isolated-tornadoes-georgia",
+      "source": "GPB News",
+      "publishedAt": "2026-10-08T20:21:59+00:00",
+      "snippet": "Hurricane Isaias is forecast to make landfall on the Gulf Coast along the Florida Panhandle and coastal Alabama on Friday night, with potential flooding and isolated tornadoes in southwestern Georgia ",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "302fe8614b7c",
+      "title": "GPB evening headlines for October 8, 2026",
+      "url": "https://www.gpb.org/news/2026/10/08/gpb-evening-headlines-for-october-8-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-08T20:05:08+00:00",
+      "snippet": "Hurricane Isaias could bring misery to Georgia cotton and peanut producers but relief to drought-stricken water supplies.\nGovernor Brian Kemp has declared a state of emergency ahead of the storms' arr",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "f6fb7445680c",
+      "title": "Mother of Secoriea Turner urges Jackson to stop using her daughter’s name, image in campaign ads",
+      "url": "https://georgiarecorder.com/2026/10/08/mother-of-secoriea-turner-urges-jackson-to-stop-using-her-daughters-name-image-in-campaign-ads/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-08T20:00:00+00:00",
+      "snippet": "The family of an 8-year-old girl who was killed during a period of civil unrest in Atlanta is urging Republican candidate for governor Rick Jackson to stop using her name and image in campaign materia",
+      "entityIds": [
+        "vg-ga-p-000368"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "51560d381e1c",
+      "title": "Georgia Today: Hurricane warnings; ICE detains graduate student; Atlanta Braves lose",
+      "url": "https://www.gpb.org/news/2026/10/08/georgia-today-hurricane-warnings-ice-detains-graduate-student-atlanta-braves-lose",
+      "source": "GPB News",
+      "publishedAt": "2026-10-08T19:24:22+00:00",
+      "snippet": "On the Oct. 8 edition: A Georgia State graduate was taken into ICE custody; Southwestern Georgia could see strong winds and heavy rain starting Friday; and energy efficiency advocates are working with",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "5e0c7a1ef24b",
+      "title": "Obama featured in videos boosting Bottoms, Ossoff in Georgia",
+      "url": "https://georgiarecorder.com/2026/10/08/obama-featured-in-videos-boosting-bottoms-ossoff-in-georgia/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-08T19:03:32+00:00",
+      "snippet": "Keisha Lance Bottoms’ campaign for governor got a boost Thursday with a heavyweight endorsement from former President Barack Obama. In a video released Thursday, Obama praised Bottoms’ record as the f",
+      "entityIds": [
+        "vg-ga-p-000264",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
       "id": "175c40883265",
       "title": "Ronald Acuña Jr. fights back tears after the Braves' Division Series elimination by the Dodgers",
       "url": "https://www.gpb.org/news/2026/10/08/ronald-acuna-jr-fights-back-tears-after-the-braves-division-series-elimination-by",
@@ -193,16 +266,16 @@
       "topics": []
     },
     {
-      "id": "1ed2d0e40d14",
-      "title": "GPB morning headlines for October 8, 2026",
-      "url": "https://www.gpb.org/news/2026/10/08/gpb-morning-headlines-for-october-8-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-10-08T13:20:27+00:00",
-      "snippet": "A federal appeals court has ruled that an Atlanta family cannot take the federal government to trial for a mistaken FBI raid on their home in 2017; As homeowners look for ways to save money, energy ef",
-      "entityIds": [],
-      "topics": [
-        "courts"
-      ]
+      "id": "7f8060702add",
+      "title": "Gov. Kemp Declares State of Emergency Ahead of Hurricane Isaias",
+      "url": "https://gov.georgia.gov/press-releases/2026-10-08/gov-kemp-declares-state-emergency-ahead-hurricane-isaias",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-10-08T12:00:00+00:00",
+      "snippet": "Atlanta, GA – Governor Brian P. Kemp today issued an updated State of Emergency for all 159 counties in preparation for Hurricane Isaias. The new Executive Order enables emergency management teams to ",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
     },
     {
       "id": "6fce8b607746",
@@ -383,6 +456,20 @@
       ]
     },
     {
+      "id": "76add0792bae",
+      "title": "McBath Bill to Stop Human Trafficking Passes Senate, Heads to President’s Desk",
+      "url": "https://mcbath.house.gov/2026/10/05/mcbath-bill-to-stop-human-trafficking-passes-senate-heads-to-presidents-desk/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-10-05T15:23:00+00:00",
+      "snippet": "Washington, DC – Legislation led Rep. Lucy McBath (D-Ga.) and Chairman of the U.S. House Education and Workforce Committee Tim Walberg (R-Mich.) has passed the Senate unanimously and is headed to the ",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": [
+        "education"
+      ]
+    },
+    {
       "id": "c03327bfe756",
       "title": "Georgia cuts payments by 30% for foster children’s autism therapy",
       "url": "https://georgiarecorder.com/2026/10/05/georgia-cuts-payments-by-30-for-foster-childrens-autism-therapy/",
@@ -403,18 +490,6 @@
         "vg-ga-p-000267",
         "vg-ga-p-000319"
       ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "facfdc5226d0",
-      "title": "Proposal requiring Georgia election workers to ‘shuffle’ ballots at polls fails to find support",
-      "url": "https://thecurrentga.org/2026/10/03/proposal-requiring-georgia-election-workers-to-shuffle-ballots-at-polls-fails-to-find-support/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-03T14:37:07+00:00",
-      "snippet": "A proposal requiring Georgia poll workers to manually shuffle ballots to preserve voter secrecy failed to advance during a special meeting of the State Election Board on Thursday.\nThe Current is an in",
-      "entityIds": [],
       "topics": [
         "elections"
       ]
@@ -1047,18 +1122,6 @@
       "snippet": "For Immediate Release\n                                    \n                                    \n                                    \n                                    \n                              ",
       "entityIds": [
         "vg-ga-p-000258"
-      ],
-      "topics": []
-    },
-    {
-      "id": "3b494fd16989",
-      "title": "Gov. Kemp: Pirelli to Invest $1.2 Billion in Georgia Expansion",
-      "url": "https://gov.georgia.gov/press-releases/2026-09-22/gov-kemp-pirelli-invest-12-billion-georgia-expansion",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-09-22T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that Pirelli, a world leader in tire production, will create 1,000 new jobs as part of a multi-year, $1.2 billion expansion of its existing facility in",
-      "entityIds": [
-        "vg-ga-p-000024"
       ],
       "topics": []
     },
