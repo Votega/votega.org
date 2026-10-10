@@ -624,7 +624,7 @@ breadcrumb:
     return '<div class="vote-bar-section">'
       + '<div class="vote-bar-header">'
       + '<span class="vote-yes-txt">&#10003; ' + v.yea + ' yes</span>'
-      + '<span style="color:#888;font-size:0.78rem">' + escHtml(motionLabel) + ' &middot; ' + result + ' &middot; ' + v.date + '</span>'
+      + '<span style="color:#888;font-size:0.78rem">' + escHtml(motionLabel) + ' &middot; ' + result + ' &middot; ' + escHtml(formatDate(v.date)) + '</span>'
       + '<span class="vote-no-txt">' + v.nay + ' no &#10007;</span>'
       + '</div>'
       + '<div class="vote-bar-track">'
@@ -637,19 +637,29 @@ breadcrumb:
       + '</div>';
   }
 
+  // ISO date or timestamp ("2026-03-09" / "2026-03-09T13:14:38") -> "Mar 9, 2026".
+  // Parsed from the string, not new Date(), so a bare date is not shifted a day by
+  // the viewer's timezone. Unparseable input is returned as-is (callers escape it).
+  function formatDate(value) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(value == null ? '' : value));
+    if (!m) return value == null ? '' : String(value);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months[+m[2] - 1] + ' ' + (+m[3]) + ', ' + m[1];
+  }
+
   // ── Governor's action meta text (for the collapsed card row) ───────────────
   function governorMetaHtml(bill) {
     const ga = bill.governorAction;
     if (!ga) return bill.statusDate
-      ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + bill.statusDate + '</span>'
+      ? '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + escHtml(formatDate(bill.statusDate)) + '</span>'
       : '';
     let text;
     if (ga.status === 'Signed') {
-      text = 'Signed ' + ga.decisionDate + (ga.actNumber ? ' · Act ' + ga.actNumber : '');
+      text = 'Signed ' + formatDate(ga.decisionDate) + (ga.actNumber ? ' · Act ' + ga.actNumber : '');
     } else if (ga.status === 'Vetoed') {
-      text = 'Vetoed ' + ga.decisionDate;
+      text = 'Vetoed ' + formatDate(ga.decisionDate);
     } else {
-      text = 'Sent to Governor ' + ga.sentDate;
+      text = 'Sent to Governor ' + formatDate(ga.sentDate);
     }
     return '<span class="bill-meta-sep">&middot;</span><span class="bill-meta-txt">' + escHtml(text) + '</span>';
   }
@@ -660,12 +670,12 @@ breadcrumb:
     if (!ga) return '';
     let body;
     if (ga.status === 'Signed') {
-      body = 'Sent to the Governor ' + (ga.sentDate || '—') + '. Signed into law ' + ga.decisionDate
-        + (ga.actNumber ? ' as <strong>Act ' + ga.actNumber + '</strong>.' : '.');
+      body = 'Sent to the Governor ' + escHtml(ga.sentDate ? formatDate(ga.sentDate) : '—') + '. Signed into law ' + escHtml(formatDate(ga.decisionDate))
+        + (ga.actNumber ? ' as <strong>Act ' + escHtml(ga.actNumber) + '</strong>.' : '.');
     } else if (ga.status === 'Vetoed') {
-      body = 'Sent to the Governor ' + (ga.sentDate || '—') + '. Vetoed ' + ga.decisionDate + '.';
+      body = 'Sent to the Governor ' + escHtml(ga.sentDate ? formatDate(ga.sentDate) : '—') + '. Vetoed ' + escHtml(formatDate(ga.decisionDate)) + '.';
     } else {
-      body = 'Sent to the Governor ' + ga.sentDate + '. Awaiting the Governor’s signature or veto.';
+      body = 'Sent to the Governor ' + escHtml(formatDate(ga.sentDate)) + '. Awaiting the Governor’s signature or veto.';
     }
     return '<div class="detail-section"><div class="detail-label">Governor’s Action</div><div class="detail-body">' + body + '</div></div>';
   }
