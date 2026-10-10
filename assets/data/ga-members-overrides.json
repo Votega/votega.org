@@ -406,10 +406,14 @@
   ],
   "ocd-person/3cfc8d4f-68d4-44b2-81f4-a162465e1aed": {
     "_name": "Adrienne White (Carden)",
-    "_note": "Open States lists her as 'Adrienne White'; preserve the 'White Carden' display name VoteGA has used since her synthetic-id period (see _retired). Remove this override to fall back to the Open States canonical name.",
+    "_note": "Open States lists her as 'Adrienne White' and omits her legis.ga.gov id, portrait, phone and term start (the _inject bridge entry is skipped once the API serves her, so those fields are restored here). Also preserves the 'White Carden' display name VoteGA has used since her synthetic-id period (see _retired). Remove the name fields to fall back to the Open States canonical name.",
     "name": "Adrienne White Carden",
     "firstName": "Adrienne",
-    "lastName": "White Carden"
+    "lastName": "White Carden",
+    "legisGaGovId": 5097,
+    "imageUrl": "https://www.legis.ga.gov/api/images/default-source/portraits/carden-adrienne-white-5097.jpg",
+    "phone": "404-463-5263",
+    "termStartYear": 2026
   },
   "_example_by_id": {
     "ocd-person/REPLACE-WITH-REAL-ID": {
