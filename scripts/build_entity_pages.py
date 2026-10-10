@@ -142,6 +142,44 @@ def abbrev_office(s):
     return s
 
 
+#: Longest <title> (before the " | Vote GA" suffix the head adds) that search results
+#: show whole: ~60 characters in total, of which the suffix takes 10.
+TITLE_BUDGET = 50
+
+
+def fit_title(options, budget=TITLE_BUDGET):
+    """First option that fits the title budget; else the last, cut at a word boundary.
+
+    Options run from richest to barest ("X — Candidates & Results", "X — Candidates",
+    "X"), so a short race keeps its full title and a long circuit-court seat gives up
+    the suffix before it gives up its own name."""
+    for opt in options:
+        if len(opt) <= budget:
+            return opt
+    last = options[-1]
+    cut = last[: budget - 1].rsplit(" ", 1)[0].rstrip(" ,;:-—–")
+    return cut + "…"
+
+
+def fit_description(parts, limit=158):
+    """Join sentences while they fit a ~160-character meta description, never cutting
+    mid-sentence; the first part is always kept (truncated at a word boundary if alone
+    too long)."""
+    out = ""
+    for p in parts:
+        p = (p or "").strip()
+        if not p:
+            continue
+        cand = (out + " " + p).strip()
+        if len(cand) <= limit or not out:
+            out = cand
+        else:
+            break
+    if len(out) > limit:
+        out = out[: limit - 1].rsplit(" ", 1)[0].rstrip(" ,;:-—–") + "…"
+    return out
+
+
 # ─────────────────────── Server-rendered "about" copy ───────────────────────
 # Bing Webmaster flags pages with too few words. Candidate / race / legislator
 # pages hydrate their real content client-side, so the crawlable HTML was a
@@ -813,7 +851,9 @@ def build_races(records, urls, prior, new_state):
         _rcat, _rorder = _race_category(chamber)
         _dir_add("races", _rcat, _rorder, name, name, permalink)
 
-        share_title = f"{abbrev_office(name)} — Candidates & Results"
+        _office = abbrev_office(name)
+        share_title = fit_title([f"{_office} — Candidates & Results",
+                                 f"{_office} — Candidates", _office])
         desc = (f"Candidates, the incumbent, district information, and results for the "
                 f"{name} race in Georgia.")
         # Candidates in this race, across phases, deduped by id/name — for an
@@ -948,8 +988,29 @@ def build_candidates(records, urls, prior, new_state):
 
         # Compact office label + "Candidate," (not "Candidate for") keeps the
         # <title> under 70 chars; the full race_label stays in jobTitle/description.
-        share_title = f"{name} — Candidate, {abbrev_office(race_label)}".strip()
-        page_desc = desc or f"Candidate profile for {name}."
+        _seat = abbrev_office(race_label)
+        share_title = fit_title([f"{name} — Candidate, {_seat}".strip(),
+                                 f"{name} — {_seat}".strip(), name])
+        # ~700 candidates used to share a description of just "Party — Office", which
+        # reads as duplicate content. Lead with the person and seat, add what is specific
+        # to them (occupation, county) and who they are running against, then the page's
+        # purpose; fit_description drops whole sentences from the end to stay ~160 chars.
+        _party = _party_txt(cand_obj)
+        _intro = (f"{name} is {'the incumbent' if cand_obj.get('isIncumbent') else 'a'} "
+                  f"{(_party + ' ') if _party and _party != 'nonpartisan' else ''}"
+                  f"{'candidate ' if not cand_obj.get('isIncumbent') else ''}for {race_label}"
+                  f" in Georgia's {race.get('cycle') or ''} election.").replace("  ", " ")
+        _facts = ", ".join(x.strip() for x in (cand_obj.get("occupation"),
+                                               (cand_obj.get("county") or "") and f"{cand_obj['county'].strip()} County")
+                           if x and x.strip())
+        _rivals = [c["name"].strip() for c in _race_active_candidates(race)[1]
+                   if (c.get("id") or c["name"]) != (cand_obj.get("id") or name)] if race else []
+        page_desc = fit_description([
+            _intro,
+            (_facts + ".") if _facts else "",
+            ("Also on the ballot: " + ", ".join(_rivals[:3]) + ".") if _rivals else "",
+            "Race, campaign finance and results on VoteGA.",
+        ]) if race else (desc or f"Candidate profile for {name}.")
         person = {
             "@context": "https://schema.org", "@type": "Person", "name": name,
             "url": SITE_URL + permalink,
