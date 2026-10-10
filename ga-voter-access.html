@@ -253,7 +253,14 @@ breadcrumb:
   // hero has to carry the same dates or they'd be lost for the one election a
   // visitor most likely came here for.
   function detailsHtml(e) {
-    const regDeadline = e.registrationDeadline ? formatShortDate(e.registrationDeadline) : 'Same as original primary';
+    // A null deadline means different things by election type: a runoff reuses its
+    // original election's deadline (no new registrations), but any other election
+    // with no date on file simply hasn't been published here, so don't claim it
+    // matches something it doesn't.
+    const isRunoff = /runoff/i.test(e.type || '');
+    const regDeadline = e.registrationDeadline
+      ? formatShortDate(e.registrationDeadline)
+      : (isRunoff ? 'Same as the original election' : 'See the Georgia Secretary of State');
     // Shown only when it adds something the date line doesn't already say.
     const evQualifier = (e.earlyVotingStart && !e.earlyVotingEnd && e.earlyVotingNote)
       ? `<span class="va-cal-qualifier">${escHtml(e.earlyVotingNote)}</span>`
