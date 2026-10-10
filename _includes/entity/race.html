@@ -457,8 +457,11 @@
     // scaling made a small Cash bar look wider than a larger Raised bar.)
     const maxAll = Math.max(0, ...rows.flatMap(r => [r.s.raised || 0, r.s.spent || 0, r.s.cashOnHand || 0]));
 
-    // Sort by raised desc; candidates with no figures sink to the bottom.
-    rows.sort((a, b) => (b.s.raised || -1) - (a.s.raised || -1));
+    // Sort by raised desc; candidates with no figures sink to the bottom. A filer who
+    // raised $0 has a filing on record and ranks above one with none, so test for
+    // null rather than falsy (0 || -1 would tie them).
+    const raisedKey = r => (r.s.raised == null ? -1 : r.s.raised);
+    rows.sort((a, b) => raisedKey(b) - raisedKey(a));
 
     const sourceName = race.level === 'federal' ? 'the Federal Election Commission (FEC)' : 'the Georgia Ethics Commission (PeachFile)';
 

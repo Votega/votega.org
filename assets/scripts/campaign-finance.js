@@ -66,11 +66,16 @@ window.CampaignFinance = (function () {
   }
 
   // ── formatting ─────────────────────────────────────────────────────────────
+  // Shared by every finance panel (the legislator pages used to carry their own copies).
+  // Rounding is decided on the ROUNDED value: $999,500–$999,999 round to 1000K, so the
+  // K branch has to hand off to M at that boundary rather than at the raw 1e6.
   function fmtMoney(n) {
     if (n == null) return '—';
-    if (Math.abs(n) >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
-    if (Math.abs(n) >= 1e3) return '$' + Math.round(n / 1e3) + 'K';
-    return '$' + Math.round(n).toLocaleString();
+    const sign = n < 0 ? '-' : '';
+    const abs = Math.abs(n);
+    if (abs >= 1e6 || Math.round(abs / 1e3) >= 1000) return sign + '$' + (abs / 1e6).toFixed(1) + 'M';
+    if (abs >= 1e3) return sign + '$' + Math.round(abs / 1e3) + 'K';
+    return sign + '$' + Math.round(abs).toLocaleString();
   }
 
   // ── FEC name matching ──────────────────────────────────────────────────────

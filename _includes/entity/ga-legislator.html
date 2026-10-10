@@ -529,12 +529,8 @@
     return null;
   }
 
-  function fmtMoney(n) {
-    if (n == null) return '—';
-    if (Math.abs(n) >= 1_000_000) return '$' + (n / 1_000_000).toFixed(1) + 'M';
-    if (Math.abs(n) >= 1_000)     return '$' + Math.round(n / 1_000) + 'K';
-    return '$' + Math.round(n).toLocaleString();
-  }
+  // One shared formatter (assets/scripts/campaign-finance.js) so the finance panels agree.
+  const fmtMoney = CampaignFinance.fmtMoney;
 
   // Map the member's chamber (ga-members.json vocabulary) to the race-style
   // label CampaignFinance.findGaFilers expects (see GA_CHAMBER_MAP there).
