@@ -555,11 +555,12 @@ breadcrumb:
   }
 
   // A party-line tag is only as good as the roster behind it, but a flat
-  // coverage threshold is the wrong instrument. Coverage never reaches 100% —
-  // votes cast by members who have since left the legislature are in the roll
-  // call yet carry no party in ga-members.json, so they can't be tallied. The
-  // measured ceiling is ~99% and the median ~91%; a 95% cutoff would suppress
-  // four out of five tags and effectively delete the feature.
+  // coverage threshold is the wrong instrument. Coverage used to sit below 100% on
+  // nearly every vote because the official totals count every seat while an empty seat
+  // has no member to attribute; the votes file now records those per roll call
+  // (`vacant`) and the enrichment subtracts them, so a complete roster reads 100%.
+  // Records generated before that, or a genuine shortfall (a voter the roster can't
+  // place), still land here, and a flat 95% cutoff would suppress most tags.
   //
   // What actually matters is whether the votes we couldn't attribute could
   // change the answer. computePartyLineInfo() calls a vote party-line when the

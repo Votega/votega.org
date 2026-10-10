@@ -21,17 +21,35 @@ from lib.atomic_io import write_json_atomic
 from lib.ga_passage import normalize_bill
 
 
-def _rollcall_key(bill, date, yea, nay):
-    """Source-agnostic join key for a single roll call: normalized bill identifier,
-    ISO date, and the yea/nay tally. The tally disambiguates a bill with more than one
-    roll call on the same day. This replaces the old (bill, motionText) key, which only
-    worked when the bills file and the votes file both came from Open States (identical
-    motion phrasing). The votes now come from the legis.ga.gov SOAP producer, whose
-    `motionText` is the official caption ("PASSAGE", "Local Calendar", …) and never
-    matches OS's "House Vote #N …" phrasing — so the join must key on data both sources
-    agree on. ga-bills.json passageVotes and both vote producers all carry date + yea +
-    nay, and the SOAP tally equals the official tally for the same roll call."""
-    return (normalize_bill(bill), (date or "")[:10], yea, nay)
+def _rollcall_key(bill, date, yea, nay, motion_text=""):
+    """Join key for a single roll call: normalized bill identifier, ISO date, the
+    yea/nay tally and the official caption ("PASSAGE", "Local Calendar", …).
+
+    History: this once keyed on (bill, motionText), which broke when the votes moved
+    off Open States (OS phrased motions "House Vote #N …"), so it was relaxed to
+    (bill, date, yea, nay). That is ambiguous: SB 76 on 2026-04-02 has a PASSAGE and an
+    "Agree to Senate Amend to House Sub" roll call that both ended 168-2 with rosters
+    twelve members apart, and a plain dict kept whichever came last. Both files now come
+    from the same legis.ga.gov caption, so the caption is back in the key; it separates
+    9 of the 18 colliding pairs. What still collides (a calendar voted twice the same day
+    at the same tally) is handled in resolve_vote_id."""
+    return (normalize_bill(bill), (date or "")[:10], yea, nay, (motion_text or "").strip().lower())
+
+
+def resolve_vote_id(candidates, tally_for):
+    """Pick the voteId whose roster belongs to a passage vote, or None if it is unsafe.
+
+    `candidates` are the voteIds sharing a key. One candidate is the normal case. With
+    several, the roll calls are indistinguishable by anything the bills file carries, so
+    use their roster only if every candidate yields the SAME party tally (then it is
+    right whichever one this is); otherwise return None and leave the vote without a
+    party tally, which the UI already handles, rather than attach another roll call's."""
+    if not candidates:
+        return None
+    if len(candidates) == 1:
+        return candidates[0]
+    tallies = [tally_for(c) for c in candidates]
+    return candidates[0] if all(t == tallies[0] for t in tallies[1:]) else None
 
 
 def main():
@@ -53,11 +71,14 @@ def main():
     with open(votes_path, encoding='utf-8') as f:
         votes_data = json.load(f)
 
-    # Build vote_index: {(normalized bill, date, yea, nay): voteId}. See _rollcall_key.
+    # Build vote_index: {rollcall key: [voteId, ...]}. See _rollcall_key / resolve_vote_id.
     vote_index = {}
+    vote_vacant = {}
     for vote_id, v in votes_data.get('votes', {}).items():
-        key = _rollcall_key(v.get('bill', ''), v.get('date', ''), v.get('yea'), v.get('nay'))
-        vote_index[key] = vote_id
+        key = _rollcall_key(v.get('bill', ''), v.get('date', ''), v.get('yea'), v.get('nay'),
+                            v.get('motionText', ''))
+        vote_index.setdefault(key, []).append(vote_id)
+        vote_vacant[vote_id] = v.get('vacant', 0) or 0
 
     # Invert memberVotes into vote_roster: {voteId: {personId: vote_option}}.
     # member_votes_map decodes compact or legacy schema; see scripts/lib/votes_schema.py.
@@ -85,26 +106,36 @@ def main():
     }
     PARTIES = ('Republican', 'Democratic', 'Independent')
 
+    def tally_for(vote_id):
+        tally = {p: {'yea': 0, 'nay': 0, 'other': 0} for p in PARTIES}
+        for person_id, vote_option in vote_roster.get(vote_id, {}).items():
+            party = party_map.get(person_id)
+            if party and party in tally:
+                tally[party][VOTE_MAP.get(vote_option, 'other')] += 1
+        return tally
+
     matched = 0
     unmatched = 0
+    ambiguous = 0
 
     for bill in bills_data.get('bills', []):
         identifier = bill.get('identifier', '')
         for pv in bill.get('passageVotes', []):
-            key = _rollcall_key(identifier, pv.get('date', ''), pv.get('yea'), pv.get('nay'))
-            vote_id = vote_index.get(key)
+            key = _rollcall_key(identifier, pv.get('date', ''), pv.get('yea'), pv.get('nay'),
+                                pv.get('motionText', ''))
+            candidates = vote_index.get(key, [])
+            vote_id = resolve_vote_id(candidates, lambda c: tally_for(c))
             if not vote_id:
-                unmatched += 1
+                if candidates:
+                    ambiguous += 1   # several indistinguishable roll calls, rosters differ
+                else:
+                    unmatched += 1
+                # A stale tally from a previous run must not outlive a failed match.
+                for stale in ('partyTally', 'partyTallyCoverage', 'partyTallyTallied', 'partyTallyOfficial'):
+                    pv.pop(stale, None)
                 continue
 
-            roster = vote_roster.get(vote_id, {})
-            tally = {p: {'yea': 0, 'nay': 0, 'other': 0} for p in PARTIES}
-
-            for person_id, vote_option in roster.items():
-                party = party_map.get(person_id)
-                if party and party in tally:
-                    bucket = VOTE_MAP.get(vote_option, 'other')
-                    tally[party][bucket] += 1
+            tally = tally_for(vote_id)
 
             # Only include parties that cast at least one vote
             pv['partyTally'] = {
@@ -117,7 +148,12 @@ def main():
             # short of the official yea/nay/other totals reported alongside it.
             # Surface that gap explicitly so the UI can hedge or suppress the
             # party-line badge instead of presenting a partial count as complete.
-            official_total = pv.get('yea', 0) + pv.get('nay', 0) + pv.get('other', 0)
+            # The official totals count every seat (House 180, Senate 56), but an empty
+            # seat has no member to attribute. The votes file records those per roll
+            # call as `vacant`; leaving them in made a complete roster read as ~97%
+            # covered and hedged the party-line badge on roughly half of all votes.
+            official_total = (pv.get('yea', 0) + pv.get('nay', 0) + pv.get('other', 0)
+                              - vote_vacant.get(vote_id, 0))
             tallied_total = sum(
                 counts['yea'] + counts['nay'] + counts['other']
                 for counts in tally.values()
@@ -146,7 +182,8 @@ def main():
     # generated, client-fetched blob, not a human-reviewed diff.
     write_json_atomic(bills_path, bills_data, separators=(',', ':'))
 
-    print(f"Done — {matched} passageVotes enriched, {unmatched} unmatched")
+    print(f"Done — {matched} passageVotes enriched, {unmatched} unmatched, "
+          f"{ambiguous} skipped as ambiguous")
     print(f"Written: {bills_path}")
 
 

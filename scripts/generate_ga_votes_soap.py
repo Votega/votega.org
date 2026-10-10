@@ -348,10 +348,11 @@ def build_session(our_session, by_legis_id, os_index, title_index,
             stats["passageByOverlay" if source == "overlay" else "passageByNative"] += 1
 
             # Resolve members by numeric id ONLY; skip the VACANT sentinel; tally Y/N.
-            resolved, yea, nay = [], 0, 0
+            resolved, yea, nay, vacant = [], 0, 0, 0
             for mid, option in rows:
                 if mid == VACANT_ID:
                     stats["sentinelRows"] += 1
+                    vacant += 1
                     continue
                 if option == "Yea":
                     yea += 1
@@ -383,6 +384,12 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                     "date": date10,
                     "yea": yea,
                     "nay": nay,
+                    # Empty seats on this roll call (the VACANT sentinel rows dropped
+                    # above), omitted when zero. The official tallies in ga-bills.json
+                    # count every seat (House always 180, Senate always 56), so without
+                    # this the party-tally enrichment reads each vacancy as a member it
+                    # failed to attribute and reports coverage < 1 on a complete roster.
+                    **({"vacant": vacant} if vacant else {}),
                     # Pass/Fail derived from THIS roll call's tally (derive_result —
                     # reproduces OS's rule exactly). Deliberately NOT the OS overlay:
                     # the overlay indexes on (bill, date) only, so when a bill has two
