@@ -13,7 +13,8 @@ Reads votega.org's source data and emits a full set of consumer-friendly artifac
   ROSTER.md                 Human-readable roster that renders on GitHub
 
 Normalization applied to members (vs. the raw Congress.gov shape):
-  * adds a derived top-level `chamber` (so consumers don't need terms.item[0].chamber)
+  * adds a derived top-level `chamber` (the chamber of the member's most recent term, so consumers
+    don't have to pick a term)
   * `contactInfo.zipCode` coerced to string (it's an identifier, not a number)
   * `birthYear` coerced to int
 
@@ -47,7 +48,11 @@ def normalize_member(m):
     passed through unchanged from Congress.gov."""
     m = dict(m)
     terms = (m.get("terms") or {}).get("item") or []
-    m["chamber"] = terms[0].get("chamber") if terms else None
+    # Terms run oldest -> newest, so the LAST one is where the member sits now. Taking
+    # item[0] reports a House-to-Senate member by their first chamber (43 members of
+    # the full Congress, e.g. Grassley, Schiff, Wyden); no Georgia member is affected.
+    # Matches congress.js, find-my-reps.html and the other generators.
+    m["chamber"] = terms[-1].get("chamber") if terms else None
     by = m.get("birthYear")
     if isinstance(by, str) and by.isdigit():
         m["birthYear"] = int(by)
@@ -195,7 +200,7 @@ def members_schema():
                         "partyName": {"type": "string", "enum": ["Democratic", "Republican", "Independent"]},
                         "state": {"type": "string"},
                         "chamber": {"type": ["string", "null"], "enum": ["Senate", "House of Representatives", None],
-                                    "description": "Derived top-level chamber (from terms.item[0].chamber) for convenience."},
+                                    "description": "Derived top-level chamber (from the most recent entry in terms.item, i.e. the last one) for convenience."},
                         "district": {"type": ["integer", "null"], "description": "House district number; null for Senators."},
                         "terms": {"type": "object", "description": "Congress.gov term history; source of the derived `chamber`."},
                         "currentMember": {"type": "boolean"},

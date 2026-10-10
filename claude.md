@@ -99,7 +99,7 @@ votega.org/
 ## Core Principles
 - **API Key Security First**: Never expose API keys in client-side code. Use build-time generation (GitHub Actions) to fetch data and serve static JSON. If live API calls are needed, implement a proxy.
 - **Static Site Best Practices**: Prefer prebuilt data over dynamic fetches to avoid CORS issues and key exposure.
-- **Congress.gov API Handling**: Fields are `partyName` (direct), `terms.item[0].chamber` for chamber. Always filter client-side for state/chamber — the API doesn't support direct chamber queries. Note API limitations in UI (e.g., no contact info).
+- **Congress.gov API Handling**: Fields are `partyName` (direct), `terms.item[-1].chamber` (the most recent term; terms run oldest → newest) for chamber. Always filter client-side for state/chamber — the API doesn't support direct chamber queries. Note API limitations in UI (e.g., no contact info).
 - **Error Handling**: Clear, actionable error messages for users ("Data file missing—run the workflow"). Log errors to console for debugging. Python scripts should `sys.exit(1)` on fatal errors so workflows catch failures.
 - **Environment Awareness**: Detect GitHub Pages paths and adjust redirects accordingly.
 - **GitHub Actions**: Use secrets for sensitive data. Schedule workflows for daily updates. Validate data integrity (count thresholds + required fields) before committing — never commit based on JSON validity alone.
@@ -117,7 +117,7 @@ votega.org/
 
 ### `current-members.json`
 Top-level: `{ metadata: { generatedAt, source, count, apiVersion }, members: [...] }`
-Each member: `bioguideId`, `name`, `partyName`, `state`, `district`, `terms.item[]` (chamber via `item[0].chamber`), `depiction.imageUrl`, `leadership[]`, `committees[]`, `contactInfo`, `officialWebsiteUrl`, `birthYear`, `firstName`, `lastName`.
+Each member: `bioguideId`, `name`, `partyName`, `state`, `district`, `terms.item[]` (chamber via the last item: `item[-1].chamber` — terms run oldest → newest, so `item[0]` is a House-to-Senate member's first chamber), `depiction.imageUrl`, `leadership[]`, `committees[]`, `contactInfo`, `officialWebsiteUrl`, `birthYear`, `firstName`, `lastName`.
 Enriched from `unitedstates/congress-legislators` (public-domain crosswalk, merged in `generate_current_members_data.py`; absent when that member isn't in the crosswalk yet, e.g. a just-seated member): `birthday` (full ISO date), `gender`, `externalLinks[]` (`{label, url}` for Wikipedia/Ballotpedia/OpenSecrets/GovTrack), `socialLinks[]` (`{label, url}` for X/Facebook/Instagram/YouTube). The same repo also backs the deterministic FEC-ID crosswalk in `generate_fec_data.py`.
 For GA delegation only: `recentSponsored[]`.
 

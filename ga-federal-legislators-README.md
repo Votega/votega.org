@@ -73,7 +73,7 @@ Files are updated automatically whenever the source data changes in the [votega.
 | `bioguideId` | string | Congress.gov's stable member ID — primary key, also used as the join key into `votes.json` |
 | `name`, `firstName`, `lastName`, `honorificName` | string | |
 | `partyName` | string | `"Democratic"`, `"Republican"`, or `"Independent"` |
-| `terms.item[]` | object[] | Term history; `terms.item[0].chamber` is `"Senate"` or `"House of Representatives"` |
+| `terms.item[]` | object[] | Term history, oldest to newest; the last item's `chamber` (`"Senate"` or `"House of Representatives"`) is the member's current chamber, and is what the top-level `chamber` field carries |
 | `currentMember` | boolean | |
 | `birthYear` | string | |
 | `depiction.imageUrl` | string | Official portrait |
