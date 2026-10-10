@@ -30,6 +30,11 @@ Front-matter contract
   label_winner / label_runoff / label_uncontested / label_noresults
                  optional    override the auto status-badge text
   notice         optional    raw-HTML notice override; otherwise a default is shown per status
+  notice_upcoming optional   raw-HTML notice used ONLY while the page reads `upcoming` (no votes
+                             counted yet). It lets an indexable page say what to expect before
+                             election night and then fall back to the normal per-status notice on
+                             its own the moment the first vote lands — no front-matter edit.
+                             Beaten by `notice` if both are set.
   empty_section_text optional message for a section tab with no races
 {%- endcomment -%}
 {%- include result-status.html stub=page -%}
@@ -117,6 +122,8 @@ Front-matter contract
 
 {% if page.notice %}
   <div class="pr-notice {% if result_status == 'certified' %}pr-notice-certified{% elsif result_status == 'upcoming' %}pr-notice-upcoming{% endif %}">{{ page.notice }}</div>
+{% elsif result_status == 'upcoming' and page.notice_upcoming %}
+  <div class="pr-notice pr-notice-upcoming">{{ page.notice_upcoming }}</div>
 {% elsif result_status == 'certified' %}
   <div class="pr-notice pr-notice-certified">&#10003; Official certified results from the Georgia Secretary of State.</div>
 {% elsif result_status == 'upcoming' %}

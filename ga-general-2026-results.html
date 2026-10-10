@@ -2,31 +2,31 @@
 layout: election_results
 title: Georgia 2026 General Election Results
 permalink: /ga-general-2026-results/
-share-description: "Results from Georgia's November 3, 2026 general election, by race and county."
+share-description: "Georgia 2026 general election results, coming November 3 — every federal, statewide, legislative, and judicial race on the ballot, with live counts after polls close at 7 PM ET."
 heading: Georgia 2026 General Election Results
-updated: 2026-08-17
+updated: 2026-10-10
 election_date: 2026-11-03
 status: unofficial
 results_mode: round
 label_winner: Elected
 runoff_advances: 2
 results_data: ga-general-2026-results
-notice: >-
-  Preview of the November 3, 2026 General Election ballot, built from every
-  federal, state legislative, statewide, and judicial race on file. No votes
-  have been cast yet, so every race reads &ldquo;Awaiting Results&rdquo;
-  &mdash; live counts will replace this once polls close and will keep
-  updating as votes are tallied. A small number of statewide races could go
-  to a December 1 runoff if no candidate wins a majority.
-# --- Staged ahead of election day -------------------------------------------
-# No votes exist yet, so this page is deliberately undiscoverable: not in the
-# sitemap, not indexable, not in on-site search. The status above is the one it
-# will have on election night; until a vote is actually counted every badge for
-# this election reads "Upcoming" on its own (_includes/result-status.html).
+notice_upcoming: >-
+  <strong>Results coming Tuesday, November 3, 2026.</strong> Polls close at
+  7:00 PM ET. This page lists every federal, statewide, state legislative, and
+  judicial race on the ballot; each reads &ldquo;Awaiting Results&rdquo; until
+  votes are reported, then live counts replace it and keep updating as votes
+  are tallied. A statewide race where no candidate wins a majority goes to a
+  December 1 runoff. See who is on the ballot on the
+  <a href="/elections/">elections page</a>.
+# --- Live and indexable ------------------------------------------------------
+# This page is crawlable (and in the sitemap and on-site search) BEFORE election
+# day so it already ranks and is bookmarked when people look for results. While no
+# vote has been counted the badge reads "Upcoming" and `notice_upcoming` shows
+# (_includes/result-status.html, _layouts/election_results.html). The first counted
+# vote switches the badge to the status above and the notice to the standard
+# unofficial one on its own.
 #
-# TO GO LIVE on election night: delete the three flags below. Nothing else
-# needs to change.
-noindex: true
-sitemap: false
-search: false
+# NOTHING to flip on election night. Afterwards: set `status: certified` and bump
+# `updated:` once the Secretary of State certifies.
 ---
