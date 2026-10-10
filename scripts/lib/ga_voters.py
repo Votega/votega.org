@@ -37,6 +37,12 @@ MEMBERS_FILE = "assets/data/ga-members.json"
 #: never be treated as a missing voter.
 VOTING_CHAMBERS = ("Senate", "House of Representatives")
 
+#: `status` values meaning the seat is no longer held by that member (or never was:
+#: "Vacant" is an injected placeholder). "Suspended" is deliberately NOT here: a
+#: suspended member still holds the seat and stays listed, badged. Filtering on a
+#: truthy `status` instead silently drops them (Sharon Henderson, HD 113).
+DEPARTED_STATUSES = ("Resigned", "Removed", "Deceased", "Vacant")
+
 #: Deprecated OCD person ids folded into the member's current id. Open States
 #: occasionally re-issues a person a new id mid-session, stranding their earlier
 #: votes under the old one. Identified 2026-07-24 by LegiScan roll-call

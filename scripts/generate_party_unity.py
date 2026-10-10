@@ -35,7 +35,7 @@ import sys
 from datetime import datetime, timezone
 
 # scripts/ is sys.path[0] when run as `python scripts/generate_party_unity.py`
-from lib.ga_voters import VOTING_CHAMBERS
+from lib.ga_voters import VOTING_CHAMBERS, DEPARTED_STATUSES
 from lib.votes_schema import member_votes_map
 from lib.atomic_io import write_json_atomic
 
@@ -210,10 +210,10 @@ def main():
     results = []
     for m in members_data.get("members", []):
         mid = m.get("id")
-        # Only sitting legislators of a voting chamber. Executives, and members
-        # who have left the seat, are excluded from a "current" comparison — the
-        # same filter ga.js and the majority tracker apply.
-        if not mid or m.get("chamber") not in VOTING_CHAMBERS or m.get("status"):
+        # Only legislators who still hold a seat in a voting chamber. Executives
+        # and members who have left the seat (DEPARTED_STATUSES) are excluded from
+        # a "current" comparison; a Suspended member keeps the seat and stays in.
+        if not mid or m.get("chamber") not in VOTING_CHAMBERS or m.get("status") in DEPARTED_STATUSES:
             continue
         votes = member_votes.get(mid)
         if not votes:
