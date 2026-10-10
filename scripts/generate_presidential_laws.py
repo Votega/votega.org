@@ -16,7 +16,7 @@ import time
 import urllib.request
 import urllib.error
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.http import fetch_json
 
@@ -178,7 +178,7 @@ def main():
 
     output = {
         "metadata": {
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "congress":    CURRENT_CONGRESS,
             "termStart":   TERM_START,
             "source":      "Congress.gov API",

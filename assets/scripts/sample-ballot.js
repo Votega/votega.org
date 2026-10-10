@@ -169,8 +169,12 @@ function availableElections(races, measures, calendar) {
   });
 }
 
+// The visitor's local calendar date. toISOString() is UTC, which rolls to tomorrow at
+// 8 PM Eastern (7 PM in winter) — i.e. while polls are still open on election night —
+// and would drop election day from the "upcoming" list an hour or more early.
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
 
 // Elections to offer in the selector: a sample ballot is forward-looking, so past

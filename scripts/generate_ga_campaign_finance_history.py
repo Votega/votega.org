@@ -71,7 +71,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 
 API_BASE    = "https://api-recordsearch.ethics.ga.gov/api"
 OUTPUT_FILE = "assets/data/ga-campaign-finance-history.json"
@@ -330,7 +330,7 @@ def main():
     years = sorted(y for y in by_year if y)
     output = {
         "metadata": {
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "source":      "Georgia Ethics Commission legacy records search "
                            "(api-recordsearch.ethics.ga.gov)",
             "sourceUrl":   "https://recordsearch.ethics.ga.gov/public/cf/publiccandidate",

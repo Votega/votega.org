@@ -244,7 +244,7 @@ def main():
 
     output = {
         "metadata": {
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "terms":       TERMS,
             "source":      "Oyez.org API + CourtListener",
             "count":       len(all_cases),

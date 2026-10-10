@@ -64,7 +64,7 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.ga_passage import classify, load_os_passage_index, normalize_bill
@@ -510,7 +510,7 @@ def main():
     output = {
         "metadata": {
             "schemaVersion": 2,
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "biennium": BIENNIUM,
             "sessions": [{"id": sid, "name": session_name(sid),
                           "voteCount": by_session.get(sid, 0)}

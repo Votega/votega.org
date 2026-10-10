@@ -51,7 +51,7 @@ import json
 import os
 import sys
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.legis_ga import LegisGaClient, LegisGaError, vote_ids
@@ -633,7 +633,7 @@ def main():
     output = {
         "metadata": {
             "schemaVersion": 2,
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "biennium": BIENNIUM,
             "sessions": [{"id": sid, "name": session_name(sid),
                           "voteCount": by_session.get(sid, 0)}

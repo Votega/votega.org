@@ -15,7 +15,7 @@ import time
 import urllib.request
 import urllib.error
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.http import fetch_json
 from lib.ga_voters import (VOTING_CHAMBERS, MemberIndex, assign_remaining_by_surname,
@@ -298,7 +298,7 @@ def main():
 
     output = {
         'metadata': {
-            'generatedAt': datetime.now().isoformat(),
+            'generatedAt': datetime.now(timezone.utc).isoformat(),
             'source':      'Open States API',
             'count':       len(results),
             'sittingLegislators':    len(sitting),

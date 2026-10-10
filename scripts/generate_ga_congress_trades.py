@@ -16,7 +16,7 @@ import sys
 import time
 import urllib.request
 import urllib.error
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.http import fetch_json as http_fetch_json
 
@@ -344,7 +344,7 @@ def main():
 
     output = {
         'metadata': {
-            'generatedAt': datetime.now().isoformat(),
+            'generatedAt': datetime.now(timezone.utc).isoformat(),
             'source':      'kadoa-org/congress-trading-monitor (github.com/kadoa-org/congress-trading-monitor)',
             'totalTrades': total_trades,
             'gaMembers':   sorted(by_member.keys()),

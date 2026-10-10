@@ -12,7 +12,7 @@ import time
 import urllib.request
 import urllib.error
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.http import fetch_json
 from lib.atomic_io import write_json_atomic
@@ -258,7 +258,7 @@ def main():
 
     output_data = {
         'metadata': {
-            'generatedAt':        datetime.now().isoformat(),
+            'generatedAt':        datetime.now(timezone.utc).isoformat(),
             'source':             'Open States API',
             'jurisdiction':       'Georgia',
             'count':              len(members),

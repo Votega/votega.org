@@ -52,7 +52,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.legis_ga import CHAMBER, LegisGaClient
@@ -311,7 +311,7 @@ def main():
 
     output = {
         "metadata": {
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "sessions": sessions,
             "gaLegislators": len(by_ocd),
             "missingLegisId": len(null_targets),

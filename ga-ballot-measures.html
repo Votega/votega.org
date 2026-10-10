@@ -224,7 +224,10 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       // the most recent one if none are upcoming. Past-cycle measures stay in
       // the JSON as a historical record but drop off the page automatically once
       // a newer election's measures are introduced. No manual per-cycle flag.
-      const today = new Date().toISOString().slice(0, 10);
+      // Local calendar date, not toISOString() (UTC), which flips to tomorrow at
+      // 8 PM Eastern and would retire an election's measures while polls are open.
+      const now = new Date();
+      const today = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
       const measureDate = m => m.electionDate || data.metadata?.electionDate || null;
       const dates = [...new Set(allMeasures.map(measureDate).filter(Boolean))].sort();
       const upcoming = dates.filter(d => d >= today);

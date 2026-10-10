@@ -23,7 +23,7 @@ import urllib.error
 import urllib.parse
 import xml.etree.ElementTree as ET
 import yaml
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.http import fetch_bytes, fetch_json
 
@@ -503,7 +503,7 @@ def main():
 
     output = {
         "metadata": {
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "congress":    CURRENT_CONGRESS,
             "sessionName": f"{CURRENT_CONGRESS}th Congress",
             "source":      "Congress.gov API + Clerk of House + Senate.gov",

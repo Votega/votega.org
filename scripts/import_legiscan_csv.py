@@ -20,7 +20,7 @@ import csv
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 # scripts/ is sys.path[0] when run as `python scripts/import_legiscan_csv.py`
 from lib.votes_schema import encode_member_votes
@@ -254,7 +254,7 @@ def main():
     output = {
         "metadata": {
             "schemaVersion": 2,
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "session":     session_id,
             "sessionName": "Georgia General Assembly",
             "source":      "LegiScan CSV",

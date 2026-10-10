@@ -38,7 +38,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 
 API_BASE    = "https://api-peachfile.ethics.ga.gov/api"
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-campaign-finance.json"
@@ -262,7 +262,7 @@ def main():
 
     output = {
         "metadata": {
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "cycle":       cycle,
             "source":      "Georgia Ethics Commission PeachFile (api-peachfile.ethics.ga.gov)",
             "sourceUrl":   "https://peachfile.ethics.ga.gov/public/cf/publiccandidate",

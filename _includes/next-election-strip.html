@@ -98,13 +98,19 @@
     document.getElementById('nextElectionDate').innerHTML =
       `${esc(fmtLong(next.date))} <span class="next-election-countdown">&middot; ${esc(when)}</span>`;
 
+    // A deadline that has passed must not read as an invitation: "Register by Oct 5"
+    // on Oct 20 sends a voter to a form that can no longer help them. The deadline day
+    // itself is still open (daysUntil === 0).
     const facts = [];
     if (next.registrationDeadline) {
-      facts.push(['Register by', fmtShort(next.registrationDeadline)]);
+      facts.push(daysUntil(next.registrationDeadline) < 0
+        ? ['Registration', 'Closed ' + fmtShort(next.registrationDeadline)]
+        : ['Register by', fmtShort(next.registrationDeadline)]);
     }
     if (next.earlyVotingStart) {
+      const evOver = next.earlyVotingEnd && daysUntil(next.earlyVotingEnd) < 0;
       facts.push(['Early voting', next.earlyVotingEnd
-        ? fmtShort(next.earlyVotingStart) + ' – ' + fmtShort(next.earlyVotingEnd)
+        ? fmtShort(next.earlyVotingStart) + ' – ' + fmtShort(next.earlyVotingEnd) + (evOver ? ' (ended)' : '')
         : 'Begins ' + fmtShort(next.earlyVotingStart)]);
     }
     document.getElementById('nextElectionFacts').innerHTML = facts

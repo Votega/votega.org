@@ -23,7 +23,7 @@ import time
 import urllib.request
 import urllib.error
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.http import fetch_bytes
 
@@ -249,7 +249,7 @@ def main():
 
     output = {
         "metadata": {
-            "generatedAt": datetime.now().isoformat(),
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
             "congress":    CURRENT_CONGRESS,
             "source":      "Senate.gov roll call XML",
             "count":       len(all_votes),

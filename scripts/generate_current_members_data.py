@@ -11,7 +11,7 @@ import urllib.request
 import urllib.error
 from urllib.parse import quote
 import yaml
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.http import fetch_bytes, fetch_json
 from lib.atomic_io import write_json_atomic
@@ -266,7 +266,7 @@ def enrich_member_data(bioguideId, basic_member):
         basic_member['currentMember'] = None
         basic_member['firstName'] = None
         basic_member['lastName'] = None
-        basic_member['dataUpdatedAt'] = datetime.now().isoformat()
+        basic_member['dataUpdatedAt'] = datetime.now(timezone.utc).isoformat()
         return basic_member, False
 
     basic_member['leadership'] = extract_leadership(member_details)
@@ -279,7 +279,7 @@ def enrich_member_data(bioguideId, basic_member):
     basic_member['lastName'] = member_details.get('lastName', '')
     basic_member['sponsoredLegislation'] = member_details.get('sponsoredLegislation', {})
     basic_member['cosponsoredLegislation'] = member_details.get('cosponsoredLegislation', {})
-    basic_member['dataUpdatedAt'] = datetime.now().isoformat()
+    basic_member['dataUpdatedAt'] = datetime.now(timezone.utc).isoformat()
 
     # Fetch recent sponsored bills only for GA delegation (avoids 500+ extra API calls)
     if basic_member.get('state') == 'Georgia':
@@ -421,7 +421,7 @@ def main():
     # Create output structure
     output_data = {
         'metadata': {
-            'generatedAt': datetime.now().isoformat(),
+            'generatedAt': datetime.now(timezone.utc).isoformat(),
             'source': 'Congress.gov API',
             'count': len(enriched_members),
             'apiVersion': 'v3',

@@ -35,7 +35,7 @@ import sys
 import time
 import urllib.request
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, timezone
 
 from lib.http import fetch_json
 
@@ -447,7 +447,7 @@ def main():
 
     output = {
         "metadata": {
-            "generatedAt":    datetime.now().isoformat(),
+            "generatedAt":    datetime.now(timezone.utc).isoformat(),
             "cycle":          CYCLE,
             "source":         "FEC API (api.open.fec.gov)",
             "totalCandidates": len(output_candidates),
