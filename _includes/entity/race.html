@@ -9,6 +9,14 @@
       {%- if e.summary %}<br><span style="color:#6b7280;">{{ e.summary | escape }}</span>{% endif -%}
     </p>
       {%- if e.about %}{% for para in e.about %}<p>{{ para | escape }}</p>{% endfor %}{% endif -%}
+    {%- if e.candidates and e.candidates.size > 0 %}
+    <h2 style="font-size:1.15rem;margin:1rem 0 .4rem;">Candidates on the ballot</h2>
+    <ul>
+      {%- for c in e.candidates %}
+      <li>{% if c.url %}<a href="{{ c.url | relative_url }}">{{ c.name | escape }}</a>{% else %}{{ c.name | escape }}{% endif %}{% if c.party or c.incumbent %} ({% if c.party %}{{ c.party | escape }}{% endif %}{% if c.party and c.incumbent %}, {% endif %}{% if c.incumbent %}incumbent{% endif %}){% endif %}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
     <p><a href="{{ '/elections/' | relative_url }}">2026 Georgia elections</a> · <a href="{{ '/sample-ballot' | relative_url }}">Sample ballot</a> · <a href="{{ '/ga-voter-access' | relative_url }}">Voter access</a></p>
   {%- else -%}
     <p>Loading race information…</p>

@@ -8,6 +8,12 @@
     {%- assign e = page.entity -%}
     <h1 style="margin:0 0 .5rem;">{{ e.name | escape }}</h1>
     {%- if e.about %}{% for para in e.about %}<p>{{ para | escape }}</p>{% endfor %}{% endif %}
+    {%- if e.race %}<p>Race page: <a href="{{ e.race.url | relative_url }}">{{ e.race.name | escape }}</a></p>{% endif %}
+    {%- if e.rivals and e.rivals.size > 0 %}
+    <p>Also on the ballot:
+      {%- for c in e.rivals %}{% if forloop.first %} {% else %} · {% endif %}{% if c.url %}<a href="{{ c.url | relative_url }}">{{ c.name | escape }}</a>{% else %}{{ c.name | escape }}{% endif %}{% if c.party %} ({{ c.party | escape }}){% endif %}{% endfor %}
+    </p>
+    {%- endif %}
     <p><a href="{{ '/elections/' | relative_url }}">2026 Georgia elections</a> · <a href="{{ '/sample-ballot' | relative_url }}">Sample ballot</a></p>
   {%- else -%}
     <p>Loading candidate information…</p>

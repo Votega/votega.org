@@ -227,6 +227,75 @@ def _cand_phrase(c):
     return txt + (f", {', '.join(bits)}" if bits else "")
 
 
+def _candidate_index(races):
+    """cid -> (candidate, race). A candidate id is stable per person across phases, so
+    the first occurrence wins."""
+    index = {}
+    for r in races:
+        for phase in (r.get("phases") or {}).values():
+            if not isinstance(phase, dict):
+                continue
+            groups = list((phase.get("ballots") or {}).values()) + [phase.get("candidates") or []]
+            for group in groups:
+                for c in (group or []):
+                    cid = c.get("id")
+                    if cid and cid not in index:
+                        index[cid] = (c, r)
+    return index
+
+
+#: cid -> "/candidates/<slug>/", filled once per run by plan_candidate_permalinks().
+#: Race pages (built BEFORE candidates, because candidate breadcrumbs need the race
+#: URLs) link to candidates through this, so it has to exist before either builder runs
+#: and be the single source of candidate slugs.
+_CAND_PERMALINKS = {}
+
+
+def plan_candidate_permalinks(records, races):
+    """Decide every candidate page's permalink up front.
+
+    Slug is name + seat, never the candidate id: make_candidate_id() ends ids with a
+    positional row index (…-d-1), so a re-ordered source export would silently move a
+    URL. The seat comes from the race id with its cycle stripped, which is stable. Walks
+    the manifest in the same order build_candidates does, so collision handling (two
+    different people with the same name and seat) resolves identically."""
+    index = _candidate_index(races)
+    plan, seen = {}, set()
+    for rec in records:
+        if rec.get("category") != "Candidate":
+            continue
+        cid = qs_id(rec["url"])
+        if not cid:  # federal incumbent: redirected to /us-congress/, no page of its own
+            continue
+        name = rec.get("title") or ""
+        desc = rec.get("desc") or ""
+        race = (index.get(cid) or (None, {}))[1]
+        rid = race.get("id") or ""
+        anchor = re.sub(r"-20\d\d$", "", rid) if rid else slugify(desc)
+        slug = slugify(name, anchor) or slugify(cid)
+        if slug in seen:
+            slug = slugify(slug, hashlib.sha1(cid.encode()).hexdigest()[:6])
+        seen.add(slug)
+        plan[cid] = f"/candidates/{slug}/"
+    return plan
+
+
+def candidate_links(cands, urls):
+    """[{name, party, incumbent, url}] for a race's candidates, so server-rendered pages
+    can link each name to its profile: /candidates/<slug>/ where a page exists, the
+    /us-congress/ page for a sitting member of Congress on the ballot, else no link."""
+    us_urls = urls.get("us-congress", {})
+    out = []
+    for c in cands:
+        url = _CAND_PERMALINKS.get(c.get("id"))
+        if not url:
+            mid = c.get("existingMemberId") or c.get("memberId")
+            url = us_urls.get(mid) if mid else None
+        out.append({"name": c["name"].strip(), "party": _party_txt(c) or None,
+                    "incumbent": bool(c.get("isIncumbent")), "url": url})
+    return out
+
+
 def _election_dates_txt(race):
     ph = race.get("phases") or {}
     bits = []
@@ -343,7 +412,12 @@ def write_page(subdir, slug, front_matter, body):
         if isinstance(v, dict):
             lines.append(f"{k}:")
             for kk, vv in v.items():
-                if isinstance(vv, list):
+                if isinstance(vv, dict) or (isinstance(vv, list) and any(not isinstance(x, str) for x in vv)):
+                    # Nested structures (a list of {name, url} candidates, a {name, url}
+                    # race link): JSON is valid YAML flow style, and keeps types and
+                    # quoting exact. Only plain lists of strings use the quoted form below.
+                    lines.append(f"  {kk}: {json.dumps(vv, ensure_ascii=False)}")
+                elif isinstance(vv, list):
                     lines.append(f"  {kk}: [{', '.join(yaml_quote(x) for x in vv)}]")
                 elif vv is not None:
                     lines.append(f"  {kk}: {yaml_quote(vv)}")
@@ -782,7 +856,10 @@ def build_races(records, urls, prior, new_state):
 
         entity = {"type": "race", "id": rid, "name": name, "chamber": chamber,
                   "cycle": cycle, "summary": (level.title() + " race") if level else None,
-                  "about": race_about(name, r)}
+                  "about": race_about(name, r),
+                  # Linked ballot for crawlers / no-JS readers: the people in this race,
+                  # each pointing at their own profile page.
+                  "candidates": candidate_links(_race_active_candidates(r)[1], urls)}
         lastmod = resolve_lastmod(
             permalink,
             {"e": entity, "t": share_title, "d": desc, "c": [c["name"] for c in cands]},
@@ -824,19 +901,7 @@ def build_candidates(records, urls, prior, new_state):
     data_date = _date_only(data.get("updatedAt"))
     races = data.get("races", [])
 
-    # cid -> (candidate, race). A candidate id is stable per person across phases,
-    # so the first occurrence wins.
-    cand_index = {}
-    for r in races:
-        for phase in (r.get("phases") or {}).values():
-            if not isinstance(phase, dict):
-                continue
-            groups = list((phase.get("ballots") or {}).values()) + [phase.get("candidates") or []]
-            for group in groups:
-                for c in (group or []):
-                    cid = c.get("id")
-                    if cid and cid not in cand_index:
-                        cand_index[cid] = (c, r)
+    cand_index = _candidate_index(races)
 
     us_urls = urls.get("us-congress", {})
     seen = set()
@@ -859,12 +924,10 @@ def build_candidates(records, urls, prior, new_state):
 
         race = (cand_index.get(cid) or (None, {}))[1]
         rid = race.get("id") or ""
-        anchor = re.sub(r"-20\d\d$", "", rid) if rid else slugify(desc)
-        slug = slugify(name, anchor) or slugify(cid)
-        if slug in seen:  # two different people, same name+seat (not seen in current data)
-            slug = slugify(slug, hashlib.sha1(cid.encode()).hexdigest()[:6])
-        seen.add(slug)
-        permalink = f"/candidates/{slug}/"
+        # The slug was decided up front (plan_candidate_permalinks) so race pages could
+        # link here before this builder runs; it stays the one source of truth.
+        permalink = _CAND_PERMALINKS[cid]
+        slug = permalink.strip("/").split("/")[-1]
         urls.setdefault("candidate", {})[cid] = permalink
 
         dist = race.get("district")
@@ -897,8 +960,13 @@ def build_candidates(records, urls, prior, new_state):
         if party:       # typed party (schema.org affiliation expects an Organization)
             person["affiliation"] = {"@type": "PoliticalParty", "name": party}
         ld = json_ld(person)
+        # Rivals as links, and the race page, so a candidate page leads to its ballot.
+        rivals = [x for x in candidate_links(_race_active_candidates(race)[1], urls)
+                  if x["name"] != name.strip()] if race else []
         entity = {"type": "candidate", "id": cid, "name": name,
-                  "about": candidate_about(name, race, cand_obj, race_label)}
+                  "about": candidate_about(name, race, cand_obj, race_label),
+                  "race": {"name": race_label, "url": race_url} if race_url else None,
+                  "rivals": rivals}
         lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": page_desc},
                                   data_date, prior, new_state)
         fm = {
@@ -1280,6 +1348,9 @@ def main():
 
     urls = {}
     total = 0
+    _CAND_PERMALINKS.clear()
+    _CAND_PERMALINKS.update(plan_candidate_permalinks(
+        records, load("races.json").get("races", [])))
     _DIRECTORY[:] = []  # reset the cross-builder directory accumulator
     for label, builder in CATEGORY_BUILDERS:
         try:
