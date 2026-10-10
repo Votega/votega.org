@@ -1032,6 +1032,13 @@
   }
 
   // Chamber a passage vote belongs to, derived from its motion text.
+  // SOAP voteIds are '<rollCallId>-<billId>': one floor vote on a bundled calendar
+  // fans out into a record per bill with identical tallies. Score per physical roll
+  // call (mirrors rollcall_key in scripts/generate_party_unity.py).
+  function rollCallKey(voteId) {
+    return String(voteId).split('-')[0];
+  }
+
   function voteChamber(meta) {
     const mt = (meta && meta.motionText) || '';
     if (mt.includes('Senate')) return 'Senate';
@@ -1051,7 +1058,8 @@
     for (const { voteId, vote } of memberVotes) {
       const vc = voteChamber(votesIndex[voteId]);
       if (memberChamber && vc && vc !== memberChamber) continue; // own chamber only
-      if (!seen.has(voteId)) seen.set(voteId, vote);
+      const rc = rollCallKey(voteId);
+      if (!seen.has(rc)) seen.set(rc, vote);
     }
 
     const total = seen.size;
@@ -1119,14 +1127,16 @@
       if (vote !== 'Yea' && vote !== 'Nay') continue;
       const vc = voteChamber(votesIndex[voteId]);
       if (memberChamber && vc && vc !== memberChamber) continue;
-      if (!seen.has(voteId)) seen.set(voteId, vote);
+      const rc = rollCallKey(voteId);
+      if (!seen.has(rc)) seen.set(rc, vote);
     }
 
     const otherParty = member.party === 'Democratic' ? 'Republican' : member.party === 'Republican' ? 'Democratic' : null;
 
     let aligned = 0, considered = 0;
     for (const [voteId, vote] of seen) {
-      const tally = partyVoteIndex.get(voteId);
+      const entry = partyVoteIndex.get(voteId);
+      const tally = entry && entry.tally;
       const own = tally && tally[member.party];
       const opp = otherParty && tally && tally[otherParty];
       if (!own || !opp) continue;
@@ -1167,7 +1177,7 @@
 
     if (hasSurnameTwin) {
       let chamberPartyLine = 0;
-      for (const [voteId, tally] of partyVoteIndex) {
+      for (const [rc, { tally, voteId }] of partyVoteIndex) {
         const vc = voteChamber(votesIndex[voteId]);
         if (chamber && vc && vc !== chamber) continue;
         const dem = tally['Democratic'], rep = tally['Republican'];
@@ -1276,7 +1286,8 @@
       // the shared index), so loyalty no longer needs every member's votes here.
       const partyVoteIndex = new Map();
       for (const vid in votesIndex) {
-        if (votesIndex[vid].partyTally) partyVoteIndex.set(vid, votesIndex[vid].partyTally);
+        const rc = rollCallKey(vid);
+        if (votesIndex[vid].partyTally && !partyVoteIndex.has(rc)) partyVoteIndex.set(rc, { tally: votesIndex[vid].partyTally, voteId: vid });
       }
       const partyLoyalty = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex, incomplete, allMembers);
       const partyLoyaltyHtml = partyLoyalty.html;

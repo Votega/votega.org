@@ -53,6 +53,14 @@ PRESIDING_MIN_ROLLCALLS = 50
 PRESIDING_MAX_VOTES = 3
 
 
+def rollcall_key(vote_id):
+    """Physical roll call a voteId belongs to. SOAP voteIds are '<rollCallId>-<billId>':
+    one floor vote on a bundled calendar fans out into a record per bill, all with
+    identical tallies. Scoring per voteId counted that one vote N times (2,418
+    records vs ~1,520 real roll calls), so everything here keys on the prefix."""
+    return str(vote_id).split("-", 1)[0]
+
+
 def vote_chamber(meta):
     """Chamber a passage vote belongs to, from its motion text. Mirrors the
     client-side voteChamber() so server and page bucket votes identically."""
@@ -65,10 +73,10 @@ def vote_chamber(meta):
 
 
 def build_party_vote_index(member_votes, party_map):
-    """voteId -> {party: {'yea': n, 'nay': n}} over every member's Yea/Nay votes.
+    """rollCallKey -> {party: {'yea': n, 'nay': n}} over every member's Yea/Nay votes.
 
-    De-duplicates (voteId, member) defensively; the generator upstream already
-    enforces one row per member per vote, so this is normally a no-op.
+    De-duplicates (roll call, member): bundled-bill records of one roll call
+    collapse to a single count (see rollcall_key).
     """
     index = {}
     for voter_id, votes in member_votes.items():
@@ -81,7 +89,10 @@ def build_party_vote_index(member_votes, party_map):
             if vote not in ("Yea", "Nay"):
                 continue
             vid = entry.get("voteId")
-            if not vid or vid in seen:
+            if not vid:
+                continue
+            vid = rollcall_key(vid)
+            if vid in seen:
                 continue
             seen.add(vid)
             tally = index.setdefault(vid, {})
@@ -99,7 +110,7 @@ def member_scores(member, votes, votes_index, party_vote_index):
     chamber = member.get("chamber")
     party = member.get("party")
 
-    # --- Participation: own-chamber roll calls, deduped by voteId ---
+    # --- Participation: own-chamber roll calls, deduped by physical roll call ---
     seen = {}
     for entry in votes:
         vid = entry.get("voteId")
@@ -108,8 +119,9 @@ def member_scores(member, votes, votes_index, party_vote_index):
         vc = vote_chamber(votes_index.get(vid))
         if chamber and vc and vc != chamber:
             continue  # own chamber only
-        if vid not in seen:
-            seen[vid] = entry.get("vote")
+        rc = rollcall_key(vid)
+        if rc not in seen:
+            seen[rc] = entry.get("vote")
 
     total_rollcalls = len(seen)
     if total_rollcalls == 0:
