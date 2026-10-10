@@ -712,7 +712,10 @@
 
     const emptyHtml    = !active.length && !withdrawn.length
       ? '<p class="no-candidates">No candidates listed yet for this ballot.</p>' : '';
-    const unopposedHtml = active.length === 1 && race.activePhase !== 'general'
+    // "Unopposed" is a primary claim. A lone name on a runoff ballot (an opponent
+    // withdrew) is not that, and the general phase never carried the label either, so
+    // say it only for the primary.
+    const unopposedHtml = active.length === 1 && race.activePhase === 'primary'
       ? '<p class="ballot-unopposed">Running unopposed in this primary</p>' : '';
 
     return `
