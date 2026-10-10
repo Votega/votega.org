@@ -495,6 +495,20 @@ breadcrumb:
     const lower = latestByChamber['lower'];
     const upper = latestByChamber['upper'];
     if (lower && upper && lower.result === 'pass' && upper.result === 'pass') return 'passed';
+
+    // A simple resolution (HR/SR urging, honoring, creating a study committee…) is
+    // adopted by its own chamber alone — there is no second chamber to wait for, so
+    // requiring both left ~2,800 adopted resolutions showing "In progress". It counts
+    // as passed when its latest action is that chamber's adoption (the status begins
+    // with the chamber, so a resolution already sent on to the other chamber is not
+    // claimed). Most are adopted by voice vote and carry no passageVotes at all, which
+    // is why this reads the status text. Constitutional-amendment resolutions are the
+    // exception: they need both chambers and fall through to the rule above.
+    if (bill.billType === 'resolution') {
+      const ownLabel = bill.chamber === 'lower' ? 'House' : bill.chamber === 'upper' ? 'Senate' : null;
+      const proposesAmendment = /proposing an amendment to the constitution/i.test(bill.abstract || bill.title || '');
+      if (ownLabel && !proposesAmendment && s.indexOf(ownLabel + ' ') === 0 && /Adopted|Passed/.test(s)) return 'passed';
+    }
     return 'progress';
   }
 
