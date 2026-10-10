@@ -508,6 +508,11 @@ breadcrumb:
       const ownLabel = bill.chamber === 'lower' ? 'House' : bill.chamber === 'upper' ? 'Senate' : null;
       const proposesAmendment = /proposing an amendment to the constitution/i.test(bill.abstract || bill.title || '');
       if (ownLabel && !proposesAmendment && s.indexOf(ownLabel + ' ') === 0 && /Adopted|Passed/.test(s)) return 'passed';
+      // Joint resolutions (e.g. SR 2, SR 6: "House Read and Adopted") whose latest action
+      // is the OTHER chamber adopting them: it can only get there after the originating
+      // chamber adopted it, and that voice vote leaves no second roll call to count.
+      const otherLabel = bill.chamber === 'lower' ? 'Senate' : bill.chamber === 'upper' ? 'House' : null;
+      if (otherLabel && s.indexOf(otherLabel + ' ') === 0 && /Adopted|Passed/.test(s)) return 'passed';
     }
     return 'progress';
   }
