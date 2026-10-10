@@ -624,6 +624,7 @@
           </div>
         </div>
         <p class="finance-meta">${escHtmlGa(filer.electionCycle || '')}${filer.office ? ' · ' + escHtmlGa(filer.office) : ''}</p>
+        ${CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt)}
         ${footer}${reconcileNote}`;
       return;
     }
@@ -703,6 +704,7 @@
       </div>
       <p class="finance-meta">${coverageNote}</p>
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
+      ${CampaignFinance.provenanceLine('the FEC', fecData.metadata?.generatedAt)}
       ${employersHtml}`;
   }
 

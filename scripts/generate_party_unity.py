@@ -242,7 +242,7 @@ def main():
     out = {
         "metadata": {
             "generatedAt": datetime.now(timezone.utc).isoformat(),
-            "source": "Derived from ga-member-votes.json (Open States API roll calls)",
+            "source": "Derived from ga-member-votes.json (legis.ga.gov SOAP roll calls)",
             "biennium": votes_data.get("metadata", {}).get("biennium"),
             "sessions": votes_data.get("metadata", {}).get("sessions", []),
             "paginationComplete": votes_data.get("metadata", {}).get("paginationComplete"),

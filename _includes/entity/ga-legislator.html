@@ -653,6 +653,7 @@
         </div>
       </div>
       <p class="finance-meta">${escHtml(f.electionCycle || '')}${f.office ? ` · ${escHtml(f.office)}` : ''}</p>
+      ${window.CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt)}
       <p class="finance-meta">
         <a href="${escHtml(searchUrl)}" target="_blank" rel="noopener">View filings on PeachFile ↗</a>
         &nbsp;·&nbsp; Covers filings from Jan 1, 2026 onward.
@@ -1353,9 +1354,17 @@
           ).join('')
         : tableFor(sorted);
 
+      // Per-block provenance: roll calls come from the votes file's own
+      // metadata.generatedAt, not the roster stamp the page header shows.
+      const votesGenIso  = data.metadata?.generatedAt || null;
+      const votesGenDate = votesGenIso && !isNaN(new Date(votesGenIso))
+        ? new Date(votesGenIso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+        : null;
+
       container.innerHTML = `
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing recorded passage votes, the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
+        ${votesGenDate ? `<p style="font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">Vote data from legis.ga.gov, updated ${votesGenDate}.</p>` : ''}
         ${incompleteNote}
         ${(participationHtml || partyLoyaltyHtml) ? `
         <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">

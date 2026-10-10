@@ -397,8 +397,21 @@ window.CampaignFinance = (function () {
     };
   }
 
+  // Per-block provenance line ("Finance data from the FEC, updated October 4, 2026.").
+  // Finance figures come from their own files (ga-fec-data.json /
+  // ga-campaign-finance.json), not from the roster the page-level stamp describes, so
+  // each panel dates itself from the finance file's own metadata.generatedAt. Returns ''
+  // when the timestamp is absent or unparseable rather than printing a bare or wrong date.
+  function provenanceLine(sourceName, generatedAt) {
+    if (!generatedAt) return '';
+    const d = new Date(generatedAt);
+    if (isNaN(d)) return '';
+    const when = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    return '<p class="finance-meta">Finance data from ' + sourceName + ', updated ' + when + '.</p>';
+  }
+
   return {
-    getFecData, getGaFinanceData, fmtMoney,
+    getFecData, getGaFinanceData, fmtMoney, provenanceLine,
     normalizeName, candidateLastName, findFecId, findFecMatch,
     narrowFecMatches, fecHasActivity,
     gaCandidatePool, findGaFilers,
