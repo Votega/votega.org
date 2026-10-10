@@ -1,0 +1,23 @@
+{%- comment -%}
+  Status banner for a post that snapshots election results. The post body is
+  frozen at the moment it was written ("unofficial", as of a date), but the
+  election it describes is not: once the results page is certified, the post
+  would otherwise keep saying "unofficial" next to a page that says "certified".
+  Status is derived at build time through result-status.html (the same resolver
+  race.html and the archive use), so certifying an election needs no post edit.
+
+  Inputs:
+      url   permalink of the results page, e.g. /ga-primary-results/
+      asof  what the post's own figures are, e.g. "the unofficial count as of May 20"
+{%- endcomment -%}
+{%- include result-status.html url=include.url -%}
+{%- assign rps_link = include.url | relative_url -%}
+{%- if result_status == 'certified' -%}
+<div class="box-note" markdown="0">
+<strong>Update: these results are now certified.</strong> This post preserves {{ include.asof | default: 'the unofficial count as first reported' }}; the Georgia Secretary of State has since certified the final numbers, which may differ slightly. See the <a href="{{ rps_link }}">certified results</a>.
+</div>
+{%- elsif result_status == 'unofficial' -%}
+<div class="box-note" markdown="0">
+<strong>Results are preliminary and unofficial until certified by the Georgia Secretary of State.</strong> See the latest on the <a href="{{ rps_link }}">results page</a>.
+</div>
+{%- endif -%}

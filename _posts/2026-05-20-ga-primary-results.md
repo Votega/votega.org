@@ -8,6 +8,8 @@ share-description: "Analysis of the unofficial results from Georgia's 2026 prima
 # Georgia Primary Election 2026 — Statewide Voting Data Analysis
 *Data as of May 20, 2026 (9:30 PM)*
 
+{% include post-results-status.html url="/ga-primary-results/" asof="the unofficial count as of May 20, 9:30 PM" %}
+
 **Source:** Georgia Secretary of State — General Primary Election Results (Unofficial), May 19, 2026. Available at: [results.sos.ga.gov](https://results.sos.ga.gov/results/public/Georgia/elections/GeneralPrimary51926/reports) 
 
 ## Key Findings

@@ -8,6 +8,8 @@ share-description: "Unofficial results from Georgia's 2026 primary runoff electi
 # Georgia Primary Runoff Results
 *Created June 17, 2026 with unofficial Secretary of State results*
 
+{% include post-results-status.html url="/ga-primary-runoff-results/" asof="the unofficial count as of June 17" %}
+
 **Source:** Georgia Secretary of State — General Primary Runoff Results. Available at: [results.sos.ga.gov](https://results.sos.ga.gov/results/public/Georgia/elections/06162026GeneralPrimaryRunoff) 
 
 ## Key Findings
