@@ -725,10 +725,16 @@ breadcrumb:
     const subjectTag = bill.subjects && bill.subjects.length
       ? '<span class="bill-subject-tag">' + escHtml(toTitleCase(bill.subjects[0])) + '</span><span class="bill-meta-sep">&middot;</span>'
       : '';
-    const voteInline = bill.passageVotes && bill.passageVotes.length
+    // Headline the LATEST passage vote (the one that decided the bill's last chamber),
+    // not whichever happens to be first in the array. Ties on date keep the later entry.
+    let headlineVote = null;
+    (bill.passageVotes || []).forEach(function (v) {
+      if (!headlineVote || (v.date || '') >= (headlineVote.date || '')) headlineVote = v;
+    });
+    const voteInline = headlineVote
       ? '<span class="bill-meta-sep">&middot;</span>'
-        + '<span class="bill-vote-inline"><span class="vote-yes-txt">' + bill.passageVotes[0].yea + ' yes</span>'
-        + '&nbsp;&middot;&nbsp;<span class="vote-no-txt">' + bill.passageVotes[0].nay + ' no</span></span>'
+        + '<span class="bill-vote-inline"><span class="vote-yes-txt">' + headlineVote.yea + ' yes</span>'
+        + '&nbsp;&middot;&nbsp;<span class="vote-no-txt">' + headlineVote.nay + ' no</span></span>'
       : '';
 
     const abstract    = bill.abstract ? '<div class="detail-section"><div class="detail-label">Summary</div><div class="detail-body">' + escHtml(bill.abstract) + '</div></div>' : '';

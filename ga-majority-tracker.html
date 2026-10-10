@@ -72,6 +72,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .bar-d { background: #2563eb; }
   .bar-r { background: #dc2626; }
   .bar-v { background: #9ca3af; }
+  .bar-i { background: #7c3aed; }
   .seat-bar-legend {
     display: flex;
     justify-content: space-between;
@@ -172,6 +173,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   }
   .senate-seat.seat-d { background: #dbeafe; border-color: #93c5fd; }
   .senate-seat.seat-r { background: #fee2e2; border-color: #fca5a5; }
+  .senate-seat.seat-i { background: #ede9fe; border-color: #c4b5fd; }
   .senate-seat.seat-v { background: #f3f4f6; border-color: #d1d5db; }
   .seat-name {
     font-size: 0.66rem;
@@ -467,14 +469,13 @@ const HOUSE_ROWS = [
   { r: 230, count: 36 },
 ];
 
-const COLOR = { D: '#2563eb', R: '#dc2626', V: '#9ca3af' };
-const BG    = { D: '#dbeafe', R: '#fee2e2', V: '#f3f4f6' };
+const COLOR = { D: '#2563eb', R: '#dc2626', I: '#7c3aed', V: '#9ca3af' };
+const BG    = { D: '#dbeafe', R: '#fee2e2', I: '#ede9fe', V: '#f3f4f6' };
 
 // ── Data loading ───────────────────────────────────────────────────────────
 
 async function loadMembers() {
-  const base = (location.pathname.match(/^\/[^/]+\//) || [''])[0];
-  const res  = await fetch(base + 'assets/data/ga-members.json');
+  const res  = await fetch(getBasePath() + 'assets/data/ga-members.json');
   const members = (await res.json()).members || [];
   // Resigned/Removed/Deceased entries are historical records kept only so
   // ga-member-votes.json can still join their earlier votes by OCD id — the
@@ -491,7 +492,10 @@ function partyOf(member) {
   const p = (member.party || '').toLowerCase();
   if (p.startsWith('d')) return 'D';
   if (p.startsWith('r')) return 'R';
-  return 'V';
+  // A seated member of any other party (or none recorded) is an Independent, not a
+  // vacancy: 'V' is reserved for a missing record or a status of Vacant above, so an
+  // Independent is counted, labelled and linked like any other sitting legislator.
+  return 'I';
 }
 
 const UNOPPOSED = window.UNOPPOSED_SEATS || { senate: {}, house: {} };
@@ -505,11 +509,12 @@ function unopposedPartyFor(chamber, district) {
   return (map && Object.prototype.hasOwnProperty.call(map, district)) ? map[district] : null;
 }
 
-function legendHtml(d, r, v, uCount) {
+function legendHtml(d, r, v, uCount, i = 0) {
   // Marks mirror the seat shapes so the non-colour cue is decodable.
   return `
     <span><span class="dot" style="background:${COLOR.D}"></span>Democrat (${d})</span>
     <span><span class="dot dot-square" style="background:${COLOR.R}"></span>Republican (${r})</span>
+    ${i ? `<span><span class="dot" style="background:${COLOR.I};border-radius:2px;transform:rotate(45deg)"></span>Independent (${i})</span>` : ''}
     ${v ? `<span><span class="dot dot-hollow" style="border-color:${COLOR.V}"></span>Vacant (${v})</span>` : ''}
     ${uCount ? `<span><span class="legend-star">★</span>No major-party opponent (${uCount})</span>` : ''}
   `;
@@ -517,8 +522,8 @@ function legendHtml(d, r, v, uCount) {
 
 // ── Stats banner ───────────────────────────────────────────────────────────
 
-function renderCard(el, title, dCount, rCount, vCount, majority) {
-  const total = dCount + rCount + vCount;
+function renderCard(el, title, dCount, rCount, vCount, majority, iCount = 0) {
+  const total = dCount + rCount + iCount + vCount;
 
   // Signed distance from the majority line: a positive number means the party
   // holds the majority by that many seats, negative means it is that many
@@ -541,10 +546,12 @@ function renderCard(el, title, dCount, rCount, vCount, majority) {
     <div class="seat-bar">
       <div class="bar-d" style="width:${(dCount/total*100).toFixed(1)}%"></div>
       <div class="bar-r" style="width:${(rCount/total*100).toFixed(1)}%"></div>
+      <div class="bar-i" style="width:${(iCount/total*100).toFixed(1)}%"></div>
       <div class="bar-v" style="width:${(vCount/total*100).toFixed(1)}%"></div>
     </div>
     <div class="seat-bar-legend">
       <span><span class="dot" style="background:${COLOR.D}"></span>D ${dCount}</span>
+      ${iCount ? `<span><span class="dot" style="background:${COLOR.I}"></span>I ${iCount}</span>` : ''}
       ${vCount ? `<span><span class="dot" style="background:${COLOR.V}"></span>Vacant ${vCount}</span>` : ''}
       <span>R ${rCount}<span class="dot" style="background:${COLOR.R};margin:0 0 0 3px"></span></span>
     </div>
@@ -573,7 +580,7 @@ function renderSenate(byDistrict) {
   const grid = document.getElementById('senateGrid');
   grid.innerHTML = '';
 
-  let d = 0, r = 0, v = 0;
+  let d = 0, r = 0, i = 0, v = 0;
   SENATE_ROWS.forEach(row => {
     const rowEl = document.createElement('div');
     rowEl.className = 'senate-row';
@@ -597,10 +604,10 @@ function renderSenate(byDistrict) {
   // Tally
   Object.values(byDistrict).filter(m => m.chamber === 'Senate').forEach(m => {
     const p = partyOf(m);
-    if (p === 'D') d++; else if (p === 'R') r++; else v++;
+    if (p === 'D') d++; else if (p === 'R') r++; else if (p === 'I') i++; else v++;
   });
 
-  document.getElementById('senateLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.senate || {}).length);
+  document.getElementById('senateLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.senate || {}).length, i);
 }
 
 function makeSeneateSeat(dist, byDistrict) {
@@ -624,7 +631,7 @@ function makeSeneateSeat(dist, byDistrict) {
     ? member.name.split(',')[0].split(' ').pop()
     : 'Vacant';
   const fullName = (member && !isVacant) ? member.name : 'Vacant';
-  const partyLabel = party === 'D' ? 'Democrat' : party === 'R' ? 'Republican' : 'Vacant';
+  const partyLabel = party === 'D' ? 'Democrat' : party === 'R' ? 'Republican' : party === 'I' ? 'Independent' : 'Vacant';
   const partyMark  = party === 'V' ? '—' : party;
 
   const unopposed = unopposedPartyFor('Senate', dist);
@@ -663,7 +670,7 @@ function renderHouse(members) {
     .sort((a, b) => a.district - b.district);
 
   let memberIdx = 0;
-  let d = 0, r = 0, v = 0;
+  let d = 0, r = 0, i = 0, v = 0;
 
   HOUSE_ROWS.forEach(({ r: radius, count }) => {
     for (let i = 0; i < count; i++) {
@@ -675,7 +682,7 @@ function renderHouse(members) {
 
       const member = house[memberIdx++] || null;
       const party  = partyOf(member);
-      if (party === 'D') d++; else if (party === 'R') r++; else v++;
+      if (party === 'D') d++; else if (party === 'R') r++; else if (party === 'I') i++; else v++;
 
       const seatSize = 9;
       // Party must not be colour-only (WCAG 1.4.1), and a 9px seat is too small
@@ -700,7 +707,8 @@ function renderHouse(members) {
       let seatNode = circle;
       if (district != null) {
         const partyLabel = party === 'D' ? 'Democrat'
-                         : party === 'R' ? 'Republican' : 'Vacant';
+                         : party === 'R' ? 'Republican'
+                         : party === 'I' ? 'Independent' : 'Vacant';
         const who = (member && !isVacant) ? member.name : 'Vacant';
         const unopposed = unopposedPartyFor('House of Representatives', district);
         const link = svgEl('a', {
@@ -734,7 +742,7 @@ function renderHouse(members) {
     }
   });
 
-  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.house || {}).length);
+  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.house || {}).length, i);
 }
 
 // ── Seat marks ─────────────────────────────────────────────────────────────
@@ -750,6 +758,14 @@ function seatShape(party, x, y, size) {
     return svgEl('rect', Object.assign({
       x: (x - size / 2).toFixed(1), y: (y - size / 2).toFixed(1),
       width: size, height: size, rx: 1.5,
+    }, common));
+  }
+  if (party === 'I') {
+    // Diamond, so an Independent is distinct from D (circle) and R (square) without colour.
+    return svgEl('rect', Object.assign({
+      x: (x - size / 2).toFixed(1), y: (y - size / 2).toFixed(1),
+      width: size, height: size, rx: 1.5,
+      transform: `rotate(45 ${x.toFixed(1)} ${y.toFixed(1)})`,
     }, common));
   }
   if (party === 'V') {
@@ -851,19 +867,19 @@ document.querySelectorAll('.chamber-tab').forEach(btn => {
 
     // Tally per chamber
     const tally = (map) => {
-      let d = 0, r = 0, v = 0;
+      let d = 0, r = 0, i = 0, v = 0;
       Object.values(map).forEach(m => {
         const p = partyOf(m);
-        if (p === 'D') d++; else if (p === 'R') r++; else v++;
+        if (p === 'D') d++; else if (p === 'R') r++; else if (p === 'I') i++; else v++;
       });
-      return { d, r, v };
+      return { d, r, i, v };
     };
 
     const ht = tally(houseByDist);
     const st = tally(senateByDist);
 
-    renderCard(document.getElementById('houseCard'),  'House of Representatives', ht.d, ht.r, ht.v, HOUSE_MAJORITY);
-    renderCard(document.getElementById('senateCard'), 'Senate',                   st.d, st.r, st.v, SENATE_MAJORITY);
+    renderCard(document.getElementById('houseCard'),  'House of Representatives', ht.d, ht.r, ht.v, HOUSE_MAJORITY, ht.i);
+    renderCard(document.getElementById('senateCard'), 'Senate',                   st.d, st.r, st.v, SENATE_MAJORITY, st.i);
 
     renderSenate(senateByDist);
     renderHouse(members);
