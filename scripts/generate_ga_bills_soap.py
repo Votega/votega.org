@@ -45,6 +45,7 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic, atomic_write
 from lib.ga_passage import native_is_passage
+from lib.ga_vote_rules import is_state_constitutional_amendment, vote_passed
 from lib.ga_bill_subjects import infer_local_subject
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              legis_session_id, session_name)
@@ -151,12 +152,14 @@ def _text(el, tag, cast=None):
     return child.text.strip()
 
 
-def derive_result(yea, nay):
-    """Pass/Fail by simple majority — reproduces Open States' result rule exactly
-    (see generate_ga_votes_soap.derive_result)."""
-    if yea is None or nay is None:
+def derive_result(yea, nay, chamber=None, constitutional_amendment=False):
+    """Pass/Fail by simple majority (Open States' result rule), or two-thirds of the
+    chamber's elected members for a Georgia constitutional amendment — see
+    lib/ga_vote_rules.py and generate_ga_votes_soap.derive_result."""
+    passed = vote_passed(yea, nay, chamber, constitutional_amendment)
+    if passed is None:
         return None
-    return "pass" if yea > nay else "fail"
+    return "pass" if passed else "fail"
 
 
 def get_titles():
@@ -263,7 +266,7 @@ def _clean_member_desc(desc):
     return (desc or "").strip()
 
 
-def _passage_votes(detail):
+def _passage_votes(detail, constitutional_amendment=False):
     """The bill's passage roll calls (native_is_passage), mapped to the ga-bills schema."""
     out = []
     votes = detail.find("d:Votes", ns)
@@ -277,10 +280,11 @@ def _passage_votes(detail):
         nay = _text(vl, "Nays", int)
         nv  = _text(vl, "NotVoting", int) or 0
         exc = _text(vl, "Excused", int) or 0
+        chamber = _chamber(None, _text(vl, "Branch"))
         out.append({
-            "chamber":    _chamber(None, _text(vl, "Branch")),
+            "chamber":    chamber,
             "date":       (_text(vl, "Date") or "")[:10] or "",
-            "result":     derive_result(yea, nay) or "",
+            "result":     derive_result(yea, nay, chamber, constitutional_amendment) or "",
             "motionText": caption,
             "yea":        yea if yea is not None else 0,
             "nay":        nay if nay is not None else 0,
@@ -356,7 +360,8 @@ def map_bill(detail, our_session, roster, titles_map):
         "sponsors":    _sponsors(detail, roster),
         "billUrl":     "https://www.legis.ga.gov/legislation/%s" % lid,
         "textUrl":     (_text(latest, "Url") or "") if latest is not None else "",
-        "passageVotes": _passage_votes(detail),
+        "passageVotes": _passage_votes(
+            detail, is_state_constitutional_amendment(summary) and doc_type.upper() in RESOLUTION_TYPES),
         "governorAction": _governor_action(detail),
     }
 

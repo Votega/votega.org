@@ -68,6 +68,7 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.ga_passage import classify, load_os_passage_index, normalize_bill
+from lib.ga_vote_rules import is_state_constitutional_amendment, vote_passed
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              legis_session_id, session_name)
 from lib.votes_schema import encode_member_votes
@@ -100,6 +101,7 @@ VOTE_MAP = {
 CHAMBERS      = ["House", "Senate"]
 VACANT_ID     = 0                       # Member.Id sentinel for an empty seat
 CROSSWALK_FILE = "assets/data/id-crosswalk.json"
+BILLS_FILE     = "assets/data/ga-bills.json"           # abstracts -> constitutional-amendment ids
 OS_VOTES_FILE  = "assets/data/ga-member-votes.json"   # passage overlay / result oracle
 DEFAULT_OUTPUT = "assets/data/ga-member-votes.soap.json"
 
@@ -108,17 +110,38 @@ class RollCallNotPublished(Exception):
     """GetVote faulted: this roll call isn't published (attendance / procedural)."""
 
 
-def derive_result(yea, nay):
-    """Pass/Fail from the tally. Open States' `result` field is empirically a SIMPLE
-    majority of those voting — `yea > nay` reproduces OS's Pass/Fail on 2503/2503
-    (100%) of the biennium's votes, while the GA constitutional-majority rule
-    (House 91 / Senate 29 of elected) only matches 98.56% because resolutions and
-    procedural motions pass on a present-majority. Matching OS exactly keeps the
-    rendered Pass/Fail byte-identical across a cutover; a future "true constitutional
-    result" would be a separate, deliberate change. Returns None if the tally is absent."""
-    if yea is None or nay is None:
+def derive_result(yea, nay, chamber=None, constitutional_amendment=False):
+    """Pass/Fail from the tally (see lib/ga_vote_rules.py for the rule).
+
+    A simple majority of those voting (`yea > nay`) — which reproduced Open States'
+    `result` on all 2503/2503 of the biennium's votes at the SOAP cutover — except for
+    a resolution proposing a Georgia constitutional amendment, which needs two-thirds
+    of the chamber's elected members (House 120 / Senate 38). Those had been labelled
+    Pass on a bare majority (HR 1114 at 99-73; SR 838, 875 and 668, which the Senate
+    lost), so this now takes the chamber and an amendment flag. Returns None if the
+    tally is absent."""
+    passed = vote_passed(yea, nay, chamber, constitutional_amendment)
+    if passed is None:
         return None
-    return "Pass" if yea > nay else "Fail"
+    return "Pass" if passed else "Fail"
+
+
+def load_amendment_ids(bills_file):
+    """legislationIds of resolutions proposing a Georgia constitutional amendment, read
+    from the committed ga-bills.json (whose abstracts this script does not fetch).
+    Empty set — and a warning — if the file is absent, in which case those votes fall
+    back to the simple-majority rule until the next bills run."""
+    try:
+        with open(bills_file, encoding="utf-8") as f:
+            bills = json.load(f).get("bills", [])
+    except (OSError, ValueError) as e:
+        print("  WARNING: could not read %s (%s); constitutional-amendment votes will use "
+              "the simple-majority rule" % (bills_file, e), file=sys.stderr)
+        return set()
+    return {b["legislationId"] for b in bills
+            if b.get("legislationId") is not None
+            and b.get("billType") == "resolution"
+            and is_state_constitutional_amendment(b.get("abstract"))}
 
 
 # --------------------------------------------------------------------------- SOAP
@@ -279,7 +302,7 @@ def build_crosswalk(path=CROSSWALK_FILE):
 # ---------------------------------------------------------------------------- build
 
 def build_session(our_session, by_legis_id, os_index, title_index,
-                  chambers=CHAMBERS, sample=None, verbose=True):
+                  chambers=CHAMBERS, sample=None, verbose=True, amendment_ids=frozenset()):
     """Fetch one session's roll calls across `chambers`, keep PASSAGE votes (overlay-
     primary), resolve members by id ONLY, and explode each roll call into one record
     per bundled bill. Returns (votes_meta, member_votes, stats)."""
@@ -366,7 +389,7 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                     # roll calls the same day both would inherit ONE roll call's result
                     # (67 such mis-assignments observed). The per-roll-call tally is
                     # correct for each, and fully decouples result from OS.
-                    "result": derive_result(yea, nay),
+                    "result": derive_result(yea, nay, branch, lid in amendment_ids),
                 }
                 for ocd, option in resolved:
                     member_votes.setdefault(ocd, []).append({"voteId": key, "vote": option})
@@ -432,6 +455,9 @@ def main():
     by_legis_id = build_crosswalk()
     print("Loaded crosswalk: %d legisGaGovId joins (id-only resolution)" % len(by_legis_id))
 
+    amendment_ids = load_amendment_ids(BILLS_FILE)
+    print("Constitutional-amendment resolutions (2/3 rule): %d" % len(amendment_ids))
+
     votes_meta, member_votes = {}, {}
     agg = Counter()
     unresolved_gap = {}
@@ -455,7 +481,8 @@ def main():
             print("  title index: %d bills" % len(title_index))
 
         vm, mv, stats = build_session(our_session, by_legis_id, os_index, title_index,
-                                      chambers=chambers, sample=sample)
+                                      chambers=chambers, sample=sample,
+                                      amendment_ids=amendment_ids)
         votes_meta.update(vm)
         for ocd, entries in mv.items():
             member_votes.setdefault(ocd, []).extend(entries)
