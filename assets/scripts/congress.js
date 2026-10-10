@@ -140,9 +140,11 @@ function renderMembers() {
 
     // Vacant seat — shown inline (not gated behind a selection) since the
     // row list has no separate "choose then reveal" step.
-    const vacancyMsg = district === 13
-      ? `Vacant following Rep. David Scott's death. See the <a href="${basePath}ga-special-2026-runoff-results/">2026 special election runoff results</a>.`
-      : `District ${district} is currently vacant.`;
+    // Deliberately generic: this branch is reached only when current-members.json
+    // has no sitting member for the district. A district-specific message here (the
+    // old GA-13 text after Rep. Scott's death) goes stale the moment the seat is
+    // filled and has to be remembered and removed by hand.
+    const vacancyMsg = `District ${district} is currently vacant.`;
     return `<div class="member-row member-row-vacant">
       <span class="member-district">District ${district}</span>
       <span class="member-name">${vacancyMsg}</span>
