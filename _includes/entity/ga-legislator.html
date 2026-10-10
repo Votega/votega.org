@@ -1002,7 +1002,7 @@
         : `<span class="bill-vote-badge badge-other">No vote recorded</span>`;
 
       const statusDate = bill.statusDate
-        ? new Date(bill.statusDate + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'})
+        ? new Date(String(bill.statusDate).slice(0, 10) + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'})
         : '';
       const statusTag = escHtml([bill.status, statusDate].filter(Boolean).join(' · '));
       const summaryHtml = bill.summary ? `<div class="bill-summary">${escHtml(bill.summary)}</div>` : '';
@@ -1308,7 +1308,7 @@
         const bill    = escHtml(meta.bill || '—');
         const title   = meta.title ? escHtml(meta.title) : '';
         const caption = escHtml(meta.motionText || '—');
-        const date    = meta.date ? new Date(meta.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+        const date    = meta.date ? new Date(meta.date + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
         const billLink = meta.billUrl
           ? `<a href="${escHtml(meta.billUrl)}" target="_blank" rel="noopener">${bill}</a>`
           : bill;
