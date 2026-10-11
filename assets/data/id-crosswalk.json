@@ -2,7 +2,7 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-10-11T14:10:31+00:00",
+  "generatedAt": "2026-10-11T15:36:31+00:00",
   "count": 747,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
@@ -26,9 +26,9 @@
    "people": 747,
    "officeholders": 267,
    "candidateOnly": 480,
-   "withVgId": 678,
-   "unkeyed": 69,
-   "withAnyFiling": 660,
+   "withVgId": 677,
+   "unkeyed": 70,
+   "withAnyFiling": 659,
    "candidacies": 716,
    "ambiguous": []
   }
@@ -39484,60 +39484,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000676",
-   "name": {
-    "full": "Eddie Travis Hall",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "103425"
-    ],
-    "votegaCandidateIds": [
-     "ga-senate-54-2026-r-2"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-senate-54-2026",
-     "candidateId": "ga-senate-54-2026-r-2",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia State Senate",
-     "district": 54,
-     "party": "Republican",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "103425",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000677",
    "name": {
     "full": "James Martin Brown",
@@ -40937,6 +40883,56 @@
       "confidence": "confirmed-none",
       "source": "assets/data/ga-campaign-finance-overrides.json",
       "key": "ga-senate-17-2026-d-1"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Eddie Travis Hall",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "ga-senate-54-2026-r-2"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-senate-54-2026",
+     "candidateId": "ga-senate-54-2026-r-2",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia State Senate",
+     "district": 54,
+     "party": "Republican",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
      }
     }
    ],
