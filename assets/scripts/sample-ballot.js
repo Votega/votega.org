@@ -46,12 +46,19 @@ function pickLayer(geographies, needle) {
   return entry || null;
 }
 
+// True only when Census positively placed the match in another state. A match with no
+// state layer is "unknown", not "outside Georgia".
+function isOutsideGeorgia(match) {
+  const state = pickLayer(match.geographies || {}, 'states');
+  return !!state && String(state.GEOID) !== '13'; // 13 = Georgia (FIPS)
+}
+
 // Parse one Census addressMatch into a location object. Returns null if the match is
-// not in Georgia or is missing the layers we need.
+// not in Georgia or is missing the layers we need (callers use isOutsideGeorgia() to
+// tell the two apart).
 function parseCensusMatch(match) {
   const g = match.geographies || {};
-  const state = pickLayer(g, 'states');
-  if (state && String(state.GEOID) !== '13') return null; // 13 = Georgia (FIPS)
+  if (isOutsideGeorgia(match)) return null;
 
   const county   = pickLayer(g, 'counties');
   const usHouse  = pickLayer(g, 'congressional districts');
@@ -96,21 +103,23 @@ function geocodeAddress(address) {
       try {
         const matches = payload && payload.result && payload.result.addressMatches;
         if (!matches || !matches.length) {
-          reject(new Error('That address could not be found. Try a full street address, or pick your county below.'));
+          reject(new Error('That address could not be found. Try a full street address, or pick your county above.'));
           return;
         }
         const loc = parseCensusMatch(matches[0]);
         if (!loc) {
-          reject(new Error('That address does not appear to be in Georgia.'));
+          reject(new Error(isOutsideGeorgia(matches[0])
+            ? 'That address does not appear to be in Georgia.'
+            : 'We found that address but could not tell which county it is in. Try your county above.'));
           return;
         }
         resolve(loc);
       } catch (e) {
-        reject(new Error('The address lookup returned unexpected data. Try your county below.'));
+        reject(new Error('The address lookup returned unexpected data. Try your county above.'));
       }
     };
 
-    script.onerror = () => fail('The address lookup service could not be reached. Try again, or pick your county below.');
+    script.onerror = () => fail('The address lookup service could not be reached. Try again, or pick your county above.');
     script.src = `${CENSUS_GEOCODER_URL}?address=${encodeURIComponent(address)}&${CENSUS_PARAMS}&callback=${cb}`;
     document.body.appendChild(script);
   });
@@ -400,7 +409,7 @@ async function resolveBallot(input) {
  * ------------------------------------------------------------------ */
 
 const SampleBallot = {
-  geocodeAddress, parseCensusMatch, locationFromCounty,
+  geocodeAddress, parseCensusMatch, isOutsideGeorgia, locationFromCounty,
   assembleBallot, raceApplies, measureApplies,
   circuitSlugFromRaceId, candidatesForPhase, candidatesForActivePhase,
   availableElections, selectableElections, defaultElectionDate, phaseForDate, newestCycle,
