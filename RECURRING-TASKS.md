@@ -292,6 +292,35 @@ is closed, so the gap is frozen rather than growing.
 
 ## 5. Open items
 
+- [ ] **Unpin the Actions runners from `ubuntu-24.04` (after the 2026 general is certified).**
+      All 46 jobs say `runs-on: ubuntu-24.04` rather than `ubuntu-latest`. This is a deliberate,
+      temporary pin, taken on 2026-10-12.
+
+      **Why.** GitHub moves `ubuntu-latest` from 24.04 to 26.04 gradually between **2026-10-19 and
+      2026-11-19** — a window that contains election day. The rollout is *per job*, so which image
+      a run gets is unpredictable and a passing run proves nothing about the next one. Nine
+      workflows run Python with no `setup-python` step and therefore ride the **system** Python
+      (24.04 ships 3.12; 26.04 is well ahead of that). One of those nine is `deploy-pages.yml`,
+      which runs `build_entity_pages.py` and `build_render_data.py` to publish the site — so an
+      incompatibility there stops the site updating, during the week it matters most.
+
+      Pinning changed no behaviour: `ubuntu-latest` *was* 24.04 when the pin was taken, so this
+      freezes what was already passing rather than moving to anything new.
+
+      **To undo**, once there is no election pressure: swap `ubuntu-24.04` back to `ubuntu-latest`
+      (or go straight to `ubuntu-26.04`) in `.github/workflows/*.yml`, drop the trailing
+      `# pinned through the 2026 general` comments, and run `python scripts/validate_workflow_triggers.py`.
+      Test the nine system-Python workflows first — the durable fix for them is an explicit
+      `setup-python` step, which makes the OS image irrelevant.
+
+      **Do this together with the Node 20 action bump**, which was deliberately deferred for the
+      same reason: `actions/checkout@v4` (47 uses) and `actions/setup-python@v5` (35 uses) target
+      Node 20 and are already being force-run on Node 24. Nothing is broken — the current majors
+      are `checkout@v5`/`@v6` and `setup-python@v6` — but that is 82 major-version bumps and was
+      not worth the risk before the election. Sources:
+      [GitHub changelog](https://github.blog/changelog/2026-09-17-ubuntu-26-generally-available-and-latest-migration/),
+      [runner-images #14748](https://github.com/actions/runner-images/issues/14748).
+
 - [x] ~~Regenerate FEC data after the pagination fix.~~ Ran 2026-08-08: 252 candidates
       (was 138), House 214 (was capped at 100), 16 of 17 GA members now resolve.
 - [x] ~~Re-run `update-fec-data.yml` after the bioguide-map fix.~~ Ran 2026-08-08: all 15

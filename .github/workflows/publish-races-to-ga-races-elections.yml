@@ -20,7 +20,7 @@ on:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 

@@ -29,7 +29,7 @@ on:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
 
     steps:
       - name: Checkout repository

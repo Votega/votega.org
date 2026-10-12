@@ -56,7 +56,7 @@ permissions:
 jobs:
   open-or-update-issue:
     if: github.event.workflow_run.conclusion == 'failure'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
 
     steps:
       - name: Open or update a deduplicated failure issue

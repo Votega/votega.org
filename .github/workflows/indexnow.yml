@@ -24,7 +24,7 @@ jobs:
   submit:
     # Only after a successful deploy (or a manual run).
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
     steps:
       - name: Checkout
         uses: actions/checkout@v4

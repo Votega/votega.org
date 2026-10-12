@@ -25,7 +25,7 @@ on:
 
 jobs:
   report:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ISSUE_TITLE: 'Local officials: rosters due for re-verification'
