@@ -1234,10 +1234,30 @@
       const CODE = { Y: 'Yea', N: 'Nay', NV: 'Not Voting', P: 'Present', A: 'Absent', E: 'Excused', O: 'Other' };
       // Decode only this member's compact { index: code } slice into the legacy
       // [{ voteId, vote }] shape the rest of this function expects.
+      // An absent slice and a failed slice fetch mean different things, and only one
+      // of them licenses the "no voting record" claim below. build_member_votes_slices.py
+      // writes a file only for members who appear in memberVotes, so 404/410 really is
+      // "this member has no roll calls in our data". Any other failure — a 5xx, an edge
+      // hiccup, a truncated or invalid body — tells us nothing about the member, and
+      // reporting it as "no voting record" asserts as fact something we don't know: a
+      // legislator with a full record would render as having none. Separate the two.
       const memberVotes = [];
+      let sliceFailed = false;
       if (sliceRes.ok) {
-        const compact = (await sliceRes.json()).compact || {};
-        for (const i in compact) memberVotes.push({ voteId: ids[+i], vote: CODE[compact[i]] || compact[i] });
+        try {
+          const compact = (await sliceRes.json()).compact || {};
+          for (const i in compact) memberVotes.push({ voteId: ids[+i], vote: CODE[compact[i]] || compact[i] });
+        } catch (err) {
+          console.warn('Could not parse vote slice:', err);
+          sliceFailed = true;
+        }
+      } else if (sliceRes.status !== 404 && sliceRes.status !== 410) {
+        console.warn('Vote slice fetch failed:', sliceRes.status, SLICE_URL);
+        sliceFailed = true;
+      }
+      if (sliceFailed) {
+        container.innerHTML = `<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">We couldn’t load this member’s voting record just now — this is a temporary problem on our end, not a sign that they have no record. Please reload the page to try again.</p>`;
+        return;
       }
       if (memberVotes.length === 0) {
         container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No voting record found for this member in our data for this session. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';
