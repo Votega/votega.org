@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-08T15:55:06Z",
+  "generatedAt": "2026-10-12T17:51:05Z",
   "source": "Barrow County (granicus agenda HTML)",
   "place": "Barrow County",
   "count": 25
@@ -10,22 +10,48 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-08",
+  "lastActivity": "2026-10-15",
   "topicTotals": {
-   "variance": 8,
-   "appointment": 1,
-   "contract": 1,
-   "millage-budget": 1,
-   "comprehensive-plan": 3,
-   "development": 5,
-   "rezoning": 5
+   "comprehensive-plan": 5,
+   "development": 6,
+   "rezoning": 6,
+   "variance": 9,
+   "appointment": 2,
+   "millage-budget": 2,
+   "contract": 1
   },
   "dataCenterItems": [],
   "landUseItems": [
    {
+    "title": "Planning Commission",
+    "date": "2026-10-15",
+    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=760",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… C2026-00076 (XX057 008) 980 Collie Doster Rd; Wielme , LLC / Applicant; Estate of Fredera Doster / Owner; Request for a Future Land Use Map amendment to Suburban residential and rezone for ±141.35 acres from AG (Agriculture) to R-2 (Medium Density Residen …",
+    "excerptTerm": "future land use"
+   },
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-10-13",
+    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=714",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… 615 Blackstock Rd; Key Engineering Solutions / Applicant; Buildwise Enterprise LLC / Owner. Request to rezone ±6 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential). Variance …",
+    "excerptTerm": "rezon"
+   },
+   {
     "title": "Board of Appeals",
     "date": "2026-10-08",
-    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=770",
+    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1169",
     "tags": [
      "variance"
     ]
@@ -107,33 +133,150 @@
     "tags": [
      "variance"
     ]
-   },
-   {
-    "title": "Planning Commission",
-    "date": "2026-05-21",
-    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1121",
-    "tags": [
-     "development",
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "… ndividual lot split. e) Consideration of a text amendment to the Destination 211 Overlay District guidelines to clarify townhome requirements of section 89-1522 (b). VI. Adjournment BOARD OF COMMISSIONERS MEETING WILL BE HELD ON JUNE 09, 2026 AT 6: …",
-    "excerptTerm": "townhome"
    }
   ],
-  "landUseMeetings": 9,
+  "landUseMeetings": 10,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
   {
-   "id": "770",
+   "id": "760",
+   "date": "2026-10-15",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=760",
+   "textSource": "agenda",
+   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=760",
+   "textMethod": "html",
+   "textChars": 1859,
+   "contentSha256": "203bfd268627dcba211dda69c8477e82b9240e16fd882c6a6ef13872d075477a",
+   "topics": {
+    "comprehensive-plan": 1,
+    "development": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "development",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "future land use",
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "future land use",
+     "excerpt": "… C2026-00076 (XX057 008) 980 Collie Doster Rd; Wielme , LLC / Applicant; Estate of Fredera Doster / Owner; Request for a Future Land Use Map amendment to Suburban residential and rezone for ±141.35 acres from AG (Agriculture) to R-2 (Medium Density Residen …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… an residential and rezone for ±141.35 acres from AG (Agriculture) to R-2 (Medium Density Residential) for an Open space subdivision. b) BOC2026-00089 (XX043 005) 815 Progress Dr; Greatrise Materials Recycling Inc / Applicant and Owner; Special use req …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… / Applicant; Estate of Fredera Doster / Owner; Request for a Future Land Use Map amendment to Suburban residential and rezone for ±141.35 acres from AG (Agriculture) to R-2 (Medium Density Residential) for an Open space subdivision. b) BOC2026- …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… f Georgia / Owner; Request to rezone ± 5.08 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential). Variance request to Sec. 89-402 for required road frontage and Sec. 89-1186 for shared driveway length. VI. Adjournment BOARD OF …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "714",
+   "date": "2026-10-13",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners",
+   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=714",
+   "textSource": "agenda",
+   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=714",
+   "textMethod": "pdftotext",
+   "textChars": 8066,
+   "contentSha256": "8577bd18a7c879012d2e6a01e4181f96425f9ec07853409497792c62a3d93b3c",
+   "topics": {
+    "appointment": 1,
+    "comprehensive-plan": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "comprehensive-plan",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "future land use",
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… to exceed the maximum 25% impervious surface. VII. Consent Agenda a) Consideration to approve the appointment of Steffanie Sorrells to the Planning Commission Board to fulfill a term that will expire on Decem …",
+     "context": "unknown"
+    },
+    "comprehensive-plan": {
+     "term": "future land use",
+     "excerpt": "… Owner. Special Use request to UDC Sec. 89-190(d) for a ±133.99-acre expansion of an existing landfill. Future Land Use Map amendment to parcels XX052 106 & 115 to Rural Neighborhood to allow for a rezone …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… nsity Single Family Residential). Variance request to UDC Sec 89-402 minimum road frontage for a minor subdivision and UDC Sec. 89-1186 for shared driveway length exceeding 100’. b) BOC2026-00080 (XX052 10 …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… n Water Reclamation Facility in the amount of $3,000,000.00 and approve the necessary budget amendment. Board of Commissioners Voting Session – October 13, 2026 2 X. …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 615 Blackstock Rd; Key Engineering Solutions / Applicant; Buildwise Enterprise LLC / Owner. Request to rezone ±6 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential). Variance …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… wner. Request to rezone ±6 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential). Variance request to UDC Sec 89-402 minimum road frontage for a minor subdivision and UDC Sec. …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1169",
    "date": "2026-10-08",
    "body": "Board of Appeals",
    "title": "Board of Appeals",
-   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=770",
+   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1169",
    "textSource": "agenda",
-   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=770",
+   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1169",
    "textMethod": "html",
    "textChars": 1798,
    "contentSha256": "39c95d6ee964e696e24f97ccefedc49252cb7a228fc85b21fddab2da0e84a9f2",
@@ -759,72 +902,6 @@
    "textMethod": "html",
    "textChars": 26641,
    "contentSha256": "8391179f216c2ddedf901768a3ed62f7e7d916de410be881d4bf6d2102ea2c30",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1121",
-   "date": "2026-05-21",
-   "body": "Planning Commission",
-   "title": "Planning Commission",
-   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1121",
-   "textSource": "agenda",
-   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1121",
-   "textMethod": "html",
-   "textChars": 2348,
-   "contentSha256": "9de27a8445a575fc904cbcdf5257fcba553e961b51bb353aa5af9f25f4a73f9f",
-   "topics": {
-    "development": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "development",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "rezon",
-    "townhome",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "townhome",
-     "excerpt": "… ndividual lot split. e) Consideration of a text amendment to the Destination 211 Overlay District guidelines to clarify townhome requirements of section 89-1522 (b). VI. Adjournment BOARD OF COMMISSIONERS MEETING WILL BE HELD ON JUNE 09, 2026 AT 6: …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… (XX032 016) 0 County Line-Auburn Rd; Jakob Sullins / Applicant; European Construction & Design, LLC / Owner; Request to rezone ± 2.56 acres from AG (Agriculture) to R -1 (Low Density Single Family Residential) for an individual lot split. b) BOC …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… a White / Owners; Request to rezone ± 10.89 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential). Variance request to UDC Sec. 89-402 for required road frontage and 89 -1186 for shared driveway greater than 100’ long . d) BOC2 …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1117",
-   "date": "2026-05-12",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners",
-   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1117",
-   "textSource": "agenda",
-   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1117",
-   "textMethod": "html",
-   "textChars": 28774,
-   "contentSha256": "fc1b00bbfdf3d04845ed76eab3ad5d35c84b433e30999dffa8984378a995cbde",
    "topics": {},
    "tags": [],
    "matchedTerms": [],

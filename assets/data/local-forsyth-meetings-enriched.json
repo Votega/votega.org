@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-08T15:54:48Z",
+  "generatedAt": "2026-10-12T17:50:02Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -10,19 +10,30 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-06",
+  "lastActivity": "2026-10-15",
   "topicTotals": {
-   "comprehensive-plan": 5,
-   "contract": 23,
-   "millage-budget": 20,
-   "rezoning": 16,
+   "comprehensive-plan": 6,
+   "contract": 24,
+   "development": 11,
+   "millage-budget": 21,
+   "rezoning": 17,
+   "variance": 11,
    "appointment": 7,
-   "variance": 10,
-   "development": 10,
    "special-land-use": 4
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-10-15",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5377,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning",
+     "variance"
+    ]
+   },
    {
     "title": "Board of Commissioners Work Session",
     "date": "2026-10-06",
@@ -205,11 +216,86 @@
     ]
    }
   ],
-  "landUseMeetings": 18,
+  "landUseMeetings": 19,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "460",
+   "date": "2026-10-15",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5377,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5377,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 18826,
+   "pdfSha256": "875f52f5e84ffdbbba656094fb2d16190b62482677e5a85c6e0d081d721d32f5",
+   "topics": {
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "budget",
+    "comprehensive plan",
+    "contract",
+    "fiscal year",
+    "rezon",
+    "task order",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… ing an introduction to the purpose, process, and community engagement plan related to the Forsyth County Comprehensive Plan 2027 update - Anna Johnson, Blue Cypress Consulting / Comprehensive Planning Manager, Dep …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "task order",
+     "excerpt": "… total loss Unit #399 - Chief of Staff, Sheriff's Office (C) Board approval of a Task Order with Steele & Associates, Inc. in the amount of $191,659.00 to provide services under the Trails R …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… - CP260013 - to operate an open storage yard with an overall site including a contractor's establishment/warehouse/wholesale in existing buildings totaling 17,638 sq. ft. with 19 parking spaces on 6.70 acres zoned Restr …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ociated services agreement – Fire Chief, Fire Department (B) Board approval of a Budget Resolution for replacement of total loss Unit #399 - Chief of Staff, Sheriff's Office …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ension of a Moratorium prohibiting the County from receiving applications for Residential Rezonings as defined in UDC Chapter 11 and 20(B), except for applications seeking to rezone to the Res1, MRD, …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… c Hearing and possible vote regarding an Alternate Design for Red Oak Sanitation, LLC with the following variance to: 1. Increase the maximum number of parking spaces from 104 to 150 (UDC 17-2.7) - Parcel 009-075 - AD2 …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "438",
    "date": "2026-10-06",
@@ -1597,24 +1683,6 @@
    "flags": [
     "millage-budget"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "468",
-   "date": "2026-04-22",
-   "body": "Board of Commissioners",
-   "title": "Special Called Meeting of April 22, 2026",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5066,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5066,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 553,
-   "pdfSha256": "75ed08c62dc358c8c3c7ae720d4b67bcf2f4318363ba9190548c6b18c7d87e47",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   }
  ]

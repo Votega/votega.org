@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-08T15:54:57Z",
+  "generatedAt": "2026-10-12T17:50:58Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -11,24 +11,24 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-06",
+  "lastActivity": "2026-10-13",
   "topicTotals": {
-   "appointment": 13,
-   "contract": 14,
+   "data-center": 4,
+   "appointment": 12,
+   "contract": 13,
    "millage-budget": 15,
-   "special-land-use": 8,
+   "special-land-use": 7,
    "variance": 12,
-   "comprehensive-plan": 4,
+   "comprehensive-plan": 3,
    "rezoning": 8,
-   "development": 6,
-   "data-center": 3
+   "development": 6
   },
   "dataCenterItems": [
    {
     "title": "Coweta County Board of Commissioners - Work Session",
-    "date": "2026-07-14",
-    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3536,plainText=false)",
-    "excerpt": "… 1. Discussion Regarding the Fiscal Year 2027 Budget and 2026 Millage Rate 2. Discussion Regarding the Coweta County Data Center Ordinance 3. Discussion Regarding the Georgia Cottage Food Law and Local Ordinances Adjournment As set forth in …",
+    "date": "2026-10-13",
+    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3693,plainText=false)",
+    "excerpt": "… Meeting Called to Order Pledge of Allegiance Invocation Regular Session 1. Discussion Regarding the Coweta County Data Center Ordinance 2. Presentation of Quality Development Corridor District (QDCD) Materials 3. Discussion Regarding the …",
     "excerptTerm": "data center"
    },
    {
@@ -220,17 +220,6 @@
     ],
     "excerpt": "… , Newnan - District 3 4. Public Hearing Regarding Petition # REZ 24-19 Filed by Atlas Development, LLC Requesting to Rezone Property Located at Welcome to Sargent Road and Wagers Mill Road, Newnan - District 2 Coweta County Board o …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-    "date": "2026-03-17",
-    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3252,plainText=false)",
-    "tags": [
-     "comprehensive-plan",
-     "special-land-use"
-    ],
-    "excerpt": "… for Property Located at 1071 Boone Road, Newnan - District 2 6. Second Public Hearing Regarding the Coweta County Comprehensive Plan Update Regular Session Public Comments Regarding Items On the Agenda - This is also time for anyone that wishes …",
-    "excerptTerm": "comprehensive plan"
    }
   ],
   "landUseMeetings": 21,
@@ -238,6 +227,47 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1096",
+   "date": "2026-10-13",
+   "body": "Board of Commissioners",
+   "title": "Coweta County Board of Commissioners - Work Session",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3693,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3693,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1928,
+   "pdfSha256": "357a62d0700fcde70ec55cb76bba697689e68c5ab652c419c2a3607c135f6ded",
+   "topics": {
+    "data-center": 1
+   },
+   "tags": [
+    "data-center"
+   ],
+   "matchedTerms": [
+    "data center"
+   ],
+   "topicExcerpts": {
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… Meeting Called to Order Pledge of Allegiance Invocation Regular Session 1. Discussion Regarding the Coweta County Data Center Ordinance 2. Presentation of Quality Development Corridor District (QDCD) Materials 3. Discussion Regarding the …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Coweta County Board of Commissioners - Work Session",
+     "date": "2026-10-13",
+     "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3693,plainText=false)",
+     "excerpt": "… Meeting Called to Order Pledge of Allegiance Invocation Regular Session 1. Discussion Regarding the Coweta County Data Center Ordinance 2. Presentation of Quality Development Corridor District (QDCD) Materials 3. Discussion Regarding the …",
+     "excerptTerm": "data center"
+    }
+   ]
+  },
   {
    "id": "1095",
    "date": "2026-10-06",
@@ -1490,62 +1520,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1068",
-   "date": "2026-03-17",
-   "body": "Board of Commissioners",
-   "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3252,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3252,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 5947,
-   "pdfSha256": "7dc161a12916825728bd68311d4b43257ecc74134c0f312a056d903f85226e1b",
-   "topics": {
-    "appointment": 1,
-    "comprehensive-plan": 1,
-    "contract": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "appointment",
-    "comprehensive-plan",
-    "contract",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "comprehensive plan",
-    "conditional use",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… perty Located on Highway 29 South and East Gordon Road, Newnan - District 2 Unfinished Business 9. Request Appointments to Various Boards/Authorities New Business Bids and Contracts 10. Request Approval/Execution of an Agreem …",
-     "context": "unknown"
-    },
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… for Property Located at 1071 Boone Road, Newnan - District 2 6. Second Public Hearing Regarding the Coweta County Comprehensive Plan Update Regular Session Public Comments Regarding Items On the Agenda - This is also time for anyone that wishes …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… District 2 Unfinished Business 9. Request Appointments to Various Boards/Authorities New Business Bids and Contracts 10. Request Approval/Execution of an Agreement with HB Next for Stormwater Monitoring and Sampling at the Pu …",
-     "context": "unknown"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… f Zoning Appeals 7. Recommend Approval Regarding Petition # CONDUSE 25-05 Filed by Sherrie Britt Requesting a Conditional Use Permit for Property Located at 1501 Boone Road, Newnan - District 2 8. Request Direction from the Board Regarding Co …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]

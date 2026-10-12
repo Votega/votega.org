@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-08T15:54:48Z",
+  "generatedAt": "2026-10-12T17:50:00Z",
   "source": "Banks County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Banks County",
   "count": 23
@@ -11,16 +11,16 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-06",
+  "lastActivity": "2026-10-13",
   "topicTotals": {
+   "appointment": 4,
    "contract": 15,
    "development": 6,
-   "special-land-use": 8,
-   "appointment": 3,
+   "special-land-use": 7,
    "comprehensive-plan": 1,
    "data-center": 2,
    "millage-budget": 7,
-   "rezoning": 5
+   "rezoning": 4
   },
   "dataCenterItems": [
    {
@@ -146,24 +146,51 @@
     "tags": [
      "special-land-use"
     ]
-   },
-   {
-    "title": "Banks County Board of Commissioners Meeting",
-    "date": "2026-04-14",
-    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-8545fdb0f2f148f9947cd3d69fe38970.pdf",
-    "tags": [
-     "rezoning",
-     "special-land-use"
-    ],
-    "excerpt": "… lit Dr. for an outdoor storage yard. d. Z-26-04 An application has been submitted by Terry Rylee to Rezone the property identified as B19 005, a 1.5-acre parcel located at 899 Henderson from C2- General Commercial …",
-    "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 14,
+  "landUseMeetings": 13,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "77",
+   "date": "2026-10-13",
+   "body": "Board of Commissioners",
+   "title": "Banks County Board of Commissioners Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-e01dd5930bf84e779c3bf0dcf1ce4057.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-e01dd5930bf84e779c3bf0dcf1ce4057.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 2298,
+   "pdfSha256": "501c52ea48a9be53677ec61027fa64f29f8c96f329991bbadfcf778caaaf2a81",
+   "topics": {
+    "appointment": 1,
+    "contract": 1
+   },
+   "tags": [
+    "appointment",
+    "contract"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… cussion 12. BOARDS & AUTHORITIES: a. Board of Elections: Member Replacement b. Planning Commission Member Appointment 13. 2027 SPLOST Q & A FORUM 14. PUBLIC COMMENT: 15. EXECUTIVE SESSION: 16. ADJOURNMENT The Board of Commissioners r …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ension Service: Surplus Property c. Human Resources: Badge/Door Access Server & Software Update - Convergint 10. CONTRACTS AND AGREEMENTS: a. Probate Court: Court Software - i3 Verticals b. Superior Court: CSRA Probation Contra …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "64",
    "date": "2026-10-06",
@@ -1047,54 +1074,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "72",
-   "date": "2026-04-14",
-   "body": "Board of Commissioners",
-   "title": "Banks County Board of Commissioners Meeting",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-8545fdb0f2f148f9947cd3d69fe38970.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-8545fdb0f2f148f9947cd3d69fe38970.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 4374,
-   "pdfSha256": "1615b1b9b3b3588d98b8bfdaf782d5bf56c7faa7cbe1f95af3d045511520cae3",
-   "topics": {
-    "contract": 1,
-    "rezoning": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "contract",
-    "rezoning",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "conditional use",
-    "contract",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… rchase 9. RESOLUTIONS AND ORDINANCES: a. Roads & Bridges: A Portion of Old Webbs Creek Rd Abandonment 10. CONTRACTS AND AGREEMENTS: a. Parks & Recreation: Concessions Contract - Ratification b. Parks & Recreation: Field …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… lit Dr. for an outdoor storage yard. d. Z-26-04 An application has been submitted by Terry Rylee to Rezone the property identified as B19 005, a 1.5-acre parcel located at 899 Henderson from C2- General Commercial …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… REPORT 7. PUBLIC HEARINGS: a. CU-26-09 An application has been submitted by Clark and Summer Schwartz for a Conditional Use on the property identified as B67E 019, a 2.07-acre parcel located at 149 Buckeye Pt. to operate a home …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

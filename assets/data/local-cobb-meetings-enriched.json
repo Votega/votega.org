@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-08T15:54:55Z",
+  "generatedAt": "2026-10-12T17:50:03Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -11,24 +11,24 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-12",
+  "lastActivity": "2026-12-01",
   "topicTotals": {
-   "variance": 8,
-   "special-land-use": 6,
-   "contract": 8,
-   "rezoning": 4,
-   "appointment": 5,
-   "millage-budget": 7,
-   "development": 3,
+   "variance": 7,
+   "special-land-use": 7,
    "annexation": 3,
-   "data-center": 2
+   "appointment": 5,
+   "contract": 8,
+   "data-center": 3,
+   "millage-budget": 7,
+   "rezoning": 4,
+   "development": 2
   },
   "dataCenterItems": [
    {
     "title": "BOC Regular Meeting",
-    "date": "2026-08-11",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10156,plainText=false)",
-    "excerpt": "… . To adopt a resolution extending a temporary moratorium on rezoning applications and permits for new data centers in unincorporated Cobb County. Internal Audit 28. To approve an updated Internal Audit Department Chart …",
+    "date": "2026-10-13",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10279,plainText=false)",
+    "excerpt": "… under the Cobb County Solicitor General's Office. 5. To provide a presentation and discussion on data centers and their impacts. PUBLIC HEARING 6. To conduct the first public hearing on the proposed amendments to Part …",
     "excerptTerm": "data center"
    },
    {
@@ -54,6 +54,16 @@
      "special-land-use"
     ],
     "excerpt": "… LUP-37-2026 District 3 - 230 Rocky Top Court 11. LUP-38-2026 District 3 - 568 Tate Creek Court 12. SLUP-10-2026 District 1 - 3261 Ernest Barrett Parkway 13. SLUP-11-2026 District 2 - 465 Big Shanty Road Other Busi …",
+    "excerptTerm": "slup"
+   },
+   {
+    "title": "BOC Zoning Hearing",
+    "date": "2026-10-20",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10277,plainText=false)",
+    "tags": [
+     "special-land-use"
+    ],
+    "excerpt": "… d 13. LUP-19-2026 District 3 - 1884 Addison Road 14. LUP-35-2026 District 4 - 448 Hurt Road 15. SLUP-8-2026 District 2 - 2967 Olympic Industrial Drive 16. SLUP-9-2026 District 2 - 114 Townpark Drive …",
     "excerptTerm": "slup"
    },
    {
@@ -155,25 +165,6 @@
     ],
     "excerpt": "… rity vote shall be required for adoption of the amendment. The particular item to be amended is the zoning action for rezoning case Z-10 of 2026 as listed in the official minutes of the May 19, 2026 Board of Commissioner's Zoning Hearing. Up …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Board of Zoning Appeals Variance Hearing",
-    "date": "2026-07-15",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9053,plainText=false)",
-    "tags": [
-     "variance"
-    ]
-   },
-   {
-    "title": "BOC Regular Meeting",
-    "date": "2026-07-14",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9043,plainText=false)",
-    "tags": [
-     "annexation",
-     "development"
-    ],
-    "excerpt": "… Edwards, LLC. to provide the labor for the roof replacement at the Department of Public Safety Supply Warehouse located 1596 County Services Parkway, Marietta, GA 30008. Public Safety Agency Police …",
-    "excerptTerm": "warehouse"
    }
   ],
   "landUseMeetings": 16,
@@ -181,6 +172,24 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1266",
+   "date": "2026-12-01",
+   "body": "Planning Commission",
+   "title": "Planning Commission Zoning Hearing",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10275,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10275,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1038,
+   "pdfSha256": "c7ea9a044429f550b376c654598d00b97603686e4ade59d4559d7e9fe0d0a10a",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "1254",
    "date": "2026-11-12",
@@ -250,17 +259,31 @@
    "date": "2026-10-20",
    "body": "Board of Commissioners",
    "title": "BOC Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10239,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10277,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10239,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10277,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 711,
-   "pdfSha256": "007c410f9d17880a495efa5456242cfcefde700ef5f9a81679247fd7f2dee902",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
+   "textChars": 2809,
+   "pdfSha256": "5340c030c7502f6e68ced409ab0d81ca0df7e77b1d99b95085beb58617dd9719",
+   "topics": {
+    "special-land-use": 1
+   },
+   "tags": [
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "slup"
+   ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "slup",
+     "excerpt": "… d 13. LUP-19-2026 District 3 - 1884 Addison Road 14. LUP-35-2026 District 4 - 448 Hurt Road 15. SLUP-8-2026 District 2 - 2967 Olympic Industrial Drive 16. SLUP-9-2026 District 2 - 114 Townpark Drive …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
    "dataCenterItems": []
   },
   {
@@ -294,6 +317,84 @@
     "land-use"
    ],
    "dataCenterItems": []
+  },
+  {
+   "id": "1191",
+   "date": "2026-10-13",
+   "body": "Board of Commissioners",
+   "title": "BOC Regular Meeting",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10279,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10279,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 11814,
+   "pdfSha256": "1eb775aee1378f41cd9b862c4357ecd981cc8182b2efd3fed06b888ce2939b9c",
+   "topics": {
+    "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
+    "data-center": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "annexation",
+    "appointment",
+    "contract",
+    "data-center",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "annexation",
+    "appoint",
+    "budget",
+    "contract",
+    "data center",
+    "fiscal year",
+    "procurement",
+    "reappoint",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annexation",
+     "excerpt": "… r the procurement of equipment and supplies. Community Development 24. To adopt a resolution consenting to deannexation per O.C.G.A. 36-36-131 regarding a petition for a parcel that is 1.10 acres located at 1409 Walcutts Way, …",
+     "context": "agenda-action"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… er will be allotted a maximum of three (3) minutes. Speakers should address their comments toward the Chairwoman only. APPOINTMENTS 42. To announce the reappointment of Susan Hampton to the Neighborhood Safety Commission. …",
+     "context": "public-comment"
+    },
+    "contract": {
+     "term": "procurement",
+     "excerpt": "… OCTOBER 13, 2026 – 9:00 AM CALL TO ORDER PRESENTATIONS 1. To recognize Procurement Services for receiving the 2026 Achievement of Excellence in Procurement Award for the third consecutive ye …",
+     "context": "unknown"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… under the Cobb County Solicitor General's Office. 5. To provide a presentation and discussion on data centers and their impacts. PUBLIC HEARING 6. To conduct the first public hearing on the proposed amendments to Part …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… related to Cobb County 3-1-1, originally filed in 2008. Finance 28. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. 29. To authorize the increase of fund balance …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center",
+    "millage-budget"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "BOC Regular Meeting",
+     "date": "2026-10-13",
+     "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10279,plainText=false)",
+     "excerpt": "… under the Cobb County Solicitor General's Office. 5. To provide a presentation and discussion on data centers and their impacts. PUBLIC HEARING 6. To conduct the first public hearing on the proposed amendments to Part …",
+     "excerptTerm": "data center"
+    }
+   ]
   },
   {
    "id": "1264",
@@ -1045,105 +1146,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1250",
-   "date": "2026-07-15",
-   "body": "Board of Zoning Appeals",
-   "title": "Board of Zoning Appeals Variance Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9053,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9053,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 14225,
-   "pdfSha256": "0177bf9eb4adf59a52e8e670a3b9c3f9d51eedf9895999244e3f01dbac60ac16",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING SUMMARY AGENDA July 15, 2026 District Case Withdrawn Cases 3 V-90-2026 …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1188",
-   "date": "2026-07-14",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9043,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=9043,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 16516,
-   "pdfSha256": "d386eecca2ad267efcdd710b9482f25aaf31880060b29c9e313eb42263c7174d",
-   "topics": {
-    "annexation": 1,
-    "appointment": 1,
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "annexation",
-    "appointment",
-    "contract",
-    "development",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "appoint",
-    "budget",
-    "contract",
-    "procurement",
-    "task order",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… hearing, for Caf Restaurants, Inc. doing business as J. Christophers. 31. To approve an annexation notice of Non-Objection per HB 489 Intergovernmental Agreement and HB 2 regarding a petition for the …",
-     "context": "unknown"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… will be allotted a maximum of three (3) minutes. Speakers should address their comments toward the Chairwoman only. APPOINTMENTS 57. To announce the appointment of Kristilyn Whigham Lambert to the Historic Preserv …",
-     "context": "public-comment"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… 6. To approve final funding for the work order under the FY24 Stormwater Management Unit Price Contract with W.E. Contracting Co. Inc., for 4932 Lakeland Drive, Program No. SW1721. 7. To approv …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… Edwards, LLC. to provide the labor for the roof replacement at the Department of Public Safety Supply Warehouse located 1596 County Services Parkway, Marietta, GA 30008. Public Safety Agency Police …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… as defined by Georgia law. 3. To conduct the first public hearing on the FY 2027 Proposed Budget. PUBLIC COMMENT Those persons wishing to address the Board of Commissioners will sign up on the \"Public Comment\" …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

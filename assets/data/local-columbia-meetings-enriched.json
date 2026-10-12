@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-08T15:54:57Z",
+  "generatedAt": "2026-10-12T17:50:58Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -11,19 +11,28 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-06",
+  "lastActivity": "2026-10-15",
   "topicTotals": {
-   "appointment": 2,
-   "contract": 12,
-   "rezoning": 14,
-   "special-land-use": 10,
+   "rezoning": 15,
    "variance": 16,
+   "appointment": 2,
+   "contract": 11,
+   "special-land-use": 10,
    "millage-budget": 4,
-   "development": 3,
+   "development": 2,
    "alpr": 1
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-10-15",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13860,plainText=false)",
+    "tags": [
+     "rezoning",
+     "variance"
+    ]
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-10-06",
@@ -227,17 +236,6 @@
     ],
     "excerpt": "… Commission District 4. Staff Assignment Danielle Montgomery. c. Public Hearing 1. (H1c1) VA26-05-01, Variance to Section 90-53 List of lot and structure requirements, 417 Hastings Place, Tax Map 082I Parcel 422, …",
     "excerptTerm": "variance"
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-05-05",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13547,plainText=false)",
-    "tags": [
-     "development",
-     "variance"
-    ],
-    "excerpt": "… ncan a. Development and Planning Services Committee Commissioner Melear 1. (I1a1) VA26-04-01, Variance to Section 90-135 Signs, 212 Bobby Jones Expressway, Tax Map 078D Parcel 024, 0.598 +/- acres, and cur …",
-    "excerptTerm": "variance"
    }
   ],
   "landUseMeetings": 20,
@@ -256,6 +254,46 @@
   "alprMeetings": 1
  },
  "meetings": [
+  {
+   "id": "2627",
+   "date": "2026-10-15",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13860,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13860,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 5132,
+   "pdfSha256": "c308daa7ed27e1c5b19f3e7b85d754eccfa75443bf66e45f88f5950d7462352f",
+   "topics": {
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Chairman Moody 1. (H1) Unfinished Business a. (H1a) RZ26-10-02, Rezoning from R-A (Residential Agricultural) to S-1 (Special), 3894 Gordon Hwy, Tax Map 043 portion of par …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Commercial). Commission District 1. Staff Assignment Nayna Mistry. 4. (H2c4) VA26-10-01, Variance to section 90-98 List of lot & structure requirements and 90-139 Buffers & screening, 436 Furys …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2575",
    "date": "2026-10-06",
@@ -1295,54 +1333,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2570",
-   "date": "2026-05-05",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13547,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13547,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 8484,
-   "pdfSha256": "935a570912b8fe75dfc490b870d22d74ec6ad73c4a825c26a411934d79d9be5e",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "variance"
-   ],
-   "matchedTerms": [
-    "contract",
-    "townhome",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Agreement with SBA Structures, LLC. for 580 Stevens Creek Road b. (H2b) Award Bid# 2026010-BID5100 and contract to Blair Construction for Sawdust Rd Waterline project c. (H2c) Independent Contractor Agreement with …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "townhome",
-     "excerpt": "… tions, pending or threatened lawsuits, and other matters as permitted by law. 1. Property a. (M1a) Highlands Townhomes HOA, Inc. parcel 061 081l for permanent easement for Ivey Falls sewer line improvement project. …",
-     "context": "public-comment"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… ncan a. Development and Planning Services Committee Commissioner Melear 1. (I1a1) VA26-04-01, Variance to Section 90-135 Signs, 212 Bobby Jones Expressway, Tax Map 078D Parcel 024, 0.598 +/- acres, and cur …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }
