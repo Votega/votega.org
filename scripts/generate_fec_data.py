@@ -17,8 +17,16 @@ Flow:
 
 Output: assets/data/ga-fec-data.json
   - candidates: keyed by FEC candidate_id
-  - byBioguideId: bioguide_id -> candidate_id (for incumbent lookups)
-  - byNormalizedName: normalized "first last" -> candidate_id (name-based fallback)
+  - byBioguideId: bioguide_id -> candidate_id (for incumbent lookups; one filing,
+    chosen by preferred_filing() when a member holds several this cycle)
+  - byBioguideIdAll: bioguide_id -> [candidate_id, ...] (every filing, sorted — use
+    this when the office matters, or when a join must cover all of a person's ids)
+  - byNormalizedName: normalized "first last" -> candidate_id (name-based fallback;
+    one filing, same preferred_filing() rule)
+  - byNormalizedNameAll: normalized "first last" -> [candidate_id, ...]. A normalized
+    name is NOT an identity: 16 of them currently cover more than one filing, which the
+    single-valued index cannot express. A consumer that would otherwise trust an
+    arbitrary pick should read this and treat a multi-id key as ambiguous.
   - byDistrict: "H10" or "S" -> [candidate_ids] (district-scoped last-name matching)
 
 Lookup strategy in candidate.html (findFecId):
@@ -221,6 +229,37 @@ def normalize_name(name):
     return ' '.join(n.split())
 
 
+def preferred_filing(cids, candidates):
+    """Pick ONE filing from several for the same person, deterministically.
+
+    A sitting House member running for Senate holds two live FEC candidate ids in
+    the same cycle (2026: Buddy Carter C001103 and Mike Collins C001129 each have
+    an H and an S filing, both pointing at the same principal committee). The
+    single-valued byBioguideId/byNormalizedName indexes can hold only one, and
+    assigning them in the fetch loop made the winner whichever the FEC listed
+    last — i.e. a function of the `for office in ("H","S")` order and the API's
+    name sort, not of anything about the candidate. Flip either and the published
+    index silently changes meaning.
+
+    The rule, in order: a filing with real activity beats a dormant registration;
+    the later coverage end date beats an older one; the smallest candidate id
+    breaks what remains. The last step carries no meaning — it is there so the
+    output is a function of the data alone. Callers that need the filing for a
+    SPECIFIC office must not rely on this: use byBioguideIdAll / byDistrict and
+    check `office` (as findFecMatch() in campaign-finance.js does).
+    """
+    def sort_key(cid):
+        e = candidates.get(cid, {})
+        active = e.get("totalRaised") is not None or bool(e.get("coverageEndDate"))
+        return (0 if active else 1, _invert(e.get("coverageEndDate") or ""), cid)
+    return sorted(cids, key=sort_key)[0]
+
+
+def _invert(text):
+    """Sort an ISO date string descending inside an ascending tuple key."""
+    return tuple(-ord(c) for c in text)
+
+
 def normalize_last(name):
     """Extract normalized last name from FEC 'LAST, FIRST' format.
     Used for bioguide enrichment and the byDistrict lastName field.
@@ -328,8 +367,12 @@ def main():
         sys.exit(1)
 
     output_candidates = {}
-    by_bioguide  = {}
-    by_name      = {}
+    # Keyed to LISTS while we fetch: one person can hold several filings in a cycle
+    # (a House member running for Senate), and which one a single-valued index should
+    # publish is a decision for preferred_filing(), not for whatever order the FEC
+    # happened to return. Reduced after the loop.
+    by_bioguide_all = {}
+    by_name_all     = {}
     # byDistrict maps "H{n}" or "S" -> [candidate_ids], keyed off the API's `district`
     # field so a candidate who changed districts lands in the seat they now contest.
     # candidate.html and member.html use this for district-scoped last-name matching, which
@@ -420,11 +463,11 @@ def main():
         output_candidates[cid] = entry
 
         if bioguide:
-            by_bioguide[bioguide] = cid
+            by_bioguide_all.setdefault(bioguide, []).append(cid)
 
         key = normalize_name(name)
         if key:
-            by_name[key] = cid
+            by_name_all.setdefault(key, []).append(cid)
 
         # Bucket by the seat the candidate is actually contesting, taken from the API's
         # `district` field. The FEC candidate ID encodes a district too, but it is the seat
@@ -445,6 +488,26 @@ def main():
         if dist_key:
             by_district.setdefault(dist_key, []).append(cid)
 
+    # Reduce the multi-filing keys to the published single-valued indexes, and keep
+    # the full lists too: a person's OTHER filings are real and downstream joins need
+    # them (build_id_crosswalk.py records every FEC id a person holds, so a dual filer
+    # cannot end up with two vgIds depending on which id each code path picked).
+    by_bioguide = {b: preferred_filing(cids, output_candidates)
+                   for b, cids in by_bioguide_all.items()}
+    by_name     = {k: preferred_filing(cids, output_candidates)
+                   for k, cids in by_name_all.items()}
+    by_bioguide_sorted = {b: sorted(cids) for b, cids in by_bioguide_all.items()}
+    by_name_sorted     = {k: sorted(cids) for k, cids in by_name_all.items()}
+
+    multi = {b: c for b, c in by_bioguide_sorted.items() if len(c) > 1}
+    if multi:
+        print("")
+        print(f"{len(multi)} member(s) hold more than one FEC filing this cycle "
+              f"(byBioguideId publishes the preferred one; byBioguideIdAll has all):")
+        for b, cids in sorted(multi.items()):
+            picks = ", ".join(f"{c} [{output_candidates[c].get('office','?')}]" for c in cids)
+            print(f"  - {b}: {picks} -> {by_bioguide[b]}")
+
     output = {
         "metadata": {
             "generatedAt":    datetime.now(timezone.utc).isoformat(),
@@ -454,7 +517,9 @@ def main():
         },
         "candidates":       output_candidates,
         "byBioguideId":     by_bioguide,
+        "byBioguideIdAll":  by_bioguide_sorted,
         "byNormalizedName": by_name,
+        "byNormalizedNameAll": by_name_sorted,
         "byDistrict":       by_district,
     }
 

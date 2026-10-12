@@ -327,11 +327,28 @@ def resolve_candidate_filing(cand, finance, overrides, fec):
         if cand.get("fecCandidateId"):
             return "fec", cand["fecCandidateId"], {"method": "curated", "source": RACES_FILE}
         norm = " ".join(toks(cand["name"] or ""))
-        by_name = fec.get("byNormalizedName", {})
-        if norm in by_name:
-            return "fec", by_name[norm], {"method": "name-exact", "confidence": "high",
-                                          "source": "FEC candidate index"}
         office = cand["office"] or ""
+        # A normalized name can cover several filings (16 do), and the single-valued
+        # byNormalizedName keeps only one — so trusting it was claiming "high" confidence
+        # for a pick we did not make. Read the full list, narrow by the office sought, and
+        # report ambiguity when more than one survives rather than guessing.
+        name_hits = (fec.get("byNormalizedNameAll", {}).get(norm)
+                     or ([fec["byNormalizedName"][norm]]
+                         if norm in fec.get("byNormalizedName", {}) else []))
+        if len(name_hits) > 1:
+            want = "S" if "Senate" in office else "H"
+            same = [c for c in name_hits
+                    if (fec["candidates"].get(c, {}).get("office") or "") == want]
+            if same:
+                name_hits = same
+        if len(name_hits) == 1:
+            return "fec", name_hits[0], {"method": "name-exact", "confidence": "high",
+                                         "source": "FEC candidate index"}
+        if len(name_hits) > 1:
+            return None, None, {"method": "name-exact", "confidence": "ambiguous",
+                                "candidates": sorted(name_hits),
+                                "note": "one normalized name, several FEC filings; "
+                                        "resolve in " + OVERRIDES_FILE}
         key = "S" if "Senate" in office else f"H{cand['district']}"
         last = (toks(cand["name"] or "") or [""])[-1]
         pool = fec.get("byDistrict", {}).get(key, [])
@@ -400,6 +417,23 @@ def candidacy_record(cand, kind, filing_id, prov):
     }
 
 
+def fec_id_for_office(fec, fec_ids, office):
+    """The one of a person's FEC filings that belongs to the office being contested.
+
+    A person can hold an H and an S filing in the same cycle, so "their FEC id" is not
+    well defined without an office — picking fec_ids[0] would attach a Senate candidacy
+    to the House filing purely because 'H' sorts before 'S'.
+    """
+    if not fec_ids:
+        return None
+    if len(fec_ids) == 1:
+        return fec_ids[0]
+    want = "S" if "Senate" in (office or "") else "H"
+    same = [c for c in fec_ids
+            if ((fec.get("candidates", {}).get(c) or {}).get("office") or "") == want]
+    return same[0] if len(same) == 1 else fec_ids[0]
+
+
 def add_filing(person, kind, filing_id):
     key = "peachfileFilerEntityIds" if kind == "peachfile" else "fecCandidateIds"
     if filing_id and filing_id not in person["ids"][key]:
@@ -460,7 +494,15 @@ def main():
     for m in [x for x in federal if x.get("state") == "Georgia"]:
         vg = ledger.id_for(m["bioguideId"])
         terms = (m.get("terms") or {}).get("item") or []
-        fec_id = fec.get("byBioguideId", {}).get(m["bioguideId"])
+        # Every FEC filing this person holds, not just the one byBioguideId publishes.
+        # A House member running for Senate has two live candidate ids in the cycle, and
+        # recording only one both understates `fecCandidateIds` (documented as a list) and
+        # leaves the other id unowned — so a candidate record that resolved to the *other*
+        # id would miss the merge in filing_owner and mint a second vgId for one person.
+        fec_ids = fec.get("byBioguideIdAll", {}).get(m["bioguideId"])
+        if not fec_ids:
+            one = fec.get("byBioguideId", {}).get(m["bioguideId"])
+            fec_ids = [one] if one else []
         ext = external_ids(m)
 
         ids = blank_ids()
@@ -468,13 +510,14 @@ def main():
         ids["govtrackId"] = ext["govtrackId"]
         ids["openSecretsId"] = ext["openSecretsId"]
         ids["votegaCandidateIds"] = backrefs.get(m["bioguideId"], [])
-        if fec_id:
-            ids["fecCandidateIds"] = [fec_id]
-            filing_owner[f"fec:{fec_id}"] = vg
+        if fec_ids:
+            ids["fecCandidateIds"] = sorted(fec_ids)
+            for fid in fec_ids:
+                filing_owner[f"fec:{fid}"] = vg
 
         provenance = {"bioguideId": {"method": "authoritative", "source": "Congress.gov"}}
         us = "unitedstates/congress-legislators (public domain)"
-        if fec_id:
+        if fec_ids:
             provenance["fecCandidateIds"] = {"method": "authoritative", "source": us}
         for k in ("govtrackId", "openSecretsId"):
             if ids[k] is not None:
@@ -504,7 +547,8 @@ def main():
             if owner:
                 prov = people[owner]["provenance"].get("peachfileFilerEntityIds") or {}
                 filer = (people[owner]["ids"]["peachfileFilerEntityIds"] or [None])[0]
-                fecid = (people[owner]["ids"]["fecCandidateIds"] or [None])[0]
+                fecid = fec_id_for_office(fec, people[owner]["ids"]["fecCandidateIds"],
+                                          cand["office"])
                 kind = "peachfile" if filer else ("fec" if fecid else None)
                 people[owner]["candidacies"].append(
                     candidacy_record(cand, kind, filer or fecid, prov))
