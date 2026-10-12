@@ -13,8 +13,13 @@ a duplicate re-introduced by a hand edit. See CODEBASE-REVIEW-2026-08-18.md
 findings 5.2, 5.3, 5.4.
 
 Usage:
-    python scripts/apply_overrides.py
+    python scripts/apply_overrides.py            # apply and write
+    python scripts/apply_overrides.py --check    # exit 1 if races.json is behind
+
+--check is what .github/workflows/apply-race-candidate-overrides.yml runs on a
+pull request; on a push to main the same workflow applies and commits instead.
 """
+import copy
 import json
 import sys
 from pathlib import Path
@@ -69,7 +74,7 @@ def phase_candidate_lists(phase_data: dict):
         yield flat
 
 
-def apply(races_data: dict, overrides: dict):
+def apply(races_data: dict, overrides: dict, verbose: bool = True):
     """Apply race and candidate overrides. Returns a stats dict."""
 
     race_patches = {
@@ -92,7 +97,8 @@ def apply(races_data: dict, overrides: dict):
         if patch:
             for k, v in patch.items():
                 race[k] = v
-            print(f"  Race {race_id}: {list(patch.keys())}")
+            if verbose:
+                print(f"  Race {race_id}: {list(patch.keys())}")
             stats["races"] += 1
 
         for phase_data in race.get("phases", {}).values():
@@ -117,14 +123,16 @@ def apply(races_data: dict, overrides: dict):
                             mismatches.append((cid, expected, c.get("name", "")))
                             continue
                         to_remove.append(c)
-                        print(f"    Candidate {cid}: [removed]")
+                        if verbose:
+                            print(f"    Candidate {cid}: [removed]")
                         stats["removed"] += 1
                     else:
                         for k, v in patch.items():
                             if not k.startswith("_"):
                                 c[k] = v
                         applied = [k for k in patch if not k.startswith("_")]
-                        print(f"    Candidate {cid}: {applied}")
+                        if verbose:
+                            print(f"    Candidate {cid}: {applied}")
                         stats["patched"] += 1
 
                 for c in to_remove:
@@ -138,10 +146,10 @@ def apply(races_data: dict, overrides: dict):
     unmatched_removes = {k for k in unmatched if cand_patches[k].get("remove")}
     unmatched_patches = unmatched - unmatched_removes
 
-    if unmatched_removes:
+    if unmatched_removes and verbose:
         print(f"\n  note: {len(unmatched_removes)} 'remove' override(s) matched no "
               f"candidate here (expected — applied upstream in build_legislative_races).")
-    if unmatched_patches:
+    if unmatched_patches and verbose:
         print(f"\nWARNING: {len(unmatched_patches)} candidate override(s) target an id "
               f"that no candidate has — these do nothing:", file=sys.stderr)
         for k in sorted(unmatched_patches):
@@ -153,13 +161,96 @@ def apply(races_data: dict, overrides: dict):
     return stats
 
 
-def main():
-    print(f"Loading {RACES} ...")
-    races_data = load_json(RACES)
+def candidate_index(races_data: dict) -> dict:
+    """{(race id, phase, candidate id): candidate} across both ballot shapes."""
+    out = {}
+    for race in races_data.get("races", []):
+        rid = race.get("id")
+        for phase_name, phase_data in (race.get("phases") or {}).items():
+            for cands in phase_candidate_lists(phase_data):
+                for c in cands:
+                    if isinstance(c, dict) and c.get("id"):
+                        out[(rid, phase_name, c["id"])] = c
+    return out
 
-    print(f"Loading {OVERRIDES} ...")
+
+def drifted(before: dict, after: dict) -> list:
+    """Human-readable list of what applying the overrides would change.
+
+    Empty means races.json already reflects every override. This is the whole
+    point of --check: the override file is the authored source, races.json is
+    what the site serves, and nothing but this script connects them -- so they
+    can drift apart silently, which is exactly what happened on 2026-10-11 when
+    27 curated candidate profiles sat in the override file for a day without
+    reaching the site."""
+    out = []
+
+    before_races = {r.get("id"): r for r in before.get("races", [])}
+    for race in after.get("races", []):
+        rid = race.get("id")
+        prev = before_races.get(rid)
+        if prev is None:
+            continue
+        for key, value in race.items():
+            if key != "phases" and prev.get(key) != value:
+                out.append(f"{rid}: race field {key!r} would change")
+
+    before_c, after_c = candidate_index(before), candidate_index(after)
+    for key in sorted(set(before_c) - set(after_c)):
+        out.append(f"{key[0]} [{key[1]}]: {key[2]} would be removed")
+    for key in sorted(set(after_c) & set(before_c)):
+        b, a = before_c[key], after_c[key]
+        fields = sorted(f for f in set(b) | set(a) if b.get(f) != a.get(f))
+        if fields:
+            out.append(f"{key[0]} [{key[1]}]: {key[2]} -> {', '.join(fields)}")
+    return out
+
+
+def run_check(races_data: dict, overrides: dict) -> int:
+    """Report whether races.json already reflects the overrides. Exit 1 if not."""
+    before = copy.deepcopy(races_data)
+    stats = apply(races_data, overrides, verbose=False)
+
+    if stats["mismatches"]:
+        print("ERROR: 'remove' override(s) point at a different candidate than "
+              "their _name:", file=sys.stderr)
+        for cid, expected, actual in stats["mismatches"]:
+            print(f"  {cid}: expected {expected!r}, found {actual!r}", file=sys.stderr)
+        return 1
+
+    changes = drifted(before, races_data)
+    if changes:
+        print(f"::error::{RACES} does not reflect {OVERRIDES} — "
+              f"{len(changes)} pending change(s). Run: python scripts/apply_overrides.py",
+              file=sys.stderr)
+        for line in changes:
+            print(f"  {line}", file=sys.stderr)
+        return 1
+
+    # Unmatched patch keys are reported but do NOT fail the check: they are a
+    # data-hygiene problem (an override nobody will ever see), not a drift
+    # between the two files, and failing on them would wedge CI on a pre-existing
+    # stale key rather than on the thing this check exists to catch.
+    if stats["unmatched_patches"]:
+        print(f"note: {len(stats['unmatched_patches'])} override(s) target an id no "
+              f"candidate has — they do nothing:")
+        for k in stats["unmatched_patches"]:
+            print(f"  {k}")
+
+    print(f"{RACES} is up to date with {OVERRIDES}.")
+    return 0
+
+
+def main():
+    check = "--check" in sys.argv
+
+    races_data = load_json(RACES)
     overrides = load_json(OVERRIDES)
 
+    if check:
+        sys.exit(run_check(races_data, overrides))
+
+    print(f"Loaded {RACES} and {OVERRIDES}")
     print("Applying overrides:")
     stats = apply(races_data, overrides)
 

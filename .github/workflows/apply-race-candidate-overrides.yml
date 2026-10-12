@@ -1,0 +1,115 @@
+name: Apply race candidate overrides
+
+# ga-race-candidate-overrides.json is the authored source for GA legislative
+# candidate profiles; races.json is what the site actually fetches. Only
+# scripts/apply_overrides.py connects them, and it was a manual step -- so the two
+# could drift apart with no error anywhere. On 2026-10-11 they did: 27 curated
+# candidate profiles (bio, photo, website, email) were committed to the override
+# file and never applied, so the site served empty profiles for a day and nothing
+# reported a problem. A missing apply looks exactly like a quiet week.
+#
+# This closes that by running the apply in CI rather than relying on the
+# maintainer remembering:
+#   push to main  -> apply, stamp, commit races.json if it changed
+#   pull request  -> --check only, fail if the override file is ahead
+#
+# The override file is human-authored, so a `push` trigger on it genuinely fires
+# (a GITHUB_TOKEN bot commit would not -- see the recursion-guard note in
+# deploy-pages.yml). No entry is needed in notify-workflow-failure.yml: that
+# watchlist covers SCHEDULED workflows, which fail unattended. This one fails in
+# front of the human who just pushed, the same reasoning as
+# stamp-races-updated-at.yml, which this workflow is modelled on.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/data/ga-race-candidate-overrides.json'
+      - 'scripts/apply_overrides.py'
+      - '.github/workflows/apply-race-candidate-overrides.yml'
+  pull_request:
+    paths:
+      - 'assets/data/ga-race-candidate-overrides.json'
+      - 'scripts/apply_overrides.py'
+      - '.github/workflows/apply-race-candidate-overrides.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: apply-race-candidate-overrides
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # On a PR there is nothing to commit to, so report instead of writing.
+      - name: Check races.json reflects the overrides
+        if: github.event_name == 'pull_request'
+        run: python scripts/apply_overrides.py --check
+
+      - name: Apply overrides into races.json
+        if: github.event_name != 'pull_request'
+        run: python scripts/apply_overrides.py
+
+      # apply_overrides.py does not touch `updatedAt`, and the bot commit below
+      # will not fire stamp-races-updated-at.yml's push trigger, so the stamp has
+      # to happen here or races.json ships understating its own freshness.
+      - name: Reconcile updatedAt
+        if: github.event_name != 'pull_request'
+        run: |
+          set -e
+          BASE='${{ github.event.before }}'
+          if [ -z "$BASE" ] || ! git cat-file -e "${BASE}^{commit}" 2>/dev/null; then
+            BASE="$(git rev-parse HEAD~1 2>/dev/null || echo HEAD)"
+          fi
+          python scripts/stamp_races_updated_at.py --base "$BASE"
+
+      - name: Commit and push if races.json changed
+        if: github.event_name != 'pull_request'
+        id: commit
+        run: |
+          set -e
+          if git diff --quiet -- assets/data/races.json; then
+            echo "races.json already reflects the overrides — nothing to commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/races.json
+          git commit -m "Apply race candidate overrides into races.json"
+          pushed=0
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push; then pushed=1; break; fi
+            echo "Push attempt $attempt failed, retrying..."
+            sleep 5
+          done
+          if [ "$pushed" -ne 1 ]; then
+            echo "::error::Push failed after 3 attempts — overrides were NOT applied"
+            exit 1
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # The commit above is authored by GITHUB_TOKEN, which does not fire
+      # deploy-pages.yml's push trigger. Without this the new profiles would sit
+      # undeployed until the next scheduled deploy (13:00/23:00 UTC) -- up to 12
+      # hours, where the previous manual flow put them live immediately. Dispatch
+      # keeps the edit-to-live time the maintainer already had.
+      - name: Deploy the applied changes
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy-pages.yml --ref main

@@ -113,15 +113,31 @@ def is_generated(watched):
 
 
 PUBLISH_SCRIPT = re.compile(r"scripts/(publish_[a-z0-9_]+\.py)")
+ANY_SCRIPT = re.compile(r"scripts/([a-z0-9_]+\.py)")
+
+
+def _scripts_matching(doc, pattern):
+    found = set()
+    for job in (doc.get("jobs") or {}).values():
+        for step in job.get("steps") or []:
+            found |= set(pattern.findall(step.get("run") or ""))
+    return found
 
 
 def publish_scripts(doc):
     """The publish scripts a workflow runs."""
-    found = set()
-    for job in (doc.get("jobs") or {}).values():
-        for step in job.get("steps") or []:
-            found |= set(PUBLISH_SCRIPT.findall(step.get("run") or ""))
-    return found
+    return _scripts_matching(doc, PUBLISH_SCRIPT)
+
+
+def scripts_run(doc):
+    """Every repo script a workflow runs.
+
+    Used for the second kind of coverage: a watcher exists to run some
+    reconciliation over a file (stamp-races-updated-at.yml re-stamps races.json),
+    and a producer that writes that file while running the SAME script has already
+    done the watcher's job, so the watcher not firing costs nothing. Without this,
+    a producer doing the right thing inline still reports as an uncovered write."""
+    return _scripts_matching(doc, ANY_SCRIPT)
 
 
 def has_schedule(doc):
@@ -209,6 +225,7 @@ def main():
         if has_schedule(doc):
             continue                       # a schedule covers what push misses
         mine = publish_scripts(doc)
+        my_scripts = scripts_run(doc)
         for watched in push.get("paths") or []:
             if not is_generated(watched):
                 continue
@@ -217,8 +234,10 @@ def main():
                 if other != path
                 and writes_to_main(docs[other])
                 and any(matches(watched, w) for w in written)
-                # Covered when the producer publishes the same artifact itself.
+                # Covered when the producer publishes the same artifact itself,
+                # or runs the same reconciliation script this watcher runs.
                 and not (mine & publish_scripts(docs[other]))
+                and not (my_scripts & scripts_run(docs[other]))
             )
             if uncovered:
                 findings.append((path.name, watched, uncovered))

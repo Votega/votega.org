@@ -90,7 +90,9 @@ Triggered by: election night, then again at certification.
       next phase. **Federal & other non-regenerated races:** `tools/race-candidate-editor.html`
       (edits `races.json` in place; syncs edits across every phase a candidate appears in).
       **GA state legislative (`ga-house-*`/`ga-senate-*`):** `ga-race-candidate-overrides.json` via
-      `ga-overrides-editor.html`, then `python scripts/apply_overrides.py`. See *Maintenance — Updating
+      `ga-overrides-editor.html`, then push it — `apply-race-candidate-overrides.yml` runs
+      `apply_overrides.py` in CI, commits `races.json` and dispatches a deploy. Running the script
+      locally is optional (`--check` confirms the two files agree). See *Maintenance — Updating
       Candidate Pages* in `TO-DO.md`.
 - [ ] Then run `python scripts/sync_candidate_profiles.py`. Curating "for the next phase" only
       edits the phase you are looking at, and `races.json` stores a candidate once per phase —
