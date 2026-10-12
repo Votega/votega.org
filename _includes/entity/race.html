@@ -700,6 +700,15 @@
     return (c.name || '').split(' ').pop();
   }
 
+  // Active candidates across the whole phase (every party ballot, or the flat
+  // list). "Unopposed" in a general is a claim about the entire contest, not about
+  // one party's ballot, so it needs this rather than a single section's count.
+  function phaseActiveCount(phase) {
+    const raw = phase?.ballots ? Object.values(phase.ballots).flat()
+                               : (phase?.candidates || []);
+    return raw.filter(c => !c.withdrawn && !c.disqualified).length;
+  }
+
   function renderBallotSection(partyName, candidates, members, race) {
     const active    = candidates.filter(c => !c.withdrawn && !c.disqualified)
                                 .sort((a, b) => candidateLastName(a, members, race)
@@ -723,11 +732,25 @@
 
     const emptyHtml    = !active.length && !withdrawn.length
       ? '<p class="no-candidates">No candidates listed yet for this ballot.</p>' : '';
-    // "Unopposed" is a primary claim. A lone name on a runoff ballot (an opponent
-    // withdrew) is not that, and the general phase never carried the label either, so
-    // say it only for the primary.
-    const unopposedHtml = active.length === 1 && race.activePhase === 'primary'
-      ? '<p class="ballot-unopposed">Running unopposed in this primary</p>' : '';
+    // "Unopposed" is a claim about a contest, and what counts as the contest depends
+    // on the phase. In a primary it is this party's own ballot -- a lone name in the
+    // Republican primary is unopposed whatever the Democrats are doing. In the general
+    // every party shares one ballot, so the claim needs the phase-wide count: a sole
+    // Republican is unopposed only if nobody else is running at all. A lone name on a
+    // runoff ballot (an opponent withdrew) is neither, so it stays unlabelled.
+    //
+    // Nonpartisan judicial races are excluded. Georgia decides Supreme Court, Court of
+    // Appeals and Superior Court contests at the May general primary, and the SoS
+    // "November 2026 Federal and State Candidates" list carries none of them (only the
+    // partisan District Attorney races), so "in the general election" would be wrong
+    // for the 91 judicial races that nonetheless carry a Nov 3 general phase.
+    const unopposedHtml =
+        race.activePhase === 'primary' && active.length === 1
+          ? '<p class="ballot-unopposed">Running unopposed in this primary</p>'
+      : race.activePhase === 'general' && race.level !== 'state-judicial'
+          && phaseActiveCount(race.phases[race.activePhase]) === 1
+          ? '<p class="ballot-unopposed">Running unopposed in the general election</p>'
+      : '';
 
     return `
       <div class="ballot-section">
