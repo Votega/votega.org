@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-12T13:53:19.768536+00:00",
+    "generatedAt": "2026-10-12T22:18:56.036218+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,14 +21,14 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 117,
+    "count": 120,
     "windowDays": 45,
-    "entityTagged": 76,
+    "entityTagged": 75,
     "topicCounts": {
-      "elections": 32,
-      "courts": 13,
+      "elections": 34,
+      "courts": 14,
       "education": 12,
-      "healthcare": 16,
+      "healthcare": 15,
       "surveillance": 2,
       "budget": 6,
       "ethics": 5
@@ -36,6 +36,14 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000685": {
+      "name": "Everton Blair",
+      "url": null,
+      "bioguideId": "B001328",
+      "candidateIds": [
+        "challenger-everton-blair-ga13-2026"
+      ]
+    },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
       "url": null,
@@ -160,14 +168,78 @@
       "name": "Barry Loudermilk",
       "url": null,
       "bioguideId": "L000583"
-    },
-    "vg-ga-p-000252": {
-      "name": "Richard McCormick",
-      "url": null,
-      "bioguideId": "M001218"
     }
   },
   "items": [
+    {
+      "id": "6b5ad1ee2447",
+      "title": "Secret agreement effectively ends Jasper Ocean Terminal plans",
+      "url": "https://thecurrentga.org/2026/10/12/secret-agreement-effectively-ends-jasper-ocean-terminal-plans/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-12T21:58:21+00:00",
+      "snippet": "A long-standing plan to build a container ship terminal in Jasper County through a joint venture between South Carolina and Georgia has been indefinitely suspended as both states focus on their indivi",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "5f9d69061b85",
+      "title": "Approximately 500 participate in hunger strike at Folkston immigration detention center",
+      "url": "https://thecurrentga.org/2026/10/12/over-500-participate-in-hunger-strike-at-folkston-immigration-detention-center/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-12T20:24:12+00:00",
+      "snippet": "Approximately 500 detainees at a private ICE facility in Folkston, Georgia, launched a hunger strike to protest poor living conditions and alleged asylum protocol violations while awaiting judicial he",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "89cbff3a39fe",
+      "title": "Actor Selma Blair removed from plane by police after altercation",
+      "url": "https://www.gpb.org/news/2026/10/12/actor-selma-blair-removed-plane-by-police-after-altercation",
+      "source": "GPB News",
+      "publishedAt": "2026-10-12T20:18:42+00:00",
+      "snippet": "Authorities say Blair was physically abusive and injured two flight attendants while traveling from Los Angeles to New York. A Blair representative said she had a medical emergency aboard the plane.",
+      "entityIds": [
+        "vg-ga-p-000685"
+      ],
+      "topics": []
+    },
+    {
+      "id": "bf5e0cb90388",
+      "title": "GPB evening headlines for October 12, 2026",
+      "url": "https://www.gpb.org/news/2026/10/12/gpb-evening-headlines-for-october-12-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-12T19:13:33+00:00",
+      "snippet": "Tomorrow is the first day of early voting -- and county officials have been hard at work preparing for the mid-term elections.\nDevelopers are proposing a data center complex in southeast Georgia's Can",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "9cea1e2d7942",
+      "title": "Judge throws out local conservative activist’s lawsuit against Chatham elections official, police officers for civil rights violations",
+      "url": "https://thecurrentga.org/2026/10/12/judge-throws-out-local-conservative-activists-lawsuit-against-chatham-elections-official-police-officers-for-civil-rights-violations/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-12T18:55:26+00:00",
+      "snippet": "A federal judge dismissed a lawsuit filed by conservative activist Beth Majeroni, who alleged her constitutional rights were violated when she was forcibly removed from a 2023 Chatham County elections",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
+      "id": "dcaad88db677",
+      "title": "Watch the 2026 Georgia election debates",
+      "url": "https://thecurrentga.org/2026/10/12/watch-the-2026-georgia-election-debates/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-12T17:57:41+00:00",
+      "snippet": "Recordings, links to statewide debates for 2026 November election.\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth watchdog journalism for Savannah and Coastal",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
     {
       "id": "ae558ad516ca",
       "title": "Election workers prep for early voting as talk of DOJ ‘intervention’ leaves advocates unsettled",
@@ -186,7 +258,7 @@
       "url": "https://www.gpb.org/news/2026/10/12/gpb-morning-headlines-for-october-12-2026",
       "source": "GPB News",
       "publishedAt": "2026-10-12T13:06:48+00:00",
-      "snippet": "Georgia prepares for early voting; Trump renews effort to remove Fed Governor Lisa Cook; Georgia Tech and Emory unveil new AI supercomputer; Researchers study ocean viruses and their impact on sea tur",
+      "snippet": "Georgia prepares for early voting; Trump renews effort to remove Fed Governor Lisa Cook; Georgia Tech unveils new AI supercomputer; Researchers study ocean viruses and their impact on sea turtles.",
       "entityIds": [],
       "topics": []
     },
@@ -379,22 +451,6 @@
       ]
     },
     {
-      "id": "bd0df96b4d20",
-      "title": "Bottoms, Jackson debate healthcare, data centers in sole scheduled forum",
-      "url": "https://thecurrentga.org/2026/10/07/bottoms-jackson-debate-healthcare-data-centers-in-sole-scheduled-forum/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-07T12:52:18+00:00",
-      "snippet": "Democratic candidate Keisha Lance Bottoms and Republican challenger Rick Jackson debated key issues including healthcare, crime, data centers, and election security in their first, and likely only, te",
-      "entityIds": [
-        "vg-ga-p-000368",
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections",
-        "healthcare"
-      ]
-    },
-    {
       "id": "c984bd769518",
       "title": "Sen. Ossoff Statement on 3rd Anniversary of October 7th",
       "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-statement-on-3rd-anniversary-of-october-7th/",
@@ -447,16 +503,6 @@
       "entityIds": [
         "vg-ga-p-000024"
       ],
-      "topics": []
-    },
-    {
-      "id": "0f1f9da4b72c",
-      "title": "Peek inside Georgia’s record-setting sea turtle nesting season",
-      "url": "https://thecurrentga.org/2026/10/06/peek-inside-georgias-record-setting-sea-turtle-nesting-season/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-06T22:57:37+00:00",
-      "snippet": "Georgia beaches recorded a record 4,292 loggerhead sea turtle nests this season, rebounding from a low in 2004.\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth",
-      "entityIds": [],
       "topics": []
     },
     {
@@ -1581,18 +1627,6 @@
       "publishedAt": "2026-09-10T11:52:10+00:00",
       "snippet": "Experts are urging Georgia residents to take caution as the state enters peak season for West Nile virus, which is the most common mosquito-borne disease in the U.S. The disease is transmitted by Cule",
       "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "6ec51f7f9417",
-      "title": "Fetterman continues GOP flirtation, appears in surprise video to midterm convention",
-      "url": "https://georgiarecorder.com/2026/09/09/repub/fetterman-continues-gop-flirtation-appears-in-surprise-video-to-midterm-convention/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-10T01:42:57+00:00",
-      "snippet": "Democratic U.S. Sen. John Fetterman made a surprise video appearance Wednesday at the GOP convention in Dallas, praising Republican Sen. Dave McCormick while vowing the pair of Pennsylvanians would co",
-      "entityIds": [
-        "vg-ga-p-000252"
-      ],
       "topics": []
     },
     {
