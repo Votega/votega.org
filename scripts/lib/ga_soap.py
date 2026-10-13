@@ -38,7 +38,8 @@ import xml.etree.ElementTree as ET
 VOTES_URL   = "http://webservices.legis.ga.gov/GGAServices/Votes/Service.svc"
 LEG_URL     = "http://webservices.legis.ga.gov/GGAServices/Legislation/Service.svc"
 SESSION_URL = "http://webservices.legis.ga.gov/GGAServices/Session/Service.svc"
-MEMBERS_URL = "http://webservices.legis.ga.gov/GGAServices/Members/Service.svc"
+MEMBERS_URL    = "http://webservices.legis.ga.gov/GGAServices/Members/Service.svc"
+COMMITTEES_URL = "http://webservices.legis.ga.gov/GGAServices/Committees/Service.svc"
 SVC_NS    = "http://www.legis.ga.gov/2009/01/01/services/"
 DATA_NS   = "http://www.legis.ga.gov/2009/01/01/data/"
 ns = {"s": SVC_NS, "d": DATA_NS}
@@ -52,6 +53,9 @@ ACTION = {
     # The Session contract is the odd one out: its soapAction is the BARE operation
     # name, with no namespace and no contract prefix. Taken from the WSDL, not guessed.
     "GetSessions":              "GetSessions",
+    "GetMembersBySession":      SVC_NS + "MemberFinder/GetMembersBySession",
+    "GetMember":                SVC_NS + "MemberFinder/GetMember",
+    "GetCommitteesBySession":   SVC_NS + "CommitteeFinder/GetCommitteesBySession",
 }
 
 # MemberVoted enum -> the vote strings the rest of the project uses.
@@ -239,6 +243,145 @@ def get_sessions():
             "library":     _text(el, "Library") or None,
             "isDefault":   (_text(el, "IsDefault") or "").lower() == "true",
         })
+    return out
+
+
+def get_members_by_session(legis_session):
+    """GetMembersBySession -> one dict per member who served in that session.
+
+    Everyone who served, not just the current seats — 247 for session 1033, of which 11
+    carry a `dateVacated`. This is the THIN listing: `phone` is 15% populated and `email`
+    is 0%, so a roster needs get_member() per person for contact details. Same
+    listing-vs-detail split as GetVotes/GetVote, but much sharper.
+    """
+    root = soap_call(MEMBERS_URL, "GetMembersBySession",
+                     "<s:SessionId>%d</s:SessionId>" % legis_session)
+    if root is None:
+        return []
+    out = []
+    for el in root.findall(".//d:MemberListing", ns):
+        mid = _text(el, "Id", int)
+        if mid is None:
+            continue
+        name = el.find("d:Name", ns)
+        district = el.find("d:District", ns)
+        addr = el.find("d:DistrictAddress", ns)
+        out.append({
+            "id":           mid,
+            "legId":        _text(el, "LegId", int),
+            "first":        _text(name, "First") if name is not None else None,
+            "last":         _text(name, "Last") if name is not None else None,
+            "middle":       _text(name, "Middle") if name is not None else None,
+            "nickname":     _text(name, "Nickname") if name is not None else None,
+            "suffix":       _text(name, "Suffix") if name is not None else None,
+            "party":        _text(el, "Party"),
+            "chamber":      _text(district, "Type") if district is not None else None,
+            "district":     _text(district, "Number", int) if district is not None else None,
+            "residence":    _text(el, "Residence"),
+            # Set when the member left the seat ("2025-10-12T00:00:00"). A dated departure
+            # feed — but the REASON is not in the API, so a caller must never infer a
+            # status (resigned / removed / deceased / suspended) from it.
+            "dateVacated":  _text(el, "DateVacated"),
+            "districtCity": _text(addr, "City") if addr is not None else None,
+        })
+    return out
+
+
+def get_member(member_id):
+    """GetMember -> the full record for one member, or None on transport failure.
+
+    Flattened to what a roster needs. `sessions` holds one entry per session served;
+    order is not guaranteed, so match on sessionId or the isDefault flag.
+    """
+    root = soap_call(MEMBERS_URL, "GetMember", "<s:MemberId>%d</s:MemberId>" % member_id)
+    if root is None:
+        return None
+    m = root.find(".//s:GetMemberResult", ns)
+    if m is None:
+        return None
+
+    addr = m.find("d:Address", ns)      # the CAPITOL office — phone and email live here
+    name = m.find("d:Name", ns)
+    press = m.find("d:Press", ns)
+    portraits = {}
+    for img in m.findall("d:Portrait/d:Images/d:Image", ns):
+        kind, url = _text(img, "ImageType"), _text(img, "Url")
+        if kind and url:
+            portraits[kind] = url
+
+    sessions = []
+    for svc in m.findall("d:SessionsInService/d:LegislativeService", ns):
+        sess = svc.find("d:Session", ns)
+        dist = svc.find("d:District", ns)
+        committees = []
+        for cm in svc.findall("d:CommitteeMemberships/d:CommitteeMembership", ns):
+            com = cm.find("d:Committee", ns)
+            if com is None:
+                continue
+            committees.append({
+                "id":          _text(com, "Id", int),
+                "code":        _text(com, "Code"),
+                "name":        _text(com, "Name"),
+                "type":        _text(com, "Type"),
+                "role":        _text(cm, "Role"),
+                "dateVacated": _text(cm, "DateVacated"),
+            })
+        sessions.append({
+            "sessionId":   _text(sess, "Id", int) if sess is not None else None,
+            "description": _text(sess, "Description") if sess is not None else None,
+            "isDefault":   ((_text(sess, "IsDefault") or "").lower() == "true"
+                            if sess is not None else False),
+            # Party and district sit INSIDE each session's record, so this doubles as a
+            # history of party switches and of pre-redistricting seats.
+            "party":       _text(svc, "Party"),
+            "chamber":     _text(dist, "Type") if dist is not None else None,
+            "district":    _text(dist, "Number", int) if dist is not None else None,
+            # Leadership role, free text. Normalize via lib/ga_leadership.py.
+            "title":       _text(svc, "Title"),
+            "dateVacated": _text(svc, "DateVacated"),
+            "committees":  committees,
+        })
+
+    return {
+        "id":         _text(m, "Id", int),
+        "first":      _text(name, "First") if name is not None else None,
+        "last":       _text(name, "Last") if name is not None else None,
+        "phone":      _text(addr, "Phone") if addr is not None else None,
+        "email":      _text(addr, "Email") if addr is not None else None,
+        "address1":   _text(addr, "Address1") if addr is not None else None,
+        "city":       _text(addr, "City") if addr is not None else None,
+        "state":      _text(addr, "State") if addr is not None else None,
+        "zip":        _text(addr, "Zip") if addr is not None else None,
+        # Month and day only ("July 12") — there is NO birth year anywhere in this API.
+        "birthday":   _text(m, "Birthday"),
+        "occupation": _text(m, "Occupation"),
+        "residence":  _text(m, "Residence"),
+        "staff":      _text(m, "Staff"),
+        "pressUrl":   _text(press, "Url") if press is not None else None,
+        "portraits":  portraits,
+        "sessions":   sessions,
+    }
+
+
+def get_committees_by_session(legis_session):
+    """GetCommitteesBySession -> [{id, code, name, type}].
+
+    Top-level committees only: the House's Appropriations subcommittees are NOT returned.
+    Note the names here disagree with the ones in a member's leadership Title on "&" vs
+    "and", and are inconsistent with themselves ("Agriculture & Consumer Affairs" next to
+    "Industry and Labor") — fold both before matching.
+    """
+    root = soap_call(COMMITTEES_URL, "GetCommitteesBySession",
+                     "<s:SessionId>%d</s:SessionId>" % legis_session)
+    if root is None:
+        return []
+    out = []
+    for el in root.findall(".//d:CommitteeListing", ns):
+        cid = _text(el, "Id", int)
+        if cid is None:
+            continue
+        out.append({"id": cid, "code": _text(el, "Code"),
+                    "name": _text(el, "Name"), "type": _text(el, "Type")})
     return out
 
 
