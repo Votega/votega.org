@@ -1285,7 +1285,7 @@
         return;
       }
       if (memberVotes.length === 0) {
-        container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No voting record found for this member in our data for this session. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';
+        container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No voting record found for this member in our data for this General Assembly. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';
         return;
       }
 
@@ -1315,15 +1315,6 @@
 
       const voteClass = v => v === 'Yea' ? 'vote-yea' : v === 'Nay' ? 'vote-nay' : 'vote-other';
 
-      let yeaCount = 0, nayCount = 0, otherCount = 0;
-      for (const { vote } of sorted) {
-        if (vote === 'Yea') yeaCount++;
-        else if (vote === 'Nay') nayCount++;
-        else otherCount++;
-      }
-      const chartHtml = buildVoteChart(yeaCount, nayCount, otherCount, sorted.length);
-      const participationHtml = buildParticipationSummary(memberVotes, votesIndex, member.chamber, incomplete);
-
       // Party-line positions are precomputed at build time (partyTally per vote in
       // the shared index), so loyalty no longer needs every member's votes here.
       const partyVoteIndex = new Map();
@@ -1331,19 +1322,6 @@
         const rc = rollCallKey(vid);
         if (votesIndex[vid].partyTally && !partyVoteIndex.has(rc)) partyVoteIndex.set(rc, { tally: votesIndex[vid].partyTally, voteId: vid });
       }
-      const partyLoyalty = buildPartyLoyaltySummary(memberVotes, votesIndex, member.chamber, member, partyVoteIndex, incomplete, allMembers);
-      const partyLoyaltyHtml = partyLoyalty.html;
-
-      // Turn this member's own alignment/participation figures into a gateway to the
-      // full ranking: the scorecard opens scrolled to and highlighting this member.
-      // Withheld for surname-collision members: the ranking is built from the same
-      // broken party-alignment figure the note above explains we won't show, so
-      // pointing there would just surface it in another place.
-      const scorecardLink = ((participationHtml || partyLoyaltyHtml) && !partyLoyalty.suppressed)
-        ? `<p style="margin:0.35rem 0 1rem 0;font-size:0.85rem;">
-             <a href="${getBasePath()}ga-party-unity.html#${encodeURIComponent(member.id)}">See how this ranks among other GA legislators&nbsp;&rarr;</a>
-           </p>`
-        : '';
 
       const renderRows = list => list.map(({ voteId, vote }) => {
         const meta    = votesIndex[voteId] || {};
@@ -1377,8 +1355,10 @@
         </div>`;
 
       // Group the member's votes by session. A biennium can hold a regular session
-      // plus special sessions; when more than one is present we render a labeled
-      // section per session (regular first, per metadata.sessions order).
+      // plus special sessions; when more than one is present the view is filterable
+      // (and defaults to the active session, which is the record a visitor usually
+      // wants and is far the smaller list — a median member has ~1,350 votes across
+      // the biennium but only ~240 in the current special session).
       const bySession = {};
       for (const mv of sorted) {
         const sid = (votesIndex[mv.voteId] || {}).session || activeSession || 'unknown';
@@ -1386,14 +1366,83 @@
       }
       const order = (data.metadata?.sessions || []).map(s => s.id).filter(id => bySession[id]);
       Object.keys(bySession).forEach(id => { if (!order.includes(id)) order.push(id); });
+      const multiSession = order.length > 1;
 
-      const votesTablesHtml = order.length > 1
-        ? order.map(sid =>
-            `<h3 style="font-size:0.95rem;margin:1.1rem 0 0.4rem 0;">${escHtml(sessionNames[sid] || sid)}` +
-            ` <span style="font-weight:normal;font-size:0.78rem;color:#666;">(${bySession[sid].length} vote${bySession[sid].length === 1 ? '' : 's'})</span></h3>` +
-            tableFor(bySession[sid])
-          ).join('')
-        : tableFor(sorted);
+      // ?session=<id> deep-links a specific session; ?session=all the whole biennium.
+      // An unknown or absent value falls back to the active session, then to whatever
+      // single session exists. Mirrors the filter on ga-bills.html.
+      const SESSION_ALL = 'all';
+      let selected = activeSession;
+      try {
+        const q = new URLSearchParams(window.location.search).get('session');
+        if (q === SESSION_ALL || (q && bySession[q])) selected = q;
+      } catch (err) { /* no URLSearchParams support: keep the default */ }
+      if (selected !== SESSION_ALL && !bySession[selected]) selected = order[0] || SESSION_ALL;
+      if (!multiSession) selected = order[0] || SESSION_ALL;
+
+      const listFor = sel => (sel === SESSION_ALL ? sorted : (bySession[sel] || []));
+
+      // Everything below is recomputed per selection: a participation or alignment
+      // figure describing the whole biennium, sitting directly above a table showing
+      // one session, reads as that session's figure. The scorecard RANKING is
+      // biennium-wide either way (ga-party-unity.json has no session dimension), so
+      // its link says so when a single session is in view.
+      function panelFor(sel) {
+        const list = listFor(sel);
+        let yeaCount = 0, nayCount = 0, otherCount = 0;
+        for (const { vote } of list) {
+          if (vote === 'Yea') yeaCount++;
+          else if (vote === 'Nay') nayCount++;
+          else otherCount++;
+        }
+        const chartHtml = buildVoteChart(yeaCount, nayCount, otherCount, list.length);
+        const participationHtml = buildParticipationSummary(list, votesIndex, member.chamber, incomplete);
+        const partyLoyalty = buildPartyLoyaltySummary(list, votesIndex, member.chamber, member, partyVoteIndex, incomplete, allMembers);
+        const partyLoyaltyHtml = partyLoyalty.html;
+
+        // Turn this member's own alignment/participation figures into a gateway to the
+        // full ranking: the scorecard opens scrolled to and highlighting this member.
+        // Withheld for surname-collision members: the ranking is built from the same
+        // broken party-alignment figure the note above explains we won't show, so
+        // pointing there would just surface it in another place.
+        const scopeNote = (multiSession && sel !== SESSION_ALL)
+          ? ' <span style="color:#666;">(ranked across the full ' + escHtml(session || 'biennium') + ')</span>'
+          : '';
+        const scorecardLink = ((participationHtml || partyLoyaltyHtml) && !partyLoyalty.suppressed)
+          ? `<p style="margin:0.35rem 0 1rem 0;font-size:0.85rem;">
+               <a href="${getBasePath()}ga-party-unity.html#${encodeURIComponent(member.id)}">See how this ranks among other GA legislators&nbsp;&rarr;</a>${scopeNote}
+             </p>`
+          : '';
+
+        const tablesHtml = (sel === SESSION_ALL && multiSession)
+          ? order.map(sid =>
+              `<h3 style="font-size:0.95rem;margin:1.1rem 0 0.4rem 0;">${escHtml(sessionNames[sid] || sid)}` +
+              ` <span style="font-weight:normal;font-size:0.78rem;color:#666;">(${bySession[sid].length} vote${bySession[sid].length === 1 ? '' : 's'})</span></h3>` +
+              tableFor(bySession[sid])
+            ).join('')
+          : tableFor(list);
+
+        return `
+          ${(participationHtml || partyLoyaltyHtml) ? `
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            ${participationHtml ? `<div style="flex:1;min-width:240px;">${participationHtml}</div>` : ''}
+            ${partyLoyaltyHtml  ? `<div style="flex:1;min-width:240px;">${partyLoyaltyHtml}</div>`  : ''}
+          </div>` : ''}
+          ${scorecardLink}
+          ${chartHtml}
+          ${tablesHtml}`;
+      }
+
+      // The control is data-driven: it appears only once the biennium actually holds
+      // more than one session with votes, and disappears again at a rollover.
+      const selectHtml = multiSession ? `
+        <div style="margin:0 0 0.75rem 0;">
+          <label for="gaVoteSession" style="font-size:0.8rem;color:#555;margin-right:0.4rem;">Session</label>
+          <select id="gaVoteSession" style="font-size:0.85rem;padding:0.25rem 0.4rem;">
+            ${order.map(sid => `<option value="${escHtml(sid)}"${sid === selected ? ' selected' : ''}>${escHtml(sessionNames[sid] || sid)} (${bySession[sid].length})</option>`).join('')}
+            <option value="${SESSION_ALL}"${selected === SESSION_ALL ? ' selected' : ''}>All sessions (${sorted.length})</option>
+          </select>
+        </div>` : '';
 
       // Per-block provenance: roll calls come from the votes file's own
       // metadata.generatedAt, not the roster stamp the page header shows.
@@ -1407,14 +1456,23 @@
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing recorded passage votes, the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
         ${votesGenDate ? `<p style="font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">Vote data from legis.ga.gov, updated ${votesGenDate}.</p>` : ''}
         ${incompleteNote}
-        ${(participationHtml || partyLoyaltyHtml) ? `
-        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-          ${participationHtml ? `<div style="flex:1;min-width:240px;">${participationHtml}</div>` : ''}
-          ${partyLoyaltyHtml  ? `<div style="flex:1;min-width:240px;">${partyLoyaltyHtml}</div>`  : ''}
-        </div>` : ''}
-        ${scorecardLink}
-        ${chartHtml}
-        ${votesTablesHtml}`;
+        ${selectHtml}
+        <div id="gaVotesPanel">${panelFor(selected)}</div>`;
+
+      const sel = document.getElementById('gaVoteSession');
+      const panel = document.getElementById('gaVotesPanel');
+      if (sel && panel) {
+        sel.addEventListener('change', () => {
+          selected = sel.value;
+          panel.innerHTML = panelFor(selected);
+          // Keep the view shareable without adding a history entry per change.
+          try {
+            const url = new URL(window.location.href);
+            url.searchParams.set('session', selected);
+            window.history.replaceState({}, '', url);
+          } catch (err) { /* non-critical */ }
+        });
+      }
     } catch (err) {
       console.warn('Could not load voting history:', err);
     }
