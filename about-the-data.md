@@ -453,7 +453,7 @@ officials correction is verified against its primary source before it merges.
 | GA state legislator voting history | legis.ga.gov official web service | Weekly, Mondays 07:30 UTC |
 | GA legislator voting scorecard (party unity + participation) | Derived from GA voting history + roster | Weekly, with the voting-history update |
 | GA bills & resolutions (2025–26 session) | legis.ga.gov official web service | Weekly, Sundays 07:30 UTC |
-| GA curated bills (Key Votes) | Open States API | Daily, 08:00 UTC |
+| GA curated bills (Key Votes) | legis.ga.gov official web service | Tue & Thu, 08:00 UTC |
 | GA executive orders | gov.georgia.gov (scraped) | Daily, 08:15 UTC (committed when new orders are found) |
 | GA congressional stock trades | House/Senate eFD via kadoa-org/congress-trading-monitor | Weekly, Sundays 10:00 UTC |
 | 2026 GA legislative candidates | GA Secretary of State | Updated when SOS publishes new filing data |

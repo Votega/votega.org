@@ -91,8 +91,9 @@ def schema():
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://raw.githubusercontent.com/Votega/ga-legislation/main/ga-bills.schema.json",
         "title": "Georgia Bills",
-        "description": "Bills and resolutions from the Georgia General Assembly (Open States), "
-                       "enriched with party vote tallies where available.",
+        "description": "Bills and resolutions from the Georgia General Assembly, sourced from its "
+                       "own web service at legis.ga.gov (topical subject tags originate from "
+                       "Open States), enriched with party vote tallies where available.",
         "type": "object",
         "required": ["metadata", "bills"],
         "properties": {
@@ -103,7 +104,9 @@ def schema():
                     "type": "object",
                     "required": ["id", "identifier", "title"],
                     "properties": {
-                        "id": {"type": "string", "description": "Open States OCD bill id."},
+                        "id": {"type": "string", "description": "Bill id in the form "
+                               "\"gga-bill/<legislationId>\", where legislationId is the "
+                               "legis.ga.gov id used in billUrl."},
                         "identifier": {"type": "string", "description": "e.g. 'HB 1', 'SB 264'."},
                         "billType": {"type": ["string", "null"], "description": "e.g. bill, resolution."},
                         "chamber": {"type": ["string", "null"], "enum": ["lower", "upper", None],
@@ -157,7 +160,7 @@ def build_artifacts():
                 "sessionName": session_name(sid),
                 "biennium": BIENNIUM,
                 "generatedAt": meta.get("generatedAt"),
-                "source": meta.get("source", "Open States API"),
+                "source": meta.get("source", "legis.ga.gov official web service"),
                 "totalBills": len(sess_bills),
             },
             "bills": sess_bills,

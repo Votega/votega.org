@@ -233,8 +233,11 @@ def votes_schema():
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://raw.githubusercontent.com/Votega/ga-legislators/main/sessions/votes.schema.json",
         "title": "Georgia General Assembly — Roll-call Votes",
-        "description": "Passage votes from the Georgia General Assembly (Open States), keyed by OCD "
-                       "vote id. memberVotes is keyed by OCD person id (the `id` in members data).",
+        "description": "Passage votes from the Georgia General Assembly, sourced from its own "
+                       "web service at legis.ga.gov. Keyed by vote id in the form "
+                       "\"<rollCallId>-<legislationId>\" — one floor vote on a bundled calendar "
+                       "appears once per bill, with identical tallies. memberVotes is keyed by "
+                       "OCD person id (the `id` in members data).",
         "type": "object",
         "required": ["votes", "memberVotes"],
         "properties": {
@@ -332,7 +335,7 @@ def build_votes():
                 "sessionName": session_name(sid),
                 "biennium": BIENNIUM,
                 "generatedAt": meta.get("generatedAt"),
-                "source": meta.get("source", "Open States API"),
+                "source": meta.get("source", "legis.ga.gov official web service"),
                 "totalVotes": len(sess_votes),
             },
             "votes": sess_votes,

@@ -53,9 +53,18 @@ def _urlopen_retry(req):
 # supplied its own upstream name they would rewrite NOTICE.md against each other on
 # every run — the churn this file exists to avoid.
 REPO_SOURCES = {
-    "Votega/ga-legislators": "the Open States API (Plural Policy)",
-    "Votega/ga-legislation": "the Open States API (Plural Policy), the Georgia "
-                             "Secretary of State, and the Georgia General Assembly",
+    # Mixed upstreams since the 2026-10 SOAP cutover: the roster is still Open
+    # States, but the roll-call votes and the party-unity scorecard published
+    # alongside it come from the General Assembly itself. Crediting only Open
+    # States under-credits the official source for most of the repo's content.
+    "Votega/ga-legislators": "the Open States API (Plural Policy) and the Georgia "
+                             "General Assembly (legis.ga.gov)",
+    # Bills moved to the General Assembly's own service in 2026-10; Open States
+    # remains a real upstream only for the frozen topical-subject snapshot
+    # (ga-bills-subjects-base.json), so it stays credited but no longer leads.
+    "Votega/ga-legislation": "the Georgia General Assembly (legis.ga.gov), the "
+                             "Georgia Secretary of State, and the Open States API "
+                             "(Plural Policy) for topical subject tags",
     "Votega/ga-federal-legislators": "Congress.gov, the Clerk of the U.S. House, "
                                      "and the U.S. Senate",
     "Votega/ga-races-elections": "the Georgia Secretary of State",
