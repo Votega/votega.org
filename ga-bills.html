@@ -969,7 +969,35 @@ breadcrumb:
     searchTimer = setTimeout(applyFilters, 250);
   });
   elSubject.addEventListener('change', applyFilters);
-  elSession.addEventListener('change', function () { sessionFilter = elSession.value; applyFilters(); });
+  elSession.addEventListener('change', function () {
+    sessionFilter = elSession.value;
+    applyFilters();
+    syncSessionParam();
+  });
+
+  // ?session=<id> makes a filtered view shareable (?session= or absent = all sessions).
+  // Same parameter name as the vote-history filter on the GA legislator page, so one
+  // link convention covers both. replaceState: a filter change is not a navigation.
+  function syncSessionParam() {
+    try {
+      const url = new URL(window.location.href);
+      if (sessionFilter) url.searchParams.set('session', sessionFilter);
+      else url.searchParams.delete('session');
+      window.history.replaceState({}, '', url);
+    } catch (err) { /* non-critical */ }
+  }
+
+  // Applied after buildSessionDropdown(), so the value is only honoured if that
+  // session actually has bills and the control is showing.
+  function applySessionParam() {
+    if (!multiSession) return;
+    try {
+      const q = new URLSearchParams(window.location.search).get('session');
+      if (!q) return;
+      const match = Array.prototype.some.call(elSession.options, function (o) { return o.value === q; });
+      if (match) { elSession.value = q; sessionFilter = q; }
+    } catch (err) { /* no URLSearchParams support: keep the default */ }
+  }
   elSort.addEventListener('change', applyFilters);
 
   document.getElementById('chamberTabs').addEventListener('click', function (e) {
@@ -1039,7 +1067,7 @@ breadcrumb:
     // happens to be active by default.
     elSearch.value = '';
     elSubject.value = '';
-    if (elSession) { elSession.value = ''; sessionFilter = ''; }
+    if (elSession) { elSession.value = ''; sessionFilter = ''; syncSessionParam(); }
     chamberTab = '';
     statusFilter = '';
     partyLineOnly = false;
@@ -1085,6 +1113,7 @@ breadcrumb:
       buildStats(meta);
       buildSubjectDropdown();
       buildSessionDropdown(meta);
+      applySessionParam();
       elControls.style.display   = '';
 
       const withVotes = allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;
