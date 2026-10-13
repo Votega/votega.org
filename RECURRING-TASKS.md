@@ -230,14 +230,13 @@ fetched and it opens small, the first pull is a few pages — no quota crunch. A
 You do **not** need a full refresh at a rollover: once `SESSION_NAMES` holds only the new
 biennium there is nothing marked for preservation, so the run is already a single-session
 fetch and the prior biennium stays in the publishers' `sessions/<slug>/` archives. Force
-one (`update-ga-bills` → dispatch with **full_refresh**, or `FULL_REFRESH=1`) only for a
-retroactive amendment to a closed session, or a producer schema change that has to reach
-historical records.
+one (`update-ga-bills` / `update-ga-votes` → dispatch with **full_refresh**, or
+`FULL_REFRESH=1`) only for a retroactive amendment to a closed session, a producer schema
+change that has to reach historical records, or — for votes — a crosswalk backfill or
+amendment-rule change that must be applied to a closed session's roll calls.
 
-**How the biennium model works:** each bill/vote record carries a `session` id. The
-bills producer keeps closed sessions as a frozen layer and fetches only `ACTIVE_SESSION`
-(the votes producer still sweeps every session each run — see the note in
-`scripts/lib/ga_sessions.py`), so
+**How the biennium model works:** each bill/vote record carries a `session` id. Both SOAP
+producers keep closed sessions as a frozen layer and fetch only `ACTIVE_SESSION`, so
 `ga-bills.json` / `ga-member-votes.json` cover the whole biennium; `ga-bills.html` and
 `ga-member.html` show all sessions (filterable / grouped), and the publishers split the
 combined file back into `sessions/<slug>/` archive dirs (regular → `2025-2026`, special

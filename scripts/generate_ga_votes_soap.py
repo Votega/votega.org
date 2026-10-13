@@ -44,13 +44,47 @@ Parity with the other producers (so the three files diff cleanly, design §6/§7
 
 Output defaults to assets/data/ga-member-votes.soap.json — PARALLEL to the live file.
 Diff it against the Open States and /api outputs before any cutover; never overwrite the
-canonical ga-member-votes.json until that validation passes.
+canonical ga-member-votes.json until that validation passes. (update-ga-votes.yml passes
+the canonical path explicitly, along with --no-overlay.)
+
+Incremental model: only the ACTIVE session is fetched live; the closed sessions of the
+biennium are merged forward from the existing output file. Closed sessions cannot change,
+and re-fetching them dominated the run — the 2025-2026 regular session is 1,497 of 1,522
+roll calls, so a full sweep spent 98% of its GetVote calls re-downloading immutable
+records. Fetch cost drops to ~25 calls. This is the model lib/ga_sessions.py documents
+(ACTIVE_SESSION / preserved_session_ids); the bills producer does the same.
+
+The merge is NOT a concatenation, because `memberVotes` is keyed by PERSON, not session,
+so one member's row spans both sessions:
+  * `votes` is preserved-first, so every preserved voteId keeps its index position and
+    every preserved member row stays byte-identical (lib/votes_schema.encode_member_votes
+    takes `base_vote_ids` for exactly this).
+  * the member map is a UNION with the PRESERVED layer as its base — 12 of 246 members
+    have votes only in the closed session (they left mid-biennium) and cannot appear in
+    an active-session fetch, so building up from the fetch would drop their entire
+    history. scripts/test_votes_incremental.py pins this and the index invariants.
+
+Preservation is a hard requirement, not a fallback: if the prior file cannot be read, is
+not the compact schema, or is missing a session it claims to carry, the run ABORTS and
+tells you to re-run with --full-refresh.
+
+What incremental means for provenance: metadata counters from `statsScope` onward describe
+only THIS RUN'S FETCH (`sessionsFetched`), so they drop sharply on an incremental run —
+that is preservation working, not data loss. Whole-file figures are `totalVotes`,
+`rollCallsTotal` and `sessions[].voteCount`. Two derivations also freeze for closed
+sessions, which is the main reason to keep the full-refresh hatch: crosswalk backfills
+(an unresolved legisGaGovId resolved later) and result derivation (the two-thirds
+constitutional-amendment rule, read from ga-bills.json) no longer reach them.
+
+A biennium rollover needs NO full refresh: SESSION_NAMES then holds only the new biennium,
+so nothing is marked for preservation and the run is already a single-session fetch.
 
 Usage:
-  python generate_ga_votes_soap.py                 # ALL configured sessions -> parallel file
+  python generate_ga_votes_soap.py                 # active session + preserved -> parallel file
   python generate_ga_votes_soap.py OUT.json        # explicit output path
-  python generate_ga_votes_soap.py --session 2025_26   # one session only
-  python generate_ga_votes_soap.py --chamber House     # one chamber
+  python generate_ga_votes_soap.py --full-refresh  # re-fetch ALL sessions (slow, ~1.5k calls)
+  python generate_ga_votes_soap.py --session 2025_26   # re-fetch one, preserve the rest
+  python generate_ga_votes_soap.py --chamber House     # one chamber (partial: preserves nothing)
   python generate_ga_votes_soap.py --inspect          # a few roll calls, diagnostics, write nothing
   python generate_ga_votes_soap.py --no-titles        # skip the per-session title index call
 """
@@ -67,10 +101,11 @@ from lib.atomic_io import write_json_atomic
 from lib.ga_passage import classify, load_os_passage_index, normalize_bill
 from lib.ga_vote_rules import is_state_constitutional_amendment, vote_passed
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
-                             legis_session_id, session_name)
+                             legis_session_id, session_name, preserved_session_ids)
 from lib.ga_soap import (CHAMBER_NAMES, CHAMBERS, VACANT_ID, RollCallNotPublished,
                          get_title_index, get_vote_detail, get_vote_listings)
-from lib.votes_schema import encode_member_votes
+from lib.votes_schema import (encode_member_votes, merge_member_votes,
+                              preserved_layer)
 
 
 CROSSWALK_FILE = "assets/data/id-crosswalk.json"
@@ -290,6 +325,11 @@ def parse_args(argv=None):
                    help="one session tag to run (default: ALL configured sessions). "
                         "Must be configured in lib/ga_sessions.py.")
     p.add_argument("--chamber", choices=["House", "Senate", "both"], default="both")
+    p.add_argument("--full-refresh", action="store_true",
+                   default=os.environ.get("FULL_REFRESH") == "1",
+                   help="re-fetch EVERY configured session instead of preserving the "
+                        "closed ones (slow: ~1.5k GetVote calls vs ~25; also settable "
+                        "as FULL_REFRESH=1)")
     p.add_argument("--sample", type=int, default=None, metavar="N",
                    help="cap roll calls examined per session (cheap run)")
     p.add_argument("--inspect", action="store_true",
@@ -314,14 +354,60 @@ def main():
                   % (args.session, ", ".join(all_session_ids())), file=sys.stderr)
             sys.exit(1)
         sessions = [args.session]
-    else:
+    elif args.full_refresh:
         sessions = list(all_session_ids())
+    else:
+        sessions = [ACTIVE_SESSION]
     # Only sessions mapped to a legis numeric id can be sourced from SOAP.
     sessions = [s for s in sessions if legis_session_id(s) is not None]
     if not sessions:
         print("Error: none of the configured sessions have a legis id (lib/ga_sessions.py).",
               file=sys.stderr)
         sys.exit(1)
+
+    if args.session or args.full_refresh:
+        preserve = [s for s in all_session_ids() if s not in sessions]
+    else:
+        preserve = preserved_session_ids()   # the canonical closed-session set
+
+    # A partial fetch must not be merged with a complete frozen layer: the result would
+    # look whole while missing most of the active session, and the workflow's
+    # `votes >= 1000` floor is cleared by the preserved layer alone. Sampling and a
+    # single-chamber run stay what they were — obviously-partial diagnostics.
+    partial = bool(sample) or chambers != CHAMBERS
+    if partial and preserve and not args.inspect:
+        print("Warning: --sample/--chamber writes a PARTIAL file (closed sessions not "
+              "preserved). Use --inspect to avoid writing at all.", file=sys.stderr)
+        preserve = []
+
+    # Carry the closed sessions forward from the existing file. Fatal if that fails:
+    # publishing the active session alone would silently drop thousands of roll calls
+    # and every vote of the members who have since left.
+    preserved_votes, preserved_mv, prior_counts = {}, {}, {}
+    if preserve and not args.inspect:
+        try:
+            with open(args.output_file, encoding="utf-8") as fh:
+                prior = json.load(fh)
+            preserved_votes, preserved_mv = preserved_layer(prior, preserve)
+            prior_counts = {row.get("id"): row.get("voteCount")
+                            for row in ((prior.get("metadata") or {}).get("sessions") or [])
+                            if row.get("id") in set(preserve)}
+        except (OSError, ValueError) as exc:
+            print("Error: cannot preserve closed sessions (%s) from %s: %s\n"
+                  "       Re-run with --full-refresh to rebuild every session from SOAP."
+                  % (", ".join(preserve), args.output_file, exc), file=sys.stderr)
+            sys.exit(1)
+        missing = [sid for sid in preserve
+                   if not any((r or {}).get("session") == sid
+                              for r in preserved_votes.values())]
+        if missing:
+            print("Error: %s carries no votes for %s — refusing to publish a file that "
+                  "would silently drop them.\n"
+                  "       Re-run with --full-refresh to rebuild every session from SOAP."
+                  % (args.output_file, ", ".join(missing)), file=sys.stderr)
+            sys.exit(1)
+        print("Preserving %d bill-votes and %d member records from %d closed session(s): %s"
+              % (len(preserved_votes), len(preserved_mv), len(preserve), ", ".join(preserve)))
 
     by_legis_id = build_crosswalk()
     print("Loaded crosswalk: %d legisGaGovId joins (id-only resolution)" % len(by_legis_id))
@@ -397,6 +483,26 @@ def main():
               file=sys.stderr)
         sys.exit(1)
 
+    fetched_votes, fetched_members = len(votes_meta), len(member_votes)
+
+    # Merge the frozen layer UNDER the fresh fetch. Preserved first, so every preserved
+    # voteId keeps its index and every preserved member row stays byte-identical; and
+    # preserved is the BASE of the member union, so a member who left mid-biennium (and
+    # so cannot appear in an active-session fetch) keeps their whole history.
+    # See scripts/test_votes_incremental.py for the invariants this relies on.
+    if preserved_votes:
+        votes_meta = {**preserved_votes, **votes_meta}
+        member_votes = merge_member_votes(preserved_mv, member_votes)
+        shortfall = {sid: prior for sid, prior in prior_counts.items()
+                     if prior and sum(1 for r in votes_meta.values()
+                                      if (r or {}).get("session") == sid) < prior}
+        if shortfall:
+            print("Error: preserved fewer bill-votes than %s claims for %s — refusing to write."
+                  % (args.output_file,
+                     ", ".join("%s (expected %d)" % (k, v) for k, v in shortfall.items())),
+                  file=sys.stderr)
+            sys.exit(1)
+
     member_votes_compact, vote_id_index = encode_member_votes(
         member_votes, list(votes_meta.keys()))
 
@@ -416,10 +522,21 @@ def main():
             "activeSession": ACTIVE_SESSION,
             "activeSessionName": session_name(ACTIVE_SESSION),
             "sessionsFetched": sessions,
+            "sessionsPreserved": preserve,
+            "updateMode": "full" if not preserve else "incremental",
             "source": "legis.ga.gov SOAP (webservices.legis.ga.gov/GGAServices)",
             "totalVotes": len(votes_meta),
+            # Roll calls across the WHOLE file, recovered from the merged records so the
+            # figure stays comparable run to run; `rollCalls` below counts only this
+            # run's fetch, like every other counter in the statsScope block.
+            "rollCallsTotal": len({(r.get("session"), r.get("chamber"), r.get("date"),
+                                    r.get("rollNumber")) for r in votes_meta.values()}),
+            # Everything from here to passageOverlaySource describes THIS RUN'S FETCH,
+            # not the file: on an incremental run they cover `sessionsFetched` only, so
+            # a drop against the previous run is the preservation working, not data loss.
+            "statsScope": "sessionsFetched",
             "rollCalls": agg["rollCalls"],
-            "billVotes": len(votes_meta),
+            "billVotes": fetched_votes,
             "resolvedRows": agg["resolvedRows"],
             "unresolvedRows": agg["unresolvedRows"],
             "unresolvedMembers": len(unresolved_gap),
@@ -442,6 +559,10 @@ def main():
     size_kb = os.path.getsize(args.output_file) // 1024
     print("\nDone. %d passage roll calls -> %d bill-votes · %d members · %d KB -> %s"
           % (agg["rollCalls"], len(votes_meta), len(member_votes), size_kb, args.output_file))
+    print("  %d bill-votes / %d members fetched (%s) · %d / %d preserved (%s)"
+          % (fetched_votes, fetched_members, ", ".join(sessions),
+             len(votes_meta) - fetched_votes, len(member_votes) - fetched_members,
+             ", ".join(preserve) or "none"))
     print("  passage: %d via OS overlay, %d via caption; %d non-passage dropped, "
           "%d unpublished, %d attendance skipped, %d sentinel rows dropped"
           % (agg["passageByOverlay"], agg["passageByNative"], agg["droppedNonPassage"],

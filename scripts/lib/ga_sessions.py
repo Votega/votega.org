@@ -6,13 +6,17 @@ the work of the SAME sitting membership. Open States exposes each as its own ses
 identifier, so the generators fetch the ACTIVE session live and PRESERVE the records of
 the closed sessions already on file (they never change, so they're never re-fetched).
 
-Who actually honours that: generate_ga_bills_soap.py does (via preserved_session_ids(),
-below — it fetches ACTIVE_SESSION and carries the closed sessions forward from
-ga-bills.json, aborting rather than publishing a file short a session).
-generate_ga_votes_soap.py does NOT yet — it still sweeps every configured session each
-run, because ga-member-votes.json is a cross-session compact index (positional
-memberVotes keyed off a shared voteIds list) that has to be rebuilt to merge a preserved
-layer in. Treat the paragraph above as the model for bills and the intent for votes.
+Both SOAP producers honour that, via preserved_session_ids() below: each fetches
+ACTIVE_SESSION, carries the closed sessions forward from its own output file, and ABORTS
+rather than publish a file short a session. For votes the carry-forward is a merge, not a
+concatenation — ga-member-votes.json is a cross-session compact index and its memberVotes
+are keyed by PERSON, so a member's row spans sessions and the union must take the
+preserved layer as its base (see generate_ga_votes_soap.py and
+scripts/test_votes_incremental.py).
+
+Two derivations therefore freeze for closed sessions, which is what --full-refresh is
+for: a crosswalk backfill (an unresolved legisGaGovId resolved later) and result
+derivation (the two-thirds constitutional-amendment rule) no longer reach them.
 
 Every bill and vote record is tagged with its `session` id. That lets the site show the
 whole biennium in one list (filterable by session) while the publishers split the

@@ -102,3 +102,57 @@ def encode_member_votes(member_votes, base_vote_ids):
             row[idx[vid]] = VOTE_CODES.get(entry.get('vote'), entry.get('vote'))
         compact[person_id] = {str(i): row[i] for i in sorted(row)}
     return compact, vote_ids
+
+def preserved_layer(data, sessions):
+    """The closed-session layer of an existing compact file, ready to merge.
+
+    Returns `(votes, member_votes)` where `votes` is the `{voteId: record}` subset whose
+    `session` tag is in `sessions` — **in the file's own key order**, which is what keeps
+    the compact index append-only — and `member_votes` is the legacy
+    `{personId: [{voteId, vote}]}` form filtered to those votes.
+
+    Why the order matters: `encode_member_votes(..., base_vote_ids=list(votes.keys()))`
+    assigns index 0..n-1 in the order given. Sessions are fetched regular-first, so a
+    file's closed-session votes already occupy the leading indices; preserving that order
+    and appending the freshly-fetched active session leaves every preserved index exactly
+    where it was, and every preserved member row byte-identical.
+
+    Raises ValueError if `data` is not the compact schema — a legacy-schema file has no
+    index to preserve and must be rebuilt with a full refresh rather than merged.
+    """
+    if not is_compact(data):
+        raise ValueError("not the compact schema (no top-level voteIds): "
+                         "rebuild with a full refresh instead of merging")
+    wanted = set(sessions)
+    votes = {vid: rec for vid, rec in (data.get('votes') or {}).items()
+             if (rec or {}).get('session') in wanted}
+    keep = set(votes)
+    member_votes = {}
+    for person_id, entries in member_votes_map(data).items():
+        rows = [e for e in entries if e.get('voteId') in keep]
+        if rows:
+            member_votes[person_id] = rows
+    return votes, member_votes
+
+
+def merge_member_votes(preserved, fetched):
+    """Union two legacy `{personId: [{voteId, vote}]}` maps, preserved entries first.
+
+    `preserved` is the BASE, not `fetched`: a member who left mid-biennium appears only
+    in the preserved layer, and starting from the fetched map would drop their entire
+    voting history. A member in both keeps their preserved rows followed by their new
+    ones; a voteId present in both is kept once, with the FETCHED value winning, so a
+    re-fetch of the active session corrects a row rather than duplicating it.
+    """
+    out = {person_id: list(entries) for person_id, entries in preserved.items()}
+    for person_id, entries in fetched.items():
+        rows = out.setdefault(person_id, [])
+        by_id = {e.get('voteId'): i for i, e in enumerate(rows)}
+        for entry in entries:
+            vid = entry.get('voteId')
+            if vid in by_id:
+                rows[by_id[vid]] = entry
+            else:
+                by_id[vid] = len(rows)
+                rows.append(entry)
+    return out

@@ -5,6 +5,11 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      full_refresh:
+        description: 'Re-fetch EVERY session instead of preserving closed ones (slow: ~1.5k GetVote calls vs ~25)'
+        type: boolean
+        default: false
   schedule:
     # Monday 07:30 UTC. The source is now the legis.ga.gov SOAP web service
     # (generate_ga_votes_soap.py) — no Open States key and no shared 250/day quota,
@@ -29,7 +34,16 @@ jobs:
       # classifies passage by the native caption rule only, with zero Open States input, so
       # this pipeline is fully OS-independent. The retired Open States producer is kept at
       # scripts/archive/generate_ga_votes_data.py (see its README to fall back).
+      # INCREMENTAL: only the active session is fetched (~25 GetVote calls); the closed
+      # sessions are merged forward from the ga-member-votes.json this checkout provides,
+      # so the step needs the committed file present. The producer ABORTS rather than
+      # publish a file short a preserved session — which matters because the floor below
+      # is cleared by the preserved layer alone. Tick full_refresh for a retroactive
+      # amendment to a closed session, a crosswalk backfill that must reach one, or a
+      # schema change in the producer. A biennium rollover does NOT need it.
       - name: Generate GA vote data (legis.ga.gov SOAP source)
+        env:
+          FULL_REFRESH: ${{ inputs.full_refresh && '1' || '0' }}
         run: python scripts/generate_ga_votes_soap.py --no-overlay assets/data/ga-member-votes.json
 
       - name: Validate generated data
@@ -54,6 +68,25 @@ jobs:
           assert isinstance(vote_ids, list) and len(vote_ids) >= votes, 'voteIds index missing or shorter than votes — the compact schema was not written correctly (see scripts/lib/votes_schema.py).'
           assert all(isinstance(v, dict) for v in d['memberVotes'].values()), 'memberVotes must be {index: code} maps (compact schema).'
           assert meta.get('passageOverlaySource') is None, 'Expected --no-overlay (OS-free) output: passageOverlaySource should be null.'
+          # Per-session integrity. The floors above are whole-file, so they are cleared by
+          # the preserved layer alone; these catch an incremental run that dropped or
+          # truncated a session. metadata.sessions[].voteCount must match the records.
+          actual = {}
+          for r in d['votes'].values():
+              actual[r.get('session')] = actual.get(r.get('session'), 0) + 1
+          for row in (meta.get('sessions') or []):
+              sid, claimed = row.get('id'), row.get('voteCount')
+              assert actual.get(sid, 0) == claimed, (
+                  f'metadata claims {claimed} votes for session {sid} but the file holds '
+                  f'{actual.get(sid, 0)} — the preserved/fetched merge is wrong.')
+          for sid in (meta.get('sessionsPreserved') or []):
+              assert actual.get(sid, 0) > 0, (
+                  f'session {sid} is marked preserved but has no votes in the file.')
+          # Every member row must index inside the shared index.
+          n = len(vote_ids)
+          bad_idx = [p for p, row in d['memberVotes'].items()
+                     if any(not (0 <= int(i) < n) for i in row)]
+          assert not bad_idx, f'{len(bad_idx)} member row(s) index outside voteIds (e.g. {bad_idx[:3]}).'
           bad = [k for k, v in d['votes'].items() if v.get('result') not in ('Pass', 'Fail')]
           assert not bad, f'{len(bad)} vote record(s) missing Pass/Fail result (e.g. {bad[:3]}).'
           "
