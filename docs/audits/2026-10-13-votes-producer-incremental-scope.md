@@ -1,5 +1,10 @@
 # Scope: incremental fetch for the GA votes producer
 
+> **Status: implemented.** Shipped as described below, including the member-union hazard
+> and the test file that pins it (`scripts/test_votes_incremental.py`). The verified run
+> reproduces the previous output byte-for-byte across `voteIds`, `votes` and
+> `memberVotes`; only metadata changed. Kept as the reasoning record.
+
 Follow-up to the data pipeline audit §1. `generate_ga_bills_soap.py` now fetches only
 `ACTIVE_SESSION`; `generate_ga_votes_soap.py` still sweeps every session each run. This
 is a scoping document — no code changed.
