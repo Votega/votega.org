@@ -20,14 +20,37 @@ overlay assets/data/ga-bills-subjects-base.json (snapshot), then manual correcti
 ga-bills-subjects.json (overrides win), then local-bill inference (lib.ga_bill_subjects).
 Refresh the base snapshot periodically from a historical OS pull as new bills accrue.
 
-Full-fetch model: every configured session is fetched fresh each run (no quota to
-respect; the workflow's only-generatedAt commit guard skips a no-op commit). A
-preserve-closed-sessions optimization is possible later but unnecessary now.
+Incremental model: only the ACTIVE session is fetched live; every closed session in
+the biennium is carried forward verbatim from the existing output file. Closed sessions
+cannot change, and re-fetching them dominated the run — the 2025-2026 regular session is
+5,480 of 5,656 bills, so a full sweep spent 97% of its GetLegislationDetail calls
+re-downloading immutable records. This is the model lib/ga_sessions.py documents (see
+ACTIVE_SESSION / preserved_session_ids) and that the archived Open States producer
+implemented; it was dropped in the SOAP cutover and is restored here.
+
+Carrying bills forward also PRESERVES downstream enrichment on closed sessions:
+enrich_bills_with_party_votes.py injects partyTally into each passageVote after this
+producer runs, and a re-fetch would blank it until the next enrichment pass.
+
+Preservation is a hard requirement, not a fallback. The active session alone is well
+over the 100-bill write floor, so a silently-failed preserve would publish a file
+missing thousands of bills and still pass validation. If the prior file cannot be read,
+or is missing bills for a session it claims to carry, the run ABORTS and tells you to
+re-run with --full-refresh.
+
+Use --full-refresh (or FULL_REFRESH=1) to re-fetch every session: when a closed session
+is amended retroactively, when the schema here changes in a way that must reach
+historical records, or to rebuild after the preserve check above has aborted.
+
+A biennium rollover needs NO full refresh. SESSION_NAMES then holds only the new
+biennium, so nothing is marked for preservation and the run is already a single-session
+fetch; the prior biennium lives on in the publishers' sessions/<slug>/ archives.
 
 Usage:
-  python generate_ga_bills_soap.py                 # all sessions -> assets/data/ga-bills.json
+  python generate_ga_bills_soap.py                 # active session + preserved -> assets/data/ga-bills.json
   python generate_ga_bills_soap.py OUT.json        # explicit output path
-  python generate_ga_bills_soap.py --session 2025_26
+  python generate_ga_bills_soap.py --full-refresh  # re-fetch ALL sessions (slow)
+  python generate_ga_bills_soap.py --session 2025_26       # re-fetch one, preserve the rest
   python generate_ga_bills_soap.py --sample 40 --inspect   # a few bills, diagnostics, no write
 """
 
@@ -48,7 +71,8 @@ from lib.ga_passage import native_is_passage
 from lib.ga_vote_rules import is_state_constitutional_amendment, vote_passed
 from lib.ga_bill_subjects import infer_local_subject
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
-                             legis_session_id, session_name)
+                             legis_session_id, preserved_session_ids, session_name,
+                             tag_session)
 
 LEG_URL  = "http://webservices.legis.ga.gov/GGAServices/Legislation/Service.svc"
 SVC_NS   = "http://www.legis.ga.gov/2009/01/01/services/"
@@ -398,25 +422,100 @@ def apply_subjects(bill, base, overrides):
     # else: keep the fallback subjects map_bill() already derived from the summary/title.
 
 
+def load_preserved_bills(path, sessions):
+    """Bills for `sessions` carried forward verbatim from an existing output file.
+
+    Returns (bills, prior_counts) where prior_counts is the per-session billCount the
+    file's own metadata claimed, so the caller can verify nothing was lost in transit.
+    Raises OSError/ValueError on anything unreadable — the caller MUST treat that as
+    fatal rather than publishing a partial file (see the module docstring).
+
+    Records written before multi-session support carry no `session` tag; tag_session()
+    assigns those to UNTAGGED_SESSION so an old file still migrates cleanly.
+    """
+    wanted = set(sessions)
+    with open(path, encoding="utf-8") as fh:
+        data = json.load(fh)
+    bills = [b for b in (data.get("bills") or []) if tag_session(b.get("session")) in wanted]
+    prior_counts = {row.get("id"): row.get("billCount")
+                    for row in ((data.get("metadata") or {}).get("sessions") or [])
+                    if row.get("id") in wanted}
+    return bills, prior_counts
+
+
 def main():
     ap = argparse.ArgumentParser(description="Generate ga-bills.json from the legis.ga.gov SOAP service.")
     ap.add_argument("output_file", nargs="?", default=OUTPUT_FILE)
     ap.add_argument("--session", default=None, metavar="TAG",
-                    help="one session tag (default: ALL configured sessions)")
+                    help="re-fetch one session tag and preserve the rest "
+                         "(default: the ACTIVE session only)")
+    ap.add_argument("--full-refresh", action="store_true",
+                    default=os.environ.get("FULL_REFRESH") == "1",
+                    help="re-fetch EVERY configured session instead of preserving the "
+                         "closed ones (slow; also settable as FULL_REFRESH=1)")
     ap.add_argument("--sample", type=int, default=None, metavar="N",
                     help="cap bills fetched per session (cheap run)")
     ap.add_argument("--inspect", action="store_true", help="diagnostics only, write nothing")
-    ap.add_argument("--delay", type=float, default=0.0, help="seconds between detail calls")
+    ap.add_argument("--delay", type=float, default=0.1,
+                    help="seconds between detail calls (default 0.1; this is an "
+                         "unauthenticated state endpoint and a --full-refresh is "
+                         "thousands of calls, so do not set 0 for a full sweep)")
     args = ap.parse_args()
     sample = args.sample if args.sample is not None else (8 if args.inspect else None)
 
+    # Which sessions are fetched live, and which are carried forward from the existing
+    # file. Closed sessions never change (lib/ga_sessions.py), so the default run fetches
+    # ACTIVE_SESSION alone; --full-refresh re-fetches everything.
     if args.session:
         if args.session not in all_session_ids():
-            print("Error: unknown session '%s'." % args.session, file=sys.stderr); sys.exit(1)
+            print("Error: unknown session '%s'. Configured: %s."
+                  % (args.session, ", ".join(all_session_ids())), file=sys.stderr)
+            sys.exit(1)
         sessions = [args.session]
-    else:
+    elif args.full_refresh:
         sessions = list(all_session_ids())
+    else:
+        sessions = [ACTIVE_SESSION]
     sessions = [s for s in sessions if legis_session_id(s) is not None]
+    if not sessions:
+        print("Error: no session to fetch has a legis id (lib/ga_sessions.py).",
+              file=sys.stderr)
+        sys.exit(1)
+    if args.session or args.full_refresh:
+        preserve = [s for s in all_session_ids() if s not in sessions]
+    else:
+        preserve = preserved_session_ids()   # the canonical closed-session set
+
+    # Carry the closed sessions forward. Fatal if that fails: the active session alone
+    # clears the 100-bill write floor below, so a silent miss would publish a file short
+    # by thousands of bills and still validate.
+    #
+    # A sampled run never preserves: mixing a capped active fetch with a complete frozen
+    # layer would write a file that LOOKS whole but is short most of the active session.
+    # Sampling stays what it was — an obviously-partial diagnostic the write floor catches.
+    preserved, prior_counts = [], {}
+    if sample and preserve and not args.inspect:
+        print("Warning: --sample writes a PARTIAL file (%d/session, closed sessions not "
+              "preserved). Use --inspect to avoid writing at all." % sample,
+              file=sys.stderr)
+    if preserve and not args.inspect and not sample:
+        try:
+            preserved, prior_counts = load_preserved_bills(args.output_file, preserve)
+        except (OSError, json.JSONDecodeError, AttributeError) as exc:
+            print("Error: cannot preserve closed sessions (%s) from %s: %s\n"
+                  "       Re-run with --full-refresh to rebuild every session from SOAP."
+                  % (", ".join(preserve), args.output_file, exc), file=sys.stderr)
+            sys.exit(1)
+        missing = [s for s in preserve
+                   if not any(tag_session(b.get("session")) == s for b in preserved)]
+        if missing:
+            print("Error: %s carries no bills for %s — refusing to publish a file that "
+                  "would silently drop them.\n"
+                  "       Re-run with --full-refresh to rebuild every session from SOAP."
+                  % (args.output_file, ", ".join(missing)), file=sys.stderr)
+            sys.exit(1)
+        print("Preserving %d bills from %d closed session(s): %s"
+              % (len(preserved), len(preserve), ", ".join(preserve)))
 
     roster = load_roster()
     base, overrides = load_subjects()
@@ -442,6 +541,22 @@ def main():
                 print("  %d/%d (%.0fs)" % (i, len(index), time.time() - t0))
             if args.delay:
                 time.sleep(args.delay)
+
+    fetched_count = len(bills)
+
+    # Preserved bills join the list BEFORE the subject overlay, so a manual correction in
+    # ga-bills-subjects.json reaches a closed-session bill without a --full-refresh.
+    if preserved:
+        bills.extend(preserved)
+        shortfall = {sid: prior for sid, prior in prior_counts.items()
+                     if prior and sum(1 for b in preserved
+                                      if tag_session(b.get("session")) == sid) < prior}
+        if shortfall:
+            print("Error: preserved fewer bills than %s claims for %s — refusing to write."
+                  % (args.output_file,
+                     ", ".join("%s (expected %d)" % (k, v) for k, v in shortfall.items())),
+                  file=sys.stderr)
+            sys.exit(1)
 
     for bill in bills:
         apply_subjects(bill, base, overrides)
@@ -484,7 +599,9 @@ def main():
             "source":            "legis.ga.gov SOAP (webservices.legis.ga.gov/GGAServices)",
             "subjectsOverlay":   SUBJECTS_BASE,
             "totalBills":        len(bills),
-            "updateMode":        "full",
+            "updateMode":        "full" if not preserve else "incremental",
+            "fetchedSessions":   sessions,
+            "preservedSessions": preserve,
         },
         "bills": bills,
     }
@@ -502,6 +619,9 @@ def main():
     size_mb = os.path.getsize(args.output_file) / 1024 / 1024
     print("\nDone. %d bills (%d bill, %d resolution) · %.1f MB -> %s"
           % (len(bills), len(bills_only), len(bills) - len(bills_only), size_mb, args.output_file))
+    print("  %d fetched from SOAP (%s) · %d preserved (%s)"
+          % (fetched_count, ", ".join(sessions),
+             len(bills) - fetched_count, ", ".join(preserve) or "none"))
     print("  with subjects: %d (%.0f%%) · with passageVotes: %d · signed: %d · vetoed: %d · untagged bills: %d"
           % (with_subjects, 100 * with_subjects / len(bills), with_votes, signed, vetoed, len(untagged)))
 

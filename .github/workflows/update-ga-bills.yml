@@ -5,9 +5,15 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      full_refresh:
+        description: 'Re-fetch EVERY session instead of preserving closed ones (slow: ~5.7k SOAP calls vs ~180)'
+        type: boolean
+        default: false
   schedule:
-    # Weekly on Sundays at 07:30 UTC — 30 min before update-ga-votes.yml,
-    # which re-enriches ga-bills.json with that day's freshest vote data.
+    # Weekly on Sundays at 07:30 UTC. update-ga-votes.yml runs MONDAY 07:30 and
+    # re-enriches ga-bills.json with that day's vote data, so the party tallies written
+    # by the enrichment step below are always one cycle behind until that Monday run.
     - cron: '30 7 * * 0'
 
 jobs:
@@ -27,7 +33,17 @@ jobs:
       # share a source with the votes (generate_ga_votes_soap.py), so the party-tally
       # enrichment below joins exactly. The retired Open States producer is kept at
       # scripts/archive/generate_ga_bills_data.py (see its README to fall back).
+      #
+      # INCREMENTAL: only the active session is fetched (~180 bills); the closed sessions
+      # of the biennium are carried forward from the ga-bills.json this checkout provides,
+      # which is why the step needs the committed file present. The producer ABORTS rather
+      # than publish a file short a preserved session, so a bad checkout fails loudly
+      # instead of silently dropping ~5.5k bills. Tick full_refresh on a manual run (or
+      # set FULL_REFRESH=1) for a retroactive amendment to a closed session, or a schema
+      # change that must reach historical records. A biennium rollover does NOT need it.
       - name: Generate GA bills data (legis.ga.gov SOAP source)
+        env:
+          FULL_REFRESH: ${{ inputs.full_refresh && '1' || '0' }}
         run: python scripts/generate_ga_bills_soap.py assets/data/ga-bills.json
 
       - name: Validate generated data
@@ -54,8 +70,9 @@ jobs:
           meta  = d.get('metadata', {})
           print(f'Validated: {len(bills)} bills (metadata.totalBills={meta.get(\"totalBills\")})')
           assert meta.get('totalBills') == len(bills), 'metadata.totalBills does not match actual bill count'
-          # (The SOAP producer does a single full fetch — no pagination — and refuses to
-          # write below 100 bills itself, so the relative-floor check above is the guard
+          # (The SOAP producer fetches the active session and preserves the closed ones —
+          # no pagination — and refuses to write below 100 bills, or to write at all if a
+          # preserved session is missing, so the relative-floor check above is the guard
           # against a truncated sweep; there is no paginationComplete flag to assert.)
           required = ['id', 'identifier', 'chamber', 'title', 'billUrl']
           for b in bills:

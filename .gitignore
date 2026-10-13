@@ -101,3 +101,7 @@ RECURRING-TASKS.md
 GA-FINANCE-MATCH-REVIEW.md
 assets/docs/SOAP Read-Me.md
 assets/data/ga-members.soap.json
+# Local review artifact from generate_ga_bills_soap.py (bills whose subjects could not
+# be inferred). Written to a fixed path on every run regardless of the output path, and
+# never committed — the workflow git-adds ga-bills.json alone and discards this.
+assets/data/ga-bills-untagged-review.csv
