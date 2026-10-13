@@ -148,6 +148,46 @@ for motion in ('PASSAGE', 'PASSAGE BY SUBSTITUTE', 'Local Calendar',
     check('%-40s -> unknown' % ('"' + motion + '"'), chamber_from_motion(motion), '')
 
 print("")
+print("=== legis session table: ids come from the source, never from a guess ===")
+from lib.ga_sessions import (LEGIS_SESSIONS, legis_session_id, legis_session_library,  # noqa: E402
+                             legis_session_table, regular_session_description)
+
+# The id space is neither contiguous nor ordered by era (1, 6, 7, 11, 13-15, 18, 20-27,
+# then 1027+), so every id must come from Session/GetSessions via the committed table --
+# 2019-2020 is id 27, which no sequential probe would find.
+TABLE = legis_session_table()
+check("the committed table loaded", len(TABLE) >= 20, True)
+check("2025_26 -> 1033", legis_session_id("2025_26"), 1033)
+check("2026_ss -> 1034 (special, explicit)", legis_session_id("2026_ss"), 1034)
+check("2023_24 -> 1031", legis_session_id("2023_24"), 1031)
+check("2019_20 -> 27, not 1026", legis_session_id("2019_20"), 27)
+check("2001_02 -> 1", legis_session_id("2001_02"), 1)
+check("library comes along", legis_session_library("2023_24"), "20232024")
+
+# A `YYYY_YY` tag derives a DESCRIPTION, which is then looked up in the table. The
+# derivation never invents an id, so an unknown description resolves to nothing.
+check("tag -> description", regular_session_description("2013_14"), "2013-2014 Regular Session")
+for tag in ("2026_ss", "2023_25", "2023_2024", "garbage", ""):
+    check("%-11s derives nothing" % repr(tag), regular_session_description(tag), "")
+check("a tag outside the table resolves to None", legis_session_id("1899_00"), None)
+
+# Every regular session in the table must resolve from its bare tag.
+_missed = []
+for _desc, _row in TABLE.items():
+    if "Regular" not in _desc:
+        continue
+    _y = int(_desc[:4])
+    if legis_session_id("%d_%s" % (_y, str(_y + 1)[2:])) != _row["id"]:
+        _missed.append(_desc)
+check("every regular session resolves from its tag", _missed, [])
+
+# The hardcoded fallback must not contradict the source, or an offline run would
+# silently use a different session than a normal one.
+_drift = [t for t, v in LEGIS_SESSIONS.items()
+          if legis_session_id(t) is not None and v["id"] != legis_session_id(t)]
+check("the offline fallback agrees with the table", _drift, [])
+
+print("")
 print("=== curated key votes: picking the operative final vote ===")
 import generate_curated_ga_bills as gen  # noqa: E402
 from lib.votes_schema import VOTE_CODES  # noqa: E402

@@ -209,6 +209,20 @@ Both generators and both sibling-repo publishers import it — there is no longe
    belong to (only relevant the first time an untagged file is migrated).
 4. At a full biennium rollover, also update `BIENNIUM`.
 
+**You no longer look up the legis.ga.gov numeric session id.** `Session/GetSessions`
+publishes every session (23 of them, back to 2001-2002); `update-legis-sessions.yml`
+commits that table to `assets/data/ga-legis-sessions.json` weekly, and
+`legis_session_id()` resolves our tag against it. A regular-session tag of the form
+`YYYY_YY` resolves with **no entry anywhere** — step 1 is needed only so the site has a
+display name, and a SPECIAL session needs its exact name there because those
+descriptions are irregular. `LEGIS_SESSIONS` is now an offline fallback; you do not
+have to touch it. If a brand-new session needs to be fetched before the weekly run,
+trigger that workflow (or run `python scripts/generate_legis_sessions.py`) first.
+
+Never guess or probe for a legis session id: the id space is not contiguous and not
+ordered by era (2019-2020 is **27**, 2021-2022 is **1029**), so a sequential sweep finds
+the recent sessions and silently misses the rest.
+
 Then re-run `update-ga-bills` and `update-ga-votes`. Because only the active session is
 fetched and it opens small, the first pull is a few pages — no quota crunch. Also follow
 *Maintenance — Curated GA Bills → Session changeover* in `TO-DO.md`.

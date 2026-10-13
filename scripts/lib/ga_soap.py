@@ -35,8 +35,10 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 
-VOTES_URL = "http://webservices.legis.ga.gov/GGAServices/Votes/Service.svc"
-LEG_URL   = "http://webservices.legis.ga.gov/GGAServices/Legislation/Service.svc"
+VOTES_URL   = "http://webservices.legis.ga.gov/GGAServices/Votes/Service.svc"
+LEG_URL     = "http://webservices.legis.ga.gov/GGAServices/Legislation/Service.svc"
+SESSION_URL = "http://webservices.legis.ga.gov/GGAServices/Session/Service.svc"
+MEMBERS_URL = "http://webservices.legis.ga.gov/GGAServices/Members/Service.svc"
 SVC_NS    = "http://www.legis.ga.gov/2009/01/01/services/"
 DATA_NS   = "http://www.legis.ga.gov/2009/01/01/data/"
 ns = {"s": SVC_NS, "d": DATA_NS}
@@ -47,6 +49,9 @@ ACTION = {
     "GetVotes":                 SVC_NS + "VoteFinder/GetVotes",
     "GetVote":                  SVC_NS + "VoteFinder/GetVote",
     "GetLegislationForSession": SVC_NS + "LegislationSearch/GetLegislationForSession",
+    # The Session contract is the odd one out: its soapAction is the BARE operation
+    # name, with no namespace and no contract prefix. Taken from the WSDL, not guessed.
+    "GetSessions":              "GetSessions",
 }
 
 # MemberVoted enum -> the vote strings the rest of the project uses.
@@ -205,6 +210,36 @@ def get_vote_detail(vote_id):
             continue
         rows.append((mid, VOTE_MAP.get(_text(mv, "MemberVoted"), "Other")))
     return caption, date10, legislation, rows
+
+
+def get_sessions():
+    """Session/GetSessions -> [{id, description, library, isDefault}], newest first-ish.
+
+    Takes no parameters and returns every session the legislature has published (23 as
+    of 2026-10, back to 2001-2002). This is the only correct way to learn a SessionId:
+    the id space is neither contiguous nor ordered by era (1, 6, 7, 11, 13-15, 18,
+    20-27, then 1027+), so probing a range finds the recent sessions and misses every
+    older one.
+
+    `isDefault` marks the current REGULAR session, which is NOT the session in
+    progress — during the 2026 special session (1034) it stayed on 1033. Do not use it
+    to decide which session to fetch live.
+    """
+    root = soap_call(SESSION_URL, "GetSessions")
+    if root is None:
+        return []
+    out = []
+    for el in root.findall(".//d:Session", ns):
+        sid = _text(el, "Id", int)
+        if sid is None:
+            continue
+        out.append({
+            "id":          sid,
+            "description": _text(el, "Description") or "",
+            "library":     _text(el, "Library") or None,
+            "isDefault":   (_text(el, "IsDefault") or "").lower() == "true",
+        })
+    return out
 
 
 def get_title_index(legis_session):

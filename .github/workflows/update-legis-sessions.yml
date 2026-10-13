@@ -1,0 +1,84 @@
+name: Update legis.ga.gov session table (weekly, Sun 06:30 UTC)
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly on Sundays at 06:30 UTC, ahead of the Sunday/Monday bills and votes jobs that
+    # resolve a SessionId through this table. One unauthenticated SOAP call; the table only
+    # changes when the legislature publishes a new session (about twice a year), so most
+    # runs commit nothing.
+    - cron: '30 6 * * 0'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # No API key: Session/GetSessions needs no auth and takes no parameters.
+      - name: Generate legis session table
+        run: python scripts/generate_legis_sessions.py assets/data/ga-legis-sessions.json
+
+      - name: Validate generated data
+        run: |
+          # The table only ever grows, so a shrink means a bad response, not a real
+          # change. The generator already refuses to write fewer than 20; this catches a
+          # drop relative to what we last committed.
+          python scripts/validate_data_update.py assets/data/ga-legis-sessions.json \
+            --metric sessions=metadata.count \
+            --metric records=len:sessions \
+            --min sessions=20
+
+          python -c "
+          import json
+          d = json.load(open('assets/data/ga-legis-sessions.json'))
+          rows = d['sessions']
+          ids = [r['id'] for r in rows]
+          assert len(ids) == len(set(ids)), 'duplicate SessionId in the table'
+          assert all(r.get('description') for r in rows), 'a session has no description'
+          # Exactly one session is the default; more than one would make
+          # metadata.defaultSessionId meaningless.
+          defaults = [r['id'] for r in rows if r.get('isDefault')]
+          assert len(defaults) == 1, f'expected 1 default session, got {defaults}'
+          # Every regular-session description must parse as 'YYYY-YYYY Regular Session',
+          # because lib/ga_sessions.regular_session_description() keys on exactly that.
+          import re
+          for r in rows:
+              if 'Regular' in r['description']:
+                  m = re.fullmatch(r'(\d{4})-(\d{4}) Regular Session', r['description'])
+                  assert m, f'unparseable regular-session description: {r[\"description\"]!r}'
+                  assert int(m.group(2)) == int(m.group(1)) + 1, r['description']
+          print(f'{len(rows)} sessions, default {defaults[0]} - all integrity checks passed')
+          "
+
+      - name: Commit and push generated data
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/ga-legis-sessions.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update legis.ga.gov session table"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
+          fi

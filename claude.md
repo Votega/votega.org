@@ -76,6 +76,9 @@ votega.org/
 │   ├── build_legislative_races.py / build_results_json.py (CSV → _data/election_results/*.json, shared by all results pages)
 │   ├── generate_search_corpus.py (entity JSONs → assets/data/search-entities.json for site search)
 │   ├── apply_overrides.py / validate_ga_overrides.py / import_legiscan_csv.py / fix_general_fallbacks.py
+│   ├── generate_legis_sessions.py       # Session/GetSessions → ga-legis-sessions.json (every
+│   │                                     # session back to 2001; legis_session_id() reads it,
+│   │                                     # so session ids are never hand-maintained or probed)
 │   ├── lib/ga_soap.py                   # shared legis.ga.gov SOAP client (no auth, no quota):
 │   │                                     # GetVotes listings (incl. the authoritative chamber +
 │   │                                     # rollNumber), GetVote detail keyed on legisGaGovId
