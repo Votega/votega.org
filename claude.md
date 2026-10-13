@@ -70,12 +70,15 @@ votega.org/
 │   ├── generate_current_members_data.py # Congress.gov API → assets/data/current-members.json
 │   ├── generate_ga_members_data.py      # Open States API → assets/data/ga-members.json
 │   ├── generate_ga_votes_soap.py        # legis.ga.gov SOAP (official) → ga-member-votes.json (canonical since 2026-10; OS producer retired to scripts/archive/generate_ga_votes_data.py)
-│   ├── generate_ga_bills_soap.py (legis.ga.gov SOAP → ga-bills.json; canonical since 2026-10, OS producer retired to scripts/archive/generate_ga_bills_data.py; subjects via ga-bills-subjects-base.json overlay) / enrich_bills_with_party_votes.py / generate_curated_ga_bills.py
+│   ├── generate_ga_bills_soap.py (legis.ga.gov SOAP → ga-bills.json; canonical since 2026-10, OS producer retired to scripts/archive/generate_ga_bills_data.py; subjects via ga-bills-subjects-base.json overlay) / enrich_bills_with_party_votes.py / generate_curated_ga_bills.py (curated key votes; reads the committed SOAP artifacts, SOAP-fetches only a session they do not cover — no Open States, no API key, canonical since 2026-10)
 │   ├── generate_federal_votes_data.py / generate_fec_data.py / generate_ga_congress_trades.py
 │   ├── generate_ga_executive_orders.py / generate_scotus_decisions.py / generate_presidential_laws.py / generate_vp_tie_votes.py
 │   ├── build_legislative_races.py / build_results_json.py (CSV → _data/election_results/*.json, shared by all results pages)
 │   ├── generate_search_corpus.py (entity JSONs → assets/data/search-entities.json for site search)
 │   ├── apply_overrides.py / validate_ga_overrides.py / import_legiscan_csv.py / fix_general_fallbacks.py
+│   ├── lib/ga_soap.py                   # shared legis.ga.gov SOAP client (no auth, no quota):
+│   │                                     # GetVotes listings (incl. the authoritative chamber +
+│   │                                     # rollNumber), GetVote detail keyed on legisGaGovId
 │   ├── inspect_ga_bill_votes.py / inspect_openstates_fields.py  # diagnostics, each backed by its own workflow
 │   └── (one-off/local-machine scripts — e.g. debug_*.py, watch_downloads.py — are gitignored, not tracked)
 │
@@ -136,6 +139,12 @@ Manual patches applied after Open States fetch. Keys are OCD person IDs (`ocd-pe
 ### `ga-member-votes.json`
 Top-level: `{ metadata: { schemaVersion: 2, generatedAt, session, sessionName, source, totalVotes, totalBillsSeen, paginationComplete }, voteIds: [<voteId>, ...], votes: { <voteId>: {...} }, memberVotes: { <ocdPersonId>: { <indexString>: <code> } } }`
 Members are joined by OCD person ID — the same `id` field as in `ga-members.json`.
+
+Each `votes[<voteId>]`: `bill`, `billUrl`, `title`, `session`, `motionText`, `chamber`, `rollNumber`, `time`, `excused`, `notVoting`, `date`, `yea`, `nay`, `vacant` (omitted when 0), `result`. `chamber`, `rollNumber`, `time`, `excused` and `notVoting` come straight off the SOAP `GetVotes` listing (`generate_ga_votes_soap.py`), which the producer already fetches per chamber — so they cost no extra requests and are authoritative rather than inferred.
+
+**⚠ Never infer the chamber from `motionText`.** The motion names *whose work is being accepted*, so the chamber casting the vote is the other one: "Agree to Senate Substitute" is a **House** vote. Three copies of the naive reading got it backwards — measured against the official record it was 0-for-270 (136 wrong, and being case-sensitive it left the 134 upper-case Senate motions unclassified), which silently dropped 136 roll calls from every House member's own-chamber participation and party-alignment figures. Read `chamber`; fall back only to `chamber_from_motion()` in `scripts/lib/ga_voters.py`, the one implementation (mirrored by `voteChamber()` in `_includes/entity/ga-legislator.html` and `vote_chamber()` in `generate_party_unity.py` — keep all three in step).
+
+**⚠ `rollNumber` cannot be derived; it has to be stored.** It is the chamber's own roll-call number, and it counts EVERY roll call the chamber held while this file keeps only passage votes (312 dropped in 2025-26), so the sequence is gapped here and dense at the source. `voteId` is **not** a substitute: it tracks record creation and goes backwards 137 times within a day in the House. It matters because a chamber can hold two passage roll calls on one bill on one day (89 such groups in 2025-26, 5 of them with one passing and one failing), and `rollNumber` is what identifies the operative final vote. Open States republished this same field as `"House Vote #752"`; where the two differ (7 of 1,898) OS points at the procedural roll call that preceded the passage vote and the SOAP `Number` is right.
 
 **⚠ Compact schema (v2).** At ~270k rows the old `memberVotes: {pid: [{voteId, vote}]}` form repeated the keys and a 45-char uuid on every entry, making the file ~19 MB — the site's largest blob and top client-fetched file. v2 shrinks it to ~3.6 MB (81%): `voteIds` is an ordered index of vote ids; `memberVotes` values are `{indexString: code}` maps, where the index resolves via `voteIds[i]` and `code` is `Y`/`N`/`O` (full map `Y`/`N`/`NV`/`P`/`A`/`E`/`O` for the Open States options `Yea`/`Nay`/`Not Voting`/`Present`/`Absent`/`Excused`/`Other`; GA data currently only uses Yea/Nay/Other). `votes` is **unchanged** (still keyed by voteId).
 

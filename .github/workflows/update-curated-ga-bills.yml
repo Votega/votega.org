@@ -6,9 +6,13 @@ permissions:
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 8 * * 2,4'  # Tue/Thu 08:00 UTC - kept off Sun/Mon so the Open States
-                           # daily quota is not shared with update-ga-bills (Sun) or
-                           # update-ga-votes (Mon). See CODEBASE-REVIEW-2026-08-18.md 2.5.
+    - cron: '0 8 * * 2,4'  # Tue/Thu 08:00 UTC. Originally set here to keep off the
+                           # shared Open States quota; that no longer applies, but the
+                           # slot is now load-bearing for a different reason: this job
+                           # reads the artifacts update-ga-bills (Sun) and update-ga-votes
+                           # (Mon) commit, so it must run after them. Changing the day
+                           # means changing the name: too — and notify-workflow-failure.yml
+                           # with it, in the same commit.
 
 jobs:
   update-data:
@@ -23,10 +27,11 @@ jobs:
         with:
           python-version: '3.x'
 
+      # No API key: this reads the committed SOAP artifacts (ga-bills.json,
+      # ga-member-votes.json) and only reaches out to legis.ga.gov SOAP — which needs
+      # no auth — for a curated bill from a session those artifacts do not cover.
       - name: Generate curated bill votes data
         run: python scripts/generate_curated_ga_bills.py assets/data/curated-ga-bill-votes.json
-        env:
-          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
 
       - name: Validate generated data
         run: |

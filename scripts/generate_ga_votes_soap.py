@@ -60,9 +60,6 @@ import json
 import os
 import sys
 import time
-import urllib.error
-import urllib.request
-import xml.etree.ElementTree as ET
 from collections import Counter
 from datetime import datetime, timezone
 
@@ -71,43 +68,16 @@ from lib.ga_passage import classify, load_os_passage_index, normalize_bill
 from lib.ga_vote_rules import is_state_constitutional_amendment, vote_passed
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              legis_session_id, session_name)
+from lib.ga_soap import (CHAMBER_NAMES, CHAMBERS, VACANT_ID, RollCallNotPublished,
+                         get_title_index, get_vote_detail, get_vote_listings)
 from lib.votes_schema import encode_member_votes
 
-VOTES_URL = "http://webservices.legis.ga.gov/GGAServices/Votes/Service.svc"
-LEG_URL   = "http://webservices.legis.ga.gov/GGAServices/Legislation/Service.svc"
-SVC_NS    = "http://www.legis.ga.gov/2009/01/01/services/"
-DATA_NS   = "http://www.legis.ga.gov/2009/01/01/data/"
-ns = {"s": SVC_NS, "d": DATA_NS}
 
-# SOAPAction strings are per-contract and NOT uniform — the Votes/Legislation
-# contracts use the full action; grep each WSDL's soapAction= to confirm.
-ACTION = {
-    "GetVotes":                 SVC_NS + "VoteFinder/GetVotes",
-    "GetVote":                  SVC_NS + "VoteFinder/GetVote",
-    "GetLegislationForSession": SVC_NS + "LegislationSearch/GetLegislationForSession",
-}
-
-#: MemberVoted string enum -> option string. Option strings MUST be keys of
-#: lib/votes_schema.VOTE_CODES. SOAP gives Yea/Nay/NotVoting/Excused distinctly
-#: (richer than the /api 2/3 ambiguity); "Unknown" -> "Other".
-VOTE_MAP = {
-    "Yea": "Yea",
-    "Nay": "Nay",
-    "NotVoting": "Not Voting",
-    "Excused": "Excused",
-    "Unknown": "Other",
-}
-
-CHAMBERS      = ["House", "Senate"]
-VACANT_ID     = 0                       # Member.Id sentinel for an empty seat
 CROSSWALK_FILE = "assets/data/id-crosswalk.json"
 BILLS_FILE     = "assets/data/ga-bills.json"           # abstracts -> constitutional-amendment ids
 OS_VOTES_FILE  = "assets/data/ga-member-votes.json"   # passage overlay / result oracle
 DEFAULT_OUTPUT = "assets/data/ga-member-votes.soap.json"
 
-
-class RollCallNotPublished(Exception):
-    """GetVote faulted: this roll call isn't published (attendance / procedural)."""
 
 
 def derive_result(yea, nay, chamber=None, constitutional_amendment=False):
@@ -142,144 +112,6 @@ def load_amendment_ids(bills_file):
             if b.get("legislationId") is not None
             and b.get("billType") == "resolution"
             and is_state_constitutional_amendment(b.get("abstract"))}
-
-
-# --------------------------------------------------------------------------- SOAP
-
-def _envelope(op, inner, url_ns=SVC_NS):
-    return ('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" '
-            f'xmlns:s="{url_ns}"><soap:Body><s:{op}>{inner}</s:{op}>'
-            '</soap:Body></soap:Envelope>')
-
-
-def _parse_fault(raw):
-    """Return (faultstring, [detail element local-names]) for a SOAP Fault, else (None, [])."""
-    try:
-        root = ET.fromstring(raw)
-    except ET.ParseError:
-        return None, []
-    fs = root.find(".//faultstring")
-    if fs is None:
-        return None, []
-    detail = root.find(".//detail")
-    tags = [el.tag.split("}")[-1] for el in detail.iter()] if detail is not None else []
-    return fs.text, tags
-
-
-def soap_call(url, op, inner="", retries=3, timeout=60):
-    """POST a SOAP request; return the parsed root Element, or None on transport failure.
-
-    Retry policy follows CLAUDE.md: retry on HTTP 429 and transport 5xx / network
-    errors only; return None on other 4xx. A SOAP *application fault* also arrives as
-    500 but is deterministic — never retried: RollCallNotPublishedFault raises
-    RollCallNotPublished, any other fault raises RuntimeError.
-    """
-    body = _envelope(op, inner).encode("utf-8")
-    headers = {"Content-Type": "text/xml; charset=utf-8",
-               "SOAPAction": '"%s"' % ACTION[op]}
-    backoff = 4
-    for attempt in range(retries + 1):
-        try:
-            req = urllib.request.Request(url, data=body, headers=headers, method="POST")
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
-                return ET.fromstring(resp.read())
-        except urllib.error.HTTPError as e:
-            fault, detail_tags = _parse_fault(e.read())
-            if fault is not None:
-                if any("RollCallNotPublished" in t for t in detail_tags):
-                    raise RollCallNotPublished(fault)
-                raise RuntimeError("SOAP fault on %s: %s" % (op, (fault or "")[:160]))
-            if 400 <= e.code < 500 and e.code != 429:
-                print("  %s: HTTP %d (client error) — not retrying" % (op, e.code),
-                      file=sys.stderr)
-                return None
-            if attempt < retries:
-                time.sleep(backoff); backoff *= 2; continue
-            print("  %s: HTTP %d after %d retries — giving up" % (op, e.code, retries),
-                  file=sys.stderr)
-            return None
-        except (urllib.error.URLError, TimeoutError, ET.ParseError) as e:
-            if attempt < retries:
-                time.sleep(backoff); backoff *= 2; continue
-            print("  %s: %s %s after %d retries — giving up"
-                  % (op, type(e).__name__, e, retries), file=sys.stderr)
-            return None
-
-
-def _text(el, tag, cast=None):
-    child = el.find("d:%s" % tag, ns)
-    if child is None or child.text is None:
-        return None
-    if cast:
-        try:
-            return cast(child.text)
-        except (ValueError, TypeError):
-            return None
-    return child.text
-
-
-def get_vote_listings(legis_session, branch):
-    """GetVotes -> [{voteId, caption}] for one chamber/session (just what we need to
-    enumerate roll calls and skip Attendance before the per-vote GetVote fetch)."""
-    inner = "<s:Branch>%s</s:Branch><s:SessionId>%d</s:SessionId>" % (branch, legis_session)
-    root = soap_call(VOTES_URL, "GetVotes", inner)
-    if root is None:
-        return []
-    out = []
-    for vl in root.findall(".//d:VoteListing", ns):
-        vid = _text(vl, "VoteId", int)
-        if vid is not None:
-            out.append({"voteId": vid, "caption": (_text(vl, "Caption") or "")})
-    return out
-
-
-def get_vote_detail(vote_id):
-    """GetVote -> (caption, date10, legislation[], member_rows[]).
-
-    legislation[] = [{legislationId:int, description:str}] (bundled bills).
-    member_rows[] = [(member_id:int, option:str)].
-    Raises RollCallNotPublished if the roll call isn't published; returns None on
-    a transport failure.
-    """
-    root = soap_call(VOTES_URL, "GetVote", "<s:VoteId>%d</s:VoteId>" % vote_id)
-    if root is None:
-        return None
-    # GetVoteResult (services ns) holds the Vote fields directly (data ns) —
-    # there is NO nested <Vote> element.
-    v = root.find(".//s:GetVoteResult", ns)
-    if v is None:
-        return None
-    caption = (_text(v, "Caption") or "").strip()
-    date10  = (_text(v, "Date") or "")[:10] or None
-
-    legislation = []
-    for item in v.findall("d:Legislation/d:ItemVotedOn", ns):
-        legislation.append({"legislationId": _text(item, "LegislationId", int),
-                            "description": _text(item, "Description") or ""})
-
-    rows = []
-    for mv in v.findall("d:Votes/d:MemberVote", ns):
-        member = mv.find("d:Member", ns)
-        mid = _text(member, "Id", int) if member is not None else None
-        if mid is None:
-            continue
-        rows.append((mid, VOTE_MAP.get(_text(mv, "MemberVoted"), "Other")))
-    return caption, date10, legislation, rows
-
-
-def get_title_index(legis_session):
-    """GetLegislationForSession -> {legislationId: title} in one call. Best-effort:
-    returns {} on failure (titles then fall back to '')."""
-    root = soap_call(LEG_URL, "GetLegislationForSession",
-                     "<s:SessionId>%d</s:SessionId>" % legis_session)
-    if root is None:
-        return {}
-    idx = {}
-    for li in root.findall(".//d:LegislationIndex", ns):
-        lid = _text(li, "Id", int)
-        if lid is not None:
-            idx[lid] = _text(li, "Caption") or ""
-    return idx
 
 
 # ------------------------------------------------------------------------ crosswalk
@@ -366,6 +198,17 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                     unresolved_members[mid] += 1
             stats["resolvedRows"] += len(resolved)
 
+            # The GetVotes listing carries the chamber's OFFICIAL tally, produced
+            # independently of the per-member rows GetVote returns. Comparing the two
+            # is a free check that we read every row: a mismatch means the rows we
+            # counted are not the roll call the clerk recorded. Counted, not fatal —
+            # the tallies we publish stay the row-derived ones, so a mismatch is a
+            # signal to investigate rather than a reason to drop a vote.
+            if lst.get("yea") is not None and (lst["yea"], lst["nay"]) != (yea, nay):
+                stats["listingTallyMismatch"] += 1
+                print("    vote %d: listing says %s-%s, member rows give %d-%d"
+                      % (vid, lst["yea"], lst["nay"], yea, nay), file=sys.stderr)
+
             # EXPLODE: one record per bundled bill, sharing members + tally.
             for entry in legn:
                 lid = entry["legislationId"]
@@ -381,6 +224,27 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                     "title": title_index.get(lid, ""),
                     "session": our_session,
                     "motionText": caption,
+                    # The chamber that actually held this roll call, straight from the
+                    # GetVotes(Branch, ...) call that produced the listing. Readers used to
+                    # infer it from motionText, which cannot be done reliably: an "Agree to
+                    # Senate Substitute" is a HOUSE vote (the House agreeing to the Senate's
+                    # product), so the chamber named in the motion is the OTHER one. Spelled
+                    # with ga-members.json's chamber vocabulary so a reader can compare it
+                    # to member.chamber directly.
+                    "chamber": CHAMBER_NAMES[branch],
+                    # The chamber's own roll-call number for the session, and the time of
+                    # day, both straight off the GetVotes listing. Neither can be recovered
+                    # later: `number` counts every roll call the chamber held (312 of which
+                    # this producer drops as non-passage), and voteId is not a sequence —
+                    # it tracks record creation and inverts within a day. They are what
+                    # orders two passage votes on one bill on one day, which decides which
+                    # one is the operative final vote (89 such groups in 2025-26).
+                    **({"rollNumber": lst["number"]} if lst.get("number") else {}),
+                    **({"time": lst["time"]} if lst.get("time") else {}),
+                    # Chamber-level non-voting counts from the same listing, which the
+                    # per-member rows do not total on their own.
+                    **({"excused": lst["excused"]} if lst.get("excused") else {}),
+                    **({"notVoting": lst["notVoting"]} if lst.get("notVoting") else {}),
                     "date": date10,
                     "yea": yea,
                     "nay": nay,

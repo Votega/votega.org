@@ -20,7 +20,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from lib.ga_voters import (LEGACY_PERSON_ID_MAP, MemberIndex, event_chamber,  # noqa: E402
+from lib.ga_voters import (LEGACY_PERSON_ID_MAP, MemberIndex,  # noqa: E402
+                           chamber_from_motion, event_chamber,
                            new_stats, normalize_voter_name, resolve_voter)
 
 HOUSE = 'House of Representatives'
@@ -117,40 +118,92 @@ check('organization classification wins',
 check('falls back to motion text', event_chamber('House Vote #12', None), HOUSE)
 check('unknown -> None', event_chamber('Vote #12', None), None)
 
-print('\n=== build_vote_record: tally is derived from the deduped roster ===')
+# An 'agree to' motion names whose work is being ACCEPTED, so the chamber casting the
+# vote is the other one. Reading it at face value put 136 of the session's 270 such
+# roll calls in the wrong chamber and, because the old test was case-sensitive, left
+# the 134 upper-case Senate motions with no chamber at all.
+print("")
+print("=== chamber_from_motion: the 'agree to' family is inverted ===")
+AGREE_CASES = [
+    ('AGREE TO HOUSE SUBSTITUTE', SENATE),
+    ('AGREE TO HOUSE SUBSTITUTE AS AMENDED', SENATE),
+    ('AGREE TO HOUSE AMENDMENT TO SENATE SUBSTITUTE', SENATE),
+    ('AGREE TO HOUSE AMENDMENT TO SENATE AMENDMENT TO HOUSE SUBSTITUTE', SENATE),
+    ('Agree to Senate Substitute', HOUSE),
+    ('Agree to Senate Sub as Am', HOUSE),
+    ('Agree to Senate Amendment', HOUSE),
+    ('Agree to Senate Amend to House Sub', HOUSE),
+    # The House amends the Senate's substitute and agrees to it in one motion: still
+    # a House vote, even though 'House' appears last.
+    ('Agree to Senate Sub as Amended by House', HOUSE),
+    ('Agree to Senate Amend to HAm to SSub', HOUSE),
+]
+for motion, want in AGREE_CASES:
+    check('%-62s -> %s' % ('"' + motion + '"', want), chamber_from_motion(motion), want)
+
+# Motions that name no chamber must stay unknown rather than guess: callers read '' as
+# 'do not filter', which keeps a real vote in the member's own-chamber stats.
+for motion in ('PASSAGE', 'PASSAGE BY SUBSTITUTE', 'Local Calendar',
+               'LOCAL CONSENT CALENDAR', 'ADOPT', 'ADOPT CONFERENCE COMMITTEE REPORT'):
+    check('%-40s -> unknown' % ('"' + motion + '"'), chamber_from_motion(motion), '')
+
+print("")
+print("=== curated key votes: picking the operative final vote ===")
 import generate_curated_ga_bills as gen  # noqa: E402
+from lib.votes_schema import VOTE_CODES  # noqa: E402
 
-party_lookup = {m['id']: m['party'] for m in IDX.by_id.values()}
+# A chamber can hold several passage roll calls on one bill on one day (89 such groups
+# in 2025-26), and in 5 of them one passed while another failed -- so picking by dict or
+# fetch order could show a failed attempt as the outcome. rollNumber, the chamber's own
+# sequence, settles it; it cannot be derived downstream, which is why it is stored.
+SAME_DAY = [
+    {"rollNumber": 884, "date": "2025-03-31", "time": "10:12 PM",
+     "motionText": "AGREE TO HOUSE SUBSTITUTE AS AMENDED", "result": "fail"},
+    {"rollNumber": 883, "date": "2025-03-31", "time": "9:58 PM",
+     "motionText": "AGREE TO HOUSE SUBSTITUTE", "result": "pass"},
+]
+check("highest rollNumber wins, whichever order they arrive in",
+      gen.select_final_vote(SAME_DAY)["rollNumber"], 884)
+check("  ...and reversing the input does not change it",
+      gen.select_final_vote(list(reversed(SAME_DAY)))["rollNumber"], 884)
 
-# Same voter listed twice (Open States does this) + one ghost recoverable by name.
-event = {
-    'motion_text': 'House Vote #99 - 2025-2026 Regular Session',
-    'organization': {'classification': 'lower'},
-    'votes': [
-        {'voter': {'id': 'ocd-person/aaa'}, 'voter_name': 'Jan Jones', 'option': 'yes'},
-        {'voter': {'id': 'ocd-person/aaa'}, 'voter_name': 'Jan Jones', 'option': 'yes'},
-        {'voter': {'id': 'ocd-person/GHOST'}, 'voter_name': 'Todd Jones', 'option': 'no'},
-        {'voter': {'id': 'ocd-person/ddd'}, 'voter_name': 'Park Cannon', 'option': 'no'},
-        {'voter': {'id': 'ocd-person/NOPE'}, 'voter_name': 'Unknown Person', 'option': 'yes'},
-    ],
-}
-stats = new_stats()
-rec = gen.build_vote_record(event, party_lookup, IDX, stats)
+# Without a rollNumber (records predating the field) fall back to date, then clock
+# time, then a vote that passed over one that did not -- never input order.
+NO_NUMBER = [
+    {"date": "2025-03-31", "time": "9:58 PM", "result": "pass"},
+    {"date": "2025-03-31", "time": "10:12 PM", "result": "fail"},
+]
+check("later clock time wins when rollNumber is absent",
+      gen.select_final_vote(NO_NUMBER)["time"], "10:12 PM")
+check("a later date beats an earlier one", gen.select_final_vote([
+    {"date": "2026-03-31", "result": "pass"}, {"date": "2025-03-31", "result": "pass"}
+])["date"], "2026-03-31")
+check("with nothing else to go on, a vote that passed beats one that did not",
+      gen.select_final_vote([{"result": "fail"}, {"result": "pass"}])["result"], "pass")
+check("no candidates -> None", gen.select_final_vote([]), None)
+check("12:05 AM sorts before 1:00 PM", gen._minutes("12:05 AM") < gen._minutes("1:00 PM"), True)
+check("an unparseable clock does not crash", gen._minutes("noon"), 0)
 
-check('duplicate voter collapses in memberVotes', len(rec['memberVotes']), 3)
-check('ghost id recovered onto the right member',
-      rec['memberVotes'].get('ocd-person/bbb'), 'no')
-check('unrecoverable ghost is omitted',
-      'ocd-person/NOPE' in rec['memberVotes'], False)
+print("")
+print("=== curated key votes: option vocabulary and party tally ===")
+# Every vote string the producers can emit must map, or a real position would silently
+# become "other" by falling through a .get() default.
+for option in VOTE_CODES:
+    check("%-12s maps to a published option" % option, option in gen.OPTION, True)
 
-tally_total = sum(b['yea'] + b['nay'] + b['other'] for b in rec['partyTally'].values())
-check('partyTally equals the roster, not the row count', tally_total, 3)
-check('  R yea', rec['partyTally']['Republican']['yea'], 1)
-check('  R nay', rec['partyTally']['Republican']['nay'], 1)
-check('  D nay', rec['partyTally']['Democratic']['nay'], 1)
-check('stats counted every row', sum(stats.values()), 5)
-check('  ghost counted', stats['ghost'], 1)
-check('  name fallback counted', stats['name'], 1)
+PARTIES = {"p/r1": "Republican", "p/r2": "Republican", "p/d1": "Democratic",
+           "p/i1": "Independent", "p/unknown": None}
+TALLY = gen.build_party_tally(
+    {"p/r1": "yes", "p/r2": "no", "p/d1": "yes", "p/i1": "other", "p/unknown": "yes"},
+    PARTIES)
+check("R yea", TALLY["Republican"]["yea"], 1)
+check("R nay", TALLY["Republican"]["nay"], 1)
+check("D yea", TALLY["Democratic"]["yea"], 1)
+check("abstain/not-voting lands in other", TALLY["Independent"]["other"], 1)
+# A member whose party we do not know is counted in no bucket, so the bars never
+# imply a party voted a way it did not.
+check("unknown party is not counted",
+      sum(b["yea"] + b["nay"] + b["other"] for b in TALLY.values()), 4)
 
 print('\n=== assign_remaining_by_surname: elimination against the roster ===')
 from lib.ga_voters import assign_remaining_by_surname, surname_key  # noqa: E402

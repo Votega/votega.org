@@ -202,10 +202,22 @@ def build_members():
 def votes_csv(votes):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
-    w.writerow(["voteId", "date", "bill", "title", "motionText", "yea", "nay", "result", "billUrl"])
-    for vid, v in sorted(votes.items(), key=lambda kv: (kv[1].get("date") or "", kv[0])):
-        w.writerow([vid, v.get("date"), v.get("bill"), v.get("title"), v.get("motionText"),
-                    v.get("yea"), v.get("nay"), v.get("result"), v.get("billUrl")])
+    # chamber is published because it cannot be re-derived downstream: the motion text
+    # names whose work is being adopted, so an "Agree to Senate Substitute" is a HOUSE
+    # vote. Consumers inferring it from motionText would get it backwards, as we did.
+    # rollNumber is the chamber's own roll-call number and cannot be reconstructed from
+    # this dataset: it counts every roll call the chamber held, including the procedural
+    # ones a passage-vote dataset omits. With `time` it is what orders two passage votes
+    # on one bill on one day — which decides which is the operative final vote.
+    w.writerow(["voteId", "date", "time", "chamber", "rollNumber", "bill", "title",
+                "motionText", "yea", "nay", "result", "billUrl"])
+    for vid, v in sorted(votes.items(),
+                         key=lambda kv: (kv[1].get("date") or "",
+                                         kv[1].get("rollNumber") or 0, kv[0])):
+        w.writerow([vid, v.get("date"), v.get("time"), v.get("chamber"),
+                    v.get("rollNumber"), v.get("bill"), v.get("title"),
+                    v.get("motionText"), v.get("yea"), v.get("nay"), v.get("result"),
+                    v.get("billUrl")])
     return buf.getvalue().encode()
 
 
@@ -237,6 +249,18 @@ def votes_schema():
                         "title": {"type": ["string", "null"]},
                         "session": {"type": ["string", "null"], "description": "Session id, e.g. '2025_26' or '2026_ss'."},
                         "motionText": {"type": ["string", "null"]},
+                        "chamber": {"type": ["string", "null"],
+                                    "enum": ["Senate", "House of Representatives", None],
+                                    "description": "The chamber that held this roll call, as "
+                                                   "recorded by the source. Do NOT infer this from "
+                                                   "motionText: an 'Agree to Senate Substitute' is a "
+                                                   "House vote. Absent on records predating this field."},
+                        "rollNumber": {"type": ["integer", "null"],
+                                       "description": "The chamber's own roll-call number for the session, counting ALL roll calls (procedural ones included), so it is dense in the source but gapped here. Orders roll calls authoritatively; absent on records predating the field."},
+                        "time": {"type": ["string", "null"],
+                                 "description": "Clock time the roll call was taken, e.g. \"2:39 PM\"."},
+                        "excused": {"type": ["integer", "null"]},
+                        "notVoting": {"type": ["integer", "null"]},
                         "date": {"type": ["string", "null"]},
                         "yea": {"type": "integer"},
                         "nay": {"type": "integer"},

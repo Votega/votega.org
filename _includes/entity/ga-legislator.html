@@ -1009,7 +1009,10 @@
 
       return `<div class="bill-card">
         <div class="bill-card-header">
-          <a class="bill-identifier" href="${escHtml(bill.openstatesUrl)}" target="_blank" rel="noopener">${escHtml(bill.identifier)}</a>
+          <!-- billUrl (legis.ga.gov, the official record) replaced openstatesUrl when
+               the curated data moved off Open States; the fallback keeps a cached page
+               working against either shape. -->
+          <a class="bill-identifier" href="${escHtml(bill.billUrl || bill.openstatesUrl || '')}" target="_blank" rel="noopener">${escHtml(bill.identifier)}</a>
           ${statusTag ? `<span class="bill-status-tag">${statusTag}</span>` : ''}
         </div>
         <div class="bill-title">${escHtml(bill.title)}</div>
@@ -1036,10 +1039,32 @@
     return String(voteId).split('-')[0];
   }
 
+  // Mirrors vote_chamber() in scripts/generate_party_unity.py and event_chamber() in
+  // scripts/lib/ga_voters.py — keep all three in step.
   function voteChamber(meta) {
+    // Authoritative when present: generate_ga_votes_soap.py records the Branch it
+    // fetched the roll call from. Only older records need the inference below.
+    if (meta && meta.chamber) return meta.chamber;
+
     const mt = (meta && meta.motionText) || '';
-    if (mt.includes('Senate')) return 'Senate';
-    if (mt.includes('House'))  return 'House of Representatives';
+    // Reading the chamber off the motion text is only possible for the "agree to"
+    // family, and there it is INVERTED: the motion names whose work is being accepted,
+    // so the chamber voting is the other one. "Agree to Senate Substitute" is a House
+    // vote; "AGREE TO HOUSE SUBSTITUTE" is a Senate one. Taking the named chamber at
+    // face value mis-filed 136 of 270 such roll calls and, being case-sensitive, left
+    // the other 134 (the upper-case Senate motions) with no chamber at all.
+    const m = /\b(?:agree|concur)\w*\b(.*)$/i.exec(mt);
+    if (m) {
+      const rest = m[1].toLowerCase();
+      const h = rest.indexOf('house'), sen = rest.indexOf('senate');
+      // The FIRST chamber named after "agree to" owns the text being adopted; whoever
+      // amended it later ("...as Amended by House") does not change who is voting.
+      if (h >= 0 && (sen < 0 || h < sen)) return 'Senate';
+      if (sen >= 0) return 'House of Representatives';
+    }
+    // Anything else (PASSAGE, Local Calendar, ADOPT, a conference report) carries no
+    // chamber signal. Return unknown rather than guessing: callers treat '' as "do not
+    // filter", which keeps a real vote in the member's own-chamber stats.
     return '';
   }
 

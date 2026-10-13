@@ -21,6 +21,13 @@ Consolidating here also removes a fork: `generate_ga_votes_data.py` had the name
 index, chamber inference and legacy-id map; `generate_curated_ga_bills.py` had
 none of them and keyed `memberVotes` on the raw `voter.id` with no validation.
 
+As of 2026-10 that name/surname resolution is no longer on any production path: the
+producers source legis.ga.gov, which keys every row on a numeric member id, so there
+is no surname to disambiguate. `resolve_voter` and `assign_remaining_by_surname` stay
+for the Open States diagnostics (`inspect_ga_voter_resolution.py`), and because they
+document why that source could not be trusted for contested votes. `MemberIndex`,
+`VOTING_CHAMBERS` and `chamber_from_motion` are still used widely.
+
 Import from a generator in scripts/ (sys.path[0] is scripts/ when run as
 `python scripts/generate_x.py`):
 
@@ -35,7 +42,9 @@ MEMBERS_FILE = "assets/data/ga-members.json"
 #: Chambers whose members actually cast roll-call votes. `ga-members.json` also
 #: carries an `executive` chamber (Governor, Lt. Governor, AG, SoS), which must
 #: never be treated as a missing voter.
-VOTING_CHAMBERS = ("Senate", "House of Representatives")
+SENATE = "Senate"
+HOUSE = "House of Representatives"
+VOTING_CHAMBERS = (SENATE, HOUSE)
 
 #: `status` values meaning the seat is no longer held by that member (or never was:
 #: "Vacant" is an injected placeholder). "Suspended" is deliberately NOT here: a
@@ -83,15 +92,52 @@ def event_chamber(motion_text, organization=None):
     """Which chamber held a roll call: 'Senate', 'House of Representatives', or None."""
     cls = (organization or {}).get('classification')
     if cls == 'upper':
-        return 'Senate'
+        return SENATE
     if cls == 'lower':
-        return 'House of Representatives'
-    mt = motion_text or ''
-    if 'Senate' in mt:
-        return 'Senate'
-    if 'House' in mt:
-        return 'House of Representatives'
-    return None
+        return HOUSE
+    return chamber_from_motion(motion_text) or None
+
+
+_AGREE_RE = re.compile(r'\b(?:agree|concur)\w*\b(.*)$', re.I)
+
+
+def chamber_from_motion(motion_text):
+    """Voting chamber inferred from motion text, or '' when it carries no signal.
+
+    Only the 'agree to' family says anything, and it says the OPPOSITE of what it looks
+    like: the motion names whose work is being accepted, so the chamber casting the vote
+    is the other one. 'Agree to Senate Substitute' is a HOUSE vote; 'AGREE TO HOUSE
+    SUBSTITUTE' is a Senate one. Taking the named chamber at face value mis-filed 136 of
+    the 270 such roll calls in the current session and, because the test was
+    case-sensitive, gave the other 134 (the upper-case Senate motions) no chamber at all.
+
+    Mirrors voteChamber() in _includes/entity/ga-legislator.html and vote_chamber() in
+    scripts/generate_party_unity.py. Prefer a recorded chamber over this wherever one
+    exists (generate_ga_votes_soap.py now stores the Branch it fetched).
+    """
+    m = _AGREE_RE.search(motion_text or '')
+    if m:
+        # The FIRST chamber named after 'agree to' owns the text being adopted; a later
+        # amender ('...as Amended by House') does not change who is voting.
+        first = _first_chamber(m.group(1))
+        if first:
+            return HOUSE if first == SENATE else SENATE   # inverted, deliberately
+        return ''
+    # Not an 'agree' motion. A chamber named in a plain caption is the chamber itself
+    # (Open States captions take the form 'House Vote #12'). PASSAGE, Local Calendar,
+    # ADOPT and conference reports name none, and stay unknown.
+    return _first_chamber(motion_text)
+
+
+def _first_chamber(text):
+    """Whichever of the two chambers is named first in `text`, or ''."""
+    low = (text or '').lower()
+    i_house, i_senate = low.find('house'), low.find('senate')
+    if i_house >= 0 and (i_senate < 0 or i_house < i_senate):
+        return HOUSE
+    if i_senate >= 0:
+        return SENATE
+    return ''
 
 
 class MemberIndex:

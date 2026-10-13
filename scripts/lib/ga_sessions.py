@@ -49,6 +49,14 @@ BIENNIUM = "2025-2026"
 LEGIS_SESSIONS = {
     "2025_26": {"id": 1033, "library": "20252026"},
     "2026_ss": {"id": 1034, "library": "2026EX"},
+    # PRIOR biennium, kept only so a curated bill older than the committed vote
+    # artifacts can still be sourced over SOAP (generate_curated_ga_bills.py). It is
+    # deliberately absent from SESSION_NAMES, so nothing iterates or fetches it as
+    # part of the current biennium. `library` is unknown — the legis REST producer
+    # needs it, SOAP does not, and guessing it would be worse than omitting it.
+    # id confirmed 2026-10-12 by GetVotes(Senate, 1031): 902 listings spanning
+    # 2023-01-09..2024-03-29, i.e. the 157th General Assembly's regular session.
+    "2023_24": {"id": 1031},
 }
 
 
@@ -59,9 +67,12 @@ def legis_session_id(session_id):
 
 
 def legis_session_library(session_id):
-    """legis.ga.gov session `library` string for our tag, or None if not mapped."""
+    """legis.ga.gov session `library` string for our tag, or None if not mapped.
+
+    None also when the session is mapped for SOAP only (no `library` recorded) —
+    callers that need the REST producer must treat that as unmapped."""
     s = LEGIS_SESSIONS.get(session_id)
-    return s["library"] if s else None
+    return s.get("library") if s else None
 
 
 def session_name(session_id):

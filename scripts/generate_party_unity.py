@@ -35,7 +35,7 @@ import sys
 from datetime import datetime, timezone
 
 # scripts/ is sys.path[0] when run as `python scripts/generate_party_unity.py`
-from lib.ga_voters import VOTING_CHAMBERS, DEPARTED_STATUSES
+from lib.ga_voters import VOTING_CHAMBERS, DEPARTED_STATUSES, chamber_from_motion
 from lib.votes_schema import member_votes_map
 from lib.atomic_io import write_json_atomic
 
@@ -62,14 +62,16 @@ def rollcall_key(vote_id):
 
 
 def vote_chamber(meta):
-    """Chamber a passage vote belongs to, from its motion text. Mirrors the
-    client-side voteChamber() so server and page bucket votes identically."""
-    mt = (meta or {}).get("motionText", "") or ""
-    if "Senate" in mt:
-        return "Senate"
-    if "House" in mt:
-        return "House of Representatives"
-    return ""
+    """Chamber a passage vote belongs to. Mirrors the client-side voteChamber() so
+    server and page bucket votes identically.
+
+    Prefers the chamber the producer recorded (generate_ga_votes_soap.py stores the
+    Branch it fetched the roll call from) and only falls back to reading the motion
+    text, which is reliable for the "agree to" family only, and inverted there — see
+    chamber_from_motion().
+    """
+    meta = meta or {}
+    return meta.get("chamber") or chamber_from_motion(meta.get("motionText"))
 
 
 def build_party_vote_index(member_votes, party_map):
