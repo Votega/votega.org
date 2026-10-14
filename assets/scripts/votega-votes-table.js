@@ -49,11 +49,13 @@ window.VotegaVotesTable = (function () {
     throw new Error('votega-votes-table.js requires html-escape.js (VoteGA.escapeHtml)');
   }
 
-  // Lowercase and drop whitespace, so neither the query nor the field it is
-  // matched against can lose a match to a space: 'hb1', 'HB 1' and 'hb  1' all
-  // find HB 1.
+  // Lowercase and drop whitespace AND periods, so neither the query nor the field
+  // it is matched against can lose a match to punctuation. Whitespace alone is not
+  // enough: GA numbers its bills 'HB 32', but the federal record uses 'H.R. 5334'
+  // and 'S.J.Res. 80', so a reader typing 'hr 5334' matched nothing until the dots
+  // came out too.
   function normalizeQuery(s) {
-    return String(s == null ? '' : s).toLowerCase().replace(/\s+/g, '');
+    return String(s == null ? '' : s).toLowerCase().replace(/[\s.]+/g, '');
   }
 
   // The chart's three categories. Everything that is not a cast Yea or Nay —

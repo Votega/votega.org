@@ -50,6 +50,25 @@ test('normalizeQuery lowercases and drops whitespace', () => {
   assert.strictEqual(VT.normalizeQuery(undefined), '');
 });
 
+test('normalizeQuery drops periods as well as whitespace', () => {
+  // The federal record numbers bills 'H.R. 5334' and 'S.J.Res. 80'; a reader types
+  // 'hr 5334'. Whitespace-only normalization (which suffices for GA's 'HB 32')
+  // matched nothing there.
+  assert.strictEqual(VT.normalizeQuery('H.R. 5334'), 'hr5334');
+  assert.strictEqual(VT.normalizeQuery('hr 5334'), 'hr5334');
+  assert.strictEqual(VT.normalizeQuery('S.J.Res. 80'), 'sjres80');
+});
+
+test('makeMatcher finds a federal bill number typed without its periods', () => {
+  const index = {
+    f1: { bill: 'H.R. 5334', title: 'An act', motionText: 'On Passage', date: '2026-04-03' },
+    f2: { bill: 'S. 723', title: 'Another act', motionText: 'On Passage', date: '2026-04-02' },
+  };
+  const entries = [{ voteId: 'f1', vote: 'Yea' }, { voteId: 'f2', vote: 'Nay' }];
+  assert.deepStrictEqual(entries.filter(VT.makeMatcher({ q: 'hr 5334' }, index)).map(e => e.voteId), ['f1']);
+  assert.deepStrictEqual(entries.filter(VT.makeMatcher({ q: 's723' }, index)).map(e => e.voteId), ['f2']);
+});
+
 test('voteBucket collapses every non-Yea/Nay option to other', () => {
   assert.strictEqual(VT.voteBucket('Yea'), 'yea');
   assert.strictEqual(VT.voteBucket('Nay'), 'nay');

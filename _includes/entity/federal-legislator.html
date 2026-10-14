@@ -1032,14 +1032,53 @@
           : '';
       };
 
-      // No paging here: a GA member has ~1,100 roll calls in a session, a member of
-      // the GA delegation has ~75 (max 141), so truncation would add a click and
-      // buy nothing. The module takes the whole list.
-      const tableMarkup = VT.tableHtml(sorted, votesIndex, { showMotion: !isHouse, cellAfter: lawCell });
+      const ROW_OPTS = { showMotion: !isHouse, cellAfter: lawCell };
+      const TABLE_KEY = 'federal';
+
+      // Searchable, but NOT paged: a member of the GA delegation has ~75 roll calls
+      // here (max 141), where a GA legislator has ~1,100 in a session. Truncating 75
+      // rows would add a click and buy nothing — but finding how they voted on one
+      // specific bill is still eyeballing a long table, which is what the filter is
+      // for. Passing no `shown` renders the whole list.
+      let filter = { q: '', vote: 'all' };
+
+      function tablesHtml() {
+        const shownList = sorted.filter(VT.makeMatcher(filter, votesIndex));
+        if (!shownList.length) return VT.noMatchHtml();
+        const countLine = VT.isFiltered(filter)
+          ? `<p style="font-size:0.78rem;color:#666;margin:0 0 0.5rem 0;">Showing ${shownList.length} of ${sorted.length} vote${sorted.length === 1 ? '' : 's'}.</p>`
+          : '';
+        return countLine + VT.tableHtml(shownList, votesIndex, Object.assign({ key: TABLE_KEY }, ROW_OPTS));
+      }
+
+      // The chart and any figures above the table describe the member's whole
+      // record, not the filtered rows, so say so while a filter is engaged rather
+      // than letting the two read as one number.
+      const scopeNote = `<p id="fedVotesScopeNote" style="display:none;font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">`
+        + `The breakdown above covers all ${sorted.length} vote${sorted.length === 1 ? '' : 's'}, not the filtered list.</p>`;
+
       container.innerHTML = `
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
-        ${chartHtml}${tableMarkup}`;
+        ${chartHtml}
+        ${scopeNote}
+        ${VT.filterRowHtml({ searchId: 'fedVoteSearch', voteId: 'fedVoteResult' })}
+        <div id="fedVotesTables">${tablesHtml()}</div>`;
+
+      function refreshTables() {
+        const host = document.getElementById('fedVotesTables');
+        if (host) host.innerHTML = tablesHtml();
+        const note = document.getElementById('fedVotesScopeNote');
+        if (note) note.style.display = VT.isFiltered(filter) ? '' : 'none';
+      }
+
+      VT.mountControls({
+        searchId: 'fedVoteSearch',
+        voteId: 'fedVoteResult',
+        tablesRoot: 'fedVotesTables',
+        onFilter: next => { filter = next; refreshTables(); },
+        onClear: () => { filter = { q: '', vote: 'all' }; refreshTables(); },
+      });
     } catch (err) {
       console.warn('Could not load voting history:', err);
     }
