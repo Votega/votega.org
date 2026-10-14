@@ -104,6 +104,13 @@ breadcrumb:
   }
   .bills-status-btn:hover { border-color: #1a56a8; color: #1a56a8; }
   .bills-status-btn.active { background: #1a56a8; border-color: #1a56a8; color: #fff; font-weight: 600; }
+  .bills-filter-hint {
+    margin: -0.15rem 0 0.5rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: #666;
+  }
+  .bills-filter-hint strong { color: #6d28d9; font-weight: 600; }
 
   /* ── Results bar ── */
   .bills-results-bar {
@@ -424,8 +431,15 @@ breadcrumb:
     <button class="bills-status-btn" data-status="progress">In progress</button>
     <button class="bills-status-btn" data-status="stalled">Stalled</button>
     <button class="bills-status-btn" data-status="failed">Failed</button>
-    <button class="bills-status-btn" id="partyLineToggle" style="margin-left:auto;">&#9889; Party-line votes only</button>
+    <button class="bills-status-btn" id="partyLineToggle" style="margin-left:auto;" aria-pressed="false">&#9889; Party-line votes only</button>
   </div>
+
+  <p class="bills-filter-hint">
+    <strong>&#9889; Party-line votes only</strong> narrows the list to bills with at least one recorded roll
+    call where a majority of Democrats voted one way and a majority of Republicans voted the other. A roll call
+    is left untagged when it is too close to call &mdash; when the votes we could not attribute to a party
+    could have flipped either party&rsquo;s majority.
+  </p>
 </div>
 
 <div class="bills-results-bar" id="billsResultsBar" style="display:none">
@@ -1036,6 +1050,7 @@ breadcrumb:
     if (btn.id === 'partyLineToggle') {
       partyLineOnly = !partyLineOnly;
       btn.classList.toggle('active', partyLineOnly);
+      btn.setAttribute('aria-pressed', partyLineOnly ? 'true' : 'false');
       applyFilters();
       if (partyLineOnly) window.vgTrack && window.vgTrack('bills_filter', { control: 'party_line' });
       return;
@@ -1093,6 +1108,7 @@ breadcrumb:
     document.querySelectorAll('.bills-tab').forEach(function (b) { b.classList.toggle('active', b.dataset.chamber === ''); });
     document.querySelectorAll('#statusPills .bills-status-btn:not(#partyLineToggle)').forEach(function (b) { b.classList.toggle('active', b.dataset.status === ''); });
     document.getElementById('partyLineToggle').classList.remove('active');
+    document.getElementById('partyLineToggle').setAttribute('aria-pressed', 'false');
 
     applyFilters();
 
@@ -1124,7 +1140,9 @@ breadcrumb:
         b._status = classifyStatus(b);
         b._partyLine = (b.passageVotes || []).some(function (v) {
           const pli = computePartyLineInfo(v.partyTally);
-          return pli && pli.isPartyLine && !hasLowCoverage(v);
+          // Same bar the detail tag uses, so the badge and the filter can never
+          // claim a party-line vote the vote panel declines to tag.
+          return pli && pli.isPartyLine && partyLineIsSound(v) && !hasLowCoverage(v);
         });
         return b;
       });
