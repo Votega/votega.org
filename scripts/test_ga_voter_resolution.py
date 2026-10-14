@@ -15,6 +15,7 @@ Usage:
   python scripts/test_ga_voter_resolution.py
 """
 
+import json
 import os
 import sys
 
@@ -303,6 +304,238 @@ check('  the rest stay unresolved', sorted(u), [1, 2])
 
 check('no chamber -> refuses everything',
       assign_remaining_by_surname([(0, 'JONES', 'no')], set(), None, SUR), ({}, [0]))
+
+
+
+# ---------------------------------------------------------------------------
+# Roster field normalization (lib.ga_roster) — Phase 1 of the roster SOAP
+# migration. legis.ga.gov's `Address1` is free text: it spells the one building
+# five ways, separates some lines with semicolons, and leaves a trailing hyphen
+# on a ZIP. These are the real values, taken from the 251-member listing.
+# ---------------------------------------------------------------------------
+print('\nlib.ga_roster.normalize_address')
+
+from lib.ga_roster import display_committee, normalize_address  # noqa: E402
+
+CLOB = 'Coverdell Legislative Office Building'
+
+check('canonical form passes through unchanged',
+      normalize_address('511-A ' + CLOB, 'Atlanta', 'GA', '30334'),
+      f'511-A {CLOB}, Atlanta, GA 30334')
+
+# The five spellings of one building, all seen in production.
+for raw, label in [('320-B CLOB', 'bare acronym'),
+                   ('409-E Coverdell Legislative Office Bldg', 'Bldg'),
+                   ('612-A Coverdell Legislative Office Bldg.', 'Bldg.'),
+                   ('301 Coverdell Legislative Bldg.', 'no "Office"')]:
+    room = raw.split(' ', 1)[0]
+    check(f'building spelling normalized ({label})',
+          normalize_address(raw, 'Atlanta', 'GA', '30334'),
+          f'{room} {CLOB}, Atlanta, GA 30334')
+
+check('the Capitol is left alone — it is not the same building',
+      normalize_address('HM-1 State Capitol', 'Atlanta', 'GA', '30334'),
+      'HM-1 State Capitol, Atlanta, GA 30334')
+
+# Semicolons and the empty segments they leave behind.
+check('semicolons become commas',
+      normalize_address('240 State Capitol', 'Atlanta', 'GA', '30334'),
+      '240 State Capitol, Atlanta, GA 30334')
+check('a semicolon inside the street line becomes a comma',
+      normalize_address('206 Washington Street; Suite 203, State Capitol',
+                        'Atlanta', 'GA', '30334'),
+      '206 Washington Street, Suite 203, State Capitol, Atlanta, GA 30334')
+check('empty segments between separators collapse',
+      normalize_address('214 State Capitol ; ; ', 'Atlanta', 'GA', '30334-'),
+      '214 State Capitol, Atlanta, GA 30334')
+
+# ZIP hygiene: drop a dangling hyphen, keep a real ZIP+4.
+check('a trailing-hyphen ZIP loses the hyphen',
+      normalize_address('1 Somewhere', 'Atlanta', 'GA', '30334-'),
+      '1 Somewhere, Atlanta, GA 30334')
+check('a real ZIP+4 is preserved',
+      normalize_address('40 Capitol Square, SW', 'Atlanta', 'GA', '30334-1300'),
+      '40 Capitol Square, SW, Atlanta, GA 30334-1300')
+
+check('runs of whitespace collapse',
+      normalize_address('320-B    CLOB', 'Atlanta', 'GA', '30334'),
+      f'320-B {CLOB}, Atlanta, GA 30334')
+
+# Missing pieces must yield null, never a bare comma or the string "None".
+check('no pieces at all -> None', normalize_address('', '', '', ''), None)
+check('whitespace-only -> None', normalize_address('  ', None, None, None), None)
+check('street only -> no dangling comma', normalize_address('320-B CLOB', '', '', ''),
+      f'320-B {CLOB}')
+check('missing street still yields the city line',
+      normalize_address(None, 'Atlanta', 'GA', '30334'), 'Atlanta, GA 30334')
+
+# ---------------------------------------------------------------------------
+# Committee display names: legis.ga.gov's own names are published verbatim, so
+# the list needs no maintenance as committees are renamed. The one exception is
+# the bare acronym, which means nothing to a reader.
+# ---------------------------------------------------------------------------
+print('\nlib.ga_roster.display_committee')
+
+check('MARTOC is expanded', display_committee('MARTOC'),
+      'Metropolitan Atlanta Rapid Transit Overview Committee')
+check('  and is matched case- and space-insensitively',
+      display_committee(' martoc '),
+      'Metropolitan Atlanta Rapid Transit Overview Committee')
+check('an official name with & is published verbatim',
+      display_committee('Ways & Means'), 'Ways & Means')
+check('the official long form is not rewritten',
+      display_committee('Special Committee on Healthcare'),
+      'Special Committee on Healthcare')
+check('surrounding whitespace is trimmed',
+      display_committee('  Appropriations  '), 'Appropriations')
+check('empty -> None', display_committee('   '), None)
+check('None -> None', display_committee(None), None)
+
+
+# ---------------------------------------------------------------------------
+# apply_member_overrides — lifted out of generate_ga_members_data.py so the
+# SOAP producer applies the SAME editorial layer. This is what carries the
+# vacancy/departure data the majority tracker renders; a producer that skipped
+# it would silently promote 11 Resigned + 1 Suspended member back to active.
+# ---------------------------------------------------------------------------
+print()
+print('lib.ga_roster.apply_member_overrides')
+
+import tempfile  # noqa: E402
+
+from lib.ga_roster import apply_member_overrides  # noqa: E402
+
+
+def _ov(tmp, payload):
+    """Write an overrides file and return its path."""
+    path = os.path.join(tmp, 'ov.json')
+    with open(path, 'w', encoding='utf-8') as fh:
+        json.dump(payload, fh)
+    return path
+
+
+def _base():
+    return [{'id': 'ocd-person/aaa', 'name': 'Jane Doe', 'status': None},
+            {'id': 'legis-99', 'name': 'John Roe', 'status': None}]
+
+
+with tempfile.TemporaryDirectory() as tmp:
+    # Patch by OCD id — the precise key, preferred over the name.
+    ms = _base()
+    got = apply_member_overrides(ms, _ov(tmp, {
+        'ocd-person/aaa': {'status': 'Resigned', 'statusDate': '2026-01-05'}}))
+    check('patch by OCD id applies', got, (1, 0))
+    check('  status is set', ms[0]['status'], 'Resigned')
+    check('  statusDate is set', ms[0]['statusDate'], '2026-01-05')
+    check('  other members untouched', ms[1]['status'], None)
+
+    # Name keys, case- and whitespace-insensitive, for members with no OCD id.
+    ms = _base()
+    apply_member_overrides(ms, _ov(tmp, {'  john roe ': {'status': 'Suspended'}}))
+    check('patch by name is case/space-insensitive', ms[1]['status'], 'Suspended')
+
+    # Underscore-prefixed keys are editorial notes, never published fields.
+    ms = _base()
+    apply_member_overrides(ms, _ov(tmp, {
+        'ocd-person/aaa': {'_note': 'confirmed by AJC', 'status': 'Deceased'}}))
+    check('_-prefixed keys are stripped from the patch', '_note' in ms[0], False)
+    check('  the real field still applies', ms[0]['status'], 'Deceased')
+
+    # _inject adds a member the source does not carry...
+    ms = _base()
+    got = apply_member_overrides(ms, _ov(tmp, {'_inject': [
+        {'id': 'ocd-person/zzz', 'name': 'Vacant', 'status': 'Vacant', '_why': 'x'}]}))
+    check('_inject adds a new member', got, (0, 1))
+    check('  with _-keys stripped', '_why' in ms[-1], False)
+    check('  roster grew by one', len(ms), 3)
+
+    # ...and never duplicates one the source already returned. That is what makes
+    # an _inject entry self-skipping once the upstream catches up.
+    ms = _base()
+    got = apply_member_overrides(ms, _ov(tmp, {'_inject': [
+        {'id': 'ocd-person/aaa', 'name': 'Jane Doe'}]}))
+    check('_inject never duplicates an existing id', (len(ms), got[1]), (2, 0))
+
+    # A member with no id/name must not crash the name path.
+    check('missing id/name does not raise',
+          apply_member_overrides([{'id': None, 'name': None}],
+                                 _ov(tmp, {'x': {'status': 'Vacant'}})), (0, 0))
+
+check('a missing overrides file is not an error',
+      apply_member_overrides(_base(), 'does/not/exist.json'), (0, 0))
+
+
+# An _inject entry exists because the source did not carry that member. When the
+# source STARTS carrying them, skipping the entry outright silently discards the
+# editorial departure record with it: Open States dropped resigned members, so
+# their "Resigned" lived only in _inject, and legis.ga.gov returns all 247 who
+# served the biennium. That is 11 resigned members reading as sitting and 11
+# empty seats painted as filled on the majority tracker. So the source's facts
+# win, and the editorial status fields are merged on top.
+with tempfile.TemporaryDirectory() as tmp:
+    live = [{'id': 'ocd-person/aaa', 'name': 'Jane Doe', 'party': 'Republican',
+             'district': 7, 'status': None, 'statusDate': None, 'statusNote': None}]
+    got = apply_member_overrides(live, _ov(tmp, {'_inject': [
+        {'id': 'ocd-person/aaa', 'name': 'Jane Doe', 'party': 'Democratic',
+         'district': 99, 'status': 'Resigned', 'statusDate': '2026-03-13',
+         'statusNote': 'resigned to run for Congress'}]}))
+    check('_inject on a now-carried member counts as a patch, not an injection',
+          (got, len(live)), ((1, 0), 1))
+    check('  the editorial status is merged', live[0]['status'], 'Resigned')
+    check('  statusDate comes with it', live[0]['statusDate'], '2026-03-13')
+    check('  statusNote comes with it', live[0]['statusNote'],
+          'resigned to run for Congress')
+    check('  but the stale snapshot does NOT overwrite live facts: party',
+          live[0]['party'], 'Republican')
+    check('  ...or district', live[0]['district'], 7)
+
+    # A sitting member whose _inject entry carries no status is left untouched --
+    # these are the "source has not catalogued them yet" entries, and once the
+    # source does, the entry has nothing left to contribute.
+    live = [{'id': 'ocd-person/bbb', 'name': 'John Roe', 'status': None}]
+    got = apply_member_overrides(live, _ov(tmp, {'_inject': [
+        {'id': 'ocd-person/bbb', 'name': 'John Roe', 'status': None}]}))
+    check('a status-free _inject on a carried member changes nothing', got, (0, 0))
+    check('  status stays null', live[0]['status'], None)
+
+    # An explicit patch still wins over the _inject merge: it is the more
+    # specific statement about that member.
+    live = [{'id': 'ocd-person/ccc', 'name': 'Ann Poe', 'status': None}]
+    apply_member_overrides(live, _ov(tmp, {
+        'ocd-person/ccc': {'status': 'Deceased'},
+        '_inject': [{'id': 'ocd-person/ccc', 'name': 'Ann Poe',
+                     'status': 'Resigned'}]}))
+    check('an explicit patch outranks the _inject merge',
+          live[0]['status'], 'Deceased')
+
+
+# ---------------------------------------------------------------------------
+# listing_is_too_short -- the gap a plain "roster count" floor cannot see.
+# The producer preserves any committed member ABSENT from the source listing
+# (that is how the Lt. Governor survives). So a truncated listing does not
+# shrink the roster, it silently fills it with stale records: 50 fresh + 200
+# carried still clears a 56/180 floor while 200 members quietly stop updating.
+# Stale-but-complete is worse than short, because nothing looks wrong.
+# ---------------------------------------------------------------------------
+print()
+print('lib.ga_roster.listing_is_too_short')
+
+from lib.ga_roster import listing_is_too_short  # noqa: E402
+
+check('a full listing is fine', listing_is_too_short(247, 248), False)
+check('a listing larger than the roster is fine (new members)',
+      listing_is_too_short(255, 248), False)
+check('losing the 4 non-members is fine (the executives + Lt. Governor)',
+      listing_is_too_short(247, 251), False)
+check('a 10% shortfall is tolerated (an election-year turnover)',
+      listing_is_too_short(224, 248), False)
+check('a truncated listing is caught', listing_is_too_short(50, 248), True)
+check('  even one just past the tolerance', listing_is_too_short(200, 248), True)
+check('an empty listing is caught', listing_is_too_short(0, 248), True)
+# A first run, or a deliberate roster reset, has nothing to compare against.
+check('no committed roster -> cannot judge, so do not block',
+      listing_is_too_short(247, 0), False)
+
 
 print(f'\n{len(PASS)} passed, {len(FAIL)} failed')
 if FAIL:

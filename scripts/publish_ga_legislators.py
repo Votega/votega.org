@@ -4,7 +4,7 @@
 Georgia runs two-year General Assembly sessions, and both source datasets are
 DESTRUCTIVELY REPLACED at the biennium rollover: ga-member-votes.json is refetched
 for the new session (GA_SESSION bump) and ga-members.json turns over to the new
-roster as Open States seats the incoming members. Left flat, the sibling repo would
+roster when lib/ga_sessions.SESSION_NAMES advances. Left flat, the sibling repo would
 lose every prior session. So — mirroring Votega/ga-legislation — this repo is a
 session ARCHIVE: per-session data lives under sessions/<YYYY-YYYY>/ and is never
 overwritten once a new session begins (the generator only ever writes the *current*
@@ -29,10 +29,11 @@ entry point):
                                                members.schema.json, ROSTER.md}
 
 The roster and the votes turn over on DIFFERENT clocks: votes flip on the manual
-GA_SESSION bump, but the roster turns over gradually via Open States after the
-election. So the roster is NOT archived automatically alongside votes — it is frozen
-by an explicit, deliberate `freeze-roster` run at end-of-session (sine die), before
-Open States erodes the outgoing roster. See RECURRING-TASKS.md §3.
+GA_SESSION bump, while the roster is built for the biennium's REGULAR session and so
+flips when SESSION_NAMES advances. So the roster is NOT archived automatically
+alongside votes — it is frozen by an explicit, deliberate `freeze-roster` run at
+end-of-session (sine die), before that bump replaces the outgoing roster.
+See RECURRING-TASKS.md §3.
 
 ga-members.json also carries 4 statewide executives (chamber == "executive") and
 departed members (status Resigned/Removed/Deceased); both are excluded from the roster
@@ -148,8 +149,9 @@ def members_schema():
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://raw.githubusercontent.com/Votega/ga-legislators/main/data/members.schema.json",
         "title": "Georgia General Assembly — Members",
-        "description": "Georgia state legislators from Open States. NOTE: also includes 4 statewide "
-                       "executives (chamber == 'executive'); filter to chamber in "
+        "description": "Georgia state legislators, sourced from the General Assembly's own web "
+                       "service at legis.ga.gov. NOTE: also includes 4 statewide executives "
+                       "(chamber == 'executive'); filter to chamber in "
                        "['Senate', 'House of Representatives'] for legislators only. The target repo "
                        "splits this file into house.json / senate.json.",
         "type": "object",
@@ -162,8 +164,16 @@ def members_schema():
                     "type": "object",
                     "required": ["id", "name", "chamber"],
                     "properties": {
-                        "id": {"type": "string", "description": "OCD person id (join key into votes.json's memberVotes)."},
-                        "name": {"type": "string"},
+                        "id": {"type": "string", "description":
+                               "Join key into votes.json's memberVotes. Normally an Open "
+                               "States OCD person id, carried as a cross-reference; a member "
+                               "Open States has not catalogued is keyed 'legis-<legisGaGovId>' "
+                               "instead. A member's id is assigned once and never changes. "
+                               "Prefer legisGaGovId as the STABLE identifier: it is the "
+                               "General Assembly's own id for the member."},
+                        "name": {"type": "string", "description":
+                                 "The name as commonly used, which can differ from the formal "
+                                 "name legis.ga.gov returns ('Tim Bearden' vs 'Timothy Bearden')."},
                         "firstName": {"type": ["string", "null"]},
                         "lastName": {"type": ["string", "null"]},
                         "party": {"type": ["string", "null"]},
@@ -174,8 +184,19 @@ def members_schema():
                         "phone": {"type": ["string", "null"]},
                         "email": {"type": ["string", "null"]},
                         "officialWebsiteUrl": {"type": ["string", "null"]},
-                        "committees": {"type": "array"},
-                        "legisGaGovId": {"type": ["integer", "null"]},
+                        "committees": {"type": "array", "description":
+                                       "Committee names exactly as legis.ga.gov publishes them."},
+                        "legisGaGovId": {"type": ["integer", "null"], "description":
+                                         "The General Assembly's own member id, and the stable "
+                                         "join key. Null only for the statewide executives, who "
+                                         "are not members of the legislature."},
+                        "leadershipRole": {"type": ["string", "null"], "description":
+                                           "Chamber or committee leadership title, e.g. "
+                                           "'Speaker of the House', 'Chairman, House Committee "
+                                           "on Appropriations'. Null for a rank-and-file member."},
+                        "occupation": {"type": ["string", "null"]},
+                        "residence": {"type": ["string", "null"], "description":
+                                      "The city the member gives as home — not an address."},
                     },
                     "additionalProperties": True,
                 },
@@ -237,7 +258,9 @@ def votes_schema():
                        "web service at legis.ga.gov. Keyed by vote id in the form "
                        "\"<rollCallId>-<legislationId>\" — one floor vote on a bundled calendar "
                        "appears once per bill, with identical tallies. memberVotes is keyed by "
-                       "OCD person id (the `id` in members data).",
+                       "the `id` in members data — normally an Open States OCD person id, or "
+                       "'legis-<legisGaGovId>' for a member Open States has not catalogued. See "
+                       "members.schema.json; legisGaGovId is the stable identifier.",
         "type": "object",
         "required": ["votes", "memberVotes"],
         "properties": {

@@ -45,8 +45,11 @@ votega.org/
 ├── assets/
 │   ├── data/                            # Generated JSON/CSV data (committed via GitHub Actions)
 │   │   ├── current-members.json         # Federal Congress members (daily, from Congress.gov API)
-│   │   ├── ga-members.json              # Georgia state legislators (from Open States API)
-│   │   ├── ga-members-overrides.json    # Manual patches/injections applied after Open States fetch
+│   │   ├── ga-members.json              # Georgia state legislators (legis.ga.gov SOAP Members
+│   │   │                                #   service; canonical since 2026-10 — OS producer retired
+│   │   │                                #   to generate_ga_members_data.py, still runnable)
+│   │   ├── ga-members-overrides.json    # Editorial patches/injections applied after the fetch —
+│   │   │                                #   the ONLY place departures/vacancies live
 │   │   ├── ga-member-votes.json         # GA passage votes keyed by OCD person ID
 │   │   ├── ga-bills.json                # GA bills/resolutions (Open States), enriched with party vote tallies
 │   │   ├── curated-ga-bill-votes.json / curated-federal-bills.json  # Editorial "key votes" picks
@@ -68,7 +71,9 @@ votega.org/
 │
 ├── scripts/                             # Build-time data generation (run by GitHub Actions), ~43 tracked
 │   ├── generate_current_members_data.py # Congress.gov API → assets/data/current-members.json
-│   ├── generate_ga_members_data.py      # Open States API → assets/data/ga-members.json
+│   ├── generate_ga_members_soap.py      # legis.ga.gov SOAP → ga-members.json (canonical since
+│   │                                     # 2026-10; no API key, no quota). generate_ga_members_data.py
+│   │                                     # is the retired Open States producer, kept for rollback
 │   ├── generate_ga_votes_soap.py        # legis.ga.gov SOAP (official) → ga-member-votes.json (canonical since 2026-10; OS producer retired to scripts/archive/generate_ga_votes_data.py)
 │   ├── generate_ga_bills_soap.py (legis.ga.gov SOAP → ga-bills.json; canonical since 2026-10, OS producer retired to scripts/archive/generate_ga_bills_data.py; subjects via ga-bills-subjects-base.json overlay) / enrich_bills_with_party_votes.py / generate_curated_ga_bills.py (curated key votes; reads the committed SOAP artifacts, SOAP-fetches only a session they do not cover — no Open States, no API key, canonical since 2026-10)
 │   ├── generate_federal_votes_data.py / generate_fec_data.py / generate_ga_congress_trades.py
@@ -79,6 +84,8 @@ votega.org/
 │   ├── generate_legis_sessions.py       # Session/GetSessions → ga-legis-sessions.json (every
 │   │                                     # session back to 2001; legis_session_id() reads it,
 │   │                                     # so session ids are never hand-maintained or probed)
+│   ├── lib/ga_roster.py                 # roster field shaping + the editorial overrides layer
+│   │                                     # (apply_member_overrides — departures/vacancies)
 │   ├── lib/ga_soap.py                   # shared legis.ga.gov SOAP client (no auth, no quota):
 │   │                                     # GetVotes listings (incl. the authoritative chamber +
 │   │                                     # rollNumber), GetVote detail keyed on legisGaGovId
@@ -89,7 +96,7 @@ votega.org/
 │   │                                     # (update-*.yml), and publish-*-to-<sibling-repo>.yml syncs
 │   ├── deploy-pages.yml
 │   ├── update-current-members.yml       # Daily: runs generate_current_members_data.py, commits JSON
-│   ├── update-ga-members.yml            # Daily: runs generate_ga_members_data.py, commits JSON
+│   ├── update-ga-members.yml            # Daily: runs generate_ga_members_soap.py, commits JSON
 │   └── sync-generated-data-on-pr.yml
 │
 ├── tools/                                # Standalone editing HTML utilities (not part of the Jekyll site; open locally in a Chromium browser, use the File System Access API to read/write a data file in place)
@@ -128,16 +135,28 @@ Enriched from `unitedstates/congress-legislators` (public-domain crosswalk, merg
 For GA delegation only: `recentSponsored[]`.
 
 ### `ga-members.json`
-Top-level: `{ metadata: { generatedAt, source, jurisdiction, count, committeesAvailable }, members: [...] }`
-Each member: `id` (OCD `ocd-person/<uuid>`), `name`, `firstName`, `lastName`, `party` (null if unknown), `chamber` (`"Senate"` | `"House of Representatives"` | `"executive"` — see below), `district` (int or null), `title`, `imageUrl`, `phone`, `address`, `email`, `officialWebsiteUrl`, `birthDate`, `birthYear`, `termStart` (ISO date or null), `termStartYear`, `committees[]`, `legisGaGovId` (int or null — needed to join with vote data), `status` (null = active; `"Vacant"` | `"Suspended"` | `"Resigned"` | `"Removed"` | `"Deceased"` if set via overrides), `statusDate`, `statusNote`.
-Optional override-only fields: `leadershipRole`, `statusNote`.
+Produced by `generate_ga_members_soap.py` from legis.ga.gov's **Members** service (canonical since 2026-10; no API key, no quota).
+
+Top-level: `{ metadata: { generatedAt, source, jurisdiction, session, legisSessionId, count, committeesAvailable, carriedForward, withoutOcdId, preservedNotInMembersService, overridesApplied, overridesInjected }, members: [...], review: {...} }`
+Each member: `id` (see below), `name`, `firstName`, `lastName`, `party` (null if unknown), `chamber` (`"Senate"` | `"House of Representatives"` | `"executive"` — see below), `district` (int or null), `title` (derived from `chamber`), `imageUrl`, `phone`, `address`, `email`, `officialWebsiteUrl`, `birthDate`, `birthYear`, `termStart` (ISO date or null), `termStartYear`, `committees[]`, `legisGaGovId` (int or null), `status` (null = active; `"Vacant"` | `"Suspended"` | `"Resigned"` | `"Removed"` | `"Deceased"` if set via overrides), `statusDate`, `statusNote`.
+From the SOAP service: `leadershipRole` (normalized by `lib/ga_leadership.py`), `committeeRoles[]` (`{name, role}`), `occupation`, `residence`, `pressUrl`, `birthdayMonthDay`, `dateVacated`, `termStartSession`.
+
+**⚠ `id` is the join key, but `legisGaGovId` is the stable identity.** `id` is normally the Open States OCD person id, carried forward from the committed roster by `legisGaGovId` as a cross-reference — Open States is no longer a *source* for this file. A member Open States has not catalogued is keyed `legis-<legisGaGovId>`. **A member's `id` is assigned once and never changes**; the producer refuses to write if any existing `legisGaGovId → id` pair moves, because re-keying breaks that member's vote join and their append-only `vgId`. Never invent or derive an OCD id.
+
+**⚠ Four fields the service cannot supply, preserved from the committed file.** `birthDate`/`birthYear` (it has a birthday with no year, so it cannot yield an age), `termStart` (it has the earliest session served, not a date), and `name`/`firstName`/`lastName` — it returns the FORMAL name where the site publishes the common one (`Timothy Bearden` vs `Tim Bearden`). 18 members differ; applying the formal name would move their entity URL, since `build_entity_pages.py` slugs on the name. Divergences are reported in `review.nameDiffersFromLegis`, never applied — a real rename is an editorial decision with a redirect attached. `email` falls back to the committed value for the 2 members the service has none for.
+
+**⚠ The producer proposes; a human disposes.** It never writes `status` — see the overrides file. `review` carries the queues it declined to act on: `vacatedWithoutStatusOverride`, `vacatedDateDiffersFromOurs`, `nameDiffersFromLegis`, `lapsedLeadershipTitles`, `leadershipNeedsReview`, `carriedForward`, `notInCommittedRoster`, `preservedNotInMembersService`. Check it after a roster change rather than trusting a clean run.
 
 **⚠ Not every member is a legislator.** Four statewide executives (Governor, Lt. Governor, Attorney General, Secretary of State) sit in this file under `chamber: "executive"`, with a raw-enum `title` (`"Lt_Governor"`). Anything that means "a member of the General Assembly" must filter on chamber — use `VOTING_CHAMBERS` from `scripts/lib/ga_voters.py` server-side, or an exact chamber-string check client-side (as `ga.js` and `ga-majority-tracker.html` do). Omitting that filter put the Governor in site search as a "GA Legislator" (see CODEBASE-REVIEW-2026-08-18.md 3.2). Executives are surfaced from `ga-executive.json`, not this file.
 
 **`status`** is `null` for a sitting member. `"Resigned"`/`"Removed"`/`"Deceased"` are historical records to filter out; `"Suspended"` members still hold the seat and should stay listed (badged), and `"Vacant"` entries are injected placeholders with synthetic non-OCD ids.
 
 ### `ga-members-overrides.json`
-Manual patches applied after Open States fetch. Keys are OCD person IDs (`ocd-person/...`) or member full names. Use `_inject` array for entirely new entries (vacant seats). Departure fields: `status`, `statusDate`, `statusNote`. Fields prefixed `_` are stripped before merging.
+The editorial layer, applied by `apply_member_overrides` in `scripts/lib/ga_roster.py` — **the single implementation; any roster producer must call it.** Keys are OCD person IDs (`ocd-person/...`) or member full names. Use the `_inject` array for entirely new entries. Departure fields: `status`, `statusDate`, `statusNote`. Fields prefixed `_` are stripped before merging.
+
+**⚠ This is the only thing that knows a member has left.** No roster source has the concept — legis.ga.gov records who holds a seat, not who vacated one. Skip this step and 11 Resigned + 1 Suspended members read as sitting, and `ga-majority-tracker.html` paints their seats as filled.
+
+**⚠ An `_inject` entry for a member the source now returns is MERGED, not skipped.** The source's facts win, but the editorial `status`/`statusDate`/`statusNote` are layered on top, because they exist nowhere else. This is not a detail: Open States dropped departed members, so their `Resigned` lived only inside `_inject`, while legis.ga.gov returns all 247 who served the biennium — a plain skip silently promoted all 11 back to sitting. An explicit patch entry still outranks the merge.
 
 ### `ga-member-votes.json`
 Top-level: `{ metadata: { schemaVersion: 2, generatedAt, session, sessionName, source, totalVotes, totalBillsSeen, paginationComplete }, voteIds: [<voteId>, ...], votes: { <voteId>: {...} }, memberVotes: { <ocdPersonId>: { <indexString>: <code> } } }`
