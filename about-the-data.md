@@ -10,7 +10,7 @@ VoteGA.org is a static website. We run automated workflows that pull data from t
 {: .box-note}
 **Looking to _reuse_ our data?** Our machine-readable datasets are open for anyone to use and are catalogued on the **[Open Data](https://www.votega.org/open-data)** page.
 
-**Federal legislator** (U.S. House & Senate) data comes from the Congress.gov API. The **Georgia legislator** roster (names, parties, districts, committees) comes from the Open States API, while Georgia **bills and roll-call votes** come from the Georgia General Assembly's own official web service at legis.ga.gov. 
+**Federal legislator** (U.S. House & Senate) data comes from the Congress.gov API. All **Georgia legislature** data — the roster (names, parties, districts, committees), the bills, and the roll-call votes — comes from the Georgia General Assembly's own official web service at legis.ga.gov. 
 
 Each source covers only its own level of government.
 
@@ -59,12 +59,15 @@ See **[Open Data](https://www.votega.org/open-data)** for the repository, file l
 
 ## Georgia General Assembly Legislators
 
-**Primary source:** [Open States API](https://openstates.org/) (Plural Policy)
+**Primary source:** the [Georgia General Assembly](https://www.legis.ga.gov/)'s official web service
 
-Open States is a nonpartisan, nonprofit project that collects and standardizes legislative data from all 50 U.S. states. Georgia member data including: name, party, chamber, district, committee assignments, and official legislative page is pulled from the Open States API (v3) daily.
+Member data — name, party, chamber, district, committee assignments, leadership role, contact details and official legislative page — is pulled daily from the General Assembly's own Members service. This is the legislature publishing its own roster, so there is no third party between the record and the page.
 
-- **Legislative page URLs:** Constructed from `legis.ga.gov` using the member's official Georgia legislature ID, which is reliably maintained by the Georgia General Assembly.
-- **Term start dates:** Not consistently available from Open States for Georgia. We maintain a manual override file to fill in known values.
+- **Names:** We publish the name a member is commonly known by, which is sometimes shorter than the formal name in the official record ("Tim Bearden" rather than "Timothy Bearden"). Changing a published name changes that member's page address, so we treat a rename as an editorial decision rather than applying it automatically.
+- **Who has left:** The official roster records who holds a seat, not who has left one. Resignations, suspensions and vacancies are maintained by VoteGA on top of it; the service does supply a vacancy date, which we use as a prompt to check rather than as the record itself.
+- **Term start dates and dates of birth:** Not available from the service — it gives the earliest session a member served, and a birthday without a year. We maintain a manual override file for known values, so coverage of these two fields decays slowly as the roster turns over.
+- **Committees:** Named exactly as the General Assembly names them, so they track official renamings. The one exception is the acronym MARTOC, which we expand.
+- **Open States:** No longer a source for any of this. We still carry each member's Open States OCD person ID as a cross-reference, so our data can be joined to theirs — see the ID crosswalk below.
 - **Freshness:** Fetched daily
 
 ---
@@ -315,7 +318,7 @@ Race and candidate information for the 2026 election cycle is maintained in a cu
 
 **Federal candidates** (U.S. House and Senate) are manually researched and entered. Incumbents are linked directly to their Congress.gov member record so their photo, party, and legislative history populate automatically. Challengers' bios, photos, and websites are sourced from candidates' official campaign websites and entered manually.
 
-**Incumbent enrichment:** When a candidate is the current officeholder, their profile photo and member record link are automatically pulled from our existing legislator data (Congress.gov for Federal, Open States for State). No duplicate data entry required. Judicial incumbents are identified from the SoS qualification data but do not link to a separate legislator profile.
+**Incumbent enrichment:** When a candidate is the current officeholder, their profile photo and member record link are automatically pulled from our existing legislator data (Congress.gov for Federal, legis.ga.gov for State). No duplicate data entry required. Judicial incumbents are identified from the SoS qualification data but do not link to a separate legislator profile.
 
 **Unopposed-seat count:** From this same race data we derive how many of Georgia's 236 legislative seats have no major-party opponent — a seat where at most one of the two major parties fields a candidate on the general-election ballot, so the contest is effectively decided. The figure is recomputed at build time whenever the race data changes (never hardcoded) and shown on the [Majority Tracker](https://www.votega.org/ga-majority-tracker.html). It is measured on the general-election ballot rather than primary filings, so a seat where both parties filed but only one nominee advanced is counted correctly.
 
@@ -447,7 +450,7 @@ officials correction is verified against its primary source before it merges.
 | Supreme Court justices | Manual curation | Manually maintained |
 | Supreme Court decisions & votes | Oyez.org API + CourtListener | Weekly, Sundays 10:00 UTC |
 | Federal Congress members | Congress.gov API | Daily, 06:00 UTC |
-| Georgia state legislators | Open States API | Daily, 07:00 UTC |
+| Georgia state legislators | legis.ga.gov official web service | Daily, 07:00 UTC |
 | GA legislators community repo | Published from above | Daily, after GA member update |
 | Federal legislator voting history | Congress.gov API + Clerk/Senate XML | Weekly, Sundays 09:00 UTC |
 | GA state legislator voting history | legis.ga.gov official web service | Weekly, Mondays 07:30 UTC |

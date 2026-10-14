@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""Generate a PARALLEL GA legislator roster from legis.ga.gov SOAP, for comparison.
+"""Generate the canonical GA legislator roster from legis.ga.gov SOAP.
 
-Phase 0 of Roadmap/ROSTER-SOAP-MIGRATION-SPEC.md. Writes
-`assets/data/ga-members.soap.json` and **never** the canonical `ga-members.json`, so
-nothing on the site changes. Pair it with `compare_members_soap_vs_os.py`, whose
-reconciliation table is the artifact that decides whether Phase 1 is worth doing.
+Phase 1 of Roadmap/ROSTER-SOAP-MIGRATION-SPEC.md: this is the producer behind
+`assets/data/ga-members.json`. It replaces the Open States producer
+(`generate_ga_members_data.py`, kept for rollback per spec §9) and needs no API key and
+no quota. Run `compare_members_soap_vs_os.py` against a saved Open States roster to
+re-prove equivalence before any change to the mapping.
 
-Same shape as the Open States producer (`generate_ga_members_data.py`) so the two files
-diff field by field, plus the fields only SOAP has.
+Keys are UNCHANGED in this phase: `id` is still the OCD person id, carried from the
+committed roster by `legisGaGovId`, so every join into vote data keeps working (spec §4).
+A member the roster does not know gets `legis-<legisGaGovId>`, assigned once and never
+rewritten.
 
 Cost: one `GetMembersBySession` + one `GetCommitteesBySession` + one `GetMember` per
 member (~250 calls). No auth, no quota. A single member's detail failing carries that
@@ -31,16 +34,22 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.ga_leadership import committee_index, normalize_title
+from lib.ga_roster import (apply_member_overrides, display_committee,
+                           listing_is_too_short, normalize_address)
 from lib.ga_sessions import SESSION_NAMES, all_session_ids, legis_session_id
 from lib.ga_soap import (get_committees_by_session, get_member, get_members_by_session)
 
-MEMBERS_FILE   = "assets/data/ga-members.json"
-DEFAULT_OUTPUT = "assets/data/ga-members.soap.json"
-OUTPUT_FILE    = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_OUTPUT
+MEMBERS_FILE    = "assets/data/ga-members.json"
+OVERRIDES_FILE  = "assets/data/ga-members-overrides.json"
+OUTPUT_FILE     = sys.argv[1] if len(sys.argv) > 1 else MEMBERS_FILE
 
 DELAY = 0.1           # politeness between GetMember calls; there is no quota
 #: Carrying a member forward is for a transient. Past this share it is an outage.
 MAX_CARRIED_SHARE = 0.1
+#: Floor mirroring update-ga-members.yml's own check (spec §7.2): refuse to WRITE a short
+#: roster rather than let the workflow discover it after the fact. The General Assembly is
+#: 56 + 180; anything materially under that is a bad fetch, not an election result.
+MIN_SENATE, MIN_HOUSE = 56, 180
 
 PARTY = {"Democrat": "Democratic", "Republican": "Republican"}
 CHAMBER = {"House": "House of Representatives", "Senate": "Senate"}
@@ -69,17 +78,6 @@ def format_phone(raw):
     if len(digits) == 10:
         return f"{digits[:3]}-{digits[3:6]}-{digits[6:]}"
     return raw or None
-
-
-def compose_address(detail):
-    """One line, matching the committed roster's shape: street, City, ST ZIP."""
-    street = (detail.get("address1") or "").strip()
-    city = (detail.get("city") or "").strip()
-    state = (detail.get("state") or "").strip()
-    zipc = (detail.get("zip") or "").strip()
-    tail = " ".join(p for p in (state, zipc) if p)
-    parts = [p for p in (street, city, tail) if p]
-    return ", ".join(parts) or None
 
 
 def portrait(detail):
@@ -132,7 +130,7 @@ def build_record(listing, detail, legis_session, committees, prior):
     # the site already consumes. `role` is kept separately rather than folded into the
     # string, so nothing that renders the list has to parse it back out.
     coms = [c for c in (svc.get("committees") or []) if c.get("name")]
-    committee_names = sorted({c["name"] for c in coms})
+    committee_names = sorted({n for n in (display_committee(c["name"]) for c in coms) if n})
 
     badge, badge_note = normalize_title(svc.get("title"), listing.get("chamber"), committees)
 
@@ -153,8 +151,13 @@ def build_record(listing, detail, legis_session, committees, prior):
         "title":            TITLE.get(chamber),
         "imageUrl":         portrait(detail),
         "phone":            format_phone(detail.get("phone")),
-        "address":          compose_address(detail),
-        "email":            detail.get("email") or None,
+        "address":          normalize_address(detail.get("address1"), detail.get("city"),
+                                              detail.get("state"), detail.get("zip")),
+        # Two sitting senators have no email in the Members service where the roster has
+        # one. Falling back keeps the exit criterion "additive-or-better on every member"
+        # true; the alternative is deriving the address, which would be inventing contact
+        # details for a public official.
+        "email":            detail.get("email") or carried.get("email") or None,
         "officialWebsiteUrl": (
             f"https://www.legis.ga.gov/members/{CHAMBER_SLUG[chamber]}/{legis_id}"
             if chamber in CHAMBER_SLUG else None),
@@ -173,7 +176,10 @@ def build_record(listing, detail, legis_session, committees, prior):
 
         # ---- SOAP-only, not in the committed roster ----
         "leadershipRole":   badge,
-        "committeeRoles":   [{"name": c["name"], "role": c.get("role")} for c in coms],
+        # Same display names as `committees` above — the two must agree, or a consumer
+        # joining one to the other silently loses the aliased committee.
+        "committeeRoles":   [{"name": display_committee(c["name"]), "role": c.get("role")}
+                             for c in coms],
         "termStartSession": term_session,
         "birthdayMonthDay": detail.get("birthday") or None,
         "occupation":       detail.get("occupation") or None,
@@ -206,6 +212,14 @@ def main():
     if not listings:
         print("Error: GetMembersBySession returned nothing — aborting", file=sys.stderr)
         return 1
+    # A truncated listing would NOT shrink the roster — everyone missing from it is
+    # preserved verbatim below — so the count floor downstream cannot catch it. It would
+    # quietly republish most of the roster as stale, which looks like a clean run.
+    if listing_is_too_short(len(listings), len(by_legis_id)):
+        print(f"Error: GetMembersBySession returned {len(listings)} members against "
+              f"{len(by_legis_id)} in the committed roster. Preserving that many stale "
+              f"records would look like a clean run. Refusing to write.", file=sys.stderr)
+        return 1
 
     # Anyone in the committed roster the Members service does not return is PRESERVED
     # VERBATIM, keyed on absence from the listing rather than on lacking a legisGaGovId.
@@ -218,7 +232,7 @@ def main():
           f"{', '.join(m.get('name') or '?' for m in preserved) or 'none'}\n")
 
     members, carried, unknown_ids, notes = [], [], [], []
-    vacated_unflagged, lapsed, renamed = [], [], []
+    vacated_unflagged, vacated_disagrees, lapsed, renamed = [], [], [], []
     for i, listing in enumerate(listings, 1):
         legis_id = listing["id"]
         prior = by_legis_id.get(legis_id)
@@ -243,10 +257,6 @@ def main():
         svc = current_service(detail, legis_session) or {}
         if svc.get("title") and rec["leadershipRole"] is None:
             lapsed.append(f"{rec['name']}: {svc['title']!r}")
-        # SOAP proposes, a human disposes (spec §8.4): flag a departure the overrides
-        # file has not characterised, never write a status.
-        if rec["dateVacated"] and not (prior or {}).get("status"):
-            vacated_unflagged.append(f"{rec['name']} ({legis_id}) vacated {rec['dateVacated'][:10]}")
         members.append(rec)
 
         if i % 50 == 0:
@@ -259,12 +269,82 @@ def main():
         return 1
 
     members.extend(preserved)
+
+    # ---- Guards (spec §7). Each refuses to write rather than publishing the damage. ----
+    # The key-form guards run BEFORE the editorial layer: an `_inject` entry is allowed a
+    # synthetic id (CLAUDE.md documents `ga-senate-7-vacant`), so holding the hand-
+    # maintained layer to the producer's key rule would break the documented escape hatch.
+
+    # §7.3 A member's id is assigned once and never changes: re-keying a sitting member
+    # breaks their vote join and their append-only vgId.
+    was = {m["legisGaGovId"]: m["id"] for m in existing
+           if m.get("legisGaGovId") and m.get("id")}
+    rekeyed = [f"{m['name']} ({m['legisGaGovId']}): {was[m['legisGaGovId']]} -> {m['id']}"
+               for m in members
+               if m.get("legisGaGovId") in was and m.get("id") != was[m["legisGaGovId"]]]
+    if rekeyed:
+        print(f"Error: {len(rekeyed)} member id(s) changed, which breaks the vote join "
+              f"and the vgId ledger. Refusing to write.", file=sys.stderr)
+        for r in rekeyed:
+            print(f"  {r}", file=sys.stderr)
+        return 1
+
+    # §7.4 Never invent an OCD id. A synthetic key must be the deterministic legis- form.
+    bad_keys = [m["id"] for m in members if not (
+        str(m.get("id", "")).startswith("ocd-person/")
+        or str(m.get("id", "")) == f"legis-{m.get('legisGaGovId')}")]
+    if bad_keys:
+        print(f"Error: {len(bad_keys)} member(s) have a key that is neither an OCD id nor "
+              f"legis-<legisGaGovId>: {bad_keys[:5]}. Refusing to write.", file=sys.stderr)
+        return 1
+
+    # The editorial layer: departures, suspensions, and members the service has not yet
+    # caught up with. Without this the roster has no concept of a member having left —
+    # 11 Resigned and 1 Suspended would read as sitting and the majority tracker would
+    # paint their seats as filled.
+    patched, injected = apply_member_overrides(members, OVERRIDES_FILE)
+    print(f"\n  overrides: patched {patched}, injected {injected}")
+
     members.sort(key=lambda m: (m.get("chamber") or "", m.get("name") or ""))
+
+    # SOAP proposes, a human disposes (spec §8.4): surface a departure, never write a
+    # status. Computed AFTER the overrides so these describe the file they ship in — read
+    # against the PREVIOUS file instead, a departure characterised in this very run still
+    # showed up as outstanding, and the queue lagged a day behind the data.
+    for m in members:
+        vacated, ours = (m.get("dateVacated") or "")[:10], m.get("statusDate")
+        if not vacated:
+            continue
+        if not m.get("status"):
+            vacated_unflagged.append(
+                f"{m['name']} ({m.get('legisGaGovId')}) vacated {vacated}")
+        elif ours and ours != vacated:
+            # Ours may still be the better date — an announced resignation against the
+            # day the seat was recorded empty. Surfaced for a human, never applied.
+            vacated_disagrees.append(
+                f"{m['name']}: we record {ours}, legis.ga.gov {vacated}")
+
+    # §7.2 No silent roster shrink.
+    sitting = [m for m in members if m.get("status") in (None, "Suspended")]
+    n_sen = sum(1 for m in sitting if m.get("chamber") == "Senate")
+    n_house = sum(1 for m in sitting if m.get("chamber") == "House of Representatives")
+    if n_sen < MIN_SENATE or n_house < MIN_HOUSE:
+        print(f"Error: roster is short — Senate {n_sen}/{MIN_SENATE}, House "
+              f"{n_house}/{MIN_HOUSE}. Refusing to write.", file=sys.stderr)
+        return 1
+
+    # §7.6 Party vocabulary: a leaked "Democrat" drops the member from every party tally.
+    stray = sorted({m.get("party") for m in members
+                    if m.get("party") not in (None, "Democratic", "Republican")})
+    if stray:
+        print(f"Error: unexpected party value(s) {stray} — party tallies bucket on exact "
+              f"strings. Refusing to write.", file=sys.stderr)
+        return 1
 
     output = {
         "metadata": {
             "generatedAt": datetime.now(timezone.utc).isoformat(),
-            "source": "legis.ga.gov SOAP (Members + Committees services)",
+            "source": "legis.ga.gov official web service (Members + Committees)",
             "jurisdiction": "Georgia",
             "session": tag,
             "legisSessionId": legis_session,
@@ -273,8 +353,8 @@ def main():
             "carriedForward": len(carried),
             "withoutOcdId": sum(1 for m in members if not str(m.get("id", "")).startswith("ocd-person/")),
             "preservedNotInMembersService": len(preserved),
-            "parallelTo": MEMBERS_FILE,
-            "note": "Phase 0 comparison artifact. NOT consumed by the site.",
+            "overridesApplied": patched,
+            "overridesInjected": injected,
         },
         "members": members,
         "review": {
@@ -283,6 +363,7 @@ def main():
             "lapsedLeadershipTitles": lapsed,
             "leadershipNeedsReview": notes,
             "vacatedWithoutStatusOverride": vacated_unflagged,
+            "vacatedDateDiffersFromOurs": vacated_disagrees,
             "nameDiffersFromLegis": renamed,
             "preservedNotInMembersService": [m.get("name") for m in preserved],
         },
@@ -295,10 +376,12 @@ def main():
     print(f"  leadership badges          : {sum(1 for m in members if m.get('leadershipRole'))}")
     print(f"  lapsed titles (not badged) : {len(lapsed)}")
     print(f"  departures to characterise : {len(vacated_unflagged)}")
+    print(f"  departure dates disagreeing: {len(vacated_disagrees)}")
     print(f"  display names differing from legis: {len(renamed)}")
     for label, rows in (("carried forward", carried), ("new to us", unknown_ids),
                         ("lapsed titles", lapsed), ("needs review", notes),
-                        ("vacated, no status", vacated_unflagged), ("renamed", renamed)):
+                        ("vacated, no status", vacated_unflagged),
+                        ("vacated date differs", vacated_disagrees), ("renamed", renamed)):
         for r in rows[:8]:
             print(f"    [{label}] {r}")
     return 0

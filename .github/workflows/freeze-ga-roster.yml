@@ -1,11 +1,16 @@
 name: Freeze GA session roster (manual, at sine die)
 
-# Deliberate, once-per-session action. The GA roster (ga-members.json) turns over
-# gradually via Open States AFTER the election, so it is NOT archived automatically
-# alongside votes (which flip on the manual GA_SESSION bump). Run this once the session
-# has adjourned sine die, BEFORE Open States seats the incoming members, to snapshot who
-# served in that General Assembly into Votega/ga-legislators sessions/<slug>/.
-# See RECURRING-TASKS.md §3.
+# Deliberate, once-per-session action. The GA roster (ga-members.json) is built for the
+# biennium's REGULAR session, so it turns over in one step the first time the daily run
+# sees a new biennium in lib/ga_sessions.SESSION_NAMES — it is NOT archived automatically
+# alongside votes. Run this once the session has adjourned sine die and BEFORE that
+# session bump lands, to snapshot who served in that General Assembly into
+# Votega/ga-legislators sessions/<slug>/.
+#
+# Since the roster moved to legis.ga.gov this is a deadline we control rather than a race
+# against a third party reseating members, so there is no partial-roster window — but by
+# the same token nothing warns you: once SESSION_NAMES advances, the outgoing roster is
+# one daily run from being replaced. See RECURRING-TASKS.md §3.
 
 permissions:
   contents: read
