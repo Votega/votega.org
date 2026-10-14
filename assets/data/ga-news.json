@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-14T14:11:15.575781+00:00",
+    "generatedAt": "2026-10-14T19:03:45.865242+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,15 +21,15 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 120,
+    "count": 119,
     "windowDays": 45,
-    "entityTagged": 76,
+    "entityTagged": 74,
     "topicCounts": {
-      "elections": 39,
+      "elections": 37,
       "budget": 5,
+      "healthcare": 16,
       "courts": 15,
       "education": 11,
-      "healthcare": 15,
       "surveillance": 2,
       "ethics": 5
     },
@@ -54,18 +54,18 @@
       "url": null,
       "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
-    "vg-ga-p-000335": {
-      "name": "Keisha R. Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
-    },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
+      ]
+    },
+    "vg-ga-p-000335": {
+      "name": "Keisha R. Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
       ]
     },
     "vg-ga-p-000039": {
@@ -164,6 +164,18 @@
   },
   "items": [
     {
+      "id": "416536ef9998",
+      "title": "Georgia sets midterm early voting record with over 188,000 ballots cast on first day",
+      "url": "https://www.gpb.org/news/2026/10/14/georgia-sets-midterm-early-voting-record-over-188000-ballots-cast-on-first-day",
+      "source": "GPB News",
+      "publishedAt": "2026-10-14T16:38:31+00:00",
+      "snippet": "Georgians broke the midterm election early voting record on the first of day of voting on Tuesday.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
       "id": "31f0f14c8a4c",
       "title": "Ossoff and Collins exchange fire in heated Senate campaign debate",
       "url": "https://www.gpb.org/news/2026/10/14/ossoff-and-collins-exchange-fire-in-heated-senate-campaign-debate",
@@ -220,6 +232,21 @@
       ]
     },
     {
+      "id": "da4e12737850",
+      "title": "Bottoms attacks Jackson over abortion at solo debate",
+      "url": "https://capitol-beat.org/2026/10/bottoms-attacks-jackson-over-abortion-at-solo-debate/?utm_source=rss&utm_medium=rss&utm_campaign=bottoms-attacks-jackson-over-abortion-at-solo-debate",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-10-13T23:10:34+00:00",
+      "snippet": "ATLANTA — Democrat Keisha Lance Bottoms attacked her Republican opponent, Rick Jackson, on data centers, fuel costs and abortion when he skipped what would have been their final debate Monday night. B",
+      "entityIds": [
+        "vg-ga-p-000368",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
       "id": "149182d6af63",
       "title": "Georgians around the state head to the polls on the first day of early voting",
       "url": "https://www.gpb.org/news/2026/10/13/georgians-around-the-state-head-the-polls-on-the-first-day-of-early-voting",
@@ -227,34 +254,6 @@
       "publishedAt": "2026-10-13T20:40:00+00:00",
       "snippet": "Early voting is underway in Georgia. A limited number of polls in every county opened on Tuesday morning for voters who want to cast their ballot before Nov. 3, Election Day.",
       "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "4b4a0ec062f3",
-      "title": "GPB evening headlines for October 13, 2026",
-      "url": "https://www.gpb.org/news/2026/10/13/gpb-evening-headlines-for-october-13-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-10-13T20:15:04+00:00",
-      "snippet": "Candidates competing to be Georgia’s next lieutenant governor took the stage at the Atlanta Press Club debates Monday.\nDemocratic gubernatorial candidate Keisha Lance Bottoms debated Rick Jackson's em",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "426dcdff5448",
-      "title": "Georgia Today: Data centers consumption; Candidate debates; Six Flags death",
-      "url": "https://www.gpb.org/news/2026/10/13/georgia-today-data-centers-consumption-candidate-debates-six-flags-death",
-      "source": "GPB News",
-      "publishedAt": "2026-10-13T19:54:53+00:00",
-      "snippet": "On the October 13 edition: A man dies after being thrown from a roller coaster at Six Flags over the weekend; Democratic candidate for governor Keisha Lance Bottoms says she wants to fully expand Medi",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
       "topics": [
         "elections"
       ]
@@ -845,20 +844,6 @@
       "topics": [
         "elections",
         "ethics"
-      ]
-    },
-    {
-      "id": "a7dc959922ff",
-      "title": "Georgia Republican candidates at rally target Bottoms, rarely mention Trump",
-      "url": "https://capitol-beat.org/2026/09/georgia-republican-candidates-at-rally-target-bottoms-rarely-mention-trump/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-republican-candidates-at-rally-target-bottoms-rarely-mention-trump",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-09-29T22:05:14+00:00",
-      "snippet": "ATLANTA — When Republicans running for office rallied with Gov. Brian Kemp south of Atlanta this week, they rarely mentioned President Donald Trump but repeatedly targeted Democrat Keisha Lance Bottom",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "elections"
       ]
     },
     {
