@@ -90,6 +90,9 @@ votega.org/
 │   ├── generate_legis_sessions.py       # Session/GetSessions → ga-legis-sessions.json (every
 │   │                                     # session back to 2001; legis_session_id() reads it,
 │   │                                     # so session ids are never hand-maintained or probed)
+│   ├── lib/congress_session.py          # which Congress is sitting, derived from the date
+│   │                                     # (never a literal; $CONGRESS overrides for a backfill).
+│   │                                     # All four federal generators read it
 │   ├── lib/federal_sponsorship.py       # paginated Congress.gov sponsored/cosponsored fetch
 │   │                                     # (injected fetcher, so it is testable with no API key)
 │   │                                     # + the index/slice writer

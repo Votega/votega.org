@@ -26,6 +26,7 @@ import yaml
 from datetime import datetime, timezone
 
 from lib.http import fetch_bytes, fetch_json
+from lib.congress_session import current_congress
 
 CONGRESS_API_KEY  = os.environ.get('CONGRESS_API_KEY')
 CONGRESS_API_BASE = "https://api.congress.gov/v3"
@@ -34,7 +35,8 @@ LEGISLATORS_BASE  = "https://raw.githubusercontent.com/unitedstates/congress-leg
 OUTPUT_FILE  = sys.argv[1] if len(sys.argv) > 1 else "assets/data/federal-member-votes.json"
 MEMBERS_FILE = sys.argv[2] if len(sys.argv) > 2 else "assets/data/current-members.json"
 
-CURRENT_CONGRESS = 119
+#: Derived from today's date, not pinned here - see lib/congress_session.py.
+CURRENT_CONGRESS = current_congress()
 API_DELAY = 0.5   # Congress.gov API (rate-limited)
 XML_DELAY = 0.3   # Static XML files from Clerk/Senate (no rate limit)
 

@@ -19,11 +19,13 @@ import urllib.parse
 from datetime import datetime, timezone
 
 from lib.http import fetch_json
+from lib.congress_session import current_congress
 
 CONGRESS_API_KEY  = os.environ.get('CONGRESS_API_KEY')
 CONGRESS_API_BASE = "https://api.congress.gov/v3"
 
-CURRENT_CONGRESS = 119
+#: Derived from today's date, not pinned here - see lib/congress_session.py.
+CURRENT_CONGRESS = current_congress()
 TERM_START       = "2025-01-20"   # Update when a new administration begins
 API_DELAY        = 0.5
 

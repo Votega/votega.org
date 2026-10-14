@@ -17,6 +17,7 @@ Run: python scripts/test_federal_sponsorship.py        (no network, no repo writ
 import json
 import os
 import random
+import re
 import sys
 import tempfile
 from urllib.parse import urlparse, parse_qs
@@ -25,6 +26,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from lib.federal_sponsorship import (fetch_member_legislation, most_recent,
                                      write_sponsorship_artifacts)
+from lib.federal_sponsorship import BILL_TYPE_SLUG, ROW_FIELDS
 
 CONGRESS = 119
 failures = []
@@ -159,6 +161,39 @@ with tempfile.TemporaryDirectory() as tmp:
     print("  %d bytes/row across the heaviest slice (%d rows, %.0f KB)"
           % (stats['maxSliceBytes'] / len(rows2), len(rows2),
              stats['maxSliceBytes'] / 1024))
+
+# ---------------------------------------------------------------------------
+# The slice format is split across two languages: this module writes the rows,
+# _includes/entity/federal-legislator.html reads them. Both carry their own copy
+# of the bill-type slug table and the row field order, and a comment asking the
+# next person to keep them in step is not enforcement - a silent drift here
+# renders every permalink wrong, or every row's fields shifted by one, with no
+# error anywhere. So the test reads the include and compares.
+
+INCLUDE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                       '_includes', 'entity', 'federal-legislator.html')
+
+print("Cross-language constants (python <-> the entity include):")
+with open(INCLUDE, encoding='utf-8') as fh:
+    include_src = fh.read()
+
+js_slug = re.search(r'const BILL_TYPE_SLUG = \{(.*?)\}', include_src, re.S)
+check('include still declares BILL_TYPE_SLUG', bool(js_slug), True)
+if js_slug:
+    check('bill-type slugs match lib/federal_sponsorship.py',
+          dict(re.findall(r"(\w+):\s*'([^']+)'", js_slug.group(1))),
+          BILL_TYPE_SLUG)
+
+# ROW_FIELDS is the leading run of the row; the two interned indexes follow it.
+js_positions = dict((name, int(pos)) for name, pos in
+                    re.findall(r'R_([A-Z_]+)\s*=\s*(\d+)', include_src))
+expected = {'TYPE': 0, 'NUM': 1, 'TITLE': 2, 'INTRO': 3, 'ACTION_DATE': 4,
+            'ACTION': 5, 'POLICY': 6}
+check('row positions in the include are unchanged', js_positions, expected)
+check('python writes the same number of fields',
+      len(ROW_FIELDS) + 2, len(expected))
+check('python row order still leads with type/number/title',
+      ROW_FIELDS[:3], ('type', 'number', 'title'))
 
 print("")
 if failures:

@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 
 from lib.http import fetch_bytes, fetch_json
 from lib.atomic_io import write_json_atomic
+from lib.congress_session import current_congress
 from lib.federal_sponsorship import (
     as_recent_sponsored, fetch_member_legislation, most_recent,
     write_sponsorship_artifacts,
@@ -29,7 +30,7 @@ LEGISLATORS_BASE = "https://raw.githubusercontent.com/unitedstates/congress-legi
 # The Congress that the per-member sponsorship record covers. Overridable so a
 # session rollover is a workflow env change, not a code edit (CLAUDE.md:
 # cycle-agnostic design).
-CURRENT_CONGRESS = int(os.environ.get('CONGRESS', '119'))
+CURRENT_CONGRESS = current_congress()
 
 # Pause between the paginated sponsorship page fetches. Congress.gov documents a
 # 5,000 requests/hour limit; a full run is ~542 roster/detail requests plus ~131

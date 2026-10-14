@@ -1,0 +1,66 @@
+name: Run script tests
+
+# scripts/test_*.py are offline invariant checks (fake fetchers, temp dirs, no
+# network, no repo writes). Until now only one of the seven ran in CI, and only
+# inside update-current-members.yml — so a change that broke an invariant was
+# caught by the next day's data run at the earliest, and six of the suites were
+# never run by CI at all. The cross-language slice-format check in
+# test_federal_sponsorship.py is the clearest case: it compares constants in
+# scripts/lib/federal_sponsorship.py against the copies in
+# _includes/entity/federal-legislator.html, and it is only useful if it runs on
+# the commit that moves one of them.
+#
+# Not scheduled, so notify-workflow-failure.yml does not need to watch it
+# (scripts/validate_workflow_triggers.py enforces that rule for scheduled
+# workflows only); a failure here fails the PR, which is the signal.
+
+on:
+  push:
+    paths:
+      - 'scripts/**.py'
+      - '_includes/entity/**.html'
+      - '.github/workflows/run-script-tests.yml'
+  pull_request:
+    paths:
+      - 'scripts/**.py'
+      - '_includes/entity/**.html'
+      - '.github/workflows/run-script-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run every scripts/test_*.py
+        run: |
+          # Run them all and report once, rather than stopping at the first
+          # failure: when a shared helper breaks several suites, seeing which
+          # ones is the diagnosis.
+          failed=()
+          for t in scripts/test_*.py; do
+            echo "::group::$t"
+            if python "$t"; then
+              echo "PASS $t"
+            else
+              echo "FAIL $t"
+              failed+=("$t")
+            fi
+            echo "::endgroup::"
+          done
+          if [ ${#failed[@]} -gt 0 ]; then
+            echo "Failing suites: ${failed[*]}"
+            exit 1
+          fi
+          echo "All script test suites passed."
+
+      - name: Check workflow triggers are wired
+        run: python scripts/validate_workflow_triggers.py

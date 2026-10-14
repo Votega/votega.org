@@ -26,8 +26,10 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
 from lib.http import fetch_bytes
+from lib.congress_session import current_congress
 
-CURRENT_CONGRESS = 119
+#: Derived from today's date, not pinned here - see lib/congress_session.py.
+CURRENT_CONGRESS = current_congress()
 SESSIONS         = [1, 2]   # Check both sessions; missing ones are skipped gracefully
 XML_DELAY        = 0.3      # seconds between requests
 

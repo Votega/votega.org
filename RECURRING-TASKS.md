@@ -24,6 +24,7 @@ before editing any JSON by hand; a hand edit will be overwritten on the next run
 | On push / PR (validators) | `validate-ga-overrides` (on `ga-members-overrides.json`); `validate-local-officials` (on `_data/local_officials.yml` **or** `_data/places.yml` &mdash; it cross-checks the slug join). (`sync-generated-data-on-pr` runs on every pull request.) |
 | On push to `main` | The five `publish-*` syncs each fire when the `assets/data/*.json` they mirror changes (and are also `workflow_dispatch`-able). `publish-races-to-ga-races-elections` additionally runs on the daily schedule above. |
 | Manual dispatch only | the `inspect-*` diagnostics. |
+| Never (derived) | **The Congress number.** `scripts/lib/congress_session.py` derives which Congress is sitting from today's date, and `generate_current_members_data`, `generate_federal_votes_data`, `generate_presidential_laws` and `generate_vp_tie_votes` all read it &mdash; so there is nothing to bump when the 120th convenes on 3 January 2027. Set `CONGRESS` in a workflow's env only to backfill an older one; do not re-pin the current number in source. |
 | Daily deploy | `deploy-pages` (13:00) &mdash; **also** on every push to `main`. It is not manual-only, and the schedule is load-bearing: see the note below. |
 
 > **A `publish-*` sync cannot see a bot's commit.** GitHub does not fire a `push`
