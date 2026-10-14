@@ -176,7 +176,10 @@ def build_record(listing, detail, legis_session, committees, prior):
 
         # ---- SOAP-only, not in the committed roster ----
         "leadershipRole":   badge,
-        "committeeRoles":   [{"name": c["name"], "role": c.get("role")} for c in coms],
+        # Same display names as `committees` above — the two must agree, or a consumer
+        # joining one to the other silently loses the aliased committee.
+        "committeeRoles":   [{"name": display_committee(c["name"]), "role": c.get("role")}
+                             for c in coms],
         "termStartSession": term_session,
         "birthdayMonthDay": detail.get("birthday") or None,
         "occupation":       detail.get("occupation") or None,
