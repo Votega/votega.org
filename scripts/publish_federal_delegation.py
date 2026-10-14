@@ -223,8 +223,21 @@ def members_schema():
                                        "description": "Full committee names (unitedstates/congress-legislators); Georgia-only enrichment."},
                         "sponsoredLegislation": {"type": "object"},
                         "cosponsoredLegislation": {"type": "object"},
+                        "sponsorship": {
+                            "type": ["object", "null"],
+                            "description": "Complete current-Congress sponsorship counts, from a full "
+                                           "paginated walk of both Congress.gov endpoints; null if that "
+                                           "refresh could not fetch the member's record. Georgia-only.",
+                            "properties": {
+                                "congress": {"type": "integer"},
+                                "sponsored": {"type": "integer"},
+                                "cosponsored": {"type": "integer"},
+                            },
+                        },
                         "recentSponsored": {"type": "array",
-                                            "description": "Up to 20 most recent bills sponsored this Congress; Georgia-only enrichment."},
+                                            "description": "The 20 most recently introduced bills sponsored "
+                                                           "this Congress, drawn from the complete list; "
+                                                           "Georgia-only enrichment."},
                         "url": {"type": "string", "description": "Congress.gov API URL for the member."},
                         "updateDate": {"type": ["string", "null"],
                                        "description": "Congress.gov's own last-update timestamp for the member record."},

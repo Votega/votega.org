@@ -58,6 +58,9 @@ votega.org/
 │   │   ├── scotus-decisions.json / supreme-court.json / presidential-laws.json / vp-tie-votes.json
 │   │   ├── ga-congress-trades.json      # Stock trade disclosures for GA federal delegation
 │   │   ├── election-status.json         # Certified/unofficial/upcoming per election (Jekyll-rendered from the results pages' front matter; the live overlay race.html applies to race-results-index.json)
+│   │   ├── federal-sponsorship-index.json / federal-sponsorship/<bioguideId>.json
+│   │   │                                # GA federal delegation's complete sponsored +
+│   │   │                                # cosponsored record for the current Congress
 │   │   ├── searchcorpus.json            # Site search index (Jekyll-rendered: posts + static pages)
 │   │   └── search-entities.json         # Site search index (entities: members, races, candidates, etc. — built by generate_search_corpus.py)
 │   ├── scripts/                         # Client-side JS (loaded by HTML pages) + a few standalone Python utilities
@@ -71,6 +74,9 @@ votega.org/
 │
 ├── scripts/                             # Build-time data generation (run by GitHub Actions), ~43 tracked
 │   ├── generate_current_members_data.py # Congress.gov API → assets/data/current-members.json
+│   │                                     # + federal-sponsorship-index.json & federal-sponsorship/
+│   │                                     # (GA delegation's complete sponsored + cosponsored
+│   │                                     # record, via lib/federal_sponsorship.py)
 │   ├── generate_ga_members_soap.py      # legis.ga.gov SOAP → ga-members.json (canonical since
 │   │                                     # 2026-10; no API key, no quota). generate_ga_members_data.py
 │   │                                     # is the retired Open States producer, kept for rollback
@@ -84,6 +90,9 @@ votega.org/
 │   ├── generate_legis_sessions.py       # Session/GetSessions → ga-legis-sessions.json (every
 │   │                                     # session back to 2001; legis_session_id() reads it,
 │   │                                     # so session ids are never hand-maintained or probed)
+│   ├── lib/federal_sponsorship.py       # paginated Congress.gov sponsored/cosponsored fetch
+│   │                                     # (injected fetcher, so it is testable with no API key)
+│   │                                     # + the index/slice writer
 │   ├── lib/ga_roster.py                 # roster field shaping + the editorial overrides layer
 │   │                                     # (apply_member_overrides — departures/vacancies)
 │   ├── lib/ga_soap.py                   # shared legis.ga.gov SOAP client (no auth, no quota):
@@ -132,7 +141,23 @@ votega.org/
 Top-level: `{ metadata: { generatedAt, source, count, apiVersion }, members: [...] }`
 Each member: `bioguideId`, `name`, `partyName`, `state`, `district`, `terms.item[]` (chamber via the last item: `item[-1].chamber` — terms run oldest → newest, so `item[0]` is a House-to-Senate member's first chamber), `depiction.imageUrl`, `leadership[]`, `committees[]`, `contactInfo`, `officialWebsiteUrl`, `birthYear`, `firstName`, `lastName`.
 Enriched from `unitedstates/congress-legislators` (public-domain crosswalk, merged in `generate_current_members_data.py`; absent when that member isn't in the crosswalk yet, e.g. a just-seated member): `birthday` (full ISO date), `gender`, `externalLinks[]` (`{label, url}` for Wikipedia/Ballotpedia/OpenSecrets/GovTrack), `socialLinks[]` (`{label, url}` for X/Facebook/Instagram/YouTube). The same repo also backs the deterministic FEC-ID crosswalk in `generate_fec_data.py`.
-For GA delegation only: `recentSponsored[]`.
+For GA delegation only: `recentSponsored[]` (the 20 most recently introduced bills this member sponsored this Congress — a convenience slice, republished to the sibling repo) and `sponsorship` (`{congress, sponsored, cosponsored}`, or `null` if that run's fetch failed).
+
+**⚠ The COMPLETE sponsorship record is not in this file.** It lives in `federal-sponsorship-index.json` + `federal-sponsorship/<bioguideId>.json` (below). current-members.json is fetched by `federal-reps.html`, `find-my-reps.html`, `my-representatives.html` and every `/us-congress/<slug>/` page, so the delegation's ~27k sponsorship rows inline there would be paid for by every visitor to read one member's panel. `sponsorship` is the two integers the entity page needs *before* any slice fetch, to decide whether the Sponsored Legislation tab appears at all.
+
+### `federal-sponsorship-index.json` + `federal-sponsorship/<bioguideId>.json`
+Written by `scripts/lib/federal_sponsorship.py`, called from `generate_current_members_data.py` in the same run as the roster (so the roster's inline counts and the slices can never disagree on the deployed site). Scope is the **16-member Georgia delegation**, the only scope the site renders.
+
+Index: `{ metadata: { generatedAt, source, congress, scope, memberCount, totalSponsored, totalCosponsored }, members: { <bioguideId>: [nPrimary, nCosponsored] } }`.
+Slice: `{ bioguideId, congress, actions[], policyAreas[], primary[], cosponsored[] }`, where each row is positional — `[type, number, title, introducedDate, actionDate, actionIdx, policyIdx]`, the last two indexing the slice's own intern tables. `billUrl` is omitted and rebuilt client-side from congress+type+number. Mirrors `build_sponsorship_slices.py`; `_includes/entity/federal-legislator.html` carries the matching `R_*` constants and `BILL_TYPE_SLUG` — keep the two in step.
+
+**⚠ Never read these endpoints as a single page.** `/member/{bioguide}/sponsored-legislation` has no `congress=` filter and is **not** ordered newest-Congress-first, so the old `?limit=20`-then-filter call both truncated the record and sampled it arbitrarily: off the same 20-row page, Sen. Warnock surfaced 3 bills and Sen. Ossoff 14. `fetch_member_legislation()` walks every page (limit=250, `pagination.next` with an offset fallback) and filters afterwards.
+
+**⚠ A failed page discards the whole member's list.** `fetch_member_legislation()` returns `None` rather than a short list, the member is then left out of the slice writer, and their inline `sponsorship` is `null` — because once written, a truncated list is indistinguishable from a real one and would publish as fact that a member sponsored less than they did. The entity page reads a `null` summary as "no tab", never as "sponsored nothing".
+
+**⚠ A missing slice means different things depending on the inline counts.** Counts present and zero = the genuine empty record; counts absent = a roster written before the slices existed (the window between a deploy and the next daily run), which is NOT "sponsored nothing"; counts non-zero = a real failure. The panel says which.
+
+Request cost of a full delegation refresh: ~131 pages (18 sponsored + 113 cosponsored, set by the delegation's career totals — these endpoints page the whole career), against Congress.gov's documented 5,000 requests/hour. `scripts/test_federal_sponsorship.py` pins the pagination and slice invariants with a fake API and no network.
 
 ### `ga-members.json`
 Produced by `generate_ga_members_soap.py` from legis.ga.gov's **Members** service (canonical since 2026-10; no API key, no quota).

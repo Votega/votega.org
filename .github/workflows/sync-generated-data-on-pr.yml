@@ -25,15 +25,32 @@ jobs:
       - name: Sync generated data files from base branch
         run: |
           git fetch origin ${{ github.base_ref }}
-          git checkout origin/${{ github.base_ref }} -- \
+          # Per path, and tolerant of one that does not exist on the base branch
+          # yet: these are gitignored, bot-committed artifacts, so a newly added
+          # one is absent on base for exactly one workflow cycle, and a bare
+          # multi-path `git checkout` would fail the whole step (and so every PR)
+          # for that window.
+          for path in \
             assets/data/current-members.json \
-            assets/data/ga-members.json
+            assets/data/ga-members.json \
+            assets/data/federal-sponsorship-index.json \
+            assets/data/federal-sponsorship
+          do
+            if git cat-file -e "origin/${{ github.base_ref }}:$path" 2>/dev/null; then
+              git checkout "origin/${{ github.base_ref }}" -- "$path"
+              # Staged here rather than in one `git add` below: these paths are
+              # gitignored, so each needs -A/-f, and a pathspec that does not exist
+              # yet would fail the whole add and stage nothing at all.
+              git add -A -f -- "$path"
+            else
+              echo "Skipping $path — not on ${{ github.base_ref }} yet"
+            fi
+          done
 
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/data/current-members.json assets/data/ga-members.json
           if git diff --cached --quiet; then
             echo "Generated data already in sync — no commit needed"
           else

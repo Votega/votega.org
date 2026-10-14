@@ -28,6 +28,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests pyyaml
 
+      - name: Check sponsorship fetch/slice invariants (no network)
+        run: python scripts/test_federal_sponsorship.py
+
       - name: Generate current member data (includes leadership positions)
         run: |
           echo "Running script..."
@@ -64,16 +67,81 @@ jobs:
           print('All integrity checks passed')
           "
 
+      - name: Validate sponsorship index and slices
+        run: |
+          python - <<'PY'
+          import json, os, sys
+
+          DATA = 'assets/data'
+          idx_path = os.path.join(DATA, 'federal-sponsorship-index.json')
+          assert os.path.exists(idx_path), 'federal-sponsorship-index.json was not generated'
+          idx = json.load(open(idx_path, encoding='utf-8'))
+          meta, counts = idx['metadata'], idx['members']
+
+          # Georgia seats: 14 House + 2 Senate. A vacancy can legitimately take this
+          # below 16, but not far - a smaller number means the delegation filter or
+          # the fetch broke, not that Georgia lost half its seats.
+          assert meta['congress'], 'index carries no congress'
+          assert meta['generatedAt'], 'index carries no generatedAt (the panel stamps from it)'
+          assert len(counts) >= 14, f"only {len(counts)} delegation members have slices"
+          assert len(counts) == meta['memberCount'], \
+              f"memberCount {meta['memberCount']} != {len(counts)} count entries"
+
+          roster = json.load(open(os.path.join(DATA, 'current-members.json'), encoding='utf-8'))
+          ga = [m for m in roster['members'] if m.get('state') == 'Georgia']
+          assert ga, 'no Georgia members in the roster'
+
+          # Every Georgia member must carry the inline summary the entity page reads
+          # to decide whether the tab appears, and it must agree with the slice.
+          total_s = total_c = 0
+          for m in ga:
+              bid, name = m['bioguideId'], m.get('name', '?')
+              s = m.get('sponsorship')
+              assert s is not None, f"{name}: no sponsorship summary (that run's fetch failed)"
+              assert s['congress'] == meta['congress'], f"{name}: summary congress mismatch"
+              assert bid in counts, f"{name}: in the roster but has no sponsorship slice"
+              assert counts[bid] == [s['sponsored'], s['cosponsored']], \
+                  f"{name}: index {counts[bid]} != inline summary {s}"
+              slice_path = os.path.join(DATA, 'federal-sponsorship', bid + '.json')
+              assert os.path.exists(slice_path), f"{name}: slice file missing"
+              sl = json.load(open(slice_path, encoding='utf-8'))
+              assert len(sl['primary']) == s['sponsored'], f"{name}: primary row count mismatch"
+              assert len(sl['cosponsored']) == s['cosponsored'], f"{name}: cosponsor row count mismatch"
+              for row in (sl['primary'] + sl['cosponsored'])[:50]:
+                  assert len(row) == 7, f"{name}: slice row is not 7 fields: {row}"
+                  assert row[0] and row[1] and row[2], f"{name}: row missing type/number/title: {row}"
+              # recentSponsored is republished to the sibling repo; it must stay a
+              # subset of the primary list, capped at 20.
+              recent = m.get('recentSponsored') or []
+              assert len(recent) <= 20, f"{name}: recentSponsored is {len(recent)} rows, expected <= 20"
+              assert len(recent) == min(20, s['sponsored']), \
+                  f"{name}: recentSponsored {len(recent)} != min(20, {s['sponsored']})"
+              total_s += s['sponsored']
+              total_c += s['cosponsored']
+
+          assert total_s == meta['totalSponsored'], 'index totalSponsored disagrees with the members'
+          assert total_c == meta['totalCosponsored'], 'index totalCosponsored disagrees with the members'
+          # The delegation sponsors hundreds of measures and cosponsors thousands per
+          # Congress. A near-empty result parses fine and would wipe the panel, which
+          # is exactly the failure a record floor exists to stop.
+          assert total_s >= 100, f'only {total_s} sponsored records across the delegation'
+          assert total_c >= 500, f'only {total_c} cosponsored records across the delegation'
+          print(f'Validated: {len(counts)} delegation slices, {total_s} sponsored + '
+                f'{total_c} cosponsored records in the {meta["congress"]}th Congress')
+          PY
+
       - name: Commit and push generated data
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f assets/data/current-members.json
+          git add -f assets/data/current-members.json \
+                     assets/data/federal-sponsorship-index.json \
+                     assets/data/federal-sponsorship
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update current Congress member data (includes leadership positions)"
+            git commit -m "Update current Congress member data (members, leadership, GA delegation sponsorship)"
             pushed=0
             for attempt in 1 2 3; do
               if git pull --rebase origin main && git push; then pushed=1; break; fi

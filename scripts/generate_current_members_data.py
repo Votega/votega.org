@@ -15,12 +15,32 @@ from datetime import datetime, timezone
 
 from lib.http import fetch_bytes, fetch_json
 from lib.atomic_io import write_json_atomic
+from lib.federal_sponsorship import (
+    as_recent_sponsored, fetch_member_legislation, most_recent,
+    write_sponsorship_artifacts,
+)
 
 # Configuration
 API_KEY = os.environ.get('CONGRESS_API_KEY')
 BASE_URL = "https://api.congress.gov/v3"
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/current-members.json"
 LEGISLATORS_BASE = "https://raw.githubusercontent.com/unitedstates/congress-legislators/main"
+
+# The Congress that the per-member sponsorship record covers. Overridable so a
+# session rollover is a workflow env change, not a code edit (CLAUDE.md:
+# cycle-agnostic design).
+CURRENT_CONGRESS = int(os.environ.get('CONGRESS', '119'))
+
+# Pause between the paginated sponsorship page fetches. Congress.gov documents a
+# 5,000 requests/hour limit; a full run is ~542 roster/detail requests plus ~131
+# sponsorship pages for the 16-member Georgia delegation, so ~13% of the hourly
+# budget. The delay is politeness, not a necessity — at 0.2s it adds ~26s.
+API_DELAY = float(os.environ.get('CONGRESS_API_DELAY', '0.2'))
+
+# Collected during enrichment, written as index + per-member slices after the
+# roster file. {bioguideId: {name, primary[], cosponsored[]}} — a member whose
+# fetch failed is deliberately absent rather than present-and-empty.
+SPONSORSHIP = {}
 
 def fetch_url(url, retries=3, backoff=5):
     """Fetch data from Congress.gov API with error handling.
@@ -91,50 +111,47 @@ def fetch_yaml(url):
         print(f"Error parsing YAML {url}: {e}")
         return None
 
-BILL_TYPE_SLUG = {
-    'HR':      'house-bill',
-    'S':       'senate-bill',
-    'HRES':    'house-resolution',
-    'SRES':    'senate-resolution',
-    'HJRES':   'house-joint-resolution',
-    'SJRES':   'senate-joint-resolution',
-    'HCONRES': 'house-concurrent-resolution',
-    'SCONRES': 'senate-concurrent-resolution',
-}
+def get_sponsorship(bioguideId, name):
+    """Fetch this member's COMPLETE sponsored + cosponsored record for the current
+    Congress. Returns (recentSponsored[], summary) and stashes the full lists in
+    SPONSORSHIP for the slice writer.
 
-def get_sponsored_legislation(bioguideId, current_congress=119, limit=20):
-    """Fetch first page of sponsored legislation for a member, filtered to current Congress."""
-    url = f"{BASE_URL}/member/{bioguideId}/sponsored-legislation?limit={limit}&format=json"
-    data = fetch_url(url)
-    if not data:
-        return []
+    Replaces a single ``?limit=20`` page that was filtered to the current Congress
+    *after* the fact — see lib/federal_sponsorship.py for why that both truncated
+    and non-deterministically sampled the record. Pagination, the 429/5xx-only
+    retry policy and the "a failed page discards the whole list" rule all live in
+    that module and lib.http; this is just the per-member call site.
+    """
+    lists = {}
+    for kind in ('sponsored', 'cosponsored'):
+        rows = fetch_member_legislation(fetch_url, bioguideId, kind,
+                                        CURRENT_CONGRESS, base_url=BASE_URL,
+                                        delay=API_DELAY)
+        if rows is None:
+            print(f"  Warning: {name} ({bioguideId}) {kind} legislation unavailable "
+                  f"— no sponsorship slice will be written for this member")
+            return [], None
+        lists[kind] = rows
 
-    bills = data.get('sponsoredLegislation', [])
-    if not isinstance(bills, list):
-        bills = []
+    SPONSORSHIP[bioguideId] = {
+        'name':        name,
+        'primary':     lists['sponsored'],
+        'cosponsored': lists['cosponsored'],
+    }
+    # Kept inline on the member: the counts (so the entity page can hide the tab
+    # without fetching anything) and the 20 most recent sponsored bills, which the
+    # sibling ga-federal-legislators dataset documents and republishes. The full
+    # record goes to the slices, not into a file every visitor fetches.
+    summary = {
+        'congress':    CURRENT_CONGRESS,
+        'sponsored':   len(lists['sponsored']),
+        'cosponsored': len(lists['cosponsored']),
+    }
+    print(f"  {name}: {summary['sponsored']} sponsored, "
+          f"{summary['cosponsored']} cosponsored in the {CURRENT_CONGRESS}th")
+    recent = [as_recent_sponsored(b) for b in most_recent(lists['sponsored'], 20)]
+    return recent, summary
 
-    result = []
-    for bill in bills:
-        if bill.get('congress') != current_congress:
-            continue
-        bill_type = bill.get('type') or ''
-        bill_num  = bill.get('number') or ''
-        title     = bill.get('title') or ''
-        if not bill_type or not bill_num or not title:
-            continue
-        slug = BILL_TYPE_SLUG.get(bill_type, bill_type.lower())
-        bill_url = f"https://www.congress.gov/bill/{current_congress}th-congress/{slug}/{bill_num}"
-        result.append({
-            'type':           bill_type,
-            'number':         bill_num,
-            'title':          title,
-            'introducedDate': bill.get('introducedDate', ''),
-            'latestAction':   bill.get('latestAction') or {},
-            'policyArea':     (bill.get('policyArea') or {}).get('name') or None,
-            'billUrl':        bill_url,
-        })
-
-    return result
 
 def get_committee_memberships():
     """Fetch committee memberships from unitedstates/congress-legislators.
@@ -281,9 +298,13 @@ def enrich_member_data(bioguideId, basic_member):
     basic_member['cosponsoredLegislation'] = member_details.get('cosponsoredLegislation', {})
     basic_member['dataUpdatedAt'] = datetime.now(timezone.utc).isoformat()
 
-    # Fetch recent sponsored bills only for GA delegation (avoids 500+ extra API calls)
+    # Sponsorship is fetched only for the Georgia delegation (16 members): doing it
+    # nationally would be ~500 extra members' worth of paginated career lists, and
+    # the delegation is the only scope the site renders. See CLAUDE.md.
     if basic_member.get('state') == 'Georgia':
-        basic_member['recentSponsored'] = get_sponsored_legislation(bioguideId)
+        recent, summary = get_sponsorship(bioguideId, basic_member.get('name', bioguideId))
+        basic_member['recentSponsored'] = recent
+        basic_member['sponsorship'] = summary
 
     return basic_member, True
 
@@ -419,9 +440,10 @@ def main():
     print(f"Members enriched with profile data: {profile_matched}/{len(enriched_members)}")
 
     # Create output structure
+    generated_at = datetime.now(timezone.utc).isoformat()
     output_data = {
         'metadata': {
-            'generatedAt': datetime.now(timezone.utc).isoformat(),
+            'generatedAt': generated_at,
             'source': 'Congress.gov API',
             'count': len(enriched_members),
             'apiVersion': 'v3',
@@ -446,6 +468,36 @@ def main():
         print(f"Error writing file: {e}")
         sys.exit(1)
     
+    # Sponsorship index + per-member slices. Written AFTER the roster file so a
+    # failure here cannot cost us the roster refresh, and only for members still in
+    # the published list — a member dropped as departed above must not keep a slice
+    # that the (now absent) entity page would never retire.
+    #
+    # Deliberately not gated on "did anything change": the slice writer clears the
+    # directory and rewrites, and the rows are sorted deterministically, so a quiet
+    # day produces byte-identical files and an empty commit.
+    sitting = {m.get('bioguideId') for m in enriched_members}
+    publishable = {bid: rec for bid, rec in SPONSORSHIP.items() if bid in sitting}
+    dropped = sorted(set(SPONSORSHIP) - sitting)
+    if dropped:
+        print(f"Skipping sponsorship slices for {len(dropped)} member(s) no longer "
+              f"in the roster: {dropped}")
+    if publishable:
+        try:
+            write_sponsorship_artifacts(os.path.dirname(OUTPUT_FILE) or '.',
+                                        CURRENT_CONGRESS, publishable,
+                                        generated_at=generated_at)
+        except Exception as e:
+            print(f"Error writing sponsorship artifacts: {e}")
+            sys.exit(1)
+    else:
+        # Every delegation fetch failed. The previous artifacts are still on disk
+        # (atomic writes, and nothing was cleared), so the page keeps serving the
+        # last good record; failing loudly is what stops that going unnoticed.
+        print("Error: no sponsorship records fetched for the Georgia delegation "
+              "— leaving the previous index/slices in place. Not committing.")
+        sys.exit(1)
+
     # Print summary
     leadership_count = sum(1 for m in enriched_members if m.get('leadership'))
     print(f"Members with leadership positions: {leadership_count}")

@@ -24,6 +24,11 @@ scripts/debug_legiscan_rollcall.py
 
 assets/data/legiscan-csv/
 assets/data/current-members.json
+# Bot-generated like current-members.json above: committed by
+# update-current-members.yml with git add -f, ignored locally so a keyed local
+# run cannot stage a half-refreshed delegation record.
+assets/data/federal-sponsorship-index.json
+assets/data/federal-sponsorship/
 assets/data/ga-members.json
 .claude/
 TO-DO.md

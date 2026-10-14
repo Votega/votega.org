@@ -220,6 +220,37 @@
     color: #374151;
     margin-left: 0.4rem;
   }
+
+  /* Sponsored-legislation groups (primary vs. cosponsored). Deliberately the same
+     rules as the GA legislator panel, so the two profiles read alike; the rows
+     themselves reuse .bill-list / .bill-item above. */
+  .spon-group { margin-bottom: 1.5rem; }
+  .spon-group:last-child { margin-bottom: 0; }
+  .spon-group-head { font-size: 1rem; margin: 0 0 0.15rem 0; }
+  .spon-group-head span {
+    font-weight: normal;
+    font-size: 0.78rem;
+    color: #666;
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 0.05rem 0.4rem;
+    margin-left: 0.3rem;
+  }
+  .spon-group-note { font-size: 0.78rem; color: #666; margin: 0 0 0.6rem 0; line-height: 1.45; }
+  /* The clamp past SPON_INITIAL rows: every row is in the DOM, the extras hidden,
+     so "Show all" is one class removal rather than a re-render. */
+  .spon-hidden { display: none; }
+  .spon-more {
+    margin-top: 0.6rem;
+    font-size: 0.8rem;
+    color: #1d4ed8;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+  }
+  .spon-more:hover { background: #eef2f7; }
   /* Voting-history table styles: assets/css/votes-table.css (shared with the
      GA legislator page). */
 
@@ -403,10 +434,16 @@
       if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
       displayMemberDetails(member, electionInfo, seatRace);
       displaySidebar(member, allMembers);
+      // Sponsored Legislation is NOT loaded eagerly: its slice is the one artifact
+      // on this page that can run to six figures of bytes for a heavy cosponsor
+      // list, and a visitor who never leaves Key Votes should not pay for it.
+      // activateTab loads it on first open — which includes the call initTabs()
+      // makes for a #sponsoredLegislation deep link, so currentMember has to be set
+      // BEFORE initTabs(): set after, the deep-linked panel never loads at all.
+      currentMember = member;
       initTabs();
       loadCampaignFinance(member);
       loadKeyVotes(member);
-      loadSponsoredLegislation(member);
       loadVotingHistory(member);
       loadEntityNews(member);
       if (window.location.hash) {
@@ -656,6 +693,10 @@
 
   const DEFAULT_TAB = 'keyVotes';
 
+  // Set once the roster resolves, so the lazy tab loaders below have the member
+  // without re-reading current-members.json.
+  let currentMember = null;
+
   // Syncs the active tab to location.hash (pushHistory on a real user click,
   // not on hash-driven restores) so browser Back steps through tab switches
   // instead of always landing back on the default tab.
@@ -667,6 +708,8 @@
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     panel.classList.add('active');
+    // Lazy panels. Each loader is idempotent and no-ops once it has run.
+    if (tabId === 'sponsoredLegislation') loadSponsoredLegislation(currentMember);
     if (pushHistory && window.location.hash.slice(1) !== tabId) {
       history.pushState(null, '', '#' + tabId);
     }
@@ -910,67 +953,242 @@
       ${cards}`;
   }
 
+  // -- Sponsored legislation --------------------------------------------------
+  // Joined at BUILD time (scripts/lib/federal_sponsorship.py, called from
+  // generate_current_members_data.py) by walking
+  // /member/{bioguide}/sponsored-legislation and .../cosponsored-legislation to
+  // their last page and filtering to the current Congress.
+  //
+  // This panel used to render member.recentSponsored - ONE unpaginated limit=20
+  // page, filtered to the current Congress only after the fact, so a prolific
+  // member's record was both cut off and arbitrarily sampled (Sen. Warnock showed
+  // 3 bills off the same 20-row page that gave Sen. Ossoff 14). Cosponsorship,
+  // which federally is the main alignment signal, was not fetched at all.
+  //
+  // The complete record does not live in current-members.json: that file is
+  // fetched by federal-reps, find-my-reps, my-representatives AND every
+  // /us-congress/<slug>/ page, so the delegation's ~27k sponsorship rows there
+  // would be paid for by every visitor to read one member's panel. Same two
+  // artifacts the GA panel uses instead: a small shared index and this member's
+  // own slice, fetched only when the tab is opened.
+  const SPON_INDEX_URL = getBasePath() + 'assets/data/federal-sponsorship-index.json';
+  const sponSliceUrl   = bioguide =>
+    `${getBasePath()}assets/data/federal-sponsorship/${encodeURIComponent(bioguide)}.json`;
+
+  // Bill type -> congress.gov URL slug. Mirrors BILL_TYPE_SLUG in
+  // scripts/lib/federal_sponsorship.py; the slice stores congress + type + number
+  // and the permalink is rebuilt here, rather than repeating the prefix on every
+  // one of thousands of rows.
+  const BILL_TYPE_SLUG = {
+    HR: 'house-bill', S: 'senate-bill',
+    HRES: 'house-resolution', SRES: 'senate-resolution',
+    HJRES: 'house-joint-resolution', SJRES: 'senate-joint-resolution',
+    HCONRES: 'house-concurrent-resolution', SCONRES: 'senate-concurrent-resolution',
+  };
+
+  // Positions in a slice row. Rows are positional arrays rather than objects
+  // because the field names would otherwise repeat on every one of the thousands
+  // of records a heavy cosponsor list carries; `actions` and `policyAreas` are the
+  // slice's own intern tables for the long, recurring latest-action and
+  // policy-area strings. Keep in step with compact_row() in the build library.
+  const R_TYPE = 0, R_NUM = 1, R_TITLE = 2, R_INTRO = 3, R_ACTION_DATE = 4,
+        R_ACTION = 5, R_POLICY = 6;
+
+  // Rows shown per list before "Show all". Federal cosponsorship runs to the
+  // hundreds per member, so an uncapped render would push everything below it out
+  // of reach. Matches SPON_INITIAL on the GA legislator panel.
+  const SPON_INITIAL = 10;
+
+  // The index is tiny and wanted in two places - here, and at render time to decide
+  // whether the tab appears at all - so fetch it at most once per page.
+  let sponIndexPromise = null;
+  function loadSponsorshipIndex() {
+    if (!sponIndexPromise) {
+      sponIndexPromise = fetch(SPON_INDEX_URL)
+        .then(res => res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`)))
+        .catch(err => { console.warn('Could not load sponsorship index:', err); return null; });
+    }
+    return sponIndexPromise;
+  }
+
+  // Whether to render the Sponsored Legislation tab at all. Answered from the
+  // member's own inline `sponsorship` counts, which is why those two integers stay
+  // in current-members.json: the tab bar is built before anything is fetched, and
+  // sponsorship is Georgia-only enrichment, so a member of another state has no
+  // record to show. Fails OPEN - a roster predating this field shows the tab and
+  // lets the panel speak for itself.
+  function hasSponsorship(member) {
+    if (!member || member.state !== 'Georgia') return false;
+    const s = member.sponsorship;
+    if (s === undefined) return true;   // roster written before this field existed
+    if (!s) return false;               // null = that run's fetch failed for them
+    return (s.sponsored || 0) + (s.cosponsored || 0) > 0;
+  }
+
+  // Even a heavy slice is only fetched when someone opens this tab, and only once.
+  let sponsoredLoaded = false;
+
   async function loadSponsoredLegislation(member) {
     const container = document.getElementById('sponsoredLegislation');
-    if (!container) return;
+    if (!container || !member || !member.bioguideId || sponsoredLoaded) return;
+    if (!hasSponsorship(member)) return;
+    sponsoredLoaded = true;
+    container.innerHTML = '<p style="font-size:0.875rem;color:#666;">Loading sponsored legislation&hellip;</p>';
 
-    const bills = member.recentSponsored;
-    if (!bills || bills.length === 0) {
-      const btn = document.querySelector('[data-tab="sponsoredLegislation"]');
-      if (btn) btn.style.display = 'none';
+    // Counts the roster already told us. Used below to tell "this member sponsored
+    // nothing" apart from "the slice did not arrive" - a distinction the GA panel
+    // cannot draw, because there a missing slice IS the empty answer.
+    const expected = (member.sponsorship?.sponsored || 0)
+                   + (member.sponsorship?.cosponsored || 0);
+
+    let index, slice, lawIdx;
+    try {
+      const [idx, sliceRes, laws] = await Promise.all([
+        loadSponsorshipIndex(), fetch(sponSliceUrl(member.bioguideId)), getEnactedLaws(),
+      ]);
+      if (sliceRes.ok) {
+        slice = await sliceRes.json();
+      } else if (sliceRes.status === 404 || sliceRes.status === 410) {
+        // The writer emits a slice for every member whose fetch succeeded, so what
+        // a missing one means depends on what the roster says to expect:
+        //   counts present and zero  -> the genuine empty record
+        //   counts absent            -> a roster written before the slices existed
+        //                               (the window between a deploy and the next
+        //                               daily run), which is NOT "sponsored nothing"
+        //   counts non-zero          -> something is wrong; fall through to error
+        if (member.sponsorship && expected === 0) {
+          slice = { actions: [], policyAreas: [], primary: [], cosponsored: [] };
+        } else if (member.sponsorship === undefined) {
+          sponsoredLoaded = false;
+          container.innerHTML = `<h2>Sponsored Legislation</h2>
+            <p style="color:#666;font-size:0.875rem;">This member&rsquo;s full sponsorship record is still being built and will appear after the next daily data refresh.</p>`;
+          return;
+        } else {
+          throw new Error(`HTTP ${sliceRes.status}`);
+        }
+      } else {
+        throw new Error(`HTTP ${sliceRes.status}`);
+      }
+      index = idx;
+      lawIdx = laws;
+    } catch (err) {
+      console.warn('Could not load sponsored legislation:', err);
+      // A failed fetch and an empty sponsorship record are different claims, and
+      // only one of them is about the member. Say which this is, and let a later
+      // tab visit retry rather than leaving the panel stuck on a transient error.
+      sponsoredLoaded = false;
+      container.innerHTML = `<h2>Sponsored Legislation</h2>
+        <p style="color:#666;font-size:0.875rem;">We couldn&rsquo;t load this member&rsquo;s bill record just now &mdash; this is a temporary problem on our end, not a sign that they have sponsored nothing. Please reload the page to try again.</p>`;
       return;
     }
 
-    const totalCount = member.sponsoredLegislation?.count;
-    const countNote = totalCount
-      ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${totalCount.toLocaleString()} total sponsored</small>`
-      : '';
+    const congress = slice.congress || index?.metadata?.congress || null;
+    const actions  = slice.actions || [];
+    const policies = slice.policyAreas || [];
 
-    const fmt = fmtDate;
-
-    const validBills = bills.filter(b => b.type && b.number && b.title);
-    if (!validBills.length) {
-      const btn = document.querySelector('[data-tab="sponsoredLegislation"]');
-      if (btn) btn.style.display = 'none';
-      return;
-    }
-
-    const lawIdx = await getEnactedLaws();
-
-    const items = validBills.map(b => {
-      const policyBadge = b.policyArea
-        ? `<span class="bill-policy-area">${escHtml(b.policyArea)}</span>`
+    function itemHtml(row, hidden) {
+      const type = row[R_TYPE] || '', number = String(row[R_NUM] || '');
+      const slug = BILL_TYPE_SLUG[type] || type.toLowerCase();
+      const href = `https://www.congress.gov/bill/${encodeURIComponent(congress || '')}th-congress/`
+        + `${encodeURIComponent(slug)}/${encodeURIComponent(number)}`;
+      const policy = policies[row[R_POLICY]] || '';
+      const policyBadge = policy
+        ? `<span class="bill-policy-area">${escHtml(policy)}</span>`
         : '';
 
-      // If this bill became law, promote the enactment from buried meta text to
-      // a badge, and link the GPO-authenticated text when it's available.
-      const conn = lawConnector(lawIdx.get(lawKey(b.type, b.number)));
+      // If this bill became law, promote the enactment from buried meta text to a
+      // badge and link the GPO-authenticated text. Same presidential-laws.json
+      // index the voting-history panel joins against (getEnactedLaws above), so
+      // enactment is read from the law record rather than re-derived from the
+      // action text.
+      const conn = lawConnector(lawIdx.get(lawKey(type, number)));
       let badge = '', metaTail;
       if (conn) {
         const label = `Became ${conn.isPrivate ? 'Private' : 'Public'} Law${conn.plNumber ? ` ${conn.plNumber}` : ''}`;
-        badge = `<span class="law-became-badge" title="Signed into law — text authenticated by the U.S. Government Publishing Office">✓ ${label}</span>`;
-        const signed = conn.signedDate ? `signed into law ${fmt(conn.signedDate)}` : 'signed into law';
+        badge = `<span class="law-became-badge" title="Signed into law &mdash; text authenticated by the U.S. Government Publishing Office">&#10003; ${escHtml(label)}</span>`;
+        const signed = conn.signedDate ? `signed into law ${escHtml(fmtDate(conn.signedDate))}` : 'signed into law';
         const link = conn.officialPdfUrl
-          ? ` · <a class="law-official-link" href="${escHtml(conn.officialPdfUrl)}" target="_blank" rel="noopener">Read the authenticated law (GPO PDF)</a>`
+          ? ` &middot; <a class="law-official-link" href="${escHtml(conn.officialPdfUrl)}" target="_blank" rel="noopener">Read the authenticated law (GPO PDF)</a>`
           : '';
         metaTail = `${signed}${link}`;
       } else {
-        metaTail = b.latestAction?.text
-          ? `<span style="color:#555;">${escHtml(b.latestAction.text)}</span>`
-          : '';
+        const action = actions[row[R_ACTION]] || '';
+        metaTail = action ? `<span style="color:#555;">${escHtml(action)}</span>` : '';
       }
 
-      return `<li class="bill-item">
-        <a class="bill-id" href="${escHtml(b.billUrl)}" target="_blank" rel="noopener">${escHtml(b.type)} ${escHtml(b.number)}</a>
-        <span class="bill-title">${escHtml(b.title)}</span>${policyBadge}${badge}
-        <div class="bill-meta">Introduced ${fmt(b.introducedDate)} · ${metaTail}</div>
+      return `<li class="bill-item${hidden ? ' spon-hidden' : ''}">
+        <a class="bill-id" href="${escHtml(href)}" target="_blank" rel="noopener">${escHtml(type)} ${escHtml(number)}</a>
+        <span class="bill-title">${escHtml(row[R_TITLE] || '')}</span>${policyBadge}${badge}
+        <div class="bill-meta">Introduced ${escHtml(fmtDate(row[R_INTRO]))}${metaTail ? ' &middot; ' : ''}${metaTail}</div>
       </li>`;
-    }).join('');
+    }
+
+    // Every row goes into the DOM up front and the ones past the cap are hidden
+    // with a class, so "Show all" only has to drop the clamp: no re-render and no
+    // scroll jump. The slices arrive sorted newest-introduced-first from the build
+    // library, so there is no sort here to disagree with it.
+    let listSeq = 0;
+    function listHtml(rows) {
+      const key = 'sponList' + (++listSeq);
+      const items = rows.map((r, i) => itemHtml(r, i >= SPON_INITIAL)).join('');
+      const more = rows.length > SPON_INITIAL
+        ? `<button type="button" class="spon-more" data-spon-more="${key}">Show all ${rows.length} bills</button>`
+        : '';
+      return `<ul class="bill-list" id="${key}">${items}</ul>${more}`;
+    }
+
+    function groupHtml(label, note, rows) {
+      if (!rows.length) return '';
+      return `<div class="spon-group">
+          <h3 class="spon-group-head">${escHtml(label)} <span>${rows.length}</span></h3>
+          <p class="spon-group-note">${escHtml(note)}</p>
+          ${listHtml(rows)}
+        </div>`;
+    }
+
+    // Primary sponsorship (the member introduced the measure) and cosponsorship
+    // (they signed on afterwards) say very different things about a legislator, and
+    // federally the second list is an order of magnitude the longer - so they are
+    // split here as they are on the GA panel, not merged into one count.
+    const groups =
+      groupHtml('Primary sponsor', 'Bills and resolutions this member introduced.',
+                slice.primary || []) +
+      groupHtml('Cosponsor', 'Measures this member signed on to after introduction.',
+                slice.cosponsored || []);
+
+    // Per-block provenance from THIS dataset's own generatedAt - not the roster
+    // stamp at the foot of the page, which supplies none of the rows in this panel.
+    // Omit the dated clause rather than printing a bare or wrong date.
+    const sponIso  = index?.metadata?.generatedAt || null;
+    const sponDate = sponIso && window.dataStamp ? window.dataStamp.formatDate(sponIso) : null;
+    // The published, archived home for this dataset is the sibling repo, not the
+    // build artifact we happen to fetch (CLAUDE.md on linking published datasets).
+    const sourceLine = `<p style="font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">`
+      + `Sponsorship comes from the Congress.gov API`
+      + (sponDate ? `, updated ${escHtml(sponDate)}` : '')
+      + `, and is published as open data in the `
+      + `<a href="https://github.com/Votega/ga-federal-legislators" target="_blank" rel="noopener">Votega/ga-federal-legislators</a> repository.</p>`;
+
+    const congressLabel = congress ? `${congress}th Congress` : 'current Congress';
 
     container.innerHTML = `
-      <h2>Sponsored Legislation${countNote}</h2>
-      <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Most recent bills sponsored during the 119th Congress (2025–2027).</p>
-      <ul class="bill-list">${items}</ul>`;
+      <h2>Sponsored Legislation${congress ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${escHtml(congressLabel)}</small>` : ''}</h2>
+      ${groups
+        ? `<p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Every bill and resolution this member sponsored or cosponsored in the ${escHtml(congressLabel)}.</p>
+           ${sourceLine}
+           ${groups}`
+        : `<p style="font-size:0.875rem;color:#666;">No sponsored or cosponsored legislation is recorded for this member in the ${escHtml(congressLabel)}.</p>
+           ${sourceLine}`}`;
+
+    // Delegated so one listener covers every list, and so it survives the
+    // innerHTML above (the container node itself does not change).
+    container.addEventListener('click', ev => {
+      const btn = ev.target.closest('[data-spon-more]');
+      if (!btn) return;
+      const list = document.getElementById(btn.getAttribute('data-spon-more'));
+      if (list) list.querySelectorAll('.spon-hidden').forEach(li => li.classList.remove('spon-hidden'));
+      btn.remove();
+    });
   }
 
   async function loadVotingHistory(member) {
@@ -1253,7 +1471,7 @@
         <div class="tab-nav" role="tablist" aria-label="Voting record and campaign finance" data-tabs>
           <button class="tab-btn active" data-tab="keyVotes">Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory">Voting History</button>
-          <button class="tab-btn" data-tab="sponsoredLegislation">Sponsored Legislation</button>
+          ${hasSponsorship(member) ? `<button class="tab-btn" data-tab="sponsoredLegislation">Sponsored Legislation</button>` : ''}
           ${state === 'Georgia' ? `<button class="tab-btn" data-tab="campaignFinance">Campaign Finance</button>` : ''}
           <button class="tab-btn" data-tab="entityNews" hidden>In the News</button>
         </div>
