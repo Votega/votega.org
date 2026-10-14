@@ -178,6 +178,63 @@
   .tally-bar-fill-r { height: 100%; background: #dc2626; border-radius: 3px; }
   .tally-count { width: 5rem; text-align: right; color: #555; white-space: nowrap; }
   .bill-text-link { font-size: 0.8rem; white-space: nowrap; }
+  /* Committee assignments: the role (Chairman / Vice Chairman / Secretary /
+     Ex-Officio / subcommittee chair) rides as a badge beside the committee name.
+     Plain "Member" gets none - 1,060 of the 1,399 assignments are Members, so
+     badging them all would bury the 339 that actually say something. */
+  .committee-role {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.05rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: #eef2ff;
+    color: #3730a3;
+    vertical-align: 0.05rem;
+  }
+  /* Chair and vice-chair outrank the honorary and clerical roles visually. */
+  .committee-role.role-chair { background: #1a1a2e; color: #fff; }
+  .committee-role.role-vice  { background: #e0e7ff; color: #312e81; }
+  .committee-role.role-exoff { background: #f3f4f6; color: #4b5563; }
+
+  /* Sponsored legislation list */
+  .spon-group { margin-bottom: 1.5rem; }
+  .spon-group:last-child { margin-bottom: 0; }
+  .spon-group-head { font-size: 1rem; margin: 0 0 0.15rem 0; }
+  .spon-group-head span {
+    font-weight: normal;
+    font-size: 0.8rem;
+    color: #666;
+    margin-left: 0.25rem;
+  }
+  .spon-group-note { font-size: 0.78rem; color: #666; margin: 0 0 0.6rem 0; line-height: 1.45; }
+  .spon-session { font-size: 0.9rem; margin: 0.9rem 0 0.3rem 0; }
+  .spon-session span { font-weight: normal; font-size: 0.78rem; color: #666; }
+  .spon-list { list-style: none; padding: 0; margin: 0; }
+  .spon-item {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.875rem;
+  }
+  .spon-item:last-child { border-bottom: none; }
+  .spon-hidden { display: none; }
+  .spon-id { font-weight: 600; margin-right: 0.45rem; color: #1d4ed8; white-space: nowrap; }
+  .spon-title { color: #111; }
+  .spon-official { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
+  .spon-meta { color: #6b7280; font-size: 0.78rem; margin-top: 0.2rem; }
+  .spon-more {
+    margin-top: 0.5rem;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #f8fafc;
+    color: #1d4ed8;
+    cursor: pointer;
+  }
+  .spon-more:hover { background: #eef2f7; }
   #stateSidebar {
     width: 240px;
     flex-shrink: 0;
@@ -341,6 +398,9 @@
   const RACE_URLS          = {{ site.data.entity_urls['race'] | jsonify }};
   const CANDIDATE_URLS     = {{ site.data.entity_urls['candidate'] | jsonify }};
 
+  // Set once the roster resolves; read by the lazily-loaded Sponsored Legislation tab.
+  let currentMember = null;
+
   const urlParams      = new URLSearchParams(window.location.search);
   // Clean per-entity URLs set window.VOTEGA_ENTITY; the legacy ?id= URL still works.
   const memberId       = urlParams.get('id') || (window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.id);
@@ -435,6 +495,9 @@
       }
       const all   = data.members || [];
       const member = all.find(m => m.id === id);
+      // The Sponsored Legislation panel loads on first tab open rather than here
+      // (see loadSponsoredLegislation), so it needs the member after this returns.
+      currentMember = member || null;
 
       if (!member) {
         statusLine.textContent = '';
@@ -669,6 +732,29 @@
     const age = computeAge(member);
     const ageLabel = age && !age.exact ? `Age (as of ${currentYear})` : 'Age';
 
+    // Prefer the full birth date, which the Members service cannot supply (it has a
+    // birthday with no year) and which is therefore preserved from the committed
+    // roster for the 185 members who have one. The remaining 62 keep the year-only
+    // form, whose age is an estimate and is labeled as such.
+    const bornHtml = (() => {
+      if (!age) return '';
+      if (member.birthDate) {
+        const born = new Date(member.birthDate + 'T00:00:00')
+          .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        return `<p style="display:flex;justify-content:space-between;">
+             <span><strong>Born:</strong> ${escHtml(born)}</span>
+             <span><strong>Age:</strong> ${age.value}</span>
+           </p>`;
+      }
+      if (member.birthYear) {
+        return `<p style="display:flex;justify-content:space-between;">
+             <span><strong>Birth Year:</strong> ${member.birthYear}</span>
+             <span><strong>${escHtml(ageLabel)}:</strong> ${age.value}</span>
+           </p>`;
+      }
+      return '';
+    })();
+
     const name    = member.name || 'Unknown';
     document.title = `${name} — ${member.title || (member.chamber === 'Senate' ? 'State Senator' : 'State Representative')}`;
     const imageHtml = member.imageUrl
@@ -724,6 +810,62 @@
       return `<div class="status-banner status-${knownSlug}">${labelLine}${noteLine}${electionLine}</div>`;
     })();
 
+    // Three fields the Members service supplies for most members but the page used to
+    // drop on the floor: occupation (199 of 247), residence (247) and the chamber
+    // press-office page (221). Each is omitted entirely when null - a bare
+    // "Occupation:" label with nothing after it reads as missing data about the
+    // member rather than data we never had.
+    const occupationHtml = member.occupation ? `<p><strong>Occupation:</strong> ${escHtml(member.occupation)}</p>` : '';
+    const residenceHtml  = member.residence  ? `<p><strong>Residence:</strong> ${escHtml(member.residence)}</p>`  : '';
+    // house-press.com / senatepress.net are the chambers' own press offices, so the
+    // link is labeled by what it is rather than shown as a raw URL.
+    const pressHtml = member.pressUrl
+      ? `<p><strong>Press Releases:</strong> <a href="${escHtml(member.pressUrl)}" target="_blank" rel="noopener">${escHtml(member.chamber === 'Senate' ? 'Senate Press Office' : 'House Press Office')} ↗</a></p>`
+      : '';
+
+    // Committee assignments, from committeeRoles[] (243 of 247 members) so a chair,
+    // vice-chair, secretary, ex-officio seat or subcommittee title shows next to the
+    // committee name - 148 members hold such a role, and the flat committees[] list
+    // this used to render discarded every one of them. committees[] is still the
+    // fallback for the 4 members the service returns no roles for, and the
+    // committeesAvailable === false branch is unchanged: that flag means the last
+    // refresh could not fetch committees at all, which is a different claim from a
+    // member simply having none.
+    const committeesHtml = (() => {
+      const roleClass = role => {
+        const r = role.toLowerCase();
+        if (r.startsWith('chairman')) return ' role-chair';
+        if (r.startsWith('vice')) return ' role-vice';
+        if (r.startsWith('ex-officio')) return ' role-exoff';
+        return '';
+      };
+      const items = (() => {
+        if (member.committeeRoles && member.committeeRoles.length) {
+          return member.committeeRoles.map(cr => {
+            // 'Member' is the unremarkable default; badging it would drown out the
+            // roles that carry information.
+            const badge = cr.role && cr.role !== 'Member'
+              ? ` <span class="committee-role${roleClass(cr.role)}">${escHtml(cr.role)}</span>`
+              : '';
+            return `<li>${escHtml(cr.name || '')}${badge}</li>`;
+          }).join('');
+        }
+        if (member.committees && member.committees.length) {
+          return member.committees.map(c => `<li>${escHtml(c)}</li>`).join('');
+        }
+        return '';
+      })();
+      if (!items) {
+        return committeesAvailable === false
+          ? `<p style="margin-top:1rem;font-size:0.8rem;color:#a35b00;">Committee data is temporarily unavailable (the last data refresh could not fetch it).</p>`
+          : '';
+      }
+      return `<div style="margin-top:1rem;">
+             <strong>Committee Assignments:</strong>
+             <ul style="margin:0.4rem 0 0 1.25rem;padding:0;">${items}</ul>
+           </div>`;
+    })();
+
     const phoneHtml   = member.phone   ? `<p><strong>Phone:</strong> ${escHtml(member.phone)}</p>`   : '';
     const addressHtml = member.address ? `<p><strong>Address:</strong> ${escHtml(member.address)}</p>` : '';
     const emailHtml   = member.email   ? `<p><strong>Email:</strong> <a href="mailto:${encodeURIComponent(member.email)}">${escHtml(member.email)}</a></p>` : '';
@@ -739,12 +881,7 @@
       <h1>${escHtml(name)}</h1>
       ${otherRaceBannerHtml}
       ${leadershipHtml}
-      ${member.birthYear
-        ? `<p style="display:flex;justify-content:space-between;">
-             <span><strong>Birth Year:</strong> ${member.birthYear}</span>
-             <span><strong>${ageLabel}:</strong> ${age.value}</span>
-           </p>`
-        : ''}
+      ${bornHtml}
       ${member.termStartYear
         ? `<p style="display:flex;justify-content:space-between;">
              <span><strong>First Term (Current Chamber):</strong> ${member.termStartYear}</span>
@@ -755,31 +892,27 @@
       <p><strong>Party:</strong> ${escHtml(member.party || 'N/A')} ${getPartyIconHtml(member.party)}</p>
       <p><strong>Chamber:</strong> ${escHtml(member.chamber || 'N/A')}</p>
       <p><strong>District:</strong> ${member.district ?? 'N/A'}</p>
+      ${residenceHtml}
+      ${occupationHtml}
       ${phoneHtml}
       ${addressHtml}
       ${emailHtml}
       ${websiteHtml}
-      ${(member.committees && member.committees.length)
-        ? `<div style="margin-top:1rem;">
-             <strong>Committee Assignments:</strong>
-             <ul style="margin:0.4rem 0 0 1.25rem;padding:0;">
-               ${member.committees.map(c => `<li>${escHtml(c)}</li>`).join('')}
-             </ul>
-           </div>`
-        : (committeesAvailable === false
-            ? `<p style="margin-top:1rem;font-size:0.8rem;color:#a35b00;">Committee data is temporarily unavailable (the last data refresh could not fetch it).</p>`
-            : '')}
+      ${pressHtml}
+      ${committeesHtml}
       <p><a href="/ga-state-reps">Search for another member</a></p>
       <div id="votesTabs">
-        <div class="tab-bar" role="tablist" aria-label="Voting record and campaign finance"
+        <div class="tab-bar" role="tablist" aria-label="Voting record, sponsored legislation and campaign finance"
              data-tabs data-tab-active="tab-active">
           <button class="tab-btn tab-active" data-tab="curatedBills" onclick="switchTab('curatedBills')">Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory" onclick="switchTab('votingHistory')">Voting History</button>
+          ${member.legisGaGovId ? `<button class="tab-btn" data-tab="sponsoredLegislation" onclick="switchTab('sponsoredLegislation')">Sponsored Legislation</button>` : ''}
           <button class="tab-btn" data-tab="campaignFinance" onclick="switchTab('campaignFinance')">Campaign Finance</button>
           <button class="tab-btn" data-tab="entityNews" onclick="switchTab('entityNews')" hidden>In the News</button>
         </div>
         <div id="curatedBills" class="tab-panel"></div>
         <div id="votingHistory" class="tab-panel" style="display:none;"></div>
+        <div id="sponsoredLegislation" class="tab-panel" style="display:none;"></div>
         <div id="campaignFinance" class="tab-panel" style="display:none;"></div>
         <div id="entityNews" class="tab-panel" style="display:none;"></div>
       </div>
@@ -867,6 +1000,9 @@
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
     panel.style.display = '';
     btn.classList.add('tab-active');
+    // Deferred panels load the first time they are actually shown - whether that is a
+    // click, a #hash restore or a Back step. The loader is idempotent.
+    if (tabId === 'sponsoredLegislation') loadSponsoredLegislation(currentMember);
     if (pushHistory && window.location.hash.slice(1) !== tabId) {
       history.pushState(null, '', '#' + tabId);
     }
@@ -994,6 +1130,175 @@
       <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">This member's votes on a selection of significant Georgia legislation.</p>
       ${curatedSource}
       ${cards}`;
+  }
+
+  // -- Sponsored legislation --------------------------------------------------
+  // Joined client-side out of the committed bill file on
+  // sponsors[].legisGaGovId == member.legisGaGovId. That is the collision-proof
+  // legis.ga.gov identity (see CLAUDE.md), so the join needs no name matching: every
+  // sitting member carries one, 245 of 247 join to at least one bill, and no sponsor
+  // id in ga-bills.json fails to resolve against the roster. Nothing is fetched or
+  // generated for this panel that the site did not already publish - it reads the
+  // same file ga-bills.html does.
+  const GA_BILLS_URL = getBasePath() + 'assets/data/ga-bills.json';
+
+  // Same reasoning as CURATED_BILLS_REPO above: the published, archived home for
+  // these bills is the sibling repo, not the build artifact we happen to fetch.
+  const GA_BILLS_REPO = 'https://github.com/Votega/ga-legislation';
+
+  // Rows shown per list before "Show all". A median member primary-sponsors 20 bills
+  // and the heaviest co-sponsor lists run past 290, so an uncapped render would push
+  // everything below it out of reach.
+  const SPON_INITIAL = 10;
+
+  // ga-bills.json is ~7 MB - the site's largest client-fetched blob. It is therefore
+  // fetched only when someone actually opens this tab, and only once, so a visitor who
+  // never leaves Key Votes pays nothing for it. That deferral is also why the tab
+  // button is shown unconditionally instead of being hidden for a member with no
+  // bills: finding that out would need the very fetch we are deferring, so the rare
+  // empty case is handled by an empty state inside the panel instead.
+  let sponsoredLoaded = false;
+
+  async function loadSponsoredLegislation(member) {
+    const container = document.getElementById('sponsoredLegislation');
+    if (!container || !member || !member.legisGaGovId || sponsoredLoaded) return;
+    sponsoredLoaded = true;
+    container.innerHTML = '<p style="font-size:0.875rem;color:#666;">Loading sponsored legislation…</p>';
+
+    let data;
+    try {
+      const res = await fetch(GA_BILLS_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      data = await res.json();
+    } catch (err) {
+      console.warn('Could not load sponsored legislation:', err);
+      // A failed fetch and an empty sponsorship record are different claims, and only
+      // one of them is about the member. Say which this is, and let a later tab visit
+      // retry rather than leaving the panel stuck on a transient error.
+      sponsoredLoaded = false;
+      container.innerHTML = `<h2>Sponsored Legislation</h2>
+        <p style="color:#666;font-size:0.875rem;">We couldn’t load the bill file just now — this is a temporary problem on our end, not a sign that this member has sponsored nothing. Please reload the page to try again.</p>`;
+      return;
+    }
+
+    const sessionNames = {};
+    const order = [];
+    (data.metadata?.sessions || []).forEach(sn => {
+      if (sn.id) { sessionNames[sn.id] = sn.name || sn.id; order.push(sn.id); }
+    });
+
+    // One pass over the bill file, splitting on sponsors[].primary: the member who
+    // introduced the bill versus the ones who signed on afterwards. Keeping them
+    // apart matters because the two say very different things about a legislator, and
+    // the co-sponsor list is an order of magnitude the longer of the two.
+    const primary = {}, cosponsored = {};
+    for (const bill of (data.bills || [])) {
+      const mine = (bill.sponsors || []).find(sp => sp.legisGaGovId === member.legisGaGovId);
+      if (!mine) continue;
+      const bucket = mine.primary ? primary : cosponsored;
+      const sid = bill.session || data.metadata?.activeSession || 'unknown';
+      (bucket[sid] || (bucket[sid] = [])).push(bill);
+    }
+
+    // Most recent action first; the identifier breaks the many ties, so the order is
+    // stable across refreshes instead of inheriting the file's.
+    const byRecency = (a, b) =>
+      String(b.statusDate || '').localeCompare(String(a.statusDate || '')) ||
+      String(a.identifier || '').localeCompare(String(b.identifier || ''));
+
+    const fmtDay = iso => iso
+      ? new Date(String(iso).slice(0, 10) + 'T00:00:00')
+          .toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+      : '';
+
+    function itemHtml(bill, hidden) {
+      // ?bill=<identifier> is the deep-link form jumpToBillFromURL() on ga-bills.html
+      // handles: it clears the default filters, pages to the bill and opens its card.
+      const href = `${getBasePath()}ga-bills.html?bill=${encodeURIComponent(bill.identifier || '')}`;
+      const meta = [bill.status, fmtDay(bill.statusDate)].filter(Boolean).join(' · ');
+      // The official legis.ga.gov record stays one click away, as on the Key Votes
+      // cards above.
+      const official = bill.billUrl
+        ? ` <a class="spon-official" href="${escHtml(bill.billUrl)}" target="_blank" rel="noopener">legis.ga.gov ↗</a>`
+        : '';
+      return `<li class="spon-item${hidden ? ' spon-hidden' : ''}">
+          <a class="spon-id" href="${escHtml(href)}">${escHtml(bill.identifier || '')}</a>
+          <span class="spon-title">${escHtml(bill.title || '')}</span>${official}
+          ${meta ? `<div class="spon-meta">${escHtml(meta)}</div>` : ''}
+        </li>`;
+    }
+
+    // Every row goes into the DOM up front and the ones past the cap are hidden with a
+    // class, so "Show all" only has to drop the clamp: no re-render and no scroll
+    // jump. The heaviest list is ~290 bills, far short of the ~5,000 nodes that forced
+    // the voting table into real paging.
+    let listSeq = 0;
+    function listHtml(bills) {
+      const sorted = [...bills].sort(byRecency);
+      const key = 'sponList' + (++listSeq);
+      const rows = sorted.map((b, i) => itemHtml(b, i >= SPON_INITIAL)).join('');
+      const more = sorted.length > SPON_INITIAL
+        ? `<button type="button" class="spon-more" data-spon-more="${key}">Show all ${sorted.length} bills</button>`
+        : '';
+      return `<ul class="spon-list" id="${key}">${rows}</ul>${more}`;
+    }
+
+    function groupHtml(label, note, bucket) {
+      // metadata.sessions order first, then any session tag it does not cover.
+      const ids = order.filter(sid => bucket[sid]);
+      Object.keys(bucket).forEach(sid => { if (!ids.includes(sid)) ids.push(sid); });
+      if (!ids.length) return '';
+      const total = ids.reduce((n, sid) => n + bucket[sid].length, 0);
+      // The per-session heading is only worth the space once this member's bills
+      // actually span more than one session of the biennium.
+      const body = ids.map(sid => {
+        const head = ids.length > 1
+          ? `<h4 class="spon-session">${escHtml(sessionNames[sid] || sid)} <span>(${bucket[sid].length})</span></h4>`
+          : '';
+        return head + listHtml(bucket[sid]);
+      }).join('');
+      return `<div class="spon-group">
+          <h3 class="spon-group-head">${escHtml(label)} <span>${total}</span></h3>
+          <p class="spon-group-note">${escHtml(note)}</p>
+          ${body}
+        </div>`;
+    }
+
+    const groups =
+      groupHtml('Primary sponsor', 'Bills and resolutions this member introduced.', primary) +
+      groupHtml('Co-sponsor', 'Measures this member signed on to after introduction.', cosponsored);
+
+    // Per-block provenance from the BILL file's own generatedAt - not the roster stamp
+    // at the foot of the page, which supplies none of the data in this panel. Omit the
+    // dated clause rather than printing a bare or wrong date.
+    const billsIso  = data.metadata?.generatedAt || null;
+    const billsDate = billsIso && window.dataStamp ? window.dataStamp.formatDate(billsIso) : null;
+    const sourceLine = `<p style="font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">`
+      + `Sponsorship comes from legis.ga.gov`
+      + (billsDate ? `, updated ${escHtml(billsDate)}` : '')
+      + `, and is published as open data in the `
+      + `<a href="${escHtml(GA_BILLS_REPO)}" target="_blank" rel="noopener">Votega/ga-legislation</a> repository.</p>`;
+
+    const biennium = data.metadata?.biennium || '';
+
+    container.innerHTML = `
+      <h2>Sponsored Legislation${biennium ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${escHtml(biennium)}</small>` : ''}</h2>
+      ${groups
+        ? `<p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Bills and resolutions this member sponsored or co-sponsored in the ${escHtml(biennium || 'current')} General Assembly, including any special session.</p>
+           ${sourceLine}
+           ${groups}`
+        : `<p style="font-size:0.875rem;color:#666;">No sponsored or co-sponsored legislation is recorded for this member in the ${escHtml(biennium || 'current')} General Assembly.</p>
+           ${sourceLine}`}`;
+
+    // Delegated so one listener covers every list, and so it survives the innerHTML
+    // above (the container node itself does not change).
+    container.addEventListener('click', ev => {
+      const btn = ev.target.closest('[data-spon-more]');
+      if (!btn) return;
+      const list = document.getElementById(btn.getAttribute('data-spon-more'));
+      if (list) list.querySelectorAll('.spon-hidden').forEach(li => li.classList.remove('spon-hidden'));
+      btn.remove();
+    });
   }
 
   // Chamber a passage vote belongs to, derived from its motion text.
