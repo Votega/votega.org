@@ -509,6 +509,34 @@ with tempfile.TemporaryDirectory() as tmp:
           live[0]['status'], 'Deceased')
 
 
+# ---------------------------------------------------------------------------
+# listing_is_too_short -- the gap a plain "roster count" floor cannot see.
+# The producer preserves any committed member ABSENT from the source listing
+# (that is how the Lt. Governor survives). So a truncated listing does not
+# shrink the roster, it silently fills it with stale records: 50 fresh + 200
+# carried still clears a 56/180 floor while 200 members quietly stop updating.
+# Stale-but-complete is worse than short, because nothing looks wrong.
+# ---------------------------------------------------------------------------
+print()
+print('lib.ga_roster.listing_is_too_short')
+
+from lib.ga_roster import listing_is_too_short  # noqa: E402
+
+check('a full listing is fine', listing_is_too_short(247, 248), False)
+check('a listing larger than the roster is fine (new members)',
+      listing_is_too_short(255, 248), False)
+check('losing the 4 non-members is fine (the executives + Lt. Governor)',
+      listing_is_too_short(247, 251), False)
+check('a 10% shortfall is tolerated (an election-year turnover)',
+      listing_is_too_short(224, 248), False)
+check('a truncated listing is caught', listing_is_too_short(50, 248), True)
+check('  even one just past the tolerance', listing_is_too_short(200, 248), True)
+check('an empty listing is caught', listing_is_too_short(0, 248), True)
+# A first run, or a deliberate roster reset, has nothing to compare against.
+check('no committed roster -> cannot judge, so do not block',
+      listing_is_too_short(247, 0), False)
+
+
 print(f'\n{len(PASS)} passed, {len(FAIL)} failed')
 if FAIL:
     for f in FAIL:

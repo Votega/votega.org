@@ -54,6 +54,30 @@ def display_committee(name):
     return COMMITTEE_ALIASES.get(k) or re.sub(r"\s+", " ", name.strip())
 
 
+#: How far a source listing may fall below the committed roster before it is treated as
+#: a truncated fetch. Real attrition inside a biennium is a handful of seats; an election
+#: turnover replaces members rather than removing them, so the listing stays about the
+#: same size either way.
+LISTING_TOLERANCE = 0.10
+
+
+def listing_is_too_short(n_listing, n_committed, tolerance=LISTING_TOLERANCE):
+    """Is this listing short enough to be a truncated fetch rather than real attrition?
+
+    A roster-count floor cannot catch this on its own. Because any committed member
+    absent from the listing is PRESERVED verbatim — the rule that keeps the Lt. Governor,
+    who is not a member of either chamber — a truncated listing does not shrink the
+    roster, it backfills it with stale records and still passes a 56/180 check. Nothing
+    then looks wrong while most of the roster quietly stops updating.
+
+    Returns False when there is no committed roster to compare against: a first run has
+    no baseline, and inventing one would block the bootstrap.
+    """
+    if n_committed <= 0:
+        return False
+    return n_listing < n_committed * (1 - tolerance)
+
+
 def apply_member_overrides(members, overrides_file):
     """Apply the editorial layer in place; return (patched, injected) counts.
 

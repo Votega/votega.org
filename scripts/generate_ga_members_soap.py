@@ -34,7 +34,8 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.ga_leadership import committee_index, normalize_title
-from lib.ga_roster import apply_member_overrides, display_committee, normalize_address
+from lib.ga_roster import (apply_member_overrides, display_committee,
+                           listing_is_too_short, normalize_address)
 from lib.ga_sessions import SESSION_NAMES, all_session_ids, legis_session_id
 from lib.ga_soap import (get_committees_by_session, get_member, get_members_by_session)
 
@@ -207,6 +208,14 @@ def main():
     listings = get_members_by_session(legis_session)
     if not listings:
         print("Error: GetMembersBySession returned nothing — aborting", file=sys.stderr)
+        return 1
+    # A truncated listing would NOT shrink the roster — everyone missing from it is
+    # preserved verbatim below — so the count floor downstream cannot catch it. It would
+    # quietly republish most of the roster as stale, which looks like a clean run.
+    if listing_is_too_short(len(listings), len(by_legis_id)):
+        print(f"Error: GetMembersBySession returned {len(listings)} members against "
+              f"{len(by_legis_id)} in the committed roster. Preserving that many stale "
+              f"records would look like a clean run. Refusing to write.", file=sys.stderr)
         return 1
 
     # Anyone in the committed roster the Members service does not return is PRESERVED
