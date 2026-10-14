@@ -20,12 +20,12 @@ no signup, no rate limit.
 |---|---|---|---|
 | [ga-legislators](https://github.com/Votega/ga-legislators) | Current GA House & Senate members (158th General Assembly) — name, party, district, committees, contact, official page; each member's passage-vote history; and a derived voting scorecard (party unity + participation) | `data/all.json`, `sessions/2025-2026/scorecard.csv` | Roster daily · votes & scorecard weekly |
 | [ga-federal-legislators](https://github.com/Votega/ga-federal-legislators) | Georgia's 2 U.S. Senators and 14 U.S. Representatives | JSON | Weekly |
-| [ga-legislation](https://github.com/Votega/ga-legislation) | GA General Assembly bills, 2025–26 session (adapted from Open States) | JSON | Daily |
+| [ga-legislation](https://github.com/Votega/ga-legislation) | GA General Assembly bills, 2025–26 session | JSON | Daily |
 | [ga-executive-orders](https://github.com/Votega/ga-executive-orders) | Georgia Governor's executive orders, 2023–present — date, number, title, category, PDF link | One JSON file per year | On publication |
 | [ga-races-elections](https://github.com/Votega/ga-races-elections) | 2026 Georgia races and candidates | JSON | As SOS publishes |
 | [ga-local-government](https://github.com/Votega/ga-local-government) | What Georgia county & city governments are discussing on their published agendas & minutes — license-plate readers (ALPR), data centers, and land use — classified by keyword, with the source document for every mention, plus the jurisdiction registry and per-place coverage | `data/mentions.json`, `data/mentions.csv`, `data/places.json` (+ JSON Schema) | Twice weekly |
 
-**Sources:** [Georgia General Assembly / legis.ga.gov](https://www.legis.ga.gov/) (GA bills &amp; roll-call votes) · [Open States](https://openstates.org/) (Plural Policy — GA legislator roster) · [Congress.gov](https://api.congress.gov/) ·
+**Sources:** [Georgia General Assembly / legis.ga.gov](https://www.legis.ga.gov/) (GA legislator roster, bills &amp; roll-call votes) · [Open States](https://openstates.org/) (Plural Policy — OCD person IDs in the ID crosswalk, and bill subject tags) · [Congress.gov](https://api.congress.gov/) ·
 [Federal Register](https://www.federalregister.gov/developers/api/v1) · [FEC](https://api.open.fec.gov/) ·
 [Oyez](https://api.oyez.org/) · [gov.georgia.gov](https://gov.georgia.gov/) · [Georgia Secretary of State](https://sos.ga.gov/) ·
 Georgia county & municipal governments (published agendas & minutes)

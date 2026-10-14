@@ -429,7 +429,7 @@
       if (window.dataStamp) {
         window.dataStamp.render('dataStamp', {
           updated: (data.metadata || {}).generatedAt,
-          source:  (data.metadata || {}).source || 'Open States API',
+          source:  (data.metadata || {}).source || 'legis.ga.gov official web service',
           repo:    { url: 'https://github.com/Votega/ga-legislators' },
         });
       }
@@ -976,7 +976,7 @@
 
     // Per-block provenance: these bills and roll calls come from this file's own
     // metadata.generatedAt and legis.ga.gov, NOT from the roster stamp at the foot of
-    // the page (which names the roster's Open States source and supplies none of the
+    // the page (which stamps the ROSTER's own generatedAt and supplies none of the
     // data in this panel). Omit the dated sentence if the timestamp is missing rather
     // than printing a bare or wrong date.
     const curatedIso  = data.metadata?.generatedAt || null;

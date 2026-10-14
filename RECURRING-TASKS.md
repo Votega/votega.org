@@ -255,7 +255,10 @@ biennium's regular and special sessions. Do it at the end of the biennium, BEFOR
 `update-ga-members` turns the roster over to the incoming class. Bills and votes archive
 themselves per session (the publishers bucket by each record's `session` tag, and past
 dirs are never overwritten); the **roster** does not — `ga-members.json` carries no
-session name and Open States replaces it gradually after the election.
+session name, and `generate_ga_members_soap.py` builds it for whichever biennium
+`lib/ga_sessions.SESSION_NAMES` names, so it is replaced wholesale by the first daily run
+after you bump that. Freeze **before** the bump: the cutover is yours to time, but nothing
+warns you once it has happened.
 
 - Run the **`freeze-ga-roster`** workflow (dispatch-only). Leave the input blank to freeze
   the biennium (`2025-2026`), or pass an explicit slug. It writes
@@ -281,8 +284,13 @@ is closed, so the gap is frozen rather than growing.
 - **GA member overrides** — after each `update-ga-members` run that adds new legislators, check
   whether any lack `legisGaGovId` (no official website link) and patch via
   `assets/data/ga-members-overrides.json`.
-- **Vacancies / departures** — resignations and deaths are not tracked by Open States. Set
-  `status`, `statusDate`, `statusNote` in the overrides file.
+- **Vacancies / departures** — the official roster records who holds a seat, not who has
+  left one, so these stay editorial. Set `status`, `statusDate`, `statusNote` in the
+  overrides file. legis.ga.gov *does* supply a vacancy date: the producer surfaces an
+  uncharacterised departure under `review.vacatedWithoutStatusOverride`, and a date that
+  disagrees with ours under `review.vacatedDateDiffersFromOurs`, in `ga-members.json`.
+  Treat both as prompts to check — it has the date but not the reason, and a `Suspended`
+  member still holds the seat.
 - **Election calendar** — `assets/data/ga-election-calendar.json` needs new dates each cycle.
 - **Ballot measures** — `assets/data/ga-ballot-measures.json` is curated by hand; conforms to
   [`ga-ballot-measures.schema.json`](assets/data/ga-ballot-measures.schema.json) and syncs to
