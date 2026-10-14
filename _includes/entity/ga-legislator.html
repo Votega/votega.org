@@ -482,6 +482,11 @@
 
     try {
       const [res, racesRes] = await Promise.all([fetch(DATA_URL), fetch(RACES_URL)]);
+      // Kicked off here, not awaited until just before the tab bar is built, so the
+      // ~4KB sponsorship index overlaps the work below instead of costing its own
+      // round trip. It cannot start any earlier: loadMemberDetails() is called at the
+      // top of this script, above the const this loader reads (temporal dead zone).
+      loadSponsorshipIndex();
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data  = await res.json();
@@ -521,6 +526,7 @@
       // Non-fatal: without the manifest the portrait renders from its original
       // (uncached) legis.ga.gov URL, exactly as before this cache existed.
       if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
+      await loadSponsorshipIndex();   // resolved by now in practice; see above
       displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable, electionDataUnavailable);
       // Resigned/Removed/Deceased entries are historical records kept only so
       // ga-member-votes.json can still join their earlier votes by OCD id —
@@ -906,7 +912,7 @@
              data-tabs data-tab-active="tab-active">
           <button class="tab-btn tab-active" data-tab="curatedBills" onclick="switchTab('curatedBills')">Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory" onclick="switchTab('votingHistory')">Voting History</button>
-          ${member.legisGaGovId ? `<button class="tab-btn" data-tab="sponsoredLegislation" onclick="switchTab('sponsoredLegislation')">Sponsored Legislation</button>` : ''}
+          ${hasSponsorships(member) ? `<button class="tab-btn" data-tab="sponsoredLegislation" onclick="switchTab('sponsoredLegislation')">Sponsored Legislation</button>` : ''}
           <button class="tab-btn" data-tab="campaignFinance" onclick="switchTab('campaignFinance')">Campaign Finance</button>
           <button class="tab-btn" data-tab="entityNews" onclick="switchTab('entityNews')" hidden>In the News</button>
         </div>
@@ -1133,14 +1139,53 @@
   }
 
   // -- Sponsored legislation --------------------------------------------------
-  // Joined client-side out of the committed bill file on
+  // Joined at BUILD time (scripts/build_sponsorship_slices.py) on
   // sponsors[].legisGaGovId == member.legisGaGovId. That is the collision-proof
   // legis.ga.gov identity (see CLAUDE.md), so the join needs no name matching: every
   // sitting member carries one, 245 of 247 join to at least one bill, and no sponsor
-  // id in ga-bills.json fails to resolve against the roster. Nothing is fetched or
-  // generated for this panel that the site did not already publish - it reads the
-  // same file ga-bills.html does.
-  const GA_BILLS_URL = getBasePath() + 'assets/data/ga-bills.json';
+  // id in ga-bills.json fails to resolve against the roster.
+  //
+  // This panel used to do that join here, in the browser, out of the whole 6.9MB
+  // ga-bills.json - ~600x the bytes the median member's rows occupy, on a file
+  // CLAUDE.md already names as a bandwidth ceiling. It now fetches the same two
+  // artifacts the voting-history panel does: a small shared index and this member's
+  // own ~12KB slice. ga-bills.json is untouched; ga-bills.html still needs all of it.
+  const SPON_BASE  = getBasePath();
+  const SPON_INDEX_URL = SPON_BASE + 'assets/data/ga-sponsorship-index.json';
+  const sponSliceUrl = gid => `${SPON_BASE}assets/data/ga-sponsorship/${encodeURIComponent(gid)}.json`;
+
+  // Positions in a slice row. Rows are positional arrays rather than objects
+  // because the field names would otherwise repeat on all ~33k sponsorship records
+  // the slice set covers; `statuses` is the slice's own intern table for the long,
+  // recurring status strings. Keep in step with compact_row() in the build script.
+  const R_ID = 0, R_TITLE = 1, R_STATUS = 2, R_DATE = 3, R_LEGIS = 4;
+
+  // The index is tiny (~4KB) and is wanted in two places - here, and at render time
+  // to decide whether the tab appears at all - so fetch it at most once per page.
+  let sponIndexPromise = null;
+  let sponCounts = null;   // { "<legisGaGovId>": [nPrimary, nCoSponsor] }
+  function loadSponsorshipIndex() {
+    if (!sponIndexPromise) {
+      sponIndexPromise = fetch(SPON_INDEX_URL)
+        .then(res => res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`)))
+        .then(idx => { sponCounts = idx?.members || null; return idx; })
+        .catch(err => { console.warn('Could not load sponsorship index:', err); return null; });
+    }
+    return sponIndexPromise;
+  }
+
+  // Whether to render the Sponsored Legislation tab at all. 2 of 247 sitting members
+  // sponsor nothing, and the tab used to be shown for them anyway - unavoidably, when
+  // answering the question meant fetching 6.9MB we were deliberately deferring. The
+  // index's count map answers it for ~4KB, before the tab bar is built, so those two
+  // get no tab instead of a tab that only apologises. Fails OPEN: with no index (not
+  // yet generated, fetch blocked), show the tab and let the panel speak for itself.
+  function hasSponsorships(member) {
+    if (!member?.legisGaGovId) return false;
+    if (!sponCounts) return true;
+    const c = sponCounts[String(member.legisGaGovId)];
+    return Array.isArray(c) && (c[0] + c[1]) > 0;
+  }
 
   // Same reasoning as CURATED_BILLS_REPO above: the published, archived home for
   // these bills is the sibling repo, not the build artifact we happen to fetch.
@@ -1151,12 +1196,8 @@
   // everything below it out of reach.
   const SPON_INITIAL = 10;
 
-  // ga-bills.json is ~7 MB - the site's largest client-fetched blob. It is therefore
-  // fetched only when someone actually opens this tab, and only once, so a visitor who
-  // never leaves Key Votes pays nothing for it. That deferral is also why the tab
-  // button is shown unconditionally instead of being hidden for a member with no
-  // bills: finding that out would need the very fetch we are deferring, so the rare
-  // empty case is handled by an empty state inside the panel instead.
+  // Even at ~12KB the slice is only fetched when someone actually opens this tab, and
+  // only once: a visitor who never leaves Key Votes still pays nothing for it.
   let sponsoredLoaded = false;
 
   async function loadSponsoredLegislation(member) {
@@ -1165,11 +1206,25 @@
     sponsoredLoaded = true;
     container.innerHTML = '<p style="font-size:0.875rem;color:#666;">Loading sponsored legislation…</p>';
 
-    let data;
+    let data, slice;
     try {
-      const res = await fetch(GA_BILLS_URL);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      data = await res.json();
+      // In parallel: the shared index (usually already resolved - the tab-visibility
+      // check above asked for it at render time) and this member's slice.
+      const [idx, sliceRes] = await Promise.all([
+        loadSponsorshipIndex(), fetch(sponSliceUrl(member.legisGaGovId)),
+      ]);
+      if (!idx) throw new Error('index unavailable');
+      // The build script writes a slice only for a member who sponsors something, so
+      // a 404/410 is the real "this member sponsored nothing" answer - an empty state,
+      // not an error. Any other failure tells us nothing about the member.
+      if (sliceRes.status === 404 || sliceRes.status === 410) {
+        slice = { statuses: [], sessions: {} };
+      } else if (sliceRes.ok) {
+        slice = await sliceRes.json();
+      } else {
+        throw new Error(`HTTP ${sliceRes.status}`);
+      }
+      data = idx;
     } catch (err) {
       console.warn('Could not load sponsored legislation:', err);
       // A failed fetch and an empty sponsorship record are different claims, and only
@@ -1187,43 +1242,45 @@
       if (sn.id) { sessionNames[sn.id] = sn.name || sn.id; order.push(sn.id); }
     });
 
-    // One pass over the bill file, splitting on sponsors[].primary: the member who
-    // introduced the bill versus the ones who signed on afterwards. Keeping them
-    // apart matters because the two say very different things about a legislator, and
+    // The primary/co-sponsor split (the member who introduced the bill versus the ones
+    // who signed on afterwards) and the per-session grouping are both precomputed in
+    // the slice, so this is a rename rather than the old full-file scan. Keeping the
+    // two apart still matters: they say very different things about a legislator, and
     // the co-sponsor list is an order of magnitude the longer of the two.
+    const statuses = slice.statuses || [];
     const primary = {}, cosponsored = {};
-    for (const bill of (data.bills || [])) {
-      const mine = (bill.sponsors || []).find(sp => sp.legisGaGovId === member.legisGaGovId);
-      if (!mine) continue;
-      const bucket = mine.primary ? primary : cosponsored;
-      const sid = bill.session || data.metadata?.activeSession || 'unknown';
-      (bucket[sid] || (bucket[sid] = [])).push(bill);
+    for (const [sid, buckets] of Object.entries(slice.sessions || {})) {
+      if (buckets.p?.length) primary[sid] = buckets.p;
+      if (buckets.c?.length) cosponsored[sid] = buckets.c;
     }
 
     // Most recent action first; the identifier breaks the many ties, so the order is
     // stable across refreshes instead of inheriting the file's.
     const byRecency = (a, b) =>
-      String(b.statusDate || '').localeCompare(String(a.statusDate || '')) ||
-      String(a.identifier || '').localeCompare(String(b.identifier || ''));
+      String(b[R_DATE] || '').localeCompare(String(a[R_DATE] || '')) ||
+      String(a[R_ID] || '').localeCompare(String(b[R_ID] || ''));
 
     const fmtDay = iso => iso
       ? new Date(String(iso).slice(0, 10) + 'T00:00:00')
           .toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
       : '';
 
-    function itemHtml(bill, hidden) {
+    function itemHtml(row, hidden) {
       // ?bill=<identifier> is the deep-link form jumpToBillFromURL() on ga-bills.html
       // handles: it clears the default filters, pages to the bill and opens its card.
-      const href = `${getBasePath()}ga-bills.html?bill=${encodeURIComponent(bill.identifier || '')}`;
-      const meta = [bill.status, fmtDay(bill.statusDate)].filter(Boolean).join(' · ');
+      const href = `${SPON_BASE}ga-bills.html?bill=${encodeURIComponent(row[R_ID] || '')}`;
+      const status = statuses[row[R_STATUS]] || '';
+      const meta = [status, fmtDay(row[R_DATE])].filter(Boolean).join(' · ');
       // The official legis.ga.gov record stays one click away, as on the Key Votes
-      // cards above.
-      const official = bill.billUrl
-        ? ` <a class="spon-official" href="${escHtml(bill.billUrl)}" target="_blank" rel="noopener">legis.ga.gov ↗</a>`
+      // cards above. Rebuilt from legislationId - every bill's billUrl is this URL
+      // with that number on the end, so the slice stores the number (see the build
+      // script) instead of repeating the prefix on every row.
+      const official = row[R_LEGIS]
+        ? ` <a class="spon-official" href="https://www.legis.ga.gov/legislation/${encodeURIComponent(row[R_LEGIS])}" target="_blank" rel="noopener">legis.ga.gov ↗</a>`
         : '';
       return `<li class="spon-item${hidden ? ' spon-hidden' : ''}">
-          <a class="spon-id" href="${escHtml(href)}">${escHtml(bill.identifier || '')}</a>
-          <span class="spon-title">${escHtml(bill.title || '')}</span>${official}
+          <a class="spon-id" href="${escHtml(href)}">${escHtml(row[R_ID] || '')}</a>
+          <span class="spon-title">${escHtml(row[R_TITLE] || '')}</span>${official}
           ${meta ? `<div class="spon-meta">${escHtml(meta)}</div>` : ''}
         </li>`;
     }

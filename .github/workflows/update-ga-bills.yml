@@ -106,6 +106,36 @@ jobs:
             fi
           fi
 
+      # Split sponsorship out of the monolithic bill file into a ~4KB shared index +
+      # per-member slices (median ~12KB), so the Sponsored Legislation tab on a
+      # legislator profile stops fetching all 6.9MB of ga-bills.json to render one
+      # member's rows. Must run in the SAME job that rewrote ga-bills.json: the slices
+      # are derived from its sponsors[], so leaving them to a separate trigger is how
+      # they would go stale against it. Derived from the just-committed file joined
+      # with ga-members.json for the roster check. See scripts/build_sponsorship_slices.py.
+      - name: Build per-member sponsorship slices
+        run: python scripts/build_sponsorship_slices.py
+
+      - name: Commit per-member sponsorship slices
+        run: |
+          set -e
+          git add -A assets/data/ga-sponsorship-index.json assets/data/ga-sponsorship
+          if git diff --cached --quiet; then
+            echo "No changes to sponsorship slices"
+          else
+            git commit -m "Rebuild per-member sponsorship slices"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - sponsorship slices were NOT committed"
+              exit 1
+            fi
+          fi
+
       # Publish inline so this scheduled update propagates to ga-legislation. The
       # separate publish-ga-bills-to-ga-legislation.yml (on: push) does NOT fire for the
       # commit above: GitHub does not trigger workflows for commits authored by the
