@@ -454,6 +454,7 @@ breadcrumb:
   let searchTimer   = null;
   let sessionFilter = '';       // '' = all sessions in the biennium
   let sessionNames  = {};       // session id -> display name (from metadata.sessions)
+  let billsMeta     = {};       // ga-bills.json metadata, kept for stat rebuilds
   let multiSession  = false;    // more than one session present -> show session UI
 
   // ── DOM refs ──────────────────────────────────────────────────────────────
@@ -933,21 +934,38 @@ breadcrumb:
   }
 
   // ── Stats row ─────────────────────────────────────────────────────────────
+  // The stats row summarises the SESSION in view, so selecting a session re-counts it.
+  // It deliberately does not follow the search/subject/chamber filters or the status
+  // pills: those drill DOWN into these totals, and the pills mirror the tiles one for
+  // one, so following them would be circular — picking "Signed into law" would leave
+  // "Total bills" and "Signed into law" showing the same number and "Vetoed" at 0. The
+  // count of what the filters actually matched is the "N bills" line above the list.
+  function statsScopeBills() {
+    return sessionFilter
+      ? allBills.filter(function (b) { return (b.session || '') === sessionFilter; })
+      : allBills;
+  }
+
   function buildStats(meta) {
-    const signed   = allBills.filter(function (b) { return b._status === 'signed'; }).length;
-    const vetoed   = allBills.filter(function (b) { return b._status === 'vetoed'; }).length;
-    const pending  = allBills.filter(function (b) { return b._status === 'pending'; }).length;
-    const failed   = allBills.filter(function (b) { return b._status === 'failed'; }).length;
-    const stalled  = allBills.filter(function (b) { return b._status === 'stalled'; }).length;
+    const scope    = statsScopeBills();
+    const countBy  = function (st) { return scope.filter(function (b) { return b._status === st; }).length; };
+    const signed   = countBy('signed');
+    const vetoed   = countBy('vetoed');
+    const pending  = countBy('pending');
+    const failed   = countBy('failed');
+    const stalled  = countBy('stalled');
+    // Only the unscoped view can trust metadata.totalBills; a session view counts its own.
+    const total    = sessionFilter ? scope.length : (meta.totalBills || allBills.length);
     const stats = [
-      stat('Total bills', (meta.totalBills || allBills.length).toLocaleString(), ''),
+      stat('Total bills', total.toLocaleString(), '',
+        sessionFilter ? (sessionNames[sessionFilter] || sessionFilter) : ''),
       stat('Signed into law', signed.toLocaleString(), 'green'),
       stat('Vetoed', vetoed.toLocaleString(), 'red'),
     ];
     if (pending > 0) stats.push(stat('Sent to Governor', pending.toLocaleString(), 'orange', 'Awaiting signature or veto'));
     stats.push(stat('Failed / stalled', (failed + stalled).toLocaleString(), 'orange'));
-    const withVotes = allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;
-    const withParty = allBills.filter(function (b) {
+    const withVotes = scope.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;
+    const withParty = scope.filter(function (b) {
       return (b.passageVotes || []).some(function (v) { return v.partyTally; });
     }).length;
     stats.push(stat('With vote records', withVotes.toLocaleString(), 'blue',
@@ -971,6 +989,7 @@ breadcrumb:
   elSubject.addEventListener('change', applyFilters);
   elSession.addEventListener('change', function () {
     sessionFilter = elSession.value;
+    buildStats(billsMeta);
     applyFilters();
     syncSessionParam();
   });
@@ -1067,7 +1086,7 @@ breadcrumb:
     // happens to be active by default.
     elSearch.value = '';
     elSubject.value = '';
-    if (elSession) { elSession.value = ''; sessionFilter = ''; syncSessionParam(); }
+    if (elSession) { elSession.value = ''; sessionFilter = ''; syncSessionParam(); buildStats(billsMeta); }
     chamberTab = '';
     statusFilter = '';
     partyLineOnly = false;
@@ -1100,6 +1119,7 @@ breadcrumb:
     })
     .then(function (data) {
       const meta = data.metadata || {};
+      billsMeta = meta;
       allBills = (data.bills || []).map(function (b) {
         b._status = classifyStatus(b);
         b._partyLine = (b.passageVotes || []).some(function (v) {
@@ -1110,10 +1130,10 @@ breadcrumb:
       });
 
       elLoading.style.display = 'none';
-      buildStats(meta);
       buildSubjectDropdown();
       buildSessionDropdown(meta);
-      applySessionParam();
+      applySessionParam();          // sets sessionFilter from ?session=, if valid
+      buildStats(meta);             // AFTER the param, so a deep link counts its own session
       elControls.style.display   = '';
 
       const withVotes = allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;
