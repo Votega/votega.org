@@ -257,17 +257,6 @@ def main():
         svc = current_service(detail, legis_session) or {}
         if svc.get("title") and rec["leadershipRole"] is None:
             lapsed.append(f"{rec['name']}: {svc['title']!r}")
-        # SOAP proposes, a human disposes (spec §8.4): flag a departure the overrides
-        # file has not characterised, never write a status.
-        if rec["dateVacated"] and not (prior or {}).get("status"):
-            vacated_unflagged.append(f"{rec['name']} ({legis_id}) vacated {rec['dateVacated'][:10]}")
-        # Both sources have a date for a departure we already know about, and they
-        # disagree. Ours may be the better one (an announced resignation vs the day the
-        # seat was recorded empty), so this is surfaced, never applied.
-        prior_date = (prior or {}).get("statusDate")
-        if rec["dateVacated"] and prior_date and rec["dateVacated"][:10] != prior_date:
-            vacated_disagrees.append(
-                f"{rec['name']}: we record {prior_date}, legis.ga.gov {rec['dateVacated'][:10]}")
         members.append(rec)
 
         if i % 50 == 0:
@@ -317,6 +306,23 @@ def main():
     print(f"\n  overrides: patched {patched}, injected {injected}")
 
     members.sort(key=lambda m: (m.get("chamber") or "", m.get("name") or ""))
+
+    # SOAP proposes, a human disposes (spec §8.4): surface a departure, never write a
+    # status. Computed AFTER the overrides so these describe the file they ship in — read
+    # against the PREVIOUS file instead, a departure characterised in this very run still
+    # showed up as outstanding, and the queue lagged a day behind the data.
+    for m in members:
+        vacated, ours = (m.get("dateVacated") or "")[:10], m.get("statusDate")
+        if not vacated:
+            continue
+        if not m.get("status"):
+            vacated_unflagged.append(
+                f"{m['name']} ({m.get('legisGaGovId')}) vacated {vacated}")
+        elif ours and ours != vacated:
+            # Ours may still be the better date — an announced resignation against the
+            # day the seat was recorded empty. Surfaced for a human, never applied.
+            vacated_disagrees.append(
+                f"{m['name']}: we record {ours}, legis.ga.gov {vacated}")
 
     # §7.2 No silent roster shrink.
     sitting = [m for m in members if m.get("status") in (None, "Suspended")]
