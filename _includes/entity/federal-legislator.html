@@ -220,20 +220,8 @@
     color: #374151;
     margin-left: 0.4rem;
   }
-  .vote-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-  }
-  .vote-table th, .vote-table td {
-    text-align: left;
-    padding: 0.4rem 0.6rem;
-    border-bottom: 1px solid #eee;
-  }
-  .vote-table th { background: #f5f5f5; font-weight: bold; }
-  .vote-yea   { color: #1a7a1a; font-weight: bold; }
-  .vote-nay   { color: #b00020; font-weight: bold; }
-  .vote-other { color: #666; }
+  /* Voting-history table styles: assets/css/votes-table.css (shared with the
+     GA legislator page). */
 
   /* Became-law connector (bills that were enacted -> GPO-authenticated text) */
   .law-became-badge {
@@ -340,6 +328,8 @@
 <p id="dataStamp" class="data-stamp"></p>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<link rel="stylesheet" href="{{ '/assets/css/votes-table.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+<script src="{{ '/assets/scripts/votega-votes-table.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/entity-news.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -663,58 +653,6 @@
     document.getElementById('stateSidebar').style.display = 'block';
   }
 
-  function buildVoteChart(yea, nay, other, total) {
-    if (total === 0) return '';
-    const pct = n => Math.round((n / total) * 100);
-
-    // SVG pie chart — handle 100% single-slice edge case
-    const size = 88, cx = 44, cy = 44, r = 40;
-    const slices = [
-      { value: yea,   color: '#16a34a' },
-      { value: nay,   color: '#dc2626' },
-      { value: other, color: '#9ca3af' },
-    ].filter(s => s.value > 0);
-
-    let svgPaths = '';
-    if (slices.length === 1) {
-      svgPaths = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${slices[0].color}"/>`;
-    } else {
-      let angle = -Math.PI / 2;
-      for (const s of slices) {
-        const sweep = (s.value / total) * 2 * Math.PI;
-        const end   = angle + sweep;
-        const x1 = (cx + r * Math.cos(angle)).toFixed(2);
-        const y1 = (cy + r * Math.sin(angle)).toFixed(2);
-        const x2 = (cx + r * Math.cos(end)).toFixed(2);
-        const y2 = (cy + r * Math.sin(end)).toFixed(2);
-        svgPaths += `<path d="M${cx},${cy}L${x1},${y1}A${r},${r} 0 ${sweep > Math.PI ? 1 : 0},1 ${x2},${y2}Z" fill="${s.color}"/>`;
-        angle = end;
-      }
-    }
-
-    const legendItems = [
-      { label: 'Yea',   count: yea,   color: '#16a34a' },
-      { label: 'Nay',   count: nay,   color: '#dc2626' },
-      { label: 'Other', count: other, color: '#9ca3af' },
-    ].filter(s => s.count > 0).map(s =>
-      `<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;">
-        <span style="width:11px;height:11px;border-radius:50%;background:${s.color};flex-shrink:0;display:inline-block;"></span>
-        <span>${s.label}: <strong>${s.count}</strong> <span style="color:#777;">(${pct(s.count)}%)</span></span>
-      </div>`
-    ).join('');
-
-    const footnote = other > 0
-      ? `<p style="font-size:0.72rem;color:#888;margin:0.5rem 0 0 0;">* Other includes Not Voting, Absent, and Excused</p>`
-      : '';
-
-    return `<div>
-      <div style="display:flex;align-items:center;gap:1.25rem;margin:0.75rem 0 0.4rem 0;">
-        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
-        <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
-      </div>
-      <p style="font-size:0.72rem;color:#888;margin:0 0 1.25rem 0;max-width:32rem;">Most bills that reach a floor vote pass, so a chart weighted toward “Yea” is typical here and on other members' pages — it reflects which bills got a recorded vote, not this member's overall independence or party loyalty.</p>
-    </div>`;
-  }
 
   const DEFAULT_TAB = 'keyVotes';
 
@@ -1067,7 +1005,11 @@
         return db.localeCompare(da);
       });
 
-      const voteClass = v => v === 'Yea' ? 'vote-yea' : v === 'Nay' ? 'vote-nay' : 'vote-other';
+      // Rows and the chart come from VotegaVotesTable
+      // (assets/scripts/votega-votes-table.js), shared with the GA legislator page —
+      // the two pages had grown diverging copies of both. What stays here is this
+      // page's own: the enacted-law connector and the chamber-dependent columns.
+      const VT = window.VotegaVotesTable;
 
       // Vote breakdown chart
       let yeaCount = 0, nayCount = 0, otherCount = 0;
@@ -1076,45 +1018,28 @@
         else if (vote === 'Nay') nayCount++;
         else otherCount++;
       }
-      const chartHtml = buildVoteChart(yeaCount, nayCount, otherCount, sorted.length);
+      const chartHtml = VT.chartHtml(yeaCount, nayCount, otherCount, sorted.length, {
+        // This page's own wording of the caption, kept verbatim through the
+        // extraction; the GA page uses the module's default.
+        caption: "Most bills that reach a floor vote pass, so a chart weighted toward “Yea” is typical here and on other members' pages — it reflects which bills got a recorded vote, not this member's overall independence or party loyalty.",
+      });
 
-      const rows = sorted.map(({ voteId, vote }) => {
-        const meta     = votesIndex[voteId] || {};
-        const bill     = escHtml(meta.bill || '—');
-        const title    = meta.title ? escHtml(meta.title) : '';
-        const caption  = escHtml(meta.motionText || '—');
-        const date     = fmtDate(meta.date);
-        const billLink = meta.billUrl
-          ? `<a href="${escHtml(meta.billUrl)}" target="_blank" rel="noopener">${bill}</a>`
-          : bill;
+      // The enacted-law line sits below the title, so it uses the cellAfter slot.
+      const lawCell = meta => {
         const conn = lawConnector(lawIdx.get(lawKey(meta.bill, '')));
-        const lawLine = (conn && conn.officialPdfUrl)
+        return (conn && conn.officialPdfUrl)
           ? `<span class="vote-law-cell">${conn.plNumber ? `P.L. ${escHtml(conn.plNumber)} · ` : ''}<a href="${escHtml(conn.officialPdfUrl)}" target="_blank" rel="noopener">Official text (GPO) →</a></span>`
           : '';
-        const billBase = title
-          ? `${billLink}<br><span style="font-size:0.75rem;color:#555;font-weight:normal;">${title}</span>`
-          : billLink;
-        const billCell = billBase + lawLine;
-        const motionCell = isHouse ? '' : `<td>${caption}</td>`;
-        return `<tr>
-          <td>${date}</td>
-          <td>${billCell}</td>
-          ${motionCell}
-          <td class="${voteClass(vote)}">${escHtml(vote)}</td>
-        </tr>`;
-      }).join('');
+      };
 
-      const motionHeader = isHouse ? '' : '<th>Motion</th>';
+      // No paging here: a GA member has ~1,100 roll calls in a session, a member of
+      // the GA delegation has ~75 (max 141), so truncation would add a click and
+      // buy nothing. The module takes the whole list.
+      const tableMarkup = VT.tableHtml(sorted, votesIndex, { showMotion: !isHouse, cellAfter: lawCell });
       container.innerHTML = `
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
-        ${chartHtml}
-        <div style="overflow-x:auto;">
-        <table class="vote-table">
-          <thead><tr><th>Date</th><th>Bill</th>${motionHeader}<th>Vote</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-        </div>`;
+        ${chartHtml}${tableMarkup}`;
     } catch (err) {
       console.warn('Could not load voting history:', err);
     }

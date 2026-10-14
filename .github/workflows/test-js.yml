@@ -1,0 +1,42 @@
+name: JS unit tests
+
+# Covers the shared front-end modules in assets/scripts/. These render what a
+# reader actually sees on an entity page, and until now nothing checked them:
+# the repo has no JS test suite, so a typo in a shared module surfaced only as a
+# blank panel in the browser.
+#
+# PR/push triggered rather than scheduled, so it needs no entry in
+# notify-workflow-failure.yml (that watches scheduled workflows, which otherwise
+# run unattended) — see scripts/validate_workflow_triggers.py.
+#
+# No package.json, no node_modules: the tests use node's built-in runner and
+# evaluate the browser assets against a stub window. Keep it that way.
+
+on:
+  push:
+    paths:
+      - 'assets/scripts/**'
+      - 'tests/**'
+      - '.github/workflows/test-js.yml'
+  pull_request:
+    paths:
+      - 'assets/scripts/**'
+      - 'tests/**'
+      - '.github/workflows/test-js.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run JS unit tests
+        run: node --test tests/js/*.test.js

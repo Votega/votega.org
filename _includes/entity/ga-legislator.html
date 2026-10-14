@@ -85,59 +85,8 @@
   /* Finance now lives in a tab; match the sibling panels' heading level rather
      than the smaller stand-alone-section heading it used to render at. */
   #campaignFinance h2 { margin: 0 0 0.75rem 0; font-size: 1.5rem; }
-  .vote-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-  }
-  .vote-table th, .vote-table td {
-    text-align: left;
-    padding: 0.4rem 0.6rem;
-    border-bottom: 1px solid #eee;
-  }
-  .vote-table th { background: #f5f5f5; font-weight: bold; }
-  .vote-yea   { color: #1a7a1a; font-weight: bold; }
-  .vote-nay   { color: #b00020; font-weight: bold; }
-  .vote-other { color: #666; }
-  /* Voting-history filter row + progressive disclosure. A member has ~1,100 roll
-     calls in a regular session, so the table opens truncated and searchable
-     rather than rendering every row on tab open. */
-  .vote-filter-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem 0.75rem;
-    margin: 0 0 0.6rem 0;
-  }
-  .vote-filter-row label { font-size: 0.8rem; color: #555; }
-  .vote-filter-row input[type="search"] {
-    font-size: 0.85rem;
-    padding: 0.25rem 0.4rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    min-width: 14rem;
-    flex: 1 1 14rem;
-  }
-  .vote-filter-row select { font-size: 0.85rem; padding: 0.25rem 0.4rem; }
-  .vote-page-foot {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    color: #555;
-    margin: 0.6rem 0 1rem 0;
-  }
-  .vote-page-btn {
-    font-size: 0.8rem;
-    padding: 0.3rem 0.7rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #fff;
-    cursor: pointer;
-  }
-  .vote-page-btn:hover { background: #f3f4f6; }
-  .vote-no-match { font-size: 0.85rem; color: #666; margin: 0.4rem 0 1rem 0; }
+  /* Voting-history table styles: assets/css/votes-table.css (shared with the
+     federal legislator page). */
   /* Voting participation summary */
   .participation-box {
     border: 1px solid #d7dde5;
@@ -371,6 +320,8 @@
 <p id="dataStamp" class="data-stamp"></p>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<link rel="stylesheet" href="{{ '/assets/css/votes-table.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+<script src="{{ '/assets/scripts/votega-votes-table.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -902,57 +853,6 @@
     document.getElementById('stateSidebar').style.display = 'block';
   }
 
-  function buildVoteChart(yea, nay, other, total) {
-    if (total === 0) return '';
-    const pct = n => Math.round((n / total) * 100);
-
-    const size = 88, cx = 44, cy = 44, r = 40;
-    const slices = [
-      { value: yea,   color: '#16a34a' },
-      { value: nay,   color: '#dc2626' },
-      { value: other, color: '#9ca3af' },
-    ].filter(s => s.value > 0);
-
-    let svgPaths = '';
-    if (slices.length === 1) {
-      svgPaths = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${slices[0].color}"/>`;
-    } else {
-      let angle = -Math.PI / 2;
-      for (const s of slices) {
-        const sweep = (s.value / total) * 2 * Math.PI;
-        const end   = angle + sweep;
-        const x1 = (cx + r * Math.cos(angle)).toFixed(2);
-        const y1 = (cy + r * Math.sin(angle)).toFixed(2);
-        const x2 = (cx + r * Math.cos(end)).toFixed(2);
-        const y2 = (cy + r * Math.sin(end)).toFixed(2);
-        svgPaths += `<path d="M${cx},${cy}L${x1},${y1}A${r},${r} 0 ${sweep > Math.PI ? 1 : 0},1 ${x2},${y2}Z" fill="${s.color}"/>`;
-        angle = end;
-      }
-    }
-
-    const legendItems = [
-      { label: 'Yea',   count: yea,   color: '#16a34a' },
-      { label: 'Nay',   count: nay,   color: '#dc2626' },
-      { label: 'Other', count: other, color: '#9ca3af' },
-    ].filter(s => s.count > 0).map(s =>
-      `<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;">
-        <span style="width:11px;height:11px;border-radius:50%;background:${s.color};flex-shrink:0;display:inline-block;"></span>
-        <span>${s.label}: <strong>${s.count}</strong> <span style="color:#777;">(${pct(s.count)}%)</span></span>
-      </div>`
-    ).join('');
-
-    const footnote = other > 0
-      ? `<p style="font-size:0.72rem;color:#888;margin:0.5rem 0 0 0;">* Other includes Not Voting, Absent, and Excused</p>`
-      : '';
-
-    return `<div>
-      <div style="display:flex;align-items:center;gap:1.25rem;margin:0.75rem 0 0.4rem 0;">
-        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0;">${svgPaths}</svg>
-        <div style="display:flex;flex-direction:column;gap:0.45rem;">${legendItems}${footnote}</div>
-      </div>
-      <p style="font-size:0.72rem;color:#888;margin:0 0 1.25rem 0;max-width:32rem;">Most bills that reach a floor vote pass, so a chart weighted toward “Yea” is typical here and on other members' pages. It reflects which bills got a recorded vote, not this member's overall independence or party loyalty.</p>
-    </div>`;
-  }
 
   const DEFAULT_TAB = 'curatedBills';
 
@@ -1378,7 +1278,6 @@
         return db.localeCompare(da);
       });
 
-      const voteClass = v => v === 'Yea' ? 'vote-yea' : v === 'Nay' ? 'vote-nay' : 'vote-other';
 
       // Party-line positions are precomputed at build time (partyTally per vote in
       // the shared index), so loyalty no longer needs every member's votes here.
@@ -1388,87 +1287,40 @@
         if (votesIndex[vid].partyTally && !partyVoteIndex.has(rc)) partyVoteIndex.set(rc, { tally: votesIndex[vid].partyTally, voteId: vid });
       }
 
-      const renderRows = list => list.map(({ voteId, vote }) => {
-        const meta    = votesIndex[voteId] || {};
-        const bill    = escHtml(meta.bill || '—');
-        const title   = meta.title ? escHtml(meta.title) : '';
-        const caption = escHtml(meta.motionText || '—');
-        const date    = meta.date ? new Date(meta.date + 'T00:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
-        const billLink = meta.billUrl
-          ? `<a href="${escHtml(meta.billUrl)}" target="_blank" rel="noopener">${bill}</a>`
-          : bill;
-        const textLink = meta.textUrl
-          ? ` <a href="${escHtml(meta.textUrl)}" target="_blank" rel="noopener" style="font-size:0.7rem;color:#666;white-space:nowrap;">[text]</a>`
-          : '';
-        const billCell = title
-          ? `${billLink}${textLink}<br><span style="font-size:0.75rem;color:#555;font-weight:normal;">${title}</span>`
-          : `${billLink}${textLink}`;
-        return `<tr>
-          <td>${date}</td>
-          <td>${billCell}</td>
-          <td>${caption}</td>
-          <td class="${voteClass(vote)}">${escHtml(vote)}</td>
-        </tr>`;
-      }).join('');
+      // Rows, the chart, the filter row, the paging footer and the control wiring
+      // all come from VotegaVotesTable (assets/scripts/votega-votes-table.js), which
+      // the federal legislator page uses too — those pieces had drifted into two
+      // diverging copies. What stays here is what is genuinely GA's: sessions,
+      // participation, party loyalty, the scorecard link and the panel layout.
+      const VT = window.VotegaVotesTable;
 
-      // Progressive disclosure. A member has ~1,100 roll calls in a regular session
-      // (~1,350 across the biennium), which is ~5,000 DOM nodes and an unusable
-      // scroll if rendered in full on tab open. Open at PAGE_INITIAL and grow by
-      // PAGE_STEP: a 25-row step alone would take ~44 clicks to reach the end of a
-      // session, so the step is larger than the opening slice and "Show all" keeps
-      // the complete record one click away (it is also the escape hatch for
-      // browser find, which cannot see rows that are not rendered yet).
-      const PAGE_INITIAL = 25;
-      const PAGE_STEP    = 100;
+      // GA's only per-row addition: the bill-text link.
+      const billTextCell = meta => meta.textUrl
+        ? ` <a href="${escHtml(meta.textUrl)}" target="_blank" rel="noopener" style="font-size:0.7rem;color:#666;white-space:nowrap;">[text]</a>`
+        : '';
+      const ROW_OPTS = { showMotion: true, cell: billTextCell };
+      const renderRows = list => VT.rowsHtml(list, votesIndex, ROW_OPTS);
+
+      // Progressive disclosure: the table opens at PAGE_INITIAL rows and grows by
+      // PAGE_STEP, because a member has ~1,100 roll calls in a regular session
+      // (~1,350 across the biennium) and rendering all of them on tab open is
+      // ~5,000 DOM nodes and an unusable scroll. Both constants, the matcher and
+      // the footer markup live in the shared module.
+      const PAGE_INITIAL = VT.PAGE_INITIAL;
+      const PAGE_STEP    = VT.PAGE_STEP;
 
       // sessionId (or the selection key for an ungrouped table) -> rows shown.
       const offsets = new Map();
-      let filterQ = '';
-      let filterVote = 'all';
+      let filter = { q: '', vote: 'all' };
 
-      // One normalization for the query and for every field it is matched against,
-      // so whitespace never decides a match: 'hb1', 'HB 1' and 'hb  1' all find HB 1.
-      const normalize = s => String(s == null ? '' : s).toLowerCase().replace(/\s+/g, '');
-      const filterActive = () => !!filterQ || filterVote !== 'all';
-
-      // Buckets mirror the chart's three categories, so a filtered count can be read
-      // against the figures above it.
-      const voteBucket = v => v === 'Yea' ? 'yea' : v === 'Nay' ? 'nay' : 'other';
-
-      function matchesFilter({ voteId, vote }) {
-        if (filterVote !== 'all' && voteBucket(vote) !== filterVote) return false;
-        if (!filterQ) return true;
-        const meta = votesIndex[voteId] || {};
-        return normalize(`${meta.bill || ''} ${meta.title || ''} ${meta.motionText || ''}`).includes(filterQ);
-      }
-
-      const tableFoot = (sid, total, shown) => {
-        if (!total) return '';
-        const remaining = total - shown;
-        const label = filterActive()
-          ? `Showing ${shown} of ${total} matching vote${total === 1 ? '' : 's'}`
-          : `Showing ${shown} of ${total} vote${total === 1 ? '' : 's'}`;
-        if (remaining <= 0) return `<div class="vote-page-foot"><span>${label}</span></div>`;
-        return `<div class="vote-page-foot" data-vote-foot="${escHtml(sid)}">
-          <span>${label}</span>
-          <button type="button" class="vote-page-btn" data-vote-page data-sid="${escHtml(sid)}" data-step="page">Load ${Math.min(remaining, PAGE_STEP)} more</button>
-          <button type="button" class="vote-page-btn" data-vote-page data-sid="${escHtml(sid)}" data-step="all">Show all ${total}</button>
-        </div>`;
-      };
+      const filterActive = () => VT.isFiltered(filter);
+      const matchesFilter = entry => VT.makeMatcher(filter, votesIndex)(entry);
 
       const tableFor = (list, sid) => {
-        if (!list.length) {
-          return `<p class="vote-no-match">No votes match this search.
-            <a href="#" data-clear-filters>Clear filters</a></p>`;
-        }
+        if (!list.length) return VT.noMatchHtml();
         const shown = Math.min(offsets.get(sid) || PAGE_INITIAL, list.length);
-        return `
-        <div style="overflow-x:auto;">
-        <table class="vote-table" data-vote-table="${escHtml(sid)}">
-          <thead><tr><th>Date</th><th>Bill</th><th>Motion</th><th>Vote</th></tr></thead>
-          <tbody>${renderRows(list.slice(0, shown))}</tbody>
-        </table>
-        </div>${tableFoot(sid, list.length, shown)}`;
+        return VT.tableHtml(list, votesIndex, Object.assign({ key: sid, shown }, ROW_OPTS))
+          + VT.footHtml({ key: sid, total: list.length, shown, filtered: filterActive(), pageStep: PAGE_STEP });
       };
 
       // Group the member's votes by session. A biennium can hold a regular session
@@ -1512,7 +1364,7 @@
           else if (vote === 'Nay') nayCount++;
           else otherCount++;
         }
-        const chartHtml = buildVoteChart(yeaCount, nayCount, otherCount, list.length);
+        const chartHtml = VT.chartHtml(yeaCount, nayCount, otherCount, list.length);
         const participationHtml = buildParticipationSummary(list, votesIndex, member.chamber, incomplete);
         const partyLoyalty = buildPartyLoyaltySummary(list, votesIndex, member.chamber, member, partyVoteIndex, incomplete, allMembers);
         const partyLoyaltyHtml = partyLoyalty.html;
@@ -1538,18 +1390,7 @@
         const statScopeNote = `<p id="gaVotesScopeNote" style="display:none;font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">`
           + `Figures above cover all ${list.length} vote${list.length === 1 ? '' : 's'} in this view, not the filtered list.</p>`;
 
-        const filterRow = `
-          <div class="vote-filter-row">
-            <label for="gaVoteSearch">Search</label>
-            <input type="search" id="gaVoteSearch" placeholder="Bill number or title" autocomplete="off">
-            <label for="gaVoteResult">Vote</label>
-            <select id="gaVoteResult">
-              <option value="all">All</option>
-              <option value="yea">Yea</option>
-              <option value="nay">Nay</option>
-              <option value="other">Other</option>
-            </select>
-          </div>`;
+        const filterRow = VT.filterRowHtml({ searchId: 'gaVoteSearch', voteId: 'gaVoteResult' });
 
         return `
           ${(participationHtml || partyLoyaltyHtml) ? `
@@ -1608,54 +1449,33 @@
         if (!tbody || !foot) return;
         const list = tableList(sid, sel);
         const prev = Math.min(offsets.get(sid) || PAGE_INITIAL, list.length);
-        const next = step === 'all' ? list.length : Math.min(prev + PAGE_STEP, list.length);
+        const next = VT.nextOffset(prev, list.length, step === 'all' ? 'all' : PAGE_STEP);
         offsets.set(sid, next);
         tbody.insertAdjacentHTML('beforeend', renderRows(list.slice(prev, next)));
-        foot.outerHTML = tableFoot(sid, list.length, next);
+        foot.outerHTML = VT.footHtml({ key: sid, total: list.length, shown: next, filtered: filterActive(), pageStep: PAGE_STEP });
       }
 
       // Wired after every full panel render (the session select rebuilds the panel,
-      // which discards these nodes and their listeners). Clicks are delegated to the
-      // tables container, so they survive a refreshTables() re-render.
+      // which discards these nodes and their listeners). The module delegates the
+      // paging/clear clicks to the tables container, so those survive a
+      // refreshTables() re-render.
       function wirePanel(sel) {
-        const search  = document.getElementById('gaVoteSearch');
-        const voteSel = document.getElementById('gaVoteResult');
-        const tables  = document.getElementById('gaVotesTables');
-
-        if (search) {
-          let timer;
-          search.addEventListener('input', () => {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-              filterQ = normalize(search.value);
-              offsets.clear();   // a new result set starts at the top again
-              refreshTables(sel);
-            }, 150);
-          });
-        }
-        if (voteSel) {
-          voteSel.addEventListener('change', () => {
-            filterVote = voteSel.value;
+        VT.mountControls({
+          searchId: 'gaVoteSearch',
+          voteId: 'gaVoteResult',
+          tablesRoot: 'gaVotesTables',
+          onFilter: next => {
+            filter = next;
+            offsets.clear();   // a new result set starts at the top again
+            refreshTables(sel);
+          },
+          onClear: () => {
+            filter = { q: '', vote: 'all' };
             offsets.clear();
             refreshTables(sel);
-          });
-        }
-        if (tables) {
-          tables.addEventListener('click', ev => {
-            const clear = ev.target.closest('[data-clear-filters]');
-            if (clear) {
-              ev.preventDefault();
-              filterQ = ''; filterVote = 'all';
-              if (search) search.value = '';
-              if (voteSel) voteSel.value = 'all';
-              offsets.clear();
-              refreshTables(sel);
-              return;
-            }
-            const btn = ev.target.closest('[data-vote-page]');
-            if (btn) growTable(btn.getAttribute('data-sid'), btn.getAttribute('data-step'), sel);
-          });
-        }
+          },
+          onGrow: (sid, step) => growTable(sid, step, sel),
+        });
       }
 
       // The control is data-driven: it appears only once the biennium actually holds
@@ -1694,7 +1514,7 @@
           // A session change rebuilds the panel with empty controls, so the filter
           // state has to return to its default alongside them — otherwise an
           // invisible filter would keep narrowing the new session's table.
-          filterQ = ''; filterVote = 'all'; offsets.clear();
+          filter = { q: '', vote: 'all' }; offsets.clear();
           panel.innerHTML = panelFor(selected);
           wirePanel(selected);
           // Keep the view shareable without adding a history entry per change.

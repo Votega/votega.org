@@ -357,6 +357,8 @@ exclude:
   # Build-time data generation; has no place in the served site
   - scripts/
   - tools/
+  # Unit tests for the shared front-end modules (node --test); build-time only.
+  - tests/
   # Executive-order source text: ~3,400 .txt files (~17MB) read only by the EO
   # enrich/publish scripts at build time. Nothing on the served site links them
   # (the EO JSON carries sha256/url/archiveUrl, not the text), so keep them in the
