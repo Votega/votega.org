@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-12T18:16:53Z",
+  "generatedAt": "2026-10-15T00:20:41Z",
   "source": "Columbus-Muscogee County (Legistar structured API)",
   "place": "Columbus-Muscogee County",
   "count": 25
@@ -12,15 +12,15 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-19",
+  "lastActivity": "2026-10-26",
   "topicTotals": {
-   "rezoning": 76,
-   "development": 94,
-   "variance": 174,
-   "contract": 750,
-   "appointment": 128,
-   "millage-budget": 297,
-   "annexation": 35,
+   "rezoning": 78,
+   "development": 96,
+   "variance": 177,
+   "contract": 712,
+   "appointment": 122,
+   "millage-budget": 285,
+   "annexation": 31,
    "data-center": 3,
    "alpr": 1
   },
@@ -41,6 +41,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Zoning Committee",
+    "date": "2026-10-26",
+    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6218&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… North Cassady Avenue, 1,238± feet north of Airport Drive, From: CPD, Commercial Planned Development District, To: AR-1, Apartment Residential District (Rezoning #Z26-015). Ordinance",
+    "excerptTerm": "apartment"
+   },
    {
     "title": "Zoning Committee",
     "date": "2026-10-19",
@@ -259,16 +271,6 @@
     ],
     "excerpt": "… e north side of Hard Road, 150± feet west of Stoneford Drive, From: L-RR, Limited Rural Residential District, To: AR-1, Apartment Residential District (Rezoning #Z25-044). Ordinance",
     "excerptTerm": "apartment"
-   },
-   {
-    "title": "Columbus City Council",
-    "date": "2026-04-27",
-    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6179&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-    "tags": [
-     "annexation"
-    ],
-    "excerpt": "To accept the application (AN25-021) of Dublin MHP LLC for the annexation of certain territory containing 4.46± acres in Washington Township. ($0.00) Ordinance",
-    "excerptTerm": "annexation"
    }
   ],
   "landUseMeetings": 23,
@@ -287,6 +289,103 @@
   "alprMeetings": 1
  },
  "meetings": [
+  {
+   "eventId": 6218,
+   "date": "2026-10-26",
+   "body": "Zoning Committee",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6218&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "itemCount": 13,
+   "topics": {
+    "rezoning": 2,
+    "development": 2,
+    "variance": 3
+   },
+   "matchedTerms": [
+    "apartment",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "REZONINGS/AMENDMENTS",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… North Cassady Avenue, 1,238± feet north of Airport Drive, From: CPD, Commercial Planned Development District, To: AR-1, Apartment Residential District (Rezoning #Z26-015). Ordinance",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "VARIANCES",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "REZONINGS/AMENDMENTS",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To rezone 2125 ACKLEY PL. (43219), being 30.17± acres located on the west side of North Cassady Avenue, 1,238± feet north of Airport Drive, From: CPD, Commercial Planned Developmen",
+     "matterFile": "2915-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "VARIANCES",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3353.03, Permitted uses; 3370.05, Permitted uses; 3312.25, Maneuvering; and 3312.30, Parking in a driveway, of the Columbus City",
+     "matterFile": "2890-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3309.14, Height districts; 3333.18, Building lines; 3333.255, Perimeter yard; and 3333.26, Height district, of the Columbus City",
+     "matterFile": "2916-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
   {
    "eventId": 6216,
    "date": "2026-10-19",
@@ -4784,101 +4883,6 @@
      "passed": "Pass",
      "action": "Approved",
      "mover": "Rob Dorans"
-    }
-   ]
-  },
-  {
-   "eventId": 6179,
-   "date": "2026-04-27",
-   "body": "Columbus City Council",
-   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6179&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 133,
-   "topics": {
-    "contract": 38,
-    "millage-budget": 12,
-    "annexation": 4,
-    "appointment": 6
-   },
-   "matchedTerms": [
-    "annexation",
-    "appoint",
-    "budget",
-    "contract",
-    "procurement",
-    "purchase order",
-    "reappoint"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… he Director of the Department of Finance and Management, on behalf of the Facilities Management Division, to enter into contract with The Scherzinger Corporation for pest control services; to waive the competitive bidding provisions of the Columbus …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "To authorize the Director of the Department of Finance and Management to associate all General Budget Reservations resulting from this ordinance with the appropriate Universal Term Contract/Purchase Agreement for the proc …",
-     "context": "agenda-action"
-    },
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "To accept the application (AN25-021) of Dublin MHP LLC for the annexation of certain territory containing 4.46± acres in Washington Township. ($0.00) Ordinance",
-     "context": "agenda-action"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "APPOINTMENTS",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": [],
-   "landUseItems": [
-    {
-     "title": "To accept the application (AN25-021) of Dublin MHP LLC for the annexation of certain territory containing 4.46± acres in Washington Township. ($0.00)",
-     "matterFile": "0985-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "annexation"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To accept the application (AN25-027) of Joseph R. and Lexie C. Blalock, Richard C. Wolf, and Bruce L., Andrea V., Robert B., and Karen L. Minto for the annexation of certain territ",
-     "matterFile": "0999-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "annexation"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To set forth a statement of municipal services and zoning conditions to be provided to the area contained in a proposed annexation (AN26-005) of 167.2± Acres in Madison Township to",
-     "matterFile": "0998-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "annexation"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Emmanuel V. Remy"
-    },
-    {
-     "title": "To set forth a statement of municipal services and zoning conditions to be provided to the area contained in a proposed annexation (AN26-002) of 1.681± Acres in Jackson Township to",
-     "matterFile": "1064-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "annexation"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Emmanuel V. Remy"
     }
    ]
   }

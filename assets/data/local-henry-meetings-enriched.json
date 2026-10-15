@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-12T18:16:54Z",
+  "generatedAt": "2026-10-15T00:20:43Z",
   "source": "Henry County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Henry County",
   "count": 25
@@ -11,21 +11,32 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-29",
+  "lastActivity": "2026-10-20",
   "topicTotals": {
-   "contract": 14,
-   "millage-budget": 15,
-   "appointment": 4,
-   "development": 10,
+   "appointment": 5,
+   "comprehensive-plan": 4,
+   "contract": 15,
+   "millage-budget": 16,
    "rezoning": 9,
-   "special-land-use": 2,
-   "variance": 4,
+   "development": 9,
+   "special-land-use": 1,
+   "variance": 3,
    "annexation": 4,
-   "alpr": 2,
-   "comprehensive-plan": 4
+   "alpr": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-10-20",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2668,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "rezoning"
+    ],
+    "excerpt": "… (Public Hearing) EPL Enterprises, Inc. of Lithonia, GA requests an amendment to the Comprehensive Plan for property located on Highway 155 North to the west of Valley Road in Land Lot 133 of the 11th …",
+    "excerptTerm": "comprehensive plan"
+   },
    {
     "title": "Zoning Advisory Board  Meeting",
     "date": "2026-09-10",
@@ -166,18 +177,6 @@
     ],
     "excerpt": "… Ordinance 26-01 B. COMP-AM-26-01 (Public Hearing) Resolution to amend the Henry County Comprehensive Plan to modify text and policy language to ensure consistency with the adopted 2026 Unified Land D …",
     "excerptTerm": "comprehensive plan"
-   },
-   {
-    "title": "Zoning Advisory Board Meeting",
-    "date": "2026-03-12",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2435,plainText=false)",
-    "tags": [
-     "comprehensive-plan",
-     "development",
-     "rezoning",
-     "special-land-use",
-     "variance"
-    ]
    }
   ],
   "landUseMeetings": 14,
@@ -206,6 +205,72 @@
   "alprMeetings": 2
  },
  "meetings": [
+  {
+   "id": "821",
+   "date": "2026-10-20",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2668,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2668,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 13438,
+   "pdfSha256": "7d2fd25008f2b01bd1c5ab9e60df173b048a669bc8a0a5a3309ef5b06a97da93",
+   "topics": {
+    "appointment": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "comprehensive-plan",
+    "contract",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "comprehensive plan",
+    "contract",
+    "future land use",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… imal Care and Control)(Exhibit 1) Board of Commissioners A. Resolution appointing an Executive Assistant to the Henry County Board of Commissioners. (Presenter: Carlotta Harrell, …",
+     "context": "agenda-action"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… (Public Hearing) EPL Enterprises, Inc. of Lithonia, GA requests an amendment to the Comprehensive Plan for property located on Highway 155 North to the west of Valley Road in Land Lot 133 of the 11th …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Inc. in the amount of $204,987.13 for the future Community Resource Center, utilizing OMNIA Partners Contract #3341; funding for this project shall be provided through the County’s American Res …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Financial Services A. Resolution approving an update to the FY27 General Fund budget to recognize deferred revenue items as revenue items. (Presenter: Joy Robinson, CFO)(Exhibit 9) VIII. …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 12) B. RZ-23-15 (Public Hearing) EPL Enterprises, Inc. of Lithonia, GA requests a rezoning from R- A (Residential Agricultural) to C-2 (General Commercial) for propert …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "820",
    "date": "2026-09-29",
@@ -1285,72 +1350,6 @@
    "flags": [
     "land-use",
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "828",
-   "date": "2026-03-12",
-   "body": "Zoning Advisory Board",
-   "title": "Zoning Advisory Board Meeting",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2435,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2435,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4315,
-   "pdfSha256": "c8cd56737a3da3f8bee053183b035ee725c550c8ca69e9489709dfd3211e6ca8",
-   "topics": {
-    "comprehensive-plan": 1,
-    "development": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "comprehensive-plan",
-    "development",
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "comprehensive plan",
-    "conditional use",
-    "future land use",
-    "multifamily",
-    "rezon",
-    "townhome",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… +/- acres, and the request is for the expansion of a religious facility. District 5 VII. REZONING VIII. COMPREHENSIVE PLAN AMENDMENT IX. UNIFIED LAND DEVELOPMENT CODE AMENDMENT X. ASSOCIATED CASES A. COMP-AM-25-02 H …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "multifamily",
-     "excerpt": "… Investments, LLC, of McDonough, GA requests a rezoning from RA (Residential Agricultural) to RM (Multifamily Residential) for property located at 1916 Highway 155 S in Land Lot 254 of the 2nd District. The …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… 25-03 (Postponed by the applicant) Professional Property Investments, LLC, of McDonough, GA requests a rezoning from RA (Residential Agricultural) to RM (Multifamily Residential) for property lo …",
-     "context": "unknown"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… is for a townhome development. District 5 IV. PLANNING STAFF COMMENTS V. VARIANCES VI. CONDITIONAL USE A. CU-25-09 Hoon Jae Lee of Loganville, GA requests a conditional use for property located at …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… es and the request is for a townhome development. District 5 IV. PLANNING STAFF COMMENTS V. VARIANCES VI. CONDITIONAL USE A. CU-25-09 Hoon Jae Lee of Loganville, GA requests a conditional use for pro …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }
