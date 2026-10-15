@@ -32,16 +32,16 @@ district, term dates, and official photo is pulled.
 
 **Sources:** [Congress.gov API](https://api.congress.gov/), [Clerk of the U.S. House](https://clerk.house.gov/), [U.S. Senate](https://www.senate.gov/)
 
-Voting history is displayed on each Georgia federal legislator's profile page, showing how they voted on every roll call tied to a bill that was <u>signed into law</u> during the current Congress (119th, 2025–2027).
+Voting history is displayed on each Georgia federal legislator's profile page, showing how they voted on <u>every recorded roll call</u> their chamber held during the current Congress (119th, 2025–2027) — not just the votes on bills that became law.
 
 **How it works:**
 
-1. The Congress.gov API is queried for all public laws enacted during the current Congress.
-2. For each enacted bill, we pull the associated roll call vote URLs from the bill's action history via the Congress.gov API.
-3. Roll call XML files are fetched directly from the Clerk of the House (House votes) and Senate.gov (Senate votes). These are the  official government sources.
+1. The Senate publishes a complete index of every vote it has taken in a session, so that index gives us the full list of Senate roll calls directly.
+2. The Clerk of the House publishes one file per roll call but no index, so we walk the numbered files for each calendar year until they run out.
+3. Roll call XML files are fetched directly from the Clerk of the House (House votes) and Senate.gov (Senate votes). These are the official government sources, and no API key is involved.
 4. Georgia delegation members are identified by their state attribute in the XML. House XML includes an ID (bioguide) directly. Senate XML uses LIS Senator IDs, which are mapped to bioguide IDs via the [unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators) project.
 
-- **Scope:** Only votes on bills that were <u>signed into law</u>. Votes on bills that failed, were vetoed, or are still pending are not included.
+- **Scope:** Every roll call recorded by name, including votes on measures that failed, amendments, procedural motions such as cloture and motions to adjourn, and — in the Senate — nominations. Votes on anything other than a bill or resolution are shown without a bill number. Voice votes and unanimous-consent agreements are not recorded by name and so cannot be shown.
 - **Coverage:** Georgia's 2 U.S. Senators and 14 U.S. House Representatives.
 - **Freshness:** Fetched weekly
 

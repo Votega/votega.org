@@ -257,8 +257,13 @@ def votes_schema():
         "$id": "https://raw.githubusercontent.com/Votega/ga-federal-legislators/main/data/votes.schema.json",
         "title": "Georgia Federal Delegation — Roll-call Votes",
         "description": "Roll-call votes for Georgia's federal delegation in the current Congress. "
-                       "SCOPE: only roll calls tied to enacted legislation (public laws walked back to "
-                       "their votes), NOT every procedural vote. yea/nay are chamber-wide totals.",
+                       "SCOPE: every recorded roll call both chambers held, enumerated from the "
+                       "Clerk of the House's per-year roll files and the Senate's per-session vote "
+                       "index - including measures that failed, amendments, procedural motions and "
+                       "Senate nominations. A vote on anything other than a measure (a quorum call, "
+                       "a motion to adjourn, a nomination) has bill and billUrl null. Voice votes "
+                       "and unanimous-consent agreements are not recorded by name and cannot appear. "
+                       "yea/nay are chamber-wide totals.",
         "type": "object",
         "required": ["metadata", "votes", "memberVotes"],
         "properties": {

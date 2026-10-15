@@ -849,18 +849,167 @@
       ${employersHtml}`;
   }
 
+  // -- Roll-call votes: one shared index + this member's slice ----------------
+  // generate_federal_votes_data.py no longer drives off enacted public laws, so
+  // the file now holds EVERY roll call of the Congress (~1,591, against the 216
+  // the enacted-law frame could see) and the monolith is ~1.2 MB — far too much
+  // to put on the wire for one member's panel, and it was being fetched twice.
+  // build_federal_votes_slices.py derives two artifacts instead: a shared index
+  // of every vote, and each member's own compact {index: code} map. Both panels
+  // below read the same two, so each is fetched once and cached here.
+  const FED_VOTES_INDEX_URL = getBasePath() + 'assets/data/federal-votes-index.json';
+  const fedVoteSliceUrl = bioguide =>
+    `${getBasePath()}assets/data/federal-votes/${encodeURIComponent(bioguide)}.json`;
+
+  // Positions in an index row. Rows are positional arrays because the field names
+  // would otherwise repeat on all ~1,591 records (~140 KB of key names alone).
+  // Mirrors ROW_FIELDS in scripts/build_federal_votes_slices.py;
+  // scripts/test_federal_votes_slices.py fails if the two drift. The FV_ prefix
+  // keeps them clear of the sponsorship panel's own R_* row positions above.
+  const FV_CHAMBER = 0, FV_DATE = 1, FV_BILLTYPE = 2, FV_BILLNUM = 3, FV_TITLE = 4,
+        FV_MOTION = 5, FV_RESULT = 6, FV_YEA = 7, FV_NAY = 8, FV_TALLY = 9;
+
+  // Bill type -> display prefix. Mirrors TYPE_LABEL in
+  // scripts/generate_federal_votes_data.py. Both the label and the congress.gov
+  // permalink are rebuilt from billType + billNumber (the slug via BILL_TYPE_SLUG
+  // above) rather than stored on every row.
+  const FED_BILL_LABEL = {
+    hr: 'H.R.', s: 'S.',
+    hjres: 'H.J.Res.', sjres: 'S.J.Res.',
+    hconres: 'H.Con.Res.', sconres: 'S.Con.Res.',
+    hres: 'H.Res.', sres: 'S.Res.',
+  };
+
+  // Compact vote codes -> labels, matching VOTE_CODES in scripts/lib/votes_schema.py.
+  const FED_VOTE_CODE = {
+    Y: 'Yea', N: 'Nay', NV: 'Not Voting',
+    P: 'Present', A: 'Absent', E: 'Excused', O: 'Other',
+  };
+
+  // Positional rows -> the { voteId: meta } shape VotegaVotesTable and the Key
+  // Votes cards already expect, so neither had to learn the compact format.
+  function hydrateVoteIndex(idx) {
+    const congress = (idx && idx.metadata && idx.metadata.congress) || '';
+    const motions  = (idx && idx.motions) || [];
+    const ids      = (idx && idx.voteIds) || [];
+    const rows     = (idx && idx.rows) || [];
+    const out = {};
+    ids.forEach((voteId, i) => {
+      const row = rows[i];
+      if (!row) return;
+      const type = row[FV_BILLTYPE], num = row[FV_BILLNUM];
+      // A motion to adjourn, a quorum call and a Senate nomination are associated
+      // with no measure at all — now that the frame is every roll call rather than
+      // only enacted bills, that is a large and normal share of the record. Both
+      // bill and billUrl stay null, and the table renders its em dash rather than
+      // an empty link.
+      const slug = type ? (BILL_TYPE_SLUG[String(type).toUpperCase()] || String(type)) : '';
+      const t = row[FV_TALLY];
+      out[voteId] = {
+        chamber:    row[FV_CHAMBER] === 'H' ? 'House' : 'Senate',
+        date:       row[FV_DATE] || '',
+        bill:       (type && num) ? `${FED_BILL_LABEL[type] || String(type).toUpperCase()} ${num}` : null,
+        billUrl:    (type && num)
+          ? `https://www.congress.gov/bill/${encodeURIComponent(congress)}th-congress/${encodeURIComponent(slug)}/${encodeURIComponent(num)}`
+          : null,
+        title:      row[FV_TITLE] || null,
+        motionText: motions[row[FV_MOTION]] || '',
+        // Three-way, not two: a roll call that answers no pass/fail question — the
+        // election of a Speaker records the winner's NAME — carries its own wording
+        // through, which is what the callers already fall back to printing.
+        result:     row[FV_RESULT] === 'P' ? 'Pass' : row[FV_RESULT] === 'F' ? 'Fail' : row[FV_RESULT],
+        yea:        row[FV_YEA],
+        nay:        row[FV_NAY],
+        // Six flat ints in the index (Dem then Rep), expanded to the shape
+        // buildTallyBar() reads. Independents are deliberately not carried here —
+        // the panel draws Dem and Rep bars only, and the full per-party tally
+        // stays in the monolith for the server-side consumers.
+        partyTally: t ? {
+          Democratic: { yea: t[0], nay: t[1], other: t[2] },
+          Republican: { yea: t[3], nay: t[4], other: t[5] },
+        } : null,
+      };
+    });
+    return out;
+  }
+
+  // { metadata, voteIds, votes } or null. Fetched once per page.
+  let _fedVoteIndexPromise = null;
+  function getFederalVoteIndex() {
+    if (!_fedVoteIndexPromise) {
+      _fedVoteIndexPromise = fetch(FED_VOTES_INDEX_URL)
+        .then(r => (r.ok ? r.json() : null))
+        .then(idx => (idx ? {
+          metadata: idx.metadata || {},
+          voteIds:  idx.voteIds || [],
+          votes:    hydrateVoteIndex(idx),
+        } : null))
+        .catch(err => { console.warn('Could not load the federal vote index:', err); return null; });
+    }
+    return _fedVoteIndexPromise;
+  }
+
+  // This member's roll calls, decoded to the legacy [{ voteId, vote }] list both
+  // panels read. An ABSENT slice and a FAILED slice fetch are different claims and
+  // only one of them licenses a "no voting record" message: the builder writes a
+  // file for every member who appears in memberVotes, so a 404/410 really does mean
+  // "no roll calls in our data", while a 5xx or an unparseable body tells us
+  // nothing about the member — reporting that as "no record" would assert as fact
+  // something we do not know. Returns { votes, failed }.
+  // Keyed by bioguide, not a bare singleton: both panels on a page ask for the
+  // same member, but a cache that ignored the argument would hand a second
+  // member's panel the first member's record rather than fetching theirs.
+  const _fedVoteSlicePromises = new Map();
+  function getFederalVoteSlice(bioguide) {
+    if (!_fedVoteSlicePromises.has(bioguide)) {
+      _fedVoteSlicePromises.set(bioguide, Promise.all([
+        fetch(fedVoteSliceUrl(bioguide)).catch(() => null),
+        getFederalVoteIndex(),
+      ]).then(async ([res, idx]) => {
+        const ids = (idx && idx.voteIds) || [];
+        if (!res || !res.ok) {
+          const absent = !!res && (res.status === 404 || res.status === 410);
+          if (!absent) console.warn('Vote slice fetch failed:', res && res.status);
+          return { votes: [], failed: !absent };
+        }
+        try {
+          const compact = (await res.json()).compact || {};
+          const votes = [];
+          for (const i in compact) {
+            const voteId = ids[+i];
+            if (voteId) votes.push({ voteId, vote: FED_VOTE_CODE[compact[i]] || compact[i] });
+          }
+          // A slice with entries that resolve to nothing means the slice and the
+          // index are out of step (or the index never arrived) — a build fault,
+          // not a member who cast no votes. Reporting it as the latter would
+          // render a full record as an empty one.
+          const misaligned = Object.keys(compact).length > 0 && votes.length === 0;
+          if (misaligned) console.warn('Vote slice does not align with the shared index:', bioguide);
+          return { votes, failed: misaligned };
+        } catch (err) {
+          console.warn('Could not parse the vote slice:', err);
+          return { votes: [], failed: true };
+        }
+      }));
+    }
+    return _fedVoteSlicePromises.get(bioguide);
+  }
+
   async function loadKeyVotes(member) {
     const container = document.getElementById('keyVotes');
     if (!container || !member.bioguideId) return;
 
-    const CURATED_URL  = getBasePath() + 'assets/data/curated-federal-bills.json';
-    const VOTES_URL    = getBasePath() + 'assets/data/federal-member-votes.json';
+    const CURATED_URL = getBasePath() + 'assets/data/curated-federal-bills.json';
 
-    let curatedData, votesData;
+    let curatedData, voteIdx, slice;
     try {
-      const [cRes, vRes] = await Promise.all([fetch(CURATED_URL), fetch(VOTES_URL)]);
-      if (!cRes.ok || !vRes.ok) return;
-      [curatedData, votesData] = await Promise.all([cRes.json(), vRes.json()]);
+      const [cRes, idx, sl] = await Promise.all([
+        fetch(CURATED_URL), getFederalVoteIndex(), getFederalVoteSlice(member.bioguideId),
+      ]);
+      if (!cRes.ok || !idx) return;
+      curatedData = await cRes.json();
+      voteIdx = idx;
+      slice = sl;
     } catch (err) {
       console.warn('Could not load key votes:', err);
       return;
@@ -869,8 +1018,8 @@
     const bills = curatedData.bills || [];
     if (!bills.length) return;
 
-    const votesIndex   = votesData.votes || {};
-    const memberVotes  = (votesData.memberVotes || {})[member.bioguideId] || [];
+    const votesIndex   = voteIdx.votes || {};
+    const memberVotes  = slice.votes || [];
     const lawIdx       = await getEnactedLaws();  // enacted key votes -> GPO law PDF
     // Build quick lookup: voteId -> member's vote string
     const myVoteMap = {};
@@ -1195,21 +1344,28 @@
     const container = document.getElementById('votingHistory');
     if (!member.bioguideId || !container) return;
 
-    const VOTES_URL = getBasePath() + 'assets/data/federal-member-votes.json';
     try {
-      const res = await fetch(VOTES_URL);
-      if (!res.ok) return; // silently skip if file not yet generated
+      const [voteIdx, slice] = await Promise.all([
+        getFederalVoteIndex(), getFederalVoteSlice(member.bioguideId),
+      ]);
+      if (!voteIdx) return; // silently skip if the shared index isn't generated yet
 
-      const data        = await res.json();
-      const memberVotes = (data.memberVotes || {})[member.bioguideId];
+      // A failed slice fetch is not evidence about the member — say so rather than
+      // rendering a full record as an empty one. See getFederalVoteSlice().
+      if (slice.failed) {
+        container.innerHTML = `<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">We couldn&rsquo;t load this member&rsquo;s voting record just now &mdash; this is a temporary problem on our end, not a sign that they have no record. Please reload the page to try again.</p>`;
+        return;
+      }
+
+      const memberVotes = slice.votes;
       if (!memberVotes || memberVotes.length === 0) {
         container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No votes recorded for this session.</p>';
         return;
       }
 
-      const votesIndex = data.votes || {};
-      const session    = data.metadata?.sessionName || '';
-      const lawIdx     = await getEnactedLaws();  // every voted bill here is enacted law
+      const votesIndex = voteIdx.votes || {};
+      const session    = voteIdx.metadata?.sessionName || '';
+      const lawIdx     = await getEnactedLaws();  // joins the subset that became law
 
       // Determine member chamber to conditionally show Motion column
       const termsArr  = member.terms?.item || [];
@@ -1239,11 +1395,18 @@
       const chartHtml = VT.chartHtml(yeaCount, nayCount, otherCount, sorted.length, {
         // This page's own wording of the caption, kept verbatim through the
         // extraction; the GA page uses the module's default.
-        caption: "Most bills that reach a floor vote pass, so a chart weighted toward “Yea” is typical here and on other members' pages — it reflects which bills got a recorded vote, not this member's overall independence or party loyalty.",
+        // Reworded with the scope: the frame is no longer "bills that became law"
+        // but every question the chamber put to a recorded vote, most of which —
+        // suspensions, rules, cloture, nominations — carry a majority by design.
+        caption: "Most questions that reach a recorded vote carry, so a chart weighted toward “Yea” is typical here and on other members' pages. It reflects what the chamber chose to put to a vote, not this member's overall independence or party loyalty.",
       });
 
       // The enacted-law line sits below the title, so it uses the cellAfter slot.
       const lawCell = meta => {
+        // Only a measure can have become law, and most roll calls now in scope are
+        // not attached to one at all (a quorum call, a nomination, a procedural
+        // motion), so the connector is skipped rather than joined on an empty key.
+        if (!meta.bill) return '';
         const conn = lawConnector(lawIdx.get(lawKey(meta.bill, '')));
         return (conn && conn.officialPdfUrl)
           ? `<span class="vote-law-cell">${conn.plNumber ? `P.L. ${escHtml(conn.plNumber)} · ` : ''}<a href="${escHtml(conn.officialPdfUrl)}" target="_blank" rel="noopener">Official text (GPO) →</a></span>`
@@ -1252,36 +1415,73 @@
 
       const ROW_OPTS = { showMotion: !isHouse, cellAfter: lawCell };
       const TABLE_KEY = 'federal';
+      const renderRows = list => VT.rowsHtml(list, votesIndex, ROW_OPTS);
 
-      // Searchable, but NOT paged: a member of the GA delegation has ~75 roll calls
-      // here (max 141), where a GA legislator has ~1,100 in a session. Truncating 75
-      // rows would add a click and buy nothing — but finding how they voted on one
-      // specific bill is still eyeballing a long table, which is what the filter is
-      // for. Passing no `shown` renders the whole list.
+      // Progressive disclosure, as on the GA panel. This table used to render the
+      // whole list unpaged, which was right when the enacted-law frame gave a House
+      // member ~75 roll calls. Enumerating the chambers' own indexes gives them the
+      // chamber's full record — ~676 for a representative, ~915 for a senator — so
+      // an unpaged render is thousands of DOM nodes and an unusable scroll. Both
+      // constants and the footer markup live in the shared module.
+      const PAGE_INITIAL = VT.PAGE_INITIAL;
+      const PAGE_STEP    = VT.PAGE_STEP;
+      let shownCount = PAGE_INITIAL;
       let filter = { q: '', vote: 'all' };
 
+      const matchedList = () => sorted.filter(VT.makeMatcher(filter, votesIndex));
+
       function tablesHtml() {
-        const shownList = sorted.filter(VT.makeMatcher(filter, votesIndex));
-        if (!shownList.length) return VT.noMatchHtml();
-        const countLine = VT.isFiltered(filter)
-          ? `<p style="font-size:0.78rem;color:#666;margin:0 0 0.5rem 0;">Showing ${shownList.length} of ${sorted.length} vote${sorted.length === 1 ? '' : 's'}.</p>`
-          : '';
-        return countLine + VT.tableHtml(shownList, votesIndex, Object.assign({ key: TABLE_KEY }, ROW_OPTS));
+        const list = matchedList();
+        if (!list.length) return VT.noMatchHtml();
+        const shown = Math.min(shownCount, list.length);
+        return VT.tableHtml(list, votesIndex, Object.assign({ key: TABLE_KEY, shown }, ROW_OPTS))
+          + VT.footHtml({ key: TABLE_KEY, total: list.length, shown,
+                          filtered: VT.isFiltered(filter), pageStep: PAGE_STEP });
+      }
+
+      // Appends to the existing tbody rather than re-rendering the panel, so the
+      // reader's scroll position survives a "Load more".
+      function growTable(step) {
+        const host  = document.getElementById('fedVotesTables');
+        const tbody = host && host.querySelector(`table[data-vote-table="${TABLE_KEY}"] tbody`);
+        const foot  = host && host.querySelector(`[data-vote-foot="${TABLE_KEY}"]`);
+        if (!tbody || !foot) return;
+        const list = matchedList();
+        const prev = Math.min(shownCount, list.length);
+        const next = VT.nextOffset(prev, list.length, step === 'all' ? 'all' : PAGE_STEP);
+        shownCount = next;
+        tbody.insertAdjacentHTML('beforeend', renderRows(list.slice(prev, next)));
+        foot.outerHTML = VT.footHtml({ key: TABLE_KEY, total: list.length, shown: next,
+                                       filtered: VT.isFiltered(filter), pageStep: PAGE_STEP });
       }
 
       // The chart and any figures above the table describe the member's whole
       // record, not the filtered rows, so say so while a filter is engaged rather
       // than letting the two read as one number.
+      // This panel's own dated provenance. The page's bottom stamp names
+      // Congress.gov, which is where the ROSTER comes from — these roll calls come
+      // from the two chambers directly and are refreshed on their own schedule, so
+      // borrowing that stamp would name the wrong source and the wrong date
+      // (CLAUDE.md: each rendered dataset carries its own). Links the published
+      // sibling repo rather than the build artifact we happen to fetch.
+      const voteGen = voteIdx.metadata?.generatedAt;
+      const voteSourceLine = `<p style="font-size:0.78rem;color:#666;margin:0.75rem 0 0 0;">`
+        + `Roll calls come from the Clerk of the U.S. House and Senate.gov`
+        + (voteGen ? `, updated ${escHtml(fmtDate(voteGen))}` : '')
+        + `, and are published as open data in the `
+        + `<a href="https://github.com/Votega/ga-federal-legislators" target="_blank" rel="noopener">Votega/ga-federal-legislators</a> repository.</p>`;
+
       const scopeNote = `<p id="fedVotesScopeNote" style="display:none;font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">`
         + `The breakdown above covers all ${sorted.length} vote${sorted.length === 1 ? '' : 's'}, not the filtered list.</p>`;
 
       container.innerHTML = `
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
-        <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing votes on bills that were signed into law. Does not include votes on bills that failed, were vetoed, or are still pending.</p>
+        <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Every recorded roll call this member's chamber has held in the ${escHtml(session || 'current Congress')} &mdash; including measures that failed, amendments, procedural motions, and, in the Senate, nominations. Rows with no bill number are votes on something other than a measure. Voice votes and unanimous-consent agreements are not recorded by name and so cannot appear here.</p>
         ${chartHtml}
         ${scopeNote}
         ${VT.filterRowHtml({ searchId: 'fedVoteSearch', voteId: 'fedVoteResult' })}
-        <div id="fedVotesTables">${tablesHtml()}</div>`;
+        <div id="fedVotesTables">${tablesHtml()}</div>
+        ${voteSourceLine}`;
 
       function refreshTables() {
         const host = document.getElementById('fedVotesTables');
@@ -1294,8 +1494,10 @@
         searchId: 'fedVoteSearch',
         voteId: 'fedVoteResult',
         tablesRoot: 'fedVotesTables',
-        onFilter: next => { filter = next; refreshTables(); },
-        onClear: () => { filter = { q: '', vote: 'all' }; refreshTables(); },
+        // A new result set starts at the top again, so the offset resets with it.
+        onFilter: next => { filter = next; shownCount = PAGE_INITIAL; refreshTables(); },
+        onClear: () => { filter = { q: '', vote: 'all' }; shownCount = PAGE_INITIAL; refreshTables(); },
+        onGrow: (_sid, step) => growTable(step),
       });
     } catch (err) {
       console.warn('Could not load voting history:', err);

@@ -27,30 +27,72 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyyaml
 
+      # The index row format is split across Python and the entity include; this
+      # fails the run if the two have drifted, before any data is written.
+      - name: Check the slice format still matches the entity include
+        run: python scripts/test_federal_votes_slices.py
+
+      # No CONGRESS_API_KEY any more: the roll-call universe comes from the
+      # chambers' own indexes (clerk.house.gov and senate.gov static XML), so this
+      # job makes no Congress.gov API call at all and is off that key's rate limit
+      # entirely. The run is incremental — it reuses every roll call already in the
+      # committed file and fetches only the ones missing, so a quiet week costs a
+      # few dozen requests rather than ~1,600.
       - name: Generate federal vote data
         run: python scripts/generate_federal_votes_data.py assets/data/federal-member-votes.json assets/data/current-members.json
-        env:
-          CONGRESS_API_KEY: ${{ secrets.CONGRESS_API_KEY }}
+
+      - name: Build the shared vote index and per-member slices
+        run: python scripts/build_federal_votes_slices.py
 
       - name: Validate generated data
         run: |
           python scripts/validate_data_update.py assets/data/federal-member-votes.json \
             --metric rollcalls=len:votes \
             --metric members=len:memberVotes \
+            --metric house=metadata.houseVotes \
+            --metric senate=metadata.senateVotes \
+            --min members=15 \
             --scope-key metadata.congress
+
+      # Counts cannot see shape. This checks that the fields the page renders are
+      # present, that bill/billUrl are null rather than "" on the many roll calls
+      # with no associated measure, that both chambers are represented, and that
+      # every member's slice still decodes against the shared index.
+      #
+      # Deliberately no absolute floor on the roll-call count: a Congress starts at
+      # zero, and --scope-key only relaxes the DELTA checks on a rollover, so a
+      # `--min rollcalls=N` would fail every run for the first year of the 120th —
+      # the standing-failure trap CLAUDE.md records against update-ga-bills.yml.
+      - name: Validate roll-call structure and slice alignment
+        run: |
+          python scripts/validate_federal_votes.py \
+            assets/data/federal-member-votes.json \
+            assets/data/federal-votes-index.json \
+            assets/data/federal-votes
 
       - name: Commit and push generated data
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f assets/data/federal-member-votes.json
+          git add -f assets/data/federal-member-votes.json \
+                     assets/data/federal-votes-index.json \
+                     assets/data/federal-votes
+          # The run-scoped counters move on every run by design (an incremental run
+          # fetches a handful, a full refresh ~1,600), so they are listed alongside
+          # the timestamp: without them a quiet week would still commit a full
+          # revision of the monolith, the index and all 16 slices.
           if git diff --cached --quiet; then
             echo "No changes to commit"
-          elif python scripts/only_keys_changed.py assets/data/federal-member-votes.json metadata.generatedAt; then
-            echo "Only metadata.generatedAt changed — skipping redundant commit"
-            git restore --staged assets/data/federal-member-votes.json
-            git checkout -- assets/data/federal-member-votes.json
+          elif python scripts/only_keys_changed.py assets/data/federal-member-votes.json \
+                 metadata.generatedAt metadata.rollCallsFetchedThisRun metadata.updateMode; then
+            echo "Only run-scoped metadata changed — skipping redundant commit"
+            git restore --staged assets/data/federal-member-votes.json \
+                                 assets/data/federal-votes-index.json \
+                                 assets/data/federal-votes
+            git checkout -- assets/data/federal-member-votes.json \
+                            assets/data/federal-votes-index.json \
+                            assets/data/federal-votes
           else
             git commit -m "Update federal legislative vote data (GA delegation)"
             pushed=0

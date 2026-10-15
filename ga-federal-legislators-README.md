@@ -167,7 +167,7 @@ Only covers votes cast by Georgia's own delegation — a House vote array never 
 
 Files in this repo are pushed automatically from [Votega/votega.org](https://github.com/Votega/votega.org) via a GitHub Actions workflow (`.github/workflows/publish-federal-delegation-to-ga-federal-legislators.yml`). It runs whenever `current-members.json` or `federal-member-votes.json` changes on `main`, and can also be triggered manually.
 
-Source data comes from the [Congress.gov API](https://api.congress.gov), the Clerk of the House's roll-call XML, and Senate.gov's roll-call XML, via `scripts/generate_current_members_data.py` and `scripts/generate_federal_votes_data.py` in the votega.org repo.
+Source data comes from the [Congress.gov API](https://api.congress.gov) (the roster), the Clerk of the House's roll-call XML and Senate.gov's roll-call XML (the votes), via `scripts/generate_current_members_data.py` and `scripts/generate_federal_votes_data.py` in the votega.org repo. The vote half needs no API key: both chambers publish their roll calls as static XML.
 
 ---
 
@@ -175,6 +175,6 @@ Source data comes from the [Congress.gov API](https://api.congress.gov), the Cle
 
 - **`sponsorship`, `recentSponsored` and `committees` are Georgia-specific enrichment.** votega.org's full national roster only fetches per-member sponsored-legislation detail for the Georgia delegation, to avoid 500+ extra Congress.gov API calls on every run — that's why it's present here on every member.
 - **`recentSponsored` is a slice of a complete record, not a page of one.** Both `/sponsored-legislation` and `/cosponsored-legislation` are walked to their last page and filtered to the current Congress; `sponsorship` carries the full counts, and `recentSponsored` is the 20 most recently introduced of the sponsored list. (Before October 2026 it was a single unpaginated 20-row page filtered after the fact, so it was both truncated and arbitrarily sampled.)
-- **`votes.json` only records roll calls tied to enacted legislation.** It's built by walking public laws passed in the current Congress back to their roll-call votes, not every procedural vote taken.
+- **`votes.json` covers every recorded roll call of the Congress.** It enumerates the chambers' own indexes — the Clerk of the House's per-year roll files and the Senate's per-session vote menu — so failed measures, amendments, procedural motions and Senate nominations are all included. (Before October 2026 it was built by walking enacted public laws back to their votes, which captured only 216 of the 119th Congress's 1,591 roll calls.) Votes on anything other than a measure have `bill` and `billUrl` set to `null`. Voice votes and unanimous-consent agreements are not recorded by name and so cannot appear.
 - **Committee names** come from the community-maintained [`unitedstates/congress-legislators`](https://github.com/unitedstates/congress-legislators) project, not Congress.gov directly.
 - This dataset covers the **119th Congress** only.
