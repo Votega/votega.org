@@ -11,6 +11,7 @@ exclusion has to be exercised, and the real record's shape changes weekly.
 
 Run: python scripts/test_federal_party_unity.py        (no network, no writes)
 """
+import json
 import os
 import sys
 
@@ -133,6 +134,42 @@ check("the senate cohort is reported even when below the rank threshold",
       doc["delegation"]["Senate"]["cohortSize"], 1)
 check("the rank threshold is published so the page can mirror it",
       RANK_MIN_COHORT, 5)
+
+# ---------------------------------------------------------------------------
+# The structural validator (validate_federal_party_unity.py). Counts cannot see
+# shape: an artifact whose rates had drifted above 1, or that had quietly lost a
+# member, is still valid JSON of about the right size.
+#
+# RULING (plan defect): the brief gave this `problems(scorecard, votes)`, but one
+# of the checks the spec asks for -- that every sitting Georgia roster member is
+# present -- cannot be made without the roster. The signature takes it as a third
+# argument and the CLI a third path.
+
+from validate_federal_party_unity import problems  # noqa: E402
+
+
+def mutated(**member_fields):
+    """A copy of the good document with OLD00001's fields overridden."""
+    copy = json.loads(json.dumps(doc))
+    copy["members"]["OLD00001"].update(member_fields)
+    return copy
+
+
+print("the structural validator:")
+check("a clean document has no problems", problems(doc, VOTES, MEMBERS), [])
+check("a rate above 1 is caught",
+      len(problems(mutated(participationRate=1.5), VOTES, MEMBERS)), 1)
+check("votedWithParty above partyLineVotes is caught",
+      len(problems(mutated(votedWithParty=99), VOTES, MEMBERS)), 1)
+check("cast above totalRollCalls is caught",
+      len(problems(mutated(cast=99), VOTES, MEMBERS)), 1)
+check("more roll calls than the chamber held is caught",
+      len(problems(mutated(totalRollCalls=99), VOTES, MEMBERS)), 1)
+
+dropped = json.loads(json.dumps(doc))
+del dropped["members"]["OLD00001"]
+check("a sitting roster member missing from the scorecard is caught",
+      len(problems(dropped, VOTES, MEMBERS)), 1)
 
 print("")
 if failures:
