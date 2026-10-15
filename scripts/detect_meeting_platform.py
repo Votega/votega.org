@@ -41,17 +41,26 @@ from lib.http import fetch_bytes  # noqa: E402
 # ---------------------------------------------------------------------------
 # Platform signatures. Order matters: embedded third-party portals first, so a
 # CMS page that iframes one of them resolves to the portal, not the CMS shell.
-# Each entry: (platform, compiled host/path regex, extractor(match, page_url) -> cfg).
+# Each entry: (platform, compiled host/path regex,
+#              extractor(match, page_url, blob) -> cfg).
 # The extractor returns the domains.meetings config dict (minus schedule/body_map),
-# or None to reject a false match.
+# or None to reject a false match. `blob` is the markup the regex matched in, so an
+# extractor can check that the surface it claims actually has meetings on it —
+# which matters most for the CMS-level fingerprints, where the brand being present
+# says nothing about whether this particular page is the agenda archive.
 # ---------------------------------------------------------------------------
+
+# A link that looks like a posted agenda or minutes document — the thing a
+# link-harvesting adapter (lib.revize) actually needs to find on the page.
+_AGENDA_PDF_RE = re.compile(r'[^"\'\s<>]*(?:agenda|minute)[^"\'\s<>]*\.pdf', re.I)
+
 
 def _origin(u):
     p = urllib.parse.urlparse(u if '//' in u else 'https://' + u)
     return '%s://%s' % (p.scheme or 'https', p.netloc)
 
 
-def _municode(m, page):
+def _municode(m, page, blob=None):
     # Keep the whole PublishPage URL — it carries cid + ppid, which the adapter needs.
     url = m.group(0)
     if url.startswith('//'):
@@ -63,18 +72,18 @@ def _municode(m, page):
     return {'platform': 'municode', 'agendas_url': url}
 
 
-def _civicclerk(m, page):
+def _civicclerk(m, page, blob=None):
     return {'platform': 'civicclerk', 'subdomain': m.group(1)}
 
 
-def _legistar(m, page):
+def _legistar(m, page, blob=None):
     sub = m.group(1)
     if sub in ('webapi', 'www'):
         return None
     return {'platform': 'legistar', 'client': sub}
 
 
-def _granicus(m, page):
+def _granicus(m, page, blob=None):
     url = m.group(0).replace('&amp;', '&').rstrip('"\'\\ )')
     if not url.startswith('http'):
         url = 'https://' + url.lstrip('/')
@@ -88,29 +97,37 @@ def _iqm2(m, page):
     return {'platform': 'iqm2', 'agendas_url': url}
 
 
-def _primegov(m, page):
+def _primegov(m, page, blob=None):
     return {'platform': 'primegov', 'base_url': _origin(m.group(0))}
 
 
-def _agendapub(m, page):
+def _agendapub(m, page, blob=None):
     return {'platform': 'agendapub', 'agendas_url': _origin(m.group(0))}
 
 
-def _revize(m, page):
+def _revize(m, page, blob=None):
     # Revize is a CMS, not a portal: the page you fed in IS the agendas page, and
     # lib.revize harvests its PDF links. Reuse that URL as agendas_url and the
     # origin as the <base>-fallback base_url.
+    #
+    # Reject the match when the page has no agenda/minutes PDF to harvest. A Revize
+    # site whose agendas live somewhere else entirely (LaFayette links out to a
+    # SharePoint folder) would otherwise be labelled with an ADAPTER platform, and
+    # generate_place_meetings.py treats an adapter returning nothing as a hard
+    # failure — so the mislabel breaks the whole run, not just this place.
+    if blob and not _AGENDA_PDF_RE.search(blob):
+        return None
     return {'platform': 'revize', 'agendas_url': page, 'base_url': _origin(page)}
 
 
-def _wpdatatables(m, page):
+def _wpdatatables(m, page, blob=None):
     # Like Revize, a CMS fingerprint rather than a portal: the page you fed in IS
     # the meetings page, and lib.wpdatatables reads its tables through the
     # plugin's admin-ajax endpoint.
     return {'platform': 'wpdatatables', 'agendas_url': page}
 
 
-def _teammunicode(m, page):
+def _teammunicode(m, page, blob=None):
     origin = _origin(m.group(0))
     # teammunicode.com serves the view at /meetings; municodemeetings.com at root.
     path = '/meetings' if 'teammunicode.com' in origin else '/'
@@ -156,6 +173,11 @@ _NO_SCRAPER = [
     ('boarddocs', re.compile(r'boarddocs\.com|go\.boarddocs', re.I)),
     ('escribe', re.compile(r'escribemeetings\.com|pub-[a-z0-9-]+\.escribe', re.I)),
     ('novusagenda', re.compile(r'novusagenda\.com', re.I)),
+    # A SharePoint folder link IS the meeting surface on some sites (LaFayette's
+    # Revize page links out to one). Checked before the CMS markers below, since
+    # the CMS hosting the link is not what would have to be scraped.
+    ('sharepoint', re.compile(r'[a-z0-9-]+\.sharepoint\.com/[^"\'\s<>]*', re.I)),
+    ('squarespace', re.compile(r'squarespace\.com|static1\.squarespace|Static\.SQUARESPACE', re.I)),
     ('wix', re.compile(r'wix\.com|wixsite\.com|_wixCssStates', re.I)),
     ('wordpress', re.compile(r'wp-content|wp-json', re.I)),
 ]
@@ -217,7 +239,7 @@ def detect(url, timeout=30):
             m = rx.search(hay)
             if not m:
                 continue
-            cfg = extract(m, src_url)
+            cfg = extract(m, src_url, blob)
             if cfg:
                 return {'url': url, 'platform': platform, 'config': cfg,
                         'confidence': 'high', 'evidence': src_url,
