@@ -960,6 +960,107 @@
       .catch(err => { console.warn('Could not load the ' + label + ':', err); return null; });
   }
 
+  // -- Party-unity scorecard --------------------------------------------------
+  // Computed at build time by scripts/generate_federal_party_unity.py, never here.
+  // The delegation ranks need all 16 members' votes, and this page deliberately
+  // fetches only this member's slice — recomputing client-side would mean 16 slice
+  // fetches or re-shipping the 1.2 MB monolith. The file is ~8 KB.
+  const FED_SCORECARD_URL = getBasePath() + 'assets/data/federal-party-unity.json';
+
+  // Mirrors RANK_MIN_COHORT in scripts/generate_federal_party_unity.py. Georgia
+  // has two senators, and "2nd of 2" is noise where naming the other senator's
+  // figure is informative, so below this the panel shows a peer comparison.
+  const RANK_MIN_COHORT = 5;
+
+  let _fedScorecardPromise = null;
+  function getFederalScorecard() {
+    if (!_fedScorecardPromise) {
+      _fedScorecardPromise = fetch(FED_SCORECARD_URL)
+        .then(r => (r.ok ? r.json() : null))
+        .catch(err => { console.warn('Could not load the party-unity scorecard:', err); return null; });
+    }
+    return _fedScorecardPromise;
+  }
+
+  const pct = rate => `${(rate * 100).toFixed(1)}%`;
+
+  // One figure as a card: the number, what it means, and the comparison — a rank
+  // where the cohort is big enough for one, a named peer where it is not.
+  function scoreCardHtml(label, value, detail, context) {
+    return `<div class="finance-card" style="background:#f8fafc;border:1px solid #e2e8f0;">
+          <div class="finance-card-label">${escHtml(label)}</div>
+          <div class="finance-card-value">${escHtml(value)}</div>
+          <div style="font-size:0.7rem;color:#64748b;margin-top:0.15rem;">${escHtml(detail)}</div>
+          ${context ? `<div style="font-size:0.7rem;color:#475569;margin-top:0.2rem;">${escHtml(context)}</div>` : ''}
+        </div>`;
+  }
+
+  function scorecardHtml(doc, bioguideId) {
+    const entry = doc && doc.members && doc.members[bioguideId];
+    if (!entry) return '';   // no entry is "we can't say", not a zero
+    const cohort = entry.cohortSize || 0;
+    const ranked = cohort >= RANK_MIN_COHORT;
+    const chamberLabel = entry.chamber === 'Senate' ? 'senators' : 'representatives';
+
+    // Below the rank threshold the comparison is the other member of the cohort,
+    // named. With two senators that is the whole delegation.
+    const peers = Object.values((doc && doc.members) || {})
+      .filter(m => m.chamber === entry.chamber && m !== entry);
+    const peerFor = key => {
+      const peer = peers.find(m => m[key] != null);
+      return peer ? `${peer.name ? peer.name.split(',')[0] : 'the other member'}: ${pct(peer[key])}` : '';
+    };
+
+    // A member sworn in since their chamber last voted has an empty record. Null
+    // here must never reach pct(): `null * 100` is 0, so the panel would print a
+    // confident "0.0%" participation for someone who has had nothing to attend.
+    // Loose `== null` on purpose — an absent field has to take this branch too.
+    if (entry.participationRate == null || !entry.totalRollCalls) {
+      return `
+        <div class="finance-cards" style="margin-bottom:0.5rem;">
+          <div class="finance-card" style="background:#f8fafc;border:1px solid #e2e8f0;">
+            <div class="finance-card-label">Voting Record</div>
+            <div style="font-size:0.78rem;color:#64748b;margin-top:0.25rem;">No roll calls have been held in this chamber since this member was sworn in, so there is nothing to score yet.</div>
+          </div>
+        </div>`;
+    }
+
+    const unityCard = entry.partyUnity == null
+      // A member with no party-line votes has no unity score. Printing 0% here
+      // would read as total disloyalty, which is the opposite of what we know.
+      ? `<div class="finance-card" style="background:#f8fafc;border:1px solid #e2e8f0;">
+          <div class="finance-card-label">Party Unity</div>
+          <div style="font-size:0.78rem;color:#64748b;margin-top:0.25rem;">No party-line votes yet, so there is nothing to measure.</div>
+        </div>`
+      : scoreCardHtml('Party Unity', pct(entry.partyUnity),
+          `on ${entry.partyLineVotes} party-line vote${entry.partyLineVotes === 1 ? '' : 's'}`,
+          ranked ? `${ordinal(entry.unityRank)} of ${cohort} Georgia ${chamberLabel}`
+                 : peerFor('partyUnity'));
+
+    const participationCard = scoreCardHtml('Participation', pct(entry.participationRate),
+      `voted on ${entry.cast} of ${entry.totalRollCalls} roll calls`,
+      ranked ? `${ordinal(entry.participationRank)} of ${cohort} Georgia ${chamberLabel}`
+             : peerFor('participationRate'));
+
+    const stamp = doc.metadata && doc.metadata.generatedAt;
+    return `
+        <div class="finance-cards" style="margin-bottom:0.5rem;">
+          ${unityCard}
+          ${participationCard}
+        </div>
+        <p style="font-size:0.72rem;color:#888;margin:0 0 1rem 0;max-width:36rem;">
+          Party unity counts only the roll calls where most of one party voted against most of the other, so lopsided and bipartisan votes are left out. Participation counts the roll calls held while this member was seated${stamp ? `. Calculated ${escHtml(fmtDate(stamp))}` : ''}.
+        </p>`;
+  }
+
+  // 1 -> "1st". Used for ranks, which are small integers.
+  function ordinal(n) {
+    if (n === null || n === undefined) return '';
+    const mod100 = n % 100;
+    if (mod100 >= 11 && mod100 <= 13) return `${n}th`;
+    return `${n}${({ 1: 'st', 2: 'nd', 3: 'rd' })[n % 10] || 'th'}`;
+  }
+
   let _fedVoteIndexPromise = null;
   function getFederalVoteIndex() {
     if (!_fedVoteIndexPromise) {
@@ -1392,8 +1493,8 @@
     container.innerHTML = '<p style="font-size:0.875rem;color:#666;">Loading voting history&hellip;</p>';
 
     try {
-      const [voteIdx, slice] = await Promise.all([
-        getFederalVoteIndex(), getFederalVoteSlice(member.bioguideId),
+      const [voteIdx, slice, scorecard] = await Promise.all([
+        getFederalVoteIndex(), getFederalVoteSlice(member.bioguideId), getFederalScorecard(),
       ]);
       // No index generated yet: say nothing rather than leaving the loading line up.
       if (!voteIdx) { container.innerHTML = ''; return; }
@@ -1531,6 +1632,7 @@
       container.innerHTML = `
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
         <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Every recorded roll call this member's chamber has held in the ${escHtml(session || 'current Congress')} &mdash; including measures that failed, amendments, procedural motions, and, in the Senate, nominations. Rows with no bill number are votes on something other than a measure. Voice votes and unanimous-consent agreements are not recorded by name and so cannot appear here.</p>
+        ${scorecardHtml(scorecard, member.bioguideId)}
         ${chartHtml}
         ${scopeNote}
         ${VT.filterRowHtml({ searchId: 'fedVoteSearch', voteId: 'fedVoteResult' })}

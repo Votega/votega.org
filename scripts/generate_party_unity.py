@@ -38,12 +38,11 @@ from datetime import datetime, timezone
 from lib.ga_voters import VOTING_CHAMBERS, DEPARTED_STATUSES, chamber_from_motion
 from lib.votes_schema import member_votes_map
 from lib.atomic_io import write_json_atomic
+from lib.party_unity import OTHER_PARTY, score_participation, score_unity
 
 VOTES_FILE = "assets/data/ga-member-votes.json"
 MEMBERS_FILE = "assets/data/ga-members.json"
 OUT_FILE = "assets/data/ga-party-unity.json"
-
-OTHER_PARTY = {"Democratic": "Republican", "Republican": "Democratic"}
 
 #: A member with a near-full slate of roll calls but almost no Yea/Nay is a
 #: presiding officer (the Speaker votes only to break ties by custom). Matches
@@ -125,12 +124,10 @@ def member_scores(member, votes, votes_index, party_vote_index):
         if rc not in seen:
             seen[rc] = entry.get("vote")
 
-    total_rollcalls = len(seen)
+    total_rollcalls, cast, missed = score_participation(seen)
     if total_rollcalls == 0:
         return None
 
-    cast = sum(1 for v in seen.values() if v in ("Yea", "Nay"))
-    missed = total_rollcalls - cast
     presiding = total_rollcalls >= PRESIDING_MIN_ROLLCALLS and cast <= PRESIDING_MAX_VOTES
 
     scores = {
@@ -148,41 +145,16 @@ def member_scores(member, votes, votes_index, party_vote_index):
     }
 
     # --- Party unity: party-line roll calls only ---
-    other_party = OTHER_PARTY.get(party)
-    if other_party:
-        aligned = 0
-        considered = 0
-        for vid, vote in seen.items():
-            if vote not in ("Yea", "Nay"):
-                continue
-            tally = party_vote_index.get(vid)
-            if not tally:
-                continue
-            own = tally.get(party)
-            opp = tally.get(other_party)
-            if not own or not opp:
-                continue
-            # Need at least one OTHER same-party voter, and a non-tied majority
-            # in each caucus, else "the party's position" is undefined.
-            if own["yea"] + own["nay"] < 2 or own["yea"] == own["nay"]:
-                continue
-            if opp["yea"] + opp["nay"] == 0 or opp["yea"] == opp["nay"]:
-                continue
-            own_dir = "Yea" if own["yea"] > own["nay"] else "Nay"
-            opp_dir = "Yea" if opp["yea"] > opp["nay"] else "Nay"
-            if own_dir == opp_dir:
-                continue  # both caucuses agreed — not a party-line vote
-            considered += 1
-            if vote == own_dir:
-                aligned += 1
-
-        if considered > 0:
-            scores["partyLineVotes"] = considered
-            scores["votedWithParty"] = aligned
-            scores["partyUnity"] = round(aligned / considered, 4)
-            # Independence is the complement — the share of party-line votes on
-            # which the member broke with their own caucus.
-            scores["independenceRate"] = round(1 - aligned / considered, 4)
+    # The rule itself lives in lib/party_unity.py so the GA and federal
+    # scorecards cannot drift to two definitions of "party-line vote".
+    considered, aligned = score_unity(seen, party_vote_index, party)
+    if considered > 0:
+        scores["partyLineVotes"] = considered
+        scores["votedWithParty"] = aligned
+        scores["partyUnity"] = round(aligned / considered, 4)
+        # Independence is the complement — the share of party-line votes on
+        # which the member broke with their own caucus.
+        scores["independenceRate"] = round(1 - aligned / considered, 4)
 
     return scores
 

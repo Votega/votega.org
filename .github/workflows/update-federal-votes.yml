@@ -44,6 +44,12 @@ jobs:
       - name: Build the shared vote index and per-member slices
         run: python scripts/build_federal_votes_slices.py
 
+      # Derived from the roll calls above, so it runs in the same job: a scorecard
+      # generated from a different vintage of the vote record than the one being
+      # committed would be two sources of truth about the same member.
+      - name: Score party unity and participation
+        run: python scripts/generate_federal_party_unity.py
+
       - name: Validate generated data
         run: |
           python scripts/validate_data_update.py assets/data/federal-member-votes.json \
@@ -72,6 +78,17 @@ jobs:
             assets/data/federal-votes-keyvotes.json \
             assets/data/curated-federal-bills.json
 
+      # The scorecard states how loyal a named member of Congress is, so it gets
+      # impossibility checks of its own — a rate above 1, an aligned count above
+      # its own denominator, a member scored against more roll calls than their
+      # chamber held, or a sitting member silently missing.
+      - name: Validate the party-unity scorecard
+        run: |
+          python scripts/validate_federal_party_unity.py \
+            assets/data/federal-party-unity.json \
+            assets/data/federal-member-votes.json \
+            assets/data/current-members.json
+
       - name: Commit and push generated data
         run: |
           set -e
@@ -80,7 +97,8 @@ jobs:
           git add -f assets/data/federal-member-votes.json \
                      assets/data/federal-votes-index.json \
                      assets/data/federal-votes \
-                     assets/data/federal-votes-keyvotes.json
+                     assets/data/federal-votes-keyvotes.json \
+                     assets/data/federal-party-unity.json
           # The run-scoped counters move on every run by design (an incremental run
           # fetches a handful, a full refresh ~1,600), so they are listed alongside
           # the timestamp: without them a quiet week would still commit a full
@@ -93,11 +111,13 @@ jobs:
             git restore --staged assets/data/federal-member-votes.json \
                                  assets/data/federal-votes-index.json \
                                  assets/data/federal-votes \
-                                 assets/data/federal-votes-keyvotes.json
+                                 assets/data/federal-votes-keyvotes.json \
+                                 assets/data/federal-party-unity.json
             git checkout -- assets/data/federal-member-votes.json \
                             assets/data/federal-votes-index.json \
                             assets/data/federal-votes \
-                            assets/data/federal-votes-keyvotes.json
+                            assets/data/federal-votes-keyvotes.json \
+                            assets/data/federal-party-unity.json
           else
             git commit -m "Update federal legislative vote data (GA delegation)"
             pushed=0
