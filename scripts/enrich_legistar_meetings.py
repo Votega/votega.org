@@ -30,7 +30,9 @@ from lib.meeting_topics import (  # noqa: E402
     LAND_USE, classify, matched_terms, topic_flags, build_summary, flag_entry,
     topic_excerpts,
 )
-from lib.enrich_runner import run_places, report  # noqa: E402
+from lib.enrich_runner import (  # noqa: E402
+    run_places, run_meetings, report, too_lossy, PlaceOutcome,
+)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -149,25 +151,53 @@ def enrich_event(client, e):
     }
 
 
+def load_cache(slug):
+    """Prior enriched sidecar indexed by event id.
+
+    Unlike the Granicus and OCR enrichers, this is NOT an incremental cache —
+    the Legistar API is structured and cheap, so every event in the window is
+    re-read on every run. It is read only as the per-meeting failure fallback:
+    an event whose items or roll calls raise keeps the record an earlier run
+    gave it rather than vanishing from the place page. See lib/enrich_runner.py.
+    """
+    path = os.path.join(OUT_DIR, 'local-%s-meetings-enriched.json' % slug)
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, encoding='utf-8') as f:
+            prior = json.load(f)
+    except (ValueError, OSError):
+        return {}
+    return {m['eventId']: m for m in prior.get('meetings', []) if m.get('eventId')}
+
+
 def enrich_place(place, client, since, limit):
     """Enrich one Legistar place: write its sidecar, return its flag entry.
 
     Returns None to leave the place's committed data untouched (nothing in the
-    window). Raising is reserved for the unexpected, which lib.enrich_runner
-    contains to this one place.
+    window) — or a PlaceOutcome when events inside the window were lost, so the
+    run still fails even though the sidecar was written. Raising is reserved for
+    the unexpected, which lib.enrich_runner contains to this one place.
     """
     slug = place['slug']
     print('Enriching %s (legistar %r) since %s ...' % (place['name'], client, since))
     events = [e for e in fetch_events(client, since) if e.get('EventAgendaFile')][:limit]
     print('  processing %d meeting(s)...' % len(events))
-    enriched = [enrich_event(client, e) for e in events]
+    # Per-MEETING boundary: one event whose items or roll calls raise costs that
+    # event, not this place's whole window, and it falls back to its prior record.
+    enriched, lost = run_meetings(
+        slug, events, lambda e: enrich_event(client, e),
+        meeting_id=lambda e: e.get('EventId'), cache=load_cache(slug))
 
     # Guard like the other steps: never overwrite a good sidecar / good flags
     # with nothing. A zero-meeting result means the API was unreachable or the
     # window was empty, not that the place stopped flagging data centers.
     if not enriched:
         print('  WARNING: 0 meetings for %s — leaving existing enriched data intact' % slug)
-        return None
+        return PlaceOutcome(None, lost)
+    # ... nor with a window short of events we simply could not read.
+    if too_lossy(slug, lost, len(events)):
+        return PlaceOutcome(None, lost)
 
     summary = build_summary(enriched)
     out = {
@@ -184,7 +214,7 @@ def enrich_place(place, client, since, limit):
                       out, indent=1)
     print('  %s: flags=%s, %d data-center item(s)'
           % (slug, ','.join(summary['flags']) or '-', len(summary['dataCenterItems'])))
-    return flag_entry(summary)
+    return PlaceOutcome(flag_entry(summary), lost)
 
 
 def main():
