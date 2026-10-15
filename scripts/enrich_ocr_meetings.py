@@ -51,7 +51,9 @@ from lib.meeting_topics import (  # noqa: E402
     classify, matched_terms, topic_flags, build_summary, flag_entry,
     topic_excerpts, agenda_head,
 )
-from lib.enrich_runner import run_places, report  # noqa: E402
+from lib.enrich_runner import (  # noqa: E402
+    run_places, run_meetings, report, too_lossy, PlaceOutcome,
+)
 from lib.gdrive import drive_download_url  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -241,8 +243,9 @@ def enrich_place(place, cfg, since, limit, reclassify=False):
 
     Returns None to leave the place's committed data untouched — no meetings file
     yet, or nothing classified (the "never overwrite good data with nothing"
-    guard). Raising is reserved for the unexpected, which lib.enrich_runner
-    contains to this one place.
+    guard) — or a PlaceOutcome when meetings inside the window were lost, so the
+    run still fails even though the sidecar was written. Raising is reserved for
+    the unexpected, which lib.enrich_runner contains to this one place.
     """
     slug = place['slug']
     data = load_meetings(slug)
@@ -256,18 +259,23 @@ def enrich_place(place, cfg, since, limit, reclassify=False):
           % (place['name'], cfg.get('platform'), len(window), len(data['meetings']), since))
 
     agenda_packet = bool(cfg.get('agenda_packet'))
-    enriched = []
-    for m in window:
-        rec = enrich_meeting(m, cache, reclassify=reclassify,
-                             agenda_packet=agenda_packet)
-        if rec:
-            enriched.append(rec)
+    # Per-MEETING boundary: one malformed PDF (or a poppler/OCR surprise) costs
+    # one meeting, not this place's whole window, and a meeting that raises keeps
+    # its cached tags.
+    enriched, lost = run_meetings(
+        slug, window,
+        lambda m: enrich_meeting(m, cache, reclassify=reclassify,
+                                 agenda_packet=agenda_packet),
+        cache=cache)
 
     # Guard like generate/validate: never overwrite a good sidecar / good flags
     # with nothing. Empty means every fetch failed and there was no prior cache.
     if not enriched:
         print('  WARNING: 0 classified meetings for %s — leaving existing data intact' % slug)
-        return None
+        return PlaceOutcome(None, lost)
+    # ... nor with a window short of meetings we simply could not read.
+    if too_lossy(slug, lost, len(window)):
+        return PlaceOutcome(None, lost)
 
     summary = build_summary(enriched)
     out = {
@@ -285,7 +293,7 @@ def enrich_place(place, cfg, since, limit, reclassify=False):
                       out, indent=1)
     print('  %s: flags=%s, %d data-center meeting(s)'
           % (slug, ','.join(summary['flags']) or '-', len(summary['dataCenterItems'])))
-    return flag_entry(summary)
+    return PlaceOutcome(flag_entry(summary), lost)
 
 
 def main():
