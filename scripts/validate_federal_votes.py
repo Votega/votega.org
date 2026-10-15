@@ -17,13 +17,18 @@ What it enforces:
   * the universe is not a regression to the old enacted-laws frame — a bill-attached
     share near 100% means the roll-call enumeration silently stopped working;
   * every member's compact slice decodes against the index's voteIds, and every
-    member with votes in the monolith has a slice file.
+    member with votes in the monolith has a slice file;
+  * the Key Votes sidecar resolves every voteId curated-federal-bills.json names,
+    and its `indices` really are positions in the full voteIds list — Key Votes is
+    the default tab and reads the sidecar alone, so an off-by-one there would show
+    every visitor one roll call's tally under another's heading.
 
 Usage:
     python scripts/validate_federal_votes.py \
         assets/data/federal-member-votes.json \
         assets/data/federal-votes-index.json \
-        assets/data/federal-votes
+        assets/data/federal-votes \
+        [assets/data/federal-votes-keyvotes.json assets/data/curated-federal-bills.json]
 
 Exit 0 when every check passes, 1 otherwise (the caller must not commit).
 """
@@ -38,6 +43,11 @@ import sys
 #: the enumeration has almost certainly fallen back to a legislation-only frame.
 MIN_BILL_LESS_SHARE = 0.05
 
+#: Position of `motion` in an index row (its intern-table pointer is per-file, so
+#: the sidecar's differs by design); the fields before it must match byte for byte.
+#: Mirrors ROW_FIELDS in build_federal_votes_slices.py.
+ROW_MOTION = 5
+
 #: Required on every roll call because the page renders them unconditionally.
 REQUIRED_FIELDS = ("chamber", "date", "motionText", "yea", "nay", "result")
 
@@ -47,6 +57,64 @@ notes = []
 
 def fail(msg):
     problems.append(msg)
+
+
+def check_keyvotes(keyvotes_path, curated_path, vote_ids, rows, index):
+    """The sidecar must carry every curated roll call, with aligned `indices`."""
+    try:
+        with open(keyvotes_path, encoding="utf-8") as fh:
+            side = json.load(fh)
+        with open(curated_path, encoding="utf-8") as fh:
+            curated = json.load(fh)
+    except (OSError, ValueError) as exc:
+        fail(f"cannot read the key-votes sidecar or curated bills: {exc}")
+        return
+
+    side_ids = side.get("voteIds") or []
+    indices = side.get("indices") or []
+    side_rows = side.get("rows") or []
+    if not (len(side_ids) == len(indices) == len(side_rows)):
+        fail(f"key-votes sidecar misaligned: {len(side_ids)} voteIds, "
+             f"{len(indices)} indices, {len(side_rows)} rows")
+        return
+
+    # The whole point of `indices`: the member slice is keyed on the FULL index's
+    # position, so a shifted value here attributes one vote's record to another.
+    for vote_id, i in zip(side_ids, indices):
+        if not isinstance(i, int) or not 0 <= i < len(vote_ids):
+            fail(f"{vote_id}: sidecar index {i!r} is outside the full voteIds list")
+        elif vote_ids[i] != vote_id:
+            fail(f"{vote_id}: sidecar index {i} points at {vote_ids[i]} in the full "
+                 "index — Key Votes would show another roll call's record")
+        elif rows[i][:ROW_MOTION] != side_rows[side_ids.index(vote_id)][:ROW_MOTION]:
+            fail(f"{vote_id}: sidecar row disagrees with the full index's row")
+
+    # A curated id the monolith does not carry is a curation lag, not a build fault
+    # (the page renders "No record"), so it is a note; one the monolith HAS and the
+    # sidecar dropped is a fault, because the panel then shows nothing for a vote we
+    # hold.
+    wanted = []
+    for bill in curated.get("bills") or []:
+        for _chamber, vote_id in sorted((bill.get("voteIds") or {}).items()):
+            if vote_id and vote_id not in wanted:
+                wanted.append(vote_id)
+    dropped = [v for v in wanted if v in set(vote_ids) and v not in set(side_ids)]
+    if dropped:
+        fail(f"{len(dropped)} curated voteId(s) exist in the index but are missing "
+             f"from the key-votes sidecar: {dropped[:5]}")
+    unknown = [v for v in wanted if v not in set(vote_ids)]
+    if unknown:
+        notes.append(f"{len(unknown)} curated voteId(s) are not in our roll-call "
+                     f"data yet (rendered as \"No record\"): {unknown[:5]}")
+    stray = [v for v in side_ids if v not in set(wanted)]
+    if stray:
+        fail(f"{len(stray)} sidecar vote(s) are not curated at all: {stray[:5]}")
+    side_fmt = (side.get("metadata") or {}).get("sliceFormat")
+    if side_fmt != (index.get("metadata") or {}).get("sliceFormat"):
+        fail("key-votes sidecar publishes a different sliceFormat from the index — "
+             "the page decodes both with one set of positions")
+    notes.append(f"key-votes sidecar: {len(side_ids)} curated roll calls, "
+                 f"{os.path.getsize(keyvotes_path) / 1024:.1f}KB")
 
 
 def main():
@@ -164,6 +232,11 @@ def main():
         if decoded != monolith:
             fail(f"{bioguide}: slice decodes to {len(decoded)} votes, monolith has "
                  f"{len(monolith)} — index and slice are out of step")
+
+    # -- the Key Votes sidecar, which is what a page load actually fetches -----
+    if len(sys.argv) >= 6:
+        keyvotes_path, curated_path = sys.argv[4:6]
+        check_keyvotes(keyvotes_path, curated_path, vote_ids, rows, index)
 
     for note in notes:
         print(f"note: {note}")

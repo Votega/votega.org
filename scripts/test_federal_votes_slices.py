@@ -9,6 +9,10 @@ commented:
     rebuilds each bill's label and permalink from a type table of its own. A drift
     in either shifts every field by one, or renders every permalink wrong, with no
     error anywhere.
+  * The Key Votes sidecar's `indices` must point at the FULL index. Key Votes is the
+    default tab and reads the small sidecar, but a member's slice is keyed on each
+    vote's position in the full voteIds list, so an off-by-one there would show one
+    member another roll call's vote — valid JSON, right length, wrong fact.
   * A bill-less vote must round-trip as null. Now that the generator enumerates the
     chambers' own indexes rather than enacted laws, quorum calls, procedural motions
     and Senate nominations are a large share of the record and have no measure at
@@ -92,31 +96,54 @@ def fixture():
             "votes": votes, "memberVotes": member_votes}
 
 
-def run_builder(data):
-    """Run the builder against a temp data dir and return (index, {bioguide: slice})."""
+#: Two curated bills, deliberately naming votes that sit at different positions in
+#: the full index — one House, one Senate, plus a Senate id the monolith does not
+#: carry, which must be reported rather than silently dropped.
+CURATED = {"bills": [
+    {"bill": "S. 723", "voteIds": {"House": "H2026_0081"}},
+    {"bill": "S.Con.Res. 33", "voteIds": {"Senate": "S119_2_00100",
+                                          "House": "H9999_9999"}},
+]}
+
+
+def run_builder(data, curated=CURATED):
+    """Run the builder against a temp data dir.
+
+    Returns (rc, index, {bioguide: slice}, sidecar)."""
     with tempfile.TemporaryDirectory() as tmp:
         votes_file = os.path.join(tmp, "federal-member-votes.json")
         with open(votes_file, "w", encoding="utf-8") as fh:
             json.dump(data, fh)
-        saved = (B.VOTES_FILE, B.INDEX_OUT, B.SLICES_DIR)
+        curated_file = os.path.join(tmp, "curated-federal-bills.json")
+        if curated is not None:
+            with open(curated_file, "w", encoding="utf-8") as fh:
+                json.dump(curated, fh)
+        saved = (B.VOTES_FILE, B.INDEX_OUT, B.SLICES_DIR, B.KEYVOTES_OUT, B.CURATED_FILE)
         B.VOTES_FILE = votes_file
         B.INDEX_OUT = os.path.join(tmp, "federal-votes-index.json")
+        B.KEYVOTES_OUT = os.path.join(tmp, "federal-votes-keyvotes.json")
+        B.CURATED_FILE = curated_file
         B.SLICES_DIR = os.path.join(tmp, "federal-votes")
         try:
             rc = B.main()
             with open(B.INDEX_OUT, encoding="utf-8") as fh:
                 index = json.load(fh)
+            sidecar = None
+            if os.path.exists(B.KEYVOTES_OUT):
+                with open(B.KEYVOTES_OUT, encoding="utf-8") as fh:
+                    sidecar = json.load(fh)
             slices = {}
             for name in sorted(os.listdir(B.SLICES_DIR)):
                 with open(os.path.join(B.SLICES_DIR, name), encoding="utf-8") as fh:
                     slices[name[:-5]] = json.load(fh)
-            return rc, index, slices
+            return rc, index, slices, sidecar
         finally:
-            B.VOTES_FILE, B.INDEX_OUT, B.SLICES_DIR = saved
+            (B.VOTES_FILE, B.INDEX_OUT, B.SLICES_DIR,
+             B.KEYVOTES_OUT, B.CURATED_FILE) = saved
 
 
 data = fixture()
-rc, index, slices = run_builder(data)
+rc, index, slices, sidecar = run_builder(data)
 
 print("Index shape:")
 check("builder succeeded", rc, 0)
@@ -164,11 +191,44 @@ check("senator's slice decodes to their own votes",
 check("codes come from the shared codec",
       set(slices["A000372"]["compact"].values()) <= set(VOTE_CODES.values()), True)
 
+print("Key Votes sidecar:")
+check("sidecar holds only the curated votes the monolith carries",
+      sidecar["voteIds"], ["H2026_0081", "S119_2_00100"])
+check("sidecar rows follow the full index's order, not the curated file's",
+      [index["voteIds"].index(v) for v in sidecar["voteIds"]],
+      sorted(index["voteIds"].index(v) for v in sidecar["voteIds"]))
+check("one row and one index per sidecar voteId",
+      (len(sidecar["rows"]), len(sidecar["indices"])),
+      (len(sidecar["voteIds"]), len(sidecar["voteIds"])))
+# This is the invariant the page's Key Votes panel stands on: the member slice is
+# keyed on the FULL index position, so `indices` is the only thing that can resolve
+# it without fetching the full voteIds list.
+check("indices are positions in the FULL voteIds list",
+      [index["voteIds"][i] for i in sidecar["indices"]], sidecar["voteIds"])
+check("sidecar rows are field-for-field the full index's",
+      [sidecar["rows"][i][:B.R_MOTION] for i in range(len(sidecar["voteIds"]))],
+      [index["rows"][i][:B.R_MOTION] for i in sidecar["indices"]])
+check("sidecar interns its own motion text, resolvable without the full index",
+      [sidecar["motions"][r[B.R_MOTION]] for r in sidecar["rows"]],
+      [index["motions"][index["rows"][i][B.R_MOTION]] for i in sidecar["indices"]])
+check("sidecar publishes the same row format", sidecar["metadata"]["sliceFormat"],
+      list(B.ROW_FIELDS))
+check("a curated voteId the monolith lacks is reported, not written",
+      "H9999_9999" in sidecar["voteIds"], False)
+check("curated_vote_ids reports a missing curated file as None rather than empty",
+      B.curated_vote_ids(os.path.join(tempfile.gettempdir(), "no-such-curated.json")),
+      None)
+rc3, _index3, _slices3, no_sidecar = run_builder(fixture(), curated=None)
+check("a missing curated file leaves the sidecar alone and still succeeds",
+      (rc3, no_sidecar), (0, None))
+
 print("Determinism:")
-rc2, index2, slices2 = run_builder(fixture())
+rc2, index2, slices2, sidecar2 = run_builder(fixture())
 check("a re-run is byte-identical",
-      (json.dumps(index2, sort_keys=False), json.dumps(slices2, sort_keys=True)),
-      (json.dumps(index, sort_keys=False), json.dumps(slices, sort_keys=True)))
+      (json.dumps(index2, sort_keys=False), json.dumps(slices2, sort_keys=True),
+       json.dumps(sidecar2, sort_keys=False)),
+      (json.dumps(index, sort_keys=False), json.dumps(slices, sort_keys=True),
+       json.dumps(sidecar, sort_keys=False)))
 
 # ---------------------------------------------------------------------------
 # The format is split across two languages: this builder writes the rows,
@@ -214,6 +274,13 @@ if js_slug:
     slugs = dict(re.findall(r"(\w+):\s*'([^']+)'", js_slug.group(1)))
     check("every generator bill type has a permalink slug in the include",
           sorted(t for t in fedvotes.TYPE_SLUG if t.upper() not in slugs), [])
+
+# The sidecar only saves a page load if the page actually fetches it: a rename on
+# either side would leave Key Votes silently back on the 55 KB full index.
+check("include fetches the key-votes sidecar by its built filename",
+      os.path.basename(B.KEYVOTES_OUT) in include_src, True)
+check("include resolves the member slice through the sidecar's indices",
+      "voteIdx.indices" in include_src, True)
 
 # The vote-code table the slices are written with must be the one the include decodes.
 js_code = re.search(r"const FED_VOTE_CODE = \{(.*?)\};", include_src, re.S)

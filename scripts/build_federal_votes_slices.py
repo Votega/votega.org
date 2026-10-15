@@ -16,6 +16,10 @@ use (build_member_votes_slices.py, build_sponsorship_slices.py):
                                           motion text + one positional row per vote
   assets/data/federal-votes/<bioguide>.json
                                           one member's compact {index: code} map
+  assets/data/federal-votes-keyvotes.json a sidecar in the SAME row format holding
+                                          only the roll calls curated-federal-bills.json
+                                          names, so the default tab need not fetch
+                                          the whole index
 
 The monolithic federal-member-votes.json is left untouched and stays on the LEGACY
 vote schema: publish_federal_delegation.py passes it straight through to
@@ -24,6 +28,14 @@ unity generator that will read it is server-side. The compaction that matters is
 one on the wire, and that is what these artifacts are. (CLAUDE.md's note that
 federal-member-votes.json does not use lib/votes_schema.py therefore still holds —
 the *slices* use the codec, the monolith does not.)
+
+The sidecar exists because Key Votes is the DEFAULT tab and needs vote metadata for
+~15 roll calls, which used to mean fetching the whole index (291 KB raw / 55 KB gzip)
+on every page load even for a visitor who never opened Voting History. It carries its
+own `indices` array — each included vote's position in the FULL voteIds list —
+because a member's slice is keyed on that position, so the sidecar has to be able to
+resolve a member's own vote without the full list. Carrying the full voteIds list
+instead would work too, and was measured: 5.4 KB gzip against 1.4 KB for `indices`.
 
 Run after generate_federal_votes_data.py, before `jekyll build`:
     python scripts/build_federal_votes_slices.py
@@ -48,6 +60,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT, "assets", "data")
 VOTES_FILE = os.path.join(DATA_DIR, "federal-member-votes.json")
 INDEX_OUT = os.path.join(DATA_DIR, "federal-votes-index.json")
+KEYVOTES_OUT = os.path.join(DATA_DIR, "federal-votes-keyvotes.json")
+CURATED_FILE = os.path.join(DATA_DIR, "curated-federal-bills.json")
 SLICES_DIR = os.path.join(DATA_DIR, "federal-votes")
 
 #: Positions in an index row. Rows are positional arrays, not objects, because the
@@ -114,6 +128,70 @@ def compact_row(meta, motion_index):
     ]
 
 
+def curated_vote_ids(path=None):
+    """The roll-call ids curated-federal-bills.json names, in curation order.
+
+    Returns None when the curated file is missing or unreadable — a different claim
+    from "it names no votes", and the caller leaves any existing sidecar alone
+    rather than replacing it with an empty one.
+    """
+    path = path or CURATED_FILE
+    try:
+        with open(path, encoding="utf-8") as fh:
+            curated = json.load(fh)
+    except (OSError, ValueError) as exc:
+        print(f"build_federal_votes_slices: cannot read {path}: {exc}", file=sys.stderr)
+        return None
+    wanted = []
+    for bill in curated.get("bills") or []:
+        for _chamber, vote_id in sorted((bill.get("voteIds") or {}).items()):
+            if vote_id and vote_id not in wanted:
+                wanted.append(vote_id)
+    return wanted
+
+
+def build_keyvotes_sidecar(metadata, vote_ids, rows, motions, wanted):
+    """The Key Votes sidecar: the same positional rows, for the curated votes only.
+
+    `indices[i]` is voteIds[i]'s position in the FULL index, which is what a
+    member's slice is keyed on — without it the page could not tell how this member
+    voted on a curated roll call without fetching the whole voteIds list.
+
+    Follows the full index's order rather than the curated file's, so re-ordering a
+    curated entry does not rewrite the sidecar; `missing` names any curated id the
+    monolith does not carry (a typo, or a vote the generator has not reached yet).
+    """
+    wanted_set = set(wanted)
+    sel, indices, sel_rows = [], [], []
+    motion_index: dict[str, int] = {}
+    for i, vote_id in enumerate(vote_ids):
+        if vote_id not in wanted_set or rows[i] is None:
+            continue
+        row = list(rows[i])
+        # The sidecar interns its own motion text: pointing into the full index's
+        # table would make it unreadable without the file it exists to avoid.
+        text = motions[row[R_MOTION]] if row[R_MOTION] < len(motions) else ""
+        if text not in motion_index:
+            motion_index[text] = len(motion_index)
+        row[R_MOTION] = motion_index[text]
+        sel.append(vote_id)
+        indices.append(i)
+        sel_rows.append(row)
+
+    sel_motions = [""] * len(motion_index)
+    for text, i in motion_index.items():
+        sel_motions[i] = text
+
+    sidecar = {
+        "metadata": dict(metadata, sliceFormat=list(ROW_FIELDS), scope="curated key votes"),
+        "voteIds": sel,
+        "indices": indices,
+        "motions": sel_motions,
+        "rows": sel_rows,
+    }
+    return sidecar, [v for v in wanted if v not in set(sel)]
+
+
 def main() -> int:
     if not os.path.exists(VOTES_FILE):
         print(f"build_federal_votes_slices: {VOTES_FILE} not found — skipping.")
@@ -152,6 +230,25 @@ def main() -> int:
     }
     write_json_atomic(INDEX_OUT, index, separators=(",", ":"))
 
+    # The Key Votes sidecar. Key Votes is the default tab, so this is the only vote
+    # artifact a page load fetches; the full index above is paid for only by a
+    # reader who opens Voting History.
+    wanted = curated_vote_ids()
+    missing = []
+    if wanted is None:
+        print("build_federal_votes_slices: no curated bills file — leaving the "
+              "key-votes sidecar as it is.", file=sys.stderr)
+        sidecar = None
+    else:
+        sidecar, missing = build_keyvotes_sidecar(
+            index["metadata"], vote_ids, rows, motions, wanted)
+        write_json_atomic(KEYVOTES_OUT, sidecar, separators=(",", ":"))
+        if missing:
+            # Not fatal: a curated entry can name a vote the generator has not
+            # reached yet, and the page already renders "No record" for one.
+            print("build_federal_votes_slices: %d curated voteId(s) not in the "
+                  "monolith: %s" % (len(missing), ", ".join(missing)), file=sys.stderr)
+
     # Per-member slices. Clear stale ones first so a member who leaves the dataset
     # does not keep a dangling file the page would still find.
     os.makedirs(SLICES_DIR, exist_ok=True)
@@ -174,6 +271,9 @@ def main() -> int:
     if sizes:
         summary += (f" (median {sorted(sizes)[len(sizes) // 2] / 1024:.1f}KB, "
                     f"max {max(sizes) / 1024:.1f}KB)")
+    if sidecar is not None:
+        summary += (f", key-votes sidecar {os.path.getsize(KEYVOTES_OUT) / 1024:.1f}KB "
+                    f"({len(sidecar['voteIds'])} curated votes)")
     print(summary)
     return 0
 

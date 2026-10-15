@@ -434,17 +434,18 @@
       if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
       displayMemberDetails(member, electionInfo, seatRace);
       displaySidebar(member, allMembers);
-      // Sponsored Legislation is NOT loaded eagerly: its slice is the one artifact
-      // on this page that can run to six figures of bytes for a heavy cosponsor
-      // list, and a visitor who never leaves Key Votes should not pay for it.
-      // activateTab loads it on first open — which includes the call initTabs()
-      // makes for a #sponsoredLegislation deep link, so currentMember has to be set
-      // BEFORE initTabs(): set after, the deep-linked panel never loads at all.
+      // Neither Sponsored Legislation nor Voting History is loaded eagerly. The
+      // sponsorship slice can run to six figures of bytes for a heavy cosponsor
+      // list, and Voting History's shared index is 55 KB gzip for all ~1,591 roll
+      // calls of the Congress; a visitor who never leaves Key Votes should pay for
+      // neither. activateTab loads each on first open — which includes the call
+      // initTabs() makes for a #votingHistory or #sponsoredLegislation deep link,
+      // so currentMember has to be set BEFORE initTabs(): set after, the
+      // deep-linked panel never loads at all.
       currentMember = member;
       initTabs();
       loadCampaignFinance(member);
       loadKeyVotes(member);
-      loadVotingHistory(member);
       loadEntityNews(member);
       if (window.location.hash) {
         const target = document.getElementById(window.location.hash.slice(1));
@@ -710,6 +711,7 @@
     panel.classList.add('active');
     // Lazy panels. Each loader is idempotent and no-ops once it has run.
     if (tabId === 'sponsoredLegislation') loadSponsoredLegislation(currentMember);
+    if (tabId === 'votingHistory') loadVotingHistory(currentMember);
     if (pushHistory && window.location.hash.slice(1) !== tabId) {
       history.pushState(null, '', '#' + tabId);
     }
@@ -854,10 +856,20 @@
   // the file now holds EVERY roll call of the Congress (~1,591, against the 216
   // the enacted-law frame could see) and the monolith is ~1.2 MB — far too much
   // to put on the wire for one member's panel, and it was being fetched twice.
-  // build_federal_votes_slices.py derives two artifacts instead: a shared index
-  // of every vote, and each member's own compact {index: code} map. Both panels
-  // below read the same two, so each is fetched once and cached here.
-  const FED_VOTES_INDEX_URL = getBasePath() + 'assets/data/federal-votes-index.json';
+  // build_federal_votes_slices.py derives three artifacts instead: a shared index
+  // of every vote, a small sidecar holding only the curated key votes, and each
+  // member's own compact {index: code} map. Each is fetched once and cached here.
+  //
+  // Key Votes is the DEFAULT tab, so what it fetches is what every page load costs.
+  // It needs metadata for the ~15 roll calls curated-federal-bills.json names, and
+  // reading those out of the full index meant 55 KB gzip on every page load for a
+  // visitor who never opened Voting History. The sidecar is 1.4 KB gzip in the same
+  // row format, and carries each included vote's position in the FULL voteIds list
+  // (`indices`) so a member's slice — which is keyed on that position — can still be
+  // decoded without it. The full index is now paid for only by a reader who opens
+  // Voting History, which activateTab() loads lazily.
+  const FED_VOTES_INDEX_URL    = getBasePath() + 'assets/data/federal-votes-index.json';
+  const FED_KEYVOTES_INDEX_URL = getBasePath() + 'assets/data/federal-votes-keyvotes.json';
   const fedVoteSliceUrl = bioguide =>
     `${getBasePath()}assets/data/federal-votes/${encodeURIComponent(bioguide)}.json`;
 
@@ -933,66 +945,88 @@
     return out;
   }
 
-  // { metadata, voteIds, votes } or null. Fetched once per page.
+  // { metadata, voteIds, indices, votes } or null. Each URL is fetched once per page.
+  function fetchVoteIndex(url, label) {
+    return fetch(url)
+      .then(r => (r.ok ? r.json() : null))
+      .then(idx => (idx ? {
+        metadata: idx.metadata || {},
+        voteIds:  idx.voteIds || [],
+        // Only the sidecar carries this: voteIds[i]'s position in the full index,
+        // which is the key a member's slice uses.
+        indices:  idx.indices || null,
+        votes:    hydrateVoteIndex(idx),
+      } : null))
+      .catch(err => { console.warn('Could not load the ' + label + ':', err); return null; });
+  }
+
   let _fedVoteIndexPromise = null;
   function getFederalVoteIndex() {
     if (!_fedVoteIndexPromise) {
-      _fedVoteIndexPromise = fetch(FED_VOTES_INDEX_URL)
-        .then(r => (r.ok ? r.json() : null))
-        .then(idx => (idx ? {
-          metadata: idx.metadata || {},
-          voteIds:  idx.voteIds || [],
-          votes:    hydrateVoteIndex(idx),
-        } : null))
-        .catch(err => { console.warn('Could not load the federal vote index:', err); return null; });
+      _fedVoteIndexPromise = fetchVoteIndex(FED_VOTES_INDEX_URL, 'federal vote index');
     }
     return _fedVoteIndexPromise;
   }
 
-  // This member's roll calls, decoded to the legacy [{ voteId, vote }] list both
-  // panels read. An ABSENT slice and a FAILED slice fetch are different claims and
-  // only one of them licenses a "no voting record" message: the builder writes a
-  // file for every member who appears in memberVotes, so a 404/410 really does mean
-  // "no roll calls in our data", while a 5xx or an unparseable body tells us
-  // nothing about the member — reporting that as "no record" would assert as fact
-  // something we do not know. Returns { votes, failed }.
+  let _fedKeyVotesPromise = null;
+  function getFederalKeyVoteIndex() {
+    if (!_fedKeyVotesPromise) {
+      _fedKeyVotesPromise = fetchVoteIndex(FED_KEYVOTES_INDEX_URL, 'federal key-vote index');
+    }
+    return _fedKeyVotesPromise;
+  }
+
+  // This member's compact {index: code} map, as written by the builder. An ABSENT
+  // slice and a FAILED slice fetch are different claims and only one of them
+  // licenses a "no voting record" message: the builder writes a file for every
+  // member who appears in memberVotes, so a 404/410 really does mean "no roll calls
+  // in our data", while a 5xx or an unparseable body tells us nothing about the
+  // member — reporting that as "no record" would assert as fact something we do not
+  // know. Returns { compact, failed }.
+  //
+  // The index is deliberately NOT awaited here: Key Votes decodes this map against
+  // the sidecar's `indices` and Voting History against the full index's voteIds, so
+  // tying the fetch to either would put the other panel's artifact on the wire.
   // Keyed by bioguide, not a bare singleton: both panels on a page ask for the
   // same member, but a cache that ignored the argument would hand a second
   // member's panel the first member's record rather than fetching theirs.
   const _fedVoteSlicePromises = new Map();
   function getFederalVoteSlice(bioguide) {
     if (!_fedVoteSlicePromises.has(bioguide)) {
-      _fedVoteSlicePromises.set(bioguide, Promise.all([
-        fetch(fedVoteSliceUrl(bioguide)).catch(() => null),
-        getFederalVoteIndex(),
-      ]).then(async ([res, idx]) => {
-        const ids = (idx && idx.voteIds) || [];
-        if (!res || !res.ok) {
-          const absent = !!res && (res.status === 404 || res.status === 410);
-          if (!absent) console.warn('Vote slice fetch failed:', res && res.status);
-          return { votes: [], failed: !absent };
-        }
-        try {
-          const compact = (await res.json()).compact || {};
-          const votes = [];
-          for (const i in compact) {
-            const voteId = ids[+i];
-            if (voteId) votes.push({ voteId, vote: FED_VOTE_CODE[compact[i]] || compact[i] });
+      _fedVoteSlicePromises.set(bioguide, fetch(fedVoteSliceUrl(bioguide))
+        .catch(() => null)
+        .then(async res => {
+          if (!res || !res.ok) {
+            const absent = !!res && (res.status === 404 || res.status === 410);
+            if (!absent) console.warn('Vote slice fetch failed:', res && res.status);
+            return { compact: {}, failed: !absent };
           }
-          // A slice with entries that resolve to nothing means the slice and the
-          // index are out of step (or the index never arrived) — a build fault,
-          // not a member who cast no votes. Reporting it as the latter would
-          // render a full record as an empty one.
-          const misaligned = Object.keys(compact).length > 0 && votes.length === 0;
-          if (misaligned) console.warn('Vote slice does not align with the shared index:', bioguide);
-          return { votes, failed: misaligned };
-        } catch (err) {
-          console.warn('Could not parse the vote slice:', err);
-          return { votes: [], failed: true };
-        }
-      }));
+          try {
+            return { compact: (await res.json()).compact || {}, failed: false };
+          } catch (err) {
+            console.warn('Could not parse the vote slice:', err);
+            return { compact: {}, failed: true };
+          }
+        }));
     }
     return _fedVoteSlicePromises.get(bioguide);
+  }
+
+  // A compact map -> the legacy [{ voteId, vote }] list both panels read, resolving
+  // each key through `ids` (the full index's voteIds, or the sidecar's `indices`
+  // mapped back to them). A map with entries that resolve to nothing means the
+  // slice and the index are out of step — a build fault, not a member who cast no
+  // votes; reporting it as the latter would render a full record as an empty one.
+  // Returns { votes, misaligned }.
+  function decodeVoteSlice(compact, idForIndex) {
+    const votes = [];
+    let seen = 0;
+    for (const i in compact) {
+      seen++;
+      const voteId = idForIndex(+i);
+      if (voteId) votes.push({ voteId, vote: FED_VOTE_CODE[compact[i]] || compact[i] });
+    }
+    return { votes, misaligned: seen > 0 && votes.length === 0 };
   }
 
   async function loadKeyVotes(member) {
@@ -1003,8 +1037,10 @@
 
     let curatedData, voteIdx, slice;
     try {
+      // The sidecar, not the full index: this panel needs ~15 roll calls and runs
+      // on every page load. See FED_KEYVOTES_INDEX_URL above.
       const [cRes, idx, sl] = await Promise.all([
-        fetch(CURATED_URL), getFederalVoteIndex(), getFederalVoteSlice(member.bioguideId),
+        fetch(CURATED_URL), getFederalKeyVoteIndex(), getFederalVoteSlice(member.bioguideId),
       ]);
       if (!cRes.ok || !idx) return;
       curatedData = await cRes.json();
@@ -1019,11 +1055,16 @@
     if (!bills.length) return;
 
     const votesIndex   = voteIdx.votes || {};
-    const memberVotes  = slice.votes || [];
-    const lawIdx       = await getEnactedLaws();  // enacted key votes -> GPO law PDF
+    // The member's slice is keyed on each vote's position in the FULL index, so the
+    // sidecar's `indices` is what maps those keys onto the votes it carries. Any
+    // key outside that set belongs to a roll call this panel does not show.
+    const sideIds = voteIdx.voteIds || [];
+    const sidePos = new Map((voteIdx.indices || []).map((full, i) => [full, sideIds[i]]));
+    const decoded = decodeVoteSlice(slice.compact || {}, i => sidePos.get(i));
+    const lawIdx  = await getEnactedLaws();  // enacted key votes -> GPO law PDF
     // Build quick lookup: voteId -> member's vote string
     const myVoteMap = {};
-    for (const { voteId, vote } of memberVotes) myVoteMap[voteId] = vote;
+    for (const { voteId, vote } of decoded.votes) myVoteMap[voteId] = vote;
 
     // Determine member chamber key
     const termsArr   = member.terms?.item || [];
@@ -1340,24 +1381,37 @@
     });
   }
 
+  // The shared index is 55 KB gzip, so it is only fetched when someone opens this
+  // tab, and only once.
+  let votingHistoryLoaded = false;
+
   async function loadVotingHistory(member) {
     const container = document.getElementById('votingHistory');
-    if (!member.bioguideId || !container) return;
+    if (!container || !member || !member.bioguideId || votingHistoryLoaded) return;
+    votingHistoryLoaded = true;
+    container.innerHTML = '<p style="font-size:0.875rem;color:#666;">Loading voting history&hellip;</p>';
 
     try {
       const [voteIdx, slice] = await Promise.all([
         getFederalVoteIndex(), getFederalVoteSlice(member.bioguideId),
       ]);
-      if (!voteIdx) return; // silently skip if the shared index isn't generated yet
+      // No index generated yet: say nothing rather than leaving the loading line up.
+      if (!voteIdx) { container.innerHTML = ''; return; }
+
+      const ids = voteIdx.voteIds || [];
+      const decoded = decodeVoteSlice(slice.compact || {}, i => ids[i]);
+      if (decoded.misaligned) {
+        console.warn('Vote slice does not align with the shared index:', member.bioguideId);
+      }
 
       // A failed slice fetch is not evidence about the member — say so rather than
       // rendering a full record as an empty one. See getFederalVoteSlice().
-      if (slice.failed) {
+      if (slice.failed || decoded.misaligned) {
         container.innerHTML = `<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">We couldn&rsquo;t load this member&rsquo;s voting record just now &mdash; this is a temporary problem on our end, not a sign that they have no record. Please reload the page to try again.</p>`;
         return;
       }
 
-      const memberVotes = slice.votes;
+      const memberVotes = decoded.votes;
       if (!memberVotes || memberVotes.length === 0) {
         container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No votes recorded for this session.</p>';
         return;
@@ -1501,6 +1555,9 @@
       });
     } catch (err) {
       console.warn('Could not load voting history:', err);
+      // The panel is now lazy, so the loading line is on screen when this fires —
+      // leaving it up would read as a load that never finishes.
+      container.innerHTML = `<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">We couldn&rsquo;t load this member&rsquo;s voting record just now. Please reload the page to try again.</p>`;
     }
   }
 

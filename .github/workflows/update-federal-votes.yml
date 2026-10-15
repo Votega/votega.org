@@ -68,7 +68,9 @@ jobs:
           python scripts/validate_federal_votes.py \
             assets/data/federal-member-votes.json \
             assets/data/federal-votes-index.json \
-            assets/data/federal-votes
+            assets/data/federal-votes \
+            assets/data/federal-votes-keyvotes.json \
+            assets/data/curated-federal-bills.json
 
       - name: Commit and push generated data
         run: |
@@ -77,7 +79,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f assets/data/federal-member-votes.json \
                      assets/data/federal-votes-index.json \
-                     assets/data/federal-votes
+                     assets/data/federal-votes \
+                     assets/data/federal-votes-keyvotes.json
           # The run-scoped counters move on every run by design (an incremental run
           # fetches a handful, a full refresh ~1,600), so they are listed alongside
           # the timestamp: without them a quiet week would still commit a full
@@ -89,10 +92,12 @@ jobs:
             echo "Only run-scoped metadata changed — skipping redundant commit"
             git restore --staged assets/data/federal-member-votes.json \
                                  assets/data/federal-votes-index.json \
-                                 assets/data/federal-votes
+                                 assets/data/federal-votes \
+                                 assets/data/federal-votes-keyvotes.json
             git checkout -- assets/data/federal-member-votes.json \
                             assets/data/federal-votes-index.json \
-                            assets/data/federal-votes
+                            assets/data/federal-votes \
+                            assets/data/federal-votes-keyvotes.json
           else
             git commit -m "Update federal legislative vote data (GA delegation)"
             pushed=0
