@@ -30,8 +30,9 @@ from lib.legistar import fetch_events, fetch_event_items, fetch_rollcalls  # noq
 from lib.atomic_io import write_json_atomic  # noqa: E402
 from lib.meeting_topics import (  # noqa: E402
     LAND_USE, classify, matched_terms, topic_flags, build_summary, flag_entry,
-    write_flags_file, topic_excerpts,
+    topic_excerpts,
 )
+from lib.enrich_runner import run_places, report  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -140,6 +141,44 @@ def enrich_event(client, e):
     }
 
 
+def enrich_place(place, client, since, limit):
+    """Enrich one Legistar place: write its sidecar, return its flag entry.
+
+    Returns None to leave the place's committed data untouched (nothing in the
+    window). Raising is reserved for the unexpected, which lib.enrich_runner
+    contains to this one place.
+    """
+    slug = place['slug']
+    print('Enriching %s (legistar %r) since %s ...' % (place['name'], client, since))
+    events = [e for e in fetch_events(client, since) if e.get('EventAgendaFile')][:limit]
+    print('  processing %d meeting(s)...' % len(events))
+    enriched = [enrich_event(client, e) for e in events]
+
+    # Guard like the other steps: never overwrite a good sidecar / good flags
+    # with nothing. A zero-meeting result means the API was unreachable or the
+    # window was empty, not that the place stopped flagging data centers.
+    if not enriched:
+        print('  WARNING: 0 meetings for %s — leaving existing enriched data intact' % slug)
+        return None
+
+    summary = build_summary(enriched)
+    out = {
+        'metadata': {
+            'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'source': '%s (Legistar structured API)' % place['name'],
+            'place': place['name'],
+            'count': len(enriched),
+        },
+        'summary': summary,
+        'meetings': enriched,
+    }
+    write_json_atomic(os.path.join(OUT_DIR, 'local-%s-meetings-enriched.json' % slug),
+                      out, indent=1)
+    print('  %s: flags=%s, %d data-center item(s)'
+          % (slug, ','.join(summary['flags']) or '-', len(summary['dataCenterItems'])))
+    return flag_entry(summary)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--slug', help='one place (default: all Legistar places)')
@@ -149,41 +188,14 @@ def main():
 
     since = (datetime.now(timezone.utc) - timedelta(days=30 * args.months)).strftime('%Y-%m-%d')
     os.makedirs(OUT_DIR, exist_ok=True)
-    flag_updates = {}
 
-    for place, client in legistar_places(args.slug):
-        slug = place['slug']
-        print('Enriching %s (legistar %r) since %s ...' % (place['name'], client, since))
-        events = [e for e in fetch_events(client, since) if e.get('EventAgendaFile')][:args.limit]
-        print('  processing %d meeting(s)...' % len(events))
-        enriched = [enrich_event(client, e) for e in events]
-
-        # Guard like the other steps: never overwrite a good sidecar / good flags
-        # with nothing. A zero-meeting result means the API was unreachable or the
-        # window was empty, not that the place stopped flagging data centers.
-        if not enriched:
-            print('  WARNING: 0 meetings for %s — leaving existing enriched data intact' % slug)
-            continue
-
-        summary = build_summary(enriched)
-        out = {
-            'metadata': {
-                'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'source': '%s (Legistar structured API)' % place['name'],
-                'place': place['name'],
-                'count': len(enriched),
-            },
-            'summary': summary,
-            'meetings': enriched,
-        }
-        write_json_atomic(os.path.join(OUT_DIR, 'local-%s-meetings-enriched.json' % slug),
-                          out, indent=1)
-        flag_updates[slug] = flag_entry(summary)
-        print('  %s: flags=%s, %d data-center item(s)'
-              % (slug, ','.join(summary['flags']) or '-', len(summary['dataCenterItems'])))
-
-    if flag_updates:
-        print('  Wrote %s' % write_flags_file(OUT_DIR, flag_updates))
+    # One place's failure is contained to that place, and local-flags.json is
+    # written as each place finishes — see lib/enrich_runner.py for the run this
+    # cost us.
+    done, failed = run_places(
+        legistar_places(args.slug), OUT_DIR,
+        lambda place, client: enrich_place(place, client, since, args.limit))
+    sys.exit(report(done, failed, OUT_DIR))
 
 
 if __name__ == '__main__':

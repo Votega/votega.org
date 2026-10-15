@@ -73,9 +73,10 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.meeting_topics import (  # noqa: E402
-    classify, matched_terms, topic_flags, build_summary, flag_entry, write_flags_file,
+    classify, matched_terms, topic_flags, build_summary, flag_entry,
     topic_excerpts,
 )
+from lib.enrich_runner import run_places, report  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
 from lib.pdf_text import extract_text  # noqa: E402
 
@@ -310,6 +311,54 @@ def recent_meetings(meetings, since, limit):
     return dated[:limit]
 
 
+def enrich_place(place, cfg, since, limit, reclassify=False):
+    """Enrich one Granicus place: write its sidecar, return its flag entry.
+
+    Returns None to leave the place's committed data untouched — no meetings file
+    yet, or nothing classified (the "never overwrite good data with nothing"
+    guard). Raising is reserved for the unexpected, which lib.enrich_runner
+    contains to this one place.
+    """
+    slug = place['slug']
+    data = load_meetings(slug)
+    if not data or not data.get('meetings'):
+        print('%s: no meetings file yet — run generate_place_meetings.py first' % slug)
+        return None
+
+    cache = load_cache(slug)
+    window = recent_meetings(data['meetings'], since, limit)
+    print('Enriching %s (%s): %d of %d meeting(s) since %s ...'
+          % (place['name'], cfg.get('platform'), len(window), len(data['meetings']), since))
+
+    enriched = []
+    for m in window:
+        rec = enrich_meeting(m, cache, reclassify=reclassify)
+        if rec:
+            enriched.append(rec)
+
+    # Guard like generate/validate: never overwrite a good sidecar with nothing.
+    if not enriched:
+        print('  WARNING: 0 classified meetings for %s — leaving existing data intact' % slug)
+        return None
+
+    summary = build_summary(enriched)
+    out = {
+        'metadata': {
+            'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'source': '%s (%s agenda HTML)' % (place['name'], cfg.get('platform')),
+            'place': place['name'],
+            'count': len(enriched),
+        },
+        'summary': summary,
+        'meetings': enriched,
+    }
+    write_json_atomic(os.path.join(DATA_DIR, 'local-%s-meetings-enriched.json' % slug),
+                      out, indent=1)
+    print('  %s: flags=%s, %d data-center meeting(s)'
+          % (slug, ','.join(summary['flags']) or '-', len(summary['dataCenterItems'])))
+    return flag_entry(summary)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--slug', help='one place (default: all Granicus places)')
@@ -323,49 +372,14 @@ def main():
 
     since = (datetime.now(timezone.utc) - timedelta(days=30 * args.months)).strftime('%Y-%m-%d')
 
-    flag_updates = {}
-    for place, cfg in granicus_places(args.slug):
-        slug = place['slug']
-        data = load_meetings(slug)
-        if not data or not data.get('meetings'):
-            print('%s: no meetings file yet — run generate_place_meetings.py first' % slug)
-            continue
-
-        cache = load_cache(slug)
-        window = recent_meetings(data['meetings'], since, args.limit)
-        print('Enriching %s (%s): %d of %d meeting(s) since %s ...'
-              % (place['name'], cfg.get('platform'), len(window), len(data['meetings']), since))
-
-        enriched = []
-        for m in window:
-            rec = enrich_meeting(m, cache, reclassify=args.reclassify)
-            if rec:
-                enriched.append(rec)
-
-        # Guard like generate/validate: never overwrite a good sidecar with nothing.
-        if not enriched:
-            print('  WARNING: 0 classified meetings for %s — leaving existing data intact' % slug)
-            continue
-
-        summary = build_summary(enriched)
-        out = {
-            'metadata': {
-                'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'source': '%s (%s agenda HTML)' % (place['name'], cfg.get('platform')),
-                'place': place['name'],
-                'count': len(enriched),
-            },
-            'summary': summary,
-            'meetings': enriched,
-        }
-        write_json_atomic(os.path.join(DATA_DIR, 'local-%s-meetings-enriched.json' % slug),
-                          out, indent=1)
-        flag_updates[slug] = flag_entry(summary)
-        print('  %s: flags=%s, %d data-center meeting(s)'
-              % (slug, ','.join(summary['flags']) or '-', len(summary['dataCenterItems'])))
-
-    if flag_updates:
-        print('Wrote %s' % write_flags_file(DATA_DIR, flag_updates))
+    # One place's failure is contained to that place, and local-flags.json is
+    # written as each place finishes — see lib/enrich_runner.py for the run this
+    # cost us.
+    done, failed = run_places(
+        granicus_places(args.slug), DATA_DIR,
+        lambda place, cfg: enrich_place(place, cfg, since, args.limit,
+                                        reclassify=args.reclassify))
+    sys.exit(report(done, failed, DATA_DIR))
 
 
 if __name__ == '__main__':

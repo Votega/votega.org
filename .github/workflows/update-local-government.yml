@@ -99,13 +99,23 @@ jobs:
       # they never overwrite a good sidecar or good flags with an empty result —
       # so a transient upstream failure can't wipe the committed watch data.
       # Legistar (Fulton, DeKalb): structured API, no OCR.
+      # continue-on-error on all three: each enricher now contains a failure to
+      # the one place that broke, still writes every other place's sidecar and
+      # flag entry, and then exits non-zero so the failure is not lost. Letting
+      # that exit skip the commit step would throw the healthy places' work away
+      # one layer up — exactly the failure mode the validate step above was
+      # already restructured to avoid — so the status is carried to the job's end.
       - name: Enrich Legistar meetings (topics + data-center watch)
+        id: enrich-legistar
+        continue-on-error: true
         run: python scripts/enrich_legistar_meetings.py
 
       # PDF places (Newton/Covington/Douglas/Cobb/Henry): poppler text-layer,
       # OCR fallback. Incremental — the committed sidecar is the cache, so only
       # meetings new since last week are downloaded and classified.
       - name: Enrich PDF-platform meetings (topics + data-center watch)
+        id: enrich-ocr
+        continue-on-error: true
         run: |
           python scripts/enrich_ocr_meetings.py \
             --months "${{ inputs.months || '12' }}" --limit 25 \
@@ -117,6 +127,8 @@ jobs:
       # through the poppler/OCR path. Same guard as the others: never overwrites a
       # good sidecar/flags with nothing.
       - name: Enrich Granicus meetings (topics + data-center watch)
+        id: enrich-granicus
+        continue-on-error: true
         run: |
           python scripts/enrich_granicus_meetings.py \
             --months "${{ inputs.months || '12' }}" --limit 25 \
@@ -166,13 +178,19 @@ jobs:
           GA_LOCAL_GOVERNMENT_TOKEN: ${{ secrets.GA_LOCAL_GOVERNMENT_TOKEN }}
         run: python scripts/publish_ga_local_government.py
 
-      # Everything above ran and the good data is committed; now surface the
-      # validation failure as a job failure. This is the LAST step on purpose —
-      # failing earlier is what used to discard the healthy places' data.
-      - name: Fail the job if validation failed
-        if: steps.validate.outcome == 'failure'
+      # Everything above ran and the good data is committed; now surface any
+      # validation or enrichment failure as a job failure, so
+      # notify-workflow-failure still opens an issue. This is the LAST step on
+      # purpose — failing earlier is what used to discard the healthy places' data.
+      - name: Fail the job if validation or enrichment failed
+        if: |
+          steps.validate.outcome == 'failure' ||
+          steps.enrich-legistar.outcome == 'failure' ||
+          steps.enrich-ocr.outcome == 'failure' ||
+          steps.enrich-granicus.outcome == 'failure'
         run: |
-          echo "::error::validate_place_meetings.py failed - see the annotations" \
-            "above. The failing place(s) were quarantined; every other place's" \
-            "data was committed and published normally."
+          echo "::error::a validation or enrichment step failed - see the" \
+            "annotations above. The failing place(s) were quarantined, or left" \
+            "with their previously committed data; every other place's data was" \
+            "committed and published normally."
           exit 1
