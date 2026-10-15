@@ -43,8 +43,6 @@ import sys
 import tempfile
 from datetime import datetime, timedelta, timezone
 
-import yaml
-
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.http import fetch_bytes  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
@@ -81,7 +79,16 @@ _PDF_HEADERS = {
 
 
 def ocr_places(slug=None):
-    """(place, cfg) for every visible PDF-platform place with a meetings domain."""
+    """(place, cfg) for every visible PDF-platform place with a meetings domain.
+
+    `yaml` is imported HERE, not at module scope, and that placement is load-
+    bearing: it is this module's only third-party dependency and the only place
+    that needs it. scripts/test_enrich_*.py import this module, and
+    run-script-tests.yml deliberately installs no pip packages — so a module-level
+    `import yaml` made those suites fail with ModuleNotFoundError while the
+    invariants they check were fine (see c01efecc for the same fix). Keep it local.
+    """
+    import yaml  # noqa: PLC0415 - see the docstring above
     with open(REGISTRY, encoding='utf-8') as f:
         places = (yaml.safe_load(f) or {}).get('places', [])
     out = []

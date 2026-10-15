@@ -23,8 +23,6 @@ import re
 import sys
 from datetime import datetime, timedelta, timezone
 
-import yaml
-
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.legistar import fetch_events, fetch_event_items, fetch_rollcalls  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
@@ -47,6 +45,16 @@ def _clean(s):
 
 
 def legistar_places(slug=None):
+    """(place, client) for every visible Legistar place.
+
+    `yaml` is imported HERE, not at module scope, and that placement is load-
+    bearing: it is this module's only third-party dependency and the only place
+    that needs it. scripts/test_enrich_*.py import this module, and
+    run-script-tests.yml deliberately installs no pip packages — so a module-level
+    `import yaml` made those suites fail with ModuleNotFoundError while the
+    invariants they check were fine (see c01efecc for the same fix). Keep it local.
+    """
+    import yaml  # noqa: PLC0415 - see the docstring above
     with open(REGISTRY, encoding='utf-8') as f:
         places = (yaml.safe_load(f) or {}).get('places', [])
     out = []
