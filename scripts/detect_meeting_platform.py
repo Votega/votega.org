@@ -103,6 +103,13 @@ def _revize(m, page):
     return {'platform': 'revize', 'agendas_url': page, 'base_url': _origin(page)}
 
 
+def _wpdatatables(m, page):
+    # Like Revize, a CMS fingerprint rather than a portal: the page you fed in IS
+    # the meetings page, and lib.wpdatatables reads its tables through the
+    # plugin's admin-ajax endpoint.
+    return {'platform': 'wpdatatables', 'agendas_url': page}
+
+
 def _teammunicode(m, page):
     origin = _origin(m.group(0))
     # teammunicode.com serves the view at /meetings; municodemeetings.com at root.
@@ -125,13 +132,27 @@ SIGNATURES = [
     # Revize is a CMS fingerprint (checked last, so any embedded third-party portal
     # above wins). lib.revize scrapes the page's own agenda/minutes PDF links.
     ('revize', re.compile(r'revize\.com|Revize', re.I), _revize),
+    # wpDataTables is likewise a CMS-level fingerprint, checked after every
+    # portal above. Keyed on the plugin's own markup (a table element carrying
+    # wpDataTableID-<n>), NOT on the plugin merely being enqueued — plenty of
+    # WordPress sites load it for an unrelated grid.
+    ('wpdatatables',
+     re.compile(r'wpDataTableID-\d+|data-wpdatatable_id=[\"\']\d+', re.I),
+     _wpdatatables),
 ]
 
 # CivicPlus (real Agenda Center, not an empty shell) — only if no portal above hit.
 _CIVICPLUS_HINT = re.compile(r'/AgendaCenter|cpTextResizeOn|connect\.civicplus\.com|CivicEngage', re.I)
 # Adapter-less CMSs we recognise but can't scrape — flag so time isn't wasted.
 _NO_SCRAPER = [
-    ('governmentwindow', re.compile(r'governmentwindow\.com', re.I)),
+    # ⚠ Match the AGENDA surface, not the brand. GovernmentWindow also sells a
+    # utility-bill payment portal, and a city that merely takes payments through
+    # it (fortogov.com -> fortoglethorpega.governmentwindow.com/ticket.html)
+    # would otherwise be labelled adapter-less and skipped — Fort Oglethorpe was,
+    # though its meetings sit in a perfectly scrapable wpDataTables grid.
+    ('governmentwindow',
+     re.compile(r'governmentwindow\.com/(?!ticket)[^"\'\s<>]*'
+                r'(?:agenda|minute|meeting|board|council)', re.I)),
     ('boarddocs', re.compile(r'boarddocs\.com|go\.boarddocs', re.I)),
     ('escribe', re.compile(r'escribemeetings\.com|pub-[a-z0-9-]+\.escribe', re.I)),
     ('novusagenda', re.compile(r'novusagenda\.com', re.I)),

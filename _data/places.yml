@@ -29,11 +29,14 @@
 #   domains              per-domain adapter config; supported domain today: meetings
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
 #                        legistar | teammunicode | primegov | granicus | gwinnett | iqm2 |
-#                        municode | agendapub | revize
+#                        municode | agendapub | revize | wpdatatables
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
 #                          wix | wordpress | governmentwindow |
+#                                     (a WordPress site whose meetings sit in a
+#                                     wpDataTables grid IS scrapable — use
+#                                     `wpdatatables`, not `wordpress`.)
 #                          custom  = a real but adapter-less system: a hand-built
 #                                     page with no CMS name, e.g. Bacon's PHP.
 #                                     (Revize now HAS an adapter — see below.) Register in
@@ -56,6 +59,16 @@
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
 #       corecode keys:   base_url, meetings_path
+#       wpdatatables keys: agendas_url (the public PAGE carrying the grid).
+#                        The rows are not in that HTML — the plugin is
+#                        serverSide, so lib/wpdatatables.py reads them from
+#                        admin-ajax.php using the nonce the page renders.
+#                        Every table on the page with an agenda/minutes column
+#                        is ingested; optional table_ids pins an explicit list.
+#                        ⚠ Column roles come from the HEADER TEXT, since the
+#                        order varies per page and a "Date" column is often the
+#                        POSTING date — see the module docstring before
+#                        touching the date logic.
 #       civicclerk keys: subdomain (the <sub> in <sub>.api.civicclerk.com)
 #       legistar keys:   client (the <client> in webapi.legistar.com/v1/<client>/Events)
 #       teammunicode keys: base_url (the <sub>.teammunicode.com Municode Meetings
@@ -1134,3 +1147,72 @@ places:
           - body: Board of Commissioners
             when: "3rd Monday of every month, 5:30 p.m."                # TODO: confirm from posted notices
             location: "Administration Building, Commissioners' meeting room, 1266 East Church Street, Jasper"            # optional
+  - slug: catoosa
+    name: Catoosa County
+    type: county
+    fips: "13047"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Granicus ViewPublisher portal. ⚠ The county's OWN site
+        # (www.catoosacountyga.gov) returns 403 to every non-browser client, so
+        # agendas_url deliberately points at the Granicus host instead — that is
+        # also where the documents actually live. Nothing here touches the
+        # bot-protected domain, so this place does NOT need `bot_protected`.
+        # ⚠ Catoosa renders its date cell numerically (`10 / 06 / 2026`) rather
+        # than as "October 6, 2026"; lib/granicus.py parsed only the latter, so
+        # all 205 rows silently dropped until _parse_numeric_date was added.
+        # Validated 2026-10-14: 205 meetings, 2021-05-18 to 2026-10-13.
+        platform: granicus
+        base_url: https://www.catoosacountyga.gov/
+        agendas_url: "https://catoosaga.granicus.com/ViewPublisher.php?view_id=1"
+        # The Name cell is already a clean body name here (no meeting-type
+        # suffix), so the map is a plain allow-list: keep the legislative and
+        # land-use bodies, drop Elections & Registration, the Public Facilities
+        # Authority and the Development Authority per the IA policy.
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Worksession BOC", label: "Board of Commissioners" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Tuesday of every month, 6:00 p.m."
+            location: "Administration Building, 800 Lafayette Street, Ringgold"
+
+  - slug: fort-oglethorpe
+    name: City of Fort Oglethorpe
+    type: city
+    fips: null
+    parentCounty: catoosa
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # wpDataTables grid on an ordinary WordPress page — see
+        # scripts/lib/wpdatatables.py. The rows are NOT in the HTML (the table
+        # is serverSide), so the adapter reads them through the plugin's
+        # admin-ajax endpoint using the nonce the page renders.
+        # ⚠ Current year only, by decision: the city also keeps three archive
+        # pages (2022-24) at /mayor-council/archived-council-meeting-agenda-minutes/,
+        # /mayor-council/current-city-council-agenda-minutes/ (stale, ends May
+        # 2023) and /mayor-council/agenda-and-recordings-2024/. The adapter
+        # handles them, but they are left out here on purpose.
+        # ⚠ Column 1 of this table is the POSTING date and is dirty (one row
+        # reads 07-15-20 for a July 2026 meeting). The adapter reads "Date of
+        # Meeting", falling back to the date inside the title; it never uses the
+        # posting date. Do not "fix" that by pointing it at column 1.
+        # Validated 2026-10-14: 48 meetings, 2025-01-13 to 2026-10-12.
+        platform: wpdatatables
+        base_url: https://fortogov.com
+        agendas_url: "https://fortogov.com/mayor-council/"
+        body_label: City Council
+        # The grid carries an Organization column, so real bodies come through
+        # named; keep the council and the planning board, drop the one-off
+        # "City of Fort Oglethorpe" town-hall row.
+        body_map:
+          - { match: "City Council", label: "City Council" }
+          - { match: "Planning Advisory Board", label: "Planning Advisory Board" }
+        schedule:
+          - body: City Council
+            when: "2nd and 4th Monday of every month, 6:00 p.m."
+            location: "Fort Oglethorpe City Hall, 500 City Hall Drive, Fort Oglethorpe, GA 30742"
