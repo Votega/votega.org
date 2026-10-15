@@ -58,7 +58,6 @@ import re
 import sys
 import time
 import xml.etree.ElementTree as ET
-import yaml
 from datetime import date, datetime, timezone
 
 from lib.atomic_io import write_json_atomic
@@ -142,7 +141,17 @@ def sitting_ga_bioguides(members_file):
 
 
 def build_lis_to_bioguide():
-    """Return {lis_id: bioguideId} from congress-legislators YAML (senators only)."""
+    """Return {lis_id: bioguideId} from congress-legislators YAML (senators only).
+
+    `yaml` is imported HERE, not at module scope, and that placement is load-
+    bearing: it is this module's only third-party dependency and the only function
+    that needs it. scripts/test_federal_votes_slices.py imports this module to
+    compare TYPE_LABEL/TYPE_SLUG against the entity include's mirrors, and
+    run-script-tests.yml deliberately installs no pip packages — so a module-level
+    `import yaml` made that whole suite fail with ModuleNotFoundError while the
+    constants it was checking were fine. Keep it local.
+    """
+    import yaml  # noqa: PLC0415 - see the docstring above
     raw = fetch_raw(f"{LEGISLATORS_BASE}/legislators-current.yaml", "legislators-current.yaml")
     if not raw:
         print("  Warning: could not fetch legislators YAML — Senate LIS mapping will be empty")
