@@ -69,18 +69,20 @@ def _redact(text, secret):
     return text
 
 
-def _request(url, headers=None, timeout=DEFAULT_TIMEOUT):
+def _request(url, headers=None, timeout=DEFAULT_TIMEOUT, data=None):
     merged = {'User-Agent': DEFAULT_USER_AGENT}
     if headers:
         merged.update(headers)
-    req = urllib.request.Request(url, headers=merged)
+    if data is not None and 'Content-Type' not in merged:
+        merged['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+    req = urllib.request.Request(url, data=data, headers=merged)
     return urllib.request.urlopen(req, timeout=timeout)
 
 
 def fetch_bytes(url, headers=None, retries=DEFAULT_RETRIES,
                 backoff=DEFAULT_BACKOFF, rate_limit_backoff=None,
                 timeout=DEFAULT_TIMEOUT, redact=None, label=None,
-                quiet_statuses=(), verbose=True):
+                quiet_statuses=(), verbose=True, data=None):
     """Fetch a URL and return raw bytes, or None on failure.
 
     Retries on 429 and 5xx with linear backoff (backoff * attempt); returns
@@ -95,13 +97,23 @@ def fetch_bytes(url, headers=None, retries=DEFAULT_RETRIES,
         quiet_statuses: statuses to not log at all, e.g. (404,) when a miss is
             an expected, uninteresting outcome.
         label: short human-readable name for log lines; defaults to the URL.
+        data: request body bytes. Supplying it makes the request a POST and
+            sets a form-urlencoded Content-Type unless `headers` overrides it.
+            This module was GET-only for its first year because every caller
+            was; wpDataTables (lib.wpdatatables) is the first adapter whose
+            source is reachable only by POST, and giving it its own client
+            would have re-opened exactly the retry-policy drift this module
+            exists to close. Retry semantics are unchanged — which is safe
+            here because the only POST we make is a paginated *read*, not a
+            mutation, so replaying it is harmless. Do NOT pass `data` for a
+            request with side effects.
     """
     shown = _redact(label or url, redact)
     rl_backoff = rate_limit_backoff if rate_limit_backoff is not None else backoff
 
     for attempt in range(1, retries + 1):
         try:
-            with _request(url, headers, timeout) as resp:
+            with _request(url, headers, timeout, data=data) as resp:
                 return resp.read()
 
         except urllib.error.HTTPError as exc:

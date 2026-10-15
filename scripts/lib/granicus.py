@@ -41,6 +41,11 @@ _ROW_RE = re.compile(r'<tr class="listingRow">.*?</tr>', re.S | re.I)
 _NAME_RE = re.compile(r'headers="Name"[^>]*>(.*?)</td>', re.S | re.I)
 # Date lives in a cell like: July 21, 2026 - 6:00 PM  (month may be abbreviated).
 _DATE_RE = re.compile(r'([A-Za-z]{3,9})\s+(\d{1,2}),\s+(\d{4})')
+# Some portals render the date cell numerically instead, padded with the
+# non-breaking spaces _clean strips: `10&nbsp;/&nbsp;06&nbsp;/&nbsp;2026`
+# (catoosaga). Matched only INSIDE the Date cell — see _parse_row.
+_DATE_CELL_RE = re.compile(r'headers="Date[^"]*"[^>]*>(.*?)</td>', re.S | re.I)
+_NUM_DATE_RE = re.compile(r'\b(\d{1,2})\s*/\s*(\d{1,2})\s*/\s*(\d{4})\b')
 _AGENDA_RE = re.compile(r'(//[^"\']*AgendaViewer\.php\?[^"\']+)', re.I)
 _MINUTES_RE = re.compile(r'(//[^"\']*MinutesViewer\.php\?[^"\']+)', re.I)
 _VIDEO_RE = re.compile(r'(//[^"\']*MediaPlayer\.php\?[^"\']+)', re.I)
@@ -81,13 +86,38 @@ def _parse_date(text):
         return None
 
 
+def _parse_numeric_date(row):
+    """`10 / 06 / 2026` inside the row's Date cell -> ISO, else None.
+
+    Deliberately scoped to the Date cell rather than the whole row: a bare
+    M/D/YYYY pattern is common enough in agenda titles and media URLs that
+    searching the row would eventually bind a meeting to the wrong date.
+    """
+    cell = _DATE_CELL_RE.search(row or '')
+    if not cell:
+        return None
+    m = _NUM_DATE_RE.search(_clean(cell.group(1)))
+    if not m:
+        return None
+    month, day, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
+    if not (1 <= month <= 12 and 1 <= day <= 31):
+        return None
+    try:
+        dt.date(year, month, day)
+    except ValueError:
+        return None
+    return '%04d-%02d-%02d' % (year, month, day)
+
+
 def _parse_row(row, scheme):
     name = _NAME_RE.search(row)
     body = _clean(name.group(1)) if name else None
     if not body:
         return None
 
-    date = _parse_date(_clean(row))
+    # Month-name form first, so every portal already in the registry parses
+    # byte-identically; the numeric cell form is a fallback for catoosaga.
+    date = _parse_date(_clean(row)) or _parse_numeric_date(row)
     if not date:
         return None
 
