@@ -55,7 +55,10 @@ VOTES = {
     "memberVotes": {
         # Full-term member. The S1 entry is deliberate: a House member must never
         # be scored against a Senate roll call even if one reaches their record.
-        "OLD00001": [{"voteId": v, "vote": "Yea"} for v in ("H1", "H2", "H3", "H4", "H5", "S1")],
+        # H5 is the Speaker-election shape: no party tally, and the member's
+        # "vote" is the candidate's name. They turned up and voted.
+        "OLD00001": ([{"voteId": v, "vote": "Yea"} for v in ("H1", "H2", "H3", "H4", "S1")]
+                     + [{"voteId": "H5", "vote": "Johnson (LA)"}]),
         # Arrived mid-Congress: present for two roll calls, neither party-line.
         "NEW00001": [{"voteId": "H4", "vote": "Yea"}, {"voteId": "H5", "vote": "Yea"}],
         "NOPL0001": [{"voteId": "H4", "vote": "Yea"}, {"voteId": "H5", "vote": "Nay"}],
@@ -83,6 +86,10 @@ MEMBERS = {"members": [
     member("TIED0002", HOUSE, R),
     member("LAST0001", HOUSE, R),
     member("SEN00001", "Senate", D),
+    # Sworn in during a recess: on the roster, but their chamber has not held a
+    # roll call since. current-members.json refreshes daily and the vote record
+    # weekly, so this window is real and recurring.
+    member("NOVOTE01", HOUSE, R),
     # Another state's member, with no votes here: must not reach the scorecard.
     {"bioguideId": "OTHER001", "state": "Ohio", "partyName": R,
      "terms": {"item": [{"chamber": HOUSE}]}},
@@ -98,6 +105,10 @@ check("the full-term member is scored against all of them",
       m["OLD00001"]["totalRollCalls"], 5)
 check("the other chamber's roll calls are excluded",
       m["SEN00001"]["totalRollCalls"], 2)
+# A Speaker election records the candidate's name as the vote. Counting that as a
+# missed vote publishes a member as having skipped a roll call they turned up for.
+check("a named ballot counts as a vote cast, not a missed one",
+      (m["OLD00001"]["cast"], m["OLD00001"]["missed"]), (5, 0))
 
 print("what is excluded from the unity denominator:")
 # H1-H3 are party-line; H4 is bipartisan; H5 has no tally. Only the three count.
@@ -113,6 +124,18 @@ check("a member with votes but no roster entry is excluded",
 check("...and is counted in metadata", doc["metadata"]["withVotesButNotInRoster"], 1)
 check("another state's member is not scored", "OTHER001" in m, False)
 
+# A sitting member with no roll calls yet must still appear. Dropping them made the
+# validator report a missing member and exit 1, which aborts the commit step for the
+# WHOLE federal vote update — the scorecard taking down the dataset it derives from.
+print("a sitting member whose chamber has not voted since they arrived:")
+check("is present rather than dropped", "NOVOTE01" in m, True)
+check("has an empty record, not a zero score",
+      (m["NOVOTE01"]["totalRollCalls"], m["NOVOTE01"]["participationRate"],
+       m["NOVOTE01"]["partyUnity"]), (0, None, None))
+check("is not ranked", m["NOVOTE01"]["unityRank"], None)
+# That they do not fail the validator is asserted in its own section below, where
+# `problems` is in scope.
+
 print("ranking:")
 check("rank 1 is the top of the metric", m["OLD00001"]["unityRank"], 1)
 # OLD scores 1.0, the two TIED members 0.5 each, LAST 0.0. Standard competition
@@ -125,7 +148,8 @@ check("rank 1 is the top of the metric", m["OLD00001"]["unityRank"], 1)
 check("ties share a rank and the next rank skips",
       [m[b]["unityRank"] for b in ("TIED0001", "TIED0002", "LAST0001")], [2, 2, 4])
 check("a member with no unity score is not ranked", m["NOPL0001"]["unityRank"], None)
-check("cohort is the chamber delegation", m["OLD00001"]["cohortSize"], 6)
+check("cohort is the chamber delegation, including the member with no votes yet",
+      m["OLD00001"]["cohortSize"], 7)
 
 print("the delegation block:")
 check("the chamber median ignores unscored members",
@@ -157,6 +181,10 @@ def mutated(**member_fields):
 
 print("the structural validator:")
 check("a clean document has no problems", problems(doc, VOTES, MEMBERS), [])
+# The clean document above already contains NOVOTE01, so this doubles as the proof
+# that a sitting member with an empty record does not fail the build.
+check("a member with no roll calls yet is tolerated",
+      [p for p in problems(doc, VOTES, MEMBERS) if "NOVOTE01" in p], [])
 check("a rate above 1 is caught",
       len(problems(mutated(participationRate=1.5), VOTES, MEMBERS)), 1)
 check("votedWithParty above partyLineVotes is caught",

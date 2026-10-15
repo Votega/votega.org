@@ -1007,11 +1007,25 @@
     const peers = Object.values((doc && doc.members) || {})
       .filter(m => m.chamber === entry.chamber && m !== entry);
     const peerFor = key => {
-      const peer = peers.find(m => m[key] !== null && m[key] !== undefined);
+      const peer = peers.find(m => m[key] != null);
       return peer ? `${peer.name ? peer.name.split(',')[0] : 'the other member'}: ${pct(peer[key])}` : '';
     };
 
-    const unityCard = entry.partyUnity === null
+    // A member sworn in since their chamber last voted has an empty record. Null
+    // here must never reach pct(): `null * 100` is 0, so the panel would print a
+    // confident "0.0%" participation for someone who has had nothing to attend.
+    // Loose `== null` on purpose — an absent field has to take this branch too.
+    if (entry.participationRate == null || !entry.totalRollCalls) {
+      return `
+        <div class="finance-cards" style="margin-bottom:0.5rem;">
+          <div class="finance-card" style="background:#f8fafc;border:1px solid #e2e8f0;">
+            <div class="finance-card-label">Voting Record</div>
+            <div style="font-size:0.78rem;color:#64748b;margin-top:0.25rem;">No roll calls have been held in this chamber since this member was sworn in, so there is nothing to score yet.</div>
+          </div>
+        </div>`;
+    }
+
+    const unityCard = entry.partyUnity == null
       // A member with no party-line votes has no unity score. Printing 0% here
       // would read as total disloyalty, which is the opposite of what we know.
       ? `<div class="finance-card" style="background:#f8fafc;border:1px solid #e2e8f0;">

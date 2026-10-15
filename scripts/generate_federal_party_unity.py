@@ -35,7 +35,8 @@ from datetime import datetime, timezone
 
 # scripts/ is sys.path[0] when run as `python scripts/generate_federal_party_unity.py`
 from lib.atomic_io import write_json_atomic
-from lib.party_unity import OTHER_PARTY, score_participation, score_unity
+from lib.party_unity import (ABSTENTIONS, OTHER_PARTY, score_participation,
+                             score_unity)
 
 VOTES_FILE = "assets/data/federal-member-votes.json"
 MEMBERS_FILE = "assets/data/current-members.json"
@@ -141,13 +142,21 @@ def build_scorecard(votes_data, members_data):
                 continue
             own.setdefault(vote_id, entry.get("vote"))
 
-        total, cast, missed = score_participation(own)
-        if total == 0:
-            continue
+        # Anything recorded that is not an absence counts as a vote cast -- a
+        # Speaker election records the candidate's NAME, and that is a ballot,
+        # not a no-show. See ABSTENTIONS.
+        total, cast, missed = score_participation(own, abstentions=ABSTENTIONS)
 
         tallies = {vote_id: (votes.get(vote_id) or {}).get("partyTally") for vote_id in own}
         party_line, aligned = score_unity(own, tallies, party)
 
+        # A sitting member whose chamber has not voted since they were sworn in has
+        # an empty record, which is not the same as a bad one. They stay in the
+        # scorecard with null figures: dropping them made the validator report a
+        # missing member and fail the run, which aborts the commit step for the
+        # whole federal vote update — the scorecard taking down the dataset it is
+        # derived from. The roster refreshes daily and the votes weekly, so this
+        # window opens every time someone is seated during a recess.
         unity = round(aligned / party_line, PRECISION) if party_line else None
         scores[bioguide] = {
             "name": name,
@@ -156,8 +165,8 @@ def build_scorecard(votes_data, members_data):
             "totalRollCalls": total,
             "cast": cast,
             "missed": missed,
-            "participationRate": round(cast / total, PRECISION),
-            "missedRate": round(missed / total, PRECISION),
+            "participationRate": round(cast / total, PRECISION) if total else None,
+            "missedRate": round(missed / total, PRECISION) if total else None,
             "partyUnity": unity,
             "partyLineVotes": party_line,
             "votedWithParty": aligned,
@@ -175,7 +184,8 @@ def build_scorecard(votes_data, members_data):
         unity_ranks = competition_ranks(
             {b: s["partyUnity"] for b, s in cohort.items() if s["partyUnity"] is not None})
         participation_ranks = competition_ranks(
-            {b: s["participationRate"] for b, s in cohort.items()})
+            {b: s["participationRate"] for b, s in cohort.items()
+             if s["participationRate"] is not None})
         for bioguide, entry in cohort.items():
             entry["unityRank"] = unity_ranks.get(bioguide)
             entry["participationRank"] = participation_ranks.get(bioguide)
@@ -184,7 +194,8 @@ def build_scorecard(votes_data, members_data):
             "cohortSize": len(cohort),
             "medianUnity": median([s["partyUnity"] for s in cohort.values()
                                    if s["partyUnity"] is not None]),
-            "medianParticipation": median([s["participationRate"] for s in cohort.values()]),
+            "medianParticipation": median([s["participationRate"] for s in cohort.values()
+                                           if s["participationRate"] is not None]),
         }
 
     votes_meta = votes_data.get("metadata") or {}
@@ -204,8 +215,9 @@ def build_scorecard(votes_data, members_data):
                               "voted with their own caucus. Excludes lopsided and "
                               "bipartisan votes.",
                 "participation": "Share of the roll calls held in the member's chamber "
-                                 "while they were seated on which they cast a Yea or Nay; "
-                                 "Other (not voting/present/absent/excused) counts against it.",
+                                 "while they were seated on which they cast a ballot of any "
+                                 "kind, including a candidate name in a Speaker election; "
+                                 "not voting, present, absent and excused count against it.",
             },
             "count": len(scores),
             "scoredForUnity": sum(1 for s in scores.values() if s["partyUnity"] is not None),

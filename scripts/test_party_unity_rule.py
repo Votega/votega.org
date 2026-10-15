@@ -20,7 +20,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from lib.party_unity import (OTHER_PARTY, party_line_direction, score_participation,
+from lib.party_unity import (ABSTENTIONS, OTHER_PARTY, party_line_direction,
+                             score_participation,
                              score_unity)
 
 failures = []
@@ -63,6 +64,22 @@ check("unity counts only party-line votes the member cast", score_unity(VOTES, T
 check("an absence is not a defection", score_unity({"c": "Not Voting"}, TALLIES, R), (0, 0))
 check("participation counts Yea and Nay only", score_participation(VOTES), (4, 3, 1))
 check("participation of an empty record", score_participation({}), (0, 0, 0))
+
+# A Speaker election records the candidate's NAME as each member's vote. That is a
+# ballot cast, not an absence — counting it as missed publishes a member as having
+# skipped a vote they turned up for. The GA record has no such value, so the GA
+# rule (cast == Yea or Nay) stays the default and the federal generator opts in.
+print("a recorded ballot that is neither Yea, Nay, nor an absence:")
+SPEAKER = {"a": "Yea", "b": "Johnson (LA)", "c": "Not Voting"}
+check("by default a named ballot does not count as cast (the GA rule)",
+      score_participation(SPEAKER), (3, 1, 2))
+check("with an abstention list, a named ballot counts as cast",
+      score_participation(SPEAKER, abstentions=ABSTENTIONS), (3, 2, 1))
+check("an absence still counts against participation",
+      score_participation({"c": "Not Voting"}, abstentions=ABSTENTIONS), (1, 0, 1))
+check("every absence vocabulary value is treated the same",
+      score_participation({v: v for v in ABSTENTIONS}, abstentions=ABSTENTIONS),
+      (len(ABSTENTIONS), 0, len(ABSTENTIONS)))
 
 print("the caucus map:")
 check("the two major caucuses oppose each other",

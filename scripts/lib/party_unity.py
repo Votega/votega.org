@@ -42,10 +42,23 @@ Import from a generator in scripts/ (sys.path[0] is scripts/ when run as
 #: and therefore no unity score — `None` here is what makes that fall out.
 OTHER_PARTY = {"Democratic": "Republican", "Republican": "Democratic"}
 
-#: The two vote values that count as a cast vote. Everything else — Not Voting,
-#: Present, Absent, Excused, and the candidate names a Speaker election records —
-#: is an abstention for both metrics.
+#: The two vote values that decide a question, and so the only two that can agree
+#: or disagree with a caucus. Unity is always measured on these.
 CAST = ("Yea", "Nay")
+
+#: The values that mean the member did NOT vote. Everything else recorded against
+#: them is a ballot they cast.
+#:
+#: This exists because not every roll call asks a Yea/Nay question: a Speaker
+#: election records the candidate's NAME as each member's vote ("Johnson (LA)",
+#: "Jeffries"). Measuring participation as "cast a Yea or Nay" counts that as a
+#: missed vote, which publishes a member as having skipped a vote they turned up
+#: for — every Georgia House member was off by one before this.
+#:
+#: It is opt-in rather than the default because the GA record has no such value
+#: (Open States yields Yea/Nay/Other only), so switching GA to it would change
+#: "Other" from an absence into a cast vote and move published state figures.
+ABSTENTIONS = ("Not Voting", "Present", "Absent", "Excused")
 
 
 def _direction(bucket):
@@ -116,7 +129,7 @@ def score_unity(votes_by_rollcall, tallies, party):
     return considered, aligned
 
 
-def score_participation(votes_by_rollcall):
+def score_participation(votes_by_rollcall, abstentions=None):
     """`(total, cast, missed)` over the roll calls in this member's own record.
 
     The denominator is the member's OWN records, never the chamber's total. Both
@@ -124,7 +137,15 @@ def score_participation(votes_by_rollcall):
     mid-term is scored against the roll calls held since they arrived — deriving
     the denominator from the chamber instead would publish every mid-term arrival
     as having missed most of the term.
+
+    By default a vote counts as cast only if it is a Yea or a Nay, which is the
+    GA rule. Pass `abstentions` (normally ABSTENTIONS) to invert the test, so that
+    anything recorded which is not an absence counts as cast — see ABSTENTIONS for
+    why the federal record needs that and the GA record must not have it.
     """
     total = len(votes_by_rollcall)
-    cast = sum(1 for vote in votes_by_rollcall.values() if vote in CAST)
+    if abstentions is None:
+        cast = sum(1 for vote in votes_by_rollcall.values() if vote in CAST)
+    else:
+        cast = sum(1 for vote in votes_by_rollcall.values() if vote not in abstentions)
     return total, cast, total - cast
