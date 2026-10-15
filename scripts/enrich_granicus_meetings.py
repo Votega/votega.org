@@ -26,7 +26,7 @@ Tesseract path (lib.pdf_text.extract_text), exactly like enrich_ocr_meetings.py;
 without that check the PDF bytes were fed to the HTML stripper and classified as
 binary garbage, tagging zero topics.
 
-Three Granicus quirks handled here:
+Four Granicus quirks handled here:
 
   * The AgendaViewer redirect points at
     `https://<bucket>.s3.amazonaws.com/...` where the bucket name contains
@@ -37,6 +37,13 @@ Three Granicus quirks handled here:
     (`s3.amazonaws.com`) verifies cleanly — no TLS downgrade needed.
   * A missing/unpublished agenda 302s to `/core/error/NotFound.aspx` instead of a
     document; that is detected and skipped (the meeting keeps any prior tags).
+  * ⚠ The Location header is sometimes RELATIVE. Catoosa answers 11 of its
+    first 35 documents with `/DocumentViewer.php?file=<hash>.pdf&view=1`,
+    which RFC 7231 §7.1.2 permits and urllib rejects outright ("unknown url
+    type"). Every Location is resolved against the viewer URL before use.
+    DocumentViewer.php serves the PDF itself, so it lands on the `%PDF-`
+    path below. Barrow/Cherokee/Spalding only ever send absolute S3 URLs,
+    which is why this stayed invisible until a fourth portal was added.
 
 Git-bloat rule (same as the OCR enricher): only DERIVED data — tags, flags,
 matched keywords, the HTML's sha256 — is committed to the sidecar. Raw agenda text
@@ -59,6 +66,7 @@ import tempfile
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import urljoin
 from datetime import datetime, timedelta, timezone
 
 import yaml
@@ -107,8 +115,12 @@ def _path_style(url):
 def _get(url, timeout=30):
     """GET without following redirects. Returns (code, location, body_or_None)."""
     opener = urllib.request.build_opener(_NoRedirect)
-    req = urllib.request.Request(url, headers=_HEADERS)
     try:
+        # Request() is built INSIDE the try on purpose: it raises
+        # ValueError on a URL urllib will not accept, and one unreadable
+        # document must never abort a multi-county run (it did — see
+        # scripts/test_enrich_granicus.py).
+        req = urllib.request.Request(url, headers=_HEADERS)
         resp = opener.open(req, timeout=timeout)
         return resp.getcode(), resp.headers.get('Location'), resp.read()
     except urllib.error.HTTPError as e:
@@ -136,7 +148,13 @@ def fetch_agenda_html(viewer_url, timeout=30, retries=3, backoff=5):
         if code and 300 <= code < 400 and loc:
             if '/core/error/' in loc.lower():
                 return None  # missing / unpublished agenda
-            code2, _, body2 = _get(_path_style(loc), timeout=timeout)
+            # ⚠ A Location may be RELATIVE (RFC 7231 §7.1.2). Catoosa
+            # answers with `/DocumentViewer.php?file=<hash>.pdf&view=1`;
+            # handing that to urllib raises "unknown url type". Resolve
+            # against the viewer URL before the S3 rewrite, which is a
+            # no-op for anything that is not an S3 virtual host.
+            target = _path_style(urljoin(viewer_url, loc))
+            code2, _, body2 = _get(target, timeout=timeout)
             if code2 and 200 <= code2 < 300 and body2:
                 return body2
             if code2 and code2 < 500:
