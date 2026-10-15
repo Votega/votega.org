@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-15T03:31:57Z",
+  "generatedAt": "2026-10-15T13:44:26Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -13,8 +13,8 @@
   "lastActivity": "2026-10-20",
   "topicTotals": {
    "contract": 9,
-   "millage-budget": 7,
-   "development": 10,
+   "millage-budget": 8,
+   "development": 9,
    "variance": 3,
    "appointment": 6
   },
@@ -100,17 +100,9 @@
     ],
     "excerpt": "… wth Case 177 is requesting a variance to Section 26-70 (b) to allow a manufactured home/ mobile home within a subdivision. 8. Location: Eden Grove Class II Subdivision (1049 Ben Higgens Road, Dahlonega, GA 30533) Applicant: Jace …",
     "excerptTerm": "subdivision"
-   },
-   {
-    "title": "Land Use & Development Regulations Review Committee Meeting",
-    "date": "2026-08-03",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4192,plainText=false)",
-    "tags": [
-     "development"
-    ]
    }
   ],
-  "landUseMeetings": 10,
+  "landUseMeetings": 9,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -191,6 +183,40 @@
     }
    },
    "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1417",
+   "date": "2026-10-15",
+   "body": "Board of Commissioners",
+   "title": "BOC Special Called Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4396,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4396,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 570,
+   "pdfSha256": "54220274301857e66a53f362a7e0fca63da08928c6903f7c8391e2df89402ead",
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "ad valorem",
+    "budget",
+    "millage"
+   ],
+   "topicExcerpts": {
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 026 4:10 PM • CALL TO ORDER • RESOLUTIONS 1. 2026-56 Amend the 2027 Budget (Finance Director Abby Branan) 2. 2026-57 Resolution Revising 2026 Ad Valorem Tax Millage Rate (Finance Directo …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
    "dataCenterItems": []
   },
   {
@@ -943,38 +969,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1301",
-   "date": "2026-08-03",
-   "body": "Land Use & Development Regulations Review Committee",
-   "title": "Land Use & Development Regulations Review Committee Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4192,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4192,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 598,
-   "pdfSha256": "8077c015e25ade91bfd4ae0658ee4ce0fd5140c413fb43fc94999bd6fd2d8c8c",
-   "topics": {
-    "development": 1
-   },
-   "tags": [
-    "development"
-   ],
-   "matchedTerms": [
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… 5:00 PM • CALL TO ORDER • OTHER ITEMS 1. Approve the July 20, 2026 Meeting Minutes 2. Review Article III Subdivision Classes & Article IV Platting Jurisdiction • ADJOURNMENT",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }
