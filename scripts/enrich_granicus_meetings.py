@@ -69,8 +69,6 @@ import urllib.request
 from urllib.parse import urljoin
 from datetime import datetime, timedelta, timezone
 
-import yaml
-
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.meeting_topics import (  # noqa: E402
     classify, matched_terms, topic_flags, build_summary, flag_entry,
@@ -180,7 +178,16 @@ def html_to_text(raw):
 
 
 def granicus_places(slug=None):
-    """(place, cfg) for every visible Granicus ViewPublisher place."""
+    """(place, cfg) for every visible Granicus ViewPublisher place.
+
+    `yaml` is imported HERE, not at module scope, and that placement is load-
+    bearing: it is this module's only third-party dependency and the only place
+    that needs it. scripts/test_enrich_*.py import this module, and
+    run-script-tests.yml deliberately installs no pip packages — so a module-level
+    `import yaml` made those suites fail with ModuleNotFoundError while the
+    invariants they check were fine (see c01efecc for the same fix). Keep it local.
+    """
+    import yaml  # noqa: PLC0415 - see the docstring above
     with open(REGISTRY, encoding='utf-8') as f:
         places = (yaml.safe_load(f) or {}).get('places', [])
     out = []
