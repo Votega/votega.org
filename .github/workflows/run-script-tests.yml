@@ -62,5 +62,14 @@ jobs:
           fi
           echo "All script test suites passed."
 
-      - name: Check workflow triggers are wired
-        run: python scripts/validate_workflow_triggers.py
+# No "Check workflow triggers are wired" step here. It used to run
+# scripts/validate_workflow_triggers.py, which needs pyyaml to parse the workflow
+# files — and this job installs no pip packages on purpose (see the header: these
+# suites are offline checks with no network and no third-party deps). So that step
+# failed with ModuleNotFoundError on every run it ever reached, and was invisible
+# only because an earlier failing step usually stopped the job first.
+#
+# Nothing is lost: validate-workflows.yml runs the same validator WITH pyyaml, on
+# pushes and PRs touching '.github/workflows/**' or the validator itself. The
+# invariant it guards lives entirely inside .github/workflows, so those paths
+# already catch every change that could break it.
