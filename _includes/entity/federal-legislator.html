@@ -104,6 +104,12 @@
     color: #1e3a8a;
   }
   .running-badge strong { display: block; margin-bottom: 0.25rem; }
+  .running-badge-note {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.85rem;
+    opacity: 0.9;
+  }
   .running-badge a { color: inherit; }
   .tab-container {
     margin-top: 2rem;
@@ -462,13 +468,41 @@
     }
   }
 
+  // A seat can carry more than one race in the same cycle — GA-13 in 2026 has a
+  // special election for the remainder of the late incumbent's term AND the
+  // general for the next full term. Matching on chamber+district alone returned
+  // whichever came first in races.json, so the member who WON the special was
+  // told on his own profile that his seat was "up for election", pointing at a
+  // decided contest between two other people. Decided races are dropped, and of
+  // what remains the soonest election still ahead wins.
+  function pickLiveRace(matches) {
+    const live = matches.filter(r => r.status !== 'certified' && !r.winner);
+    if (!live.length) return null;
+    const today = new Date().toISOString().slice(0, 10);
+    const dateOf = r => {
+      const dates = Object.values(r.phases || {})
+        .map(p => p && p.electionDate)
+        .filter(d => d && d >= today)
+        .sort();
+      return dates[0] || null;
+    };
+    const upcoming = live
+      .map(r => ({ r, d: dateOf(r) }))
+      .filter(x => x.d)
+      .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
+    if (upcoming.length) return upcoming[0].r;
+    // Nothing ahead on the calendar: fall back to the latest cycle on file so a
+    // between-cycles visit still points at the most recent contest for the seat.
+    return live.slice().sort((a, b) => (b.cycle || 0) - (a.cycle || 0))[0];
+  }
+
   function findSeatRace(member, races) {
     if (member.state !== 'Georgia') return null;
     const currentTerm = member.terms?.item?.slice(-1)[0] || {};
     const chamber = currentTerm.chamber || '';
     const isHouse  = chamber.includes('House');
     const isSenate = chamber.includes('Senate');
-    return races.find(r => {
+    return pickLiveRace(races.filter(r => {
       if (r.level !== 'federal') return false;
       if (isHouse) return r.chamber === 'U.S. House' && r.district === member.district;
       if (isSenate) {
@@ -485,7 +519,7 @@
         });
       }
       return false;
-    }) || null;
+    }));
   }
 
   function findMemberInRaces(bioguideId, races) {
@@ -1777,9 +1811,16 @@
     } else if (seatRace) {
       const distLabel = seatRace.district ? ` District ${seatRace.district}` : '';
       const raceUrl   = raceHref(seatRace.id);
+      // Where two races share the seat, the race carries a note explaining which
+      // term each one is for. Without it the badge reads as the member's own
+      // re-election fight when it may be a separate contest for a later term.
+      const relatedHtml = seatRace.relatedNote?.text
+        ? `<span class="running-badge-note">${escHtml(seatRace.relatedNote.text)}</span>`
+        : '';
       runningBadgeHtml = `
         <div class="running-badge seat-election">
           <strong>This seat is up for election in ${escHtml(seatRace.cycle)}</strong>
+          ${relatedHtml}
           <a href="${escHtml(raceUrl)}">View ${escHtml(seatRace.chamber)}${escHtml(distLabel)} race →</a>
         </div>`;
     }

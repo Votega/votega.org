@@ -47,6 +47,10 @@
     font-style: italic;
     opacity: 0.75;
   }
+  /* Who holds the seat now is the one thing a visitor to a departed member's
+     page most needs, so it reads at full strength rather than as a footnote. */
+  .status-banner .status-successor { color: inherit; }
+  .status-banner .status-successor a { color: inherit; font-weight: 600; }
   .status-running {
     background: #f0fdf4;
     border-color: #16a34a;
@@ -425,6 +429,59 @@
     return clean ? getBasePath() + clean.replace(/^\//, '')
                  : `${getBasePath()}candidate.html?id=${encodeURIComponent(id)}`;
   }
+  function gaMemberHref(id) {
+    const clean = GA_LEGISLATOR_URLS[id];
+    return clean ? getBasePath() + clean.replace(/^\//, '')
+                 : `${getBasePath()}ga-member.html?id=${encodeURIComponent(id)}`;
+  }
+
+  // "Senate District 7" / "House District 177" — the roster spells the lower
+  // chamber "House of Representatives", which is a mouthful mid-sentence.
+  function districtLabel(member) {
+    const chamber = member.chamber === 'House of Representatives' ? 'House' : member.chamber;
+    return member.district != null ? `${chamber} District ${member.district}` : chamber;
+  }
+
+  // The member sitting in this seat now, for a departed member's page. Every
+  // departed member in the roster today has exactly one sitting counterpart at
+  // their chamber+district, because the editorial layer injects the successor
+  // as soon as the seat is filled. Returning them is what lets the status
+  // banner say who holds the seat instead of guessing that a special election
+  // is still pending — the seat was filled months ago in every current case.
+  function findSeatSuccessor(member, all) {
+    if (!member.status || member.district == null) return null;
+    return all.find(m =>
+      m.id !== member.id &&
+      m.chamber === member.chamber &&
+      m.district === member.district &&
+      !m.status
+    ) || null;
+  }
+
+  // A seat can carry more than one race in the same cycle (a special election
+  // for the remainder of a term alongside the general for the next full one).
+  // Matching on chamber+district alone returned whichever came first in
+  // races.json, so a profile could advertise a contest that was already decided.
+  // Decided races are dropped; of what remains the soonest election still ahead
+  // wins, falling back to the latest cycle when nothing is upcoming.
+  function pickLiveRace(matches) {
+    const live = matches.filter(r => r.status !== 'certified' && !r.winner);
+    if (!live.length) return null;
+    const today = new Date().toISOString().slice(0, 10);
+    const dateOf = r => {
+      const dates = Object.values(r.phases || {})
+        .map(p => p && p.electionDate)
+        .filter(d => d && d >= today)
+        .sort();
+      return dates[0] || null;
+    };
+    const upcoming = live
+      .map(r => ({ r, d: dateOf(r) }))
+      .filter(x => x.d)
+      .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
+    if (upcoming.length) return upcoming[0].r;
+    return live.slice().sort((a, b) => (b.cycle || 0) - (a.cycle || 0))[0];
+  }
 
   function findSeatRace(member, races) {
     const chamberMap = {
@@ -432,11 +489,11 @@
       'Senate': 'Georgia State Senate',
     };
     const raceChamber = chamberMap[member.chamber] || member.chamber;
-    return races.find(r =>
+    return pickLiveRace(races.filter(r =>
       r.level === 'state' &&
       r.chamber === raceChamber &&
       r.district === member.district
-    ) || null;
+    ));
   }
 
   // This member's own candidate entry within one race (their current seat),
@@ -527,7 +584,7 @@
       // (uncached) legis.ga.gov URL, exactly as before this cache existed.
       if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
       await loadSponsorshipIndex();   // resolved by now in practice; see above
-      displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable, electionDataUnavailable);
+      displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable, electionDataUnavailable, findSeatSuccessor(member, all));
       // Resigned/Removed/Deceased entries are historical records kept only so
       // ga-member-votes.json can still join their earlier votes by OCD id —
       // exclude them from the sidebar's "current occupants" peer list, but
@@ -732,7 +789,7 @@
       </p>`;
   }
 
-  function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable, electionDataUnavailable) {
+  function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable, electionDataUnavailable, seatSuccessor) {
     const currentYear = new Date().getFullYear();
     const detailsDiv  = document.getElementById('memberDetails');
     const age = computeAge(member);
@@ -782,8 +839,14 @@
       if (!seatRace) return '';
       const raceUrl   = raceHref(seatRace.id);
       const distLabel = seatRace.district ? ` District ${seatRace.district}` : '';
+      // See federal-legislator.html: where two races share a seat, this note is
+      // what tells a voter which term the contest is for.
+      const relatedHtml = seatRace.relatedNote?.text
+        ? `<span class="status-note">${escHtml(seatRace.relatedNote.text)}</span>`
+        : '';
       return `<div class="status-banner status-running">
         <span class="status-label">This seat is up for election in ${escHtml(seatRace.cycle)}</span>
+        ${relatedHtml}
         <a href="${escHtml(raceUrl)}">View ${escHtml(seatRace.chamber)}${escHtml(distLabel)} race →</a>
       </div>`;
     })();
@@ -812,8 +875,18 @@
         ? escHtml(member.statusNote).replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
         : '';
       const noteLine  = noteText ? `<span class="status-note">${noteText}</span>` : '';
-      const electionLine = `<span class="status-election">This seat may be subject to a special election.</span>`;
-      return `<div class="status-banner status-${knownSlug}">${labelLine}${noteLine}${electionLine}</div>`;
+      // Who holds the seat now beats a standing guess that an election is coming:
+      // "This seat may be subject to a special election" was printed for every
+      // departed member regardless, so it kept promising a contest that had in
+      // fact been decided and sworn in months earlier. Only say it when nobody
+      // is sitting in the seat, and never for a suspension (the member keeps the
+      // seat through a suspension — no special election follows).
+      const successorLine = seatSuccessor
+        ? `<span class="status-successor">${escHtml(seatSuccessor.name)} now represents ${escHtml(districtLabel(member))}. <a href="${escHtml(gaMemberHref(seatSuccessor.id))}">View their profile →</a></span>`
+        : (knownSlug === 'suspended'
+            ? ''
+            : `<span class="status-election">This seat may be subject to a special election.</span>`);
+      return `<div class="status-banner status-${knownSlug}">${labelLine}${noteLine}${successorLine}</div>`;
     })();
 
     // Three fields the Members service supplies for most members but the page used to

@@ -183,7 +183,7 @@ members, from the same roll-call record behind each member's page.</p>
     </div>
   </div>
   <div class="pu-ctl">
-    <label for="pu-min">Min. party-line votes <span class="pu-rangeval" id="pu-minval">25</span></label>
+    <label for="pu-min">Minimum <span id="pu-minwhat">party-line votes</span> <span class="pu-rangeval" id="pu-minval">25</span></label>
     <div class="pu-range"><input type="range" id="pu-min" min="0" max="100" step="5" value="25"></div>
   </div>
 </div>
@@ -247,27 +247,50 @@ members, from the same roll-call record behind each member's page.</p>
   var partyColor = function (p) { return p === 'Democratic' ? '#2563eb' : p === 'Republican' ? '#dc2626' : '#888'; };
   function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
 
+  // `denom` is the sample the active metric is computed over, and so the number
+  // the minimum-sample filter has to be applied to. The filter used to run on
+  // partyLineVotes only, which meant it silently did nothing under the missed
+  // and participation sorts: a member seated for 11 of 790 roll calls ranked
+  // second for "missed votes" at 45.5%, directly above members with a 790-vote
+  // denominator, while the slider still read 25.
   var SORTS = {
-    independence: { head: 'Independence', get: function (m) { return m.independenceRate; }, need: 'unity', color: function () { return '#8a6a1c'; } },
-    unity:        { head: 'Party unity',  get: function (m) { return m.partyUnity; },       need: 'unity', color: function (m) { return partyColor(m.party); } },
-    missed:       { head: 'Missed-vote rate', get: function (m) { return m.missedRate; },    need: 'any',   color: function () { return '#9a6a12'; } },
-    participation:{ head: 'Participation', get: function (m) { return m.participationRate; }, need: 'any',  color: function () { return '#777'; } }
+    independence: { head: 'Independence', get: function (m) { return m.independenceRate; }, need: 'unity', denom: function (m) { return m.partyLineVotes; },  sample: 'party-line votes', color: function () { return '#8a6a1c'; } },
+    unity:        { head: 'Party unity',  get: function (m) { return m.partyUnity; },       need: 'unity', denom: function (m) { return m.partyLineVotes; },  sample: 'party-line votes', color: function (m) { return partyColor(m.party); } },
+    missed:       { head: 'Missed-vote rate', get: function (m) { return m.missedRate; },    need: 'any',   denom: function (m) { return m.totalRollCalls; }, sample: 'roll calls',       color: function () { return '#9a6a12'; } },
+    participation:{ head: 'Participation', get: function (m) { return m.participationRate; }, need: 'any',  denom: function (m) { return m.totalRollCalls; }, sample: 'roll calls',       color: function () { return '#777'; } }
   };
+
+  // Full-session roll-call count per chamber, used to tag a partial term under
+  // any sort. The data splits cleanly — 732/790 for a member who served the
+  // whole biennium against 11-14 for one seated late — so half of the chamber's
+  // maximum separates them without hard-coding a session length.
+  var chamberMax = {};
+  function isPartialTerm(m) {
+    var max = chamberMax[m.chamber];
+    return !!max && m.totalRollCalls < max * 0.5;
+  }
 
   function passes(m) {
     if (state.chamber !== 'all' && m.chamber !== state.chamber) return false;
     if (state.party !== 'all' && m.party !== state.party) return false;
     var s = SORTS[state.sort];
-    if (s.need === 'unity') {
-      if (m.partyUnity === null) return false;
-      if (m.partyLineVotes < state.min) return false;
-    }
+    // The Speaker votes only to break ties, so he is recorded as missing every
+    // roll call he presided over. Ranking that as a 100% missed-vote rate put
+    // him top of the scorecard for absenteeism on a page voters read as a
+    // record of showing up; his participation figures are not comparable to a
+    // voting member's, so he is left out of those two rankings entirely.
+    if (s.need === 'any' && m.presidingOfficer) return false;
+    if (s.need === 'unity' && m.partyUnity === null) return false;
+    if (s.denom(m) < state.min) return false;
     return true;
   }
 
   function render() {
     var s = SORTS[state.sort];
     $('pu-metric-head').textContent = s.head;
+    // The filter applies to whichever sample the active metric uses, so the
+    // control has to say which one that is.
+    $('pu-minwhat').textContent = s.sample;
 
     var list = members.filter(passes).slice().sort(function (a, b) {
       var d = s.get(b) - s.get(a);
@@ -278,7 +301,8 @@ members, from the same roll-call record behind each member's page.</p>
     $('pu-count').innerHTML = 'Showing <strong>' + list.length + '</strong> members'
       + (state.chamber === 'all' ? '' : ' &middot; ' + (state.chamber === 'Senate' ? 'Senate' : 'House'))
       + (state.party === 'all' ? '' : ' &middot; ' + state.party)
-      + (s.need === 'unity' ? ' &middot; min ' + state.min + ' party-line votes' : '');
+      + (state.min > 0 ? ' &middot; min ' + state.min + ' ' + s.sample : '')
+      + (s.need === 'any' ? ' &middot; presiding officer excluded' : '');
 
     var maxV = list.length ? Math.max.apply(null, list.map(s.get)) : 1;
     if (!(maxV > 0)) maxV = 1;
@@ -294,10 +318,18 @@ members, from the same roll-call record behind each member's page.</p>
       else frac = m.cast + ' of ' + m.totalRollCalls;
 
       var tags = '';
-      if (m.presidingOfficer) tags = '<span class="pu-tag" title="Votes only to break ties by custom">Presiding</span>';
-      else if (s.need === 'unity' && m.partyLineVotes > 0 && m.partyLineVotes < 60) tags = '<span class="pu-tag" title="Seated for part of the biennium — small sample">Partial term</span>';
+      if (m.presidingOfficer) tags = '<span class="pu-tag" title="Presiding officer — votes only to break ties by custom">Presiding</span>';
+      // The partial-term tag used to render only under the unity sorts, so the
+      // small-sample members who top a missed-vote or participation ranking
+      // appeared without any mark at all.
+      else if (isPartialTerm(m) || (s.need === 'unity' && m.partyLineVotes > 0 && m.partyLineVotes < 60)) tags = '<span class="pu-tag" title="Seated for part of the biennium — small sample">Partial term</span>';
 
       var unityCell = m.partyUnity === null ? '&mdash;' : pct(m.partyUnity);
+      // A presiding officer's missed/participation rates describe the chair, not
+      // attendance, so they are withheld in the columns too — not just in the
+      // rankings they were excluded from above.
+      var missedCell = m.presidingOfficer ? '&mdash;' : pct(m.missedRate);
+      var partCell   = m.presidingOfficer ? '&mdash;' : pct(m.participationRate);
       var href = basePath + 'ga-member.html?id=' + encodeURIComponent(m.id);
 
       return '<tr' + (m.id === highlightId ? ' class="pu-hl" id="pu-hl-row"' : '') + '>'
@@ -310,8 +342,8 @@ members, from the same roll-call record behind each member's page.</p>
           + '<span class="pu-pct">' + pct(v) + '</span></div>'
           + '<div class="pu-frac">' + frac + '</div></td>'
         + '<td class="pu-num pu-hide-sm ' + (state.sort === 'unity' ? 'pu-strong' : '') + '">' + unityCell + '</td>'
-        + '<td class="pu-num pu-hide-sm ' + (state.sort === 'missed' ? 'pu-strong' : '') + '">' + pct(m.missedRate) + '</td>'
-        + '<td class="pu-num pu-hide-sm ' + (state.sort === 'participation' ? 'pu-strong' : '') + '">' + pct(m.participationRate) + '</td>'
+        + '<td class="pu-num pu-hide-sm ' + (state.sort === 'missed' ? 'pu-strong' : '') + '">' + missedCell + '</td>'
+        + '<td class="pu-num pu-hide-sm ' + (state.sort === 'participation' ? 'pu-strong' : '') + '">' + partCell + '</td>'
         + '</tr>';
     }).join('');
 
@@ -329,7 +361,11 @@ members, from the same roll-call record behind each member's page.</p>
       state.sort = 'participation';
       $('pu-sort').value = 'participation';
     }
-    if (SORTS[state.sort].need === 'unity' && m.partyLineVotes < state.min) {
+    // A presiding officer has no comparable figure under any sort (no party-line
+    // votes to score, and a missed-vote rate that only describes the chair), so
+    // there is no filter to relax for him — updateBanner says why instead.
+    if (m.presidingOfficer) return;
+    if (SORTS[state.sort].denom(m) < state.min) {
       state.min = 0;
       $('pu-min').value = 0;
       $('pu-minval').textContent = '0';
@@ -343,8 +379,13 @@ members, from the same roll-call record behind each member's page.</p>
     if (!m) { b.style.display = 'none'; return; }
     var shown = list.some(function (x) { return x.id === highlightId; });
     b.style.display = 'block';
+    var whyHidden = shown ? ''
+      : m.presidingOfficer
+        ? ' — as presiding officer of the ' + (m.chamber === 'Senate' ? 'Senate' : 'House')
+          + ', he votes only to break ties, so he is not ranked on this scorecard'
+        : ' — not shown under the current filters';
     b.innerHTML = 'Highlighting <strong>' + esc(m.name) + '</strong>'
-      + (shown ? '' : ' — not shown under the current filters')
+      + whyHidden
       + '. <a id="pu-clear">View full ranking</a>';
     $('pu-clear').addEventListener('click', function () {
       highlightId = null;
@@ -387,14 +428,22 @@ members, from the same roll-call record behind each member's page.</p>
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) {
       members = data.members || [];
-      members.forEach(function (m) { byId[m.id] = m; });
+      members.forEach(function (m) {
+        byId[m.id] = m;
+        if (!(chamberMax[m.chamber] >= m.totalRollCalls)) chamberMax[m.chamber] = m.totalRollCalls;
+      });
 
       var meta = data.metadata || {};
       var incomplete = meta.paginationComplete === false;
       $('pu-foot').innerHTML =
-        'Small-sample members are held back by the minimum party-line-votes filter. A member '
-        + 'seated for only part of the legislative session (biennium), or the Speaker (who by custom votes only to break '
-        + 'ties), would otherwise top an independence ranking on a handful of votes. Party unity is '
+        'Small-sample members are held back by the minimum-sample filter, which applies to whichever '
+        + 'count the ranking on screen is measured against — party-line votes for independence and party '
+        + 'unity, roll calls for missed votes and participation. A member seated for only part of the '
+        + 'legislative session (biennium) would otherwise top a ranking on a handful of votes, and is '
+        + 'tagged <em>Partial term</em> wherever they do appear. The Speaker presides rather than votes '
+        + '(by custom he votes only to break ties), so he is recorded as absent for the roll calls he '
+        + 'chaired; he is left out of the missed-vote and participation rankings entirely rather than '
+        + 'ranked as the chamber\'s least present member. Party unity is '
         + 'undefined for independents and for members with no party-line votes. Figures cover recorded '
         + 'passage votes only; committee and procedural votes are excluded. '
         + (incomplete ? '<strong>Our roll-call record covers most, but not all, of the regular session\'s bills, so some passage votes are missing and these figures may understate a member\'s totals.</strong> ' : '')
