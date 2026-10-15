@@ -71,8 +71,13 @@ ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammun
 # `unknown`/`custom`.
 # NOTE: `wordpress` stays here, but a WordPress site whose meetings are in a
 # wpDataTables grid now has an adapter — use `wpdatatables` (lib.wpdatatables).
+# `squarespace` and `sharepoint` name the MEETING surface, not the CMS behind
+# it: LaFayette runs Revize but parks its agendas in a SharePoint folder, and
+# Rossville's Squarespace page carries only the current month's packet. Both
+# are client-rendered with no archive to walk, so there is nothing to scrape
+# even though the surrounding CMS is one we otherwise handle.
 NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'wix', 'wordpress',
-                        'governmentwindow'}
+                        'governmentwindow', 'squarespace', 'sharepoint'}
 
 
 def load_registry(path):

@@ -34,6 +34,15 @@
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
 #                          wix | wordpress | governmentwindow |
+#                          squarespace | sharepoint = the MEETING surface, not the
+#                                     CMS around it. LaFayette runs Revize but links
+#                                     out to a SharePoint folder; Rossville's
+#                                     Squarespace page carries only the current
+#                                     month's packet. Both are client-rendered with
+#                                     no archive, so use these rather than the CMS
+#                                     name — `revize` is an ADAPTER platform, and
+#                                     labelling a PDF-less page with it makes the
+#                                     generator hard-fail the run.
 #                                     (a WordPress site whose meetings sit in a
 #                                     wpDataTables grid IS scrapable — use
 #                                     `wpdatatables`, not `wordpress`.)
@@ -1216,3 +1225,75 @@ places:
           - body: City Council
             when: "2nd and 4th Monday of every month, 6:00 p.m."
             location: "Fort Oglethorpe City Hall, 500 City Hall Drive, Fort Oglethorpe, GA 30742"
+  - slug: walker
+    name: Walker County
+    type: county
+    fips: "13295"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # CivicClerk portal, reached from the county's Revize site. The body is a
+        # clean board name here (no meeting-type suffix), so the map is a plain
+        # allow-list: keep the legislative + land-use bodies, drop the Development
+        # Authority, Board of Assessors, Historic Preservation Commission and
+        # Alcoholic Beverage Board per the IA policy.
+        # Validated 2026-10-15: 204 meetings, 2022-10-17 to 2026-10-20.
+        platform: civicclerk
+        subdomain: walkercoga
+        base_url: https://www.walkercountyga.gov/
+        agendas_url: "https://www.walkercountyga.gov/government/board_of_commissioners/meeting_agendas.php"
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Thursday of every month, 6:30 p.m."
+            location: "Courthouse Annex IV, 201 S Duke Street, LaFayette"
+
+  - slug: lafayette
+    name: City of LaFayette
+    type: city
+    fips: null
+    parentCounty: walker
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # No scraper adapter. The CMS is Revize, but the agendas are NOT on this
+        # page — it links out to a SharePoint folder, which renders its file list
+        # client-side and exposes no anonymous listing, so lib/revize.py finds
+        # zero PDFs to harvest. Tracked as `sharepoint` (the MEETING surface)
+        # rather than `revize`, which is an ADAPTER platform: labelling it revize
+        # would make generate_place_meetings.py treat the empty result as a hard
+        # failure and break the whole run. scripts/detect_meeting_platform.py now
+        # rejects a Revize page with no agenda PDFs for exactly this reason.
+        # The city publishes no meeting schedule; `when` is left empty so the
+        # agendas link still renders (same as Rockdale).
+        platform: sharepoint
+        base_url: https://mycityoflafayettega.org
+        agendas_url: "https://mycityoflafayettega.org/government/agendas_minutes.php"
+        schedule:
+          - body: City Council
+            when: ""
+
+  - slug: rossville
+    name: City of Rossville
+    type: city
+    fips: null
+    parentCounty: walker
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # No scraper adapter: a Squarespace page carrying a single "Download
+        # Meeting Agenda" link to the CURRENT month's packet
+        # (/s/Agenda-Packet-October-2026.pdf). There is no archive to walk — last
+        # month's packet is simply replaced — so there is nothing for an adapter
+        # to collect, and a link harvester would publish exactly one meeting that
+        # silently changes identity every month.
+        platform: squarespace
+        base_url: https://www.rossvillega.gov
+        agendas_url: "https://www.rossvillega.gov/mayor-city-council"
+        schedule:
+          - body: City Council
+            when: "2nd Monday of every month, 6:00 p.m."
+            location: "Rossville Civic Center"

@@ -93,7 +93,7 @@ ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammun
 # and they are skipped silently. A value in neither set is a likely typo → warned.
 # (`granicus`, `revize` and `gdrive` are scraped adapters now — they live above.)
 NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'wix', 'wordpress',
-                        'governmentwindow'}
+                        'governmentwindow', 'squarespace', 'sharepoint'}
 
 
 def _norm(name):
