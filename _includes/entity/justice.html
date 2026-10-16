@@ -75,6 +75,18 @@
   }
   .tab-btn:hover { color: #374151; }
   .tab-btn.active { color: #1d4ed8; border-bottom-color: #1d4ed8; }
+
+  /* A non-wrapping flex row of tabs runs off the side of a phone: four tabs
+     measured 376px inside a 326px container, so the last one was clipped at the
+     screen edge and the whole page scrolled sideways. Wrapping is what the
+     site's other tab bars already do (elections.html, federal-reps.html,
+     ga-state-reps.html, race.html), and the tighter type keeps it to two rows
+     rather than four. Must come AFTER the .tab-btn rules above — same
+     specificity, so source order decides. Desktop is unchanged. */
+  @media (max-width: 540px) {
+    .tab-bar { flex-wrap: wrap; }
+    .tab-btn { padding: 0.45rem 0.7rem; font-size: 0.82rem; }
+  }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
