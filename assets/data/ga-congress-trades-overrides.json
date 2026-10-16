@@ -1,30 +1,5 @@
 {
   "_note": "Manual overrides for GA Congress trade data, applied after generate_ga_congress_trades.py fetches from kadoa-org/congress-trading-monitor. Keys are filer IDs from that dataset. Use _exclude to drop a filer entirely, _mergeInto to fold one filer's trades into another (dedup), and any other fields to patch filer-level values.",
 
-  "house_richarddeandr_mccormick": {
-    "_note": "Source dataset incorrectly shows NY-01. McCormick represents GA-07. Photo URL was a 404 — corrected to Congress.gov.",
-    "office": "U.S. Representative · GA-07",
-    "photoUrl": "https://www.congress.gov/img/member/m001218_200.jpg"
-  },
-
-  "house_michaela_collins_jr": {
-    "_note": "Duplicate entry for Michael Collins (GA-10). Merge trades into the primary entry.",
-    "_mergeInto": "house_michaela_collins"
-  },
-
-  "house_michaela_collins": {
-    "_note": "Michael Collins represents GA-10, not GA-08 as shown in source data. Photo URL was a 404 — corrected to Congress.gov.",
-    "office": "U.S. Representative · GA-10",
-    "photoUrl": "https://www.congress.gov/img/member/c001129_200.jpg"
-  },
-
-  "house_tomthomas_graves_jr": {
-    "_note": "Tom Graves left Congress January 3, 2021. No longer a current member.",
-    "_exclude": true
-  },
-
-  "house_marjorietaylor_greene": {
-    "_note": "Marjorie Taylor Greene is no longer a current member of Congress (confirmed against current-members.json, currentMember: false).",
-    "_exclude": true
-  }
+  "_note_empty": "Intentionally empty. Ordinary delegation turnover needs no entry here: the generator drops filers who are not in current-members.json (previously _exclude entries for Tom Graves and Marjorie Taylor Greene), merges filers sharing a bioguideId (previously a _mergeInto for the duplicate Michael Collins records), and rebuilds office and photoUrl from the roster (previously hand-written patches for McCormick's NY-01 and Collins' GA-08, and two 404 photo URLs). Add an entry only for something the roster cannot settle -- chiefly pinning bioguideId for a filer whose surname is shared by two GA members and whose upstream office string does not disambiguate."
 }

@@ -6,6 +6,23 @@ Writes assets/data/ga-congress-trades.json keyed by member name.
 
 Data source: https://github.com/kadoa-org/congress-trading-monitor
 No API key required.
+
+The delegation roster in current-members.json is treated as authoritative for
+*who* is published and for their office and photo, so a member joining or
+leaving Georgia's federal delegation needs no code or override change:
+
+  * a filer whose surname is not in the current GA delegation is dropped
+    (Tom Graves, Marjorie Taylor Greene) -- see drop_departed()
+  * two filers resolving to one bioguideId are merged (the duplicate
+    "Michael A. Collins" / "Michael A. Collins Jr" records) -- see
+    merge_duplicate_filers()
+  * office and photoUrl are rebuilt from the roster rather than trusted from
+    upstream, which has listed McCormick as NY-01, Collins as GA-08, and 404
+    photo URLs for both -- see delegation_office() / main()
+
+ga-congress-trades-overrides.json remains an escape hatch for what the roster
+cannot settle (chiefly an ambiguous surname, where `bioguideId` can be pinned
+by hand), but no entry is required for ordinary delegation turnover.
 """
 
 import json
@@ -49,8 +66,12 @@ def filer_district(office):
     return int(m.group(1)) if m else None
 
 
-def load_bioguide_index():
-    """surname -> [(district, bioguideId), ...] for GA's federal delegation.
+def load_delegation():
+    """Georgia's current federal delegation, indexed two ways.
+
+    Returns (by_surname, by_bioguide):
+      by_surname  surname -> [(district, bioguideId), ...]
+      by_bioguide bioguideId -> {'district', 'chamber', 'lastName', 'photoUrl'}
 
     Trade data carries no bioguideId, so the join is inferred from the name. The
     old map was surname -> bioguideId with last-write-wins, which is the bug
@@ -58,14 +79,20 @@ def load_bioguide_index():
     ("two Representatives named Scott… stamped one bioguide onto every Scott").
     Keeping every match instead lets an ambiguous surname be detected rather than
     silently resolved. See CODEBASE-REVIEW-2026-08-18.md finding 3.3.
+
+    by_bioguide exists so this roster -- not the upstream filer record -- decides
+    a published member's office and photo, and so a filer who is no longer in
+    the delegation can be dropped without a hand-written override. Note that
+    current-members.json holds only serving members: a departed member is absent
+    from it, not flagged `currentMember: false`, so absence is the test.
     """
     if not os.path.exists(CURRENT_MEMBERS_FILE):
         print(f"Warning: {CURRENT_MEMBERS_FILE} not found, trade cards won't link to member profiles")
-        return {}
+        return {}, {}
     with open(CURRENT_MEMBERS_FILE, encoding='utf-8') as f:
         data = json.load(f)
 
-    by_surname = {}
+    by_surname, by_bioguide = {}, {}
     for m in data.get('members', []):
         if m.get('state') != 'Georgia' or not m.get('bioguideId'):
             continue
@@ -73,9 +100,98 @@ def load_bioguide_index():
         if not surname:
             continue
         district = m.get('district')
-        by_surname.setdefault(surname, []).append(
-            (int(district) if district is not None else None, m['bioguideId']))
-    return by_surname
+        district = int(district) if district is not None else None
+        by_surname.setdefault(surname, []).append((district, m['bioguideId']))
+
+        terms = (m.get('terms') or {}).get('item') or []
+        by_bioguide[m['bioguideId']] = {
+            'district':  district,
+            'chamber':   (terms[-1].get('chamber') if terms else '') or '',
+            'lastName':  m.get('lastName') or '',
+            'photoUrl':  (m.get('depiction') or {}).get('imageUrl') or '',
+        }
+    return by_surname, by_bioguide
+
+
+def delegation_office(record):
+    """Office string for a delegation record ('U.S. Representative · GA-07').
+
+    Built from the roster rather than copied from upstream, whose office field
+    has carried McCormick (GA-07) as "NY-01" and Collins (GA-10) as "GA-08".
+    Those two were corrected by hand in the overrides file; deriving the string
+    fixes the whole class, including for a member who arrives tomorrow.
+    """
+    if not record:
+        return None
+    if 'senate' in (record.get('chamber') or '').lower():
+        return 'U.S. Senator · GA'
+    district = record.get('district')
+    if district is None:
+        return None
+    return f"U.S. Representative · GA-{district:02d}"
+
+
+def drop_departed(ga_filers, by_surname):
+    """Split filers into (in the current delegation, no longer in it).
+
+    The upstream feed keeps filing history for members who have left -- Tom
+    Graves left in January 2021 and is still listed -- and each one used to need
+    an `_exclude` override written by hand. A surname absent from the GA roster
+    is the signal: `resolve_bioguide` already refuses to guess, so this only
+    turns "cannot link" into "do not publish" for the no-candidate case. An
+    *ambiguous* surname (candidates exist, district cannot pick one) is kept and
+    published without a profile link, exactly as before.
+
+    If the roster is unavailable, nothing is dropped -- a missing
+    current-members.json must not empty the page.
+    """
+    if not by_surname:
+        return ga_filers, []
+    keep, departed = [], []
+    for f in ga_filers:
+        (keep if filer_surname(f.get('full_name')) in by_surname
+         else departed).append(f)
+    return keep, departed
+
+
+def merge_duplicate_filers(by_member):
+    """Fold filers that resolve to one member into a single entry.
+
+    Upstream splits Michael Collins across `house_michaela_collins` and
+    `house_michaela_collins_jr`; that took a `_mergeInto` override naming both
+    IDs. Two filers sharing a bioguideId are the same person, so the merge is
+    inferable. The entry with more trades wins (filer ID breaks a tie, for a
+    deterministic result), and every counter is re-derived from the combined
+    list -- the invariant CODEBASE-REVIEW-2026-08-18.md finding 3.3 is about.
+
+    Members whose bioguide did not resolve are left alone: without an ID there
+    is nothing to prove two filers are one person, and merging on surname alone
+    would recreate the Scott collision.
+
+    Returns a list of (absorbed name, surviving name, trade count) for logging.
+    """
+    groups = {}
+    for name, m in by_member.items():
+        if m.get('bioguideId'):
+            groups.setdefault(m['bioguideId'], []).append(name)
+
+    merges = []
+    for names in groups.values():
+        if len(names) < 2:
+            continue
+        primary = max(names, key=lambda n: (len(by_member[n]['trades']),
+                                            by_member[n]['filerId']))
+        for name in names:
+            if name == primary:
+                continue
+            extra = by_member[name]['trades']
+            by_member[primary]['trades'].extend(extra)
+            merges.append((name, primary, len(extra)))
+            del by_member[name]
+        by_member[primary]['trades'].sort(
+            key=lambda t: t.get('transaction_date', ''), reverse=True)
+        by_member[primary].update(derive_counters(by_member[primary]['trades']))
+    return merges
 
 
 def resolve_bioguide(name, office, by_surname):
@@ -215,7 +331,15 @@ def main():
     for f in ga_filers:
         print(f"  {f['full_name']} ({f['office']}) — {f['trade_count']} trades, ${f.get('est_volume', 0):,.2f} est. volume")
 
-    bioguide_by_surname = load_bioguide_index()
+    bioguide_by_surname, delegation = load_delegation()
+
+    ga_filers, departed = drop_departed(ga_filers, bioguide_by_surname)
+    for f in departed:
+        print(f"  Skipping {f['full_name']} ({f.get('office', '?')}) — not in "
+              f"Georgia's current federal delegation")
+    if departed:
+        print(f"Publishing {len(ga_filers)} of "
+              f"{len(ga_filers) + len(departed)} GA filers")
 
     by_member = {}
     total_trades = 0
@@ -260,14 +384,23 @@ def main():
         counters = derive_counters(trades)
         report_counter_drift(name, counters, filer)
 
+        # The roster wins over upstream for office and photo where it has them;
+        # upstream's values stay as the fallback for an unresolved filer.
+        record = delegation.get(bioguide_id) if bioguide_id else None
+        office = delegation_office(record) or filer.get('office', '')
+        photo_url = (record or {}).get('photoUrl') or filer.get('photo_url', '')
+        if record and office != filer.get('office', ''):
+            print(f"  Office corrected from upstream {filer.get('office', '')!r} "
+                  f"to {office!r}")
+
         by_member[name] = {
             'filerId':      filer_id,
             'bioguideId':   bioguide_id,
             'party':        filer.get('party', ''),
             'chamber':      filer.get('chamber', ''),
-            'office':       filer.get('office', ''),
+            'office':       office,
             'state':        'GA',
-            'photoUrl':     filer.get('photo_url', ''),
+            'photoUrl':     photo_url,
             'trades':       trades,
             **counters,
         }
@@ -275,6 +408,16 @@ def main():
         print(f"  -> {len(trades)} trades loaded")
 
         time.sleep(0.2)
+
+    # Fold split filer records together before overrides get a say, so an
+    # override targeting the surviving entry sees the merged trade list.
+    auto_merges = merge_duplicate_filers(by_member)
+    if auto_merges:
+        print("\nMerging duplicate filer records...")
+        for absorbed, primary, count in auto_merges:
+            print(f"  Merged {absorbed} ({count} trades) into {primary} -> "
+                  f"{by_member[primary]['tradeCount']} trades, "
+                  f"${by_member[primary]['estVolume']:,.2f} est. volume")
 
     # Apply overrides
     print("\nApplying overrides...")
@@ -348,6 +491,9 @@ def main():
             'source':      'kadoa-org/congress-trading-monitor (github.com/kadoa-org/congress-trading-monitor)',
             'totalTrades': total_trades,
             'gaMembers':   sorted(by_member.keys()),
+            'skippedNotInDelegation': sorted(f['full_name'] for f in departed),
+            'mergedFilers': sorted(f"{absorbed} -> {primary}"
+                                   for absorbed, primary, _ in auto_merges),
             'disclaimer':  (
                 'Stock trades are self-reported STOCK Act disclosures (Periodic Transaction Reports). '
                 'Dollar amounts are ranges, not exact figures. Trades may be filed up to 45 days '
