@@ -84,6 +84,11 @@ breadcrumb:
   }
   .va-next .va-cal-details dt { color: #5a7396; }
 
+  .va-fetch-note {
+    margin: 0 0 1rem; padding: 0.7rem 0.9rem; font-size: 0.9rem;
+    background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; color: #78350f;
+  }
+  .va-fetch-note a { color: inherit; font-weight: 600; }
   .va-section-heading {
     margin-top: 1.75rem;
     font-size: 1.15rem;
@@ -179,9 +184,15 @@ breadcrumb:
 
 <h2 class="va-section-heading">2026 Election Calendar</h2>
 
-<div id="vaLoading" style="padding:1.5rem 0;color:#666;">
-  {%- comment -%} Server-rendered fallback; JS hides #vaLoading on load. See scripts/build_render_data.py {%- endcomment -%}
-  {%- assign r = site.data.rendered.ga_election_calendar -%}
+{%- comment -%}
+  Server-rendered fallback; JS hides #vaLoading on a SUCCESSFUL load only. See
+  scripts/build_render_data.py. data-fallback tells the script whether there are
+  real dates underneath to preserve when the fetch fails — on this page of all
+  pages, a registration deadline a voter can still act on beats a fresh one.
+{%- endcomment -%}
+{%- assign r = site.data.rendered.ga_election_calendar -%}
+<p id="vaFetchNote" class="va-fetch-note" role="status" hidden></p>
+<div id="vaLoading" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}" style="padding:1.5rem 0;color:#666;">
   {%- if r and r.rows -%}
     {% include data-freshness.html data=r noun="elections" %}
     <ul style="list-style:none;padding:0;margin:0;">
@@ -355,6 +366,7 @@ breadcrumb:
       const elections = (data.elections || []).slice().sort((a, b) => a.date.localeCompare(b.date));
       if (!elections.length) throw new Error('No elections found in data.');
 
+      // Only now, with real data in hand, is it safe to drop the fallback.
       loading.style.display = 'none';
 
       const today = new Date();
@@ -376,9 +388,26 @@ breadcrumb:
           + (meta.source ? ` · Source: ${meta.source}` : '');
       }
     } catch (err) {
-      console.error(err);
-      loading.style.display = 'none';
-      calendar.innerHTML = `<p style="color:#c00;">Error loading election calendar: ${escHtml(err.message)}.</p>`;
+      // Never trade a working calendar for an error message. The fallback below
+      // carries the same registration deadlines and early-voting windows, so it
+      // stays on screen; the voter gets a plain note and the official source,
+      // and the technical detail goes to the console where it belongs.
+      console.error('ga-voter-access: calendar fetch failed', err);
+      const note = document.getElementById('vaFetchNote');
+      const MVP  = 'https://mvp.sos.ga.gov/s/mvp-landing-page';
+      if (loading && loading.dataset.fallback === '1') {
+        note.innerHTML = 'We could not refresh the calendar just now, so the dates below are the '
+          + 'last ones we published. Confirm anything time-sensitive on the '
+          + `<a href="${MVP}" target="_blank" rel="noopener">Secretary of State's My Voter Page ↗</a>.`;
+      } else {
+        // No fallback to protect: the container is still showing "Loading…", so
+        // replace it rather than leaving a spinner that will never resolve.
+        loading.style.display = 'none';
+        note.innerHTML = 'The election calendar could not be loaded. Registration deadlines, '
+          + 'early-voting dates and your polling place are all on the '
+          + `<a href="${MVP}" target="_blank" rel="noopener">Secretary of State's My Voter Page ↗</a>.`;
+      }
+      note.hidden = false;
     }
   }
 
