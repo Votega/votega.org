@@ -139,6 +139,14 @@ css:
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} Per-tab carry-over of a location resolved on another page this visit. {%- endcomment -%}
 <script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%}
+  html-escape.js first: find-my-reps-view.js calls VoteGA.escapeHtml. The page
+  used to escape by round-tripping through a detached element, which covers
+  & < > but not quotes — and its output goes into href="…" and src="…".
+{%- endcomment -%}
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} County expansion, member matching and the results markup. Tested in tests/js/find-my-reps-view.test.js. {%- endcomment -%}
+<script src="{{ '/assets/scripts/find-my-reps-view.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} Shared chrome around the geocoder; see assets/scripts/address-lookup.js. {%- endcomment -%}
 <script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
@@ -146,7 +154,6 @@ css:
   'use strict';
   var FED_URL = 'assets/data/current-members.json';
   var GA_URL  = 'assets/data/ga-members.json';
-  var DEPARTED = { Resigned: 1, Removed: 1, Deceased: 1 };
 
   var input     = document.getElementById('fmrAddress');
   var btn       = document.getElementById('fmrBtn');
@@ -178,25 +185,11 @@ css:
     return clean ? basePath() + clean.replace(/^\//, '')
                  : basePath() + 'ga-member.html?id=' + encodeURIComponent(m.id);
   }
-  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
-  function partyLetter(p) {
-    p = (p || '').toLowerCase();
-    return p.indexOf('dem') === 0 ? 'D' : p.indexOf('rep') === 0 ? 'R' : 'I';
-  }
-  function chip(party) {
-    if (!party) return '';
-    var L = partyLetter(party);
-    return '<span class="fmr-chip ' + L + '">' + L + '</span>';
-  }
-  function fedName(m) {
-    if (m.firstName && m.lastName) return m.firstName + ' ' + m.lastName;
-    var n = m.name || '', i = n.indexOf(', ');
-    return i > -1 ? n.slice(i + 2) + ' ' + n.slice(0, i) : n;
-  }
-  function fedChamber(m) {
-    var it = (m.terms && m.terms.item) || [];
-    return it.length ? it[it.length - 1].chamber : null;
-  }
+  // County expansion, member matching and the results markup all live in
+  // find-my-reps-view.js, which holds no page state and is unit-tested. This
+  // page keeps the DOM wiring and the URL maps only.
+  var View = window.FindMyRepsView;
+  var esc  = VoteGA.escapeHtml;
 
   function loadJson(rel) {
     return fetch(basePath() + rel).then(function (r) {
@@ -205,103 +198,20 @@ css:
     });
   }
 
-  // One rep row, or a "vacant" note when the seat has no sitting member. The
-  // office heading is rendered by repSection, because a county can touch several
-  // districts in the same chamber and the heading belongs to the group, not the row.
-  function repRow(m, opts) {
-    opts = opts || {};
-    if (!m) {
-      return '<div class="fmr-repcard"><span class="fmr-photo fmr-photo-blank">—</span>'
-        + '<div><div class="fmr-repname fmr-vacant">' + esc(opts.vacant || 'Seat currently vacant') + '</div>'
-        + (opts.sub ? '<div class="fmr-repmeta">' + esc(opts.sub) + '</div>' : '') + '</div></div>';
-    }
-    var photo = opts.photo
-      ? '<img class="fmr-photo" src="' + esc(opts.photo) + '" alt="" loading="lazy" />'
-      : '<span class="fmr-photo fmr-photo-blank">👤</span>';
-    return '<a class="fmr-repcard" href="' + esc(opts.href) + '">' + photo
-      + '<div><div class="fmr-repname">' + esc(opts.name) + chip(opts.party) + '</div>'
-      + '<div class="fmr-repmeta">' + esc(opts.sub || '') + '</div></div></a>';
+  // The county→district tables come from ga-districts.js, which is a separate
+  // file and may be absent; the view treats a missing map as no districts.
+  function countyMaps() {
+    return {
+      usHouse:     typeof COUNTY_US_HOUSE_DISTRICTS !== 'undefined' ? COUNTY_US_HOUSE_DISTRICTS : null,
+      stateSenate: typeof COUNTY_SENATE_DISTRICTS   !== 'undefined' ? COUNTY_SENATE_DISTRICTS   : null,
+      stateHouse:  typeof COUNTY_HOUSE_DISTRICTS    !== 'undefined' ? COUNTY_HOUSE_DISTRICTS    : null,
+    };
   }
 
-  // One office heading plus every row under it.
-  function repSection(office, rows, note) {
-    if (!rows.length) return '';
-    return '<div><p class="fmr-office">' + esc(office) + '</p>'
-      + (note ? '<p class="fmr-group-note">' + esc(note) + '</p>' : '')
-      + rows.join('') + '</div>';
-  }
-
-  // `loc.usHouse` / `stateSenate` / `stateHouse` are arrays of district numbers:
-  // one each from the address path, every district touching the county from the
-  // county path. An empty array means we could not determine that district.
   function render(loc, fed, ga) {
-    var byCounty = loc.source === 'county';
-    var fedGA = (fed.members || []).filter(function (m) {
-      return m.state === 'Georgia' && m.currentMember !== false;
-    });
-    var senators = fedGA.filter(function (m) { return fedChamber(m) === 'Senate'; })
-      .sort(function (a, b) { return fedName(a).localeCompare(fedName(b)); });
-    var gaSeated = (ga.members || []).filter(function (m) { return !DEPARTED[m.status]; });
-
-    var html = '';
-    if (loc.matchedAddress) {
-      html += '<p class="fmr-matched">Showing representatives for <strong>' + esc(loc.matchedAddress) + '</strong></p>';
-    } else if (byCounty) {
-      html += '<p class="fmr-matched">Showing every district that touches <strong>' + esc(loc.county)
-        + ' County</strong>. Your own address falls in one district per chamber — enter it above to narrow this down.</p>';
-    }
-
-    html += repSection('U.S. Senate', senators.map(function (m) {
-      return repRow(m, {
-        name: fedName(m), party: m.partyName, sub: 'Georgia · U.S. Senator',
-        photo: m.depiction && m.depiction.imageUrl, href: fedHref(m),
-      });
-    }));
-
-    html += repSection('U.S. House', loc.usHouse.map(function (d) {
-      var m = fedGA.find(function (x) {
-        return fedChamber(x) === 'House of Representatives' && x.district === d;
-      });
-      return repRow(m, m ? {
-        name: fedName(m), party: m.partyName, sub: 'District ' + d,
-        photo: m.depiction && m.depiction.imageUrl, href: fedHref(m),
-      } : { sub: 'District ' + d, vacant: 'No sitting U.S. Representative found' });
-    }));
-
-    html += repSection('Georgia State Senate', loc.stateSenate.map(function (d) {
-      var m = gaSeated.find(function (x) { return x.chamber === 'Senate' && x.district === d; });
-      return repRow(m, m ? {
-        name: m.name, party: m.party,
-        sub: 'District ' + d + (m.status === 'Vacant' ? ' · Vacant' : ''),
-        photo: m.imageUrl, href: gaHref(m),
-      } : { sub: 'District ' + d, vacant: 'This Senate seat is currently vacant' });
-    }));
-
-    html += repSection('Georgia House of Representatives', loc.stateHouse.map(function (d) {
-      var m = gaSeated.find(function (x) { return x.chamber === 'House of Representatives' && x.district === d; });
-      return repRow(m, m ? {
-        name: m.name, party: m.party,
-        sub: 'District ' + d + (m.status === 'Vacant' ? ' · Vacant' : ''),
-        photo: m.imageUrl, href: gaHref(m),
-      } : { sub: 'District ' + d, vacant: 'This House seat is currently vacant' });
-    }));
-
-    out.innerHTML = html;
+    out.innerHTML = View.renderReps(loc, fed, ga, { fedHref: fedHref, gaHref: gaHref });
     status.textContent = '';
     status.className = 'fmr-status';
-  }
-
-  // The geocoder returns one district per chamber; render() works in arrays.
-  function normalizeAddressLoc(loc) {
-    var one = function (v) { return v == null ? [] : [v]; };
-    return {
-      source: 'address',
-      matchedAddress: loc.matchedAddress,
-      county: loc.county,
-      usHouse: one(loc.usHouse),
-      stateSenate: one(loc.stateSenate),
-      stateHouse: one(loc.stateHouse),
-    };
   }
 
   var busy = false;
@@ -367,7 +277,7 @@ css:
       // above makes. render() works in arrays, hence normalizeAddressLoc.
       hideCarry();
       return Promise.all([loadJson(FED_URL), loadJson(GA_URL)]).then(function (r) {
-        render(normalizeAddressLoc(loc), r[0], r[1]);
+        render(View.normalizeAddressLoc(loc), r[0], r[1]);
       });
     },
   });
@@ -395,21 +305,7 @@ css:
         : { source: 'county', county: county, usHouse: null, stateHouse: null, stateSenate: null });
     }
     hideCarry();
-    run('county', Promise.resolve(countyLoc(county)));
-  }
-
-  function countyLoc(county) {
-    var byCounty = function (map) {
-      return ((typeof map !== 'undefined' && map[county]) || []).slice().sort(function (a, b) { return a - b; });
-    };
-    return {
-      source: 'county',
-      matchedAddress: null,
-      county: county,
-      usHouse: byCounty(typeof COUNTY_US_HOUSE_DISTRICTS !== 'undefined' ? COUNTY_US_HOUSE_DISTRICTS : {}),
-      stateSenate: byCounty(typeof COUNTY_SENATE_DISTRICTS !== 'undefined' ? COUNTY_SENATE_DISTRICTS : {}),
-      stateHouse: byCounty(typeof COUNTY_HOUSE_DISTRICTS !== 'undefined' ? COUNTY_HOUSE_DISTRICTS : {}),
-    };
+    run('county', Promise.resolve(View.countyLoc(county, countyMaps())));
   }
 
   // Without ga-districts.js there are no county→district tables, so the control
@@ -422,7 +318,7 @@ css:
       return;
     }
     var frag = document.createDocumentFragment();
-    Object.keys(COUNTY_HOUSE_DISTRICTS).sort().forEach(function (county) {
+    View.countyNames(COUNTY_HOUSE_DISTRICTS).forEach(function (county) {
       var opt = document.createElement('option');
       opt.value = county;
       opt.textContent = county;
@@ -443,22 +339,10 @@ css:
     var stored = window.VoterLocation.load();
     if (!stored) return;
 
-    var loc = null, where = '';
-    if (stored.source === 'address'
-        && (stored.usHouse != null || stored.stateSenate != null || stored.stateHouse != null)) {
-      loc = normalizeAddressLoc(stored);
-      var parts = [];
-      if (stored.stateHouse  != null) parts.push('State House ' + stored.stateHouse);
-      if (stored.stateSenate != null) parts.push('State Senate ' + stored.stateSenate);
-      if (stored.usHouse     != null) parts.push('U.S. House ' + stored.usHouse);
-      where = parts.join(' · ');
-    } else if (stored.source === 'county' && stored.county
-               && typeof COUNTY_HOUSE_DISTRICTS !== 'undefined' && COUNTY_HOUSE_DISTRICTS[stored.county]) {
-      loc = countyLoc(stored.county);
-      countySel.value = stored.county;
-      where = stored.county + ' County';
-    }
-    if (!loc) return;
+    var carried = View.carriedLocation(stored, countyMaps());
+    if (!carried) return;
+    var loc = carried.loc, where = carried.where;
+    if (carried.county) countySel.value = carried.county;
 
     carry.innerHTML = '<span>Using the districts you looked up earlier this visit: <strong>'
       + esc(where) + '</strong>. Your address was not saved — enter it again to re-check.</span>'
