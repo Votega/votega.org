@@ -211,6 +211,122 @@ def get_candidate_totals(candidate_id):
     return data["results"][0]
 
 
+# Employer strings are free text typed by individual donors, so one employer
+# arrives in several spellings ("GOOGLE", "GOOGLE, INC.") and the FEC returns
+# them uppercased. The old code called .title() and deduped on a key that kept
+# commas and periods, which produced two visible defects on every finance panel:
+# Ossoff's top-donor table listed "Google" and "Google, Inc." as separate rows,
+# and .title() destroyed acronym casing ("Cvs", "Ibm", "At&T") while
+# over-capitalizing small words ("University Of California").
+#
+# Nothing here expands an acronym into a company name: an employer field has no
+# authoritative registry to resolve against, unlike a stock ticker. These are
+# spelling and casing rules only.
+
+_LEGAL_SUFFIX_RE = re.compile(
+    r'\b(INC|INCORPORATED|LLC|LLP|LP|LTD|CO|COMPANY|CORP|CORPORATION|PLC|PC|PA)\b')
+
+# Lowercased inside a name, never as its first word.
+_SMALL_WORDS = {'of', 'and', 'the', 'for', 'at', 'in', 'on', 'to', 'a', 'an'}
+
+# A personal name's suffix. "Jr" has no vowel, so the initialism rule below
+# would otherwise shout it: "Benton J. Mathis, JR.". Roman numerals do carry a
+# vowel and need the opposite nudge, since .title() flattens III to "Iii".
+_NAME_SUFFIXES = {'jr': 'Jr', 'sr': 'Sr', 'ii': 'II', 'iii': 'III', 'iv': 'IV'}
+
+# Stylings no rule can derive. Keyed by employer_key(). Deliberately tiny -- an
+# entry belongs here only when a name actually in the data cannot be cased
+# correctly by the rules below, not as a general alias list.
+_STYLED_NAMES = {
+    'ATT':   'AT&T',
+    'FEDEX': 'FedEx',
+    'IBM':   'IBM',
+}
+
+
+def employer_key(name):
+    """Canonical key that merges spellings of one employer.
+
+    Punctuation is dropped and a trailing legal suffix removed, so "Google",
+    "Google, Inc." and "GOOGLE LLC" share a key. Used for merging and for the
+    skip-list test, so "Self-Employed" and "SELF EMPLOYED" are one entry.
+    """
+    k = re.sub(r'[^A-Z0-9&\s]', ' ', (name or '').upper())
+    k = _LEGAL_SUFFIX_RE.sub(' ', k)
+    return re.sub(r'[\s&]', '', k)
+
+
+def display_employer(name):
+    """Title-case an employer name without mangling acronyms.
+
+    A token with no vowel is an initialism (CVS, KPMG, DFCS, TD, BGR Group),
+    so it stays uppercase. Small words lowercase unless they lead. The
+    possessive that .title() capitalized -- "Buckhead'S Finest" -- and the
+    "Mc" prefix it flattened -- "Mcmullen" -- are both restored.
+
+    Known limit: an initialism that contains a vowel (IBM, AFGE, ACOG, CPAs)
+    is indistinguishable by rule from a short word like Apple or Emory, so it
+    title-cases to "Afge". Separating them needs a word list, which is a
+    maintained artifact this deliberately does without; _STYLED_NAMES covers
+    the whole-string cases worth pinning by hand.
+    """
+    styled = _STYLED_NAMES.get(employer_key(name))
+    if styled:
+        return styled
+
+    words = []
+    for i, token in enumerate((name or '').split()):
+        letters = re.sub(r'[^A-Za-z]', '', token)
+        if letters.lower() in _NAME_SUFFIXES:
+            words.append(token.replace(letters, _NAME_SUFFIXES[letters.lower()]))
+        elif letters and not re.search(r'[AEIOUY]', letters.upper()):
+            words.append(token.upper())            # CVS, IBM, KPMG, TD
+        elif i and token.lower() in _SMALL_WORDS:
+            words.append(token.lower())            # University of California
+        else:
+            words.append(token.title())
+    out = ' '.join(words)
+
+    # .title() uppercases the letter after any apostrophe ("Buckhead'S").
+    out = re.sub(r"(\w)'S\b", lambda m: m.group(1) + "'s", out)
+    # ...and leaves a Scots-Irish prefix flat ("Mcmullen" -> "McMullen").
+    out = re.sub(r'\bMc([a-z])', lambda m: 'Mc' + m.group(1).upper(), out)
+    return out
+
+
+def merge_top_employers(rows):
+    """Collapse spellings of one employer into a single row, summing the money.
+
+    The variant with the largest total supplies the display name -- its
+    spelling is the one most donors used -- and the name itself breaks a tie so
+    the result never depends on API ordering. Totals and donor counts are
+    summed: the old code kept the first variant and silently discarded every
+    later one, which dropped $86K of Ossoff's Google money and 240 of its
+    donors rather than merging them.
+
+    `rows` are {'employer', 'total', 'count'} dicts carrying raw upstream
+    spellings. Returns display-cased rows re-sorted by total, since merging
+    changes the ranking.
+    """
+    merged = {}
+    for row in rows:
+        key = employer_key(row['employer'])
+        entry = merged.get(key)
+        if entry is None:
+            merged[key] = {'employer': row['employer'], 'total': row['total'],
+                           'count': row['count'], 'best': row['total']}
+            continue
+        entry['total'] += row['total']
+        entry['count'] += row['count']
+        if (row['total'], row['employer']) > (entry['best'], entry['employer']):
+            entry['employer'], entry['best'] = row['employer'], row['total']
+
+    out = [{'employer': display_employer(e['employer']),
+            'total': e['total'], 'count': e['count']} for e in merged.values()]
+    out.sort(key=lambda e: (-e['total'], e['employer']))
+    return out
+
+
 def get_top_employers(committee_id):
     # schedule_a uses two_year_transaction_period, not cycle
     data = fec_get("/schedules/schedule_a/by_employer/", {
@@ -222,29 +338,26 @@ def get_top_employers(committee_id):
     })
     if not data:
         return []
-    results = []
-    # Normalize skip set: remove spaces, hyphens, and punctuation for comparison
-    _SKIP_RAW = {"NONE", "N/A", "NA", "NULL", "INFORMATION REQUESTED", "INFORMATIONREQUESTED",
-                 "NOT EMPLOYED", "NOTEMPLOYED", "UNEMPLOYED", "HOMEMAKER",
-                 "SELF", "SELFEMPLOYED", "SELF-EMPLOYED", "SELF EMPLOYED",
-                 "RETIRED", "STUDENT"}
-    SKIP_EMPLOYERS = {re.sub(r'[\s\-/]', '', s) for s in _SKIP_RAW}
-    seen_employers = set()
+
+    # Not employers: a donor who gave a job title, or no answer at all.
+    _SKIP_RAW = {"NONE", "N/A", "NA", "NULL", "INFORMATION REQUESTED",
+                 "NOT EMPLOYED", "UNEMPLOYED", "HOMEMAKER", "SELF",
+                 "SELF-EMPLOYED", "RETIRED", "STUDENT", "VARIOUS",
+                 "ATTORNEY", "ATTY", "CEO", "OWNER", "CITY", "CONSULTANT"}
+    SKIP_EMPLOYERS = {employer_key(s) for s in _SKIP_RAW}
+
+    rows = []
     for r in data.get("results", []):
         emp = (r.get("employer") or "").strip()
-        emp_key = re.sub(r'[\s\-/]', '', emp.upper())
-        if not emp or emp_key in SKIP_EMPLOYERS or emp_key in seen_employers:
+        if not emp or employer_key(emp) in SKIP_EMPLOYERS:
             continue
-        seen_employers.add(emp_key)
-        results.append({
-            "employer": emp.title(),
+        rows.append({
+            "employer": emp,
             "total":    round(r.get("total", 0)),
             "count":    r.get("count", 0),
         })
-    return results[:TOP_N]
 
-
-
+    return merge_top_employers(rows)[:TOP_N]
 
 
 def normalize_name(name):
