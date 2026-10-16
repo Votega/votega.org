@@ -73,7 +73,10 @@
    *   setStatus(msg, isError)   how this page shows a message (required)
    *   onResolve(loc) what this page does with a resolved location (required).
    *                  May return an outcome string to replace 'success' -- a page
-   *                  that got a location with no district of its own says so.
+   *                  that got a location with no district of its own says so --
+   *                  or a promise, which is awaited: a page that fetches and
+   *                  renders before it is really done keeps the latch held, and
+   *                  a failure in there is reported like any other.
    *   setBusy(bool)  optional; defaults to toggling `button.disabled`. Pages with
    *                  a second lookup button share one latch through this.
    *   subject, fallbackPhrase   copy, see messages()
@@ -161,7 +164,11 @@
         .then(function () { return geocode(parsed.value); })
         .then(function (loc) {
           saveLocation(loc);
-          var outcome = cfg.onResolve(loc, parsed.value);
+          // Awaited, so a page that renders asynchronously holds the latch until
+          // it has actually finished and its failures land in the catch below.
+          return Promise.resolve(cfg.onResolve(loc, parsed.value));
+        })
+        .then(function (outcome) {
           return typeof outcome === 'string' ? outcome : 'success';
         })
         .catch(function (err) {

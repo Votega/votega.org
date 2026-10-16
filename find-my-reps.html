@@ -139,6 +139,8 @@ css:
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} Per-tab carry-over of a location resolved on another page this visit. {%- endcomment -%}
 <script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} Shared chrome around the geocoder; see assets/scripts/address-lookup.js. {%- endcomment -%}
+<script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
 (function () {
   'use strict';
@@ -303,13 +305,20 @@ css:
   }
 
   var busy = false;
-  // Both lookups share the data fetches, the busy latch and the error handling;
-  // only how they arrive at a set of districts differs.
+  // One latch for both buttons: either lookup in flight blocks the other, and
+  // the address path reaches it through the shared module's setBusy.
+  function setBusy(value) {
+    busy = value;
+    btn.disabled = value;
+    countyBtn.disabled = value;
+  }
+
+  // The county path keeps this; the address path's half -- guard, latch, error
+  // passthrough, outcome event -- moved to address-lookup.js, which all four
+  // geocoder pages now share. Only how a set of districts is arrived at differs.
   function run(method, locPromise, working) {
     if (busy) return;
-    busy = true;
-    btn.disabled = true;
-    countyBtn.disabled = true;
+    setBusy(true);
     out.innerHTML = '';
     // A carried-over location needs no geocoder round trip, so saying "Looking up
     // your districts" would misdescribe what is happening.
@@ -326,40 +335,41 @@ css:
         status.className = 'fmr-status err';
         window.vgTrack && window.vgTrack('reps_lookup', { method: method, outcome: 'error' });
       }).finally(function () {
-        busy = false;
-        btn.disabled = false;
-        countyBtn.disabled = false;
+        setBusy(false);
       });
   }
 
-  function lookup() {
-    var addr = (input.value || '').trim();
-    if (!addr) {
-      status.textContent = 'Enter your address above, or pick your county.';
-      status.className = 'fmr-status err';
-      return;
-    }
-    // A ZIP alone can't pin down a district — one ZIP often spans several — and
-    // the geocoder just reports "not found", so explain rather than make a
-    // pointless request. Mirrors sample-ballot.html.
-    if (/^\d{5}(-\d{4})?$/.test(addr)) {
-      status.textContent = 'A ZIP code alone isn’t enough to find your districts. Enter your full street address, or pick your county above.';
-      status.className = 'fmr-status err';
-      out.innerHTML = '';
-      window.vgTrack && window.vgTrack('reps_lookup', { method: 'address', outcome: 'zip_only' });
-      return;
-    }
-    // SampleBallot.geocodeAddress: address -> { county, usHouse, stateHouse, stateSenate }.
-    run('address', window.SampleBallot.geocodeAddress(addr).then(function (loc) {
-      // Save the geocoder's own scalar shape — one district per chamber — which is
-      // what the sample ballot and the candidate finder read. Never the address
-      // itself: voter-location.js persists only the derived districts, which is
-      // the promise the privacy note above makes.
-      if (window.VoterLocation) window.VoterLocation.save(loc);
+  // Address path. The module owns refusing a bare ZIP without spending a
+  // request, the latch, the geocoder's error text and the outcome event; this
+  // page keeps only what it does with a location. Rendering is awaited inside
+  // onResolve, so the latch holds until the two data files have loaded and a
+  // failure in there is still reported as an error.
+  var addressLookup = window.AddressLookup.createAddressLookup({
+    input: input,
+    button: btn,
+    subject: 'your districts',
+    fallbackPhrase: 'pick your county above',
+    eventName: 'reps_lookup',
+    setBusy: setBusy,
+    setStatus: function (message, isError) {
+      status.textContent = message;
+      status.className = isError ? 'fmr-status err' : 'fmr-status';
+    },
+    onRefuse: function () { out.innerHTML = ''; },
+    onResolve: function (loc) {
+      // The geocoder's own scalar shape -- one district per chamber -- is what
+      // the sample ballot and the candidate finder read, and what the module
+      // persisted a moment ago. Never the address itself: voter-location.js
+      // keeps only the derived districts, which is the promise the privacy note
+      // above makes. render() works in arrays, hence normalizeAddressLoc.
       hideCarry();
-      return normalizeAddressLoc(loc);
-    }));
-  }
+      return Promise.all([loadJson(FED_URL), loadJson(GA_URL)]).then(function (r) {
+        render(normalizeAddressLoc(loc), r[0], r[1]);
+      });
+    },
+  });
+
+  function lookup() { addressLookup.run(); }
 
   function lookupCounty() {
     var county = countySel.value;

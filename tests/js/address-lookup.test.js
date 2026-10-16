@@ -222,3 +222,37 @@ test('copy keeps each page pointing at its own fallback control', () => {
   assert.equal(none.empty, 'Enter your address.');
   assert.match(none.zip, /Enter your full street address\.$/);
 });
+
+test('an async onResolve holds the latch until it finishes', async () => {
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  const h = harness({ onResolve: () => gate });
+  h.input.value = '123 Peachtree St NE';
+
+  const run = h.lookup.run();
+  await new Promise(r => setImmediate(r));
+  assert.equal(h.lookup.isBusy(), true, 'a page still rendering is not done');
+  release();
+  assert.equal(await run, 'success');
+  assert.equal(h.lookup.isBusy(), false);
+});
+
+test('a failure while the page renders is reported like any other', async () => {
+  // find-my-reps fetches two JSON files inside this step; a fetch that fails
+  // must surface and be tracked, not disappear into a resolved lookup.
+  const { lookup, input, calls } = harness({
+    onResolve: async () => { throw new Error('Could not load member data.'); },
+  });
+  input.value = '123 Peachtree St NE';
+
+  assert.equal(await lookup.run(), 'error');
+  assert.equal(lastStatus(calls)[0], 'Could not load member data.');
+  assert.equal(lastEvent(calls)[1].outcome, 'error');
+});
+
+test('an async onResolve can still name its own outcome', async () => {
+  const { lookup, input, calls } = harness({ onResolve: async () => 'no_district' });
+  input.value = '123 Peachtree St NE';
+  assert.equal(await lookup.run(), 'no_district');
+  assert.equal(lastEvent(calls)[1].outcome, 'no_district');
+});
