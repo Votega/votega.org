@@ -131,6 +131,23 @@
           ],
           "description": "The General Assembly bill/resolution that placed the measure on the ballot."
         },
+        "explainer": {
+          "type": ["object", "null"],
+          "description": "Link to VoteGA's own plain-language explanation of this measure -- what it does and what a yes or no vote means. Usually a section of a per-cycle explainer post, so the URL carries the fragment and is stored per measure rather than derived: a later cycle's measure must not inherit an earlier cycle's post. Keep `anchorCheck` in scripts/validate_ballot_measures.py passing when a heading is reworded.",
+          "additionalProperties": false,
+          "required": ["url"],
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "Site-relative URL, including any #fragment.",
+              "examples": ["/2026-09-16-2026-georgia-ballot-measures-explained/#3-nonpartisan-elections-for-probate-judges"]
+            },
+            "label": {
+              "type": ["string", "null"],
+              "description": "Optional link text override; the UI supplies a default."
+            }
+          }
+        },
         "fullText": {
           "type": ["string", "null"],
           "format": "uri",

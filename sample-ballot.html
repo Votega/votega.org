@@ -183,7 +183,13 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
 
   function measureRow(c) {
     const m = c.measure;
-    const href = `${basePath}ga-ballot-measures.html`;
+    // "What it means →" used to land at the top of a multi-measure list, which
+    // is not what it promises. Prefer the plain-language explanation for this
+    // measure; fall back to its own card on the tracker, which now carries an
+    // id, rather than the top of the page.
+    const href = m.explainer && m.explainer.url
+      ? basePath + m.explainer.url.replace(/^\//, '')
+      : `${basePath}ga-ballot-measures.html#measure-${encodeURIComponent(m.id)}`;
     const pending = c.status === 'potential'
       ? `<span class="contest-badge badge-pending">pending certification</span>` : '';
     const type = m.type ? escHtml(m.type) : 'Ballot measure';
