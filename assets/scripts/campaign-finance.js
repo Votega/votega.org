@@ -402,6 +402,120 @@ window.CampaignFinance = (function () {
     };
   }
 
+  // -- "Where the money came from": composition of receipts -----------------
+  //
+  // The headline cards print Total Raised and From Individuals, which on an
+  // incumbent leaves a large unexplained gap (Clay Fuller, 2026: $1.85M raised,
+  // $1.08M from individuals, $766K unaccounted for). That gap is the PAC, party,
+  // transfer and self-funding money -- the part of "who funds this member" a
+  // reader most wants named, and it was on the wire already inside the committee
+  // totals response. generate_fec_data.py now keeps it as entry.funding.
+  //
+  // Lives here rather than in either template because the finance panel is
+  // duplicated between _includes/entity/federal-legislator.html and
+  // _includes/entity/candidate.html; a second copy of this logic would diverge
+  // the way the employers table already has.
+
+  // Display groups, each summing one or more raw components. Ordered by size at
+  // render time, not here -- "where did the money come from" is answered fastest
+  // when the biggest source is first, and the fixed label+color per group keeps
+  // two members comparable.
+  const FUNDING_GROUPS = [
+    {
+      key: 'small', label: 'Small donors (under $200)', color: '#15803d',
+      parts: ['individualUnitemized'],
+      // Contributions from donors whose cycle total stays at or under $200. The
+      // FEC does not require these to be itemized, so no name, employer or date
+      // is disclosed for any of it -- it is a sum, not a list of people.
+    },
+    { key: 'itemized', label: 'Individuals ($200 and up)', color: '#4ade80',
+      parts: ['individualItemized'] },
+    { key: 'pac',      label: 'PACs and other committees', color: '#b45309',
+      parts: ['pac'] },
+    { key: 'party',    label: 'Party committees', color: '#a16207',
+      parts: ['party'] },
+    { key: 'transfers', label: 'Transfers from the candidate\u2019s other committees', color: '#1d4ed8',
+      parts: ['transfers'] },
+    { key: 'self',     label: 'The candidate (contributions and loans)', color: '#6d28d9',
+      parts: ['candidateSelf', 'candidateLoans'] },
+    { key: 'other',    label: 'Other receipts', color: '#9ca3af',
+      parts: ['otherLoans', 'offsets', 'otherReceipts'] },
+  ];
+
+  function fundingRows(entry) {
+    const f = entry && entry.funding;
+    const receipts = entry && entry.totalRaised;
+    if (!f || !receipts || receipts <= 0) return null;
+
+    const rows = FUNDING_GROUPS
+      .map(g => ({
+        label: g.label,
+        color: g.color,
+        amount: g.parts.reduce((sum, k) => sum + (f[k] || 0), 0),
+      }))
+      .filter(r => r.amount > 0);
+    if (!rows.length) return null;
+
+    // Anything receipts covers that the named components do not. A renamed or
+    // dropped FEC field, or a receipt type with no component of its own, lands
+    // here instead of quietly disappearing from a breakdown that claims to
+    // account for every dollar raised. Negatives (refunds netted into a
+    // component, rounding) are clamped away rather than printed as a source.
+    const named = rows.reduce((sum, r) => sum + r.amount, 0);
+    const remainder = receipts - named;
+    // Floor keeps a rounding crumb from rendering as a 0%-share row of its own;
+    // $1,000 and 0.5% are both small enough to be noise on any real filing.
+    if (remainder > 1000 && remainder / receipts > 0.005) {
+      const other = rows.find(r => r.label === 'Other receipts');
+      if (other) other.amount += remainder;
+      else rows.push({ label: 'Other receipts', color: '#9ca3af', amount: remainder });
+    }
+
+    rows.sort((a, b) => b.amount - a.amount);
+    // Receipts is the denominator that makes a row readable on its own ("31% of
+    // what he raised came from PACs"). Guard it anyway: an amended filing can
+    // leave the components summing past gross receipts, and dividing by the
+    // smaller figure would print a 120% share and a bar segment wider than the
+    // bar. Falling back to the row total caps shares at 100% in that case and
+    // changes nothing in the normal one.
+    const denom = Math.max(receipts, rows.reduce((sum, r) => sum + r.amount, 0));
+    rows.forEach(r => { r.share = r.amount / denom; });
+    return { rows, receipts };
+  }
+
+  // Shares are of total receipts, so they sum to 100% and each row is readable
+  // on its own ("31% of what he raised came from PACs") without the reader
+  // having to hold a denominator in their head.
+  function fundingBreakdownHtml(entry) {
+    const data = fundingRows(entry);
+    if (!data) return '';
+    // A real source too small to round to a whole percent reads as '0%' and looks
+    // like a rendering bug. Entity-escaped: a raw '<' in text, even one a browser
+    // tolerates, is the kind of thing a downstream sanitizer eats.
+    const pct = share => (share * 100 < 1 ? '&lt;1' : Math.round(share * 100)) + '%';
+
+    const bar = data.rows.map(r =>
+      '<span class="funding-bar-seg" style="width:' + (r.share * 100).toFixed(2) + '%;background:' + r.color + ';"'
+      + ' title="' + r.label + ': ' + fmtMoney(r.amount) + '"></span>').join('');
+
+    const body = data.rows.map(r =>
+      '<tr>'
+      + '<td><span class="funding-swatch" style="background:' + r.color + ';"></span>' + r.label + '</td>'
+      + '<td>' + fmtMoney(r.amount) + '</td>'
+      + '<td>' + pct(r.share) + '</td>'
+      + '</tr>').join('');
+
+    return '<h3 class="finance-subhead">Where the money came from</h3>'
+      + '<p class="finance-meta funding-note">Share of the ' + fmtMoney(data.receipts)
+      + ' raised this cycle, through the reporting date above.</p>'
+      + '<div class="funding-bar" role="presentation">' + bar + '</div>'
+      + '<table class="employers-table funding-table">'
+      + '<thead><tr><th>Source</th><th>Amount</th><th>Share</th></tr></thead>'
+      + '<tbody>' + body + '</tbody></table>'
+      + '<p class="finance-meta funding-note">Donors who gave $200 or less in total are not itemized by the FEC,'
+      + ' so no names, employers or dates are disclosed for that money.</p>';
+  }
+
   // Per-block provenance line ("Finance data from the FEC, updated October 4, 2026.").
   // Finance figures come from their own files (ga-fec-data.json /
   // ga-campaign-finance.json), not from the roster the page-level stamp describes, so
@@ -422,6 +536,7 @@ window.CampaignFinance = (function () {
     gaCandidatePool, findGaFilers,
     GA_CHAMBER_MAP, GA_OFFICE_MAP,
     fecSearchUrl, cycleLabelFor,
+    fundingBreakdownHtml,
     summary,
   };
 })();
