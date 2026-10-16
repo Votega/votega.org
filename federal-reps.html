@@ -156,7 +156,7 @@ Many counties are served by multiple districts, and some districts serve multipl
 
 <!-- ga-districts.js supplies the full GA seat list so vacant districts still render -->
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
-<script src="assets/scripts/ga-districts.js"></script>
+<script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%}
   Reuses the tested Census geocoder from the sample-ballot module (address ->
   county + district, via JSONP). It defines no DOM handlers of its own, so it is
@@ -167,7 +167,7 @@ Many counties are served by multiple districts, and some districts serve multipl
 <script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} Shared chrome around the geocoder: ZIP guard, busy latch, outcome events. {%- endcomment -%}
 <script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
-<script src="assets/scripts/congress.js"></script> <!-- Call congress.js script-->
+<script src="{{ '/assets/scripts/congress.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
 <script>
 (function () {

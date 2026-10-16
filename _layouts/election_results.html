@@ -135,7 +135,22 @@ Front-matter contract
 {% if page.related %}
   <div class="pr-related">
     {% if page.related.text %}<span class="pr-related-text">{{ page.related.text }}</span>{% endif %}
-    {% if page.related.url %} <a class="pr-related-link" href="{{ page.related.url | relative_url }}">{{ page.related.label | default: 'Learn more' }} &rarr;</a>{% endif %}
+    {%- comment -%}
+      Results pages hand-write related.url as a legacy shell ("/race.html?id=ga-13-2026")
+      because front matter is YAML, not Liquid, and cannot resolve the clean URL itself.
+      Swap it here instead, at build time: the shell is noindex + sitemap:false and only
+      location.replace()s to this same path, so linking it costs the reader a redirect.
+      Falls through to the authored value when the id is not in the map (a race that has
+      no entity page, or a build where entity generation failed, which deploy-pages.yml
+      tolerates) and for any related.url that is not a race shell.
+    {%- endcomment -%}
+    {%- assign rel_url = page.related.url -%}
+    {%- if rel_url contains '/race.html?id=' -%}
+      {%- assign rel_rid = rel_url | split: '/race.html?id=' | last -%}
+      {%- assign rel_clean = site.data.entity_urls.race[rel_rid] -%}
+      {%- if rel_clean -%}{%- assign rel_url = rel_clean -%}{%- endif -%}
+    {%- endif -%}
+    {% if page.related.url %} <a class="pr-related-link" href="{{ rel_url | relative_url }}">{{ page.related.label | default: 'Learn more' }} &rarr;</a>{% endif %}
   </div>
 {% endif %}
 
@@ -256,6 +271,9 @@ async function buildCandidateIndex() {
   }
 
   try {
+    // Resolved alongside the data it decorates, so candidate names in the
+    // results tables link clean rather than through a redirect.
+    await VoteGA.entityUrls.load(basePath);
     const [racesRes, congressRes, gaRes] = await Promise.all([
       fetch(basePath + 'assets/data/races.json'),
       fetch(basePath + 'assets/data/current-members.json'),
@@ -288,12 +306,17 @@ async function buildCandidateIndex() {
           // went unlinked. Only federal incumbents (no `id`) need that route.
           groups.forEach(cands => (cands || []).forEach(c => {
             if (c.id && c.name) {
-              add(c.name, `${basePath}candidate.html?id=${encodeURIComponent(c.id)}`);
+              add(c.name, VoteGA.entityUrls.get('candidate', c.id,
+                `${basePath}candidate.html?id=${encodeURIComponent(c.id)}`));
             } else if (c.type === 'incumbent' && c.memberId) {
               const src  = c.memberSource || 'congress';
               const name = src === 'congress' ? congressNameById.get(c.memberId) : gaNameById.get(c.memberId);
               if (name) {
-                add(name, `${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(c.memberId)}&memberSource=${encodeURIComponent(src)}`);
+                // A federal incumbent with no candidate id is keyed in the map
+                // by member id and resolves to their member profile -- exactly
+                // where this shell already redirected them.
+                add(name, VoteGA.entityUrls.get('candidate', c.memberId,
+                  `${basePath}candidate.html?raceId=${encodeURIComponent(race.id)}&memberId=${encodeURIComponent(c.memberId)}&memberSource=${encodeURIComponent(src)}`));
               }
             }
           }));

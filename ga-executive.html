@@ -299,7 +299,8 @@ breadcrumb:
     if (reelectionText) {
       const profileId = official['candidateProfileId'];
       if (profileId) {
-        const profileUrl = `${getBasePath()}candidate.html?id=${encodeURIComponent(profileId)}`;
+        const profileUrl = VoteGA.entityUrls.get('candidate', profileId,
+          `${getBasePath()}candidate.html?id=${encodeURIComponent(profileId)}`);
         reelectionHtml = `<a class="exec-reelection" href="${profileUrl}">🗳 ${reelectionText} · View candidate profile →</a>`;
       } else {
         reelectionHtml = `<span class="exec-reelection">${reelectionText}</span>`;
@@ -335,6 +336,7 @@ breadcrumb:
   async function loadExecutiveOfficials() {
     const grid = document.getElementById('execGrid');
     try {
+      await VoteGA.entityUrls.load(getBasePath());
       const res = await fetch(DATA_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();

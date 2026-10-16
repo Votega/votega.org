@@ -542,7 +542,7 @@ breadcrumb:
     const summary    = candidateSummary(phase);
     const dateStr    = phase ? formatDate(phase.electionDate) : '';
     return `
-      <a class="race-row" href="${basePath}race.html?id=${encodeURIComponent(race.id)}">
+      <a class="race-row" href="${VoteGA.entityUrls.get('race', race.id, `${basePath}race.html?id=${encodeURIComponent(race.id)}`)}">
         <div class="race-info">
           <div class="race-title">${escHtml(titleText)}</div>
           <div class="race-candidates">${summary}</div>
@@ -752,6 +752,7 @@ breadcrumb:
   async function loadData() {
     racesOutput.innerHTML = '<p class="empty-note">Loading races…</p>';
     try {
+      await VoteGA.entityUrls.load(getBasePath());
       const res = await fetch(RACES_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();

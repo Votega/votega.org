@@ -141,7 +141,11 @@ function renderMembers() {
     const nameHtml = isVacant
       ? `<span style="color:#888;font-style:italic;">Vacant</span>`
       : `<span${isSuspended ? ' style="color:#888;"' : ''}>${m.name}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}</span>${suspendedPill}`;
-    return `<a class="member-row" href="${basePath}ga-member.html?id=${encodeURIComponent(m.id)}">
+    // Clean /ga-legislators/<slug>/ when the map has this member; the
+    // ga-member.html shell (which only redirects there) is the fallback.
+    const memberHref = VoteGA.entityUrls.get(
+      'ga-legislator', m.id, `${basePath}ga-member.html?id=${encodeURIComponent(m.id)}`);
+    return `<a class="member-row" href="${memberHref}">
       <span class="member-district">District ${m.district}</span>
       <span class="member-name">${nameHtml}</span>
       <span class="member-counties">${counties}</span>
@@ -164,6 +168,9 @@ countySel.addEventListener('change', renderMembers);
 async function loadData() {
   statusLine.textContent = 'Loading member data…';
   try {
+    // Awaited before the roster renders, so rows link clean on first paint.
+    // Resolves to {} if the map is unavailable and every row keeps its shell.
+    await VoteGA.entityUrls.load(getBasePath());
     const res = await fetch(getBasePath() + DATA_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
