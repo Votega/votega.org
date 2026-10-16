@@ -41,6 +41,14 @@ ENTITIES_DIR = os.path.join(ROOT, "_entities")
 PLACES_PATH = os.path.join(ROOT, "_data", "places.yml")
 LOCAL_OFFICIALS_PATH = os.path.join(ROOT, "_data", "local_officials.yml")
 ENTITY_URLS_PATH = os.path.join(ROOT, "_data", "entity_urls.json")
+# A served copy of the same map, for clients that need it at runtime. The
+# _data/ copy is Jekyll-build-time only (not published), and inlining 92 KB of
+# mappings into every page is not an option, so site search fetches this one
+# lazily to turn its legacy shell URLs into clean ones. Both are .gitignore'd
+# build artifacts: when this script fails, the file is simply absent and every
+# consumer falls back to the shell URLs, which still redirect -- the same
+# degradation deploy-pages.yml already relies on.
+SERVED_ENTITY_URLS_PATH = os.path.join(ROOT, "assets", "data", "entity-urls.json")
 # Persisted {permalink: {"h": content-hash, "d": "YYYY-MM-DD"}} so a page's
 # last_modified_at only advances when its content actually changes. Restored from
 # the Actions cache across deploys (see deploy-pages.yml); missing = treat all as
@@ -1448,6 +1456,7 @@ def main():
     except Exception as exc:
         print(f"  Directory: FAILED — {exc}", file=sys.stderr)
     write_json_atomic(ENTITY_URLS_PATH, urls, separators=(",", ":"))
+    write_json_atomic(SERVED_ENTITY_URLS_PATH, urls, separators=(",", ":"))
     write_json_atomic(LASTMOD_STATE_PATH, new_state, separators=(",", ":"))
     changed = sum(1 for k, v in new_state.items() if prior.get(k, {}).get("h") != v["h"])
     print(f"build_entity_pages: {total} pages, {sum(len(v) for v in urls.values())} URL mappings, "

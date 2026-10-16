@@ -40,6 +40,7 @@ breadcrumb:
 </style>
 
 <script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
+<script src="{{ '/assets/scripts/search-entity-urls.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   // Standalone, deep-linkable search results page (/search/?q=…). Reuses the same
   // indexes as the nav-bar overlay: searchcorpus.json (posts/pages, rendered by
@@ -69,12 +70,18 @@ breadcrumb:
     var loadEntities = fetch(base + '/assets/data/search-entities.json')
       .then(function (r) { return r.ok ? r.json() : { records: [] }; }).catch(function () { return { records: [] }; });
 
+    // Rewrites the index's id-bearing shell URLs to clean entity paths; fetched
+    // in parallel so a slow or missing map never blocks or breaks the results.
+    var loadUrlMap = VoteGA.entityUrls.load(base);
+
     status.textContent = 'Loading…';
-    Promise.all([loadPagesPosts, loadEntities]).then(function (res) {
+    Promise.all([loadPagesPosts, loadEntities, loadUrlMap]).then(function (res) {
       var pagesPosts = Array.isArray(res[0]) ? res[0] : [];
       var entities = (res[1] && res[1].records) ? res[1].records : [];
+      var urlMaps = res[2] || {};
       entities = entities.map(function (rec) {
-        return { title: rec.title, desc: rec.desc, category: rec.category, url: base + '/' + rec.url };
+        return { title: rec.title, desc: rec.desc, category: rec.category,
+                 url: base + '/' + VoteGA.entityUrls.resolve(rec, urlMaps) };
       });
 
       SimpleJekyllSearch({

@@ -19,6 +19,7 @@
   </style>
 
   <script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
+  <script src="{{ '/assets/scripts/search-entity-urls.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   <script>
     // The posts/pages corpus (searchcorpus.json) is rendered by Jekyll and only
     // knows about blog posts and static pages. The site's real content --
@@ -43,19 +44,25 @@
         var loadEntities = fetch(base + '/assets/data/search-entities.json')
           .then(function (r) { return r.ok ? r.json() : { records: [] }; })
           .catch(function () { return { records: [] }; });
+        // Fetched in parallel, not in series: it only rewrites hrefs, so a slow
+        // or missing map must not hold up (or break) the results themselves.
+        var loadUrlMap = VoteGA.entityUrls.load(base);
 
-        Promise.all([loadPagesPosts, loadEntities]).then(function (results) {
+        Promise.all([loadPagesPosts, loadEntities, loadUrlMap]).then(function (results) {
           var pagesPosts = Array.isArray(results[0]) ? results[0] : [];
           var entities = (results[1] && results[1].records) ? results[1].records : [];
+          var urlMaps = results[2] || {};
           // Entity URLs are stored relative (e.g. "member.html?bioguideId=...");
           // the posts/pages corpus already bakes in site.baseurl. Normalize
-          // entities to match so one result template works for both.
+          // entities to match so one result template works for both, and swap
+          // the index's id-bearing shell URL for the clean entity path so a
+          // click does not pay for a redirect (see search-entity-urls.js).
           entities = entities.map(function (rec) {
             return {
               title: rec.title,
               desc: rec.desc,
               category: rec.category,
-              url: base + '/' + rec.url
+              url: base + '/' + VoteGA.entityUrls.resolve(rec, urlMaps)
             };
           });
 
