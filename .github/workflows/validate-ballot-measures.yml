@@ -1,0 +1,41 @@
+name: Validate GA ballot measures
+
+# The post is a trigger path on purpose. Each measure's "What a yes or no vote
+# means" link points at a heading in the explainer post, and Jekyll derives those
+# anchor ids from the heading text — so rewording a heading silently downgrades a
+# voter-facing link to a jump at the top of the post. Editing the post has to
+# re-run this check, not just editing the data.
+on:
+  push:
+    paths:
+      - 'assets/data/ga-ballot-measures.json'
+      - 'assets/data/ga-ballot-measures.schema.json'
+      - 'scripts/validate_ballot_measures.py'
+      - '_posts/*ballot-measures*.md'
+  pull_request:
+    paths:
+      - 'assets/data/ga-ballot-measures.json'
+      - 'assets/data/ga-ballot-measures.schema.json'
+      - 'scripts/validate_ballot_measures.py'
+      - '_posts/*ballot-measures*.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # The validator falls back to a hand-rolled enum/required check without it,
+      # which is weaker than validating the whole document against the schema.
+      - name: Install jsonschema
+        run: pip install --quiet jsonschema
+
+      - name: Validate ga-ballot-measures.json
+        run: python scripts/validate_ballot_measures.py

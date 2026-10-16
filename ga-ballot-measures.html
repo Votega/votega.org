@@ -219,10 +219,20 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       ? `<a href="${escHtml(m.fullText)}" target="_blank" rel="noopener">Full amendment text ↗</a>`
       : '';
 
-    const footerParts = [legHtml, fullTextHtml].filter(Boolean);
+    // The plain-language explanation of what a yes or no vote means has existed
+    // in an explainer post all along, but nothing on this page linked to it —
+    // so a voter arriving here (from the navbar, the hub, or their sample
+    // ballot) got the Secretary of State's summary wording and no way to reach
+    // the explanation. First in the footer because it is what they came for.
+    const explainerHtml = m.explainer && m.explainer.url
+      ? `<a href="${escHtml(getBasePath() + m.explainer.url.replace(/^\//, ''))}">`
+        + `${escHtml(m.explainer.label || 'What a yes or no vote means')} →</a>`
+      : '';
+
+    const footerParts = [explainerHtml, legHtml, fullTextHtml].filter(Boolean);
 
     return `
-      <div class="measure-card ${isPotential ? 'potential' : ''}${notOnBallot ? ' not-on-ballot' : ''}">
+      <div class="measure-card ${isPotential ? 'potential' : ''}${notOnBallot ? ' not-on-ballot' : ''}" id="measure-${escHtml(m.id)}">
         <div class="measure-badges">${statusBadge}${typeBadge}</div>
         <div class="measure-title">${escHtml(m.title)}</div>
         <div class="measure-summary">${escHtml(m.summary)}</div>
