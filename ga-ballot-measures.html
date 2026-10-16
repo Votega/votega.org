@@ -35,6 +35,17 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     text-decoration: line-through;
     color: #777;
   }
+  /* Deliberately grey and recessive: this measure is not on anyone's ballot, so
+     it must not compete visually with the three a voter actually decides. */
+  .measure-card.not-on-ballot {
+    border-left-color: #9aa3af;
+    background: #f7f8fa;
+  }
+  .measure-card.not-on-ballot .measure-title,
+  .measure-card.not-on-ballot .measure-summary {
+    color: #4b5563;
+    text-decoration: line-through;
+  }
   .measure-badges {
     display: flex;
     flex-wrap: wrap;
@@ -59,6 +70,8 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   .badge-type { background: #e7eef8; color: #1a4d94; }
   .badge-passed { background: #d7efd8; color: #1b5e20; }
   .badge-failed { background: #f6dcdc; color: #a02121; }
+  /* Neutral grey, not red: the measure did not lose a vote, it never got one. */
+  .badge-not-on-ballot { background: #e5e7eb; color: #374151; }
   .measure-title {
     font-size: 1.2rem;
     font-weight: bold;
@@ -176,7 +189,10 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
 
   function renderCard(m) {
     const isPotential = m.status === 'potential';
-    const statusBadge = isPotential
+    const notOnBallot = m.status === 'not-on-ballot';
+    const statusBadge = notOnBallot
+      ? `<span class="badge badge-not-on-ballot">Did not reach the ballot</span>`
+      : isPotential
       ? ''
       : m.status === 'passed'
         ? `<span class="badge badge-passed">Ballot measure passed</span>`
@@ -206,7 +222,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     const footerParts = [legHtml, fullTextHtml].filter(Boolean);
 
     return `
-      <div class="measure-card ${isPotential ? 'potential' : ''}">
+      <div class="measure-card ${isPotential ? 'potential' : ''}${notOnBallot ? ' not-on-ballot' : ''}">
         <div class="measure-badges">${statusBadge}${typeBadge}</div>
         <div class="measure-title">${escHtml(m.title)}</div>
         <div class="measure-summary">${escHtml(m.summary)}</div>
@@ -244,23 +260,48 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
         ? allMeasures.filter(m => measureDate(m) === focalDate)
         : allMeasures;
 
-      const certified = measures.filter(m => m.status !== 'potential');
-      const potential = measures.filter(m => m.status === 'potential');
+      // Bucket on explicit statuses, never on "not potential". The old test put
+      // anything unrecognised under the "Certified Measures" heading, so a new
+      // lifecycle stage would have been announced to voters as on their ballot —
+      // which is the exact opposite of what 'not-on-ballot' means.
+      const onBallot    = measures.filter(m => ['certified', 'passed', 'failed'].includes(m.status));
+      const potential   = measures.filter(m => m.status === 'potential');
+      const notOnBallot = measures.filter(m => m.status === 'not-on-ballot');
+      const unknown     = measures.filter(m =>
+        !['certified', 'passed', 'failed', 'potential', 'not-on-ballot'].includes(m.status));
+      if (unknown.length) console.warn('ga-ballot-measures: unrecognised status', unknown.map(m => m.status));
 
       const election = data.metadata?.election || '';
       let html = '';
 
       if (election) {
-        html += `<p style="font-weight:600;color:#444;margin-top:0.5rem;">On the ballot for the ${escHtml(election)}.</p>`;
+        // Counts the measures actually on the ballot, so the line cannot read as
+        // a claim about a 'not-on-ballot' card further down the page.
+        const n = onBallot.length;
+        html += `<p style="font-weight:600;color:#444;margin-top:0.5rem;">`
+          + (n ? `${n} statewide ${n === 1 ? 'measure is' : 'measures are'} on the ballot for the ${escHtml(election)}.`
+               : `On the ballot for the ${escHtml(election)}.`)
+          + `</p>`;
       }
 
-      if (certified.length) {
-        html += `<h2 class="section-heading">Certified Measures (${certified.length})</h2>`;
-        html += `<div class="measure-grid">${certified.map(renderCard).join('')}</div>`;
+      if (onBallot.length) {
+        html += `<h2 class="section-heading">Certified Measures (${onBallot.length})</h2>`;
+        html += `<div class="measure-grid">${onBallot.map(renderCard).join('')}</div>`;
       }
       if (potential.length) {
-        html += `<h2 class="section-heading">Failed Measures</h2>`;
+        html += `<h2 class="section-heading">Pending Measures</h2>`;
         html += `<div class="measure-grid">${potential.map(renderCard).join('')}</div>`;
+      }
+      // Kept visible, and last: a voter who read about one of these elsewhere
+      // should be able to find out it is not on their ballot, rather than find
+      // nothing and keep looking for it.
+      if (notOnBallot.length) {
+        html += `<h2 class="section-heading">Failed Measures</h2>`;
+        html += `<p style="font-size:0.9rem;color:#666;">These were proposed for this election but were never referred to voters, so they will <strong>not</strong> appear on your ballot. They are listed for the record.</p>`;
+        html += `<div class="measure-grid">${notOnBallot.map(renderCard).join('')}</div>`;
+      }
+      if (unknown.length) {
+        html += `<div class="measure-grid">${unknown.map(renderCard).join('')}</div>`;
       }
 
       container.innerHTML = html;

@@ -1,15 +1,15 @@
 ---
 layout: post
 title: Georgia's 2026 Ballot Measures Explained. What a Yes or No Vote Means
-subtitle: Plain-language breakdowns of the constitutional amendments and referendum on your November ballot
+subtitle: Plain-language breakdowns of the three constitutional amendments on your November ballot
 share-title: Georgia 2026 Ballot Measures Explained. What Yes or No Means
-share-description: Georgia's November 2026 ballot includes three constitutional amendments and a possible veterans tax referendum. Here's what each measure does and what a Yes or No vote actually means, in plain English.
+share-description: Georgia's November 2026 ballot includes three statewide constitutional amendments. Here's what each measure does and what a Yes or No vote actually means, in plain English.
 tags: [ballot measures, constitutional amendments, 2026 general election, voter guide]
 ---
 
 > **See the live tracker:** For the current status of every measure, its enabling legislation, and results after the election, visit the [Georgia Ballot Measures page]({{ '/ga-ballot-measures.html' | relative_url }}).
 
-At the bottom of your **November 3, 2026** ballot, past the candidates, you'll find a short list of statewide measures written in dense legal language. They're easy to skip but a "yes" or "no" here changes Georgia's constitution or its tax code directly, with no candidate in between. This is where your vote is most literal.
+At the bottom of your **November 3, 2026** ballot, past the candidates, you'll find three statewide measures written in dense legal language. They're easy to skip but a "yes" or "no" here changes Georgia's constitution or its tax code directly, with no candidate in between. This is where your vote is most literal.
 
 Here's each measure in plain English: what it does, and what your vote means.
 
@@ -47,19 +47,16 @@ These three have cleared every step and **will** appear on the ballot.
 - **A YES vote** removes party affiliation (D/R) from probate judge races statewide.
 - **A NO vote** keeps probate judges running under party labels where they currently do.
 
-## One measure still pending
+## One measure that did not make the ballot
 
 ### Homestead Tax Exemption for Families of Disabled Veterans
 
 *Related legislation: [HB 52](https://www.legis.ga.gov/legislation/69349){:target="_blank"} — statewide referendum*
 
-**What it would do:** Extend Georgia's homestead property-tax exemption to the **surviving spouses and minor children of disabled veterans**.
+**What it would have done:** Extended Georgia's homestead property-tax exemption to the **surviving spouses and minor children of disabled veterans**.
 
-{: .box-note}
-As of our last data update, this measure was **potential, not yet certified**. It passed the General Assembly but still required final steps to be referred to the ballot. Check the [live tracker]({{ '/ga-ballot-measures.html' | relative_url }}) for its current status before you vote.
-
-- **A YES vote** (if it appears) would grant the exemption to those surviving family members.
-- **A NO vote** would leave the exemption unchanged.
+{: .box-warning}
+**Correction (October 16, 2026):** this measure will **not** be on your ballot, and an earlier version of this post described it as still pending. HB 52 passed the House 170–5 in March 2025, and the Senate adopted a substitute 50–0 in April 2026 — which sent the bill back to the House, where it was not taken up before the General Assembly adjourned. A property-tax exemption has to clear both chambers in the same form before it can go to voters, so this one was never referred. **Three** statewide measures are on the November 3, 2026 ballot: the three constitutional amendments above.
 
 ## Why these are worth your time
 

@@ -1,13 +1,14 @@
 {
   "metadata": {
-    "generatedAt": "2026-07-15",
+    "generatedAt": "2026-10-16",
     "election": "November 3, 2026 General Election",
     "electionDate": "2026-11-03",
     "source": "Georgia Secretary of State; Georgia General Assembly (legis.ga.gov)",
-    "note": "Curated manually; conforms to ga-ballot-measures.schema.json. Lifecycle: 'potential' (passed the General Assembly, not yet certified) → 'certified' (on the ballot) → 'passed'/'failed' (terminal outcome recorded after results are certified). Measures are retained across cycles as a historical record and are never deleted; consumers select the focal election by electionDate and archive past-cycle measures from active display without altering the data.",
+    "note": "Curated manually; conforms to ga-ballot-measures.schema.json. Lifecycle: 'potential' (passed the General Assembly, not yet certified) → 'certified' (on the ballot) → 'passed'/'failed' (terminal outcome recorded after results are certified); a measure tracked as potential that was never referred to voters ends at 'not-on-ballot'. Measures are retained across cycles as a historical record and are never deleted; consumers select the focal election by electionDate and archive past-cycle measures from active display without altering the data.",
     "schemaVersion": "1.0.0",
     "certifiedCount": 3,
-    "potentialCount": 1
+    "potentialCount": 0,
+    "notOnBallotCount": 1
   },
   "measures": [
     {
@@ -60,12 +61,12 @@
     },
     {
       "id": "ga-2026-disabled-veteran-homestead",
-      "status": "potential",
+      "status": "not-on-ballot",
       "type": "Statewide Referendum",
       "title": "Georgia Homestead Exemption for Surviving Spouses and Children of Disabled Veterans Measure",
       "subjects": ["Homestead tax", "Veterans"],
       "summary": "Extend the homestead property tax exemption to the surviving spouses and minor children of disabled veterans.",
-      "statusNote": "Passed the House in March 2025 and the Senate in April 2026. The Governor must sign the bill for it to be referred to the ballot.",
+      "statusNote": "Not on the November 3, 2026 ballot. HB 52 passed the House 170-5 on March 6, 2025; the Senate adopted a substitute 50-0 on April 2, 2026, which returned the bill to the House, and the House did not act on that substitute before the General Assembly adjourned. A property-tax exemption must clear both chambers in the same form and be signed before it can be referred to voters, so this measure was never referred and will not appear on a ballot this cycle. Kept as a record of what was proposed.",
       "electionDate": "2026-11-03",
       "fullText": null,
       "enablingLegislation": {
