@@ -131,6 +131,48 @@
           ],
           "description": "The General Assembly bill/resolution that placed the measure on the ballot."
         },
+        "intent": {
+          "type": ["string", "null"],
+          "description": "Why this measure was put to voters, in plain language, drawn from official material (the ballot question, the enabling legislation, the sponsors' stated purpose). Descriptive, never persuasive: it says what the measure is FOR, not whether to vote for it. Anything contested belongs in `sources` as an attributed link instead."
+        },
+        "sources": {
+          "type": ["array", "null"],
+          "description": "A labelled reading list for this measure, so a voter can read the arguments at their origin. VoteGA does not characterise or summarise the positions -- each entry points at a document and says what KIND of document it is. An entry is never VoteGA's own view. Where no organised support or opposition exists, the honest result is no entry of that kind: do NOT add a weak or manufactured one for symmetry.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "publisher", "url", "kind"],
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Neutral description of the document, e.g. 'Position on HR 1243'. Must not paraphrase the argument."
+              },
+              "publisher": {
+                "type": "string",
+                "description": "Who published it, named as the voter would recognise them."
+              },
+              "url": { "type": "string" },
+              "kind": {
+                "type": "string",
+                "enum": ["official", "news", "support", "oppose", "analysis"],
+                "description": "'official' = government or legislative material. 'news' = reporting. 'support'/'oppose' = a party to the debate, labelled so a reader can weigh it. 'analysis' = research or advocacy organisation not formally campaigning."
+              },
+              "published": {
+                "type": ["string", "null"],
+                "format": "date",
+                "description": "Publication date (YYYY-MM-DD) where known. An argument from before a campaign formed is not the argument now, so the date is shown to the reader."
+              },
+              "note": {
+                "type": ["string", "null"],
+                "description": "Optional factual caveat, e.g. that a link is paywalled."
+              }
+            }
+          }
+        },
+        "opposition": {
+          "type": ["string", "null"],
+          "description": "What was found when looking for organised opposition, stated plainly -- including 'none identified', which is information a voter should have rather than an empty section. Never a characterisation of opponents' motives."
+        },
         "explainer": {
           "type": ["object", "null"],
           "description": "Link to VoteGA's own plain-language explanation of this measure -- what it does and what a yes or no vote means. Usually a section of a per-cycle explainer post, so the URL carries the fragment and is stored per measure rather than derived: a later cycle's measure must not inherit an earlier cycle's post. Keep `anchorCheck` in scripts/validate_ballot_measures.py passing when a heading is reworded.",

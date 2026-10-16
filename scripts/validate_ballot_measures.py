@@ -138,6 +138,32 @@ def main():
                     f"{m['id']}: explainer anchor #{frag} is not a heading in {src}. "
                     f"A heading was probably reworded; available: {sorted(ids)}")
 
+    # Editorial policy, enforced rather than documented. See about-the-data.md.
+    # These are the rules that keep a reading list from drifting into advocacy;
+    # a reviewer cannot be relied on to notice a single bad entry years later.
+    AI_GENERATED_HOSTS = ("cpo.soar.com",)   # self-flagged as possibly inaccurate
+    for m in data["measures"]:
+        for src in m.get("sources") or []:
+            url = src.get("url", "")
+            for host in AI_GENERATED_HOSTS:
+                if host in url:
+                    problems.append(
+                        f"{m['id']}: source {url} is from {host}, whose articles are AI-generated "
+                        f"and self-flagged as possibly inaccurate — not citable")
+            if not url.startswith(("http://", "https://", "/")):
+                problems.append(f"{m['id']}: source url {url!r} is neither absolute nor site-relative")
+        kinds = [s.get("kind") for s in m.get("sources") or []]
+        if m.get("status") in ON_BALLOT and m.get("sources") and "official" not in kinds:
+            problems.append(
+                f"{m['id']}: a measure on the ballot must cite at least one 'official' source, "
+                f"so the reading list is anchored to the state's own material (kinds: {kinds})")
+        # Silence about opposition is the failure mode: a voter cannot tell
+        # whether none exists or nobody looked.
+        if m.get("status") in ON_BALLOT and "oppose" not in kinds and not m.get("opposition"):
+            problems.append(
+                f"{m['id']}: no 'oppose' source and no `opposition` note — say what was found when "
+                f"looking for organised opposition, including that none was identified")
+
     for m in data["measures"]:
         if m.get("results") and m.get("status") not in ("passed", "failed"):
             problems.append(f"{m['id']}: carries results but status is {m.get('status')!r}")

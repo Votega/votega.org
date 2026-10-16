@@ -60,6 +60,32 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   .badge-failed { background: #f6dcdc; color: #a02121; }
   /* Neutral grey, not red: the measure did not lose a vote, it never got one. */
   .badge-not-on-ballot { background: #e5e7eb; color: #374151; }
+  .measure-sub {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    font-weight: 700;
+    margin: 0.9rem 0 0.3rem;
+  }
+  .measure-intent p, .measure-opposition p { margin: 0; font-size: 0.93rem; }
+  .measure-opposition p { color: #4b5563; }
+  .measure-sources ul { list-style: none; padding: 0; margin: 0; }
+  .measure-sources li { padding: 0.22rem 0; font-size: 0.9rem; }
+  /* The kind tag is the whole point of the reading list: a voter should see at a
+     glance whether a link is the state, a reporter, or a party to the debate. */
+  .src-kind {
+    display: inline-block; min-width: 5.4rem; text-align: center;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; padding: 0.08rem 0.4rem; border-radius: 100px;
+    vertical-align: 0.05rem;
+  }
+  .src-official { background: #e7eef8; color: #1a4d94; }
+  .src-news     { background: #eef0f3; color: #374151; }
+  .src-support  { background: #e3f2e4; color: #1b5e20; }
+  .src-oppose   { background: #f6e3e3; color: #a02121; }
+  .src-analysis { background: #f1ebf8; color: #553c9a; }
+  .src-pub { color: #6b7280; }
   .measure-title {
     font-size: 1.2rem;
     font-weight: bold;
@@ -198,6 +224,37 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       ? `<div class="measure-status-note">${escHtml(m.statusNote)}</div>`
       : '';
 
+    // Why this was put to voters. Descriptive and drawn from official material —
+    // the ballot question, the enabling legislation, the sponsors' stated
+    // purpose — because the summary above says what the measure does without
+    // ever saying what it is for.
+    const intentHtml = m.intent
+      ? `<div class="measure-intent"><h3 class="measure-sub">Why it's on the ballot</h3>`
+        + `<p>${escHtml(m.intent)}</p></div>`
+      : '';
+
+    // A reading list, not a summary of the arguments: each entry names a
+    // document and what kind it is, so a voter weighs the source themselves and
+    // VoteGA never puts words in anyone's mouth.
+    const KIND_LABEL = { official: 'Official', news: 'News', support: 'Supporting', oppose: 'Opposing', analysis: 'Analysis' };
+    const sourcesHtml = (m.sources && m.sources.length)
+      ? `<div class="measure-sources"><h3 class="measure-sub">Read more</h3><ul>`
+        + m.sources.map(s =>
+            `<li><span class="src-kind src-${escHtml(s.kind)}">${escHtml(KIND_LABEL[s.kind] || s.kind)}</span> `
+            + `<a href="${escHtml(s.url)}" target="_blank" rel="noopener">${escHtml(s.label)}</a> `
+            + `<span class="src-pub">— ${escHtml(s.publisher)}`
+            + (s.published ? `, ${escHtml(s.published)}` : '')
+            + (s.note ? ` (${escHtml(s.note)})` : '') + `</span></li>`).join('')
+        + `</ul></div>`
+      : '';
+
+    // "None identified" is information a voter should have. An empty section
+    // would instead read as though we had not looked.
+    const oppositionHtml = m.opposition
+      ? `<div class="measure-opposition"><h3 class="measure-sub">Organised opposition</h3>`
+        + `<p>${escHtml(m.opposition)}</p></div>`
+      : '';
+
     const leg = m.enablingLegislation;
     const legHtml = leg && leg.identifier
       ? `<a href="${getBasePath()}ga-bills.html?bill=${encodeURIComponent(leg.identifier)}">Enabling legislation: ${escHtml(leg.identifier)} →</a>`
@@ -226,6 +283,9 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
         <div class="measure-summary">${escHtml(m.summary)}</div>
         ${subjectsHtml}
         ${statusNoteHtml}
+        ${intentHtml}
+        ${oppositionHtml}
+        ${sourcesHtml}
         ${renderResults(m.results)}
         ${footerParts.length ? `<div class="measure-footer">${footerParts.join('')}</div>` : ''}
       </div>`;
