@@ -15,6 +15,25 @@ breadcrumb:
 <p>Everything you need for Georgia's upcoming and recent elections, who's running, how and when to vote, what's on the ballot, and how it turned out.</p>
 
 <div class="elections-grid">
+  {%- comment -%}
+    First card deliberately: "what's on my ballot" is the most actionable thing a
+    voter comes here for, and the hub previously had no card for it at all — it
+    was reachable only from the home-page strip (itself conditional on an
+    upcoming election being on file) and the footer site map.
+  {%- endcomment -%}
+  <a class="election-card" href="{{ '/sample-ballot' | relative_url }}">
+    <div class="election-card-icon">📋</div>
+    <p class="election-card-title">What's on My Ballot</p>
+    <p class="election-card-desc">A preview of the state and federal contests on your ballot. Enter your address for your exact districts, or pick your county to see every district it touches. Your official ballot also carries county and city races, so the Secretary of State's My Voter Page remains the precinct-exact source.</p>
+    <div class="election-card-topics">
+      <span class="election-card-topic">By address</span>
+      <span class="election-card-topic">By county</span>
+      <span class="election-card-topic">Your races</span>
+      <span class="election-card-topic">Your measures</span>
+    </div>
+    <span class="election-card-cta">See what's on my ballot →</span>
+  </a>
+
   <a class="election-card" href="{{ '/elections/candidates/' | relative_url }}">
     <div class="election-card-icon">🗳️</div>
     <p class="election-card-title">Find Candidates</p>
@@ -50,7 +69,12 @@ breadcrumb:
       <span class="election-card-topic">Statewide referenda</span>
       <span class="election-card-topic">Plain-language</span>
     </div>
-    <span class="election-card-cta">See what's on the ballot →</span>
+    {%- comment -%}
+      Was "See what's on the ballot →", a near-match for the sample ballot's own
+      "See what's on my ballot →" while pointing at statewide amendments instead
+      of the voter's ballot. Named for what it actually opens.
+    {%- endcomment -%}
+    <span class="election-card-cta">See the ballot measures →</span>
   </a>
 
   <a class="election-card" href="{{ '/results/' | relative_url }}">
@@ -67,7 +91,7 @@ breadcrumb:
   </a>
 </div>
 
-<!-- Candidate-facing CTA, deliberately set apart from and below the four
+<!-- Candidate-facing CTA, deliberately set apart from and below the
      voter-facing cards above: muted styling and its own audience heading so a
      voter scanning the hub isn't steered to the "claim your profile" flow that
      is only for candidates and their staff. -->
