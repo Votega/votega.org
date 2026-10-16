@@ -14,18 +14,44 @@
       {%- for c in e.rivals %}{% if forloop.first %} {% else %} · {% endif %}{% if c.url %}<a href="{{ c.url | relative_url }}">{{ c.name | escape }}</a>{% else %}{{ c.name | escape }}{% endif %}{% if c.party %} ({{ c.party | escape }}){% endif %}{% endfor %}
     </p>
     {%- endif %}
-    <p><a href="{{ '/elections/' | relative_url }}">2026 Georgia elections</a> · <a href="{{ '/sample-ballot' | relative_url }}">Sample ballot</a></p>
   {%- else -%}
     <p>Loading candidate information…</p>
   {%- endif -%}
 </div>
 
+{%- comment -%}
+  Voter actions live OUTSIDE #candidateContent on purpose — see the matching note
+  in _includes/entity/race.html. The JS below replaces that container's innerHTML
+  once races.json resolves, so these links (and, before this change, the "Also on
+  the ballot" row above) were rendered for crawlers and then destroyed for every
+  real visitor. A sibling the JS never touches is one copy that cannot drift.
+
+  The year comes from the entity's own `cycle` (added for candidate entities in
+  scripts/build_entity_pages.py); the three URLs carry no year. The legacy
+  /candidate.html?id= shell has no page.entity, so it gets an unlabeled
+  "Georgia elections" rather than a guessed year.
+{%- endcomment -%}
+<div class="voter-links">
+  <p><a href="{{ '/elections/' | relative_url }}">{% if page.entity.cycle %}{{ page.entity.cycle }} {% endif %}Georgia elections</a> · <a href="{{ '/sample-ballot' | relative_url }}">Sample ballot</a> · <a href="{{ '/ga-voter-access' | relative_url }}">Voter access</a></p>
+</div>
+
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/format-date.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
 <p id="dataStamp" class="data-stamp"></p>
 
 <style>
+  .voter-links { margin-top: 1.25rem; font-size: 0.95rem; }
+  .candidate-rivals {
+    margin: 1.25rem 0;
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border-left: 3px solid #d1d5db;
+    font-size: 0.95rem;
+  }
+  .candidate-rivals h2 { font-size: 1rem; margin: 0 0 0.35rem; }
+  .candidate-rivals ul { margin: 0; padding-left: 1.2rem; }
   .candidate-header {
     display: flex;
     gap: 1.5rem;
@@ -363,6 +389,7 @@
   const US_CONGRESS_URLS   = {{ site.data.entity_urls['us-congress'] | jsonify }};
   const GA_LEGISLATOR_URLS = {{ site.data.entity_urls['ga-legislator'] | jsonify }};
   const RACE_URLS          = {{ site.data.entity_urls['race'] | jsonify }};
+  const CANDIDATE_URLS     = {{ site.data.entity_urls['candidate'] | jsonify }};
 
   const _params              = new URLSearchParams(window.location.search);
   // On a clean /candidates/<slug>/ entity page the id is injected via
@@ -398,12 +425,54 @@
       : `${getBasePath()}race.html?id=${encodeURIComponent(id)}`;
   }
 
+  // Candidate id -> clean "/candidates/…" URL, falling back to the legacy
+  // candidate.html?id= shell. Mirrors candidateHref() in race.html.
+  function candidateHref(id) {
+    const clean = CANDIDATE_URLS[id];
+    return clean
+      ? getBasePath() + clean.replace(/^\//, '')
+      : `${getBasePath()}candidate.html?id=${encodeURIComponent(id)}`;
+  }
+
+  // Shared with race.html via assets/scripts/format-date.js (loaded above).
+  const formatDate = VoteGA.formatDate;
+
   function partyClass(party) {
     if (!party) return 'party-other';
     const p = party.toLowerCase();
     if (p.includes('republican')) return 'party-R';
     if (p.includes('democrat'))   return 'party-D';
     return 'party-other';
+  }
+
+  // Everyone still on this phase's ballot except the person whose page this is.
+  // A phase exposes either `ballots` (keyed by party, so the values need
+  // flattening) or a flat `candidates` array — same shape race.html's
+  // phaseActiveCount() handles, and both forms occur in races.json.
+  function phaseRivals(phase, self) {
+    const raw = phase?.ballots ? Object.values(phase.ballots).flat()
+                               : (phase?.candidates || []);
+    const selfKey = (self && (self.id || self.name)) || '';
+    return raw.filter(c => c && !c.withdrawn && !c.disqualified
+                           && (c.id || c.name) !== selfKey);
+  }
+
+  // Names and party labels are external data (races.json), so escape them
+  // rather than interpolating raw values into the template literal.
+  function rivalsHtml(rivals) {
+    if (!rivals.length) return '';
+    const items = rivals.map(c => {
+      const label = escHtmlGa(c.name)
+        + (c.party ? ` (${escHtmlGa(c.party)})` : '')
+        + (c.isIncumbent || c.type === 'incumbent' ? ' — incumbent' : '');
+      return c.id
+        ? `<li><a href="${escHtmlGa(candidateHref(c.id))}">${label}</a></li>`
+        : `<li>${label}</li>`;
+    }).join('');
+    return `<div class="candidate-rivals">
+        <h2>Also on the ballot</h2>
+        <ul>${items}</ul>
+      </div>`;
   }
 
   function renderCandidate(candidate, race, phaseName) {
@@ -419,6 +488,14 @@
       || (phaseName ? phaseName[0].toUpperCase() + phaseName.slice(1) : 'Election');
     const raceLabel  = `${race.displayTitle || (race.chamber + distLabel)} — ${race.cycle} ${phaseLabel}`;
     const raceUrl    = raceHref(race.id);
+    // When the election is, and who else is on the ballot. Both were previously
+    // absent from this page: the date was never rendered at all, and the rivals
+    // row existed only in the Liquid fallback above, which this innerHTML
+    // assignment destroys. On a page whose whole purpose is helping a voter
+    // choose, the alternatives are not optional.
+    const phase      = race.phases?.[phaseName] || null;
+    const dateStr    = formatDate(phase && phase.electionDate);
+    const rivals     = phaseRivals(phase, candidate);
     const isFederal  = race.level === 'federal';
     const isIncumbent = candidate.isIncumbent || candidate.type === 'incumbent';
     const isWithdrawn     = !!candidate.withdrawn;
@@ -506,9 +583,11 @@
           ${roleBadge}
           <span class="party-badge ${partyClass(candidate.party)}">${escHtmlGa(candidate.party || 'Unknown party')}</span>
           <div class="race-context">Running for: <a href="${escHtmlGa(raceUrl)}">${escHtmlGa(raceLabel)}</a></div>
+          ${dateStr ? `<div class="race-context">Election date: ${escHtmlGa(dateStr)}</div>` : ''}
         </div>
       </div>
 
+      ${rivalsHtml(rivals)}
       ${detailsHtml}
       ${memberRecordHtml}
       ${serviceHtml}
