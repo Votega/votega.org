@@ -165,6 +165,8 @@ Many counties are served by multiple districts, and some districts serve multipl
 {%- endcomment -%}
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} Shared chrome around the geocoder: ZIP guard, busy latch, outcome events. {%- endcomment -%}
+<script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="assets/scripts/congress.js"></script> <!-- Call congress.js script-->
 
 <script>
@@ -174,7 +176,7 @@ Many counties are served by multiple districts, and some districts serve multipl
   var btn    = document.getElementById('frpBtn');
   var status = document.getElementById('frpStatus');
   var countySel = document.getElementById('countySelect');
-  if (!input || !btn || !window.FederalReps) return;
+  if (!input || !btn || !window.FederalReps || !window.AddressLookup) return;
 
   function say(msg, isError) {
     status.textContent = msg || '';
@@ -198,58 +200,39 @@ Many counties are served by multiple districts, and some districts serve multipl
     if (loc.usHouse != null) {
       window.FederalReps.setExactDistrict(loc.usHouse, label);
       say('');
-    } else {
-      // Census found the address but returned no congressional layer. The county
-      // filter above is already set, so the page still narrows -- just not to one
-      // district. Saying so beats leaving the voter to wonder.
-      window.FederalReps.setExactDistrict(null);
-      say(loc.county
-        ? 'We found that address but could not tell which congressional district it is in. '
-          + 'Showing every district that touches ' + loc.county + ' County.'
-        : 'We found that address but could not tell which district it is in.', true);
+      return 'success';
     }
+    // Census found the address but returned no congressional layer. The county
+    // filter above is already set, so the page still narrows -- just not to one
+    // district. Saying so beats leaving the voter to wonder.
+    window.FederalReps.setExactDistrict(null);
+    say(loc.county
+      ? 'We found that address but could not tell which congressional district it is in. '
+        + 'Showing every district that touches ' + loc.county + ' County.'
+      : 'We found that address but could not tell which district it is in.', true);
+    return 'no_district';
   }
 
-  // Outcome only -- never the address, the coordinates, or the resolved district.
-  // `page` keeps this page separable from find-my-reps, which reports the same
-  // event name for the same user intent. Both values are author-set enums.
-  function track(outcome) {
-    if (window.vgTrack) {
-      window.vgTrack('reps_lookup', { method: 'address', outcome: outcome, page: 'federal_reps' });
-    }
-  }
+  var lookup = window.AddressLookup.createAddressLookup({
+    input: input,
+    button: btn,
+    setStatus: say,
+    subject: 'your district',
+    fallbackPhrase: 'pick your county below',
+    eventName: 'reps_lookup',
+    // Same event as find-my-reps -- the same user intent -- kept separable by an
+    // author-set page enum rather than by GA4's page dimension.
+    eventParams: { page: 'federal_reps' },
+    // A refused lookup must not leave a stale "Showing District 5" above the
+    // error, where it reads as the answer.
+    onRefuse: function () { window.FederalReps.setExactDistrict(null); },
+    onReject: function () { window.FederalReps.setExactDistrict(null); },
+    onResolve: function (loc, typed) { return apply(loc, loc.matchedAddress || typed); },
+  });
 
-  function lookup() {
-    var address = (input.value || '').trim();
-    if (!address) { say('Enter your address first.', true); input.focus(); return; }
-    // A ZIP alone can't pin down a district -- one ZIP often spans several -- and
-    // the geocoder just reports "not found", so explain rather than make a
-    // pointless request. Mirrors find-my-reps.html and sample-ballot.html.
-    if (/^\d{5}(-\d{4})?$/.test(address)) {
-      window.FederalReps.setExactDistrict(null);
-      say('A ZIP code alone isn\u2019t enough to find your district. Enter your full street address, or pick your county below.', true);
-      track('zip_only');
-      return;
-    }
-    btn.disabled = true;
-    say('Looking up your district\u2026');
-    window.SampleBallot.geocodeAddress(address).then(function (loc) {
-      apply(loc, loc.matchedAddress || address);
-      // Districts and county only -- never the street address. See voter-location.js.
-      if (window.VoterLocation) window.VoterLocation.save(loc);
-      track(loc && loc.usHouse != null ? 'success' : 'no_district');
-    }).catch(function (err) {
-      window.FederalReps.setExactDistrict(null);
-      say((err && err.message) || 'That address could not be looked up.', true);
-      track('error');
-    }).then(function () {
-      btn.disabled = false;
-    });
-  }
-
-  btn.addEventListener('click', lookup);
+  btn.addEventListener('click', function () { lookup.run(); });
   input.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); lookup(); }
+    if (e.key === 'Enter') { e.preventDefault(); lookup.run(); }
   });
 
   // A location resolved on another page this visit. The raw address is never
