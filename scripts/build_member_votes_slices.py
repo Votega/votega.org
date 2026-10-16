@@ -9,7 +9,9 @@ on every page load — just to show one member's history and party-loyalty stat.
 This script derives two lighter artifacts from that same file so a detail page
 fetches ~14KB + a shared, cacheable index instead:
 
-  assets/data/ga-votes-index.json      metadata + voteIds + votes, and — the key
+  assets/data/ga-votes-index.json      metadata (incl. per-session bill-document
+                                        URL segments) + voteIds + votes, each with
+                                        the bill text's document id, and — the key
                                         move — a precomputed `partyTally` per vote
                                         ({party: {yea, nay}}). That is exactly what
                                         the client's buildPartyVoteIndex() derived
@@ -39,6 +41,12 @@ VOTES_FILE = os.path.join(DATA_DIR, "ga-member-votes.json")
 MEMBERS_FILE = os.path.join(DATA_DIR, "ga-members.json")
 INDEX_OUT = os.path.join(DATA_DIR, "ga-votes-index.json")
 SLICES_DIR = os.path.join(DATA_DIR, "ga-votes")
+BILLS_FILE = os.path.join(DATA_DIR, "ga-bills.json")
+
+# Every bill's textUrl is this prefix + "<session segment>/<document id>", and the
+# segment is a property of the session, not the bill. Mirrors split_text_url() in
+# build_sponsorship_slices.py — keep the two in step.
+TEXT_URL_PREFIX = "https://www.legis.ga.gov/api/legislation/document/"
 
 # Compact vote codes → the two positions that count toward a party tally. Mirrors
 # the CODE map in the client; only Yea/Nay feed party-line math (everything else —
@@ -50,6 +58,39 @@ def member_slug(member_id: str) -> str:
     """Filesystem-safe slice name for an OCD id (which contains '/'). Must match the
     same transform in the client: id.replace(/[^a-zA-Z0-9]+/g,'-') trimmed of '-'."""
     return re.sub(r"[^a-zA-Z0-9]+", "-", member_id).strip("-")
+
+
+def bill_text_documents():
+    """-> ({(session, identifier): documentId}, {session: url segment}).
+
+    The roll-call record carries the bill number but not its text link; the bill
+    file carries both. Joining them here, at build time, is what lets a Voting
+    History row link the bill text directly instead of making the reader hop
+    through our bill page to reach the same PDF. The join is on (session,
+    identifier) because an identifier is unique only within a biennium.
+
+    A missing or unparseable bill file is not fatal: the rows simply render
+    without text links, exactly as they did before this existed.
+    """
+    docs, segments = {}, {}
+    if not os.path.exists(BILLS_FILE):
+        return docs, segments
+    with open(BILLS_FILE, encoding="utf-8") as fh:
+        bills = (json.load(fh) or {}).get("bills") or []
+    for b in bills:
+        url = b.get("textUrl") or ""
+        if not url.startswith(TEXT_URL_PREFIX):
+            continue
+        parts = url[len(TEXT_URL_PREFIX):].split("/")
+        if len(parts) != 2 or not all(parts):
+            continue
+        seg, doc_id = parts
+        session, identifier = b.get("session"), b.get("identifier")
+        if not session or not identifier:
+            continue
+        docs[(session, identifier)] = doc_id
+        segments.setdefault(session, seg)
+    return docs, segments
 
 
 def build_party_tallies(member_votes, vote_ids, party_by_id):
@@ -101,15 +142,28 @@ def main() -> int:
 
     # Shared index: the vote metadata every member references, plus the party
     # tallies that used to require the full memberVotes map on the client.
+    # `doc` is the bill text's document id, joined from the bill file (see
+    # bill_text_documents) and stored as the number alone — the prefix and the
+    # per-session segment are the same for thousands of rows, so the client
+    # rebuilds the URL from metadata.docSegments instead.
+    bill_docs, doc_segments = bill_text_documents()
     votes_with_tally = {}
+    matched = 0
     for vid, meta in votes.items():
         rec = dict(meta)
         if vid in tallies:
             rec["partyTally"] = tallies[vid]
+        doc_id = bill_docs.get((meta.get("session"), meta.get("bill")))
+        if doc_id:
+            rec["doc"] = doc_id
+            matched += 1
         votes_with_tally[vid] = rec
 
+    metadata = dict(data.get("metadata", {}))
+    if doc_segments:
+        metadata["docSegments"] = doc_segments
     index = {
-        "metadata": data.get("metadata", {}),
+        "metadata": metadata,
         "voteIds": vote_ids,
         "votes": votes_with_tally,
     }
@@ -132,7 +186,8 @@ def main() -> int:
     idx_kb = os.path.getsize(INDEX_OUT) / 1024
     print(f"build_member_votes_slices: index {idx_kb:.0f}KB, "
           f"{len(member_votes)} member slices, "
-          f"{len(tallies)} votes with party tallies.")
+          f"{len(tallies)} votes with party tallies, "
+          f"{matched}/{len(votes)} votes joined to a bill text document.")
     return 0
 
 

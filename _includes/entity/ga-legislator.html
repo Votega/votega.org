@@ -141,6 +141,18 @@
   }
   .tab-btn:hover { color: #333; }
   .tab-active { color: #1a56a8; border-bottom-color: #1a56a8; }
+
+  /* A non-wrapping flex row of tabs runs off the side of a phone: four tabs
+     measured 376px inside a 326px container, so the last one was clipped at the
+     screen edge and the whole page scrolled sideways. Wrapping is what the
+     site's other tab bars already do (elections.html, federal-reps.html,
+     ga-state-reps.html, race.html), and the tighter type keeps it to two rows
+     rather than four. Must come AFTER the .tab-btn rules above — same
+     specificity, so source order decides. Desktop is unchanged. */
+  @media (max-width: 540px) {
+    .tab-bar { flex-wrap: wrap; }
+    .tab-btn { padding: 0.45rem 0.7rem; font-size: 0.82rem; }
+  }
   /* Curated bill cards */
   #curatedBills h2 { margin: 0 0 0.75rem 0; font-size: 1.5rem; }
   .bill-card {
@@ -160,6 +172,8 @@
   }
   .bill-identifier { font-weight: bold; font-size: 0.95rem; }
   .bill-official-link { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
+  .bill-text-inline { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
+  .vh-link { font-size: 0.7rem; color: #666; margin-left: 0.35rem; white-space: nowrap; font-weight: normal; }
   .bill-status-tag { font-size: 0.75rem; color: #666; }
   .bill-title { font-size: 0.875rem; color: #444; font-style: italic; margin-bottom: 0.35rem; }
   .bill-summary { font-size: 0.875rem; color: #333; line-height: 1.5; margin-bottom: 0.75rem; }
@@ -182,7 +196,6 @@
   .tally-bar-fill-d { height: 100%; background: #2563eb; border-radius: 3px; }
   .tally-bar-fill-r { height: 100%; background: #dc2626; border-radius: 3px; }
   .tally-count { width: 5rem; text-align: right; color: #555; white-space: nowrap; }
-  .bill-text-link { font-size: 0.8rem; white-space: nowrap; }
   /* Committee assignments: the role (Chairman / Vice Chairman / Secretary /
      Ex-Officio / subcommittee chair) rides as a badge beside the committee name.
      Plain "Member" gets none - 1,060 of the 1,399 assignments are Members, so
@@ -1169,9 +1182,6 @@
         : '';
       const statusTag = escHtml([bill.status, statusDate].filter(Boolean).join(' · '));
       const summaryHtml = bill.summary ? `<div class="bill-summary">${escHtml(bill.summary)}</div>` : '';
-      const textLink = bill.fullTextUrl
-        ? `<a class="bill-text-link" href="${escHtml(bill.fullTextUrl)}" target="_blank" rel="noopener">Full text (PDF) →</a>`
-        : '';
 
       // The identifier goes to OUR bill page, as it does on the Sponsored Legislation
       // rows below - the two tabs used to disagree, the same-looking link leaving the
@@ -1187,10 +1197,16 @@
       const officialLink = officialUrl
         ? ` <a class="bill-official-link" href="${escHtml(officialUrl)}" target="_blank" rel="noopener">legis.ga.gov &#8599;</a>`
         : '';
+      // Was "Full text (PDF) →" down in the footer. Same destination, now the same
+      // label and the same place as on Voting History and Sponsored Legislation —
+      // three panels that each had their own wording for one link.
+      const textLink = bill.fullTextUrl
+        ? ` <a class="bill-text-inline" href="${escHtml(bill.fullTextUrl)}" target="_blank" rel="noopener">&#128196; text &#8599;</a>`
+        : '';
 
       return `<div class="bill-card">
         <div class="bill-card-header">
-          <span><a class="bill-identifier" href="${escHtml(billHref)}">${escHtml(bill.identifier)}</a>${officialLink}</span>
+          <span><a class="bill-identifier" href="${escHtml(billHref)}">${escHtml(bill.identifier)}</a>${officialLink}${textLink}</span>
           ${statusTag ? `<span class="bill-status-tag">${statusTag}</span>` : ''}
         </div>
         <div class="bill-title">${escHtml(bill.title)}</div>
@@ -1198,7 +1214,6 @@
         <div class="bill-footer">
           ${voteBadge}
           ${buildTallyBar(voteData?.partyTally)}
-          ${textLink}
         </div>
       </div>`;
     }).join('');
@@ -1759,11 +1774,47 @@
       // participation, party loyalty, the scorecard link and the panel layout.
       const VT = window.VotegaVotesTable;
 
-      // GA's only per-row addition: the bill-text link.
-      const billTextCell = meta => meta.textUrl
-        ? ` <a href="${escHtml(meta.textUrl)}" target="_blank" rel="noopener" style="font-size:0.7rem;color:#666;white-space:nowrap;">[text]</a>`
-        : '';
-      const ROW_OPTS = { showMotion: true, cell: billTextCell };
+      // GA's per-row additions, the same pair the Key Votes and Sponsored
+      // Legislation panels carry: the official record, and the bill text itself.
+      //
+      // This replaces a `meta.textUrl` link that could never render — the roll-call
+      // index has never had that field, so the link was dead from the day it was
+      // written. The document id now rides on each vote and the per-session URL
+      // segment on the index metadata (see bill_text_documents in
+      // build_member_votes_slices.py), which is the same shape the sponsorship
+      // slices use.
+      const docSegments = data.metadata?.docSegments || {};
+      const billTextUrl = meta => {
+        const seg = docSegments[meta.session];
+        return (seg && meta.doc)
+          ? `https://www.legis.ga.gov/api/legislation/document/${encodeURIComponent(seg)}/${encodeURIComponent(meta.doc)}`
+          : '';
+      };
+      // legislationId is the tail of billUrl, so the internal link needs no new
+      // field. Matching on it rather than the bill number matters: an identifier
+      // is unique only within a biennium.
+      const legisIdOf = meta => {
+        const m = /\/legislation\/(\d+)\s*$/.exec(meta.billUrl || '');
+        return m ? m[1] : '';
+      };
+      const billLinkCell = (meta, bill) => {
+        if (!meta.bill) return bill;
+        const legisId = legisIdOf(meta);
+        const href = `${base}ga-bills.html?bill=${encodeURIComponent(meta.bill)}`
+          + (legisId ? `&legislationId=${encodeURIComponent(legisId)}` : '');
+        return `<a href="${escHtml(href)}">${bill}</a>`;
+      };
+      const billLinksCell = meta => {
+        const official = meta.billUrl
+          ? ` <a class="vh-link" href="${escHtml(meta.billUrl)}" target="_blank" rel="noopener">legis.ga.gov &#8599;</a>`
+          : '';
+        const url = billTextUrl(meta);
+        const text = url
+          ? ` <a class="vh-link" href="${escHtml(url)}" target="_blank" rel="noopener">&#128196; text &#8599;</a>`
+          : '';
+        return official + text;
+      };
+      const ROW_OPTS = { showMotion: true, billLink: billLinkCell, cell: billLinksCell };
       const renderRows = list => VT.rowsHtml(list, votesIndex, ROW_OPTS);
 
       // Progressive disclosure: the table opens at PAGE_INITIAL rows and grows by

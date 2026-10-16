@@ -23,7 +23,9 @@
  *
  * Two hooks carry every difference between the callers:
  *   showMotion — the federal page hides the Motion column for House members.
- *   cell(meta) — extra HTML for the Bill cell: GA's "[text]" link, the federal
+ *   billLink(meta, escapedBill) — overrides the bill-number anchor (GA points it
+ *     at our own bill page; the federal page keeps the default off-site link)
+ *   cell(meta) — extra HTML for the Bill cell: GA's record/text links, the federal
  *                page's "P.L. … / Official text (GPO) →" line.
  *
  * Exposed on window.VotegaVotesTable. Tested by tests/js/votes-table.test.js,
@@ -123,12 +125,19 @@ window.VotegaVotesTable = (function () {
     opts = opts || {};
     var showMotion = opts.showMotion !== false;
     var cell = typeof opts.cell === 'function' ? opts.cell : null;
+    // billLink(meta, escapedBillNumber) -> the anchor HTML for the bill number.
+    // The default sends the reader to the official record off-site; GA overrides
+    // it to point at our own bill page, as its other panels do. The federal page
+    // passes nothing and keeps the default.
+    var billLinkFn = typeof opts.billLink === 'function' ? opts.billLink : null;
     return entries.map(function (entry) {
       var meta = index[entry.voteId] || {};
       var bill = esc(meta.bill || '—');
-      var billLink = meta.billUrl
-        ? '<a href="' + esc(meta.billUrl) + '" target="_blank" rel="noopener">' + bill + '</a>'
-        : bill;
+      var billLink = billLinkFn
+        ? (billLinkFn(meta, bill) || bill)
+        : (meta.billUrl
+            ? '<a href="' + esc(meta.billUrl) + '" target="_blank" rel="noopener">' + bill + '</a>'
+            : bill);
       // Two slots, because the callers decorate different ends of the cell: GA's
       // "[text]" link sits beside the bill number, the federal page's enacted-law
       // line sits below the title.

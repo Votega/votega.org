@@ -57,6 +57,13 @@ breadcrumb:
     border-radius: 5px;
     font-size: 0.88rem;
     background: #fff;
+    /* A select with no width sizes itself to its longest OPTION, and the subject
+       list carries full O.C.G.A. title names. #billSubject rendered 429px wide
+       inside a 360px row on a phone, pushing the whole page 54px past the
+       viewport at 390px and 124px at 320px — its dropdown arrow sat off-screen
+       at every phone width. The row already wraps; this is what keeps an item
+       from overflowing the line it wrapped onto. */
+    max-width: 100%;
   }
 
   /* ── Chamber tabs ── */
