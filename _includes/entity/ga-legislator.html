@@ -619,9 +619,9 @@
       statusLine.textContent = '';
     } catch (err) {
       console.error(err);
-      statusLine.textContent = err.message.includes('HTTP')
-        ? 'Data file missing or inaccessible. Check that assets/data/ga-members.json exists.'
-        : err.message;
+      // Voter-facing copy only: the file path and the raw exception go to the
+      // console above, which is where a developer looks. Never surface either here.
+      statusLine.textContent = 'Details for this member are temporarily unavailable. Please try again shortly.';
       document.getElementById('memberDetails').innerHTML =
         '<p>Error loading details. <a href="/ga-state-reps">Go back</a></p>';
     }

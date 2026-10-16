@@ -502,10 +502,9 @@
       statusLine.textContent = '';
     } catch (err) {
       console.error('loadMemberDetails()', err);
-      const message = err.message.includes('HTTP') ?
-        'Data file missing or inaccessible. Check that assets/data/current-members.json exists.' :
-        err.message;
-      statusLine.textContent = message;
+      // Voter-facing copy only: the file path and the raw exception go to the
+      // console above, which is where a developer looks. Never surface either here.
+      statusLine.textContent = 'Details for this member are temporarily unavailable. Please try again shortly.';
       document.getElementById('memberDetails').innerHTML = `<p>Error loading details. <a href="${getBasePath()}federal-reps">Go back</a></p>`;
     }
   }
