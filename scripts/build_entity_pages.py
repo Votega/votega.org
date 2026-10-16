@@ -486,6 +486,21 @@ def breadcrumb_ld(items):
                     "itemListElement": elements})
 
 
+def breadcrumbs(fm, items):
+    """Attach a visible trail to `fm` and return its JSON-LD.
+
+    One items list feeds both the `breadcrumb:` front matter that
+    _includes/breadcrumbs.html renders and the schema.org BreadcrumbList that
+    structured-data.html emits, so the two cannot drift apart. Serialized as
+    JSON because write_page passes a top-level string through verbatim and JSON
+    is valid YAML flow style.
+    """
+    fm["breadcrumb"] = json.dumps(
+        [{"name": n, "url": p} if p else {"name": n} for n, p in items],
+        ensure_ascii=False)
+    return breadcrumb_ld(items)
+
+
 def _nth_weekday(year, month, weekday, n):
     """Date of the nth `weekday` (Mon=0…Sun=6) in month; e.g. 2nd Sunday of March."""
     first = date(year, month, 1)
@@ -742,7 +757,7 @@ def build_ga_legislators(records, urls, prior, new_state):
             "last_modified_at": lastmod,
             "entity": entity,
         }
-        bc = breadcrumb_ld([("Home", "/"), ("Georgia Legislators", "/ga-state-reps"), (name, None)])
+        bc = breadcrumbs(fm, [("Home", "/"), ("Georgia Legislators", "/ga-state-reps"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(mid)}}};</script>\n'
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/ga-legislator.html %}}")
@@ -813,7 +828,7 @@ def build_federal_legislators(records, urls, prior, new_state):
             "last_modified_at": lastmod,
             "entity": entity,
         }
-        bc = breadcrumb_ld([("Home", "/"), ("U.S. Congress", "/federal-reps"), (name, None)])
+        bc = breadcrumbs(fm, [("Home", "/"), ("U.S. Congress", "/federal-reps"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(bid)}}};</script>\n'
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/federal-legislator.html %}}")
@@ -913,7 +928,7 @@ def build_races(records, urls, prior, new_state):
             "last_modified_at": lastmod,
             "entity": entity,
         }
-        bc = breadcrumb_ld([("Home", "/"), ("2026 Elections", "/elections/"), (name, None)])
+        bc = breadcrumbs(fm, [("Home", "/"), ("2026 Elections", "/elections/"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(rid)}}};</script>\n'
                 f"{bc}\n"
                 + (f"{il}\n" if il else "")
@@ -1043,7 +1058,7 @@ def build_candidates(records, urls, prior, new_state):
         if race_url:
             crumbs.append((race_label, race_url))
         crumbs.append((name, None))
-        bc = breadcrumb_ld(crumbs)
+        bc = breadcrumbs(fm, crumbs)
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(cid)}}};</script>\n'
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/candidate.html %}}")
@@ -1102,7 +1117,7 @@ def build_federal_executives(records, urls, prior, new_state):
             "last_modified_at": lastmod,
             "entity": entity,
         }
-        bc = breadcrumb_ld([("Home", "/"), ("Executive Branch", "/executive-branch.html"), (name, None)])
+        bc = breadcrumbs(fm, [("Home", "/"), ("Executive Branch", "/executive-branch.html"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(oid)}}};</script>\n'
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/federal-executive.html %}}")
@@ -1157,7 +1172,7 @@ def build_justices(records, urls, prior, new_state):
             "last_modified_at": lastmod,
             "entity": entity,
         }
-        bc = breadcrumb_ld([("Home", "/"), ("Supreme Court", "/supreme-court.html"), (name, None)])
+        bc = breadcrumbs(fm, [("Home", "/"), ("Supreme Court", "/supreme-court.html"), (name, None)])
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(jid)}}};</script>\n'
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/justice.html %}}")
@@ -1244,7 +1259,6 @@ def build_places(records, urls, prior, new_state):
             "areaServed": {"@type": "AdministrativeArea", "name": name},
             "containedInPlace": {"@type": "State", "name": "Georgia"},
         })
-        bc = breadcrumb_ld([("Home", "/"), ("Local Government", "/local/"), (name, None)])
         events_ld, events_fp = build_meeting_events(p, slug, name, permalink, org_id)
 
         entity = {
@@ -1269,6 +1283,8 @@ def build_places(records, urls, prior, new_state):
             "last_modified_at": lastmod,
             "entity": entity,
         }
+        # After fm: breadcrumbs() writes the trail into it.
+        bc = breadcrumbs(fm, [("Home", "/"), ("Local Government", "/local/"), (name, None)])
         head = f"<script>window.VOTEGA_PLACE = {json.dumps(place_js)};</script>\n{ld}\n{bc}\n"
         if events_ld:
             head += f"{events_ld}\n"
@@ -1337,7 +1353,7 @@ def _dir_section_page(section, slug, title, lede, rows, prior, new_state):
         "permalink": permalink,
         "last_modified_at": lastmod,
     }
-    bc = breadcrumb_ld([("Home", "/"), ("Directory", "/directory/"), (title, None)])
+    bc = breadcrumbs(fm, [("Home", "/"), ("Directory", "/directory/"), (title, None)])
     body = f"{bc}\n{_DIRECTORY_CSS}\n" + "\n".join(parts)
     write_page("directory", slug, fm, body)
 
@@ -1376,7 +1392,7 @@ def build_directory_pages(prior, new_state):
         "permalink": "/directory/",
         "last_modified_at": lastmod,
     }
-    bc = breadcrumb_ld([("Home", "/"), ("Directory", None)])
+    bc = breadcrumbs(fm, [("Home", "/"), ("Directory", None)])
     body = f"{bc}\n{_DIRECTORY_CSS}\n" + "\n".join(parts)
     write_page("directory", "index", fm, body)
     return len(hub) + 1
