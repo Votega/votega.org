@@ -159,6 +159,7 @@
     margin-bottom: 0.35rem;
   }
   .bill-identifier { font-weight: bold; font-size: 0.95rem; }
+  .bill-official-link { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
   .bill-status-tag { font-size: 0.75rem; color: #666; }
   .bill-title { font-size: 0.875rem; color: #444; font-style: italic; margin-bottom: 0.35rem; }
   .bill-summary { font-size: 0.875rem; color: #333; line-height: 1.5; margin-bottom: 0.75rem; }
@@ -227,6 +228,7 @@
   .spon-id { font-weight: 600; margin-right: 0.45rem; color: #1d4ed8; white-space: nowrap; }
   .spon-title { color: #111; }
   .spon-official { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
+  .spon-text { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
   .spon-meta { color: #6b7280; font-size: 0.78rem; margin-top: 0.2rem; }
   .spon-more {
     margin-top: 0.5rem;
@@ -1171,12 +1173,24 @@
         ? `<a class="bill-text-link" href="${escHtml(bill.fullTextUrl)}" target="_blank" rel="noopener">Full text (PDF) →</a>`
         : '';
 
+      // The identifier goes to OUR bill page, as it does on the Sponsored Legislation
+      // rows below - the two tabs used to disagree, the same-looking link leaving the
+      // site here and staying on it there. legislationId is what ga-bills.html matches
+      // on: an identifier is unique only within a biennium, and two of the curated key
+      // votes are 2023-24 bills whose numbers belong to different 2025-26 bills.
+      // billUrl (legis.ga.gov, the official record) replaced openstatesUrl when the
+      // curated data moved off Open States; the fallback keeps a cached page working
+      // against either shape.
+      const billHref = `${getBasePath()}ga-bills.html?bill=${encodeURIComponent(bill.identifier || '')}`
+        + (bill.legislationId ? `&legislationId=${encodeURIComponent(bill.legislationId)}` : '');
+      const officialUrl = bill.billUrl || bill.openstatesUrl || '';
+      const officialLink = officialUrl
+        ? ` <a class="bill-official-link" href="${escHtml(officialUrl)}" target="_blank" rel="noopener">legis.ga.gov &#8599;</a>`
+        : '';
+
       return `<div class="bill-card">
         <div class="bill-card-header">
-          <!-- billUrl (legis.ga.gov, the official record) replaced openstatesUrl when
-               the curated data moved off Open States; the fallback keeps a cached page
-               working against either shape. -->
-          <a class="bill-identifier" href="${escHtml(bill.billUrl || bill.openstatesUrl || '')}" target="_blank" rel="noopener">${escHtml(bill.identifier)}</a>
+          <span><a class="bill-identifier" href="${escHtml(billHref)}">${escHtml(bill.identifier)}</a>${officialLink}</span>
           ${statusTag ? `<span class="bill-status-tag">${statusTag}</span>` : ''}
         </div>
         <div class="bill-title">${escHtml(bill.title)}</div>
@@ -1231,7 +1245,7 @@
   // because the field names would otherwise repeat on all ~33k sponsorship records
   // the slice set covers; `statuses` is the slice's own intern table for the long,
   // recurring status strings. Keep in step with compact_row() in the build script.
-  const R_ID = 0, R_TITLE = 1, R_STATUS = 2, R_DATE = 3, R_LEGIS = 4;
+  const R_ID = 0, R_TITLE = 1, R_STATUS = 2, R_DATE = 3, R_LEGIS = 4, R_DOC = 5;
 
   // The index is tiny (~4KB) and is wanted in two places - here, and at render time
   // to decide whether the tab appears at all - so fetch it at most once per page.
@@ -1310,9 +1324,14 @@
     }
 
     const sessionNames = {};
+    const sessionDocSeg = {};
     const order = [];
     (data.metadata?.sessions || []).forEach(sn => {
-      if (sn.id) { sessionNames[sn.id] = sn.name || sn.id; order.push(sn.id); }
+      if (sn.id) {
+        sessionNames[sn.id] = sn.name || sn.id;
+        if (sn.docSegment) sessionDocSeg[sn.id] = sn.docSegment;
+        order.push(sn.id);
+      }
     });
 
     // The primary/co-sponsor split (the member who introduced the bill versus the ones
@@ -1338,10 +1357,13 @@
           .toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
       : '';
 
-    function itemHtml(row, hidden) {
+    function itemHtml(row, hidden, sid) {
       // ?bill=<identifier> is the deep-link form jumpToBillFromURL() on ga-bills.html
       // handles: it clears the default filters, pages to the bill and opens its card.
-      const href = `${SPON_BASE}ga-bills.html?bill=${encodeURIComponent(row[R_ID] || '')}`;
+      // legislationId rides along so the match is on the bill's own id rather than an
+      // identifier string, which is only unique within a biennium.
+      const href = `${SPON_BASE}ga-bills.html?bill=${encodeURIComponent(row[R_ID] || '')}`
+        + (row[R_LEGIS] ? `&legislationId=${encodeURIComponent(row[R_LEGIS])}` : '');
       const status = statuses[row[R_STATUS]] || '';
       const meta = [status, fmtDay(row[R_DATE])].filter(Boolean).join(' · ');
       // The official legis.ga.gov record stays one click away, as on the Key Votes
@@ -1351,9 +1373,17 @@
       const official = row[R_LEGIS]
         ? ` <a class="spon-official" href="https://www.legis.ga.gov/legislation/${encodeURIComponent(row[R_LEGIS])}" target="_blank" rel="noopener">legis.ga.gov ↗</a>`
         : '';
+      // The bill text itself, direct. Without it, reading a bill this member
+      // sponsored costs a hop through ga-bills.html purely to reach the same PDF.
+      // Rebuilt the same way: per-session segment from the index, document id from
+      // the row (see split_text_url in the build script).
+      const docSeg = sessionDocSeg[sid];
+      const text = (docSeg && row[R_DOC])
+        ? ` <a class="spon-text" href="https://www.legis.ga.gov/api/legislation/document/${encodeURIComponent(docSeg)}/${encodeURIComponent(row[R_DOC])}" target="_blank" rel="noopener">&#128196; text &#8599;</a>`
+        : '';
       return `<li class="spon-item${hidden ? ' spon-hidden' : ''}">
           <a class="spon-id" href="${escHtml(href)}">${escHtml(row[R_ID] || '')}</a>
-          <span class="spon-title">${escHtml(row[R_TITLE] || '')}</span>${official}
+          <span class="spon-title">${escHtml(row[R_TITLE] || '')}</span>${official}${text}
           ${meta ? `<div class="spon-meta">${escHtml(meta)}</div>` : ''}
         </li>`;
     }
@@ -1363,10 +1393,10 @@
     // jump. The heaviest list is ~290 bills, far short of the ~5,000 nodes that forced
     // the voting table into real paging.
     let listSeq = 0;
-    function listHtml(bills) {
+    function listHtml(bills, sid) {
       const sorted = [...bills].sort(byRecency);
       const key = 'sponList' + (++listSeq);
-      const rows = sorted.map((b, i) => itemHtml(b, i >= SPON_INITIAL)).join('');
+      const rows = sorted.map((b, i) => itemHtml(b, i >= SPON_INITIAL, sid)).join('');
       const more = sorted.length > SPON_INITIAL
         ? `<button type="button" class="spon-more" data-spon-more="${key}">Show all ${sorted.length} bills</button>`
         : '';
@@ -1385,7 +1415,7 @@
         const head = ids.length > 1
           ? `<h4 class="spon-session">${escHtml(sessionNames[sid] || sid)} <span>(${bucket[sid].length})</span></h4>`
           : '';
-        return head + listHtml(bucket[sid]);
+        return head + listHtml(bucket[sid], sid);
       }).join('');
       return `<div class="spon-group">
           <h3 class="spon-group-head">${escHtml(label)} <span>${total}</span></h3>

@@ -129,6 +129,8 @@ Fetched weekly from the Georgia General Assembly's official web service (`webser
 | `billUrl` | Link to the bill on legis.ga.gov |
 | `textUrl` | Link to the bill text (PDF, where available) |
 
+**"What it does":** The bill cards on [Georgia Bills](/ga-bills) lead with a trimmed form of the `abstract` rather than the raw field. A Georgia caption is written to a fixed shape — the Code citation first ("A BILL to be entitled an Act to amend Part 3 of Article 4 of Chapter 11 of Title 16 of the Official Code of Georgia Annotated, relating to carrying and possession of firearms, so as to…"), then what the bill does, then clauses nearly every bill repeats ("to provide for related matters; to repeal conflicting laws; and for other purposes"). We cut the citation and the boilerplate and show the middle. Nothing is added, reworded, summarized or interpreted: it is the legislature's own wording with two known-boilerplate ends removed, which is why the untouched caption stays on the same card under **Official caption**. Captions are stored up to 500 characters, so a trimmed caption that hit that limit ends in an ellipsis — the bill text itself is linked from every card.
+
 **Governor's Action:** Georgia bills that pass both chambers are sent to the Governor, who signs, vetoes, or lets a bill become law without signature. The `governorAction` field is derived from the bill's official legis.ga.gov status history — the "Sent to Governor", "Date Signed by Governor" / "Act N", and veto status entries — plus the act/veto number.
 
 ```
