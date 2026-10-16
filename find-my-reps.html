@@ -54,6 +54,15 @@ css:
   }
   .fmr-btn-secondary { background:#fff; color:#1a56a8; border:1px solid #1a56a8; }
   .fmr-group-note { font-size:0.85rem; color:#555; margin:0 0 0.75rem; }
+  .fmr-carry {
+    margin-top:0.9rem; padding:0.6rem 0.8rem; font-size:0.88rem;
+    background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; color:#1e3a8a;
+    display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;
+  }
+  .fmr-carry button {
+    padding:0.25rem 0.7rem; font-size:0.82rem; cursor:pointer;
+    background:#fff; color:#1e3a8a; border:1px solid #1e3a8a; border-radius:6px;
+  }
 </style>
 
 <div class="fmr-lookup">
@@ -82,6 +91,9 @@ css:
     </select>
     <button id="fmrCountyBtn" class="fmr-btn fmr-btn-secondary" type="button">Show county reps</button>
   </div>
+
+  {%- comment -%} Filled by JS when a location resolved earlier this visit is reused. {%- endcomment -%}
+  <div id="fmrCarry" class="fmr-carry" hidden></div>
 
   <div id="fmrStatus" class="fmr-status" role="status" aria-live="polite"></div>
   <div id="fmrResults" class="fmr-results"></div>
@@ -125,6 +137,8 @@ css:
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} County → district maps (COUNTY_US_HOUSE_DISTRICTS, COUNTY_SENATE_DISTRICTS, COUNTY_HOUSE_DISTRICTS) for the county fallback. {%- endcomment -%}
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} Per-tab carry-over of a location resolved on another page this visit. {%- endcomment -%}
+<script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
 (function () {
   'use strict';
@@ -291,13 +305,15 @@ css:
   var busy = false;
   // Both lookups share the data fetches, the busy latch and the error handling;
   // only how they arrive at a set of districts differs.
-  function run(method, locPromise) {
+  function run(method, locPromise, working) {
     if (busy) return;
     busy = true;
     btn.disabled = true;
     countyBtn.disabled = true;
     out.innerHTML = '';
-    status.textContent = 'Looking up your districts…';
+    // A carried-over location needs no geocoder round trip, so saying "Looking up
+    // your districts" would misdescribe what is happening.
+    status.textContent = working || 'Looking up your districts…';
     status.className = 'fmr-status';
 
     Promise.all([locPromise, loadJson(FED_URL), loadJson(GA_URL)])
@@ -334,7 +350,15 @@ css:
       return;
     }
     // SampleBallot.geocodeAddress: address -> { county, usHouse, stateHouse, stateSenate }.
-    run('address', window.SampleBallot.geocodeAddress(addr).then(normalizeAddressLoc));
+    run('address', window.SampleBallot.geocodeAddress(addr).then(function (loc) {
+      // Save the geocoder's own scalar shape — one district per chamber — which is
+      // what the sample ballot and the candidate finder read. Never the address
+      // itself: voter-location.js persists only the derived districts, which is
+      // the promise the privacy note above makes.
+      if (window.VoterLocation) window.VoterLocation.save(loc);
+      hideCarry();
+      return normalizeAddressLoc(loc);
+    }));
   }
 
   function lookupCounty() {
@@ -348,17 +372,31 @@ css:
     // county→district tables. A county is not a district: Fulton alone spans
     // more than a dozen state House seats, so the result is a superset and
     // render() says so.
+    // Carry the county over as the shared county-only shape (districts null), the
+    // same thing locationFromCounty() produces. Saving this page's district
+    // ARRAYS would corrupt it for the other readers, whose banners format
+    // `stateHouse` as a single number and would print "State House 57,58,59".
+    if (window.VoterLocation) {
+      window.VoterLocation.save(window.SampleBallot && window.SampleBallot.locationFromCounty
+        ? window.SampleBallot.locationFromCounty(county)
+        : { source: 'county', county: county, usHouse: null, stateHouse: null, stateSenate: null });
+    }
+    hideCarry();
+    run('county', Promise.resolve(countyLoc(county)));
+  }
+
+  function countyLoc(county) {
     var byCounty = function (map) {
       return ((typeof map !== 'undefined' && map[county]) || []).slice().sort(function (a, b) { return a - b; });
     };
-    run('county', Promise.resolve({
+    return {
       source: 'county',
       matchedAddress: null,
       county: county,
       usHouse: byCounty(typeof COUNTY_US_HOUSE_DISTRICTS !== 'undefined' ? COUNTY_US_HOUSE_DISTRICTS : {}),
       stateSenate: byCounty(typeof COUNTY_SENATE_DISTRICTS !== 'undefined' ? COUNTY_SENATE_DISTRICTS : {}),
       stateHouse: byCounty(typeof COUNTY_HOUSE_DISTRICTS !== 'undefined' ? COUNTY_HOUSE_DISTRICTS : {}),
-    }));
+    };
   }
 
   // Without ga-districts.js there are no county→district tables, so the control
@@ -380,7 +418,55 @@ css:
     countySel.appendChild(frag);
   }
 
+  var carry = document.getElementById('fmrCarry');
+  function hideCarry() { carry.hidden = true; carry.innerHTML = ''; }
+
+  // A location resolved earlier this visit — on the sample ballot, the candidate
+  // finder, or here — is reused so the voter does not retype. Only the derived
+  // districts are stored, never the address, so the address box stays empty and
+  // the banner says where the result came from rather than implying we kept it.
+  function restoreCarried() {
+    if (!window.VoterLocation) return;
+    var stored = window.VoterLocation.load();
+    if (!stored) return;
+
+    var loc = null, where = '';
+    if (stored.source === 'address'
+        && (stored.usHouse != null || stored.stateSenate != null || stored.stateHouse != null)) {
+      loc = normalizeAddressLoc(stored);
+      var parts = [];
+      if (stored.stateHouse  != null) parts.push('State House ' + stored.stateHouse);
+      if (stored.stateSenate != null) parts.push('State Senate ' + stored.stateSenate);
+      if (stored.usHouse     != null) parts.push('U.S. House ' + stored.usHouse);
+      where = parts.join(' · ');
+    } else if (stored.source === 'county' && stored.county
+               && typeof COUNTY_HOUSE_DISTRICTS !== 'undefined' && COUNTY_HOUSE_DISTRICTS[stored.county]) {
+      loc = countyLoc(stored.county);
+      countySel.value = stored.county;
+      where = stored.county + ' County';
+    }
+    if (!loc) return;
+
+    carry.innerHTML = '<span>Using the districts you looked up earlier this visit: <strong>'
+      + esc(where) + '</strong>. Your address was not saved — enter it again to re-check.</span>'
+      + '<button type="button" id="fmrCarryClear">Start over</button>';
+    carry.hidden = false;
+    document.getElementById('fmrCarryClear').addEventListener('click', function () {
+      window.VoterLocation.clear();
+      countySel.value = '';
+      input.value = '';
+      out.innerHTML = '';
+      status.textContent = '';
+      status.className = 'fmr-status';
+      hideCarry();
+    });
+
+    run(stored.source === 'address' ? 'carried_address' : 'carried_county', Promise.resolve(loc),
+        'Loading your representatives…');
+  }
+
   populateCounties();
+  restoreCarried();
   btn.addEventListener('click', lookup);
   countyBtn.addEventListener('click', lookupCounty);
   input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); lookup(); } });
