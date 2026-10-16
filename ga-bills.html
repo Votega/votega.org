@@ -386,9 +386,13 @@ breadcrumb:
 
 <div id="billsStats" class="bills-stats" style="display:none"></div>
 
-<div id="billsLoading" class="bills-loading">
-  {%- comment -%} Server-rendered fallback; JS hides #billsLoading on load. See scripts/build_render_data.py {%- endcomment -%}
-  {%- assign r = site.data.rendered.ga_bills -%}
+{%- comment -%}
+  Server-rendered fallback; JS hides #billsLoading on a SUCCESSFUL load only. See
+  scripts/build_render_data.py. data-fallback tells the script whether there is a
+  real bill list underneath worth keeping when the fetch fails.
+{%- endcomment -%}
+{%- assign r = site.data.rendered.ga_bills -%}
+<div id="billsLoading" class="bills-loading" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}">
   {%- if r and r.rows -%}
     {% include data-freshness.html data=r noun="bills" %}
     <ul style="list-style:none;padding:0;margin:0;text-align:left;">
@@ -1290,10 +1294,18 @@ breadcrumb:
       jumpToBillFromURL();
     })
     .catch(function (err) {
-      elLoading.style.display = 'none';
-      elError.textContent     = 'Could not load bill data. ' + err.message;
-      elError.style.display   = '';
+      // Keep the server-rendered bill list when there is one: a short list of
+      // real bills beats an error message. The HTTP detail goes to the console,
+      // not to a reader who cannot act on it.
       console.error('ga-bills: fetch failed', err);
+      if (elLoading.dataset.fallback === '1') {
+        elError.textContent = 'The full, searchable list could not be loaded just now. '
+          + 'The most recent bills we published are shown below.';
+      } else {
+        elLoading.style.display = 'none';
+        elError.textContent = 'Bill data could not be loaded. Please try again later.';
+      }
+      elError.style.display = '';
     });
 }());
 </script>

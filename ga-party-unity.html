@@ -203,9 +203,13 @@ members, from the same roll-call record behind each member's page.</p>
         <th class="pu-hide-sm">Participation</th>
       </tr>
     </thead>
-    <tbody id="pu-rows">
-      {%- comment -%} Server-rendered fallback; JS overwrites #pu-rows. See scripts/build_render_data.py {%- endcomment -%}
-      {%- assign r = site.data.rendered.ga_party_unity -%}
+    {%- comment -%}
+      Server-rendered fallback; JS overwrites #pu-rows on a SUCCESSFUL load only.
+      See scripts/build_render_data.py. data-fallback tells the script whether
+      these rows are real, so a failed fetch does not blank them.
+    {%- endcomment -%}
+    {%- assign r = site.data.rendered.ga_party_unity -%}
+    <tbody id="pu-rows" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}">
       {%- if r and r.rows -%}
         {%- if r.updated -%}<tr><td colspan="6" style="color:#6b7280;font-size:.85rem;">Last updated {% if r.updatedISO %}<time datetime="{{ r.updatedISO }}">{{ r.updated }}</time>{% else %}{{ r.updated }}{% endif %}{% if r.count %} · {{ r.count }} members{% endif %}</td></tr>{%- endif -%}
         {%- for m in r.rows -%}
@@ -237,6 +241,7 @@ members, from the same roll-call record behind each member's page.</p>
       : SCORECARD_REPO;
   }
   var members = [];
+  var dataLoaded = false;
   var byId = {};
   var state = { sort: 'independence', chamber: 'all', party: 'all', min: 25 };
   var highlightId = null;
@@ -286,6 +291,11 @@ members, from the same roll-call record behind each member's page.</p>
   }
 
   function render() {
+    // The sort/chamber/party controls are bound before the fetch resolves, so a
+    // click after a failed load would otherwise re-render an empty list over the
+    // server-rendered fallback and blank the table — the very thing the catch
+    // below now avoids. Until real data is in hand there is nothing to re-render.
+    if (!dataLoaded) return;
     var s = SORTS[state.sort];
     $('pu-metric-head').textContent = s.head;
     // The filter applies to whichever sample the active metric uses, so the
@@ -428,6 +438,7 @@ members, from the same roll-call record behind each member's page.</p>
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) {
       members = data.members || [];
+      dataLoaded = members.length > 0;
       members.forEach(function (m) {
         byId[m.id] = m;
         if (!(chamberMax[m.chamber] >= m.totalRollCalls)) chamberMax[m.chamber] = m.totalRollCalls;
@@ -459,10 +470,19 @@ members, from the same roll-call record behind each member's page.</p>
       render();
     })
     .catch(function (err) {
-      $('pu-rows').innerHTML = '<tr><td colspan="6" style="padding:1.5rem;color:#a00;">'
-        + 'Could not load the scorecard data. If this persists, the daily data workflow may not have run yet.</td></tr>';
-      $('pu-count').textContent = '';
+      // Preserve the server-rendered rows rather than blanking the table, and
+      // say it in terms a reader can act on — "the daily data workflow may not
+      // have run yet" described our pipeline, not their problem.
       console.warn('scorecard load failed:', err);
+      var rows = $('pu-rows');
+      if (rows.dataset.fallback === '1') {
+        $('pu-count').innerHTML = 'The sortable scorecard could not be loaded just now. '
+          + 'The figures we last published are shown below.';
+      } else {
+        rows.innerHTML = '<tr><td colspan="6" style="padding:1.5rem;color:#a00;">'
+          + 'The scorecard could not be loaded. Please try again later.</td></tr>';
+        $('pu-count').textContent = '';
+      }
     });
 })();
 </script>
