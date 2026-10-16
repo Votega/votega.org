@@ -15,7 +15,7 @@ VoteGA exists to close that gap. Everything on the site is built from official, 
 
 ## How your legislators actually voted
 
-Every roll-call vote in the Georgia General Assembly is public, but almost nobody reads floor votes bill by bill. We do it for you. Look up your Georgia state Senator or Representative and you can see the individual votes behind the headlines.
+Every roll-call vote in the Georgia General Assembly is public, but almost nobody reads floor votes bill by bill. We do it for you. Look up your Georgia State Senator or Representative and you can see the individual votes behind the headlines.
 
 Two tools that help: 
 
