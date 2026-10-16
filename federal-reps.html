@@ -46,6 +46,31 @@ Many counties are served by multiple districts, and some districts serve multipl
   .tab-btn:hover { color: #1a56a8; }
   .tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
 
+  /* Address lookup. Mirrors the control on find-my-reps.html, which uses the
+     same Census geocoder; the class prefix is local so the two pages' styles
+     cannot drift into each other. */
+  .frp-lookup { margin: 1.25rem 0 0.25rem 0; }
+  .frp-label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; font-weight: 600; }
+  .frp-row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+  .frp-input { flex: 1 1 320px; padding: 8px; box-sizing: border-box; }
+  .frp-btn {
+    padding: 8px 1.1rem; cursor: pointer; border-radius: 6px;
+    background: #1a56a8; color: #fff; border: 1px solid #1a56a8; font-size: 0.9rem;
+  }
+  .frp-btn:disabled { opacity: 0.6; cursor: default; }
+  .frp-privacy { margin: 0.4rem 0 0 0; font-size: 0.78rem; color: #666; }
+  .frp-status { margin-top: 0.5rem; font-size: 0.88rem; color: #444; min-height: 1.2em; }
+  .frp-status[data-state="error"] { color: #c00; }
+
+  #lookupNote:not(:empty) {
+    margin: 0.75rem 0 0 0; padding: 0.6rem 0.9rem; font-size: 0.88rem;
+    background: #eef4ff; border: 1px solid #c7d9f7; border-radius: 6px;
+  }
+  .lookup-reset {
+    margin-left: 0.4rem; padding: 0.15rem 0.6rem; font-size: 0.8rem; cursor: pointer;
+    background: #fff; color: #1a56a8; border: 1px solid #1a56a8; border-radius: 6px;
+  }
+
   .county-filter { margin: 1rem 0 0.5rem 0; max-width: 400px; }
   .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; }
   .county-filter select { width: 100%; padding: 8px; box-sizing: border-box; }
@@ -96,6 +121,18 @@ Many counties are served by multiple districts, and some districts serve multipl
   }
 </style>
 
+<div class="frp-lookup">
+  <label class="frp-label" for="frpAddress">Enter your address to find your district</label>
+  <div class="frp-row">
+    <input type="text" id="frpAddress" class="frp-input"
+           placeholder="123 Peachtree St NE, Atlanta, GA 30303"
+           autocomplete="street-address" />
+    <button id="frpBtn" class="frp-btn" type="button">Find my district</button>
+  </div>
+  <p class="frp-privacy">Your address is sent only to the U.S. Census geocoder to look up your district. VoteGA does not store it.</p>
+  <div id="frpStatus" class="frp-status" role="status" aria-live="polite"></div>
+</div>
+
 <div class="tab-bar" id="tabBar" role="tablist" aria-label="Chamber"
      data-tabs data-tab-panel="#membersOutput">
   <button class="tab-btn active" data-tab="house">U.S. House</button>
@@ -110,6 +147,7 @@ Many counties are served by multiple districts, and some districts serve multipl
 </div>
 
 <div class="msg" id="status" role="alert"></div>
+<div id="lookupNote"></div>
 <div id="membersOutput"></div>
 
 <p id="dataStamp" class="data-stamp"></p>
@@ -119,6 +157,89 @@ Many counties are served by multiple districts, and some districts serve multipl
 <!-- ga-districts.js supplies the full GA seat list so vacant districts still render -->
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="assets/scripts/ga-districts.js"></script>
+{%- comment -%}
+  Reuses the tested Census geocoder from the sample-ballot module (address ->
+  county + district, via JSONP). It defines no DOM handlers of its own, so it is
+  safe to load on a page that has no ballot UI. voter-location.js carries a
+  location resolved elsewhere this visit (e.g. on find-my-reps) into this page.
+{%- endcomment -%}
+<script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="assets/scripts/congress.js"></script> <!-- Call congress.js script-->
+
+<script>
+(function () {
+  'use strict';
+  var input  = document.getElementById('frpAddress');
+  var btn    = document.getElementById('frpBtn');
+  var status = document.getElementById('frpStatus');
+  var countySel = document.getElementById('countySelect');
+  if (!input || !btn || !window.FederalReps) return;
+
+  function say(msg, isError) {
+    status.textContent = msg || '';
+    if (isError) status.setAttribute('data-state', 'error');
+    else status.removeAttribute('data-state');
+  }
+
+  // Applies a resolved location to the page's existing controls: the county
+  // dropdown is set so the fallback view is already correct if the voter clears
+  // the district filter, and the exact district narrows the list to one row.
+  // Setting countySel.value in script fires no 'change' event, so this does not
+  // trip the handler that clears the district filter.
+  function apply(loc, label) {
+    if (!loc) return;
+    if (countySel && loc.county) {
+      var match = Array.prototype.find.call(countySel.options, function (o) {
+        return o.value.toLowerCase() === String(loc.county).toLowerCase();
+      });
+      if (match) countySel.value = match.value;
+    }
+    if (loc.usHouse != null) {
+      window.FederalReps.setExactDistrict(loc.usHouse, label);
+      say('');
+    } else {
+      // Census found the address but returned no congressional layer. The county
+      // filter above is already set, so the page still narrows -- just not to one
+      // district. Saying so beats leaving the voter to wonder.
+      window.FederalReps.setExactDistrict(null);
+      say(loc.county
+        ? 'We found that address but could not tell which congressional district it is in. '
+          + 'Showing every district that touches ' + loc.county + ' County.'
+        : 'We found that address but could not tell which district it is in.', true);
+    }
+  }
+
+  function lookup() {
+    var address = (input.value || '').trim();
+    if (!address) { say('Enter your address first.', true); input.focus(); return; }
+    btn.disabled = true;
+    say('Looking up your district\u2026');
+    window.SampleBallot.geocodeAddress(address).then(function (loc) {
+      apply(loc, loc.matchedAddress || address);
+      // Districts and county only -- never the street address. See voter-location.js.
+      if (window.VoterLocation) window.VoterLocation.save(loc);
+    }).catch(function (err) {
+      window.FederalReps.setExactDistrict(null);
+      say((err && err.message) || 'That address could not be looked up.', true);
+    }).then(function () {
+      btn.disabled = false;
+    });
+  }
+
+  btn.addEventListener('click', lookup);
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); lookup(); }
+  });
+
+  // A location resolved on another page this visit. The raw address is never
+  // stored, so the note says "your earlier address lookup" rather than echoing
+  // one back.
+  if (window.VoterLocation) {
+    var carried = window.VoterLocation.load();
+    if (carried && carried.source === 'address') apply(carried, null);
+  }
+})();
+</script>
 
 <script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
