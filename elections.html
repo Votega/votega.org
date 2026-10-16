@@ -274,6 +274,7 @@ breadcrumb:
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <!-- sample-ballot.js is pure function definitions (no side effects on load); we use its
      exported geocodeAddress() so address→district logic lives in one place. -->
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -659,34 +660,35 @@ breadcrumb:
     syncURL();
   }
 
-  async function lookupAddress() {
-    const addr = addressInput.value.trim();
-    addressError.textContent = '';
-    if (!addr) { addressError.textContent = 'Enter your address, or use the county filter below.'; return; }
-    if (!(window.SampleBallot && window.SampleBallot.geocodeAddress)) {
-      addressError.textContent = 'Address lookup is unavailable right now — use the county filter below.';
-      return;
-    }
-    addressBtn.disabled = true;
-    addressBtn.textContent = 'Looking up…';
-    try {
-      const loc = await window.SampleBallot.geocodeAddress(addr);
+  // The chrome around the geocoder -- ZIP guard, busy latch, error passthrough,
+  // outcome events -- lives in address-lookup.js, so this page keeps only what
+  // it does with a resolved location. Before the extraction this page had
+  // neither the ZIP guard nor an outcome event; both arrive with the module.
+  const addressLookup = window.AddressLookup.createAddressLookup({
+    input: addressInput,
+    button: addressBtn,
+    subject: 'your districts',
+    fallbackPhrase: 'use the county filter below',
+    eventName: 'races_lookup',
+    eventParams: { page: 'elections' },
+    setStatus: (message, isError) => { addressError.textContent = isError ? message : ''; },
+    // This page swaps the button's label as well as disabling it, so it owns the
+    // latch rather than taking the module's default.
+    setBusy: (busy) => {
+      addressBtn.disabled = busy;
+      addressBtn.textContent = busy ? 'Looking up…' : 'Find my districts';
+    },
+    onResolve: (loc) => {
       countySelect.value = '';                          // an exact address supersedes a county pick
       voterLoc = loc;
-      if (window.VoterLocation) window.VoterLocation.save(loc);  // carry over to other pages this visit
       renderVoterBanner();
       renderRaces();
       syncURL();
-    } catch (err) {
-      addressError.textContent = err.message || 'Address lookup failed. Use the county filter below.';
-    } finally {
-      addressBtn.disabled = false;
-      addressBtn.textContent = 'Find my districts';
-    }
-  }
+    },
+  });
 
-  addressBtn.addEventListener('click', lookupAddress);
-  addressInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); lookupAddress(); } });
+  addressBtn.addEventListener('click', () => addressLookup.run());
+  addressInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addressLookup.run(); } });
 
   // Phase toggle handler
   document.getElementById('phaseToggle').addEventListener('click', e => {
