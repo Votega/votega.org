@@ -35,6 +35,47 @@ const membersOut  = document.getElementById('membersOutput');
 let allMembers = [];
 let activeTab  = 'house'; // 'house' | 'senate'
 
+// Set by an address lookup (see federal-reps.html): the one U.S. House district
+// the Census geocoder placed the address in. null means no address filter, which
+// is also what every other control resets it to -- picking a county or switching
+// chambers is the voter saying "show me something else", so the narrowed view
+// must not survive it.
+let exactDistrict = null;
+let exactNote     = '';   // already-escaped HTML, or '' for no note
+
+const lookupNote = document.getElementById('lookupNote');
+
+function escHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+// Narrow the list to one district. `label` is the matched address, shown so the
+// voter can see which address the geocoder actually resolved -- it is echoed
+// back into the page, so it is escaped here rather than trusted.
+function setExactDistrict(district, label) {
+  exactDistrict = Number.isInteger(district) ? district : null;
+  if (exactDistrict == null) {
+    exactNote = '';
+  } else {
+    exactNote = `Showing <strong>District ${exactDistrict}</strong>`
+      + (label ? ` for <strong>${escHtml(label)}</strong>` : ' from your earlier address lookup')
+      + '. <button type="button" class="lookup-reset" id="lookupReset">Show all districts</button>';
+  }
+  renderMembers();
+}
+
+function clearExactDistrict() {
+  if (exactDistrict == null) return;
+  exactDistrict = null;
+  exactNote = '';
+}
+
+if (typeof window !== 'undefined') {
+  window.FederalReps = { setExactDistrict, clearExactDistrict };
+}
+
 if (countySel && typeof COUNTY_US_HOUSE_DISTRICTS !== 'undefined') {
   Object.keys(COUNTY_US_HOUSE_DISTRICTS).sort().forEach(county => {
     const opt = document.createElement('option');
@@ -58,6 +99,14 @@ function renderMembers() {
   const county      = countySel ? countySel.value : '';
   const chamberName = activeTab === 'senate' ? 'Senate' : 'House of Representatives';
   const basePath    = getBasePath();
+
+  // The Senate tab has no districts -- both senators represent the whole state --
+  // so an address filter is meaningless there. exactDistrict is left set rather
+  // than cleared, so switching back to the House tab keeps the lookup the voter
+  // just did. Resolved here, above the Senate branch's early return, because a
+  // note written only on the House path would stay on screen after that return.
+  const exact = activeTab === 'house' ? exactDistrict : null;
+  if (lookupNote) lookupNote.innerHTML = exact != null ? exactNote : '';
 
   const members = allMembers.filter(m => {
     const terms = m.terms?.item || m.terms || [];
@@ -119,6 +168,8 @@ function renderMembers() {
     ordered = ordered.filter(d => countyDistricts.has(d));
   }
 
+  if (exact != null) ordered = ordered.filter(d => d === exact);
+
   if (!ordered.length) {
     membersOut.innerHTML = `<p class="empty-note">No House district found${county ? ` for ${county} County` : ''}.</p>`;
     return;
@@ -159,10 +210,23 @@ tabBar.addEventListener('click', e => {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
   updateCountyVisibility();
   if (countySel) countySel.value = '';
+  clearExactDistrict();
   renderMembers();
 });
 
-if (countySel) countySel.addEventListener('change', renderMembers);
+if (countySel) countySel.addEventListener('change', () => {
+  clearExactDistrict();
+  renderMembers();
+});
+
+// "Show all districts" inside the note. Delegated: the note is re-rendered on
+// every pass, so a listener bound to the button itself would not survive.
+if (lookupNote) lookupNote.addEventListener('click', e => {
+  if (!e.target.closest('#lookupReset')) return;
+  if (countySel) countySel.value = '';
+  clearExactDistrict();
+  renderMembers();
+});
 updateCountyVisibility();
 
 async function loadData() {

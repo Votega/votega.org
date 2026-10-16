@@ -82,6 +82,8 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} Shared chrome around the geocoder; see assets/scripts/address-lookup.js. {%- endcomment -%}
+<script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
 (function () {
@@ -244,36 +246,29 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
     statusEl.className = 'ballot-status' + (isError ? ' error' : '');
   }
 
-  async function lookupAddress() {
-    const addr = addressInput.value.trim();
-    if (!addr) { setStatus('Enter your address, or choose a county above.', true); return; }
-    // A ZIP alone can't pin down districts (one ZIP often spans several), and the
-    // geocoder just reports "not found" for it — so explain instead of making a
-    // pointless request.
-    if (/^\d{5}(-\d{4})?$/.test(addr)) {
-      setStatus('A ZIP code alone isn’t enough to find your districts. Enter your full street address, or choose your county above.', true);
-      resultsEl.innerHTML = '';
-      window.vgTrack && window.vgTrack('ballot_lookup', { method: 'address', outcome: 'zip_only' });
-      return;
-    }
-    setStatus('Looking up your districts…', false);
-    resultsEl.innerHTML = '';
-    addressBtn.disabled = true;
-    try {
-      const loc = await window.SampleBallot.geocodeAddress(addr);
+  // The chrome around the geocoder -- the ZIP guard, the busy latch, the
+  // geocoder's error text and the outcome event -- lives in address-lookup.js,
+  // shared with find-my-reps, elections and federal-reps. This page keeps only
+  // what it does with a resolved location.
+  const addressLookup = window.AddressLookup.createAddressLookup({
+    input: addressInput,
+    button: addressBtn,
+    setStatus: setStatus,
+    subject: 'your districts',
+    fallbackPhrase: 'choose a county above',
+    eventName: 'ballot_lookup',
+    // A stale ballot must not sit under a "Looking up…" status, nor under the
+    // message explaining why a bare ZIP was refused.
+    onStart: function () { resultsEl.innerHTML = ''; },
+    onRefuse: function () { resultsEl.innerHTML = ''; },
+    onResolve: function (loc) {
       lastLoc = loc;
-      if (window.VoterLocation) window.VoterLocation.save(loc);  // carry over to other pages this visit
       setStatus('', false);
       render(buildBallot(loc));
-      // Outcome + method only — never the address or resolved districts.
-      window.vgTrack && window.vgTrack('ballot_lookup', { method: 'address', outcome: 'success' });
-    } catch (err) {
-      setStatus(err.message || 'Address lookup failed. Try your county above.', true);
-      window.vgTrack && window.vgTrack('ballot_lookup', { method: 'address', outcome: 'error' });
-    } finally {
-      addressBtn.disabled = false;
-    }
-  }
+    },
+  });
+
+  function lookupAddress() { addressLookup.run(); }
 
   function lookupCounty() {
     const county = countySelect.value;
