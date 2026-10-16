@@ -210,18 +210,38 @@ Many counties are served by multiple districts, and some districts serve multipl
     }
   }
 
+  // Outcome only -- never the address, the coordinates, or the resolved district.
+  // `page` keeps this page separable from find-my-reps, which reports the same
+  // event name for the same user intent. Both values are author-set enums.
+  function track(outcome) {
+    if (window.vgTrack) {
+      window.vgTrack('reps_lookup', { method: 'address', outcome: outcome, page: 'federal_reps' });
+    }
+  }
+
   function lookup() {
     var address = (input.value || '').trim();
     if (!address) { say('Enter your address first.', true); input.focus(); return; }
+    // A ZIP alone can't pin down a district -- one ZIP often spans several -- and
+    // the geocoder just reports "not found", so explain rather than make a
+    // pointless request. Mirrors find-my-reps.html and sample-ballot.html.
+    if (/^\d{5}(-\d{4})?$/.test(address)) {
+      window.FederalReps.setExactDistrict(null);
+      say('A ZIP code alone isn\u2019t enough to find your district. Enter your full street address, or pick your county below.', true);
+      track('zip_only');
+      return;
+    }
     btn.disabled = true;
     say('Looking up your district\u2026');
     window.SampleBallot.geocodeAddress(address).then(function (loc) {
       apply(loc, loc.matchedAddress || address);
       // Districts and county only -- never the street address. See voter-location.js.
       if (window.VoterLocation) window.VoterLocation.save(loc);
+      track(loc && loc.usHouse != null ? 'success' : 'no_district');
     }).catch(function (err) {
       window.FederalReps.setExactDistrict(null);
       say((err && err.message) || 'That address could not be looked up.', true);
+      track('error');
     }).then(function () {
       btn.disabled = false;
     });
