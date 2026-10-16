@@ -217,7 +217,7 @@ So a candidate is keyed on their **campaign filing** — a PeachFile filer entit
 
 Keying on the filing also dedupes correctly: three sitting statewide executives are on the 2026 governor's ballot, and their candidate rows resolve to the same filing as their officeholder record, so the candidacy attaches to the existing person instead of creating a second one.
 
-**Committees follow the office sought, not the office held.** A campaign committee is registered against the office a candidate is seeking, and PeachFile files it that way. So a sitting state representative running for the Senate has their committee under the Senate seat, not the House one. The crosswalk matches against the office sought first and falls back to the seat currently held.
+**Committees follow the office sought, not the office held.** A campaign committee is registered against the office a candidate is seeking, and PeachFile files it that way. So a sitting State Representative running for the Senate has their committee under the Senate seat, not the House one. The crosswalk matches against the office sought first and falls back to the seat currently held.
 
 **Where one person has two filings.** Because PeachFile registers a committee per office, someone seeking two offices in a cycle has two filer entity IDs — Georgia's 2026 ballot contains such a case. Those are merged onto one person only by an explicit, documented decision recorded in a public overrides file, never inferred from a name match.
 

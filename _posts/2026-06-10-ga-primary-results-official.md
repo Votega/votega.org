@@ -59,7 +59,7 @@ The six Republican runoffs spanning Senator, Governor, Lt. Governor, Secretary o
 
 #### But the Aggregate Total Across All Races Tells a Different Story
 
-When summing every race, including hundreds of state House and Senate districts, Republicans show more total raw votes statewide (19.1M vs. 16.2M, 54% to 46%). This is notable because Democrats actually fielded more candidates (383 vs. 334), meaning the Republican vote advantage cannot simply be explained by Republicans contesting more races unopposed.
+When summing every race, including hundreds of State House and Senate districts, Republicans show more total raw votes statewide (19.1M vs. 16.2M, 54% to 46%). This is notable because Democrats actually fielded more candidates (383 vs. 334), meaning the Republican vote advantage cannot simply be explained by Republicans contesting more races unopposed.
 
 What this likely reflects instead: Republicans are running in higher-turnout local districts... safe, heavily Republican suburban and rural seats where primary participation is historically strong, while Democratic candidates are distributed across a wider mix of districts with lower average turnout. The math bears this out: Republicans averaged roughly 57,100 votes per candidate, compared to 42,300 per candidate for Democrats.
 
@@ -76,7 +76,7 @@ The data here shows that significantly more Democratic voters crossed that thres
 #### Why It's Concentrated at the Top of the Ticket
 The phrase "concentrated at the top of the ticket" captures something specific and important: the Democratic advantage doesn't appear to be driven by superior local party organization or grassroots district-level mobilization. If it were, you'd expect Democrats to also outperform in aggregate vote totals across all races and they don't. Republicans average roughly 57,100 votes per candidate versus 42,300 for Democrats.
 
-What this pattern suggests is that Democratic voters are being drawn to the ballot primarily by the high-profile statewide races (Senate, Governor, Attorney General) and that motivation diminishes down the ballot. Republican voters, by contrast, appear to have a more evenly distributed, locally-rooted participation base: they show up for their state house representative, their state senator, their local PSC race at consistent levels, even without the same top-of-ticket energy.
+What this pattern suggests is that Democratic voters are being drawn to the ballot primarily by the high-profile statewide races (Senate, Governor, Attorney General) and that motivation diminishes down the ballot. Republican voters, by contrast, appear to have a more evenly distributed, locally-rooted participation base: they show up for their State House representative, their State Senator, their local PSC race at consistent levels, even without the same top-of-ticket energy.
 
 This is actually a meaningful structural difference. It means:
 

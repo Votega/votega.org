@@ -10,7 +10,7 @@ VoteGA brings Georgia voter information together in one place: who represents yo
 
 ## Find who represents you
 
-- [Find Your Georgia State Legislator]({{ '/ga-state-reps' | relative_url }}) looks up your state House and Senate members, with committees and contact information.
+- [Find Your Georgia State Legislator]({{ '/ga-state-reps' | relative_url }}) looks up your State House and Senate members, with committees and contact information.
 - [Find Your U.S. Representative]({{ '/federal-reps' | relative_url }}) does the same for Georgia's members of Congress.
 - [Find My Reps]({{ '/find-my-reps' | relative_url }}) finds all of your representatives from your address.
 

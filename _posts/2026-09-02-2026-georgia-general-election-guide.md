@@ -41,7 +41,7 @@ Want the bigger picture first? The [2026 Elections hub]({{ '/elections' | relati
 
 It's easy to fill in the top of the ticket and guess the rest. VoteGA is built to make the rest easy too:
 
-- **[Find My Reps]({{ '/find-my-reps' | relative_url }})** — enter your address and see everyone who represents you, from your U.S. Senators down to your state House member.
+- **[Find My Reps]({{ '/find-my-reps' | relative_url }})** — enter your address and see everyone who represents you, from your U.S. Senators down to your State House member.
 - **[Federal delegation]({{ '/federal-reps' | relative_url }})** — Georgia's U.S. Senators and all 14 U.S. House members, with their records.
 - **Incumbent records** — for the people already in office, you can see how they've actually voted and what they've done. 
 
