@@ -33,6 +33,7 @@ Usage:
 
 import json
 import os
+import stat
 import tempfile
 from contextlib import contextmanager
 
@@ -53,6 +54,7 @@ def atomic_write(path, mode="w", encoding="utf-8", newline=None):
 
     # Same-directory temp so os.replace is an atomic intra-filesystem rename.
     fd, tmp = tempfile.mkstemp(dir=directory, prefix=".tmp-", suffix=".swap")
+    _match_open_permissions(tmp, path)
     binary = "b" in mode
     try:
         open_kwargs = {} if binary else {"encoding": encoding, "newline": newline}
@@ -67,6 +69,41 @@ def atomic_write(path, mode="w", encoding="utf-8", newline=None):
         except OSError:
             pass
         raise
+
+
+def _match_open_permissions(tmp, target):
+    """Give the temp file the mode a plain `open(path, "w")` would have produced.
+
+    mkstemp() deliberately creates its file 0600 -- it is designed for secrets --
+    and os.replace() carries that mode onto the destination. So this helper's
+    absence made write_json_atomic subtly NOT the drop-in replacement for
+    `open(path, "w")` that it advertises: every output it wrote was readable only
+    by the writing user.
+
+    That stayed invisible for as long as every output was committed to git,
+    because CI gets those files from `git checkout`, which creates them 0644. It
+    surfaced the first time a generated file went straight from a generator into
+    the published site: assets/data/entity-urls.json is written here, copied into
+    _site by the Jekyll container as root, and then read by actions/upload-pages-
+    artifact as the unprivileged runner user -- which could not open a 0600 file.
+    `tar: ./assets/data/entity-urls.json: Cannot open: Permission denied` failed
+    the whole deploy, so the site stopped publishing.
+
+    An existing target's mode wins, so re-writing a deliberately-restricted file
+    does not widen it. Otherwise honour the process umask, exactly as open() does.
+    No-op in effect on Windows, which does not implement POSIX modes.
+    """
+    try:
+        os.chmod(tmp, stat.S_IMODE(os.stat(target).st_mode))
+        return
+    except OSError:
+        pass  # target does not exist yet (the normal case) -- fall through
+    try:
+        umask = os.umask(0)
+        os.umask(umask)
+        os.chmod(tmp, 0o666 & ~umask)
+    except OSError:
+        pass  # a platform that will not let us set it; the write still succeeds
 
 
 def write_json_atomic(path, obj, *, ensure_ascii=False, **json_kwargs):
