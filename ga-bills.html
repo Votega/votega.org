@@ -321,6 +321,11 @@ breadcrumb:
   /* ── States ── */
   .bills-loading { padding: 2rem 0; color: #666; font-size: 0.9rem; }
   .bills-error   { padding: 1rem; background: #fff5f5; border: 1px solid #fca5a5; border-radius: 6px; color: #991b1b; font-size: 0.9rem; margin: 1rem 0; }
+  .bills-notice  { padding: 0.75rem 1rem; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; color: #713f12; font-size: 0.875rem; margin: 1rem 0; }
+  .bill-caption { margin-top: 0.5rem; }
+  .bill-caption > summary { font-size: 0.78rem; color: #6b7280; cursor: pointer; }
+  .bill-caption > summary:hover { color: #374151; }
+  .bill-caption .detail-body { margin-top: 0.35rem; }
   .bills-empty   { padding: 2rem 1rem; text-align: center; color: #888; font-size: 0.9rem; border: 1px dashed #ddd; border-radius: 6px; }
   .data-note     {
     font-size: 0.8rem;
@@ -441,6 +446,8 @@ breadcrumb:
     could have flipped either party&rsquo;s majority.
   </p>
 </div>
+
+<div id="billsNotice" class="bills-notice" style="display:none" role="status"></div>
 
 <div class="bills-results-bar" id="billsResultsBar" style="display:none">
   <span id="billsCount"></span>
@@ -715,6 +722,76 @@ breadcrumb:
     return '<div class="detail-section"><div class="detail-label">Governor’s Action</div><div class="detail-body">' + body + '</div></div>';
   }
 
+  // ── Plain-language gist of the official caption ───────────────────────────
+  // A bill's `abstract` is its official caption, and the caption is built to a
+  // fixed shape: the code citation first ("A BILL to be entitled an Act to amend
+  // Part 3 of Article 4 of Chapter 11 of Title 16 of the Official Code of Georgia
+  // Annotated, relating to carrying and possession of firearms, so as to ..."),
+  // then what the bill actually does, then clauses every bill repeats ("to
+  // provide for related matters; to repeal conflicting laws; and for other
+  // purposes"). Readers only want the middle, so this trims both ends.
+  //
+  // It is a pure transform of the official text — nothing is added, reworded or
+  // interpreted — which is why the untouched caption stays on the card behind a
+  // disclosure rather than being replaced by this. Measured on the 2025-26 file:
+  // the "so as to" hinge is present in 2,002 of the 2,341 substantive bills, and
+  // every one of the 5,656 yields a non-empty, shorter result (median 114 chars
+  // against the caption's 180).
+  const GIST_BOILERPLATE = [
+    'provide for related matters', 'provide related matters', 'repeal conflicting laws',
+    'provide for an effective date', 'provide an effective date',
+    'provide for an effective date and applicability', 'provide for applicability',
+    'provide for other purposes', 'for other purposes', 'and for other purposes',
+    'provide for compliance with constitutional requirements',
+    'provide for severability', 'provide for automatic repeal'
+  ];
+  // generate_ga_bills_soap.py stores the caption as summary[:ABSTRACT_MAX] with
+  // ABSTRACT_MAX = 500, so a 500-char abstract is a truncated one (1,396 of them).
+  // Its last clause is then a fragment, and the gist is marked with an ellipsis
+  // rather than reading as the bill's complete list of provisions.
+  const ABSTRACT_MAX = 500;
+
+  function gistClauseKey(clause) {
+    return clause.trim().replace(/\.$/, '').replace(/^(?:and\s+)?(?:to\s+)?/i, '').trim().toLowerCase();
+  }
+
+  function billGist(abstract) {
+    if (!abstract) return '';
+    const truncated = abstract.length >= ABSTRACT_MAX;
+    const hinge = abstract.toLowerCase().indexOf('so as to');
+    const core = hinge >= 0
+      ? abstract.slice(hinge + 'so as to'.length)
+      : abstract.replace(/^A (?:BILL|RESOLUTION)(?: to be entitled an Act)?\s*/i, '');
+
+    const parts = core.split(';')
+      .map(function (p) { return p.trim().replace(/\.$/, ''); })
+      .filter(Boolean);
+
+    const keep = [];
+    parts.forEach(function (p, i) {
+      const key = gistClauseKey(p);
+      if (GIST_BOILERPLATE.indexOf(key) !== -1) return;
+      // A truncated caption's final clause is a cut-off fragment; drop it when it
+      // is the start of a boilerplate phrase ("repeal conflicting law"). The length
+      // floor keeps a genuinely short provision from matching by accident.
+      const isCutBoilerplate = truncated && i === parts.length - 1 && key.length > 6
+        && GIST_BOILERPLATE.some(function (b) { return b.indexOf(key) === 0; });
+      if (isCutBoilerplate) return;
+      keep.push(p.replace(/^(?:and\s+)?to\s+/i, ''));
+    });
+
+    // Every clause was boilerplate — keep the first so the card never shows an
+    // empty "What it does" where the official record does say something.
+    const clauses = keep.length ? keep : parts.slice(0, 1).map(function (p) {
+      return p.replace(/^(?:and\s+)?to\s+/i, '');
+    });
+
+    let out = clauses.filter(Boolean).join('; ').trim();
+    if (!out) return '';
+    out = out.charAt(0).toUpperCase() + out.slice(1);
+    return truncated ? out + '\u2026' : out;
+  }
+
   // ── Stable per-bill anchor ────────────────────────────────────────────────
   // Keyed by identifier (e.g. "HB 111" -> "bill-HB111") rather than list index,
   // so a link to a specific bill survives filtering/sorting/pagination changes.
@@ -753,7 +830,19 @@ breadcrumb:
         + '&nbsp;&middot;&nbsp;<span class="vote-no-txt">' + headlineVote.nay + ' no</span></span>'
       : '';
 
-    const abstract    = bill.abstract ? '<div class="detail-section"><div class="detail-label">Summary</div><div class="detail-body">' + escHtml(bill.abstract) + '</div></div>' : '';
+    // "What it does" is the trimmed caption (see billGist); the caption itself is
+    // kept verbatim behind the disclosure, because the trimmed form is a reading
+    // aid and the official text is the record.
+    const gist = billGist(bill.abstract);
+    const abstract = bill.abstract
+      ? '<div class="detail-section"><div class="detail-label">What it does</div>'
+        + '<div class="detail-body">' + escHtml(gist || bill.abstract) + '</div>'
+        + (gist && gist !== bill.abstract
+            ? '<details class="bill-caption"><summary>Official caption</summary>'
+              + '<div class="detail-body">' + escHtml(bill.abstract) + '</div></details>'
+            : '')
+        + '</div>'
+      : '';
     const allSponsors = bill.sponsors && bill.sponsors.length
       ? '<div class="detail-section"><div class="detail-label">Sponsors</div><div class="detail-body">' + escHtml(bill.sponsors.map(function (s) { return s.name; }).join(' · ')) + '</div></div>'
       : '';
@@ -1083,13 +1172,37 @@ breadcrumb:
   }
 
   function jumpToBillFromURL() {
-    const billParam = new URLSearchParams(window.location.search).get('bill');
-    if (!billParam) { applyFilters(); return; }
+    const params    = new URLSearchParams(window.location.search);
+    const billParam = params.get('bill');
+    // legislationId is the bill's own id and is unique across bienniums; `bill=` is
+    // an identifier string, which is only unique within one. Links from a member's
+    // page send both, so match on the id first and keep the identifier for the
+    // search fallback and the not-carried notice below.
+    const legisParam = params.get('legislationId');
+    if (!billParam && !legisParam) { applyFilters(); return; }
 
-    const target = normalizeIdentifier(billParam);
-    const bill = allBills.find(function (b) { return normalizeIdentifier(b.identifier) === target; });
+    const target = billParam ? normalizeIdentifier(billParam) : null;
+    const bill = legisParam
+      ? allBills.find(function (b) { return String(b.legislationId) === String(legisParam); })
+      : allBills.find(function (b) { return normalizeIdentifier(b.identifier) === target; });
 
     if (!bill) {
+      // A legislationId we don't carry is a bill from an earlier biennium — this
+      // file holds the current one. Say so and point at the official record, rather
+      // than searching the identifier and opening whichever bill of THIS biennium
+      // happens to reuse that number.
+      if (legisParam) {
+        const notice = document.getElementById('billsNotice');
+        if (notice) {
+          notice.innerHTML = (billParam ? '<strong>' + escHtml(billParam) + '</strong> is not' : 'That bill is not')
+            + ' in this biennium&rsquo;s bill file — it is from an earlier session. '
+            + '<a href="https://www.legis.ga.gov/legislation/' + encodeURIComponent(legisParam)
+            + '" target="_blank" rel="noopener">View it on legis.ga.gov &#8599;</a>';
+          notice.style.display = '';
+        }
+        applyFilters();
+        return;
+      }
       // No exact match — fall back to a search for the requested identifier so
       // the visitor lands somewhere useful instead of a silent no-op.
       elSearch.value = billParam;

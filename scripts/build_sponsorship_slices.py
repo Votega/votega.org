@@ -13,8 +13,10 @@ all ~247 legislator profiles.
 This mirrors build_member_votes_slices.py (same shape: one shared index + tiny
 per-member files, written through lib.atomic_io):
 
-  assets/data/ga-sponsorship-index.json   session names, biennium and the bill
-                                          file's own generatedAt, plus a
+  assets/data/ga-sponsorship-index.json   session names (with the URL segment
+                                          their bill-text documents live under),
+                                          biennium and the bill file's own
+                                          generatedAt, plus a
                                           {legisGaGovId: [nPrimary, nCo]} count
                                           map. The counts are what let the page
                                           hide the tab for a member with no
@@ -63,16 +65,37 @@ SLICES_DIR = os.path.join(DATA_DIR, "ga-sponsorship")
 VOTING_CHAMBERS = ("Senate", "House of Representatives")
 
 
+# Every bill's textUrl is this prefix + "<session segment>/<document id>" (verified
+# across all 5,656 bills), and the session segment is a property of the session, not
+# the bill — so the segment is interned once per session in the index and a row
+# stores only the six-digit document id.
+TEXT_URL_PREFIX = "https://www.legis.ga.gov/api/legislation/document/"
+
+
+def split_text_url(url):
+    """-> (session segment, document id), or (None, None) if the URL isn't the
+    expected shape. A bill whose text link we can't parse simply renders without
+    one; guessing a document id would link to the wrong bill's text."""
+    if not url or not url.startswith(TEXT_URL_PREFIX):
+        return None, None
+    parts = url[len(TEXT_URL_PREFIX):].split("/")
+    if len(parts) != 2 or not all(parts):
+        return None, None
+    return parts[0], parts[1]
+
+
 def compact_row(bill, status_table, status_index):
     """One rendered row, positional to keep slices small:
-        [identifier, title, statusIdx, statusDate, legislationId]
+        [identifier, title, statusIdx, statusDate, legislationId, documentId]
 
     statusIdx points into the slice's own `statuses` table — the status strings are
     long ("House Committee Favorably Reported By Substitute") and recur across a
     member's bills, so interning them per slice is free compression. legislationId
     stands in for billUrl: every one of the 5,656 bills' billUrl is exactly
     https://www.legis.ga.gov/legislation/<legislationId>, so storing the number and
-    rebuilding the URL client-side beats repeating the prefix 33k times.
+    rebuilding the URL client-side beats repeating the prefix 33k times. documentId
+    does the same for textUrl (the bill text PDF), against the per-session segment
+    the index carries.
     """
     status = bill.get("status")
     if status and status not in status_index:
@@ -88,6 +111,7 @@ def compact_row(bill, status_table, status_index):
         # and silently reordered 309 of one member's 382 rows.
         bill.get("statusDate") or None,
         bill.get("legislationId"),
+        split_text_url(bill.get("textUrl"))[1],
     ]
 
 
@@ -121,8 +145,16 @@ def main() -> int:
     by_member: dict[int, dict] = {}
     unknown_sponsors: set[int] = set()
     sponsorships = 0
+    # session id -> the segment its text-document URLs use ("2025_26" -> "20252026",
+    # "2026_ss" -> "2026EX"). Read off the bills rather than mapped by hand, so a
+    # future session needs no code change; first one wins, and a session whose bills
+    # carry no parseable text URL simply gets no segment and renders no text links.
+    doc_segments: dict[str, str] = {}
     for bill in bills:
         session = bill.get("session") or meta.get("activeSession") or "unknown"
+        seg = split_text_url(bill.get("textUrl"))[0]
+        if seg and session not in doc_segments:
+            doc_segments[session] = seg
         for sp in (bill.get("sponsors") or []):
             gid = sp.get("legisGaGovId")
             if gid is None:
@@ -179,7 +211,8 @@ def main() -> int:
             "generatedAt": meta.get("generatedAt"),
             "source": meta.get("source"),
             "biennium": meta.get("biennium"),
-            "sessions": [{"id": s.get("id"), "name": s.get("name")}
+            "sessions": [{"id": s.get("id"), "name": s.get("name"),
+                           "docSegment": doc_segments.get(s.get("id"))}
                          for s in (meta.get("sessions") or []) if s.get("id")],
             "activeSession": meta.get("activeSession"),
             "totalBills": len(bills),
