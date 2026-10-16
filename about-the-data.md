@@ -287,7 +287,7 @@ We display stock trades filed by Georgia's Federal Congressional Delegation on t
 
 **How it works:**
 
-The `kadoa-org/congress-trading-monitor` open dataset aggregates STOCK Act PTR disclosures from the official House and Senate filing systems and publishes them in a structured format. We run a process weekly that pulls the latest data for Georgia's House and Senate members and processes it into our static data file.
+The `kadoa-org/congress-trading-monitor` open dataset aggregates STOCK Act PTR disclosures from the official House and Senate filing systems and publishes them in a structured format. We run a process weekly that pulls the latest data for Georgia's House and Senate members and processes it into our static data file. Our current-delegation roster decides who appears: filers who no longer represent Georgia are dropped automatically, split filing records for the same lawmaker are combined, and each member's district and photo come from the roster rather than the upstream feed. A newly sworn-in member appears on the page in the first weekly run after they file a disclosure, without any manual step.
 
 **What's included:**
 - Ticker symbol and asset name (with asset type: stock, crypto, government security, corporate bond, or other)
