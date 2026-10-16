@@ -491,6 +491,12 @@ def main():
             'source':      'kadoa-org/congress-trading-monitor (github.com/kadoa-org/congress-trading-monitor)',
             'totalTrades': total_trades,
             'gaMembers':   sorted(by_member.keys()),
+            # The denominator the page needs: "5 members" alone reads as the whole
+            # delegation, when it is the subset with a disclosure in this dataset.
+            # Taken from current-members.json, which is already authoritative here
+            # for who is published, so it tracks a delegation change on its own.
+            'delegationSize': len(delegation),
+            'delegationChambers': sorted({m['chamber'] for m in delegation.values() if m.get('chamber')}),
             'skippedNotInDelegation': sorted(f['full_name'] for f in departed),
             'mergedFilers': sorted(f"{absorbed} -> {primary}"
                                    for absorbed, primary, _ in auto_merges),
