@@ -340,7 +340,8 @@ members, from the same roll-call record behind each member's page.</p>
       // rankings they were excluded from above.
       var missedCell = m.presidingOfficer ? '&mdash;' : pct(m.missedRate);
       var partCell   = m.presidingOfficer ? '&mdash;' : pct(m.participationRate);
-      var href = basePath + 'ga-member.html?id=' + encodeURIComponent(m.id);
+      var href = VoteGA.entityUrls.get('ga-legislator', m.id,
+        basePath + 'ga-member.html?id=' + encodeURIComponent(m.id));
 
       return '<tr' + (m.id === highlightId ? ' class="pu-hl" id="pu-hl-row"' : '') + '>'
         + '<td class="pu-rank">' + (i + 1) + '</td>'
@@ -434,9 +435,17 @@ members, from the same roll-call record behind each member's page.</p>
     render();
   });
 
-  fetch(DATA_URL)
-    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function (data) {
+  // The entity-URL map rides alongside the scorecard fetch so member rows link
+  // straight to /ga-legislators/<slug>/ instead of the ga-member.html shell that
+  // only redirects there. It resolves to {} if unavailable, and every row then
+  // keeps the shell URL -- see assets/scripts/entity-urls.js.
+  Promise.all([
+    fetch(DATA_URL)
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+    VoteGA.entityUrls.load(getBasePath()),
+  ])
+    .then(function (results) {
+      var data = results[0];
       members = data.members || [];
       dataLoaded = members.length > 0;
       members.forEach(function (m) {

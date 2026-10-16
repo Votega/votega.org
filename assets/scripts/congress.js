@@ -128,7 +128,7 @@ function renderMembers() {
     membersOut.innerHTML = senators.map(m => {
       const abbrev = partyAbbrev(m.partyName);
       const pClass = abbrev === 'D' ? 'party-d' : abbrev === 'R' ? 'party-r' : '';
-      return `<a class="member-row" href="${basePath}member.html?bioguideId=${encodeURIComponent(m.bioguideId)}">
+      return `<a class="member-row" href="${VoteGA.entityUrls.get('us-congress', m.bioguideId, `${basePath}member.html?bioguideId=${encodeURIComponent(m.bioguideId)}`)}">
         <span class="member-name">${formatMemberName(m)}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}</span>
         <span class="member-arrow">›</span>
       </a>`;
@@ -182,7 +182,7 @@ function renderMembers() {
     if (current) {
       const abbrev = partyAbbrev(current.partyName);
       const pClass = abbrev === 'D' ? 'party-d' : abbrev === 'R' ? 'party-r' : '';
-      return `<a class="member-row" href="${basePath}member.html?bioguideId=${encodeURIComponent(current.bioguideId)}">
+      return `<a class="member-row" href="${VoteGA.entityUrls.get('us-congress', current.bioguideId, `${basePath}member.html?bioguideId=${encodeURIComponent(current.bioguideId)}`)}">
         <span class="member-district">District ${district}</span>
         <span class="member-name">${formatMemberName(current)}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}</span>
         <span class="member-arrow">›</span>
@@ -232,6 +232,9 @@ updateCountyVisibility();
 async function loadData() {
   statusLine.textContent = 'Loading member data…';
   try {
+    // Awaited before rendering so rows link straight to /us-congress/<slug>/
+    // instead of the member.html shell that redirects there; {} if unavailable.
+    await VoteGA.entityUrls.load(getBasePath());
     const res = await fetch(getBasePath() + DATA_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();

@@ -168,7 +168,8 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
   }
 
   function raceRow(c) {
-    const href = `${basePath}race.html?id=${encodeURIComponent(c.id)}`;
+    const href = VoteGA.entityUrls.get('race', c.id,
+      `${basePath}race.html?id=${encodeURIComponent(c.id)}`);
     const ambiguous = c.ambiguous
       ? `<span class="contest-badge badge-ambiguous">may not be your district</span>` : '';
     return `
@@ -314,6 +315,7 @@ share-description: "Preview the federal, state, and judicial contests on your Ge
 
     setStatus('Loading ballot data…', false);
     try {
+      await VoteGA.entityUrls.load(basePath);
       const [racesRes, measuresRes, calendarRes] = await Promise.all([
         fetch(basePath + 'assets/data/races.json'),
         fetch(basePath + 'assets/data/ga-ballot-measures.json').catch(() => null),

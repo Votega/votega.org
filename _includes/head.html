@@ -215,5 +215,11 @@
   {%- comment %} Shared front-end helpers (getBasePath, …). Loaded synchronously in
       <head> so it is defined before any page's inline scripts run. {% endcomment -%}
   <script src="{{ '/assets/scripts/votega-core.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  <!-- Resolves entity ids to their clean URLs so pages can link straight to
+       /ga-legislators/<slug>/ etc. instead of the legacy query-string shells
+       that only redirect there. Sitewide because nine pages plus both search
+       surfaces need it; it costs one small cached script and fetches the map
+       itself only when a page actually calls load(). -->
+  <script src="{{ '/assets/scripts/entity-urls.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
 </head>

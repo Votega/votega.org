@@ -19,7 +19,6 @@
   </style>
 
   <script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
-  <script src="{{ '/assets/scripts/search-entity-urls.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   <script>
     // The posts/pages corpus (searchcorpus.json) is rendered by Jekyll and only
     // knows about blog posts and static pages. The site's real content --
@@ -56,7 +55,7 @@
           // the posts/pages corpus already bakes in site.baseurl. Normalize
           // entities to match so one result template works for both, and swap
           // the index's id-bearing shell URL for the clean entity path so a
-          // click does not pay for a redirect (see search-entity-urls.js).
+          // click does not pay for a redirect (see entity-urls.js).
           entities = entities.map(function (rec) {
             return {
               title: rec.title,

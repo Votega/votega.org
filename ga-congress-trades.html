@@ -373,6 +373,7 @@ breadcrumb:
   async function init() {
     let data;
     try {
+      await VoteGA.entityUrls.load(getBasePath());
       const res = await fetch(DATA_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       data = await res.json();
@@ -512,7 +513,7 @@ breadcrumb:
       const district = (info.office || '').split('·')[1]?.trim() || '';
 
       const profileLinkHtml = info.bioguideId
-        ? `<a class="member-card-profile-link" href="${basePath}member.html?bioguideId=${encodeURIComponent(info.bioguideId)}">View profile →</a>`
+        ? `<a class="member-card-profile-link" href="${VoteGA.entityUrls.get('us-congress', info.bioguideId, `${basePath}member.html?bioguideId=${encodeURIComponent(info.bioguideId)}`)}">View profile →</a>`
         : '';
 
       card.innerHTML = `

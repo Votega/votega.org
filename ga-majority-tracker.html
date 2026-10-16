@@ -424,6 +424,7 @@ let raceCycle = FALLBACK_CYCLE;
 
 async function loadRaceCycle() {
   try {
+    await VoteGA.entityUrls.load(getBasePath());
     const res = await fetch(getBasePath() + 'assets/data/races.json');
     const cycles = ((await res.json()).races || []).map(r => r.cycle).filter(Boolean);
     if (cycles.length) return Math.max(...cycles);
@@ -435,11 +436,13 @@ async function loadRaceCycle() {
 
 function raceUrl(chamber, district) {
   const slug = chamber === 'Senate' ? 'ga-senate' : 'ga-house';
-  return `${getBasePath()}race.html?id=${slug}-${district}-${raceCycle}`;
+  const rid = `${slug}-${district}-${raceCycle}`;
+  return VoteGA.entityUrls.get('race', rid, `${getBasePath()}race.html?id=${rid}`);
 }
 
 function memberUrl(id) {
-  return `${getBasePath()}ga-member.html?id=${encodeURIComponent(id)}`;
+  return VoteGA.entityUrls.get('ga-legislator', id,
+    `${getBasePath()}ga-member.html?id=${encodeURIComponent(id)}`);
 }
 
 function escHtml(value) { return VoteGA.escapeHtml(value); }
