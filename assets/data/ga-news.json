@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-16T07:40:23.032022+00:00",
+    "generatedAt": "2026-10-16T13:37:44.981129+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -21,21 +21,26 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 124,
+    "count": 125,
     "windowDays": 45,
-    "entityTagged": 74,
+    "entityTagged": 73,
     "topicCounts": {
-      "elections": 37,
+      "elections": 38,
       "courts": 19,
-      "healthcare": 15,
+      "healthcare": 14,
       "budget": 6,
-      "education": 10,
+      "education": 9,
       "ethics": 4,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000256": {
+      "name": "Rick W. Allen",
+      "url": null,
+      "bioguideId": "A000372"
+    },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
       "url": null,
@@ -85,11 +90,6 @@
       "candidateIds": [
         "challenger-keisha-bottoms-gov-2026"
       ]
-    },
-    "vg-ga-p-000256": {
-      "name": "Rick W. Allen",
-      "url": null,
-      "bioguideId": "A000372"
     },
     "vg-ga-p-000030": {
       "name": "Burt Jones",
@@ -163,6 +163,54 @@
     }
   },
   "items": [
+    {
+      "id": "6d70a5aa4f4a",
+      "title": "Explainer: Georgia ballot measures",
+      "url": "https://thecurrentga.org/2026/10/16/explainer-georgia-ballot-measures/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-16T12:34:43+00:00",
+      "snippet": "The state ballot will have three separate amendments for you to vote for or against. Here's a guide of what the ballot language means and what your Yes or No vote supports -- or doesn't.\nThe Current i",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "3a6d51192dd2",
+      "title": "Georgia voters are seeing a new check-in step at polls this cycle",
+      "url": "https://www.gpb.org/news/2026/10/16/georgia-voters-are-seeing-new-check-in-step-at-polls-cycle",
+      "source": "GPB News",
+      "publishedAt": "2026-10-16T12:09:00+00:00",
+      "snippet": "As voters head to the polls to vote this election season, they may notice a slight change at check-in.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "d027d0adae4d",
+      "title": "Will Trump’s Georgia rally be a lifeline or an anchor for the GOP candidates he seeks to boost?",
+      "url": "https://georgiarecorder.com/2026/10/16/will-trumps-georgia-rally-be-a-lifeline-or-an-anchor-for-the-gop-candidates-he-seeks-to-boost/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-16T08:00:33+00:00",
+      "snippet": "President Donald Trump is set to visit Dalton in northwest Georgia Friday to stump for Republican candidates as early voting is underway for the Nov. 3 midterm elections. Trump visited Dalton in early",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "50e97b945b65",
+      "title": "Congressman Rick Allen's Retire through Ownership Act Signed into Law by President Trump",
+      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7417",
+      "source": "Rep. Rick Allen (GA-12, press)",
+      "publishedAt": "2026-10-16T04:00:00+00:00",
+      "snippet": "Yesterday, President Donald J. Trump signed S. 2403, the Retire through Ownership Act, into law. Congressman Rick W. Allen (GA-12) introduced the House version of this bill last year, which would prov",
+      "entityIds": [
+        "vg-ga-p-000256"
+      ],
+      "topics": []
+    },
     {
       "id": "2c202af3abaf",
       "title": "Lieutenant governor’s race heats up as candidates spar over public safety, healthcare, Trump",
@@ -506,18 +554,6 @@
       ]
     },
     {
-      "id": "ae558ad516ca",
-      "title": "Election workers prep for early voting as talk of DOJ ‘intervention’ leaves advocates unsettled",
-      "url": "https://thecurrentga.org/2026/10/12/election-workers-prep-for-early-voting-as-talk-of-doj-intervention-leaves-advocates-unsettled/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-12T13:41:41+00:00",
-      "snippet": "As Georgia prepares for midterm elections starting with early voting on October 13, local officials are conducting logic and accuracy testing on voting machines amidst controversy over the State Elect",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "913aadff52a8",
       "title": "Election workers prepare for early voting as talk of DOJ ‘intervention’ leaves advocates unsettled",
       "url": "https://georgiarecorder.com/2026/10/12/election-workers-prepare-for-early-voting-as-talk-of-doj-intervention-leaves-advocates-unsettled/",
@@ -565,20 +601,6 @@
         "vg-ga-p-000264"
       ],
       "topics": []
-    },
-    {
-      "id": "50e97b945b65",
-      "title": "ICYMI: Congressman Rick Allen Hosts 2026 Youth Leadership Summit",
-      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7412",
-      "source": "Rep. Rick Allen (GA-12, press)",
-      "publishedAt": "2026-10-09T04:00:00+00:00",
-      "snippet": "Yesterday, Congressman Rick W. Allen (GA-12) hosted 11th-12th grade students and community leaders from the 12th District for his biennial Youth Leadership Summit.\n\nThe event was held at the Columbia ",
-      "entityIds": [
-        "vg-ga-p-000256"
-      ],
-      "topics": [
-        "education"
-      ]
     },
     {
       "id": "751938fd872e",
@@ -1059,9 +1081,9 @@
       ]
     },
     {
-      "id": "af6f45b3c894",
+      "id": "bab5d8f59fcd",
       "title": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!",
-      "url": "http://bishop.house.gov/node/8471",
+      "url": "https://bishop.house.gov/node/8471",
       "source": "Rep. Sanford Bishop (GA-02, press)",
       "publishedAt": "2026-09-28T20:56:13+00:00",
       "snippet": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!\n\n  \n    \n      Image or Video    \n                  \n\n  \n  \n  \n    \n      Image    \n        ",
@@ -1638,21 +1660,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "0fbed65e36dd",
-      "title": "Is Jackson’s ‘Intelligent Medicaid Expansion’ weak tea – or a revolutionary fix?",
-      "url": "https://georgiarecorder.com/2026/09/14/is-rick-jacksons-intelligent-medicaid-expansion-weak-tea-or-a-revolutionary-fix-for-vulnerable-georgians/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-14T09:00:58+00:00",
-      "snippet": "A high-stakes mystery is unfolding in the Georgia governor’s race, potentially affecting health insurance for hundreds of thousands of Georgians. Republican gubernatorial nominee Rick Jackson released",
-      "entityIds": [
-        "vg-ga-p-000368"
-      ],
-      "topics": [
-        "elections",
-        "healthcare"
       ]
     },
     {
