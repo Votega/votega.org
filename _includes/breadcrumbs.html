@@ -1,0 +1,30 @@
+{%- comment -%}
+  Visible breadcrumb trail.
+
+  Reads the same `breadcrumb:` front matter that structured-data.html turns into
+  a schema.org BreadcrumbList, so the on-page trail and the trail Google may show
+  in a result come from one source and cannot drift apart. Entity pages get the
+  same front matter from scripts/build_entity_pages.py (see breadcrumbs()).
+
+  Renders nothing for a page with no trail, or a trail of one — a lone "Home"
+  crumb tells a visitor nothing. The final crumb is the current page: never a
+  link, and marked aria-current so a screen reader says where it is.
+
+  Separators are CSS ::before, not markup, to keep punctuation out of the
+  accessibility tree. Mobile truncation is in beautifuljekyll.css.
+{%- endcomment -%}
+{%- if page.breadcrumb and page.breadcrumb.size > 1 -%}
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    {%- for c in page.breadcrumb %}
+    <li>
+      {%- if c.url and forloop.last == false %}
+      <a href="{{ c.url | relative_url }}">{{ c.name | escape }}</a>
+      {%- else %}
+      <span aria-current="page">{{ c.name | escape }}</span>
+      {%- endif %}
+    </li>
+    {%- endfor %}
+  </ol>
+</nav>
+{%- endif -%}

@@ -1173,3 +1173,36 @@ pre {
     display: inline-block;
   }
 }
+
+/* --- Breadcrumbs --- */
+/* Rendered by _includes/breadcrumbs.html from the `breadcrumb:` front matter
+   that also feeds the schema.org BreadcrumbList. */
+.breadcrumbs {
+  margin: 0 0 1.1rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.breadcrumbs ol { list-style: none; margin: 0; padding: 0; }
+.breadcrumbs li { display: inline; }
+.breadcrumbs li + li::before {
+  content: "\2002\203A\2002";   /* en-space, single right angle, en-space */
+  color: #9aa3af;
+}
+.breadcrumbs a { color: #1a56a8; text-decoration: none; }
+.breadcrumbs a:hover,
+.breadcrumbs a:focus { text-decoration: underline; }
+.breadcrumbs [aria-current="page"] { color: #444; font-weight: 600; }
+
+/* A four-level trail (Home > Local Government > Topics > ALPR / surveillance)
+   wraps to three lines on a phone. Keep the parent and the current page, since
+   going up one level is what the trail is mostly used for, and drop the
+   ancestors above them; the navbar still reaches the top level. A two-crumb
+   trail is already short enough and is left alone. The leading marker becomes a
+   left angle so the kept parent reads as "up", not as a mid-trail separator. */
+@media (max-width: 600px) {
+  .breadcrumbs li:not(:nth-last-child(-n+2)) { display: none; }
+  .breadcrumbs li:nth-last-child(2):not(:first-child)::before {
+    content: "\2039\2002";       /* single left angle, en-space */
+    color: #9aa3af;
+  }
+}
