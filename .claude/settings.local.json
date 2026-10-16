@@ -54,7 +54,16 @@
       "Bash(curl -s \"https://api.oyez.org/cases?per_page=100&filter=term:2025\")",
       "Read(//c/Users/justi/Downloads/**)",
       "Bash(xargs -I{} sh -c 'echo \"{} $\\(stat -c %y \"{}\" 2>/dev/null || stat -f %Sm \"{}\"\\)\"')",
-      "Bash(sort -k2)"
+      "Bash(sort -k2)",
+      "Bash(git checkout *)",
+      "Bash(python scripts/build_entity_pages.py)",
+      "Bash(grep -o '<div class=\"voter-links\">.\\\\{0,320\\\\}' _site/candidates/aaron-baker-ga-house-51/index.html)",
+      "Bash(grep -o '<div class=\"voter-links\">.\\\\{0,320\\\\}' _site/races/ga-house-51-2026/index.html)",
+      "Bash(node -e \"require\\('playwright'\\)\")",
+      "Bash(npm ls *)",
+      "Bash(npm root *)",
+      "Bash(grep -o 'Also on the ballot:.\\\\{0,160\\\\}' _site/candidates/mike-cheokas-ga-house-151/index.html)",
+      "Bash(awk -F: '$1>400')"
     ]
   }
 }
