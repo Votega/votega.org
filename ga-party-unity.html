@@ -445,6 +445,14 @@ members, from the same roll-call record behind each member's page.</p>
       });
 
       var meta = data.metadata || {};
+      // Legacy coverage-gap flag, and a deliberate no-op today — the same guard
+      // and the same reasoning as _includes/entity/ga-legislator.html. The former
+      // Open States source could leave the roll-call record short of the session
+      // (a quota-bounded gap); the current legis.ga.gov source fetches every
+      // published roll call and sets no flag, so this stays false and the caveat
+      // below correctly never fires. `null` means "no known gap", NOT "unknown":
+      // widening this to `!== true` would print an incompleteness warning over a
+      // complete record. It is kept in case a future source reintroduces a gap.
       var incomplete = meta.paginationComplete === false;
       $('pu-foot').innerHTML =
         'Small-sample members are held back by the minimum-sample filter, which applies to whichever '
