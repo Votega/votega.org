@@ -15,12 +15,12 @@ VoteGA exists to close that gap. Everything on the site is built from official, 
 
 ## How your legislators actually voted
 
-Every roll-call vote in the Georgia General Assembly is public, but almost nobody reads floor votes bill by bill. We do it for you. Look up your Georgia state Senator or Representative and you can see the individual votes behind the headlines.
+Every roll-call vote in the Georgia General Assembly is public, but almost nobody reads floor votes bill by bill. We do it for you. Look up your Georgia State Senator or Representative and you can see the individual votes behind the headlines.
 
 Two tools that help: 
 
 - **[Party Unity]({{ '/ga-party-unity.html' | relative_url }})** measures how often each member votes with their own party and, just as revealing, how often they break from it. A legislator who claims to be independent-minded either has the votes to show it or doesn't.
-- **[Majority Tracker]({{ '/ga-majority-tracker.html' | relative_url }})** shows who actually controls each chamber and how close the balance is. This is useful context for why a single state House or Senate race can matter far more than its size suggests.
+- **[Majority Tracker]({{ '/ga-majority-tracker.html' | relative_url }})** shows who actually controls each chamber and how close the balance is. This is useful context for why a single State House or Senate race can matter far more than its size suggests.
 
 Prefer to start from the bills themselves? The [Georgia Bills tracker]({{ '/ga-bills.html' | relative_url }}) covers legislation from the current session, and each member's page ties their votes back to the bills that produced them.
 
@@ -37,7 +37,7 @@ If one of these members is on your November ballot, their trading history is par
 
 ## Why this matters in a general election
 
-Down-ballot races decide who writes Georgia's laws, and they're routinely won by a few hundred votes. An informed vote on a state House seat or a U.S. House seat starts with a simple question: *what has this person actually done in office?* The answer shouldn't require a records request.
+Down-ballot races decide who writes Georgia's laws, and they're routinely won by a few hundred votes. An informed vote on a State House seat or a U.S. House seat starts with a simple question: *what has this person actually done in office?* The answer shouldn't require a records request.
 
 Check out the following resources: 
 
