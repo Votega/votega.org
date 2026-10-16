@@ -179,6 +179,36 @@
   .finance-card.cash    .finance-card-value { color: #1d4ed8; }
   .finance-meta { font-size: 0.78rem; color: #666; margin: 0; }
 
+  /* "Where the money came from" (receipt composition) — rendered by
+     CampaignFinance.fundingBreakdownHtml() so both finance panels share it. */
+  .finance-subhead {
+    font-size: 0.88rem;
+    margin: 1.25rem 0 0.25rem 0;
+    color: #374151;
+  }
+  .funding-note { margin-bottom: 0.5rem; }
+  .funding-bar {
+    display: flex;
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #f3f4f6;
+    margin: 0.1rem 0 0.25rem 0;
+  }
+  /* Segments are sized by share, so a 0.4% source would otherwise render as a
+     sliver too thin to see or hover. */
+  .funding-bar-seg { min-width: 2px; }
+  .funding-table { margin-top: 0.5rem; }
+  .funding-swatch {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    margin-right: 0.4rem;
+    vertical-align: baseline;
+  }
+
   .employers-table {
     width: 100%;
     border-collapse: collapse;
@@ -882,6 +912,7 @@
       <p class="finance-meta">${coverageNote}</p>
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
       ${finGenDate ? `<p class="finance-meta">Finance data from the FEC, updated ${finGenDate}.</p>` : ''}
+      ${CampaignFinance.fundingBreakdownHtml(entry)}
       ${employersHtml}`;
   }
 

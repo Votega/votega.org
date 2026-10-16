@@ -12,11 +12,15 @@ Flow:
           same-district same-surname challenger with an incumbent)
        b. surname + seat heuristic against current-members.json, for incumbents
           the crosswalk doesn't cover yet (e.g. just-seated members)
-  3. GET /v1/committee/{id}/totals/ for each principal committee
+  3. GET /v1/committee/{id}/totals/ for each principal committee -- both the
+     headline cards and the receipt-component breakdown (see FUNDING_FIELDS)
+     come out of this one response
   4. GET /v1/schedules/schedule_a/by_employer/ for top donors by employer
 
 Output: assets/data/ga-fec-data.json
-  - candidates: keyed by FEC candidate_id
+  - candidates: keyed by FEC candidate_id. Each may carry `funding`, the
+    composition of receipts (PAC, party, transfers, self-funding, itemized vs
+    unitemized individual money) -- see FUNDING_FIELDS.
   - byBioguideId: bioguide_id -> candidate_id (for incumbent lookups; one filing,
     chosen by preferred_filing() when a member holds several this cycle)
   - byBioguideIdAll: bioguide_id -> [candidate_id, ...] (every filing, sorted — use
@@ -149,6 +153,51 @@ def get_committee_totals(committee_id):
     if not data or not data.get("results"):
         return None
     return data["results"][0]
+
+
+# Composition of receipts, for the "Where the money came from" panel.
+#
+# /committee/{id}/totals/ is already fetched for the headline cards, and its
+# response carries the whole breakdown -- we were keeping four fields and
+# discarding the rest. Total raised minus total from individuals was leaving a
+# large unexplained remainder on the page (Clay Fuller: $1.85M raised, $1.08M
+# from individuals, $766K unaccounted for), which is exactly the PAC/party/
+# transfer money a reader most wants named. No extra API call: same endpoint,
+# same response, more of it kept.
+#
+# Stored as raw components rather than pre-summed groups so the renderer can
+# regroup without a data regeneration, and so the "Other" row can be derived
+# as receipts - sum(components). That remainder is load-bearing: if the FEC
+# renames or drops a field, the money lands in "Other" instead of silently
+# vanishing from a breakdown that claims to account for all receipts.
+FUNDING_FIELDS = (
+    ("individualItemized",   "individual_itemized_contributions"),
+    ("individualUnitemized", "individual_unitemized_contributions"),
+    ("pac",                  "other_political_committee_contributions"),
+    ("party",                "political_party_committee_contributions"),
+    ("transfers",            "transfers_from_other_authorized_committee"),
+    ("candidateSelf",        "candidate_contribution"),
+    ("candidateLoans",       "loans_received_from_candidate"),
+    ("otherLoans",           "other_loans_received"),
+    ("offsets",              "offsets_to_operating_expenditures"),
+    ("otherReceipts",        "other_receipts"),
+)
+
+
+def funding_breakdown(totals):
+    """Receipt components from a committee/candidate totals response.
+
+    Zero and absent components are omitted rather than stored as 0 -- across 266
+    candidates most of these fields are empty, and the renderer treats a missing
+    key and a zero identically. Returns {} when nothing is present, so callers
+    can skip the key entirely.
+    """
+    out = {}
+    for key, field in FUNDING_FIELDS:
+        val = totals.get(field)
+        if val:
+            out[key] = round(val)
+    return out
 
 
 def get_candidate_totals(candidate_id):
@@ -444,6 +493,9 @@ def main():
                 unitemized = totals.get("individual_unitemized_contributions") or 0
                 if itemized or unitemized:
                     entry["totalIndividual"] = round(itemized + unitemized)
+                funding = funding_breakdown(totals)
+                if funding:
+                    entry["funding"] = funding
 
             time.sleep(DELAY)
             entry["topEmployers"] = get_top_employers(committee_id)
@@ -458,6 +510,12 @@ def main():
                 entry["cashOnHand"]      = (totals.get("last_cash_on_hand_end_period")
                                             or totals.get("cash_on_hand_end_period"))
                 entry["coverageEndDate"] = totals.get("coverage_end_date", "")
+                # /candidate/{id}/totals/ carries the same receipt-component
+                # field names as the committee endpoint, so the same breakdown
+                # is available on this fallback path.
+                funding = funding_breakdown(totals)
+                if funding:
+                    entry["funding"] = funding
             entry["topEmployers"] = []
 
         output_candidates[cid] = entry
