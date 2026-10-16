@@ -17,13 +17,32 @@
       {%- endfor %}
     </ul>
     {%- endif %}
-    <p><a href="{{ '/elections/' | relative_url }}">2026 Georgia elections</a> · <a href="{{ '/sample-ballot' | relative_url }}">Sample ballot</a> · <a href="{{ '/ga-voter-access' | relative_url }}">Voter access</a></p>
   {%- else -%}
     <p>Loading race information…</p>
   {%- endif -%}
 </div>
 
+{%- comment -%}
+  Voter actions live OUTSIDE #raceContent on purpose. The JS below replaces that
+  container's innerHTML wholesale once races.json resolves, so anything the Liquid
+  fallback above renders is destroyed about a second into every real page view —
+  these links were in view-source (and so survived review) but never in the live
+  DOM. A sibling element the JS never touches keeps one copy of the markup instead
+  of duplicating it into the JS template, where the two would drift.
+
+  The year is the only cycle-dependent token here (/elections/, /sample-ballot and
+  /ga-voter-access are stable permalinks), and it comes from the entity's own
+  `cycle` — never hardcoded, per ga_next_general_election's rule in
+  scripts/build_entity_pages.py. The legacy /race.html?id= shell has no
+  page.entity and so no cycle to derive: it gets the same links with an unlabeled
+  "Georgia elections".
+{%- endcomment -%}
+<div class="voter-links">
+  <p><a href="{{ '/elections/' | relative_url }}">{% if page.entity.cycle %}{{ page.entity.cycle }} {% endif %}Georgia elections</a> · <a href="{{ '/sample-ballot' | relative_url }}">Sample ballot</a> · <a href="{{ '/ga-voter-access' | relative_url }}">Voter access</a></p>
+</div>
+
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/format-date.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/results-contest.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
@@ -31,6 +50,7 @@
 
 <style>
 {% include result-status.css %}
+  .voter-links { margin-top: 1.25rem; font-size: 0.95rem; }
   .race-header { margin-bottom: 1.5rem; }
   .race-header h1 { margin-bottom: 0.25rem; }
   .race-header .meta { font-size: 0.9rem; color: #555; }
@@ -554,11 +574,8 @@
       : `${getBasePath()}candidate.html?id=${encodeURIComponent(id)}`;
   }
 
-  function formatDate(iso) {
-    if (!iso) return '';
-    const [y, m, d] = iso.split('-').map(Number);
-    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  }
+  // Shared with candidate.html via assets/scripts/format-date.js (loaded above).
+  const formatDate = VoteGA.formatDate;
 
   function partyClass(party) {
     if (!party) return 'party-other';

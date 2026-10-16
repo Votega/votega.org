@@ -1040,6 +1040,10 @@ def build_candidates(records, urls, prior, new_state):
         rivals = [x for x in candidate_links(_race_active_candidates(race)[1], urls)
                   if x["name"] != name.strip()] if race else []
         entity = {"type": "candidate", "id": cid, "name": name,
+                  # The election year, so the page's voter-links label can be derived
+                  # rather than hardcoded (see ga_next_general_election's cycle-agnostic
+                  # rule). Race pages already carry this; candidate pages did not.
+                  "cycle": race.get("cycle") if race else None,
                   "about": candidate_about(name, race, cand_obj, race_label),
                   "race": {"name": race_label, "url": race_url} if race_url else None,
                   "rivals": rivals}
