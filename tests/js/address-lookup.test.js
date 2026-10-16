@@ -256,3 +256,26 @@ test('an async onResolve can still name its own outcome', async () => {
   assert.equal(await lookup.run(), 'no_district');
   assert.equal(lastEvent(calls)[1].outcome, 'no_district');
 });
+
+test('onStart clears a stale result once the guards have passed', async () => {
+  const order = [];
+  const h = harness({
+    onStart: () => order.push('start'),
+    geocode: async () => { order.push('geocode'); return { county: 'Fulton', usHouse: 5 }; },
+    onResolve: () => { order.push('resolve'); },
+  });
+  h.input.value = '123 Peachtree St NE';
+  await h.lookup.run();
+  assert.deepEqual(order, ['start', 'geocode', 'resolve']);
+});
+
+test('a refused lookup never reaches onStart', async () => {
+  // Nothing was cleared because nothing was started: a bare ZIP leaves the page
+  // as it was apart from the message, and onRefuse is the hook for tidying up.
+  const started = [];
+  const h = harness({ onStart: () => started.push(1) });
+  h.input.value = '30303';
+  await h.lookup.run();
+  assert.deepEqual(started, []);
+  assert.deepEqual(h.calls.refused, ['zip_only']);
+});

@@ -355,6 +355,9 @@ css:
       status.textContent = message;
       status.className = isError ? 'fmr-status err' : 'fmr-status';
     },
+    // run() cleared stale results at the start of every lookup; the address
+    // path starts inside the module now, so it clears from there.
+    onStart: function () { out.innerHTML = ''; },
     onRefuse: function () { out.innerHTML = ''; },
     onResolve: function (loc) {
       // The geocoder's own scalar shape -- one district per chamber -- is what

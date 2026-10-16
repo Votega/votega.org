@@ -79,6 +79,11 @@
    *                  a failure in there is reported like any other.
    *   setBusy(bool)  optional; defaults to toggling `button.disabled`. Pages with
    *                  a second lookup button share one latch through this.
+   *   onStart()      optional; after the guards pass and before the request, for
+   *                  a page that clears a stale result so it cannot sit under a
+   *                  "Looking up..." status and read as the new answer.
+   *   onRefuse(why)  optional; a lookup stopped before any request ('zip_only',
+   *                  'unavailable'), so the page can clear a stale result too.
    *   subject, fallbackPhrase   copy, see messages()
    *   eventName      outcome event name; omit to report nothing
    *   eventParams    extra author-set enums merged into every event
@@ -158,6 +163,7 @@
       }
 
       setBusy(true);
+      if (typeof cfg.onStart === 'function') cfg.onStart();
       cfg.setStatus(msg.working, false);
 
       return Promise.resolve()
