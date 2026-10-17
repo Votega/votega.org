@@ -11,6 +11,10 @@ on:
         description: 'Run even if the last successful run was under an hour ago'
         type: boolean
         default: false
+      allow_collapse:
+        description: 'Commit even if the data shrank catastrophically (inspect the rejected artifact first)'
+        type: boolean
+        default: false
   schedule:
     - cron: '0 8 * * 0' # weekly on Sunday at 08:00 UTC
 
@@ -105,7 +109,8 @@ jobs:
         run: |
           python scripts/validate_fec_data.py assets/data/ga-fec-data.json \
             --baseline-ref HEAD \
-            --report-out "$RUNNER_TEMP/fec-changes.md"
+            --report-out "$RUNNER_TEMP/fec-changes.md" \
+            ${{ inputs.allow_collapse && '--allow-collapse' || '' }}
 
       - name: Commit and push
         if: steps.guard.outputs.proceed == 'true'
@@ -173,8 +178,16 @@ jobs:
       # missed the case that actually happened: validation PASSED and the commit
       # step failed on a rebase conflict, so a file that had cleared tier 1 was
       # lost anyway. The condition is now "we have data and are about to lose it".
+      # `cancelled()` as well as `failure()`: a cancelled run is not a failed one,
+      # and GitHub skips every remaining step on cancellation unless its `if`
+      # names always() or cancelled(). Without it, clicking "Cancel workflow"
+      # after the fetch threw away the same ~50 minutes of API calls this step
+      # exists to protect. Still gated on the fetch having SUCCEEDED, so a cancel
+      # during the fetch itself uploads nothing — a half-fetched file is not
+      # worth keeping. Best-effort by nature: a second cancel click force-kills
+      # the job before any of this runs.
       - name: Preserve the generated file
-        if: failure() && steps.fetch.outcome == 'success'
+        if: (failure() || cancelled()) && steps.fetch.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: unpushed-ga-fec-data
