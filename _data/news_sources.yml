@@ -12,7 +12,10 @@
 # Each feed:
 #   name        display name shown on the card
 #   url         RSS/Atom feed
-#   type        outlet | official
+#   type        outlet | official | advocacy
+#               advocacy -> an interest group's own releases. A legitimate
+#               primary source for that group's position, but one-sided: cards
+#               link out and carry the publisher name, which is the disclosure.
 #   ga_focused  true  -> feed is wholly GA politics; keep every item
 #               false -> general feed; apply the GA-relevance gate (drops national
 #                        wire copy, e.g. the States Newsroom syndication that makes
@@ -43,6 +46,17 @@ feeds:
   # Rough Draft Atlanta (roughdraftatlanta.com/feed/) is behind Cloudflare bot
   # protection and returns 403 "Just a moment..." to a server-side fetch, so it is
   # not included. Revisit if a fetchable feed URL becomes available.
+
+  # --- Advocacy / interest groups (one-sided by nature; see `type` above) ---
+  # National tech-industry trade association. In scope because it is a party to
+  # Georgia litigation (e.g. its SB 351 challenge, NetChoice v. Carr), so its
+  # releases are the primary record of its own filings and statements. Most of
+  # the feed is other states' work, so ga_focused is false and the GA-relevance
+  # gate below does the filtering.
+  - name: NetChoice
+    url: https://netchoice.org/feed/
+    type: advocacy
+    ga_focused: false
   - name: GA Secretary of State
     url: https://sos.ga.gov/rss.xml
     type: official
