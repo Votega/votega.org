@@ -2,6 +2,7 @@ name: Update Georgia legislative vote data (weekly, Mon 07:30 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -42,54 +43,45 @@ jobs:
       # amendment to a closed session, a crosswalk backfill that must reach one, or a
       # schema change in the producer. A biennium rollover does NOT need it.
       - name: Generate GA vote data (legis.ga.gov SOAP source)
+        id: generate
         env:
           FULL_REFRESH: ${{ inputs.full_refresh && '1' || '0' }}
         run: python scripts/generate_ga_votes_soap.py --no-overlay assets/data/ga-member-votes.json
 
+      # Two tiers, and the split is the point. Tier 1 is the file against
+      # ITSELF -- a metadata total that disagrees with the records it counts, a
+      # per-session voteCount that disagrees with the records carrying that
+      # session id, a session marked preserved with nothing in the file, a
+      # member row indexing outside the shared voteIds list, a code the codec
+      # does not define. No fact about the General Assembly can make those
+      # true, so they fail the run and nothing is committed. Tier 2 is a thin
+      # sweep and the diff against last week; those are reported and the data
+      # is committed anyway.
+      #
+      # The heredoc this replaces gated on `votes >= 1000` and
+      # `members >= 150`: floors pinned to the shape of a mid-biennium session.
+      # They are cleared by the PRESERVED layer alone, which is what makes them
+      # both useless and dangerous -- they look safe while the thing they are
+      # meant to guard (the incremental fetch of the ACTIVE session) can fail
+      # silently under them, and meanwhile a new biennium or a full-refresh run
+      # that loses a closed session trips them and discards ~1,500 SOAP calls'
+      # worth of sweep, which dies with the runner. The per-session integrity
+      # check below is the one that actually catches a broken merge.
+      #
+      # `result in ('Pass','Fail')` moved to tier 2 as well: the chambers write
+      # their own captions ("Agreed to", "Adopted", "Nomination Confirmed"), so
+      # new wording is a gap in the producer's normalization for a human to
+      # close, not a reason to throw away the record. A MISSING result stays
+      # tier 1. See docs/audits/2026-10-13-data-pipeline-audit.md 2.6, and the
+      # header of update-local-government.yml for the first workflow to make
+      # this split.
       - name: Validate generated data
+        id: validate
         run: |
-          if [ ! -f assets/data/ga-member-votes.json ]; then
-            echo "Error: ga-member-votes.json was not generated"
-            exit 1
-          fi
-          python -c "
-          import json, os
-          d = json.load(open('assets/data/ga-member-votes.json'))
-          votes   = len(d.get('votes', {}))
-          members = len(d.get('memberVotes', {}))
-          meta    = d.get('metadata', {})
-          size_kb = os.path.getsize('assets/data/ga-member-votes.json') // 1024
-          print(f'Validated: {votes} bill-votes, {members} members with vote records, {size_kb} KB')
-          # Floors well under a healthy biennium (~2.4k bill-votes, ~240 members) but well
-          # above anything a partial/failed SOAP sweep would leave.
-          assert votes >= 1000, f'Only {votes} bill-votes — expected ~2400 for the biennium. The SOAP sweep likely failed; see the generate step above.'
-          assert members >= 150, f'Only {members} members with votes — the crosswalk join or the SOAP fetch is broken.'
-          vote_ids = d.get('voteIds')
-          assert isinstance(vote_ids, list) and len(vote_ids) >= votes, 'voteIds index missing or shorter than votes — the compact schema was not written correctly (see scripts/lib/votes_schema.py).'
-          assert all(isinstance(v, dict) for v in d['memberVotes'].values()), 'memberVotes must be {index: code} maps (compact schema).'
-          assert meta.get('passageOverlaySource') is None, 'Expected --no-overlay (OS-free) output: passageOverlaySource should be null.'
-          # Per-session integrity. The floors above are whole-file, so they are cleared by
-          # the preserved layer alone; these catch an incremental run that dropped or
-          # truncated a session. metadata.sessions[].voteCount must match the records.
-          actual = {}
-          for r in d['votes'].values():
-              actual[r.get('session')] = actual.get(r.get('session'), 0) + 1
-          for row in (meta.get('sessions') or []):
-              sid, claimed = row.get('id'), row.get('voteCount')
-              assert actual.get(sid, 0) == claimed, (
-                  f'metadata claims {claimed} votes for session {sid} but the file holds '
-                  f'{actual.get(sid, 0)} — the preserved/fetched merge is wrong.')
-          for sid in (meta.get('sessionsPreserved') or []):
-              assert actual.get(sid, 0) > 0, (
-                  f'session {sid} is marked preserved but has no votes in the file.')
-          # Every member row must index inside the shared index.
-          n = len(vote_ids)
-          bad_idx = [p for p, row in d['memberVotes'].items()
-                     if any(not (0 <= int(i) < n) for i in row)]
-          assert not bad_idx, f'{len(bad_idx)} member row(s) index outside voteIds (e.g. {bad_idx[:3]}).'
-          bad = [k for k, v in d['votes'].items() if v.get('result') not in ('Pass', 'Fail')]
-          assert not bad, f'{len(bad)} vote record(s) missing Pass/Fail result (e.g. {bad[:3]}).'
-          "
+          python scripts/validate_ga_votes.py assets/data/ga-member-votes.json \
+            --expect-no-overlay \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/ga-votes-changes.md"
 
       - name: Commit and push generated data
         run: |
@@ -118,6 +110,33 @@ jobs:
               echo "::error::Push failed after 3 attempts - generated data was NOT committed"
               exit 1
             fi
+          fi
+
+      # After the commit, not before: the report describes a record that has
+      # already shipped. One issue, refreshed in place, so the history of thin
+      # sweeps and new result wording lives in one thread. This job is weekly,
+      # so the comment is unconditional -- there is no daily pile to avoid.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "GA votes: thin sweeps and material changes"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/ga-votes-changes.md"
+          if [ ! -s "$report" ] || grep -q 'no material change this run' "$report"; then
+            echo "A full-looking sweep and nothing material — skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-ga-votes."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
           fi
 
       # Split the monolithic votes file into a shared index (with precomputed
@@ -235,3 +254,20 @@ jobs:
         env:
           GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
         run: python3 scripts/publish_ga_legislators.py scorecard
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it,
+      # so an `if: failure()` step placed before the failing step never runs at
+      # all. Sitting here it catches a tier-1 rejection, any commit or push
+      # failure, and a publish failure.
+      #
+      # The condition is "we have a generated file and are about to lose it",
+      # not just "validation failed": this sweep costs ~1,500 SOAP calls on a
+      # full refresh and the output dies with the runner either way.
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-member-votes
+          path: assets/data/ga-member-votes.json
+          if-no-files-found: ignore
+          retention-days: 14
