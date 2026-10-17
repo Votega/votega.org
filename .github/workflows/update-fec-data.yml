@@ -21,8 +21,17 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
+      # fetch-depth: 0 because the commit step rebases. actions/checkout defaults
+      # to a depth-1 shallow clone, which has no merge base to rebase against:
+      # git then reports every touched file as an add/add conflict. That stayed
+      # invisible for 39 runs because on main the rebase is a no-op fast-forward,
+      # and surfaced the first time the rebase had real work to do (run 40, on a
+      # feature branch). It is latent on main too — any push to main during a run
+      # makes the rebase real, and these runs take 15-50 minutes.
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -70,6 +79,7 @@ jobs:
           echo "proceed=true" >> "$GITHUB_OUTPUT"
 
       - name: Fetch GA FEC data
+        id: fetch
         if: steps.guard.outputs.proceed == 'true'
         run: python scripts/generate_fec_data.py assets/data/ga-fec-data.json
         env:
@@ -97,17 +107,6 @@ jobs:
             --baseline-ref HEAD \
             --report-out "$RUNNER_TEMP/fec-changes.md"
 
-      # A tier-1 failure means the file is wrong in a way worth looking at, and
-      # the runner is about to be destroyed with it inside. Keep it.
-      - name: Preserve the rejected file
-        if: failure() && steps.validate.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: rejected-ga-fec-data
-          path: assets/data/ga-fec-data.json
-          if-no-files-found: ignore
-          retention-days: 14
-
       - name: Commit and push
         if: steps.guard.outputs.proceed == 'true'
         run: |
@@ -125,7 +124,10 @@ jobs:
             git commit -m "Update GA FEC campaign finance data"
             pushed=0
             for attempt in 1 2 3; do
-              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              # Rebase onto THIS ref's upstream, not main: on a feature-branch
+              # run (a pre-merge verification) pulling main would rebase the
+              # branch's own commits and push the result to the wrong place.
+              if git pull --rebase origin "$GITHUB_REF_NAME" && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
@@ -160,3 +162,22 @@ jobs:
             echo "Creating tracking issue"
             gh issue create --title "$ISSUE_TITLE" --body-file "$report"
           fi
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it,
+      # so an `if: failure()` step placed before the failing step never runs at
+      # all. Sitting at the end, this catches a validation failure, a commit or
+      # push failure, and a failure in the report step.
+      #
+      # Any failure after the fetch means ~50 minutes of API calls are about to be
+      # destroyed with the runner. Scoped to the validation step at first, which
+      # missed the case that actually happened: validation PASSED and the commit
+      # step failed on a rebase conflict, so a file that had cleared tier 1 was
+      # lost anyway. The condition is now "we have data and are about to lose it".
+      - name: Preserve the generated file
+        if: failure() && steps.fetch.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-fec-data
+          path: assets/data/ga-fec-data.json
+          if-no-files-found: ignore
+          retention-days: 14
