@@ -292,6 +292,7 @@
   </div>
 </div>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   const DATA_URL = 'assets/data/executive.json';
 
@@ -307,6 +308,27 @@
     loadOfficial(officialId);
   }
 
+
+  // Every renderer below builds markup with template literals, and the text it
+  // interpolates comes from outside this page: the Federal Register API
+  // (executive orders, agency rules) and the generated Congress.gov and Senate
+  // feeds. html-escape.js loads ahead of this block; the fallback keeps a
+  // missing dependency from silently emitting raw text.
+  function esc(value) {
+    const shared = window.VoteGA && window.VoteGA.escapeHtml;
+    if (shared) return shared(value);
+    return String(value == null ? '' : value)
+      .replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // Links from remote data need the scheme checked as well as the text
+  // escaped — see safeUrl() in html-escape.js.
+  function safeUrl(value) {
+    const shared = window.VoteGA && window.VoteGA.safeUrl;
+    if (shared) return shared(value);
+    const raw = String(value == null ? '' : value).trim();
+    return /^(https?:\/\/|\/|#)/i.test(raw) ? esc(raw) : '#';
+  }
 
   function partyIcon(party) {
     if (!party) return '';
@@ -362,7 +384,7 @@
     const isCabinet  = o.tier === 'cabinet';
 
     const imageHtml = o.imageUrl
-      ? `<img class="official-photo" src="${o.imageUrl}" alt="${o.name}">`
+      ? `<img class="official-photo" src="${safeUrl(o.imageUrl)}" alt="${esc(o.name)}">`
       : '';
 
     const termHtml = isElected && o.termStart
@@ -372,11 +394,11 @@
     const isActing = (o.role || '').toLowerCase().startsWith('acting');
     const confirmedLabel = isActing ? 'Effective' : 'Senate Confirmed';
     const confirmedHtml = isCabinet && o.confirmedDate
-      ? `<div class="detail-row"><span><strong>${confirmedLabel}:</strong> ${fmt(o.confirmedDate)}</span></div>`
+      ? `<div class="detail-row"><span><strong>${esc(confirmedLabel)}:</strong> ${fmt(o.confirmedDate)}</span></div>`
       : '';
 
     const deptHtml = o.department
-      ? `<div class="detail-row"><span><strong>Department:</strong> ${o.department}</span></div>`
+      ? `<div class="detail-row"><span><strong>Department:</strong> ${esc(o.department)}</span></div>`
       : '';
 
     const birthHtml = o.birthYear
@@ -387,17 +409,17 @@
       : '';
 
     const websiteHtml = o.officialWebsite
-      ? `<p><strong>Official Website:</strong> <a href="${o.officialWebsite}" target="_blank" rel="noopener">${o.officialWebsite}</a></p>`
+      ? `<p><strong>Official Website:</strong> <a href="${safeUrl(o.officialWebsite)}" target="_blank" rel="noopener">${esc(o.officialWebsite)}</a></p>`
       : '';
 
     const bioHtml = o.bio
-      ? `<p style="margin-top:1rem;font-size:0.9rem;line-height:1.6;color:#333;">${o.bio}</p>`
+      ? `<p style="margin-top:1rem;font-size:0.9rem;line-height:1.6;color:#333;">${esc(o.bio)}</p>`
       : '';
 
     const constitutionalRoleHtml = o.constitutionalRole
       ? `<div style="margin-top:1rem;padding:0.85rem 1rem;background:#f8f9fa;border-left:3px solid #6b7280;border-radius:0 6px 6px 0;font-size:0.875rem;line-height:1.6;color:#374151;">
            <strong style="display:block;margin-bottom:0.3rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;">Constitutional Role</strong>
-           ${o.constitutionalRole.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')}
+           ${esc(o.constitutionalRole).replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')}
          </div>`
       : '';
 
@@ -430,9 +452,9 @@
 
     container.innerHTML = `
       ${imageHtml}
-      <span class="role-badge">${o.role}</span>
-      <h2 style="margin:0 0 0.75rem 0;">${o.name}</h2>
-      ${o.party ? `<p><strong>Party:</strong> ${o.party} ${partyIcon(o.party)}</p>` : ''}
+      <span class="role-badge">${esc(o.role)}</span>
+      <h2 style="margin:0 0 0.75rem 0;">${esc(o.name)}</h2>
+      ${o.party ? `<p><strong>Party:</strong> ${esc(o.party)} ${partyIcon(o.party)}</p>` : ''}
       ${deptHtml}
       ${termHtml}
       ${confirmedHtml}
@@ -485,17 +507,17 @@
         const badge     = v.vpVote === 'Yea'
           ? `<span class="tie-badge tie-badge-yea">Voted Yea</span>`
           : `<span class="tie-badge tie-badge-nay">Voted Nay</span>`;
-        const title   = v.title || v.question || 'Senate Vote';
+        const title   = esc(v.title || v.question || 'Senate Vote');
         const date    = v.date ? fmt(v.date) : '—';
-        const meta    = `${date} · ${v.yeas}–${v.nays} (tie) · ${v.result || ''}`.trim().replace(/ · $/, '');
+        const meta    = `${date} · ${esc(v.yeas)}–${esc(v.nays)} (tie) · ${esc(v.result || '')}`.trim().replace(/ · $/, '');
         const summaryHtml = v.summary
-          ? `<div class="tie-summary">${v.summary}</div>`
+          ? `<div class="tie-summary">${esc(v.summary)}</div>`
           : '';
 
         return `<li class="tie-item">
           <div class="tie-header">
             ${badge}
-            <a class="tie-title" href="${v.url}" target="_blank" rel="noopener">${title}</a>
+            <a class="tie-title" href="${safeUrl(v.url)}" target="_blank" rel="noopener">${title}</a>
           </div>
           <div class="tie-meta">${meta}</div>
           ${summaryHtml}
@@ -558,11 +580,11 @@
             const m = law.govinfoPackageId.match(/^PLAW-(\d+)publ(\d+)$/);
             if (m) plNum = `${m[1]}-${m[2]}`;
           }
-          const lawNum   = plNum ? `P.L. ${plNum}` : law.billLabel;
-          const billId   = plNum ? law.billLabel : '';
+          const lawNum   = plNum ? `P.L. ${esc(plNum)}` : esc(law.billLabel);
+          const billId   = plNum ? esc(law.billLabel) : '';
           const date     = law.signingDate ? fmt(law.signingDate) : '—';
           const policy   = law.policyArea
-            ? `<span class="law-policy">${law.policyArea}</span>`
+            ? `<span class="law-policy">${esc(law.policyArea)}</span>`
             : '';
           const metaParts = [date];
           if (billId) metaParts.push(billId);
@@ -574,17 +596,17 @@
             : '';
           const links = authed
             ? `<div class="law-links">
-                 <a href="${law.officialPdfUrl}" target="_blank" rel="noopener">Official law text (GPO PDF)</a>
+                 <a href="${safeUrl(law.officialPdfUrl)}" target="_blank" rel="noopener">Official law text (GPO PDF)</a>
                </div>`
             : '';
           const shaRow = law.sha256Pdf
-            ? `<div class="lv-row"><span class="lv-k">PDF SHA-256</span><span class="lv-v lv-mono">${law.sha256Pdf}</span></div>`
+            ? `<div class="lv-row"><span class="lv-k">PDF SHA-256</span><span class="lv-v lv-mono">${esc(law.sha256Pdf)}</span></div>`
             : '';
           const verify = authed
             ? `<details class="law-verify">
                  <summary>Verify integrity</summary>
                  <div class="law-verify-body">
-                   <div class="lv-row"><span class="lv-k">Source</span><span class="lv-v">GovInfo · <a href="${law.officialTextUrl}" target="_blank" rel="noopener">${law.govinfoPackageId}</a></span></div>
+                   <div class="lv-row"><span class="lv-k">Source</span><span class="lv-v">GovInfo · <a href="${safeUrl(law.officialTextUrl)}" target="_blank" rel="noopener">${esc(law.govinfoPackageId)}</a></span></div>
                    <div class="lv-row"><span class="lv-k">Signed by</span><span class="lv-v">U.S. Government Publishing Office</span></div>
                    ${shaRow}
                  </div>
@@ -594,7 +616,7 @@
           return `<li class="law-item">
             <div class="law-header">
               <span class="law-id">${lawNum}</span>${badge}
-              <a class="law-title" href="${law.congressUrl}" target="_blank" rel="noopener">${law.title}</a>${policy}
+              <a class="law-title" href="${safeUrl(law.congressUrl)}" target="_blank" rel="noopener">${esc(law.title)}</a>${policy}
             </div>
             <div class="law-meta">Signed ${metaParts.join(' · ')}</div>
             ${links}${verify}
@@ -667,12 +689,14 @@
 
     function renderItems(results) {
       return results.map(eo => {
-        const eoNum  = eo.executive_order_number ? `EO ${eo.executive_order_number}` : `Doc ${eo.document_number || ''}`;
+        const eoNum  = eo.executive_order_number
+          ? `EO ${esc(eo.executive_order_number)}`
+          : `Doc ${esc(eo.document_number || '')}`;
         const date   = eo.signing_date ? fmt(eo.signing_date) : '—';
-        const title  = eo.title || 'Untitled';
-        const url    = eo.html_url || '#';
+        const title  = esc(eo.title || 'Untitled');
+        const url    = safeUrl(eo.html_url);
         const abs    = eo.abstract
-          ? `<div class="eo-abstract">${eo.abstract}</div>`
+          ? `<div class="eo-abstract">${esc(eo.abstract)}</div>`
           : '';
         return `<li class="eo-item">
           <div class="eo-header">
@@ -796,10 +820,10 @@
       return results.map(doc => {
         const typeLabel = doc.type === 'Proposed Rule' ? 'PROPOSED RULE' : 'RULE';
         const date      = doc.publication_date ? fmt(doc.publication_date) : '—';
-        const title     = doc.title || 'Untitled';
-        const url       = doc.html_url || '#';
+        const title     = esc(doc.title || 'Untitled');
+        const url       = safeUrl(doc.html_url);
         const abs       = doc.abstract
-          ? `<div class="eo-abstract">${doc.abstract}</div>`
+          ? `<div class="eo-abstract">${esc(doc.abstract)}</div>`
           : '';
         return `<li class="eo-item">
           <div class="eo-header">
