@@ -12,9 +12,12 @@ Flow:
           same-district same-surname challenger with an incumbent)
        b. surname + seat heuristic against current-members.json, for incumbents
           the crosswalk doesn't cover yet (e.g. just-seated members)
-  3. GET /v1/committee/{id}/totals/ for each principal committee -- both the
+  3. GET /v1/committee/{id}/totals/ for each candidate's committee -- both the
      headline cards and the receipt-component breakdown (see FUNDING_FIELDS)
-     come out of this one response
+     come out of this one response. Normally the principal campaign committee,
+     but see get_candidate_committee(): a campaign committee that has been
+     re-designated still holds the cycle's money, and the entry records the
+     committee's name and designation so the page can say so
   4. GET /v1/schedules/schedule_a/by_employer/ for top donors by employer
 
 Output: assets/data/ga-fec-data.json
@@ -138,14 +141,42 @@ def get_ga_candidates():
     return candidates
 
 
-def get_principal_committee_id(candidate_id):
-    """The candidates list endpoint omits principal_committees.
-    Use /candidate/{id}/committees/ filtered to designation='P' (principal).
+# Committee designations, best first. 'P' is the principal campaign committee and
+# 'A' another authorized one; anything else is a committee FEC merely links to the
+# candidate, which we take only when there is nothing better.
+DESIGNATION_RANK = {"P": 0, "A": 1}
+
+
+def get_candidate_committee(candidate_id):
+    """Return {id, name, designation} for the committee carrying this candidacy.
+
+    Filtering to designation='P' and giving up (as this did) loses a member whose
+    campaign committee has been RE-DESIGNATED. Everton Blair's EVERTON BLAIR FOR
+    CONGRESS kept its id, C00901157, and became the unauthorized BUILDING LASTING
+    ALLIANCES FOR IMPACT AND RESULTS PAC after he won the GA-13 special. The
+    committee still holds the cycle's $943k and FEC still links it to his
+    candidate id, but the 'P' filter saw nothing, so no totals were written and
+    /us-congress/everton-blair-ga-13/ said "No current FEC filing found for this
+    member" while the money sat in plain sight.
+
+    So: ask for every committee FEC links to the candidate and rank them —
+    principal, then authorized, then the rest, newest filing first within a tier.
+    The designation travels with the id so the page can say whose filing the
+    figures come from rather than presenting a PAC's totals as a campaign's.
     """
-    data = fec_get(f"/candidate/{candidate_id}/committees/", {"designation": "P"})
-    if not data or not data.get("results"):
+    data = fec_get(f"/candidate/{candidate_id}/committees/", {"cycle": CYCLE})
+    results = (data or {}).get("results") or []
+    if not results:
         return None
-    return data["results"][0].get("committee_id")
+    results.sort(key=lambda c: (DESIGNATION_RANK.get(c.get("designation"), 9),
+                                _newest_first(c.get("last_file_date")),
+                                c.get("committee_id") or ""))
+    best = results[0]
+    return {
+        "id":          best.get("committee_id"),
+        "name":        best.get("name") or "",
+        "designation": best.get("designation") or "",
+    }
 
 
 def get_committee_totals(committee_id):
@@ -404,22 +435,43 @@ def preferred_filing(cids, candidates):
     index silently changes meaning.
 
     The rule, in order: a filing with real activity beats a dormant registration;
-    the later coverage end date beats an older one; the smallest candidate id
-    breaks what remains. The last step carries no meaning — it is there so the
-    output is a function of the data alone. Callers that need the filing for a
-    SPECIFIC office must not rely on this: use byBioguideIdAll / byDistrict and
-    check `office` (as findFecMatch() in campaign-finance.js does).
+    the later coverage end date beats an older one; the more recently filed
+    candidacy beats one that has not filed since an earlier cycle; the smallest
+    candidate id breaks what remains. The last step carries no meaning — it is
+    there so the output is a function of the data alone. Callers that need the
+    filing for a SPECIFIC office must not rely on this: use byBioguideIdAll /
+    byDistrict and check `office` (as findFecMatch() in campaign-finance.js does).
+
+    The lastFileDate step is what decides the dual-filer case, and nothing before
+    it can: both ids draw their totals from the one shared committee, so activity
+    and coverage end date are identical by construction. Without it the winner
+    fell to the id sort, which picked Carter's House filing (H4GA01039 <
+    S6GA00374) — the seat he is leaving, whose FEC page reads "nothing filed" for
+    the cycle because every 2026 document is filed under the Senate candidacy.
     """
     def sort_key(cid):
         e = candidates.get(cid, {})
         active = e.get("totalRaised") is not None or bool(e.get("coverageEndDate"))
-        return (0 if active else 1, _invert(e.get("coverageEndDate") or ""), cid)
+        return (0 if active else 1,
+                _newest_first(e.get("coverageEndDate")),
+                _newest_first(e.get("lastFileDate")),
+                cid)
     return sorted(cids, key=sort_key)[0]
 
 
 def _invert(text):
     """Sort an ISO date string descending inside an ascending tuple key."""
     return tuple(-ord(c) for c in text)
+
+
+def _newest_first(date_text):
+    """Ascending sort key that puts the newest date first and no date last.
+
+    _invert() alone can't do this: an absent date inverts to the empty tuple,
+    which sorts ahead of every real one, so a filing with no date would beat a
+    filing that has one. The leading flag keeps the unknowns at the back.
+    """
+    return (0, _invert(date_text)) if date_text else (1, ())
 
 
 def normalize_last(name):
@@ -554,12 +606,17 @@ def main():
         district   = c.get("district", "")
         bioguide   = c.get("bioguide_id") or ""
         committees = c.get("principal_committees") or []
-        committee_id = committees[0].get("committee_id") if committees else None
+        committee = {
+            "id":          committees[0].get("committee_id"),
+            "name":        committees[0].get("name") or "",
+            "designation": committees[0].get("designation") or "P",
+        } if committees else None
 
         # List endpoint often omits principal_committees — fetch via individual detail endpoint
-        if not committee_id:
+        if not committee:
             time.sleep(DELAY)
-            committee_id = get_principal_committee_id(cid)
+            committee = get_candidate_committee(cid)
+        committee_id = committee["id"] if committee else None
 
         # FEC doesn't return bioguide_id in list responses; enrich it ourselves.
         # Primary: the congress-legislators crosswalk, keyed on the FEC candidate_id
@@ -586,11 +643,24 @@ def main():
             "district":    district,
             "lastName":    normalize_last(name),   # stored for district+lastName lookup in candidate.html
             "fecUrl":      f"https://www.fec.gov/data/candidate/{cid}/",
+            # Date of this filing's most recent FEC document. Two filings for the
+            # same person share a committee and therefore share every dollar
+            # figure, so this is the only field that tells the live candidacy from
+            # the dormant one — see preferred_filing().
+            "lastFileDate": c.get("last_file_date") or "",
         }
         if bioguide:
             entry["bioguideId"] = bioguide
         if committee_id:
             entry["committeeId"] = committee_id
+            # Carried so the page can name the filer when it is not the
+            # candidate's own principal campaign committee — see
+            # get_candidate_committee() and filingCommitteeNote() in
+            # campaign-finance.js.
+            if committee.get("name"):
+                entry["committeeName"] = committee["name"]
+            if committee.get("designation"):
+                entry["committeeDesignation"] = committee["designation"]
 
         if committee_id:
             time.sleep(DELAY)

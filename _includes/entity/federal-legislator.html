@@ -921,6 +921,7 @@
         </div>` : ''}
       </div>
       <p class="finance-meta">${coverageNote}</p>
+      ${CampaignFinance.filingCommitteeNote(entry)}
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
       ${finGenDate ? `<p class="finance-meta">Finance data from the FEC, updated ${finGenDate}.</p>` : ''}
       ${CampaignFinance.fundingBreakdownHtml(entry)}
