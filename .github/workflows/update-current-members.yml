@@ -2,7 +2,8 @@ name: Update Congress.gov current members data (daily, 06:00 UTC)
 
 permissions:
   contents: write  # Allows the bot to commit and push changes
-  
+  issues: write    # the tier-2 report keeps one refreshed tracking issue
+
 on:
   workflow_dispatch:
   schedule:
@@ -32,6 +33,7 @@ jobs:
         run: python scripts/test_federal_sponsorship.py
 
       - name: Generate current member data (includes leadership positions)
+        id: generate
         run: |
           echo "Running script..."
           python scripts/generate_current_members_data.py assets/data/current-members.json
@@ -41,94 +43,38 @@ jobs:
         env:
           CONGRESS_API_KEY: ${{ secrets.CONGRESS_API_KEY }}
 
+      # Two tiers, and the split is the point. Tier 1 is the data against
+      # ITSELF -- a metadata.count that disagrees with the member list, a
+      # missing required field, a duplicated bioguide ID, an index entry naming
+      # someone the roster does not hold, a slice whose row count disagrees
+      # with the inline summary written in the same run, more seats than
+      # Congress has. No fact about Congress can make those true, so they fail
+      # the run and nothing is committed. Tier 2 is a chamber short of a full
+      # house, a Congress.gov detail outage, a member whose sponsorship record
+      # came back null, a Congress three weeks old with nothing introduced yet;
+      # every one of those is something the world can legitimately do, so they
+      # are written to a report and the data is committed anyway.
+      #
+      # The two heredocs this replaces gated on three things the world
+      # controls, on a DAILY job whose regenerated file dies with the runner:
+      # `count >= 500` (a floor on the number of seated members),
+      # `failures <= max(5, count*0.05)` (an upstream detail-endpoint outage),
+      # and `s is not None` on every Georgia member's inline sponsorship
+      # summary -- which gated on a degraded state the pipeline DESIGNS FOR:
+      # fetch_member_legislation() returns None rather than a truncated list
+      # when one page fails, and the entity page already reads that as "no
+      # tab". One flaky page for one of sixteen members aborted the job before
+      # the commit step and discarded the other fifteen members' fresh records
+      # along with the whole 500-member roster. See
+      # docs/audits/2026-10-13-data-pipeline-audit.md 2.6, and the header of
+      # update-local-government.yml for the first workflow to make this split.
       - name: Validate generated data
+        id: validate
         run: |
-          if [ ! -f assets/data/current-members.json ]; then
-            echo "Error: current-members.json was not generated"
-            exit 1
-          fi
-          python -c "
-          import json, sys
-          d = json.load(open('assets/data/current-members.json'))
-          members = d['members']
-          count = d['metadata']['count']
-          print(f'Validated: {count} Congress members')
-          assert count >= 500, f'Expected 500+ members, got {count}'
-          assert count == len(members), f'metadata.count {count} != actual member count {len(members)}'
-          required = ['bioguideId', 'name', 'partyName', 'state', 'terms']
-          for m in members:
-              for field in required:
-                  assert field in m, f'Member {m.get(\"name\",\"?\")} missing required field: {field}'
-
-          failures = d['metadata'].get('enrichmentFailures', 0)
-          print(f'Detail-enrichment failures: {failures}/{count}')
-          assert failures <= max(5, count * 0.05), f'Too many enrichment failures ({failures}/{count}) — indicates a broad API outage'
-
-          print('All integrity checks passed')
-          "
-
-      - name: Validate sponsorship index and slices
-        run: |
-          python - <<'PY'
-          import json, os, sys
-
-          DATA = 'assets/data'
-          idx_path = os.path.join(DATA, 'federal-sponsorship-index.json')
-          assert os.path.exists(idx_path), 'federal-sponsorship-index.json was not generated'
-          idx = json.load(open(idx_path, encoding='utf-8'))
-          meta, counts = idx['metadata'], idx['members']
-
-          # Georgia seats: 14 House + 2 Senate. A vacancy can legitimately take this
-          # below 16, but not far - a smaller number means the delegation filter or
-          # the fetch broke, not that Georgia lost half its seats.
-          assert meta['congress'], 'index carries no congress'
-          assert meta['generatedAt'], 'index carries no generatedAt (the panel stamps from it)'
-          assert len(counts) >= 14, f"only {len(counts)} delegation members have slices"
-          assert len(counts) == meta['memberCount'], \
-              f"memberCount {meta['memberCount']} != {len(counts)} count entries"
-
-          roster = json.load(open(os.path.join(DATA, 'current-members.json'), encoding='utf-8'))
-          ga = [m for m in roster['members'] if m.get('state') == 'Georgia']
-          assert ga, 'no Georgia members in the roster'
-
-          # Every Georgia member must carry the inline summary the entity page reads
-          # to decide whether the tab appears, and it must agree with the slice.
-          total_s = total_c = 0
-          for m in ga:
-              bid, name = m['bioguideId'], m.get('name', '?')
-              s = m.get('sponsorship')
-              assert s is not None, f"{name}: no sponsorship summary (that run's fetch failed)"
-              assert s['congress'] == meta['congress'], f"{name}: summary congress mismatch"
-              assert bid in counts, f"{name}: in the roster but has no sponsorship slice"
-              assert counts[bid] == [s['sponsored'], s['cosponsored']], \
-                  f"{name}: index {counts[bid]} != inline summary {s}"
-              slice_path = os.path.join(DATA, 'federal-sponsorship', bid + '.json')
-              assert os.path.exists(slice_path), f"{name}: slice file missing"
-              sl = json.load(open(slice_path, encoding='utf-8'))
-              assert len(sl['primary']) == s['sponsored'], f"{name}: primary row count mismatch"
-              assert len(sl['cosponsored']) == s['cosponsored'], f"{name}: cosponsor row count mismatch"
-              for row in (sl['primary'] + sl['cosponsored'])[:50]:
-                  assert len(row) == 7, f"{name}: slice row is not 7 fields: {row}"
-                  assert row[0] and row[1] and row[2], f"{name}: row missing type/number/title: {row}"
-              # recentSponsored is republished to the sibling repo; it must stay a
-              # subset of the primary list, capped at 20.
-              recent = m.get('recentSponsored') or []
-              assert len(recent) <= 20, f"{name}: recentSponsored is {len(recent)} rows, expected <= 20"
-              assert len(recent) == min(20, s['sponsored']), \
-                  f"{name}: recentSponsored {len(recent)} != min(20, {s['sponsored']})"
-              total_s += s['sponsored']
-              total_c += s['cosponsored']
-
-          assert total_s == meta['totalSponsored'], 'index totalSponsored disagrees with the members'
-          assert total_c == meta['totalCosponsored'], 'index totalCosponsored disagrees with the members'
-          # The delegation sponsors hundreds of measures and cosponsors thousands per
-          # Congress. A near-empty result parses fine and would wipe the panel, which
-          # is exactly the failure a record floor exists to stop.
-          assert total_s >= 100, f'only {total_s} sponsored records across the delegation'
-          assert total_c >= 500, f'only {total_c} cosponsored records across the delegation'
-          print(f'Validated: {len(counts)} delegation slices, {total_s} sponsored + '
-                f'{total_c} cosponsored records in the {meta["congress"]}th Congress')
-          PY
+          python scripts/validate_current_members.py \
+            --data-dir assets/data \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/federal-members-changes.md"
 
       - name: Commit and push generated data
         run: |
@@ -154,6 +100,43 @@ jobs:
             fi
           fi
 
+      # After the commit, not before: the report describes data that has already
+      # shipped. One issue, refreshed in place, so the history of vacancies and
+      # failed fetches lives in one thread.
+      #
+      # The body is rewritten every run but a comment is only added when the body
+      # actually CHANGED. This job is daily and a vacancy stands for months, so
+      # commenting unconditionally would be the pile of notifications the single
+      # tracking issue exists to avoid — while a real change (a new vacancy, a
+      # member's sponsorship record going missing) still pings.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "Federal members: vacancies, failed fetches and material changes"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/federal-members-changes.md"
+          if [ ! -s "$report" ] || grep -q 'no material change this run' "$report"; then
+            echo "A full house, every member enriched, nothing material — skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            gh issue view "$existing" --json body --jq .body > "$RUNNER_TEMP/current-body.md" || true
+            if diff -q "$RUNNER_TEMP/current-body.md" "$report" >/dev/null 2>&1; then
+              echo "Issue #$existing already says this — leaving it alone."
+              exit 0
+            fi
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-current-members — the federal members report changed."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
       # Published from here, not left to publish-federal-delegation-to-ga-federal-legislators.yml's
       # `paths` trigger: that trigger watches a file this workflow writes, and
       # GitHub does not fire `push` for a commit authored by the default
@@ -163,3 +146,23 @@ jobs:
         env:
           GA_FEDERAL_LEGISLATORS: ${{ secrets.GA_FEDERAL_LEGISLATORS }}
         run: python3 scripts/publish_federal_delegation.py
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it, so
+      # an `if: failure()` step placed before the failing step never runs at all.
+      # Sitting here it catches a tier-1 rejection, a commit or push failure, and
+      # a publish failure.
+      #
+      # The condition is "we have generated files and are about to lose them", not
+      # just "validation failed": this run costs ~131 Congress.gov pages for the
+      # sponsorship record alone, and the output dies with the runner either way.
+      - name: Preserve the generated files
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-federal-members
+          path: |
+            assets/data/current-members.json
+            assets/data/federal-sponsorship-index.json
+            assets/data/federal-sponsorship
+          if-no-files-found: ignore
+          retention-days: 14
