@@ -2,6 +2,7 @@ name: Update GA Executive Orders (twice daily)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -36,34 +37,45 @@ jobs:
       - name: Fetch current year executive orders
         run: python scripts/fetch_ga_executive_orders.py
 
+      # `id: generate` is on THIS step, not the fetch above, because the artifact
+      # step below keys on "we hold a file we are about to lose". The fetch writes
+      # the orders; the enricher adds the SHA-256, byte size and Wayback archive
+      # URL for each, after minutes of PDF downloads and rate-limited archive.org
+      # saves. That enriched file is the one worth preserving, and it exists only
+      # once this step succeeds.
       - name: Enrich orders (hash, archive, full text)
+        id: generate
         run: python scripts/enrich_ga_executive_orders.py
 
+      # Two tiers, and the split is the point. Tier 1 is the file against ITSELF --
+      # a metadata.count that disagrees with the orders, an order with no number
+      # or title, a duplicate number, a date that disagrees with the date encoded
+      # in its number, an order from another year than the file it sits in, a
+      # malformed hash. No fact about Georgia makes those true, so they fail the
+      # run and nothing is committed. Tier 2 is everything the Governor's office
+      # or the calendar can do -- new orders, a writ of election, an order that
+      # went missing or was renumbered, an empty year file -- and is written to a
+      # report while the data is committed anyway.
+      #
+      # The heredoc this replaces gated on two such facts:
+      #   * `if not orders: sys.exit(...)`. The file is per calendar year, so on
+      #     1 January the new year's file legitimately holds nothing until the
+      #     Governor signs the first order. That gate failed all of the twice-
+      #     daily runs until then. A dated time bomb, and it would have gone off
+      #     in January.
+      #   * `len(orders) < prev_n` against last run's file. That compares the file
+      #     with a previous run rather than with itself; a withdrawn or renumbered
+      #     order is the Governor's office's business, and the gate discarded the
+      #     whole run -- including every NEW order and freshly enriched hash --
+      #     without even saying which order had gone.
+      # Each time one fired it aborted the job before the commit step and the
+      # data died with the runner. See docs/audits/2026-10-13-data-pipeline-audit.md
+      # 2.6, and update-ga-members.yml for the same split.
       - name: Validate output
+        id: validate
         run: |
-          set -e
           YEAR=$(date +%Y)
-          FILE=assets/data/ga-executive-orders-${YEAR}.json
-          # Previous committed version, so we can assert the count never shrinks —
-          # the fetch merges additively, so a drop means data was lost, not updated.
-          git show HEAD:${FILE} > /tmp/prev-eo.json 2>/dev/null || echo '{"orders":[]}' > /tmp/prev-eo.json
-          python - "$FILE" /tmp/prev-eo.json <<'PY'
-          import json, sys
-          new  = json.load(open(sys.argv[1], encoding='utf-8'))
-          prev = json.load(open(sys.argv[2], encoding='utf-8'))
-          orders = new.get('orders', [])
-          if not orders:
-              sys.exit('ERROR: no orders in output')
-          if new.get('metadata', {}).get('count') != len(orders):
-              sys.exit(f"ERROR: metadata.count {new.get('metadata',{}).get('count')} != {len(orders)} orders")
-          prev_n = len(prev.get('orders', []))
-          if len(orders) < prev_n:
-              sys.exit(f"ERROR: order count dropped {prev_n} -> {len(orders)} (merge should be additive)")
-          missing = [o.get('number') for o in orders if not o.get('number') or not o.get('title')]
-          if missing:
-              sys.exit(f"ERROR: {len(missing)} order(s) missing number/title")
-          print(f"Valid: {len(orders)} orders (was {prev_n})")
-          PY
+          python scripts/validate_ga_executive_orders.py             assets/data/ga-executive-orders-${YEAR}.json             --baseline-ref HEAD             --report-out "$RUNNER_TEMP/ga-executive-orders-changes.md"
 
       - name: Commit if changed
         run: |
@@ -72,7 +84,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           mkdir -p assets/data/eo-text
-          git add assets/data/ga-executive-orders-${YEAR}.json assets/data/eo-text
+          # A brand-new year has no file until its first order, and `git add` of a
+          # missing path is fatal -- so only add the year file when it exists.
+          if [ -f assets/data/ga-executive-orders-${YEAR}.json ]; then
+            git add assets/data/ga-executive-orders-${YEAR}.json
+          fi
+          git add assets/data/eo-text
           if git diff --cached --quiet; then
             echo "No new executive orders"
           else
@@ -89,6 +106,39 @@ jobs:
             fi
           fi
 
+      # After the commit, not before: the report describes data that has already
+      # shipped. One issue, refreshed in place. This job runs TWICE daily, so the
+      # body is rewritten but a comment is only added when the body actually
+      # CHANGED -- otherwise two notifications a day. Reports that are only
+      # routine items (new orders, a January empty file) skip the issue entirely;
+      # they still land in the run summary.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "GA executive orders: items needing a look"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/ga-executive-orders-changes.md"
+          [ -s "$report" ] && cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"              || grep -q 'No action needed' "$report"; then
+            echo "Nothing needing a human look — skipping issue."
+            exit 0
+          fi
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE"             --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            gh issue view "$existing" --json body --jq .body > "$RUNNER_TEMP/current-body.md" || true
+            if diff -q "$RUNNER_TEMP/current-body.md" "$report" >/dev/null 2>&1; then
+              echo "Issue #$existing already says this — leaving it alone."
+              exit 0
+            fi
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-ga-executive-orders — the report changed."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
       # Published from here, not left to publish-ga-executive-orders.yml's
       # `paths` trigger: that trigger watches a file this workflow writes, and
       # GitHub does not fire `push` for a commit authored by the default
@@ -98,3 +148,19 @@ jobs:
         env:
           GA_EXECUTIVE_ORDERS_TOKEN: ${{ secrets.GA_EXECUTIVE_ORDERS_TOKEN }}
         run: python3 scripts/publish_ga_executive_orders.py
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it, so
+      # an `if: failure()` step placed before the failing step never runs at all.
+      # Sitting here, after the publish, it catches a tier-1 rejection, a commit
+      # or push failure, and a publish failure.
+      #
+      # The condition is "we have an enriched file and are about to lose it", not
+      # just "validation failed": the file dies with the runner either way.
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-executive-orders
+          path: assets/data/ga-executive-orders-*.json
+          if-no-files-found: ignore
+          retention-days: 14
