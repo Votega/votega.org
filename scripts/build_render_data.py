@@ -23,6 +23,7 @@ from __future__ import annotations
 import json
 from lib.atomic_io import write_json_atomic
 import os
+import re
 import sys
 from datetime import datetime, date
 
@@ -175,6 +176,76 @@ def make_freshness_builder(extra_srcs, date_paths):
     return _builder
 
 
+def exec_order_year_files():
+    """`ga-executive-orders-<year>.json` on disk, newest year first.
+
+    The executive-orders dataset is partitioned per calendar year, so naming one
+    file here means naming a year — and this config used to do exactly that
+    (`ga-executive-orders-2026.json`), which goes stale the moment the year rolls
+    over and silently keeps rendering last year as "recent". The year comes off
+    the filenames instead; see the cycle-agnostic rule in CLAUDE.md.
+    """
+    found = []
+    for name in os.listdir(SRC_DIR):
+        m = re.fullmatch(r"ga-executive-orders-(\d{4})\.json", name)
+        if m:
+            found.append((int(m.group(1)), name))
+    return [name for _, name in sorted(found, reverse=True)]
+
+
+def exec_orders_src():
+    """The newest year's file, or None when there is none (build_one then skips)."""
+    files = exec_order_year_files()
+    return files[0] if files else None
+
+
+def build_exec_orders(data, cfg):
+    """Recent orders across year boundaries, newest first.
+
+    Reading only the newest year's file would be rollover-correct but would put
+    a cliff where the old hardcoded year had one: on 1 January the new year's
+    file holds nothing (the Governor has signed none yet — the fetcher now
+    writes it empty rather than failing), so the panel would go blank, and the
+    first order of the year would leave it showing a single row. "Recent
+    executive orders" is not "this calendar year's", so this walks back through
+    older years until it has `cap` rows.
+
+    `count` is the orders held by the years actually drawn from, which keeps the
+    "showing 60 of 318" line meaning the span on screen rather than every year
+    ever archived.
+    """
+    rows, total = [], 0
+    best_iso, best_human = None, None
+    for name in exec_order_year_files():
+        if name == cfg["src"]:
+            year_data = data            # already loaded by build_one
+        else:
+            path = os.path.join(SRC_DIR, name)
+            try:
+                with open(path, encoding="utf-8") as fh:
+                    year_data = json.load(fh)
+            except (OSError, json.JSONDecodeError):
+                continue
+        orders = _get(year_data, "orders", []) or []
+        if not isinstance(orders, list):
+            continue
+        total += _get(year_data, "metadata.count", len(orders)) or 0
+        rows += [_pick(o, cfg["fields"]) for o in orders[:cfg["cap"] - len(rows)]]
+        human, iso = _fmt_date(_get(year_data, cfg["date"]))
+        if iso and (best_iso is None or iso > best_iso):
+            best_iso, best_human = iso, human
+        if len(rows) >= cfg["cap"]:
+            break
+    return {
+        "updated": best_human,
+        "updatedISO": best_iso,
+        "count": total,
+        "shown": len(rows),
+        "source": _get(data, "metadata.source"),
+        "rows": rows,
+    }
+
+
 def rows_from_bymember_trades(data, list_key, fields, cap):
     """ga-congress-trades stores byMember as a name-keyed dict; flatten to rows sorted by tradeCount."""
     bm = _get(data, list_key, {}) or {}
@@ -227,8 +298,9 @@ CONFIG = {
         "cap": 100, "builder": build_bills_rows,
     },
     "ga_executive_orders": {
-        "src": "ga-executive-orders-2026.json", "date": "metadata.updatedAt", "count": "metadata.count",
+        "src": exec_orders_src, "date": "metadata.updatedAt", "count": "metadata.count",
         "list": "orders", "fields": ["date", "number", "title", "category"], "cap": 60,
+        "builder": build_exec_orders,
     },
     "ga_election_calendar": {
         "src": "ga-election-calendar.json", "date": "metadata.generatedAt", "list": "elections",
@@ -261,9 +333,17 @@ CONFIG = {
 
 
 def build_one(name, cfg):
-    path = os.path.join(SRC_DIR, cfg["src"])
+    # `src` may be a callable, for a dataset whose filename carries a year or a
+    # session and so must be resolved from what is on disk rather than written
+    # down here. It returns None when it finds nothing to read.
+    src = cfg["src"]() if callable(cfg["src"]) else cfg["src"]
+    if src is None:
+        print(f"  skip {name}: no source file found", file=sys.stderr)
+        return None
+    cfg = {**cfg, "src": src}
+    path = os.path.join(SRC_DIR, src)
     if not os.path.exists(path):
-        print(f"  skip {name}: {cfg['src']} not found", file=sys.stderr)
+        print(f"  skip {name}: {src} not found", file=sys.stderr)
         return None
     with open(path, encoding="utf-8") as fh:
         data = json.load(fh)
