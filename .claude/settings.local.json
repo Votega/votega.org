@@ -100,7 +100,18 @@
       "Bash(python scripts/test_search_corpus_sources.py)",
       "Bash(cp assets/data/search-entities.json /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/73eea726-9a0d-49b1-80c5-9fbb4837ad51/scratchpad/sc-committed.json)",
       "Bash(python scripts/generate_search_corpus.py)",
-      "Bash(python scripts/only_keys_changed.py assets/data/search-entities.json metadata.generatedAt)"
+      "Bash(python scripts/only_keys_changed.py assets/data/search-entities.json metadata.generatedAt)",
+      "Bash(gh run *)",
+      "Bash(gh repo *)",
+      "Bash(gh workflow *)",
+      "Bash(cp scripts/generate_search_corpus.py /tmp/gsc.bak)",
+      "Bash(cp /tmp/gsc.bak scripts/generate_search_corpus.py)",
+      "Bash(rm /tmp/gsc.bak)",
+      "Bash(git config *)",
+      "Bash(xargs -I{} echo \"  {} workflows visible\")",
+      "Bash(git fetch *)",
+      "Bash(python - /c/Users/justi/.claude/projects/C--Users-justi-Documents-GitHub-votega-org/memory)",
+      "Bash(xargs -I{} echo \"{} files total\")"
     ]
   }
 }
