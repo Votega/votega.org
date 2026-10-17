@@ -2,6 +2,7 @@ name: Cache government candidate portraits (weekly, Sun 11:00 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one tracking issue
 
 # Downloads government-hosted portraits (congress.gov, legis.ga.gov), resizes
 # them, and commits the local copies plus candidate-image-cache.json. The script
@@ -34,21 +35,20 @@ jobs:
         run: pip install Pillow
 
       - name: Cache government portraits
+        id: generate
         run: python scripts/fetch_candidate_images.py
 
+      # Tier 1 is the manifest against itself and the disk: a count that does
+      # not match, an entry whose file is missing, and the copyright invariant
+      # -- a source on any host that is not a declared .gov one. Tier 2 is what
+      # the sources did: portraits that failed to download (named), entries
+      # added or dropped, image files nothing references. The two asserts this
+      # replaces were already tier-1 shaped; the step just had no report, so a
+      # portrait that kept failing was invisible. See
+      # docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
       - name: Validate manifest
         run: |
-          python -c "
-          import json
-          d = json.load(open('assets/data/candidate-image-cache.json'))
-          count = d['metadata']['count']
-          images = d['images']
-          assert count == len(images), f'metadata.count {count} != {len(images)} entries'
-          import os
-          for url, rel in images.items():
-              assert os.path.exists(rel), f'manifest points at missing file: {rel}'
-          print(f'Validated: {count} cached portraits, all files present')
-          "
+          python scripts/validate_candidate_images.py assets/data/candidate-image-cache.json             --baseline-ref HEAD             --report-out "$RUNNER_TEMP/candidate-images-changes.md"
 
       - name: Commit and push cached portraits
         run: |
@@ -71,3 +71,40 @@ jobs:
               exit 1
             fi
           fi
+
+      # After the commit: the report describes a cache that has already shipped.
+      # One issue, refreshed in place.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "Candidate portrait cache: material changes"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/candidate-images-changes.md"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"; then
+            echo "Nothing material changed - skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE"             --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-candidate-images."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose (an `if: failure()` step placed earlier never runs).
+      # Condition is "we have a generated manifest and are about to lose it".
+      - name: Preserve the generated files
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-candidate-images
+          path: |
+            assets/data/candidate-image-cache.json
+            assets/img/candidates
+          if-no-files-found: ignore
+          retention-days: 14

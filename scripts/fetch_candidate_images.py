@@ -171,6 +171,7 @@ def main():
 
     manifest = {}
     fetched = skipped = failed = 0
+    failed_urls = []
 
     for url in urls:
         name = local_name(url)
@@ -186,11 +187,13 @@ def main():
         raw = fetch_bytes(url, headers=UA, timeout=45)
         if raw is None:
             failed += 1
+            failed_urls.append(url)
             continue
 
         jpeg = resize_to_jpeg(raw)
         if jpeg is None:
             failed += 1
+            failed_urls.append(url)
             continue
 
         # Plain write is fine: a torn portrait is self-healing (next run re-fetches
@@ -203,6 +206,14 @@ def main():
         print("  saved %s (%.1f KB, from %.1f KB source)"
               % (rel, len(jpeg) / 1024, len(raw) / 1024))
 
+    # A run that resolves nothing at all almost certainly means the rosters or
+    # the network are broken — fail so CI does not overwrite a good manifest
+    # with an empty one. Checked BEFORE the write: it used to follow it, so the
+    # "refusing" message was printed after the empty manifest was already on disk.
+    if not manifest and urls:
+        sys.exit("No portraits could be cached despite %d candidate URL(s) — "
+                 "refusing to write an empty manifest." % len(urls))
+
     payload = {
         "metadata": {
             "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -214,17 +225,14 @@ def main():
         # Sorted for a stable, minimal diff between runs.
         "images": {u: manifest[u] for u in sorted(manifest)},
     }
+    if failed_urls:
+        # Named so validate_candidate_images.py can report them. Omitted when
+        # empty, so a clean run's manifest is unchanged byte for byte.
+        payload["metadata"]["failed"] = sorted(failed_urls)
     write_json_atomic(os.path.join(REPO_ROOT, MANIFEST_FILE), payload, indent=2)
 
     print("Done. %d fetched, %d already cached, %d failed. Manifest: %d entries."
           % (fetched, skipped, failed, len(manifest)))
-
-    # A run that resolves nothing at all almost certainly means the rosters or
-    # the network are broken — fail so CI does not overwrite a good manifest
-    # with an empty one.
-    if not manifest and urls:
-        sys.exit("No portraits could be cached despite %d candidate URL(s) — "
-                 "refusing to write an empty manifest." % len(urls))
 
 
 if __name__ == "__main__":
