@@ -13,6 +13,7 @@ name: Refresh general-election ballot preview (daily, 07:30 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -44,23 +45,25 @@ jobs:
           python-version: '3.x'
 
       - name: Rebuild the ballot preview
+        id: generate
         run: python scripts/build_general_placeholder.py
 
+      # Two tiers. Tier 1 is the file against ITSELF: a placeholder carrying
+      # votes (it is defined as the file with none), a contest whose total is
+      # not the sum of its candidates, a nameless candidate, a duplicated
+      # office. Tier 2 is what races.json can legitimately say -- a section
+      # with no offices, fewer offices than yesterday, a candidate who
+      # withdrew -- and is reported by name while the commit proceeds.
+      #
+      # The heredoc this replaces asserted exactly 5 sections, >= 300 offices
+      # and >= 400 candidates: floors on numbers races.json controls, which
+      # could not say WHICH section had lost its races. This runs daily AND on
+      # every races.json push. See docs/audits/2026-10-13-data-pipeline-audit.md
+      # 2.6.
       - name: Validate the rebuild
         run: |
           set -e
-          python -c "
-          import json
-          d = json.load(open('_data/election_results/ga-general-2026-results.json'))
-          offices = sum(len(s.get('races', [])) for s in d)
-          cands = sum(len(c['candidates']) for s in d for r in s.get('races', []) for c in r['contests'])
-          votes = sum(c.get('totalVotes', 0) for s in d for r in s.get('races', []) for c in r['contests'])
-          assert len(d) == 5, f'expected 5 sections, got {len(d)}'
-          assert offices >= 300, f'suspiciously few offices: {offices}'
-          assert cands >= 400, f'suspiciously few candidates: {cands}'
-          assert votes == 0, f'placeholder should carry no votes, found {votes}'
-          print(f'Validated: {offices} offices, {cands} candidates, 0 votes')
-          "
+          python scripts/validate_general_placeholder.py             _data/election_results/ga-general-2026-results.json             --baseline-ref HEAD             --report-out "$RUNNER_TEMP/general-placeholder-changes.md"
           # Belt and braces: the file on disk must now agree with races.json.
           python scripts/build_general_placeholder.py --check
 
@@ -85,3 +88,44 @@ jobs:
               exit 1
             fi
           fi
+
+      # After the commit: the report describes a preview that has already
+      # shipped. One issue, refreshed in place; because this runs daily and on
+      # every races.json push, a comment is only added when the body CHANGED.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "General-election preview: material changes"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/general-placeholder-changes.md"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"; then
+            echo "Nothing material changed - skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE"             --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            gh issue view "$existing" --json body --jq .body > "$RUNNER_TEMP/current-body.md" || true
+            if diff -q "$RUNNER_TEMP/current-body.md" "$report" >/dev/null 2>&1; then
+              echo "Issue #$existing already says this - leaving it alone."
+              exit 0
+            fi
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by refresh-general-placeholder - the report changed."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose (an `if: failure()` step placed earlier never runs).
+      # Condition is "we have a generated file and are about to lose it".
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-general-placeholder
+          path: _data/election_results/ga-general-2026-results.json
+          if-no-files-found: ignore
+          retention-days: 14
