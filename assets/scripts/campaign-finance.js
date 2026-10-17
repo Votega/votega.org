@@ -78,6 +78,17 @@ window.CampaignFinance = (function () {
     return sign + '$' + Math.round(abs).toLocaleString();
   }
 
+  // Committee names are the only FEC text this module puts into markup, so it
+  // reaches for the shared escaper rather than carrying its own. html-escape.js
+  // is loaded ahead of this file on every page that uses a finance panel; the
+  // fallback keeps a missing dependency from silently emitting raw text.
+  function esc(value) {
+    const shared = window.VoteGA && window.VoteGA.escapeHtml;
+    if (shared) return shared(value);
+    return String(value == null ? '' : value)
+      .replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
   // ── FEC name matching ──────────────────────────────────────────────────────
   // Mirrors normalize_name() in generate_fec_data.py. Both sides reduce a name to
   // 'first last', lowercase, without punctuation, suffixes, honorifics, quoted
@@ -533,6 +544,28 @@ window.CampaignFinance = (function () {
       + ' so no names, employers or dates are disclosed for that money.</p>';
   }
 
+  // Name the filer when the figures do not come from the candidate's own principal
+  // campaign committee. Everton Blair's committee kept its id through the GA-13
+  // special and was re-designated from EVERTON BLAIR FOR CONGRESS to the
+  // unauthorized BUILDING LASTING ALLIANCES FOR IMPACT AND RESULTS PAC, so the
+  // cycle's money is filed by a PAC rather than a campaign. Printing those totals
+  // under a bare "Campaign Finance" heading would be a claim the filing does not
+  // make, and FEC's own candidate page for him publishes no totals at all.
+  // Returns '' for a principal committee (the ordinary case) and for data
+  // generated before committeeDesignation existed.
+  function filingCommitteeNote(entry) {
+    if (!entry) return '';
+    const designation = entry.committeeDesignation || '';
+    if (!designation || designation === 'P') return '';
+    const what = designation === 'A' ? 'an authorized committee' : 'a committee not authorized by the candidate';
+    const named = entry.committeeName
+      ? esc(entry.committeeName) + ', ' + what
+      : what;
+    return '<p class="finance-meta">Filed by ' + named
+      + ' — not a principal campaign committee. These are the committee\'s totals for the cycle,'
+      + ' which may include money raised and spent outside a campaign.</p>';
+  }
+
   // Per-block provenance line ("Finance data from the FEC, updated October 4, 2026.").
   // Finance figures come from their own files (ga-fec-data.json /
   // ga-campaign-finance.json), not from the roster the page-level stamp describes, so
@@ -553,7 +586,7 @@ window.CampaignFinance = (function () {
     gaCandidatePool, findGaFilers,
     GA_CHAMBER_MAP, GA_OFFICE_MAP,
     fecSearchUrl, cycleLabelFor,
-    fundingBreakdownHtml,
+    fundingBreakdownHtml, filingCommitteeNote,
     summary,
   };
 })();

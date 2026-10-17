@@ -93,3 +93,44 @@ test('two different people sharing a surname stay ambiguous, not newest-wins', (
     { id: null, status: 'ambiguous' }
   );
 });
+
+/*
+ * filingCommitteeNote(): say whose filing the figures come from when it is not
+ * the candidate's own principal campaign committee.
+ */
+
+test('says nothing for a principal campaign committee', () => {
+  assert.strictEqual(
+    CF.filingCommitteeNote({ committeeId: 'C00543967', committeeDesignation: 'P',
+                             committeeName: 'BUDDY CARTER FOR SENATE' }),
+    ''
+  );
+});
+
+test('says nothing for data generated before the designation was recorded', () => {
+  assert.strictEqual(CF.filingCommitteeNote({ committeeId: 'C00543967' }), '');
+  assert.strictEqual(CF.filingCommitteeNote(null), '');
+});
+
+test('names an unauthorized committee and warns the totals are not a campaign’s', () => {
+  const note = CF.filingCommitteeNote({
+    committeeId: 'C00901157',
+    committeeName: 'BUILDING LASTING ALLIANCES FOR IMPACT AND RESULTS PAC',
+    committeeDesignation: 'U',
+  });
+  assert.match(note, /BUILDING LASTING ALLIANCES FOR IMPACT AND RESULTS PAC/);
+  assert.match(note, /not authorized by the candidate/);
+  assert.match(note, /not a principal campaign committee/);
+});
+
+test('distinguishes an authorized committee from an unauthorized one', () => {
+  const note = CF.filingCommitteeNote({ committeeName: 'X VICTORY FUND', committeeDesignation: 'A' });
+  assert.match(note, /an authorized committee/);
+  assert.ok(!/not authorized by the candidate/.test(note));
+});
+
+test('escapes the committee name', () => {
+  const note = CF.filingCommitteeNote({ committeeName: 'A & B <PAC>', committeeDesignation: 'U' });
+  assert.match(note, /A &amp; B &lt;PAC&gt;/);
+  assert.ok(!/<PAC>/.test(note));
+});

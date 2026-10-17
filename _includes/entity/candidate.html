@@ -818,6 +818,7 @@
         </div>` : ''}
       </div>
       <p class="finance-meta">${coverageNote}</p>
+      ${CampaignFinance.filingCommitteeNote(entry)}
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
       ${CampaignFinance.provenanceLine('the FEC', fecData.metadata?.generatedAt)}
       ${CampaignFinance.fundingBreakdownHtml(entry)}
