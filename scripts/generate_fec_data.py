@@ -404,22 +404,43 @@ def preferred_filing(cids, candidates):
     index silently changes meaning.
 
     The rule, in order: a filing with real activity beats a dormant registration;
-    the later coverage end date beats an older one; the smallest candidate id
-    breaks what remains. The last step carries no meaning — it is there so the
-    output is a function of the data alone. Callers that need the filing for a
-    SPECIFIC office must not rely on this: use byBioguideIdAll / byDistrict and
-    check `office` (as findFecMatch() in campaign-finance.js does).
+    the later coverage end date beats an older one; the more recently filed
+    candidacy beats one that has not filed since an earlier cycle; the smallest
+    candidate id breaks what remains. The last step carries no meaning — it is
+    there so the output is a function of the data alone. Callers that need the
+    filing for a SPECIFIC office must not rely on this: use byBioguideIdAll /
+    byDistrict and check `office` (as findFecMatch() in campaign-finance.js does).
+
+    The lastFileDate step is what decides the dual-filer case, and nothing before
+    it can: both ids draw their totals from the one shared committee, so activity
+    and coverage end date are identical by construction. Without it the winner
+    fell to the id sort, which picked Carter's House filing (H4GA01039 <
+    S6GA00374) — the seat he is leaving, whose FEC page reads "nothing filed" for
+    the cycle because every 2026 document is filed under the Senate candidacy.
     """
     def sort_key(cid):
         e = candidates.get(cid, {})
         active = e.get("totalRaised") is not None or bool(e.get("coverageEndDate"))
-        return (0 if active else 1, _invert(e.get("coverageEndDate") or ""), cid)
+        return (0 if active else 1,
+                _newest_first(e.get("coverageEndDate")),
+                _newest_first(e.get("lastFileDate")),
+                cid)
     return sorted(cids, key=sort_key)[0]
 
 
 def _invert(text):
     """Sort an ISO date string descending inside an ascending tuple key."""
     return tuple(-ord(c) for c in text)
+
+
+def _newest_first(date_text):
+    """Ascending sort key that puts the newest date first and no date last.
+
+    _invert() alone can't do this: an absent date inverts to the empty tuple,
+    which sorts ahead of every real one, so a filing with no date would beat a
+    filing that has one. The leading flag keeps the unknowns at the back.
+    """
+    return (0, _invert(date_text)) if date_text else (1, ())
 
 
 def normalize_last(name):
@@ -586,6 +607,11 @@ def main():
             "district":    district,
             "lastName":    normalize_last(name),   # stored for district+lastName lookup in candidate.html
             "fecUrl":      f"https://www.fec.gov/data/candidate/{cid}/",
+            # Date of this filing's most recent FEC document. Two filings for the
+            # same person share a committee and therefore share every dollar
+            # figure, so this is the only field that tells the live candidacy from
+            # the dormant one — see preferred_filing().
+            "lastFileDate": c.get("last_file_date") or "",
         }
         if bioguide:
             entry["bioguideId"] = bioguide

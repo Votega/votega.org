@@ -147,6 +147,18 @@ window.CampaignFinance = (function () {
     return idx;
   }
 
+  // Of several filings, the one with the newest lastFileDate — the live candidacy,
+  // where a filing with no date never outranks one that has. Mirrors _newest_first()
+  // in generate_fec_data.py. Falls back to array order when no id carries a date,
+  // so data generated before lastFileDate existed behaves as it did.
+  function mostRecentlyFiled(candidates, ids) {
+    return ids.reduce((best, cid) => {
+      const a = (candidates[cid] && candidates[cid].lastFileDate) || '';
+      const b = (candidates[best] && candidates[best].lastFileDate) || '';
+      return a > b ? cid : best;
+    }, ids[0]);
+  }
+
   // Reduce several candidate FEC filings to one, or report ambiguity rather than
   // guessing — the rule findGaFilers() already follows on the GA side. Picking
   // blindly is what put another man's money on a candidate page.
@@ -169,12 +181,17 @@ window.CampaignFinance = (function () {
     if (active.length === 1) return { id: active[0], status: 'ok' };
     pool = active.length ? active : pool;
 
-    // c. One committee across all remaining ids means duplicate FEC records for a
-    //    single filer, so either is correct; prefer whichever carries totals.
+    // c. One committee across all remaining ids means the same filer under several
+    //    candidate registrations — a sitting House member running for Senate holds
+    //    an H and an S id drawing on one committee. Both carry the same money, so
+    //    the totals cannot separate them; the most recently filed id can, and it is
+    //    the one whose FEC page actually shows the cycle. Picking by array order
+    //    sent Buddy Carter's page to his dormant House filing, which FEC.gov renders
+    //    as "nothing filed".
     const committees = new Set(pool.map(cid => C[cid] && C[cid].committeeId));
     if (committees.size === 1 && !committees.has(null) && !committees.has(undefined)) {
       const withData = pool.filter(cid => fecHasActivity(C[cid]));
-      return { id: (withData.length ? withData : pool)[0], status: 'ok' };
+      return { id: mostRecentlyFiled(C, withData.length ? withData : pool), status: 'ok' };
     }
 
     return { id: null, status: 'ambiguous' };
