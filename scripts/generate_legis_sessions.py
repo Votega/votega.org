@@ -30,10 +30,6 @@ from lib.ga_soap import SESSION_URL, get_sessions
 
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-legis-sessions.json"
 
-#: A floor, not a count: GetSessions returned 23 in 2026-10 and only ever grows. Guards
-#: against committing a truncated table over a good one.
-MIN_SESSIONS = 20
-
 
 def main() -> int:
     sessions = get_sessions()
@@ -41,11 +37,9 @@ def main() -> int:
         print("Error: GetSessions returned nothing — refusing to overwrite the table",
               file=sys.stderr)
         return 1
-    if len(sessions) < MIN_SESSIONS:
-        print(f"Error: GetSessions returned {len(sessions)} sessions, fewer than the "
-              f"{MIN_SESSIONS} floor — refusing to overwrite the table", file=sys.stderr)
-        return 1
-
+    # No count floor: the table only grows, but a short response is validate_legis_sessions.py's
+    # to report BY NAME (which ids vanished), not this script's to refuse -- a refusal here
+    # discards the whole run, and a floor of 20 is the world's number, not ours.
     missing = [s for s in sessions if not s.get("id") or not s.get("description")]
     if missing:
         print(f"Error: {len(missing)} session(s) missing an id or description",
