@@ -38,16 +38,36 @@ DATA_DIR = REPO_ROOT / "assets" / "data"
 JEKYLL_DATA_DIR = REPO_ROOT / "_data"
 OUTPUT_PATH = DATA_DIR / "search-entities.json"
 
-# Minimum record count below which we assume something went wrong and refuse
-# to overwrite a good index with a broken one.
-MIN_RECORDS = 200
+# Record count below which the index is worth a second look. A WARNING, not a
+# gate: the number of searchable entities is content, and refusing to write
+# over it discarded the run and left the validator — which produces the
+# per-category report that actually diagnoses a thin index — with no file to
+# read. See docs/audits/2026-10-13-data-pipeline-audit.md 2.6, and
+# scripts/validate_search_corpus.py.
+#
+# It also never caught what it was written for. Every source below contributes
+# a few hundred records at most, so losing one entirely still clears 200:
+# dropping all 236 GA legislators leaves 1,174. `missing_sources` is the check
+# that does catch it, by naming the file that failed to load.
+THIN_INDEX = 200
+
+# Sources that failed to load this run. Every file `load()` is asked for is
+# committed in this repo and always present, so a miss means the repo state or
+# an upstream workflow is broken — not that Georgia has fewer entities.
+missing_sources = []
 
 
 def load(name, base=DATA_DIR):
-    """Load a data file, returning None if it's missing (non-fatal)."""
+    """Load a data file, returning None if it's missing.
+
+    The caller returns early on None and contributes nothing, which is why a
+    miss is recorded here rather than merely printed: a silently absent source
+    is a whole category vanishing from site search.
+    """
     path = base / name
     if not path.exists():
         print(f"  ! {name} not found -- skipping", file=sys.stderr)
+        missing_sources.append(name)
         return None
     with open(path, encoding="utf-8") as f:
         return json.load(f)
@@ -311,7 +331,11 @@ def build_places(records, seen):
     """
     path = JEKYLL_DATA_DIR / "places.yml"
     if not path.exists():
+        # Recorded, not just printed, for the same reason as load()'s misses:
+        # the registry is the authoritative list of places, so its absence is
+        # every local government dropping out of search.
         print("  ! places.yml not found -- skipping", file=sys.stderr)
+        missing_sources.append("places.yml")
         return
     with open(path, encoding="utf-8") as f:
         places = (yaml.safe_load(f) or {}).get("places", [])
@@ -354,13 +378,35 @@ def main():
         print(f"  {cat}: {n}")
     print(f"  TOTAL: {len(records)}")
 
-    if len(records) < MIN_RECORDS:
+    # A source that did not load is the precise version of what the old record
+    # floor was groping at, and it IS fatal: no fact about Georgia makes
+    # ga-members.json absent, and writing the index without it would publish a
+    # search box that has quietly lost every legislator. Nothing is written, so
+    # the committed index stays serviceable until the next run.
+    # De-duplicated: some sources are read by more than one builder
+    # (current-members.json and ga-members.json are each loaded twice), and one
+    # absent file reporting as "2 source file(s)" sends a reader hunting for a
+    # second problem that does not exist.
+    absent = sorted(set(missing_sources))
+    if absent:
         print(
-            f"FATAL: only {len(records)} records (expected >= {MIN_RECORDS}); "
-            "refusing to write a likely-broken index.",
+            f"FATAL: {len(absent)} source file(s) could not be read: "
+            f"{', '.join(absent)}. Each one is a whole category missing from "
+            f"site search, so the index is not written.",
             file=sys.stderr,
         )
         sys.exit(1)
+
+    # A thin index is reported, never gated. The run is written either way and
+    # validate_search_corpus.py prints the per-category figures that say which
+    # part is thin.
+    if len(records) < THIN_INDEX:
+        print(
+            f"WARNING: only {len(records)} records (a healthy index runs ~1,400). "
+            f"Every source loaded, so this is the content — writing it and "
+            f"letting the validator report it.",
+            file=sys.stderr,
+        )
 
     output = {
         "metadata": {
