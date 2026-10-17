@@ -345,6 +345,45 @@ def tier2_cases():
     heads = [h for h, _ in V.tier2(r, n, r, i)]
     check("counts going down is reported", "Sponsorship counts went down" in heads, True)
 
+    # Naming the vacant seat is what makes the report actionable on sight. The
+    # scan reads the file's own contents: a gap in a state's district sequence,
+    # or a state short a senator.
+    n = copy.deepcopy(r)
+    n["members"] += [member("F%03d" % d, state="Florida", district=d)
+                     for d in range(1, 29) if d != 20]
+    lines = dict(V.tier2(n, i))["Congress below a full house"]
+    check("a gap in a state's district sequence is named",
+          any("Florida district 20" in l for l in lines), True)
+    check("...and the districts either side of it are not",
+          any("district 19" in l or "district 21" in l for l in lines), False)
+
+    n = copy.deepcopy(r)
+    n["members"] += [member("S1", state="Ohio", chamber="Senate")]
+    lines = dict(V.tier2(n, i))["Congress below a full house"]
+    check("a state short a senator is named",
+          any("Ohio** holds 1 of 2 Senate seats" in l for l in lines), True)
+
+    # A delegate has no numbered district, so the territories must not read as a
+    # 1-district state missing nothing, nor appear in the scan at all.
+    n = copy.deepcopy(r)
+    n["members"] += [member("D001", state="Guam"),
+                     member("D002", state="Puerto Rico")]
+    lines = dict(V.tier2(n, i))["Congress below a full house"]
+    check("territories are left out of the gap scan",
+          any("Guam" in l or "Puerto Rico" in l for l in lines), False)
+
+    # The seats the scan cannot see must be declared, not papered over: a
+    # vacancy in a state's HIGHEST-numbered district leaves no gap behind.
+    lines = dict(V.tier2(r, i))["Congress below a full house"]
+    check("seats the scan cannot locate are declared as unaccounted for",
+          any("unaccounted for" in l for l in lines), True)
+
+    n = copy.deepcopy(r)
+    n["members"] += [member("Z%03d" % k, state="Wyoming")
+                     for k in range(V.SEATS_MAX - len(n["members"]))]
+    check("a full house reports nothing about seats",
+          "Congress below a full house" in [h for h, _ in V.tier2(n, i)], False)
+
     # The report is what a human reads; it must say the data shipped anyway.
     body = V.render(V.tier2(r, i))
     check("the report states the data was committed anyway",

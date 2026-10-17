@@ -69,6 +69,15 @@ SEATS_MAX = 541
 # vacancy takes the delegation below 16, nothing takes it above.
 GA_SEATS_MAX = 16
 
+SENATORS_PER_STATE = 2
+
+# Their House rows are delegates and a resident commissioner, with no numbered
+# district, so they are left out of the gap scan that names a vacant seat.
+TERRITORIES = frozenset({
+    "District of Columbia", "Puerto Rico", "Guam", "Virgin Islands",
+    "American Samoa", "Northern Mariana Islands",
+})
+
 # `recentSponsored` is a convenience slice republished to the sibling repo. The
 # cap is in the generator, so exceeding it is a code bug, not a fact.
 RECENT_CAP = 20
@@ -99,6 +108,48 @@ def baseline(path, ref):
 
 def georgia(roster):
     return [m for m in (roster.get("members") or []) if m.get("state") == "Georgia"]
+
+
+def chamber(m):
+    """The chamber a member sits in, off the LAST term — they run oldest first."""
+    items = (m.get("terms") or {}).get("item") or []
+    return items[-1].get("chamber") if items else None
+
+
+def vacant_seats(roster):
+    """Which seats the roster has no member for, as (named, locatable) lines.
+
+    Found from the file's own contents: a gap in a state's House district
+    sequence, or a state with fewer than two senators. A vacancy in a state's
+    HIGHEST-numbered district leaves no gap to see, and locating it would take an
+    apportionment table this file does not carry — so the caller says when the
+    named list is shorter than the arithmetic shortfall rather than implying the
+    list is complete.
+    """
+    districts, senators = {}, {}
+    for m in roster.get("members") or []:
+        state = m.get("state")
+        if state in TERRITORIES:
+            continue        # a delegate has no numbered district to be missing from
+        if chamber(m) == "Senate":
+            senators[state] = senators.get(state, 0) + 1
+        elif chamber(m) == "House of Representatives":
+            districts.setdefault(state, set()).add(m.get("district"))
+
+    lines = []
+    for state in sorted(districts):
+        held = districts[state]
+        numbered = sorted(d for d in held if isinstance(d, int))
+        if not numbered:
+            continue        # at-large; nothing to find a gap in
+        gaps = [n for n in range(1, max(numbered) + 1) if n not in held]
+        for n in gaps:
+            lines.append(f"- **{state} district {n}** — no member in the roster")
+    for state in sorted(senators):
+        if senators[state] < SENATORS_PER_STATE:
+            lines.append(f"- **{state}** holds {senators[state]} of "
+                         f"{SENATORS_PER_STATE} Senate seats")
+    return lines
 
 
 # ── tier 1: the artifacts against themselves ──────────────────────────────────
@@ -272,9 +323,22 @@ def tier2(roster, index, old_roster=None, old_index=None):
     # The condition `assert count >= 500` used to gate on. Vacancies are a fact
     # about Congress, and the one thing a mid-term resignation looks like.
     if len(members) < SEATS_MAX:
-        sections.append(("Congress below a full house", [
-            f"- {len(members)} of {SEATS_MAX} seats filled "
-            f"({SEATS_MAX - len(members)} vacant or not yet seated)"]))
+        short = SEATS_MAX - len(members)
+        lines = [f"- {len(members)} of {SEATS_MAX} seats filled "
+                 f"({short} vacant or not yet seated)", ""]
+        named = vacant_seats(roster)
+        lines += named
+        # Naming the seat is what makes this line actionable, but the scan can
+        # only see a GAP in a state's district sequence. A vacancy in a state's
+        # highest-numbered district, or a whole delegation missing, leaves no gap
+        # — so say when the list does not account for the whole shortfall rather
+        # than letting a reader take it as complete.
+        if len(named) < short:
+            lines.append(f"- {short - len(named)} further seat(s) unaccounted for. A "
+                         f"vacancy in a state's highest-numbered district leaves no "
+                         f"gap in the sequence, so it cannot be named from this file "
+                         f"alone.")
+        sections.append(("Congress below a full house", lines))
     if len(ga) < GA_SEATS_MAX:
         sections.append(("Georgia delegation below full strength", [
             f"- {len(ga)} of {GA_SEATS_MAX} seats filled — "
