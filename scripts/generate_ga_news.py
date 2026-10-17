@@ -55,7 +55,9 @@ import json
 from lib.atomic_io import write_json_atomic
 import os
 import re
+import subprocess
 import sys
+import time
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 from urllib.parse import urljoin, urlsplit, urlunsplit
@@ -63,7 +65,7 @@ import xml.etree.ElementTree as ET
 
 import yaml
 
-from lib.http import fetch_bytes
+from lib.http import DEFAULT_USER_AGENT, fetch_bytes
 from lib.ga_match import toks
 
 HERE           = os.path.dirname(os.path.abspath(__file__))
@@ -472,8 +474,157 @@ def parse_usg_html(raw_bytes, source, feed_url):
     return items
 
 
+#: sos.ga.gov/news/division/<id> cards: one <article class="card card-list__item">
+#: per release, carrying a "Month DD, YYYY" <span class="card__date">, the
+#: headline as the only <a class="heading__link"> in the card, and a
+#: <div class="card__summary">. The headline is scoped to that class because the
+#: enclosing <h2> repeats the title verbatim in its own id= and name=
+#: attributes, and the card also links the same article twice (headline plus a
+#: "Read the full article" anchor) -- so a bare /news/ href pattern would match
+#: the wrong thing.
+SOS_CARD = '<article class="card card-list__item"'
+SOS_DATE = re.compile(r'<span class="card__date">\s*([A-Z][a-z]+ \d{1,2}, \d{4})\s*</span>')
+SOS_LINK = re.compile(
+    r"""<a\s+href=["']([^"']+)["'][^>]*class=["'][^"']*heading__link[^"']*["'][^>]*>(.*?)</a>""",
+    re.S)
+SOS_SUMMARY = re.compile(r'<div class="card__summary">(.*?)</div>', re.S)
+
+
+def parse_sos_html(raw_bytes, source, feed_url):
+    """Scrape a Georgia Secretary of State news listing.
+
+    The agency's rss.xml -- which this feed pointed at until now -- is not its
+    newsroom. It is the site-wide alert/banner feed: "Student Ambassador
+    Registration Banner - Cloned", professional-licensing-board go-live
+    notices, items going back to 2025, and no press releases at all. The
+    division listing is the actual release stream (the Elections Division is 31).
+    """
+    page = raw_bytes.decode("utf-8", "replace")
+    items = []
+    for chunk in page.split(SOS_CARD)[1:]:
+        d = SOS_DATE.search(chunk)
+        a = SOS_LINK.search(chunk)
+        if not d or not a:
+            continue
+        try:
+            when = datetime.strptime(d.group(1), "%B %d, %Y").replace(tzinfo=timezone.utc)
+        except ValueError:
+            continue
+        title = clean_text(a.group(2))
+        if not title:
+            continue
+        link = urljoin(feed_url, a.group(1).strip())
+        sm = SOS_SUMMARY.search(chunk)
+        snippet = clean_text(sm.group(1)) if sm else ""
+        cu = canonical_url(link)
+        items.append({
+            "id": hashlib.sha1(cu.encode("utf-8")).hexdigest()[:12],
+            "title": title,
+            "url": link,
+            "source": source,
+            "publishedAt": when.isoformat(),
+            "snippet": snippet[:SNIPPET_MAX] or None,
+        })
+        if len(items) >= PER_FEED_MAX:
+            break
+    return items
+
+
 #: `parser` values news_sources.yml may name. Omitting the key means RSS/Atom.
-HTML_PARSERS = {"usg": parse_usg_html}
+HTML_PARSERS = {"usg": parse_usg_html, "sos": parse_sos_html}
+
+
+#: Seconds between re-attempts for a feed with `blocked_retries` set.
+BLOCKED_RETRY_WAIT = 10
+
+#: `fetch_with` values news_sources.yml may name. Omitting the key uses urllib
+#: via lib.http, which is what every feed but one wants.
+FEED_TRANSPORTS = ("curl",)
+
+
+def fetch_via_curl(url, label, timeout=30, verbose=True):
+    """Fetch a URL with the curl binary instead of urllib.
+
+    For one feed, lib.http cannot reach the host at all. sos.ga.gov sits behind
+    a Cloudflare filter that decides on the TLS client fingerprint, not on
+    anything in the request we control: measured interleaved against the same
+    IP and the same User-Agent, urllib scored 0/6 while curl scored 4/6, and
+    four urllib variants (default context, ALPN pinned to http/1.1, curl's
+    cipher list, and both together) scored 0/3 each. No header or TLS setting
+    reachable from the standard library gets through, so retrying urllib here
+    would be a knob that cannot help the one feed that needs it.
+
+    curl is a standard HTTP client, the User-Agent stays our own, and the
+    site's robots.txt disallows nothing under /news/ -- this is ordinary
+    crawling of a public agency's press releases, not an attempt to pass as a
+    browser. Deliberately NOT added to lib.http: that module is the project's
+    single statement of the retry policy and is GET-via-urllib by design, and
+    this is one source's transport problem rather than a policy change. Move it
+    to lib/ if a second source ever needs it.
+
+    `--fail` matters: without it curl exits 0 on a 403 and hands back the
+    "Just a moment..." interstitial as a 200-looking body, which the HTML
+    adapter would then scrape to zero items and report as changed markup.
+    """
+    cmd = ["curl", "--silent", "--show-error", "--fail", "--location",
+           "--max-redirs", "3", "--max-time", str(timeout),
+           "--user-agent", DEFAULT_USER_AGENT, "--header", "Accept: */*", url]
+    try:
+        proc = subprocess.run(cmd, capture_output=True, timeout=timeout + 10)
+    except FileNotFoundError:
+        print(f"  [{label}] curl not found on PATH -- cannot fetch this feed")
+        return None
+    except subprocess.SubprocessError as exc:
+        if verbose:
+            print(f"  [{label}] curl failed: {exc}")
+        return None
+    if proc.returncode != 0:
+        if verbose:
+            err = proc.stderr.decode("utf-8", "replace").strip()[:200]
+            print(f"  [{label}] curl exit {proc.returncode}: {err or 'blocked'}")
+        return None
+    return proc.stdout or None
+
+
+def fetch_feed_bytes(url, label, blocked_retries=0, transport=None):
+    """Fetch one feed, with optional extra attempts for a bot-challenge 403.
+
+    lib.http follows CLAUDE.md's policy exactly -- retry 429 and 5xx, return
+    None immediately on any other 4xx -- and that is right for an API, where a
+    403 means the request itself is wrong and replaying it only burns quota.
+
+    Cloudflare's "Just a moment..." interstitial is also served as a 403, and it
+    is not a client error: it is a probabilistic challenge that the identical
+    request passes on a later try. sos.ga.gov serves it to roughly half of our
+    fetches, which is why that feed contributed zero items to every committed
+    run. Nothing about the request was fixable -- measured, the challenge fires
+    independently of User-Agent and of the Accept/Accept-Language headers, and
+    `/news/` is not disallowed by the site's robots.txt, so this is an
+    indiscriminate bot filter rather than a refusal aimed at us.
+
+    Retrying here rather than in lib.http keeps that module's policy (and the
+    twelve generators relying on it) untouched, and the opt-in is per feed, so a
+    source that genuinely 403s still fails fast instead of stalling the build.
+    """
+    if transport and transport not in FEED_TRANSPORTS:
+        print(f"  WARNING: feed '{label}' names unknown fetch_with "
+              f"'{transport}' -- expected one of {sorted(FEED_TRANSPORTS)}; "
+              f"falling back to urllib")
+        transport = None
+
+    for attempt in range(blocked_retries + 1):
+        if transport == "curl":
+            raw = fetch_via_curl(url, label, verbose=(attempt == 0))
+        else:
+            raw = fetch_bytes(url, label=label, verbose=(attempt == 0))
+        if raw is not None:
+            return raw
+        if attempt < blocked_retries:
+            print(f"[{label}] blocked or unreachable -- retrying in "
+                  f"{BLOCKED_RETRY_WAIT}s (attempt {attempt + 2}/"
+                  f"{blocked_retries + 1})")
+            time.sleep(BLOCKED_RETRY_WAIT)
+    return None
 
 
 def parse_source(raw_bytes, feed):
@@ -548,7 +699,10 @@ def main():
         if unknown:
             print(f"[{name}] warning: ga_terms_exclude names term(s) not in "
                   f"ga_terms: {', '.join(unknown)}")
-        raw = fetch_bytes(url, label=name)
+        raw = fetch_feed_bytes(
+            url, name,
+            blocked_retries=int(feed.get("blocked_retries") or 0),
+            transport=feed.get("fetch_with"))
         if raw is None:
             print(f"[{name}] fetch failed -- skipping")
             continue

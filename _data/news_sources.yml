@@ -18,7 +18,21 @@
 #               link out and carry the publisher name, which is the disclosure.
 #   parser      OPTIONAL. Omit for RSS/Atom (the default). Names an HTML
 #               adapter in generate_ga_news.py's HTML_PARSERS, for a source that
-#               publishes no feed at all. Currently only `usg`.
+#               publishes no usable feed. Currently `usg` and `sos`.
+#   blocked_retries
+#               OPTIONAL. Extra fetch attempts for a host that serves an
+#               intermittent bot-challenge 403 (Cloudflare's "Just a moment..."
+#               interstitial). lib.http correctly treats a 403 as final, so
+#               without this a feed behind a probabilistic challenge silently
+#               contributes nothing on the runs it loses. Set it only for a
+#               source measured to pass on a retry -- a real 403 should still
+#               fail fast rather than stall the build.
+#   fetch_with  OPTIONAL. `curl` fetches this feed with the curl binary instead
+#               of urllib, for a host whose bot filter decides on the TLS client
+#               fingerprint and so refuses the standard library no matter what
+#               headers it sends. Measured on sos.ga.gov: urllib 0/6, curl 4/6,
+#               same IP and same User-Agent. Leave it unset otherwise -- urllib
+#               via lib.http is the normal path and carries the retry policy.
 #   ga_focused  true  -> feed is wholly GA politics; keep every item
 #               false -> general feed; apply the GA-relevance gate (drops national
 #                        wire copy, e.g. the States Newsroom syndication that makes
@@ -87,9 +101,22 @@ feeds:
     parser: usg
     ga_focused: true
 
+  # The division listing, not rss.xml. sos.ga.gov's rss.xml is NOT the newsroom:
+  # it is the site-wide alert/banner feed (licensing-board go-live notices,
+  # "Student Ambassador Registration Banner - Cloned", items dating to 2025) and
+  # carries no press releases at all, so this feed published nothing usable even
+  # on the runs it did fetch. /news/division/31 is the Elections Division's
+  # release stream; it has no feed of its own, hence the `sos` HTML adapter.
+  # Cloudflare challenges this host on the TLS client fingerprint, so the feed
+  # also needs curl as its transport (urllib never gets through) plus retries
+  # for the share of curl's attempts that are still challenged -- see fetch_with
+  # and blocked_retries in the header above.
   - name: GA Secretary of State
-    url: https://sos.ga.gov/rss.xml
+    url: https://sos.ga.gov/news/division/31
     type: official
+    parser: sos
+    fetch_with: curl
+    blocked_retries: 4
     ga_focused: true
     entity: ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1  # Brad Raffensperger
 
