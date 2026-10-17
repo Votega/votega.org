@@ -143,8 +143,43 @@ def get_ga_candidates():
 
 # Committee designations, best first. 'P' is the principal campaign committee and
 # 'A' another authorized one; anything else is a committee FEC merely links to the
-# candidate, which we take only when there is nothing better.
+# candidate, which we take only when it was once the candidate's own — see
+# committee_was_authorized().
 DESIGNATION_RANK = {"P": 0, "A": 1}
+
+# The designations that mean "this committee is the candidate's own". Everything
+# else — 'D' leadership PAC, 'J' joint fundraiser, 'U' unauthorized — is money
+# raised around a politician, not by their campaign.
+AUTHORIZED_DESIGNATIONS = {"P", "A"}
+
+
+def committee_was_authorized(committee_id):
+    """True when FEC has ever recorded this committee as a candidate's own.
+
+    The discriminator between the two things that look identical in a single
+    cycle's data:
+
+      • A campaign committee that was RE-DESIGNATED keeps its id, so its history
+        still carries the cycles it filed as P. Everton Blair's C00901157 was
+        EVERTON BLAIR FOR CONGRESS before it became the unauthorized BUILDING
+        LASTING ALLIANCES FOR IMPACT AND RESULTS PAC, and the cycle's money in it
+        is genuinely his campaign's.
+
+      • A leadership PAC ('D') or an unrelated advocacy PAC ('U') that FEC merely
+        links to the person has no such cycle. Derek Dooley's LEADERSHIP MATTERS
+        PAC holds $4.7M that is not his Senate campaign's money, and putting it
+        under "Total Raised" on his page states something the filing does not.
+
+    Taking the best-ranked committee without this check is what put that $4.7M on
+    a live candidate page, along with Marjorie Taylor Greene's leadership PAC and
+    five other PACs belonging to former candidates.
+
+    Returns False when the history can't be read, so an unreadable history keeps
+    a non-authorized committee OUT rather than letting it through unverified.
+    """
+    data = fec_get(f"/committee/{committee_id}/history/", {"per_page": 100})
+    results = (data or {}).get("results") or []
+    return any(r.get("designation") in AUTHORIZED_DESIGNATIONS for r in results)
 
 
 def get_candidate_committee(candidate_id):
@@ -171,12 +206,23 @@ def get_candidate_committee(candidate_id):
     results.sort(key=lambda c: (DESIGNATION_RANK.get(c.get("designation"), 9),
                                 _newest_first(c.get("last_file_date")),
                                 c.get("committee_id") or ""))
-    best = results[0]
-    return {
-        "id":          best.get("committee_id"),
-        "name":        best.get("name") or "",
-        "designation": best.get("designation") or "",
-    }
+    for cand in results:
+        designation = cand.get("designation") or ""
+        # A committee that is not authorized TODAY has to show that it once was,
+        # or it is somebody's PAC rather than this candidate's campaign.
+        if designation not in AUTHORIZED_DESIGNATIONS:
+            time.sleep(DELAY)
+            if not committee_was_authorized(cand.get("committee_id")):
+                print(f"    skipping {cand.get('committee_id')} "
+                      f"({cand.get('name') or '?'}, designation {designation or '-'}): "
+                      f"never an authorized committee of this candidate")
+                continue
+        return {
+            "id":          cand.get("committee_id"),
+            "name":        cand.get("name") or "",
+            "designation": designation,
+        }
+    return None
 
 
 def get_committee_totals(committee_id):

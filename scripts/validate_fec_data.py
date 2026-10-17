@@ -198,13 +198,24 @@ def tier2(new, old):
         sections.append((f"Totals moved more than {MATERIAL_SHIFT:.0%}", moved))
 
     # A committee change is how a re-designation or a new campaign shows up.
+    #
+    # A field that did not exist last week is not a change. When committeeName and
+    # committeeDesignation were introduced, every candidate whose committee was
+    # otherwise untouched read as `C00x [?] -> C00x [P]`: 209 of the 226 lines in
+    # the first report, which buried the 17 real ones. So a designation only counts
+    # as changed when BOTH sides carry one; absent-to-present on an unchanged
+    # committee is the schema catching up, not the FEC saying anything.
     cmte = []
     for cid in sorted(set(nc) & set(oc)):
         n, o = describe(nc[cid]), describe(oc[cid])
-        if (n["committee"], n["designation"]) != (o["committee"], o["designation"]):
-            cmte.append(f"- **{n['name']}** (`{cid}`): "
-                        f"`{o['committee']}` [{o['designation'] or '?'}] → "
-                        f"`{n['committee']}` [{n['designation'] or '?'}]")
+        committee_moved = n["committee"] != o["committee"]
+        redesignated = (o["designation"] and n["designation"]
+                        and n["designation"] != o["designation"])
+        if not (committee_moved or redesignated):
+            continue
+        cmte.append(f"- **{n['name']}** (`{cid}`): "
+                    f"`{o['committee']}` [{o['designation'] or '?'}] → "
+                    f"`{n['committee']}` [{n['designation'] or '?'}]")
     if cmte:
         sections.append(("Filing committee changed", cmte))
 

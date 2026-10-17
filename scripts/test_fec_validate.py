@@ -160,6 +160,30 @@ def tier2_cases():
     heads = [h for h, _ in V.tier2(new, old)]
     check("roster churn is reported", "Candidates added or removed" in heads, True)
 
+    # A field that did not exist last week is not a change. Introducing
+    # committeeDesignation made 209 of the first report's 226 committee lines
+    # read `C00x [?] -> C00x [P]`, burying the 17 real ones.
+    new = copy.deepcopy(old)
+    for cid in new["candidates"]:
+        new["candidates"][cid].pop("committeeDesignation", None)
+    heads = [h for h, _ in V.tier2(old, new)]   # old is "new", new is "baseline"
+    check("a newly populated designation on an unchanged committee is not a change",
+          "Filing committee changed" in heads, False)
+
+    # But a genuine re-designation, both sides present, still reports.
+    new = copy.deepcopy(old)
+    new["candidates"]["H6GA13062"]["committeeDesignation"] = "P"
+    heads = [h for h, _ in V.tier2(new, old)]
+    check("a real re-designation still reports", "Filing committee changed" in heads, True)
+
+    # And a committee swap reports even when the designation is absent on one side.
+    new = copy.deepcopy(old)
+    new["candidates"]["H6GA13062"]["committeeId"] = "C00222222"
+    new["candidates"]["H6GA13062"].pop("committeeDesignation")
+    heads = [h for h, _ in V.tier2(new, old)]
+    check("a committee swap reports whatever the designations are",
+          "Filing committee changed" in heads, True)
+
     # The report is what a human reads; it must say the data shipped.
     body = V.render("ga-fec-data.json", V.tier2(new, old))
     check("the report states the data was committed anyway",

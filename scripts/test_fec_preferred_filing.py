@@ -27,6 +27,7 @@ Exits 0 on success, 1 on any failure.
 import json
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import generate_fec_data as gen  # noqa: E402
@@ -59,25 +60,80 @@ def dual_filer_case():
 
 
 def committee_cases():
-    """Rank the committees FEC links to a candidate, without touching the network."""
-    real_get = gen.fec_get
+    """Rank the committees FEC links to a candidate, without touching the network.
 
-    def stub(results):
-        gen.fec_get = lambda path, params=None, retries=3: {"results": list(results)}
+    Two endpoints are stubbed, because the rule needs both: the candidate's
+    committee list, and each non-authorized committee's designation history. The
+    history is what separates a re-designated campaign committee (Blair's, which
+    filed as P in earlier cycles) from a leadership PAC that was never anybody's
+    campaign (Dooley's, D/U throughout).
+    """
+    real_get = gen.fec_get
+    real_sleep = time.sleep
+    time.sleep = lambda *_: None       # the real one pauses DELAY per history call
+
+    def stub(results, history=None):
+        """history: {committee_id: [designation, ...]} as FEC would report it."""
+        hist = history or {}
+
+        def fake(path, params=None, retries=3):
+            if "/history/" in path:
+                cid = path.split("/committee/")[1].split("/")[0]
+                return {"results": [{"designation": d} for d in hist.get(cid, [])]}
+            return {"results": list(results)}
+        gen.fec_get = fake
 
     try:
         # Everton Blair: the campaign committee kept its id through the GA-13
         # special and was re-designated to an unauthorized PAC. Filtering to
         # designation='P' found nothing, so his $943k went unreported and the
         # page said "No current FEC filing found for this member".
+        # Blair: one committee, unauthorized today, but P in the cycles it filed
+        # as EVERTON BLAIR FOR CONGRESS. The money in it is his campaign's.
         stub([{"committee_id": "C00901157",
                "name": "BUILDING LASTING ALLIANCES FOR IMPACT AND RESULTS PAC",
-               "designation": "U", "last_file_date": "2026-10-15"}])
+               "designation": "U", "last_file_date": "2026-10-15"}],
+             history={"C00901157": ["U", "P", "P"]})
         got = gen.get_candidate_committee("H6GA13062")
         check("a re-designated committee is found, not skipped",
               got and got["id"], "C00901157")
         check("its designation travels with it, so the page can say whose filing it is",
               got and got["designation"], "U")
+
+        # Dooley: a leadership PAC that was never a campaign committee. Taking it
+        # put $4.7M under "Total Raised" on a live Senate candidate's page.
+        stub([{"committee_id": "C00914531", "name": "LEADERSHIP MATTERS PAC",
+               "designation": "U", "last_file_date": "2026-10-15"}],
+             history={"C00914531": ["U", "U"]})
+        check("a PAC that was never the candidate's own is refused",
+              gen.get_candidate_committee("S6GA00408"), None)
+
+        stub([{"committee_id": "C00708289", "name": "PUTTING PEOPLE BEFORE POLITICIANS INC",
+               "designation": "D", "last_file_date": "2026-10-15"}],
+             history={"C00708289": ["D", "D"]})
+        check("a leadership PAC is refused",
+              gen.get_candidate_committee("H0GA06192"), None)
+
+        # An unreadable history must not let an unverified PAC through.
+        stub([{"committee_id": "C00999999", "name": "MYSTERY PAC", "designation": "U"}],
+             history={})
+        check("no history -> the committee is refused, not assumed good",
+              gen.get_candidate_committee("H0GA00000"), None)
+
+        # A real campaign committee is never subjected to the history check at all.
+        stub([{"committee_id": "C00543967", "name": "BUDDY CARTER FOR SENATE",
+               "designation": "P", "last_file_date": "2026-10-15"}], history={})
+        check("a principal committee needs no history lookup",
+              gen.get_candidate_committee("S6GA00374")["id"], "C00543967")
+
+        # Falling past a refused PAC to a committee that does qualify.
+        stub([{"committee_id": "C00111111", "name": "SOMEBODY'S PAC",
+               "designation": "U", "last_file_date": "2026-10-15"},
+              {"committee_id": "C00222222", "name": "REAL CAMPAIGN",
+               "designation": "A", "last_file_date": "2026-01-01"}],
+             history={"C00111111": ["U"]})
+        check("a refused PAC does not block a qualifying committee behind it",
+              gen.get_candidate_committee("H0GA00000")["id"], "C00222222")
 
         # A principal committee always wins, whatever else is linked and however
         # recently those filed — this is the ordinary case and must not change.
@@ -111,6 +167,7 @@ def committee_cases():
               gen.get_candidate_committee("H0GA01000"), None)
     finally:
         gen.fec_get = real_get
+        time.sleep = real_sleep
 
 
 def main():
