@@ -2,6 +2,7 @@ name: Update Georgia General Assembly member data (daily, 07:00 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -26,64 +27,36 @@ jobs:
       # ROSTER-SOAP-MIGRATION-SPEC.md §9 and is archived in Phase 2, which is also
       # when OPENSTATES_API_KEY leaves this workflow.
       - name: Generate GA member data
+        id: generate
         run: python scripts/generate_ga_members_soap.py assets/data/ga-members.json
 
+      # Two tiers, and the split is the point. Tier 1 is the file against ITSELF
+      # -- a metadata.count that disagrees with the member list, a missing
+      # required field, two members in one district, a chamber holding MORE
+      # seats than the constitution creates, an _inject entry the merge dropped.
+      # No fact about the General Assembly can make those true, so they fail the
+      # run and nothing is committed. Tier 2 is a chamber below full strength and
+      # the diff against yesterday's roster; every one of those is something
+      # Georgia can legitimately do, so they are written to a report and the data
+      # is committed anyway.
+      #
+      # The heredoc this replaces asserted `len(senate) == 56` and
+      # `len(house) == 180` -- exact equality on a number the world controls. The
+      # chambers are that size at FULL STRENGTH; a resignation, a death or a seat
+      # awaiting a special election makes the real count lower, and that is a true
+      # fact the site should publish. This runs daily, so each time the assert
+      # fired it aborted the job before the commit step and discarded the whole
+      # day's refresh -- every other member's updated data with it, unrecoverably,
+      # since the file died with the runner. See
+      # docs/audits/2026-10-13-data-pipeline-audit.md 2.6, and the header of
+      # update-local-government.yml for the first workflow to make this split.
       - name: Validate generated data
+        id: validate
         run: |
-          if [ ! -f assets/data/ga-members.json ]; then
-            echo "Error: ga-members.json was not generated"
-            exit 1
-          fi
-          python -c "
-          import json, os
-
-          d = json.load(open('assets/data/ga-members.json'))
-          members = d['members']
-          count = d['metadata']['count']
-          print(f'Validated: {count} GA members')
-          assert count == len(members), f'metadata.count {count} != actual member count {len(members)}'
-
-          # Resigned/Removed/Deceased entries are historical records injected purely so
-          # ga-member-votes.json can still join their earlier votes by OCD id — the seat
-          # itself is already reflected by a successor or a separate Vacant entry, so
-          # these must not count as an extra current seat.
-          DEPARTED_STATUSES = {'Resigned', 'Removed', 'Deceased'}
-          current_seat = lambda m: m.get('status') not in DEPARTED_STATUSES
-          senate = [m for m in members if m.get('chamber') == 'Senate' and current_seat(m)]
-          house  = [m for m in members if m.get('chamber') == 'House of Representatives' and current_seat(m)]
-          # Georgia's General Assembly has a constitutionally fixed size: 56 Senate seats, 180 House seats.
-          # Vacant seats are injected as placeholder entries, so these should always hold exactly.
-          assert len(senate) == 56,  f'Expected exactly 56 senators, got {len(senate)}'
-          assert len(house)  == 180, f'Expected exactly 180 representatives, got {len(house)}'
-
-          required = ['id', 'name', 'chamber', 'district']
-          for m in members:
-              for field in required:
-                  assert field in m, f'Member {m.get(\"name\",\"?\")} missing required field: {field}'
-
-          def assert_no_duplicate_districts(chamber_members, label):
-              seen = {}
-              for m in chamber_members:
-                  dist = m.get('district')
-                  if dist is None:
-                      continue
-                  seen.setdefault(dist, []).append(m.get('name', '?'))
-              dups = {dist: names for dist, names in seen.items() if len(names) > 1}
-              assert not dups, f'{label}: duplicate district(s) found: {dups}'
-
-          assert_no_duplicate_districts(senate, 'Senate')
-          assert_no_duplicate_districts(house, 'House')
-
-          overrides_path = 'assets/data/ga-members-overrides.json'
-          if os.path.exists(overrides_path):
-              overrides = json.load(open(overrides_path))
-              injected = overrides.get('_inject', [])
-              existing_ids = {m['id'] for m in members}
-              missing = [e['id'] for e in injected if e.get('id') not in existing_ids]
-              assert not missing, f'_inject entries missing from output (failed to apply): {missing}'
-
-          print('All integrity checks passed')
-          "
+          python scripts/validate_ga_members.py assets/data/ga-members.json \
+            --overrides assets/data/ga-members-overrides.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/ga-roster-changes.md"
 
       - name: Commit and push generated data
         run: |
@@ -107,6 +80,43 @@ jobs:
             fi
           fi
 
+      # After the commit, not before: the report describes a roster that has
+      # already shipped. One issue, refreshed in place, so the history of GA
+      # vacancies and departures lives in one thread.
+      #
+      # The body is rewritten every run but a comment is only added when the body
+      # actually CHANGED. This job is daily and a vacancy stands for weeks, so
+      # commenting unconditionally would be the pile of notifications the single
+      # tracking issue exists to avoid -- while a real change (a new resignation,
+      # a seat filled) still pings.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "GA roster: vacancies and material changes"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/ga-roster-changes.md"
+          if [ ! -s "$report" ] || grep -q 'no material change this run' "$report"; then
+            echo "Both chambers full and nothing material changed — skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            gh issue view "$existing" --json body --jq .body > "$RUNNER_TEMP/current-body.md" || true
+            if diff -q "$RUNNER_TEMP/current-body.md" "$report" >/dev/null 2>&1; then
+              echo "Issue #$existing already says this — leaving it alone."
+              exit 0
+            fi
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-ga-members — the roster report changed."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
       - name: Publish to ga-legislators repo
         env:
           GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
@@ -115,3 +125,21 @@ jobs:
         # all.json into house.json / senate.json in its own workflow. The per-session
         # roster ARCHIVE is a separate, deliberate freeze — see freeze-ga-roster.yml.
         run: python3 scripts/publish_ga_legislators.py members
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it, so
+      # an `if: failure()` step placed before the failing step never runs at all.
+      # Sitting here it catches a tier-1 rejection, a commit or push failure, and
+      # a publish failure.
+      #
+      # The condition is "we have a generated file and are about to lose it", not
+      # just "validation failed": the regenerated JSON dies with the runner either
+      # way, and the FEC workflow learned this the hard way when validation passed
+      # and the commit step failed on a rebase conflict, losing a good file.
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-members
+          path: assets/data/ga-members.json
+          if-no-files-found: ignore
+          retention-days: 14
