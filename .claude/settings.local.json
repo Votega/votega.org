@@ -85,7 +85,12 @@
       "Bash(python scripts/validate_ga_votes.py /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/e6fdff49-5be7-4423-ae3c-b0b7a4f057e9/scratchpad/votes-mutated.json --expect-no-overlay)",
       "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/update-ga-votes.yml'\\)\\); print\\('YAML OK'\\)\")",
       "Bash(python3 scripts/test_ga_bills_validate.py)",
-      "Bash(python3 scripts/test_curated_ga_bills_validate.py)"
+      "Bash(python3 scripts/test_curated_ga_bills_validate.py)",
+      "Bash(git check-ignore *)",
+      "Bash(grep -c '\\\\^M\\\\$')",
+      "Bash(python -I -c ' *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ]
   }
 }
