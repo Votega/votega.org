@@ -44,8 +44,15 @@ import generate_search_corpus as G  # noqa: E402
 # blocker silently blocks nothing and this check passes however the import is
 # written. Verified by putting the module-level import back and watching this
 # fail.
-IMPORT_WITHOUT_YAML = """
-import sys
+# Running the suite under a yaml blocker is the only way to catch this locally:
+# this machine HAS pyyaml, so every case passes here no matter where the import
+# sits, and CI is the first thing to notice. It noticed twice — once for a
+# module-level `import yaml`, then again when the lazy import was placed above
+# the exists() check in build_places(), so the branch that records a missing
+# registry raised ModuleNotFoundError. So the whole suite re-runs itself with
+# yaml unavailable rather than only checking that the module imports.
+RUN_WITHOUT_YAML = """
+import runpy, sys
 class Block:
     def find_spec(self, name, path=None, target=None):
         if name == "yaml" or name.startswith("yaml."):
@@ -53,9 +60,12 @@ class Block:
         return None
 sys.meta_path.insert(0, Block())
 sys.path.insert(0, %r)
-import generate_search_corpus          # must not need yaml at module scope
-print("imported")
+sys.argv = [%r]
+runpy.run_path(%r, run_name="__main__")
 """
+
+# Set in the child so it runs the cases without spawning another child.
+CHILD_ENV = "VOTEGA_SEARCH_CORPUS_NO_YAML"
 
 failures = []
 
@@ -68,17 +78,22 @@ def check(label, got, want):
         failures.append(label)
 
 
-def cases():
-    # This suite cannot run at all in CI unless the module imports with no
-    # third-party packages, so prove it in a subprocess that cannot see pyyaml.
-    here = os.path.dirname(os.path.abspath(__file__))
-    proc = subprocess.run([sys.executable, "-c", IMPORT_WITHOUT_YAML % here],
-                          capture_output=True, text=True)
-    check("the module imports with pyyaml unavailable (as run-script-tests.yml "
-          "has it)", proc.returncode, 0)
+def rerun_without_yaml():
+    """Run every case again in a child that cannot import yaml, as CI cannot."""
+    me = os.path.abspath(__file__)
+    here = os.path.dirname(me)
+    env = {**os.environ, CHILD_ENV: "1"}
+    proc = subprocess.run(
+        [sys.executable, "-c", RUN_WITHOUT_YAML % (here, me, me)],
+        capture_output=True, text=True, env=env)
+    check("every case still passes with pyyaml unavailable "
+          "(run-script-tests.yml installs none)", proc.returncode, 0)
     if proc.returncode != 0:
-        print("       " + (proc.stderr.strip().splitlines() or [""])[-1])
+        for line in (proc.stdout + proc.stderr).strip().splitlines()[-4:]:
+            print("       " + line)
 
+
+def cases():
     # The floor is gone as a gate, and survives only as a threshold to report.
     check("the refuse-to-write floor is gone",
           hasattr(G, "MIN_RECORDS"), False)
@@ -138,8 +153,12 @@ def cases():
 
 
 def main():
-    print("generate_search_corpus: sources vs record count:")
+    child = os.environ.get(CHILD_ENV) == "1"
+    print("generate_search_corpus: sources vs record count"
+          + (" [pyyaml blocked]" if child else "") + ":")
     cases()
+    if not child:
+        rerun_without_yaml()
     if failures:
         print(f"\nFAIL: {len(failures)} case(s) failed")
         return 1

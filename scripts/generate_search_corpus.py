@@ -328,15 +328,6 @@ def build_places(records, seen):
     file — the registry is the authoritative list of places. Each points at its
     clean /local/<slug>/ entity page.
     """
-    # Imported here, not at module scope, so this module can be IMPORTED without
-    # pyyaml. .github/workflows/run-script-tests.yml installs no pip packages on
-    # purpose (offline suites, no third-party deps), so a module-level
-    # `import yaml` makes any scripts/test_*.py that imports this file fail there
-    # with ModuleNotFoundError while passing locally — which is exactly what
-    # happened to test_search_corpus_sources.py. The real run has pyyaml:
-    # update-search-corpus.yml installs it.
-    import yaml
-
     path = JEKYLL_DATA_DIR / "places.yml"
     if not path.exists():
         # Recorded, not just printed, for the same reason as load()'s misses:
@@ -345,6 +336,19 @@ def build_places(records, seen):
         print("  ! places.yml not found -- skipping", file=sys.stderr)
         missing_sources.append("places.yml")
         return
+
+    # Imported here rather than at module scope so this module can be IMPORTED
+    # without pyyaml: run-script-tests.yml installs no pip packages on purpose
+    # (offline suites, no third-party deps), so a module-level `import yaml`
+    # makes any scripts/test_*.py importing this file die there with
+    # ModuleNotFoundError while passing locally.
+    #
+    # And it sits BELOW the exists() check, not above it, so reporting a missing
+    # registry needs no parser. Placed above, the branch that records the miss
+    # raised ModuleNotFoundError in CI instead — which broke the very test
+    # written to cover it.
+    import yaml
+
     with open(path, encoding="utf-8") as f:
         places = (yaml.safe_load(f) or {}).get("places", [])
     for p in places:
