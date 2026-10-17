@@ -259,7 +259,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
         html += `<div class="measure-grid">${certified.map(renderCard).join('')}</div>`;
       }
       if (potential.length) {
-        html += `<h2 class="section-heading">Pending Measures</h2>`;
+        html += `<h2 class="section-heading">Failed Measures</h2>`;
         html += `<div class="measure-grid">${potential.map(renderCard).join('')}</div>`;
       }
 
