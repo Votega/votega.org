@@ -1,12 +1,13 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-16T23:07:44.800077+00:00",
+    "generatedAt": "2026-10-17T02:07:49.721710+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
       "Capitol Beat",
       "The Current GA",
       "GPB News",
+      "NetChoice",
       "GA Secretary of State",
       "Sen. Jon Ossoff (press)",
       "Sen. Raphael Warnock (press)",
@@ -21,21 +22,36 @@
       "Rep. Barry Loudermilk (GA-11, press)",
       "Rep. Rick Allen (GA-12, press)"
     ],
-    "count": 132,
+    "count": 134,
     "windowDays": 45,
-    "entityTagged": 84,
+    "entityTagged": 86,
     "topicCounts": {
-      "elections": 38,
+      "elections": 37,
       "budget": 6,
       "education": 12,
       "healthcare": 16,
-      "courts": 19,
+      "courts": 21,
       "ethics": 4,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
+      ]
+    },
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
+      "url": null,
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
+    },
     "vg-ga-p-000330": {
       "name": "Joshua \"Josh\" Tolbert",
       "url": null,
@@ -62,13 +78,6 @@
       "url": null,
       "candidateIds": [
         "challenger-peter-hubbard-psc3-2026"
-      ]
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
       ]
     },
     "vg-ga-p-000335": {
@@ -178,14 +187,6 @@
         "challenger-keisha-waites-inscom-2026"
       ]
     },
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
-      "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
-    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
@@ -276,6 +277,31 @@
     }
   },
   "items": [
+    {
+      "id": "8ea7c5ab6b95",
+      "title": "Trump pitches for Republicans at the top of the ticket in Georgia at Dalton rally",
+      "url": "https://www.gpb.org/news/2026/10/16/trump-pitches-for-republicans-at-the-top-of-the-ticket-in-georgia-at-dalton-rally",
+      "source": "GPB News",
+      "publishedAt": "2026-10-17T01:05:00+00:00",
+      "snippet": "President Donald Trump pitched for U.S. Rep. Mike Collins, who is running for U.S. Senate, and Rick Jackson, who is running for governor, in Dalton on Friday.",
+      "entityIds": [
+        "vg-ga-p-000368",
+        "vg-ga-p-000253"
+      ],
+      "topics": []
+    },
+    {
+      "id": "00dc1ca3a463",
+      "title": "Trump to Georgia voters: ‘Pretend I’m on the ballot’",
+      "url": "https://capitol-beat.org/2026/10/trump-to-georgia-voters-pretend-im-on-the-ballot/?utm_source=rss&utm_medium=rss&utm_campaign=trump-to-georgia-voters-pretend-im-on-the-ballot",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-10-16T23:30:09+00:00",
+      "snippet": "ATLANTA — President Donald Trump traveled to Georgia on Friday to rally Republican voters three days after early voting got underway and with Election Day just over two weeks away. His visit was meant",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
     {
       "id": "1b0b5db1a0e3",
       "title": "PSC District 5: Sheila Edwards, Josh Tolbert",
@@ -524,18 +550,6 @@
       "topics": []
     },
     {
-      "id": "3a6d51192dd2",
-      "title": "Georgia voters are seeing a new check-in step at polls this cycle",
-      "url": "https://www.gpb.org/news/2026/10/16/georgia-voters-are-seeing-new-check-in-step-at-polls-cycle",
-      "source": "GPB News",
-      "publishedAt": "2026-10-16T12:09:00+00:00",
-      "snippet": "As voters head to the polls to vote this election season, they may notice a slight change at check-in.",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "d027d0adae4d",
       "title": "Will Trump’s Georgia rally be a lifeline or an anchor for the GOP candidates he seeks to boost?",
       "url": "https://georgiarecorder.com/2026/10/16/will-trumps-georgia-rally-be-a-lifeline-or-an-anchor-for-the-gop-candidates-he-seeks-to-boost/",
@@ -638,6 +652,20 @@
       ]
     },
     {
+      "id": "f6df1cc50340",
+      "title": "NetChoice Vows to Keep Fighting for Georgians’ Online Rights After Eleventh Circuit Lifts SB 351 Injunction",
+      "url": "https://netchoice.org/netchoice-vows-to-keep-fighting-for-georgians-online-rights-after-eleventh-circuit-lifts-sb-351-injunction/",
+      "source": "NetChoice",
+      "publishedAt": "2026-10-15T16:13:41+00:00",
+      "snippet": "ATLANTA—The U.S. Court of Appeals for the Eleventh Circuit today vacated the preliminary injunction blocking Georgia’s SB 351 in NetChoice v. Carr, our challenge to the state’s law restricting user […",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
       "id": "9dfc7d56e318",
       "title": "Carr Secures Major Victory in Defense of Georgia’s Social Media Law",
       "url": "https://law.georgia.gov/press-releases/2026-10-15/carr-secures-major-victory-defense-georgias-social-media-law",
@@ -671,6 +699,18 @@
       "entityIds": [],
       "topics": [
         "budget",
+        "courts"
+      ]
+    },
+    {
+      "id": "27c4fc9a30dc",
+      "title": "NetChoice to Explore All Options to Protect Floridians’ Rights Online Following Eleventh Circuit Court Ruling on HB3",
+      "url": "https://netchoice.org/netchoice-to-explore-all-options-to-protect-floridians-rights-online-following-eleventh-circuit-court-ruling-on-hb3/",
+      "source": "NetChoice",
+      "publishedAt": "2026-10-14T19:13:59+00:00",
+      "snippet": "ATLANTA—The U.S. Court of Appeals for the Eleventh Circuit ruled today against NetChoice and CCIA in CCIA & NetChoice v. Uthmeier, our challenge to Florida’s HB 3.  “We are disappointed […]",
+      "entityIds": [],
+      "topics": [
         "courts"
       ]
     },
@@ -1061,18 +1101,6 @@
       "snippet": "Krystina McQueen’s severely autistic foster son – who is prone to biting and hitting — has made big strides in his few weeks in specialized behavior therapy. He’s in it at the crucial time to learn ba",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "0f4f5fe7a17a",
-      "title": "Georgia voters will see pen and paper at polls",
-      "url": "https://capitol-beat.org/2026/10/georgia-voters-will-see-pen-and-paper-at-polls/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-voters-will-see-pen-and-paper-at-polls",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-02T14:11:23+00:00",
-      "snippet": "ATLANTA — Attentive Georgia voters will notice something different when they go to their polling places on Election Day: pen and paper. Poll workers will log each voter in electronically, but they wil",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "99eef1518852",
