@@ -60,13 +60,14 @@ def dual_filer_case():
 
 
 def committee_cases():
-    """Only an authorized committee is a source of totals; the rest are pointers.
+    """Which committees a candidacy's money comes from, and how they combine.
 
-    Two earlier rules put other people's money on candidate pages — taking the
-    best-ranked committee of any designation, then allowing one that had ever
-    been designated P. The second measured committee age, not ownership: it
-    accepted seven PACs and refused three committees that really were the
-    candidate's own. These cases pin the rule that replaced both.
+    Two rules replaced here over one night, both of which put other people's
+    money on candidate pages: taking the best-ranked committee of any
+    designation, then allowing one that had ever been designated P (that
+    measured committee AGE -- it accepted seven PACs and refused three
+    committees that really were the candidate's own). Only P and A qualify now,
+    and ALL of them are summed, because FEC's candidate page does the same.
     """
     real_get = gen.fec_get
 
@@ -74,74 +75,109 @@ def committee_cases():
         gen.fec_get = lambda path, params=None, retries=3: {"results": list(results)}
 
     try:
-        # A principal committee is the ordinary case and must not change.
-        stub([
-            {"committee_id": "C00000002", "name": "SOME JOINT FUNDRAISER",
-             "designation": "J", "last_file_date": "2026-10-15"},
-            {"committee_id": "C00000001", "name": "CANDIDATE FOR CONGRESS",
-             "designation": "P", "last_file_date": "2026-01-01"},
-        ])
-        got = gen.get_candidate_committee("H0GA01000")
-        check("principal beats every other designation", got["id"], "C00000001")
-        check("a usable committee is returned as a source, not a pointer",
-              "related" in got, False)
+        # The ordinary case: one principal committee, nothing else.
+        stub([{"committee_id": "C00000001", "name": "CANDIDATE FOR CONGRESS",
+               "designation": "P", "last_file_date": "2026-01-01"},
+              {"committee_id": "C00000002", "name": "SOME JOINT FUNDRAISER",
+               "designation": "J", "last_file_date": "2026-10-15"}])
+        got = gen.get_candidate_committees("H0GA01000")
+        check("a joint fundraiser is not the candidate's money",
+              [a["id"] for a in got["authorized"]], ["C00000001"])
+        check("and nothing is left over to point at", got["related"], None)
 
-        stub([
-            {"committee_id": "C00000003", "designation": "U", "last_file_date": "2026-10-15"},
-            {"committee_id": "C00000002", "designation": "A", "last_file_date": "2026-02-01"},
-        ])
-        check("authorized beats unauthorized",
-              gen.get_candidate_committee("H0GA01000")["id"], "C00000002")
+        # Mike Collins: principal + nominee fund. Reading the principal alone
+        # under-reported him by $959,344.49 against his own FEC page.
+        stub([{"committee_id": "C00544684", "name": "MIKE COLLINS FOR SENATE",
+               "designation": "P", "last_file_date": "2026-10-15"},
+              {"committee_id": "C00892000", "name": "COLLINS FOR GA SENATE REPUBLICAN NOMINEE FUND 2026",
+               "designation": "A", "last_file_date": "2026-10-15"}])
+        got = gen.get_candidate_committees("S6GA00390")
+        check("an authorized nominee fund is collected, not dropped",
+              [a["id"] for a in got["authorized"]], ["C00544684", "C00892000"])
+        check("the principal sorts first, so it stays the headline identity",
+              got["authorized"][0]["designation"], "P")
 
-        stub([
-            {"committee_id": "C00000001", "designation": "A", "last_file_date": "2025-01-01"},
-            {"committee_id": "C00000002", "designation": "A", "last_file_date": "2026-01-01"},
-        ])
-        check("inside a tier the most recent filer wins",
-              gen.get_candidate_committee("H0GA01000")["id"], "C00000002")
+        stub([{"committee_id": "C00000003", "designation": "U", "last_file_date": "2026-10-15"},
+              {"committee_id": "C00000002", "designation": "A", "last_file_date": "2026-02-01"}])
+        got = gen.get_candidate_committees("H0GA01000")
+        check("authorized is kept and unauthorized is not",
+              [a["id"] for a in got["authorized"]], ["C00000002"])
 
-        # Dooley: a leadership PAC is never a source. $4.7M of LEADERSHIP MATTERS
-        # PAC reached a live Senate candidate's page when it was.
+        stub([{"committee_id": "C00000001", "designation": "A", "last_file_date": "2025-01-01"},
+              {"committee_id": "C00000002", "designation": "A", "last_file_date": "2026-01-01"}])
+        check("inside a tier the most recent filer leads",
+              [a["id"] for a in gen.get_candidate_committees("H0GA01000")["authorized"]],
+              ["C00000002", "C00000001"])
+
+        # Dooley: a leadership PAC is never a source, only a pointer.
         stub([{"committee_id": "C00914531", "name": "LEADERSHIP MATTERS PAC",
                "designation": "U", "last_file_date": "2026-10-15"}])
-        got = gen.get_candidate_committee("S6GA00408")
-        check("an unauthorized committee is a pointer, never a source",
-              "related" in got, True)
-        check("the pointer still names the committee",
-              got["related"]["id"], "C00914531")
+        got = gen.get_candidate_committees("S6GA00408")
+        check("an unauthorized committee yields no authorized set",
+              got["authorized"], [])
+        check("it becomes a pointer instead", got["related"]["id"], "C00914531")
 
-        stub([{"committee_id": "C00708289", "name": "PUTTING PEOPLE BEFORE POLITICIANS INC",
-               "designation": "D", "last_file_date": "2026-10-15"}])
-        check("a leadership PAC is a pointer too",
-              "related" in gen.get_candidate_committee("H0GA06192"), True)
-
-        # Blair: his own campaign committee, re-designated. Still not a source —
-        # it files as a PAC now, which is why FEC publishes no totals for him.
-        stub([{"committee_id": "C00901157",
-               "name": "BUILDING LASTING ALLIANCES FOR IMPACT AND RESULTS PAC",
-               "designation": "U", "last_file_date": "2026-10-15"}])
-        got = gen.get_candidate_committee("H6GA13062")
-        check("a re-designated campaign committee is a pointer, not a source",
-              "related" in got, True)
-
-        # The fall-through that made the old rule worse: refusing HOLD THE LINE
-        # promoted MISSION DEMOCRACY PAC behind it. Ranking picks one; a
-        # non-authorized winner ends the search instead of walking the list.
+        # Refusing one PAC must not promote the next: that fall-through put
+        # MISSION DEMOCRACY PAC on a page after HOLD THE LINE was refused.
         stub([{"committee_id": "C00868976", "name": "HOLD THE LINE",
                "designation": "U", "last_file_date": "2026-10-15"},
               {"committee_id": "C00768101", "name": "MISSION DEMOCRACY PAC",
                "designation": "D", "last_file_date": "2026-09-01"}])
-        got = gen.get_candidate_committee("H2GA14044")
-        check("refusing one PAC does not promote the next one",
-              "related" in got, True)
-        check("the pointer is the best-ranked, not whichever survived a walk",
+        got = gen.get_candidate_committees("H2GA14044")
+        check("refusing one PAC does not promote the next", got["authorized"], [])
+        check("the pointer is the best-ranked of them",
               got["related"]["id"], "C00868976")
 
         stub([])
-        check("no linked committee -> None",
-              gen.get_candidate_committee("H0GA01000"), None)
+        got = gen.get_candidate_committees("H0GA01000")
+        check("no linked committee -> nothing either way",
+              (got["authorized"], got["related"]), ([], None))
     finally:
         gen.fec_get = real_get
+
+
+def summing_cases():
+    """sum_committee_totals() against Mike Collins' published FEC page."""
+    principal = {"receipts": 9290371.80, "disbursements": 8748014.35,
+                 "last_cash_on_hand_end_period": 1138587.54,
+                 "individual_itemized_contributions": 3551772.0,
+                 "individual_unitemized_contributions": 2222710.0,
+                 "transfers_from_other_authorized_committee": 2748507.0,
+                 "coverage_end_date": "2026-06-30T00:00:00"}
+    nominee = {"receipts": 959344.49,
+               "individual_itemized_contributions": 224633.59,
+               "individual_unitemized_contributions": 675868.82,
+               "transfers_from_other_authorized_committee": 57205.44,
+               "coverage_end_date": "2026-09-30T00:00:00"}
+
+    m = gen.sum_committee_totals([principal, nominee])
+    check("receipts match the FEC candidate page",
+          round(m["receipts"], 2), 10249716.29)
+    check("itemized individual money matches",
+          round(m["individual_itemized_contributions"], 2), 3776405.59)
+    check("unitemized individual money matches",
+          round(m["individual_unitemized_contributions"], 2), 2898578.82)
+    check("transfers are summed, not netted out (FEC does not net them either)",
+          round(m["transfers_from_other_authorized_committee"], 2), 2805712.44)
+    check("the later coverage date wins, since the figure runs through it",
+          m["coverage_end_date"], "2026-09-30T00:00:00")
+    check("a field only one committee reports still comes through",
+          m["disbursements"], 8748014.35)
+
+    # Nothing non-numeric gets summed: a response carries ids and flags too.
+    noise = [{"receipts": 1.0, "cycle": 2026, "committee_id": "C1"},
+             {"receipts": 2.0, "cycle": 2026, "committee_id": "C2"}]
+    m = gen.sum_committee_totals(noise)
+    check("receipts add", m["receipts"], 3.0)
+    check("cycle is not added to itself", "cycle" in m, False)
+    check("committee_id is not concatenated", "committee_id" in m, False)
+
+    check("one committee is passed through untouched",
+          gen.sum_committee_totals([principal]) is principal, True)
+    check("no committees -> None", gen.sum_committee_totals([]), None)
+    check("a failed totals fetch among several is skipped",
+          gen.sum_committee_totals([principal, None])["receipts"], 9290371.80)
+    check("all fetches failed -> None", gen.sum_committee_totals([None, None]), None)
 
 
 def main():
@@ -209,8 +245,11 @@ def main():
         if not multi:
             print("  (no member currently holds more than one filing)")
 
-    print("\nget_candidate_committee():")
+    print("\nget_candidate_committees():")
     committee_cases()
+
+    print("\nsum_committee_totals():")
+    summing_cases()
 
     if failures:
         print(f"\nFAIL: {len(failures)} case(s) failed")

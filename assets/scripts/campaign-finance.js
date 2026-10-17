@@ -600,6 +600,27 @@ window.CampaignFinance = (function () {
       + ' which may include money raised and spent outside a campaign.</p>';
   }
 
+  // Say when a figure spans more than one committee, the way FEC's own candidate
+  // page does with its "Data is included from these committees" line. Only set
+  // when there IS more than one, so the ordinary candidate prints nothing.
+  //
+  // Mike Collins is the case: MIKE COLLINS FOR SENATE plus his nominee fund add
+  // to $10,249,716.29, and reading the principal alone showed $9,290,371.80. A
+  // reader checking the page against FEC should be able to see which committees
+  // the number covers.
+  function contributingCommitteesHtml(entry) {
+    const list = (entry && entry.contributingCommittees) || [];
+    if (list.length < 2) return '';
+    const items = list.map(c => {
+      const label = esc(c.name || c.id);
+      return c.fecUrl
+        ? '<li><a href="' + esc(c.fecUrl) + '" target="_blank" rel="noopener">' + label + '</a></li>'
+        : '<li>' + label + '</li>';
+    }).join('');
+    return '<p class="finance-meta">Includes ' + list.length
+      + ' committees:</p><ul class="finance-meta finance-committees">' + items + '</ul>';
+  }
+
   // Per-block provenance line ("Finance data from the FEC, updated October 4, 2026.").
   // Finance figures come from their own files (ga-fec-data.json /
   // ga-campaign-finance.json), not from the roster the page-level stamp describes, so
@@ -621,6 +642,7 @@ window.CampaignFinance = (function () {
     GA_CHAMBER_MAP, GA_OFFICE_MAP,
     fecSearchUrl, cycleLabelFor,
     fundingBreakdownHtml, filingCommitteeNote, noFilingHtml,
+    contributingCommitteesHtml,
     summary,
   };
 })();
