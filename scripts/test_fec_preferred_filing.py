@@ -60,93 +60,32 @@ def dual_filer_case():
 
 
 def committee_cases():
-    """Rank the committees FEC links to a candidate, without touching the network.
+    """Only an authorized committee is a source of totals; the rest are pointers.
 
-    Two endpoints are stubbed, because the rule needs both: the candidate's
-    committee list, and each non-authorized committee's designation history. The
-    history is what separates a re-designated campaign committee (Blair's, which
-    filed as P in earlier cycles) from a leadership PAC that was never anybody's
-    campaign (Dooley's, D/U throughout).
+    Two earlier rules put other people's money on candidate pages — taking the
+    best-ranked committee of any designation, then allowing one that had ever
+    been designated P. The second measured committee age, not ownership: it
+    accepted seven PACs and refused three committees that really were the
+    candidate's own. These cases pin the rule that replaced both.
     """
     real_get = gen.fec_get
-    real_sleep = time.sleep
-    time.sleep = lambda *_: None       # the real one pauses DELAY per history call
 
-    def stub(results, history=None):
-        """history: {committee_id: [designation, ...]} as FEC would report it."""
-        hist = history or {}
-
-        def fake(path, params=None, retries=3):
-            if "/history/" in path:
-                cid = path.split("/committee/")[1].split("/")[0]
-                return {"results": [{"designation": d} for d in hist.get(cid, [])]}
-            return {"results": list(results)}
-        gen.fec_get = fake
+    def stub(results):
+        gen.fec_get = lambda path, params=None, retries=3: {"results": list(results)}
 
     try:
-        # Everton Blair: the campaign committee kept its id through the GA-13
-        # special and was re-designated to an unauthorized PAC. Filtering to
-        # designation='P' found nothing, so his $943k went unreported and the
-        # page said "No current FEC filing found for this member".
-        # Blair: one committee, unauthorized today, but P in the cycles it filed
-        # as EVERTON BLAIR FOR CONGRESS. The money in it is his campaign's.
-        stub([{"committee_id": "C00901157",
-               "name": "BUILDING LASTING ALLIANCES FOR IMPACT AND RESULTS PAC",
-               "designation": "U", "last_file_date": "2026-10-15"}],
-             history={"C00901157": ["U", "P", "P"]})
-        got = gen.get_candidate_committee("H6GA13062")
-        check("a re-designated committee is found, not skipped",
-              got and got["id"], "C00901157")
-        check("its designation travels with it, so the page can say whose filing it is",
-              got and got["designation"], "U")
-
-        # Dooley: a leadership PAC that was never a campaign committee. Taking it
-        # put $4.7M under "Total Raised" on a live Senate candidate's page.
-        stub([{"committee_id": "C00914531", "name": "LEADERSHIP MATTERS PAC",
-               "designation": "U", "last_file_date": "2026-10-15"}],
-             history={"C00914531": ["U", "U"]})
-        check("a PAC that was never the candidate's own is refused",
-              gen.get_candidate_committee("S6GA00408"), None)
-
-        stub([{"committee_id": "C00708289", "name": "PUTTING PEOPLE BEFORE POLITICIANS INC",
-               "designation": "D", "last_file_date": "2026-10-15"}],
-             history={"C00708289": ["D", "D"]})
-        check("a leadership PAC is refused",
-              gen.get_candidate_committee("H0GA06192"), None)
-
-        # An unreadable history must not let an unverified PAC through.
-        stub([{"committee_id": "C00999999", "name": "MYSTERY PAC", "designation": "U"}],
-             history={})
-        check("no history -> the committee is refused, not assumed good",
-              gen.get_candidate_committee("H0GA00000"), None)
-
-        # A real campaign committee is never subjected to the history check at all.
-        stub([{"committee_id": "C00543967", "name": "BUDDY CARTER FOR SENATE",
-               "designation": "P", "last_file_date": "2026-10-15"}], history={})
-        check("a principal committee needs no history lookup",
-              gen.get_candidate_committee("S6GA00374")["id"], "C00543967")
-
-        # Falling past a refused PAC to a committee that does qualify.
-        stub([{"committee_id": "C00111111", "name": "SOMEBODY'S PAC",
-               "designation": "U", "last_file_date": "2026-10-15"},
-              {"committee_id": "C00222222", "name": "REAL CAMPAIGN",
-               "designation": "A", "last_file_date": "2026-01-01"}],
-             history={"C00111111": ["U"]})
-        check("a refused PAC does not block a qualifying committee behind it",
-              gen.get_candidate_committee("H0GA00000")["id"], "C00222222")
-
-        # A principal committee always wins, whatever else is linked and however
-        # recently those filed — this is the ordinary case and must not change.
+        # A principal committee is the ordinary case and must not change.
         stub([
             {"committee_id": "C00000002", "name": "SOME JOINT FUNDRAISER",
              "designation": "J", "last_file_date": "2026-10-15"},
             {"committee_id": "C00000001", "name": "CANDIDATE FOR CONGRESS",
              "designation": "P", "last_file_date": "2026-01-01"},
         ])
-        check("principal beats every other designation",
-              gen.get_candidate_committee("H0GA01000")["id"], "C00000001")
+        got = gen.get_candidate_committee("H0GA01000")
+        check("principal beats every other designation", got["id"], "C00000001")
+        check("a usable committee is returned as a source, not a pointer",
+              "related" in got, False)
 
-        # Authorized sits between principal and the rest.
         stub([
             {"committee_id": "C00000003", "designation": "U", "last_file_date": "2026-10-15"},
             {"committee_id": "C00000002", "designation": "A", "last_file_date": "2026-02-01"},
@@ -154,7 +93,6 @@ def committee_cases():
         check("authorized beats unauthorized",
               gen.get_candidate_committee("H0GA01000")["id"], "C00000002")
 
-        # Within one tier, the newest filer wins.
         stub([
             {"committee_id": "C00000001", "designation": "A", "last_file_date": "2025-01-01"},
             {"committee_id": "C00000002", "designation": "A", "last_file_date": "2026-01-01"},
@@ -162,12 +100,48 @@ def committee_cases():
         check("inside a tier the most recent filer wins",
               gen.get_candidate_committee("H0GA01000")["id"], "C00000002")
 
+        # Dooley: a leadership PAC is never a source. $4.7M of LEADERSHIP MATTERS
+        # PAC reached a live Senate candidate's page when it was.
+        stub([{"committee_id": "C00914531", "name": "LEADERSHIP MATTERS PAC",
+               "designation": "U", "last_file_date": "2026-10-15"}])
+        got = gen.get_candidate_committee("S6GA00408")
+        check("an unauthorized committee is a pointer, never a source",
+              "related" in got, True)
+        check("the pointer still names the committee",
+              got["related"]["id"], "C00914531")
+
+        stub([{"committee_id": "C00708289", "name": "PUTTING PEOPLE BEFORE POLITICIANS INC",
+               "designation": "D", "last_file_date": "2026-10-15"}])
+        check("a leadership PAC is a pointer too",
+              "related" in gen.get_candidate_committee("H0GA06192"), True)
+
+        # Blair: his own campaign committee, re-designated. Still not a source —
+        # it files as a PAC now, which is why FEC publishes no totals for him.
+        stub([{"committee_id": "C00901157",
+               "name": "BUILDING LASTING ALLIANCES FOR IMPACT AND RESULTS PAC",
+               "designation": "U", "last_file_date": "2026-10-15"}])
+        got = gen.get_candidate_committee("H6GA13062")
+        check("a re-designated campaign committee is a pointer, not a source",
+              "related" in got, True)
+
+        # The fall-through that made the old rule worse: refusing HOLD THE LINE
+        # promoted MISSION DEMOCRACY PAC behind it. Ranking picks one; a
+        # non-authorized winner ends the search instead of walking the list.
+        stub([{"committee_id": "C00868976", "name": "HOLD THE LINE",
+               "designation": "U", "last_file_date": "2026-10-15"},
+              {"committee_id": "C00768101", "name": "MISSION DEMOCRACY PAC",
+               "designation": "D", "last_file_date": "2026-09-01"}])
+        got = gen.get_candidate_committee("H2GA14044")
+        check("refusing one PAC does not promote the next one",
+              "related" in got, True)
+        check("the pointer is the best-ranked, not whichever survived a walk",
+              got["related"]["id"], "C00868976")
+
         stub([])
         check("no linked committee -> None",
               gen.get_candidate_committee("H0GA01000"), None)
     finally:
         gen.fec_get = real_get
-        time.sleep = real_sleep
 
 
 def main():

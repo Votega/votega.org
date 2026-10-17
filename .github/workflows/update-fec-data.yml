@@ -6,6 +6,11 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Run even if the last successful run was under an hour ago'
+        type: boolean
+        default: false
   schedule:
     - cron: '0 8 * * 0' # weekly on Sunday at 08:00 UTC
 
@@ -24,7 +29,48 @@ jobs:
         with:
           python-version: '3.x'
 
+      # FEC allows 1,000 API calls an hour and a full run makes roughly 950, so
+      # two runs inside one rolling hour exhaust the quota. That does not fail
+      # loudly: fec_get() backs off 60s/120s/180s per 429, which turned the
+      # 2026-10-17 03:17 dispatch into a 32-minute fetch, and had the retries run
+      # out it would have written candidates with no totals -- a file that is
+      # perfectly self-consistent, so tier 1 would have passed it and the site
+      # would have lost its finance figures wholesale.
+      #
+      # Skipping is deliberate rather than failing: an operator dispatching twice
+      # is not a broken workflow, and exiting 1 would have
+      # notify-workflow-failure.yml open a "Data workflow failing" issue that
+      # misdescribes it. Nothing is fetched, nothing is committed, and the run is
+      # green with a notice. Re-dispatch with force=true to override.
+      - name: Guard against a back-to-back run
+        id: guard
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORCED: ${{ inputs.force }}
+        run: |
+          if [ "$FORCED" = "true" ]; then
+            echo "force=true — skipping the quota guard"
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          last=$(gh run list --workflow update-fec-data.yml --status success                    --limit 1 --json updatedAt --jq '.[0].updatedAt // empty')
+          if [ -z "$last" ]; then
+            echo "No previous successful run — proceeding."
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          age=$(( $(date -u +%s) - $(date -u -d "$last" +%s) ))
+          if [ "$age" -lt 3600 ]; then
+            wait=$(( (3600 - age + 59) / 60 ))
+            echo "::notice::Last successful run finished $((age / 60))m ago."               "FEC's hourly quota is still carrying ~950 calls from it, so this run"               "would crawl through 429 backoffs. Skipping; retry in ~${wait}m,"               "or re-dispatch with force=true."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Last successful run was $((age / 60))m ago — proceeding."
+          echo "proceed=true" >> "$GITHUB_OUTPUT"
+
       - name: Fetch GA FEC data
+        if: steps.guard.outputs.proceed == 'true'
         run: python scripts/generate_fec_data.py assets/data/ga-fec-data.json
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
@@ -45,6 +91,7 @@ jobs:
       # update-local-government.yml for the first workflow to make this split.
       - name: Validate generated data
         id: validate
+        if: steps.guard.outputs.proceed == 'true'
         run: |
           python scripts/validate_fec_data.py assets/data/ga-fec-data.json \
             --baseline-ref HEAD \
@@ -62,6 +109,7 @@ jobs:
           retention-days: 14
 
       - name: Commit and push
+        if: steps.guard.outputs.proceed == 'true'
         run: |
           set -e
           git config user.name "github-actions[bot]"
@@ -91,6 +139,7 @@ jobs:
       # shipped. One issue, refreshed each week, so the history of what moved in
       # GA finance data lives in one thread instead of a pile of notifications.
       - name: Report what changed
+        if: steps.guard.outputs.proceed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_TITLE: "FEC data: material changes"

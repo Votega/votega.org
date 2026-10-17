@@ -776,6 +776,15 @@
       return;
     }
 
+    // An entry with no totals used to fall through and render cards of "—".
+    // Same empty state as the legislator panel, and for the same reason.
+    if (entry.totalRaised == null) {
+      container.innerHTML = `
+        <h2>Campaign Finance</h2>
+        ${CampaignFinance.noFilingHtml(entry, fecCycle)}`;
+      return;
+    }
+
     const cycleLabel = CampaignFinance.cycleLabelFor(fecCycle) || 'election cycle';
     const coverageNote = entry.coverageEndDate
       ? `${cycleLabel} · Through ${new Date(entry.coverageEndDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`

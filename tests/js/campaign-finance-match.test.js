@@ -134,3 +134,55 @@ test('escapes the committee name', () => {
   assert.match(note, /A &amp; B &lt;PAC&gt;/);
   assert.ok(!/<PAC>/.test(note));
 });
+
+/*
+ * noFilingHtml(): the empty state. "No filing found" plus a statewide search box
+ * was what /us-congress/everton-blair-ga-13/ showed while FEC had his committee's
+ * filings one click away.
+ */
+
+test('links the candidate’s own FEC page instead of a statewide search', () => {
+  const html = CF.noFilingHtml({ fecUrl: 'https://www.fec.gov/data/candidate/H6GA13062/' }, 2026);
+  assert.match(html, /candidate\/H6GA13062/);
+  assert.match(html, /View their FEC candidate page/);
+  assert.ok(!/Search FEC\.gov/.test(html));
+});
+
+test('falls back to a search only when there is no candidate id at all', () => {
+  const html = CF.noFilingHtml(null, 2026);
+  assert.match(html, /Search FEC\.gov/);
+  assert.match(html, /election_year=2026/);
+});
+
+test('names the non-campaign committee FEC links, and links its filings', () => {
+  const html = CF.noFilingHtml({
+    fecUrl: 'https://www.fec.gov/data/candidate/H6GA13062/',
+    relatedCommittee: {
+      id: 'C00901157',
+      name: 'BUILDING LASTING ALLIANCES FOR IMPACT AND RESULTS PAC',
+      designation: 'U',
+      fecUrl: 'https://www.fec.gov/data/committee/C00901157/',
+    },
+  }, 2026);
+  assert.match(html, /No campaign committee is filing for this candidate/);
+  assert.match(html, /BUILDING LASTING ALLIANCES FOR IMPACT AND RESULTS PAC/);
+  assert.match(html, /which is not a campaign committee/);
+  assert.match(html, /committee\/C00901157/);
+  assert.match(html, /view its filings/);
+  // and still offers the candidate page
+  assert.match(html, /candidate\/H6GA13062/);
+});
+
+test('says plainly that no filing was found when no committee is known', () => {
+  const html = CF.noFilingHtml({ fecUrl: 'https://www.fec.gov/data/candidate/H0GA01000/' }, 2026);
+  assert.match(html, /No current FEC filing found/);
+  assert.ok(!/not a campaign committee/.test(html));
+});
+
+test('escapes the related committee’s name and url', () => {
+  const html = CF.noFilingHtml({
+    relatedCommittee: { id: 'C1', name: 'A & B <PAC>', fecUrl: 'https://x/?a=1&b=2' },
+  }, 2026);
+  assert.match(html, /A &amp; B &lt;PAC&gt;/);
+  assert.ok(!/<PAC>/.test(html));
+});
