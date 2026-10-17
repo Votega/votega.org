@@ -95,6 +95,7 @@ appropriate credit and license any adaptations you distribute under the same ter
 
 ## How to credit
 
+> Source: VoteGA.org (https://www.votega.org), CC BY-SA 4.0.
 > Data from [VoteGA.org](https://votega.org), licensed under [CC BY-SA 4.0]({url}).
 > Original source: {source}.
 

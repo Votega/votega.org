@@ -84,7 +84,8 @@ Static Jekyll site on GitHub Pages, with all data prebuilt by
 scheduled GitHub Actions workflows.
 
 [![Site](https://img.shields.io/website?url=https%3A%2F%2Fwww.votega.org)](https://www.votega.org)
-![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+[![Code: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/code-PolyForm%20Noncommercial%201.0.0-blue)](LICENSE)
+[![Data: CC BY-SA 4.0](https://img.shields.io/badge/data-CC%20BY--SA%204.0-lightgrey)](LICENSE)
 
 ## What's here
 
@@ -123,7 +124,7 @@ Several of these also publish to the public
 
 ## License
 
-Site code: MIT. Published datasets are licensed [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) — attribute VoteGA and license any adaptations you distribute under the same terms (see each repository's `LICENSE`).
+Site code: [PolyForm Noncommercial 1.0.0](LICENSE). Published datasets: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) — attribute VoteGA and license any adaptations you distribute under the same terms (see each repository's `LICENSE`).
 Underlying data remains subject to the terms of its original sources.
 
 ## Contact
