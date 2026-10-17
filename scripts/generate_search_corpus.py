@@ -26,7 +26,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
-import yaml
 
 # The two chambers of the General Assembly. Shared so the definition of "is a
 # legislator" lives in one place -- ga-members.json also carries statewide
@@ -329,6 +328,15 @@ def build_places(records, seen):
     file — the registry is the authoritative list of places. Each points at its
     clean /local/<slug>/ entity page.
     """
+    # Imported here, not at module scope, so this module can be IMPORTED without
+    # pyyaml. .github/workflows/run-script-tests.yml installs no pip packages on
+    # purpose (offline suites, no third-party deps), so a module-level
+    # `import yaml` makes any scripts/test_*.py that imports this file fail there
+    # with ModuleNotFoundError while passing locally — which is exactly what
+    # happened to test_search_corpus_sources.py. The real run has pyyaml:
+    # update-search-corpus.yml installs it.
+    import yaml
+
     path = JEKYLL_DATA_DIR / "places.yml"
     if not path.exists():
         # Recorded, not just printed, for the same reason as load()'s misses:

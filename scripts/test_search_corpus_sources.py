@@ -27,12 +27,35 @@ never written to.
 
 import io
 import os
+import subprocess
 import sys
 from contextlib import redirect_stderr
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import generate_search_corpus as G  # noqa: E402
+
+# run-script-tests.yml installs no pip packages on purpose, so this module must
+# import without pyyaml or this whole suite dies there with ModuleNotFoundError
+# while passing locally. It did, once. The check below reproduces that
+# environment rather than trusting that the import stayed lazy.
+# The finder implements find_spec, NOT the legacy find_module/load_module pair:
+# Python 3.12 removed those from the import system, so a find_module-based
+# blocker silently blocks nothing and this check passes however the import is
+# written. Verified by putting the module-level import back and watching this
+# fail.
+IMPORT_WITHOUT_YAML = """
+import sys
+class Block:
+    def find_spec(self, name, path=None, target=None):
+        if name == "yaml" or name.startswith("yaml."):
+            raise ImportError("No module named 'yaml'")
+        return None
+sys.meta_path.insert(0, Block())
+sys.path.insert(0, %r)
+import generate_search_corpus          # must not need yaml at module scope
+print("imported")
+"""
 
 failures = []
 
@@ -46,6 +69,16 @@ def check(label, got, want):
 
 
 def cases():
+    # This suite cannot run at all in CI unless the module imports with no
+    # third-party packages, so prove it in a subprocess that cannot see pyyaml.
+    here = os.path.dirname(os.path.abspath(__file__))
+    proc = subprocess.run([sys.executable, "-c", IMPORT_WITHOUT_YAML % here],
+                          capture_output=True, text=True)
+    check("the module imports with pyyaml unavailable (as run-script-tests.yml "
+          "has it)", proc.returncode, 0)
+    if proc.returncode != 0:
+        print("       " + (proc.stderr.strip().splitlines() or [""])[-1])
+
     # The floor is gone as a gate, and survives only as a threshold to report.
     check("the refuse-to-write floor is gone",
           hasattr(G, "MIN_RECORDS"), False)
