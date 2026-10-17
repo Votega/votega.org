@@ -864,12 +864,12 @@
     const fecCycle = fecData.metadata?.cycle ?? null;
     const entry = findFecEntry(fecData, member);
     if (!entry || entry.totalRaised == null) {
+      // Not a dead end: noFilingHtml() links the member's own FEC candidate page,
+      // and the committee FEC does link them to when that committee is not a
+      // campaign committee (a re-designated one, a leadership PAC).
       container.innerHTML = `
         <h2>Campaign Finance</h2>
-        <p class="finance-meta">
-          No current FEC filing found for this member.
-          <a href="${CampaignFinance.fecSearchUrl(fecCycle)}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
-        </p>`;
+        ${CampaignFinance.noFilingHtml(entry, fecCycle)}`;
       return;
     }
 

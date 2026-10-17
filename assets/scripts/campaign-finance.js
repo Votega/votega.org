@@ -544,6 +544,40 @@ window.CampaignFinance = (function () {
       + ' so no names, employers or dates are disclosed for that money.</p>';
   }
 
+  // The empty state. "No filing found" plus a statewide search box is a dead end:
+  // it was what /us-congress/everton-blair-ga-13/ showed while FEC had his
+  // committee's filings one click away. When we know the candidate's FEC id — and
+  // we almost always do, since that is how we looked them up — say so and link it.
+  // relatedCommittee is set when FEC links the candidate only to committees that
+  // are not their own (a campaign committee re-designated into a PAC, a leadership
+  // PAC): no campaign money to report, but the filings are worth pointing at.
+  function noFilingHtml(entry, cycle) {
+    const related = entry && entry.relatedCommittee;
+    const lines = [];
+
+    lines.push(related
+      ? 'No campaign committee is filing for this candidate in the '
+        + (cycleLabelFor(cycle) || 'current cycle') + '.'
+      : 'No current FEC filing found for this candidate.');
+
+    if (related && related.id) {
+      lines.push(' FEC links them to ' + esc(related.name || related.id)
+        + ', which is not a campaign committee'
+        + (related.fecUrl
+            ? ' — <a href="' + esc(related.fecUrl) + '" target="_blank" rel="noopener">'
+              + 'view its filings ↗</a>.'
+            : '.'));
+    }
+
+    lines.push(entry && entry.fecUrl
+      ? ' <a href="' + esc(entry.fecUrl) + '" target="_blank" rel="noopener">'
+        + 'View their FEC candidate page ↗</a>'
+      : ' <a href="' + fecSearchUrl(cycle) + '" target="_blank" rel="noopener">'
+        + 'Search FEC.gov ↗</a>');
+
+    return '<p class="finance-meta">' + lines.join('') + '</p>';
+  }
+
   // Name the filer when the figures do not come from the candidate's own principal
   // campaign committee. Everton Blair's committee kept its id through the GA-13
   // special and was re-designated from EVERTON BLAIR FOR CONGRESS to the
@@ -586,7 +620,7 @@ window.CampaignFinance = (function () {
     gaCandidatePool, findGaFilers,
     GA_CHAMBER_MAP, GA_OFFICE_MAP,
     fecSearchUrl, cycleLabelFor,
-    fundingBreakdownHtml, filingCommitteeNote,
+    fundingBreakdownHtml, filingCommitteeNote, noFilingHtml,
     summary,
   };
 })();

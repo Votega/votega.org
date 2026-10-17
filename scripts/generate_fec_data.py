@@ -141,63 +141,46 @@ def get_ga_candidates():
     return candidates
 
 
-# Committee designations, best first. 'P' is the principal campaign committee and
-# 'A' another authorized one; anything else is a committee FEC merely links to the
-# candidate, which we take only when it was once the candidate's own — see
-# committee_was_authorized().
+# Committee designations, best first. 'P' is the principal campaign committee,
+# 'A' another authorized one. Nothing else is the candidate's own money.
 DESIGNATION_RANK = {"P": 0, "A": 1}
 
 # The designations that mean "this committee is the candidate's own". Everything
 # else — 'D' leadership PAC, 'J' joint fundraiser, 'U' unauthorized — is money
-# raised around a politician, not by their campaign.
+# raised around a politician, not by their campaign, and never becomes the
+# headline figure on their page.
 AUTHORIZED_DESIGNATIONS = {"P", "A"}
 
 
-def committee_was_authorized(committee_id):
-    """True when FEC has ever recorded this committee as a candidate's own.
-
-    The discriminator between the two things that look identical in a single
-    cycle's data:
-
-      • A campaign committee that was RE-DESIGNATED keeps its id, so its history
-        still carries the cycles it filed as P. Everton Blair's C00901157 was
-        EVERTON BLAIR FOR CONGRESS before it became the unauthorized BUILDING
-        LASTING ALLIANCES FOR IMPACT AND RESULTS PAC, and the cycle's money in it
-        is genuinely his campaign's.
-
-      • A leadership PAC ('D') or an unrelated advocacy PAC ('U') that FEC merely
-        links to the person has no such cycle. Derek Dooley's LEADERSHIP MATTERS
-        PAC holds $4.7M that is not his Senate campaign's money, and putting it
-        under "Total Raised" on his page states something the filing does not.
-
-    Taking the best-ranked committee without this check is what put that $4.7M on
-    a live candidate page, along with Marjorie Taylor Greene's leadership PAC and
-    five other PACs belonging to former candidates.
-
-    Returns False when the history can't be read, so an unreadable history keeps
-    a non-authorized committee OUT rather than letting it through unverified.
-    """
-    data = fec_get(f"/committee/{committee_id}/history/", {"per_page": 100})
-    results = (data or {}).get("results") or []
-    return any(r.get("designation") in AUTHORIZED_DESIGNATIONS for r in results)
-
-
 def get_candidate_committee(candidate_id):
-    """Return {id, name, designation} for the committee carrying this candidacy.
+    """Return the committee whose totals are this candidate's campaign money.
 
-    Filtering to designation='P' and giving up (as this did) loses a member whose
-    campaign committee has been RE-DESIGNATED. Everton Blair's EVERTON BLAIR FOR
-    CONGRESS kept its id, C00901157, and became the unauthorized BUILDING LASTING
-    ALLIANCES FOR IMPACT AND RESULTS PAC after he won the GA-13 special. The
-    committee still holds the cycle's $943k and FEC still links it to his
-    candidate id, but the 'P' filter saw nothing, so no totals were written and
-    /us-congress/everton-blair-ga-13/ said "No current FEC filing found for this
-    member" while the money sat in plain sight.
+    Only an authorized committee qualifies, and this deliberately gives up rather
+    than settle for something else. Two earlier attempts settled, and both put
+    other people's money on candidate pages:
 
-    So: ask for every committee FEC links to the candidate and rank them —
-    principal, then authorized, then the rest, newest filing first within a tier.
-    The designation travels with the id so the page can say whose filing the
-    figures come from rather than presenting a PAC's totals as a campaign's.
+      1. Taking the best-ranked committee of any designation. Derek Dooley's page
+         showed $4.7M of LEADERSHIP MATTERS PAC, and six more PACs landed on
+         former candidates.
+      2. Allowing a non-authorized committee that had ever been designated P,
+         on the theory that a re-designated campaign committee keeps its id.
+         /committee/{id}/history/ reports the committee's designations over time
+         but not whose candidate it answered to, and a committee first registered
+         this cycle has a single row, so the check measured committee AGE. It
+         accepted seven PACs (Greene's and Flowers' leadership PACs among them)
+         and refused three committees that really were the candidate's own. The
+         fall-through made it worse: refusing HOLD THE LINE simply promoted
+         MISSION DEMOCRACY PAC behind it.
+
+    So: no campaign committee, no totals. A candidate whose committee has been
+    re-designated has no campaign money this cycle to report — which is what
+    FEC's own candidate page says about them — and the page links out to the
+    filings instead (see relatedCommittee below, and noFilingHtml() in
+    campaign-finance.js).
+
+    Returns {id, name, designation} for the committee to read totals from, or,
+    when FEC links only non-authorized committees, {related: {...}} naming the
+    best of them for the page to point at without quoting its money.
     """
     data = fec_get(f"/candidate/{candidate_id}/committees/", {"cycle": CYCLE})
     results = (data or {}).get("results") or []
@@ -206,23 +189,20 @@ def get_candidate_committee(candidate_id):
     results.sort(key=lambda c: (DESIGNATION_RANK.get(c.get("designation"), 9),
                                 _newest_first(c.get("last_file_date")),
                                 c.get("committee_id") or ""))
-    for cand in results:
-        designation = cand.get("designation") or ""
-        # A committee that is not authorized TODAY has to show that it once was,
-        # or it is somebody's PAC rather than this candidate's campaign.
-        if designation not in AUTHORIZED_DESIGNATIONS:
-            time.sleep(DELAY)
-            if not committee_was_authorized(cand.get("committee_id")):
-                print(f"    skipping {cand.get('committee_id')} "
-                      f"({cand.get('name') or '?'}, designation {designation or '-'}): "
-                      f"never an authorized committee of this candidate")
-                continue
-        return {
-            "id":          cand.get("committee_id"),
-            "name":        cand.get("name") or "",
-            "designation": designation,
-        }
-    return None
+    best = results[0]
+    designation = best.get("designation") or ""
+    entry = {
+        "id":          best.get("committee_id"),
+        "name":        best.get("name") or "",
+        "designation": designation,
+    }
+    if designation in AUTHORIZED_DESIGNATIONS:
+        return entry
+    # Not the candidate's own committee. Keep it as a pointer, not as a source.
+    print(f"    {candidate_id}: no authorized committee; FEC links "
+          f"{entry['id']} ({entry['name'] or '?'}, designation "
+          f"{designation or '-'}) — recording it as a reference only")
+    return {"related": entry}
 
 
 def get_committee_totals(committee_id):
@@ -659,9 +639,16 @@ def main():
         } if committees else None
 
         # List endpoint often omits principal_committees — fetch via individual detail endpoint
+        related = None
         if not committee:
             time.sleep(DELAY)
-            committee = get_candidate_committee(cid)
+            found = get_candidate_committee(cid)
+            if found and "related" in found:
+                # FEC links only non-authorized committees. Not a source of
+                # totals; kept so the page can point at the filings.
+                related, committee = found["related"], None
+            else:
+                committee = found
         committee_id = committee["id"] if committee else None
 
         # FEC doesn't return bioguide_id in list responses; enrich it ourselves.
@@ -707,6 +694,16 @@ def main():
                 entry["committeeName"] = committee["name"]
             if committee.get("designation"):
                 entry["committeeDesignation"] = committee["designation"]
+        elif related:
+            # No campaign money to show, but we know where FEC files what money
+            # there is. noFilingHtml() turns this into a link rather than leaving
+            # the reader with a statewide search box.
+            entry["relatedCommittee"] = {
+                "id":          related["id"],
+                "name":        related["name"],
+                "designation": related["designation"],
+                "fecUrl":      f"https://www.fec.gov/data/committee/{related['id']}/",
+            }
 
         if committee_id:
             time.sleep(DELAY)

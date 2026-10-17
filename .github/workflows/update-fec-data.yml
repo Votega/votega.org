@@ -6,6 +6,11 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Run even if the last successful run was under an hour ago'
+        type: boolean
+        default: false
   schedule:
     - cron: '0 8 * * 0' # weekly on Sunday at 08:00 UTC
 
@@ -16,15 +21,66 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
+      # fetch-depth: 0 because the commit step rebases. actions/checkout defaults
+      # to a depth-1 shallow clone, which has no merge base to rebase against:
+      # git then reports every touched file as an add/add conflict. That stayed
+      # invisible for 39 runs because on main the rebase is a no-op fast-forward,
+      # and surfaced the first time the rebase had real work to do (run 40, on a
+      # feature branch). It is latent on main too — any push to main during a run
+      # makes the rebase real, and these runs take 15-50 minutes.
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
+      # FEC allows 1,000 API calls an hour and a full run makes roughly 950, so
+      # two runs inside one rolling hour exhaust the quota. That does not fail
+      # loudly: fec_get() backs off 60s/120s/180s per 429, which turned the
+      # 2026-10-17 03:17 dispatch into a 32-minute fetch, and had the retries run
+      # out it would have written candidates with no totals -- a file that is
+      # perfectly self-consistent, so tier 1 would have passed it and the site
+      # would have lost its finance figures wholesale.
+      #
+      # Skipping is deliberate rather than failing: an operator dispatching twice
+      # is not a broken workflow, and exiting 1 would have
+      # notify-workflow-failure.yml open a "Data workflow failing" issue that
+      # misdescribes it. Nothing is fetched, nothing is committed, and the run is
+      # green with a notice. Re-dispatch with force=true to override.
+      - name: Guard against a back-to-back run
+        id: guard
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORCED: ${{ inputs.force }}
+        run: |
+          if [ "$FORCED" = "true" ]; then
+            echo "force=true — skipping the quota guard"
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          last=$(gh run list --workflow update-fec-data.yml --status success                    --limit 1 --json updatedAt --jq '.[0].updatedAt // empty')
+          if [ -z "$last" ]; then
+            echo "No previous successful run — proceeding."
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          age=$(( $(date -u +%s) - $(date -u -d "$last" +%s) ))
+          if [ "$age" -lt 3600 ]; then
+            wait=$(( (3600 - age + 59) / 60 ))
+            echo "::notice::Last successful run finished $((age / 60))m ago."               "FEC's hourly quota is still carrying ~950 calls from it, so this run"               "would crawl through 429 backoffs. Skipping; retry in ~${wait}m,"               "or re-dispatch with force=true."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Last successful run was $((age / 60))m ago — proceeding."
+          echo "proceed=true" >> "$GITHUB_OUTPUT"
+
       - name: Fetch GA FEC data
+        id: fetch
+        if: steps.guard.outputs.proceed == 'true'
         run: python scripts/generate_fec_data.py assets/data/ga-fec-data.json
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
@@ -45,23 +101,14 @@ jobs:
       # update-local-government.yml for the first workflow to make this split.
       - name: Validate generated data
         id: validate
+        if: steps.guard.outputs.proceed == 'true'
         run: |
           python scripts/validate_fec_data.py assets/data/ga-fec-data.json \
             --baseline-ref HEAD \
             --report-out "$RUNNER_TEMP/fec-changes.md"
 
-      # A tier-1 failure means the file is wrong in a way worth looking at, and
-      # the runner is about to be destroyed with it inside. Keep it.
-      - name: Preserve the rejected file
-        if: failure() && steps.validate.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: rejected-ga-fec-data
-          path: assets/data/ga-fec-data.json
-          if-no-files-found: ignore
-          retention-days: 14
-
       - name: Commit and push
+        if: steps.guard.outputs.proceed == 'true'
         run: |
           set -e
           git config user.name "github-actions[bot]"
@@ -77,7 +124,10 @@ jobs:
             git commit -m "Update GA FEC campaign finance data"
             pushed=0
             for attempt in 1 2 3; do
-              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              # Rebase onto THIS ref's upstream, not main: on a feature-branch
+              # run (a pre-merge verification) pulling main would rebase the
+              # branch's own commits and push the result to the wrong place.
+              if git pull --rebase origin "$GITHUB_REF_NAME" && git push; then pushed=1; break; fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
@@ -91,6 +141,7 @@ jobs:
       # shipped. One issue, refreshed each week, so the history of what moved in
       # GA finance data lives in one thread instead of a pile of notifications.
       - name: Report what changed
+        if: steps.guard.outputs.proceed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_TITLE: "FEC data: material changes"
@@ -111,3 +162,22 @@ jobs:
             echo "Creating tracking issue"
             gh issue create --title "$ISSUE_TITLE" --body-file "$report"
           fi
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it,
+      # so an `if: failure()` step placed before the failing step never runs at
+      # all. Sitting at the end, this catches a validation failure, a commit or
+      # push failure, and a failure in the report step.
+      #
+      # Any failure after the fetch means ~50 minutes of API calls are about to be
+      # destroyed with the runner. Scoped to the validation step at first, which
+      # missed the case that actually happened: validation PASSED and the commit
+      # step failed on a rebase conflict, so a file that had cleared tier 1 was
+      # lost anyway. The condition is now "we have data and are about to lose it".
+      - name: Preserve the generated file
+        if: failure() && steps.fetch.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-fec-data
+          path: assets/data/ga-fec-data.json
+          if-no-files-found: ignore
+          retention-days: 14
