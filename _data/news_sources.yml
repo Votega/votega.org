@@ -139,8 +139,13 @@ feeds:
     url: https://www.ossoff.senate.gov/press-releases/feed/
     type: official
     entity: O000174
+  # The releases moved under /newsroom/ and the old /press-releases/feed/ now
+  # 404s. The site's advertised feed (/feed/) is the default post type and is
+  # not the newsroom -- 6 items spanning 2022 to 2026, one with an empty title.
+  # Releases are the `press_releases` custom post type, so the feed needs the
+  # post_type query: ordinary RSS, no adapter.
   - name: Sen. Raphael Warnock (press)
-    url: https://www.warnock.senate.gov/press-releases/feed/
+    url: https://www.warnock.senate.gov/feed/?post_type=press_releases
     type: official
     entity: W000790
   # -- Statewide executives (georgia.gov Drupal; feed is <host>/rss.xml) --
