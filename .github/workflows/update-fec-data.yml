@@ -2,6 +2,7 @@ name: Update FEC campaign finance data (weekly, Sun 08:00 UTC)
 
 permissions:
   contents: write
+  issues: write
 
 on:
   workflow_dispatch:
@@ -28,42 +29,37 @@ jobs:
         env:
           FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
 
+      # Two tiers, and the split is the point. Tier 1 is the file against ITSELF
+      # -- a published index that disagrees with preferred_filing(), a count that
+      # does not match what it counts. No FEC fact can make those true, so they
+      # fail the run and nothing is committed. Tier 2 is the file against last
+      # week's, and every one of those differences is something the FEC can
+      # legitimately report, so they are written to a report and the data is
+      # committed anyway.
+      #
+      # The heredoc this replaces gated on "expected >= 12 incumbents" and
+      # friends -- floors pinned to the shape of the 2026 delegation, which an
+      # ordinary vacancy would trip, throwing away a good week of data to
+      # protect against a failure mode it could not actually distinguish. See
+      # docs/audits/2026-10-13-data-pipeline-audit.md 2.6, and the header of
+      # update-local-government.yml for the first workflow to make this split.
       - name: Validate generated data
+        id: validate
         run: |
-          if [ ! -f assets/data/ga-fec-data.json ]; then
-            echo "Error: ga-fec-data.json was not generated"
-            exit 1
-          fi
-          python - <<'PY'
-          import json, sys
+          python scripts/validate_fec_data.py assets/data/ga-fec-data.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/fec-changes.md"
 
-          d = json.load(open('assets/data/ga-fec-data.json'))
-          candidates = d.get('candidates', {})
-          n          = d['metadata']['totalCandidates']
-          by_bio     = d.get('byBioguideId', {})
-          house      = [c for c in candidates.values() if c.get('office') == 'H']
-
-          print(f"{n} candidates ({len(house)} House) | {len(by_bio)} mapped to incumbents")
-
-          errors = []
-          if n == 0:
-              errors.append("no candidates returned")
-          if n != len(candidates):
-              errors.append(f"metadata.totalCandidates ({n}) != len(candidates) ({len(candidates)})")
-          # A House count of exactly 100 means the paginated fetch silently stopped at
-          # the FEC's per_page cap and the list is truncated alphabetically.
-          if len(house) == 100:
-              errors.append("House count is exactly 100 - pagination likely truncated")
-          # Incumbents are spread across the alphabet, so a truncated pull drops most of
-          # them. GA seats 16 members; require the majority to resolve.
-          if len(by_bio) < 12:
-              errors.append(f"only {len(by_bio)} incumbents mapped to a bioguide ID (expected >= 12)")
-
-          if errors:
-              for e in errors:
-                  print(f"Error: {e}", file=sys.stderr)
-              sys.exit(1)
-          PY
+      # A tier-1 failure means the file is wrong in a way worth looking at, and
+      # the runner is about to be destroyed with it inside. Keep it.
+      - name: Preserve the rejected file
+        if: failure() && steps.validate.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rejected-ga-fec-data
+          path: assets/data/ga-fec-data.json
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Commit and push
         run: |
@@ -89,4 +85,29 @@ jobs:
               echo "::error::Push failed after 3 attempts - generated data was NOT committed"
               exit 1
             fi
+          fi
+
+      # After the commit, not before: the report describes data that has already
+      # shipped. One issue, refreshed each week, so the history of what moved in
+      # GA finance data lives in one thread instead of a pile of notifications.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "FEC data: material changes"
+        run: |
+          report="$RUNNER_TEMP/fec-changes.md"
+          if [ ! -s "$report" ] || grep -q '^No material change this run' "$report"; then
+            echo "Nothing material changed — skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-fec-data."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
           fi
