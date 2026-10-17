@@ -93,7 +93,14 @@
       "Bash(git commit *)",
       "Bash(python scripts/test_ga_eo_news.py)",
       "Bash(python scripts/generate_ga_news.py)",
-      "Bash(node --test tests/js/*.test.js)"
+      "Bash(node --test tests/js/*.test.js)",
+      "Bash(S=\"/c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/73eea726-9a0d-49b1-80c5-9fbb4837ad51/scratchpad\"; echo \"######## tiny index \\(old floor's false positive\\) ########\"; grep -A6 \"Fewer\\\\|thin\\\\|floor\\\\|###\" \"$S/sc-tiny.out\" | head -14; echo; echo \"######## a whole category gone ########\"; sed -n '/## Search index/,$p' \"$S/sc-category-gone.out\" | head -22; echo; echo \"######## bad category sum \\(must gate\\) ########\"; cat \"$S/sc-bad-sum.out\" | head -8)",
+      "Bash(PYTHONIOENCODING=utf-8 python -)",
+      "Bash(M=\"/c/Users/justi/.claude/projects/C--Users-justi-Documents-GitHub-votega-org/memory\"; ls \"$M\" | head -40; echo \"=== count ===\"; ls \"$M\" | wc -l; echo \"=== sample style ===\"; cat \"$M/project_races_guard.md\")",
+      "Bash(python scripts/test_search_corpus_sources.py)",
+      "Bash(cp assets/data/search-entities.json /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/73eea726-9a0d-49b1-80c5-9fbb4837ad51/scratchpad/sc-committed.json)",
+      "Bash(python scripts/generate_search_corpus.py)",
+      "Bash(python scripts/only_keys_changed.py assets/data/search-entities.json metadata.generatedAt)"
     ]
   }
 }
