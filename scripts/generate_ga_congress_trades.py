@@ -343,6 +343,10 @@ def main():
 
     by_member = {}
     total_trades = 0
+    # Filers whose per-filer fetch failed and were therefore left OUT. Published
+    # in metadata so validate_ga_congress_trades.py can tell "this member's
+    # fetch failed" from "this member is gone", which the file alone cannot.
+    fetch_failed = []
 
     for filer in ga_filers:
         filer_id = filer['id']
@@ -353,6 +357,7 @@ def main():
         data = fetch_json(url)
         if not data:
             print(f"  Warning: could not fetch data for {name}, skipping")
+            fetch_failed.append(name)
             continue
 
         trades_raw = data.get('trades', [])
@@ -497,6 +502,7 @@ def main():
             # for who is published, so it tracks a delegation change on its own.
             'delegationSize': len(delegation),
             'delegationChambers': sorted({m['chamber'] for m in delegation.values() if m.get('chamber')}),
+            'fetchFailed': sorted(fetch_failed),
             'skippedNotInDelegation': sorted(f['full_name'] for f in departed),
             'mergedFilers': sorted(f"{absorbed} -> {primary}"
                                    for absorbed, primary, _ in auto_merges),
