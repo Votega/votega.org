@@ -166,7 +166,7 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
     if (state.sources.size && !state.sources.has(it.source)) return false;
     if (state.q) {
       var names = (it.entityIds || []).map(function (v) { return (DATA.entities[v] || {}).name || ''; }).join(' ');
-      var hay = (it.title + ' ' + it.snippet + ' ' + names + ' ' + (it.topics || []).join(' ')).toLowerCase();
+      var hay = (it.title + ' ' + (it.snippet || '') + ' ' + names + ' ' + (it.topics || []).join(' ')).toLowerCase();
       if (hay.indexOf(state.q) === -1) return false;
     }
     return true;

@@ -16,6 +16,9 @@
 #               advocacy -> an interest group's own releases. A legitimate
 #               primary source for that group's position, but one-sided: cards
 #               link out and carry the publisher name, which is the disclosure.
+#   parser      OPTIONAL. Omit for RSS/Atom (the default). Names an HTML
+#               adapter in generate_ga_news.py's HTML_PARSERS, for a source that
+#               publishes no feed at all. Currently only `usg`.
 #   ga_focused  true  -> feed is wholly GA politics; keep every item
 #               false -> general feed; apply the GA-relevance gate (drops national
 #                        wire copy, e.g. the States Newsroom syndication that makes
@@ -57,6 +60,17 @@ feeds:
     url: https://netchoice.org/feed/
     type: advocacy
     ga_focused: false
+  # --- State agencies / boards (not entity-bound) ---------------------------
+  # University System of Georgia newsroom. Board of Regents decisions,
+  # chancellor and campus-president appointments, tuition and budget -- state
+  # policy made by a gubernatorial-appointed board. The site is TerminalFour
+  # with no RSS anywhere, so it is read by the `usg` HTML adapter.
+  - name: University System of Georgia
+    url: https://www.usg.edu/news/
+    type: official
+    parser: usg
+    ga_focused: true
+
   - name: GA Secretary of State
     url: https://sos.ga.gov/rss.xml
     type: official
