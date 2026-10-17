@@ -2,6 +2,7 @@ name: Update GA political news (every 3 hours)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -26,19 +27,24 @@ jobs:
         run: pip install pyyaml
 
       - name: Generate GA news data
+        id: generate
         run: python scripts/generate_ga_news.py assets/data/ga-news.json
 
+      # Tier 1 gates on the file contradicting itself (count vs items, tag and
+      # topic tallies, duplicate ids, a source missing from the chip list).
+      # A thin run is tier 2: reported, committed anyway. The
+      # `--min items=20` this replaces aborted the job whenever Cloudflare
+      # 403'd enough feeds, which happens on healthy days; the file is rebuilt
+      # every 3 hours, so a thin run heals itself and discarding it only adds a
+      # failure issue. Zero items is still refused, upstream, by the generator
+      # (exit 1 before the write, committed file untouched). See
+      # docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
       - name: Validate generated data
-        # Absolute floor only, deliberately: individual feeds sit behind
-        # Cloudflare bot protection and intermittently 403 a datacenter runner,
-        # so a per-source or tight delta check would fail the build on a healthy
-        # day. 20 is well under a normal run (~65) but proves the aggregate did
-        # not collapse to a single surviving feed.
+        id: validate
         run: |
-          python scripts/validate_data_update.py assets/data/ga-news.json \
-            --metric items=metadata.count \
-            --metric entities=len:entities \
-            --min items=20
+          python scripts/validate_ga_news.py assets/data/ga-news.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/ga-news-changes.md"
 
       - name: Commit and push generated data
         run: |
@@ -61,3 +67,43 @@ jobs:
               exit 1
             fi
           fi
+
+      # After the commit: the report describes a record that has already shipped.
+      # Runs every 3 hours, so the issue body is diffed first and only touched
+      # (and commented on) when the report actually changed.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "GA news: thin feed runs"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/ga-news-changes.md"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"; then
+            echo "Nothing material - skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \n            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            gh issue view "$existing" --json body --jq .body > "$RUNNER_TEMP/current-body.md" || true
+            if diff -q "$RUNNER_TEMP/current-body.md" "$report" >/dev/null 2>&1; then
+              echo "Issue #$existing already says this - leaving it alone."
+              exit 0
+            fi
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d %H:%M') UTC by update-ga-news - the report changed."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose (a step's `if` is evaluated when the runner reaches it).
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-news
+          path: assets/data/ga-news.json
+          if-no-files-found: ignore
+          retention-days: 14
