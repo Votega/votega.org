@@ -44,6 +44,7 @@ from datetime import date, datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.atomic_io import write_json_atomic  # noqa: E402
+from lib.federal_register import fetch_all  # noqa: E402
 from lib.http import fetch_bytes, fetch_json  # noqa: E402
 
 FR_URL = "https://www.federalregister.gov/api/v1/documents.json"
@@ -188,20 +189,11 @@ def build_abstract(paragraphs, limit=320):
 def fetch_federal_register(term_start, fetcher=fetch_json):
     """Every executive order signed on/after term_start, or None if any page
     failed (a short list would publish as fact)."""
-    fields = "".join(f"&fields[]={f}" for f in FR_FIELDS)
-    orders, page, total_pages = [], 1, 1
-    while page <= total_pages:
-        url = (f"{FR_URL}?conditions%5Btype%5D%5B%5D=PRESDOCU"
-               f"&conditions%5Bpresidential_document_type%5D%5B%5D=executive_order"
-               f"&conditions%5Bsigning_date%5D%5Bgte%5D={term_start}"
-               f"&per_page={PER_PAGE}&page={page}&order=newest{fields}")
-        data = fetcher(url, label=f"Federal Register page {page}")
-        if not isinstance(data, dict) or "results" not in data:
-            return None
-        total_pages = data.get("total_pages") or 1
-        orders.extend({f: r.get(f) for f in FR_FIELDS} for r in data["results"])
-        page += 1
-    return orders
+    return fetch_all(
+        "conditions%5Btype%5D%5B%5D=PRESDOCU"
+        "&conditions%5Bpresidential_document_type%5D%5B%5D=executive_order"
+        f"&conditions%5Bsigning_date%5D%5Bgte%5D={term_start}",
+        FR_FIELDS, fetcher=fetcher, per_page=PER_PAGE)
 
 
 _EO_PDF = re.compile(r"/uploads/[^\"'\s<>]*?/eo-(\d{4,6})\.pdf", re.I)
