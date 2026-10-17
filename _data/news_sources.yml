@@ -23,6 +23,17 @@
 #               false -> general feed; apply the GA-relevance gate (drops national
 #                        wire copy, e.g. the States Newsroom syndication that makes
 #                        up ~1/3 of the Georgia Recorder feed)
+#   ga_terms_exclude
+#               OPTIONAL, only meaningful with ga_focused: false. A list of
+#               `ga_terms` (below) that do NOT count as GA relevance for THIS
+#               feed, because the source prints them as boilerplate on every
+#               item. NetChoice datelines every release "ATLANTA--", so the
+#               `atlanta` term alone kept its releases about other states' laws;
+#               excluding it means an item must name a GA politician or some
+#               other GA term. Scope it per feed and keep it minimal -- an
+#               Atlanta-datelined GPB or Georgia Recorder story is real GA news,
+#               so dropping a dateline term globally would lose true positives.
+#               A term here that is not in `ga_terms` prints a warning.
 #   entity      OPTIONAL. An official's own press-release feed. The value is that
 #               person's stable id in assets/data/id-crosswalk.json -- a vgId, a
 #               federal member's bioguideId, or a state person's ocdPersonId.
@@ -60,6 +71,11 @@ feeds:
     url: https://netchoice.org/feed/
     type: advocacy
     ga_focused: false
+    # Every release is datelined "ATLANTA--" (the association's own boilerplate,
+    # not where the story is), so the dateline city cannot stand in for GA
+    # relevance here -- see ga_terms_exclude in the header above.
+    ga_terms_exclude:
+      - atlanta
   # --- State agencies / boards (not entity-bound) ---------------------------
   # University System of Georgia newsroom. Board of Regents decisions,
   # chancellor and campus-president appointments, tuition and budget -- state

@@ -329,10 +329,19 @@ def resolve_entity_url(person, entity_urls):
     return None
 
 
-def is_ga_relevant(text_lower, has_entity, ga_terms):
+def is_ga_relevant(text_lower, has_entity, ga_terms, excluded_terms=()):
+    """Keep an item from a non-GA-focused feed only if it is actually about GA.
+
+    `excluded_terms` drops specific `ga_terms` for one feed, for a source whose
+    boilerplate names a Georgia place on every item regardless of subject --
+    NetChoice datelines every release "ATLANTA--", so `atlanta` alone kept its
+    releases about other states' laws. Such a feed must name a GA politician or
+    a GA term other than its own boilerplate. The exclusion is per-feed on
+    purpose: an Atlanta-datelined GPB or Georgia Recorder story is real GA news.
+    """
     if has_entity:
         return True
-    return any(term in text_lower for term in ga_terms)
+    return any(term in text_lower for term in ga_terms if term not in excluded_terms)
 
 
 def bucket_topics(text, topics):
@@ -534,6 +543,11 @@ def main():
         # does -- a "Statement on the shutdown" release must not be dropped for
         # never saying "Georgia".
         ga_focused = bool(feed.get("ga_focused")) or bool(bound_vgid)
+        excluded_terms = {t.lower() for t in (feed.get("ga_terms_exclude") or [])}
+        unknown = sorted(excluded_terms - set(ga_terms))
+        if unknown:
+            print(f"[{name}] warning: ga_terms_exclude names term(s) not in "
+                  f"ga_terms: {', '.join(unknown)}")
         raw = fetch_bytes(url, label=name)
         if raw is None:
             print(f"[{name}] fetch failed -- skipping")
@@ -552,7 +566,8 @@ def main():
             text = f"{it['title']} {it['snippet']}"
             ents = match_entities(toks(text), by_surname, sole_bare)
 
-            if not ga_focused and not is_ga_relevant(text.lower(), bool(ents), ga_terms):
+            if not ga_focused and not is_ga_relevant(
+                    text.lower(), bool(ents), ga_terms, excluded_terms):
                 dropped_national += 1
                 continue
 
