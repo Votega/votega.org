@@ -162,6 +162,23 @@ def tier2_cases():
     check("a full-strength roster and no baseline reports nothing",
           V.tier2(sound(), None), [])
 
+    # Every member who has left during the biennium keeps an entry, so the
+    # standing status roster is a dozen lines long on a day when nothing
+    # happened. It is context, never a trigger: as its own section it would make
+    # every daily run produce a non-empty report, open a tracking issue forever,
+    # and bury the days something actually moved.
+    quiet = copy.deepcopy(old)
+    quiet["members"] = [m for m in quiet["members"]
+                        if not (m["chamber"] == "Senate" and m["district"] == 7)]
+    quiet["members"].append(member("Senate", 7, id="ocd-person/successor"))
+    quiet["members"].append(member("Senate", 7, id="ocd-person/departed",
+                                   status="Resigned", statusDate="2026-03-13"))
+    quiet["metadata"]["count"] = len(quiet["members"])
+    check("a seat refilled after a departure is self-consistent", V.tier1(quiet), [])
+    check("standing departures alone do NOT make a report",
+          V.tier2(quiet, quiet), [])
+    check("...nor without a baseline", V.tier2(quiet, None), [])
+
     # The headline: the condition that used to abort the run now reports, names
     # the empty district, and lets the commit proceed.
     new = copy.deepcopy(old)
@@ -185,8 +202,8 @@ def tier2_cases():
     check("a departure is reported", "Status changed" in heads, True)
     check("a departure also shows up as a seat short",
           "Chamber below full strength" in heads, True)
-    check("the standing status list is reported",
-          "Members carrying a status" in heads, True)
+    check("the standing status list rides along as context",
+          "For reference: members carrying a status" in heads, True)
 
     new = copy.deepcopy(old)
     new["members"][0]["party"] = "Democratic"

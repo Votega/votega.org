@@ -190,6 +190,32 @@ def by_id(d):
     return {m.get("id"): m for m in (d.get("members") or []) if m.get("id")}
 
 
+def with_context(new, sections):
+    """Append the standing status roster — but only to a report that already says something.
+
+    Every member who has ever left the 2025-26 biennium keeps an entry here, so
+    this list is a dozen lines long on a day when nothing whatsoever happened.
+    It is useful CONTEXT next to a vacancy (the departure that caused it, with
+    the date to check against the Governor's writ-of-election executive orders)
+    and useful for confirming the overrides layer is current — but it is standing
+    state, not news, so it must never be the reason a report exists. As its own
+    section it would make every single daily run produce a non-empty report,
+    which would open and refresh a tracking issue forever and turn the one thing
+    a human is supposed to read into noise they learn to ignore.
+    """
+    if not sections:
+        return sections
+    flagged = [m for m in (new.get("members") or []) if m.get("status")]
+    if not flagged:
+        return sections
+    return sections + [("For reference: members carrying a status", [
+        f"- **{m.get('name', '?')}** ({m.get('chamber', '?')}, district "
+        f"{m.get('district', '?')}): {m['status']}"
+        + (f" as of {m['statusDate']}" if m.get("statusDate") else "")
+        for m in sorted(flagged, key=lambda m: (m.get("chamber", ""), m.get("name", "")))
+    ])]
+
+
 def tier2(new, old):
     """Material facts and changes, as (heading, [lines]) sections."""
     sections = []
@@ -198,19 +224,8 @@ def tier2(new, old):
     if short:
         sections.append(("Chamber below full strength", short))
 
-    # Departures and vacancies live only in the overrides layer, so listing them
-    # is how a human confirms the layer is current.
-    flagged = [m for m in (new.get("members") or []) if m.get("status")]
-    if flagged:
-        sections.append(("Members carrying a status", [
-            f"- **{m['name']}** ({m.get('chamber', '?')}, district "
-            f"{m.get('district', '?')}): {m['status']}"
-            + (f" as of {m['statusDate']}" if m.get("statusDate") else "")
-            for m in sorted(flagged, key=lambda m: (m.get("chamber", ""), m.get("name", "")))
-        ]))
-
     if not old:
-        return sections
+        return with_context(new, sections)
 
     nm, om = by_id(new), by_id(old)
 
@@ -243,7 +258,7 @@ def tier2(new, old):
         if lines:
             sections.append((heading, lines))
 
-    return sections
+    return with_context(new, sections)
 
 
 def render(path, sections):
