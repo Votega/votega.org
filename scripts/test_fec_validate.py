@@ -192,11 +192,72 @@ def tier2_cases():
           V.render("ga-fec-data.json", []), True)
 
 
+def collapse_cases():
+    """The one baseline-reading gate: a shrink no week of politics can explain.
+
+    The pair that matters is the last two. Within a cycle, a 99% drop is a
+    half-failed fetch and must not commit. Across a cycle boundary the same
+    99% drop is the FEC's list starting over, and gating on it would recreate
+    the hand-pinned floor this validator replaced — the 2028 rollover would
+    fail every run until someone edited the code.
+    """
+    old = sound()
+
+    check("no baseline (first run) cannot collapse",
+          V.collapse(sound(), None), [])
+
+    check("an unchanged file does not collapse",
+          V.collapse(sound(), old), [])
+
+    grown = sound()
+    grown["candidates"]["H8GA07000"] = {"candidateId": "H8GA07000", "name": "NEW, ONE",
+                                        "office": "H", "committeeId": "C00999999",
+                                        "totalRaised": 1000.0}
+    check("growth does not collapse", V.collapse(grown, old), [])
+
+    # One of three candidates leaving is a third of the file — real roster churn,
+    # and tier 2's business.
+    churned = sound()
+    del churned["candidates"]["H6GA13062"]
+    check("losing a third of the roster is reported, not gated",
+          V.collapse(churned, old), [])
+
+    gutted = sound()
+    gutted["candidates"] = {"H4GA01039": old["candidates"]["H4GA01039"]}
+    errs = V.collapse(gutted, old)
+    # Two errors, not one: the candidates that went also carried the totals, so
+    # both counts fall through the floor. Reporting both is the point — the pair
+    # tells a reader the whole file thinned rather than the money alone.
+    check("losing two thirds of the roster gates", len(errs), 2)
+    check("the collapse error names the drop",
+          bool(errs) and "3 -> 1" in errs[0] and "67% drop" in errs[0], True)
+    check("the second error covers the totals that went with them",
+          len(errs) > 1 and errs[1].startswith("candidates carrying totals"), True)
+
+    # Totals vanishing wholesale while the roster survives is the exact shape of
+    # a fetch that got the candidate list but lost the committee calls to 429s.
+    no_money = sound()
+    for c in no_money["candidates"].values():
+        c["totalRaised"] = None
+    errs = V.collapse(no_money, old)
+    check("every total vanishing while the roster survives gates", len(errs), 1)
+    check("that error is about totals, not the roster",
+          bool(errs) and errs[0].startswith("candidates carrying totals"), True)
+
+    rolled = sound()
+    rolled["metadata"] = {**rolled["metadata"], "cycle": 2028}
+    rolled["candidates"] = {"H4GA01039": old["candidates"]["H4GA01039"]}
+    check("the same drop across a cycle rollover does not gate",
+          V.collapse(rolled, old), [])
+
+
 def main():
     print("tier 1 — gate on self-contradiction:")
     tier1_cases()
     print("\ntier 2 — report change, never gate:")
     tier2_cases()
+    print("\ncollapse — gate only on a shrink the world cannot produce:")
+    collapse_cases()
     if failures:
         print(f"\nFAIL: {len(failures)} case(s) failed")
         return 1

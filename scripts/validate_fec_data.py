@@ -15,6 +15,14 @@ a validator ends up discarding the truth:
   candidacy. Every one of these is something the FEC can legitimately report,
   and the site exists to publish exactly that. These are REPORTED, never gated.
 
+The collapse check is the one deliberate exception, and it reads the baseline.
+It exists because the failure it catches leaves every surviving record
+perfectly self-consistent: a fetch that loses half the delegation to 429s
+produces a SMALLER file, not a malformed one. Tier 1 passes it, tier 2 writes a
+long and accurate report about it, and a hundred members' finances quietly
+leave the site. See collapse() for why that one gates and what stops it from
+becoming the hand-pinned floor this validator replaced.
+
 The distinction matters because the two are indistinguishable by shape. Everton
 Blair's totals going to zero is the signature of the bug fixed in October 2026
 (a re-designated committee the fetch skipped) AND of his PAC legitimately
@@ -50,6 +58,12 @@ from generate_fec_data import preferred_filing  # noqa: E402
 # the report. Amended filings and a quarter's fundraising both land well under
 # it; a committee swap does not.
 MATERIAL_SHIFT = 0.25
+
+# Losing more than this share of the records the last run published is not a
+# week in politics; it is a fetch that half-failed. Deliberately far above any
+# real week: candidates do not leave the FEC's list mid-cycle, so within one
+# cycle this number only moves up.
+COLLAPSE_DROP = 0.5
 
 
 def load(path):
@@ -128,6 +142,50 @@ def tier1(d):
     if orphaned:
         errors.append(f"candidate(s) carry totals with no committeeId: {orphaned}")
 
+    return errors
+
+
+# ── the collapse check: the file against last week's, for a catastrophic shrink ─
+
+def collapse(new, old):
+    """Return errors for a shrink no week of politics can explain.
+
+    This gates rather than reports, which is the opposite of everything in tier
+    2, so the asymmetry is the argument: if the shrink is a fetch failure,
+    committing it destroys live data for every reader; if it is somehow real,
+    holding it costs one week and a human glance. Everything short of
+    catastrophic stays in tier 2, where Everton Blair's totals going to zero
+    belongs — that one is indistinguishable by shape from a real wind-down, and
+    gating on it is exactly the mistake this validator was written to undo.
+
+    Skipped when the cycle rolls over. The candidate list for a new cycle starts
+    nearly empty and fills over a year, so 2026 -> 2028 is a ~99% drop that means
+    nothing is wrong. Gating on it would be the hand-pinned floor in a new hat:
+    a check that fires on a calendar date and gets overridden until it means
+    nothing.
+    """
+    if not old:
+        return []
+
+    n_cycle = (new.get("metadata") or {}).get("cycle")
+    o_cycle = (old.get("metadata") or {}).get("cycle")
+    if n_cycle != o_cycle:
+        print(f"Collapse check skipped: cycle {o_cycle} -> {n_cycle}. A new cycle "
+              f"starts with few candidates, so a drop here is expected.")
+        return []
+
+    nc = new.get("candidates") or {}
+    oc = old.get("candidates") or {}
+
+    def with_totals(d):
+        return sum(1 for c in d.values() if c.get("totalRaised") is not None)
+
+    errors = []
+    for label, n, o in (("candidates", len(nc), len(oc)),
+                        ("candidates carrying totals", with_totals(nc), with_totals(oc))):
+        if o and n < o * (1 - COLLAPSE_DROP):
+            errors.append(f"{label}: {o} -> {n}, a {1 - n / o:.0%} drop in one run "
+                          f"with the cycle unchanged ({n_cycle})")
     return errors
 
 
@@ -260,6 +318,10 @@ def main():
     ap.add_argument("--baseline-ref", default="HEAD",
                     help="git ref to diff the new file against (default HEAD)")
     ap.add_argument("--report-out", help="write the tier-2 markdown report here")
+    ap.add_argument("--allow-collapse", action="store_true",
+                    help="report a catastrophic shrink instead of failing on it. For a "
+                         "human who has inspected the rejected file and confirmed the "
+                         "drop is real — never the default, or the check means nothing.")
     args = ap.parse_args()
 
     if not os.path.exists(args.path):
@@ -283,7 +345,26 @@ def main():
     print(f"Tier 1 passed: {len(new['candidates'])} candidates, indexes agree with "
           f"preferred_filing(), no orphaned totals.")
 
-    sections = tier2(new, baseline(args.path, args.baseline_ref))
+    old = baseline(args.path, args.baseline_ref)
+
+    shrink = collapse(new, old)
+    if shrink:
+        stream = sys.stdout if args.allow_collapse else sys.stderr
+        print("\nCOLLAPSE CHECK: the file is self-consistent but far smaller than "
+              "the committed one:", file=stream)
+        for e in shrink:
+            print(f"  - {e}", file=stream)
+        if not args.allow_collapse:
+            print("\nRefusing to commit. Every surviving record here is internally "
+                  "valid, so this is what a half-failed fetch looks like — check the "
+                  "run log for rate-limit backoffs before anything else. The rejected "
+                  "file is uploaded as a workflow artifact. If the drop is real, "
+                  "re-dispatch with allow_collapse=true.", file=stream)
+            return 1
+        print("\nallow_collapse was set, so this is a warning and the file will be "
+              "committed.", file=stream)
+
+    sections = tier2(new, old)
     report = render(args.path, sections)
     if args.report_out:
         with open(args.report_out, "w", encoding="utf-8") as f:
