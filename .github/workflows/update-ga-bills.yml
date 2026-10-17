@@ -2,6 +2,7 @@ name: Update Georgia legislative bill data (weekly, Sun 07:30 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -42,44 +43,41 @@ jobs:
       # set FULL_REFRESH=1) for a retroactive amendment to a closed session, or a schema
       # change that must reach historical records. A biennium rollover does NOT need it.
       - name: Generate GA bills data (legis.ga.gov SOAP source)
+        id: generate
         env:
           FULL_REFRESH: ${{ inputs.full_refresh && '1' || '0' }}
         run: python scripts/generate_ga_bills_soap.py assets/data/ga-bills.json
 
+      # Two tiers, and the split is the point. Tier 1 is the file against
+      # ITSELF -- a metadata total that disagrees with the bills it counts, a
+      # per-session billCount that disagrees with the bills carrying that session
+      # id, a session marked preserved with nothing in the file, a duplicate bill
+      # id, a bill missing a field every consumer reads. No fact about the General
+      # Assembly can make those true, so they fail the run and nothing is
+      # committed. Tier 2 is the diff against last week -- sessions gaining or
+      # losing bills, a rollover, an empty active session; those are reported and
+      # the data is committed anyway.
+      #
+      # The step this replaces gated on validate_data_update.py: a 20% shrink of
+      # len(bills) against HEAD (reset by --scope-key at a session change) plus
+      # `--min bills=1`. That is a floor cleared by the PRESERVED layer: ~5,500 of
+      # ~5,650 bills are carried forward verbatim from the closed session, so the
+      # active session (~3% of the file) could come back EMPTY from the
+      # incremental fetch and the whole-file delta never moved. It looked safe
+      # while the thing it was meant to guard failed silently under it, and it
+      # still tripped on a legitimate rollover, discarding a sweep that dies with
+      # the runner. The per-session billCount equality is the check that actually
+      # catches a broken merge. The inline `totalBills == len(bills)` and
+      # required-field asserts were already self-consistency checks and survive
+      # as tier 1. See docs/audits/2026-10-13-data-pipeline-audit.md 2.6, and the
+      # header of update-local-government.yml for the first workflow to make
+      # this split.
       - name: Validate generated data
+        id: validate
         run: |
-          if [ ! -f assets/data/ga-bills.json ]; then
-            echo "Error: ga-bills.json was not generated"
-            exit 1
-          fi
-          # Relative floor + structural checks. The absolute `len(bills) >= 5000`
-          # assert that used to live below was pinned to the 2025-26 session and
-          # would have failed every run for roughly the first year of the next
-          # biennium; --scope-key lets the check reset itself when the session
-          # rolls over. See CODEBASE-REVIEW-2026-08-18.md findings 2.3 and 5.1.
-          python scripts/validate_data_update.py assets/data/ga-bills.json \
-            --metric bills=len:bills \
-            --metric totalBills=metadata.totalBills \
-            --scope-key metadata.session \
-            --min bills=1
-
-          python -c "
-          import json
-          d = json.load(open('assets/data/ga-bills.json'))
-          bills = d.get('bills', [])
-          meta  = d.get('metadata', {})
-          print(f'Validated: {len(bills)} bills (metadata.totalBills={meta.get(\"totalBills\")})')
-          assert meta.get('totalBills') == len(bills), 'metadata.totalBills does not match actual bill count'
-          # (The SOAP producer fetches the active session and preserves the closed ones —
-          # no pagination — and refuses to write below 100 bills, or to write at all if a
-          # preserved session is missing, so the relative-floor check above is the guard
-          # against a truncated sweep; there is no paginationComplete flag to assert.)
-          required = ['id', 'identifier', 'chamber', 'title', 'billUrl']
-          for b in bills:
-              for field in required:
-                  assert field in b, f'Bill {b.get(\"identifier\",\"?\")} missing required field: {field}'
-          print('All integrity checks passed')
-          "
+          python scripts/validate_ga_bills.py assets/data/ga-bills.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/ga-bills-changes.md"
 
       - name: Enrich GA bills with party vote tallies
         run: python scripts/enrich_bills_with_party_votes.py assets/data/ga-bills.json assets/data/ga-member-votes.json assets/data/ga-members.json
@@ -104,6 +102,33 @@ jobs:
               echo "::error::Push failed after 3 attempts - generated data was NOT committed"
               exit 1
             fi
+          fi
+
+      # After the commit, not before: the report describes a record that has
+      # already shipped. One issue, refreshed in place, so the history of
+      # rollovers and session changes lives in one thread. This job is weekly,
+      # so the comment is unconditional -- there is no daily pile to avoid.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "GA bills: session and roster changes"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/ga-bills-changes.md"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"; then
+            echo "Nothing material this run -- skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-ga-bills."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
           fi
 
       # Split sponsorship out of the monolithic bill file into a ~4KB shared index +
@@ -148,3 +173,18 @@ jobs:
         env:
           GA_BILLS_TOKEN: ${{ secrets.GA_LEGISLATION_PUSH_TOKEN }}
         run: python3 scripts/publish_ga_bills.py
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it,
+      # so an `if: failure()` step placed before the failing step never runs at
+      # all. Sitting here it catches a tier-1 rejection, any commit or push
+      # failure, and a publish failure. The condition is "we have a generated
+      # file and are about to lose it": a full refresh is ~5.7k SOAP calls and
+      # the output dies with the runner either way.
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-bills
+          path: assets/data/ga-bills.json
+          if-no-files-found: ignore
+          retention-days: 14

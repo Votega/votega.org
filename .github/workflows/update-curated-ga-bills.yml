@@ -2,6 +2,7 @@ name: Update curated GA bill votes (Tue/Thu, 08:00 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -31,41 +32,36 @@ jobs:
       # ga-member-votes.json) and only reaches out to legis.ga.gov SOAP — which needs
       # no auth — for a curated bill from a session those artifacts do not cover.
       - name: Generate curated bill votes data
+        id: generate
         run: python scripts/generate_curated_ga_bills.py assets/data/curated-ga-bill-votes.json
 
+      # Two tiers, and the split is the point. Tier 1 is the file against
+      # ITSELF -- a metadata count that disagrees with the bills it counts, a
+      # source breakdown larger than the whole, more legislators "with votes"
+      # than are sitting, a party tally larger than the roster it tallies (the
+      # one inline assert that survives, because it is arithmetic), a bill or
+      # chamber vote missing a field the page reads. Those fail the run and
+      # nothing is committed. Tier 2 is everything the world or the editorial
+      # list can do; it is reported and the data is committed anyway.
+      #
+      # The step this replaces gated on validate_data_update.py: a 20% shrink of
+      # bills, records and legislatorsWithVotes against HEAD, plus `--min
+      # bills=1`. The curated list is NINE bills, so a single editorial edit is
+      # an 11%+ move, and a session rollover or a vacancy moves
+      # legislatorsWithVotes legitimately -- so the gate fired on the editor and
+      # the legislature, discarding a run whose output dies with the runner. The
+      # `ghosts or unres` block only printed a ::warning:: on a green run, for a
+      # degraded state the producer DESIGNS for (it drops an unattributable row
+      # and counts it in metadata); it now lands in the report where a human
+      # reads it. See docs/audits/2026-10-13-data-pipeline-audit.md 2.6, and the
+      # header of update-local-government.yml for the first workflow to make
+      # this split.
       - name: Validate generated data
+        id: validate
         run: |
-          # Relative floors: a session rollover or an edit to the curated list
-          # changes these counts legitimately, so absolute thresholds would go
-          # stale. legislatorsWithVotes is the metric a reader actually feels --
-          # a legislator missing from every key vote reads as one who never voted.
-          # See CODEBASE-REVIEW-2026-08-18.md 1.5.
-          python scripts/validate_data_update.py assets/data/curated-ga-bill-votes.json             --metric bills=metadata.count             --metric records=len:bills             --metric coverage=metadata.legislatorsWithVotes             --min bills=1
-
-          python -c "
-          import json, sys
-          d = json.load(open('assets/data/curated-ga-bill-votes.json'))
-          m = d['metadata']
-          sitting = m.get('sittingLegislators', 0)
-          covered = m.get('legislatorsWithVotes', 0)
-          ghosts  = m.get('ghostVoterIds', 0)
-          unres   = m.get('unresolvedVoterRows', 0)
-          print(f'Coverage: {covered}/{sitting} sitting legislators have a key vote')
-          print(f'Unresolved: {ghosts} ghost id(s), {unres} row(s) with no usable id or name')
-          if ghosts or unres:
-              print('::warning::' + str(ghosts + unres) + ' roll-call row(s) could not be '
-                    'attributed to a legislator; their votes are missing from the site.')
-          # Every roll call should tally exactly the members it recorded.
-          for b in d['bills']:
-              for chamber, v in b['votes'].items():
-                  roster = len(v['memberVotes'])
-                  tally  = sum(x['yea'] + x['nay'] + x['other'] for x in v['partyTally'].values())
-                  known  = sum(1 for _ in v['memberVotes'])
-                  assert tally <= roster, (
-                      f'{b[\"identifier\"]} {chamber}: partyTally {tally} exceeds the '
-                      f'{roster}-member roster - the tally is double-counting rows')
-          print('All integrity checks passed')
-          "
+          python scripts/validate_curated_ga_bills.py assets/data/curated-ga-bill-votes.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/curated-ga-bills-changes.md"
 
       - name: Commit and push generated data
         run: |
@@ -88,3 +84,47 @@ jobs:
               exit 1
             fi
           fi
+
+      # After the commit, not before: the report describes a record that has
+      # already shipped. One issue, refreshed in place. This job runs twice a
+      # week and an unresolved-row warning persists until someone fixes the
+      # crosswalk, so only comment when the report body actually changed --
+      # otherwise the thread fills with identical "refreshed" notes.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "Curated GA bill votes: coverage and roster changes"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/curated-ga-bills-changes.md"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"; then
+            echo "Nothing material this run -- skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            if [ "$(gh issue view "$existing" --json body --jq .body)" = "$(cat "$report")" ]; then
+              echo "Issue #$existing already carries this report -- nothing to update."
+              exit 0
+            fi
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-curated-ga-bills."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it,
+      # so an `if: failure()` step placed earlier never runs at all. Sitting here
+      # it catches a tier-1 rejection and a commit or push failure.
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-curated-ga-bill-votes
+          path: assets/data/curated-ga-bill-votes.json
+          if-no-files-found: ignore
+          retention-days: 14
