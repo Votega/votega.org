@@ -1,0 +1,114 @@
+name: Update presidential executive orders (twice daily, 13:00 & 23:00 UTC)
+
+permissions:
+  contents: write
+  issues: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # An order is signed at any hour and the Register lags 3-5 days, so the
+    # whitehouse.gov half of this file is what twice-daily buys.
+    - cron: '0 13,23 * * *'
+
+jobs:
+  update-executive-orders:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      # fetch-depth: 0 because the commit step rebases: a depth-1 clone has no
+      # merge base, and git reports every touched file as an add/add conflict
+      # (see update-fec-data.yml, where that took 39 runs to surface).
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Federal Register is required (exit 1, file untouched); whitehouse.gov is a
+      # supplement and its outage carries forward the previous provisional entries.
+      - name: Fetch executive orders
+        id: fetch
+        run: python scripts/generate_presidential_executive_orders.py assets/data/presidential-executive-orders.json
+
+      # Tier 1 (the file against itself) fails the run; tier 2 (the file against
+      # HEAD: new orders, expired provisional entries, ...) is reported and never
+      # gates -- "the White House has announced more than the Register has
+      # published" is the normal lag. See validate_fec_data.py for the split.
+      - name: Validate generated data
+        id: validate
+        run: |
+          python scripts/validate_presidential_executive_orders.py \
+            assets/data/presidential-executive-orders.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/eo-changes.md"
+
+      - name: Commit and push
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/presidential-executive-orders.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          elif python scripts/only_keys_changed.py assets/data/presidential-executive-orders.json metadata.generatedAt; then
+            echo "Only metadata.generatedAt changed — skipping redundant commit"
+            git restore --staged assets/data/presidential-executive-orders.json
+            git checkout -- assets/data/presidential-executive-orders.json
+          else
+            git commit -m "Update presidential executive orders"
+            pushed=0
+            for attempt in 1 2 3; do
+              # Rebase onto THIS ref's upstream, not main (feature-branch runs).
+              if git pull --rebase origin "$GITHUB_REF_NAME" && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
+          fi
+
+      # After the commit: the report describes data that has shipped. One issue,
+      # refreshed in place. An expired provisional entry is the line to act on.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "Executive orders: material changes"
+        run: |
+          report="$RUNNER_TEMP/eo-changes.md"
+          if [ ! -s "$report" ] || grep -q '^No material change this run' "$report"; then
+            echo "Nothing material changed — skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          # Only an expiry or a feed outage needs a human; new orders are just news.
+          if ! grep -qE '^### (Provisional entries expired|whitehouse.gov feed unavailable|Orders no longer)' "$report"; then
+            echo "Changes are routine — summary only, no issue."
+            exit 0
+          fi
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-presidential-executive-orders."
+          else
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose: an `if: failure()` step placed earlier never runs.
+      - name: Preserve the generated file
+        if: failure() && steps.fetch.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-presidential-executive-orders
+          path: assets/data/presidential-executive-orders.json
+          if-no-files-found: ignore
+          retention-days: 14

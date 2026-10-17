@@ -113,6 +113,8 @@
     margin-top: 0.3rem;
     line-height: 1.5;
   }
+  .eo-pending .eo-number { color: #b45309; }
+  .eo-pending-note { font-size: 0.78rem; color: #92400e; margin-top: 0.25rem; }
   .eo-load-more {
     display: block;
     width: 100%;
@@ -652,112 +654,79 @@
     }
   }
 
-  // Fetches executive orders from the Federal Register API (free, no key, CORS-open).
-  // Filters to the current term start date so only this administration's EOs appear.
+  // Executive orders come from assets/data/presidential-executive-orders.json,
+  // built by scripts/generate_presidential_executive_orders.py: the Federal
+  // Register record, plus orders already signed on whitehouse.gov but not yet
+  // published there (provisional: true, no number). The browser no longer calls
+  // the Federal Register; paging is over the loaded array, like
+  // loadSignedLegislation(). (loadAgencyActions() below still fetches live.)
   async function loadExecOrders(official) {
     const container = document.getElementById('execOrders');
     if (!container) return;
 
-    const FR_BASE = 'https://www.federalregister.gov/api/v1/documents.json';
-    const PER_PAGE = 20;
-    const termStart = (official.termStart || '2025-01-20').slice(0, 10);
+    const EO_URL    = 'assets/data/presidential-executive-orders.json';
+    const PAGE_SIZE = 20;
+    const FR_ALL    = 'https://www.federalregister.gov/presidential-documents/executive-orders';
+    let   shown     = PAGE_SIZE;
 
-    // State shared between initial load and "load more" calls
-    let currentPage = 1;
-    let totalCount  = 0;
-    let totalPages  = 0;
-    const rendered  = [];   // accumulates rendered <li> strings
-
-    function buildUrl(page) {
-      const params = new URLSearchParams({
-        'conditions[type][]':                     'PRESDOCU',
-        'conditions[presidential_document_type][]': 'executive_order',
-        'conditions[signing_date][gte]':          termStart,
-        'per_page':                               PER_PAGE,
-        'page':                                   page,
-        'order':                                  'newest',
-        'fields[]':                               ['document_number', 'executive_order_number', 'title', 'signing_date', 'abstract', 'html_url'].join('&fields[]='),
-      });
-      // URLSearchParams encodes fields[] oddly — build the fields part manually
-      const base = `${FR_BASE}?conditions%5Btype%5D%5B%5D=PRESDOCU` +
-        `&conditions%5Bpresidential_document_type%5D%5B%5D=executive_order` +
-        `&conditions%5Bsigning_date%5D%5Bgte%5D=${termStart}` +
-        `&per_page=${PER_PAGE}&page=${page}&order=newest` +
-        `&fields[]=document_number&fields[]=executive_order_number&fields[]=title&fields[]=signing_date&fields[]=abstract&fields[]=html_url`;
-      return base;
-    }
-
-    function renderItems(results) {
-      return results.map(eo => {
-        const eoNum  = eo.executive_order_number
-          ? `EO ${esc(eo.executive_order_number)}`
-          : `Doc ${esc(eo.document_number || '')}`;
-        const date   = eo.signing_date ? fmt(eo.signing_date) : '—';
-        const title  = esc(eo.title || 'Untitled');
-        const url    = safeUrl(eo.html_url);
-        const abs    = eo.abstract
-          ? `<div class="eo-abstract">${esc(eo.abstract)}</div>`
-          : '';
-        return `<li class="eo-item">
-          <div class="eo-header">
-            <span class="eo-number">${eoNum}</span>
-            <a class="eo-title" href="${url}" target="_blank" rel="noopener">${title}</a>
-          </div>
-          <div class="eo-date">Signed ${date}</div>
-          ${abs}
-        </li>`;
-      });
-    }
-
-    function rebuildContainer() {
-      const hasMore = currentPage < totalPages;
-      const metaBar = totalCount > 0
-        ? `<p class="eo-meta-bar">Showing ${rendered.length} of ${totalCount} executive orders signed this term (since ${fmt(termStart)}) · <a href="https://www.federalregister.gov/presidential-documents/executive-orders" target="_blank" rel="noopener">View all on Federal Register →</a></p>`
+    function renderItem(eo) {
+      const pending = !!eo.provisional;
+      const eoNum = pending
+        ? 'EO #: PENDING'
+        : (eo.executive_order_number ? `EO ${esc(eo.executive_order_number)}` : `Doc ${esc(eo.document_number || '')}`);
+      const date  = eo.signing_date ? fmt(eo.signing_date) : '—';
+      const abs   = eo.abstract
+        ? `<div class="eo-abstract">${esc(eo.abstract)}</div>`
         : '';
-      const loadMoreBtn = hasMore
-        ? `<button class="eo-load-more" id="eoLoadMore">Load more</button>`
+      const note  = pending
+        ? `<div class="eo-pending-note">Awaiting Federal Register publication. Linked to the White House copy; the order number and official link are added automatically once published.</div>`
         : '';
-
-      container.innerHTML = `
-        ${metaBar}
-        <ul class="eo-list">${rendered.join('')}</ul>
-        ${loadMoreBtn}
-      `;
-
-      const btn = document.getElementById('eoLoadMore');
-      if (btn) {
-        btn.addEventListener('click', async () => {
-          btn.disabled = true;
-          btn.textContent = 'Loading…';
-          currentPage++;
-          await fetchPage(currentPage);
-        });
-      }
-    }
-
-    async function fetchPage(page) {
-      const res = await fetch(buildUrl(page));
-      if (!res.ok) throw new Error(`Federal Register API: HTTP ${res.status}`);
-      const data = await res.json();
-
-      if (page === 1) {
-        totalCount = data.count || 0;
-        totalPages = data.total_pages || 1;
-      }
-
-      const newItems = renderItems(data.results || []);
-      rendered.push(...newItems);
-      rebuildContainer();
+      return `<li class="eo-item${pending ? ' eo-pending' : ''}">
+        <div class="eo-header">
+          <span class="eo-number">${eoNum}</span>
+          <a class="eo-title" href="${safeUrl(eo.html_url)}" target="_blank" rel="noopener">${esc(eo.title || 'Untitled')}</a>
+        </div>
+        <div class="eo-date">Signed ${date}</div>
+        ${abs}${note}
+      </li>`;
     }
 
     try {
-      await fetchPage(1);
-      if (rendered.length === 0) {
+      const res = await fetch(getBasePath() + EO_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data   = await res.json();
+      const orders = data.orders || [];
+      const meta   = data.metadata || {};
+
+      if (!orders.length) {
         container.innerHTML = `<p style="color:#777;font-size:0.875rem;">No executive orders found for this term.</p>`;
+        return;
       }
+
+      const termStart = (meta.termStart || official.termStart || '2025-01-20').slice(0, 10);
+      const pendingCount = orders.filter(o => o.provisional).length;
+      // Dated from this file's own generatedAt, not the page's other sources.
+      const updated = meta.generatedAt ? ` · Updated ${fmt(meta.generatedAt)}` : '';
+
+      function renderPage() {
+        const slice   = orders.slice(0, shown);
+        const hasMore = slice.length < orders.length;
+        const pend    = pendingCount
+          ? ` (${pendingCount} awaiting Federal Register publication)`
+          : '';
+        const metaBar = `<p class="eo-meta-bar">Showing ${slice.length} of ${orders.length} executive orders signed this term (since ${fmt(termStart)})${pend} · <a href="${FR_ALL}" target="_blank" rel="noopener">View all on Federal Register →</a>${updated}</p>`;
+        const loadMoreBtn = hasMore
+          ? `<button class="eo-load-more" id="eoLoadMore">Load more (${orders.length - slice.length} remaining)</button>`
+          : '';
+        container.innerHTML = `${metaBar}<ul class="eo-list">${slice.map(renderItem).join('')}</ul>${loadMoreBtn}`;
+        const btn = document.getElementById('eoLoadMore');
+        if (btn) btn.addEventListener('click', () => { shown += PAGE_SIZE; renderPage(); });
+      }
+
+      renderPage();
     } catch (err) {
       console.error('loadExecOrders()', err);
-      container.innerHTML = `<p style="color:#c00;font-size:0.875rem;">Could not load executive orders from the Federal Register. <a href="https://www.federalregister.gov/presidential-documents/executive-orders" target="_blank" rel="noopener">View directly on FederalRegister.gov →</a></p>`;
+      container.innerHTML = `<p style="color:#c00;font-size:0.875rem;">Executive orders are temporarily unavailable. <a href="${FR_ALL}" target="_blank" rel="noopener">View directly on FederalRegister.gov →</a></p>`;
     }
   }
 
