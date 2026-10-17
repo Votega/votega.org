@@ -11,6 +11,7 @@ name: Refresh unopposed-seat count (daily, 07:35 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -36,21 +37,24 @@ jobs:
           python-version: '3.x'
 
       - name: Rebuild the unopposed-seat count
+        id: generate
         run: python scripts/generate_unopposed_seats.py
 
+      # Two tiers. Tier 1 is the file against ITSELF: chamber totals that do not
+      # sum, a seat list not as long as the unopposed count, a chamber holding
+      # more seats than the constitution creates. Nothing about Georgia can make
+      # those true, so they fail the run. Tier 2 is what races.json can
+      # legitimately say -- a chamber short of 180/56 seats, a seat newly
+      # contested -- and is reported while the commit proceeds.
+      #
+      # The heredoc this replaces asserted `150 <= total <= 260`, a window on a
+      # number races.json controls. This runs daily AND on every races.json
+      # push, so one gap in the roster discarded the refresh. See
+      # docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
       - name: Validate the rebuild
         run: |
           set -e
-          python -c "
-          import json
-          d = json.load(open('_data/ga_unopposed_seats.json'))
-          assert d['total'] == d['byChamber']['house']['total'] + d['byChamber']['senate']['total'], 'chamber totals do not sum'
-          assert d['unopposed'] == d['byChamber']['house']['unopposed'] + d['byChamber']['senate']['unopposed'], 'chamber unopposed do not sum'
-          assert d['unopposed'] + d['contested'] == d['total'], 'unopposed + contested != total'
-          assert 150 <= d['total'] <= 260, f\"suspicious seat total: {d['total']}\"
-          assert len(d['seats']) == d['unopposed'], 'seat list length != unopposed count'
-          print(f\"Validated: {d['unopposed']} of {d['total']} seats unopposed ({d['unopposedPct']}%)\")
-          "
+          python scripts/validate_unopposed_seats.py _data/ga_unopposed_seats.json             --baseline-ref HEAD             --report-out "$RUNNER_TEMP/unopposed-changes.md"
           # Belt and braces: the file on disk must now agree with races.json.
           python scripts/generate_unopposed_seats.py --check
 
@@ -75,3 +79,44 @@ jobs:
               exit 1
             fi
           fi
+
+      # After the commit: the report describes a count that has already shipped.
+      # One issue, refreshed in place. This job runs daily and on every
+      # races.json push, so a comment is only added when the body CHANGED.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "Unopposed seats: material changes"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/unopposed-changes.md"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"; then
+            echo "Nothing material changed - skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE"             --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            gh issue view "$existing" --json body --jq .body > "$RUNNER_TEMP/current-body.md" || true
+            if diff -q "$RUNNER_TEMP/current-body.md" "$report" >/dev/null 2>&1; then
+              echo "Issue #$existing already says this - leaving it alone."
+              exit 0
+            fi
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by refresh-unopposed-count - the report changed."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose (an `if: failure()` step placed earlier never runs).
+      # Condition is "we have a generated file and are about to lose it".
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-unopposed-seats
+          path: _data/ga_unopposed_seats.json
+          if-no-files-found: ignore
+          retention-days: 14
