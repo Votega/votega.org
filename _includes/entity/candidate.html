@@ -185,6 +185,10 @@
   .finance-card.raised  { background: #f0fdf4; border: 1px solid #bbf7d0; }
   .finance-card.raised  .finance-card-label { color: #166534; }
   .finance-card.raised  .finance-card-value { color: #15803d; }
+  /* The "Includes N committees" list under a combined figure. Tight and
+     unbulleted so it reads as a caption, not a content list. */
+  .finance-committees { margin: 0.15rem 0 0 0; padding-left: 1rem; list-style: none; }
+  .finance-committees li { margin: 0.1rem 0; }
   .finance-card.spent   { background: #fef2f2; border: 1px solid #fecaca; }
   .finance-card.spent   .finance-card-label { color: #991b1b; }
   .finance-card.spent   .finance-card-value { color: #b91c1c; }
@@ -828,6 +832,7 @@
       </div>
       <p class="finance-meta">${coverageNote}</p>
       ${CampaignFinance.filingCommitteeNote(entry)}
+      ${CampaignFinance.contributingCommitteesHtml(entry)}
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
       ${CampaignFinance.provenanceLine('the FEC', fecData.metadata?.generatedAt)}
       ${CampaignFinance.fundingBreakdownHtml(entry)}

@@ -15,9 +15,10 @@ Flow:
   3. GET /v1/committee/{id}/totals/ for each candidate's committee -- both the
      headline cards and the receipt-component breakdown (see FUNDING_FIELDS)
      come out of this one response. Normally the principal campaign committee,
-     but see get_candidate_committee(): a campaign committee that has been
-     re-designated still holds the cycle's money, and the entry records the
-     committee's name and designation so the page can say so
+     but see get_candidate_committees(): a candidacy can have more than one
+     authorized committee and FEC adds them together, so the totals here are
+     summed across the set and the entry records the principal's name and
+     designation (plus contributingCommittees when there is more than one)
   4. GET /v1/schedules/schedule_a/by_employer/ for top donors by employer
 
 Output: assets/data/ga-fec-data.json
@@ -152,57 +153,61 @@ DESIGNATION_RANK = {"P": 0, "A": 1}
 AUTHORIZED_DESIGNATIONS = {"P", "A"}
 
 
-def get_candidate_committee(candidate_id):
-    """Return the committee whose totals are this candidate's campaign money.
+def get_candidate_committees(candidate_id):
+    """Every committee whose money is this candidacy's, plus a fallback pointer.
 
-    Only an authorized committee qualifies, and this deliberately gives up rather
-    than settle for something else. Two earlier attempts settled, and both put
-    other people's money on candidate pages:
+    Returns {"authorized": [ {id, name, designation}, ... ], "related": {...}|None}.
+    `authorized` is P then A, newest filer first within a tier, and is EMPTY when
+    FEC links only committees that are not the candidate's own; `related` then
+    names the best of those so the page can link out without quoting its money
+    (see noFilingHtml() in campaign-finance.js).
 
-      1. Taking the best-ranked committee of any designation. Derek Dooley's page
-         showed $4.7M of LEADERSHIP MATTERS PAC, and six more PACs landed on
-         former candidates.
-      2. Allowing a non-authorized committee that had ever been designated P,
-         on the theory that a re-designated campaign committee keeps its id.
-         /committee/{id}/history/ reports the committee's designations over time
-         but not whose candidate it answered to, and a committee first registered
-         this cycle has a single row, so the check measured committee AGE. It
-         accepted seven PACs (Greene's and Flowers' leadership PACs among them)
-         and refused three committees that really were the candidate's own. The
-         fall-through made it worse: refusing HOLD THE LINE simply promoted
-         MISSION DEMOCRACY PAC behind it.
+    Plural because a candidacy can have more than one authorized committee and
+    FEC's candidate page adds them together -- its "Data is included from these
+    committees" line. Mike Collins has MIKE COLLINS FOR SENATE (C00544684, P)
+    and COLLINS FOR GA SENATE REPUBLICAN NOMINEE FUND 2026 (C00892000, A); FEC
+    reports $10,249,716.29 and we reported $9,290,371.80, because we read the
+    principal alone. A nominee fund is designation A, so it is absent from the
+    list endpoint's `principal_committees` as well -- which is why this is now
+    asked for every candidate rather than only when that field is missing.
 
-    So: no campaign committee, no totals. A candidate whose committee has been
-    re-designated has no campaign money this cycle to report — which is what
-    FEC's own candidate page says about them — and the page links out to the
-    filings instead (see relatedCommittee below, and noFilingHtml() in
-    campaign-finance.js).
-
-    Returns {id, name, designation} for the committee to read totals from, or,
-    when FEC links only non-authorized committees, {related: {...}} naming the
-    best of them for the page to point at without quoting its money.
+    Only P and A qualify. Two earlier rules let other designations through and
+    both put other people's money on candidate pages: taking the best-ranked
+    committee of any designation (a leadership PAC's $4.7M landed on a live
+    Senate candidate's page), and allowing one that had ever been designated P
+    (/committee/{id}/history/ records designations over time but not whose
+    candidate they answered to, so it measured committee age -- it accepted
+    seven PACs and refused three committees that really were the candidate's).
     """
     data = fec_get(f"/candidate/{candidate_id}/committees/", {"cycle": CYCLE})
     results = (data or {}).get("results") or []
     if not results:
-        return None
+        return {"authorized": [], "related": None}
+
     results.sort(key=lambda c: (DESIGNATION_RANK.get(c.get("designation"), 9),
                                 _newest_first(c.get("last_file_date")),
                                 c.get("committee_id") or ""))
-    best = results[0]
-    designation = best.get("designation") or ""
-    entry = {
-        "id":          best.get("committee_id"),
-        "name":        best.get("name") or "",
-        "designation": designation,
-    }
-    if designation in AUTHORIZED_DESIGNATIONS:
-        return entry
-    # Not the candidate's own committee. Keep it as a pointer, not as a source.
-    print(f"    {candidate_id}: no authorized committee; FEC links "
-          f"{entry['id']} ({entry['name'] or '?'}, designation "
-          f"{designation or '-'}) — recording it as a reference only")
-    return {"related": entry}
+    authorized, others = [], []
+    for c in results:
+        row = {
+            "id":          c.get("committee_id"),
+            "name":        c.get("name") or "",
+            "designation": c.get("designation") or "",
+        }
+        (authorized if row["designation"] in AUTHORIZED_DESIGNATIONS else others).append(row)
+
+    if authorized:
+        if len(authorized) > 1:
+            names = ", ".join(f"{a['id']} [{a['designation']}]" for a in authorized)
+            print(f"    {candidate_id}: {len(authorized)} authorized committees — {names}")
+        return {"authorized": authorized, "related": None}
+
+    best = others[0] if others else None
+    if best:
+        print(f"    {candidate_id}: no authorized committee; FEC links "
+              f"{best['id']} ({best['name'] or '?'}, designation "
+              f"{best['designation'] or '-'}) — recording it as a reference only")
+    return {"authorized": [], "related": best}
 
 
 def get_committee_totals(committee_id):
@@ -256,6 +261,44 @@ def funding_breakdown(totals):
             out[key] = round(val)
     return out
 
+
+# Numeric fields read off a totals response. Summed across a candidacy's
+# authorized committees; everything else in the response (cycle, ids, flags) is
+# meaningless to add, so it is left alone rather than summed blindly.
+SUMMABLE_FIELDS = (
+    "receipts", "disbursements",
+    "last_cash_on_hand_end_period", "cash_on_hand_end_period",
+    "individual_itemized_contributions", "individual_unitemized_contributions",
+) + tuple(field for _, field in FUNDING_FIELDS)
+
+
+def sum_committee_totals(totals_list):
+    """Add several committees' totals into one response-shaped dict.
+
+    Matches how FEC's candidate page aggregates: a plain sum, with no attempt to
+    net out transfers between the candidate's own committees. Verified against
+    Mike Collins — $9,290,371.80 + $959,344.49 = $10,249,716.29, the figure his
+    FEC page shows to the cent.
+
+    coverage_end_date is a date, not an amount: the latest one wins, since that
+    is the reporting date the combined figure runs through.
+    """
+    totals_list = [t for t in totals_list if t]
+    if not totals_list:
+        return None
+    if len(totals_list) == 1:
+        return totals_list[0]
+
+    merged = {}
+    for field in SUMMABLE_FIELDS:
+        values = [t.get(field) for t in totals_list]
+        present = [v for v in values if isinstance(v, (int, float))]
+        if present:
+            merged[field] = sum(present)
+    ends = [t.get("coverage_end_date") for t in totals_list if t.get("coverage_end_date")]
+    if ends:
+        merged["coverage_end_date"] = max(ends)
+    return merged
 
 def get_candidate_totals(candidate_id):
     """Fallback when principal_committees is missing from the candidate list response.
@@ -384,7 +427,23 @@ def merge_top_employers(rows):
     return out
 
 
-def get_top_employers(committee_id):
+def get_top_employers(committee_ids):
+    """Top donor employers across ALL of a candidacy's authorized committees.
+
+    Takes a list, because the money does: merging the raw rows before ranking
+    means an employer that gave to both the principal committee and a nominee
+    fund appears once with the combined total, rather than twice at half size or
+    once at whichever committee happened to be read. merge_top_employers()
+    already collapses spelling variants, so it collapses across committees too.
+    """
+    rows = []
+    for committee_id in committee_ids:
+        rows.extend(_employer_rows(committee_id))
+    return merge_top_employers(rows)[:TOP_N]
+
+
+def _employer_rows(committee_id):
+    """Raw, unmerged employer rows for one committee."""
     # schedule_a uses two_year_transaction_period, not cycle
     data = fec_get("/schedules/schedule_a/by_employer/", {
         "committee_id":              committee_id,
@@ -414,7 +473,7 @@ def get_top_employers(committee_id):
             "count":    r.get("count", 0),
         })
 
-    return merge_top_employers(rows)[:TOP_N]
+    return rows
 
 
 def normalize_name(name):
@@ -631,24 +690,17 @@ def main():
         office     = c.get("office", "")        # "H" or "S"
         district   = c.get("district", "")
         bioguide   = c.get("bioguide_id") or ""
-        committees = c.get("principal_committees") or []
-        committee = {
-            "id":          committees[0].get("committee_id"),
-            "name":        committees[0].get("name") or "",
-            "designation": committees[0].get("designation") or "P",
-        } if committees else None
 
-        # List endpoint often omits principal_committees — fetch via individual detail endpoint
-        related = None
-        if not committee:
-            time.sleep(DELAY)
-            found = get_candidate_committee(cid)
-            if found and "related" in found:
-                # FEC links only non-authorized committees. Not a source of
-                # totals; kept so the page can point at the filings.
-                related, committee = found["related"], None
-            else:
-                committee = found
+        # Always ask, rather than trusting the list response's
+        # `principal_committees`: that field carries only P-designated
+        # committees, so an authorized nominee fund (designation A) is invisible
+        # in it, and reading it alone is what under-reported Mike Collins by
+        # $959,344.49. One call per candidate buys the complete set.
+        time.sleep(DELAY)
+        found = get_candidate_committees(cid)
+        authorized = found["authorized"]
+        related = found["related"]
+        committee = authorized[0] if authorized else None   # the principal, for identity
         committee_id = committee["id"] if committee else None
 
         # FEC doesn't return bioguide_id in list responses; enrich it ourselves.
@@ -688,12 +740,23 @@ def main():
             entry["committeeId"] = committee_id
             # Carried so the page can name the filer when it is not the
             # candidate's own principal campaign committee — see
-            # get_candidate_committee() and filingCommitteeNote() in
+            # get_candidate_committees() and filingCommitteeNote() in
             # campaign-finance.js.
             if committee.get("name"):
                 entry["committeeName"] = committee["name"]
             if committee.get("designation"):
                 entry["committeeDesignation"] = committee["designation"]
+            # Only when the figures span more than one committee, so the page can
+            # say so the way FEC's own candidate page does ("Data is included
+            # from these committees"). Absent for the ordinary single-committee
+            # candidate, which is nearly all of them.
+            if len(authorized) > 1:
+                entry["contributingCommittees"] = [{
+                    "id":          a["id"],
+                    "name":        a["name"],
+                    "designation": a["designation"],
+                    "fecUrl":      f"https://www.fec.gov/data/committee/{a['id']}/",
+                } for a in authorized]
         elif related:
             # No campaign money to show, but we know where FEC files what money
             # there is. noFilingHtml() turns this into a link rather than leaving
@@ -706,8 +769,11 @@ def main():
             }
 
         if committee_id:
-            time.sleep(DELAY)
-            totals = get_committee_totals(committee_id)
+            per_committee = []
+            for a in authorized:
+                time.sleep(DELAY)
+                per_committee.append(get_committee_totals(a["id"]))
+            totals = sum_committee_totals(per_committee)
             if totals:
                 entry["totalRaised"]      = totals.get("receipts")
                 entry["totalSpent"]       = totals.get("disbursements")
@@ -724,7 +790,7 @@ def main():
                     entry["funding"] = funding
 
             time.sleep(DELAY)
-            entry["topEmployers"] = get_top_employers(committee_id)
+            entry["topEmployers"] = get_top_employers([a["id"] for a in authorized])
         else:
             # principal_committees missing from list response — fall back to candidate totals
             time.sleep(DELAY)

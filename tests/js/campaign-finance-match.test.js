@@ -186,3 +186,39 @@ test('escapes the related committee’s name and url', () => {
   assert.match(html, /A &amp; B &lt;PAC&gt;/);
   assert.ok(!/<PAC>/.test(html));
 });
+
+/*
+ * contributingCommitteesHtml(): disclose when a figure spans more than one
+ * committee, as FEC's own candidate page does.
+ */
+
+test('says nothing for the ordinary single-committee candidate', () => {
+  assert.strictEqual(CF.contributingCommitteesHtml({ committeeId: 'C00544684' }), '');
+  assert.strictEqual(CF.contributingCommitteesHtml({ contributingCommittees: [{ id: 'C1' }] }), '');
+  assert.strictEqual(CF.contributingCommitteesHtml(null), '');
+});
+
+test('lists and links every committee behind a combined figure', () => {
+  const html = CF.contributingCommitteesHtml({
+    contributingCommittees: [
+      { id: 'C00544684', name: 'MIKE COLLINS FOR SENATE', designation: 'P',
+        fecUrl: 'https://www.fec.gov/data/committee/C00544684/' },
+      { id: 'C00892000', name: 'COLLINS FOR GA SENATE REPUBLICAN NOMINEE FUND 2026', designation: 'A',
+        fecUrl: 'https://www.fec.gov/data/committee/C00892000/' },
+    ],
+  });
+  assert.match(html, /Includes 2 committees/);
+  assert.match(html, /MIKE COLLINS FOR SENATE/);
+  assert.match(html, /NOMINEE FUND 2026/);
+  assert.match(html, /committee\/C00544684/);
+  assert.match(html, /committee\/C00892000/);
+});
+
+test('falls back to the committee id when a name is missing, and escapes names', () => {
+  const html = CF.contributingCommitteesHtml({
+    contributingCommittees: [{ id: 'C00000001' }, { id: 'C2', name: 'A & B <PAC>' }],
+  });
+  assert.match(html, /C00000001/);
+  assert.match(html, /A &amp; B &lt;PAC&gt;/);
+  assert.ok(!/<PAC>/.test(html));
+});
