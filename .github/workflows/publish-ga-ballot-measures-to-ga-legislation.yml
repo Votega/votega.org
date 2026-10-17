@@ -28,49 +28,14 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v4
 
+      # Every check is tier 1 (the file against itself and its own schema) and the
+      # vocabularies are read from the schema file, not restated here -- see the
+      # docstring of scripts/validate_ga_ballot_measures.py for why there is no
+      # tier 2. This job commits nothing to the source repo, so a refusal costs no
+      # data; it runs before the target checkout so a bad file fails fast. The
+      # schema being parseable is covered by the same script, which loads it.
       - name: Validate ga-ballot-measures.json
-        run: |
-          python -c "
-          import json, sys
-          with open('assets/data/ga-ballot-measures.json') as f:
-              data = json.load(f)
-          measures = data.get('measures', [])
-          if len(measures) == 0:
-              print('ERROR: ga-ballot-measures.json has no measures', file=sys.stderr)
-              sys.exit(1)
-          allowed_status = {'potential', 'certified', 'passed', 'failed'}
-          allowed_type   = {'Constitutional Amendment', 'Statewide Referendum'}
-          required = ('id', 'status', 'type', 'title', 'summary')
-          seen_ids = set()
-          for i, m in enumerate(measures):
-              for field in required:
-                  if not m.get(field):
-                      print(f'ERROR: measure #{i} missing required field {field!r}', file=sys.stderr)
-                      sys.exit(1)
-              if m['status'] not in allowed_status:
-                  print(f'ERROR: measure {m[\"id\"]!r} has invalid status {m[\"status\"]!r}', file=sys.stderr)
-                  sys.exit(1)
-              if m['type'] not in allowed_type:
-                  print(f'ERROR: measure {m[\"id\"]!r} has invalid type {m[\"type\"]!r}', file=sys.stderr)
-                  sys.exit(1)
-              if m['id'] in seen_ids:
-                  print(f'ERROR: duplicate measure id {m[\"id\"]!r}', file=sys.stderr)
-                  sys.exit(1)
-              seen_ids.add(m['id'])
-              # A terminal status must carry a results object, and vice versa.
-              terminal = m['status'] in ('passed', 'failed')
-              has_results = isinstance(m.get('results'), dict)
-              if terminal and not has_results:
-                  print(f'ERROR: measure {m[\"id\"]!r} is {m[\"status\"]} but has no results object', file=sys.stderr)
-                  sys.exit(1)
-              if has_results and not terminal:
-                  print(f'ERROR: measure {m[\"id\"]!r} has results but status is {m[\"status\"]!r} (expected passed/failed)', file=sys.stderr)
-                  sys.exit(1)
-          print(f'ga-ballot-measures.json valid: {len(measures)} measures')
-          "
-
-      - name: Validate schema file is parseable JSON
-        run: python -c "import json; json.load(open('assets/data/ga-ballot-measures.schema.json')); print('schema OK')"
+        run: python scripts/validate_ga_ballot_measures.py
 
       - name: Checkout target repo
         uses: actions/checkout@v4
