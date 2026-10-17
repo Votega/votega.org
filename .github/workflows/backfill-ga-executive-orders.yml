@@ -57,27 +57,30 @@ jobs:
           EO_ENRICH_ARCHIVE: ${{ inputs.archive && 'retry' || '0' }}
         run: python scripts/enrich_ga_executive_orders.py ${{ inputs.years }}
 
+      # The same two-tier validator the daily job runs (validate_ga_executive_orders.py),
+      # once per year file, instead of a weaker inline copy that checked only the
+      # count and number/title. Tier 1 (the file contradicting itself) fails the
+      # run -- but only AFTER every file has been checked, so one bad year does not
+      # hide a second. Tier 2 (new orders, an empty year, renumbered orders) goes to
+      # the job summary and never blocks: for a dry run it IS the point, a readable
+      # account of what the backfill found. The artifact step below runs even on
+      # failure, so a rejected file can be inspected.
       - name: Validate any written files
         run: |
-          set -e
-          python - <<'PY'
-          import glob, json, sys
-          bad = 0
-          files = sorted(glob.glob('assets/data/ga-executive-orders-*.json'))
-          for f in files:
-              d = json.load(open(f, encoding='utf-8'))
-              orders = d.get('orders', [])
-              meta_n = d.get('metadata', {}).get('count')
-              if meta_n is not None and meta_n != len(orders):
-                  print(f"ERROR {f}: metadata.count {meta_n} != {len(orders)} orders"); bad += 1
-              missing = [o.get('number') for o in orders if not o.get('number') or not o.get('title')]
-              if missing:
-                  print(f"ERROR {f}: {len(missing)} order(s) missing number/title"); bad += 1
-              print(f"{f}: {len(orders)} orders (governor: {d.get('metadata',{}).get('governor')})")
-          sys.exit(1 if bad else 0)
-          PY
+          status=0
+          for f in assets/data/ga-executive-orders-*.json; do
+            echo "::group::$f"
+            python scripts/validate_ga_executive_orders.py "$f" --baseline-ref HEAD               --report-out "$RUNNER_TEMP/eo-report.md" || status=1
+            echo "::endgroup::"
+            if [ -s "$RUNNER_TEMP/eo-report.md" ] && ! grep -q 'No material change' "$RUNNER_TEMP/eo-report.md"; then
+              cat "$RUNNER_TEMP/eo-report.md" >> "$GITHUB_STEP_SUMMARY"
+            fi
+            rm -f "$RUNNER_TEMP/eo-report.md"
+          done
+          exit $status
 
       - name: Upload results as artifact (always, for inspection)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ga-executive-orders-backfill
