@@ -45,6 +45,14 @@ only what a feed would have given -- headline, link, date, the page's own
 summary -- and is deliberately brittle: if the markup moves it yields nothing
 and the feed simply contributes no items, which is how a 404 feed already fails.
 
+Not every source is fetched. The Governor's executive orders come from the EO
+pipeline's own committed artifacts (assets/data/ga-executive-orders-<year>.json +
+assets/data/eo-text/), configured under `executive_orders:` in news_sources.yml
+rather than as a feed -- see load_eo_items() and scripts/lib/ga_eo_news.py for
+why, and for the category allowlist that keeps 81%-of-the-corpus board
+appointments out of the hub. Local items go through ingest() exactly like fetched
+ones, so there is one set of tagging and relevance rules.
+
 Usage:
     python scripts/generate_ga_news.py [output.json] [overrides.json]
 """
@@ -67,12 +75,20 @@ import yaml
 
 from lib.http import DEFAULT_USER_AGENT, fetch_bytes
 from lib.ga_match import toks
+from lib.ga_eo_news import (
+    DEFAULT_CATEGORIES as EO_DEFAULT_CATEGORIES,
+    build_news_items as build_eo_news_items,
+    load_orders as load_eo_orders,
+    make_text_reader as make_eo_text_reader,
+)
 
 HERE           = os.path.dirname(os.path.abspath(__file__))
 REPO           = os.path.dirname(HERE)
 SOURCES_FILE   = os.path.join(REPO, "_data", "news_sources.yml")
 CROSSWALK_FILE = os.path.join(REPO, "assets", "data", "id-crosswalk.json")
 ENTITY_URLS_FILE = os.path.join(REPO, "_data", "entity_urls.json")
+DATA_DIR       = os.path.join(REPO, "assets", "data")
+EO_TEXT_DIR    = os.path.join(DATA_DIR, "eo-text")
 OUTPUT_FILE    = sys.argv[1] if len(sys.argv) > 1 else os.path.join(REPO, "assets", "data", "ga-news.json")
 OVERRIDES_FILE = sys.argv[2] if len(sys.argv) > 2 else os.path.join(REPO, "assets", "data", "ga-news-overrides.json")
 
@@ -121,7 +137,8 @@ def load_sources():
     if not feeds:
         print("Error: no feeds configured in _data/news_sources.yml")
         sys.exit(1)
-    return feeds, ga_terms, topics
+    eo = cfg.get("executive_orders") or None
+    return feeds, ga_terms, topics, eo
 
 
 # --------------------------------------------------------------------------- #
@@ -645,6 +662,51 @@ def parse_source(raw_bytes, feed):
     return items
 
 # --------------------------------------------------------------------------- #
+# Local sources (already-committed data, no fetch)
+# --------------------------------------------------------------------------- #
+def make_item_id(url):
+    """The feed path's item id, so a local source dedupes by the same rule."""
+    return hashlib.sha1(canonical_url(url).encode("utf-8")).hexdigest()[:12]
+
+
+def load_eo_items(eo_cfg, source_name):
+    """Governor's executive orders as news items, read off disk.
+
+    gov.georgia.gov is deliberately NOT added as a feed: the EO pipeline
+    (update-ga-executive-orders.yml) already fetches, hashes, archives and
+    text-extracts every order twice a day, so a feed here would be a second
+    network dependency and a second failure mode for data the repo holds. The
+    cards inherit that pipeline's archiveUrl and sha256 as a side benefit.
+
+    Only the years the 45-day window can reach are read, so the file count does
+    not grow with the archive (3,508 orders back to 2020).
+    """
+    now = datetime.now(timezone.utc)
+    years = sorted({now.year, (now - timedelta(days=WINDOW_DAYS)).year})
+    orders = load_eo_orders(DATA_DIR, years)
+    if not orders:
+        print(f"[{source_name}] WARNING: no order files for {years} in {DATA_DIR} "
+              f"-- expected ga-executive-orders-<year>.json")
+        return []
+
+    categories = eo_cfg.get("categories") or list(EO_DEFAULT_CATEGORIES)
+    present = {o.get("category") for o in orders}
+    unknown = sorted(c for c in categories if c not in present)
+    if unknown:
+        # A typo'd category silently filters everything out, so name it.
+        print(f"[{source_name}] warning: configured categor(ies) match no order "
+              f"in {years}: {', '.join(unknown)}")
+
+    items = build_eo_news_items(orders, source_name,
+                                make_eo_text_reader(EO_TEXT_DIR),
+                                categories, make_item_id, SNIPPET_MAX)
+    print(f"[{source_name}] {len(orders)} orders on file -> {len(items)} in "
+          f"allowlisted categories ({len(present - set(categories))} categor"
+          f"{'y' if len(present - set(categories)) == 1 else 'ies'} excluded)")
+    return items
+
+
+# --------------------------------------------------------------------------- #
 # Overrides
 # --------------------------------------------------------------------------- #
 def load_overrides():
@@ -667,7 +729,7 @@ def is_suppressed(item, suppress):
 # Main
 # --------------------------------------------------------------------------- #
 def main():
-    feeds, ga_terms, topics = load_sources()
+    feeds, ga_terms, topics, eo_cfg = load_sources()
 
     if not os.path.exists(CROSSWALK_FILE):
         print(f"Error: {CROSSWALK_FILE} not found -- run build_id_crosswalk.py first")
@@ -684,7 +746,67 @@ def main():
     overrides = load_overrides()
 
     raw_items, seen_ids, seen_titles = [], set(), set()
-    dropped_national = 0
+    stats = {"dropped_national": 0}
+
+    def ingest(items, label, bound_vgid, ga_focused, excluded_terms=frozenset(),
+               dedupe_titles=True):
+        """Dedupe, GA-gate, entity-tag and topic-bucket one source's items.
+
+        Shared by the fetched feeds and the local executive-order source so both
+        go through exactly the same gates -- a local source must not be a second
+        path with its own tagging rules.
+
+        `dedupe_titles=False` turns off only the normalized-title collapse, for a
+        source whose titles are boilerplate rather than a story headline. The
+        title rule exists to collapse ONE story syndicated by several outlets;
+        two separately signed executive orders can carry a byte-identical title
+        ("Amending the State of Emergency for Georgia Wildfires", signed
+        2026-05-05 and again 2026-05-12; two Albany State demolition orders
+        signed the same day -- three such pairs in 2026 alone), and collapsing
+        those drops a real primary document. Their identity is the order number;
+        the url-hash id still dedupes a genuine repeat.
+        """
+        kept_here = 0
+        for it in items:
+            if it["id"] in seen_ids:
+                continue
+            norm_title = re.sub(r"[^a-z0-9]", "", it["title"].lower()) if dedupe_titles else None
+            if norm_title and norm_title in seen_titles:
+                continue
+            if is_suppressed(it, overrides["suppress"]):
+                continue
+
+            text = f"{it['title']} {it['snippet']}"
+            ents = match_entities(toks(text), by_surname, sole_bare)
+
+            if not ga_focused and not is_ga_relevant(
+                    text.lower(), bool(ents), ga_terms, excluded_terms):
+                stats["dropped_national"] += 1
+                continue
+
+            it["entityIds"] = [e["vgId"] for e in ents if e["vgId"]]
+            it["entityNames"] = [e["name"] for e in ents]
+            # Force-tag the source's bound official (their own press release or
+            # their own signed order), first and deduped, on top of anyone
+            # name-matched in the text.
+            if bound_vgid and bound_vgid not in it["entityIds"]:
+                it["entityIds"].insert(0, bound_vgid)
+                bp = person_by_vgid.get(bound_vgid)
+                it["entityNames"].insert(0, (bp.get("name") or {}).get("full") if bp else bound_vgid)
+            it["topics"] = bucket_topics(text, topics)
+
+            # Apply per-item overrides (add/replace tags).
+            patch = overrides["patches"].get(it["id"])
+            if patch:
+                it["entityIds"] = patch.get("entityIds", it["entityIds"])
+                it["topics"] = patch.get("topics", it["topics"])
+
+            seen_ids.add(it["id"])
+            if norm_title:
+                seen_titles.add(norm_title)
+            raw_items.append(it)
+            kept_here += 1
+        print(f"[{label}] {len(items)} fetched -> {kept_here} kept")
 
     for feed in feeds:
         name, url = feed["name"], feed["url"]
@@ -706,46 +828,17 @@ def main():
         if raw is None:
             print(f"[{name}] fetch failed -- skipping")
             continue
-        items = parse_source(raw, feed)
-        kept_here = 0
-        for it in items:
-            if it["id"] in seen_ids:
-                continue
-            norm_title = re.sub(r"[^a-z0-9]", "", it["title"].lower())
-            if norm_title in seen_titles:
-                continue
-            if is_suppressed(it, overrides["suppress"]):
-                continue
+        ingest(parse_source(raw, feed), name, bound_vgid, ga_focused, excluded_terms)
 
-            text = f"{it['title']} {it['snippet']}"
-            ents = match_entities(toks(text), by_surname, sole_bare)
-
-            if not ga_focused and not is_ga_relevant(
-                    text.lower(), bool(ents), ga_terms, excluded_terms):
-                dropped_national += 1
-                continue
-
-            it["entityIds"] = [e["vgId"] for e in ents if e["vgId"]]
-            it["entityNames"] = [e["name"] for e in ents]
-            # Force-tag the feed's bound official (their own press release),
-            # first and deduped, on top of anyone name-matched in the text.
-            if bound_vgid and bound_vgid not in it["entityIds"]:
-                it["entityIds"].insert(0, bound_vgid)
-                bp = person_by_vgid.get(bound_vgid)
-                it["entityNames"].insert(0, (bp.get("name") or {}).get("full") if bp else bound_vgid)
-            it["topics"] = bucket_topics(text, topics)
-
-            # Apply per-item overrides (add/replace tags).
-            patch = overrides["patches"].get(it["id"])
-            if patch:
-                it["entityIds"] = patch.get("entityIds", it["entityIds"])
-                it["topics"] = patch.get("topics", it["topics"])
-
-            seen_ids.add(it["id"])
-            seen_titles.add(norm_title)
-            raw_items.append(it)
-            kept_here += 1
-        print(f"[{name}] {len(items)} fetched -> {kept_here} kept")
+    # Local source: the Governor's executive orders, already on disk.
+    eo_source_name = None
+    if eo_cfg:
+        eo_source_name = eo_cfg.get("name") or "Georgia executive orders"
+        # ga_focused is unconditional, not inherited from the entity binding: a
+        # Georgia governor's executive order is GA news whether or not its title
+        # says "Georgia" ("Lowering flags to half-staff ... Patriot Day").
+        ingest(load_eo_items(eo_cfg, eo_source_name), eo_source_name,
+               resolve_feed_entity(eo_cfg, id_index), True, dedupe_titles=False)
 
     # 45-day window; undated items are kept but sort last.
     cutoff = datetime.now(timezone.utc) - timedelta(days=WINDOW_DAYS)
@@ -808,7 +901,9 @@ def main():
         "metadata": {
             "generatedAt": datetime.now(timezone.utc).isoformat(),
             "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
-            "sources": [f["name"] for f in feeds],
+            # Drives the page's source filter chips, so a local source has to be
+            # listed here too or its cards cannot be filtered to.
+            "sources": [f["name"] for f in feeds] + ([eo_source_name] if eo_source_name else []),
             "count": len(windowed),
             "windowDays": WINDOW_DAYS,
             "entityTagged": tagged,
@@ -822,7 +917,7 @@ def main():
     write_json_atomic(OUTPUT_FILE, output, indent=2)
 
     print(f"\nDone. {len(windowed)} items ({tagged} entity-tagged, "
-          f"{dropped_national} dropped as non-GA) -> {OUTPUT_FILE}")
+          f"{stats['dropped_national']} dropped as non-GA) -> {OUTPUT_FILE}")
     print(f"Entities: {len(entities)} tagged ({linked} with a clean profile link)")
     print(f"Topics: {topic_counts}")
 

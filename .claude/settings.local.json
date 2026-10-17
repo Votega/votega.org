@@ -90,7 +90,10 @@
       "Bash(grep -c '\\\\^M\\\\$')",
       "Bash(python -I -c ' *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(python scripts/test_ga_eo_news.py)",
+      "Bash(python scripts/generate_ga_news.py)",
+      "Bash(node --test tests/js/*.test.js)"
     ]
   }
 }

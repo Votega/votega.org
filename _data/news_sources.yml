@@ -227,6 +227,48 @@ feeds:
   #   type: official                              # frozen Drupal default (static service pages,
   #   entity: F000485                             # 2025-01). Needs an HTML adapter, not RSS.
 
+# --------------------------------------------------------------------------- #
+# Local source: the Governor's executive orders (NOT a feed)
+# --------------------------------------------------------------------------- #
+# gov.georgia.gov is deliberately not listed as a feed for these. The EO pipeline
+# (.github/workflows/update-ga-executive-orders.yml) already fetches, hashes,
+# Wayback-archives and text-extracts every order twice a day into
+# assets/data/ga-executive-orders-<year>.json + assets/data/eo-text/<year>/, so
+# the news generator reads those committed artifacts instead of adding a second
+# fetch and a second failure mode for data the repo already holds. Cards inherit
+# the pipeline's archiveUrl and sha256.
+#
+#   name        display name on the card (and the page's source filter chip)
+#   entity      the Governor's id in assets/data/id-crosswalk.json -- same
+#               binding his press feed above uses. Every order is force-tagged to
+#               him, and the source bypasses the GA-relevance gate: a Georgia
+#               governor's executive order is GA news whether or not its title
+#               says "Georgia" ("Lowering flags to half-staff ... Patriot Day").
+#   categories  REQUIRED in practice, and an editorial judgement rather than a
+#               fact about the data. 257 of 2026's 318 orders (81%) are
+#               Appointment -- routine board appointments and reappointments --
+#               so piping every category in turns the hub into an appointments
+#               ticker and buries the actual news. The allowlist below is every
+#               category EXCEPT Appointment, which leaves ~61 orders a year
+#               (a bit over one a week). `Writ of Election` matters more than its
+#               count suggests on a voting site: those are special elections.
+#               Omitting the key falls back to the same cut, hard-coded as
+#               DEFAULT_CATEGORIES in scripts/lib/ga_eo_news.py. A category here
+#               that matches no order in the window prints a warning (catches a
+#               typo, which would otherwise filter everything out silently).
+#               Remove the whole `executive_orders:` block to drop the source.
+executive_orders:
+  name: Gov. Brian Kemp (executive orders)
+  type: official
+  entity: ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f  # Brian Kemp
+  categories:
+    - State of Emergency
+    - Suspension
+    - Writ of Election
+    - Authorization
+    - Other
+    - Flag at Half-Staff
+
 # Extra GA-relevance signals (place names, institutions) beyond a matched entity.
 # An item from a non-ga_focused feed is kept only if it names a GA politician OR
 # contains one of these.
