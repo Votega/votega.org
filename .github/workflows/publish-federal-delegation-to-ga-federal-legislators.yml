@@ -33,19 +33,13 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v4
 
-      - name: Validate source data
-        run: |
-          python3 -c "
-          import json
-          members = json.load(open('assets/data/current-members.json'))['members']
-          ga = [m for m in members if m.get('state') == 'Georgia']
-          assert ga, 'No Georgia members found in current-members.json — filter or source data may be broken'
-          print(f'current-members.json valid: {len(members)} total, {len(ga)} in Georgia')
-          votes = json.load(open('assets/data/federal-member-votes.json'))
-          assert votes.get('memberVotes'), 'federal-member-votes.json has no memberVotes'
-          print(f'federal-member-votes.json valid: {len(votes[\"memberVotes\"])} members with vote records')
-          "
-
+      # The source checks live in the publisher (check_sources in
+      # scripts/publish_federal_delegation.py), not here: the inline heredoc this
+      # replaces duplicated its FATAL exits and added a `memberVotes` non-empty
+      # assert that would have held the roster back at the start of every
+      # Congress until its first roll call. Nothing is committed by this job, so
+      # a refusal costs no data -- the sibling repo just keeps its last publish.
+      # The publisher also runs the sanity guard + min_items floor before any PUT.
       - name: Build and publish delegation artifacts
         env:
           GA_FEDERAL_LEGISLATORS: ${{ secrets.GA_FEDERAL_LEGISLATORS }}

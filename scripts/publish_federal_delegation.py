@@ -317,17 +317,45 @@ def votes_schema():
 # --------------------------------------------------------------------------- #
 # Build + publish
 # --------------------------------------------------------------------------- #
+def check_sources(ga, votes_doc):
+    """Decide whether the sources are fit to publish. Returns a list of warnings;
+    raises SystemExit when publishing would wipe or contradict the public repo.
+
+    Nothing here discards data -- the sources are already committed, so a refusal
+    just leaves the sibling repo as it was until the next trigger. The question is
+    only which conditions are worth refusing for.
+
+    FATAL: no Georgia members (an empty roster would blank members.json), and a
+    vote catalog that contradicts its per-member records (votes with no
+    memberVotes, or the reverse).
+
+    NOT fatal: a Congress that has not held a roll call yet. The 120th convenes
+    3 January 2027 and its first recorded votes come days later, while the roster
+    -- the part that changes on swearing-in day -- is exactly what readers need.
+    The old gate (`memberVotes` non-empty) held the whole publish, new members
+    included, until the first vote.
+    """
+    if not ga:
+        sys.exit("FATAL: no Georgia members found in current-members.json")
+    votes = votes_doc.get("votes") or {}
+    member_votes = votes_doc.get("memberVotes") or {}
+    if bool(votes) != bool(member_votes):
+        sys.exit("FATAL: federal-member-votes.json is self-contradictory: "
+                 f"{len(votes)} vote(s) but {len(member_votes)} member(s) with records")
+    if not member_votes:
+        return ["federal-member-votes.json holds no roll calls yet (a Congress that has "
+                "not voted); publishing the roster with empty vote files"]
+    return []
+
+
 def build_artifacts():
     src = json.load(open(SRC_MEMBERS, encoding="utf-8"))
     ga = [normalize_member(m) for m in src.get("members", []) if m.get("state") == "Georgia"]
-    if not ga:
-        sys.exit("FATAL: no Georgia members found in current-members.json")
-
     votes_doc = json.load(open(SRC_VOTES, encoding="utf-8"))
+    for warning in check_sources(ga, votes_doc):
+        print(f"WARNING: {warning}")
     votes = votes_doc.get("votes", {})
     member_votes = votes_doc.get("memberVotes", {})
-    if not member_votes:
-        sys.exit("FATAL: federal-member-votes.json has no memberVotes")
 
     meta = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
