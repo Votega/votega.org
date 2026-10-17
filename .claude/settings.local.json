@@ -63,7 +63,27 @@
       "Bash(npm ls *)",
       "Bash(npm root *)",
       "Bash(grep -o 'Also on the ballot:.\\\\{0,160\\\\}' _site/candidates/mike-cheokas-ga-house-151/index.html)",
-      "Bash(awk -F: '$1>400')"
+      "Bash(awk -F: '$1>400')",
+      "Bash(python scripts/test_ga_members_validate.py)",
+      "Bash(python scripts/validate_ga_members.py assets/data/ga-members.json --overrides assets/data/ga-members-overrides.json)",
+      "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/update-ga-members.yml'\\)\\); print\\('yaml ok'\\)\")",
+      "Bash(python scripts/validate_workflow_triggers.py)",
+      "Bash(python scripts/test_current_members_validate.py)",
+      "Bash(python scripts/validate_current_members.py --data-dir assets/data --report-out __TRACKED_VAR__/cm.md)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(rm -rf /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/e6fdff49-5be7-4423-ae3c-b0b7a4f057e9/scratchpad/cm)",
+      "Bash(mkdir -p /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/e6fdff49-5be7-4423-ae3c-b0b7a4f057e9/scratchpad/cm)",
+      "Bash(cp assets/data/current-members.json assets/data/federal-sponsorship-index.json /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/e6fdff49-5be7-4423-ae3c-b0b7a4f057e9/scratchpad/cm/)",
+      "Bash(cp -r assets/data/federal-sponsorship /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/e6fdff49-5be7-4423-ae3c-b0b7a4f057e9/scratchpad/cm/)",
+      "Bash(python - /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/e6fdff49-5be7-4423-ae3c-b0b7a4f057e9/scratchpad/cm/current-members.json)",
+      "Bash(python -)",
+      "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/update-current-members.yml'\\)\\)\")",
+      "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/update-current-members.yml'\\)\\); print\\('YAML OK'\\)\")",
+      "Bash(python scripts/test_ga_votes_validate.py)",
+      "Bash(python scripts/validate_ga_votes.py assets/data/ga-member-votes.json --expect-no-overlay)",
+      "Bash(python - /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/e6fdff49-5be7-4423-ae3c-b0b7a4f057e9/scratchpad/votes-mutated.json)",
+      "Bash(python scripts/validate_ga_votes.py /c/Users/justi/AppData/Local/Temp/claude/C--Users-justi-Documents-GitHub-votega-org/e6fdff49-5be7-4423-ae3c-b0b7a4f057e9/scratchpad/votes-mutated.json --expect-no-overlay)",
+      "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/update-ga-votes.yml'\\)\\); print\\('YAML OK'\\)\")"
     ]
   }
 }
