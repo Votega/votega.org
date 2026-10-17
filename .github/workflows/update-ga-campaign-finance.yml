@@ -2,6 +2,7 @@ name: Update GA campaign finance data (weekly, Sun 08:30 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -26,50 +27,39 @@ jobs:
       # No API key: the PeachFile public endpoints are unauthenticated. They are
       # CORS origin-locked, which is why this runs at build time rather than in the page.
       - name: Generate GA campaign finance data
+        id: generate
         run: python scripts/generate_ga_campaign_finance.py assets/data/ga-campaign-finance.json
 
+      # Two tiers, and the split is the point. Tier 1 is the file against ITSELF:
+      # a metadata.count that is not the number of filers, a filer missing
+      # totalRaised or office (the member pages read both), a seat or office index
+      # naming a filer the file does not hold, a legislative filer its own bySeat
+      # forgot, or no filers at all (an empty run has no good data to discard, and
+      # the generator refuses to write it anyway). No fact about the Ethics
+      # Commission can make those true, so they fail the run and nothing is
+      # committed. Tier 2 is coverage and the diff against last week: reported,
+      # and the data is committed anyway.
+      #
+      # The heredoc this replaces gated on `len(by_seat) < 150` and
+      # `len(legislative) < 400`: floors on what the SOURCE returns, pinned to the
+      # 2026 general (233 seats, 560 legislative filers). They would fire on any
+      # cycle with fewer contested seats and on the first weeks of the 2028
+      # rollover, and each firing discards a whole week of every other filer's
+      # money, which dies with the runner. The failure they were groping at is
+      # real -- a partial pull -- but a global count cannot localise it: one seat
+      # that had a filer last week and has none now is a fact with a name. The
+      # validator enumerates Georgia's 180 + 56 seats and NAMES the ones that lost
+      # coverage, the offices that thinned, and (from metadata.incompleteOffices,
+      # which the generator now records) the offices whose pagination stopped on a
+      # failed page. The generator's own abort on a stale override (a terminated
+      # committee) moved to the same report: it dropped a whole run over one id.
+      # See docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
       - name: Validate generated data
+        id: validate
         run: |
-          if [ ! -f assets/data/ga-campaign-finance.json ]; then
-            echo "Error: ga-campaign-finance.json was not generated"
-            exit 1
-          fi
-          python - <<'PY'
-          import json, sys
-
-          d       = json.load(open('assets/data/ga-campaign-finance.json'))
-          filers  = d.get('filers', {})
-          by_seat = d.get('bySeat', {})
-          n       = d['metadata']['count']
-
-          legislative = [f for f in filers.values()
-                         if f.get('office') in ('State Representative', 'State Senator')]
-
-          print(f"{n} filers | {len(legislative)} legislative | {len(by_seat)} seats covered")
-
-          errors = []
-          if n == 0:
-              errors.append("no filers returned")
-          if n != len(filers):
-              errors.append(f"metadata.count ({n}) != len(filers) ({len(filers)})")
-          # Georgia has 180 House and 56 Senate seats. A partial pull (a dropped page, a
-          # WAF rejection) shows up as a collapse in seat coverage, which a plain
-          # "is this valid JSON" check would happily commit.
-          if len(by_seat) < 150:
-              errors.append(f"only {len(by_seat)} seats covered (expected >= 150) - likely a partial fetch")
-          if len(legislative) < 400:
-              errors.append(f"only {len(legislative)} legislative filers (expected >= 400)")
-          # Every filer needs the fields the member pages read.
-          missing = [k for k, f in filers.items()
-                     if 'totalRaised' not in f or 'office' not in f][:5]
-          if missing:
-              errors.append(f"filers missing required fields: {missing}")
-
-          if errors:
-              for e in errors:
-                  print(f"Error: {e}", file=sys.stderr)
-              sys.exit(1)
-          PY
+          python scripts/validate_ga_campaign_finance.py assets/data/ga-campaign-finance.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/ga-campaign-finance-changes.md"
 
       - name: Commit and push
         run: |
@@ -92,3 +82,44 @@ jobs:
               exit 1
             fi
           fi
+
+      # After the commit, not before: the report describes a record that has
+      # already shipped. One issue, refreshed in place, so the history lives in
+      # one thread. This job runs weekly, so the comment is unconditional --
+      # there is no daily pile to avoid, and the body-diff guard that
+      # update-ga-members.yml uses is not needed.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "GA state campaign finance: seats that lost coverage"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/ga-campaign-finance-changes.md"
+          if [ ! -s "$report" ] || grep -qi 'no material change this run' "$report"; then
+            echo "Nothing material -- skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-ga-campaign-finance."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it, so
+      # one placed before the failing step never runs. Sitting here it catches a
+      # tier-1 rejection, a commit or push failure, and the report step. The
+      # condition is "we have a generated file and are about to lose it".
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-campaign-finance
+          path: assets/data/ga-campaign-finance.json
+          if-no-files-found: ignore
+          retention-days: 14

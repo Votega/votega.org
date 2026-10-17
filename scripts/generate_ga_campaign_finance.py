@@ -112,8 +112,13 @@ def cycle_year(name):
 
 
 def fetch_office(office_id):
-    """All active filers for one office, paginated."""
-    out, page = [], 1
+    """All active filers for one office, paginated. Returns (rows, complete).
+
+    `complete` is False when a page failed: the rows are then a prefix of the
+    office, and the caller has to say so in the output rather than let a partial
+    pull read as the whole record (the validator names the offices).
+    """
+    out, page, complete = [], 1, True
     while True:
         payload = {
             "pageNumber": page, "pageSize": PAGE_SIZE,
@@ -132,6 +137,7 @@ def fetch_office(office_id):
         data = post("/PublicFilerDetails/GetCandidateDetails", payload)
         if not data or "data" not in data:
             print(f"    Warning: office {office_id} page {page} failed — results may be incomplete")
+            complete = False
             break
         items = (data.get("data") or {}).get("items") or []
         out.extend(items)
@@ -140,7 +146,7 @@ def fetch_office(office_id):
             break
         page += 1
         time.sleep(DELAY)
-    return out
+    return out, complete
 
 
 def norm_name(first, last, full):
@@ -165,10 +171,15 @@ def main():
 
     filers, by_seat, by_name, by_office = {}, {}, {}, {}
     skipped_other_cycle = 0
+    rows_fetched = 0
+    incomplete_offices = []   # offices whose pagination stopped on a failed page
 
     for office_id, (label, chamber) in OFFICES.items():
         print(f"\nFetching {label} (office {office_id})...")
-        rows = fetch_office(office_id)
+        rows, complete = fetch_office(office_id)
+        rows_fetched += len(rows)
+        if not complete:
+            incomplete_offices.append(label)
         kept = 0
         for r in rows:
             if cycle_year(r.get("electionCycleName")) != cycle:
@@ -223,19 +234,28 @@ def main():
         print(f"  {len(rows)} fetched, {kept} kept for cycle {cycle}")
         time.sleep(DELAY)
 
+    # Nothing kept is the one case where aborting costs nothing: there is no good
+    # data in this run to discard, and the committed file is left as it was. Say
+    # which way it happened, because the two have different fixes.
     if not filers:
-        print("Error: no filers collected — aborting rather than overwriting good data")
+        if rows_fetched == 0:
+            print("Error: the API returned no rows at all — aborting rather than "
+                  "overwriting good data")
+        else:
+            print(f"Error: {rows_fetched} rows fetched but none belong to cycle {cycle} "
+                  f"— races.json may be ahead of PeachFile; aborting rather than "
+                  f"overwriting good data")
         sys.exit(1)
 
     # Manual resolutions for candidates the automatic join can't settle — ambiguous
     # filings, or ballot names that don't resemble the filing name. Emitted into the
-    # data file so the pages need one fetch rather than two, and so a bad candidate id
-    # or filer id fails the build here instead of silently doing nothing in the browser.
+    # data file so the pages need one fetch rather than two, and so a stale candidate id
+    # or filer id is dropped and NAMED here instead of silently doing nothing in the browser.
     overrides = {}
+    unknown = []   # overrides naming a filer the API no longer returns
     if os.path.exists(OVERRIDES_FILE):
         with open(OVERRIDES_FILE, encoding="utf-8") as f:
             raw = json.load(f)
-        unknown = []
         for key, val in raw.items():
             if key.startswith("_"):
                 continue
@@ -251,14 +271,18 @@ def main():
             if entry:
                 overrides[key] = entry
         print(f"\nLoaded {len(overrides)} manual override(s) from {OVERRIDES_FILE}")
+        # A filer id can disappear when a committee is terminated -- a fact about the
+        # Ethics Commission, not about this build. This used to sys.exit(1) here, which
+        # discarded a whole run's worth of every other filer's money over one stale
+        # override. The override is dropped (the candidate falls back to the automatic
+        # join, which is the safe direction: a stale id must never pin a wrong
+        # filing) and NAMED in metadata.droppedOverrides, which the validator reports
+        # so a human re-resolves it with scripts/report_ga_finance_matches.py.
         if unknown:
-            print("Error: overrides reference filers that no longer exist:", file=sys.stderr)
+            print("Warning: dropped overrides that reference filers which no longer "
+                  "exist:", file=sys.stderr)
             for u in unknown:
                 print(f"  - {u}", file=sys.stderr)
-            print("  Re-run scripts/report_ga_finance_matches.py and re-resolve those "
-                  "candidates; a filer id can disappear when a committee is terminated.",
-                  file=sys.stderr)
-            sys.exit(1)
 
     output = {
         "metadata": {
@@ -268,6 +292,11 @@ def main():
             "sourceUrl":   "https://peachfile.ethics.ga.gov/public/cf/publiccandidate",
             "coverage":    "PeachFile holds filings from 2026-01-01 onward; earlier records at https://ethics.ga.gov/records-search-all/",
             "count":       len(filers),
+            # What the fetch knows about its own completeness. Read by
+            # validate_ga_campaign_finance.py, which reports (never gates on) them.
+            "rowsFetched":       rows_fetched,
+            "incompleteOffices": incomplete_offices,
+            "droppedOverrides":  unknown,
         },
         "filers":           filers,
         "candidateOverrides": overrides,

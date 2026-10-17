@@ -7,6 +7,7 @@ name: Update GA campaign finance history (legacy records)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -27,57 +28,38 @@ jobs:
           python-version: '3.11'
 
       - name: Generate campaign finance history
+        id: generate
         run: python scripts/generate_ga_campaign_finance_history.py
 
+      # Two tiers, and the split is the point. Tier 1 is the file against ITSELF:
+      # a metadata.count that is not the number of records, a record missing
+      # filerEntityId/office/totalRaised/cycleYear/source, a record not tagged
+      # source=legacy (these ids share a numeric range with PeachFile's but are a
+      # different id space, so an untagged one can join to the wrong entity), keys
+      # that are not '<filerEntityId>:<electionCycleId>' (collapsing to a bare
+      # filer id overwrites per-cycle rows and loses about a quarter of the
+      # dataset). Those now check EVERY record, where the heredoc sampled the
+      # first. Tier 2 is the diff against the committed archive: reported, and the
+      # data is committed anyway.
+      #
+      # The heredoc this replaces gated on `len(filers) < 1200` and
+      # `min(cycleYears) > 2020`: floors on what the source returns. This job runs
+      # four times a year, so a legitimate cleanup by the Commission (350 records
+      # withdrawn) aborts the run and the next chance is three months out. Both
+      # were groping at "an office silently returned nothing", which a global count
+      # cannot localise -- losing the 151 Senate records of 2022 leaves 1,394, well
+      # above the floor. The validator compares per cycle year and per office with
+      # the committed file and NAMES what shrank. The generator's own `short_reads`
+      # abort (rows != the API's totalItems, per office) stays: it is the precise
+      # condition the floor approximated, and a truncated archive is not worth
+      # committing over a complete one.
       - name: Validate output
+        id: validate
         run: |
-          python -c "
-          import json, sys
-
-          d = json.load(open('assets/data/ga-campaign-finance-history.json'))
-          filers = d['filers']
-          meta   = d['metadata']
-
-          # Count threshold: a healthy run returns ~1,500 records across the state
-          # offices. A large drop means an office silently returned nothing rather
-          # than erroring, which is the failure mode the generator cannot see.
-          if len(filers) < 1200:
-              print(f'ERROR: only {len(filers)} records (expected ~1500)', file=sys.stderr)
-              sys.exit(1)
-          if meta.get('count') != len(filers):
-              print('ERROR: metadata.count does not match len(filers)', file=sys.stderr)
-              sys.exit(1)
-
-          # Records are keyed '<filerEntityId>:<electionCycleId>'. If that ever
-          # collapses back to a bare filer id, per-cycle rows are being overwritten
-          # and roughly a quarter of the dataset disappears silently.
-          if not any(':' in k for k in filers):
-              print('ERROR: no composite recordId keys — per-cycle rows are being lost',
-                    file=sys.stderr)
-              sys.exit(1)
-
-          # The historical span is the whole point; a run that only returns the
-          # current cycle has lost the archive.
-          years = [int(y) for y in meta.get('cycleYears', [])]
-          if not years or min(years) > 2020:
-              print(f'ERROR: history looks truncated — cycle years {years}', file=sys.stderr)
-              sys.exit(1)
-
-          required = ('filerEntityId', 'office', 'totalRaised', 'cycleYear', 'source')
-          sample = next(iter(filers.values()))
-          missing = [f for f in required if f not in sample]
-          if missing:
-              print(f'ERROR: records missing fields: {missing}', file=sys.stderr)
-              sys.exit(1)
-
-          # Guard the join hazard: these ids share a numeric range with PeachFile
-          # but are a different id space entirely.
-          if sample.get('source') != 'legacy':
-              print('ERROR: records not tagged source=legacy', file=sys.stderr)
-              sys.exit(1)
-
-          print(f'Valid: {len(filers)} records, cycle years {min(years)}-{max(years)}')
-          "
+          python scripts/validate_ga_campaign_finance_history.py \
+            assets/data/ga-campaign-finance-history.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/ga-campaign-finance-history-changes.md"
 
       - name: Commit and push if changed
         run: |
@@ -104,3 +86,44 @@ jobs:
               exit 1
             fi
           fi
+
+      # After the commit, not before: the report describes a record that has
+      # already shipped. One issue, refreshed in place, so the history lives in
+      # one thread. This job runs quarterly, so the comment is unconditional --
+      # there is no daily pile to avoid, and the body-diff guard that
+      # update-ga-members.yml uses is not needed.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "GA campaign finance history: records changed in the legacy archive"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/ga-campaign-finance-history-changes.md"
+          if [ ! -s "$report" ] || grep -qi 'no material change this run' "$report"; then
+            echo "Nothing material -- skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-ga-campaign-finance-history."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose: a step's `if` is evaluated when the runner reaches it, so
+      # one placed before the failing step never runs. Sitting here it catches a
+      # tier-1 rejection, a commit or push failure, and the report step. The
+      # condition is "we have a generated file and are about to lose it".
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-campaign-finance-history
+          path: assets/data/ga-campaign-finance-history.json
+          if-no-files-found: ignore
+          retention-days: 14
