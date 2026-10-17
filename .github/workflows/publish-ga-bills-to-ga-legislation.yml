@@ -27,19 +27,17 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v4
 
+      # The same tier-1 gate update-ga-bills.yml applies before it commits this
+      # file (validate_ga_bills.py), not a second weaker copy: the inline check
+      # this replaces was `len(bills) == 0` alone, so a wrong metadata.totalBills,
+      # a per-session billCount that disagrees with the bills, or a duplicate bill
+      # id went straight into the public archive. The publisher runs the same gate
+      # itself (gate_source) so a local dry-run refuses what CI would. This job
+      # commits nothing to the source repo, so a refusal costs no data, and tier 2
+      # (what changed) is already reported by update-ga-bills -- the file here IS
+      # the committed one, so a baseline diff would only ever say "no change".
       - name: Validate ga-bills.json
-        run: |
-          python -c "
-          import json, sys
-          with open('assets/data/ga-bills.json') as f:
-              data = json.load(f)
-          bills = data.get('bills', [])
-          count = data.get('metadata', {}).get('count', len(bills))
-          if len(bills) == 0:
-              print('ERROR: ga-bills.json has no bills', file=sys.stderr)
-              sys.exit(1)
-          print(f'ga-bills.json valid: {len(bills)} bills (metadata.count={count})')
-          "
+        run: python scripts/validate_ga_bills.py assets/data/ga-bills.json --baseline-ref HEAD
 
       - name: Checkout target repo
         uses: actions/checkout@v4

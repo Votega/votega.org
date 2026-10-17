@@ -20,6 +20,7 @@ from collections import Counter
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              session_name, session_slug, tag_session)
 from lib.sibling_publish import build_json, publish_or_dry_run
+import validate_ga_bills
 
 REPO = "Votega/ga-legislation"
 TOKEN_ENV = "GA_BILLS_TOKEN"
@@ -197,7 +198,25 @@ def build_artifacts():
     return artifacts
 
 
+def gate_source(doc):
+    """Refuse to publish a ga-bills.json that contradicts itself.
+
+    This is validate_ga_bills.tier1, the same gate update-ga-bills.yml applies before
+    it commits the file -- deliberately NOT a second, weaker copy. The workflow's old
+    inline check was `len(bills) == 0` alone, which a file with a wrong totalBills, a
+    per-session billCount that disagrees with its bills, or a duplicate bill id sailed
+    through, straight into the public archive. Nothing here is a floor on the world: a
+    session that legitimately holds no bills yet still publishes (build_artifacts emits
+    it empty by design); only a file that contradicts itself is refused.
+    """
+    errors = validate_ga_bills.tier1(doc)
+    if errors:
+        bullets = "\n  - ".join(errors[:10])
+        raise SystemExit(f"refusing to publish: ga-bills.json contradicts itself:\n  - {bullets}")
+
+
 def main():
+    gate_source(json.load(open(SRC_JSON, encoding="utf-8")))
     publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV)
 
 
