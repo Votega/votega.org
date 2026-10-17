@@ -38,6 +38,13 @@ feed is force-tagged to that person by their crosswalk id, because a release
 may be a vgId, a federal member's bioguideId, or a state person's ocdPersonId;
 name-matching still runs on top to catch anyone else the item mentions.
 
+Most sources publish RSS/Atom. A source that publishes none (usg.edu/news/ is
+a TerminalFour site with no feed) gets a named HTML adapter in HTML_PARSERS,
+selected by a `parser` key on that feed in news_sources.yml. An adapter scrapes
+only what a feed would have given -- headline, link, date, the page's own
+summary -- and is deliberately brittle: if the markup moves it yields nothing
+and the feed simply contributes no items, which is how a 404 feed already fails.
+
 Usage:
     python scripts/generate_ga_news.py [output.json] [overrides.json]
 """
@@ -51,7 +58,7 @@ import re
 import sys
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urljoin, urlsplit, urlunsplit
 import xml.etree.ElementTree as ET
 
 import yaml
@@ -408,6 +415,76 @@ def parse_feed(raw_bytes, source):
 
 
 # --------------------------------------------------------------------------- #
+# HTML adapters (sources with no RSS/Atom feed)
+# --------------------------------------------------------------------------- #
+#: usg.edu/news/ rows: a MM.DD.YYYY date in <span class="quiet">, then the
+#: headline link. The "Latest News" row wraps the link in an <h3> and adds the
+#: page's own one-paragraph summary; the "More News" rows are a bare <a> with no
+#: summary at all -- so the link pattern must not require either, and is scoped
+#: to /news/ hrefs instead to avoid matching some other anchor in the row.
+USG_DATE = re.compile(r'\s*(\d{1,2})\.(\d{1,2})\.(\d{4})\s*</span>')
+USG_LINK = re.compile(r"""<a\s+href=["']([^"']*/news/[^"']+)["'][^>]*>(.*?)</a>""", re.S)
+
+
+def parse_usg_html(raw_bytes, source, feed_url):
+    """Scrape the University System of Georgia newsroom listing."""
+    page = raw_bytes.decode("utf-8", "replace")
+    items = []
+    for chunk in page.split('<span class="quiet">')[1:]:
+        d = USG_DATE.match(chunk)
+        a = USG_LINK.search(chunk)
+        if not d or not a:
+            continue
+        month, day, year = (int(x) for x in d.groups())
+        try:
+            when = datetime(year, month, day, tzinfo=timezone.utc)
+        except ValueError:
+            continue
+        title = clean_text(a.group(2))
+        link = urljoin(feed_url, a.group(1).strip())
+        if not title:
+            continue
+        # The row's summary, where there is one, is whatever follows the headline
+        # inside the row div. A "More News" row has none -- hence None, not "".
+        tail = chunk[a.end():]
+        end = tail.find("</div>")
+        snippet = clean_text(tail[:end] if end != -1 else tail)
+        cu = canonical_url(link)
+        items.append({
+            "id": hashlib.sha1(cu.encode("utf-8")).hexdigest()[:12],
+            "title": title,
+            "url": link,
+            "source": source,
+            "publishedAt": when.isoformat(),
+            "snippet": snippet[:SNIPPET_MAX] or None,
+        })
+        if len(items) >= PER_FEED_MAX:
+            break
+    return items
+
+
+#: `parser` values news_sources.yml may name. Omitting the key means RSS/Atom.
+HTML_PARSERS = {"usg": parse_usg_html}
+
+
+def parse_source(raw_bytes, feed):
+    """Parse one source's bytes into normalized items, RSS/Atom or HTML."""
+    name = feed["name"]
+    parser = feed.get("parser")
+    if not parser:
+        return parse_feed(raw_bytes, name)
+    fn = HTML_PARSERS.get(parser)
+    if fn is None:
+        print(f"  WARNING: feed '{name}' names unknown parser '{parser}' "
+              f"-- expected one of {sorted(HTML_PARSERS)}")
+        return []
+    items = fn(raw_bytes, name, feed["url"])
+    if not items:
+        print(f"  WARNING: HTML parser '{parser}' found no items for '{name}' "
+              f"-- the page markup may have changed")
+    return items
+
+# --------------------------------------------------------------------------- #
 # Overrides
 # --------------------------------------------------------------------------- #
 def load_overrides():
@@ -461,7 +538,7 @@ def main():
         if raw is None:
             print(f"[{name}] fetch failed -- skipping")
             continue
-        items = parse_feed(raw, name)
+        items = parse_source(raw, feed)
         kept_here = 0
         for it in items:
             if it["id"] in seen_ids:

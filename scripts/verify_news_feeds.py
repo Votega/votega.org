@@ -53,13 +53,13 @@ def main():
             print(f"  FAIL  {name}  ({url})")
             bad += 1
             continue
-        items = g.parse_feed(raw, name)
+        items = g.parse_source(raw, feed)
         if items:
             print(f"  OK    {name}: {len(items)} items{bound}")
             print(f"        e.g. {items[0]['title'][:70]}")
             ok += 1
         else:
-            print(f"  EMPTY {name}  ({url}) -- fetched but no <item>/<entry>")
+            print(f"  EMPTY {name}  ({url}) -- fetched but no items parsed")
             bad += 1
 
     print(f"\n{ok} OK, {bad} failed/empty of {len(feeds)} feeds")
