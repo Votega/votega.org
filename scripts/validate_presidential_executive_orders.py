@@ -148,6 +148,18 @@ def tier2(new, old):
              f"[whitehouse.gov]({e['whitehouse_url']}). Compare its title with the Register's record of "
              f"that date; a reworded title is the usual cause." for e in expired]))
 
+    conflicts = meta.get("numberConflicts") or []
+    if conflicts:
+        sections.append(("Title match overruled by the White House's own EO number - check these",
+                         [f"- **{c['whitehouse_title']}** claims EO {c['executive_order_number']}, but its title "
+                          f"also matched EO {c['title_matched_eo']}: [whitehouse.gov]({c['whitehouse_url']})"
+                          for c in conflicts]))
+    rescued = meta.get("matchedByNumber") or []
+    if rescued:
+        sections.append(("Matched by EO number because the titles differ - whitehouse.gov reworded these",
+                         [f"- EO {r['executive_order_number']}: Register \"{r['title']}\" vs White House "
+                          f"\"{r['whitehouse_title']}\" ([link]({r['whitehouse_url']}))" for r in rescued]))
+
     dupes = meta.get("duplicateRegisterRecords") or []
     if dupes:
         sections.append(("Duplicate Federal Register records collapsed",

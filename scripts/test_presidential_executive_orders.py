@@ -194,6 +194,68 @@ class Dedupe(unittest.TestCase):
         self.assertEqual(data["metadata"]["count"], 1)
 
 
+PDF = '<object data="https://www.whitehouse.gov/wp-content/uploads/2026/09/eo-%s.pdf" type="application/pdf"></object>'
+
+
+def numbered(title, signed, num, url="https://w/n"):
+    return dict(wh(title, signed, url), claimed_number=str(num))
+
+
+class NumberCrossCheck(unittest.TestCase):
+    def test_claimed_number_comes_from_the_attached_pdf_only(self):
+        self.assertEqual(g.claimed_number(PDF % "14435" + PDF % "14435"), "14435")
+        self.assertIsNone(g.claimed_number("<p>Executive Order 14100 is amended; see eo-14100 text.</p>"))
+        self.assertIsNone(g.claimed_number(PDF % "14435" + PDF % "14436"))   # ambiguous
+
+    def test_feed_item_carries_claimed_number(self):
+        item = feed_item("Numbered", "Fri, 16 Oct 2026 15:00:00 +0000", [PREAMBLE, "THE WHITE HOUSE,", "October 16, 2026."])
+        item = item.replace("]]></content:encoded>", PDF % "14436" + "]]></content:encoded>")
+        self.assertEqual(g.parse_whitehouse_feed(feed(item))[0]["claimed_number"], "14436")
+
+    def test_number_rescues_a_reworded_title(self):
+        notes = {}
+        orders, expired = g.reconcile([fr(14431, "Enhancing Program Integrity", "2026-09-18")],
+                                      [numbered("Enhancing Program Integrity and Integrity", "2026-09-18", 14431)],
+                                      TODAY, notes=notes)
+        self.assertEqual((len(orders), expired), (1, []))
+        self.assertFalse(orders[0]["provisional"])
+        self.assertTrue(orders[0]["whitehouse_url"])
+        self.assertEqual(notes["matchedByNumber"][0]["executive_order_number"], "14431")
+
+    def test_number_vetoes_a_title_match_to_a_different_order(self):
+        notes = {}
+        orders, _ = g.reconcile([fr(14400, "Amendment To Tariffs", "2026-10-14")],
+                                [numbered("Amendment To Tariffs", "2026-10-15", 14401)], TODAY, notes=notes)
+        # The title record is NOT claimed; the White House item is a separate (provisional) order.
+        self.assertEqual(sorted(o["provisional"] for o in orders), [False, True])
+        self.assertEqual(notes["numberConflicts"][0]["title_matched_eo"], "14400")
+
+    def test_numbered_item_gets_its_record_before_a_title_only_item(self):
+        records = [fr(14401, "Same Title", "2026-10-15"), fr(14402, "Same Title", "2026-10-15")]
+        orders, _ = g.reconcile(records, [wh("Same Title", "2026-10-15", "https://w/plain"),
+                                          numbered("Same Title", "2026-10-15", 14402, "https://w/num")], TODAY)
+        by_num = {o["executive_order_number"]: o["whitehouse_url"] for o in orders}
+        self.assertEqual(by_num["14402"], "https://w/num")
+        self.assertEqual(by_num["14401"], "https://w/plain")
+
+    def test_matching_number_and_title_produces_no_notes(self):
+        notes = {}
+        g.reconcile([fr(14435, "Diesel", "2026-10-05")], [numbered("DIESEL", "2026-10-05", 14435)], TODAY, notes=notes)
+        self.assertEqual(notes, {"matchedByNumber": [], "numberConflicts": []})
+
+    def test_claimed_number_not_yet_in_register_stays_provisional(self):
+        orders, _ = g.reconcile([], [numbered("Brand New", "2026-10-16", 14999)], TODAY)
+        self.assertEqual((orders[0]["provisional"], orders[0]["executive_order_number"]), (True, None))
+
+    def test_build_output_exposes_notes_and_validator_reports_them(self):
+        data = g.build_output([fr(14431, "Real Title", "2026-09-18")],
+                              [numbered("Reworded Title", "2026-09-18", 14431)], TODAY, "2025-01-20")
+        self.assertEqual(len(data["metadata"]["matchedByNumber"]), 1)
+        text = v.render("x.json", v.tier2(data, None))
+        self.assertIn("Reworded Title", text)
+        self.assertEqual(v.tier1(data, None), [])      # reported, never gated
+
+
 class FederalRegisterPaging(unittest.TestCase):
     def test_pages_until_total_pages(self):
         pages = {1: {"total_pages": 2, "results": [fr(2, "B", "2026-02-01")]},

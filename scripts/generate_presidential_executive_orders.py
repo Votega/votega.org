@@ -15,11 +15,14 @@ Two sources, one file:
 
 Reconciliation happens here, at build time, so the page just renders the file.
 
-Why the join is on the normalized title and nothing else: the number does not
-exist on whitehouse.gov. (Its pages do carry an `eo-NNNNN` download token once an
-order is published, but never at signing, which is the only time it would help.)
-The title is the one thing both sources share, which makes it the fragile part: a
-title reworded between posting and publication leaves a duplicate. So a
+Why the join is on the normalized title: the number does not exist on
+whitehouse.gov at signing. Once the order is numbered, the page gains an attached
+PDF named `eo-NNNNN.pdf`; that is the item identifying ITSELF (unlike numbers in
+the body text, which cite other orders), so when present it is read as
+`claimed_number` and OUTRANKS the title: it rescues a reworded title and vetoes a
+title match to a record with a different number. Most provisional entries have no
+such file yet, so the title remains the join that matters, and the fragile part:
+a title reworded between posting and publication leaves a duplicate. So a
 provisional entry has a hard expiry (PROVISIONAL_TTL_DAYS from signing), after
 which it is dropped from `orders` and listed in `metadata.expiredProvisional`.
 The validator reports that list, because an expiry means matching broke.
@@ -201,9 +204,20 @@ def fetch_federal_register(term_start, fetcher=fetch_json):
     return orders
 
 
+_EO_PDF = re.compile(r"/uploads/[^\"'\s<>]*?/eo-(\d{4,6})\.pdf", re.I)
+
+
+def claimed_number(content_html):
+    """The EO number of the PDF whitehouse.gov attached to the item, or None.
+    Read only from an `uploads/.../eo-NNNNN.pdf` URL - never from prose, where
+    numbers are references to other orders - and None unless exactly one appears."""
+    found = set(_EO_PDF.findall(content_html or ""))
+    return found.pop() if len(found) == 1 else None
+
+
 def parse_whitehouse_feed(xml_bytes):
-    """Executive Orders items from the RSS feed as
-    {title, url, signing_date, signing_date_source, abstract} dicts."""
+    """Executive Orders items from the RSS feed as {title, url, signing_date,
+    signing_date_source, abstract, claimed_number} dicts."""
     root = ET.fromstring(xml_bytes)
     items = []
     for item in root.iter("item"):
@@ -228,6 +242,7 @@ def parse_whitehouse_feed(xml_bytes):
             "signing_date": signed.isoformat(),
             "signing_date_source": source,
             "abstract": build_abstract(paras),
+            "claimed_number": claimed_number(body),
         })
     return items
 
@@ -260,19 +275,32 @@ def _days_apart(a, b):
     return abs((date.fromisoformat(a) - date.fromisoformat(b)).days)
 
 
-def reconcile(fr_orders, wh_items, today, carried=()):
+def reconcile(fr_orders, wh_items, today, carried=(), notes=None):
     """Merge the two sources. Returns (orders, expired).
 
     Every Register record is kept, gaining `whitehouse_url` if a White House item
-    matches it. A White House item with no Register match becomes provisional
-    unless it is past its TTL, in which case it is returned in `expired`.
-    `carried` are provisional entries from the previous file, used only when the
-    feed was unavailable (wh_items is None)."""
+    matches it. An item matches by its claimed EO number when it has one, else by
+    normalized title within MATCH_WINDOW_DAYS; a title match to a record whose
+    number differs from the one the item claims is vetoed. An item with no match
+    becomes provisional unless it is past its TTL, in which case it is returned in
+    `expired`. `carried` are provisional entries from the previous file, used only
+    when the feed was unavailable (wh_items is None).
+
+    `notes`, if given, is filled in place for the validator:
+    `matchedByNumber` (number matched, titles differ: a reworded title the title
+    join would have lost) and `numberConflicts` (a title join the number
+    overruled)."""
+    if notes is None:
+        notes = {}
+    notes.setdefault("matchedByNumber", [])
+    notes.setdefault("numberConflicts", [])
     orders = [dict(o, whitehouse_url=o.get("whitehouse_url"), provisional=False)
               for o in fr_orders]
-    by_key = {}
+    by_key, by_num = {}, {}
     for o in orders:
         by_key.setdefault(normalize_title(o["title"]), []).append(o)
+        if o.get("executive_order_number"):
+            by_num[str(o["executive_order_number"])] = o
     claimed = set()
 
     expired, provisional = [], []
@@ -281,12 +309,34 @@ def reconcile(fr_orders, wh_items, today, carried=()):
                      "signing_date": c["signing_date"], "abstract": c.get("abstract"),
                      "signing_date_source": c.get("signing_date_source")}
                     for c in carried]
-    for item in wh_items:
-        candidates = [o for o in by_key.get(normalize_title(item["title"]), [])
-                      if id(o) not in claimed and o.get("signing_date")
-                      and _days_apart(o["signing_date"], item["signing_date"]) <= MATCH_WINDOW_DAYS]
-        if candidates:
-            match = min(candidates, key=lambda o: _days_apart(o["signing_date"], item["signing_date"]))
+    def near(o, item):
+        return bool(o.get("signing_date")) and _days_apart(o["signing_date"], item["signing_date"]) <= MATCH_WINDOW_DAYS
+
+    # Numbered items first, so a title match can never take a record that an item
+    # claiming its number is entitled to.
+    for item in sorted(wh_items, key=lambda i: not i.get("claimed_number")):
+        num = item.get("claimed_number")
+        by_title = [o for o in by_key.get(normalize_title(item["title"]), [])
+                    if id(o) not in claimed and near(o, item)]
+        match = None
+        if num:
+            rec = by_num.get(num)
+            if rec is not None and id(rec) not in claimed and near(rec, item):
+                match = rec
+                if normalize_title(rec["title"]) != normalize_title(item["title"]):
+                    notes["matchedByNumber"].append({
+                        "executive_order_number": num, "title": rec["title"],
+                        "whitehouse_title": item["title"], "whitehouse_url": item["url"]})
+            wrong = [o for o in by_title if str(o.get("executive_order_number")) != num]
+            if wrong:
+                notes["numberConflicts"].append({
+                    "executive_order_number": num, "whitehouse_title": item["title"],
+                    "title_matched_eo": wrong[0].get("executive_order_number"),
+                    "whitehouse_url": item["url"]})
+            by_title = [o for o in by_title if str(o.get("executive_order_number")) == num]
+        if match is None and by_title:
+            match = min(by_title, key=lambda o: _days_apart(o["signing_date"], item["signing_date"]))
+        if match is not None:
             claimed.add(id(match))
             match["whitehouse_url"] = item["url"]     # provenance, never overwritten
             continue
@@ -316,7 +366,8 @@ def reconcile(fr_orders, wh_items, today, carried=()):
 
 def build_output(fr_orders, wh_items, today, term_start, carried=(), now=None):
     fr_orders, duplicates = dedupe_register(fr_orders)
-    orders, expired = reconcile(fr_orders, wh_items, today, carried)
+    notes = {}
+    orders, expired = reconcile(fr_orders, wh_items, today, carried, notes)
     provisional = sum(1 for o in orders if o["provisional"])
     return {
         "metadata": {
@@ -332,6 +383,8 @@ def build_output(fr_orders, wh_items, today, term_start, carried=(), now=None):
             "provisionalTtlDays": PROVISIONAL_TTL_DAYS,
             "expiredProvisional": expired,
             "duplicateRegisterRecords": duplicates,
+            "matchedByNumber": notes["matchedByNumber"],
+            "numberConflicts": notes["numberConflicts"],
         },
         "orders": orders,
     }
