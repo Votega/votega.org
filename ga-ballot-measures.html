@@ -23,9 +23,17 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     background: #fff;
     border-left: 5px solid #1a56a8;
   }
+  /* A measure that has passed the General Assembly but has not been referred to
+     the ballot (the Governor has not signed). Struck through so it cannot be read
+     as something voters will see; the status note says what happens next. */
   .measure-card.potential {
     border-left-color: #c98a00;
     background: #fffdf6;
+  }
+  .measure-card.potential .measure-title,
+  .measure-card.potential .measure-summary {
+    text-decoration: line-through;
+    color: #777;
   }
   .measure-badges {
     display: flex;
@@ -169,7 +177,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   function renderCard(m) {
     const isPotential = m.status === 'potential';
     const statusBadge = isPotential
-      ? `<span class="badge badge-potential">Potential — Not Yet Certified</span>`
+      ? ''
       : m.status === 'passed'
         ? `<span class="badge badge-passed">Ballot measure passed</span>`
         : m.status === 'failed'
@@ -251,8 +259,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
         html += `<div class="measure-grid">${certified.map(renderCard).join('')}</div>`;
       }
       if (potential.length) {
-        html += `<h2 class="section-heading">Potential Measures</h2>`;
-        html += `<p style="font-size:0.9rem;color:#666;">These have passed the General Assembly but are not yet certified for the ballot.</p>`;
+        html += `<h2 class="section-heading">Pending Measures</h2>`;
         html += `<div class="measure-grid">${potential.map(renderCard).join('')}</div>`;
       }
 
