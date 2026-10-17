@@ -151,6 +151,41 @@ Relatedly, `validate_data_update.py` is used by 10 of ~29 committing workflows;
 the rest carry inline heredoc validators with hand-pinned absolute floors — the
 exact anti-pattern its own docstring (`:12-19`) was written to replace.
 
+**[update 2026-10-17]** Both halves of this finding are now largely addressed,
+and the recommendation above has been overtaken.
+
+*Tests.* `run-script-tests.yml` runs every `scripts/test_*.py` (21 files,
+including the three named above) and `test-js.yml` runs every
+`tests/js/*.test.js` (5 files). No separate `tests.yml` was needed.
+
+*Validators.* Adoption is now 15 of 29 committing workflows, and the newer ones
+are purpose-built per dataset (`validate_ga_members.py`, `validate_ga_bills.py`,
+`validate_curated_ga_bills.py`, `validate_ga_votes.py`,
+`validate_current_members.py`, `validate_fec_data.py`) rather than all routed
+through `validate_data_update.py`. Four workflows still carry hand-pinned
+absolute floors:
+
+  - `update-ga-campaign-finance` — `by_seat < 150`, `legislative < 400`. The
+    live one: early in a cycle, before candidates file, the legislative count
+    legitimately falls below 400 and the run is discarded.
+  - `update-ga-executive-orders` — `len(orders) < prev_n`, a comparison against
+    the last commit. Encodes a real invariant (the merge is additive, so a drop
+    is loss) but blocks permanently on a legitimately withdrawn order.
+  - `update-search-corpus` — `count >= 200`.
+  - `update-ga-campaign-finance-history` — `len(filers) < 1200` (an archive that
+    only grows; low risk).
+
+*The target has moved.* This finding recommends migrating to
+`validate_data_update.py`, which still hard-fails and so discards the run's data
+— the regenerated file dies with the runner, and the site keeps serving stale
+data. `update-local-government.yml` (2026-10-14, one day after this audit) and
+`update-fec-data.yml` instead split checks in two: conditions the file's own
+contents contradict fail the run, while differences from the previous run are
+reported and the data commits anyway. See `scripts/validate_fec_data.py`'s
+module docstring for why the two cannot be collapsed — a candidate's money
+disappearing is indistinguishable, by shape alone, from the fetch bug that
+would cause it.
+
 ---
 
 ## 3. Data captured but never shown
