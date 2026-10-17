@@ -271,6 +271,28 @@ def _scrape_from_base(base_url, year):
     return all_orders, reachable
 
 
+def scheme_alive(year, fetch=None):
+    """True when `year`'s listing page resolves AND parses into at least one order.
+
+    One request (two if the older URL scheme is needed), used only to interpret an
+    empty result for a DIFFERENT year — see `fetch_year`. Deliberately page 0
+    only: the question is "does this scheme still work", not "what did that year
+    hold", so paginating would spend a request and a second per page to learn
+    nothing more.
+    """
+    fetch = fetch or fetch_page
+    for base in candidate_bases(year):
+        html = fetch(base)
+        if not html:
+            continue
+        parser = EOPageParser(year)
+        parser.feed(html)
+        parser.close()
+        if parser.orders:
+            return True
+    return False
+
+
 def scrape_all_pages(year):
     """Fetch all paginated listing pages and return a merged dict of orders.
 
@@ -319,20 +341,64 @@ def fetch_year(year, strict=True):
     print(f"Fetching GA Executive Orders for {year}...")
 
     scraped = scrape_all_pages(year)
-    if scraped is None:
-        msg = f"could not fetch listing page for {year}"
-        if strict:
-            print(f"Error: {msg} — aborting")
-            sys.exit(1)
-        print(f"  Skipping {year}: {msg}")
-        return False
     if not scraped:
-        msg = f"no orders found for {year} — page structure may have changed or none published"
-        if strict:
-            print(f"Warning: {msg}")
+        # Nothing came back. That is EITHER "the Governor has signed no orders
+        # for this year yet" OR "the site moved, and our selector now matches
+        # nothing" — and the two need opposite responses, so guessing is not
+        # good enough.
+        #
+        # The site is the discriminator. gov.georgia.gov creates a year's
+        # listing page only once it has content: measured 2026-10-17, /2026
+        # returns 200 with 631 KB of orders while /2027 and /2028 both 404
+        # under BOTH URL schemes. So in January the current year 404s, no
+        # scheme resolves, and `scrape_all_pages` returns None — which is
+        # indistinguishable, on its own, from the whole site having moved.
+        #
+        # The PREVIOUS year tells them apart. If last year's page still
+        # resolves and still parses into orders, the URL scheme and our parser
+        # both work, and an empty current year is the calendar, not a bug: we
+        # write the (empty) file and let validate_ga_executive_orders.py report
+        # it. If last year's page is ALSO unreadable, something really did
+        # change and the run must fail loudly, which is what `strict` is for.
+        #
+        # This is the other half of the fix in 6aa75c4e. That commit stopped the
+        # VALIDATOR failing on an empty year file, but the job still died here,
+        # one step earlier, before the validator ever ran — so the January bomb
+        # had only moved rather than been defused.
+        reason = ("could not fetch any listing page" if scraped is None
+                  else "listing page resolved but held no orders")
+        if not strict:
+            print(f"  Skipping {year}: {reason}")
+            return False
+
+        # A year that ALREADY has orders cannot go back to having none. If the
+        # committed file holds some and the scrape now returns nothing, that is
+        # not the January case whatever the previous year says — it is a failure,
+        # and letting it through would rewrite a populated year as empty or pass
+        # a dead scrape off as a quiet day.
+        held = len((load_existing(year).get('orders') or []))
+        if held:
+            print(f"Error: {reason} for {year}, but the committed file already "
+                  f"holds {held} order(s) — a year cannot lose its orders. "
+                  f"Aborting; the scrape failed.")
             sys.exit(1)
-        print(f"  Skipping {year}: {msg}")
-        return False
+
+        print(f"  {year}: {reason} — checking whether {year - 1} still reads, "
+              f"to tell an empty year from a broken scraper")
+        if not scheme_alive(year - 1):
+            print(f"Error: {reason} for {year}, AND {year - 1} does not read "
+                  f"either — the URL scheme or the page structure has changed. "
+                  f"Aborting rather than publishing an empty year.")
+            sys.exit(1)
+
+        print(f"  {year - 1} reads normally, so the scraper is fine and {year} "
+              f"genuinely has no orders yet. Writing an empty file; "
+              f"validate_ga_executive_orders.py reports it.")
+        data = load_existing(year)
+        data.setdefault('metadata', {})
+        data['metadata']['count'] = len(data.get('orders') or [])
+        save(year, data)
+        return True
 
     # Warn about any entries where the title is missing, too short, or suspiciously long
     bad = [n for n, e in scraped.items()
