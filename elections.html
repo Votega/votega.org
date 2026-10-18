@@ -675,15 +675,11 @@ breadcrumb:
 
   // The address and county filters show on every tab except Courts (a coverage notice,
   // not a list), so the layout is the same wherever a voter lands. They only NARROW the
-  // district tabs (COUNTY_TABS); on the statewide tabs every voter faces the same
-  // races, so a note says so rather than leaving a box that silently does nothing.
-  const STATEWIDE_TABS = new Set(['executive', 'us-senate']);
-  const statewideNote = document.getElementById('statewideNote');
+  // district tabs (COUNTY_TABS); the statewide tabs show every race regardless.
   function updateFilterVisibility() {
     const show = activeTab !== 'courts';
     countyFilter.classList.toggle('visible', show);
     addressFilter.classList.toggle('visible', show);
-    statewideNote.hidden = !STATEWIDE_TABS.has(activeTab);
   }
 
   function renderVoterBanner() {
