@@ -95,7 +95,7 @@
 
         var lu = s.landUseItems || [];
         if (lu.length) {
-          html += '<div class="sub-lu"><strong>🏗️ Land use on recent agendas</strong><ul>';
+          html += '<div class="sub-lu"><strong>🏗️ Land use on recent, or upcoming, agendas</strong><ul>';
           lu.slice(0, 6).forEach(function (it) {
             var t = esc(cleanTitle(it.title)).slice(0, 150);
             var tags = (it.tags && it.tags.length)
