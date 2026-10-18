@@ -781,7 +781,14 @@
         </div>
         <p class="finance-meta">${escHtmlGa(filer.electionCycle || '')}${filer.office ? ' · ' + escHtmlGa(filer.office) : ''}</p>
         ${CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt)}
+        <div class="ga-donors-slot"></div>
         ${footer}${reconcileNote}`;
+      // Donor detail is a separate, optional file: the totals above must not wait on
+      // it or fail with it.
+      CampaignFinance.getGaDonors().then(d => {
+        const slot = container.querySelector('.ga-donors-slot');
+        if (slot) slot.innerHTML = CampaignFinance.gaDonorsHtml(filer.filerEntityId, d);
+      });
       return;
     }
 

@@ -781,6 +781,7 @@
       </div>
       <p class="finance-meta">${escHtml(f.electionCycle || '')}${f.office ? ` · ${escHtml(f.office)}` : ''}</p>
       ${window.CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt)}
+      <div class="ga-donors-slot"></div>
       <p class="finance-meta">
         <a href="${escHtml(searchUrl)}" target="_blank" rel="noopener">View filings on PeachFile ↗</a>
         &nbsp;·&nbsp; Covers filings from Jan 1, 2026 onward.
@@ -802,6 +803,12 @@
         on hand carries forward from the previous cycle, so the three figures are not
         expected to net.
       </p>`;
+    // Donor detail is a separate, optional file: the totals above must not wait on
+    // it or fail with it.
+    window.CampaignFinance.getGaDonors().then(d => {
+      const slot = container.querySelector('.ga-donors-slot');
+      if (slot) slot.innerHTML = window.CampaignFinance.gaDonorsHtml(f.filerEntityId, d);
+    });
   }
 
   function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable, electionDataUnavailable, seatSuccessor) {

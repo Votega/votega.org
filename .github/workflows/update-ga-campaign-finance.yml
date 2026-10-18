@@ -61,12 +61,24 @@ jobs:
             --baseline-ref HEAD \
             --report-out "$RUNNER_TEMP/ga-campaign-finance-changes.md"
 
+      # Donor detail (largest gifts, who gave, in/out of state) is a sidecar the pages
+      # fetch separately and treat as optional, so a failure here must not cost the
+      # totals above their weekly commit. It is incremental (a filer whose total has
+      # not moved is carried forward) and refuses to replace the committed file with a
+      # mostly-failed pull; either way the previous file stays in place.
+      - name: Generate GA donor summaries
+        continue-on-error: true
+        run: python scripts/generate_ga_donor_summaries.py
+
       - name: Commit and push
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f assets/data/ga-campaign-finance.json
+          if [ -f assets/data/ga-campaign-finance-donors.json ]; then
+            git add -f assets/data/ga-campaign-finance-donors.json
+          fi
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

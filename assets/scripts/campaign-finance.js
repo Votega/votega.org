@@ -25,6 +25,10 @@ window.CampaignFinance = (function () {
   }
   const FEC_DATA_URL   = basePath() + 'assets/data/ga-fec-data.json';
   const GA_FINANCE_URL = basePath() + 'assets/data/ga-campaign-finance.json';
+  // Per-candidate donor summaries (largest contributions, who gave, in/out of state).
+  // A sidecar so the totals file every member page downloads stays small; keyed by the
+  // same filerEntityId. Written by scripts/generate_ga_donor_summaries.py.
+  const GA_DONORS_URL  = basePath() + 'assets/data/ga-campaign-finance-donors.json';
 
   const PEACHFILE_SEARCH = 'https://peachfile.ethics.ga.gov/public/cf/publiccandidate';
 
@@ -46,6 +50,7 @@ window.CampaignFinance = (function () {
   // ── loaders (cached) ───────────────────────────────────────────────────────
   let _fecCache;   // undefined = unfetched, null = failed
   let _gaCache;
+  let _gaDonorsCache;
 
   async function getFecData() {
     if (_fecCache !== undefined) return _fecCache;
@@ -63,6 +68,15 @@ window.CampaignFinance = (function () {
       _gaCache = res.ok ? await res.json() : null;
     } catch (err) { console.error('CampaignFinance.getGaFinanceData()', err); _gaCache = null; }
     return _gaCache;
+  }
+
+  async function getGaDonors() {
+    if (_gaDonorsCache !== undefined) return _gaDonorsCache;
+    try {
+      const res = await fetch(GA_DONORS_URL);
+      _gaDonorsCache = res.ok ? await res.json() : null;
+    } catch (err) { console.error('CampaignFinance.getGaDonors()', err); _gaDonorsCache = null; }
+    return _gaDonorsCache;
   }
 
   // ── formatting ─────────────────────────────────────────────────────────────
@@ -626,6 +640,97 @@ window.CampaignFinance = (function () {
   // ga-campaign-finance.json), not from the roster the page-level stamp describes, so
   // each panel dates itself from the finance file's own metadata.generatedAt. Returns ''
   // when the timestamp is absent or unparseable rather than printing a bare or wrong date.
+  function provenanceDate(generatedAt) {
+    if (!generatedAt) return null;
+    const d = new Date(generatedAt);
+    if (isNaN(d)) return null;
+    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  // ── GA donor panel ─────────────────────────────────────────────────────────
+  // Short labels for PeachFile's contributor categories; an unknown code falls back to
+  // the Commission's own label so a new category still renders rather than vanishing.
+  const GA_TYPE_STYLE = {
+    TIND: { label: 'Individuals',               color: '#2563eb' },
+    TBSN: { label: 'Corporations & businesses', color: '#d97706' },
+    TNCC: { label: 'Political committees',      color: '#7c3aed' },
+  };
+  const GA_FALLBACK_COLORS = ['#0d9488', '#be185d', '#65a30d', '#9ca3af'];
+
+  function exactMoney(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function ensureDonorStyles() {
+    if (document.getElementById('ga-donors-css')) return;
+    const st = document.createElement('style');
+    st.id = 'ga-donors-css';
+    st.textContent =
+      '.gad h3{font-size:0.88rem;margin:1.25rem 0 0.25rem;color:#374151;}'
+      + '.gad-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#e5e7eb;margin:0.5rem 0;}'
+      + '.gad-bar span{display:block;height:100%;}'
+      + '.gad-sw{display:inline-block;width:0.7rem;height:0.7rem;border-radius:2px;margin-right:0.4rem;}'
+      + '.gad table{width:100%;border-collapse:collapse;font-size:0.85rem;margin-top:0.5rem;}'
+      + '.gad th{text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.04em;color:#6b7280;'
+      + 'padding:0.3rem 0.5rem 0.3rem 0;border-bottom:1px solid #e5e7eb;}'
+      + '.gad td{padding:0.35rem 0.5rem 0.35rem 0;border-bottom:1px solid #f3f4f6;color:#111;}'
+      + '.gad td:last-child,.gad th:last-child{text-align:right;}'
+      + '.gad td.gad-place{color:#6b7280;}';
+    document.head.appendChild(st);
+  }
+
+  // `donors` is the parsed sidecar (or null). Returns '' when this filer has nothing
+  // to break down, so a page can drop the result in unconditionally.
+  function gaDonorsHtml(filerEntityId, donors) {
+    const e = donors && donors.filers && donors.filers[String(filerEntityId)];
+    if (!e) return '';
+
+    const typeTotal = (e.byType || []).reduce((sum, t) => sum + t.amount, 0);
+    let fb = 0;
+    const types = typeTotal > 0 ? e.byType.map(t => {
+      const st = GA_TYPE_STYLE[t.code] || { label: t.type || 'Other', color: GA_FALLBACK_COLORS[fb++ % GA_FALLBACK_COLORS.length] };
+      return { label: st.label, color: st.color, amount: t.amount, share: t.amount / typeTotal };
+    }) : [];
+    const geo = [['In Georgia', e.inState], ['Outside Georgia', e.outOfState], ['Unitemized', e.unitemized]]
+      .filter(g => g[1]);
+    const largest = e.largest || [];
+    if (!types.length && !geo.length && !largest.length) return '';
+    ensureDonorStyles();
+
+    const pct = share => (share * 100 < 1 ? '&lt;1' : Math.round(share * 100)) + '%';
+    let html = '<div class="gad">';
+    if (types.length) {
+      html += '<h3>Who gave</h3>'
+        + '<div class="gad-bar" role="presentation">'
+        + types.map(t => '<span style="width:' + (t.share * 100).toFixed(2) + '%;background:' + t.color
+            + '" title="' + esc(t.label) + ': ' + exactMoney(t.amount) + '"></span>').join('')
+        + '</div><table><thead><tr><th>Source</th><th>Itemized</th><th>Share</th></tr></thead><tbody>'
+        + types.map(t => '<tr><td><span class="gad-sw" style="background:' + t.color + '"></span>' + esc(t.label)
+            + '</td><td>' + exactMoney(t.amount) + '</td><td>' + pct(t.share) + '</td></tr>').join('')
+        + '</tbody></table>';
+    }
+    if (geo.length) {
+      html += '<h3>Where it came from</h3><table><thead><tr><th>Origin</th><th>Amount</th></tr></thead><tbody>'
+        + geo.map(g => '<tr><td>' + g[0] + '</td><td>' + exactMoney(g[1]) + '</td></tr>').join('')
+        + '</tbody></table>';
+    }
+    if (largest.length) {
+      html += '<h3>Largest single contributions</h3>'
+        + '<table><thead><tr><th>Giver</th><th>Location</th><th>Amount</th></tr></thead><tbody>'
+        + largest.map(l => '<tr><td>' + esc(l.name) + '</td><td class="gad-place">' + esc(l.place || '')
+            + '</td><td>' + exactMoney(l.amount) + '</td></tr>').join('')
+        + '</tbody></table>';
+    }
+    // Say what the figures are not: the API's largest-gifts list is transactions, not
+    // donors, and the breakdowns need not sum to the headline total.
+    const when = provenanceDate(donors.metadata && donors.metadata.generatedAt);
+    html += '<p class="finance-meta" style="margin-top:0.5rem;">Largest contributions are single gifts, so the same'
+      + ' giver can appear more than once. These breakdowns cover what the Ethics Commission itemizes in its'
+      + ' current filing system and may not add up to the total raised above.'
+      + (when ? ' Donor detail updated ' + when + '.' : '') + '</p></div>';
+    return html;
+  }
+
   function provenanceLine(sourceName, generatedAt) {
     if (!generatedAt) return '';
     const d = new Date(generatedAt);
@@ -635,7 +740,7 @@ window.CampaignFinance = (function () {
   }
 
   return {
-    getFecData, getGaFinanceData, fmtMoney, provenanceLine,
+    getFecData, getGaFinanceData, getGaDonors, gaDonorsHtml, fmtMoney, provenanceLine,
     normalizeName, candidateLastName, findFecId, findFecMatch,
     narrowFecMatches, fecHasActivity,
     gaCandidatePool, findGaFilers,
