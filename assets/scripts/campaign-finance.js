@@ -654,6 +654,10 @@ window.CampaignFinance = (function () {
     TIND: { label: 'Individuals',               color: '#2563eb' },
     TBSN: { label: 'Corporations & businesses', color: '#d97706' },
     TNCC: { label: 'Political committees',      color: '#7c3aed' },
+    TCNCC: { label: 'Other candidates & campaigns', color: '#0d9488' },
+    TSELF: { label: 'Candidate (self-funded)',   color: '#be185d' },
+    TSPDC: { label: 'Spouse / dependent child',  color: '#65a30d' },
+    TLOB:  { label: 'Lobbyists',                 color: '#9ca3af' },
   };
   const GA_FALLBACK_COLORS = ['#0d9488', '#be185d', '#65a30d', '#9ca3af'];
 
@@ -670,10 +674,10 @@ window.CampaignFinance = (function () {
       + '.gad-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#e5e7eb;margin:0.5rem 0;}'
       + '.gad-bar span{display:block;height:100%;}'
       + '.gad-sw{display:inline-block;width:0.7rem;height:0.7rem;border-radius:2px;margin-right:0.4rem;}'
-      + '.gad table{width:100%;border-collapse:collapse;font-size:0.85rem;margin-top:0.5rem;}'
-      + '.gad th{text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.04em;color:#6b7280;'
+      + '.gad table.gad-tbl{width:100%;border-collapse:collapse;font-size:0.85rem;margin-top:0.5rem;}'
+      + '.gad table.gad-tbl th{text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.04em;color:#6b7280;'
       + 'padding:0.3rem 0.5rem 0.3rem 0;border-bottom:1px solid #e5e7eb;}'
-      + '.gad td{padding:0.35rem 0.5rem 0.35rem 0;border-bottom:1px solid #f3f4f6;color:#111;}'
+      + '.gad table.gad-tbl td{padding:0.35rem 0.5rem 0.35rem 0;border-bottom:1px solid #f3f4f6;color:#111;}'
       + '.gad td:last-child,.gad th:last-child{text-align:right;}'
       + '.gad td.gad-place{color:#6b7280;}';
     document.head.appendChild(st);
@@ -704,19 +708,19 @@ window.CampaignFinance = (function () {
         + '<div class="gad-bar" role="presentation">'
         + types.map(t => '<span style="width:' + (t.share * 100).toFixed(2) + '%;background:' + t.color
             + '" title="' + esc(t.label) + ': ' + exactMoney(t.amount) + '"></span>').join('')
-        + '</div><table><thead><tr><th>Source</th><th>Itemized</th><th>Share</th></tr></thead><tbody>'
+        + '</div><table class="gad-tbl"><thead><tr><th>Source</th><th>Itemized</th><th>Share</th></tr></thead><tbody>'
         + types.map(t => '<tr><td><span class="gad-sw" style="background:' + t.color + '"></span>' + esc(t.label)
             + '</td><td>' + exactMoney(t.amount) + '</td><td>' + pct(t.share) + '</td></tr>').join('')
         + '</tbody></table>';
     }
     if (geo.length) {
-      html += '<h3>Where it came from</h3><table><thead><tr><th>Origin</th><th>Amount</th></tr></thead><tbody>'
+      html += '<h3>Where it came from</h3><table class="gad-tbl"><thead><tr><th>Origin</th><th>Amount</th></tr></thead><tbody>'
         + geo.map(g => '<tr><td>' + g[0] + '</td><td>' + exactMoney(g[1]) + '</td></tr>').join('')
         + '</tbody></table>';
     }
     if (largest.length) {
       html += '<h3>Largest single contributions</h3>'
-        + '<table><thead><tr><th>Giver</th><th>Location</th><th>Amount</th></tr></thead><tbody>'
+        + '<table class="gad-tbl"><thead><tr><th>Giver</th><th>Location</th><th>Amount</th></tr></thead><tbody>'
         + largest.map(l => '<tr><td>' + esc(l.name) + '</td><td class="gad-place">' + esc(l.place || '')
             + '</td><td>' + exactMoney(l.amount) + '</td></tr>').join('')
         + '</tbody></table>';

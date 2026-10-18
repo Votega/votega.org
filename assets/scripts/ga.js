@@ -22,7 +22,17 @@ const countySel    = document.getElementById('countySelect');
 const statusLine   = document.getElementById('status');
 const membersOut   = document.getElementById('membersOutput');
 
+const lookupInput  = document.getElementById('lookupInput');
+const lookupBtn    = document.getElementById('lookupBtn');
+const lookupMsg    = document.getElementById('lookupMsg');
+const lookupBanner = document.getElementById('lookupBanner');
+
 let allMembers = [];
+// What the address box resolved to, or null. {kind:'zip', zip, senate[], house[],
+// shares:{senate:{}, house:{}}} lists EVERY district touching the ZIP; {kind:'address',
+// senate[], house[]} is the exact pair (an empty list = the geocoder returned no
+// layer, so that chamber is left unfiltered). Never persisted and never in the URL.
+let locFilter = null;
 let activeTab  = 'senate';
 
 // Populate county dropdown
@@ -101,6 +111,15 @@ function drawPartyChart(members) {
   ).join('');
 }
 
+// The districts the active filter allows in this chamber, or null for no filter.
+function allowedDistricts(chamberKey, countyLookup, county) {
+  if (locFilter) {
+    const list = locFilter[chamberKey];
+    return list.length ? list : (locFilter.kind === 'address' ? null : []);
+  }
+  return county ? (countyLookup[county] || []) : null;
+}
+
 function renderMembers() {
   const county = countySel.value;
   const chamberName      = activeTab === 'senate' ? 'Senate' : 'House of Representatives';
@@ -110,10 +129,13 @@ function renderMembers() {
 
   let members = allMembers.filter(m => m.chamber === chamberName);
 
-  if (county) {
-    const countyDists = countyLookup[county] || [];
-    members = members.filter(m => countyDists.includes(m.district));
-  }
+  const chamberKey = activeTab === 'senate' ? 'senate' : 'house';
+  const allowed = allowedDistricts(chamberKey, countyLookup, county);
+  if (allowed) members = members.filter(m => allowed.includes(m.district));
+  // A county or ZIP that touches more than one district in this chamber cannot say
+  // which is the voter's, so every row carries the badge (same wording as the sample
+  // ballot). One district is theirs; an exact address is never badged.
+  const uncertain = !!allowed && allowed.length > 1 && !(locFilter && locFilter.kind === 'address');
 
   members.sort((a, b) => (a.district ?? 999) - (b.district ?? 999));
 
@@ -143,11 +165,15 @@ function renderMembers() {
       : `<span${isSuspended ? ' style="color:#888;"' : ''}>${m.name}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}</span>${suspendedPill}`;
     // Clean /ga-legislators/<slug>/ when the map has this member; the
     // ga-member.html shell (which only redirects there) is the fallback.
+    const share = uncertain && locFilter && locFilter.kind === 'zip'
+      ? window.ZipDistricts.shareLabel(locFilter.shares[chamberKey][m.district]) : null;
+    const note = share || uncertain
+      ? `<span class="member-note">${share || ''}${share && uncertain ? ' ' : ''}${uncertain ? `<span class="member-badge">may not be your district</span>` : ''}</span>` : '';
     const memberHref = VoteGA.entityUrls.get(
       'ga-legislator', m.id, `${basePath}ga-member.html?id=${encodeURIComponent(m.id)}`);
     return `<a class="member-row" href="${memberHref}">
       <span class="member-district">District ${m.district}</span>
-      <span class="member-name">${nameHtml}</span>
+      <span class="member-name">${nameHtml}${note}</span>
       <span class="member-counties">${counties}</span>
       <span class="member-arrow">›</span>
     </a>`;
@@ -163,7 +189,80 @@ document.getElementById('tabBar').addEventListener('click', e => {
   renderMembers();
 });
 
-countySel.addEventListener('change', renderMembers);
+// One district filter at a time: picking a county drops a ZIP/address result.
+countySel.addEventListener('change', () => { clearLookup(); renderMembers(); });
+
+function clearLookup() {
+  locFilter = null;
+  lookupBanner.classList.remove('visible');
+  lookupBanner.innerHTML = '';
+  lookupMsg.textContent = '';
+}
+
+function showBanner(html) {
+  lookupBanner.innerHTML = html + '<button type="button" id="lookupClear">Clear</button>';
+  lookupBanner.classList.add('visible');
+  document.getElementById('lookupClear').addEventListener('click', () => {
+    clearLookup();
+    lookupInput.value = '';
+    lookupMsg.textContent = '';
+    renderMembers();
+  });
+}
+
+const ZIP_NEXT = ' Pick your county below, or enter your full street address.';
+
+const addressLookup = window.AddressLookup.createAddressLookup({
+  input: lookupInput,
+  button: lookupBtn,
+  subject: 'your districts',
+  fallbackPhrase: 'pick your county below',
+  eventName: 'reps_lookup',
+  eventParams: { page: 'ga_state_reps' },
+  save: false,   // derived districts stay on this page; nothing is carried over
+  setStatus: (message, isError) => { lookupMsg.textContent = isError ? message : ''; },
+  // A bare ZIP is answered from the static table, not refused: every district
+  // touching it, fetched only now. PO-box, unknown and failed-fetch ZIPs leave the
+  // current view alone and say what to do instead.
+  onZip: async (zip) => {
+    let found;
+    try {
+      found = window.ZipDistricts.lookup(zip, await window.ZipDistricts.load(getBasePath()));
+    } catch (err) {
+      console.error('ZIP table', err);
+      lookupMsg.textContent = 'ZIP code data couldn\u2019t be loaded right now.' + ZIP_NEXT;
+      return 'zip_error';
+    }
+    if (found.status === 'unknown') {
+      lookupMsg.textContent = `ZIP ${zip} isn\u2019t in our list of Georgia ZIP codes.` + ZIP_NEXT;
+      return 'zip_unknown';
+    }
+    if (found.status !== 'ok') {
+      lookupMsg.textContent = `ZIP ${zip} is a PO box ZIP, which doesn\u2019t map to any district.` + ZIP_NEXT;
+      return 'zip_no_districts';
+    }
+    countySel.value = '';
+    locFilter = {
+      kind: 'zip', zip, senate: found.stateSenate, house: found.stateHouse,
+      shares: { senate: found.shares.stateSenate, house: found.shares.stateHouse },
+    };
+    showBanner(`<span>Showing districts touching ZIP <strong>${zip}</strong>. A ZIP can span several districts \u2014 enter your full address to narrow this to yours.</span>`);
+    renderMembers();
+    return 'zip';
+  },
+  onResolve: (loc) => {
+    countySel.value = '';
+    const one = v => (v == null ? [] : [v]);
+    locFilter = { kind: 'address', senate: one(loc.stateSenate), house: one(loc.stateHouse) };
+    const parts = [];
+    if (loc.stateSenate != null) parts.push(`State Senate ${loc.stateSenate}`);
+    if (loc.stateHouse != null) parts.push(`State House ${loc.stateHouse}`);
+    showBanner(`<span>Showing your districts: <strong>${parts.join(' \u00b7 ') || 'none found'}</strong>.</span>`);
+    renderMembers();
+  },
+});
+lookupBtn.addEventListener('click', () => addressLookup.run());
+lookupInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addressLookup.run(); } });
 
 async function loadData() {
   statusLine.textContent = 'Loading member data…';

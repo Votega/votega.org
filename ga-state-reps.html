@@ -49,6 +49,22 @@ share-description: "Directory of Georgia General Assembly members - State Senato
   .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; }
   .county-filter select { width: 100%; max-width: 400px; padding: 8px; box-sizing: border-box; }
 
+  .lookup { margin: 1rem 0 0; }
+  .lookup label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; font-weight: 600; }
+  .lookup-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .lookup-row input { flex: 1; min-width: 240px; padding: 8px; font-size: 1rem; border: 1px solid #cbd0d8; border-radius: 6px; }
+  .lookup-row button { padding: 8px 16px; font-size: 0.95rem; font-weight: 600; cursor: pointer; background: #1a56a8; color: #fff; border: 0; border-radius: 6px; white-space: nowrap; }
+  .lookup-row button:disabled { opacity: 0.6; cursor: default; }
+  .lookup-hint { font-size: 0.78rem; color: #666; margin: 0.4rem 0 0; }
+  .lookup-msg { margin-top: 0.5rem; font-size: 0.9rem; color: #b91c1c; }
+  .lookup-banner { display: none; margin-top: 0.75rem; padding: 0.6rem 0.8rem; font-size: 0.88rem; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; color: #1e3a8a; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .lookup-banner.visible { display: flex; }
+  .lookup-banner button { padding: 0.25rem 0.7rem; font-size: 0.82rem; cursor: pointer; background: #fff; color: #1e3a8a; border: 1px solid #1e3a8a; border-radius: 6px; }
+  .lookup-or { margin: 0.9rem 0 0; font-size: 0.9rem; color: #555; font-weight: 600; }
+  .member-note { display: block; font-size: 0.78rem; font-weight: normal; color: #555; margin-top: 2px; }
+  /* Matches the sample ballot's .contest-badge / .badge-ambiguous. */
+  .member-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem; vertical-align: middle; background: #fff0c2; color: #7a5c00; }
+
   .party-chart {
     display: flex;
     flex-direction: column;
@@ -130,6 +146,18 @@ share-description: "Directory of Georgia General Assembly members - State Senato
   <button class="tab-btn" data-tab="house">GA House of Representatives</button>
 </div>
 
+<div class="lookup">
+  <label for="lookupInput">Enter your address or ZIP code</label>
+  <div class="lookup-row">
+    <input type="text" id="lookupInput" placeholder="123 Peachtree St NE, Atlanta, GA 30303 — or just 30303" autocomplete="street-address" />
+    <button type="button" id="lookupBtn">Find my districts</button>
+  </div>
+  <p class="lookup-hint">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone is looked up on this page and is not sent anywhere, and shows every district touching it. VoteGA stores neither.</p>
+  <div class="lookup-msg" id="lookupMsg" role="alert"></div>
+  <div class="lookup-banner" id="lookupBanner"></div>
+  <p class="lookup-or">OR pick your county (shows every district that touches the county)</p>
+</div>
+
 <div class="controls-row">
   <div class="county-filter">
     <label for="countySelect">Filter by county</label>
@@ -152,6 +180,10 @@ share-description: "Directory of Georgia General Assembly members - State Senato
 
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} Address -> districts via the Census geocoder, the shared lookup chrome, and the bare-ZIP table. {%- endcomment -%}
+<script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/zip-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/ga.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
 <script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
