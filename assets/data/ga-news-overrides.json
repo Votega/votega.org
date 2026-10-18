@@ -5,7 +5,9 @@
     "_suppress": "Array of item ids (12-char sha1 prefix from ga-news.json) OR url substrings to drop entirely (spam, off-topic, or a source's non-news item).",
     "per-item patch": "A top-level key = an item id; value = { entityIds: [...], topics: [...] } to REPLACE the auto-detected tags on that item (e.g. fix a missed or wrong entity match)."
   },
-  "_suppress": [],
+  "_suppress": [
+    "gpb.org/news/2026/10/16/savannah-bananas-and-banana-ball-are-going-international-dates-in-canada-and-mexico"
+  ],
   "_add": [
     {
       "title": "Bottoms, Jackson debate healthcare, data centers in sole scheduled forum",
