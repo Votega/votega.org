@@ -145,7 +145,7 @@ def build_entries(hud, tract_table, usps):
 
     entries = {}
     for z in sorted(set(usps["zips"]) | set(by["zip-tract"])):
-        kind = usps["zips"].get(z, "unverified")
+        kind = usps["zips"].get(z, "other")
         entry = {"city": title_city(city.get(z)) or None, "kind": kind,
                  "counties": None, "stateSenate": None, "stateHouse": None, "usHouse": None}
         if kind != "po-box" and z in by["zip-tract"]:
@@ -179,7 +179,10 @@ def build_document(entries, year, quarter, tract_table, generated_at):
             "count": len(entries),
             "withDistricts": with_districts,
             "poBox": sum(1 for e in entries.values() if e["kind"] == "po-box"),
-            "unverified": sum(1 for e in entries.values() if e["kind"] == "unverified"),
+            "other": sum(1 for e in entries.values() if e["kind"] == "other"),
+            "kinds": "standard = a USPS Georgia delivery ZIP; po-box = PO-box-only, no districts; other = "
+                     "HUD reports residential addresses but the ZIP is not in the USPS Georgia facility list "
+                     "(typically a campus, government or military ZIP); treat like standard.",
             "meaning": "Districts and counties TOUCHING the ZIP, ranked by estimated share of the ZIP's "
                        "residents, largest first. Every district with any residents is listed. "
                        "A ZIP is not a district: only a street address identifies the districts "
@@ -216,7 +219,7 @@ def main():
     write_json_atomic(out, doc, separators=(",", ":"))
     m = doc["metadata"]
     print(f"Wrote {out}: {m['count']} ZIPs ({m['withDistricts']} with districts, {m['poBox']} PO-box, "
-          f"{m['unverified']} not in the USPS Georgia list); HUD {m['hudRelease']}")
+          f"{m['other']} not in the USPS Georgia list); HUD {m['hudRelease']}")
 
 
 if __name__ == "__main__":

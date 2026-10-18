@@ -30,7 +30,7 @@ import sys
 
 HERE = os.path.dirname(__file__)
 TRACT_TABLE = os.path.join(HERE, "data", "ga-tract-districts.json")
-KINDS = {"standard", "po-box", "unverified"}
+KINDS = {"standard", "po-box", "other"}
 #: Georgia has ~880 delivery ZIPs; far fewer means the HUD pull or the join broke.
 MIN_ZIPS = 800
 #: Share of non-PO-box ZIPs that must carry districts.

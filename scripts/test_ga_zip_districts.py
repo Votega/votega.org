@@ -115,9 +115,9 @@ check("an empty tract adds no district (renormalised over residents)",
       [(r["district"], r["share"]) for r in e4["stateSenate"]], [(1, 1.0)])
 check("a ZIP in the USPS list but absent from HUD is kept, with no districts",
       (entries["30003"]["kind"], entries["30003"]["stateHouse"]), ("standard", None))
-check("a ZIP only HUD knows is flagged unverified, not dropped",
+check("a ZIP only HUD knows is kept as other, not dropped",
       (entries["30099"]["kind"], [r["district"] for r in entries["30099"]["stateHouse"]]),
-      ("unverified", [12]))
+      ("other", [12]))
 
 # A sliver is listed, never cut off.
 sliver = copy.deepcopy(toy)
