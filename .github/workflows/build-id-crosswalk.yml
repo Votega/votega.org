@@ -2,6 +2,7 @@ name: Build ID crosswalk (weekly, Sun 09:15 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 # Reads ga-members.json, current-members.json, ga-campaign-finance.json,
 # ga-fec-data.json and races.json — it derives nothing from an API of its own.
@@ -30,22 +31,21 @@ jobs:
           python-version: '3.x'
 
       - name: Build crosswalk
+        id: generate
         run: python scripts/build_id_crosswalk.py
 
+      # One step, one script. The validator gates on the crosswalk contradicting
+      # itself or its inputs (a roster member, Georgia federal member or
+      # races.json candidate with no record; a vgId shared, renumbered or
+      # dropped from the append-only ledger) and REPORTS coverage movement. The
+      # `people >= 600` / `keyed >= 550` floors and the 20% shrink gate this
+      # replaces were facts about the 2026 cycle (480 of 747 records are ballot
+      # candidates) and would have failed every run once races.json moved on;
+      # "lost a chunk of what it had" is now the ledger check plus the inputs
+      # accounting. See docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
       - name: Validate crosswalk
-        run: python scripts/validate_id_crosswalk.py
-
-      - name: Guard against a collapse in coverage
-        # Catches the case the floors in the validator can't: a file that is still
-        # internally valid but lost a chunk of what it had last week.
-        run: |
-          python scripts/validate_data_update.py assets/data/id-crosswalk.json \
-            --metric people=len:people \
-            --metric keyed=metadata.coverage.withVgId \
-            --metric filings=metadata.coverage.withAnyFiling \
-            --metric candidacies=metadata.coverage.candidacies \
-            --min people=600 \
-            --min keyed=550
+        id: validate
+        run: python scripts/validate_id_crosswalk.py --report-out "$RUNNER_TEMP/id-crosswalk-changes.md"
 
       - name: Commit and push
         run: |
@@ -68,3 +68,40 @@ jobs:
               exit 1
             fi
           fi
+
+      # After the commit: the report describes a record that has already shipped.
+      # One issue, refreshed in place; weekly, so the comment is unconditional.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "ID crosswalk: coverage changes and ambiguous matches"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/id-crosswalk-changes.md"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"; then
+            echo "Nothing material - skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by build-id-crosswalk."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose (a step's `if` is evaluated when the runner reaches it).
+      - name: Preserve the generated files
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-id-crosswalk
+          path: |
+            assets/data/id-crosswalk.json
+            assets/data/id-crosswalk-ledger.json
+          if-no-files-found: ignore
+          retention-days: 14

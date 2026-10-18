@@ -16,12 +16,24 @@ Two checks matter most over time:
   build_legislative_races.py:128 and CODEBASE-REVIEW-2026-08-18.md 5.2). If one
   ever becomes a ledger key, identity silently reassigns on the next re-export.
 
+There is deliberately NO absolute floor on the number of people or keyed people.
+The old `>= 600 people` / `>= 550 keyed` were the world's numbers: 480 of the 747
+records are 2026 ballot candidates, so the count is a fact about the cycle, not
+about the build, and falls by two thirds when races.json moves on (or a field
+qualifies thin). What a partial build actually does is fail to carry through
+records its INPUTS hold, so that is what is checked, cycle-agnostically: every
+roster member, every Georgia federal member and every races.json candidate id
+must be accounted for (see unaccounted_inputs). Movement in coverage against the
+committed file is REPORTED, not gated (see tier2); identity itself is guarded
+by the append-only ledger check below, which is the loss that matters.
+
 Run:
-    python scripts/validate_id_crosswalk.py
+    python scripts/validate_id_crosswalk.py [--report-out report.md]
 
 Exit 0 = valid. Exit 1 = one or more errors (details on stdout).
 """
 
+import argparse
 import json
 import os
 import re
@@ -39,10 +51,12 @@ RACES_FILE     = "assets/data/races.json"
 
 EXPECTED_SCHEMA_VERSION = 2
 
-#: Floors, set well below observed values (749 people / 682 keyed at time of
-#: writing) so ordinary churn doesn't trip them but a collapsed input does.
-MIN_PEOPLE = 600
-MIN_WITH_VGID = 550
+#: Coverage moving by more than this share against the committed file is worth a
+#: line in the report. Reported, never gated -- see the module docstring.
+MATERIAL_SHIFT = 0.20
+
+COVERAGE_KEYS = ("people", "officeholders", "candidateOnly", "withVgId",
+                 "withAnyFiling", "candidacies")
 
 #: A races.json candidate id — positional, and therefore never a valid ledger key.
 POSITIONAL_ID = re.compile(r'^ga-(house|senate)-\d+-\d{4}-[a-z]+-\d+$')
@@ -83,7 +97,72 @@ def git_show(path):
         return None
 
 
+def unaccounted_inputs(people, members, federal, cand_ids):
+    """Input records the crosswalk failed to carry through. Returns error strings.
+
+    The crosswalk is derived from the roster, the Georgia federal delegation and
+    races.json, so a file that omits any of their records contradicts its own
+    inputs -- whatever the cycle, and unlike a head-count floor it moves with
+    them. Candidate ids may be merged onto one person (a person in two races) but
+    each must still be claimed by someone.
+    """
+    errors = []
+    ocd = {(p.get("ids") or {}).get("ocdPersonId") for p in people}
+    bio = {(p.get("ids") or {}).get("bioguideId") for p in people}
+    claimed = {c for p in people for c in (p.get("ids") or {}).get("votegaCandidateIds") or []}
+    for label, missing in (
+            ("roster member(s) in ga-members.json",
+             sorted(m["id"] for m in members if m["id"] not in ocd)),
+            ("Georgia federal member(s) in current-members.json",
+             sorted(m["bioguideId"] for m in federal
+                    if m.get("state") == "Georgia" and m["bioguideId"] not in bio)),
+            ("races.json candidate id(s)", sorted(set(cand_ids) - claimed))):
+        if missing:
+            errors.append(f"{len(missing)} {label} have no record in the crosswalk, "
+                          f"e.g. {', '.join(missing[:3])} -- a partial build")
+    return errors
+
+
+def tier2(new_meta, old_meta, ambiguous=()):
+    """Coverage movement and open review queues. Returns [(heading, [lines])]."""
+    sections = []
+    ncov = (new_meta or {}).get("coverage") or {}
+    ocov = ((old_meta or {}).get("coverage") or {}) if old_meta else {}
+    moved = []
+    for k in COVERAGE_KEYS:
+        n, o = ncov.get(k), ocov.get(k)
+        if isinstance(n, int) and isinstance(o, int) and o > 0 and abs(n - o) / o > MATERIAL_SHIFT:
+            moved.append(f"- {k}: {o} -> {n} ({(n - o) / o:+.0%})")
+    if moved:
+        sections.append((f"Coverage moved more than {MATERIAL_SHIFT:.0%} against the committed file",
+                         moved + ["", "Expected when the ballot changes (a primary, a certified "
+                                  "result, a new cycle's field). Unexpected for officeholders; "
+                                  "the ledger check has already confirmed no published vgId "
+                                  "changed meaning."]))
+    if ambiguous:
+        sections.append(("Ambiguous filing matches awaiting review",
+                         [f"- {a}" for a in ambiguous] +
+                         ["", f"Resolve in {OVERRIDES_FILE} or ga-campaign-finance-overrides.json."]))
+    return sections
+
+
+def render(sections):
+    out = ["## ID crosswalk: what changed in `id-crosswalk.json`", ""]
+    if not sections:
+        out.append("No material change this run.")
+    else:
+        out.append("None of these blocked the update -- the data is committed.")
+        out.append("")
+        for heading, lines in sections:
+            out += [f"### {heading}", ""] + lines + [""]
+    return "\n".join(out).rstrip() + "\n"
+
+
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--report-out", help="write the tier-2 markdown report here")
+    args = ap.parse_args()
+
     if not os.path.exists(CROSSWALK_FILE):
         print(f"Error: {CROSSWALK_FILE} does not exist", file=sys.stderr)
         return 1
@@ -118,12 +197,10 @@ def main():
         err(f"schemaVersion is {meta.get('schemaVersion')}, expected {EXPECTED_SCHEMA_VERSION}")
     if meta.get("count") != len(people):
         err(f"metadata.count ({meta.get('count')}) != len(people) ({len(people)})")
-    if len(people) < MIN_PEOPLE:
-        err(f"only {len(people)} people (expected >= {MIN_PEOPLE}) — likely a partial build")
+    for msg in unaccounted_inputs(people, members, federal, cand_ids):
+        err(msg)
 
     with_vgid = sum(1 for p in people if p.get("vgId"))
-    if with_vgid < MIN_WITH_VGID:
-        err(f"only {with_vgid} people carry a vgId (expected >= {MIN_WITH_VGID})")
 
     # --- Per-record structure ------------------------------------------------
     seen_vg = {}
@@ -256,6 +333,14 @@ def main():
         print("\nWarnings:")
         for w in warnings:
             print(w)
+    if not errors:
+        old_doc = git_show(CROSSWALK_FILE)
+        report = render(tier2(meta, (old_doc or {}).get("metadata"), amb))
+        if args.report_out:
+            with open(args.report_out, "w", encoding="utf-8") as f:
+                f.write(report)
+        print()
+        print(report)
     if errors:
         print(f"\n{len(errors)} error(s):", file=sys.stderr)
         for e in errors:
