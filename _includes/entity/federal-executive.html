@@ -418,6 +418,11 @@
       ? `<p style="margin-top:1rem;font-size:0.9rem;line-height:1.6;color:#333;">${esc(o.bio)}</p>`
       : '';
 
+    // Only the President has an Executive Orders tab; the link jumps to it.
+    const eoJumpHtml = o.id === 'president'
+      ? `<p style="margin-top:1rem;"><a href="#execOrders">Executive orders ↓</a></p>`
+      : '';
+
     const constitutionalRoleHtml = o.constitutionalRole
       ? `<div style="margin-top:1rem;padding:0.85rem 1rem;background:#f8f9fa;border-left:3px solid #6b7280;border-radius:0 6px 6px 0;font-size:0.875rem;line-height:1.6;color:#374151;">
            <strong style="display:block;margin-bottom:0.3rem;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;">Constitutional Role</strong>
@@ -464,23 +469,46 @@
       ${websiteHtml}
       ${bioHtml}
       ${constitutionalRoleHtml}
+      ${eoJumpHtml}
       <p style="margin-top:1.5rem;"><a href="${base}executive-branch.html">← Back to Executive Branch</a></p>
       ${contentHtml}
     `;
   }
 
+  function activateTab(btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  }
+
+  // #execOrders / #signedLegislation / #agencyActions / #vpTieVotes opens that
+  // tab and scrolls to the tab strip. The tabs are built after a fetch, so the
+  // browser's own hash scroll has nothing to land on at load — this does it once
+  // they exist, and again on later hash changes (an in-page "Executive orders"
+  // link). It scrolls to the strip, not the panel: the panel's content arrives
+  // later, but it only grows downward, so the strip does not move.
+  function applyTabHash() {
+    const id = decodeURIComponent((location.hash || '').slice(1));
+    if (!id) return;
+    const btn = document.querySelector('.tab-btn[data-tab="' + id.replace(/"/g, '') + '"]');
+    if (!btn) return;
+    activateTab(btn);
+    const strip = document.querySelector('.tab-container');
+    if (strip) strip.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   function initTabs() {
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.tab).classList.add('active');
+        activateTab(btn);
         // Which executive content people open: execOrders, agencyActions,
         // signedLegislation, vpTieVotes. No PII.
         window.vgTrack && window.vgTrack('exec_tab', { tab: btn.dataset.tab });
       });
     });
+    window.addEventListener('hashchange', applyTabHash);
+    applyTabHash();
   }
 
   async function loadVpTieVotes() {
