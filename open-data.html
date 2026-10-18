@@ -64,6 +64,7 @@ breadcrumb:
 
 <style>
   .od-section-title { margin:2.5rem 0 0.25rem; }
+  .od-family-title { margin:2rem 0 0.25rem; font-size:1.15rem; }
   .od-section-sub { color:#666; font-size:0.95rem; margin:0 0 1.25rem; }
 
   .od-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:1.25rem; }
@@ -110,11 +111,31 @@ breadcrumb:
 <h2 class="od-section-title">Community data repositories</h2>
 <p class="od-section-sub">Published to dedicated public GitHub repositories, updated automatically, and open to corrections via issue or pull request.</p>
 
+{%- comment -%}Datasets that share a `family` (see meta.families in open_data.yml) are
+  grouped under their own sub-heading first; everything else follows in one grid.{%- endcomment -%}
+{% for fam in site.data.open_data.meta.families %}
+  {% assign fam_key = fam[0] %}
+  {% assign fam_repos = repos | where: "family", fam_key %}
+  {% if fam_repos.size > 0 %}
+<h3 class="od-family-title">{{ fam[1].title }}</h3>
+<p class="od-section-sub">{{ fam[1].blurb }}</p>
 <div class="od-grid">
-  {% for d in repos %}
+  {% for d in fam_repos %}
   {% include open-data-card.html d=d %}
   {% endfor %}
 </div>
+  {% endif %}
+{% endfor %}
+
+{% assign other_repos = repos | where_exp: "d", "d.family == nil" %}
+{% if other_repos.size > 0 %}
+<h3 class="od-family-title">Elections, legislation and more</h3>
+<div class="od-grid">
+  {% for d in other_repos %}
+  {% include open-data-card.html d=d %}
+  {% endfor %}
+</div>
+{% endif %}
 
 <h2 class="od-section-title">Datasets on VoteGA.org</h2>
 <p class="od-section-sub">Served directly as JSON from votega.org. Reusable today; a dedicated repository may follow.</p>
