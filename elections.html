@@ -250,7 +250,7 @@ breadcrumb:
       <input type="checkbox" id="openSeatOnly">
       Show open seats only
     </label>
-    <div style="font-size:0.78rem;color:#777;margin-top:0.25rem;margin-left:1.4rem;">An open seat is when the incumbent is not running for re-election.</div>
+    <div style="font-size:0.78rem;color:#777;margin-top:0.25rem;margin-left:1.4rem;">An open seat is when an elected position does not have a current incumbent and/or the current incumbent is not running again.</div>
   </div>
 </div>
 
@@ -329,19 +329,19 @@ breadcrumb:
     primary: {
       label: 'Primary',
       title: '{year} Georgia Primary',
-      desc:  'Primary matchups for {date} — select your county to filter by district.',
+      desc:  'Primary matchups for {date}. Select your county to filter by district.',
       empty: 'No primary races on file for this selection yet.',
     },
     runoff: {
       label: 'Runoff',
       title: '{year} Georgia Runoffs',
-      desc:  'Runoff matchups for {date} — select your county to filter by district.',
+      desc:  'Runoff matchups for {date}. Select your county to filter by district.',
       empty: 'No runoff races on file for this selection yet.',
     },
     general: {
       label: 'General Election',
       title: '{year} Georgia General Election',
-      desc:  'General election matchups for {date} — select your county to filter by district.',
+      desc:  'General election matchups for {date}. Select your county to filter by district.',
       empty: 'No general election races on file for this selection yet.',
     },
   };
@@ -350,7 +350,7 @@ breadcrumb:
     return PHASE_META[phase] || {
       label: phase ? phase[0].toUpperCase() + phase.slice(1) : 'Races',
       title: '{year} Georgia Elections',
-      desc:  'Races on the ballot for {date} — select your county to filter by district.',
+      desc:  'Races on the ballot for {date}. Select your county to filter by district.',
       empty: 'No races on file for this selection yet.',
     };
   }
