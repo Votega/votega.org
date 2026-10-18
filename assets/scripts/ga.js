@@ -222,24 +222,29 @@ const addressLookup = window.AddressLookup.createAddressLookup({
   save: false,   // derived districts stay on this page; nothing is carried over
   setStatus: (message, isError) => { lookupMsg.textContent = isError ? message : ''; },
   // A bare ZIP is answered from the static table, not refused: every district
-  // touching it, fetched only now. PO-box, unknown and failed-fetch ZIPs leave the
-  // current view alone and say what to do instead.
+  // touching it, fetched only now. A PO-box, unknown or failed-fetch ZIP clears
+  // the previous filter and says what to do instead, so the list always matches
+  // what is in the input box -- a stale "Showing ZIP 30004" under an error about
+  // 30003 reads as a contradiction. Same behaviour as the other lookup pages.
   onZip: async (zip) => {
+    const stop = (message, outcome) => {
+      clearLookup();
+      renderMembers();
+      lookupMsg.textContent = message + ZIP_NEXT;   // after clearLookup(), which empties it
+      return outcome;
+    };
     let found;
     try {
       found = window.ZipDistricts.lookup(zip, await window.ZipDistricts.load(getBasePath()));
     } catch (err) {
       console.error('ZIP table', err);
-      lookupMsg.textContent = 'ZIP code data couldn\u2019t be loaded right now.' + ZIP_NEXT;
-      return 'zip_error';
+      return stop('ZIP code data couldn\u2019t be loaded right now.', 'zip_error');
     }
     if (found.status === 'unknown') {
-      lookupMsg.textContent = `ZIP ${zip} isn\u2019t in our list of Georgia ZIP codes.` + ZIP_NEXT;
-      return 'zip_unknown';
+      return stop(`ZIP ${zip} isn\u2019t in our list of Georgia ZIP codes.`, 'zip_unknown');
     }
     if (found.status !== 'ok') {
-      lookupMsg.textContent = `ZIP ${zip} is a PO box ZIP, which doesn\u2019t map to any district.` + ZIP_NEXT;
-      return 'zip_no_districts';
+      return stop(`ZIP ${zip} is a PO box ZIP, which doesn\u2019t map to any district.`, 'zip_no_districts');
     }
     countySel.value = '';
     locFilter = {

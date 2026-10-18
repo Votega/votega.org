@@ -763,21 +763,31 @@ breadcrumb:
     // fetch are answered in the message line and leave the current filter alone.
     onZip: async (zip) => {
       const next = ' Use the county filter below, or enter your full street address.';
+      // A PO-box, unknown or failed-fetch ZIP clears the previous filter, so the list
+      // always matches what is in the input box -- a stale "Showing ZIP 30004" under an
+      // error about 30003 reads as a contradiction. Same behaviour as the other pages.
+      const stop = (message, outcome) => {
+        zipFilter = null;
+        voterLoc = null;
+        if (window.VoterLocation) window.VoterLocation.clear();
+        renderVoterBanner();
+        renderRaces();
+        syncURL();
+        addressError.textContent = message + next;
+        return outcome;
+      };
       let found;
       try {
         found = window.ZipDistricts.lookup(zip, await window.ZipDistricts.load(getBasePath()));
       } catch (err) {
         console.error('elections.html: ZIP table', err);
-        addressError.textContent = 'ZIP code data couldn’t be loaded right now.' + next;
-        return 'zip_error';
+        return stop('ZIP code data couldn’t be loaded right now.', 'zip_error');
       }
       if (found.status === 'unknown') {
-        addressError.textContent = `ZIP ${zip} isn’t in our list of Georgia ZIP codes.` + next;
-        return 'zip_unknown';
+        return stop(`ZIP ${zip} isn’t in our list of Georgia ZIP codes.`, 'zip_unknown');
       }
       if (found.status !== 'ok') {
-        addressError.textContent = `ZIP ${zip} is a PO box ZIP, which doesn’t map to any district.` + next;
-        return 'zip_no_districts';
+        return stop(`ZIP ${zip} is a PO box ZIP, which doesn’t map to any district.`, 'zip_no_districts');
       }
       countySelect.value = '';                          // one district filter at a time
       voterLoc = null;
