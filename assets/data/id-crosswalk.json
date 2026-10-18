@@ -2,7 +2,7 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-10-18T03:42:17+00:00",
+  "generatedAt": "2026-10-18T13:13:41+00:00",
   "count": 747,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
@@ -26,9 +26,9 @@
    "people": 747,
    "officeholders": 267,
    "candidateOnly": 480,
-   "withVgId": 677,
-   "unkeyed": 70,
-   "withAnyFiling": 659,
+   "withVgId": 674,
+   "unkeyed": 73,
+   "withAnyFiling": 656,
    "candidacies": 716,
    "ambiguous": []
   }
@@ -17796,60 +17796,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000270",
-   "name": {
-    "full": "Anton Anthony",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "101261"
-    ],
-    "votegaCandidateIds": [
-     "challenger-anton-anthony-super-2026"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-school-superintendent-2026",
-     "candidateId": "challenger-anton-anthony-super-2026",
-     "cycle": 2026,
-     "level": "state-executive",
-     "office": "State School Superintendent",
-     "district": null,
-     "party": "Democrat",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "101261",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000271",
    "name": {
     "full": "Arnetress Elaine Beatty",
@@ -23467,60 +23413,6 @@
      "withdrawn": false,
      "disqualified": false,
      "peachfileFilerEntityId": "102716",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000377",
-   "name": {
-    "full": "Edward \"Ted\" Metz",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "104170"
-    ],
-    "votegaCandidateIds": [
-     "challenger-ted-metz-sos-2026"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-secretary-of-state-2026",
-     "candidateId": "challenger-ted-metz-sos-2026",
-     "cycle": 2026,
-     "level": "state-executive",
-     "office": "Secretary of State",
-     "district": null,
-     "party": "Republican",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "104170",
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "seat+surname",
@@ -30855,60 +30747,6 @@
      "withdrawn": false,
      "disqualified": false,
      "peachfileFilerEntityId": "101963",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000515",
-   "name": {
-    "full": "Graham Salter Bowers",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "104311"
-    ],
-    "votegaCandidateIds": [
-     "ga-house-37-2026-d-1"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-house-37-2026",
-     "candidateId": "ga-house-37-2026-d-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 37,
-     "party": "Democrat",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "104311",
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "seat+surname",
@@ -40283,6 +40121,56 @@
   {
    "vgId": null,
    "name": {
+    "full": "Anton Anthony",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "challenger-anton-anthony-super-2026"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-school-superintendent-2026",
+     "candidateId": "challenger-anton-anthony-super-2026",
+     "cycle": 2026,
+     "level": "state-executive",
+     "office": "State School Superintendent",
+     "district": null,
+     "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
     "full": "Antonio Burnette",
     "first": null,
     "last": null
@@ -40998,6 +40886,56 @@
   {
    "vgId": null,
    "name": {
+    "full": "Edward \"Ted\" Metz",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "challenger-ted-metz-sos-2026"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-secretary-of-state-2026",
+     "candidateId": "challenger-ted-metz-sos-2026",
+     "cycle": 2026,
+     "level": "state-executive",
+     "office": "Secretary of State",
+     "district": null,
+     "party": "Republican",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
     "full": "Elfreda Desvignes",
     "first": null,
     "last": null
@@ -41244,6 +41182,56 @@
       "confidence": "confirmed-none",
       "source": "assets/data/ga-campaign-finance-overrides.json",
       "key": "ga-house-49-2026-d-1"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Graham Salter Bowers",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "ga-house-37-2026-d-1"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-37-2026",
+     "candidateId": "ga-house-37-2026-d-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 37,
+     "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
      }
     }
    ],
