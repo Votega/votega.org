@@ -70,6 +70,17 @@ jobs:
             fi
           fi
 
+      # Inline, not a separate publish-*.yml: the commit above is pushed with
+      # GITHUB_TOKEN, which does not fire `on: push` workflows. Runs every month
+      # even when the HUD file did not change, so the sibling repo also picks up a
+      # tract-table change made by hand at redistricting, and the first publish needs
+      # no new HUD release. Gated before any write: record floors and the
+      # county/tract population invariants.
+      - name: Publish to ga-district-information
+        env:
+          GA_DISTRICT_INFORMATION_TOKEN: ${{ secrets.GA_DISTRICT_INFORMATION_TOKEN }}
+        run: python scripts/publish_ga_district_information.py
+
       # Last on purpose: an `if: failure()` step placed earlier never runs.
       - name: Preserve the generated file
         if: failure() && steps.fetch.outcome == 'success'

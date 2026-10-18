@@ -1,0 +1,302 @@
+#!/usr/bin/env python3
+"""Publish Georgia district crosswalks to the Votega/ga-district-information repo.
+
+Three datasets, from the same reconciled source, each as JSON + CSV + JSON Schema:
+
+  ZIP code -> districts        assets/data/ga-zip-districts.json
+      data/zips.json                every ZIP: counties and state Senate / state House /
+                                    U.S. House districts it TOUCHES, ranked by estimated
+                                    share of residents (passthrough of the site's file)
+      data/zip-districts.csv        one row per (ZIP, chamber, district)
+      data/zip-counties.csv         one row per (ZIP, county)
+      data/zips.schema.json
+
+  County -> districts          derived from scripts/data/ga-tract-districts.json
+      data/counties.json            each county's 2020 population in each district
+      data/county-districts.csv     one row per (county, chamber, district)
+      data/counties.schema.json
+
+  Census tract -> districts    scripts/data/ga-tract-districts.json
+      data/tracts.json              each tract's 2020 population in each district: the
+                                    ingredient the other two are built from, for anyone
+                                    who wants a different geography (a school district, a
+                                    precinct set, their own service area)
+      data/tract-districts.csv      one row per (tract, chamber, district)
+      data/tracts.schema.json
+
+The tract and county tables are exact: the tract table is built only if its roll-up
+reproduces the reapportionment office's published packet totals and county reports to
+the person (see build_ga_tract_district_table.py), so the county table published here
+matches those official county reports row for row.
+
+Dry run (no GA_DISTRICT_INFORMATION_TOKEN): writes to $OUT_DIR (default ./out).
+See lib/sibling_publish.
+"""
+import csv
+import io
+import json
+import os
+import sys
+
+from lib.sibling_publish import build_json, min_items, publish_or_dry_run
+
+REPO = "Votega/ga-district-information"
+TOKEN_ENV = "GA_DISTRICT_INFORMATION_TOKEN"
+SCHEMA_VERSION = "1.0.0"
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ZIPS_SRC = os.path.join(HERE, "..", "assets", "data", "ga-zip-districts.json")
+TRACTS_SRC = os.path.join(HERE, "data", "ga-tract-districts.json")
+
+#: tract-table key -> (name used in the published files, plan name key in metadata.plans)
+CHAMBERS = {"s": "state-senate", "h": "state-house", "c": "us-house"}
+#: ga-zip-districts.json list key -> the same public chamber name
+ZIP_LISTS = {"stateSenate": "state-senate", "stateHouse": "state-house", "usHouse": "us-house"}
+#: floors: Georgia has ~880 delivery ZIPs, 159 counties and 2,796 tracts
+MIN_ZIPS, MIN_COUNTIES, MIN_TRACTS = 800, 159, 2796
+
+
+def compact_json(obj):
+    return json.dumps(obj, ensure_ascii=False, separators=(",", ":")).encode()
+
+
+def load(path):
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _csv(header, rows):
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(header)
+    w.writerows(rows)
+    return buf.getvalue().encode()
+
+
+# ---- ZIP code -> districts --------------------------------------------------------
+
+def zip_districts_csv(doc):
+    rows = []
+    for z, e in sorted(doc["zips"].items()):
+        for key, chamber in ZIP_LISTS.items():
+            for rank, r in enumerate(e.get(key) or [], start=1):
+                rows.append([z, e.get("city"), e["kind"], chamber, r["district"], r["share"], rank])
+    return _csv(["zip", "city", "kind", "chamber", "district", "share", "rank"], rows)
+
+
+def zip_counties_csv(doc):
+    rows = []
+    for z, e in sorted(doc["zips"].items()):
+        for rank, r in enumerate(e.get("counties") or [], start=1):
+            rows.append([z, e.get("city"), e["kind"], r["fips"], r["name"], r["share"], rank])
+    return _csv(["zip", "city", "kind", "county_fips", "county", "share", "rank"], rows)
+
+
+# ---- County and tract tables --------------------------------------------------------
+
+def county_table(tracts):
+    """{fips: {name, population, <chamber>: [{district, population, share}]}} from the
+    tract table. County FIPS is characters 3-5 of a tract id (state 13 + county)."""
+    names = tracts["counties"]
+    pop = {}
+    by = {}
+    for tract_id, rec in tracts["tracts"].items():
+        fips = tract_id[2:5]
+        pop[fips] = pop.get(fips, 0) + rec["p"]
+        for key in CHAMBERS:
+            bucket = by.setdefault(fips, {}).setdefault(key, {})
+            for district, p in rec[key].items():
+                bucket[district] = bucket.get(district, 0) + p
+    out = {}
+    for fips in sorted(pop):
+        entry = {"name": names.get(fips), "population": pop[fips]}
+        for key, chamber in CHAMBERS.items():
+            entry[chamber] = [
+                {"district": int(d), "population": p,
+                 "share": round(p / pop[fips], 5) if pop[fips] else None}
+                for d, p in sorted(by[fips][key].items(), key=lambda kv: int(kv[0]))
+            ]
+        out[fips] = entry
+    return out
+
+
+def counties_doc(tracts):
+    meta = tracts["metadata"]
+    return {
+        "metadata": {
+            "schemaVersion": SCHEMA_VERSION,
+            "generatedAt": meta["generatedAt"],
+            "source": meta["source"],
+            "censusVintage": meta["censusVintage"],
+            "plans": meta["plans"],
+            "count": len(tracts["counties"]),
+            "totalPopulation": meta["totalPopulation"],
+            "note": "For each county, the 2020 population living in each district of each plan, "
+                    "and that as a share of the county. Districts are listed in number order. "
+                    "A county in several districts appears once per district. Matches the "
+                    "Office of Legislative and Congressional Reapportionment's county reports.",
+        },
+        "counties": county_table(tracts),
+    }
+
+
+def county_districts_csv(doc):
+    rows = []
+    for fips, c in doc["counties"].items():
+        for chamber in CHAMBERS.values():
+            for r in c[chamber]:
+                rows.append([fips, c["name"], chamber, r["district"], r["population"], r["share"]])
+    return _csv(["county_fips", "county", "chamber", "district", "population", "share_of_county"], rows)
+
+
+def tracts_doc(tracts):
+    meta = dict(tracts["metadata"])
+    meta["schemaVersion"] = SCHEMA_VERSION
+    meta["count"] = len(tracts["tracts"])
+    return {"metadata": meta, "counties": tracts["counties"], "tracts": tracts["tracts"]}
+
+
+def tract_districts_csv(tracts):
+    rows = []
+    for tract_id, rec in sorted(tracts["tracts"].items()):
+        for key, chamber in CHAMBERS.items():
+            for district, p in sorted(rec[key].items(), key=lambda kv: int(kv[0])):
+                rows.append([tract_id, tract_id[2:5], chamber, int(district), p, rec["p"]])
+    return _csv(["tract_geoid", "county_fips", "chamber", "district", "population", "tract_population"], rows)
+
+
+# ---- Schemas --------------------------------------------------------------------------
+
+SHARE_LIST = {"type": ["array", "null"], "items": {"type": "object", "properties": {
+    "district": {"type": "integer"},
+    "share": {"type": "number", "description": "Estimated share of the ZIP's residents, 0-1."}},
+    "required": ["district", "share"]},
+    "description": "Ranked largest share first. EVERY district with residents is listed."}
+
+
+def zips_schema():
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": f"https://raw.githubusercontent.com/{REPO}/main/data/zips.schema.json",
+        "title": "Georgia ZIP codes and the districts they touch",
+        "description": "Per ZIP, the counties and districts that TOUCH it, never 'your district': a ZIP "
+                       "can span several, and only a street address identifies the districts a voter "
+                       "lives in. State Senate, state House and U.S. House shares are estimated from "
+                       "HUD residential-address ratios and 2020 Census population by 2023 district.",
+        "type": "object",
+        "required": ["metadata", "zips"],
+        "properties": {
+            "metadata": {"type": "object"},
+            "zips": {"type": "object", "additionalProperties": {
+                "type": "object",
+                "required": ["kind"],
+                "properties": {
+                    "city": {"type": ["string", "null"], "description": "Display label from HUD."},
+                    "kind": {"enum": ["standard", "po-box", "other"],
+                             "description": "standard = a USPS Georgia delivery ZIP; po-box = PO-box-only, "
+                                            "carries no districts; other = HUD reports addresses but the "
+                                            "ZIP is not in the USPS Georgia facility list (campus, "
+                                            "government, military); treat like standard."},
+                    "counties": {"type": ["array", "null"], "items": {"type": "object", "properties": {
+                        "fips": {"type": "string"}, "name": {"type": ["string", "null"]},
+                        "share": {"type": "number"}}}},
+                    "stateSenate": SHARE_LIST, "stateHouse": SHARE_LIST, "usHouse": SHARE_LIST,
+                },
+            }},
+        },
+    }
+
+
+def _district_rows(chamber_desc):
+    return {"type": "array", "description": chamber_desc, "items": {"type": "object", "properties": {
+        "district": {"type": "integer"}, "population": {"type": "integer"},
+        "share": {"type": ["number", "null"]}}, "required": ["district", "population"]}}
+
+
+def counties_schema():
+    props = {"name": {"type": ["string", "null"]}, "population": {"type": "integer"}}
+    for chamber in CHAMBERS.values():
+        props[chamber] = _district_rows(f"2020 population of the county in each {chamber} district.")
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": f"https://raw.githubusercontent.com/{REPO}/main/data/counties.schema.json",
+        "title": "Georgia counties and the districts they contain",
+        "type": "object",
+        "required": ["metadata", "counties"],
+        "properties": {
+            "metadata": {"type": "object"},
+            "counties": {"type": "object", "description": "Keyed by 3-digit county FIPS.",
+                         "additionalProperties": {"type": "object", "properties": props,
+                                                  "required": ["population"] + list(CHAMBERS.values())}},
+        },
+    }
+
+
+def tracts_schema():
+    split = {"type": "object", "additionalProperties": {"type": "integer"},
+             "description": "district number (zero-padded string) -> tract population in that district"}
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": f"https://raw.githubusercontent.com/{REPO}/main/data/tracts.schema.json",
+        "title": "Georgia census tracts and the districts they are split across",
+        "type": "object",
+        "required": ["metadata", "counties", "tracts"],
+        "properties": {
+            "metadata": {"type": "object"},
+            "counties": {"type": "object", "description": "3-digit county FIPS -> name"},
+            "tracts": {"type": "object", "description": "Keyed by 11-digit tract GEOID.",
+                       "additionalProperties": {"type": "object", "properties": {
+                           "p": {"type": "integer", "description": "2020 tract population"},
+                           "s": split, "h": split, "c": split},
+                           "required": ["p", "s", "h", "c"]}},
+        },
+    }
+
+
+# ---- Build + gate ----------------------------------------------------------------------
+
+def build_artifacts():
+    zips, tracts = load(ZIPS_SRC), load(TRACTS_SRC)
+    if not zips.get("zips"):
+        sys.exit("FATAL: ga-zip-districts.json has no ZIPs")
+    counties = counties_doc(tracts)
+    tracts_pub = tracts_doc(tracts)
+    return {
+        "data/zips.json": compact_json(zips),
+        "data/zip-districts.csv": zip_districts_csv(zips),
+        "data/zip-counties.csv": zip_counties_csv(zips),
+        "data/zips.schema.json": build_json(zips_schema()),
+        "data/counties.json": build_json(counties),
+        "data/county-districts.csv": county_districts_csv(counties),
+        "data/counties.schema.json": build_json(counties_schema()),
+        "data/tracts.json": compact_json(tracts_pub),
+        "data/tract-districts.csv": tract_districts_csv(tracts),
+        "data/tracts.schema.json": build_json(tracts_schema()),
+    }
+
+
+def validate(artifacts):
+    """Record floors for each dataset, plus the population invariant: the county
+    table must add up to the same total as the tract table it came from."""
+    min_items("data/zips.json", "zips", minimum=MIN_ZIPS)(artifacts)
+    min_items("data/counties.json", "counties", minimum=MIN_COUNTIES)(artifacts)
+    min_items("data/tracts.json", "tracts", minimum=MIN_TRACTS)(artifacts)
+    counties = json.loads(artifacts["data/counties.json"])
+    total = counties["metadata"]["totalPopulation"]
+    got = sum(c["population"] for c in counties["counties"].values())
+    if got != total:
+        raise ValueError(f"refusing to publish: county populations sum to {got:,}, tract table says {total:,}")
+    for fips, c in counties["counties"].items():
+        for chamber in CHAMBERS.values():
+            s = sum(r["population"] for r in c[chamber])
+            if s != c["population"]:
+                raise ValueError(f"refusing to publish: county {fips} {chamber} districts sum to "
+                                 f"{s:,}, county population is {c['population']:,}")
+
+
+def main():
+    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV, validate=validate)
+
+
+if __name__ == "__main__":
+    main()

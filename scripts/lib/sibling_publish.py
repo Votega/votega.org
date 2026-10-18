@@ -72,6 +72,14 @@ REPO_SOURCES = {
                                   "(gov.georgia.gov)",
     "Votega/ga-local-government": "the published agendas and minutes of Georgia "
                                   "county and municipal governments",
+    # Every figure here is derived: HUD's ZIP crosswalk supplies the ZIP -> tract
+    # address shares, and the district and population facts come from the General
+    # Assembly's own plan files and the Census Bureau's 2020 block counts.
+    "Votega/ga-district-information": "the Georgia General Assembly's Office of Legislative and "
+                                      "Congressional Reapportionment (2023 district plans), the "
+                                      "U.S. Census Bureau (2020 Census block populations), the U.S. "
+                                      "Department of Housing and Urban Development (HUD-USPS ZIP "
+                                      "Code Crosswalk) and the U.S. Postal Service",
 }
 
 # Published under CC BY-SA 4.0: a data license, matching the attribution + share-alike
