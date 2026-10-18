@@ -217,7 +217,8 @@ breadcrumb:
   <button class="tab-btn" data-tab="us-house">U.S. House</button>
   <button class="tab-btn" data-tab="ga-senate">GA State Senate</button>
   <button class="tab-btn" data-tab="ga-house">GA State House</button>
-  <button class="tab-btn" data-tab="courts">Courts</button>
+  <!-- Courts coverage is incomplete: the tab shows a notice instead of races (see renderRaces). Remove COURTS_COVERAGE_NOTICE to re-enable. -->
+  <button class="tab-btn" data-tab="courts" title="Coverage in progress">Courts*</button>
   <!-- District Attorney tab hidden until the data populates correctly. Restore this button to re-enable. -->
   <!-- <button class="tab-btn" data-tab="district-attorney">District Attorney</button> -->
 </div>
@@ -556,9 +557,16 @@ breadcrumb:
       </a>`;
   }
 
+  const COURTS_COVERAGE_NOTICE = "We're working to ensure coverage across all of Georgia.";
+
   function renderRaces() {
     const races   = racesForTab(activeTab);
     const basePath = getBasePath();
+
+    if (activeTab === 'courts' && COURTS_COVERAGE_NOTICE) {
+      racesOutput.innerHTML = `<p class="empty-note">${COURTS_COVERAGE_NOTICE}</p>`;
+      return;
+    }
 
     if (!races.length) {
       const noFilter = !voterLoc && !countySelect.value;
@@ -729,7 +737,7 @@ breadcrumb:
     const params = new URLSearchParams(window.location.search);
 
     const tab = params.get('tab');
-    if (tab && TAB_FILTER[tab]) {
+    if (tab && TAB_FILTER[tab] && document.querySelector(`.tab-btn[data-tab="${tab}"]`)) {
       activeTab = tab;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       updateFilterVisibility();
