@@ -35,13 +35,15 @@ const membersOut  = document.getElementById('membersOutput');
 let allMembers = [];
 let activeTab  = 'house'; // 'house' | 'senate'
 
-// Set by an address lookup (see federal-reps.html): the one U.S. House district
-// the Census geocoder placed the address in. null means no address filter, which
-// is also what every other control resets it to -- picking a county or switching
-// chambers is the voter saying "show me something else", so the narrowed view
-// must not survive it.
-let exactDistrict = null;
-let exactNote     = '';   // already-escaped HTML, or '' for no note
+// Set by a location lookup (see federal-reps.html): the U.S. House district(s) the
+// voter's location falls in. An address resolves to exactly one; a bare ZIP resolves
+// to every district touching it, which is why this is a list. null means no filter,
+// which is also what every other control resets it to -- picking a county or
+// switching chambers is the voter saying "show me something else", so the narrowed
+// view must not survive it.
+let exactDistricts = null;   // number[] | null
+let exactNote      = '';     // already-escaped HTML, or '' for no note
+let exactShares    = null;   // district -> share of the ZIP, for a ZIP filter only
 
 const lookupNote = document.getElementById('lookupNote');
 
@@ -55,25 +57,52 @@ function escHtml(s) {
 // voter can see which address the geocoder actually resolved -- it is echoed
 // back into the page, so it is escaped here rather than trusted.
 function setExactDistrict(district, label) {
-  exactDistrict = Number.isInteger(district) ? district : null;
-  if (exactDistrict == null) {
+  exactShares = null;
+  if (!Number.isInteger(district)) {
+    exactDistricts = null;
     exactNote = '';
   } else {
-    exactNote = `Showing <strong>District ${exactDistrict}</strong>`
+    exactDistricts = [district];
+    exactNote = `Showing <strong>District ${district}</strong>`
       + (label ? ` for <strong>${escHtml(label)}</strong>` : ' from your earlier address lookup')
       + '. <button type="button" class="lookup-reset" id="lookupReset">Show all districts</button>';
   }
   renderMembers();
 }
 
+// Narrow the list to every district touching a ZIP. A ZIP is not a location -- it
+// can span several districts and only a street address says which is the voter's --
+// so the note says so. `districts` are the table's integers; `sourceHtml` is the
+// ZIP table's own provenance line, already escaped by the page ('' for none).
+// `shares` maps district -> its share of the ZIP, for the per-row label.
+function setZipDistricts(districts, zip, sourceHtml, shares) {
+  exactShares = shares || null;
+  const list = Array.isArray(districts) ? districts.filter(Number.isInteger) : [];
+  if (!list.length) {
+    exactDistricts = null;
+    exactNote = '';
+  } else {
+    const which = list.length === 1 ? `District ${list[0]}` : `Districts ${list.join(', ')}`;
+    exactNote = `Showing <strong>${which}</strong> touching <strong>ZIP ${escHtml(zip)}</strong>.`
+      + (list.length > 1
+          ? ' A ZIP can span several districts &mdash; enter your full address to narrow this to yours.'
+          : '')
+      + ' <button type="button" class="lookup-reset" id="lookupReset">Show all districts</button>'
+      + (sourceHtml ? `<div class="lookup-source">${sourceHtml}</div>` : '');
+    exactDistricts = list;
+  }
+  renderMembers();
+}
+
 function clearExactDistrict() {
-  if (exactDistrict == null) return;
-  exactDistrict = null;
+  if (exactDistricts == null) return;
+  exactDistricts = null;
   exactNote = '';
+  exactShares = null;
 }
 
 if (typeof window !== 'undefined') {
-  window.FederalReps = { setExactDistrict, clearExactDistrict };
+  window.FederalReps = { setExactDistrict, setZipDistricts, clearExactDistrict };
 }
 
 if (countySel && typeof COUNTY_US_HOUSE_DISTRICTS !== 'undefined') {
@@ -101,11 +130,11 @@ function renderMembers() {
   const basePath    = getBasePath();
 
   // The Senate tab has no districts -- both senators represent the whole state --
-  // so an address filter is meaningless there. exactDistrict is left set rather
+  // so an address filter is meaningless there. exactDistricts is left set rather
   // than cleared, so switching back to the House tab keeps the lookup the voter
   // just did. Resolved here, above the Senate branch's early return, because a
   // note written only on the House path would stay on screen after that return.
-  const exact = activeTab === 'house' ? exactDistrict : null;
+  const exact = activeTab === 'house' ? exactDistricts : null;
   if (lookupNote) lookupNote.innerHTML = exact != null ? exactNote : '';
 
   const members = allMembers.filter(m => {
@@ -168,7 +197,21 @@ function renderMembers() {
     ordered = ordered.filter(d => countyDistricts.has(d));
   }
 
-  if (exact != null) ordered = ordered.filter(d => d === exact);
+  if (exact != null) ordered = ordered.filter(d => exact.includes(d));
+
+  // Same rule as the Georgia legislator lists: when a ZIP or county leaves more than
+  // one district in play, none of them is known to be the voter's, so each row says so.
+  // An address (one district) and the unfiltered list carry no badge. A ZIP also says
+  // how much of itself each district covers.
+  const zipFiltered = exact != null && exactShares != null;
+  const uncertain   = ordered.length > 1 && (zipFiltered || (exact == null && !!county));
+  function noteFor(district) {
+    if (!uncertain) return '';
+    const share = zipFiltered && window.ZipDistricts
+      ? window.ZipDistricts.shareLabel(exactShares[district]) : null;
+    return `<span class="member-note">${share || ''}${share ? ' ' : ''}`
+      + `<span class="member-badge">may not be your district</span></span>`;
+  }
 
   if (!ordered.length) {
     membersOut.innerHTML = `<p class="empty-note">No House district found${county ? ` for ${county} County` : ''}.</p>`;
@@ -184,7 +227,7 @@ function renderMembers() {
       const pClass = abbrev === 'D' ? 'party-d' : abbrev === 'R' ? 'party-r' : '';
       return `<a class="member-row" href="${VoteGA.entityUrls.get('us-congress', current.bioguideId, `${basePath}member.html?bioguideId=${encodeURIComponent(current.bioguideId)}`)}">
         <span class="member-district">District ${district}</span>
-        <span class="member-name">${formatMemberName(current)}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}</span>
+        <span class="member-name">${formatMemberName(current)}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}${noteFor(district)}</span>
         <span class="member-arrow">›</span>
       </a>`;
     }
@@ -198,7 +241,7 @@ function renderMembers() {
     const vacancyMsg = `District ${district} is currently vacant.`;
     return `<div class="member-row member-row-vacant">
       <span class="member-district">District ${district}</span>
-      <span class="member-name">${vacancyMsg}</span>
+      <span class="member-name">${vacancyMsg}${noteFor(district)}</span>
     </div>`;
   }).join('');
 }

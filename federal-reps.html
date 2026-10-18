@@ -66,6 +66,10 @@ Many counties are served by multiple districts, and some districts serve multipl
     margin: 0.75rem 0 0 0; padding: 0.6rem 0.9rem; font-size: 0.88rem;
     background: #eef4ff; border: 1px solid #c7d9f7; border-radius: 6px;
   }
+  .member-note { display: block; font-size: 0.78rem; font-weight: normal; color: #555; margin-top: 2px; }
+  /* Matches the sample ballot's .contest-badge / .badge-ambiguous. */
+  .member-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem; vertical-align: middle; background: #fff0c2; color: #7a5c00; }
+  #lookupNote .lookup-source { margin-top: 0.35rem; font-size: 0.78rem; color: #555; }
   .lookup-reset {
     margin-left: 0.4rem; padding: 0.15rem 0.6rem; font-size: 0.8rem; cursor: pointer;
     background: #fff; color: #1a56a8; border: 1px solid #1a56a8; border-radius: 6px;
@@ -122,14 +126,14 @@ Many counties are served by multiple districts, and some districts serve multipl
 </style>
 
 <div class="frp-lookup">
-  <label class="frp-label" for="frpAddress">Enter your address to find your district</label>
+  <label class="frp-label" for="frpAddress">Enter your address or ZIP code to find your district</label>
   <div class="frp-row">
     <input type="text" id="frpAddress" class="frp-input"
            placeholder="123 Peachtree St NE, Atlanta, GA 30303"
            autocomplete="street-address" />
     <button id="frpBtn" class="frp-btn" type="button">Find my district</button>
   </div>
-  <p class="frp-privacy">Your address is sent only to the U.S. Census geocoder to look up your district. VoteGA does not store it.</p>
+  <p class="frp-privacy">A street address is sent only to the U.S. Census geocoder to look up your district. A ZIP code alone is looked up on this page and is not sent anywhere, and shows every district touching it. VoteGA does not store either.</p>
   <div id="frpStatus" class="frp-status" role="status" aria-live="polite"></div>
 </div>
 
@@ -165,6 +169,8 @@ Many counties are served by multiple districts, and some districts serve multipl
 {%- endcomment -%}
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} ZIP table load/expansion and provenance, shared with Find My Reps, the candidate finder and the sample ballot. {%- endcomment -%}
+<script src="{{ '/assets/scripts/zip-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} Shared chrome around the geocoder: ZIP guard, busy latch, outcome events. {%- endcomment -%}
 <script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/congress.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -227,6 +233,44 @@ Many counties are served by multiple districts, and some districts serve multipl
     // error, where it reads as the answer.
     onRefuse: function () { window.FederalReps.setExactDistrict(null); },
     onReject: function () { window.FederalReps.setExactDistrict(null); },
+    // A bare ZIP is answered here instead of refused: every U.S. House district
+    // touching it, from the static ZIP table. Nothing is geocoded and nothing is
+    // saved -- a ZIP is a set of districts, not a location. Returns an outcome enum
+    // (see address-lookup.js onZip); a PO-box or unknown ZIP and a failed table fetch
+    // are answered in the status line and clear any stale filter.
+    onZip: function (zip) {
+      var next = ' Enter your full street address, or pick your county below.';
+      function stop(message, outcome) {
+        window.FederalReps.setExactDistrict(null);
+        say(message + next, true);
+        return outcome;
+      }
+      return window.ZipDistricts.load(getBasePath()).then(function (table) {
+        var found = window.ZipDistricts.lookup(zip, table);
+        if (found.status === 'unknown') {
+          return stop('ZIP ' + zip + ' isn’t in our list of Georgia ZIP codes.', 'zip_unknown');
+        }
+        if (found.status !== 'ok' || !found.usHouse.length) {
+          return stop('ZIP ' + zip + ' is a PO box ZIP, which doesn’t map to any district.', 'zip_no_districts');
+        }
+        if (countySel) countySel.value = '';            // one district filter at a time
+        // The provenance line is built by the shared stamp renderer into a detached
+        // node, so the note can carry it and be cleared with it.
+        var source = '';
+        var opts = window.dataStamp && window.ZipDistricts.stampOptions(found.meta);
+        if (opts) {
+          var holder = document.createElement('span');
+          window.dataStamp.render(holder, opts);
+          source = holder.innerHTML;
+        }
+        window.FederalReps.setZipDistricts(found.usHouse, zip, source, found.shares.usHouse);
+        say('');
+        return 'zip';
+      }).catch(function (err) {
+        console.error('federal-reps.html: ZIP table', err);
+        return stop('ZIP code data couldn’t be loaded right now.', 'zip_error');
+      });
+    },
     onResolve: function (loc, typed) { return apply(loc, loc.matchedAddress || typed); },
   });
 
