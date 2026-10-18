@@ -2,6 +2,7 @@ name: Update SCOTUS decisions data (weekly, Sun 10:00 UTC)
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
@@ -23,15 +24,26 @@ jobs:
           python-version: '3.x'
 
       - name: Generate SCOTUS decisions data
+        id: generate
         run: python scripts/generate_scotus_decisions.py assets/data/scotus-decisions.json
 
+      # Tier 1 gates on the file contradicting itself (count, terms, duplicate
+      # term/docket, date order). The one baseline gate is the loss check: the
+      # generator skips a case whose Oyez detail fetch fails and a term whose
+      # list fails, and a decided case never legitimately leaves the record, so
+      # it now publishes what it failed to get (metadata.detailFetchFailed,
+      # emptyTerms) and a failure touching an already-published case refuses
+      # the commit. Cases of a term dropped from TERMS are exempt, which is
+      # what --scope-key metadata.terms approximated. `--min decisions=1` was
+      # the world's number: a newly added term is empty until its first
+      # opinions. New decisions and a stale TERMS (the October edit) are
+      # reported. See docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
       - name: Validate generated data
+        id: validate
         run: |
-          python scripts/validate_data_update.py assets/data/scotus-decisions.json \
-            --metric decisions=metadata.count \
-            --metric cases=len:cases \
-            --scope-key metadata.terms \
-            --min decisions=1
+          python scripts/validate_scotus_decisions.py assets/data/scotus-decisions.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/scotus-changes.md"
 
       - name: Commit and push generated data
         run: |
@@ -58,3 +70,38 @@ jobs:
               exit 1
             fi
           fi
+
+      # After the commit: the report describes a record that has already shipped.
+      # One issue, refreshed in place; weekly, so the comment is unconditional.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "SCOTUS decisions: new rulings and TERMS reminders"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/scotus-changes.md"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"; then
+            echo "Nothing material - skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-scotus-decisions."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose (a step's `if` is evaluated when the runner reaches it).
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-scotus-decisions
+          path: assets/data/scotus-decisions.json
+          if-no-files-found: ignore
+          retention-days: 14

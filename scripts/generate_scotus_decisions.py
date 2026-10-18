@@ -203,12 +203,19 @@ def extract_decision(detail, cl_index):
 
 def main():
     all_cases = []
+    # What this run tried and could not get. Published in metadata so
+    # validate_scotus_decisions.py can tell "Oyez failed for this case" from
+    # "this case is gone": a decided case never legitimately leaves the record,
+    # so a silent skip here is a ruling missing from the site until next week.
+    detail_failed = []
+    empty_terms = []
 
     for term in TERMS:
         print(f"\n--- {term} SCOTUS term ---")
         cases_basic = fetch_term_cases(term)
         if not cases_basic:
             print(f"  No cases found for {term} term — skipping")
+            empty_terms.append(term)
             continue
 
         # Build CourtListener index for cross-referencing
@@ -231,6 +238,7 @@ def main():
             detail = fetch_case_detail(term, docket)
             if not detail:
                 print(f"  [{i}/{len(decided_basic)}] Could not fetch detail for {docket}")
+                detail_failed.append(f"{term}/{docket}")
                 continue
 
             record = extract_decision(detail, cl_index)
@@ -248,6 +256,8 @@ def main():
             "terms":       TERMS,
             "source":      "Oyez.org API + CourtListener",
             "count":       len(all_cases),
+            "emptyTerms":  empty_terms,
+            "detailFetchFailed": sorted(detail_failed),
         },
         "cases": all_cases,
     }
