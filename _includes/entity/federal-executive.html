@@ -418,9 +418,10 @@
       ? `<p style="margin-top:1rem;font-size:0.9rem;line-height:1.6;color:#333;">${esc(o.bio)}</p>`
       : '';
 
-    // Only the President has an Executive Orders tab; the link jumps to it.
+    // Only the President has Executive Orders and Signed Legislation tabs; these
+    // links jump to them.
     const eoJumpHtml = o.id === 'president'
-      ? `<p style="margin-top:1rem;"><a href="#execOrders">Executive orders ↓</a></p>`
+      ? `<p style="margin-top:1rem;"><a href="#execOrders">Executive orders ↓</a> &nbsp;·&nbsp; <a href="#signedLegislation">Signed legislation ↓</a></p>`
       : '';
 
     const constitutionalRoleHtml = o.constitutionalRole
