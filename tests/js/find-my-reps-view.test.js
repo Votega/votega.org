@@ -281,3 +281,48 @@ test('renderReps for a ZIP: heading, honest caveat, share labels, every district
   // Other sources keep their old output.
   assert.doesNotMatch(View.renderReps(View.countyLoc('Fulton', {}), FED, GA, {}), /Districts touching ZIP|of this ZIP/);
 });
+
+// --- "may not be your district" badge ----------------------------------------
+
+const BADGE = 'may not be your district';
+const badgeCount = (html) => (html.match(/may not be your district/g) || []).length;
+
+test('ZIP: every row in a multi-district chamber is badged, a single-district chamber is not', () => {
+  const html = View.renderReps(View.zipLoc('30303', ZIPS['30303']), FED, GA, {});
+  assert.equal(badgeCount(html), 3, 'House 56/58/59 only; Senate 36 and US House 5 are the voter\'s');
+  for (const d of [56, 58, 59]) {
+    assert.match(html, new RegExp('District ' + d + ' · [^<]*<span class="fmr-badge fmr-badge-ambiguous">' + BADGE), 'District ' + d);
+  }
+  assert.doesNotMatch(html, /District 36 [^<]*<span class="fmr-badge/);
+  assert.doesNotMatch(html, /District 5 [^<]*<span class="fmr-badge/);
+  // The share wording stays alongside the badge.
+  assert.match(html, /District 58 · about 50% of this ZIP <span class="fmr-badge/);
+});
+
+test('ZIP: a ZIP with one district per chamber has no badge at all', () => {
+  const single = Object.entries(ZIPS).find(([, e]) =>
+    e.kind !== 'po-box' && (e.usHouse || []).length === 1 && (e.stateSenate || []).length === 1 && (e.stateHouse || []).length === 1);
+  assert.ok(single, 'fixture ZIP exists in the data');
+  assert.equal(badgeCount(View.renderReps(View.zipLoc(single[0], single[1]), FED, GA, {})), 0);
+});
+
+test('county: multi-district chambers are badged, and a one-district chamber is not', () => {
+  const html = View.renderReps(View.countyLoc('Fulton', MAPS), FED, GA, {});
+  const loc = View.countyLoc('Fulton', MAPS);
+  const expected = ['usHouse', 'stateSenate', 'stateHouse']
+    .reduce((n, k) => n + (loc[k].length > 1 ? loc[k].length : 0), 0);
+  assert.ok(expected > 0);
+  assert.equal(badgeCount(html), expected);
+  // Find a county with exactly one district in some chamber and check it is clean.
+  const one = Object.keys(MAPS.usHouse).find(c => MAPS.usHouse[c].length === 1);
+  if (one) {
+    const l = View.countyLoc(one, MAPS);
+    const exp = ['usHouse', 'stateSenate', 'stateHouse'].reduce((n, k) => n + (l[k].length > 1 ? l[k].length : 0), 0);
+    assert.equal(badgeCount(View.renderReps(l, FED, GA, {})), exp);
+  }
+});
+
+test('address lookups are never badged', () => {
+  const loc = View.normalizeAddressLoc({ matchedAddress: 'X', county: 'Fulton', usHouse: 5, stateSenate: 36, stateHouse: 58 });
+  assert.equal(badgeCount(View.renderReps(loc, FED, GA, {})), 0);
+});

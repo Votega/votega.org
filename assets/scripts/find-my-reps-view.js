@@ -63,6 +63,12 @@
     return terms.length ? terms[terms.length - 1].chamber : null;
   }
 
+  // Same wording as the sample ballot's contest badge, so the site reads alike.
+  function badge(opts) {
+    return opts && opts.ambiguous
+      ? ' <span class="fmr-badge fmr-badge-ambiguous">may not be your district</span>' : '';
+  }
+
   /**
    * One rep row, or a "vacant" note when the seat has no sitting member. The
    * office heading is NOT here: a county can touch several districts in the same
@@ -73,7 +79,7 @@
     if (!member) {
       return '<div class="fmr-repcard"><span class="fmr-photo fmr-photo-blank">—</span>'
         + '<div><div class="fmr-repname fmr-vacant">' + esc(opts.vacant || 'Seat currently vacant') + '</div>'
-        + (opts.sub ? '<div class="fmr-repmeta">' + esc(opts.sub) + '</div>' : '')
+        + (opts.sub ? '<div class="fmr-repmeta">' + esc(opts.sub) + badge(opts) + '</div>' : '')
         + (opts.link ? '<div class="fmr-repmeta"><a href="' + esc(opts.link.href) + '" target="_blank" rel="noopener">'
             + esc(opts.link.label) + '</a></div>' : '')
         + '</div></div>';
@@ -83,7 +89,7 @@
       : '<span class="fmr-photo fmr-photo-blank">👤</span>';
     return '<a class="fmr-repcard" href="' + esc(opts.href) + '">' + photo
       + '<div><div class="fmr-repname">' + esc(opts.name) + chip(opts.party) + '</div>'
-      + '<div class="fmr-repmeta">' + esc(opts.sub || '') + '</div></div></a>';
+      + '<div class="fmr-repmeta">' + esc(opts.sub || '') + badge(opts) + '</div></div></a>';
   }
 
   /**
@@ -91,10 +97,11 @@
    * that suspended them (the markdown link the roster keeps in statusNote). Only
    * an https URL is accepted, so a malformed note degrades to no link.
    */
-  function suspendedSeat(m, d, sub) {
+  function suspendedSeat(m, d, sub, ambiguous) {
     var url = /\]\((https:\/\/[^)\s]+)\)/.exec(m.statusNote || '');
     return {
       sub: sub || 'District ' + d,
+      ambiguous: !!ambiguous,
       vacant: 'Vacant',
       link: url ? { href: url[1], label: 'Member suspended by Executive Order' } : null,
     };
@@ -260,6 +267,12 @@
       var label = isZip && loc.shares && loc.shares[key] ? shareLabel(loc.shares[key][d]) : null;
       return 'District ' + d + (label ? ' · ' + label : '');
     };
+    // A county or a ZIP that lists more than one district in a chamber cannot say
+    // which is the voter's, so every row in that chamber carries the badge. One
+    // district means that seat really is theirs. An address is exact: never badged.
+    var multi = function (key) {
+      return (isZip || loc.source === 'county') && (loc[key] || []).length > 1;
+    };
     if (isZip) {
       var where = loc.counties && loc.counties.length
         ? 'This ZIP is in ' + loc.counties.join(', ') + (loc.counties.length > 1 ? ' counties. ' : ' County. ') : '';
@@ -282,28 +295,28 @@
       })[0];
       return repRow(m, m ? {
         name: fedName(m), party: m.partyName, sub: distSub('usHouse', d),
-        photo: m.depiction && m.depiction.imageUrl, href: fedHref(m),
-      } : { sub: distSub('usHouse', d), vacant: 'No sitting U.S. Representative found' });
+        photo: m.depiction && m.depiction.imageUrl, href: fedHref(m), ambiguous: multi('usHouse'),
+      } : { sub: distSub('usHouse', d), ambiguous: multi('usHouse'), vacant: 'No sitting U.S. Representative found' });
     }));
 
     html += repSection('Georgia State Senate', (loc.stateSenate || []).map(function (d) {
       var m = gaSeated.filter(function (x) { return x.chamber === 'Senate' && x.district === d; })[0];
-      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d, distSub('stateSenate', d)));
+      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d, distSub('stateSenate', d), multi('stateSenate')));
       return repRow(m, m ? {
         name: m.name, party: m.party,
         sub: distSub('stateSenate', d) + (m.status === 'Vacant' ? ' · Vacant' : ''),
-        photo: m.imageUrl, href: gaHref(m),
-      } : { sub: distSub('stateSenate', d), vacant: 'This Senate seat is currently vacant' });
+        photo: m.imageUrl, href: gaHref(m), ambiguous: multi('stateSenate'),
+      } : { sub: distSub('stateSenate', d), ambiguous: multi('stateSenate'), vacant: 'This Senate seat is currently vacant' });
     }));
 
     html += repSection('Georgia House of Representatives', (loc.stateHouse || []).map(function (d) {
       var m = gaSeated.filter(function (x) { return x.chamber === 'House of Representatives' && x.district === d; })[0];
-      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d, distSub('stateHouse', d)));
+      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d, distSub('stateHouse', d), multi('stateHouse')));
       return repRow(m, m ? {
         name: m.name, party: m.party,
         sub: distSub('stateHouse', d) + (m.status === 'Vacant' ? ' · Vacant' : ''),
-        photo: m.imageUrl, href: gaHref(m),
-      } : { sub: distSub('stateHouse', d), vacant: 'This House seat is currently vacant' });
+        photo: m.imageUrl, href: gaHref(m), ambiguous: multi('stateHouse'),
+      } : { sub: distSub('stateHouse', d), ambiguous: multi('stateHouse'), vacant: 'This House seat is currently vacant' });
     }));
 
     return html;
