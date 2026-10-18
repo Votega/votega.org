@@ -91,10 +91,10 @@
    * that suspended them (the markdown link the roster keeps in statusNote). Only
    * an https URL is accepted, so a malformed note degrades to no link.
    */
-  function suspendedSeat(m, d) {
+  function suspendedSeat(m, d, sub) {
     var url = /\]\((https:\/\/[^)\s]+)\)/.exec(m.statusNote || '');
     return {
-      sub: 'District ' + d,
+      sub: sub || 'District ' + d,
       vacant: 'Vacant',
       link: url ? { href: url[1], label: 'Member suspended by Executive Order' } : null,
     };
@@ -142,6 +142,51 @@
       stateSenate: pick(maps.stateSenate),
       stateHouse: pick(maps.stateHouse),
     };
+  }
+
+  // A district's weight in a ZIP, as the voter should read it. The row is always
+  // listed; this only changes the wording. Under 5% it is "a small part" because
+  // a rounded 1% reads as noise, not because the district is dropped. A share of
+  // exactly 1 is the whole ZIP, which "about 100%" would understate.
+  var SMALL_SHARE = 0.05;
+  function shareLabel(share) {
+    if (typeof share !== 'number' || !isFinite(share)) return null;
+    if (share >= 1) return 'all of this ZIP';
+    if (share >= SMALL_SHARE) return 'about ' + Math.round(share * 100) + '% of this ZIP';
+    return 'a small part of this ZIP';
+  }
+
+  /**
+   * A bare ZIP, expanded from ga-zip-districts.json into the same shape as
+   * countyLoc, plus `shares` (chamber -> district -> share) for the row labels.
+   *   entry — zips[zip] from that file, or undefined
+   * Returns null when there is nothing to list -- a ZIP not in the file, a
+   * po-box ZIP, or one with no districts at all -- so the caller says so rather
+   * than render an empty result. Districts are sorted ascending for display (the
+   * file ranks by share); none are dropped.
+   */
+  function zipLoc(zip, entry) {
+    if (!entry || entry.kind === 'po-box') return null;
+    var shares = { usHouse: {}, stateSenate: {}, stateHouse: {} };
+    var pick = function (key) {
+      var rows = entry[key] || [];
+      rows.forEach(function (r) { shares[key][r.district] = r.share; });
+      return rows.map(function (r) { return r.district; })
+        .sort(function (a, b) { return a - b; });
+    };
+    var loc = {
+      source: 'zip',
+      zip: zip,
+      matchedAddress: null,
+      city: entry.city || null,
+      counties: (entry.counties || []).map(function (c) { return c.name; }),
+      usHouse: pick('usHouse'),
+      stateSenate: pick('stateSenate'),
+      stateHouse: pick('stateHouse'),
+      shares: shares,
+    };
+    var any = loc.usHouse.length || loc.stateSenate.length || loc.stateHouse.length;
+    return any ? loc : null;
   }
 
   /** County names for the picker, sorted. Empty when the tables are missing. */
@@ -209,6 +254,21 @@
         + ' County</strong>. Your own address falls in one district per chamber — enter it above to narrow this down.</p>';
     }
 
+    var isZip = loc.source === 'zip';
+    // "District 58", plus how much of the ZIP it covers when the location is one.
+    var distSub = function (key, d) {
+      var label = isZip && loc.shares && loc.shares[key] ? shareLabel(loc.shares[key][d]) : null;
+      return 'District ' + d + (label ? ' · ' + label : '');
+    };
+    if (isZip) {
+      var where = loc.counties && loc.counties.length
+        ? 'This ZIP is in ' + loc.counties.join(', ') + (loc.counties.length > 1 ? ' counties. ' : ' County. ') : '';
+      html += '<h2 class="fmr-zip-head">Districts touching ZIP ' + esc(loc.zip) + '</h2>'
+        + '<p class="fmr-matched">' + esc(where) + 'A ZIP code can span several districts, and only a street address'
+        + ' identifies the ones you actually vote in. Every district with residents in this ZIP is'
+        + ' listed, in number order — enter your full address above to narrow it to yours.</p>';
+    }
+
     html += repSection('U.S. Senate', senators.map(function (m) {
       return repRow(m, {
         name: fedName(m), party: m.partyName, sub: 'Georgia · U.S. Senator',
@@ -221,29 +281,29 @@
         return fedChamber(x) === 'House of Representatives' && x.district === d;
       })[0];
       return repRow(m, m ? {
-        name: fedName(m), party: m.partyName, sub: 'District ' + d,
+        name: fedName(m), party: m.partyName, sub: distSub('usHouse', d),
         photo: m.depiction && m.depiction.imageUrl, href: fedHref(m),
-      } : { sub: 'District ' + d, vacant: 'No sitting U.S. Representative found' });
+      } : { sub: distSub('usHouse', d), vacant: 'No sitting U.S. Representative found' });
     }));
 
     html += repSection('Georgia State Senate', (loc.stateSenate || []).map(function (d) {
       var m = gaSeated.filter(function (x) { return x.chamber === 'Senate' && x.district === d; })[0];
-      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d));
+      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d, distSub('stateSenate', d)));
       return repRow(m, m ? {
         name: m.name, party: m.party,
-        sub: 'District ' + d + (m.status === 'Vacant' ? ' · Vacant' : ''),
+        sub: distSub('stateSenate', d) + (m.status === 'Vacant' ? ' · Vacant' : ''),
         photo: m.imageUrl, href: gaHref(m),
-      } : { sub: 'District ' + d, vacant: 'This Senate seat is currently vacant' });
+      } : { sub: distSub('stateSenate', d), vacant: 'This Senate seat is currently vacant' });
     }));
 
     html += repSection('Georgia House of Representatives', (loc.stateHouse || []).map(function (d) {
       var m = gaSeated.filter(function (x) { return x.chamber === 'House of Representatives' && x.district === d; })[0];
-      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d));
+      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d, distSub('stateHouse', d)));
       return repRow(m, m ? {
         name: m.name, party: m.party,
-        sub: 'District ' + d + (m.status === 'Vacant' ? ' · Vacant' : ''),
+        sub: distSub('stateHouse', d) + (m.status === 'Vacant' ? ' · Vacant' : ''),
         photo: m.imageUrl, href: gaHref(m),
-      } : { sub: 'District ' + d, vacant: 'This House seat is currently vacant' });
+      } : { sub: distSub('stateHouse', d), vacant: 'This House seat is currently vacant' });
     }));
 
     return html;
@@ -252,6 +312,8 @@
   var FindMyRepsView = {
     normalizeAddressLoc: normalizeAddressLoc,
     countyLoc: countyLoc,
+    zipLoc: zipLoc,
+    shareLabel: shareLabel,
     countyNames: countyNames,
     carriedLocation: carriedLocation,
     renderReps: renderReps,

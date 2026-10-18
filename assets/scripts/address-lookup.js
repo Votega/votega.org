@@ -82,6 +82,12 @@
    *   onStart()      optional; after the guards pass and before the request, for
    *                  a page that clears a stale result so it cannot sit under a
    *                  "Looking up..." status and read as the new answer.
+   *   onZip(zip5, raw) optional; a page that can answer a bare ZIP itself (Find My
+   *                  Reps, from the static ZIP table) takes it here instead of
+   *                  refusing. No geocoder call and nothing saved -- a ZIP is not a
+   *                  location, it is a set of districts. Same contract as onResolve
+   *                  (outcome string or promise); outcome defaults to 'zip'. Pages
+   *                  that pass nothing keep today's refusal.
    *   onRefuse(why)  optional; a lookup stopped before any request ('zip_only',
    *                  'unavailable'), so the page can clear a stale result too.
    *   subject, fallbackPhrase   copy, see messages()
@@ -146,7 +152,8 @@
         cfg.setStatus(msg.empty, true);
         return Promise.resolve('empty');
       }
-      if (parsed.kind === 'zip') {
+      var zipHandler = parsed.kind === 'zip' && typeof cfg.onZip === 'function';
+      if (parsed.kind === 'zip' && !zipHandler) {
         // Returned before any request: the guard exists to not spend one.
         if (typeof cfg.onRefuse === 'function') cfg.onRefuse('zip_only');
         cfg.setStatus(msg.zip, true);
@@ -154,8 +161,8 @@
         return Promise.resolve('zip_only');
       }
 
-      var geocode = geocoder();
-      if (!geocode) {
+      var geocode = zipHandler ? null : geocoder();
+      if (!zipHandler && !geocode) {
         if (typeof cfg.onRefuse === 'function') cfg.onRefuse('unavailable');
         cfg.setStatus(msg.unavailable, true);
         track('unavailable');
@@ -167,8 +174,14 @@
       cfg.setStatus(msg.working, false);
 
       return Promise.resolve()
-        .then(function () { return geocode(parsed.value); })
+        .then(function () {
+          // ZIP+4 narrows to a delivery segment, not a district: the ZIP is the
+          // first five digits either way.
+          if (zipHandler) return cfg.onZip(parsed.value.slice(0, 5), parsed.value);
+          return geocode(parsed.value);
+        })
         .then(function (loc) {
+          if (zipHandler) return typeof loc === 'string' ? loc : 'zip';
           saveLocation(loc);
           // Awaited, so a page that renders asynchronously holds the latch until
           // it has actually finished and its failures land in the catch below.
