@@ -65,3 +65,26 @@ test('load: lazy, memoised, built on the given base path, and a failure is not r
   await Z.load('/', f);
   assert.deepEqual(urls, ['/assets/data/ga-zip-districts.json', '/assets/data/ga-zip-districts.json'], 'retried after failure, then cached');
 });
+
+test('lookup carries the table metadata so a page can stamp its own provenance', () => {
+  const Z = load();
+  const l = Z.lookup('30303', TABLE);
+  assert.equal(l.meta.generatedAt, TABLE.metadata.generatedAt);
+  assert.equal(l.meta.hudRelease, TABLE.metadata.hudRelease);
+});
+
+test('stampOptions: dated from the ZIP table itself, naming the HUD release and linking the published repo', () => {
+  const Z = load();
+  const o = Z.stampOptions(TABLE.metadata);
+  assert.equal(o.updated, TABLE.metadata.generatedAt);
+  assert.ok(o.source.includes(TABLE.metadata.hudRelease), 'names the HUD release');
+  assert.equal(o.repo.url, 'https://github.com/Votega/ga-district-information');
+  assert.equal(Z.REPO_URL, o.repo.url);
+});
+
+test('stampOptions: no timestamp, no stamp (never a dangling line)', () => {
+  const Z = load();
+  assert.equal(Z.stampOptions(null), null);
+  assert.equal(Z.stampOptions({}), null);
+  assert.equal(Z.stampOptions({ hudRelease: '2026 Q2' }), null);
+});

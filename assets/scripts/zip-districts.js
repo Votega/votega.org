@@ -16,6 +16,9 @@
 
 (function () {
   var TABLE_PATH = 'assets/data/ga-zip-districts.json';
+  // The published, archived home of this data (and of the county and tract tables it
+  // is built from). Pages that render it link here, never to the internal asset above.
+  var REPO_URL = 'https://github.com/Votega/ga-district-information';
   var CHAMBERS = ['usHouse', 'stateSenate', 'stateHouse'];
 
   // A district's weight in a ZIP, as the voter should read it. The row is always
@@ -68,7 +71,24 @@
     var e = expand(entry);
     if (!e) return { status: 'no-districts' };
     e.status = 'ok';
+    e.meta = (table && table.metadata) || null;
     return e;
+  }
+
+  /**
+   * Options for dataStamp.render() describing THIS table's provenance, from its own
+   * metadata rather than whatever other dataset the page loaded. `meta` is the
+   * `meta` a lookup() result carries. Returns null with no timestamp, so a page
+   * prints no stamp rather than a dangling one.
+   */
+  function stampOptions(meta) {
+    if (!meta || !meta.generatedAt) return null;
+    return {
+      updated: meta.generatedAt,
+      source: 'HUD-USPS ZIP crosswalk' + (meta.hudRelease ? ' (' + meta.hudRelease + ')' : '')
+        + ' with the 2023 district plans and 2020 Census population',
+      repo: { url: REPO_URL },
+    };
   }
 
   var pending = null;
@@ -94,7 +114,9 @@
     expand: expand,
     lookup: lookup,
     load: load,
+    stampOptions: stampOptions,
     TABLE_PATH: TABLE_PATH,
+    REPO_URL: REPO_URL,
     SMALL_SHARE: SMALL_SHARE,
   };
 
