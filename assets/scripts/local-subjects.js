@@ -65,7 +65,7 @@
         // citation carries the concrete vendor/capability terms that fired.
         var alpr = s.alprItems || [];
         if (alpr.length) {
-          html += '<div class="sub-alpr"><strong>📷 ALPR / surveillance on recent agendas</strong><ul>';
+          html += '<div class="sub-alpr"><strong>📷 ALPR / surveillance on recent, or upcoming, agendas</strong><ul>';
           alpr.slice(0, 6).forEach(function (it) {
             var t = esc(cleanTitle(it.title)).slice(0, 150);
             var terms = (it.terms && it.terms.length)
@@ -81,7 +81,7 @@
 
         var dc = s.dataCenterItems || [];
         if (dc.length) {
-          html += '<div class="sub-dc"><strong>🏭 Data centers on recent agendas</strong><ul>';
+          html += '<div class="sub-dc"><strong>🏭 Data centers on recent, or upcoming, agendas</strong><ul>';
           dc.slice(0, 6).forEach(function (it) {
             var t = esc(cleanTitle(it.title)).slice(0, 150);
             html += '<li>' +
@@ -95,7 +95,7 @@
 
         var lu = s.landUseItems || [];
         if (lu.length) {
-          html += '<div class="sub-lu"><strong>🏗️ Land use on recent agendas</strong><ul>';
+          html += '<div class="sub-lu"><strong>🏗️ Land use on recent, or upcoming, agendas</strong><ul>';
           lu.slice(0, 6).forEach(function (it) {
             var t = esc(cleanTitle(it.title)).slice(0, 150);
             var tags = (it.tags && it.tags.length)
