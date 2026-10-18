@@ -1,20 +1,21 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-15T13:44:25Z",
+  "generatedAt": "2026-10-18T11:47:37Z",
   "source": "Bartow County (revize agenda/minutes PDFs, poppler+OCR)",
   "place": "Bartow County",
-  "count": 12
+  "count": 13
  },
  "summary": {
   "flags": [
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-02",
+  "lastActivity": "2026-10-14",
   "topicTotals": {
+   "comprehensive-plan": 1,
+   "contract": 8,
    "annexation": 2,
    "appointment": 8,
-   "contract": 7,
    "millage-budget": 3,
    "development": 2,
    "rezoning": 1,
@@ -23,6 +24,16 @@
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Agenda",
+    "date": "2026-10-14",
+    "sourceUrl": "https://www.bartowcountyga.gov/CommissionerOffice/AGENDA.PUBLIC_MEETING_10-14-2026.pdf",
+    "tags": [
+     "comprehensive-plan"
+    ],
+    "excerpt": "… mporary Moratorium on Center Road Corridor Development (Rebecca Arnold) • Authorize a Consultant Agreement for the 2028 Comprehensive Plan (Rebecca Arnold) (Kimley Horn to speak) • Zoning Applications - See Summary Sheet (Rebecca Arnold)",
+    "excerptTerm": "comprehensive plan"
+   },
    {
     "title": "Agenda",
     "date": "2026-08-05",
@@ -78,11 +89,52 @@
     ]
    }
   ],
-  "landUseMeetings": 6,
+  "landUseMeetings": 7,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "2026-10-14",
+   "date": "2026-10-14",
+   "body": "Board of Commissioners",
+   "title": "Agenda",
+   "sourceUrl": "https://www.bartowcountyga.gov/CommissionerOffice/AGENDA.PUBLIC_MEETING_10-14-2026.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.bartowcountyga.gov/CommissionerOffice/AGENDA.PUBLIC_MEETING_10-14-2026.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 2027,
+   "pdfSha256": "a6fe46348fc629b938209da2bddab7403caec34f8b95a2666e864f1076af530d",
+   "topics": {
+    "comprehensive-plan": 1,
+    "contract": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "contract"
+   ],
+   "matchedTerms": [
+    "comprehensive plan",
+    "contract",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… mporary Moratorium on Center Road Corridor Development (Rebecca Arnold) • Authorize a Consultant Agreement for the 2028 Comprehensive Plan (Rebecca Arnold) (Kimley Horn to speak) • Zoning Applications - See Summary Sheet (Rebecca Arnold)",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "task order",
+     "excerpt": "… cycling Agreement with Liberty Tire Recycling (Rip Conner) WATER & SEWER • West Bartow WRF Construction Administration Task Order (Lamont Kiser) • Paga Mine Road Water Well Supply Contract - Project # 26-55-04 (Lamont Kiser) ZONING • Temporary Morat …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-09-02",
    "date": "2026-09-02",

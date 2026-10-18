@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-15T13:44:26Z",
+  "generatedAt": "2026-10-18T11:48:09Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -11,19 +11,30 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-15",
+  "lastActivity": "2026-10-20",
   "topicTotals": {
-   "rezoning": 15,
-   "variance": 16,
-   "appointment": 2,
-   "contract": 11,
-   "special-land-use": 10,
+   "alpr": 2,
+   "contract": 12,
    "millage-budget": 4,
-   "development": 2,
-   "alpr": 1
+   "rezoning": 16,
+   "variance": 17,
+   "appointment": 2,
+   "special-land-use": 10,
+   "development": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-10-20",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13868,plainText=false)",
+    "tags": [
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… ocated at 4158 Washington Road Suite 10 2. (I1b2) RZ26-10-01, Rezoning from R-2 (Single Family Residential) to C-1 (Neighborhood Commercial), 4391 Herefo …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Planning Commission",
     "date": "2026-10-15",
@@ -224,22 +235,20 @@
     ],
     "excerpt": "… cel 367, 0.24 +/- acres, and currently zoned R-2 (Single Family Residential). 3. (I1a3) RZ26-05-01, Rezoning from R-A (Residential Agricultural) to PRD (Planned Residential Development), 5703 Wrightsboro Road …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Planning Commission",
-    "date": "2026-05-07",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13540,plainText=false)",
-    "tags": [
-     "rezoning",
-     "special-land-use",
-     "variance"
-    ],
-    "excerpt": "… Commission District 4. Staff Assignment Danielle Montgomery. c. Public Hearing 1. (H1c1) VA26-05-01, Variance to Section 90-53 List of lot and structure requirements, 417 Hastings Place, Tax Map 082I Parcel 422, …",
-    "excerptTerm": "variance"
    }
   ],
-  "landUseMeetings": 20,
+  "landUseMeetings": 21,
   "alprItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-10-20",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13868,plainText=false)",
+    "terms": [
+     "genetec"
+    ],
+    "excerpt": "… (H1f) Authorization of Payment to Mainline Information Systems for Unitrends Appliance g. (H1g) Purchase of Genetec Servers from Dell for Life Cycle Replacement h. (H1h) Deductive Change Order 01 with R.D. Brown for the Sher …",
+    "excerptTerm": "genetec"
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-06-16",
@@ -251,9 +260,76 @@
     "excerptTerm": "genetec"
    }
   ],
-  "alprMeetings": 1
+  "alprMeetings": 2
  },
  "meetings": [
+  {
+   "id": "2589",
+   "date": "2026-10-20",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13868,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13868,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 8247,
+   "pdfSha256": "99535b45067f45d6d1afaa4b8b603e357d8df1343ee4bb1f002714a159dc2bb8",
+   "topics": {
+    "alpr": 1,
+    "contract": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "alpr",
+    "contract",
+    "millage-budget",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "fiscal year",
+    "genetec",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "alpr": {
+     "term": "genetec",
+     "excerpt": "… (H1f) Authorization of Payment to Mainline Information Systems for Unitrends Appliance g. (H1g) Purchase of Genetec Servers from Dell for Life Cycle Replacement h. (H1h) Deductive Change Order 01 with R.D. Brown for the Sher …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Columbia Judicial Circuit Superior Court Accountability Courts 2. (I1a2) Independent Contractor Agreement with Serenity Behavioral Health Systems to provide MAT Consultation and C …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… b. (H1b) Augusta Chiller Service Agreement for Refrigeration Equipment at the Coroner's Office c. (H1c) Fiscal Year 25/26 Required Budget Adjustment for Audit d. (H1d) Rename the existing Beehive Drive to Willingham Drive an …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ocated at 4158 Washington Road Suite 10 2. (I1b2) RZ26-10-01, Rezoning from R-2 (Single Family Residential) to C-1 (Neighborhood Commercial), 4391 Herefo …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… eehive Drive to Willingham Drive and the existing Willingham Drive to Willingham Circle, subject to variances to Columbia County Code Sections 18-236 Purpose and Administration, and 18-238 Renaming and Proced …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget",
+    "alpr"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2627",
    "date": "2026-10-15",
@@ -1300,39 +1376,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2605",
-   "date": "2026-05-05",
-   "body": "Board of Commissioners",
-   "title": "Budget Public Hearing For Fiscal Year 2027",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13526,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13526,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1492,
-   "pdfSha256": "d680a1598231c0ac40b7dfda84487abdb371cd9a44e7fa76f63aafdce596c074",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "fiscal year"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Columbia County Board of Commissioners Budget Public Hearing For Fiscal Year 2027 Agenda for May 5, 2026 at 5:30 …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

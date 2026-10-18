@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-15T13:44:25Z",
+  "generatedAt": "2026-10-18T11:47:38Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -10,19 +10,28 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-15",
+  "lastActivity": "2026-10-20",
   "topicTotals": {
-   "comprehensive-plan": 6,
    "contract": 24,
-   "development": 11,
+   "development": 12,
    "millage-budget": 21,
-   "rezoning": 17,
+   "rezoning": 18,
+   "comprehensive-plan": 6,
    "variance": 11,
    "appointment": 7,
    "special-land-use": 4
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Work Session",
+    "date": "2026-10-20",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5383,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning"
+    ]
+   },
    {
     "title": "Board of Commissioners Regular Meeting",
     "date": "2026-10-15",
@@ -216,11 +225,70 @@
     ]
    }
   ],
-  "landUseMeetings": 19,
+  "landUseMeetings": 20,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "439",
+   "date": "2026-10-20",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5383,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5383,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 13433,
+   "pdfSha256": "118880d6c11bb1695012388d52c747b4e8469fa837d72b74978bd2838e45a180",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "award of",
+    "budget",
+    "contract",
+    "rezon",
+    "task order",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… t of Fleet and Environmental Services (3) Board consideration and approval of the FY27 Professional Services Contract with University of Georgia Extension as approved in the Forsyth County 2027 budget - Direct …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… l Construction Administration in the amount of $11,760.00 for the Water & Sewer Maintenance Warehouse project - Vertical Capital Projects Manager, Department of Capital Projects (24) Board consider …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… rofessional Services Contract with University of Georgia Extension as approved in the Forsyth County 2027 budget - Director, Forsyth County Extension Services (4) Board consideration and approval to authoriz …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… yth County - CFO, Department of Finance (27) Board consideration and possible direction of a Board generated rezoning for ZA4108, Vijay Garlapati. In accordance with UDC 8-5.5(I), if an application for a …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "460",
    "date": "2026-10-15",
@@ -1640,48 +1708,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "427",
-   "date": "2026-04-28",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Work Session",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5076,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5076,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 20083,
-   "pdfSha256": "ad96974f585fe7d0b5368c326f2c179339fb3419fcb3d9e5b87466a750e74a46",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "purchase order",
-    "task order"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… match required - Deputy Director, Department of Engineering (12) Board consideration and approval of AT&T Contract ID 5513330, (AT&T MA Reference No. 148822UA, AT&T PS Contract ID ABVVHV6PT1), for a replacement o …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… security at World Cup events in the Atlanta Metro area and approval of the corresponding Budget Resolution and authorization for the Chairman to sign the documents required to accept the award - Chie …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

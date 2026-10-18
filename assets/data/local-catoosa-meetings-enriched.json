@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-15T13:44:27Z",
+  "generatedAt": "2026-10-18T11:48:16Z",
   "source": "Catoosa County (granicus agenda HTML)",
   "place": "Catoosa County",
   "count": 25
@@ -10,17 +10,28 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-06",
+  "lastActivity": "2026-10-20",
   "topicTotals": {
-   "millage-budget": 10,
+   "contract": 9,
+   "development": 3,
    "rezoning": 12,
-   "variance": 7,
-   "contract": 8,
-   "development": 2,
+   "millage-budget": 10,
+   "variance": 6,
    "appointment": 3
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-10-20",
+    "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=285",
+    "tags": [
+     "development",
+     "rezoning"
+    ],
+    "excerpt": "… REGULAR MEETING 1. Public Hearing 1.1 Proposed Approval of Moore Road Improvements for Wynbrook Subdivision - (Alex Wooten, Projects Supervisor) Wynbrook - Moore Road Plans.pdf Wynbrook - Moore …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Planning Commission",
     "date": "2026-09-22",
@@ -158,6 +169,54 @@
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "285",
+   "date": "2026-10-20",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners",
+   "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=285",
+   "textSource": "agenda",
+   "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=285",
+   "textMethod": "pdftotext",
+   "textChars": 3447,
+   "contentSha256": "def05095ed140b6ed43f9ef67578c396cd585b11111e76ed6c5a58d3e0fcd232",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "contract",
+    "rezon",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… 1 8.4 Proposed Approval of Contract with Pagefreezer for Social Media Archiving - (John Pless, Public Information Officer) Pagefree …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… REGULAR MEETING 1. Public Hearing 1.1 Proposed Approval of Moore Road Improvements for Wynbrook Subdivision - (Alex Wooten, Projects Supervisor) Wynbrook - Moore Road Plans.pdf Wynbrook - Moore …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Media Archiving_10.8.2026.pdf 9. Reports 10. Old Business 11. New Business 11.1 Zoning Case #1678-26, Rezoning of Tax Map 20D Parcel 10 (2327 Highway 41) from R-1 to C-1 - (Clint Underwood, Director of Planning and I …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "258",
    "date": "2026-10-06",
@@ -1012,46 +1071,6 @@
    "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=204",
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=204",
-   "textMethod": "pdftotext",
-   "textChars": 2827,
-   "contentSha256": "02a60ca6b846d2c5846c63586554b5df082ccb0c4c7e67828ba05d04ac8f001e",
-   "topics": {
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… r 2. Set Agenda 3. Minutes 4. Reports 5. Old Business 6. New Business 6.1 Zoning Case #1660-26, Rezoning of Tax Map 80 Parcel 86 (Red Belt Road) from C-2 to C-1 - (Clint Underwood, Director of Planning and I …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… of Planning and Inspections) Case 1661-26 Andrew Sharpe I-1 to C-1.pdf 6.3 Zoning Case #1662-26, Variance for Building Size at Tax Map 20D Parcel 257 (2164 Highway 41) - (Clint Underwood, Director of Planning an …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "203",
-   "date": "2026-04-28",
-   "body": "Planning Commission",
-   "title": "Planning Commission",
-   "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=203",
-   "textSource": "agenda",
-   "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=203",
    "textMethod": "pdftotext",
    "textChars": 2827,
    "contentSha256": "02a60ca6b846d2c5846c63586554b5df082ccb0c4c7e67828ba05d04ac8f001e",

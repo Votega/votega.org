@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-15T13:44:25Z",
+  "generatedAt": "2026-10-18T11:47:39Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -13,15 +13,15 @@
   ],
   "lastActivity": "2026-10-19",
   "topicTotals": {
-   "variance": 4,
-   "rezoning": 4,
+   "variance": 5,
+   "contract": 15,
+   "millage-budget": 18,
+   "rezoning": 3,
    "annexation": 4,
-   "contract": 14,
-   "development": 4,
-   "millage-budget": 17,
+   "development": 3,
    "appointment": 8,
-   "comprehensive-plan": 2,
-   "data-center": 3
+   "comprehensive-plan": 1,
+   "data-center": 2
   },
   "dataCenterItems": [
    {
@@ -33,13 +33,6 @@
     "title": "BOC Commission Meeting 08-18-26.",
     "date": "2026-08-18",
     "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7495,plainText=false)"
-   },
-   {
-    "title": "Planning Zoning and BOC",
-    "date": "2026-07-07",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7412,plainText=false)",
-    "excerpt": "… oning from R-A (residential agriculture) to PUD (planned unit Z2026- development) and a Special Use Permit for a data center and 47/S2026-48 substation located on Poole, East & West Tyson Roads, Villa Rica, 30180. Land lot(s) 11 …",
-    "excerptTerm": "data center"
    }
   ],
   "landUseItems": [
@@ -47,6 +40,14 @@
     "title": "Planning Zoning Variance",
     "date": "2026-10-19",
     "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7591,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
+   {
+    "title": "BOC Work Session",
+    "date": "2026-10-19",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7601,plainText=false)",
     "tags": [
      "variance"
     ]
@@ -160,6 +161,55 @@
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1138",
+   "date": "2026-10-19",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Session",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7601,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7601,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 9062,
+   "pdfSha256": "f1d00ef498166da1a16293e19bcbd5729d517c8fcfb727b4582b7e5680c50c92",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget",
+    "variance"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… hairman to sign all related documents pending final legal review. (Susan Shehata) BUSINESS ITEMS 14. Approval of a contract with Judicial Alternatives of Georgia, Inc. (JAG) for misdemeanor probation services for State Court for January 1, …",
+     "context": "public-comment"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… tive Session Minutes of October 5, 2026 and October 6, 2026 () FINANCIAL REPORT 4. Acceptance of the monthly Financial/Budget Report for September 2026. () PROCLAMATIONS 5. Proclaiming October as World Blindness Awareness Month in Douglas Count …",
+     "context": "public-comment"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… 28. Approval of the 2027 schedule for BOC Work Sessions, Commission Meetings, Planning & Zoning Board Meetings and Variance Hearings. (Sherri Mathis) APPROVAL OF EXPENSES COMMISSIONER COMMENTS EXECUTIVE SESSION RECONVENE AS NECESSARY ADJO …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -1188,71 +1238,6 @@
     "millage-budget"
    ],
    "dataCenterItems": []
-  },
-  {
-   "id": "1293",
-   "date": "2026-07-07",
-   "body": "Planning & Zoning",
-   "title": "Planning Zoning and BOC",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7412,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7412,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4568,
-   "pdfSha256": "cb5b49e3bef364d5db150108eca8bc7e94020906a2763718f93a90ab75080261",
-   "topics": {
-    "comprehensive-plan": 1,
-    "data-center": 1,
-    "development": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "comprehensive-plan",
-    "data-center",
-    "development",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "data center",
-    "future land use",
-    "rezon",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "comprehensive-plan": {
-     "term": "future land use",
-     "excerpt": "… on was deferred from 56/S2026-57 the June 2, 2026 meeting. Z2026- East Village Dothan, LLC - a request for a Future Land Use Map 41/S2026-42 amendment from RP(rural places) to CC (commerce center), a rezoning from R-A (residenti …",
-     "context": "agenda-action"
-    },
-    "data-center": {
-     "term": "data center",
-     "excerpt": "… oning from R-A (residential agriculture) to PUD (planned unit Z2026- development) and a Special Use Permit for a data center and 47/S2026-48 substation located on Poole, East & West Tyson Roads, Villa Rica, 30180. Land lot(s) 11 …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… agriculture) to R-MD (residential mid density) & PSP (public semi- public) for a residential subdivision located at 2391 Mt. Vernon Road, Lithia Springs, 30122. Land lot(s) 978, District 18, Section 2 & …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… equest for a Future Land Use Map 41/S2026-42 amendment from RP(rural places) to CC (commerce center), a rezoning from R-A (residential agriculture) to PUD (planned unit Z2026- development) and a Special Use Permit for a da …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "data-center"
-   ],
-   "dataCenterItems": [
-    {
-     "title": "Planning Zoning and BOC",
-     "date": "2026-07-07",
-     "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7412,plainText=false)",
-     "excerpt": "… oning from R-A (residential agriculture) to PUD (planned unit Z2026- development) and a Special Use Permit for a data center and 47/S2026-48 substation located on Poole, East & West Tyson Roads, Villa Rica, 30180. Land lot(s) 11 …",
-     "excerptTerm": "data center"
-    }
-   ]
   }
  ]
 }

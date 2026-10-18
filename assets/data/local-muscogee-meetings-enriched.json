@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-15T13:44:24Z",
+  "generatedAt": "2026-10-18T11:47:36Z",
   "source": "Columbus-Muscogee County (Legistar structured API)",
   "place": "Columbus-Muscogee County",
   "count": 25
@@ -14,13 +14,13 @@
   ],
   "lastActivity": "2026-10-26",
   "topicTotals": {
-   "rezoning": 78,
-   "development": 96,
-   "variance": 177,
-   "contract": 712,
-   "appointment": 122,
-   "millage-budget": 285,
-   "annexation": 31,
+   "rezoning": 76,
+   "development": 87,
+   "variance": 165,
+   "contract": 771,
+   "millage-budget": 305,
+   "appointment": 125,
+   "annexation": 32,
    "data-center": 3,
    "alpr": 1
   },
@@ -64,6 +64,19 @@
     ],
     "excerpt": "… d on the west side of Demorest Road; 460± feet north of White Spruce Lane, From: R, Rural District, To: L-AR-1, Limited Apartment Residential District (Rezoning #Z25-055). Ordinance",
     "excerptTerm": "apartment"
+   },
+   {
+    "title": "Columbus City Council",
+    "date": "2026-10-19",
+    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6217&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+    "tags": [
+     "annexation",
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "To set forth a statement of municipal services and zoning conditions to be provided to the area contained in a proposed annexation (AN26-018) of 1.949± Acres in Mifflin Township to the city of Columbus as required by the Ohio Revised Code and to decl …",
+    "excerptTerm": "annexation"
    },
    {
     "title": "Zoning Committee",
@@ -259,18 +272,6 @@
     ],
     "excerpt": "To accept the application (AN25-021) of Dublin MHP LLC for the annexation of certain territory containing 4.46± acres in Washington Township. ($0.00) Ordinance",
     "excerptTerm": "annexation"
-   },
-   {
-    "title": "Zoning Committee",
-    "date": "2026-04-27",
-    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6177&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-    "tags": [
-     "development",
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "… e north side of Hard Road, 150± feet west of Stoneford Drive, From: L-RR, Limited Rural Residential District, To: AR-1, Apartment Residential District (Rezoning #Z25-044). Ordinance",
-    "excerptTerm": "apartment"
    }
   ],
   "landUseMeetings": 23,
@@ -486,6 +487,144 @@
      "matterType": "Ordinance",
      "tags": [
       "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
+  {
+   "eventId": 6217,
+   "date": "2026-10-19",
+   "body": "Columbus City Council",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6217&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "itemCount": 169,
+   "topics": {
+    "contract": 59,
+    "millage-budget": 20,
+    "appointment": 3,
+    "rezoning": 2,
+    "development": 2,
+    "variance": 3,
+    "annexation": 1
+   },
+   "matchedTerms": [
+    "annexation",
+    "apartment",
+    "appoint",
+    "budget",
+    "contract",
+    "purchase order",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "To authorize the Director of the Department of Technology, on behalf of the Civil Service Commission, to enter into a contract with Governmentjobs.com, Inc. (also known as NeoGov); to waive the competitive bidding provisions of the Columbus City …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… central city areas in an amount up to $500,000.00; to authorize an expenditure up to $500,000.00 from the General Fund Budget; and to authorize the advancement of funds on a pre-determined schedule. ($500,000.00) Ordinance",
+     "context": "agenda-action"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "APPOINTMENTS",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "REZONINGS/AMENDMENTS",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… North Cassady Avenue, 1,238± feet north of Airport Drive, From: CPD, Commercial Planned Development District, To: AR-1, Apartment Residential District (Rezoning #Z26-015). Ordinance",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "VARIANCES",
+     "context": "agenda-action"
+    },
+    "annexation": {
+     "term": "annexation",
+     "excerpt": "To set forth a statement of municipal services and zoning conditions to be provided to the area contained in a proposed annexation (AN26-018) of 1.949± Acres in Mifflin Township to the city of Columbus as required by the Ohio Revised Code and to decl …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "REZONINGS/AMENDMENTS",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To rezone 2125 ACKLEY PL. (43219), being 30.17± acres located on the west side of North Cassady Avenue, 1,238± feet north of Airport Drive, From: CPD, Commercial Planned Developmen",
+     "matterFile": "2915-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "VARIANCES",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3353.03, Permitted uses; 3370.05, Permitted uses; 3312.25, Maneuvering; and 3312.30, Parking in a driveway, of the Columbus City",
+     "matterFile": "2890-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3309.14, Height districts; 3333.18, Building lines; 3333.255, Perimeter yard; and 3333.26, Height district, of the Columbus City",
+     "matterFile": "2916-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To set forth a statement of municipal services and zoning conditions to be provided to the area contained in a proposed annexation (AN26-018) of 1.949± Acres in Mifflin Township to",
+     "matterFile": "2888-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "annexation"
      ],
      "passed": null,
      "action": null,
@@ -1993,7 +2132,7 @@
    "date": "2026-06-29",
    "body": "Columbus City Council",
    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6195&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 277,
+   "itemCount": 266,
    "topics": {
     "contract": 93,
     "millage-budget": 44,
@@ -4623,266 +4762,6 @@
      "passed": null,
      "action": "Read for the First Time",
      "mover": null
-    }
-   ]
-  },
-  {
-   "eventId": 6177,
-   "date": "2026-04-27",
-   "body": "Zoning Committee",
-   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6177&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 27,
-   "topics": {
-    "rezoning": 4,
-    "development": 11,
-    "variance": 15
-   },
-   "matchedTerms": [
-    "apartment",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "REZONINGS/AMENDMENTS",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "apartment",
-     "excerpt": "… e north side of Hard Road, 150± feet west of Stoneford Drive, From: L-RR, Limited Rural Residential District, To: AR-1, Apartment Residential District (Rezoning #Z25-044). Ordinance",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "VARIANCES",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": [],
-   "landUseItems": [
-    {
-     "title": "REZONINGS/AMENDMENTS",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "rezoning"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To rezone 2100 HARD RD. (43123), being 5.0± acres located on the north side of Hard Road, 150± feet west of Stoneford Drive, From: L-RR, Limited Rural Residential District, To: AR-",
-     "matterFile": "0290-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "rezoning"
-     ],
-     "passed": "Pass",
-     "action": "Postponed to Date Certain",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To rezone 7801 & 7809 OLENTANGY RIVER RD. (43235), being 5.82± acres located on the west side of Olentangy River Road, 370± feet south of Clubview Boulevard, From: R-1, Residential",
-     "matterFile": "1035-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "rezoning"
-     ],
-     "passed": "Pass",
-     "action": "Postponed to Date Certain",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To rezone 6955-6999 HARLEM RD. (43081), being 4.40± acres located on the west side of Harlem Road, 880± feet north of Central College Road, From: L-M, Limited Manufacturing Distric",
-     "matterFile": "1136-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "rezoning"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "VARIANCES",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3312.27, Parking setback line; 3333.18, Building lines; and 3332.255, Perimeter yard, of the Columbus City Codes; for the propert",
-     "matterFile": "0291-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Postponed to Date Certain",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3333.02(5), AR-12, ARLD and AR-1 apartment residential district use; 3333.41(H)(I)(J), Standards, of the Columbus City codes; fo",
-     "matterFile": "1036-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Postponed to Date Certain",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; 3312.49(C), Required parking; 3332.05(A)(4), Area district lot width requirements; and 3332.",
-     "matterFile": "1116-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3309.14(A), Height districts; 3312.21(D), Landscaping and screening; 3332.06; R-rural area district requirements; 3333.18, Build",
-     "matterFile": "1137-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.037, R-2F residential district; 3332.18(D), Basis of computing area; and 3332.25(A)(B), Required side yard, of the Columbus",
-     "matterFile": "1139-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3332.035, R-3 residential district, of the Columbus City Codes; for the property located at 2930-2932 MEDINA AVE. (43224), to all",
-     "matterFile": "1143-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; 3312.49(C), Required parking; 3332.05(A)(4), Area district lot width requirements; and 3332.",
-     "matterFile": "1116-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; 3312.49(C), Required parking; 3332.05(A)(4), Area district lot width requirements; and 3332.",
-     "matterFile": "1116-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3309.14(A), Height districts; 3312.21(D), Landscaping and screening; 3332.06; R-rural area district requirements; 3333.18, Build",
-     "matterFile": "1137-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3309.14(A), Height districts; 3312.21(D), Landscaping and screening; 3332.06; R-rural area district requirements; 3333.18, Build",
-     "matterFile": "1137-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.037, R-2F residential district; 3332.18(D), Basis of computing area; and 3332.25(A)(B), Required side yard, of the Columbus",
-     "matterFile": "1139-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.037, R-2F residential district; 3332.18(D), Basis of computing area; and 3332.25(A)(B), Required side yard, of the Columbus",
-     "matterFile": "1139-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3332.035, R-3 residential district, of the Columbus City Codes; for the property located at 2930-2932 MEDINA AVE. (43224), to all",
-     "matterFile": "1143-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3332.035, R-3 residential district, of the Columbus City Codes; for the property located at 2930-2932 MEDINA AVE. (43224), to all",
-     "matterFile": "1143-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
     }
    ]
   }
