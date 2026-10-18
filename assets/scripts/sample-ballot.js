@@ -11,10 +11,10 @@
 // Consumes assets/data/races.json and assets/data/ga-ballot-measures.json.
 //
 // Resolution precision (see the contest-resolvability map):
-//   • Statewide (U.S. Senate, state executives, PSC, appellate courts) — everyone.
+//   • Statewide (U.S. Senate, state executives, PSC) — everyone.
 //   • U.S. House / state House / state Senate — exact from an address geocode; with
 //     county only, every overlapping district is returned and flagged `ambiguous`.
-//   • Superior Court — exact from county (circuits are whole-county groupings).
+//   • Superior Court — exact from county, but currently excluded (INCLUDE_JUDICIAL).
 //   • Ballot measures — statewide unless a measure carries a `scope`/`counties` field.
 
 'use strict';
@@ -229,6 +229,11 @@ function circuitSlugFromRaceId(id) {
 //   • District contests fall back to county overlap (ambiguous) when the district is
 //     unknown (county-only lookup).
 //   • Superior Court resolves by county → circuit (exact; circuits are whole counties).
+// Judicial contests (Superior Court, Supreme Court, Court of Appeals) are not shown
+// on the sample ballot. Flip this to true to bring them back; the county→circuit
+// matching below is left intact for that.
+const INCLUDE_JUDICIAL = false;
+
 function raceApplies(race, loc) {
   const NO  = { include: false, ambiguous: false };
   const YES = { include: true,  ambiguous: false };
@@ -254,6 +259,7 @@ function raceApplies(race, loc) {
       return YES;                                            // Gov, AG, PSC, etc. all statewide
 
     case 'state-judicial':
+      if (!INCLUDE_JUDICIAL) return NO;                      // judicial contests are left off the sample ballot
       if (race.chamber === 'Superior Court') {
         if (typeof COUNTY_CIRCUIT === 'undefined' || !loc.county) return NO;
         const voterCircuit = COUNTY_CIRCUIT[loc.county] || null;
@@ -353,7 +359,6 @@ function assembleBallot(loc, opts) {
     { key: 'federal',         label: 'Federal',              levels: ['federal'] },
     { key: 'state-executive', label: 'Statewide Executive',  levels: ['state-executive'] },
     { key: 'state',           label: 'State Legislature',    levels: ['state'] },
-    { key: 'state-judicial',  label: 'Judicial',             levels: ['state-judicial'] },
   ];
   const groups = GROUPS.map(g => ({
     key: g.key, label: g.label,
