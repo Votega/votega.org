@@ -279,3 +279,62 @@ test('a refused lookup never reaches onStart', async () => {
   assert.deepEqual(started, []);
   assert.deepEqual(h.calls.refused, ['zip_only']);
 });
+
+// --- onZip: a page that can answer a bare ZIP itself ------------------------
+
+test('with onZip, a bare ZIP is handed to the page, not refused, and never geocoded', async () => {
+  const zips = [];
+  let geocoded = 0;
+  const { lookup, input, calls } = harness({
+    onZip: (zip, raw) => { zips.push([zip, raw]); },
+    geocode: async () => { geocoded++; return {}; },
+  });
+  input.value = ' 30303-1234 ';
+  assert.equal(await lookup.run(), 'zip');
+  assert.deepEqual(zips, [['30303', '30303-1234']], 'ZIP+4 is cut to the five-digit ZIP');
+  assert.equal(geocoded, 0, 'no request to the Census geocoder');
+  assert.deepEqual(calls.refused, []);
+  assert.deepEqual(calls.saved, [], 'a ZIP is not a location; nothing is persisted');
+  assert.deepEqual(calls.resolved, []);
+  assert.deepEqual(lastEvent(calls), ['reps_lookup', { method: 'address', outcome: 'zip', page: 'federal_reps' }]);
+});
+
+test('onZip may return its own outcome, and holds the busy latch while it runs', async () => {
+  let release;
+  const { lookup, input, button } = harness({
+    onZip: () => new Promise(res => { release = () => res('zip_unknown'); }),
+  });
+  input.value = '30303';
+  const first = lookup.run();
+  assert.equal(button.disabled, true);
+  assert.equal(await lookup.run(), 'busy');
+  release();
+  assert.equal(await first, 'zip_unknown');
+  assert.equal(button.disabled, false);
+});
+
+test('a rejection from onZip is reported like any other lookup error', async () => {
+  const { lookup, input, calls } = harness({ onZip: async () => { throw new Error('boom'); } });
+  input.value = '30303';
+  assert.equal(await lookup.run(), 'error');
+  assert.deepEqual(lastStatus(calls), ['boom', true]);
+});
+
+test('onZip does not affect a full address: it still geocodes', async () => {
+  let zipCalls = 0;
+  const { lookup, input, calls } = harness({ onZip: () => { zipCalls++; } });
+  input.value = '123 Peachtree St NE, Atlanta, GA 30303';
+  assert.equal(await lookup.run(), 'success');
+  assert.equal(zipCalls, 0);
+  assert.equal(calls.resolved.length, 1);
+});
+
+test('negative control: a page WITHOUT onZip still refuses a bare ZIP', async () => {
+  let geocoded = 0;
+  const { lookup, input, calls } = harness({ geocode: async () => { geocoded++; return {}; } });
+  input.value = '30303';
+  assert.equal(await lookup.run(), 'zip_only');
+  assert.equal(geocoded, 0);
+  assert.deepEqual(calls.refused, ['zip_only']);
+  assert.match(lastStatus(calls)[0], /ZIP code alone/);
+});

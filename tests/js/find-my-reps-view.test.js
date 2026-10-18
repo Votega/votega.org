@@ -231,3 +231,53 @@ test('an empty section renders nothing at all', () => {
   assert.strictEqual(View.repSection('U.S. House', []), '');
   assert.match(View.repSection('U.S. House', ['<a></a>']), /fmr-office/);
 });
+
+// --- ZIP lookup (ga-zip-districts.json) -------------------------------------
+
+const ZIPS = readJson('assets/data/ga-zip-districts.json').zips;
+
+test('shareLabel: 5% and over is "about X%", under is "a small part"', () => {
+  assert.equal(View.shareLabel(0.50406), 'about 50% of this ZIP');
+  assert.equal(View.shareLabel(0.05), 'about 5% of this ZIP');
+  assert.equal(View.shareLabel(0.0499), 'a small part of this ZIP');
+  assert.equal(View.shareLabel(0.01212), 'a small part of this ZIP');
+  assert.equal(View.shareLabel(1), 'all of this ZIP');
+  assert.equal(View.shareLabel(undefined), null);
+});
+
+test('zipLoc lists every district in the file, sorted ascending, none dropped', () => {
+  const loc = View.zipLoc('30303', ZIPS['30303']);
+  assert.equal(loc.source, 'zip');
+  assert.deepEqual(loc.stateHouse, [56, 58, 59], 'the 1% sliver is still listed');
+  assert.deepEqual(loc.stateSenate, [36]);
+  assert.deepEqual(loc.usHouse, [5]);
+  assert.deepEqual(loc.counties, ['Fulton']);
+  // Every ZIP with districts: nothing the file lists is lost in the expansion.
+  for (const [zip, entry] of Object.entries(ZIPS)) {
+    const l = View.zipLoc(zip, entry);
+    if (!l) { assert.ok(!['stateHouse', 'stateSenate', 'usHouse'].some(k => (entry[k] || []).length), zip); continue; }
+    for (const k of ['stateHouse', 'stateSenate', 'usHouse']) {
+      assert.equal(l[k].length, (entry[k] || []).length, zip + ' ' + k);
+      assert.deepEqual(l[k], l[k].slice().sort((a, b) => a - b), zip + ' ' + k + ' ascending');
+    }
+  }
+});
+
+test('zipLoc is null for a po-box ZIP, an unknown ZIP, or one with no districts', () => {
+  assert.equal(View.zipLoc('30164', ZIPS['30164']), null);
+  assert.equal(View.zipLoc('00000', undefined), null);
+  assert.equal(View.zipLoc('30303', { kind: 'standard', counties: null, usHouse: null, stateSenate: null, stateHouse: null }), null);
+  assert.equal(View.zipLoc('30303', { kind: 'other', usHouse: [{ district: 5, share: 1 }] }).usHouse[0], 5, "'other' is treated like standard");
+});
+
+test('renderReps for a ZIP: heading, honest caveat, share labels, every district', () => {
+  const html = View.renderReps(View.zipLoc('30303', ZIPS['30303']), FED, GA, {});
+  assert.match(html, /Districts touching ZIP 30303/);
+  assert.match(html, /only a street address/);
+  assert.match(html, /District 58 · about 50% of this ZIP/);
+  assert.match(html, /District 59 · about 48% of this ZIP/);
+  assert.match(html, /District 56 · a small part of this ZIP/);
+  assert.ok(html.indexOf('District 56') < html.indexOf('District 58') && html.indexOf('District 58') < html.indexOf('District 59'));
+  // Other sources keep their old output.
+  assert.doesNotMatch(View.renderReps(View.countyLoc('Fulton', {}), FED, GA, {}), /Districts touching ZIP|of this ZIP/);
+});

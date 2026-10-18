@@ -11,7 +11,7 @@ css:
 ---
 
 <h1>Find My Representatives</h1>
-<p>Georgia voters are represented at three levels of government — federal, state, and <a href="{{ '/local/' | relative_url }}">local</a><sup>*</sup>. Enter your address to see your federal and state representatives, or browse by category below.</p>
+<p>Georgia voters are represented at three levels of government — federal, state, and <a href="{{ '/local/' | relative_url }}">local</a><sup>*</sup>. Enter your address (or just your ZIP code) to see your federal and state representatives, or browse by category below.</p>
 <p class="levels-note"><span aria-hidden="true">*</span> Not all localities in Georgia have been added to the site yet.</p>
 
 <style>
@@ -54,6 +54,7 @@ css:
     border:1px solid #cbd0d8; border-radius:8px; background:#fff;
   }
   .fmr-btn-secondary { background:#fff; color:#1a56a8; border:1px solid #1a56a8; }
+  .fmr-zip-head { font-size:1.25rem; margin:0 0 0.4rem; }
   .fmr-group-note { font-size:0.85rem; color:#555; margin:0 0 0.75rem; }
   .fmr-carry {
     margin-top:0.9rem; padding:0.6rem 0.8rem; font-size:0.88rem;
@@ -67,25 +68,26 @@ css:
 </style>
 
 <div class="fmr-lookup">
-  <label class="fmr-label" for="fmrAddress">Enter your residential address</label>
+  <label class="fmr-label" for="fmrAddress">Enter your residential address or ZIP code</label>
   <div class="fmr-row">
     <input type="text" id="fmrAddress" class="fmr-input"
-           placeholder="123 Peachtree St NE, Atlanta, GA 30303"
+           placeholder="123 Peachtree St NE, Atlanta, GA 30303 — or just 30303"
            autocomplete="street-address" />
     <button id="fmrBtn" class="fmr-btn" type="button">Find my reps</button>
   </div>
-  <p class="fmr-privacy">Your address is sent only to the U.S. Census geocoder to look up your districts. VoteGA does not store it.</p>
+  <p class="fmr-privacy">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone is looked up on this page and is not sent anywhere. VoteGA does not store either.</p>
 
   {%- comment -%}
     The county fallback is what the address path degrades to. The Census geocoder
     misses new construction, rural routes and some apartment formats, and a ZIP
-    alone can never resolve a district — without this the page's only remaining
+    alone can never resolve ONE district (it lists every district touching the
+    ZIP instead, see lookupZip) — without this the page's only remaining
     path was the browse cards, which hand the voter off to the Secretary of
     State. It also makes the geocoder's own error messages true: they say "pick
     your county above", which they do only because this control sits above the
     status line. Mirrors sample-ballot.html's county row.
   {%- endcomment -%}
-  <p class="fmr-or" id="fmrOr">OR look up by county (shows every district that touches the county)</p>
+  <p class="fmr-or" id="fmrOr">OR pick your county (shows every district that touches the county)</p>
   <div class="fmr-row">
     <select id="fmrCounty" class="fmr-select" aria-label="Choose your county">
       <option value="">Choose a county…</option>
@@ -155,6 +157,7 @@ css:
   'use strict';
   var FED_URL = 'assets/data/current-members.json';
   var GA_URL  = 'assets/data/ga-members.json';
+  var ZIP_URL = 'assets/data/ga-zip-districts.json';
 
   var input     = document.getElementById('fmrAddress');
   var btn       = document.getElementById('fmrBtn');
@@ -270,6 +273,11 @@ css:
     // path starts inside the module now, so it clears from there.
     onStart: function () { out.innerHTML = ''; },
     onRefuse: function () { out.innerHTML = ''; },
+    // A bare ZIP is answered here instead of refused: every district touching it,
+    // from the static table. Nothing is sent anywhere and nothing is saved --
+    // a ZIP is a set of districts, not a location, and storing it would let the
+    // other pages mistake it for one.
+    onZip: lookupZip,
     onResolve: function (loc) {
       // The geocoder's own scalar shape -- one district per chamber -- is what
       // the sample ballot and the candidate finder read, and what the module
@@ -282,6 +290,49 @@ css:
       });
     },
   });
+
+  // Fetched only when a ZIP is typed, so address and county visitors never pay
+  // for the table. The promise is kept for the visit, but dropped on failure so
+  // a retry can succeed.
+  var zipTable = null;
+  function loadZipTable() {
+    if (!zipTable) {
+      zipTable = loadJson(ZIP_URL).catch(function (err) { zipTable = null; throw err; });
+    }
+    return zipTable;
+  }
+
+  var ZIP_NEXT = ' Enter your full street address above, or pick your county.';
+  function zipNote(message, isError) {
+    out.innerHTML = '';
+    status.textContent = message + ZIP_NEXT;
+    status.className = isError ? 'fmr-status err' : 'fmr-status';
+  }
+
+  // Returns an outcome enum (see address-lookup.js onZip); never throws for a
+  // missing or PO-box ZIP, which are answers, not failures.
+  function lookupZip(zip) {
+    hideCarry();
+    return loadZipTable().then(function (table) {
+      var entry = table && table.zips && table.zips[zip];
+      if (!entry) {
+        zipNote('ZIP ' + zip + ' isn’t in our list of Georgia ZIP codes.', true);
+        return 'zip_unknown';
+      }
+      var loc = View.zipLoc(zip, entry);
+      if (!loc) {
+        zipNote('ZIP ' + zip + ' is a PO box ZIP, which doesn’t map to any district.', true);
+        return 'zip_no_districts';
+      }
+      return Promise.all([loadJson(FED_URL), loadJson(GA_URL)]).then(function (r) {
+        render(loc, r[0], r[1]);
+        return 'zip';
+      });
+    }, function () {
+      zipNote('ZIP code data couldn’t be loaded right now.', true);
+      return 'zip_error';
+    });
+  }
 
   function lookup() { addressLookup.run(); }
 
