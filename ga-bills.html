@@ -855,7 +855,10 @@ breadcrumb:
         + '</div>'
       : '';
     const allSponsors = bill.sponsors && bill.sponsors.length
-      ? '<div class="detail-section"><div class="detail-label">Sponsors</div><div class="detail-body">' + escHtml(bill.sponsors.map(function (s) { return s.name; }).join(' · ')) + '</div></div>'
+      ? '<div class="detail-section"><div class="detail-label">Sponsors</div><div class="detail-body">' + bill.sponsors.map(function (s) {
+          const href = sponsorHref[s.legisGaGovId];
+          return href ? '<a href="' + escHtml(href) + '">' + escHtml(s.name) + '</a>' : escHtml(s.name);
+        }).join(' · ') + '</div></div>'
       : '';
     const voteBars = bill.passageVotes && bill.passageVotes.length
       ? bill.passageVotes.map(voteBarHtml).join('')
@@ -1252,7 +1255,24 @@ breadcrumb:
     });
   }
 
-  fetch(DATA_URL)
+  // Sponsors carry only legisGaGovId. The roster maps that to the member id,
+  // and the entity-URL map turns the id into /ga-legislators/<slug>/. Both
+  // degrade to {} so a missing file leaves plain text, never a broken link.
+  const MEMBERS_URL = '/assets/data/ga-members.json';
+  let sponsorHref = {};
+  const linkDataReady = Promise.all([
+    fetch(MEMBERS_URL).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }),
+    (window.VoteGA && VoteGA.entityUrls ? VoteGA.entityUrls.load('/') : Promise.resolve({})).catch(function () { return {}; })
+  ]).then(function (res) {
+    const maps = res[1] || {};
+    ((res[0] || {}).members || []).forEach(function (m) {
+      if (m.legisGaGovId == null || !m.id) return;
+      const url = VoteGA.entityUrls.href(maps, 'ga-legislator', m.id, '/ga-member.html?id=' + encodeURIComponent(m.id));
+      sponsorHref[m.legisGaGovId] = url + '#sponsoredLegislation';
+    });
+  }).catch(function () {});
+
+  linkDataReady.then(function () { return fetch(DATA_URL); })
     .then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
