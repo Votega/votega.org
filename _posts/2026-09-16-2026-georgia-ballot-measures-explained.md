@@ -9,12 +9,10 @@ tags: [ballot measures, constitutional amendments, 2026 general election, voter 
 
 > **See the live tracker:** For the current status of every measure, its enabling legislation, and results after the election, visit the [Georgia Ballot Measures page]({{ '/ga-ballot-measures.html' | relative_url }}).
 
-At the bottom of your **November 3, 2026** ballot, past the candidates, you'll find three statewide measures written in dense legal language. They're easy to skip but a "yes" or "no" here changes Georgia's constitution or its tax code directly, with no candidate in between. This is where your vote is most literal.
-
-Here's each measure in plain English: what it does, and what your vote means.
+At the bottom of your **November 3, 2026** ballot, past the candidates, you'll find three statewide measures written in dense legal language. They're easy to skip but a "yes" or "no" here changes Georgia's Constitution.
 
 {: .box-note}
-**How Georgia amendments work.** A constitutional amendment must first pass the General Assembly by a two-thirds vote in both chambers, then win a simple majority of voters statewide. That's why these appear as a plain **YES / NO** question. A referendum works the same way at the ballot but changes state law rather than the constitution.
+**How Georgia amendments work.** A constitutional amendment must first pass the General Assembly by a two-thirds vote in both chambers, then win a simple majority of voters statewide. That's why these appear as a plain **YES / NO** question. A **referendum** works the same way at the ballot but changes state law rather than the constitution.
 
 ## The three certified constitutional amendments
 
