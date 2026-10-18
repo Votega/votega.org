@@ -466,17 +466,54 @@
   function rivalsHtml(rivals) {
     if (!rivals.length) return '';
     const items = rivals.map(c => {
-      const label = escHtmlGa(c.name)
-        + (c.party ? ` (${escHtmlGa(c.party)})` : '')
+      const name  = c.name || c._name;
+      const party = c.party || c._party;
+      // A federal incumbent is stored as {type, memberId} with no name; if the
+      // roster lookup failed there is nothing honest to print, so omit the row
+      // rather than show a bare "— incumbent".
+      if (!name) return '';
+      const label = escHtmlGa(name)
+        + (party ? ` (${escHtmlGa(party)})` : '')
         + (c.isIncumbent || c.type === 'incumbent' ? ' — incumbent' : '');
-      return c.id
-        ? `<li><a href="${escHtmlGa(candidateHref(c.id))}">${label}</a></li>`
+      const href = c.id ? candidateHref(c.id) : c._href;
+      return href
+        ? `<li><a href="${escHtmlGa(href)}">${label}</a></li>`
         : `<li>${label}</li>`;
     }).join('');
+    if (!items) return '';
     return `<div class="candidate-rivals">
         <h2>Also on the ballot</h2>
         <ul>${items}</ul>
       </div>`;
+  }
+
+  // Incumbents are curated in races.json as {type:'incumbent', memberId} with no
+  // name or party — those come from the member roster. Fill them in (as _name /
+  // _party / _href, leaving the race data untouched) so the "Also on the ballot"
+  // list can name them; without this the row printed as a bare "— incumbent".
+  async function hydrateRivalIncumbents(phase, self) {
+    const nameless = phaseRivals(phase, self).filter(c => !c.name && (c.memberId || c.existingMemberId));
+    if (!nameless.length) return;
+    const rosters = {};
+    for (const c of nameless) {
+      const source = c.memberSource || c.existingMemberSource || 'congress';
+      if (!(source in rosters)) {
+        try {
+          const res = await fetch(getBasePath() + (source === 'congress' ? CONGRESS_URL : GA_MEMBERS_URL));
+          rosters[source] = res.ok ? ((await res.json()).members || []) : [];
+        } catch (e) { rosters[source] = []; }
+      }
+      const mid = c.existingMemberId || c.memberId;
+      const m = rosters[source].find(x => (source === 'congress' ? x.bioguideId : x.id) === mid);
+      if (!m) continue;
+      c._name = source === 'congress'
+        ? ([m.firstName, m.lastName].filter(Boolean).join(' ').trim() || m.name)
+        : m.name;
+      c._party = m.partyName || m.party || '';
+      c._href = CANDIDATE_URLS[mid]
+        ? getBasePath() + CANDIDATE_URLS[mid].replace(/^\//, '')
+        : memberProfileUrl(mid, source);
+    }
   }
 
   function renderCandidate(candidate, race, phaseName) {
@@ -986,6 +1023,7 @@
       candidate._claimEmail = incumbentEntry?.email || '';
 
       if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
+      await hydrateRivalIncumbents(race.phases?.[race.activePhase], candidate);
       renderCandidate(candidate, race, race.activePhase);
       loadCampaignFinance(candidate, race);
       loadEntityNews(candidate);
@@ -1089,6 +1127,7 @@
       found._claimEmail = found.email || '';
 
       if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
+      await hydrateRivalIncumbents(foundRace.phases?.[foundPhase], found);
       renderCandidate(found, foundRace, foundPhase);
       loadCampaignFinance(found, foundRace);
       loadEntityNews(found);
