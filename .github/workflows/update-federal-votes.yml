@@ -2,9 +2,15 @@ name: Update federal legislative vote data — GA delegation (weekly, Sun 09:00 
 
 permissions:
   contents: write
+  issues: write   # the tier-2 report keeps one refreshed tracking issue
 
 on:
   workflow_dispatch:
+    inputs:
+      allow_collapse:
+        description: 'Commit even though roll calls at HEAD are missing from the new file (only after inspecting the rejected file)'
+        type: boolean
+        default: false
   schedule:
     # Weekly on Sundays at 09:00 UTC
     - cron: '0 9 * * 0'
@@ -39,6 +45,7 @@ jobs:
       # committed file and fetches only the ones missing, so a quiet week costs a
       # few dozen requests rather than ~1,600.
       - name: Generate federal vote data
+        id: generate
         run: python scripts/generate_federal_votes_data.py assets/data/federal-member-votes.json assets/data/current-members.json
 
       - name: Build the shared vote index and per-member slices
@@ -50,15 +57,25 @@ jobs:
       - name: Score party unity and participation
         run: python scripts/generate_federal_party_unity.py
 
+      # Tier 1 gates on the monolith contradicting itself (totals vs records,
+      # prefix vs chamber, memberVotes naming an unknown roll call). The one
+      # baseline gate is the loss check: committed roll calls are immutable and
+      # reused, so within a Congress the id set only grows -- an id at HEAD that
+      # is gone means a chamber index failed or the reuse layer broke, and it
+      # refuses the commit (a set difference, not a percentage). A new Congress
+      # legitimately starts empty and is exempt. `--min members=15` was the
+      # world's number (a vacancy leaves 15, two leave 14, a new Congress 0);
+      # vacancies are now reported by name. See
+      # docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
       - name: Validate generated data
+        id: validate
+        env:
+          ALLOW_COLLAPSE: ${{ inputs.allow_collapse && '--allow-collapse' || '' }}
         run: |
-          python scripts/validate_data_update.py assets/data/federal-member-votes.json \
-            --metric rollcalls=len:votes \
-            --metric members=len:memberVotes \
-            --metric house=metadata.houseVotes \
-            --metric senate=metadata.senateVotes \
-            --min members=15 \
-            --scope-key metadata.congress
+          python scripts/validate_federal_votes_monolith.py assets/data/federal-member-votes.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/federal-votes-changes.md" \
+            $ALLOW_COLLAPSE
 
       # Counts cannot see shape. This checks that the fields the page renders are
       # present, that bill/billUrl are null rather than "" on the many roll calls
@@ -141,3 +158,38 @@ jobs:
         env:
           GA_FEDERAL_LEGISLATORS: ${{ secrets.GA_FEDERAL_LEGISLATORS }}
         run: python3 scripts/publish_federal_delegation.py
+
+      # After the commit: the report describes a record that has already shipped.
+      # One issue, refreshed in place; weekly, so the comment is unconditional.
+      - name: Report what changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "Federal votes: delegation members with no votes"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/federal-votes-changes.md"
+          if [ ! -s "$report" ] || grep -q 'No material change this run' "$report"; then
+            echo "Nothing material - skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-federal-votes."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
+      # Last on purpose (a step's `if` is evaluated when the runner reaches it).
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-federal-member-votes
+          path: assets/data/federal-member-votes.json
+          if-no-files-found: ignore
+          retention-days: 14
