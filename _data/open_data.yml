@@ -24,6 +24,19 @@ meta:
     Structured, machine-readable civic data we already maintain for VoteGA.org,
     published for anyone to reuse — civic apps, researchers, journalists, or
     organizations that need clean data without building their own pipeline.
+  # A `family` groups related repos under one heading on /open-data. The repos stay
+  # separate on purpose (different upstream, different ID scheme, different layout);
+  # the family is only how they are presented and cross-linked. Set `family: <key>`
+  # on a dataset to join one.
+  families:
+    georgia-officials:
+      title: Georgia officials
+      blurb: >
+        Who represents Georgia, at both levels. State legislators and the federal
+        delegation are separate repositories because they come from different sources
+        (the General Assembly vs. Congress.gov) and are identified differently
+        (OCD person ID / legis.ga.gov ID vs. Bioguide ID), so they do not join to
+        each other. Each repo's README links to the other.
 
 datasets:
   # --------------------------------------------------------------------------
@@ -41,6 +54,7 @@ datasets:
     source: legis.ga.gov official web service
     scope: 158th General Assembly (2025–2026)
     cadence: Roster daily · votes &amp; scorecard weekly
+    family: georgia-officials
     repo_url: https://github.com/Votega/ga-legislators
     files:
       - { name: "latest.json", desc: "Start here — indexes every session and names its files", url: "https://github.com/Votega/ga-legislators/blob/main/latest.json" }
@@ -61,6 +75,7 @@ datasets:
     source: Congress.gov API · Clerk of the U.S. House · U.S. Senate
     scope: Current Congress, Georgia delegation only
     cadence: Members daily · votes weekly
+    family: georgia-officials
     repo_url: https://github.com/Votega/ga-federal-legislators
     files:
       - { name: "data/members.json", desc: "GA delegation roster", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/members.json" }
