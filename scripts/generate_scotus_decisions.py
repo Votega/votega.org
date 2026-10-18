@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 
 from lib.http import fetch_json as http_fetch_json
 
-TERMS       = ["2024", "2025"]   # Terms to include; add new term each October
+TERMS       = ["2024", "2025", "2026"]   # Terms to include; add new term each October
 API_DELAY   = 0.25
 
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/scotus-decisions.json"
