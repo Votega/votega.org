@@ -169,7 +169,12 @@ function availableElections(races, measures, calendar) {
   (races || []).forEach(r => Object.values(r.phases || {}).forEach(p => {
     if (p.electionDate && phaseCandidateCount(p) > 0) dates.add(p.electionDate);
   }));
-  (measures || []).forEach(m => { if (m.electionDate) dates.add(m.electionDate); });
+  // Same lifecycle gate as the contest list below: a measure that never reached
+  // the ballot must not conjure an election into the "Which election?" picker
+  // that would then render with no contests in it.
+  (measures || []).forEach(m => {
+    if (m.electionDate && ON_BALLOT_MEASURE_STATUSES.includes(m.status)) dates.add(m.electionDate);
+  });
 
   const cal = calendar || [];
   return [...dates].sort().map(date => {
@@ -296,6 +301,11 @@ function candidatesForActivePhase(race) {
   return candidatesForPhase(race.phases && race.phases[race.activePhase]);
 }
 
+// Ballot-measure lifecycle stages that were, or will be, printed on a ballot.
+// See ga-ballot-measures.schema.json: 'potential' has not been certified and
+// 'not-on-ballot' never was, so neither belongs in a ballot preview.
+const ON_BALLOT_MEASURE_STATUSES = ['certified', 'passed', 'failed'];
+
 // Ballot-measure guardrail: statewide unless a measure declares scope/counties.
 // (No current measure carries scope, so all resolve statewide — but the schema may add
 // `scope: "local"` + `counties: [...]`, and this is forward-compatible with that.)
@@ -344,8 +354,17 @@ function assembleBallot(loc, opts) {
   });
 
   // Measures on this election's ballot that pass the scope guardrail.
+  //
+  // The status test is not cosmetic: this is a preview of what a voter will see
+  // in the booth, so it must carry only measures that actually reach it. There
+  // was no status filter here, so a measure still working its way through the
+  // General Assembly ('potential') was previewed as a contest, and one that
+  // never got referred ('not-on-ballot') would be too. 'passed'/'failed' stay
+  // included because a past election's ballot did contain them.
   const measureContests = measures
-    .filter(m => m.electionDate === electionDate && measureApplies(m, loc))
+    .filter(m => m.electionDate === electionDate
+              && ON_BALLOT_MEASURE_STATUSES.includes(m.status)
+              && measureApplies(m, loc))
     .map(m => ({ kind: 'measure', id: m.id, status: m.status || null, measure: m }));
 
   // Group in ballot order.

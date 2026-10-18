@@ -35,6 +35,17 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     text-decoration: line-through;
     color: #777;
   }
+  /* Deliberately grey and recessive: this measure is not on anyone's ballot, so
+     it must not compete visually with the three a voter actually decides. */
+  .measure-card.not-on-ballot {
+    border-left-color: #9aa3af;
+    background: #f7f8fa;
+  }
+  .measure-card.not-on-ballot .measure-title,
+  .measure-card.not-on-ballot .measure-summary {
+    color: #4b5563;
+    text-decoration: line-through;
+  }
   .measure-badges {
     display: flex;
     flex-wrap: wrap;
@@ -59,6 +70,34 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   .badge-type { background: #e7eef8; color: #1a4d94; }
   .badge-passed { background: #d7efd8; color: #1b5e20; }
   .badge-failed { background: #f6dcdc; color: #a02121; }
+  /* Neutral grey, not red: the measure did not lose a vote, it never got one. */
+  .badge-not-on-ballot { background: #e5e7eb; color: #374151; }
+  .measure-sub {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    font-weight: 700;
+    margin: 0.9rem 0 0.3rem;
+  }
+  .measure-intent p, .measure-opposition p { margin: 0; font-size: 0.93rem; }
+  .measure-opposition p { color: #4b5563; }
+  .measure-sources ul { list-style: none; padding: 0; margin: 0; }
+  .measure-sources li { padding: 0.22rem 0; font-size: 0.9rem; }
+  /* The kind tag is the whole point of the reading list: a voter should see at a
+     glance whether a link is the state, a reporter, or a party to the debate. */
+  .src-kind {
+    display: inline-block; min-width: 5.4rem; text-align: center;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; padding: 0.08rem 0.4rem; border-radius: 100px;
+    vertical-align: 0.05rem;
+  }
+  .src-official { background: #e7eef8; color: #1a4d94; }
+  .src-news     { background: #eef0f3; color: #374151; }
+  .src-support  { background: #e3f2e4; color: #1b5e20; }
+  .src-oppose   { background: #f6e3e3; color: #a02121; }
+  .src-analysis { background: #f1ebf8; color: #553c9a; }
+  .src-pub { color: #6b7280; }
   .measure-title {
     font-size: 1.2rem;
     font-weight: bold;
@@ -176,7 +215,10 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
 
   function renderCard(m) {
     const isPotential = m.status === 'potential';
-    const statusBadge = isPotential
+    const notOnBallot = m.status === 'not-on-ballot';
+    const statusBadge = notOnBallot
+      ? `<span class="badge badge-not-on-ballot">Did not reach the ballot</span>`
+      : isPotential
       ? ''
       : m.status === 'passed'
         ? `<span class="badge badge-passed">Ballot measure passed</span>`
@@ -194,6 +236,37 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       ? `<div class="measure-status-note">${escHtml(m.statusNote)}</div>`
       : '';
 
+    // Why this was put to voters. Descriptive and drawn from official material —
+    // the ballot question, the enabling legislation, the sponsors' stated
+    // purpose — because the summary above says what the measure does without
+    // ever saying what it is for.
+    const intentHtml = m.intent
+      ? `<div class="measure-intent"><h3 class="measure-sub">${notOnBallot ? 'What it would have done' : "Why it's on the ballot"}</h3>`
+        + `<p>${escHtml(m.intent)}</p></div>`
+      : '';
+
+    // A reading list, not a summary of the arguments: each entry names a
+    // document and what kind it is, so a voter weighs the source themselves and
+    // VoteGA never puts words in anyone's mouth.
+    const KIND_LABEL = { official: 'Official', news: 'News', support: 'Supporting', oppose: 'Opposing', analysis: 'Analysis' };
+    const sourcesHtml = (m.sources && m.sources.length)
+      ? `<div class="measure-sources"><h3 class="measure-sub">Read more</h3><ul>`
+        + m.sources.map(s =>
+            `<li><span class="src-kind src-${escHtml(s.kind)}">${escHtml(KIND_LABEL[s.kind] || s.kind)}</span> `
+            + `<a href="${escHtml(s.url)}" target="_blank" rel="noopener">${escHtml(s.label)}</a> `
+            + `<span class="src-pub">— ${escHtml(s.publisher)}`
+            + (s.published ? `, ${escHtml(s.published)}` : '')
+            + (s.note ? ` (${escHtml(s.note)})` : '') + `</span></li>`).join('')
+        + `</ul></div>`
+      : '';
+
+    // "None identified" is information a voter should have. An empty section
+    // would instead read as though we had not looked.
+    const oppositionHtml = m.opposition
+      ? `<div class="measure-opposition"><h3 class="measure-sub">Organised opposition</h3>`
+        + `<p>${escHtml(m.opposition)}</p></div>`
+      : '';
+
     const leg = m.enablingLegislation;
     const legHtml = leg && leg.identifier
       ? `<a href="${getBasePath()}ga-bills.html?bill=${encodeURIComponent(leg.identifier)}">Enabling legislation: ${escHtml(leg.identifier)} →</a>`
@@ -203,15 +276,28 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       ? `<a href="${escHtml(m.fullText)}" target="_blank" rel="noopener">Full amendment text ↗</a>`
       : '';
 
-    const footerParts = [legHtml, fullTextHtml].filter(Boolean);
+    // The plain-language explanation of what a yes or no vote means has existed
+    // in an explainer post all along, but nothing on this page linked to it —
+    // so a voter arriving here (from the navbar, the hub, or their sample
+    // ballot) got the Secretary of State's summary wording and no way to reach
+    // the explanation. First in the footer because it is what they came for.
+    const explainerHtml = m.explainer && m.explainer.url
+      ? `<a href="${escHtml(getBasePath() + m.explainer.url.replace(/^\//, ''))}">`
+        + `${escHtml(m.explainer.label || 'What a yes or no vote means')} →</a>`
+      : '';
+
+    const footerParts = [explainerHtml, legHtml, fullTextHtml].filter(Boolean);
 
     return `
-      <div class="measure-card ${isPotential ? 'potential' : ''}">
+      <div class="measure-card ${isPotential ? 'potential' : ''}${notOnBallot ? ' not-on-ballot' : ''}" id="measure-${escHtml(m.id)}">
         <div class="measure-badges">${statusBadge}${typeBadge}</div>
         <div class="measure-title">${escHtml(m.title)}</div>
         <div class="measure-summary">${escHtml(m.summary)}</div>
         ${subjectsHtml}
         ${statusNoteHtml}
+        ${intentHtml}
+        ${oppositionHtml}
+        ${sourcesHtml}
         ${renderResults(m.results)}
         ${footerParts.length ? `<div class="measure-footer">${footerParts.join('')}</div>` : ''}
       </div>`;
@@ -244,23 +330,48 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
         ? allMeasures.filter(m => measureDate(m) === focalDate)
         : allMeasures;
 
-      const certified = measures.filter(m => m.status !== 'potential');
-      const potential = measures.filter(m => m.status === 'potential');
+      // Bucket on explicit statuses, never on "not potential". The old test put
+      // anything unrecognised under the "Certified Measures" heading, so a new
+      // lifecycle stage would have been announced to voters as on their ballot —
+      // which is the exact opposite of what 'not-on-ballot' means.
+      const onBallot    = measures.filter(m => ['certified', 'passed', 'failed'].includes(m.status));
+      const potential   = measures.filter(m => m.status === 'potential');
+      const notOnBallot = measures.filter(m => m.status === 'not-on-ballot');
+      const unknown     = measures.filter(m =>
+        !['certified', 'passed', 'failed', 'potential', 'not-on-ballot'].includes(m.status));
+      if (unknown.length) console.warn('ga-ballot-measures: unrecognised status', unknown.map(m => m.status));
 
       const election = data.metadata?.election || '';
       let html = '';
 
       if (election) {
-        html += `<p style="font-weight:600;color:#444;margin-top:0.5rem;">On the ballot for the ${escHtml(election)}.</p>`;
+        // Counts the measures actually on the ballot, so the line cannot read as
+        // a claim about a 'not-on-ballot' card further down the page.
+        const n = onBallot.length;
+        html += `<p style="font-weight:600;color:#444;margin-top:0.5rem;">`
+          + (n ? `${n} statewide ${n === 1 ? 'measure is' : 'measures are'} on the ballot for the ${escHtml(election)}.`
+               : `On the ballot for the ${escHtml(election)}.`)
+          + `</p>`;
       }
 
-      if (certified.length) {
-        html += `<h2 class="section-heading">Certified Measures (${certified.length})</h2>`;
-        html += `<div class="measure-grid">${certified.map(renderCard).join('')}</div>`;
+      if (onBallot.length) {
+        html += `<h2 class="section-heading">Certified Measures (${onBallot.length})</h2>`;
+        html += `<div class="measure-grid">${onBallot.map(renderCard).join('')}</div>`;
       }
       if (potential.length) {
-        html += `<h2 class="section-heading">Failed Measures</h2>`;
+        html += `<h2 class="section-heading">Pending Measures</h2>`;
         html += `<div class="measure-grid">${potential.map(renderCard).join('')}</div>`;
+      }
+      // Kept visible, and last: a voter who read about one of these elsewhere
+      // should be able to find out it is not on their ballot, rather than find
+      // nothing and keep looking for it.
+      if (notOnBallot.length) {
+        html += `<h2 class="section-heading">Proposed but Not on the Ballot</h2>`;
+        html += `<p style="font-size:0.9rem;color:#666;">These were proposed for this election but were never referred to voters, so they will <strong>not</strong> appear on your ballot. They are listed for the record.</p>`;
+        html += `<div class="measure-grid">${notOnBallot.map(renderCard).join('')}</div>`;
+      }
+      if (unknown.length) {
+        html += `<div class="measure-grid">${unknown.map(renderCard).join('')}</div>`;
       }
 
       container.innerHTML = html;

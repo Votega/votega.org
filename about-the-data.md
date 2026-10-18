@@ -340,6 +340,22 @@ Each measure records a plain-language summary, subject tags, and a link to the e
 - **Coverage:** Statewide measures on the ballot for the current general election. Vote results are added to each measure after the election is certified.
 - **Freshness:** Manually updated as measures are certified and as results are reported.
 
+### How we explain a ballot measure
+
+A measure's record carries three things beyond the official summary: **why it's on the ballot**, a note on **organised opposition**, and a **reading list**. The rules we follow, so you can judge whether we followed them:
+
+- **"Why it's on the ballot" is descriptive, never persuasive.** It comes from official material — the ballot question, the enabling legislation, and the sponsors' stated purpose — and says what a measure is *for*. It does not say how to vote.
+- **We attribute arguments; we do not write them.** The reading list names a document and labels what kind it is — **Official**, **News**, **Supporting**, **Opposing**, or **Analysis** — and links to it. We do not paraphrase a position, because paraphrasing is where a nonpartisan site starts choosing words for people who can speak for themselves.
+- **No manufactured balance.** Where nobody is organised against a measure, we say so explicitly — and give the date we last looked — rather than inventing a critic to fill a slot. False balance misinforms just as surely as omission.
+- **Every measure on the ballot cites the state's own material.** A reading list that is only news and advocacy is not anchored.
+- **Dates are shown**, because an argument from before a campaign formed is not the argument now.
+- **We exclude AI-generated news sites**, including ones whose own pages flag their articles as possibly inaccurate.
+- **Vote tallies are not published unless reconciled.** Trackers disagree on several 2026 roll calls, so we link the legislature's record instead of repeating a number we cannot confirm.
+
+These rules are enforced by `scripts/validate_ballot_measures.py` in CI, not left to memory: it fails the build if a measure on the ballot cites no official source, if the opposition question is left silent, or if an excluded source appears. Our plain-language explanation of what a Yes or No vote means lives in a per-cycle explainer post, linked from every measure; the validator also fails if a reworded heading breaks one of those links.
+
+Think we have a measure's intent wrong, or know of organised opposition we have missed? [Tell us](https://github.com/Votega/votega.org/issues) — corrections are logged in the post itself, dated.
+
 ---
 
 ## Voter Access & Election Calendar
