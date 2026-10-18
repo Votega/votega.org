@@ -732,6 +732,11 @@
         return;
       }
 
+      // Tab label carries the total, like Signed Legislation; same figure as the
+      // "Showing X of N" line below, so it includes orders awaiting publication.
+      const tabBtn = document.querySelector('[data-tab="execOrders"]');
+      if (tabBtn) tabBtn.textContent = `Executive Orders (${orders.length})`;
+
       const termStart = (meta.termStart || official.termStart || '2025-01-20').slice(0, 10);
       const pendingCount = orders.filter(o => o.provisional).length;
       // Dated from this file's own generatedAt, not the page's other sources.
