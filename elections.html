@@ -234,6 +234,7 @@ breadcrumb:
   <div class="address-hint">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone is looked up on this page and not sent anywhere, and shows every district touching it. VoteGA stores neither.</div>
   <div class="address-error" id="addressError" role="alert"></div>
   <p class="address-or">or filter by county below (shows every district touching the county)</p>
+  <p class="address-hint" id="statewideNote" hidden>These races are on every Georgia ballot, so an address or county doesn&rsquo;t narrow them. Your district races are on the U.S. House and Georgia State tabs.</p>
 </div>
 
 <div class="voter-banner" id="voterBanner"></div>
@@ -673,12 +674,17 @@ breadcrumb:
     history.replaceState(null, '', '?' + params.toString());
   }
 
-  // Both district filters (address + county) are only meaningful on the tabs that carry
-  // a district, so they appear and hide together with those tabs.
+  // The address and county filters show on every tab except Courts (a coverage notice,
+  // not a list), so the layout is the same wherever a voter lands. They only NARROW the
+  // district tabs (COUNTY_TABS); on the statewide tabs every voter faces the same
+  // races, so a note says so rather than leaving a box that silently does nothing.
+  const STATEWIDE_TABS = new Set(['executive', 'us-senate']);
+  const statewideNote = document.getElementById('statewideNote');
   function updateFilterVisibility() {
-    const show = COUNTY_TABS.has(activeTab);
+    const show = activeTab !== 'courts';
     countyFilter.classList.toggle('visible', show);
     addressFilter.classList.toggle('visible', show);
+    statewideNote.hidden = !STATEWIDE_TABS.has(activeTab);
   }
 
   function renderVoterBanner() {
@@ -876,6 +882,9 @@ breadcrumb:
       allRaces = races.filter(r => r.cycle === activeCycle && !DECIDED_STATUSES.has(r.status));
       buildPhaseToggle();
       applyURLParams();
+      // applyURLParams() only syncs the filters when the URL names a tab; the default
+      // landing tab (Executive) needs them shown too.
+      updateFilterVisibility();
 
       // Carry over a location resolved earlier this visit (e.g. on the sample ballot).
       // An explicit ?county= in the URL wins over stored state. An address-derived
