@@ -6,9 +6,6 @@ permissions:
 
 on:
   workflow_dispatch:
-  push:   # TEMPORARY: first run on this branch; removed before merge (regen)
-    branches: [ga-zip-districts]
-    paths: ['.github/workflows/update-ga-zip-districts.yml']
   schedule:
     # HUD publishes the ZIP crosswalks quarterly. Running monthly picks a release up
     # within a few weeks, and a month with no new release changes nothing and commits
