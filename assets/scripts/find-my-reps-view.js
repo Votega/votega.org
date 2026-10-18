@@ -73,7 +73,10 @@
     if (!member) {
       return '<div class="fmr-repcard"><span class="fmr-photo fmr-photo-blank">—</span>'
         + '<div><div class="fmr-repname fmr-vacant">' + esc(opts.vacant || 'Seat currently vacant') + '</div>'
-        + (opts.sub ? '<div class="fmr-repmeta">' + esc(opts.sub) + '</div>' : '') + '</div></div>';
+        + (opts.sub ? '<div class="fmr-repmeta">' + esc(opts.sub) + '</div>' : '')
+        + (opts.link ? '<div class="fmr-repmeta"><a href="' + esc(opts.link.href) + '" target="_blank" rel="noopener">'
+            + esc(opts.link.label) + '</a></div>' : '')
+        + '</div></div>';
     }
     var photo = opts.photo
       ? '<img class="fmr-photo" src="' + esc(opts.photo) + '" alt="" loading="lazy" />'
@@ -81,6 +84,20 @@
     return '<a class="fmr-repcard" href="' + esc(opts.href) + '">' + photo
       + '<div><div class="fmr-repname">' + esc(opts.name) + chip(opts.party) + '</div>'
       + '<div class="fmr-repmeta">' + esc(opts.sub || '') + '</div></div></a>';
+  }
+
+  /**
+   * A suspended member is shown as a vacant seat, linked to the Executive Order
+   * that suspended them (the markdown link the roster keeps in statusNote). Only
+   * an https URL is accepted, so a malformed note degrades to no link.
+   */
+  function suspendedSeat(m, d) {
+    var url = /\]\((https:\/\/[^)\s]+)\)/.exec(m.statusNote || '');
+    return {
+      sub: 'District ' + d,
+      vacant: 'Vacant',
+      link: url ? { href: url[1], label: 'Member suspended by Executive Order' } : null,
+    };
   }
 
   /** One office heading plus every row under it; nothing at all when empty. */
@@ -211,6 +228,7 @@
 
     html += repSection('Georgia State Senate', (loc.stateSenate || []).map(function (d) {
       var m = gaSeated.filter(function (x) { return x.chamber === 'Senate' && x.district === d; })[0];
+      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d));
       return repRow(m, m ? {
         name: m.name, party: m.party,
         sub: 'District ' + d + (m.status === 'Vacant' ? ' · Vacant' : ''),
@@ -220,6 +238,7 @@
 
     html += repSection('Georgia House of Representatives', (loc.stateHouse || []).map(function (d) {
       var m = gaSeated.filter(function (x) { return x.chamber === 'House of Representatives' && x.district === d; })[0];
+      if (m && m.status === 'Suspended') return repRow(null, suspendedSeat(m, d));
       return repRow(m, m ? {
         name: m.name, party: m.party,
         sub: 'District ' + d + (m.status === 'Vacant' ? ' · Vacant' : ''),
