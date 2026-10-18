@@ -1,0 +1,84 @@
+name: Update GA ZIP districts (monthly, 13:30 UTC on the 6th)
+
+permissions:
+  contents: write
+  issues: write
+
+on:
+  workflow_dispatch:
+  push:   # TEMPORARY: first run on this branch; removed before merge
+    branches: [ga-zip-districts]
+    paths: ['.github/workflows/update-ga-zip-districts.yml']
+  schedule:
+    # HUD publishes the ZIP crosswalks quarterly. Running monthly picks a release up
+    # within a few weeks, and a month with no new release changes nothing and commits
+    # nothing (generatedAt is preserved when the content is identical).
+    - cron: '30 13 6 * *'
+
+jobs:
+  update-ga-zip-districts:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      # fetch-depth: 0 because the commit step rebases (see update-fec-data.yml).
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # HUD_USER_TOKEN is read-only access to one public HUD dataset. A HUD failure
+      # exits 1 and leaves the committed file untouched.
+      - name: Generate ZIP -> district table
+        id: fetch
+        env:
+          HUD_USER_TOKEN: ${{ secrets.HUD_USER_TOKEN }}
+        run: python scripts/generate_ga_zip_districts.py
+
+      # Tier 1 gates (the file against itself and the tract table); tier 2 (the file
+      # against HEAD) is a report and never gates.
+      - name: Validate generated data
+        run: |
+          python scripts/validate_ga_zip_districts.py assets/data/ga-zip-districts.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/zip-districts-changes.md"
+          cat "$RUNNER_TEMP/zip-districts-changes.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit and push
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/ga-zip-districts.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update GA ZIP district table"
+            pushed=0
+            for attempt in 1 2 3; do
+              # Rebase onto THIS ref's upstream, not main (feature-branch runs).
+              if git pull --rebase origin "$GITHUB_REF_NAME" && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
+          fi
+
+      # Last on purpose: an `if: failure()` step placed earlier never runs.
+      - name: Preserve the generated file
+        if: failure() && steps.fetch.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-zip-districts
+          path: assets/data/ga-zip-districts.json
+          if-no-files-found: ignore
+          retention-days: 14
