@@ -154,9 +154,14 @@ layout: null
 .next-election-actions {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.4rem;
-  flex: 0 0 auto;
+  /* Its own full-width row, so the buttons centre in the card rather than hugging
+     the left edge when they wrap beneath the text. */
+  flex: 1 1 100%;
 }
+/* Equal-width buttons, centred as a pair. */
+.next-election-actions .next-election-btn { width: 100%; max-width: 20rem; box-sizing: border-box; }
 .next-election-btn {
   display: inline-block;
   padding: 0.6rem 1.15rem;
@@ -171,6 +176,11 @@ layout: null
 }
 .next-election-btn:hover,
 .next-election-btn:focus { background: #164a90; color: #fff; text-decoration: none; }
+/* Secondary action, in the blue's complement so the two buttons read as two
+   different destinations. #c2410c clears 4.5:1 against the white label (5.2:1). */
+.next-election-btn--alt { background: #c2410c; }
+.next-election-btn--alt:hover,
+.next-election-btn--alt:focus { background: #9a3412; color: #fff; }
 .next-election-link { font-size: 0.82rem; color: #1a56a8; text-align: center; }
 
 /* --- Paired election cards (Next Election + Latest Results) ---------------- */
