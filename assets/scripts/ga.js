@@ -285,13 +285,18 @@ async function loadData() {
     allMembers = (data.members || []).filter(m => !['Resigned', 'Removed', 'Deceased'].includes(m.status));
     statusLine.textContent = '';
     renderMembers();
-    // Provenance stamp — see CODEBASE-REVIEW-2026-08-18.md finding 4.13.
-    if (window.dataStamp) {
-      window.dataStamp.render('dataStamp', {
-        updated: (data.metadata || {}).generatedAt,
-        source:  (data.metadata || {}).source || 'legis.ga.gov official web service',
-        repo:    { url: 'https://github.com/Votega/ga-legislators' },
-      });
+    // Provenance stamp — see CODEBASE-REVIEW-2026-08-18.md finding 4.13. One line, dated
+    // from this file's own timestamp, naming the source and the published dataset (the
+    // sibling repo, per CLAUDE.md, not the internal assets/data path). The links are fixed
+    // author-set markup, so it is composed here rather than through dataStamp.render(),
+    // which escapes its source text. The date is omitted, not faked, when the file has none.
+    const stampEl = document.getElementById('dataStamp');
+    if (stampEl) {
+      const when = window.dataStamp ? window.dataStamp.formatDate((data.metadata || {}).generatedAt) : '';
+      stampEl.classList.add('data-stamp');
+      stampEl.innerHTML = (when ? `Data last updated: ${when} &middot; ` : '')
+        + 'Source: <a href="https://www.legis.ga.gov" target="_blank" rel="noopener">Georgia General Assembly</a>&rsquo;s official web service'
+        + ' and published as open data at <a href="https://github.com/Votega/ga-legislators" target="_blank" rel="noopener">Votega/ga-legislators</a>';
     }
   } catch (err) {
     console.error('loadData()', err);
