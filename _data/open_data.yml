@@ -176,6 +176,27 @@ datasets:
     docs: /about-the-data#agenda-topic-badges
     contribute: https://github.com/Votega/ga-local-government/issues
 
+  - id: ga-district-information
+    title: Georgia District Crosswalks (ZIP, County, Tract)
+    hosting: repo
+    summary: >
+      Which Georgia state Senate, state House and U.S. House districts a ZIP code,
+      county or census tract falls in, so no one has to rebuild the join. A ZIP can
+      span several districts, so each ZIP lists every district touching it, ranked by
+      estimated share of residents, and none are dropped. The county and tract tables
+      carry 2020 population by district and match the General Assembly's published
+      reapportionment reports.
+    source: Georgia General Assembly reapportionment office · U.S. Census Bureau · HUD-USPS ZIP Code Crosswalk
+    scope: Georgia, current district plans
+    cadence: ZIPs checked monthly · counties and tracts change only on redistricting
+    repo_url: https://github.com/Votega/ga-district-information
+    files:
+      - { name: "data/zips.json", desc: "Every ZIP: counties and districts it touches, with shares", url: "https://github.com/Votega/ga-district-information/blob/main/data/zips.json" }
+      - { name: "data/zip-districts.csv", desc: "Same, flat: one row per ZIP and district", url: "https://github.com/Votega/ga-district-information/blob/main/data/zip-districts.csv" }
+      - { name: "data/counties.json", desc: "County population in each district", url: "https://github.com/Votega/ga-district-information/blob/main/data/counties.json" }
+      - { name: "data/tracts.json", desc: "Census-tract population in each district (build your own crosswalk)", url: "https://github.com/Votega/ga-district-information/blob/main/data/tracts.json" }
+    contribute: https://github.com/Votega/ga-district-information/issues
+
   # --------------------------------------------------------------------------
   # ON VOTEGA.ORG (direct JSON — no dedicated repo yet)
   # --------------------------------------------------------------------------
