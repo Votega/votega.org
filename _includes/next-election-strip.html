@@ -35,6 +35,7 @@
     <dl class="next-election-facts" id="nextElectionFacts"></dl>
     <div class="next-election-actions">
       <a class="next-election-btn" href="{{ '/sample-ballot' | relative_url }}">See what's on my ballot &rarr;</a>
+      <a class="next-election-btn" id="nextElectionRaces" href="{{ '/elections/candidates/' | relative_url }}">See all races &rarr;</a>
       <a class="next-election-link" href="{{ '/ga-voter-access' | relative_url }}">Voter access &amp; deadlines</a>
     </div>
   </section>
@@ -79,6 +80,15 @@
     const today = new Date(); today.setHours(0, 0, 0, 0);
     return Math.round((parseLocalDate(iso) - today) / 86400000);
   }
+  // "November 3rd" -- the date comes from the calendar, never a literal, so the
+  // button follows the card as the cycle advances.
+  function fmtOrdinalDay(iso) {
+    const d = parseLocalDate(iso);
+    const n = d.getDate();
+    const suffix = (n % 100 >= 11 && n % 100 <= 13) ? 'th'
+      : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th');
+    return d.toLocaleDateString('en-US', { month: 'long' }) + ' ' + n + suffix;
+  }
   function esc(value) { return VoteGA.escapeHtml(value); }
   function reveal(el) { el.hidden = false; CARDS.hidden = false; }
 
@@ -115,6 +125,9 @@
     }
     document.getElementById('nextElectionFacts').innerHTML = facts
       .map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('');
+
+    document.getElementById('nextElectionRaces').innerHTML =
+      `See all races for ${esc(fmtOrdinalDay(next.date))} &rarr;`;
 
     reveal(STRIP);
   }
