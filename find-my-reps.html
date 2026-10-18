@@ -151,6 +151,8 @@ css:
   & < > but not quotes — and its output goes into href="…" and src="…".
 {%- endcomment -%}
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} ZIP table load/expansion and share wording, shared with the candidate finder. Tested in tests/js/zip-districts.test.js. {%- endcomment -%}
+<script src="{{ '/assets/scripts/zip-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} County expansion, member matching and the results markup. Tested in tests/js/find-my-reps-view.test.js. {%- endcomment -%}
 <script src="{{ '/assets/scripts/find-my-reps-view.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} Shared chrome around the geocoder; see assets/scripts/address-lookup.js. {%- endcomment -%}
@@ -160,7 +162,6 @@ css:
   'use strict';
   var FED_URL = 'assets/data/current-members.json';
   var GA_URL  = 'assets/data/ga-members.json';
-  var ZIP_URL = 'assets/data/ga-zip-districts.json';
 
   var input     = document.getElementById('fmrAddress');
   var btn       = document.getElementById('fmrBtn');
@@ -294,17 +295,6 @@ css:
     },
   });
 
-  // Fetched only when a ZIP is typed, so address and county visitors never pay
-  // for the table. The promise is kept for the visit, but dropped on failure so
-  // a retry can succeed.
-  var zipTable = null;
-  function loadZipTable() {
-    if (!zipTable) {
-      zipTable = loadJson(ZIP_URL).catch(function (err) { zipTable = null; throw err; });
-    }
-    return zipTable;
-  }
-
   var ZIP_NEXT = ' Enter your full street address above, or pick your county.';
   function zipNote(message, isError) {
     out.innerHTML = '';
@@ -316,13 +306,15 @@ css:
   // missing or PO-box ZIP, which are answers, not failures.
   function lookupZip(zip) {
     hideCarry();
-    return loadZipTable().then(function (table) {
-      var entry = table && table.zips && table.zips[zip];
-      if (!entry) {
+    // Fetched only when a ZIP is typed, so address and county visitors never pay
+    // for the table (zip-districts.js keeps the promise and drops it on failure).
+    return window.ZipDistricts.load(basePath()).then(function (table) {
+      var found = window.ZipDistricts.lookup(zip, table);
+      if (found.status === 'unknown') {
         zipNote('ZIP ' + zip + ' isn’t in our list of Georgia ZIP codes.', true);
         return 'zip_unknown';
       }
-      var loc = View.zipLoc(zip, entry);
+      var loc = found.status === 'ok' ? View.zipLoc(zip, table.zips[zip]) : null;
       if (!loc) {
         zipNote('ZIP ' + zip + ' is a PO box ZIP, which doesn’t map to any district.', true);
         return 'zip_no_districts';

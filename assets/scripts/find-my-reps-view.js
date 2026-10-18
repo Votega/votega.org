@@ -151,49 +151,35 @@
     };
   }
 
-  // A district's weight in a ZIP, as the voter should read it. The row is always
-  // listed; this only changes the wording. Under 5% it is "a small part" because
-  // a rounded 1% reads as noise, not because the district is dropped. A share of
-  // exactly 1 is the whole ZIP, which "about 100%" would understate.
-  var SMALL_SHARE = 0.05;
-  function shareLabel(share) {
-    if (typeof share !== 'number' || !isFinite(share)) return null;
-    if (share >= 1) return 'all of this ZIP';
-    if (share >= SMALL_SHARE) return 'about ' + Math.round(share * 100) + '% of this ZIP';
-    return 'a small part of this ZIP';
+  // The ZIP table's expansion and share wording are shared with the candidate
+  // finder (zip-districts.js), so the two pages cannot drift.
+  function zipApi() {
+    var z = typeof window !== 'undefined' && window.ZipDistricts;
+    if (!z) throw new Error('zip-districts.js must load before find-my-reps-view.js');
+    return z;
   }
+  function shareLabel(share) { return zipApi().shareLabel(share); }
 
   /**
-   * A bare ZIP, expanded from ga-zip-districts.json into the same shape as
-   * countyLoc, plus `shares` (chamber -> district -> share) for the row labels.
-   *   entry — zips[zip] from that file, or undefined
-   * Returns null when there is nothing to list -- a ZIP not in the file, a
-   * po-box ZIP, or one with no districts at all -- so the caller says so rather
-   * than render an empty result. Districts are sorted ascending for display (the
-   * file ranks by share); none are dropped.
+   * A bare ZIP in the same shape as countyLoc, plus `shares` for the row labels.
+   *   entry — zips[zip] from ga-zip-districts.json, or undefined
+   * Null when there is nothing to list (see ZipDistricts.expand), so the caller
+   * says so rather than render an empty result.
    */
   function zipLoc(zip, entry) {
-    if (!entry || entry.kind === 'po-box') return null;
-    var shares = { usHouse: {}, stateSenate: {}, stateHouse: {} };
-    var pick = function (key) {
-      var rows = entry[key] || [];
-      rows.forEach(function (r) { shares[key][r.district] = r.share; });
-      return rows.map(function (r) { return r.district; })
-        .sort(function (a, b) { return a - b; });
-    };
-    var loc = {
+    var e = zipApi().expand(entry);
+    if (!e) return null;
+    return {
       source: 'zip',
       zip: zip,
       matchedAddress: null,
-      city: entry.city || null,
-      counties: (entry.counties || []).map(function (c) { return c.name; }),
-      usHouse: pick('usHouse'),
-      stateSenate: pick('stateSenate'),
-      stateHouse: pick('stateHouse'),
-      shares: shares,
+      city: e.city,
+      counties: e.counties,
+      usHouse: e.usHouse,
+      stateSenate: e.stateSenate,
+      stateHouse: e.stateHouse,
+      shares: e.shares,
     };
-    var any = loc.usHouse.length || loc.stateSenate.length || loc.stateHouse.length;
-    return any ? loc : null;
   }
 
   /** County names for the picker, sorted. Empty when the tables are missing. */

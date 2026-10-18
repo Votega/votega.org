@@ -231,7 +231,7 @@ breadcrumb:
            autocomplete="street-address" />
     <button type="button" id="addressBtn">Find my districts</button>
   </div>
-  <div class="address-hint">Your address is sent only to the U.S. Census geocoder to look up your districts; VoteGA doesn't store it.</div>
+  <div class="address-hint">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone is looked up on this page and not sent anywhere, and shows every district touching it. VoteGA stores neither.</div>
   <div class="address-error" id="addressError" role="alert"></div>
   <p class="address-or">or filter by county below (shows every district touching the county)</p>
 </div>
@@ -276,6 +276,8 @@ breadcrumb:
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} Bare-ZIP table load/expansion, shared with find-my-reps. Tested in tests/js/zip-districts.test.js. {%- endcomment -%}
+<script src="{{ '/assets/scripts/zip-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <!-- sample-ballot.js is pure function definitions (no side effects on load); we use its
      exported geocodeAddress() so address→district logic lives in one place. -->
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -309,6 +311,12 @@ breadcrumb:
   // instead of the county's overlapping set. County-only carryover pre-selects the
   // dropdown instead and leaves this null.
   let voterLoc    = null;
+  // A bare ZIP typed into the address box: every district touching it, per chamber
+  // ({zip, usHouse[], stateSenate[], stateHouse[]}). Deliberately NOT a voterLoc --
+  // source:'address' means exact districts and suppresses the "which district am I
+  // in?" nudge, and a ZIP is neither. Never persisted (voter-location.js keeps
+  // derived districts only) and never put in the URL.
+  let zipFilter   = null;
 
   // Copy per phase. {date} and {year} are filled from the phase's electionDate in
   // races.json, so dates are never hardcoded here — a new cycle just works.
@@ -508,6 +516,15 @@ breadcrumb:
             return voterLoc.usHouse == null || r.district === voterLoc.usHouse;
           return true;
         });
+      } else if (zipFilter) {
+        // Union of every district touching the ZIP, same shape as the county widen
+        // below: never fewer races than the ZIP could actually put on a ballot.
+        races = races.filter(r => {
+          if (r.chamber === 'Georgia House of Representatives') return zipFilter.stateHouse.includes(r.district);
+          if (r.chamber === 'Georgia State Senate')             return zipFilter.stateSenate.includes(r.district);
+          if (r.chamber === 'U.S. House')                      return zipFilter.usHouse.includes(r.district);
+          return true;
+        });
       } else if (countySelect.value) {
         // County-only: widen to every district overlapping the county.
         const county      = countySelect.value;
@@ -569,7 +586,7 @@ breadcrumb:
     }
 
     if (!races.length) {
-      const noFilter = !voterLoc && !countySelect.value;
+      const noFilter = !voterLoc && !zipFilter && !countySelect.value;
       const hint = COUNTY_TABS.has(activeTab) && noFilter
         ? 'Enter your address or select a county above to filter by district — all districts are shown when neither is set.'
         : phaseMeta(activePhase).empty;
@@ -644,6 +661,14 @@ breadcrumb:
   }
 
   function renderVoterBanner() {
+    if (zipFilter) {
+      voterBanner.innerHTML =
+        `<span>Showing races in districts touching ZIP <strong>${escHtml(zipFilter.zip)}</strong>. A ZIP can span several districts — enter your full address to narrow this to yours.</span>`
+        + `<button type="button" id="clearVoterBtn">Clear</button>`;
+      voterBanner.classList.add('visible');
+      document.getElementById('clearVoterBtn').addEventListener('click', clearVoterLoc);
+      return;
+    }
     if (!voterLoc) { voterBanner.classList.remove('visible'); voterBanner.innerHTML = ''; return; }
     const parts = [];
     if (voterLoc.stateHouse  != null) parts.push(`State House ${voterLoc.stateHouse}`);
@@ -660,6 +685,7 @@ breadcrumb:
 
   function clearVoterLoc() {
     voterLoc = null;
+    zipFilter = null;
     if (window.VoterLocation) window.VoterLocation.clear();
     addressInput.value = '';
     addressError.textContent = '';
@@ -686,8 +712,40 @@ breadcrumb:
       addressBtn.disabled = busy;
       addressBtn.textContent = busy ? 'Looking up…' : 'Find my districts';
     },
+    // A bare ZIP narrows to the districts touching it instead of being refused.
+    // Fetched only now, so address and county visitors never download the table.
+    // Returns an outcome enum for the event; a PO-box or unknown ZIP and a failed
+    // fetch are answered in the message line and leave the current filter alone.
+    onZip: async (zip) => {
+      const next = ' Use the county filter below, or enter your full street address.';
+      let found;
+      try {
+        found = window.ZipDistricts.lookup(zip, await window.ZipDistricts.load(getBasePath()));
+      } catch (err) {
+        console.error('elections.html: ZIP table', err);
+        addressError.textContent = 'ZIP code data couldn’t be loaded right now.' + next;
+        return 'zip_error';
+      }
+      if (found.status === 'unknown') {
+        addressError.textContent = `ZIP ${zip} isn’t in our list of Georgia ZIP codes.` + next;
+        return 'zip_unknown';
+      }
+      if (found.status !== 'ok') {
+        addressError.textContent = `ZIP ${zip} is a PO box ZIP, which doesn’t map to any district.` + next;
+        return 'zip_no_districts';
+      }
+      countySelect.value = '';                          // one district filter at a time
+      voterLoc = null;
+      if (window.VoterLocation) window.VoterLocation.clear();   // so a reload can't resurrect an older one
+      zipFilter = { zip, usHouse: found.usHouse, stateSenate: found.stateSenate, stateHouse: found.stateHouse };
+      renderVoterBanner();
+      renderRaces();
+      syncURL();
+      return 'zip';
+    },
     onResolve: (loc) => {
       countySelect.value = '';                          // an exact address supersedes a county pick
+      zipFilter = null;                                 // ...and a ZIP
       voterLoc = loc;
       renderVoterBanner();
       renderRaces();
@@ -724,7 +782,11 @@ breadcrumb:
   countySelect.addEventListener('change', () => {
     // Picking a county by hand is a deliberate choice — it drops any active
     // address-exact filter and reverts to the county's overlapping-district view.
-    if (voterLoc) { voterLoc = null; if (window.VoterLocation) window.VoterLocation.clear(); renderVoterBanner(); }
+    if (voterLoc || zipFilter) {
+      voterLoc = null; zipFilter = null;
+      if (window.VoterLocation) window.VoterLocation.clear();
+      renderVoterBanner();
+    }
     renderRaces();
     syncURL();
   });

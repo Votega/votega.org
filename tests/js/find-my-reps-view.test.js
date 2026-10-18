@@ -25,6 +25,7 @@ const { loadBrowserModules, REPO_ROOT } = require('./load-browser-module');
 
 const win = loadBrowserModules(
   'assets/scripts/html-escape.js',
+  'assets/scripts/zip-districts.js',
   'assets/scripts/find-my-reps-view.js'
 );
 const View = win.FindMyRepsView;
