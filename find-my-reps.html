@@ -11,7 +11,7 @@ css:
 ---
 
 <h1>Find My Representatives</h1>
-<p>Georgia voters are represented at three levels of government — federal, state, and <a href="{{ '/local/' | relative_url }}">local</a><sup>*</sup>. Enter your address (or just your ZIP code) to see your federal and state representatives, or browse by category below.</p>
+<p>Georgia voters are represented at three levels of government — federal, state, and <a href="{{ '/local/' | relative_url }}">local</a><sup>*</sup>. Select which offices you'd like to see and search your address, ZIP code, or select a county filter to view your elected officials.</p>
 <p class="levels-note"><span aria-hidden="true">*</span> Not all localities in Georgia have been added to the site yet.</p>
 
 <style>
@@ -78,7 +78,7 @@ css:
            autocomplete="street-address" />
     <button id="fmrBtn" class="fmr-btn" type="button">Find my reps</button>
   </div>
-  <p class="fmr-privacy">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone is looked up on this page and is not sent anywhere, and shows every district touching it. VoteGA stores neither.</p>
+  <p class="fmr-privacy">A street address is sent only to the U.S. Census geocoder to look up your districts. You may search by ZIP only, which shows every district touching that ZIP code. VoteGA does not store any personal information.</p>
 
   {%- comment -%}
     The county fallback is what the address path degrades to. The Census geocoder
