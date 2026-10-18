@@ -5,6 +5,11 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      allow_collapse:
+        description: 'Commit even though signed laws at HEAD are missing from the new file (only after inspecting the rejected file)'
+        type: boolean
+        default: false
   schedule:
     # Weekly on Sundays at 09:45 UTC (after federal-votes and vp-tie-votes workflows)
     - cron: '45 9 * * 0'
@@ -23,6 +28,7 @@ jobs:
           python-version: '3.x'
 
       - name: Generate presidential signed laws data
+        id: generate
         run: python scripts/generate_presidential_laws.py assets/data/presidential-laws.json
         env:
           CONGRESS_API_KEY: ${{ secrets.CONGRESS_API_KEY }}
@@ -36,12 +42,24 @@ jobs:
         env:
           GOVINFO_API_KEY: ${{ secrets.GOVINFO_API_KEY }}
 
+      # Tier 1 gates on the file contradicting itself (count, term start, one
+      # Congress, no duplicates, GovInfo fields complete). The one baseline gate
+      # is the loss check: signed laws are immutable and the file is rebuilt
+      # whole, so a (type, number) at HEAD that is gone now means a Congress.gov
+      # page failed mid-pagination and truncated the list. A set difference, not
+      # the 20% shrink it replaces, which let a 300 -> 250 truncation through
+      # (-17%). A new Congress starts empty and is exempt. Lost GovInfo
+      # provenance is reported to the step summary. See
+      # docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
       - name: Validate generated data
+        id: validate
+        env:
+          ALLOW_COLLAPSE: ${{ inputs.allow_collapse && '--allow-collapse' || '' }}
         run: |
-          python scripts/validate_data_update.py assets/data/presidential-laws.json \
-            --metric laws=metadata.count \
-            --metric records=len:laws \
-            --scope-key metadata.congress
+          python scripts/validate_presidential_laws.py assets/data/presidential-laws.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/presidential-laws-changes.md" \
+            $ALLOW_COLLAPSE
 
       - name: Commit and push generated data
         run: |
@@ -64,3 +82,20 @@ jobs:
               exit 1
             fi
           fi
+
+      - name: Report what changed
+        run: |
+          report="$RUNNER_TEMP/presidential-laws-changes.md"
+          if [ -s "$report" ] && ! grep -q 'No material change this run' "$report"; then
+            cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # Last on purpose (a step's `if` is evaluated when the runner reaches it).
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-presidential-laws
+          path: assets/data/presidential-laws.json
+          if-no-files-found: ignore
+          retention-days: 14
