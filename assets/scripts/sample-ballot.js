@@ -132,6 +132,22 @@ function locationFromCounty(county) {
            usHouse: null, stateHouse: null, stateSenate: null };
 }
 
+// ZIP fallback: a ZIP is not a location but a SET of districts (zip-districts.js). The
+// districts touching it are carried per chamber, and contests in them are flagged
+// `ambiguous` exactly like a county's, because a ZIP can span several and only a street
+// address says which is the voter's. `found` is a ZipDistricts.lookup() result with
+// status 'ok'. `counties` carries every county the ZIP touches, for local-scope measures.
+function locationFromZip(zip, found) {
+  return { source: 'zip', matchedAddress: null, county: null, zip,
+           counties: (found && found.counties) || [],
+           usHouse: null, stateHouse: null, stateSenate: null,
+           zipDistricts: {
+             usHouse:     (found && found.usHouse)     || [],
+             stateSenate: (found && found.stateSenate) || [],
+             stateHouse:  (found && found.stateHouse)  || [],
+           } };
+}
+
 /* ------------------------------------------------------------------ *
  * Step 2/3 — Contest assembly + correctness guardrails
  * ------------------------------------------------------------------ */
@@ -243,9 +259,12 @@ function raceApplies(race, loc) {
   const NO  = { include: false, ambiguous: false };
   const YES = { include: true,  ambiguous: false };
 
-  const byDistrict = (district, voterDistrict, countyMap) => {
+  const byDistrict = (district, voterDistrict, countyMap, zipList) => {
     if (district == null) return YES;                       // treat as at-large
     if (voterDistrict != null) return district === voterDistrict ? YES : NO;
+    // A ZIP names every district touching it: include those, flagged ambiguous. Never
+    // fall through to the county map here -- a ZIP has no county of its own.
+    if (zipList) return zipList.includes(district) ? { include: true, ambiguous: true } : NO;
     // District unknown (county-only): include if the district overlaps the county.
     const dists = (countyMap && loc.county && countyMap[loc.county]) || [];
     return dists.includes(district) ? { include: true, ambiguous: true } : NO;
@@ -255,7 +274,8 @@ function raceApplies(race, loc) {
     case 'federal':
       if (race.chamber === 'U.S. Senate') return YES;        // statewide
       if (race.chamber === 'U.S. House')
-        return byDistrict(race.district, loc.usHouse, typeof COUNTY_US_HOUSE_DISTRICTS !== 'undefined' ? COUNTY_US_HOUSE_DISTRICTS : null);
+        return byDistrict(race.district, loc.usHouse, typeof COUNTY_US_HOUSE_DISTRICTS !== 'undefined' ? COUNTY_US_HOUSE_DISTRICTS : null,
+          loc.zipDistricts && loc.zipDistricts.usHouse);
       return YES;
 
     case 'state-executive':
@@ -274,9 +294,11 @@ function raceApplies(race, loc) {
 
     case 'state':
       if (race.chamber === 'Georgia House of Representatives')
-        return byDistrict(race.district, loc.stateHouse, typeof COUNTY_HOUSE_DISTRICTS !== 'undefined' ? COUNTY_HOUSE_DISTRICTS : null);
+        return byDistrict(race.district, loc.stateHouse, typeof COUNTY_HOUSE_DISTRICTS !== 'undefined' ? COUNTY_HOUSE_DISTRICTS : null,
+          loc.zipDistricts && loc.zipDistricts.stateHouse);
       if (race.chamber === 'Georgia State Senate')
-        return byDistrict(race.district, loc.stateSenate, typeof COUNTY_SENATE_DISTRICTS !== 'undefined' ? COUNTY_SENATE_DISTRICTS : null);
+        return byDistrict(race.district, loc.stateSenate, typeof COUNTY_SENATE_DISTRICTS !== 'undefined' ? COUNTY_SENATE_DISTRICTS : null,
+          loc.zipDistricts && loc.zipDistricts.stateSenate);
       return NO;
 
     default:
@@ -318,8 +340,12 @@ const ON_BALLOT_MEASURE_STATUSES = ['certified', 'passed', 'failed'];
 function measureApplies(measure, loc) {
   const scope = measure.scope || measure.jurisdiction || null;
   const counties = measure.counties || null;
-  if (scope && String(scope).toLowerCase() === 'local' && Array.isArray(counties))
-    return loc.county ? counties.includes(loc.county) : false;
+  if (scope && String(scope).toLowerCase() === 'local' && Array.isArray(counties)) {
+    if (loc.county) return counties.includes(loc.county);
+    // A ZIP can touch several counties; a local measure applies if any of them is its.
+    if (Array.isArray(loc.counties)) return loc.counties.some(c => counties.includes(c));
+    return false;
+  }
   return true; // statewide
 }
 
@@ -433,7 +459,7 @@ async function resolveBallot(input) {
  * ------------------------------------------------------------------ */
 
 const SampleBallot = {
-  geocodeAddress, parseCensusMatch, isOutsideGeorgia, locationFromCounty,
+  geocodeAddress, parseCensusMatch, isOutsideGeorgia, locationFromCounty, locationFromZip,
   assembleBallot, raceApplies, measureApplies,
   circuitSlugFromRaceId, candidatesForPhase, candidatesForActivePhase,
   availableElections, selectableElections, defaultElectionDate, phaseForDate, newestCycle,

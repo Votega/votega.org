@@ -2,11 +2,11 @@
 layout: default
 title: Your Sample Ballot
 permalink: /sample-ballot
-share-description: "Preview the federal and state contests on your Georgia ballot. Search by your address, or county, to see races and ballot measures you'll vote on, with links to research each choice."
+share-description: "Preview the federal and state contests on your Georgia ballot. Search by your address, ZIP code, or county, to see races and ballot measures you'll vote on, with links to research each choice."
 ---
 
 <h1>Your Sample Ballot</h1>
-<p>Enter your address to see the federal, statewide, and state-legislative contests on your Georgia ballot with a link to research on every candidate and measure. Or, select your county to see all districts that touch the selected county. </p>
+<p>Enter your address (or just your ZIP code) to see the federal, statewide, and state-legislative contests on your Georgia ballot with a link to research on every candidate and measure. Or, select your county to see all districts that touch the selected county. </p>
 
 <p class="box-note">This is a preview of the <strong>state and federal</strong> portion of your ballot. Your official ballot also includes <strong>county and city races and local questions</strong> that VoteGA may not currently track. For your precinct-exact official sample ballot and polling place, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="noopener">GA Secretary of State My Voter Page</a>.</p>
 
@@ -17,14 +17,14 @@ share-description: "Preview the federal and state contests on your Georgia ballo
     <p id="electionStatic" class="election-static" hidden></p>
   </div>
 
-  <label class="lookup-label lookup-label-spaced" for="addressInput">Your residential address</label>
+  <label class="lookup-label lookup-label-spaced" for="addressInput">Your residential address or ZIP code</label>
   <div class="lookup-row">
     <input type="text" id="addressInput" class="lookup-input"
            placeholder="123 Peachtree St NE, Atlanta, GA 30303"
            autocomplete="street-address" />
     <button id="addressBtn" class="lookup-btn" type="button">Show my ballot</button>
   </div>
-  <p class="box-note">Your address is sent only to the U.S. Census geocoder to look up your districts; VoteGA does not store it</p>
+  <p class="box-note">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone is looked up on this page and not sent anywhere, and shows every district touching it. VoteGA does not store either.</p>
 
   <p class="lookup-or">OR look up by county (shows every district that touches the county)</p>
   <div class="lookup-row">
@@ -37,6 +37,9 @@ share-description: "Preview the federal and state contests on your Georgia ballo
 
 <div id="status" class="ballot-status" role="status" aria-live="polite"></div>
 <div id="results" class="ballot-results"></div>
+{%- comment -%} Where a ZIP or county result's districts came from, with the link to the published data
+  (Votega/ga-district-information). Filled by districtNote(); empty for an address, which is the Census geocoder's. {%- endcomment -%}
+<p id="districtNote" class="data-stamp"></p>
 {%- comment -%} Server-rendered freshness signal for the underlying ballot data. See scripts/build_render_data.py {%- endcomment -%}
 {% include data-freshness.html data=site.data.rendered.sample_ballot noun="" %}
 
@@ -82,6 +85,9 @@ share-description: "Preview the federal and state contests on your Georgia ballo
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} ZIP table load/expansion and wording, shared with Find My Reps and the candidate finder. {%- endcomment -%}
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/zip-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} Shared chrome around the geocoder; see assets/scripts/address-lookup.js. {%- endcomment -%}
 <script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -97,6 +103,7 @@ share-description: "Preview the federal and state contests on your Georgia ballo
   const countyBtn    = document.getElementById('countyBtn');
   const statusEl     = document.getElementById('status');
   const resultsEl    = document.getElementById('results');
+  const noteEl       = document.getElementById('districtNote');
 
   let RACES = [];
   let MEASURES = [];
@@ -208,7 +215,9 @@ share-description: "Preview the federal and state contests on your Georgia ballo
     const loc = ballot.location;
     const who = loc.matchedAddress
       ? escHtml(loc.matchedAddress)
-      : `${escHtml(loc.county)} County`;
+      : loc.source === 'zip'
+        ? `ZIP ${escHtml(loc.zip)}`
+        : `${escHtml(loc.county)} County`;
 
     const electionName = ballot.election && ballot.election.name ? ballot.election.name : 'Election';
     let html = `
@@ -222,7 +231,9 @@ share-description: "Preview the federal and state contests on your Georgia ballo
     }
 
     if (ballot.ambiguous) {
-      html += `<div class="ambiguous-note">A county can span several districts, so district races below show <strong>every candidate whose district touches ${escHtml(loc.county)} County</strong> — not all will be on your ballot. Enter your full address above, or check the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="noopener">GA Secretary of State My Voter Page</a>, to narrow it to your exact districts.</div>`;
+      const area = loc.source === 'zip' ? 'A ZIP code' : 'A county';
+      const touches = loc.source === 'zip' ? `ZIP ${escHtml(loc.zip)}` : `${escHtml(loc.county)} County`;
+      html += `<div class="ambiguous-note">${area} can span several districts, so district races below show <strong>every candidate whose district touches ${touches}</strong> — not all will be on your ballot. Enter your full address above, or check the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank" rel="noopener">GA Secretary of State My Voter Page</a>, to narrow it to your exact districts.</div>`;
     }
 
     if (!ballot.groups.length) {
@@ -246,6 +257,23 @@ share-description: "Preview the federal and state contests on your Georgia ballo
       </div>`;
 
     resultsEl.innerHTML = html;
+    districtNote(loc);
+  }
+
+  // A ZIP result is stamped from the ZIP table's OWN generatedAt (not the ballot data's);
+  // a county result comes from the same published repo but a static table with no
+  // timestamp, so it gets the link only. An address is the geocoder's, so no note.
+  function districtNote(loc) {
+    noteEl.textContent = '';
+    const repo = window.ZipDistricts && window.ZipDistricts.REPO_URL;
+    if (!repo) return;
+    if (loc.source === 'zip') {
+      const opts = window.dataStamp && window.ZipDistricts.stampOptions(loc.zipMeta);
+      if (opts) window.dataStamp.render(noteEl, opts);
+    } else if (loc.source === 'county') {
+      noteEl.innerHTML = 'County district table from the Georgia General Assembly&rsquo;s 2023 district plans'
+        + ` &middot; <a href="${repo}" target="_blank" rel="noopener">Open data</a>`;
+    }
   }
 
   function setStatus(msg, isError) {
@@ -266,8 +294,37 @@ share-description: "Preview the federal and state contests on your Georgia ballo
     eventName: 'ballot_lookup',
     // A stale ballot must not sit under a "Looking up…" status, nor under the
     // message explaining why a bare ZIP was refused.
-    onStart: function () { resultsEl.innerHTML = ''; },
-    onRefuse: function () { resultsEl.innerHTML = ''; },
+    onStart: function () { resultsEl.innerHTML = ''; noteEl.textContent = ''; },
+    onRefuse: function () { resultsEl.innerHTML = ''; noteEl.textContent = ''; },
+    // A bare ZIP is answered here instead of refused: every district touching it, from
+    // the static ZIP table, so nothing is geocoded and nothing is saved -- a ZIP is a
+    // set of districts, not a location, and storing it would let another page treat it
+    // as one. Returns an outcome enum (see address-lookup.js onZip); a missing or
+    // PO-box ZIP and a failed table fetch are answered in the status line.
+    onZip: async function (zip) {
+      const next = ' Enter your full street address, or choose a county above.';
+      let found;
+      try {
+        found = window.ZipDistricts.lookup(zip, await window.ZipDistricts.load(basePath));
+      } catch (err) {
+        console.error('sample-ballot.html: ZIP table', err);
+        setStatus('ZIP code data couldn’t be loaded right now.' + next, true);
+        return 'zip_error';
+      }
+      if (found.status === 'unknown') {
+        setStatus(`ZIP ${zip} isn’t in our list of Georgia ZIP codes.` + next, true);
+        return 'zip_unknown';
+      }
+      if (found.status !== 'ok') {
+        setStatus(`ZIP ${zip} is a PO box ZIP, which doesn’t map to any district.` + next, true);
+        return 'zip_no_districts';
+      }
+      lastLoc = window.SampleBallot.locationFromZip(zip, found);
+      lastLoc.zipMeta = found.meta;
+      setStatus('', false);
+      render(buildBallot(lastLoc));
+      return 'zip';
+    },
     onResolve: function (loc) {
       lastLoc = loc;
       setStatus('', false);
