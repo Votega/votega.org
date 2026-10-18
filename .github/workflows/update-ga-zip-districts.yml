@@ -6,9 +6,6 @@ permissions:
 
 on:
   workflow_dispatch:
-  push:   # TEMPORARY: regenerate on this branch; removed before merge
-    branches: [ga-zip-districts]
-    paths: ['scripts/generate_ga_zip_districts.py']
   schedule:
     # HUD publishes the ZIP crosswalks quarterly. Running monthly picks a release up
     # within a few weeks, and a month with no new release changes nothing and commits
