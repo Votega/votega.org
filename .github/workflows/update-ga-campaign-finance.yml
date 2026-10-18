@@ -63,12 +63,44 @@ jobs:
 
       # Donor detail (largest gifts, who gave, in/out of state) is a sidecar the pages
       # fetch separately and treat as optional, so a failure here must not cost the
-      # totals above their weekly commit. It is incremental (a filer whose total has
-      # not moved is carried forward) and refuses to replace the committed file with a
-      # mostly-failed pull; either way the previous file stays in place.
+      # totals above their weekly commit. That is why these two steps are
+      # continue-on-error — and why the LAST step of the job re-raises their failure:
+      # without it a broken donor refresh is invisible (the job is green, notify-
+      # workflow-failure never fires, and the panel quietly goes stale).
+      #
+      # The generator is incremental (a filer whose total has not moved is carried
+      # forward) and refuses to replace the committed file with a mostly-failed pull.
+      # The validator gates the FILE (tier 1: it contradicts itself) and reports
+      # coverage and staleness (tier 2: never gates).
       - name: Generate GA donor summaries
+        id: donors
         continue-on-error: true
         run: python scripts/generate_ga_donor_summaries.py
+
+      - name: Validate GA donor summaries
+        id: donorval
+        if: steps.donors.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python scripts/validate_ga_donor_summaries.py assets/data/ga-campaign-finance-donors.json \
+            --finance assets/data/ga-campaign-finance.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/ga-donor-summaries-changes.md"
+
+      # A file tier 1 rejected must not reach the commit below. Keep a copy for
+      # inspection, then put the committed file back.
+      - name: Preserve the rejected donor file
+        if: steps.donorval.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rejected-ga-donor-summaries
+          path: assets/data/ga-campaign-finance-donors.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Restore the committed donor file
+        if: steps.donorval.outcome == 'failure'
+        run: git checkout -- assets/data/ga-campaign-finance-donors.json
 
       - name: Commit and push
         run: |
@@ -123,6 +155,32 @@ jobs:
             gh issue create --title "$ISSUE_TITLE" --body-file "$report"
           fi
 
+      # Same upsert as above, for the donor file: one issue, refreshed in place, keyed on
+      # its own title so a stale donor panel is never filed under the totals' issue.
+      - name: Report donor summary changes
+        if: steps.donorval.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: "GA donor summaries: stale or missing donor detail"
+        run: |
+          set -e
+          report="$RUNNER_TEMP/ga-donor-summaries-changes.md"
+          if [ ! -s "$report" ] || grep -qi 'no material change this run' "$report"; then
+            echo "Nothing material -- skipping issue."
+            exit 0
+          fi
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          existing=$(gh issue list --state open --search "in:title $ISSUE_TITLE" \
+            --json number,title --jq "map(select(.title == \"$ISSUE_TITLE\")) | .[0].number")
+          if [ -n "$existing" ]; then
+            echo "Updating issue #$existing"
+            gh issue edit "$existing" --body-file "$report"
+            gh issue comment "$existing" --body "Refreshed $(date -u '+%Y-%m-%d') by update-ga-campaign-finance."
+          else
+            echo "Creating tracking issue"
+            gh issue create --title "$ISSUE_TITLE" --body-file "$report"
+          fi
+
       # Last on purpose: a step's `if` is evaluated when the runner reaches it, so
       # one placed before the failing step never runs. Sitting here it catches a
       # tier-1 rejection, a commit or push failure, and the report step. The
@@ -135,3 +193,16 @@ jobs:
           path: assets/data/ga-campaign-finance.json
           if-no-files-found: ignore
           retention-days: 14
+
+      # The donor steps above are continue-on-error so a donor failure cannot cost the
+      # totals their commit. That also makes the failure invisible: the job would end
+      # green and notify-workflow-failure (which fires on a failed run) would never
+      # open an issue. So, after everything that matters has been committed, fail the
+      # job here. This step is deliberately the LAST one, after "Preserve the generated
+      # file", so that step's `failure()` condition is not tripped by this deliberate
+      # failure and uploads nothing misleading.
+      - name: Fail the run if the donor refresh failed
+        if: always() && (steps.donors.outcome == 'failure' || steps.donorval.outcome == 'failure')
+        run: |
+          echo "::error::GA donor summaries failed to generate or validate. The totals were committed; the donor panel keeps its previous data and will fall behind until this is fixed."
+          exit 1

@@ -64,7 +64,7 @@ class FetchSummary(unittest.TestCase):
 class Main(unittest.TestCase):
     """The carry-forward and failure-floor rules, which decide what gets published."""
 
-    def run_main(self, roster, prev, fetch_results):
+    def run_main(self, roster, prev, fetch_results, prev_doc=None):
         written = {}
         rows = [{"filerEntityId": fid, "guid": f"g{fid}", "totalContributions": raised,
                  "electionCycleName": "2026 Georgia State Election"}
@@ -79,6 +79,8 @@ class Main(unittest.TestCase):
              mock.patch.object(g.base, "target_cycle", lambda: 2026), \
              mock.patch.object(g.time, "sleep", lambda *_: None), \
              mock.patch.object(g, "load_previous", lambda: prev), \
+             mock.patch.object(g, "load_previous_doc",
+                               lambda: prev_doc if prev_doc is not None else {"filers": prev}), \
              mock.patch.object(g, "fetch_summary", fake_fetch), \
              mock.patch.object(g, "write_json_atomic", lambda path, obj, **kw: written.update(obj)), \
              mock.patch.object(sys, "argv", ["x"]):
@@ -109,6 +111,24 @@ class Main(unittest.TestCase):
         out, _ = self.run_main(roster, prev, results)
         self.assertEqual(out["filers"]["1"]["largest"], ["old"])
         self.assertEqual(out["metadata"]["failedFilers"], ["1"])
+
+    def test_quiet_week_rewrites_the_previous_document_byte_for_byte(self):
+        # generatedAt / fetchedThisRun are run-scoped; if they were rewritten, every
+        # weekly run would commit a diff even when no donor changed.
+        prev = {"1": {"raised": 100.0, "largest": []}}
+        prev_doc = {"metadata": {"generatedAt": "2026-10-11T00:00:00+00:00", "cycle": 2026,
+                                 "fetchedThisRun": 9, "failedFilers": []},
+                    "filers": prev}
+        out, calls = self.run_main({"1": 100.0}, prev, {}, prev_doc=prev_doc)
+        self.assertEqual(calls, [])
+        self.assertEqual(out, prev_doc)
+
+    def test_changed_data_gets_a_fresh_timestamp(self):
+        prev = {"1": {"raised": 100.0, "largest": []}}
+        prev_doc = {"metadata": {"generatedAt": "OLD", "cycle": 2026, "failedFilers": []},
+                    "filers": prev}
+        out, _ = self.run_main({"1": 250.0}, prev, {"g1": {"largest": []}}, prev_doc=prev_doc)
+        self.assertNotEqual(out["metadata"]["generatedAt"], "OLD")
 
     def test_mostly_failed_run_refuses_to_publish(self):
         roster = {str(i): 100.0 for i in range(1, 5)}

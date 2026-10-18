@@ -93,12 +93,16 @@ def fetch_summary(guid):
     }
 
 
-def load_previous():
+def load_previous_doc():
     try:
         with open(OUTPUT_FILE, encoding="utf-8") as f:
-            return json.load(f).get("filers") or {}
+            return json.load(f)
     except (OSError, ValueError):
         return {}
+
+
+def load_previous():
+    return load_previous_doc().get("filers") or {}
 
 
 def main():
@@ -161,6 +165,15 @@ def main():
         },
         "filers": filers,
     }
+    # A quiet week must commit nothing (CLAUDE.md: generatedAt is preserved when the
+    # data is unchanged). Run-scoped metadata (generatedAt, fetchedThisRun) would
+    # otherwise make every run a diff; when nothing a reader can see has changed,
+    # keep the previous document byte for byte.
+    prev_doc = {} if full else load_previous_doc()
+    if (prev_doc.get("filers") == filers
+            and (prev_doc.get("metadata") or {}).get("cycle") == cycle
+            and (prev_doc.get("metadata") or {}).get("failedFilers") == failed):
+        output = prev_doc
     write_json_atomic(OUTPUT_FILE, output, separators=(",", ":"))
     print(f"Done. {len(filers)} filers ({fetched} fetched, {carried} carried, "
           f"{empty} with no money, {len(failed)} failed) -> {OUTPUT_FILE}")
