@@ -65,6 +65,9 @@ breadcrumb:
   .race-info { flex: 1; min-width: 0; }
   .race-title { font-weight: bold; font-size: 1rem; }
   .race-candidates { font-size: 0.85rem; color: #555; margin-top: 0.2rem; }
+  .race-note { font-size: 0.78rem; font-weight: normal; color: #555; margin-top: 2px; }
+  /* Matches the sample ballot's .contest-badge / .badge-ambiguous. */
+  .race-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem; vertical-align: middle; background: #fff0c2; color: #7a5c00; }
 
   .race-meta { text-align: right; flex-shrink: 0; }
   .phase-badge {
@@ -550,7 +553,21 @@ breadcrumb:
     return races;
   }
 
-  function renderRaceRow(race, basePath) {
+  // Same rule as the sample ballot and the Georgia legislator lists: when a county or ZIP
+  // leaves more than one district in play, none of them is known to be the voter's, so each
+  // district row says so. An address (exact districts), no filter, and a lone district carry
+  // no badge. A ZIP row also says how much of the ZIP the district covers.
+  const ZIP_SHARE_KEY = { 'U.S. House': 'usHouse', 'Georgia State Senate': 'stateSenate',
+                          'Georgia House of Representatives': 'stateHouse' };
+  function rowShareNote(race, uncertain) {
+    if (!uncertain || !COUNTY_TABS.has(activeTab)) return '';
+    const key = ZIP_SHARE_KEY[race.chamber];
+    const share = zipFilter && key && window.ZipDistricts && zipFilter.shares
+      ? window.ZipDistricts.shareLabel(zipFilter.shares[key][race.district]) : null;
+    return (share ? `<div class="race-note">${escHtml(share)}</div>` : '');
+  }
+
+  function renderRaceRow(race, basePath, uncertain) {
     const phase      = race.phases[race.activePhase];
     const phaseLabel = race.activePhase === 'primary' ? 'Primary'
                      : race.activePhase === 'runoff'  ? 'Runoff'
@@ -565,7 +582,8 @@ breadcrumb:
     return `
       <a class="race-row" href="${VoteGA.entityUrls.get('race', race.id, `${basePath}race.html?id=${encodeURIComponent(race.id)}`)}">
         <div class="race-info">
-          <div class="race-title">${escHtml(titleText)}</div>
+          <div class="race-title">${escHtml(titleText)}${uncertain && COUNTY_TABS.has(activeTab) ? '<span class="race-badge">may not be your district</span>' : ''}</div>
+          ${rowShareNote(race, uncertain)}
           <div class="race-candidates">${summary}</div>
         </div>
         <div class="race-meta">
@@ -653,8 +671,13 @@ breadcrumb:
         html += `<p class="box-note" style="margin-bottom:1rem;font-size:0.82rem;color:#555;">Many counties are served by multiple districts. If you are unsure which district you're in, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> and scroll to the bottom to see your districts.</p>`;
       }
 
+      // More than one district in play from a county or ZIP means none is known to be the
+      // voter's (an address resolves to exactly one, and no filter is not a guess).
+      const uncertain = COUNTY_TABS.has(activeTab) && races.length > 1
+        && !(voterLoc && voterLoc.source === 'address')
+        && (!!zipFilter || !!countySelect.value);
       races.sort((a, b) => (a.district ?? 0) - (b.district ?? 0))
-           .forEach(r => { html += renderRaceRow(r, basePath); });
+           .forEach(r => { html += renderRaceRow(r, basePath, uncertain); });
     }
 
     racesOutput.innerHTML = html;
@@ -760,7 +783,7 @@ breadcrumb:
       voterLoc = null;
       if (window.VoterLocation) window.VoterLocation.clear();   // so a reload can't resurrect an older one
       zipFilter = { zip, usHouse: found.usHouse, stateSenate: found.stateSenate, stateHouse: found.stateHouse,
-                    meta: found.meta };
+                    shares: found.shares, meta: found.meta };
       renderVoterBanner();
       renderRaces();
       syncURL();
