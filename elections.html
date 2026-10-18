@@ -129,14 +129,14 @@ breadcrumb:
   .address-filter { display: none; margin-bottom: 1rem; }
   .address-filter.visible { display: block; }
   .address-filter > label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; font-weight: 600; }
-  .address-row { display: flex; gap: 0.5rem; flex-wrap: wrap; max-width: 560px; }
-  .address-row input { flex: 1 1 260px; min-width: 0; padding: 8px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
-  .address-row button { flex: 0 0 auto; padding: 8px 16px; font-weight: 600; color: #fff; background: #0b5394; border: none; border-radius: 6px; cursor: pointer; }
-  .address-row button:hover { background: #073763; }
+  .address-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .address-row input { flex: 1; min-width: 240px; padding: 8px; border: 1px solid #cbd0d8; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+  .address-row button { flex: 0 0 auto; padding: 8px 16px; font-size: 0.95rem; font-weight: 600; color: #fff; background: #1a56a8; border: none; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+  .address-row button:hover { background: #164a90; }
   .address-row button:disabled { opacity: 0.6; cursor: default; }
-  .address-hint { font-size: 0.78rem; color: #777; margin-top: 0.3rem; }
+  .address-hint { font-size: 0.78rem; color: #666; margin: 0.4rem 0 0; }
   .address-error { color: #c00; font-size: 0.85rem; margin-top: 0.35rem; }
-  .address-or { font-size: 0.82rem; color: #888; margin: 0.6rem 0 0.3rem; }
+  .address-or { font-size: 0.9rem; color: #555; font-weight: 600; margin: 0.9rem 0 0.5rem; }
 
   .voter-banner {
     display: none;
@@ -227,16 +227,16 @@ breadcrumb:
 </div>
 
 <div class="address-filter" id="addressFilter">
-  <label for="addressInput">Find your exact districts by address</label>
+  <label for="addressInput">Enter your address or ZIP code</label>
   <div class="address-row">
     <input type="text" id="addressInput"
-           placeholder="123 Peachtree St NE, Atlanta, GA 30303"
+           placeholder="123 Peachtree St NE, Atlanta, GA 30303 — or just 30303"
            autocomplete="street-address" />
     <button type="button" id="addressBtn">Find my districts</button>
   </div>
-  <div class="address-hint">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone will show every district touching that ZIP code (not all of them will be your district). VoteGA does not store any information entered.</div>
+  <div class="address-hint">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone is looked up on this page and is not sent anywhere, and shows every district touching it. VoteGA stores neither.</div>
   <div class="address-error" id="addressError" role="alert"></div>
-  <p class="address-or">You may also filter by county below (shows every district touching the county).</p>
+  <p class="address-or">OR pick your county (shows every district that touches the county)</p>
 </div>
 
 <div class="voter-banner" id="voterBanner"></div>

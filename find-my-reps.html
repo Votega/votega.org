@@ -16,18 +16,18 @@ css:
 
 <style>
   .fmr-lookup { margin: 1.25rem 0 2rem; }
-  .fmr-label { display:block; font-weight:600; margin-bottom:0.5rem; }
+  .fmr-label { display:block; margin-bottom:0.3rem; font-size:0.88rem; color:#444; font-weight:600; }
   .fmr-row { display:flex; gap:0.5rem; flex-wrap:wrap; }
   .fmr-input {
-    flex:1; min-width:240px; padding:0.6rem 0.75rem; font-size:1rem;
-    border:1px solid #cbd0d8; border-radius:8px;
+    flex:1; min-width:240px; padding:8px; font-size:1rem;
+    border:1px solid #cbd0d8; border-radius:6px;
   }
   .fmr-btn {
-    padding:0.6rem 1.15rem; font-size:1rem; font-weight:600; cursor:pointer;
-    background:#1a56a8; color:#fff; border:0; border-radius:8px; white-space:nowrap;
+    padding:8px 16px; font-size:0.95rem; font-weight:600; cursor:pointer;
+    background:#1a56a8; color:#fff; border:0; border-radius:6px; white-space:nowrap;
   }
   .fmr-btn:disabled { opacity:0.6; cursor:default; }
-  .fmr-privacy { font-size:0.78rem; color:#666; margin:0.5rem 0 0; }
+  .fmr-privacy { font-size:0.78rem; color:#666; margin:0.4rem 0 0; }
   .fmr-status { margin-top:0.9rem; font-size:0.9rem; }
   .fmr-status.err { color:#b91c1c; }
   .fmr-results { margin-top:1rem; display:grid; gap:0.9rem; }
@@ -51,7 +51,7 @@ css:
   .fmr-badge-ambiguous { background:#fff0c2; color:#7a5c00; }
   .fmr-vacant { color:#a35b00; font-style:italic; }
   .fmr-browse-lead { margin:0.5rem 0 1rem; font-weight:600; color:#444; }
-  .fmr-or { margin:1rem 0 0.5rem; font-size:0.9rem; color:#555; font-weight:600; }
+  .fmr-or { margin:0.9rem 0 0.5rem; font-size:0.9rem; color:#555; font-weight:600; }
   .fmr-select {
     flex:1; min-width:240px; max-width:400px; padding:0.6rem 0.75rem; font-size:1rem;
     border:1px solid #cbd0d8; border-radius:8px; background:#fff;
@@ -71,14 +71,14 @@ css:
 </style>
 
 <div class="fmr-lookup">
-  <label class="fmr-label" for="fmrAddress">Enter your residential address or ZIP code</label>
+  <label class="fmr-label" for="fmrAddress">Enter your address or ZIP code</label>
   <div class="fmr-row">
     <input type="text" id="fmrAddress" class="fmr-input"
            placeholder="123 Peachtree St NE, Atlanta, GA 30303 — or just 30303"
            autocomplete="street-address" />
     <button id="fmrBtn" class="fmr-btn" type="button">Find my reps</button>
   </div>
-  <p class="fmr-privacy">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone is looked up on this page and is not sent anywhere. VoteGA does not store either.</p>
+  <p class="fmr-privacy">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP code alone is looked up on this page and is not sent anywhere, and shows every district touching it. VoteGA stores neither.</p>
 
   {%- comment -%}
     The county fallback is what the address path degrades to. The Census geocoder
