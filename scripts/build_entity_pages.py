@@ -235,6 +235,54 @@ def _office_blurb(race):
     return ""
 
 
+_ROSTER_CACHE = {}
+
+
+def _roster_name_party(source, mid):
+    """(name, party) for a nameless ballot entry keyed by memberId.
+
+    Curated incumbents (federal ones especially) are stored in races.json as
+    {type: "incumbent", memberId} with no name or party; those live in the member
+    rosters. Without this they were dropped from every server-rendered candidate
+    list, and the browser-side list (candidate.html hydrateRivalIncumbents) was
+    the only place they appeared. Mirrors that function's name rule."""
+    if source not in _ROSTER_CACHE:
+        fname = "current-members.json" if source == "congress" else "ga-members.json"
+        key = "bioguideId" if source == "congress" else "id"
+        try:
+            members = load(fname).get("members") or []
+        except (OSError, ValueError):
+            members = []
+        _ROSTER_CACHE[source] = {m.get(key): m for m in members if m.get(key)}
+    m = _ROSTER_CACHE[source].get(mid)
+    if not m:
+        return None, None
+    if source == "congress":
+        name = " ".join(x for x in (m.get("firstName"), m.get("lastName")) if x).strip() or m.get("name")
+    else:
+        name = m.get("name")
+    return (name or "").strip() or None, (m.get("partyName") or m.get("party") or "").strip() or None
+
+
+def _with_roster_name(c):
+    """The ballot entry, with name/party filled from the roster when it has none."""
+    if (c.get("name") or "").strip():
+        return c
+    mid = c.get("existingMemberId") or c.get("memberId")
+    if not mid:
+        return c
+    name, party = _roster_name_party(c.get("memberSource") or c.get("existingMemberSource") or "congress", mid)
+    if not name:
+        return c
+    out = dict(c)
+    out["name"] = name
+    if party and not out.get("party"):
+        out["party"] = party
+    if c.get("type") == "incumbent":
+        out["isIncumbent"] = True
+    return out
+
+
 def _race_active_candidates(race):
     """(phase_key, candidates) for the race's active phase (else the latest with candidates)."""
     phases = {k: v for k, v in (race.get("phases") or {}).items() if isinstance(v, dict)}
@@ -247,6 +295,7 @@ def _race_active_candidates(race):
         groups = list((ph.get("ballots") or {}).values()) + [ph.get("candidates") or []]
         for g in groups:
             for c in (g or []):
+                c = _with_roster_name(c)
                 cn = (c.get("name") or "").strip()
                 k = c.get("id") or cn
                 if cn and k not in seen and not c.get("withdrawn") and not c.get("disqualified"):
