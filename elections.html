@@ -270,6 +270,9 @@ breadcrumb:
 </div>
 
 <p id="dataStamp" class="data-stamp"></p>
+{%- comment -%} Provenance of the district tables a ZIP or county filter uses, linking the published data
+  (Votega/ga-district-information). Filled by renderDistrictNote(); empty otherwise. {%- endcomment -%}
+<p id="districtNote" class="data-stamp"></p>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -576,7 +579,25 @@ breadcrumb:
 
   const COURTS_COVERAGE_NOTICE = "We're working to ensure coverage across all of Georgia.";
 
+  // Where the districts behind a ZIP or county filter came from. A ZIP is stamped from the
+  // ZIP table's OWN generatedAt, not the races stamp above; the county table is static and
+  // undated, so it gets the link only. An address filter is the geocoder's: no note.
+  const districtNote = document.getElementById('districtNote');
+  function renderDistrictNote() {
+    districtNote.textContent = '';
+    const repo = window.ZipDistricts && window.ZipDistricts.REPO_URL;
+    if (!repo) return;
+    if (zipFilter) {
+      const opts = window.dataStamp && window.ZipDistricts.stampOptions(zipFilter.meta);
+      if (opts) window.dataStamp.render(districtNote, opts);
+    } else if (!voterLoc && countySelect.value && COUNTY_TABS.has(activeTab)) {
+      districtNote.innerHTML = 'County district table from the Georgia General Assembly’s 2023 district plans'
+        + ` &middot; <a href="${repo}" target="_blank" rel="noopener">Open data</a>`;
+    }
+  }
+
   function renderRaces() {
+    renderDistrictNote();
     const races   = racesForTab(activeTab);
     const basePath = getBasePath();
 
@@ -737,7 +758,8 @@ breadcrumb:
       countySelect.value = '';                          // one district filter at a time
       voterLoc = null;
       if (window.VoterLocation) window.VoterLocation.clear();   // so a reload can't resurrect an older one
-      zipFilter = { zip, usHouse: found.usHouse, stateSenate: found.stateSenate, stateHouse: found.stateHouse };
+      zipFilter = { zip, usHouse: found.usHouse, stateSenate: found.stateSenate, stateHouse: found.stateHouse,
+                    meta: found.meta };
       renderVoterBanner();
       renderRaces();
       syncURL();

@@ -103,6 +103,10 @@ css:
 
   <div id="fmrStatus" class="fmr-status" role="status" aria-live="polite"></div>
   <div id="fmrResults" class="fmr-results"></div>
+  {%- comment -%} Provenance of the district tables a ZIP or county result came from, with the link to the
+    published data (Votega/ga-district-information). Filled by districtNote(); empty for an address lookup,
+    which is answered by the Census geocoder, not these tables. {%- endcomment -%}
+  <p id="fmrDistrictNote" class="data-stamp"></p>
   {%- comment -%} Server-rendered freshness signal for the underlying representative data. See scripts/build_render_data.py {%- endcomment -%}
   {% include data-freshness.html data=site.data.rendered.find_my_reps noun="" %}
 </div>
@@ -152,6 +156,7 @@ css:
 {%- endcomment -%}
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} ZIP table load/expansion and share wording, shared with the candidate finder. Tested in tests/js/zip-districts.test.js. {%- endcomment -%}
+<script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/zip-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- comment -%} County expansion, member matching and the results markup. Tested in tests/js/find-my-reps-view.test.js. {%- endcomment -%}
 <script src="{{ '/assets/scripts/find-my-reps-view.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -167,6 +172,7 @@ css:
   var btn       = document.getElementById('fmrBtn');
   var status    = document.getElementById('fmrStatus');
   var out       = document.getElementById('fmrResults');
+  var note      = document.getElementById('fmrDistrictNote');
   var countySel = document.getElementById('fmrCounty');
   var countyBtn = document.getElementById('fmrCountyBtn');
   var orLine    = document.getElementById('fmrOr');
@@ -216,8 +222,32 @@ css:
     };
   }
 
+  // Results and the note describing where their districts came from go together,
+  // so a cleared result never leaves a stale source line behind.
+  function clearResults() {
+    out.innerHTML = '';
+    note.textContent = '';
+  }
+
+  // A ZIP result is stamped from the ZIP table's OWN generatedAt (not the roster's);
+  // a county result comes from the same published repo but a static table with no
+  // timestamp, so it gets the link only. An address is the geocoder's, so no note.
+  function districtNote(loc) {
+    note.textContent = '';
+    var repo = window.ZipDistricts && window.ZipDistricts.REPO_URL;
+    if (!repo) return;
+    if (loc.source === 'zip') {
+      var opts = window.dataStamp && window.ZipDistricts.stampOptions(loc.zipMeta);
+      if (opts) window.dataStamp.render(note, opts);
+    } else if (loc.source === 'county') {
+      note.innerHTML = 'County district table from the Georgia General Assembly’s 2023 district plans'
+        + ' &middot; <a href="' + repo + '" target="_blank" rel="noopener">Open data</a>';
+    }
+  }
+
   function render(loc, fed, ga) {
     out.innerHTML = View.renderReps(loc, fed, ga, { fedHref: fedHref, gaHref: gaHref });
+    districtNote(loc);
     status.textContent = '';
     status.className = 'fmr-status';
   }
@@ -237,7 +267,7 @@ css:
   function run(method, locPromise, working) {
     if (busy) return;
     setBusy(true);
-    out.innerHTML = '';
+    clearResults();
     // A carried-over location needs no geocoder round trip, so saying "Looking up
     // your districts" would misdescribe what is happening.
     status.textContent = working || 'Looking up your districts…';
@@ -275,8 +305,8 @@ css:
     },
     // run() cleared stale results at the start of every lookup; the address
     // path starts inside the module now, so it clears from there.
-    onStart: function () { out.innerHTML = ''; },
-    onRefuse: function () { out.innerHTML = ''; },
+    onStart: function () { clearResults(); },
+    onRefuse: function () { clearResults(); },
     // A bare ZIP is answered here instead of refused: every district touching it,
     // from the static table. Nothing is sent anywhere and nothing is saved --
     // a ZIP is a set of districts, not a location, and storing it would let the
@@ -297,7 +327,7 @@ css:
 
   var ZIP_NEXT = ' Enter your full street address above, or pick your county.';
   function zipNote(message, isError) {
-    out.innerHTML = '';
+    clearResults();
     status.textContent = message + ZIP_NEXT;
     status.className = isError ? 'fmr-status err' : 'fmr-status';
   }
@@ -315,6 +345,7 @@ css:
         return 'zip_unknown';
       }
       var loc = found.status === 'ok' ? View.zipLoc(zip, table.zips[zip]) : null;
+      if (loc) loc.zipMeta = found.meta;
       if (!loc) {
         zipNote('ZIP ' + zip + ' is a PO box ZIP, which doesn’t map to any district.', true);
         return 'zip_no_districts';
@@ -399,7 +430,7 @@ css:
       window.VoterLocation.clear();
       countySel.value = '';
       input.value = '';
-      out.innerHTML = '';
+      clearResults();
       status.textContent = '';
       status.className = 'fmr-status';
       hideCarry();
