@@ -711,12 +711,33 @@ def load_eo_items(eo_cfg, source_name):
 # --------------------------------------------------------------------------- #
 def load_overrides():
     if not os.path.exists(OVERRIDES_FILE):
-        return {"suppress": set(), "patches": {}}
+        return {"suppress": set(), "patches": {}, "add": []}
     with open(OVERRIDES_FILE, encoding="utf-8") as f:
         data = json.load(f)
     suppress = set(data.get("_suppress") or [])       # match on item id OR url substring
     patches = {k: v for k, v in data.items() if not k.startswith("_")}  # keyed by item id
-    return {"suppress": suppress, "patches": patches}
+    return {"suppress": suppress, "patches": patches, "add": data.get("_add") or []}
+
+
+def load_manual_items(overrides):
+    """Hand-curated articles from the overrides file's `_add` list, shaped like
+    feed items so they go through the same ingest gates (dedupe, entity
+    tagging, topics, window) rather than a second path with its own rules."""
+    items = []
+    for a in overrides["add"]:
+        title, url = clean_text(a.get("title") or ""), (a.get("url") or "").strip()
+        if not title or not url:
+            print(f"[manual] skipping _add entry without title/url: {a!r}")
+            continue
+        items.append({
+            "id": make_item_id(url),
+            "title": title,
+            "url": url,
+            "source": a.get("source") or "Manual",
+            "publishedAt": a.get("publishedAt"),
+            "snippet": clean_text(a.get("snippet") or "")[:SNIPPET_MAX],
+        })
+    return items
 
 
 def is_suppressed(item, suppress):
@@ -839,6 +860,11 @@ def main():
         # says "Georgia" ("Lowering flags to half-staff ... Patriot Day").
         ingest(load_eo_items(eo_cfg, eo_source_name), eo_source_name,
                resolve_feed_entity(eo_cfg, id_index), True, dedupe_titles=False)
+
+    # Hand-curated articles (overrides `_add`): GA news by editorial decision.
+    manual = load_manual_items(overrides)
+    if manual:
+        ingest(manual, "manual", None, True)
 
     # 45-day window; undated items are kept but sort last.
     cutoff = datetime.now(timezone.utc) - timedelta(days=WINDOW_DAYS)

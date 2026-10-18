@@ -1,8 +1,18 @@
 {
   "_comment": "Manual corrections for the GA news hub, applied by generate_ga_news.py. This is an editorial control surface for a public aggregator.",
   "_howto": {
+    "_add": "Array of hand-curated articles { title, url, source, publishedAt (ISO), snippet } ingested through the same gates as feed items (dedupe by url, entity tagging, topics, 45-day window). Use for an article a feed missed or dropped.",
     "_suppress": "Array of item ids (12-char sha1 prefix from ga-news.json) OR url substrings to drop entirely (spam, off-topic, or a source's non-news item).",
     "per-item patch": "A top-level key = an item id; value = { entityIds: [...], topics: [...] } to REPLACE the auto-detected tags on that item (e.g. fix a missed or wrong entity match)."
   },
-  "_suppress": []
+  "_suppress": [],
+  "_add": [
+    {
+      "title": "Bottoms, Jackson debate healthcare, data centers in sole scheduled forum",
+      "url": "https://thecurrentga.org/2026/10/07/bottoms-jackson-debate-healthcare-data-centers-in-sole-scheduled-forum/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-07T12:00:00+00:00",
+      "snippet": "Democrat Keisha Lance Bottoms and Republican Rick Jackson clashed Tuesday night over healthcare, crime, data centers and election security in a town hall-style debate at the Atlanta News First studio."
+    }
+  ]
 }
