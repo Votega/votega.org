@@ -5,6 +5,11 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      allow_collapse:
+        description: 'Commit even though recorded votes at HEAD are missing from the new file (only after inspecting the rejected file)'
+        type: boolean
+        default: false
   schedule:
     # Weekly on Sundays at 09:30 UTC (after federal-votes workflow)
     - cron: '30 9 * * 0'
@@ -23,14 +28,27 @@ jobs:
           python-version: '3.x'
 
       - name: Generate VP tie-breaking vote data
+        id: generate
         run: python scripts/generate_vp_tie_votes.py assets/data/vp-tie-votes.json
 
+      # Tier 1 gates on the file contradicting itself (count, every record a
+      # genuine tie, Yea/Nay, one Congress, no duplicates). The one baseline gate
+      # is the loss check: recorded votes are immutable and the file is rebuilt
+      # whole, so a (session, voteNumber) at HEAD that is gone now means a detail
+      # fetch failed or the Senate menu did not parse. It is a set difference, not
+      # the 20% shrink it replaces, which let a lost vote through on an 8-vote
+      # file (-12.5%). A new Congress starts empty and is exempt. Additions go to
+      # the step summary; they are rare enough not to need a tracking issue. See
+      # docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
       - name: Validate generated data
+        id: validate
+        env:
+          ALLOW_COLLAPSE: ${{ inputs.allow_collapse && '--allow-collapse' || '' }}
         run: |
-          python scripts/validate_data_update.py assets/data/vp-tie-votes.json \
-            --metric votes=metadata.count \
-            --metric records=len:votes \
-            --scope-key metadata.congress
+          python scripts/validate_vp_tie_votes.py assets/data/vp-tie-votes.json \
+            --baseline-ref HEAD \
+            --report-out "$RUNNER_TEMP/vp-tie-votes-changes.md" \
+            $ALLOW_COLLAPSE
 
       - name: Commit and push generated data
         run: |
@@ -53,3 +71,20 @@ jobs:
               exit 1
             fi
           fi
+
+      - name: Report what changed
+        run: |
+          report="$RUNNER_TEMP/vp-tie-votes-changes.md"
+          if [ -s "$report" ] && ! grep -q 'No material change this run' "$report"; then
+            cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # Last on purpose (a step's `if` is evaluated when the runner reaches it).
+      - name: Preserve the generated file
+        if: failure() && steps.generate.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-vp-tie-votes
+          path: assets/data/vp-tie-votes.json
+          if-no-files-found: ignore
+          retention-days: 14
