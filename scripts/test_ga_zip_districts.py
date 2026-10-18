@@ -48,6 +48,9 @@ check("every tract's House split sums to its population",
 valid = V.valid_districts(TRACTS)
 check("56 Senate districts", len(valid["s"]), 56)
 check("180 House districts", len(valid["h"]), 180)
+check("14 congressional districts", len(valid["c"]), 14)
+check("every tract's congressional split sums to its population",
+      all(sum(r["c"].values()) == r["p"] for r in TRACTS["tracts"].values()), True)
 check("USPS table: standard + PO-box = count",
       USPS["metadata"]["standard"] + USPS["metadata"]["poBox"], USPS["metadata"]["count"])
 check("USPS table holds only Georgia ZIPs (no 37316)", "37316" in USPS["zips"], False)
@@ -61,10 +64,10 @@ toy = {
     "metadata": {"plans": {"s": "S", "h": "H"}, "censusVintage": "toy"},
     "counties": {"001": "Alpha", "002": "Beta"},
     "tracts": {
-        "13001000100": {"p": 100, "s": {"001": 100}, "h": {"010": 80, "011": 20}},
-        "13001000200": {"p": 300, "s": {"001": 100, "002": 200}, "h": {"011": 300}},
-        "13002000300": {"p": 0, "s": {}, "h": {}},
-        "13002000400": {"p": 50, "s": {"003": 50}, "h": {"012": 50}},
+        "13001000100": {"p": 100, "s": {"001": 100}, "h": {"010": 80, "011": 20}, "c": {"005": 60, "004": 40}},
+        "13001000200": {"p": 300, "s": {"001": 100, "002": 200}, "h": {"011": 300}, "c": {"005": 300}},
+        "13002000300": {"p": 0, "s": {}, "h": {}, "c": {}},
+        "13002000400": {"p": 50, "s": {"003": 50}, "h": {"012": 50}, "c": {"012": 50}},
     },
 }
 usps = {"zips": {"30001": "standard", "30002": "po-box", "30003": "standard", "30004": "standard"}}
@@ -88,9 +91,6 @@ hud = {
         row("30001", "13001", 1.0), row("30004", "13001", 0.5), row("30004", "13002", 0.5),
         row("30099", "13002", 1.0),
     ],
-    "zip-cd": [
-        row("30001", "1305", 0.6), row("30001", "1304", 0.4), row("30099", "1312", 1.0),
-    ],
 }
 entries = G.build_entries(hud, toy, usps)
 
@@ -101,8 +101,9 @@ check("Senate shares combine tract weights with tract splits",
 # House 10: .25*.8 = .2 ; House 11: .25*.2 + .75*1 = .8
 check("House shares are ranked largest first",
       [(r["district"], r["share"]) for r in e["stateHouse"]], [(11, 0.8), (10, 0.2)])
-check("congressional districts come straight from HUD, ranked",
-      [(r["district"], r["share"]) for r in e["usHouse"]], [(5, 0.6), (4, 0.4)])
+# Congress 5: .25*.6 + .75*1 = .9 ; Congress 4: .25*.4 = .1
+check("congressional shares use the same tract method, ranked",
+      [(r["district"], r["share"]) for r in e["usHouse"]], [(5, 0.9), (4, 0.1)])
 check("county names are attached", e["counties"], [{"fips": "001", "name": "Alpha", "share": 1.0}])
 check("the HUD city is title-cased for display", e["city"], "Alpha Town")
 
@@ -122,15 +123,15 @@ check("a ZIP only HUD knows is kept as other, not dropped",
 # A sliver is listed, never cut off.
 sliver = copy.deepcopy(toy)
 sliver["tracts"]["13001000100"] = {"p": 1_000_000, "s": {"001": 999_999, "004": 1},
-                                   "h": {"010": 999_999, "013": 1}}
-sl = G.build_entries({"zip-tract": [row("30001", "13001000100", 1.0)], "zip-county": [], "zip-cd": []},
+                                   "h": {"010": 999_999, "013": 1}, "c": {"001": 1_000_000}}
+sl = G.build_entries({"zip-tract": [row("30001", "13001000100", 1.0)], "zip-county": []},
                      sliver, {"zips": {"30001": "standard"}})["30001"]
 check("a one-in-a-million sliver is still listed",
       [r["district"] for r in sl["stateSenate"]], [1, 4])
 check("and never rounds to zero", sl["stateSenate"][1]["share"] >= G.SHARE_FLOOR, True)
 
 # Weight fallback for a business-only ZIP.
-biz = G.build_entries({"zip-tract": [row("30001", "13001000100", 0.0, tot=1.0)], "zip-county": [], "zip-cd": []},
+biz = G.build_entries({"zip-tract": [row("30001", "13001000100", 0.0, tot=1.0)], "zip-county": []},
                       toy, {"zips": {"30001": "standard"}})["30001"]
 check("a ZIP with no residential addresses falls back to the total ratio",
       [r["district"] for r in biz["stateHouse"]], [10, 11])
@@ -139,7 +140,7 @@ check("a ZIP with no residential addresses falls back to the total ratio",
 many = {f"31{n:03d}": copy.deepcopy(e) for n in range(850)}
 doc = G.build_document(many, "2026", "2", toy, "2026-01-01T00:00:00+00:00")
 vt = V.valid_districts(toy)
-vt = {"s": {1, 2, 3}, "h": {10, 11, 12}}
+vt = {"s": {1, 2, 3}, "h": {10, 11, 12}, "c": {4, 5, 12}}
 check("a sound document passes tier 1", V.tier1(doc, vt), [])
 
 bad = copy.deepcopy(doc); bad["zips"]["31000"]["kind"] = "po-box"
@@ -157,13 +158,17 @@ bad = copy.deepcopy(doc); bad["zips"]["31000"]["stateSenate"][0]["district"] = 5
 check("a district the plan does not have is an error",
       any("no such district" in x for x in V.tier1(bad, vt)), True)
 
+bad = copy.deepcopy(doc); bad["zips"]["31000"]["usHouse"][0]["district"] = 15
+check("a congressional district the plan does not have is an error",
+      any("usHouse: no such district" in x for x in V.tier1(bad, vt)), True)
+
 bad = copy.deepcopy(doc); bad["zips"]["31000"]["stateSenate"] = None
 check("a Senate list without a House list is an error",
       any("disagree" in x for x in V.tier1(bad, vt)), True)
 
 bad = copy.deepcopy(doc)
 for z in list(bad["zips"])[:200]:
-    bad["zips"][z]["stateHouse"] = bad["zips"][z]["stateSenate"] = None
+    bad["zips"][z]["stateHouse"] = bad["zips"][z]["stateSenate"] = bad["zips"][z]["usHouse"] = None
 check("a collapsed join is an error", any("collapsed" in x for x in V.tier1(bad, vt)), True)
 
 bad = copy.deepcopy(doc); bad["metadata"]["count"] = 1

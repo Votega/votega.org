@@ -3,21 +3,25 @@
 counties and the legislative districts it touches, each ranked by the estimated
 share of the ZIP's residents living there.
 
-    HUD-USPS crosswalks (ZIP -> tract, ZIP -> county, ZIP -> congressional district;
-    residential-address ratios, quarterly)
+    HUD-USPS crosswalks (ZIP -> tract and ZIP -> county; residential-address ratios,
+    quarterly)
   + scripts/data/ga-tract-districts.json  (tract -> 2020 population by 2023 state
-    Senate / House district; built by build_ga_tract_district_table.py)
+    Senate, state House and congressional district; built by
+    build_ga_tract_district_table.py)
   + scripts/data/usps-ga-zips.json        (which ZIPs are real Georgia delivery ZIPs,
     and which are PO-box-only; built by build_usps_ga_zips.py)
   -> assets/data/ga-zip-districts.json
 
-How a ZIP's state district shares are estimated
------------------------------------------------
+How a ZIP's district shares are estimated
+-----------------------------------------
 HUD says what fraction of a ZIP's residential addresses sit in each census tract.
 The tract table says what fraction of each tract's residents live in each district.
 Their product, summed over the ZIP's tracts, is the ZIP's share in a district.
 Tracts with no residents are left out and the rest renormalised, so a tract that
-is all empty blocks cannot add a district nobody lives in.
+is all empty blocks cannot add a district nobody lives in. Congressional districts
+use the same method on the same table, not HUD's own ZIP -> district crosswalk: the
+table reconciles exactly to the official plan files, and HUD's version disagreed with
+it about the largest district for 21 of 914 ZIPs.
 
 EVERY district with any share is listed, ranked biggest first. Nothing is cut off:
 a voter on the edge of a ZIP lives in a small sliver, and hiding the sliver is
@@ -52,7 +56,7 @@ TRACT_TABLE = os.path.join(HERE, "data", "ga-tract-districts.json")
 USPS_ZIPS = os.path.join(HERE, "data", "usps-ga-zips.json")
 
 HUD_URL = "https://www.huduser.gov/hudapi/public/usps"
-HUD_TYPES = {"zip-tract": 1, "zip-county": 2, "zip-cd": 5}
+HUD_TYPES = {"zip-tract": 1, "zip-county": 2}
 GA_STATE_FIPS = "13"
 #: Shares are rounded for the file; a district with any share at all is still
 #: listed, at no less than this.
@@ -80,14 +84,14 @@ def http_get_json(url, token, tries=4):
 
 
 def fetch_hud(token):
-    """{'zip-tract': [...], ...} plus the data's year/quarter."""
+    """{'zip-tract': [...], 'zip-county': [...]} plus the data's year/quarter."""
     out, vintage = {}, set()
     for name, type_no in HUD_TYPES.items():
         data = http_get_json(f"{HUD_URL}?type={type_no}&query=GA", token)["data"]
         out[name] = data["results"]
         vintage.add((str(data.get("year")), str(data.get("quarter"))))
     if len(vintage) != 1:
-        sys.exit(f"FATAL: the three HUD crosswalks are from different releases: {sorted(vintage)}")
+        sys.exit(f"FATAL: the HUD crosswalks are from different releases: {sorted(vintage)}")
     year, quarter = next(iter(vintage))
     return out, year, quarter
 
@@ -153,14 +157,10 @@ def build_entries(hud, tract_table, usps):
                                 if g.startswith(GA_STATE_FIPS)})
             if counties:
                 entry["counties"] = [{"fips": f, "name": county_names.get(f), "share": s} for f, s in counties]
-            for key, chamber in (("stateSenate", "s"), ("stateHouse", "h")):
+            for key, chamber in (("stateSenate", "s"), ("stateHouse", "h"), ("usHouse", "c")):
                 ranked = state_shares(by["zip-tract"][z], tracts, chamber)
                 if ranked:
                     entry[key] = [{"district": int(d), "share": s} for d, s in ranked]
-            cds = _ranked({int(g[len(GA_STATE_FIPS):]): w for g, w in _weights(by["zip-cd"].get(z, []))
-                           if g.startswith(GA_STATE_FIPS)})
-            if cds:
-                entry["usHouse"] = [{"district": d, "share": s} for d, s in cds]
         entries[z] = entry
     return entries
 
@@ -171,8 +171,8 @@ def build_document(entries, year, quarter, tract_table, generated_at):
         "metadata": {
             "generatedAt": generated_at,
             "source": "HUD-USPS ZIP Code Crosswalk (residential-address ratios), combined with the "
-                      "Georgia General Assembly's 2023 Senate and House plans and 2020 Census "
-                      "block populations",
+                      "Georgia General Assembly's 2023 Senate, House and Congressional plans and "
+                      "2020 Census block populations",
             "hudRelease": f"{year} Q{quarter}",
             "statePlans": tract_table["metadata"]["plans"],
             "censusVintage": tract_table["metadata"]["censusVintage"],

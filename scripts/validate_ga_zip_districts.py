@@ -9,8 +9,8 @@ Same two-tier split as validate_agency_actions.py.
       anyone lives);
     * a ranked list whose shares do not sum to ~1, are out of order, repeat a
       district, or name a district the plans do not have;
-    * a standard ZIP with a state House list but no Senate list (or the reverse):
-      both come from the same tracts, so one without the other is a join failure;
+    * a standard ZIP with one chamber's list but not another's: all come from the same
+      tracts, so one without the other is a join failure;
     * too few ZIPs with districts (the join to the tract table collapsed).
 
   Tier 2 - the file differs from the committed one: ZIPs added or removed, a ZIP
@@ -38,8 +38,7 @@ MIN_COVERAGE = 0.90
 SUM_TOLERANCE = 0.001
 #: Rounding to five places can move a long list's total by a few ten-thousandths.
 LIST_KEYS = ("stateSenate", "stateHouse", "usHouse")
-CHAMBER_FOR = {"stateSenate": "s", "stateHouse": "h"}
-US_HOUSE_MAX = 14
+CHAMBER_FOR = {"stateSenate": "s", "stateHouse": "h", "usHouse": "c"}
 
 
 def load(path):
@@ -57,7 +56,7 @@ def baseline(path, ref):
 
 
 def valid_districts(tract_table):
-    out = {"s": set(), "h": set()}
+    out = {"s": set(), "h": set(), "c": set()}
     for rec in tract_table["tracts"].values():
         for chamber in out:
             out[chamber].update(int(d) for d in rec[chamber])
@@ -101,12 +100,8 @@ def tier1(doc, valid):
                 bad = [i for i in ids if i not in valid[CHAMBER_FOR[key]]]
                 if bad:
                     errors.append(f"{z}.{key}: no such district(s) {bad}")
-            elif key == "usHouse":
-                bad = [i for i in ids if not 1 <= i <= US_HOUSE_MAX]
-                if bad:
-                    errors.append(f"{z}.usHouse: no such district(s) {bad}")
-        if bool(e.get("stateSenate")) != bool(e.get("stateHouse")):
-            errors.append(f"{z}: state Senate and House lists disagree about whether the ZIP has residents")
+        if len({bool(e.get(k)) for k in ("stateSenate", "stateHouse", "usHouse")}) > 1:
+            errors.append(f"{z}: the Senate, House and Congress lists disagree about whether the ZIP has residents")
 
     with_d = sum(1 for e in zips.values() if e.get("kind") != "po-box" and e.get("stateHouse"))
     if open_zips and with_d / open_zips < MIN_COVERAGE:

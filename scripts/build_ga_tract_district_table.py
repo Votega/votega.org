@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build scripts/data/ga-tract-districts.json: for every Georgia census tract, its
-2020 population split by 2023 state Senate and state House district.
+2020 population split by 2023 state Senate, state House and congressional district.
 
 This is a ONE-TIME / on-redistricting build, run by hand. Its output is committed
 and read by generate_ga_zip_districts.py, so the quarterly job needs none of the
@@ -9,7 +9,7 @@ changes.
 
 Inputs (all public; none are committed):
   * the General Assembly Office of Legislative & Congressional Reapportionment's
-    block-equivalency files for the Senate-2023 and House-2023 plans (xlsx:
+    block-equivalency files for the Senate-2023, House-2023 and Congress-2023 plans (xlsx:
     columns "Block" = 15-digit census block GEOID, "DistrictID:1");
   * the Census PL 94-171 geographic header for Georgia, gageo2020.pl, whose block
     rows (SUMLEV 750) carry POP100, the block's 2020 population, and whose county
@@ -18,7 +18,9 @@ Inputs (all public; none are committed):
 Optional reconciliation, which this script runs whenever its inputs are given:
   * the plans' county reports and packets (pdftotext -layout .txt). The table must
     reproduce the packets' district populations and the county reports'
-    county x district populations EXACTLY. The same numbers come from the same
+    county x district populations EXACTLY. (The Congress-2023 plan has no packet in
+    our files, so its district totals are checked against the sums of its county
+    report instead.) The same numbers come from the same
     census blocks, so any difference means a wrong or mismatched input, and the
     script exits 1 without writing.
 
@@ -27,10 +29,12 @@ Usage:
         --geo gageo2020.pl \\
         --senate-bef senate-2023-block-equivalency.xlsx \\
         --house-bef house-2023-block-equiv.xlsx \\
+        --congress-bef congress-2023-block-equiv.xlsx \\
         [--senate-county-report senate-2023-county-report.txt] \\
         [--senate-packet senate-2023-packet-upd.txt] \\
         [--house-county-report house-2023-county-report.txt] \\
-        [--house-packet house-2023-packet-upd.txt]
+        [--house-packet house-2023-packet-upd.txt] \\
+        [--congress-county-report congress-2023-county-report.txt]
 """
 
 import argparse
@@ -124,6 +128,11 @@ def reconcile(label, bef, block_pop, counties, county_report, packet):
         p = block_pop.get(block, 0)
         dist[district] += p
         cd[(counties[block[2:5]], district)] += p
+    if county_report and not packet:
+        # No packet for this plan: the report's own district sums stand in for it.
+        packet = collections.Counter()
+        for (_, d), v in county_report.items():
+            packet[d] += v
     if packet:
         bad = {d: (dist.get(d), v) for d, v in packet.items() if dist.get(d) != v}
         if bad:
@@ -147,7 +156,9 @@ def main():
     ap.add_argument("--geo", required=True)
     ap.add_argument("--senate-bef", required=True)
     ap.add_argument("--house-bef", required=True)
-    for name in ("senate-county-report", "senate-packet", "house-county-report", "house-packet"):
+    ap.add_argument("--congress-bef", required=True)
+    for name in ("senate-county-report", "senate-packet", "house-county-report", "house-packet",
+                 "congress-county-report"):
         ap.add_argument("--" + name)
     args = ap.parse_args()
 
@@ -158,6 +169,7 @@ def main():
     for key, label, bef_path, cr_path, pk_path in (
         ("s", "Senate-2023", args.senate_bef, args.senate_county_report, args.senate_packet),
         ("h", "House-2023", args.house_bef, args.house_county_report, args.house_packet),
+        ("c", "Congress-2023", args.congress_bef, args.congress_county_report, None),
     ):
         bef = read_bef(bef_path)
         reconcile(label, bef, block_pop, counties,
@@ -168,23 +180,24 @@ def main():
     tract_ids = sorted(set(chambers["s"]) | set(chambers["h"]))
     tracts = {}
     for t in tract_ids:
-        s = {d: p for d, p in sorted(chambers["s"][t].items()) if p > 0}
-        h = {d: p for d, p in sorted(chambers["h"][t].items()) if p > 0}
-        tracts[t] = {"p": sum(chambers["s"][t].values()), "s": s, "h": h}
-        if sum(chambers["s"][t].values()) != sum(chambers["h"][t].values()):
-            sys.exit(f"tract {t}: Senate and House populations disagree")
+        rec = {"p": sum(chambers["s"][t].values())}
+        for key in ("s", "h", "c"):
+            rec[key] = {d: p for d, p in sorted(chambers[key][t].items()) if p > 0}
+            if sum(chambers[key][t].values()) != rec["p"]:
+                sys.exit(f"tract {t}: the {key} plan's population disagrees with the others")
+        tracts[t] = rec
 
     out = {
         "metadata": {
             "generatedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
             "censusVintage": "2020 Census PL 94-171 (block population, POP100)",
-            "plans": {"s": "Senate-2023", "h": "House-2023"},
+            "plans": {"s": "Senate-2023", "h": "House-2023", "c": "Congress-2023"},
             "source": "Georgia General Assembly Office of Legislative & Congressional Reapportionment "
                       "block-equivalency files, joined to U.S. Census Bureau 2020 block populations",
             "tractCount": len(tracts),
             "totalPopulation": total,
-            "note": "tracts.<id>.p is the tract's 2020 population; .s and .h map district -> the tract "
-                    "population living in that district. Districts with no population are omitted.",
+            "note": "tracts.<id>.p is the tract's 2020 population; .s, .h and .c map district -> the tract "
+                    "population living in that district (Senate, House, Congress). Districts with no population are omitted.",
         },
         "counties": dict(sorted(counties.items())),
         "tracts": tracts,
