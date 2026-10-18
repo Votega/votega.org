@@ -6,7 +6,7 @@ permissions:
 
 on:
   workflow_dispatch:
-  push:   # TEMPORARY: first run on this branch; removed before merge
+  push:   # TEMPORARY: first run on this branch; removed before merge (regen)
     branches: [ga-zip-districts]
     paths: ['.github/workflows/update-ga-zip-districts.yml']
   schedule:
