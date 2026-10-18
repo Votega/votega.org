@@ -241,7 +241,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     // purpose — because the summary above says what the measure does without
     // ever saying what it is for.
     const intentHtml = m.intent
-      ? `<div class="measure-intent"><h3 class="measure-sub">Why it's on the ballot</h3>`
+      ? `<div class="measure-intent"><h3 class="measure-sub">${notOnBallot ? 'What it would have done' : "Why it's on the ballot"}</h3>`
         + `<p>${escHtml(m.intent)}</p></div>`
       : '';
 
@@ -366,7 +366,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       // should be able to find out it is not on their ballot, rather than find
       // nothing and keep looking for it.
       if (notOnBallot.length) {
-        html += `<h2 class="section-heading">Failed Measures</h2>`;
+        html += `<h2 class="section-heading">Proposed but Not on the Ballot</h2>`;
         html += `<p style="font-size:0.9rem;color:#666;">These were proposed for this election but were never referred to voters, so they will <strong>not</strong> appear on your ballot. They are listed for the record.</p>`;
         html += `<div class="measure-grid">${notOnBallot.map(renderCard).join('')}</div>`;
       }
