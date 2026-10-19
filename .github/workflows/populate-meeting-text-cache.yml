@@ -116,6 +116,17 @@ jobs:
       # place, and whether the shipped lexicon still agrees with the committed
       # sidecars. On an unedited lexicon both verdict-change lists should be empty —
       # a non-empty one here means the corpus and the committed tags have diverged.
+      # The enrichers above ran with --reclassify, which REWROTE the enriched
+      # sidecars in this checkout. The scorer diffs the corpus against those
+      # sidecars, so scoring now would compare the corpus against tags just
+      # regenerated from that same corpus with that same lexicon — agreement by
+      # construction, and a verdict-change report carrying no information (the
+      # first run of this workflow reported 0/0 across 1220 documents for exactly
+      # this reason). Restore the COMMITTED sidecars first so the baseline is what
+      # the site actually publishes.
+      - name: Restore committed sidecars as the scoring baseline
+        run: git checkout -- assets/data
+
       - name: Score the shipped lexicon (report only)
         continue-on-error: true
         run: |

@@ -51,7 +51,7 @@ from collections import Counter
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from lib.meeting_topics import (  # noqa: E402
-    ALPR_TERMS, ALPR_VENDOR_LABELS, TOPIC_RULES, TOPIC_WORD_RULES,
+    ALPR_TERMS, ALPR_VENDOR_LABELS, LAND_USE, TOPIC_RULES, TOPIC_WORD_RULES,
     agenda_head, alpr_vendors, classify, matched_terms, topic_excerpts,
 )
 from lib.text_cache import open_cache  # noqa: E402
@@ -61,9 +61,26 @@ DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 DEFAULT_CACHE = os.path.join(ROOT, '.cache', 'meeting-text')
 
 
+# Page topics that are a ROLLUP of several taxonomy tags rather than a tag of their
+# own, mirroring generate_topic_mentions.TOPICS. 'land-use' is the case: the page
+# gathers every land-use subject except data centers, which has its own page. The
+# first run of populate-meeting-text-cache.yml crashed here with "unknown topic
+# 'land-use'" because this script only knew tags.
+PAGE_ROLLUPS = {'land-use': sorted(LAND_USE - {'data-center'})}
+
+
+def topic_tags(topic):
+    """The taxonomy tag(s) `topic` scores over — itself, or its rollup members."""
+    return PAGE_ROLLUPS.get(topic) or [topic]
+
+
 def topic_terms(topic):
-    """Every keyword that counts as evidence for `topic` — substring + whole-word."""
-    return set(TOPIC_RULES.get(topic, [])) | set(TOPIC_WORD_RULES.get(topic, []))
+    """Every keyword that counts as evidence for `topic` — substring + whole-word,
+    across every tag it rolls up."""
+    out = set()
+    for tag in topic_tags(topic):
+        out |= set(TOPIC_RULES.get(tag, [])) | set(TOPIC_WORD_RULES.get(tag, []))
+    return out
 
 
 def sidecar_tags():
@@ -105,9 +122,10 @@ def main():
                     help='print only the per-term hit table')
     args = ap.parse_args()
 
-    if args.topic not in TOPIC_RULES and args.topic not in TOPIC_WORD_RULES:
+    known = set(TOPIC_RULES) | set(TOPIC_WORD_RULES) | set(PAGE_ROLLUPS)
+    if args.topic not in known:
         ap.error('unknown topic %r — known: %s'
-                 % (args.topic, ', '.join(sorted(set(TOPIC_RULES) | set(TOPIC_WORD_RULES)))))
+                 % (args.topic, ', '.join(sorted(known))))
 
     cache = open_cache(args.cache)
     stats = cache.stats(args.slug)
@@ -134,7 +152,8 @@ def main():
             text = agenda_head(text)
 
         tags = classify(text)
-        hit = args.topic in tags
+        want = set(topic_tags(args.topic))
+        hit = bool(want & set(tags))
         evidence = sorted(set(matched_terms(text)) & terms) if hit else []
         for t in evidence:
             term_hits[t] += 1
@@ -145,12 +164,13 @@ def main():
         was = baseline.get(key)
         if was is None:
             unknown += 1           # cached but not in any committed sidecar
+        was_hit = was is not None and bool(want & set(was))
         row = (key, ent, evidence, text)
         if hit:
             matched.append(row)
-            if was is not None and args.topic not in was:
+            if was is not None and not was_hit:
                 newly.append(row)
-        elif was is not None and args.topic in was:
+        elif was_hit:
             stopped.append(row)
 
     # ── report ────────────────────────────────────────────────────────────────
@@ -162,7 +182,10 @@ def main():
         print('  %d cached document(s) have no committed sidecar row — not diffed'
               % unknown)
 
-    print('\n=== TERM HITS (topic %r: %d keywords) ===' % (args.topic, len(terms)))
+    rollup = PAGE_ROLLUPS.get(args.topic)
+    print('\n=== TERM HITS (topic %r: %d keywords%s) ===' % (
+        args.topic, len(terms),
+        '; rolls up %s' % ', '.join(rollup) if rollup else ''))
     for t in sorted(terms):
         n = term_hits.get(t, 0)
         label = ALPR_VENDOR_LABELS.get(t) if args.topic == 'alpr' else None
@@ -185,7 +208,8 @@ def main():
 
     def quote(row):
         key, ent, evidence, text = row
-        ex = topic_excerpts(text, [args.topic]).get(args.topic) or {}
+        exs = topic_excerpts(text, topic_tags(args.topic))
+        ex = next((exs[t] for t in topic_tags(args.topic) if t in exs), {})
         print('  %-22s %-10s %s' % (key, ent.get('date') or '-',
                                     (ent.get('body') or ent.get('title') or '')[:46]))
         print('      terms: %s' % (', '.join(evidence) or '-'))

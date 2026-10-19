@@ -53,8 +53,7 @@ MUST_FIRE = [
     'Real Time Crime Center',
     'ShotSpotter gunshot detection renewal',
     'SoundThinking subscription',
-    'Fusus integration', 'Verkada camera licenses', 'Hikvision cameras ban',
-    'Avigilon appearance search',
+    'Fusus integration',
     'Clearview AI contract',
     'drone as first responder pilot program',
     # Gunshot detection, both spellings. "gunfire detection" is the phrasing a real
@@ -98,6 +97,20 @@ MUST_NOT_FIRE = [
     'Palantir Gotham contract', 'Babel Street subscription',
     'Fog Data Science renewal',
     'predictive policing pilot',                               # records analytics
+    # ── Measured against the 1220-doc corpus (2026-10) ──────────────────────────
+    # Each of these was a keyword until the corpus showed what it actually matched.
+    # NDAA s.889 boilerplate: contract packets certify the government does NOT buy
+    # this equipment, so the brand name marks a prohibition, not a purchase. It was
+    # 100% of what 'hikvision'/'dahua' matched.
+    'shall not procure equipment produced by Hangzhou Hikvision Digital Technology '
+    'Company, or Dahua Technology Company',
+    'Hikvision cameras ban',
+    # Commercial building-security VMS. 'avigilon' matched only Comcast-resold
+    # "Eagle Eye Avigilon video management hardware" for the county LANDFILL — the
+    # brand form of the library-camera case above. Its whole category stays out.
+    'Eagle Eye Avigilon video management hardware for the landfill',
+    'Avigilon appearance search', 'Verkada camera licenses',
+    'Milestone XProtect license renewal', 'Eagle Eye Networks cloud VMS',
 ]
 
 for t in MUST_FIRE:

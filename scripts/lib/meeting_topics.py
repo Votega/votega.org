@@ -121,8 +121,23 @@ TOPIC_RULES = {
                            # word that is also a place or a common noun ('clearview'
                            # alone is a street name; 'axon' is tasers/body cams;
                            # 'motorola' is radios).
-                           'fusus', 'shotspotter', 'soundthinking', 'clearview ai',
-                           'avigilon', 'verkada', 'hikvision', 'dahua'],
+                           # Measured against the 1220-document corpus (2026-10):
+                           # 'hikvision' and 'dahua' matched ONLY the NDAA s.889
+                           # prohibition boilerplate that contract packets carry
+                           # ("shall not procure equipment produced by Huawei ...
+                           # Hikvision ... Dahua"), i.e. a certification that the
+                           # government does NOT buy this gear — the opposite of the
+                           # purchase we mean to catch. 'avigilon' matched only
+                           # Comcast-resold "Eagle Eye Avigilon video management"
+                           # for the Douglas County LANDFILL: commercial building
+                           # security, the brand form of the 'security camera at the
+                           # library' case this rule already excludes. All three are
+                           # out, and the same reasoning keeps their category out
+                           # (Eagle Eye Networks, Milestone, Spot AI and the like):
+                           # a general-purpose VMS brand is not evidence of public
+                           # surveillance. 'verkada' matched nothing either way and
+                           # is dropped with them for being the same category.
+                           'fusus', 'shotspotter', 'soundthinking', 'clearview ai'],
 }
 
 # Keywords that must match as WHOLE WORDS, not substrings — same tag semantics as
@@ -175,10 +190,6 @@ ALPR_VENDOR_LABELS = {
     'shotspotter':        'ShotSpotter (SoundThinking)',
     'soundthinking':      'ShotSpotter (SoundThinking)',
     'clearview ai':       'Clearview AI',
-    'avigilon':           'Avigilon (Motorola)',
-    'verkada':            'Verkada',
-    'hikvision':          'Hikvision',
-    'dahua':              'Dahua',
     # No 'cellebrite' / 'peregrine technologies' here: both left this page's scope
     # (see the SCOPE note in TOPIC_RULES). A label without its keyword fails the
     # contract test either way.
