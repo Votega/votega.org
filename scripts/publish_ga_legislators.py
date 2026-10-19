@@ -176,8 +176,6 @@ def members_schema():
                                         "Open States OCD person id, or null. A cross-reference "
                                         "that can arrive after a member is seated; never the "
                                         "key. See idProvenance for why a value is null."},
-                        "wikidataId": {"type": ["string", "null"], "description":
-                                       "Wikidata item (Q-number), or null. Cross-reference."},
                         "ballotpediaId": {"type": ["string", "null"], "description":
                                           "Ballotpedia page title, or null. Cross-reference."},
                         "idProvenance": {"type": "object", "description":

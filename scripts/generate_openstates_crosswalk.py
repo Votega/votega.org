@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Resolve each Georgia legislator's external identifiers from openstates/people.
 
-    legisGaGovId  ->  ocdPersonId, ballotpediaId     (wikidataId: see below)
+    legisGaGovId  ->  ocdPersonId, ballotpediaId
 
 Output: assets/data/ga-openstates-crosswalk.json, a SIDECAR keyed by legisGaGovId. The
 roster producer (generate_ga_members_soap.py) merges it into ga-members.json as nullable
@@ -34,8 +34,8 @@ How a person is matched (verified against the live repo on 2026-10-19)
 * A person with two distinct Ballotpedia links (8 files) is `ambiguous` for that slot.
 * Two members resolving to the same ocdPersonId / ballotpediaId would be a join error;
   both are demoted to `ambiguous` and null.
-* wikidataId is never populated here: the repo does not carry it. Its provenance stays
-  `unresolved` until a source that does is wired in.
+* There is no wikidataId slot: the repo does not carry one and no other source we read does,
+  so it was dropped rather than published as a permanently empty column.
 * An OCD id is passed through only if it has the OCD shape. Never invented or derived.
 
 Failure policy: any fetch failure exits 1 and leaves the file untouched (a partial read
@@ -208,9 +208,6 @@ def build_sidecar(people_docs, roster, *, generated_at, upstream_commit=None, pr
             "resolved": resolved,
             "license": "CC0-1.0 — public-domain dedication, compatible with CC BY-SA 4.0 publication",
             "primaryKey": "legisGaGovId",
-            "slotsNotResolvedHere": {
-                "wikidataId": "openstates/people carries no Wikidata identifier; the slot stays "
-                              "null with provenance 'unresolved' until a source that has it is wired in"},
             "matching": MATCH_NOTE,
         },
         "people": dict(sorted(out.items(), key=lambda kv: int(kv[0]))),
