@@ -17,6 +17,10 @@ member (~250 calls). No auth, no quota. A single member's detail failing carries
 member forward from the committed roster rather than failing the run or dropping them
 (spec §8.5); the count is reported and a large share is fatal.
 
+A biennium ROLLOVER (the session being built differs from the committed file's) is never
+done by the daily run: it refuses, says what it detected, and exits 1. A human runs it once
+with `--new-biennium` after freezing the outgoing roster; see RECURRING-TASKS.md §3.
+
 Three fields SOAP cannot supply, carried over from the committed roster by legisGaGovId:
   * `id`        — the OCD person id. See spec §4; a member with none gets `legis-<id>`.
   * `birthDate` / `birthYear` — SOAP has month+day only, which cannot yield an age.
@@ -25,24 +29,28 @@ Three fields SOAP cannot supply, carried over from the committed roster by legis
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import re
 import sys
 import time
+import urllib.error
+import urllib.request
 from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.ga_identity import apply_identity_slots, load_pin_overrides
 from lib.ga_leadership import committee_index, normalize_title
-from lib.ga_roster import (apply_member_overrides, display_committee,
-                           listing_is_too_short, normalize_address)
+from lib.ga_roster import (apply_member_overrides, biennium_slug, convening_date,
+                           detect_rollover, display_committee, listing_is_too_short,
+                           normalize_address, out_of_scope_entries, split_for_rollover,
+                           untagged_departures)
 from lib.ga_sessions import SESSION_NAMES, all_session_ids, legis_session_id
 from lib.ga_soap import (get_committees_by_session, get_member, get_members_by_session)
 
 MEMBERS_FILE    = "assets/data/ga-members.json"
 OVERRIDES_FILE  = "assets/data/ga-members-overrides.json"
-OUTPUT_FILE     = sys.argv[1] if len(sys.argv) > 1 else MEMBERS_FILE
 IDENTITY_SIDECAR = "assets/data/ga-openstates-crosswalk.json"
 
 DELAY = 0.1           # politeness between GetMember calls; there is no quota
@@ -52,6 +60,10 @@ MAX_CARRIED_SHARE = 0.1
 #: roster rather than let the workflow discover it after the fact. The General Assembly is
 #: 56 + 180; anything materially under that is a bad fetch, not an election result.
 MIN_SENATE, MIN_HOUSE = 56, 180
+
+#: Where freeze-ga-roster publishes the outgoing biennium (publish_ga_legislators.REPO).
+ARCHIVE_URL = ("https://raw.githubusercontent.com/Votega/ga-legislators/main/"
+               "sessions/{slug}/members.json")
 
 PARTY = {"Democrat": "Democratic", "Republican": "Republican"}
 CHAMBER = {"House": "House of Representatives", "Senate": "Senate"}
@@ -111,8 +123,38 @@ def earliest_session_year(detail):
     return min(years) if years else (None, None)
 
 
-def build_record(listing, detail, legis_session, committees, prior):
-    """One roster record in the canonical schema, plus the SOAP-only extras."""
+def first_term_start(term_session, building_description):
+    """Convening date of the session a member first served, or None if it isn't knowable.
+
+    Only for a member whose earliest session IS the regular session being built — a
+    first-term member at a biennium rollover, who took the oath on the opening day, so
+    "the second Monday of January" is accurate where null is merely missing. Never for a
+    special-session entrant (seated on a date SOAP does not give) and never for an older
+    session, which can overstate tenure (see earliest_session_year).
+    """
+    m = re.match(r"(\d{4})-\d{4} Regular Session", term_session or "")
+    if not m or term_session != building_description:
+        return None
+    return convening_date(int(m.group(1))).isoformat()
+
+
+def outgoing_archived(slug):
+    """Is sessions/<slug>/members.json published in the sibling repo? Any failure is False."""
+    try:
+        req = urllib.request.Request(ARCHIVE_URL.format(slug=slug), method="HEAD")
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.status == 200
+    except (urllib.error.URLError, OSError):
+        return False
+
+
+def build_record(listing, detail, legis_session, committees, prior, rollover=False):
+    """One roster record in the canonical schema, plus the SOAP-only extras.
+
+    `rollover` additionally derives `termStart` for a first-term member (see
+    first_term_start). It is off for an ordinary run: a member who joins mid-biennium
+    by special election would otherwise be dated to the opening day.
+    """
     chamber = CHAMBER.get(listing.get("chamber")) or listing.get("chamber")
     svc = current_service(detail, legis_session) or {}
     legis_id = listing.get("id")
@@ -137,6 +179,9 @@ def build_record(listing, detail, legis_session, committees, prior):
     badge, badge_note = normalize_title(svc.get("title"), listing.get("chamber"), committees)
 
     term_year, term_session = earliest_session_year(detail)
+    term_start = carried.get("termStart")
+    if rollover and not term_start:
+        term_start = first_term_start(term_session, svc.get("description"))
 
     return {
         # Carried from the committed roster (spec §4): SOAP has no OCD id. A member the
@@ -166,7 +211,7 @@ def build_record(listing, detail, legis_session, committees, prior):
         # Not in SOAP at any granularity that yields an age — preserved, or absent.
         "birthDate":        carried.get("birthDate"),
         "birthYear":        carried.get("birthYear"),
-        "termStart":        carried.get("termStart"),
+        "termStart":        term_start,
         "termStartYear":    carried.get("termStartYear") or term_year,
         "committees":       committee_names,
         "legisGaGovId":     legis_id,
@@ -193,6 +238,14 @@ def build_record(listing, detail, legis_session, committees, prior):
     }
 
 
+def slugify_member(m):
+    """The entity slug build_entity_pages.py will give this member (name, chamber, district)."""
+    parts = [m.get("name"), "senate" if m.get("chamber") == "Senate" else "house",
+             m.get("district")]
+    s = " ".join(str(p) for p in parts if p not in (None, "")).lower().replace("&", " and ")
+    return re.sub(r"-{2,}", "-", re.sub(r"[^a-z0-9]+", "-", s).strip("-"))
+
+
 def _load_json(path):
     """A sidecar that does not exist yet is an empty one: every slot reads "unresolved"."""
     try:
@@ -202,7 +255,36 @@ def _load_json(path):
         return {}
 
 
-def main():
+def parse_args(argv):
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("output", nargs="?", default=None,
+                    help=f"roster file to write (default {MEMBERS_FILE})")
+    ap.add_argument("--new-biennium", action="store_true",
+                    help="acknowledge and perform a biennium rollover; refused otherwise")
+    ap.add_argument("--archive-confirmed", action="store_true",
+                    help="assert the outgoing roster was frozen (skips the published-"
+                         "archive check)")
+    return ap.parse_args(argv)
+
+
+def refuse_rollover(rollover):
+    """Print what was detected and why the run stopped."""
+    was, now = rollover["from"], rollover["to"]
+    print(f"Error: biennium changeover detected — the committed roster is for "
+          f"{was['session']} (legis session {was['legisSessionId']}), this run would "
+          f"build {now['session']} (legis session {now['legisSessionId']}).\n"
+          f"The ordinary run republishes every committed member the new listing lacks as "
+          f"sitting, which would carry the whole outgoing class into the new General "
+          f"Assembly. Refusing to write. This is not a failure of the data: a person "
+          f"rolls the roster over, once —\n"
+          f"  1. freeze-ga-roster for {biennium_slug(was['session']) or was['session']}\n"
+          f"  2. python scripts/generate_ga_members_soap.py --new-biennium\n"
+          f"See RECURRING-TASKS.md §3.", file=sys.stderr)
+
+
+def main(argv=None):
+    args = parse_args(sys.argv[1:] if argv is None else argv)
+    output_file = args.output or MEMBERS_FILE
     tag, legis_session = regular_session()
     print(f"Building the SOAP roster for {tag} (legis session {legis_session})\n")
 
@@ -211,10 +293,44 @@ def main():
               f"values SOAP cannot) — aborting", file=sys.stderr)
         return 1
     with open(MEMBERS_FILE, encoding="utf-8") as fh:
-        existing = json.load(fh).get("members", [])
+        committed = json.load(fh)
+    existing = committed.get("members", [])
     by_legis_id = {m["legisGaGovId"]: m for m in existing if m.get("legisGaGovId")}
     print(f"  committed roster: {len(existing)} records "
           f"({len(by_legis_id)} joinable by legisGaGovId)")
+
+    # A changeover is never the daily run's to perform: detect it and stop unless a person
+    # asked for it. Neither half is advisory — an unacknowledged rollover would publish the
+    # outgoing class as sitting, and `--new-biennium` against an unchanged session would
+    # drop the preserved records an ordinary run depends on.
+    rollover = detect_rollover(committed.get("metadata"), tag, legis_session)
+    if rollover and not args.new_biennium:
+        refuse_rollover(rollover)
+        return 1
+    if args.new_biennium and not rollover:
+        print(f"Error: --new-biennium given, but the committed roster is already for "
+              f"{tag} (legis session {legis_session}) — there is nothing to roll over. "
+              f"Refusing to write.", file=sys.stderr)
+        return 1
+    if rollover:
+        was_slug = biennium_slug(rollover["from"]["session"])
+        if not args.archive_confirmed and not (was_slug and outgoing_archived(was_slug)):
+            print(f"Error: sessions/{was_slug}/members.json is not published in the "
+                  f"ga-legislators repo. Run freeze-ga-roster for {was_slug} FIRST — once "
+                  f"this writes, the outgoing roster is gone from the repo. (Pass "
+                  f"--archive-confirmed if you froze it and this check cannot see it.)",
+                  file=sys.stderr)
+            return 1
+        loose = untagged_departures(OVERRIDES_FILE)
+        if loose:
+            print(f"Error: {len(loose)} override entr{'y' if len(loose) == 1 else 'ies'} "
+                  f"record a departure without `_session`: {loose[:5]}. Each describes a "
+                  f"seat of one biennium; tag it (\"_session\": "
+                  f"\"{rollover['from']['session']}\") so it does not leak into {tag}. "
+                  f"Refusing to write.", file=sys.stderr)
+            return 1
+        print(f"ROLLOVER {rollover['from']['session']} -> {tag}: members absent from the "
+              f"new listing are dropped, not preserved\n")
 
     committees = committee_index(get_committees_by_session(legis_session))
     print(f"  committees: {len(committees)} indexed for leadership validation")
@@ -226,7 +342,9 @@ def main():
     # A truncated listing would NOT shrink the roster — everyone missing from it is
     # preserved verbatim below — so the count floor downstream cannot catch it. It would
     # quietly republish most of the roster as stale, which looks like a clean run.
-    if listing_is_too_short(len(listings), len(by_legis_id)):
+    # (Skipped at a rollover: the new class is legitimately smaller than the committed file,
+    # which still holds every departed member; the 56/180 floor below still applies.)
+    if not rollover and listing_is_too_short(len(listings), len(by_legis_id)):
         print(f"Error: GetMembersBySession returned {len(listings)} members against "
               f"{len(by_legis_id)} in the committed roster. Preserving that many stale "
               f"records would look like a clean run. Refusing to write.", file=sys.stderr)
@@ -237,7 +355,11 @@ def main():
     # That distinction matters: the Lt. Governor has one (805, he presides over the
     # Senate) but is not a member, so an id-based rule silently dropped him.
     in_listing = {l["id"] for l in listings}
-    preserved = [m for m in existing if m.get("legisGaGovId") not in in_listing]
+    if rollover:
+        preserved, departing = split_for_rollover(existing, in_listing)
+    else:
+        preserved = [m for m in existing if m.get("legisGaGovId") not in in_listing]
+        departing = []
     print(f"  members: {len(listings)} listings — fetching detail")
     print(f"  preserved (not in the Members service): "
           f"{', '.join(m.get('name') or '?' for m in preserved) or 'none'}\n")
@@ -257,7 +379,8 @@ def main():
                       f"roster — omitted", file=sys.stderr)
             continue
 
-        rec = build_record(listing, detail, legis_session, committees, prior)
+        rec = build_record(listing, detail, legis_session, committees, prior,
+                           rollover=bool(rollover))
         if not prior:
             unknown_ids.append(f"{rec['name']} ({legis_id}) -> {rec['id']}")
         if rec.pop("_badgeNote", None):
@@ -313,7 +436,8 @@ def main():
     # caught up with. Without this the roster has no concept of a member having left —
     # 11 Resigned and 1 Suspended would read as sitting and the majority tracker would
     # paint their seats as filled.
-    patched, injected = apply_member_overrides(members, OVERRIDES_FILE)
+    # Scoped to this biennium: an entry tagged `_session` for another one is inert.
+    patched, injected = apply_member_overrides(members, OVERRIDES_FILE, session=tag)
     print(f"\n  overrides: patched {patched}, injected {injected}")
 
     members.sort(key=lambda m: (m.get("chamber") or "", m.get("name") or ""))
@@ -384,9 +508,39 @@ def main():
             "preservedNotInMembersService": [m.get("name") for m in preserved],
         },
     }
-    write_json_atomic(OUTPUT_FILE, output, indent=2)
+    if rollover:
+        # Queues for a human, in the existing `review` object. Only at a rollover: an
+        # ordinary run's file must stay byte-identical.
+        def line(m):
+            return (f"{m.get('name')} ({m.get('legisGaGovId')}): "
+                    f"{m.get('chamber')} district {m.get('district')}")
+        incoming = [m for m in members if m.get("legisGaGovId") in in_listing
+                    and m["legisGaGovId"] not in by_legis_id]
+        skipped = out_of_scope_entries(OVERRIDES_FILE, tag)
+        output["metadata"]["rollover"] = {
+            **rollover, "incoming": len(incoming), "departing": len(departing),
+            "outOfScopeOverrides": len(skipped)}
+        output["review"].update({
+            "incomingCohort": [line(m) for m in incoming],
+            # Departed members the new roster no longer carries: they live on in the
+            # frozen archive and in the votes of the biennium they served.
+            "departingCohort": [line(m) + (f" [{m['status']}]" if m.get("status") else "")
+                                for m in departing],
+            # A brand-new member is published under the FORMAL legis.ga.gov name, and
+            # build_entity_pages.py slugs the entity URL on it. Settle each name (override
+            # `name`/`firstName`/`lastName` by legisGaGovId) BEFORE the first entity
+            # build; changing one afterwards moves a live URL.
+            "newMemberNameReview": [
+                f"{m['name']!r} -> /ga-legislators/{slugify_member(m)}/ "
+                f"(legisGaGovId {m['legisGaGovId']})" for m in incoming],
+            "rolloverPreservedNonMembers": [
+                f"{m.get('name')} ({m.get('chamber')}) — verify they still hold the office"
+                for m in preserved],
+            "overridesOutOfScope": skipped,
+        })
+    write_json_atomic(output_file, output, indent=2)
 
-    print(f"\nWrote {len(members)} records to {OUTPUT_FILE}")
+    print(f"\nWrote {len(members)} records to {output_file}")
     print(f"  carried forward            : {len(carried)}")
     print(f"  not in the committed roster: {len(unknown_ids)}")
     print(f"  leadership badges          : {sum(1 for m in members if m.get('leadershipRole'))}")

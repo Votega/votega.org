@@ -6,6 +6,14 @@ permissions:
 
 on:
   workflow_dispatch:
+    inputs:
+      new_biennium:
+        description: >-
+          Roll the roster over to a new General Assembly (RECURRING-TASKS.md section 3).
+          Leave OFF for any other run: the scheduled run REFUSES a biennium changeover on
+          purpose and must never perform one unattended. Freeze the outgoing roster first.
+        type: boolean
+        default: false
   schedule:
     - cron: '0 7 * * *'  # daily at 07:00 UTC (one hour after Congress workflow)
 
@@ -28,7 +36,7 @@ jobs:
       # when OPENSTATES_API_KEY leaves this workflow.
       - name: Generate GA member data
         id: generate
-        run: python scripts/generate_ga_members_soap.py assets/data/ga-members.json
+        run: python scripts/generate_ga_members_soap.py assets/data/ga-members.json ${{ inputs.new_biennium && '--new-biennium' || '' }}
 
       # Two tiers, and the split is the point. Tier 1 is the file against ITSELF
       # -- a metadata.count that disagrees with the member list, a missing

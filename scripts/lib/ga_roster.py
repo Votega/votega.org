@@ -12,6 +12,7 @@ untouched, so an unfamiliar value passes through rather than being mangled.
 """
 from __future__ import annotations
 
+import datetime
 import json
 import os
 import re
@@ -78,8 +79,126 @@ def listing_is_too_short(n_listing, n_committed, tolerance=LISTING_TOLERANCE):
     return n_listing < n_committed * (1 - tolerance)
 
 
-def apply_member_overrides(members, overrides_file):
+#: Chambers whose members cast roll-call votes. Duplicated from lib/ga_voters.VOTING_CHAMBERS
+#: on purpose: this module stays import-free so the no-pip CI job can load it alone.
+VOTING_CHAMBERS = ("Senate", "House of Representatives")
+
+#: Override keys carrying a departure. They say a member LEFT, which is a fact about one
+#: biennium's seat, so at a rollover an entry without `_session` is ambiguous.
+DEPARTURE_FIELDS = ("status", "statusDate", "statusNote")
+
+
+def entry_in_scope(entry, session):
+    """Does this override entry apply to the roster being built for `session`?
+
+    An entry may name the biennium it belongs to in `_session` (the roster's regular-
+    session tag, e.g. "2025_26"). One for ANOTHER biennium is inert here: a Resigned
+    `_inject` for a 2025-26 member must not re-seat them in the 2027-28 roster, and the
+    tier-1 `_inject` orphan check must not demand them either. An entry with no
+    `_session` applies to every biennium (the pre-rollover behaviour), and `session=None`
+    applies everything, so every existing caller is unchanged.
+    """
+    tag = entry.get("_session") if isinstance(entry, dict) else None
+    return session is None or tag is None or tag == session
+
+
+def injects_for_session(overrides, session):
+    """The `_inject` entries in scope for `session` — the ones the output must contain."""
+    return [e for e in (overrides or {}).get("_inject") or [] if entry_in_scope(e, session)]
+
+
+def untagged_departures(overrides_file):
+    """Labels of override entries that record a departure but name no biennium.
+
+    Safe to leave untagged within one biennium; at a rollover each is a decision (which
+    seat did this describe?) that must be made by a human, so the rollover refuses.
+    """
+    if not os.path.exists(overrides_file):
+        return []
+    with open(overrides_file, encoding="utf-8") as fh:
+        overrides = json.load(fh)
+    out = []
+    for key, val in overrides.items():
+        if key == "_inject":
+            out += [f"_inject: {e.get('name') or e.get('id')}" for e in val
+                    if isinstance(e, dict) and "_session" not in e]
+        elif key.startswith("ocd-person/") or not key.startswith("_"):
+            if (isinstance(val, dict) and "_session" not in val
+                    and any(f in val for f in DEPARTURE_FIELDS)):
+                out.append(f"{key}: {val.get('_name') or ''}".strip())
+    return out
+
+
+def out_of_scope_entries(overrides_file, session):
+    """Labels of override entries skipped because they name a different biennium."""
+    if not os.path.exists(overrides_file):
+        return []
+    with open(overrides_file, encoding="utf-8") as fh:
+        overrides = json.load(fh)
+    out = []
+    for key, val in overrides.items():
+        if key == "_inject":
+            out += [f"_inject: {e.get('name') or e.get('id')}" for e in val
+                    if isinstance(e, dict) and not entry_in_scope(e, session)]
+        elif isinstance(val, dict) and not key.startswith("_")                 and not entry_in_scope(val, session):
+            out.append(key)
+    return out
+
+
+def detect_rollover(committed_meta, tag, legis_session):
+    """None for an ordinary run; else which biennium the committed file is from.
+
+    A roster is built for one biennium's regular session, and the committed file records
+    which in `metadata`. When the session being built is a different one, the preserve-
+    verbatim rule (an absent member is republished as sitting) is wrong: it would carry
+    the entire outgoing class across. No committed record at all is a bootstrap, not a
+    rollover, so there is nothing to detect.
+    """
+    was_tag = (committed_meta or {}).get("session")
+    was_id = (committed_meta or {}).get("legisSessionId")
+    if not was_tag and not was_id:
+        return None
+    if (was_tag and was_tag != tag) or (was_id and was_id != legis_session):
+        return {"from": {"session": was_tag, "legisSessionId": was_id},
+                "to": {"session": tag, "legisSessionId": legis_session}}
+    return None
+
+
+def biennium_slug(tag):
+    """'2025_26' -> '2025-2026' (the sessions/<slug>/ archive directory), else None."""
+    m = re.fullmatch(r"(\d{4})_(\d{2})", tag or "")
+    return f"{m.group(1)}-{m.group(1)[:2]}{m.group(2)}" if m else None
+
+
+def convening_date(year):
+    """Second Monday of January — when the Georgia General Assembly convenes (Ga. Const.
+    Art. III, Sec. IV, Para. VII). 2027 -> 2027-01-11."""
+    first = datetime.date(year, 1, 1)
+    first_monday = first + datetime.timedelta(days=(7 - first.weekday()) % 7)
+    return first_monday + datetime.timedelta(days=7)
+
+
+def split_for_rollover(existing, in_listing):
+    """(preserved, departing) when the biennium changes.
+
+    `preserved` keeps only what the Members service never carries: anyone outside the
+    two voting chambers who holds a legisGaGovId (the Lt. Governor presides over the
+    Senate but is not a member). Keyed on chamber, not on lacking an id, for the same
+    reason the ordinary rule is keyed on absence: an id-based rule dropped him.
+    `departing` is every voting-chamber record the incoming listing does not carry,
+    including a Vacant placeholder, which describes a seat of the outgoing biennium.
+    """
+    absent = [m for m in existing if m.get("legisGaGovId") not in in_listing]
+    preserved = [m for m in absent if m.get("chamber") not in VOTING_CHAMBERS]
+    departing = [m for m in absent if m.get("chamber") in VOTING_CHAMBERS]
+    return preserved, departing
+
+
+def apply_member_overrides(members, overrides_file, session=None):
     """Apply the editorial layer in place; return (patched, injected) counts.
+
+    `session` scopes the layer to a biennium: an entry whose `_session` names another one
+    is skipped (see `entry_in_scope`). Omitted, everything applies.
 
     This is the only thing that knows a member has left, been suspended, or that
     a seat is empty: the upstream carries no such concept, so without this step
@@ -105,9 +224,10 @@ def apply_member_overrides(members, overrides_file):
     with open(overrides_file, encoding="utf-8") as fh:
         overrides = json.load(fh)
 
-    by_id = {k: v for k, v in overrides.items() if k.startswith("ocd-person/")}
+    by_id = {k: v for k, v in overrides.items()
+             if k.startswith("ocd-person/") and entry_in_scope(v, session)}
     by_name = {k.lower().strip(): v for k, v in overrides.items()
-               if not k.startswith(("ocd-person/", "_"))}
+               if not k.startswith(("ocd-person/", "_")) and entry_in_scope(v, session)}
 
     patched = 0
     for member in members:
@@ -121,7 +241,7 @@ def apply_member_overrides(members, overrides_file):
     injected = 0
     for entry in overrides.get("_inject", []):
         eid = entry.get("id")
-        if not eid:
+        if not eid or not entry_in_scope(entry, session):
             continue
         live = by_live_id.get(eid)
         if live is None:
