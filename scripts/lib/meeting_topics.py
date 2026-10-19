@@ -154,7 +154,96 @@ TOPIC_RULES = {
                            # if a place is ever seen debating REMOVAL of such gear,
                            # which would be a real surveillance-policy item.
                            'fusus', 'shotspotter', 'soundthinking', 'clearview ai',
-                           'avigilon', 'verkada'],
+                           'avigilon', 'verkada',
+                           # ── Added from corpus measurement (2026-10) ───────────
+                           # Each earned its place by matching real documents; the
+                           # candidates that did NOT are recorded below so the same
+                           # guesses are not re-made.
+                           #
+                           # 'skydio' — drone vendor, in scope. 4 documents: a
+                           # Gwinnett CID donating two Skydio X10 drones, and
+                           # Gwinnett awarding a "Skydio Drone as First Responder"
+                           # multi-year contract.
+                           'skydio',
+                           # 'axon enterprise video' — NOT bare 'axon enterprise'.
+                           # Axon bought Fusus and renamed the product "Axon
+                           # Enterprise Video and Data Collection"; Clayton's
+                           # renewal still says "from FUSUS to Axon Enterprise
+                           # Video...", so 'fusus' catches it only while the old
+                           # name is mentioned. This phrase keeps catching it after
+                           # that. Bare 'axon enterprise' was measured and rejected:
+                           # 23 documents, of which the inspected majority are
+                           # "BODY CAMERA/POLICE EQUIPMENT & SERVICES" and an
+                           # "Interview Bundle" — body cams are an explicit category
+                           # exclusion ('axon' is tasers/body cams), so matching the
+                           # bare company name would reverse that decision sideways.
+                           'axon enterprise video',
+                           # 'crime center' without the 'real-time' prefix. No
+                           # marginal documents today (the two hits already match on
+                           # 'real-time crime center'), kept because the bare form
+                           # is specific and costs nothing.
+                           'crime center',
+                           # ── Police-worn and in-car cameras (scope widened
+                           # 2026-10, at the publisher's direction) ──────────────
+                           # Body cams sit next to plate readers rather than inside
+                           # them, and were originally excluded with the bare 'axon'
+                           # brand. They are in now because a resident asking "what
+                           # is my police department recording" is asking one
+                           # question, not two. Measured: these phrases carry 26
+                           # documents, 21 of them previously unmatched, across 8
+                           # jurisdictions the page did not cover at all — among
+                           # them Atlanta's amendment "TO INCREASE THE TOTAL NUMBER
+                           # OF FLEET CAMERAS AND BODY WORN CAMERAS ... NOT TO
+                           # EXCEED FORTY MILLION", and Carrollton's "PD Body Cam /
+                           # Dash Cam Upgrades".
+                           # 'body cam' is the substring form on purpose: it carries
+                           # 'body cam', 'body cams' and 'body camera/s' in one
+                           # keyword.
+                           'body cam', 'bodycam', 'body-worn', 'body worn',
+                           'dashcam', 'dash cam', 'in-car camera', 'in car camera',
+                           # In-car "fleet" cameras are the closest crossover of all
+                           # — Axon Fleet does plate recognition, so this is ALPR in
+                           # a patrol car rather than on a pole. Zero marginal
+                           # documents today (Atlanta's four already match on 'body
+                           # worn'), kept because an agenda that says only "fleet
+                           # cameras" would otherwise be missed, and because it
+                           # costs no false positives to carry.
+                           'fleet camera', 'axon fleet',
+                           # The company as it is named in contracts. Deliberately
+                           # NOT given a vendor label below, which keeps it MEDIUM
+                           # confidence so it lands in the page's "possible
+                           # mentions" tier rather than the confirmed one. That is
+                           # the right home for it: of the 12 documents it adds
+                           # beyond the capability phrases above, 2 are plainly
+                           # tasers (a weapon, not surveillance) while ~5 are
+                           # umbrella deals like Cherokee's "consolidated agreement
+                           # ... for existing and future public safety technology"
+                           # — worth surfacing for review, not worth asserting.
+                           # Bare 'axon' stays out entirely: 32 documents, far too
+                           # broad.
+                           'axon enterprise',
+                           #
+                           # MEASURED AND REJECTED, with what they actually matched:
+                           #   'detection camera'  both hits were a "Portable Gas
+                           #       Detection Camera System" for Public Utilities —
+                           #       sewer gas, no surveillance at all.
+                           #   'license tag'       one hit, a disabled-veteran
+                           #       parking exemption ordinance. Confirms bare tag /
+                           #       plate words are tag-office noise.
+                           #   'lvt'               no marginal documents, and it is
+                           #       also luxury-vinyl-tile in construction packets.
+                           #   'leonardo'          no marginal documents; a common
+                           #       personal name.
+                           # Dead across all 1220 documents, so not added at all:
+                           #   flockos, flock nova, aerodome, vehicle fingerprint,
+                           #   hotlist, tag camera, tag scanner, brinc, drone
+                           #   program, unmanned aerial, public safety camera,
+                           #   community camera, camera registry, camera sharing,
+                           #   video analytics, smart camera, safe city, safety as a
+                           #   service, vehicle detection system, license plate
+                           #   data, gunfire alert, gunshot location, surveillance
+                           #   policy, pips technology, insight lpr, tattile.
+                           ],
 }
 
 # Keywords that must match as WHOLE WORDS, not substrings — same tag semantics as
@@ -174,6 +263,45 @@ TOPIC_WORD_RULES = {
 }
 _WORD_RE = {kw: re.compile(r'\b' + re.escape(kw) + r'\b')
             for kws in TOPIC_WORD_RULES.values() for kw in kws}
+
+# ── Whitespace-tolerant phrase matching ───────────────────────────────────────
+# A multi-word keyword is matched with \s+ between its words, not as a literal
+# single-spaced substring. PDF text layers break lines mid-phrase and carry the
+# indentation with them, so a plain substring test silently misses the phrase:
+#
+#   '... purchase of Skydio Drone as First\n                Responder ...'
+#
+# which is a real Gwinnett agenda item buying a Drone-as-First-Responder program.
+# Measured over the 1220-document corpus, collapsing whitespace recovers 11
+# documents across five topics (comprehensive-plan +4, special-land-use +3,
+# millage-budget +2, alpr +1, data-center +1) on 8 distinct keywords — among them
+# 'data center', the subject this taxonomy exists for.
+#
+# Done as a REGEX over the original text rather than by normalising the text
+# first, because topic_excerpts needs match OFFSETS that are valid in the text it
+# quotes; normalising would shift every offset and corrupt the published excerpt.
+# Joining re.escape()d words is deliberate too: re.escape stopped escaping spaces
+# in 3.7, so replacing an escaped space would silently no-op on a modern runtime.
+#
+# NOT handled, because the corpus says it does not happen: end-of-line hyphenation
+# ('read-\ner'). Collapsing those recovered ZERO documents, so the rule stays
+# simple.
+_PHRASE_RE = {kw: re.compile(r'\s+'.join(re.escape(w) for w in kw.split(' ')))
+              for kws in TOPIC_RULES.values() for kw in kws if ' ' in kw}
+
+
+def _find_kw(low, kw):
+    """(start, end) of substring keyword `kw` in lowercased `low`, or None.
+
+    Multi-word keywords match across any whitespace run; single-word keywords keep
+    plain substring semantics, so deliberate prefix rules ('rezon' -> rezoning/
+    rezoned) are unchanged."""
+    rx = _PHRASE_RE.get(kw)
+    if rx is not None:
+        m = rx.search(low)
+        return (m.start(), m.end()) if m else None
+    i = low.find(kw)
+    return (i, i + len(kw)) if i != -1 else None
 
 # Every keyword (substring + word-rule) that counts as ALPR evidence — used to
 # filter a meeting's matchedTerms down to the vendor/capability phrases that
@@ -208,6 +336,12 @@ ALPR_VENDOR_LABELS = {
     'soundthinking':      'ShotSpotter (SoundThinking)',
     'clearview ai':       'Clearview AI',
     'avigilon':           'Avigilon (Motorola)',
+    'skydio':             'Skydio',
+    # A specific plate-reading product, unlike the bare company name 'axon
+    # enterprise' — which is deliberately left unlabelled so it stays medium.
+    'axon fleet':         'Axon Fleet',
+    # Collapses with 'fusus' to one brand: same product, post-acquisition name.
+    'axon enterprise video': 'Fusus (Axon)',
     'verkada':            'Verkada',
     # No 'cellebrite' / 'peregrine technologies' here: both left this page's scope
     # (see the SCOPE note in TOPIC_RULES). A label without its keyword fails the
@@ -219,6 +353,12 @@ ALPR_VENDOR_LABELS = {
 # handoff scanner's high tier). Everything else that trips the alpr rule is
 # "medium" — real, badgeable, but keyword-only.
 ALPR_HIGH_TERMS = {
+    # Police-worn / in-car cameras: a "body worn camera" item is not a maybe, it is
+    # a body camera. Without these here the tier logic would file Atlanta's
+    # forty-million-dollar fleet-and-body-camera amendment under "possible
+    # mentions", which is exactly backwards.
+    'body cam', 'bodycam', 'body-worn', 'body worn',
+    'dashcam', 'dash cam', 'in-car camera', 'in car camera', 'fleet camera',
     'automated license plate', 'automatic license plate',
     'license plate recognition', 'license plate reader',
     'license-plate', 'plate recognition', 'number plate recognition',
@@ -259,9 +399,9 @@ def _tag_matches(low, tag):
     Offsets are valid in the original text too (lower() preserves length here)."""
     hits = []
     for kw in TOPIC_RULES.get(tag, []):
-        i = low.find(kw)
-        if i != -1:
-            hits.append((i, i + len(kw), kw))
+        span = _find_kw(low, kw)
+        if span:
+            hits.append((span[0], span[1], kw))
     for kw in TOPIC_WORD_RULES.get(tag, []):
         m = _WORD_RE[kw].search(low)
         if m:
@@ -439,7 +579,8 @@ def agenda_head(text):
 def classify(text):
     """Return the sorted list of subject tags whose keywords appear in `text`."""
     t = (text or '').lower()
-    tags = {tag for tag, kws in TOPIC_RULES.items() if any(k in t for k in kws)}
+    tags = {tag for tag, kws in TOPIC_RULES.items()
+            if any(_find_kw(t, k) for k in kws)}
     tags |= {tag for tag, kws in TOPIC_WORD_RULES.items()
              if any(_WORD_RE[k].search(t) for k in kws)}
     return sorted(tags)
@@ -453,7 +594,7 @@ def matched_terms(text):
     human auditor) see *why* a place is flagged without re-reading the PDF.
     """
     t = (text or '').lower()
-    terms = {k for kws in TOPIC_RULES.values() for k in kws if k in t}
+    terms = {k for kws in TOPIC_RULES.values() for k in kws if _find_kw(t, k)}
     terms |= {k for k, rx in _WORD_RE.items() if rx.search(t)}
     return sorted(terms)
 
