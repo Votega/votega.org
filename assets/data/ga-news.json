@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-19T16:01:18.710654+00:00",
+    "generatedAt": "2026-10-19T21:52:13.851874+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,17 +24,17 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 145,
+    "count": 147,
     "windowDays": 45,
-    "entityTagged": 96,
+    "entityTagged": 94,
     "topicCounts": {
-      "elections": 38,
-      "education": 17,
-      "budget": 7,
+      "surveillance": 2,
+      "elections": 40,
+      "budget": 9,
       "healthcare": 19,
+      "education": 16,
       "courts": 18,
-      "ethics": 5,
-      "surveillance": 1
+      "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
@@ -89,7 +89,8 @@
     "vg-ga-p-000090": {
       "name": "Greg Dolezal",
       "url": null,
-      "ocdPersonId": "ocd-person/1f7d013a-8861-4e08-b6bf-7c8d36f8107c"
+      "ocdPersonId": "ocd-person/1f7d013a-8861-4e08-b6bf-7c8d36f8107c",
+      "rosterId": "ocd-person/1f7d013a-8861-4e08-b6bf-7c8d36f8107c"
     },
     "vg-ga-p-000308": {
       "name": "Gregory \"Greg\" Dolezal",
@@ -102,6 +103,7 @@
       "name": "Josh McLaurin",
       "url": null,
       "ocdPersonId": "ocd-person/b83b0486-773f-4979-a1ce-e2f7f3e6d7e1",
+      "rosterId": "ocd-person/b83b0486-773f-4979-a1ce-e2f7f3e6d7e1",
       "candidateIds": [
         "challenger-josh-mclaurin-ltgov-2026"
       ]
@@ -110,6 +112,7 @@
       "name": "Brian Strickland",
       "url": null,
       "ocdPersonId": "ocd-person/3a5721a0-d848-40d0-a48a-66b797e7d7d9",
+      "rosterId": "ocd-person/3a5721a0-d848-40d0-a48a-66b797e7d7d9",
       "candidateIds": [
         "challenger-robert-strickland-ag-2026"
       ]
@@ -117,7 +120,7 @@
     "vg-ga-p-000039": {
       "name": "Chris Carr",
       "url": null,
-      "ocdPersonId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
       "candidateIds": [
         "challenger-chris-carr-gov-2026"
       ]
@@ -133,6 +136,7 @@
       "name": "Tim Fleming",
       "url": null,
       "ocdPersonId": "ocd-person/cf955c60-cbda-4414-9266-3d8dca3553fe",
+      "rosterId": "ocd-person/cf955c60-cbda-4414-9266-3d8dca3553fe",
       "candidateIds": [
         "challenger-timothy-fleming-sos-2026"
       ]
@@ -158,38 +162,10 @@
         "challenger-richard-woods-super-2026"
       ]
     },
-    "vg-ga-p-000334": {
-      "name": "Katherine E. Juhan-Arnold",
-      "url": null,
-      "candidateIds": [
-        "challenger-katherine-juhan-arnold-agcom-2026"
-      ]
-    },
-    "vg-ga-p-000384": {
-      "name": "Tyler J. Harper",
-      "url": null,
-      "candidateIds": [
-        "challenger-tyler-harper-agcom-2026"
-      ]
-    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
       "bioguideId": "W000790"
-    },
-    "vg-ga-p-000326": {
-      "name": "John King",
-      "url": null,
-      "candidateIds": [
-        "challenger-john-king-inscom-2026"
-      ]
-    },
-    "vg-ga-p-000336": {
-      "name": "Keisha Sean Waites",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-waites-inscom-2026"
-      ]
     },
     "vg-ga-p-000256": {
       "name": "Rick W. Allen",
@@ -217,12 +193,13 @@
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
       "url": null,
-      "ocdPersonId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000030": {
       "name": "Burt Jones",
       "url": null,
       "ocdPersonId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
+      "rosterId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
       "candidateIds": [
         "challenger-burt-jones-gov-2026"
       ]
@@ -231,8 +208,16 @@
       "name": "Jon Burns",
       "url": null,
       "ocdPersonId": "ocd-person/64012657-d026-411c-9525-3232524a5145",
+      "rosterId": "ocd-person/64012657-d026-411c-9525-3232524a5145",
       "candidateIds": [
         "ga-house-159-2026-r-1"
+      ]
+    },
+    "vg-ga-p-000384": {
+      "name": "Tyler J. Harper",
+      "url": null,
+      "candidateIds": [
+        "challenger-tyler-harper-agcom-2026"
       ]
     },
     "vg-ga-p-000261": {
@@ -279,6 +264,67 @@
     }
   },
   "items": [
+    {
+      "id": "8ec69700204b",
+      "title": "512 Flock cameras boost Coastal Georgia’s growing surveillance network",
+      "url": "https://thecurrentga.org/2026/10/19/512-flock-cameras-boost-coastal-georgias-growing-surveillance-network/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-19T21:48:34+00:00",
+      "snippet": "A network of at least 512 cameras are used by law enforcement officials across Georgia's coast, raising privacy and transparency concerns.\nThe Current is an inclusive nonprofit, non-partisan news orga",
+      "entityIds": [],
+      "topics": [
+        "surveillance"
+      ]
+    },
+    {
+      "id": "95b051586d7b",
+      "title": "Funding disparity grows in Senate, Coastal Georgia congressional contests",
+      "url": "https://thecurrentga.org/2026/10/19/funding-disparity-grows-in-senate-coastal-georgia-congressional-contests/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-19T21:38:24+00:00",
+      "snippet": "Campaign finance reports reveal significant funding disparities in Georgia congressional and Senate races, highlighting massive contributions from both candidates and record-breaking outside spending ",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "budget"
+      ]
+    },
+    {
+      "id": "b6d209fbca98",
+      "title": "GPB evening headlines for October 19, 2026",
+      "url": "https://www.gpb.org/news/2026/10/19/gpb-evening-headlines-for-october-19-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-19T20:15:10+00:00",
+      "snippet": "Big names campaign for Georgia candidates in the Peach State over the weekend. Andy Stanley says he's stepping down as senior pastor of North Point Ministries.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "ee38d1f63d4b",
+      "title": "Georgia Today: Trump holds weekend rally; KFC and Coca Cola partner; GLP-1's rising costs",
+      "url": "https://www.gpb.org/news/2026/10/19/georgia-today-trump-holds-weekend-rally-kfc-and-coca-cola-partner-glp-1s-rising",
+      "source": "GPB News",
+      "publishedAt": "2026-10-19T19:49:44+00:00",
+      "snippet": "On the Oct. 19 edition: State health officials are warning about a possible measles exposure in a Middle Georgia restaurant; Atlanta-based Coca-Cola and KFC team up to modernize their businesses; and ",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "d2582159f465",
+      "title": "Georgia tax collections continued growing in September",
+      "url": "https://capitol-beat.org/2026/10/georgia-tax-collections-continued-growing-in-september/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-tax-collections-continued-growing-in-september",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-10-19T19:23:36+00:00",
+      "snippet": "ATLANTA — Net Georgia tax collections in September rose 2.3% over the same month last year, continuing gains recorded in recent months. Net collections for the month totaled $3.34 billion, up $76.7 mi",
+      "entityIds": [],
+      "topics": [
+        "budget"
+      ]
+    },
     {
       "id": "b41f9207996c",
       "title": "Ossoff and Bottoms hold joint rally in Cobb County",
@@ -357,6 +403,18 @@
       "source": "Georgia Recorder",
       "publishedAt": "2026-10-17T02:20:25+00:00",
       "snippet": "DALTON, Ga. – President Donald Trump returned to conservative northwest Georgia Friday, sharing a rally stage with the GOP nominee for the U.S. Senate and the Republican who hopes to serve as Georgia’",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "00dc1ca3a463",
+      "title": "Trump to Georgia voters: ‘Pretend I’m on the ballot’",
+      "url": "https://capitol-beat.org/2026/10/trump-to-georgia-voters-pretend-im-on-the-ballot/?utm_source=rss&utm_medium=rss&utm_campaign=trump-to-georgia-voters-pretend-im-on-the-ballot",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-10-16T23:30:09+00:00",
+      "snippet": "ATLANTA — President Donald Trump traveled to Georgia on Friday to rally Republican voters three days after early voting got underway and with Election Day just over two weeks away. His visit was meant",
       "entityIds": [],
       "topics": [
         "elections"
@@ -466,19 +524,6 @@
       ]
     },
     {
-      "id": "5da39b3ca4a0",
-      "title": "Georgia Agriculture Commissioner: Tyler Harper, Katherine Juhan-Arnold",
-      "url": "https://thecurrentga.org/2026/10/16/georgia-agriculture-commissioner-tyler-harper-katherine-juhan-arnold/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-16T16:12:40+00:00",
-      "snippet": "The commissioner leads the state Department of Agriculture, which regulates animals, plants, soil and more.\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth wat",
-      "entityIds": [
-        "vg-ga-p-000334",
-        "vg-ga-p-000384"
-      ],
-      "topics": []
-    },
-    {
       "id": "3e2382f9c522",
       "title": "Warnock Names New Chief of Staff, Deputy Chief of Staff",
       "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-names-new-chief-of-staff-deputy-chief-of-staff/",
@@ -489,21 +534,6 @@
         "vg-ga-p-000263"
       ],
       "topics": []
-    },
-    {
-      "id": "f13bd002ec28",
-      "title": "Georgia Insurance, Fire Safety Commissioner: John King, Keisha Waites",
-      "url": "https://thecurrentga.org/2026/10/16/georgia-insurance-fire-safety-commissioner-john-king-keisha-waites/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-16T16:08:17+00:00",
-      "snippet": "Commissioner is responsible for holding insurance companies accountable for fair coverage and pricing.\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth watchdog",
-      "entityIds": [
-        "vg-ga-p-000326",
-        "vg-ga-p-000336"
-      ],
-      "topics": [
-        "healthcare"
-      ]
     },
     {
       "id": "d027d0adae4d",
@@ -1109,18 +1139,6 @@
       "topics": []
     },
     {
-      "id": "54e9c6197f83",
-      "title": "Georgia’s public school class of 2026 scored higher on SAT",
-      "url": "https://capitol-beat.org/2026/10/georgias-public-school-class-of-2026-scored-higher-on-sat/?utm_source=rss&utm_medium=rss&utm_campaign=georgias-public-school-class-of-2026-scored-higher-on-sat",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-05T19:26:21+00:00",
-      "snippet": "ATLANTA — Georgia’s public school class of 2026 did better in math and a little worse in reading and writing on their SAT tests than students who graduated the year before. The overall SAT score still",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
       "id": "c0eafe6a2335",
       "title": "Warnock Statement on Reporting that Trump Admin Let Millions in Rural Housing Development Dollars Expire",
       "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-statement-on-reporting-that-trump-admin-let-millions-in-rural-housing-development-dollars-expire/",
@@ -1182,18 +1200,6 @@
         "vg-ga-p-000264"
       ],
       "topics": []
-    },
-    {
-      "id": "0f4f5fe7a17a",
-      "title": "Georgia voters will see pen and paper at polls",
-      "url": "https://capitol-beat.org/2026/10/georgia-voters-will-see-pen-and-paper-at-polls/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-voters-will-see-pen-and-paper-at-polls",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-02T14:11:23+00:00",
-      "snippet": "ATLANTA — Attentive Georgia voters will notice something different when they go to their polling places on Election Day: pen and paper. Poll workers will log each voter in electronically, but they wil",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "99eef1518852",
