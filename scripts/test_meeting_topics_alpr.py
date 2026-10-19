@@ -47,6 +47,18 @@ MUST_FIRE = [
     'mobile plate scanner for patrol vehicles',
     # surveillance, beyond plate reading
     'Resolution on surveillance technology and community oversight',
+    # Facility surveillance is IN scope (decided 2026-10, against the reviewer's
+    # own recommendation to drop it — recorded here so it is not silently reverted).
+    # A county wiring video surveillance across its buildings is still government
+    # surveillance. Note the tension with 'security camera at the library' below,
+    # which stays OUT: the line drawn is evidence quality, not subject matter — a
+    # self-describing phrase ("video surveillance equipment") is evidence of
+    # surveillance, where a bare 'camera' or a generic VMS brand name only says a
+    # vendor was paid and leaves you to assume what for.
+    'the current provider of the access control, security, and video surveillance '
+    'equipment in use in county governmental properties',
+    '243AG Jail Projects Surveillance Equipment (2,113.51)',
+    '911 COMMUNICATIONS SURVEILLANCE EQUIPMENT (72,500.00)',
     'purchase of surveillance cameras for the downtown corridor',
     'facial recognition software for the police department',
     'Real-Time Crime Center (RTCC) buildout',
@@ -105,12 +117,11 @@ MUST_NOT_FIRE = [
     'shall not procure equipment produced by Hangzhou Hikvision Digital Technology '
     'Company, or Dahua Technology Company',
     'Hikvision cameras ban',
-    # Commercial building-security VMS. 'avigilon' matched only Comcast-resold
-    # "Eagle Eye Avigilon video management hardware" for the county LANDFILL — the
-    # brand form of the library-camera case above. Its whole category stays out.
-    'Eagle Eye Avigilon video management hardware for the landfill',
-    'Avigilon appearance search', 'Verkada camera licenses',
+    # Not ALPR vendors: general-purpose VMS brands that ship no plate-reading
+    # capability. The recall-favoured policy keeps an ALPR-CAPABLE brand in even on
+    # mixed evidence, but it does not make every camera brand a keyword.
     'Milestone XProtect license renewal', 'Eagle Eye Networks cloud VMS',
+    'Spot AI camera analytics trial',
 ]
 
 for t in MUST_FIRE:

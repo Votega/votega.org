@@ -121,23 +121,40 @@ TOPIC_RULES = {
                            # word that is also a place or a common noun ('clearview'
                            # alone is a street name; 'axon' is tasers/body cams;
                            # 'motorola' is radios).
-                           # Measured against the 1220-document corpus (2026-10):
-                           # 'hikvision' and 'dahua' matched ONLY the NDAA s.889
-                           # prohibition boilerplate that contract packets carry
-                           # ("shall not procure equipment produced by Huawei ...
-                           # Hikvision ... Dahua"), i.e. a certification that the
-                           # government does NOT buy this gear — the opposite of the
-                           # purchase we mean to catch. 'avigilon' matched only
-                           # Comcast-resold "Eagle Eye Avigilon video management"
-                           # for the Douglas County LANDFILL: commercial building
-                           # security, the brand form of the 'security camera at the
-                           # library' case this rule already excludes. All three are
-                           # out, and the same reasoning keeps their category out
-                           # (Eagle Eye Networks, Milestone, Spot AI and the like):
-                           # a general-purpose VMS brand is not evidence of public
-                           # surveillance. 'verkada' matched nothing either way and
-                           # is dropped with them for being the same category.
-                           'fusus', 'shotspotter', 'soundthinking', 'clearview ai'],
+                           # ── PRECISION/RECALL POLICY (set 2026-10) ─────────────
+                           # This rule is deliberately RECALL-FAVOURED: false
+                           # positives are tolerated to avoid missing true ones.
+                           # A missed ALPR contract is a story the public never
+                           # learns about; a stray facility-camera item is noise a
+                           # reader can see through in one click to the source. So
+                           # when a term's evidence is genuinely mixed, it stays IN,
+                           # and the bar an ALPR-capable vendor has to clear is
+                           # "this brand sells the capability", not "every match in
+                           # today's corpus was a clean purchase".
+                           #
+                           # 'avigilon' is kept on exactly that basis: it ships LPR
+                           # analytics and sits in the Motorola Solutions portfolio
+                           # alongside Vigilant. Measured note, not an argument
+                           # against it: in the 1220-document corpus its 5 matches
+                           # were all Comcast-resold "Eagle Eye Avigilon video
+                           # management" for the Douglas County landfill, so expect
+                           # facility-security items on the page from it. 'verkada'
+                           # is kept for the same reason (it ships LPR too) despite
+                           # matching nothing yet.
+                           #
+                           # The policy does NOT rescue a term that matches a
+                           # PROHIBITION. 'hikvision' and 'dahua' are out because
+                           # 100% of their matches were NDAA s.889 boilerplate
+                           # ("shall not procure equipment produced by ... Hangzhou
+                           # Hikvision ... or Dahua Technology Company") — a
+                           # certification that the government does NOT buy the gear.
+                           # That is not a tolerable false positive trading against
+                           # a true one; in this corpus there was no true one to
+                           # catch, so the term is pure noise with no upside. Revisit
+                           # if a place is ever seen debating REMOVAL of such gear,
+                           # which would be a real surveillance-policy item.
+                           'fusus', 'shotspotter', 'soundthinking', 'clearview ai',
+                           'avigilon', 'verkada'],
 }
 
 # Keywords that must match as WHOLE WORDS, not substrings — same tag semantics as
@@ -190,6 +207,8 @@ ALPR_VENDOR_LABELS = {
     'shotspotter':        'ShotSpotter (SoundThinking)',
     'soundthinking':      'ShotSpotter (SoundThinking)',
     'clearview ai':       'Clearview AI',
+    'avigilon':           'Avigilon (Motorola)',
+    'verkada':            'Verkada',
     # No 'cellebrite' / 'peregrine technologies' here: both left this page's scope
     # (see the SCOPE note in TOPIC_RULES). A label without its keyword fails the
     # contract test either way.
