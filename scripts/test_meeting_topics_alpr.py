@@ -8,6 +8,7 @@ term was rejected). Add a case here whenever a keyword is added or removed.
 
 Run: python scripts/test_meeting_topics_alpr.py       (no network, no repo writes)
 """
+import ast
 import os
 import sys
 
@@ -91,6 +92,25 @@ check('matched_terms reports the new term', 'real-time crime center' in
       matched_terms('Real-Time Crime Center'), True)
 check('vendors collapse duplicate brands',
       alpr_vendors(['shotspotter', 'soundthinking']), ['ShotSpotter (SoundThinking)'])
+
+# The probe diagnostic must measure the SHIPPED matcher, not a private copy: an
+# earlier probe kept its own ALPR_KEYWORDS dict (word-bounded, ~19 terms) that
+# drifted from production in coverage AND semantics. Checked by source inspection
+# rather than import: the probe imports lib.http / lib.pdf_text at module scope,
+# which is fine today (stdlib only) but would make this guard fragile the moment
+# either grows a dependency, and run-script-tests.yml installs no pip packages.
+_probe = ast.parse(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                     'probe_alpr_keywords.py'), encoding='utf-8').read())
+_defined = {t.id for n in ast.walk(_probe) if isinstance(n, (ast.Assign, ast.AnnAssign))
+            for t in (n.targets if isinstance(n, ast.Assign) else [n.target])
+            if isinstance(t, ast.Name)}
+_defined |= {n.name for n in ast.walk(_probe) if isinstance(n, ast.FunctionDef)}
+_imported = {a.name for n in ast.walk(_probe) if isinstance(n, ast.ImportFrom)
+             and n.module == 'lib.meeting_topics' for a in n.names}
+check('probe owns no keyword lexicon or matcher',
+      sorted(_defined & {'ALPR_KEYWORDS', '_MATCHERS', 'classify'}), [])
+check('probe sources its matcher from lib.meeting_topics',
+      {'classify', 'matched_terms', 'ALPR_TERMS'} <= _imported, True)
 
 if failures:
     sys.exit('FAILED: %s' % ', '.join(failures))
