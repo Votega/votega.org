@@ -218,6 +218,75 @@ def too_lossy(slug, lost, window_size, max_share=MAX_LOST_SHARE):
     return True
 
 
+# A re-read must keep at least this share of the text we previously recorded for
+# the SAME document, or it is treated as a worse read rather than a shorter agenda.
+#
+# Two thirds, not a half, and the Paulding case is why: that hybrid PDF went 11,884
+# -> 7,352 characters, a ratio of 0.62, which a half-share floor waves through — so
+# the guard would have missed the very case it was written for. The extraction fix
+# in lib/pdf_text.py catches that one at source by OCR'ing the scanned body, but
+# only where tesseract is installed; on a runner without it the thin reading would
+# publish and lose the rezoning and variance items silently. The guard has to hold
+# on its own.
+MIN_KEPT_TEXT_SHARE = 0.67
+
+
+def text_regressed(mid, cached, new_chars, new_method, new_tags=None):
+    """True when re-reading a meeting yielded far less text than we already had.
+
+    The same URL does not always return the same bytes, and when it returns fewer
+    the derived tags silently shrink. Two real cases, which look identical here:
+
+      * a Granicus viewer served the printed 2-page agenda PDF where an earlier run
+        got the HTML agenda with every item's detail (barrow/1154: 49,960 -> 7,137
+        characters);
+      * a hybrid PDF was read from its thin text layer where an earlier run OCR'd
+        the scanned body (paulding: 11,884 -> 7,352, losing the rezoning and
+        variance items).
+
+    In both, the meeting was classified from a document we HAD read more of, so
+    dropping to the worse read loses real, sourced findings. The enrichers keep the
+    richer prior record instead and say so — the same "never overwrite good data
+    with nothing" discipline as too_lossy(), one level down: never overwrite good
+    data with LESS data either.
+
+    FEWER CHARACTERS IS NOT THE TEST, and Barrow is why. Its viewer answers some
+    meetings with a JS shell that strips to tens of thousands of characters of
+    markup residue: 14 of its stored html records ran 29k-50k characters and matched
+    NOTHING, not even 'contract' or 'budget', while the html records that did match
+    were all under 2,600. The shorter PDF reading of those same meetings is the
+    REAL agenda, so a pure character-count guard would have preserved the garbage
+    and thrown away the fix. The test is therefore whether the shorter reading also
+    DROPS FINDINGS the longer one supported — losing a sourced tag is the harm;
+    losing characters on its own is not.
+
+    Deliberately conservative on both counts. A prior record with no tags has
+    nothing to lose and never blocks a new reading, and the two-thirds threshold
+    leaves normal agenda-to-agenda variation alone. Where it does fire, the meeting
+    is held at the prior reading until the document grows back or the cache is
+    rebuilt — the safer error for a watchdog feed, since a held tag points at a
+    document that really did say it.
+    """
+    if not cached or not cached.get('tags'):
+        return False
+    old_chars = cached.get('textChars') or 0
+    # >= so a document sitting exactly on the threshold is accepted: the guard
+    # fires on a clear loss, not on a boundary.
+    if not old_chars or new_chars >= old_chars * MIN_KEPT_TEXT_SHARE:
+        return False
+    # Shorter AND poorer. When the caller tells us what the new reading found, a
+    # shorter reading that still supports every prior finding is simply a tighter
+    # document and is taken as-is.
+    if new_tags is not None and not (set(cached['tags']) - set(new_tags)):
+        return False
+    lost = sorted(set(cached['tags']) - set(new_tags or []))
+    print('    %s: re-read yielded %d chars vs %d previously (%s -> %s) and dropped '
+          '%s — keeping the richer earlier reading'
+          % (mid, new_chars, old_chars, cached.get('textMethod'), new_method,
+             ', '.join(lost) or 'tags'))
+    return True
+
+
 def report(done, failed, out_dir):
     """Print the run summary and return the process exit status.
 

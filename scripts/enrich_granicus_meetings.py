@@ -75,7 +75,7 @@ from lib.meeting_topics import (  # noqa: E402
     topic_excerpts,
 )
 from lib.enrich_runner import (  # noqa: E402
-    run_places, run_meetings, report, too_lossy, PlaceOutcome,
+    run_places, run_meetings, report, too_lossy, text_regressed, PlaceOutcome,
 )
 from lib.atomic_io import write_json_atomic  # noqa: E402
 from lib.pdf_text import extract_text  # noqa: E402
@@ -313,6 +313,14 @@ def enrich_meeting(meeting, cache, reclassify=False, slug=None, text_cache=None,
 
     tags = classify(text)
     terms = matched_terms(text)
+
+    # Never overwrite a good reading with a worse one. Checked after classifying:
+    # this viewer answers some meetings with a JS shell that strips to tens of
+    # thousands of characters matching nothing, and the SHORTER pdf reading of the
+    # same meeting is the real agenda — so the test is dropped findings, not
+    # dropped characters.
+    if text_regressed(mid, cached, len(text), method, tags):
+        return cached
     # Per-mention excerpts: safe to quote from HTML-stripped text or the poppler text
     # layer, but never from OCR (non-deterministic → noisy diffs, garbled → misquotes).
     excerpts = topic_excerpts(text, tags) if method in ('html', 'pdftotext') else {}

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-19T23:24:30Z",
+  "generatedAt": "2026-10-19T23:40:27Z",
   "source": "Paulding County (municode agenda/minutes PDFs, poppler+OCR)",
   "place": "Paulding County",
   "count": 40
@@ -18,9 +18,9 @@
    "contract": 35,
    "data-center": 23,
    "special-land-use": 1,
-   "appointment": 13,
-   "rezoning": 14,
-   "variance": 8,
+   "appointment": 12,
+   "rezoning": 15,
+   "variance": 9,
    "development": 8,
    "millage-budget": 14
   },
@@ -371,43 +371,28 @@
    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-5ff47cbd526d45dd98174b3db16a9979.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-5ff47cbd526d45dd98174b3db16a9979.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 7352,
-   "pdfSha256": "5fd96412eb9b6c7e262abf837bba5f8612477907932a9e28cc6786389de8d354",
+   "textMethod": "ocr",
+   "textChars": 11884,
+   "pdfSha256": "15254bf0deb0cb2b9acaf799bf1f2842726162c76589c27a386a53d23a0efc4a",
    "topics": {
-    "appointment": 1,
     "contract": 1,
-    "data-center": 1
+    "data-center": 1,
+    "rezoning": 1,
+    "variance": 1
    },
    "tags": [
-    "appointment",
     "contract",
-    "data-center"
+    "data-center",
+    "rezoning",
+    "variance"
    ],
    "matchedTerms": [
-    "appoint",
     "contract",
     "data center",
-    "hyperscale",
-    "reappoint"
+    "rezon",
+    "variance"
    ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "reappoint",
-     "excerpt": "… for an eighteen (18) month time extension. This project is located in Post 4. 7. Adopt Resolution 2026-41 reappointing Johnny McBurrows to the Board of Assessors with a term of January 1, 2027 through December 31, 2029. …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… OLD BUSINESS: None NEW BUSINESS: 9. Action to approve Change Order #1, Magnum Contracting LLC, in the amount of $501,579.00 for the remediation of unsuitable soils and addition of the emergency …",
-     "context": "agenda-action"
-    },
-    "data-center": {
-     "term": "hyperscale",
-     "excerpt": "… _____ CONCLUSION OF REGULAR BUSINESS PUBLIC PARTICIPATION ON NON-AGENDA ITEMS: Donna Wood re: Hyperscale Data Centers Randy Wood re: Noise Ordinance Wayne Whitmire re: TPOD & TPOD Text Amendment James …",
-     "context": "public-comment"
-    }
-   },
+   "topicExcerpts": {},
    "flags": [
     "land-use",
     "data-center"
