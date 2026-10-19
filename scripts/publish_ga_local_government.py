@@ -46,6 +46,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.sibling_publish import build_json, publish_or_dry_run, min_items  # noqa: E402
+from lib import meeting_topics as mt  # noqa: E402
 
 REPO = "Votega/ga-local-government"
 TOKEN_ENV = "GA_LOCAL_GOVERNMENT_TOKEN"
@@ -214,6 +215,36 @@ def coverage(feeds, reg_by_id):
     return rows, len(scanned)
 
 
+def keywords_doc():
+    """The classification rules, straight from lib/meeting_topics.py (the one
+    taxonomy the enrichers use), so the published method can never drift from the
+    method that produced the mentions. Per topic: the taxonomy tags it rolls up,
+    and per tag the case-insensitive SUBSTRING terms and the WHOLE-WORD terms."""
+    topic_tags = {"alpr": ["alpr"], "data-center": ["data-center"],
+                  "land-use": sorted(mt.LAND_USE - {"data-center"})}
+    tags = {}
+    for tag in sorted({t for ts in topic_tags.values() for t in ts}):
+        tags[tag] = {"substring": sorted(mt.TOPIC_RULES.get(tag, [])),
+                     "wholeWord": sorted(mt.TOPIC_WORD_RULES.get(tag, []))}
+    return {
+        "matching": "Text is lowercased. A `substring` term matches anywhere "
+                    "(so 'rezon' catches rezoning/rezoned); a `wholeWord` term "
+                    "matches only as a whole word (so 'flock' does not fire on "
+                    "'flocking' and 'alpr' does not fire inside 'AppraisalPro').",
+        "topics": {t: {"label": TOPIC_LABEL[t], "tags": topic_tags[t]} for t in TOPICS},
+        "tags": tags,
+        "alpr": {
+            "highConfidenceTerms": sorted(mt.ALPR_HIGH_TERMS),
+            "vendorLabels": dict(sorted(mt.ALPR_VENDOR_LABELS.items())),
+            "note": "A mention is `high` confidence when it names a vendor or one "
+                    "of the spelled-out capability phrases above; any other match "
+                    "is `medium`. Deliberately NOT matched: bare 'license plate' "
+                    "(tag-office items), 'cctv' (sewer inspection), bare 'camera', "
+                    "and the brands 'axon' and 'motorola' (body cams, radios).",
+        },
+    }
+
+
 def summary_md(reg, all_mentions, cov_rows, scanned_n, universe, last_scan):
     by_topic = Counter(m["topic"] for m in all_mentions)
     places_by_topic = {t: len({m["placeId"] for m in all_mentions if m["topic"] == t})
@@ -266,6 +297,11 @@ def summary_md(reg, all_mentions, cov_rows, scanned_n, universe, last_scan):
         "confidence, context, and the source URL — everything but the quote.",
         "- **Confidence.** `high` = a named vendor or a spelled-out capability; "
         "`medium` = a bare keyword. ALPR excerpts are published only for `high`.",
+        "- **How it is classified.** Keyword rules, published in full in "
+        "`data/keywords.json`. A keyword list has false positives (a word that "
+        "means something else) and false negatives (a document that discusses "
+        "the topic in words we do not list) — a missing mention is not proof of "
+        "absence. Proposed additions or corrections are welcome as issues.",
         "- **Accuracy.** Provided as is, no warranty. Spotted an error? Open an issue.",
     ]
     return ("\n".join(lines) + "\n").encode()
@@ -307,6 +343,7 @@ def main():
             "mentionsCsv": "data/mentions.csv",
             "schema": "data/mentions.schema.json",
             "coverage": "data/coverage.json",
+            "keywords": "data/keywords.json",
         },
     }
 
@@ -320,6 +357,7 @@ def main():
         "data/mentions.schema.json": build_json(mention_schema()),
         "data/coverage.json": build_json({"metadata": {**meta, "count": len(cov_rows)},
                                           "places": cov_rows}),
+        "data/keywords.json": build_json({"metadata": meta, **keywords_doc()}),
         "SUMMARY.md": summary_md(reg, all_mentions, cov_rows, scanned_n, universe, last_scan),
     }
     for t in TOPICS:
