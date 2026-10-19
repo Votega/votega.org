@@ -75,11 +75,23 @@ def sitting_legislators(members):
 # --------------------------------------------------------------------------- #
 # members mode
 # --------------------------------------------------------------------------- #
-def members_csv(legislators):
+MEMBERS_CSV_HEADER = ["id", "name", "firstName", "lastName", "party", "chamber", "district",
+                      "title", "status", "phone", "email", "website", "committees",
+                      "legisGaGovId", "session"]
+
+
+def members_csv(legislators, session):
+    """`session` is the roster's General Assembly tag (metadata.session, e.g. '2025_26').
+    It is the same on every row, which is redundant on purpose: data/members.csv is
+    overwritten IN PLACE at a biennium rollover, and a CSV has no metadata channel, so
+    this column is the only way a downloaded copy can say which General Assembly it
+    describes. Appended last so existing positional consumers keep working."""
+    if not session:
+        sys.exit("ga-members.json has no metadata.session -- refusing to publish a roster "
+                 "that cannot say which General Assembly it describes")
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
-    w.writerow(["id", "name", "firstName", "lastName", "party", "chamber", "district",
-                "title", "status", "phone", "email", "website", "committees", "legisGaGovId"])
+    w.writerow(MEMBERS_CSV_HEADER)
     for m in legislators:
         w.writerow([
             m.get("id"), m.get("name"), m.get("firstName"), m.get("lastName"),
@@ -89,7 +101,7 @@ def members_csv(legislators):
             m.get("officialWebsiteUrl"),
             "; ".join(c.get("name", c) if isinstance(c, dict) else c
                       for c in (m.get("committees") or [])),
-            m.get("legisGaGovId"),
+            m.get("legisGaGovId"), session,
         ])
     return buf.getvalue().encode()
 
@@ -119,9 +131,15 @@ def roster_md(legislators, meta, session=None):
                    "Voting scorecard (party unity + participation): [`scorecard.csv`](scorecard.csv) "
                    "(full records in [`scorecard.json`](scorecard.json)).")
     else:
-        heading = "# Georgia General Assembly"
+        # The live file is overwritten in place at a rollover, so name the biennium it
+        # describes (the frozen branch does the same through its slug).
+        sess = meta.get("session")
+        heading = ("# Georgia General Assembly — current roster"
+                   + (f" (session {sess})" if sess else ""))
         freshness = (f"_Last updated {meta.get('generatedAt', '')} · {len(sen)} Senators, "
-                     f"{len(hou)} Representatives (current, live roster)._")
+                     f"{len(hou)} Representatives (current, live roster"
+                     + (f" for session `{sess}`" if sess else "")
+                     + "). Prior bienniums are archived under [`sessions/`](sessions)._")
         machine = ("> Machine-readable: [`data/all.json`](data/all.json) / "
                    "[`data/members.csv`](data/members.csv). Current session's votes and "
                    "past sessions: see [`latest.json`](latest.json) and [`sessions/`](sessions). "
@@ -157,7 +175,27 @@ def members_schema():
         "type": "object",
         "required": ["members"],
         "properties": {
-            "metadata": {"type": "object"},
+            "metadata": {
+                "type": "object",
+                "description": "Provenance for THIS file. This roster is the CURRENT biennium "
+                               "only and is overwritten in place when a new General Assembly "
+                               "is seated; prior bienniums are preserved under sessions/<slug>/ "
+                               "(see latest.json's rosterArchive).",
+                "properties": {
+                    "session": {"type": "string", "description":
+                                "The General Assembly session this roster describes, e.g. "
+                                "'2025_26'. Changes at a biennium rollover; the same value is in "
+                                "the `session` column of members.csv."},
+                    "legisSessionId": {"type": ["integer", "null"], "description":
+                                       "legis.ga.gov's own numeric id for that session "
+                                       "(Session/GetSessions), e.g. 1033."},
+                    "generatedAt": {"type": "string", "description":
+                                    "ISO-8601 time this roster was last regenerated from "
+                                    "legis.ga.gov. Freshness, not scope: it advances daily "
+                                    "within one session."},
+                },
+                "additionalProperties": True,
+            },
             "members": {
                 "type": "array",
                 "items": {
@@ -224,7 +262,7 @@ def build_members():
     legislators = sitting_legislators(doc.get("members", []))
     return {
         "data/all.json": open(SRC_MEMBERS, "rb").read(),
-        "data/members.csv": members_csv(legislators),
+        "data/members.csv": members_csv(legislators, doc.get("metadata", {}).get("session")),
         "data/members.schema.json": build_json(members_schema()),
         "ROSTER.md": roster_md(legislators, doc.get("metadata", {})),
     }
@@ -233,7 +271,10 @@ def build_members():
 # --------------------------------------------------------------------------- #
 # votes mode
 # --------------------------------------------------------------------------- #
-def votes_csv(votes):
+def votes_csv(votes, session):
+    """`session` (a session id such as '2025_26' or '2026_ss') is appended as a constant
+    column for the same reason as members.csv: the file says which session it covers
+    even when it is downloaded away from its sessions/<slug>/ directory."""
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
     # chamber is published because it cannot be re-derived downstream: the motion text
@@ -244,14 +285,14 @@ def votes_csv(votes):
     # ones a passage-vote dataset omits. With `time` it is what orders two passage votes
     # on one bill on one day — which decides which is the operative final vote.
     w.writerow(["voteId", "date", "time", "chamber", "rollNumber", "bill", "title",
-                "motionText", "yea", "nay", "result", "billUrl"])
+                "motionText", "yea", "nay", "result", "billUrl", "session"])
     for vid, v in sorted(votes.items(),
                          key=lambda kv: (kv[1].get("date") or "",
                                          kv[1].get("rollNumber") or 0, kv[0])):
         w.writerow([vid, v.get("date"), v.get("time"), v.get("chamber"),
                     v.get("rollNumber"), v.get("bill"), v.get("title"),
                     v.get("motionText"), v.get("yea"), v.get("nay"), v.get("result"),
-                    v.get("billUrl")])
+                    v.get("billUrl"), session])
     return buf.getvalue().encode()
 
 
@@ -277,7 +318,19 @@ def votes_schema():
         "type": "object",
         "required": ["votes", "memberVotes"],
         "properties": {
-            "metadata": {"type": "object"},
+            "metadata": {
+                "type": "object",
+                "description": "Provenance for this file. `session` (e.g. '2025_26', "
+                               "'2026_ss') is the one session these roll calls belong to; "
+                               "`biennium` is the General Assembly that contains it.",
+                "properties": {
+                    "session": {"type": "string"},
+                    "sessionName": {"type": "string"},
+                    "biennium": {"type": "string"},
+                    "generatedAt": {"type": ["string", "null"]},
+                },
+                "additionalProperties": True,
+            },
             "votes": {
                 "type": "object",
                 "additionalProperties": {
@@ -378,7 +431,7 @@ def build_votes():
             "memberVotes": sess_mv,
         }
         artifacts[f"{base}/votes.json"] = compact_json(sess_doc)
-        artifacts[f"{base}/votes.csv"] = votes_csv(sess_votes)
+        artifacts[f"{base}/votes.csv"] = votes_csv(sess_votes, sid)
         artifacts[f"{base}/votes.schema.json"] = build_json(votes_schema())
         sessions_index.append({
             "id": sid, "name": session_name(sid), "slug": slug,
@@ -412,13 +465,13 @@ def build_votes():
 # at the biennium grain (not per-session): party unity gets more reliable the more
 # party-line votes it sees, so the score aggregates the whole General Assembly
 # (regular + special sessions), matching how generate_party_unity.py builds it.
-def scorecard_csv(members):
+def scorecard_csv(members, biennium):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
     w.writerow(["name", "party", "chamber", "district",
                 "partyUnity", "independenceRate", "votedWithParty", "partyLineVotes",
                 "participationRate", "missedRate", "cast", "missed", "totalRollCalls",
-                "presidingOfficer", "id"])
+                "presidingOfficer", "id", "biennium"])
     for m in members:
         w.writerow([
             m.get("name"), m.get("party"), m.get("chamber"),
@@ -429,7 +482,7 @@ def scorecard_csv(members):
             m.get("participationRate"), m.get("missedRate"),
             m.get("cast"), m.get("missed"), m.get("totalRollCalls"),
             "true" if m.get("presidingOfficer") else "false",
-            m.get("id"),
+            m.get("id"), biennium,
         ])
     return buf.getvalue().encode()
 
@@ -447,7 +500,18 @@ def scorecard_schema():
         "type": "object",
         "required": ["members"],
         "properties": {
-            "metadata": {"type": "object"},
+            "metadata": {
+                "type": "object",
+                "description": "Provenance for this file. The scorecard is scoped to the whole "
+                               "biennium (regular + special sessions), named by `biennium`; "
+                               "the per-session breakdown is in `sessions`.",
+                "properties": {
+                    "biennium": {"type": "string"},
+                    "sessions": {"type": "array"},
+                    "generatedAt": {"type": ["string", "null"]},
+                },
+                "additionalProperties": True,
+            },
             "members": {
                 "type": "array",
                 "items": {
@@ -487,7 +551,7 @@ def build_scorecard():
     base = f"sessions/{slug}"
     artifacts = {
         f"{base}/scorecard.json": open(SRC_SCORECARD, "rb").read(),
-        f"{base}/scorecard.csv": scorecard_csv(members),
+        f"{base}/scorecard.csv": scorecard_csv(members, meta.get("biennium") or BIENNIUM),
         f"{base}/scorecard.schema.json": build_json(scorecard_schema()),
     }
     # Root pointer, mirroring latest.json. Uses the source generatedAt (not now())
@@ -520,7 +584,7 @@ def build_freeze_roster(slug):
     base = f"sessions/{slug}"
     return {
         f"{base}/members.json": open(SRC_MEMBERS, "rb").read(),
-        f"{base}/members.csv": members_csv(legislators),
+        f"{base}/members.csv": members_csv(legislators, meta.get("session")),
         f"{base}/members.schema.json": build_json(members_schema()),
         f"{base}/ROSTER.md": roster_md(legislators, meta, session=slug),
     }
