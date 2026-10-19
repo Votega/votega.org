@@ -353,6 +353,25 @@ ALPR_VENDOR_LABELS = {
 # handoff scanner's high tier). Everything else that trips the alpr rule is
 # "medium" — real, badgeable, but keyword-only.
 ALPR_HIGH_TERMS = {
+    # The test for this set is whether the phrase ALONE names a specific
+    # surveillance capability. It was written when this topic was plate readers
+    # only, so when the scope widened (drones, gunshot detection, face recognition,
+    # crime centres, body cams) the new capabilities were left scoring medium and
+    # sorting into the page's "possible mentions" tier — which put Athens-Clarke's
+    # real-time crime center next to a bare company-name match. These are not
+    # maybes, so they are rated here with the rest.
+    'real time crime center', 'real-time crime center', 'rtcc',
+    'gunshot detection', 'gunfire detection', 'gunshot sensor', 'acoustic gunshot',
+    'facial recognition', 'face recognition',
+    'drone as first responder', 'drone as a first responder',
+    # Plate-reader acronyms and the Georgia vernacular. 'lpr' is whole-word matched
+    # and near-unambiguous in agendas (see TOPIC_WORD_RULES); "tag reader" is simply
+    # how Georgia says plate reader.
+    'alpr', 'anpr', 'lpr', 'lpr camera', 'lpr system', 'tag reader',
+    # Deliberately NOT promoted, and left at medium so they land in the review
+    # tier: 'surveillance camera/system/technology/equipment' (self-describing but
+    # context-dependent — the Fayette hits are budget account-code lines), bare
+    # 'crime center', and 'axon enterprise' (see its note above).
     # Police-worn / in-car cameras: a "body worn camera" item is not a maybe, it is
     # a body camera. Without these here the tier logic would file Atlanta's
     # forty-million-dollar fleet-and-body-camera amendment under "possible

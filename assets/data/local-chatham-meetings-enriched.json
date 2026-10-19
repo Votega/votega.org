@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-19T15:59:03Z",
+  "generatedAt": "2026-10-19T23:24:38Z",
   "source": "Chatham County (iqm2 agenda/minutes PDFs, poppler+OCR)",
   "place": "Chatham County",
   "count": 15
@@ -14,14 +14,14 @@
   ],
   "lastActivity": "2026-10-16",
   "topicTotals": {
+   "comprehensive-plan": 2,
    "contract": 13,
    "millage-budget": 14,
    "appointment": 5,
    "data-center": 1,
    "development": 6,
    "rezoning": 7,
-   "comprehensive-plan": 1,
-   "alpr": 1
+   "alpr": 2
   },
   "dataCenterItems": [
    {
@@ -33,6 +33,14 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners - Regular Meeting",
+    "date": "2026-10-16",
+    "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1747&Inline=True",
+    "tags": [
+     "comprehensive-plan"
+    ]
+   },
    {
     "title": "Board of Commissioners - Regular Meeting",
     "date": "2026-08-14",
@@ -133,8 +141,16 @@
     "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 11,
+  "landUseMeetings": 12,
   "alprItems": [
+   {
+    "title": "Board of Commissioners - Regular Meeting",
+    "date": "2026-03-13",
+    "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1732&Inline=True",
+    "terms": [
+     "axon enterprise"
+    ]
+   },
    {
     "title": "Board of Commissioners - Regular Meeting",
     "date": "2026-01-09",
@@ -144,7 +160,7 @@
     ]
    }
   ],
-  "alprMeetings": 1
+  "alprMeetings": 2
  },
  "meetings": [
   {
@@ -156,21 +172,29 @@
    "textSource": "agenda",
    "textSourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1747&Inline=True",
    "textMethod": "pdftotext",
-   "textChars": 21209,
-   "pdfSha256": "627a4bf639fe99feaf463f7c4170c8fb00a5fe2a0481a13b564a0f8b0e1bc153",
+   "textChars": 22689,
+   "pdfSha256": "611816b2a3f9eb688e1dfd0b8cb25c54362342ade5c2bd50edb8e79703200e28",
    "topics": {
+    "comprehensive-plan": 1,
     "contract": 1,
     "millage-budget": 1
    },
    "tags": [
+    "comprehensive-plan",
     "contract",
     "millage-budget"
    ],
    "matchedTerms": [
     "budget",
+    "comprehensive plan",
     "contract"
    ],
    "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… g the Plan 2040- 2045 five year update to the existing Chatham County- Savannah Plan 2040 Comprehensive Plan which will then be forwarded to the Coastal Regional Commission (CRC) and the Georgia Department of Comm …",
+     "context": "unknown"
+    },
     "contract": {
      "term": "contract",
      "excerpt": "… to award bids as follows: (Please note that purchase thresholds of $25,000 or more have been enacted: however, contract and change orders of a lesser amount still will appear.) ITEM DEPT. SOURC …",
@@ -183,6 +207,7 @@
     }
    },
    "flags": [
+    "land-use",
     "millage-budget"
    ],
    "dataCenterItems": []
@@ -376,7 +401,8 @@
     "award of",
     "budget",
     "comprehensive plan",
-    "contract"
+    "contract",
+    "task order"
    ],
    "topicExcerpts": {
     "comprehensive-plan": {
@@ -430,7 +456,8 @@
     "fiscal year",
     "millage",
     "multi-family",
-    "rezon"
+    "rezon",
+    "task order"
    ],
    "topicExcerpts": {
     "contract": {
@@ -554,7 +581,8 @@
     "budget",
     "contract",
     "procurement",
-    "subdivision"
+    "subdivision",
+    "task order"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -647,21 +675,29 @@
    "textChars": 14559,
    "pdfSha256": "81ae65ee96c5788f6c7b0d7db860974492d8851e6dc79f2e88aea10eda70c979",
    "topics": {
+    "alpr": 1,
     "contract": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
    "tags": [
+    "alpr",
     "contract",
     "millage-budget",
     "rezoning"
    ],
    "matchedTerms": [
+    "axon enterprise",
     "budget",
     "contract",
     "rezon"
    ],
    "topicExcerpts": {
+    "alpr": {
+     "term": "axon enterprise",
+     "excerpt": "… switch installation and start-up services, to recognize additional scope of work E. Purchase of an Police Axon Enterprise, $64,344 SSD - Police Axon TRUE UP Inc. Interview Bundle, …",
+     "context": "unknown"
+    },
     "contract": {
      "term": "contract",
      "excerpt": "… Balance $190,002 to increase Other Financing Uses - Payments to Others for a fire protection services contract, and 4) In the Capital Improvement Program Fund, Increase Local Revenues and the CEMA Building Project …",
@@ -680,7 +716,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": []
   },
