@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-19T08:17:07.857304+00:00",
+    "generatedAt": "2026-10-19T16:01:18.710654+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,12 +24,12 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 142,
+    "count": 145,
     "windowDays": 45,
     "entityTagged": 96,
     "topicCounts": {
+      "elections": 38,
       "education": 17,
-      "elections": 36,
       "budget": 7,
       "healthcare": 19,
       "courts": 18,
@@ -39,6 +39,18 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
+    "vg-ga-p-000335": {
+      "name": "Keisha R. Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
     "vg-ga-p-000330": {
       "name": "Joshua \"Josh\" Tolbert",
       "url": null,
@@ -72,13 +84,6 @@
       "url": null,
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
-      ]
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha R. Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
       ]
     },
     "vg-ga-p-000090": {
@@ -199,11 +204,6 @@
         "challenger-mike-collins-senate-2026"
       ]
     },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
       "url": null,
@@ -280,6 +280,55 @@
   },
   "items": [
     {
+      "id": "b41f9207996c",
+      "title": "Ossoff and Bottoms hold joint rally in Cobb County",
+      "url": "https://www.gpb.org/news/2026/10/19/ossoff-and-bottoms-hold-joint-rally-in-cobb-county",
+      "source": "GPB News",
+      "publishedAt": "2026-10-19T12:45:00+00:00",
+      "snippet": "Democratic U.S. Sen. Jon Ossoff and Democratic gubernatorial nominee Keisha Lance Bottoms held a joint rally in Cobb County on Saturday night.",
+      "entityIds": [
+        "vg-ga-p-000264",
+        "vg-ga-p-000335"
+      ],
+      "topics": []
+    },
+    {
+      "id": "d34a6d29f6b6",
+      "title": "GPB morning headlines for October 19, 2026",
+      "url": "https://www.gpb.org/news/2026/10/19/gpb-morning-headlines-for-october-19-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-19T12:39:58+00:00",
+      "snippet": "Georgia’s candidates for U.S. Senate and governor pitched to voters this weekend as early voting continues; open enrollment on the Affordable Care Act marketplace begins Nov. 1.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "85ffe07018a3",
+      "title": "Growth of data centers becomes a defining issue of the midterms, entangling some Georgia candidates",
+      "url": "https://georgiarecorder.com/2026/10/19/growth-of-data-centers-becomes-a-defining-issue-of-the-midterms-entangling-some-georgia-candidates/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-19T08:00:28+00:00",
+      "snippet": "Georgia candidates up and down the ballot are campaigning on an issue that has struck a nerve across the political spectrum: data centers.  A wave of data center projects across Georgia has been met w",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "54cff17a8704",
+      "title": "Dr. Chaudron Gille Named Interim President of the University of North Georgia",
+      "url": "https://www.usg.edu/news/release/gille-named-interim-ung-president-2026/",
+      "source": "University System of Georgia",
+      "publishedAt": "2026-10-19T00:00:00+00:00",
+      "snippet": "University System of Georgia Chancellor Sonny Perdue named Dr. Chaudron Gille as interim president of the University of North Georgia, effective Nov. 1, 2026.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
       "id": "71f6a6665a93",
       "title": "Demonstrators turn back out in Georgia for No Kings, this time with their attention turned to voting",
       "url": "https://georgiarecorder.com/2026/10/17/demonstrators-turn-back-out-in-georgia-for-no-kings-this-time-with-their-attention-turned-to-voting/",
@@ -293,11 +342,11 @@
     },
     {
       "id": "558a6583ffde",
-      "title": "Chatham $80 mln emergency center delayed again",
+      "title": "Chatham $80M emergency center delayed again",
       "url": "https://thecurrentga.org/2026/10/17/chatham-80-mln-emergency-center-delayed-again/",
       "source": "The Current GA",
       "publishedAt": "2026-10-17T17:15:00+00:00",
-      "snippet": "Chatham County's long-delayed emergency operations HQ costs rise above $80 mln and will not be done until after 2027 hurricane season \nThe Current is an inclusive nonprofit, non-partisan news organiza",
+      "snippet": "Chatham County's long-delayed emergency operations HQ costs rise above $80M and will not be done until after 2027 hurricane season \nThe Current is an inclusive nonprofit, non-partisan news organizatio",
       "entityIds": [],
       "topics": []
     },
@@ -722,11 +771,9 @@
       "url": "https://www.usg.edu/news/release/lieuwen-named-interim-georgia-tech-president-2026/",
       "source": "University System of Georgia",
       "publishedAt": "2026-10-13T00:00:00+00:00",
-      "snippet": "University System of Georgia Chancellor Sonny Perdue named Dr. Timothy Charles Lieuwen as interim president of the Georgia Institute of Technology, effective Nov. 1, 2026.",
+      "snippet": null,
       "entityIds": [],
-      "topics": [
-        "education"
-      ]
+      "topics": []
     },
     {
       "id": "401a9d4c615c",
@@ -2122,18 +2169,6 @@
       "snippet": "Washington, DC – Today, the Government Accountability Office (GAO) released a new report on the Department of Defense’s (DOD) use of Intergovernmental Support Agreements (IGSAs) to obtain services fro",
       "entityIds": [
         "vg-ga-p-000262"
-      ],
-      "topics": []
-    },
-    {
-      "id": "dca2d08515b3",
-      "title": "Congresswoman Nikema Williams Reintroduces Legislation to Increase Access to Child Care",
-      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-reintroduces-legislation-to-increase-access-to-child-care",
-      "source": "Rep. Nikema Williams (GA-05, press)",
-      "publishedAt": "2026-09-04T13:34:57+00:00",
-      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) reintroduced the Care is an Economic Development Strategy (CEDS) Act. This legislation would require Economic Development Districts to show in ",
-      "entityIds": [
-        "vg-ga-p-000254"
       ],
       "topics": []
     }
