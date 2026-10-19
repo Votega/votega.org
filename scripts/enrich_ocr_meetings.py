@@ -55,6 +55,7 @@ from lib.enrich_runner import (  # noqa: E402
     run_places, run_meetings, report, too_lossy, PlaceOutcome,
 )
 from lib.gdrive import drive_download_url  # noqa: E402
+from lib.text_cache import open_cache  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -139,17 +140,25 @@ def text_source(meeting):
     return None, None
 
 
-def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False):
+def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
+                   slug=None, text_cache=None, from_text_cache=False):
     """Classify one meeting's PDF. Returns an enriched record, or None to skip.
 
     Reuses the cached record when the agenda/minutes URL is unchanged (no
     re-download); otherwise downloads the PDF, extracts text, classifies, and
-    discards the text. Never stores raw text.
+    discards the text. Never stores raw text in the COMMITTED sidecar.
 
     `reclassify=True` bypasses that cache reuse and re-fetches every meeting, so a
     taxonomy change (a new subject keyword in lib/meeting_topics.py) re-tags
-    already-cached meetings that a normal incremental run would leave untouched —
-    the text is not stored, so re-classifying requires re-downloading the PDF.
+    already-cached meetings that a normal incremental run would leave untouched.
+
+    `text_cache` (a lib.text_cache.TextCache, opt-in via --text-cache) stores the
+    extracted text OUTSIDE git so it can be scored and re-classified later; with
+    `from_text_cache=True` that stored text STANDS IN FOR THE FETCH, which is what
+    makes a full `--reclassify` re-tag of the history free and offline instead of
+    ~800 downloads. A from-cache run never falls back to the network: a gap is
+    reported and the meeting keeps its prior tags, so the run stays reproducible
+    and its cost stays predictable.
 
     `agenda_packet=True` (a per-place setting) marks a source whose AGENDA file is a
     full packet with the prior meetings' minutes bundled in after the agenda; the
@@ -166,19 +175,53 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False):
     if not reclassify and cached and cached.get('textSourceUrl') == url and 'tags' in cached:
         return cached  # unchanged agenda — keep derived tags, skip the fetch
 
-    # A Google Drive view URL (Carrollton) is an HTML page, not the PDF — rewrite it
-    # to the direct-download endpoint. Non-Drive URLs pass through unchanged.
-    pdf = fetch_bytes(drive_download_url(url), headers=_PDF_HEADERS,
-                      retries=3, backoff=5, label=url)
-    if pdf is None:
-        print('    %s: PDF fetch failed (%s) — skipping' % (mid, kind))
-        return cached  # keep any prior derived data rather than dropping the meeting
+    # Combined agenda packet: classify only the agenda proper, not the prior-meeting
+    # minutes bundled in after it (which belong to — and are enriched as — those
+    # earlier meetings). Minutes sources are already single-meeting, so leave them.
+    trimmed = agenda_packet and kind == 'agenda'
 
-    with tempfile.TemporaryDirectory() as tmp:
-        pdf_path = os.path.join(tmp, 'meeting.pdf')
-        with open(pdf_path, 'wb') as f:
-            f.write(pdf)
-        text, method = extract_text(pdf_path)
+    # Offline re-tag path: cached text replaces the download entirely.
+    text = None
+    if from_text_cache and text_cache is not None:
+        text = text_cache.text_for(slug, mid)
+    if text is not None:
+        ent = text_cache.entry(slug, mid) or {}
+        # The cache holds RAW extracted text, so apply this place's trim policy here
+        # exactly as the fetching path below does.
+        if trimmed:
+            text = agenda_head(text)
+        method = ent.get('method') or 'pdftotext'
+        pdf_sha = ent.get('pdfSha256') or (cached or {}).get('pdfSha256')
+    else:
+        if from_text_cache:
+            print('    %s: no cached text — keeping prior tags (no fetch)' % mid)
+            return cached
+
+        # A Google Drive view URL (Carrollton) is an HTML page, not the PDF — rewrite
+        # it to the direct-download endpoint. Non-Drive URLs pass through unchanged.
+        pdf = fetch_bytes(drive_download_url(url), headers=_PDF_HEADERS,
+                          retries=3, backoff=5, label=url)
+        if pdf is None:
+            print('    %s: PDF fetch failed (%s) — skipping' % (mid, kind))
+            return cached  # keep prior derived data rather than dropping the meeting
+
+        with tempfile.TemporaryDirectory() as tmp:
+            pdf_path = os.path.join(tmp, 'meeting.pdf')
+            with open(pdf_path, 'wb') as f:
+                f.write(pdf)
+            text, method = extract_text(pdf_path)
+        pdf_sha = hashlib.sha256(pdf).hexdigest()
+
+        # Store the RAW text (pre-trim) for later scoring / offline re-tagging, and
+        # record whether production trims it so a scorer can reproduce this run.
+        if text_cache is not None and method != 'none':
+            text_cache.record(slug, mid, text, method=method, pdf_sha=pdf_sha,
+                              source_url=url, date=meeting.get('date'),
+                              body=meeting.get('body'), title=meeting.get('title'),
+                              trimmed=trimmed)
+
+        if trimmed:
+            text = agenda_head(text)
 
     # If no text could be extracted now (image-only PDF and OCR unavailable, e.g. a
     # local run without tesseract), keep any prior derived tags rather than wiping
@@ -186,13 +229,6 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False):
     # the batch-level guard. A genuine reclassify still re-tags every readable PDF.
     if method == 'none' and cached and cached.get('tags'):
         return cached
-
-    # Combined agenda packet: classify only the agenda proper, not the prior-meeting
-    # minutes bundled in after it (which belong to — and are enriched as — those
-    # earlier meetings). Minutes sources are already single-meeting, so leave them.
-    trimmed = agenda_packet and kind == 'agenda'
-    if trimmed:
-        text = agenda_head(text)
 
     tags = classify(text)
     terms = matched_terms(text)
@@ -218,7 +254,7 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False):
         'textSourceUrl': url,
         'textMethod': method,
         'textChars': len(text),
-        'pdfSha256': hashlib.sha256(pdf).hexdigest(),
+        'pdfSha256': pdf_sha,
         'topics': topics,
         'tags': tags,
         'matchedTerms': terms,
@@ -238,7 +274,8 @@ def recent_meetings(meetings, since, limit):
     return dated[:limit]
 
 
-def enrich_place(place, cfg, since, limit, reclassify=False):
+def enrich_place(place, cfg, since, limit, reclassify=False, text_cache=None,
+                 from_text_cache=False):
     """Enrich one PDF-platform place: write its sidecar, return its flag entry.
 
     Returns None to leave the place's committed data untouched — no meetings file
@@ -265,7 +302,9 @@ def enrich_place(place, cfg, since, limit, reclassify=False):
     enriched, lost = run_meetings(
         slug, window,
         lambda m: enrich_meeting(m, cache, reclassify=reclassify,
-                                 agenda_packet=agenda_packet),
+                                 agenda_packet=agenda_packet, slug=slug,
+                                 text_cache=text_cache,
+                                 from_text_cache=from_text_cache),
         cache=cache)
 
     # Guard like generate/validate: never overwrite a good sidecar / good flags
@@ -305,7 +344,19 @@ def main():
                     help='ignore the incremental cache and re-fetch every meeting '
                          'in the window — use once after a taxonomy change so already-'
                          'cached meetings pick up new subject keywords')
+    ap.add_argument('--text-cache', metavar='DIR',
+                    help='also store each document\'s extracted text under DIR '
+                         '(gitignored, never committed) to build the offline corpus '
+                         'that scripts/score_topic_lexicon.py measures against')
+    ap.add_argument('--from-text-cache', action='store_true',
+                    help='classify from --text-cache instead of downloading. With '
+                         '--reclassify this re-tags the whole history offline after '
+                         'a taxonomy change, with no fetches; meetings absent from '
+                         'the cache keep their prior tags')
     args = ap.parse_args()
+
+    if args.from_text_cache and not args.text_cache:
+        ap.error('--from-text-cache needs --text-cache DIR to read from')
 
     since = (datetime.now(timezone.utc) - timedelta(days=30 * args.months)).strftime('%Y-%m-%d')
     if not has_ocr():
@@ -315,10 +366,17 @@ def main():
     # One place's failure is contained to that place, and local-flags.json is
     # written as each place finishes — see lib/enrich_runner.py for the run this
     # cost us.
+    # Writable only when we are the ones fetching: a --from-text-cache run reads the
+    # corpus and must not half-populate it.
+    text_cache = open_cache(args.text_cache, writable=not args.from_text_cache)
     done, failed = run_places(
         ocr_places(args.slug), DATA_DIR,
         lambda place, cfg: enrich_place(place, cfg, since, args.limit,
-                                        reclassify=args.reclassify))
+                                        reclassify=args.reclassify,
+                                        text_cache=text_cache,
+                                        from_text_cache=args.from_text_cache))
+    if text_cache is not None and text_cache.flush():
+        print('text cache: %s' % text_cache.stats())
     sys.exit(report(done, failed, DATA_DIR))
 
 

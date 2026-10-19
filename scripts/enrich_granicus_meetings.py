@@ -79,6 +79,7 @@ from lib.enrich_runner import (  # noqa: E402
 )
 from lib.atomic_io import write_json_atomic  # noqa: E402
 from lib.pdf_text import extract_text  # noqa: E402
+from lib.text_cache import open_cache  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -238,14 +239,20 @@ def text_source(meeting):
     return None, None
 
 
-def enrich_meeting(meeting, cache, reclassify=False):
+def enrich_meeting(meeting, cache, reclassify=False, slug=None, text_cache=None,
+                   from_text_cache=False):
     """Classify one meeting's agenda HTML. Returns an enriched record, or None.
 
     Reuses the cached record when the viewer URL is unchanged (no re-fetch);
     otherwise resolves + downloads the HTML, classifies, and discards the text.
 
     `reclassify=True` bypasses that cache reuse so a taxonomy change re-tags
-    already-cached meetings (the text is not stored, so re-classifying re-fetches).
+    already-cached meetings.
+
+    `text_cache` / `from_text_cache` mirror enrich_ocr_meetings.py: the extracted
+    text is stored outside git (opt-in, --text-cache) so a lexicon change can be
+    scored offline, and a from-cache run classifies that stored text instead of
+    re-fetching. A from-cache run never falls back to the network.
     """
     mid = meeting.get('id')
     url, kind = text_source(meeting)
@@ -256,30 +263,47 @@ def enrich_meeting(meeting, cache, reclassify=False):
     if not reclassify and cached and cached.get('textSourceUrl') == url and 'tags' in cached:
         return cached  # unchanged agenda — keep derived tags, skip the fetch
 
-    raw = fetch_agenda_html(url)
-    if raw is None:
-        print('    %s: agenda fetch failed/unpublished (%s) — skipping' % (mid, kind))
-        return cached  # keep any prior derived data rather than dropping the meeting
-
-    # Most instances serve HTML; some (Spalding) return a native PDF from the same
-    # AgendaViewer.php. Detect the PDF and extract its text with poppler/OCR rather
-    # than feeding binary bytes to the HTML stripper (which yields unclassifiable
-    # garbage — the original Spalding "0 topics" bug).
-    if raw[:5] == b'%PDF-':
-        with tempfile.TemporaryDirectory() as tmp:
-            pdf_path = os.path.join(tmp, 'meeting.pdf')
-            with open(pdf_path, 'wb') as f:
-                f.write(raw)
-            text, method = extract_text(pdf_path)
-        # Image-only PDF with OCR unavailable (e.g. a dev run without tesseract):
-        # keep prior tags rather than wiping them to empty. A reclassify still re-tags
-        # every readable PDF.
-        if method == 'none' and cached and cached.get('tags'):
-            return cached
-        if method == 'none':
-            print('    %s: no text extracted (image-only PDF, OCR unavailable)' % mid)
+    # Offline re-tag path: cached text replaces the fetch entirely.
+    text = None
+    if from_text_cache and text_cache is not None:
+        text = text_cache.text_for(slug, mid)
+    if text is not None:
+        method = (text_cache.entry(slug, mid) or {}).get('method') or 'html'
     else:
-        text, method = html_to_text(raw), 'html'
+        if from_text_cache:
+            print('    %s: no cached text — keeping prior tags (no fetch)' % mid)
+            return cached
+
+        raw = fetch_agenda_html(url)
+        if raw is None:
+            print('    %s: agenda fetch failed/unpublished (%s) — skipping' % (mid, kind))
+            return cached  # keep prior derived data rather than dropping the meeting
+
+        # Most instances serve HTML; some (Spalding) return a native PDF from the same
+        # AgendaViewer.php. Detect the PDF and extract its text with poppler/OCR rather
+        # than feeding binary bytes to the HTML stripper (which yields unclassifiable
+        # garbage — the original Spalding "0 topics" bug).
+        if raw[:5] == b'%PDF-':
+            with tempfile.TemporaryDirectory() as tmp:
+                pdf_path = os.path.join(tmp, 'meeting.pdf')
+                with open(pdf_path, 'wb') as f:
+                    f.write(raw)
+                text, method = extract_text(pdf_path)
+            # Image-only PDF with OCR unavailable (e.g. a dev run without tesseract):
+            # keep prior tags rather than wiping them to empty. A reclassify still
+            # re-tags every readable PDF.
+            if method == 'none' and cached and cached.get('tags'):
+                return cached
+            if method == 'none':
+                print('    %s: no text extracted (image-only PDF, OCR unavailable)' % mid)
+        else:
+            text, method = html_to_text(raw), 'html'
+
+        # Granicus agendas are never combined packets, so nothing is trimmed here.
+        if text_cache is not None and method != 'none':
+            text_cache.record(slug, mid, text, method=method, source_url=url,
+                              date=meeting.get('date'), body=meeting.get('body'),
+                              title=meeting.get('title'))
 
     tags = classify(text)
     terms = matched_terms(text)
@@ -320,7 +344,8 @@ def recent_meetings(meetings, since, limit):
     return dated[:limit]
 
 
-def enrich_place(place, cfg, since, limit, reclassify=False):
+def enrich_place(place, cfg, since, limit, reclassify=False, text_cache=None,
+                 from_text_cache=False):
     """Enrich one Granicus place: write its sidecar, return its flag entry.
 
     Returns None to leave the place's committed data untouched — no meetings file
@@ -343,7 +368,10 @@ def enrich_place(place, cfg, since, limit, reclassify=False):
     # Per-MEETING boundary: one unreadable document costs one meeting, not this
     # place's whole window, and a meeting that raises keeps its cached tags.
     enriched, lost = run_meetings(
-        slug, window, lambda m: enrich_meeting(m, cache, reclassify=reclassify),
+        slug, window,
+        lambda m: enrich_meeting(m, cache, reclassify=reclassify, slug=slug,
+                                 text_cache=text_cache,
+                                 from_text_cache=from_text_cache),
         cache=cache)
 
     # Guard like generate/validate: never overwrite a good sidecar with nothing.
@@ -381,17 +409,36 @@ def main():
                     help='ignore the incremental cache and re-fetch every meeting '
                          'in the window — use once after a taxonomy change so already-'
                          'cached meetings pick up new subject keywords')
+    ap.add_argument('--text-cache', metavar='DIR',
+                    help='also store each document\'s extracted text under DIR '
+                         '(gitignored, never committed) to build the offline corpus '
+                         'that scripts/score_topic_lexicon.py measures against')
+    ap.add_argument('--from-text-cache', action='store_true',
+                    help='classify from --text-cache instead of fetching. With '
+                         '--reclassify this re-tags the whole history offline after '
+                         'a taxonomy change, with no fetches; meetings absent from '
+                         'the cache keep their prior tags')
     args = ap.parse_args()
+
+    if args.from_text_cache and not args.text_cache:
+        ap.error('--from-text-cache needs --text-cache DIR to read from')
 
     since = (datetime.now(timezone.utc) - timedelta(days=30 * args.months)).strftime('%Y-%m-%d')
 
     # One place's failure is contained to that place, and local-flags.json is
     # written as each place finishes — see lib/enrich_runner.py for the run this
     # cost us.
+    # Writable only when we are the ones fetching: a --from-text-cache run reads
+    # the corpus and must not half-populate it.
+    text_cache = open_cache(args.text_cache, writable=not args.from_text_cache)
     done, failed = run_places(
         granicus_places(args.slug), DATA_DIR,
         lambda place, cfg: enrich_place(place, cfg, since, args.limit,
-                                        reclassify=args.reclassify))
+                                        reclassify=args.reclassify,
+                                        text_cache=text_cache,
+                                        from_text_cache=args.from_text_cache))
+    if text_cache is not None and text_cache.flush():
+        print('text cache: %s' % text_cache.stats())
     sys.exit(report(done, failed, DATA_DIR))
 
 

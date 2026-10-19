@@ -26,6 +26,7 @@ from datetime import datetime, timedelta, timezone
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.legistar import fetch_events, fetch_event_items, fetch_rollcalls  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
+from lib.text_cache import open_cache  # noqa: E402
 from lib.meeting_topics import (  # noqa: E402
     LAND_USE, classify, matched_terms, topic_flags, build_summary, flag_entry,
     topic_excerpts,
@@ -81,15 +82,32 @@ def legistar_places(slug=None):
     return out
 
 
-def enrich_event(client, e):
+def enrich_event(client, e, slug=None, text_cache=None):
+    """Classify one Legistar event's agenda items.
+
+    `text_cache` (opt-in, --text-cache) stores this event's item text in the offline
+    corpus so scripts/score_topic_lexicon.py measures the Legistar places too, rather
+    than reporting coverage over the PDF places alone.
+
+    There is deliberately NO --from-text-cache counterpart here. The other two
+    enrichers need one because re-tagging their history means re-downloading and
+    re-OCRing PDFs; this enricher keeps no incremental cache at all (see load_cache)
+    and re-reads every event in the window from a structured, cheap API on every
+    run, so a taxonomy change already re-tags these places for free. Classifying a
+    joined blob from the cache would also be WRONG here: production classifies each
+    item separately, which is what makes per-item topic counts, land-use records and
+    roll-call votes possible — a single joined text would flatten all three.
+    """
     items = fetch_event_items(client, e.get('EventId'))
     topics = {}
     terms = set()
+    blobs = []
     excerpts = {}          # {tag: {term, excerpt}} — first matching item per tag
     land_use_items = []
     for it in items:
         name = _clean(it.get('EventItemTitle') or it.get('EventItemMatterName') or '')
         blob = ' '.join(filter(None, [name, it.get('EventItemMatterType') or '']))
+        blobs.append(blob)
         tags = classify(blob)
         terms.update(matched_terms(blob))
         # Excerpt is the matching agenda item's own text (structured, so no OCR /
@@ -136,6 +154,15 @@ def enrich_event(client, e):
     dc_items = [{'title': it['title'], 'date': date, 'sourceUrl': source_url}
                 for it in land_use_items if 'data-center' in it['tags']]
 
+    # Corpus row for offline scoring: the event's item text, newline-joined. Scoring
+    # asks which terms fire over a meeting's words, and that is preserved by the
+    # join; the per-item structure that production needs is not, which is why this
+    # text is never read back to re-tag (see the docstring).
+    if text_cache is not None and blobs:
+        text_cache.record(slug, e.get('EventId'), '\n'.join(blobs),
+                          method='legistar', source_url=source_url, date=date,
+                          body=e.get('EventBodyName'))
+
     return {
         'eventId': e.get('EventId'),
         'date': date,
@@ -171,7 +198,7 @@ def load_cache(slug):
     return {m['eventId']: m for m in prior.get('meetings', []) if m.get('eventId')}
 
 
-def enrich_place(place, client, since, limit):
+def enrich_place(place, client, since, limit, text_cache=None):
     """Enrich one Legistar place: write its sidecar, return its flag entry.
 
     Returns None to leave the place's committed data untouched (nothing in the
@@ -186,7 +213,8 @@ def enrich_place(place, client, since, limit):
     # Per-MEETING boundary: one event whose items or roll calls raise costs that
     # event, not this place's whole window, and it falls back to its prior record.
     enriched, lost = run_meetings(
-        slug, events, lambda e: enrich_event(client, e),
+        slug, events,
+        lambda e: enrich_event(client, e, slug=slug, text_cache=text_cache),
         meeting_id=lambda e: e.get('EventId'), cache=load_cache(slug))
 
     # Guard like the other steps: never overwrite a good sidecar / good flags
@@ -222,6 +250,13 @@ def main():
     ap.add_argument('--slug', help='one place (default: all Legistar places)')
     ap.add_argument('--limit', type=int, default=25, help='recent meetings to enrich')
     ap.add_argument('--months', type=int, default=8, help='look-back window')
+    ap.add_argument('--text-cache', metavar='DIR',
+                    help='also store each event\'s agenda-item text under DIR '
+                         '(gitignored, never committed) so the offline corpus that '
+                         'scripts/score_topic_lexicon.py measures covers the Legistar '
+                         'places too. There is no --from-text-cache here: this '
+                         'enricher re-reads every event from the API on each run, so '
+                         'a taxonomy change already re-tags these places for free')
     args = ap.parse_args()
 
     since = (datetime.now(timezone.utc) - timedelta(days=30 * args.months)).strftime('%Y-%m-%d')
@@ -230,9 +265,13 @@ def main():
     # One place's failure is contained to that place, and local-flags.json is
     # written as each place finishes — see lib/enrich_runner.py for the run this
     # cost us.
+    text_cache = open_cache(args.text_cache, writable=True)
     done, failed = run_places(
         legistar_places(args.slug), OUT_DIR,
-        lambda place, client: enrich_place(place, client, since, args.limit))
+        lambda place, client: enrich_place(place, client, since, args.limit,
+                                           text_cache=text_cache))
+    if text_cache is not None and text_cache.flush():
+        print('text cache: %s' % text_cache.stats())
     sys.exit(report(done, failed, OUT_DIR))
 
 

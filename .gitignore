@@ -114,3 +114,10 @@ assets/data/ga-bills-untagged-review.csv
 # Inline-execution ledger for a plan under Roadmap/ (scratch; recoverable from git log).
 .superpowers/
 assets/data/entity-urls.json
+
+# Offline corpus of extracted meeting text (scripts/lib/text_cache.py), built by
+# .github/workflows/populate-meeting-text-cache.yml and read by
+# scripts/score_topic_lexicon.py and `--from-text-cache`. Derived and rebuildable
+# from the public source URLs, ~32 MB of agenda text that must never enter git —
+# the same git-bloat rule the enrichers follow by discarding text after classifying.
+.cache/

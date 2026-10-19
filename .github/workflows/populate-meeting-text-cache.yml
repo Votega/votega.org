@@ -1,0 +1,134 @@
+name: Populate meeting-text cache (diagnostic)
+
+# Builds the OFFLINE CORPUS that scripts/score_topic_lexicon.py measures a keyword
+# lexicon against, and that `--from-text-cache` re-tags the history from.
+#
+# WHY A SEPARATE WORKFLOW. The enrichers classify each agenda at fetch time and
+# discard the text — right for the repo (agenda packets are large and churn) and
+# wrong for iteration, because a keyword added to lib/meeting_topics.py then cannot
+# be measured against the documents we have already read. This run pays the ~800
+# fetches ONCE and publishes the extracted text as an artifact, after which keyword
+# scoring and full re-tagging are local, free and offline.
+#
+# NOTHING IS COMMITTED. The job writes no git changes: the text cache is uploaded as
+# a build artifact only. A --reclassify pass does rewrite the enriched sidecars on
+# the runner's checkout, and those rewrites are deliberately left on the floor — a
+# tag change belongs in a reviewed commit from update-local-government.yml, not in a
+# cache-population run. Manual only.
+on:
+  workflow_dispatch:
+    inputs:
+      months:
+        description: 'Look-back window in months (raise to reach older meetings)'
+        required: false
+        default: '12'
+      limit:
+        description: 'Meetings per place'
+        required: false
+        default: '40'
+      slug:
+        description: 'One place slug only (blank = every place)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  populate:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 120   # ~800 PDF fetches, some with an OCR fallback
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      # Same tools as update-local-government.yml: pdftotext does the work,
+      # tesseract is the scanned-PDF fallback so image-only agendas still classify.
+      - name: Install PDF text tools
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils tesseract-ocr
+
+      # Restoring a prior cache makes a re-run incremental: content-addressed blobs
+      # already present are not rewritten, and only documents new since the last
+      # populate cost a fetch. restore-keys falls back to the newest older cache.
+      - name: Restore prior text cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/meeting-text
+          key: meeting-text-${{ github.run_id }}
+          restore-keys: |
+            meeting-text-
+
+      # --reclassify is what reaches BACK over already-enriched meetings: without it
+      # the committed sidecar is treated as an incremental cache and unchanged
+      # agendas are never re-downloaded, so the corpus would only ever hold
+      # documents new since the last ordinary run.
+      - name: Populate from PDF-platform places
+        continue-on-error: true
+        run: |
+          python scripts/enrich_ocr_meetings.py --reclassify \
+            --text-cache .cache/meeting-text \
+            --months "${{ inputs.months || '12' }}" \
+            --limit "${{ inputs.limit || '40' }}" \
+            ${{ inputs.slug && format('--slug {0}', inputs.slug) || '' }}
+
+      - name: Populate from Granicus places
+        continue-on-error: true
+        run: |
+          python scripts/enrich_granicus_meetings.py --reclassify \
+            --text-cache .cache/meeting-text \
+            --months "${{ inputs.months || '12' }}" \
+            --limit "${{ inputs.limit || '40' }}" \
+            ${{ inputs.slug && format('--slug {0}', inputs.slug) || '' }}
+
+      # Legistar has no --from-text-cache counterpart (it re-reads every event from
+      # a cheap structured API on each run), but its text still belongs in the
+      # corpus so scoring covers Fulton/DeKalb instead of the PDF places alone.
+      - name: Populate from Legistar places
+        continue-on-error: true
+        run: |
+          python scripts/enrich_legistar_meetings.py \
+            --text-cache .cache/meeting-text \
+            --months "${{ inputs.months || '12' }}" \
+            ${{ inputs.slug && format('--slug {0}', inputs.slug) || '' }}
+
+      - name: Corpus size
+        run: |
+          du -sh .cache/meeting-text || true
+          python - <<'PY'
+          import json, os
+          p = '.cache/meeting-text/manifest.json'
+          e = json.load(open(p))['entries'] if os.path.exists(p) else {}
+          print('%d documents, %d places, %.1f MB of text'
+                % (len(e), len({k.split('/', 1)[0] for k in e}),
+                   sum(v.get('chars') or 0 for v in e.values()) / 1e6))
+          PY
+
+      # The report every populate run should leave behind: which keywords earn their
+      # place, and whether the shipped lexicon still agrees with the committed
+      # sidecars. On an unedited lexicon both verdict-change lists should be empty —
+      # a non-empty one here means the corpus and the committed tags have diverged.
+      - name: Score the shipped lexicon (report only)
+        continue-on-error: true
+        run: |
+          for topic in alpr data-center land-use; do
+            echo "### $topic"
+            python scripts/score_topic_lexicon.py --topic "$topic" \
+              --cache .cache/meeting-text || true
+          done
+
+      - name: Upload text cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: meeting-text-cache
+          path: .cache/meeting-text
+          retention-days: 30
+          if-no-files-found: error
