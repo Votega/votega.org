@@ -105,6 +105,16 @@ def _agendapub(m, page, blob=None):
     return {'platform': 'agendapub', 'agendas_url': _origin(m.group(0))}
 
 
+def _agendaplus(m, page, blob=None):
+    # AgendaPlus is a static-HTML publisher: the list lives at
+    # <origin>/publishing/ap-agendas.html. The page you fed in may be the city's
+    # own site (which just links the portal), so rebuild from the matched URL's
+    # origin only when the match is a portal URL; otherwise use the page itself.
+    if '/publishing/' in page:
+        return {'platform': 'agendaplus', 'agendas_url': page}
+    return None
+
+
 def _revize(m, page, blob=None):
     # Revize is a CMS, not a portal: the page you fed in IS the agendas page, and
     # lib.revize harvests its PDF links. Reuse that URL as agendas_url and the
@@ -145,6 +155,9 @@ SIGNATURES = [
     ('iqm2', re.compile(r'https?://[a-z0-9-]+\.iqm2\.com/Citizens/[^"\'\s<>]*', re.I), _iqm2),
     ('primegov', re.compile(r'https?://[a-z0-9-]+\.primegov\.com[^"\'\s<>]*', re.I), _primegov),
     ('agendapub', re.compile(r'https?://agendapub\.[a-z0-9.-]+', re.I), _agendapub),
+    # AgendaPlus: the "Powered by AgendaPlus" footer / /publishing/ap-agendas.html.
+    # Only accepted when the page we're ON is the /publishing/ list (see extractor).
+    ('agendaplus', re.compile(r'agendaplus\.org|ap-agendas\.html', re.I), _agendaplus),
     ('teammunicode', re.compile(r'https?://[a-z0-9-]+\.(?:teammunicode\.com|municodemeetings\.com)[^"\'\s<>]*', re.I), _teammunicode),
     # Revize is a CMS fingerprint (checked last, so any embedded third-party portal
     # above wins). lib.revize scrapes the page's own agenda/minutes PDF links.
