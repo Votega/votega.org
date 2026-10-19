@@ -116,7 +116,8 @@ def fetch_meetings(cfg):
         return fetch_legistar_meetings(cfg['client'])
     if platform == 'teammunicode':
         return fetch_teammunicode_meetings(cfg['base_url'].rstrip('/'),
-                                           meetings_path=cfg.get('meetings_path', '/meetings'))
+                                           meetings_path=cfg.get('meetings_path', '/meetings'),
+                                           max_pages=cfg.get('max_pages', 1))
     if platform == 'primegov':
         return fetch_primegov_meetings(cfg['base_url'].rstrip('/'))
     if platform == 'granicus':

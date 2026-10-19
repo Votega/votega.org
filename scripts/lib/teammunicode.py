@@ -24,10 +24,13 @@ Import from a generator in scripts/ (sys.path[0] is scripts/):
 """
 
 import re
+import time
 from datetime import date, timezone, datetime
 
 from lib.http import fetch_bytes
 
+PAGE_DELAY = 1.5  # seconds between pager requests; the host captcha-challenges bursts
+_CHALLENGE_RE = re.compile(r'HAProxy Challenge|g-recaptcha', re.I)
 _TAG_RE = re.compile(r'<[^>]+>')
 # Flat table rows; a meeting row is one that carries a calendar date.
 _ROW_RE = re.compile(r'<tr[^>]*>.*?</tr>', re.S | re.I)
@@ -110,7 +113,8 @@ def parse_meetings(html):
     return meetings
 
 
-def fetch_teammunicode_meetings(base_url, meetings_path='/meetings', timeout=30):
+def fetch_teammunicode_meetings(base_url, meetings_path='/meetings', timeout=30,
+                                max_pages=1):
     """Fetch and parse a county's Municode meetings table.
 
     `meetings_path` is the path of the meetings view on this instance. The two
@@ -119,17 +123,50 @@ def fetch_teammunicode_meetings(base_url, meetings_path='/meetings', timeout=30)
     the site root (Walton) — set meetings_path: "/" for those. Same Drupal-view
     markup either way, so only the URL differs.
 
-    Returns (meetings, bodies_seen), or (None, None) if the page could not be
+    `max_pages` walks the view's pager (`?page=N`, 25 rows a page, newest first).
+    The default of 1 reads only the first page, which is all a small county needs
+    but is a WINDOW, not an archive, on a busy one: Augusta-Richmond's front page
+    is seven weeks of meetings (25 rows) with the rest, back to 2009, behind
+    "View Additional Meetings". A page past the end renders an empty table rather
+    than a 404, so the walk stops at the first page with no meeting rows. Keep it
+    SHORT (Augusta uses 8, ~15 months): a burst of requests trips the host's HAProxy
+    captcha, which answers 200 with a challenge page - detected and treated as a
+    failed fetch, never as the end of the archive. Adjacent
+    pages overlap by a row or two at the seam; parse_meetings' key dedupe absorbs it.
+
+    Returns (meetings, bodies_seen), or (None, None) if the first page could not be
     fetched — the caller decides whether a fetch failure should abort (it should:
-    never overwrite good data with nothing)."""
+    never overwrite good data with nothing). A later page that fails ALSO returns
+    (None, None) rather than the pages gathered so far: a truncated archive is
+    indistinguishable from a real one once written."""
     path = meetings_path or '/'
     if not path.startswith('/'):
         path = '/' + path
     url = base_url.rstrip('/') + path
-    raw = fetch_bytes(url, label='%s meetings' % base_url, timeout=timeout)
-    if raw is None:
-        return None, None
-    html = raw.decode('utf-8', errors='replace')
-    meetings = parse_meetings(html)
+    sep = '&' if '?' in url else '?'
+
+    meetings, seen = [], set()
+    for page in range(max(1, int(max_pages))):
+        page_url = url if page == 0 else '%s%spage=%d' % (url, sep, page)
+        raw = fetch_bytes(page_url, label='%s meetings p%d' % (base_url, page),
+                          timeout=timeout)
+        if raw is None:
+            return None, None
+        html = raw.decode('utf-8', errors='replace')
+        if page > 0 and not _DATE_RE.search(html):
+            if _CHALLENGE_RE.search(html):
+                # Rate-limited: HTTP 200 with a captcha page. NOT the end of the
+                # table, and not something to work around - give up, keep old data.
+                print('  %s: bot challenge on page %d; stopping' % (base_url, page))
+                return None, None
+            break  # past the last page: an empty table, not an error
+        if page > 0:
+            time.sleep(PAGE_DELAY)
+        for rec in parse_meetings(html):
+            key = (rec['body'], rec['date'], rec['id'])
+            if key not in seen:
+                seen.add(key)
+                meetings.append(rec)
+    meetings.sort(key=lambda x: (x['date'], x['id']), reverse=True)
     bodies_seen = sorted({m['body'] for m in meetings})
     return meetings, bodies_seen

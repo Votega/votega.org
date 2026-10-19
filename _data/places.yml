@@ -161,19 +161,32 @@
 places:
   - slug: augusta
     name: Augusta-Richmond County
-    type: county
+    type: consolidated
     fips: "13245"
     parentCounty: null
     region: East Georgia                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/appling/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: wordpress
-        base_url: https://www.augustaga.gov/652/Augusta-Commission
-        agendas_url: "https://augustarichmond-ga.municodemeetings.com/"            
+        # Municode Meetings (<sub>.municodemeetings.com, Drupal) - lib/teammunicode.py.
+        # `body` is the section CODE from each meeting's detail link, so body_map keys on
+        # codes. The front page is only ~7 weeks (25 rows); the rest sits behind a pager,
+        # hence max_pages (~4 pages/year, so 8 ~= 15 months). Keep it SHORT and don't
+        # raise it casually: bursts trip the host's HAProxy captcha (the adapter sleeps
+        # between pages and treats a challenge as a failed fetch).
+        # Dropped: bc-pac (Pension and Audit - administrative, 1 meeting).
+        # Minutes are rarely posted on this portal (2 of ~300 rows) - expected.
+        platform: teammunicode
+        base_url: "https://augustarichmond-ga.municodemeetings.com"
+        meetings_path: "/"
+        max_pages: 8
+        agendas_url: "https://augustarichmond-ga.municodemeetings.com/"
+        body_map:
+          - { match: "bc-commission", label: "Augusta Commission" }
+          - { match: "bc-asc", label: "Administrative Services Committee" }
+          - { match: "bc-esc", label: "Engineering Services Committee" }
+          - { match: "bc-fc", label: "Finance Committee" }
+          - { match: "bc-psac", label: "Public Safety Committee" }
+          - { match: "bc-psec", label: "Public Services Committee" }
         schedule:
           - body: Augusta Commission
             when: "1st and 3rd Tuesday of every month, 2:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
