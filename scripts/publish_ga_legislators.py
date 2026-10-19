@@ -57,12 +57,47 @@ from lib.votes_schema import member_votes_map
 REPO = "Votega/ga-legislators"
 TOKEN_ENV = "GA_LEGISLATORS_TOKEN"
 SCHEMA_VERSION = "1.0.0"
+#: Base for every published schema's $id. Each schema appends the path it is
+#: actually written to, via schema_url().
+RAW_BASE = "https://raw.githubusercontent.com/Votega/ga-legislators/main"
 
 SRC_MEMBERS = "assets/data/ga-members.json"
 SRC_VOTES = "assets/data/ga-member-votes.json"
 SRC_SCORECARD = "assets/data/ga-party-unity.json"
 
 DEPARTED = {"Resigned", "Removed", "Deceased"}
+
+#: Prose for each schema's `schemaStability`, keyed by the artifact it describes.
+#: Says what a consumer may rely on, and names the fields that are documented but
+#: NOT required so nobody has to discover the distinction by validating.
+STABILITY = {
+    "members":
+        "Stable field names and meanings. Described in 1.0.0: metadata.session, "
+        "metadata.legisSessionId and metadata.generatedAt, plus a trailing `session` "
+        "column on members.csv. metadata.session is present from the 2026-10 "
+        "legis.ga.gov migration onward and ABSENT in snapshots taken before it, so it "
+        "is documented but not `required` — every roster published since that "
+        "migration carries it, and the publisher refuses to emit one that does not.",
+    "votes":
+        "Stable field names and meanings. `bill` and `billUrl` are null on procedural "
+        "roll calls that are attached to no measure; `chamber` is published because it "
+        "cannot be re-derived from the motion text.",
+    "scorecard":
+        "Stable field names and meanings. partyUnity and independenceRate are null for "
+        "a member with too few eligible votes to score.",
+}
+
+
+def schema_url(path):
+    """The canonical $id for a schema published at `path` in the sibling repo.
+
+    Each written file declares the path it actually lives at. They used to share
+    one hardcoded $id apiece, so every session's votes.schema.json claimed to be
+    `sessions/votes.schema.json` -- a URL no file occupies -- and the frozen
+    roster's copy claimed to be the live `data/members.schema.json`. Two
+    documents under one $id is a resolver cache away from serving the wrong one.
+    """
+    return f"{RAW_BASE}/{path}"
 
 
 def sitting_legislators(members):
@@ -162,10 +197,12 @@ def roster_md(legislators, meta, session=None):
     return ("\n".join(L) + "\n").encode()
 
 
-def members_schema():
+def members_schema(schema_path="data/members.schema.json"):
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://raw.githubusercontent.com/Votega/ga-legislators/main/data/members.schema.json",
+        "$id": schema_url(schema_path),
+        "schemaVersion": SCHEMA_VERSION,
+        "schemaStability": STABILITY["members"],
         "title": "Georgia General Assembly — Members",
         "description": "Georgia state legislators, sourced from the General Assembly's own web "
                        "service at legis.ga.gov. NOTE: also includes 4 statewide executives "
@@ -263,7 +300,8 @@ def build_members():
     return {
         "data/all.json": open(SRC_MEMBERS, "rb").read(),
         "data/members.csv": members_csv(legislators, doc.get("metadata", {}).get("session")),
-        "data/members.schema.json": build_json(members_schema()),
+        "data/members.schema.json":
+            build_json(members_schema("data/members.schema.json")),
         "ROSTER.md": roster_md(legislators, doc.get("metadata", {})),
     }
 
@@ -303,10 +341,12 @@ def votes_csv(votes, session):
 # ~1k rows, does ship member-votes.csv.
 
 
-def votes_schema():
+def votes_schema(schema_path):
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://raw.githubusercontent.com/Votega/ga-legislators/main/sessions/votes.schema.json",
+        "$id": schema_url(schema_path),
+        "schemaVersion": SCHEMA_VERSION,
+        "schemaStability": STABILITY["votes"],
         "title": "Georgia General Assembly — Roll-call Votes",
         "description": "Passage votes from the Georgia General Assembly, sourced from its own "
                        "web service at legis.ga.gov. Keyed by vote id in the form "
@@ -432,7 +472,8 @@ def build_votes():
         }
         artifacts[f"{base}/votes.json"] = compact_json(sess_doc)
         artifacts[f"{base}/votes.csv"] = votes_csv(sess_votes, sid)
-        artifacts[f"{base}/votes.schema.json"] = build_json(votes_schema())
+        artifacts[f"{base}/votes.schema.json"] = build_json(
+            votes_schema(f"{base}/votes.schema.json"))
         sessions_index.append({
             "id": sid, "name": session_name(sid), "slug": slug,
             "voteCount": len(sess_votes),
@@ -487,10 +528,12 @@ def scorecard_csv(members, biennium):
     return buf.getvalue().encode()
 
 
-def scorecard_schema():
+def scorecard_schema(schema_path):
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://raw.githubusercontent.com/Votega/ga-legislators/main/sessions/scorecard.schema.json",
+        "$id": schema_url(schema_path),
+        "schemaVersion": SCHEMA_VERSION,
+        "schemaStability": STABILITY["scorecard"],
         "title": "Georgia General Assembly — Voting Scorecard (derived)",
         "description": "Party-unity and participation scores per legislator, DERIVED from "
                        "votes.json + members.json in this repo. Party unity = share of party-line "
@@ -552,7 +595,8 @@ def build_scorecard():
     artifacts = {
         f"{base}/scorecard.json": open(SRC_SCORECARD, "rb").read(),
         f"{base}/scorecard.csv": scorecard_csv(members, meta.get("biennium") or BIENNIUM),
-        f"{base}/scorecard.schema.json": build_json(scorecard_schema()),
+        f"{base}/scorecard.schema.json":
+            build_json(scorecard_schema(f"{base}/scorecard.schema.json")),
     }
     # Root pointer, mirroring latest.json. Uses the source generatedAt (not now())
     # so an unchanged run re-emits byte-identical.
@@ -585,7 +629,8 @@ def build_freeze_roster(slug):
     return {
         f"{base}/members.json": open(SRC_MEMBERS, "rb").read(),
         f"{base}/members.csv": members_csv(legislators, meta.get("session")),
-        f"{base}/members.schema.json": build_json(members_schema()),
+        f"{base}/members.schema.json":
+            build_json(members_schema(f"{base}/members.schema.json")),
         f"{base}/ROSTER.md": roster_md(legislators, meta, session=slug),
     }
 

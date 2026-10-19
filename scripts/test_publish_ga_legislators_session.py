@@ -110,6 +110,38 @@ check("votes.csv ends with session", (v[0][-1], v[1][-1]), ("session", "2026_ss"
 sc = list(csv.reader(io.StringIO(P.scorecard_csv([{"id": "i"}], "2025-2026").decode())))
 check("scorecard.csv ends with biennium", (sc[0][-1], sc[1][-1]), ("biennium", "2025-2026"))
 
+# --- schema identity ------------------------------------------------------- #
+# Every schema must declare the path it is actually written to. They used to share
+# one hardcoded $id apiece: both sessions' votes.schema.json claimed to be
+# `sessions/votes.schema.json`, a URL no file occupies, and the frozen roster's copy
+# claimed to be the live `data/members.schema.json`. Two documents under one $id is a
+# resolver cache away from serving the wrong body.
+written = {}
+for artifacts in (P.build_members(), P.build_votes(), P.build_scorecard(),
+                  P.build_freeze_roster("2025-2026")):
+    for path, blob in artifacts.items():
+        if path.endswith(".schema.json"):
+            written[path] = json.loads(blob)
+
+check("every mode emitted a schema", len(written) >= 4, True)
+for path, doc in sorted(written.items()):
+    check(f"$id matches its path: {path}",
+          doc.get("$id"),
+          f'{getattr(P, "RAW_BASE", "<no RAW_BASE>")}/{path}')
+    check(f"schemaVersion present: {path}",
+          doc.get("schemaVersion"),
+          getattr(P, "SCHEMA_VERSION", "<no SCHEMA_VERSION>"))
+    check(f"schemaStability present: {path}", bool(doc.get("schemaStability")), True)
+
+ids = [d.get("$id") for d in written.values()]
+check("no two schemas share an $id", len(ids), len(set(ids)))
+
+# The stability prose has to say that metadata.session is NOT required and why, or a
+# consumer has no way to learn the guarantee short of reading the publisher.
+members_stability = written["data/members.schema.json"].get("schemaStability", "")
+check("members stability explains the session guarantee",
+      "required" in members_stability and "2026-10" in members_stability, True)
+
 if failures:
     print(f"\n{len(failures)} failure(s)")
     sys.exit(1)
