@@ -52,7 +52,7 @@ from lib.meeting_topics import (  # noqa: E402
     topic_excerpts, agenda_head,
 )
 from lib.enrich_runner import (  # noqa: E402
-    run_places, run_meetings, report, too_lossy, PlaceOutcome,
+    run_places, run_meetings, report, too_lossy, text_regressed, PlaceOutcome,
 )
 from lib.gdrive import drive_download_url  # noqa: E402
 from lib.text_cache import open_cache  # noqa: E402
@@ -232,6 +232,13 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
 
     tags = classify(text)
     terms = matched_terms(text)
+
+    # ... nor with a WORSE reading of the same document — a hybrid PDF read from
+    # its thin text layer where an earlier run OCR'd the scanned body. Checked
+    # after classifying, because the test is whether this reading DROPS findings
+    # the previous one supported, not merely whether it is shorter.
+    if text_regressed(mid, cached, len(text), method, tags):
+        return cached
     # Phase A per-mention excerpts: capture only from the poppler text layer, never
     # OCR (OCR text is non-deterministic → noisy diffs, and garbled → misquotes).
     excerpts = topic_excerpts(text, tags) if method == 'pdftotext' else {}

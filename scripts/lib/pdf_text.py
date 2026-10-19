@@ -22,6 +22,18 @@ import subprocess
 # back to OCR.
 MIN_TEXT_CHARS = 200
 
+# HYBRID PDFs. The document-level floor above is not enough on its own: a packet
+# whose body is scanned images but which carries ONE machine-generated page (a
+# cover sheet, a header, a generated index) clears 200 characters easily, so the
+# whole document was accepted from its text layer and the scanned body — usually
+# the actual agenda items — was never OCR'd. A real case: a Paulding agenda read
+# 7,352 characters as a text layer where OCR of the same PDF had previously found
+# 11,884, and the rezoning and variance items lived only in the part that was
+# skipped. So the decision is also made PER PAGE: when most pages yield almost
+# nothing, the text layer is not representative of the document and OCR is tried.
+MIN_PAGE_CHARS = 60        # a page below this is treated as having no text layer
+MAX_EMPTY_PAGE_RATIO = 0.5  # more than half such pages -> suspect a scanned body
+
 # Guardrails so a pathological PDF can't stall a batch. OCR is the slow path
 # (rasterise + Tesseract per page at 300 DPI), so cap the pages we OCR; a huge
 # machine-generated agenda still extracts fully via the fast pdftotext path.
@@ -40,18 +52,46 @@ def has_ocr():
     return bool(shutil.which('pdftoppm') and shutil.which('tesseract'))
 
 
-def pdftotext(pdf_path):
-    """Extract an embedded text layer with poppler. '' if unavailable/empty."""
+def pdftotext_pages(pdf_path):
+    """The text layer as a LIST OF PAGES. [] if poppler is unavailable or it failed.
+
+    Page breaks are kept (no -nopgbrk) purely so the caller can see the per-page
+    distribution; joining the result reproduces what the old single-string call
+    returned.
+    """
     if not shutil.which('pdftotext'):
-        return ''
+        return []
     try:
-        proc = _run(['pdftotext', '-layout', '-nopgbrk', pdf_path, '-'], _PDFTOTEXT_TIMEOUT)
+        proc = _run(['pdftotext', '-layout', pdf_path, '-'], _PDFTOTEXT_TIMEOUT)
         if proc.returncode == 0:
-            return proc.stdout.decode('utf-8', errors='replace').strip()
+            out = proc.stdout.decode('utf-8', errors='replace')
+            return out.split('\f')
         print('    pdftotext exit %s' % proc.returncode)
     except Exception as exc:  # noqa: BLE001
         print('    pdftotext failed: %s' % exc)
-    return ''
+    return []
+
+
+def pdftotext(pdf_path):
+    """Extract an embedded text layer with poppler. '' if unavailable/empty."""
+    return '\n'.join(pdftotext_pages(pdf_path)).strip()
+
+
+def mostly_empty_pages(pages):
+    """True when most pages carry almost no text — the hybrid-PDF signal.
+
+    A trailing empty element from the final page break is not a page, and a
+    single-page document is never judged this way: one short page is a short
+    document, not a scanned body.
+    """
+    npages = len(pages)
+    # Drop a trailing '' produced by the final form feed.
+    if pages and not pages[-1].strip():
+        npages -= 1
+    if npages < 2:
+        return False
+    empty = sum(1 for p in pages[:npages] if len(p.strip()) < MIN_PAGE_CHARS)
+    return empty > npages * MAX_EMPTY_PAGE_RATIO
 
 
 def ocr_pdf(pdf_path, workdir):
@@ -84,11 +124,20 @@ def extract_text(pdf_path):
     method is 'pdftotext', 'ocr', or 'none'. `pdf_path` points at a PDF already on
     disk (the caller owns the temp file / cleanup).
     """
-    text = pdftotext(pdf_path)
-    if len(text) >= MIN_TEXT_CHARS:
+    pages = pdftotext_pages(pdf_path)
+    text = '\n'.join(pages).strip()
+    # Accept the text layer only when it is both long enough overall AND spread
+    # across the document. A hybrid PDF fails the second test, so it goes to OCR
+    # like any other scanned document.
+    if len(text) >= MIN_TEXT_CHARS and not mostly_empty_pages(pages):
         return text, 'pdftotext'
     workdir = os.path.dirname(pdf_path)
     ocr = ocr_pdf(pdf_path, workdir)
+    # Longer wins: on a hybrid, OCR reads the scanned body AND re-reads the
+    # machine-generated page, so it should come back longer. Where OCR is
+    # unavailable (no tesseract) it returns '' and the text layer is kept — a
+    # partial read beats no read, and the method label still says where it came
+    # from.
     if len(ocr) > len(text):
         return ocr, 'ocr'
     return text, ('pdftotext' if text else 'none')
