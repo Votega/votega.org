@@ -50,8 +50,9 @@ datasets:
       party, committees, and contact — plus each member's passage-vote history
       from the legislature's official roll-call record, joined to the roster on the
       member's roster ID. The primary identity is the General Assembly's own member
-      ID (legisGaGovId); the Open States OCD ID, Wikidata and Ballotpedia ids are
-      nullable cross-references with provenance. Also a derived voting scorecard (party unity + participation)
+      ID (legisGaGovId); the Open States OCD ID and Ballotpedia id are
+      nullable cross-references with provenance. The live roster (data/all.json, data/members.csv,
+      ROSTER.md) is the current biennium only and names it; prior bienniums are under sessions/. Also a derived voting scorecard (party unity + participation)
       for every member.
     source: legis.ga.gov official web service
     scope: 158th General Assembly (2025–2026)
