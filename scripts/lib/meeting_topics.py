@@ -87,18 +87,74 @@ TOPIC_RULES = {
                            # 'cctv' (sewer-line inspection) and 'camera' are too broad.
                            'surveillance camera', 'surveillance technology',
                            'surveillance system', 'surveillance equipment',
+                           # Face recognition stays IN scope: it runs on the camera
+                           # feeds this page already tracks, so it is a camera
+                           # capability rather than separate forensics.
                            'facial recognition', 'face recognition',
                            'real time crime center', 'real-time crime center',
-                           'gunshot detection', 'predictive policing',
-                           'cell site simulator', 'cell-site simulator', 'imsi catcher',
+                           # Gunshot detection. 'gunfire detection' is not a synonym
+                           # we guessed at — it is the phrase a real Columbus agenda
+                           # used for a SoundThinking contract ("a gunfire detection,
+                           # alert, and analysis program"), which this rule matched
+                           # only because the vendor was also named. An unknown
+                           # vendor's contract in the same words was missed outright,
+                           # so the capability net has to carry both spellings.
+                           'gunshot detection', 'gunfire detection',
+                           'gunshot sensor', 'acoustic gunshot',
                            'drone as first responder', 'drone as a first responder',
+                           # ── SCOPE (2026-10) ────────────────────────────────────
+                           # This page covers cameras, plate readers, drones and
+                           # gunshot detection. Deliberately NOT matched, though they
+                           # are surveillance in the broad sense: phone forensics
+                           # ('cellebrite', 'graykey', 'magnet forensics'), phone
+                           # interception ('cell site simulator', 'imsi catcher'),
+                           # data-broker / fusion platforms ('peregrine
+                           # technologies', 'palantir', 'babel street', 'fog data
+                           # science') and records analytics with no sensor of its
+                           # own ('predictive policing'). Each was dropped from this
+                           # rule rather than never added: they were in the 2026-10
+                           # expansion and pulled back when the page's scope was set.
+                           # Re-adding any of them is a scope decision about what the
+                           # page is FOR, not a recall tweak.
+                           #
                            # Surveillance vendors. Narrow brand names only - never a
                            # word that is also a place or a common noun ('clearview'
                            # alone is a street name; 'axon' is tasers/body cams;
                            # 'motorola' is radios).
+                           # ── PRECISION/RECALL POLICY (set 2026-10) ─────────────
+                           # This rule is deliberately RECALL-FAVOURED: false
+                           # positives are tolerated to avoid missing true ones.
+                           # A missed ALPR contract is a story the public never
+                           # learns about; a stray facility-camera item is noise a
+                           # reader can see through in one click to the source. So
+                           # when a term's evidence is genuinely mixed, it stays IN,
+                           # and the bar an ALPR-capable vendor has to clear is
+                           # "this brand sells the capability", not "every match in
+                           # today's corpus was a clean purchase".
+                           #
+                           # 'avigilon' is kept on exactly that basis: it ships LPR
+                           # analytics and sits in the Motorola Solutions portfolio
+                           # alongside Vigilant. Measured note, not an argument
+                           # against it: in the 1220-document corpus its 5 matches
+                           # were all Comcast-resold "Eagle Eye Avigilon video
+                           # management" for the Douglas County landfill, so expect
+                           # facility-security items on the page from it. 'verkada'
+                           # is kept for the same reason (it ships LPR too) despite
+                           # matching nothing yet.
+                           #
+                           # The policy does NOT rescue a term that matches a
+                           # PROHIBITION. 'hikvision' and 'dahua' are out because
+                           # 100% of their matches were NDAA s.889 boilerplate
+                           # ("shall not procure equipment produced by ... Hangzhou
+                           # Hikvision ... or Dahua Technology Company") — a
+                           # certification that the government does NOT buy the gear.
+                           # That is not a tolerable false positive trading against
+                           # a true one; in this corpus there was no true one to
+                           # catch, so the term is pure noise with no upside. Revisit
+                           # if a place is ever seen debating REMOVAL of such gear,
+                           # which would be a real surveillance-policy item.
                            'fusus', 'shotspotter', 'soundthinking', 'clearview ai',
-                           'avigilon', 'verkada', 'hikvision', 'dahua', 'cellebrite',
-                           'peregrine technologies'],
+                           'avigilon', 'verkada'],
 }
 
 # Keywords that must match as WHOLE WORDS, not substrings — same tag semantics as
@@ -153,10 +209,9 @@ ALPR_VENDOR_LABELS = {
     'clearview ai':       'Clearview AI',
     'avigilon':           'Avigilon (Motorola)',
     'verkada':            'Verkada',
-    'hikvision':          'Hikvision',
-    'dahua':              'Dahua',
-    'cellebrite':         'Cellebrite',
-    'peregrine technologies': 'Peregrine Technologies',
+    # No 'cellebrite' / 'peregrine technologies' here: both left this page's scope
+    # (see the SCOPE note in TOPIC_RULES). A label without its keyword fails the
+    # contract test either way.
 }
 
 # The spelled-out capability phrases that, on their own, are unambiguous enough to

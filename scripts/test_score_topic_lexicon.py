@@ -42,10 +42,18 @@ try:
     root = os.path.join(tmp, 'corpus')
     w = open_cache(root, writable=True)
 
-    # Baseline says alpr, but the text's only surveillance phrase is "gunfire
-    # detection" — real language from a Columbus SoundThinking contract that the
-    # lexicon does NOT carry. This is the recall-loss bucket.
-    w.record('bibb', '1', 'To authorize a gunfire detection and alert program.')
+    # Baseline says alpr, but the text's only surveillance term is Cellebrite —
+    # phone forensics, deliberately OUT of this page's scope (cameras, plates,
+    # drones, gunshot detection) since 2026-10. This is the verdict-change bucket a
+    # REMOVAL produces: the sidecar still carries a tag the current lexicon no
+    # longer grants, until history is re-tagged.
+    #
+    # This fixture used to be "gunfire detection", on the premise that the lexicon
+    # did not carry it. It now does — that gap was the first thing this scorer found,
+    # and fixing it broke this test, which is the test doing its job. Keep the
+    # fixture on a term that is out of scope BY DECISION, not one merely missing,
+    # or this test fails again the next time recall is widened.
+    w.record('bibb', '1', 'Cellebrite Premium license renewal for the crime lab.')
     # Baseline says nothing; the text names Flock. This is the new-match bucket.
     w.record('bibb', '2', 'Approve agreement with Flock Safety for cameras.')
     # Clean both ways.
@@ -106,7 +114,7 @@ try:
     check('one document would stop matching', 'stopped         1' in out, True)
     check('the stopped row is named', 'bibb/1' in out.split('WOULD STOP MATCHING')[1],
           True)
-    check('the gunfire-detection gap is visible as lost recall',
+    check('a removed term shows up as a verdict change',
           'A narrowed or removed' in out, True)
 
     # nowhere/6 has no sidecar row, so it is neither newly-matching nor stopped.

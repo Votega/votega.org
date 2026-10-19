@@ -47,17 +47,36 @@ MUST_FIRE = [
     'mobile plate scanner for patrol vehicles',
     # surveillance, beyond plate reading
     'Resolution on surveillance technology and community oversight',
+    # Facility surveillance is IN scope (decided 2026-10, against the reviewer's
+    # own recommendation to drop it — recorded here so it is not silently reverted).
+    # A county wiring video surveillance across its buildings is still government
+    # surveillance. Note the tension with 'security camera at the library' below,
+    # which stays OUT: the line drawn is evidence quality, not subject matter — a
+    # self-describing phrase ("video surveillance equipment") is evidence of
+    # surveillance, where a bare 'camera' or a generic VMS brand name only says a
+    # vendor was paid and leaves you to assume what for.
+    'the current provider of the access control, security, and video surveillance '
+    'equipment in use in county governmental properties',
+    '243AG Jail Projects Surveillance Equipment (2,113.51)',
+    '911 COMMUNICATIONS SURVEILLANCE EQUIPMENT (72,500.00)',
     'purchase of surveillance cameras for the downtown corridor',
     'facial recognition software for the police department',
     'Real-Time Crime Center (RTCC) buildout',
     'Real Time Crime Center',
     'ShotSpotter gunshot detection renewal',
     'SoundThinking subscription',
-    'Fusus integration', 'Verkada camera licenses', 'Hikvision cameras ban',
-    'Avigilon appearance search', 'Cellebrite phone extraction licenses',
-    'Clearview AI contract', 'cell-site simulator policy',
-    'Peregrine Technologies platform', 'predictive policing pilot',
+    'Fusus integration',
+    'Clearview AI contract',
     'drone as first responder pilot program',
+    # Gunshot detection, both spellings. "gunfire detection" is the phrasing a real
+    # Columbus agenda used for a SoundThinking contract; before it was added, that
+    # meeting matched only because the vendor was named too, so the same contract
+    # from an unknown vendor was missed. The other two cover the capability without
+    # either brand.
+    'a gunfire detection, alert, and analysis program',
+    'gunfire detection system for the Phase II coverage area',
+    'acoustic gunshot sensors downtown',
+    'gunshot sensor maintenance agreement',
 ]
 
 MUST_NOT_FIRE = [
@@ -75,6 +94,34 @@ MUST_NOT_FIRE = [
     'the plate glass window replacement',
     'lprint', 'helpr', 'rtccx',                                # acronyms are whole-word only
     'drone survey of the landfill',
+    # ── Out of scope (2026-10) ───────────────────────────────────────────────────
+    # This page covers cameras, plate readers, drones and gunshot detection. These
+    # are surveillance in the broad sense and were carried by the 2026-10 expansion,
+    # then pulled back when the scope was set — so they are pinned QUIET here, not
+    # merely absent, to record that the silence is a decision. Re-adding any of them
+    # is a scope decision about what the page is for, and will fail this test first.
+    'Cellebrite phone extraction licenses',                    # phone forensics
+    'GrayKey unlock subscription',
+    'Magnet Forensics license renewal',
+    'cell-site simulator policy',                              # phone interception
+    'cell site simulator deployment', 'IMSI catcher disclosure',
+    'Peregrine Technologies platform',                         # data fusion
+    'Palantir Gotham contract', 'Babel Street subscription',
+    'Fog Data Science renewal',
+    'predictive policing pilot',                               # records analytics
+    # ── Measured against the 1220-doc corpus (2026-10) ──────────────────────────
+    # Each of these was a keyword until the corpus showed what it actually matched.
+    # NDAA s.889 boilerplate: contract packets certify the government does NOT buy
+    # this equipment, so the brand name marks a prohibition, not a purchase. It was
+    # 100% of what 'hikvision'/'dahua' matched.
+    'shall not procure equipment produced by Hangzhou Hikvision Digital Technology '
+    'Company, or Dahua Technology Company',
+    'Hikvision cameras ban',
+    # Not ALPR vendors: general-purpose VMS brands that ship no plate-reading
+    # capability. The recall-favoured policy keeps an ALPR-CAPABLE brand in even on
+    # mixed evidence, but it does not make every camera brand a keyword.
+    'Milestone XProtect license renewal', 'Eagle Eye Networks cloud VMS',
+    'Spot AI camera analytics trial',
 ]
 
 for t in MUST_FIRE:
