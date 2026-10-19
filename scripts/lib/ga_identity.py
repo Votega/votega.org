@@ -6,8 +6,11 @@ Every other identifier is an ADDITIVE slot that lands whenever it arrives and is
 load-bearing for identity:
 
     ocdPersonId   Open States' person id (OCD-shaped or null — never anything else)
-    wikidataId    Wikidata item (Q-number)
     ballotpediaId Ballotpedia page title
+
+(There is deliberately no wikidataId slot: no source we read carries one, so it shipped
+on every member and was never populated. Add it back with the first source that has it,
+not before.)
 
 The roster's own `id` is a different thing again: an OPAQUE HANDLE — "the stable string
 this member was first assigned, which never changes and which nothing may parse or
@@ -33,9 +36,8 @@ import re
 #: Exactly the shape Open States issues. A slot contracted to hold an OCD id rejects
 #: anything else — including the roster's own `legis-<id>` handle.
 OCD_RE = re.compile(r'^ocd-person/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
-WIKIDATA_RE = re.compile(r'^Q[1-9]\d*$')
 
-SLOTS = ("ocdPersonId", "wikidataId", "ballotpediaId")
+SLOTS = ("ocdPersonId", "ballotpediaId")
 
 OPENSTATES_SOURCE = "openstates/people (CC0 1.0)"
 CARRIED_SOURCE = "Open States (carried in the roster id since before 2026-10)"
@@ -103,9 +105,7 @@ def resolve_slots(member, entry):
 
     for slot in SLOTS:
         value = entry.get(slot)
-        valid = (is_ocd_id(value) if slot == "ocdPersonId"
-                 else bool(WIKIDATA_RE.match(value)) if slot == "wikidataId" and value
-                 else bool(value))
+        valid = is_ocd_id(value) if slot == "ocdPersonId" else bool(value)
         if value and valid:
             values[slot] = value
             prov[slot] = eprov.get(slot) or _prov("authoritative", OPENSTATES_SOURCE, "high")
@@ -119,10 +119,88 @@ def resolve_slots(member, entry):
     return values, prov
 
 
-def apply_identity_slots(members, sidecar):
+PINS_FIELD = "pinSlots"
+PINS_SOURCE = "assets/data/id-crosswalk-overrides.json"
+
+#: Where a human goes to resolve an ambiguity, by the provenance key it sits on.
+PIN_REMEDY = (f"add `\"{PINS_FIELD}\": {{\"<slot>\": \"<value>\"}}` plus a `_note` to the person's entry in "
+              f"{PINS_SOURCE} (keyed by roster id)")
+FILING_REMEDY = (f"pin `peachfileFilerEntityId` (or `peachfileNoFiling`) in {PINS_SOURCE}, "
+                 f"or resolve it in ga-campaign-finance-overrides.json")
+REMEDIES = {
+    "ballotpediaId": PIN_REMEDY, "ocdPersonId": PIN_REMEDY,
+    "peachfileFilerEntityIds": FILING_REMEDY, "fecCandidateIds": FILING_REMEDY,
+}
+KIND_LABELS = {
+    "ballotpediaId": "Ballotpedia page", "ocdPersonId": "Open States person id",
+    "peachfileFilerEntityIds": "PeachFile filing", "fecCandidateIds": "FEC filing",
+}
+
+
+def ambiguities(people):
+    """{provenance key: [{key, name, candidates}]} for every unresolved ambiguity.
+
+    `key` is what a reviewer writes in the overrides file (roster id, else bioguide id,
+    else the vgId). Generic over provenance keys so a new kind of ambiguity is reported
+    under its own heading instead of being mislabelled as a filing.
+    """
+    out = {}
+    for p in people:
+        ids = p.get("ids") or {}
+        key = ids.get("rosterId") or ids.get("bioguideId") or p.get("vgId") or (p.get("name") or {}).get("full")
+        for field, prov in (p.get("provenance") or {}).items():
+            if isinstance(prov, dict) and prov.get("confidence") == "ambiguous":
+                out.setdefault(field, []).append({
+                    "key": key, "name": (p.get("name") or {}).get("full"),
+                    "candidates": list(prov.get("candidates") or [])})
+    return out
+
+
+def pin_patch(overrides, *keys):
+    """The first override entry among `keys` that pins slots -> (pins, note) or (None, None).
+
+    Raises ValueError for an entry that cannot be honoured: an unknown slot, a value of
+    the wrong shape (ocdPersonId must stay OCD-shaped), or no `_note` — an unexplained
+    pin is indistinguishable from a guess.
+    """
+    for k in keys:
+        entry = (overrides or {}).get(k) if k else None
+        if not isinstance(entry, dict) or not entry.get(PINS_FIELD):
+            continue
+        pins, note = entry[PINS_FIELD], entry.get("_note")
+        if not isinstance(pins, dict):
+            raise ValueError(f"{k}: {PINS_FIELD} must be an object of slot -> value")
+        if not (isinstance(note, str) and note.strip()):
+            raise ValueError(f"{k}: {PINS_FIELD} needs a _note recording how it was confirmed")
+        for slot, value in pins.items():
+            if slot not in SLOTS:
+                raise ValueError(f"{k}: cannot pin {slot!r} (pinnable: {', '.join(SLOTS)})")
+            if slot == "ocdPersonId" and not is_ocd_id(value):
+                raise ValueError(f"{k}: pinned ocdPersonId {value!r} is not an OCD person id")
+            if not isinstance(value, str) or not value.strip() or value != value.strip()                     or "/" in value.replace("ocd-person/", "", 1) or " " in value:
+                raise ValueError(f"{k}: pinned {slot} {value!r} is not a bare id")
+        return pins, note
+    return None, None
+
+
+def apply_slot_pins(values, prov, pins, note):
+    """Overwrite slots with human-reviewed values, in place; returns the slots changed.
+
+    Provenance keeps what the resolver offered (`chosenFrom`) so the decision is auditable.
+    Slots are never ledger keys, so a pin cannot move anyone's vgId.
+    """
+    for slot, value in (pins or {}).items():
+        offered = (prov.get(slot) or {}).get("candidates")
+        values[slot] = value
+        prov[slot] = _prov("reviewed", PINS_SOURCE, "high", note=note,
+                           **({"chosenFrom": list(offered)} if offered else {}))
+    return list(pins or {})
+
+
+def apply_identity_slots(members, sidecar, overrides=None):
     """Add the nullable slots + provenance to every member, in place. Returns the count.
 
-    Purely additive: it writes `ocdPersonId`, `wikidataId`, `ballotpediaId` and
+    Purely additive: it writes `ocdPersonId`, `ballotpediaId` and
     `idProvenance`, and never reads-then-writes `id`. Pure function of (members, sidecar),
     so a quiet run is byte-identical.
     """
@@ -131,9 +209,20 @@ def apply_identity_slots(members, sidecar):
         legis_id = m.get("legisGaGovId")
         entry = people.get(str(int(legis_id))) if legis_id is not None else None
         values, prov = resolve_slots(m, entry)
+        pins, note = pin_patch(overrides, m.get("id"), values.get("ocdPersonId"))
+        apply_slot_pins(values, prov, pins, note)
         m.update(values)
         m["idProvenance"] = prov
     return len(members)
+
+
+def load_pin_overrides(path=PINS_SOURCE):
+    """The overrides file, or {} when absent. Paths are repo-relative like the callers'."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
 
 
 def apply_to_roster_file(roster_path, sidecar_path):
@@ -148,7 +237,7 @@ def apply_to_roster_file(roster_path, sidecar_path):
     except FileNotFoundError:
         sidecar = {}
     before = [m.get("id") for m in doc["members"]]
-    apply_identity_slots(doc["members"], sidecar)
+    apply_identity_slots(doc["members"], sidecar, load_pin_overrides())
     assert before == [m.get("id") for m in doc["members"]], "roster ids must never change"
     write_json_atomic(roster_path, doc, indent=2)   # same shape the producer writes
     return len(doc["members"])

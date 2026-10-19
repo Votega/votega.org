@@ -41,7 +41,8 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.ga_identity import SLOTS, WIKIDATA_RE, is_ocd_id, ledger_keys  # noqa: E402
+from lib.ga_identity import (SLOTS, is_ocd_id, ledger_keys, ambiguities, pin_patch,  # noqa: E402
+                             REMEDIES, KIND_LABELS, PINS_FIELD)
 
 CROSSWALK_FILE = "assets/data/id-crosswalk.json"
 LEDGER_FILE    = "assets/data/id-crosswalk-ledger.json"
@@ -148,9 +149,6 @@ def slot_errors(people, members):
         if v is not None and not is_ocd_id(v):
             errors.append(f"{who}: ocdPersonId {v!r} is not an OCD person id (a roster handle "
                           f"belongs in rosterId)")
-        w = ids.get("wikidataId")
-        if w is not None and not WIKIDATA_RE.match(str(w)):
-            errors.append(f"{who}: wikidataId {w!r} is not a Wikidata Q-number")
     for m in members:
         who = f"{m.get('name')} ({m.get('legisGaGovId')})"
         prov = m.get("idProvenance")
@@ -207,7 +205,55 @@ def ledger_identity_errors(people, assign):
     return errors
 
 
-def tier2(new_meta, old_meta, ambiguous=()):
+def pin_errors(people, overrides):
+    """Every `pinSlots` override must be well-formed and must have landed. Error strings.
+
+    A pin that silently did not apply leaves the reviewer believing an ambiguity is
+    resolved while the published slot is still null.
+    """
+    errors = []
+    by_key = {}
+    for p in people:
+        ids = p.get("ids") or {}
+        for k in (ids.get("rosterId"), ids.get("ocdPersonId"), ids.get("bioguideId")):
+            if k:
+                by_key[k] = p
+    for key, entry in (overrides or {}).items():
+        if key.startswith("_") or not isinstance(entry, dict) or PINS_FIELD not in entry:
+            continue
+        try:
+            pins, _ = pin_patch({key: entry}, key)
+        except ValueError as e:
+            errors.append(str(e))
+            continue
+        person = by_key.get(key)
+        if person is None:
+            errors.append(f"{PINS_FIELD} override {key} matches no person in the crosswalk")
+            continue
+        for slot, value in (pins or {}).items():
+            if (person.get("ids") or {}).get(slot) != value:
+                errors.append(f"{PINS_FIELD} override {key}: {slot} is "
+                              f"{(person.get('ids') or {}).get(slot)!r}, not the pinned {value!r}")
+            if ((person.get("provenance") or {}).get(slot) or {}).get("method") != "reviewed":
+                errors.append(f"{PINS_FIELD} override {key}: {slot} lacks 'reviewed' provenance")
+    return errors
+
+
+def ambiguity_sections(people):
+    """One tier-2 section per KIND of ambiguity, each with its own remedy."""
+    sections = []
+    for field, rows in sorted(ambiguities(people).items()):
+        lines = []
+        for r in rows:
+            cands = " | ".join(f"`{c}`" for c in r["candidates"]) or "(no candidates recorded)"
+            lines.append(f"- {r['name']} (`{r['key']}`): {cands}")
+        remedy = REMEDIES.get(field, f"no override exists for `{field}` yet -- see its provenance")
+        sections.append((f"Ambiguous {KIND_LABELS.get(field, field)} matches awaiting review "
+                         f"({len(rows)})", lines + ["", f"To resolve: {remedy}."]))
+    return sections
+
+
+def tier2(new_meta, old_meta, ambiguous=(), people=None):
     """Coverage movement and open review queues. Returns [(heading, [lines])]."""
     sections = []
     ncov = (new_meta or {}).get("coverage") or {}
@@ -223,10 +269,11 @@ def tier2(new_meta, old_meta, ambiguous=()):
                                   "result, a new cycle's field). Unexpected for officeholders; "
                                   "the ledger check has already confirmed no published vgId "
                                   "changed meaning."]))
-    if ambiguous:
-        sections.append(("Ambiguous filing matches awaiting review",
-                         [f"- {a}" for a in ambiguous] +
-                         ["", f"Resolve in {OVERRIDES_FILE} or ga-campaign-finance-overrides.json."]))
+    if people is not None:
+        sections += ambiguity_sections(people)
+    elif ambiguous:
+        sections.append(("Ambiguous matches awaiting review",
+                         [f"- {a}" for a in ambiguous]))
     return sections
 
 
@@ -334,7 +381,7 @@ def main():
     # --- No upstream id may be claimed by two people -------------------------
     # The invariant that makes the file safe to join on: two people sharing a
     # filing means one is being credited with the other's fundraising.
-    scalar_keys = ("rosterId", "ocdPersonId", "wikidataId", "ballotpediaId", "bioguideId",
+    scalar_keys = ("rosterId", "ocdPersonId", "ballotpediaId", "bioguideId",
                    "legisGaGovId", "govtrackId", "openSecretsId")
     list_keys   = ("peachfileFilerEntityIds", "fecCandidateIds", "votegaCandidateIds")
     for key in scalar_keys + list_keys:
@@ -412,9 +459,12 @@ def main():
     amb = cov.get("ambiguous") or []
     print(f"{len(people)} people | {with_vgid} keyed | {cov.get('unkeyed')} unkeyed | "
           f"{cov.get('candidacies')} candidacies | {len(amb)} ambiguous")
-    if amb:
-        warn(f"{len(amb)} ambiguous filing matches left unresolved: {', '.join(map(str, amb[:5]))}"
-             f" — resolve in {OVERRIDES_FILE} or ga-campaign-finance-overrides.json")
+    for field, rows in sorted(ambiguities(people).items()):
+        warn(f"{len(rows)} ambiguous {KIND_LABELS.get(field, field)} matches left unresolved "
+             f"(e.g. {', '.join(str(r['name']) for r in rows[:3])}) — to resolve: "
+             f"{REMEDIES.get(field, 'see provenance')}")
+    for msg in pin_errors(people, xov):
+        err(msg)
 
     if warnings:
         print("\nWarnings:")
@@ -422,7 +472,7 @@ def main():
             print(w)
     if not errors:
         old_doc = git_show(CROSSWALK_FILE)
-        report = render(tier2(meta, (old_doc or {}).get("metadata"), amb))
+        report = render(tier2(meta, (old_doc or {}).get("metadata"), amb, people))
         if args.report_out:
             with open(args.report_out, "w", encoding="utf-8") as f:
                 f.write(report)

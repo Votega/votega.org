@@ -29,7 +29,8 @@ sys.path.insert(0, HERE)
 
 import generate_openstates_crosswalk as R  # noqa: E402
 import validate_id_crosswalk as V          # noqa: E402
-from lib.ga_identity import (apply_identity_slots, is_ocd_id, ledger_keys)  # noqa: E402
+from lib.ga_identity import (apply_identity_slots, is_ocd_id, ledger_keys, ambiguities,
+                             pin_patch)  # noqa: E402
 
 failures = []
 
@@ -183,7 +184,7 @@ def roster_cases():
           (roster[0]["ocdPersonId"], roster[0]["idProvenance"]["ocdPersonId"]["method"]),
           (ocd(1), "authoritative"))
     check("a never-looked-up slot is 'unresolved', not a claim",
-          roster[0]["idProvenance"]["wikidataId"]["method"], "unresolved")
+          roster[0]["idProvenance"]["ballotpediaId"]["method"], "unresolved")
     check("a non-member's slots are out-of-scope",
           (roster[2]["ocdPersonId"], roster[2]["idProvenance"]["ballotpediaId"]["method"]),
           (None, "out-of-scope"))
@@ -289,9 +290,9 @@ def validator_cases():
     check("a null ocdPersonId passes", V.slot_errors([ok], []), [])
     bad = {"vgId": "vg1", "name": {"full": "A"}, "ids": {"ocdPersonId": "legis-1"}}
     check("a non-OCD ocdPersonId is an error", len(V.slot_errors([bad], [])), 1)
-    mem = {"name": "A", "legisGaGovId": 1, "ocdPersonId": None, "wikidataId": None,
+    mem = {"name": "A", "legisGaGovId": 1, "ocdPersonId": None,
            "ballotpediaId": None, "idProvenance": {}}
-    check("a roster slot with no provenance is an error", len(V.slot_errors([], [mem])), 3)
+    check("a roster slot with no provenance is an error", len(V.slot_errors([], [mem])), 2)
     mem["idProvenance"] = {s: {"method": "unresolved"} for s in V.SLOTS}
     check("provenance on every slot passes", V.slot_errors([], [mem]), [])
     mem["ocdPersonId"] = ocd(1)
@@ -311,7 +312,63 @@ def validator_cases():
                                        {"legis:2": "vg4", ocd(2): "vg3"})), 2)
 
 
-for fn in (resolver_cases, main_cases, roster_cases, cohort_cases, validator_cases):
+def pin_cases():
+    print("pins and the ambiguity report")
+    amb = {"method": "authoritative", "confidence": "ambiguous",
+           "candidates": ["Samuel_Park", "Samuel_Park_(Georgia)"]}
+    # Ambiguity is reported per KIND, with candidates and the remedy for that kind.
+    people = [{"vgId": "vg1", "name": {"full": "Sam Park"},
+               "ids": {"rosterId": ocd(1)}, "provenance": {"ballotpediaId": amb}},
+              {"vgId": "vg2", "name": {"full": "B"}, "ids": {"rosterId": ocd(2)},
+               "provenance": {"peachfileFilerEntityIds": {"confidence": "ambiguous"}}}]
+    groups = ambiguities(people)
+    check("ambiguities are grouped by provenance key", sorted(groups), ["ballotpediaId", "peachfileFilerEntityIds"])
+    check("a row carries the key to write and the candidates",
+          groups["ballotpediaId"], [{"key": ocd(1), "name": "Sam Park", "candidates": amb["candidates"]}])
+    secs = dict(V.ambiguity_sections(people))
+    bp = [v for k, v in secs.items() if "Ballotpedia" in k][0]
+    fl = [v for k, v in secs.items() if "PeachFile" in k][0]
+    check("the Ballotpedia section points at pinSlots, not finance overrides",
+          ("pinSlots" in "\n".join(bp), "ga-campaign-finance" in "\n".join(bp)), (True, False))
+    check("the Ballotpedia section prints the candidates inline", "`Samuel_Park_(Georgia)`" in bp[0], True)
+    check("the filing section keeps the finance remedy", "ga-campaign-finance" in "\n".join(fl), True)
+    check("tier2 stays a report (sections, never an error)", len(V.tier2({}, None, (), people)), 2)
+
+    ov = {ocd(1): {"pinSlots": {"ballotpediaId": "Samuel_Park_(Georgia)"}, "_note": "checked page"}}
+    m = member(1, ocd(1))
+    apply_identity_slots([m], {"people": {"1": {"ballotpediaId": None,
+                                                "provenance": {"ballotpediaId": amb}}}}, ov)
+    check("a pin fills the slot", m["ballotpediaId"], "Samuel_Park_(Georgia)")
+    check("pin provenance is 'reviewed' and records what was offered",
+          (m["idProvenance"]["ballotpediaId"]["method"], m["idProvenance"]["ballotpediaId"]["chosenFrom"]),
+          ("reviewed", amb["candidates"]))
+    check("a pin never touches the opaque id", m["id"], ocd(1))
+    m2 = member(1, ocd(1))
+    apply_identity_slots([m2], {}, {})
+    check("no overrides = unchanged behaviour", m2["ballotpediaId"], None)
+
+    def raises(o, key=ocd(1)):
+        try:
+            pin_patch(o, key)
+        except ValueError:
+            return True
+        return False
+    check("a pin with no _note is refused", raises({ocd(1): {"pinSlots": {"ballotpediaId": "X"}}}), True)
+    check("a non-OCD ocdPersonId pin is refused",
+          raises({ocd(1): {"pinSlots": {"ocdPersonId": "legis-1"}, "_note": "n"}}), True)
+    check("an unknown slot is refused", raises({ocd(1): {"pinSlots": {"wikidataId": "Q1"}, "_note": "n"}}), True)
+    check("a URL is not a bare id",
+          raises({ocd(1): {"pinSlots": {"ballotpediaId": "https://ballotpedia.org/X"}, "_note": "n"}}), True)
+
+    out = {"vgId": "vg1", "name": {"full": "A"}, "ids": {"rosterId": ocd(1), "ballotpediaId": None}}
+    check("a pin that did not land is a validator error", len(V.pin_errors([out], ov)), 2)
+    out["ids"]["ballotpediaId"] = "Samuel_Park_(Georgia)"
+    out["provenance"] = {"ballotpediaId": {"method": "reviewed"}}
+    check("a landed pin passes", V.pin_errors([out], ov), [])
+    check("a pin matching nobody is an error", len(V.pin_errors([], ov)), 1)
+
+
+for fn in (resolver_cases, main_cases, roster_cases, cohort_cases, validator_cases, pin_cases):
     fn()
 
 print()

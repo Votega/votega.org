@@ -73,7 +73,11 @@ def tier2_cases():
     heads = [h for h, _ in V.tier2(cov(people=30, candidateOnly=0), cov())]
     check("two-thirds shrink (a cycle rolling over) is reported, not gated", len(heads), 1)
     sec = V.tier2(cov(), cov(), ambiguous=["Jane Doe"])
-    check("ambiguous queue surfaced", [h for h, _ in sec], ["Ambiguous filing matches awaiting review"])
+    check("ambiguous queue surfaced", [h for h, _ in sec], ["Ambiguous matches awaiting review"])
+    ppl = [{"vgId": "v", "name": {"full": "J"}, "ids": {"rosterId": "r"},
+            "provenance": {"ballotpediaId": {"confidence": "ambiguous", "candidates": ["A", "B"]}}}]
+    check("ambiguity with people is labelled by kind, never as a filing",
+          [h for h, _ in V.tier2(cov(), cov(), people=ppl)], ["Ambiguous Ballotpedia page matches awaiting review (1)"])
     check("render with no sections says no material change",
           "No material change" in V.render([]), True)
 

@@ -33,7 +33,7 @@ import time
 from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
-from lib.ga_identity import apply_identity_slots
+from lib.ga_identity import apply_identity_slots, load_pin_overrides
 from lib.ga_leadership import committee_index, normalize_title
 from lib.ga_roster import (apply_member_overrides, display_committee,
                            listing_is_too_short, normalize_address)
@@ -318,10 +318,10 @@ def main():
 
     members.sort(key=lambda m: (m.get("chamber") or "", m.get("name") or ""))
 
-    # Identity slots (ocdPersonId / wikidataId / ballotpediaId + provenance). ADDITIVE and
+    # Identity slots (ocdPersonId / ballotpediaId + provenance). ADDITIVE and
     # nullable: legisGaGovId is the primary key, `id` stays an opaque handle and is never
     # touched here. The values come from generate_openstates_crosswalk.py's sidecar.
-    apply_identity_slots(members, _load_json(IDENTITY_SIDECAR))
+    apply_identity_slots(members, _load_json(IDENTITY_SIDECAR), load_pin_overrides())
 
     # SOAP proposes, a human disposes (spec §8.4): surface a departure, never write a
     # status. Computed AFTER the overrides so these describe the file they ship in — read
