@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-19T11:57:23Z",
+  "generatedAt": "2026-10-19T12:59:03Z",
   "source": "Columbus-Muscogee County (Legistar structured API)",
   "place": "Columbus-Muscogee County",
   "count": 25
@@ -21,8 +21,8 @@
    "millage-budget": 305,
    "appointment": 125,
    "annexation": 32,
-   "data-center": 3,
-   "alpr": 1
+   "alpr": 6,
+   "data-center": 3
   },
   "dataCenterItems": [
    {
@@ -278,16 +278,51 @@
   "alprItems": [
    {
     "title": "Columbus City Council",
+    "date": "2026-06-29",
+    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6195&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+    "terms": [
+     "surveillance system"
+    ],
+    "excerpt": "… ize the Director of the Recreation and Parks Department to enter into contract with K.N.S. Services, Inc. for continued surveillance system installation, replacement, and upgrades in accordance with the sole source procurement provisions of City Code; to auth …",
+    "excerptTerm": "surveillance system"
+   },
+   {
+    "title": "Columbus City Council",
+    "date": "2026-06-22",
+    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6193&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+    "terms": [
+     "cellebrite",
+     "shotspotter",
+     "soundthinking"
+    ],
+    "excerpt": "To authorize the expenditure of $210,000.00 from the General Fund for the third year of a three-year contract with SoundThinking Inc., formerly ShotSpotter, Inc., for use of a gunfire detection, alert, and analysis program in the Phase II coverage …",
+    "excerptTerm": "soundthinking"
+   },
+   {
+    "title": "Columbus City Council",
     "date": "2026-06-01",
     "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6187&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
     "terms": [
+     "shotspotter",
+     "soundthinking",
      "vigilant solutions"
     ],
     "excerpt": "To authorize the Director of the Department of Public Safety to enter into contract with Motorola Solutions, DBA Vigilant Solutions, for the purchase of commercial license subscriptions for the Investigative Data Platform; to waive the competitive bid …",
     "excerptTerm": "vigilant solutions"
+   },
+   {
+    "title": "Columbus City Council",
+    "date": "2026-05-18",
+    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6184&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+    "terms": [
+     "shotspotter",
+     "soundthinking"
+    ],
+    "excerpt": "To authorize the Director of the Department of Public Safety to enter into a contract with SoundThinking Inc., formerly ShotSpotter, Inc., for the use of a gunfire detection, alert, and analysis program; to authorize reimbur …",
+    "excerptTerm": "soundthinking"
    }
   ],
-  "alprMeetings": 1
+  "alprMeetings": 4
  },
  "meetings": [
   {
@@ -2136,6 +2171,7 @@
    "topics": {
     "contract": 93,
     "millage-budget": 44,
+    "alpr": 1,
     "appointment": 9,
     "development": 4,
     "annexation": 1
@@ -2149,6 +2185,7 @@
     "fiscal year",
     "procurement",
     "purchase order",
+    "surveillance system",
     "townhome",
     "warehouse"
    ],
@@ -2161,6 +2198,11 @@
     "millage-budget": {
      "term": "budget",
      "excerpt": "To authorize the Finance and Management Director to associate all General Budget Reservations resulting from this ordinance with the appropriate Universal Term Contract Purchase Agreement with Valvoli …",
+     "context": "agenda-action"
+    },
+    "alpr": {
+     "term": "surveillance system",
+     "excerpt": "… ize the Director of the Recreation and Parks Department to enter into contract with K.N.S. Services, Inc. for continued surveillance system installation, replacement, and upgrades in accordance with the sole source procurement provisions of City Code; to auth …",
      "context": "agenda-action"
     },
     "appointment": {
@@ -2181,7 +2223,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": [],
    "landUseItems": [
@@ -2711,6 +2754,7 @@
     "development": 6,
     "data-center": 1,
     "appointment": 21,
+    "alpr": 2,
     "rezoning": 5,
     "variance": 4
    },
@@ -2719,6 +2763,7 @@
     "apartment",
     "appoint",
     "budget",
+    "cellebrite",
     "contract",
     "data center",
     "fiscal year",
@@ -2726,6 +2771,8 @@
     "purchase order",
     "reappoint",
     "rezon",
+    "shotspotter",
+    "soundthinking",
     "subdivision",
     "townhome",
     "variance"
@@ -2761,6 +2808,11 @@
      "excerpt": "To appoint Kathy Green, Trenth Smith, and Ellen Harvey to a Special Assessment Board of Revision, per City Charter Section 172, to …",
      "context": "agenda-action"
     },
+    "alpr": {
+     "term": "soundthinking",
+     "excerpt": "To authorize the expenditure of $210,000.00 from the General Fund for the third year of a three-year contract with SoundThinking Inc., formerly ShotSpotter, Inc., for use of a gunfire detection, alert, and analysis program in the Phase II coverage …",
+     "context": "agenda-action"
+    },
     "rezoning": {
      "term": "rezon",
      "excerpt": "REZONINGS/AMENDMENTS",
@@ -2775,7 +2827,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": [
     {
@@ -3683,7 +3736,7 @@
     "annexation": 3,
     "appointment": 2,
     "data-center": 1,
-    "alpr": 1,
+    "alpr": 2,
     "rezoning": 2,
     "variance": 6
    },
@@ -3697,6 +3750,8 @@
     "mixed-use",
     "purchase order",
     "rezon",
+    "shotspotter",
+    "soundthinking",
     "variance",
     "vigilant solutions"
    ],
@@ -4225,7 +4280,8 @@
     "data-center": 1,
     "annexation": 3,
     "millage-budget": 30,
-    "appointment": 21
+    "appointment": 21,
+    "alpr": 1
    },
    "matchedTerms": [
     "annexation",
@@ -4235,7 +4291,9 @@
     "data center",
     "fiscal year",
     "purchase order",
-    "reappoint"
+    "reappoint",
+    "shotspotter",
+    "soundthinking"
    ],
    "topicExcerpts": {
     "contract": {
@@ -4262,12 +4320,18 @@
      "term": "appoint",
      "excerpt": "APPOINTMENTS",
      "context": "agenda-action"
+    },
+    "alpr": {
+     "term": "soundthinking",
+     "excerpt": "To authorize the Director of the Department of Public Safety to enter into a contract with SoundThinking Inc., formerly ShotSpotter, Inc., for the use of a gunfire detection, alert, and analysis program; to authorize reimbur …",
+     "context": "agenda-action"
     }
    },
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "alpr"
    ],
    "dataCenterItems": [
     {

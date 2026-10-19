@@ -7,6 +7,12 @@
    "region": "Northeast Georgia"
   },
   {
+   "placeId": "augusta",
+   "placeName": "Augusta-Richmond County",
+   "placeType": "consolidated",
+   "region": "East Georgia"
+  },
+  {
    "placeId": "baldwin",
    "placeName": "Baldwin County",
    "placeType": "county",
@@ -53,6 +59,12 @@
    "placeName": "Cherokee County",
    "placeType": "county",
    "region": "Atlanta Regional Commission"
+  },
+  {
+   "placeId": "atlanta",
+   "placeName": "City of Atlanta",
+   "placeType": "city",
+   "region": "Atlanta"
   },
   {
    "placeId": "carrollton",
@@ -111,12 +123,6 @@
   {
    "placeId": "forsyth",
    "placeName": "Forsyth County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission"
-  },
-  {
-   "placeId": "fulton",
-   "placeName": "Fulton County",
    "placeType": "county",
    "region": "Atlanta Regional Commission"
   },
@@ -520,6 +526,27 @@
    ]
   },
   {
+   "body": "Columbus City Council",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-06-29",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13215",
+   "placeId": "muscogee",
+   "placeName": "Columbus-Muscogee County",
+   "placeType": "consolidated",
+   "region": "West Georgia",
+   "sourceType": "legistar",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6195&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "tags": [],
+   "terms": [
+    "surveillance system"
+   ],
+   "vendors": []
+  },
+  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "public-comment",
@@ -540,6 +567,32 @@
    ],
    "vendors": [
     "Flock Safety"
+   ]
+  },
+  {
+   "body": "Columbus City Council",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-06-22",
+   "docType": "agenda",
+   "excerpt": "To authorize the expenditure of $210,000.00 from the General Fund for the third year of a three-year contract with SoundThinking Inc., formerly ShotSpotter, Inc., for use of a gunfire detection, alert, and analysis program in the Phase II coverage …",
+   "excerptTerm": "soundthinking",
+   "fips": "13215",
+   "placeId": "muscogee",
+   "placeName": "Columbus-Muscogee County",
+   "placeType": "consolidated",
+   "region": "West Georgia",
+   "sourceType": "legistar",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6193&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "tags": [],
+   "terms": [
+    "cellebrite",
+    "shotspotter",
+    "soundthinking"
+   ],
+   "vendors": [
+    "Cellebrite",
+    "ShotSpotter (SoundThinking)"
    ]
   },
   {
@@ -630,11 +683,59 @@
    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6187&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
    "tags": [],
    "terms": [
+    "shotspotter",
+    "soundthinking",
     "vigilant solutions"
    ],
    "vendors": [
+    "ShotSpotter (SoundThinking)",
     "Vigilant (Motorola)"
    ]
+  },
+  {
+   "body": "Columbus City Council",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-05-18",
+   "docType": "agenda",
+   "excerpt": "To authorize the Director of the Department of Public Safety to enter into a contract with SoundThinking Inc., formerly ShotSpotter, Inc., for the use of a gunfire detection, alert, and analysis program; to authorize reimbur …",
+   "excerptTerm": "soundthinking",
+   "fips": "13215",
+   "placeId": "muscogee",
+   "placeName": "Columbus-Muscogee County",
+   "placeType": "consolidated",
+   "region": "West Georgia",
+   "sourceType": "legistar",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6184&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "tags": [],
+   "terms": [
+    "shotspotter",
+    "soundthinking"
+   ],
+   "vendors": [
+    "ShotSpotter (SoundThinking)"
+   ]
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-04-15",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13121",
+   "placeId": "fulton",
+   "placeName": "Fulton County",
+   "placeType": "county",
+   "region": "Atlanta Regional Commission",
+   "sourceType": "legistar",
+   "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6382&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+   "tags": [],
+   "terms": [
+    "surveillance camera"
+   ],
+   "vendors": []
   },
   {
    "body": "Board of Commissioners",
@@ -684,21 +785,23 @@
   }
  ],
  "metadata": {
-  "citiesScanned": 3,
-  "consolidatedScanned": 3,
+  "citiesScanned": 4,
+  "consolidatedScanned": 4,
   "countiesScanned": 31,
   "emoji": "📷",
-  "generatedAt": "2026-10-19T11:57:52Z",
+  "generatedAt": "2026-10-19T12:59:45Z",
   "label": "ALPR / surveillance",
-  "placesScanned": 37,
-  "placesWithMentions": 8,
+  "placesScanned": 39,
+  "placesWithMentions": 9,
   "topic": "alpr",
   "universeCities": 537,
   "universeConsolidated": 9,
   "universeCounties": 159,
   "vendors": [
+   "Cellebrite",
    "Flock Safety",
    "Genetec",
+   "ShotSpotter (SoundThinking)",
    "Vigilant (Motorola)"
   ]
  }

@@ -1,12 +1,13 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-19T11:57:10Z",
+  "generatedAt": "2026-10-19T12:58:39Z",
   "source": "Fulton County (Legistar structured API)",
   "place": "Fulton County",
   "count": 21
  },
  "summary": {
   "flags": [
+   "alpr",
    "data-center",
    "land-use",
    "millage-budget"
@@ -17,7 +18,8 @@
    "development": 70,
    "contract": 189,
    "millage-budget": 36,
-   "data-center": 4
+   "data-center": 4,
+   "alpr": 1
   },
   "dataCenterItems": [
    {
@@ -155,8 +157,19 @@
    }
   ],
   "landUseMeetings": 14,
-  "alprItems": [],
-  "alprMeetings": 0
+  "alprItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-04-15",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6382&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "terms": [
+     "surveillance camera"
+    ],
+    "excerpt": "… ); John Ahmann (#26-0222); Reshard Snellings (Open Records Request); Devin Franklin (Oppose #26-0214); Jayson Toweh (AI Surveillance Cameras), Mo Ivory (#26-0214/Elections) 1 Zoom Speaker: Robby Caban (Lifeline/Animal Services) Public Hearings",
+    "excerptTerm": "surveillance camera"
+   }
+  ],
+  "alprMeetings": 1
  },
  "meetings": [
   {
@@ -1474,6 +1487,7 @@
    "itemCount": 67,
    "topics": {
     "development": 7,
+    "alpr": 1,
     "contract": 5
    },
    "matchedTerms": [
@@ -1481,12 +1495,18 @@
     "contract",
     "multifamily",
     "procurement",
-    "subdivision"
+    "subdivision",
+    "surveillance camera"
    ],
    "topicExcerpts": {
     "development": {
      "term": "subdivision",
      "excerpt": "Request approval of a Water Easement Dedication of 226,350 square feet to Fulton County, a political subdivision of the State of Georgia, from Blakely Manor Development LLC, for the purpose of constructing the Blakely Manor S/D Proj …",
+     "context": "agenda-action"
+    },
+    "alpr": {
+     "term": "surveillance camera",
+     "excerpt": "… ); John Ahmann (#26-0222); Reshard Snellings (Open Records Request); Devin Franklin (Oppose #26-0214); Jayson Toweh (AI Surveillance Cameras), Mo Ivory (#26-0214/Elections) 1 Zoom Speaker: Robby Caban (Lifeline/Animal Services) Public Hearings",
      "context": "agenda-action"
     },
     "contract": {
@@ -1496,7 +1516,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "alpr"
    ],
    "dataCenterItems": [],
    "landUseItems": [
