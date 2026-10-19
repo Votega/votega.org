@@ -44,7 +44,7 @@
   function prettyTerms(terms) {
     return terms.map(function (term) {
       return term.split(' ').map(function (w) {
-        return (w === 'lpr' || w === 'alpr')
+        return /^(lpr|alpr|anpr|rtcc|imsi|ai)$/.test(w)
           ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1);
       }).join(' ');
     }).join(', ');

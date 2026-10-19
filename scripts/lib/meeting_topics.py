@@ -71,7 +71,34 @@ TOPIC_RULES = {
                            # camera aggregator, not an ALPR vendor — omitted too.
                            'vigilant solutions', 'genetec', 'autovu', 'sharpv',
                            'rekor', 'openalpr', 'elsag', 'neology', 'jenoptik',
-                           'perceptics', 'verra mobility', 'platesmart'],
+                           'perceptics', 'verra mobility', 'platesmart',
+                           # ── Expansion (2026-10): wider capability + surveillance net.
+                           # Generic ALPR phrasing, incl. hyphen / "number plate" / scanner
+                           # spellings the original four phrases missed. NOT the bare
+                           # 'license plate': every county tag office has agenda items on
+                           # plate fees, specialty plates and renewals.
+                           'plate recognition', 'plate-reader', 'plate reading',
+                           'plate scanner', 'plate capture', 'license plate camera',
+                           'license-plate', 'number plate recognition',
+                           'tag reader', 'tag recognition', 'lpr system',
+                           # Surveillance beyond plate reading (the badge is
+                           # "ALPR / surveillance"). Each is a narrow phrase: bare
+                           # 'surveillance' (disease/health surveillance, inspection),
+                           # 'cctv' (sewer-line inspection) and 'camera' are too broad.
+                           'surveillance camera', 'surveillance technology',
+                           'surveillance system', 'surveillance equipment',
+                           'facial recognition', 'face recognition',
+                           'real time crime center', 'real-time crime center',
+                           'gunshot detection', 'predictive policing',
+                           'cell site simulator', 'cell-site simulator', 'imsi catcher',
+                           'drone as first responder', 'drone as a first responder',
+                           # Surveillance vendors. Narrow brand names only - never a
+                           # word that is also a place or a common noun ('clearview'
+                           # alone is a street name; 'axon' is tasers/body cams;
+                           # 'motorola' is radios).
+                           'fusus', 'shotspotter', 'soundthinking', 'clearview ai',
+                           'avigilon', 'verkada', 'hikvision', 'dahua', 'cellebrite',
+                           'peregrine technologies'],
 }
 
 # Keywords that must match as WHOLE WORDS, not substrings — same tag semantics as
@@ -85,7 +112,9 @@ TOPIC_RULES = {
 # 'rezon'/'annex'; the multi-word ALPR phrases there — "plate reader", "lpr camera"
 # — are space-delimited and can't hide inside a single word.)
 TOPIC_WORD_RULES = {
-    'alpr': ['flock', 'alpr'],
+    # 'lpr' / 'anpr' / 'rtcc' are acronyms, so whole-word only (never inside another
+    # word). 'lpr' is near-unambiguous in agendas; 'rtcc' = real-time crime center.
+    'alpr': ['flock', 'alpr', 'lpr', 'anpr', 'rtcc'],
 }
 _WORD_RE = {kw: re.compile(r'\b' + re.escape(kw) + r'\b')
             for kws in TOPIC_WORD_RULES.values() for kw in kws}
@@ -118,6 +147,16 @@ ALPR_VENDOR_LABELS = {
     'perceptics':         'Perceptics',
     'verra mobility':     'Verra Mobility',
     'platesmart':         'PlateSmart',
+    'fusus':              'Fusus (Axon)',
+    'shotspotter':        'ShotSpotter (SoundThinking)',
+    'soundthinking':      'ShotSpotter (SoundThinking)',
+    'clearview ai':       'Clearview AI',
+    'avigilon':           'Avigilon (Motorola)',
+    'verkada':            'Verkada',
+    'hikvision':          'Hikvision',
+    'dahua':              'Dahua',
+    'cellebrite':         'Cellebrite',
+    'peregrine technologies': 'Peregrine Technologies',
 }
 
 # The spelled-out capability phrases that, on their own, are unambiguous enough to
@@ -127,6 +166,7 @@ ALPR_VENDOR_LABELS = {
 ALPR_HIGH_TERMS = {
     'automated license plate', 'automatic license plate',
     'license plate recognition', 'license plate reader',
+    'license-plate', 'plate recognition', 'number plate recognition',
 }
 
 

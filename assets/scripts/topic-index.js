@@ -23,7 +23,7 @@
   // "flock" -> "Flock", "lpr camera" -> "LPR Camera" (matches local-subjects.js).
   function prettyTerm(term) {
     return term.split(' ').map(function (w) {
-      return (w === 'lpr' || w === 'alpr' || w === 'slup')
+      return (/^(lpr|alpr|anpr|rtcc|imsi|ai)$/.test(w) || w === 'slup')
         ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1);
     }).join(' ');
   }
