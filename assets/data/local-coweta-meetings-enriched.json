@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-18T11:48:09Z",
+  "generatedAt": "2026-10-19T11:57:51Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -11,17 +11,17 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-13",
+  "lastActivity": "2026-10-20",
   "topicTotals": {
+   "appointment": 13,
+   "contract": 14,
+   "development": 7,
+   "millage-budget": 16,
+   "rezoning": 9,
+   "variance": 13,
    "data-center": 4,
-   "appointment": 12,
-   "contract": 13,
-   "millage-budget": 15,
    "special-land-use": 7,
-   "variance": 12,
-   "comprehensive-plan": 3,
-   "rezoning": 8,
-   "development": 6
+   "comprehensive-plan": 3
   },
   "dataCenterItems": [
    {
@@ -40,6 +40,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
+    "date": "2026-10-20",
+    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3699,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… rm Acceptance of Roadways and a Deed of Open Space Restriction Associated with Property Located in the Chapel Hill Subdivision, Phase 4A - District 5 Supplemental and Non-Agenda Items Public Hearing (The Chairman will call for any comments rega …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Board of Zoning Appeals - Public Hearing",
     "date": "2026-09-24",
@@ -222,11 +234,84 @@
     "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 21,
+  "landUseMeetings": 22,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "1097",
+   "date": "2026-10-20",
+   "body": "Board of Commissioners",
+   "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3699,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3699,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 6052,
+   "pdfSha256": "9e40f19d0cec70b458140e955975b27f3ff010cece358d1a06e7bba6a8941715",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "fiscal year",
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ptance of Roadways and Right-of-Way Located at the Estates at North Shore - District 3 Unfinished Business 13. Request Appointments to Various Boards/Authorities 14. Request Approval forTemporary Closure of the State Court Clerk's Office Update …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… st Approval forTemporary Closure of the State Court Clerk's Office Updates from Administration New Business Bids and Contracts Coweta County Board of Commissioners Page 2 of 3 15. …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… rm Acceptance of Roadways and a Deed of Open Space Restriction Associated with Property Located in the Chapel Hill Subdivision, Phase 4A - District 5 Supplemental and Non-Agenda Items Public Hearing (The Chairman will call for any comments rega …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… mmissioners Page 2 of 3 15. Bid Award Associated with the Fiscal Year 2027 VMWare Renewal Additional Action Items 16. Request Approval/Execution of a Resolution to Adopt the Eighth Amendme …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Hearing Regarding Petition # REZ 26-06 Filed by Trinity Development Group, Inc. c/o Dillard Sellers Requesting to Rezone Property Located at 195 Fischer Road, Sharpsburg - District 1 - WITHDRAWN BY APPLICANT ON 10/12/2026 8. Public …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… roval of Petition # VAR 26-22 Filed by Lichty Building Group, Inc. for Daryl Myers Requesting a Front Yard Setback Variance for Property Located at 3 Norma Lane, Newnan - District 3 10. Recommendation Regarding Petition # AN 01-26 Filed by A …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1096",
    "date": "2026-10-13",
@@ -1502,24 +1587,6 @@
    "flags": [
     "land-use"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1145",
-   "date": "2026-03-26",
-   "body": "Board of Zoning Appeals",
-   "title": "Board of Zoning Appeals - Public Hearing",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3260,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3260,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1673,
-   "pdfSha256": "91ce9bccfa12d37f064592066811f1a26cd96fc1e90a8f8ececeb7402ea90598",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   }
  ]
