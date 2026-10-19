@@ -55,6 +55,18 @@ jobs:
           git add -f assets/data/id-crosswalk.json assets/data/id-crosswalk-ledger.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
+          elif git diff --cached --quiet -- assets/data/id-crosswalk-ledger.json \
+               && python scripts/only_keys_changed.py assets/data/id-crosswalk.json \
+                    metadata.generatedAt; then
+            # Nothing was assigned and the crosswalk moved only its timestamp, so
+            # committing would add a revision of a ~1.7k-line file that says
+            # nothing. This runs weekly, so without the guard the history fills
+            # with empty Sundays. The ledger is checked FIRST and separately: it
+            # is append-only, so a minted vgId is always material even though it
+            # is a different file from the one whose keys we are blanking.
+            echo "Only metadata.generatedAt changed - skipping redundant commit"
+            git restore --staged assets/data/id-crosswalk.json assets/data/id-crosswalk-ledger.json
+            git checkout -- assets/data/id-crosswalk.json assets/data/id-crosswalk-ledger.json
           else
             git commit -m "Update ID crosswalk"
             pushed=0
