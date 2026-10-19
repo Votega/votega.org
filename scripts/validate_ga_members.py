@@ -52,6 +52,9 @@ import os
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib.ga_roster import injects_for_session  # noqa: E402  (stdlib-only module)
+
 # Georgia's General Assembly has a constitutionally fixed size. These are the
 # seats that EXIST, not the seats that are filled: the count may legitimately sit
 # below them, never above.
@@ -102,8 +105,12 @@ def label(m):
 
 # ── tier 1: the file against itself ────────────────────────────────────────────
 
-def tier1(d, overrides=None):
-    """Return a list of contradictions. Empty means the file is self-consistent."""
+def tier1(d, overrides=None, old=None):
+    """Return a list of contradictions. Empty means the file is self-consistent.
+
+    `old` is the committed file, used for exactly one check (an unacknowledged biennium
+    changeover) — see the comment there for why that one is tier 1.
+    """
     errors = []
     members = d.get("members") or []
     meta = d.get("metadata") or {}
@@ -149,13 +156,32 @@ def tier1(d, overrides=None):
     # An `_inject` entry absent from the output means the editorial layer did not
     # apply — and that layer is the only thing that knows a member has left, so a
     # silent miss republishes a departed member as sitting.
+    #
+    # Only the entries IN SCOPE for this file's biennium are owed: an `_inject` tagged
+    # `_session` for another biennium is inert by design (a 2025-26 Resigned must not
+    # re-seat in 2027-28), and demanding it would turn every rollover into a hard block.
+    # An untagged entry applies to every biennium, so it is still demanded — leaving one
+    # behind fails loudly here rather than silently departing the wrong seat.
     if overrides:
         ids = {m.get("id") for m in members}
-        orphaned = [e.get("id") for e in (overrides.get("_inject") or [])
+        orphaned = [e.get("id") for e in injects_for_session(overrides, meta.get("session"))
                     if e.get("id") not in ids]
         if orphaned:
             errors.append(f"_inject entries missing from the output (the merge "
                           f"failed to apply): {orphaned}")
+
+    # A different biennium from the committed file, with no rollover acknowledgement in
+    # the file. Tier 1 although it compares two files: the real-world event (a new General
+    # Assembly) is tier 2, but the producer only ever emits this shape by republishing the
+    # outgoing class as sitting — nothing true about Georgia produces it — and the
+    # symptom is the "more than N seats" error above, hundreds of lines from the cause.
+    # Naming the cause here is the point. A rollover run stamps `metadata.rollover`.
+    was = ((old or {}).get("metadata") or {}).get("session")
+    if was and meta.get("session") and was != meta["session"] and not meta.get("rollover"):
+        errors.append(f"biennium changed from {was} to {meta['session']} with no "
+                      f"`metadata.rollover` — the roster was not built in rollover mode "
+                      f"(generate_ga_members_soap.py --new-biennium), so the outgoing "
+                      f"class is likely still in it")
 
     return errors
 
@@ -223,6 +249,18 @@ def tier2(new, old):
     short = under_strength(new)
     if short:
         sections.append(("Chamber below full strength", short))
+
+    roll = (new.get("metadata") or {}).get("rollover")
+    if roll:
+        rv = new.get("review") or {}
+        sections.append(("Biennium rollover", [
+            f"- {roll['from']['session']} → {roll['to']['session']}: "
+            f"{roll.get('incoming', 0)} incoming, {roll.get('departing', 0)} departing",
+            f"- {len(rv.get('newMemberNameReview') or [])} new member name(s) to review "
+            f"BEFORE the first entity-page build (the entity URL slugs on the name)",
+            f"- {roll.get('outOfScopeOverrides', 0)} override entr(ies) belong to "
+            f"{roll['from']['session']} and were skipped",
+        ]))
 
     if not old:
         return with_context(new, sections)
@@ -303,7 +341,8 @@ def main():
             print(f"FAIL: {args.overrides} is not valid JSON: {exc}", file=sys.stderr)
             return 1
 
-    errors = tier1(new, overrides)
+    old = baseline(args.path, args.baseline_ref)
+    errors = tier1(new, overrides, old)
     if errors:
         print("TIER 1 FAILED — the file contradicts itself, refusing to commit:\n",
               file=sys.stderr)
@@ -321,7 +360,7 @@ def main():
           f"House {len(seated(members, 'House of Representatives'))}/"
           f"{CHAMBER_MAX['House of Representatives']}).")
 
-    sections = tier2(new, baseline(args.path, args.baseline_ref))
+    sections = tier2(new, old)
     report = render(args.path, sections)
     if args.report_out:
         with open(args.report_out, "w", encoding="utf-8") as f:

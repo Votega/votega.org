@@ -17,7 +17,9 @@ VALID_STATUSES = {"Resigned", "Suspended", "Removed", "Deceased", "Vacant"}
 VALID_CHAMBERS = {"House of Representatives", "Senate"}
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 OCD_ID_RE = re.compile(r"^ocd-person/[0-9a-f-]{36}$")
-RESERVED_KEYS = {"_note", "_inject", "_retired", "_example_by_id", "_example_by_name"}
+RESERVED_KEYS = {"_note", "_scoping", "_inject", "_retired", "_example_by_id",
+                 "_example_by_name"}
+SESSION_RE = re.compile(r"^\d{4}_\d{2}$")
 
 errors = []
 
@@ -51,6 +53,7 @@ def check_year_consistency(context, date_field, year_field, date_val, year_val):
 
 def validate_inject_entry(entry, index):
     context = f"_inject[{index}] id={entry.get('id', '?')}"
+    check_session_tag(context, entry)
 
     required = ["id", "name", "chamber", "district", "status", "statusDate"]
     for field in required:
@@ -84,8 +87,16 @@ def validate_inject_entry(entry, index):
         check_iso_date(context, "birthDate", birth_date)
 
 
+def check_session_tag(context, entry):
+    """`_session` scopes a departure to one biennium (the roster's regular-session tag)."""
+    tag = entry.get("_session")
+    if tag is not None and not (isinstance(tag, str) and SESSION_RE.match(tag)):
+        err(context, f"_session must look like '2025_26', got: {tag!r}")
+
+
 def validate_override_entry(key, override):
     context = f"override key={repr(key)}"
+    check_session_tag(context, override)
 
     # Warn if the key looks like a leftover example entry
     if "REPLACE-WITH-REAL-ID" in key or key.startswith("First Last"):

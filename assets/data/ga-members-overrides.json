@@ -1,7 +1,9 @@
 {
   "_note": "Manual overrides applied after Open States data generation. Keys can be either the OCD member ID (ocd-person/...) or the member's full name as it appears in ga-members.json. Only include fields that need correcting — all other fields remain from Open States. Use _name for human-readable identification only; it is stripped before merging. Departure fields: status (Resigned | Suspended | Removed | Deceased | Vacant), statusDate (YYYY-MM-DD), statusNote (optional free-text detail, e.g. executive order number). Use _inject array to add entirely new entries: either a vacant seat not tracked by Open States (synthetic id like ga-senate-7-vacant), or a departed member kept under their REAL historic OCD person id so ga-member-votes.json's memberVotes (keyed by that same id) still joins correctly instead of appearing as an unattributed 'ghost' id. Use the _retired array to park a former _inject entry that Open States now supplies on its own: it is kept for provenance and IGNORED by the generator — never move it back to _inject, or it will duplicate the real member (inject keys on the synthetic id, which never collides with the real OCD id).",
+  "_scoping": "BIENNIUM SCOPE. A departure (status/statusDate/statusNote, whether in an _inject entry or an id/name patch) describes a seat of ONE General Assembly, so it carries \"_session\": the roster's regular-session tag (e.g. \"2025_26\"). generate_ga_members_soap.py applies only entries whose _session matches the roster it is building, and validate_ga_members.py only demands the matching _inject entries in the output. An entry with no _session applies to every biennium, and at a biennium rollover (--new-biennium) the producer REFUSES while any departure is untagged. Person-level facts (termStart, termStartYear, names, portraits) need no _session. The stale entries are not deleted at rollover: they stay as provenance and are simply inert.",
   "_inject": [
     {
+      "_session": "2025_26",
       "_provenance": "BRIDGE injected under her REAL OCD id while the Open States v3 API catches up to the openstates/people repo (which already lists her, verified 2026-09-11). Keyed on the real id (NOT the retired synthetic ga-senate-7-carden) so it auto-skips with no duplicate the moment the API serves her, and so her roll-call votes join. Remove this entry once ga-members.json shows her sourced from Open States.",
       "id": "ocd-person/3cfc8d4f-68d4-44b2-81f4-a162465e1aed",
       "name": "Adrienne White Carden",
@@ -27,6 +29,7 @@
       "legisGaGovId": 5097
     },
     {
+      "_session": "2025_26",
       "_provenance": "BRIDGE injected under his REAL OCD id while the Open States v3 API catches up to the openstates/people repo (which already lists him, verified 2026-09-11). Alvin Payton Jr. (D) won the special election/runoff to succeed Dexter Sharper in HD 177. Keyed on the real id (NOT the retired synthetic ga-house-177-vacant) so it auto-skips with no duplicate once the API serves him. Remove this entry once ga-members.json shows him sourced from Open States. Auto-skips harmlessly if the API already has him.",
       "id": "ocd-person/8aa7ee05-bf64-4c51-8821-ad905d25741b",
       "name": "Alvin Payton",
@@ -52,6 +55,7 @@
       "legisGaGovId": 5096
     },
     {
+      "_session": "2025_26",
       "_provenance": "Injected under her REAL historic OCD id so ga-member-votes.json's memberVotes join succeeds (Open States dropped her as a ghost id). She is the SITTING Senator for District 12 — the legis.ga.gov Senate roster shows her currently seated with no departure (verified 2026-08-23). An earlier record here marked her Resigned 2026-03-23 in error; corrected to active.",
       "id": "ocd-person/a0bfdc0d-4110-4cd2-b83c-834bba4300f5",
       "name": "Freddie Powell Sims",
@@ -77,6 +81,7 @@
       "legisGaGovId": 209
     },
     {
+      "_session": "2025_26",
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology.",
       "id": "ocd-person/23ffff2b-3ce6-46dc-996c-7b4fd71607bc",
       "name": "Nabilah Islam Parkes",
@@ -103,6 +108,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Successor Adrienne White Carden is injected as ocd-person/3cfc8d4f-68d4-44b2-81f4-a162465e1aed (legisGaGovId 5097)."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology.",
       "id": "ocd-person/b0587620-8c43-45b8-8212-285a13a4d47c",
       "name": "Dexter Sharper",
@@ -129,6 +135,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Successor Alvin Payton is injected as ocd-person/8aa7ee05-bf64-4c51-8821-ad905d25741b (legisGaGovId 5096). The ga-house-177-vacant synthetic id the old note pointed a reader at survives only in id-crosswalk-ledger.json (append-only); it is not in the roster, because the seat is filled."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. Departure date corrected 2026-08-23 to the legis.ga.gov Senate roster's 'Until' date.",
       "id": "ocd-person/e6dcaefd-8ecd-4f08-990f-e4443ae53ee8",
       "name": "Jason Esteves",
@@ -155,6 +162,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Date verified against the legis.ga.gov Senate roster 2026-08-23. Succeeded by Jaha Howard."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. Departure date corrected 2026-08-23 to the legis.ga.gov Senate roster's 'Until' date.",
       "id": "ocd-person/ffa17688-2ca9-40ba-9eb3-3991f930bf53",
       "name": "John Kennedy",
@@ -181,6 +189,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Date verified against the legis.ga.gov Senate roster 2026-08-23. Succeeded by Steven McNeel."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference — see Freddie Powell Sims entry above for methodology. Departure date corrected 2026-08-23 to the legis.ga.gov Senate roster's 'Until' date.",
       "id": "ocd-person/8d6562cb-cdd0-405f-a165-8463cde26594",
       "name": "Brandon Beach",
@@ -207,6 +216,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Date verified against the legis.ga.gov Senate roster 2026-08-23. Succeeded by Jason Dickerson."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference – see the Freddie Powell Sims entry above for methodology. statusDate was originally an UPPER BOUND (the successor's swearing-in date); on 2026-10-14 it was replaced with the official DateVacated from the legis.ga.gov Members service, as that note instructed. CONFIRMED against a primary source the same day: the Governor issued the writ of election for this seat on 2026-01-16 (EO 01.16.26.03), 11 days later – and a writ can only issue once the seat is vacant. All 11 departures in the biennium check out this way (gaps of 1–17 days, no unaccounted writs); see ga-executive-orders-*.json, which we already hold with a sha256 and a Wayback URL.",
       "id": "ocd-person/031b880f-171c-448f-b1c1-62ac47693909",
       "name": "Lynn Heffner",
@@ -234,6 +244,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Successor Sheila Nelson was sworn in 2026-03-15."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference – see the Freddie Powell Sims entry above for methodology. statusDate was originally an UPPER BOUND (the successor's swearing-in date); on 2026-10-14 it was replaced with the official DateVacated from the legis.ga.gov Members service, as that note instructed. CONFIRMED against a primary source the same day: the Governor issued the writ of election for this seat on 2026-01-16 (EO 01.16.26.02), 15 days later – and a writ can only issue once the seat is vacant. All 11 departures in the biennium check out this way (gaps of 1–17 days, no unaccounted writs); see ga-executive-orders-*.json, which we already hold with a sha256 and a Wayback URL.",
       "id": "ocd-person/cabee039-e73e-4dc6-95ec-3e22d8e529ff",
       "name": "Karen Bennett",
@@ -261,6 +272,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Successor Venola Mason was sworn in 2026-04-18."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference – see the Freddie Powell Sims entry above for methodology. statusDate was originally an UPPER BOUND (the successor's swearing-in date); on 2026-10-14 it was replaced with the official DateVacated from the legis.ga.gov Members service, as that note instructed. CONFIRMED against a primary source the same day: the Governor issued the writ of election for this seat on 2025-10-22 (EO 10.22.25.01), 10 days later – and a writ can only issue once the seat is vacant. All 11 departures in the biennium check out this way (gaps of 1–17 days, no unaccounted writs); see ga-executive-orders-*.json, which we already hold with a sha256 and a Wayback URL.",
       "id": "ocd-person/d6a8848d-a637-4c2e-ae37-84440c614400",
       "name": "Mandi Ballinger",
@@ -288,6 +300,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Successor Bill Fincher was sworn in 2026-01-10."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Identified 2026-07-24 via LegiScan roll-call cross-reference – see the Freddie Powell Sims entry above for methodology. statusDate was originally an UPPER BOUND (the successor's swearing-in date); on 2026-10-14 it was replaced with the official DateVacated from the legis.ga.gov Members service, as that note instructed. CONFIRMED against a primary source the same day: the Governor issued the writ of election for this seat on 2025-10-30 (EO 10.30.25.01), 2 days later – and a writ can only issue once the seat is vacant. All 11 departures in the biennium check out this way (gaps of 1–17 days, no unaccounted writs); see ga-executive-orders-*.json, which we already hold with a sha256 and a Wayback URL.",
       "id": "ocd-person/ff24cea3-8582-4cfe-b015-74ee7c5ebeef",
       "name": "Marcus Wiedower",
@@ -315,6 +328,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Successor Eric Gisler was sworn in 2026-01-08."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Injected under his REAL OCD id (openstates/people retired record, verified 2026-10-03) so his 2025-2026 session roll-call votes attribute to HIM, not his successor. legis.ga.gov shows him resigned January 13, 2026 (Senate 53, legisGaGovId 4933); Open States dropped him on resignation. Surfaced by the legis-id backfill: the vote producer rejected the S53 proposal (legisId 4933 matched successor Lanny Thomas by seat), revealing Moore was absent from ga-members.json. Remove once Open States serves him again.",
       "id": "ocd-person/6ebda9ee-2203-4b66-9bb3-64d2307157a0",
       "name": "Colton Moore",
@@ -341,6 +355,7 @@
       "_dataNote": "Retained under this OCD id so votes recorded earlier in the 2025–2026 session still attribute correctly. Successor Lanny Thomas holds Senate District 53."
     },
     {
+      "_session": "2025_26",
       "_provenance": "Injected under her REAL OCD id (openstates/people retired record, verified 2026-10-03) so her 2025-2026 session roll-call votes attribute to HER, not her successor. Surfaced by the id-only diff: 4952 cast 411 rows with no crosswalk entry. Remove once Open States serves her again. statusDate set 2026-10-14 from the official legis.ga.gov DateVacated (2025-09-05) and CONFIRMED the same day by EO 09.08.25.01, the writ of election for House District 106, issued 2025-09-08 – 3 days later, the tightest corroboration of the five dates adopted that day. Special election held 2025-11-04. RESOLVED: the Open States end_date of 2026-01-28 was never her departure date. It is exactly the first House sitting day of 2026, i.e. the day Open States reseated the chamber for the new session – her seat had been vacant since September and filled in November. Treat an Open States end_date near a session convening date as a reseating artifact, not a departure.",
       "id": "ocd-person/4161e949-6ea2-4df9-8248-cabcf40286ae",
       "name": "Shelly Hutchinson",
@@ -451,6 +466,7 @@
   },
   "ocd-person/e51d36a7-9684-4540-aae7-a5e60e434681": {
     "_name": "Sharon Henderson",
+    "_session": "2025_26",
     "termStart": "2021-01-11",
     "termStartYear": 2021,
     "status": "Suspended",

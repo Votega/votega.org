@@ -258,8 +258,8 @@ biennium's regular and special sessions. Do it at the end of the biennium, BEFOR
 themselves per session (the publishers bucket by each record's `session` tag, and past
 dirs are never overwritten); the **roster** does not — `ga-members.json` carries no
 session name, and `generate_ga_members_soap.py` builds it for whichever biennium
-`lib/ga_sessions.SESSION_NAMES` names, so it is replaced wholesale by the first daily run
-after you bump that. Freeze **before** the bump: the cutover is yours to time, but nothing
+`lib/ga_sessions.SESSION_NAMES` names, so it is replaced wholesale once the rollover is run
+(the daily run refuses to do it unattended — see *Roll the roster over* below). Freeze **before** the bump: the cutover is yours to time, but nothing
 warns you once it has happened.
 
 - Run the **`freeze-ga-roster`** workflow (dispatch-only). Leave the input blank to freeze
@@ -272,6 +272,56 @@ warns you once it has happened.
 - The live roster stays at `data/all.json` (refreshed daily by `update-ga-members`); the
   freeze is purely additive. `latest.json` at the repo root names the biennium, the session
   in progress, and every session's files.
+
+### Roll the roster over to the new General Assembly (deadline: Monday 2027-01-11)
+
+The Georgia General Assembly convenes the second Monday of January, so the 2027–2028
+roster has a hard date: window is late-November certification → **2027-01-11**. The Members
+service starts listing the new class for the new regular session (`2027-2028`) once it is
+published; the daily `update-ga-members` run **refuses** from that moment (it will not roll
+a biennium over unattended) and errors every morning until you do the following. The
+roster just stays on the outgoing class — safe, but stale.
+
+Why it refuses: the ordinary run republishes any committed member the new listing lacks
+*as sitting* (that is what keeps the Lt. Governor, who has a `legisGaGovId` but is not a
+member). Across a changeover that carries the entire outgoing class into the new
+Assembly and trips tier 1 ("Senate holds 59 current seats…"). The producer now detects the
+changeover from `metadata.session` / `legisSessionId` in the committed file and stops with
+a message saying exactly that.
+
+1. **Tag the departures.** Every override entry that records a departure
+   (`status` / `statusDate` / `statusNote`, in `_inject` or as an id/name patch) carries
+   `"_session": "2025_26"`. This is already done for the current entries; tag any you add.
+   Those entries then go inert at rollover (kept as provenance, never applied, and not
+   demanded by tier 1's `_inject` check). The rollover **refuses** while one is untagged.
+   `validate_ga_overrides.py` checks the tag's shape.
+2. **Freeze the outgoing roster** — run `freeze-ga-roster` for `2025-2026` while
+   `ga-members.json` still holds the outgoing class. The rollover run checks that
+   `sessions/2025-2026/members.json` is published in `Votega/ga-legislators` and refuses
+   if not (`--archive-confirmed` overrides it if the check cannot see a freeze you did).
+3. **Bump `lib/ga_sessions.py`** (§3 above: `SESSION_NAMES`, `ACTIVE_SESSION`,
+   `UNTAGGED_SESSION`, `BIENNIUM`) and land it **together with** step 4, not before: the
+   moment the bump is on `main`, the daily roster run starts refusing.
+4. **Run the rollover**: dispatch `update-ga-members` with **new_biennium** ticked (or
+   `python scripts/generate_ga_members_soap.py --new-biennium` locally, then the validator).
+   It drops everyone the new listing lacks, keeps returning incumbents' ids (never
+   re-keyed), gives newcomers `legis-<legisGaGovId>`, and derives a first-termer's
+   `termStart` as the convening date (`birthDate` stays null — SOAP has month+day only,
+   and the page already omits an unknown age). `metadata.rollover` is stamped; without it
+   `validate_ga_members.py` tier 1 fails the file as an unacknowledged changeover.
+5. **Work the review queues in `review`** (also printed in the tier-2 report):
+   - `newMemberNameReview` — **do this before the first entity-page build of the
+     biennium.** A newcomer is published under the *formal* legis.ga.gov name
+     ("Timothy Bearden"), and `build_entity_pages.py` slugs the live URL on it
+     (`/ga-legislators/<name>-<chamber>-<district>/`); fixing a name afterwards moves a URL
+     and needs a redirect. Set the common name with an override by `legisGaGovId`.
+   - `incomingCohort` / `departingCohort` — sanity-check against the election results.
+   - `rolloverPreservedNonMembers` — the Lt. Governor record is carried forward verbatim;
+     **a new Lt. Governor takes office in January 2027**, so confirm or replace it.
+   - `vacatedWithoutStatusOverride` — add new-biennium departures, tagged `"_session": "2027_28"`.
+6. Also mind the sibling halves of the same changeover: `ga-member-votes.json` / bills turn
+   over with the `SESSION_NAMES` bump (above), and late-arriving OCD ids for first-time
+   legislators land through `ga-openstates-crosswalk.json` (additive, never re-keys).
 
 **Known gap:** `ga-member-votes.json` covers ~4,280 of the 2025–26 session's ~5,480
 bills (`paginationComplete: false`). A full pass needs ~274 requests against the
