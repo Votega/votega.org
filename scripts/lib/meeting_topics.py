@@ -183,6 +183,45 @@ TOPIC_RULES = {
                            # 'real-time crime center'), kept because the bare form
                            # is specific and costs nothing.
                            'crime center',
+                           # ── Police-worn and in-car cameras (scope widened
+                           # 2026-10, at the publisher's direction) ──────────────
+                           # Body cams sit next to plate readers rather than inside
+                           # them, and were originally excluded with the bare 'axon'
+                           # brand. They are in now because a resident asking "what
+                           # is my police department recording" is asking one
+                           # question, not two. Measured: these phrases carry 26
+                           # documents, 21 of them previously unmatched, across 8
+                           # jurisdictions the page did not cover at all — among
+                           # them Atlanta's amendment "TO INCREASE THE TOTAL NUMBER
+                           # OF FLEET CAMERAS AND BODY WORN CAMERAS ... NOT TO
+                           # EXCEED FORTY MILLION", and Carrollton's "PD Body Cam /
+                           # Dash Cam Upgrades".
+                           # 'body cam' is the substring form on purpose: it carries
+                           # 'body cam', 'body cams' and 'body camera/s' in one
+                           # keyword.
+                           'body cam', 'bodycam', 'body-worn', 'body worn',
+                           'dashcam', 'dash cam', 'in-car camera', 'in car camera',
+                           # In-car "fleet" cameras are the closest crossover of all
+                           # — Axon Fleet does plate recognition, so this is ALPR in
+                           # a patrol car rather than on a pole. Zero marginal
+                           # documents today (Atlanta's four already match on 'body
+                           # worn'), kept because an agenda that says only "fleet
+                           # cameras" would otherwise be missed, and because it
+                           # costs no false positives to carry.
+                           'fleet camera', 'axon fleet',
+                           # The company as it is named in contracts. Deliberately
+                           # NOT given a vendor label below, which keeps it MEDIUM
+                           # confidence so it lands in the page's "possible
+                           # mentions" tier rather than the confirmed one. That is
+                           # the right home for it: of the 12 documents it adds
+                           # beyond the capability phrases above, 2 are plainly
+                           # tasers (a weapon, not surveillance) while ~5 are
+                           # umbrella deals like Cherokee's "consolidated agreement
+                           # ... for existing and future public safety technology"
+                           # — worth surfacing for review, not worth asserting.
+                           # Bare 'axon' stays out entirely: 32 documents, far too
+                           # broad.
+                           'axon enterprise',
                            #
                            # MEASURED AND REJECTED, with what they actually matched:
                            #   'detection camera'  both hits were a "Portable Gas
@@ -298,6 +337,9 @@ ALPR_VENDOR_LABELS = {
     'clearview ai':       'Clearview AI',
     'avigilon':           'Avigilon (Motorola)',
     'skydio':             'Skydio',
+    # A specific plate-reading product, unlike the bare company name 'axon
+    # enterprise' — which is deliberately left unlabelled so it stays medium.
+    'axon fleet':         'Axon Fleet',
     # Collapses with 'fusus' to one brand: same product, post-acquisition name.
     'axon enterprise video': 'Fusus (Axon)',
     'verkada':            'Verkada',
@@ -311,6 +353,12 @@ ALPR_VENDOR_LABELS = {
 # handoff scanner's high tier). Everything else that trips the alpr rule is
 # "medium" — real, badgeable, but keyword-only.
 ALPR_HIGH_TERMS = {
+    # Police-worn / in-car cameras: a "body worn camera" item is not a maybe, it is
+    # a body camera. Without these here the tier logic would file Atlanta's
+    # forty-million-dollar fleet-and-body-camera amendment under "possible
+    # mentions", which is exactly backwards.
+    'body cam', 'bodycam', 'body-worn', 'body worn',
+    'dashcam', 'dash cam', 'in-car camera', 'in car camera', 'fleet camera',
     'automated license plate', 'automatic license plate',
     'license plate recognition', 'license plate reader',
     'license-plate', 'plate recognition', 'number plate recognition',

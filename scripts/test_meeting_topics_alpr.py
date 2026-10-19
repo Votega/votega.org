@@ -88,7 +88,6 @@ MUST_NOT_FIRE = [
     'AppraisalPro contract',                                   # apprais-ALPR-o
     'disease surveillance report from the health department',
     'CCTV inspection of the sewer main',
-    'Axon body cameras and tasers',
     'Motorola Solutions radio upgrade',
     'security camera at the library',                          # bare cameras stay out
     'the plate glass window replacement',
@@ -122,11 +121,12 @@ MUST_NOT_FIRE = [
     # mixed evidence, but it does not make every camera brand a keyword.
     'Milestone XProtect license renewal', 'Eagle Eye Networks cloud VMS',
     'Spot AI camera analytics trial',
-    # Bare 'axon enterprise' is NOT a keyword: measured at 23 documents, inspected
-    # majority body cams / interview recording. Body cams are an explicit category
-    # exclusion, so the company name must not be what fires.
-    'AMENDMENT NUMBER SIX FOR AGREEMENT SP-APD-2212-1230170, BODY CAMERA/POLICE '
-    'EQUIPMENT & SERVICES WITH AXON ENTERPRISE, INC.',
+    # Bare 'axon' is still NOT a keyword — 32 documents, far too broad. Only the
+    # corporate form 'axon enterprise' matches, and only at medium confidence.
+    # (Until 2026-10 the body-camera half of this case was also out of scope; it is
+    # in now, so the old 'Axon body cameras and tasers' quiet-case moved to
+    # MUST_FIRE above.)
+    'Axon training simulator for the range',
     'Police Axon TRUE UP Inc. Interview Bundle',
     # Measured and rejected, with what each actually matched in the corpus.
     'contract with Konica Minolta for a Portable Gas Detection Camera System for '
