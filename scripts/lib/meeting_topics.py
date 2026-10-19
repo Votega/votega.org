@@ -87,18 +87,42 @@ TOPIC_RULES = {
                            # 'cctv' (sewer-line inspection) and 'camera' are too broad.
                            'surveillance camera', 'surveillance technology',
                            'surveillance system', 'surveillance equipment',
+                           # Face recognition stays IN scope: it runs on the camera
+                           # feeds this page already tracks, so it is a camera
+                           # capability rather than separate forensics.
                            'facial recognition', 'face recognition',
                            'real time crime center', 'real-time crime center',
-                           'gunshot detection', 'predictive policing',
-                           'cell site simulator', 'cell-site simulator', 'imsi catcher',
+                           # Gunshot detection. 'gunfire detection' is not a synonym
+                           # we guessed at — it is the phrase a real Columbus agenda
+                           # used for a SoundThinking contract ("a gunfire detection,
+                           # alert, and analysis program"), which this rule matched
+                           # only because the vendor was also named. An unknown
+                           # vendor's contract in the same words was missed outright,
+                           # so the capability net has to carry both spellings.
+                           'gunshot detection', 'gunfire detection',
+                           'gunshot sensor', 'acoustic gunshot',
                            'drone as first responder', 'drone as a first responder',
+                           # ── SCOPE (2026-10) ────────────────────────────────────
+                           # This page covers cameras, plate readers, drones and
+                           # gunshot detection. Deliberately NOT matched, though they
+                           # are surveillance in the broad sense: phone forensics
+                           # ('cellebrite', 'graykey', 'magnet forensics'), phone
+                           # interception ('cell site simulator', 'imsi catcher'),
+                           # data-broker / fusion platforms ('peregrine
+                           # technologies', 'palantir', 'babel street', 'fog data
+                           # science') and records analytics with no sensor of its
+                           # own ('predictive policing'). Each was dropped from this
+                           # rule rather than never added: they were in the 2026-10
+                           # expansion and pulled back when the page's scope was set.
+                           # Re-adding any of them is a scope decision about what the
+                           # page is FOR, not a recall tweak.
+                           #
                            # Surveillance vendors. Narrow brand names only - never a
                            # word that is also a place or a common noun ('clearview'
                            # alone is a street name; 'axon' is tasers/body cams;
                            # 'motorola' is radios).
                            'fusus', 'shotspotter', 'soundthinking', 'clearview ai',
-                           'avigilon', 'verkada', 'hikvision', 'dahua', 'cellebrite',
-                           'peregrine technologies'],
+                           'avigilon', 'verkada', 'hikvision', 'dahua'],
 }
 
 # Keywords that must match as WHOLE WORDS, not substrings — same tag semantics as
@@ -155,8 +179,9 @@ ALPR_VENDOR_LABELS = {
     'verkada':            'Verkada',
     'hikvision':          'Hikvision',
     'dahua':              'Dahua',
-    'cellebrite':         'Cellebrite',
-    'peregrine technologies': 'Peregrine Technologies',
+    # No 'cellebrite' / 'peregrine technologies' here: both left this page's scope
+    # (see the SCOPE note in TOPIC_RULES). A label without its keyword fails the
+    # contract test either way.
 }
 
 # The spelled-out capability phrases that, on their own, are unambiguous enough to

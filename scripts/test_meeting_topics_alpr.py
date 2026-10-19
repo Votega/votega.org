@@ -54,10 +54,18 @@ MUST_FIRE = [
     'ShotSpotter gunshot detection renewal',
     'SoundThinking subscription',
     'Fusus integration', 'Verkada camera licenses', 'Hikvision cameras ban',
-    'Avigilon appearance search', 'Cellebrite phone extraction licenses',
-    'Clearview AI contract', 'cell-site simulator policy',
-    'Peregrine Technologies platform', 'predictive policing pilot',
+    'Avigilon appearance search',
+    'Clearview AI contract',
     'drone as first responder pilot program',
+    # Gunshot detection, both spellings. "gunfire detection" is the phrasing a real
+    # Columbus agenda used for a SoundThinking contract; before it was added, that
+    # meeting matched only because the vendor was named too, so the same contract
+    # from an unknown vendor was missed. The other two cover the capability without
+    # either brand.
+    'a gunfire detection, alert, and analysis program',
+    'gunfire detection system for the Phase II coverage area',
+    'acoustic gunshot sensors downtown',
+    'gunshot sensor maintenance agreement',
 ]
 
 MUST_NOT_FIRE = [
@@ -75,6 +83,21 @@ MUST_NOT_FIRE = [
     'the plate glass window replacement',
     'lprint', 'helpr', 'rtccx',                                # acronyms are whole-word only
     'drone survey of the landfill',
+    # ── Out of scope (2026-10) ───────────────────────────────────────────────────
+    # This page covers cameras, plate readers, drones and gunshot detection. These
+    # are surveillance in the broad sense and were carried by the 2026-10 expansion,
+    # then pulled back when the scope was set — so they are pinned QUIET here, not
+    # merely absent, to record that the silence is a decision. Re-adding any of them
+    # is a scope decision about what the page is for, and will fail this test first.
+    'Cellebrite phone extraction licenses',                    # phone forensics
+    'GrayKey unlock subscription',
+    'Magnet Forensics license renewal',
+    'cell-site simulator policy',                              # phone interception
+    'cell site simulator deployment', 'IMSI catcher disclosure',
+    'Peregrine Technologies platform',                         # data fusion
+    'Palantir Gotham contract', 'Babel Street subscription',
+    'Fog Data Science renewal',
+    'predictive policing pilot',                               # records analytics
 ]
 
 for t in MUST_FIRE:
