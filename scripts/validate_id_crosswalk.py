@@ -40,6 +40,9 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib.ga_identity import SLOTS, WIKIDATA_RE, is_ocd_id, ledger_keys  # noqa: E402
+
 CROSSWALK_FILE = "assets/data/id-crosswalk.json"
 LEDGER_FILE    = "assets/data/id-crosswalk-ledger.json"
 OVERRIDES_FILE = "assets/data/id-crosswalk-overrides.json"
@@ -66,8 +69,11 @@ POSITIONAL_ID = re.compile(r'^ga-(house|senate)-\d+-\d{4}-[a-z]+-\d+$')
 #: member seated mid-session) — e.g. ga-house-177-vacant, ga-senate-7-carden. Those
 #: are member ids, not ballot positions: they have no cycle year and no trailing
 #: index, which is what keeps them distinct from POSITIONAL_ID above.
+#: `legis:<n>` is the primary key for state legislators; `legis-<n>` is a roster id (the
+#: legacy key) for a member Open States had not catalogued.
 VALID_LEDGER_KEY = re.compile(
-    r'^(ocd-person/[0-9a-f-]+|[A-Z]\d{6}|ga-(house|senate)-\d+-[a-z]+|peachfile:\d+|fec:[A-Z0-9]+)$')
+    r'^(legis:\d+|legis-\d+|ocd-person/[0-9a-f-]+|[A-Z]\d{6}|ga-(house|senate)-\d+-[a-z]+'
+    r'|peachfile:\d+|fec:[A-Z0-9]+)$')
 
 errors, warnings = [], []
 
@@ -107,7 +113,10 @@ def unaccounted_inputs(people, members, federal, cand_ids):
     each must still be claimed by someone.
     """
     errors = []
-    ocd = {(p.get("ids") or {}).get("ocdPersonId") for p in people}
+    # The roster `id` is an opaque handle: it is published as ids.rosterId, and (older
+    # files) as ocdPersonId. Either accounts for the member.
+    ocd = {v for p in people for v in ((p.get("ids") or {}).get("rosterId"),
+                                        (p.get("ids") or {}).get("ocdPersonId")) if v}
     bio = {(p.get("ids") or {}).get("bioguideId") for p in people}
     claimed = {c for p in people for c in (p.get("ids") or {}).get("votegaCandidateIds") or []}
     for label, missing in (
@@ -120,6 +129,81 @@ def unaccounted_inputs(people, members, federal, cand_ids):
         if missing:
             errors.append(f"{len(missing)} {label} have no record in the crosswalk, "
                           f"e.g. {', '.join(missing[:3])} -- a partial build")
+    return errors
+
+
+def slot_errors(people, members):
+    """Identity-slot invariants. Returns error strings.
+
+    `ocdPersonId` is contracted to hold an OCD person id or null -- never the roster's
+    opaque `id`, which is `legis-<legisGaGovId>` for a member Open States has not
+    catalogued. A slot is also never a bare claim: every roster slot carries provenance,
+    and a value never rides with a provenance that says it is unresolved.
+    """
+    errors = []
+    for p in people:
+        ids = p.get("ids") or {}
+        who = p.get("vgId") or (p.get("name") or {}).get("full")
+        v = ids.get("ocdPersonId")
+        if v is not None and not is_ocd_id(v):
+            errors.append(f"{who}: ocdPersonId {v!r} is not an OCD person id (a roster handle "
+                          f"belongs in rosterId)")
+        w = ids.get("wikidataId")
+        if w is not None and not WIKIDATA_RE.match(str(w)):
+            errors.append(f"{who}: wikidataId {w!r} is not a Wikidata Q-number")
+    for m in members:
+        who = f"{m.get('name')} ({m.get('legisGaGovId')})"
+        prov = m.get("idProvenance")
+        for slot in SLOTS:
+            if slot not in m:
+                errors.append(f"{who}: roster member has no {slot} slot (null if unknown)")
+                continue
+            val = m[slot]
+            if slot == "ocdPersonId" and val is not None and not is_ocd_id(val):
+                errors.append(f"{who}: roster ocdPersonId {val!r} is not an OCD person id")
+            pv = (prov or {}).get(slot)
+            if not isinstance(pv, dict) or not pv.get("method"):
+                errors.append(f"{who}: {slot} has no provenance (a bare null reads as a claim)")
+            elif val is not None and pv["method"] in ("unresolved", "out-of-scope"):
+                errors.append(f"{who}: {slot} has a value but provenance says {pv['method']}")
+            elif val is None and pv.get("confidence") == "high":
+                errors.append(f"{who}: {slot} is null but provenance claims a high-confidence match")
+    return errors
+
+
+def ledger_identity_errors(people, assign):
+    """One person, one vgId -- however many keys the ledger holds for them.
+
+    legisGaGovId is the primary key (`legis:<n>`); the legacy roster id is the fallback;
+    an identifier SLOT (ocdPersonId) is never a key. Walk every key a person could be
+    known by and require they agree, so a late-arriving ocdPersonId that some code keyed
+    on (minting a second vgId for the same person) is caught.
+    """
+    errors = []
+    for p in people:
+        vg = p.get("vgId")
+        ids = p.get("ids") or {}
+        if not vg:
+            continue
+        who = f"{vg} ({(p.get('name') or {}).get('full')})"
+        keys = ledger_keys(ids.get("legisGaGovId"), ids.get("rosterId"))
+        if not keys and ids.get("ocdPersonId"):         # an older file with no rosterId
+            keys = [ids["ocdPersonId"]]
+        if ids.get("bioguideId"):
+            keys.append(ids["bioguideId"])
+        if keys:
+            present = [k for k in keys if k in assign]
+            if not present:
+                errors.append(f"{who} has no ledger entry under any of {keys}")
+                continue
+            if assign[present[0]] != vg:
+                errors.append(f"{who} is not the ledger's assignment for {present[0]} "
+                              f"(ledger says {assign[present[0]]}) -- resolution order is {keys}")
+        # Slots must never have become keys that disagree with the person's vgId.
+        slot_keys = [ids.get(s) for s in SLOTS if ids.get(s)]
+        for k in slot_keys + list(keys):
+            if k in assign and assign[k] != vg:
+                errors.append(f"{who}: two vgIds for one person -- ledger key {k} is {assign[k]}")
     return errors
 
 
@@ -179,7 +263,8 @@ def main():
     fec     = load(FEC_FILE)
     races   = load(RACES_FILE)
 
-    ocd_ids  = {m["id"] for m in members}
+    ocd_ids  = {m["id"] for m in members} | {m["ocdPersonId"] for m in members
+                                              if m.get("ocdPersonId")}
     bio_ids  = {m["bioguideId"] for m in federal}
     filer_ids = set(filers)
     fec_ids  = set(fec.get("candidates", {}))
@@ -198,6 +283,8 @@ def main():
     if meta.get("count") != len(people):
         err(f"metadata.count ({meta.get('count')}) != len(people) ({len(people)})")
     for msg in unaccounted_inputs(people, members, federal, cand_ids):
+        err(msg)
+    for msg in slot_errors(people, members):
         err(msg)
 
     with_vgid = sum(1 for p in people if p.get("vgId"))
@@ -247,7 +334,8 @@ def main():
     # --- No upstream id may be claimed by two people -------------------------
     # The invariant that makes the file safe to join on: two people sharing a
     # filing means one is being credited with the other's fundraising.
-    scalar_keys = ("ocdPersonId", "bioguideId", "legisGaGovId", "govtrackId", "openSecretsId")
+    scalar_keys = ("rosterId", "ocdPersonId", "wikidataId", "ballotpediaId", "bioguideId",
+                   "legisGaGovId", "govtrackId", "openSecretsId")
     list_keys   = ("peachfileFilerEntityIds", "fecCandidateIds", "votegaCandidateIds")
     for key in scalar_keys + list_keys:
         owners = {}
@@ -276,16 +364,15 @@ def main():
         elif not VALID_LEDGER_KEY.match(key):
             warn(f"ledger key {key!r} is not a recognised durable-id form")
 
-    # Every keyed record must match the ledger's assignment for its natural key.
+    # Every keyed record must match the ledger's assignment, resolved in order
+    # (legisGaGovId, then the legacy roster id) -- see ledger_identity_errors.
+    for msg in ledger_identity_errors(people, assign):
+        err(msg)
     for p in people:
         if not p.get("vgId"):
             continue
         ids = p["ids"]
-        natural = ids.get("ocdPersonId") or ids.get("bioguideId")
-        if natural:
-            if assign.get(natural) != p["vgId"]:
-                err(f"{p['vgId']} ({p['name']['full']}) is not the ledger's assignment for "
-                    f"{natural} (ledger says {assign.get(natural)})")
+        if ids.get("rosterId") or ids.get("ocdPersonId") or ids.get("bioguideId"):
             continue
         # Candidate-only: every filing it carries must point at this same vgId.
         keys = [f"peachfile:{f}" for f in ids.get("peachfileFilerEntityIds") or []]

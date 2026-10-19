@@ -152,17 +152,21 @@ def load_amendment_ids(bills_file):
 # ------------------------------------------------------------------------ crosswalk
 
 def build_crosswalk(path=CROSSWALK_FILE):
-    """legisGaGovId(int) -> ocdPersonId, from id-crosswalk.json (the canonical,
-    collision- and turnover-proof join — identical to the /api producer's)."""
+    """legisGaGovId(int) -> roster id, from id-crosswalk.json (the canonical,
+    collision- and turnover-proof join — identical to the /api producer's).
+
+    The value is the roster's opaque `id` (`ids.rosterId`), which is what memberVotes is
+    keyed on. It is NOT necessarily an OCD id: a member Open States has not catalogued is
+    `legis-<legisGaGovId>`, and `ids.ocdPersonId` is null for them."""
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
     by_legis_id = {}
     for person in data.get("people", []):
         ids = person.get("ids") or {}
-        ocd = ids.get("ocdPersonId")
+        roster_id = ids.get("rosterId") or ids.get("ocdPersonId")
         legis_id = ids.get("legisGaGovId")
-        if ocd and legis_id is not None:
-            by_legis_id[int(legis_id)] = ocd
+        if roster_id and legis_id is not None:
+            by_legis_id[int(legis_id)] = roster_id
     return by_legis_id
 
 

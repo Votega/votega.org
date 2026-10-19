@@ -165,12 +165,27 @@ def members_schema():
                     "required": ["id", "name", "chamber"],
                     "properties": {
                         "id": {"type": "string", "description":
-                               "Join key into votes.json's memberVotes. Normally an Open "
-                               "States OCD person id, carried as a cross-reference; a member "
-                               "Open States has not catalogued is keyed 'legis-<legisGaGovId>' "
-                               "instead. A member's id is assigned once and never changes. "
-                               "Prefer legisGaGovId as the STABLE identifier: it is the "
-                               "General Assembly's own id for the member."},
+                               "An OPAQUE HANDLE: the stable string this member was first "
+                               "assigned, which never changes. It is the join key into "
+                               "votes.json's memberVotes and nothing else -- do not parse or "
+                               "interpret it. Some values happen to be Open States OCD person "
+                               "ids and others are 'legis-<legisGaGovId>'; neither shape is a "
+                               "promise, so read ocdPersonId for an OCD id. The PRIMARY, "
+                               "authoritative identity is legisGaGovId."},
+                        "ocdPersonId": {"type": ["string", "null"], "description":
+                                        "Open States OCD person id, or null. A cross-reference "
+                                        "that can arrive after a member is seated; never the "
+                                        "key. See idProvenance for why a value is null."},
+                        "wikidataId": {"type": ["string", "null"], "description":
+                                       "Wikidata item (Q-number), or null. Cross-reference."},
+                        "ballotpediaId": {"type": ["string", "null"], "description":
+                                          "Ballotpedia page title, or null. Cross-reference."},
+                        "idProvenance": {"type": "object", "description":
+                                         "Per-slot provenance: method, source, confidence. A null "
+                                         "slot is distinguished as confidence 'no-match' (we "
+                                         "looked, the source has no record), 'ambiguous' (more "
+                                         "than one fit, none picked) or method 'unresolved' (no "
+                                         "lookup has run yet)."},
                         "name": {"type": "string", "description":
                                  "The name as commonly used, which can differ from the formal "
                                  "name legis.ga.gov returns ('Tim Bearden' vs 'Timothy Bearden')."},
@@ -258,9 +273,9 @@ def votes_schema():
                        "web service at legis.ga.gov. Keyed by vote id in the form "
                        "\"<rollCallId>-<legislationId>\" — one floor vote on a bundled calendar "
                        "appears once per bill, with identical tallies. memberVotes is keyed by "
-                       "the `id` in members data — normally an Open States OCD person id, or "
-                       "'legis-<legisGaGovId>' for a member Open States has not catalogued. See "
-                       "members.schema.json; legisGaGovId is the stable identifier.",
+                       "the `id` in members data -- an opaque handle (some are OCD-shaped, "
+                       "others 'legis-<legisGaGovId>'; never interpret it). See "
+                       "members.schema.json; legisGaGovId is the primary identity.",
         "type": "object",
         "required": ["votes", "memberVotes"],
         "properties": {
@@ -441,7 +456,7 @@ def scorecard_schema():
                     "type": "object",
                     "required": ["id", "name", "chamber"],
                     "properties": {
-                        "id": {"type": "string", "description": "OCD person id (join key into votes.json / members data)."},
+                        "id": {"type": "string", "description": "Opaque member handle (join key into votes.json / members data); not necessarily an OCD id."},
                         "name": {"type": "string"},
                         "party": {"type": ["string", "null"]},
                         "chamber": {"type": "string", "enum": ["Senate", "House of Representatives"]},

@@ -111,8 +111,10 @@ def build_ga_legislators(records, seen):
         return
     for m in data.get("members", []):
         oid = clean(m.get("id"))
-        if not oid or not oid.startswith("ocd-person/"):
-            # Synthetic/vacant IDs have no detail page to link to.
+        if not oid or not oid.startswith(("ocd-person/", "legis-")):
+            # Synthetic/vacant IDs have no detail page to link to. `legis-<id>` is NOT
+            # synthetic in that sense: it is the real handle of a sitting member Open States
+            # has not catalogued, and `id` is opaque, so it must not be filtered on its shape.
             continue
         if m.get("status") in ("Resigned", "Removed", "Deceased"):
             # Same filter as ga.js and ga-majority-tracker.html -- don't index

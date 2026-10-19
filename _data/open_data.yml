@@ -49,7 +49,9 @@ datasets:
       Current Georgia State Senators and Representatives — roster with district,
       party, committees, and contact — plus each member's passage-vote history
       from the legislature's official roll-call record, joined to the roster on the
-      same person ID, and a derived voting scorecard (party unity + participation)
+      member's roster ID. The primary identity is the General Assembly's own member
+      ID (legisGaGovId); the Open States OCD ID, Wikidata and Ballotpedia ids are
+      nullable cross-references with provenance. Also a derived voting scorecard (party unity + participation)
       for every member.
     source: legis.ga.gov official web service
     scope: 158th General Assembly (2025–2026)
@@ -59,7 +61,7 @@ datasets:
     files:
       - { name: "latest.json", desc: "Start here — indexes every session and names its files", url: "https://github.com/Votega/ga-legislators/blob/main/latest.json" }
       - { name: "data/all.json", desc: "Live member roster", url: "https://github.com/Votega/ga-legislators/blob/main/data/all.json" }
-      - { name: "sessions/2025-2026/votes.json", desc: "Passage-vote history, regular session (keyed by OCD person ID)", url: "https://github.com/Votega/ga-legislators/blob/main/sessions/2025-2026/votes.json" }
+      - { name: "sessions/2025-2026/votes.json", desc: "Passage-vote history, regular session (keyed by the roster's opaque member id; legisGaGovId is the primary identity)", url: "https://github.com/Votega/ga-legislators/blob/main/sessions/2025-2026/votes.json" }
       - { name: "sessions/2026-ss/votes.json", desc: "Passage-vote history, 2026 special session", url: "https://github.com/Votega/ga-legislators/blob/main/sessions/2026-ss/votes.json" }
       - { name: "sessions/2025-2026/scorecard.csv", desc: "Party-unity + participation per legislator (derived)", url: "https://github.com/Votega/ga-legislators/blob/main/sessions/2025-2026/scorecard.csv" }
     docs: /about-the-data#georgia-general-assembly-legislators

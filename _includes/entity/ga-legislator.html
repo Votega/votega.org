@@ -693,7 +693,7 @@
     const panel = document.getElementById('entityNews');
     if (!btn || !panel || !window.EntityNews || !member) return;
     try {
-      const { vgId, name, items } = await EntityNews.load({ ocdPersonId: member.id });
+      const { vgId, name, items } = await EntityNews.load({ rosterId: member.id });
       if (!vgId || !items.length) { btn.remove(); panel.remove(); return; }
       panel.innerHTML = EntityNews.renderCards(items, {
         limit: 8, name: name, hubHref: EntityNews.hubHref(getBasePath(), vgId),

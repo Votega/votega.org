@@ -233,7 +233,7 @@ def build_id_index(people):
             continue
         index[vg] = vg
         ids = p.get("ids") or {}
-        for key in ("bioguideId", "ocdPersonId"):
+        for key in ("bioguideId", "ocdPersonId", "rosterId"):
             val = ids.get(key)
             if val:
                 index[val] = vg
@@ -329,7 +329,9 @@ def resolve_entity_url(person, entity_urls):
     """
     ids = person.get("ids") or {}
     bioguide = ids.get("bioguideId")
-    ocd = ids.get("ocdPersonId")
+    # entity_urls["ga-legislator"] is keyed on the roster id (the opaque handle), which is
+    # an OCD id for most members and `legis-<id>` for one Open States has not catalogued.
+    ocd = ids.get("rosterId") or ids.get("ocdPersonId")
     cand_ids = ids.get("votegaCandidateIds") or []
 
     us = entity_urls.get("us-congress", {})
@@ -917,6 +919,8 @@ def main():
                 entry["bioguideId"] = pids["bioguideId"]
             if pids.get("ocdPersonId"):
                 entry["ocdPersonId"] = pids["ocdPersonId"]
+            if pids.get("rosterId"):
+                entry["rosterId"] = pids["rosterId"]
             if pids.get("votegaCandidateIds"):
                 entry["candidateIds"] = pids["votegaCandidateIds"]
             entities[vg] = entry

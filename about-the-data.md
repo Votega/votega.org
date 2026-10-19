@@ -67,7 +67,8 @@ Member data — name, party, chamber, district, committee assignments, leadershi
 - **Who has left:** The official roster records who holds a seat, not who has left one. Resignations, suspensions and vacancies are maintained by VoteGA on top of it; the service does supply a vacancy date, which we use as a prompt to check rather than as the record itself.
 - **Term start dates and dates of birth:** Not available from the service — it gives the earliest session a member served, and a birthday without a year. We maintain a manual override file for known values, so coverage of these two fields decays slowly as the roster turns over.
 - **Committees:** Named exactly as the General Assembly names them, so they track official renamings. The one exception is the acronym MARTOC, which we expand.
-- **Open States:** No longer a source for any of this. We still carry each member's Open States OCD person ID as a cross-reference, so our data can be joined to theirs — see the ID crosswalk below.
+- **Identity:** A member's **primary identifier is the General Assembly's own member ID (`legisGaGovId`)** — official, collision-proof, direct from the source, and stable back to 2001. Every other identifier we carry is a cross-reference added alongside it, never a replacement: the Open States OCD person ID, the Wikidata item and the Ballotpedia page, each nullable and each with a note recording where it came from (or why it is empty). The `id` field on a roster record is an opaque handle used to join votes; do not read meaning into its shape.
+- **Open States:** No longer a source for any of this. The OCD person IDs are matched from the public-domain (CC0) [`openstates/people`](https://github.com/openstates/people) repository, using the member's legis.ga.gov profile link — see the ID crosswalk below.
 - **Freshness:** Fetched daily
 
 ---
@@ -222,6 +223,8 @@ Keying on the filing also dedupes correctly: three sitting statewide executives 
 **Committees follow the office sought, not the office held.** A campaign committee is registered against the office a candidate is seeking, and PeachFile files it that way. So a sitting State Representative running for the Senate has their committee under the Senate seat, not the House one. The crosswalk matches against the office sought first and falls back to the seat currently held.
 
 **Where one person has two filings.** Because PeachFile registers a committee per office, someone seeking two offices in a cycle has two filer entity IDs — Georgia's 2026 ballot contains such a case. Those are merged onto one person only by an explicit, documented decision recorded in a public overrides file, never inferred from a name match.
+
+**For state legislators the ledger is keyed on `legisGaGovId`, never on a cross-reference.** An identifier that arrives later — an OCD ID months after a member is seated, say — is added to the record and cannot create a second `vgId` for the same person.
 
 **Identifiers are stable.** Each person's `vgId` is minted once and held in a committed, append-only ledger. A legislator who changes chamber or name, or whose Open States record is reissued, keeps the same `vgId`, and an ID published once never comes to mean a different person. The build refuses to complete if the ledger renumbers or drops an assignment, or if a positional candidate ID is ever used as a key.
 
