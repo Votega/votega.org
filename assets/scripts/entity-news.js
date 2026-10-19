@@ -69,6 +69,7 @@ window.EntityNews = (function () {
       var e = entities[vg];
       if (e.bioguideId) idx[e.bioguideId] = vg;
       if (e.ocdPersonId) idx[e.ocdPersonId] = vg;
+      if (e.rosterId) idx[e.rosterId] = vg;
       (e.candidateIds || []).forEach(function (cid) { idx[cid] = vg; });
     });
     return idx;
@@ -79,7 +80,7 @@ window.EntityNews = (function () {
       if (!data || !data.entities) return { vgId: null, name: null, items: [] };
       var idx = reverseIndex(data.entities);
       var vgId = null;
-      [ids.bioguideId, ids.ocdPersonId, ids.candidateId].forEach(function (k) {
+      [ids.bioguideId, ids.rosterId, ids.ocdPersonId, ids.candidateId].forEach(function (k) {
         if (!vgId && k && idx[k]) vgId = idx[k];
       });
       if (!vgId) return { vgId: null, name: null, items: [] };

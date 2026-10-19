@@ -77,16 +77,18 @@ def build_party_lookup():
 
 
 def build_crosswalk():
-    """legisGaGovId(int) -> ocdPersonId, for the SOAP fallback path. Same canonical
-    join generate_ga_votes_soap.py uses — collision- and turnover-proof."""
+    """legisGaGovId(int) -> roster id, for the SOAP fallback path. Same canonical
+    join generate_ga_votes_soap.py uses — collision- and turnover-proof. The value is the
+    roster's opaque `id` (`ids.rosterId`), not necessarily an OCD id."""
     with open(CROSSWALK_FILE, encoding="utf-8") as f:
         data = json.load(f)
     out = {}
     for p in data.get("people", []):
         ids = p.get("ids") or {}
-        legis_id, ocd = ids.get("legisGaGovId"), ids.get("ocdPersonId")
-        if legis_id and ocd:
-            out[int(legis_id)] = ocd
+        legis_id = ids.get("legisGaGovId")
+        roster_id = ids.get("rosterId") or ids.get("ocdPersonId")
+        if legis_id and roster_id:
+            out[int(legis_id)] = roster_id
     return out
 
 

@@ -33,6 +33,7 @@ import time
 from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
+from lib.ga_identity import apply_identity_slots
 from lib.ga_leadership import committee_index, normalize_title
 from lib.ga_roster import (apply_member_overrides, display_committee,
                            listing_is_too_short, normalize_address)
@@ -42,6 +43,7 @@ from lib.ga_soap import (get_committees_by_session, get_member, get_members_by_s
 MEMBERS_FILE    = "assets/data/ga-members.json"
 OVERRIDES_FILE  = "assets/data/ga-members-overrides.json"
 OUTPUT_FILE     = sys.argv[1] if len(sys.argv) > 1 else MEMBERS_FILE
+IDENTITY_SIDECAR = "assets/data/ga-openstates-crosswalk.json"
 
 DELAY = 0.1           # politeness between GetMember calls; there is no quota
 #: Carrying a member forward is for a transient. Past this share it is an outage.
@@ -191,6 +193,15 @@ def build_record(listing, detail, legis_session, committees, prior):
     }
 
 
+def _load_json(path):
+    """A sidecar that does not exist yet is an empty one: every slot reads "unresolved"."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+
 def main():
     tag, legis_session = regular_session()
     print(f"Building the SOAP roster for {tag} (legis session {legis_session})\n")
@@ -307,6 +318,11 @@ def main():
 
     members.sort(key=lambda m: (m.get("chamber") or "", m.get("name") or ""))
 
+    # Identity slots (ocdPersonId / wikidataId / ballotpediaId + provenance). ADDITIVE and
+    # nullable: legisGaGovId is the primary key, `id` stays an opaque handle and is never
+    # touched here. The values come from generate_openstates_crosswalk.py's sidecar.
+    apply_identity_slots(members, _load_json(IDENTITY_SIDECAR))
+
     # SOAP proposes, a human disposes (spec §8.4): surface a departure, never write a
     # status. Computed AFTER the overrides so these describe the file they ship in — read
     # against the PREVIOUS file instead, a departure characterised in this very run still
@@ -351,7 +367,7 @@ def main():
             "count": len(members),
             "committeesAvailable": bool(committees),
             "carriedForward": len(carried),
-            "withoutOcdId": sum(1 for m in members if not str(m.get("id", "")).startswith("ocd-person/")),
+            "withoutOcdId": sum(1 for m in members if m.get("ocdPersonId") is None),
             "preservedNotInMembersService": len(preserved),
             "overridesApplied": patched,
             "overridesInjected": injected,

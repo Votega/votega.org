@@ -1,0 +1,77 @@
+name: Update GA external identifiers (monthly, 06:30 UTC on the 5th)
+
+permissions:
+  contents: write
+  issues: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Monthly is plenty: these are cross-references, never identity (legisGaGovId is the
+    # primary key), and a quiet month commits nothing. Ahead of the daily roster run
+    # (07:00 UTC) so a new identifier is merged into ga-members.json the same morning.
+    - cron: '30 6 5 * *'
+
+jobs:
+  update-ga-openstates-crosswalk:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      # fetch-depth: 0 because the commit step rebases (see update-fec-data.yml).
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # PyYAML is for the openstates/people person files only; the offline tests and the
+      # roster merge are stdlib. No Open States API key: this reads a public GitHub repo
+      # (CC0). GITHUB_TOKEN only lifts the contents-API rate limit.
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Resolve identifiers from openstates/people
+        id: fetch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/generate_openstates_crosswalk.py
+
+      # Only run-scoped keys moved => skip the commit (a quiet month is byte-identical).
+      - name: Commit and push
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f assets/data/ga-openstates-crosswalk.json
+          if git diff --cached --quiet || python scripts/only_keys_changed.py assets/data/ga-openstates-crosswalk.json metadata.generatedAt metadata.upstreamCommit; then
+            echo "No material change to commit"
+          else
+            git commit -m "Update GA external identifiers (openstates/people cross-references)"
+            pushed=0
+            for attempt in 1 2 3; do
+              # Rebase onto THIS ref's upstream, not main (feature-branch runs).
+              if git pull --rebase origin "$GITHUB_REF_NAME" && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
+          fi
+
+      # Last on purpose: an `if: failure()` step placed earlier never runs.
+      - name: Preserve the generated file
+        if: failure() && steps.fetch.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpushed-ga-openstates-crosswalk
+          path: assets/data/ga-openstates-crosswalk.json
+          if-no-files-found: ignore
+          retention-days: 14
