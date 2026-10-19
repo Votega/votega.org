@@ -148,6 +148,196 @@ meta:
   review_after_elections: true      # re-check every roster after each municipal cycle
 
 jurisdictions:
+  - id: atlanta
+    name: City of Atlanta
+    type: city                      # city | county
+    county: Fulton                  # home county — powers county cross-linking
+    body: City Council
+    partisan: false                 # municipal seats are nonpartisan -> party chip hidden
+    official_url: https://citycouncil.atlantaga.gov/home
+    related_pages:                  # cross-links to existing VoteGA content
+      - { }
+    notes: ""
+    members:
+      - name: "Marci Collier Overstreet"
+        role: President
+        title: City Council President
+        seat: "At-Large"
+        party: Nonpartisan
+        email: "MCOverstreet@atlantaga.gov"
+        phone: "404-330-6052"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: false
+        tie_break_only: true
+        source: "https://citycouncil.atlantaga.gov/council-members/council-president-marci-collier-overstreet"
+      - name: "Michael Julian Bond"
+        role: Council Member
+        seat: "Post 1 At Large"
+        party: Nonpartisan
+        email: "mbond@atlantaga.gov"
+        phone: "404-330-6770"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/michael-julian-bond"
+      - name: "Matt Westmoreland"
+        role: Council Member
+        seat: "Post 2 At Large"
+        party: Nonpartisan
+        email: "mwestmoreland@atlantaga.gov"
+        phone: "404-330-6302"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/matt-westmoreland"
+      - name: "Eshé Collins"
+        role: Council Member
+        seat: "Post 3 At Large"
+        party: Nonpartisan
+        email: "EsheCollins@atlantaga.gov"
+        phone: "404-330-6041"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/esh-collins"
+      - name: "Jason Winston"
+        role: Council Member
+        seat: "District 1"
+        party: Nonpartisan
+        email: "jwinston@atlantaga.gov"
+        phone: "404-330-6039"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/jason-winston"
+      - name: "Kelsea Bond"
+        role: Council Member
+        seat: "District 2"
+        party: Nonpartisan
+        email: "Kbond@atlantaga.gov"
+        phone: "470-831-9487"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/kelsea-bond"
+      - name: "Byron Amos"
+        role: Council Member
+        seat: "District 3"
+        party: Nonpartisan
+        email: "bdamos@atlantaga.gov"
+        phone: "404-330-6046"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/byron-amos"
+      - name: "Jason S. Dozier"
+        role: Council Member
+        seat: "District 4"
+        party: Nonpartisan
+        email: "jdozier@atlantaga.gov"
+        phone: "404-330-6047"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/jason-s-dozier"
+      - name: "Liliana Bakhtiari"
+        role: Council Member
+        seat: "District 5"
+        party: Nonpartisan
+        email: "Lbakhtiari@atlantaga.gov"
+        phone: "404-330-6048"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/liliana-bakhtiari"
+      - name: "Alex Wan"
+        role: Council Member
+        seat: "District 6"
+        party: Nonpartisan
+        email: "awan@atlantaga.gov"
+        phone: "404-330-6049"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/alex-wan"
+      - name: "Thomas Worthy"
+        role: Council Member
+        seat: "District 7"
+        party: Nonpartisan
+        email: "Tworthy@atlantaga.gov"
+        phone: "404-330-6050"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/thomas-worthy"
+      - name: "Mary Norwood"
+        role: Council Member
+        seat: "District 8"
+        party: Nonpartisan
+        email: "mnorwood@atlantaga.gov"
+        phone: "404-330-6051"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/mary-norwood"
+      - name: "Dustin Hillis"
+        role: Council Member
+        seat: "District 9"
+        party: Nonpartisan
+        email: "drhillis@atlantaga.gov"
+        phone: "404-330-6044"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/dustin-hillis"
+      - name: "Andrea L. Boone"
+        role: Council Member
+        seat: "District 10"
+        party: Nonpartisan
+        email: "aboone@atlantaga.gov"
+        phone: "404-330-6055"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/andrea-l-boone"
+      - name: "Wayne Martin"
+        role: Council Member
+        seat: "District 11"
+        party: Nonpartisan
+        email: "Wmartin@atlantaga.gov"
+        phone: "404-330-6054"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/wayne-martin"
+      - name: "Antonio Lewis"
+        role: Council Member
+        seat: "District 12"
+        party: Nonpartisan
+        email: "anlewis@atlantaga.gov"
+        phone: "404-330-6053"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://citycouncil.atlantaga.gov/council-members/antonio-lewis"
+  
   # ==========================================================================
   # CITY OF CARROLLTON  (municipal — nonpartisan)
   # ==========================================================================

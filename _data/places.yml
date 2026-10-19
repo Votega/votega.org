@@ -711,6 +711,30 @@ places:
         platform: legistar
         client: fulton
 
+  - slug: atlanta
+    name: City of Atlanta
+    type: city
+    fips: null
+    parentCounty: fulton
+    region: Atlanta
+    domains:
+      meetings:
+        # IQM2 (Accela/Granicus Meeting Manager) Citizens portal — lib/iqm2.py reads
+        # the Calendar list. Board names the body: keep Council + Planning + Historic
+        # Preservation (land-use); drop Tree Board / Downtown Development Authority.
+        platform: iqm2
+        base_url: https://citycouncil.atlantaga.gov/
+        agendas_url: "https://atlantacityga.iqm2.com/Citizens/calendar.aspx"
+        body_map:
+          - { match: "Mayor and Council", label: "City Council" }
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Historic Preservation", label: "Historic Preservation Commission" }
+        schedule:
+          - body: City Council
+            when: "1st and 3rd Monday of every month, 1:00 p.m."
+            location: "Marvin S. Arrington, Sr. Council Chamber, Larry M. Dingle Committee Room, City Hall, Trinity Avenue, SW, Atlanta, Georgia 30303; 2nd Floor"
+
+
   - slug: dekalb
     name: DeKalb County
     type: county
