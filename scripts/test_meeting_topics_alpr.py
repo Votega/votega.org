@@ -122,6 +122,18 @@ MUST_NOT_FIRE = [
     # mixed evidence, but it does not make every camera brand a keyword.
     'Milestone XProtect license renewal', 'Eagle Eye Networks cloud VMS',
     'Spot AI camera analytics trial',
+    # Bare 'axon enterprise' is NOT a keyword: measured at 23 documents, inspected
+    # majority body cams / interview recording. Body cams are an explicit category
+    # exclusion, so the company name must not be what fires.
+    'AMENDMENT NUMBER SIX FOR AGREEMENT SP-APD-2212-1230170, BODY CAMERA/POLICE '
+    'EQUIPMENT & SERVICES WITH AXON ENTERPRISE, INC.',
+    'Police Axon TRUE UP Inc. Interview Bundle',
+    # Measured and rejected, with what each actually matched in the corpus.
+    'contract with Konica Minolta for a Portable Gas Detection Camera System for '
+    'the Department of Public Utilities',          # sewer gas, not surveillance
+    'Any vehicle bearing a license tag issued by the state indicating that the '
+    'owner is a disabled veteran is hereby exempted',   # tag-office noise
+    'LVT flooring replacement in the annex',       # luxury vinyl tile
 ]
 
 for t in MUST_FIRE:
