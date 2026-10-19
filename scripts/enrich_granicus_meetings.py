@@ -269,6 +269,11 @@ def enrich_meeting(meeting, cache, reclassify=False, slug=None, text_cache=None,
         text = text_cache.text_for(slug, mid)
     if text is not None:
         method = (text_cache.entry(slug, mid) or {}).get('method') or 'html'
+        # No bytes were fetched on this path, so the document hash cannot be
+        # recomputed — carry the one the last networked run recorded. It still
+        # identifies the document this record was derived from; it is simply not
+        # re-verified by an offline re-tag.
+        content_sha = (cached or {}).get('contentSha256')
     else:
         if from_text_cache:
             print('    %s: no cached text — keeping prior tags (no fetch)' % mid)
@@ -298,6 +303,7 @@ def enrich_meeting(meeting, cache, reclassify=False, slug=None, text_cache=None,
                 print('    %s: no text extracted (image-only PDF, OCR unavailable)' % mid)
         else:
             text, method = html_to_text(raw), 'html'
+        content_sha = hashlib.sha256(raw).hexdigest()
 
         # Granicus agendas are never combined packets, so nothing is trimmed here.
         if text_cache is not None and method != 'none':
@@ -327,7 +333,7 @@ def enrich_meeting(meeting, cache, reclassify=False, slug=None, text_cache=None,
         'textSourceUrl': url,
         'textMethod': method,
         'textChars': len(text),
-        'contentSha256': hashlib.sha256(raw).hexdigest(),
+        'contentSha256': content_sha,
         'topics': topics,
         'tags': tags,
         'matchedTerms': terms,
