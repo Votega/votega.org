@@ -28,6 +28,18 @@
     }).join(' ');
   }
 
+  // Does any meeting in this place reach high confidence (a named vendor or a
+  // spelled-out capability phrase)? Drives the confirmed / possible split on the
+  // ALPR page. At module scope, and exported below, so it is unit-testable: it is
+  // the function that decides what a resident sees first, which is exactly the kind
+  // of decision a typo should not be able to change silently.
+  function groupIsStrong(g) {
+    if (!g || !g.meetings) return false;
+    return Object.keys(g.meetings).some(function (k) {
+      return g.meetings[k].confidence === 'high';
+    });
+  }
+
   // Escape the excerpt, then wrap the first case-insensitive occurrence of the
   // matched term in <mark>. Escaping happens BEFORE any markup is inserted, so the
   // term (which came from PDF text) can never inject HTML.
@@ -315,6 +327,33 @@
         '</details></li>';
       }
 
+      // KEYWORD-ONLY mentions are collected but not shown alongside the confirmed
+      // ones. The lexicon is deliberately recall-favoured — false positives are
+      // tolerated so a real plate-reader contract is never missed — and the cost of
+      // that choice lands here: a page that mixed a Flock contract in with a
+      // facility-camera budget line would make a resident trust neither. So the
+      // weak tier rides in its own collapsed section, labelled for what it is, with
+      // every quote, matched term and source link intact for anyone reviewing it.
+      // Nothing is hidden; it is only ranked.
+      function weakSectionHtml(ids, groups) {
+        var n = ids.reduce(function (acc, id) { return acc + groups[id].count; }, 0);
+        return '<li class="ti-weak"><details>' +
+          '<summary class="ti-weak-head">' +
+            '<span class="ti-weak-title">' + n +
+              (n === 1 ? ' possible mention' : ' possible mentions') + '</span>' +
+            '<span class="ti-badge ti-conf-med">Keyword only</span>' +
+            '<span class="ti-weak-sub">in ' + ids.length +
+              (ids.length === 1 ? ' jurisdiction' : ' jurisdictions') + '</span>' +
+          '</summary>' +
+          '<p class="ti-weak-note">These matched a watch keyword but name no vendor and ' +
+          'use no spelled-out capability phrase, so they may be unrelated — a facility ' +
+          'camera, a budget line, or a passing reference. Sources are linked so you can ' +
+          'judge each one.</p>' +
+          '<ul class="ti-list">' + ids.map(function (id) {
+            return groupHtml(groups[id]); }).join('') + '</ul>' +
+        '</details></li>';
+      }
+
       function draw() {
         var rows = filtered();
         qsWrite(current());
@@ -326,8 +365,18 @@
           return (groups[b].latest || '').localeCompare(groups[a].latest || '') ||
                  groups[a].placeName.localeCompare(groups[b].placeName);
         });
-        els.count.innerHTML = rows.length + (rows.length === 1 ? ' mention' : ' mentions') +
-          ' across ' + ids.length + ' jurisdiction' + (ids.length === 1 ? '' : 's') +
+        // Confidence only varies for ALPR (every other topic's matches are
+        // spelled-out subjects), so only that page splits.
+        var strongIds = ids, weakIds = [];
+        if (cfg.topic === 'alpr') {
+          strongIds = ids.filter(function (id) { return groupIsStrong(groups[id]); });
+          weakIds = ids.filter(function (id) { return !groupIsStrong(groups[id]); });
+        }
+        var weakRows = weakIds.reduce(function (acc, id) { return acc + groups[id].count; }, 0);
+        var strongRows = rows.length - weakRows;
+        els.count.innerHTML = strongRows + (strongRows === 1 ? ' mention' : ' mentions') +
+          ' across ' + strongIds.length + ' jurisdiction' + (strongIds.length === 1 ? '' : 's') +
+          (weakRows ? ' <span class="ti-count-weak">+ ' + weakRows + ' possible</span>' : '') +
           (rows.length === mentions.length ? '' : ' (of ' + mentions.length + ')') +
           (ids.length ? ' &nbsp;<button type="button" class="ti-linkbtn" data-toggle="expand">Expand all</button>' +
             ' · <button type="button" class="ti-linkbtn" data-toggle="collapse">Collapse all</button>' : '');
@@ -335,7 +384,8 @@
           listEl.innerHTML = '<li class="ti-empty">No mentions match these filters.</li>';
           return;
         }
-        listEl.innerHTML = ids.map(function (id) { return groupHtml(groups[id]); }).join('');
+        listEl.innerHTML = strongIds.map(function (id) { return groupHtml(groups[id]); }).join('') +
+          (weakIds.length ? weakSectionHtml(weakIds, groups) : '');
       }
 
       // Expand / collapse all (event-delegated, since the buttons are re-rendered).
@@ -384,5 +434,6 @@
     document.body.removeChild(a); URL.revokeObjectURL(url);
   }
 
-  global.TopicIndex = { init: init };
+  // groupIsStrong is exported for tests/js/topic-index-confidence.test.js.
+  global.TopicIndex = { init: init, groupIsStrong: groupIsStrong };
 })(window);
