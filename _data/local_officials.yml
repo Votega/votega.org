@@ -52,7 +52,7 @@
 # ----------------------------------------------------------------------------
 # CONTROLLED VOCABULARIES  (the validator enforces these — do not free-type)
 # ----------------------------------------------------------------------------
-#   type   : city | county
+#   type   : city | county | consolidated
 #   role   : Mayor | Mayor Pro Tem | Chair | Vice Chair | Council Member | Commissioner
 #   party  : Republican | Democratic | Nonpartisan | Independent
 #            (use Nonpartisan for municipal seats; set jurisdiction.partisan:false.
@@ -148,6 +148,141 @@ meta:
   review_after_elections: true      # re-check every roster after each municipal cycle
 
 jurisdictions:
+  - id: augusta
+    name: Augusta-Richmond County 
+    type: consolidated                     
+    county: Richmond                 # home county — powers county cross-linking
+    body: Commission
+    partisan: false                 # municipal seats are nonpartisan -> party chip hidden
+    official_url: https://www.augustaga.gov/652/Augusta-Commission
+    related_pages:                  # cross-links to existing VoteGA content
+      - { }
+    notes: ""
+    members:
+      - name: "Garnett Johnson"
+        role: Chair
+        title: Mayor
+        seat: "At-Large"
+        party: Nonpartisan
+        email: "mayorjohnson@augustaga.gov"
+        phone: "706-821-1831"
+        last_elected: 2023
+        term_end: 2026
+        next_election: 2026
+        voting: false
+        tie_break_only: true
+        source: "https://www.augustaga.gov/3112/Mayor-Garnett-L-Johnson"
+      - name: "Jordan Johnson"
+        role: Commissioner
+        seat: "District 1"
+        party: Nonpartisan
+        email: "CJohnson4@augustaga.gov"
+        phone: "706-564-9356"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+      - name: "Stacy Pulliam"
+        role: Commissioner
+        seat: "District 2"
+        party: Nonpartisan
+        email: "spulliam@augustaga.gov"
+        phone: "762-328-8256"
+        last_elected: 2023
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+      - name: "Catherine Smith-Rice"
+        role: Commissioner
+        seat: "District 3"
+        party: Nonpartisan
+        email: "CMcKnight@augustaga.gov"
+        phone: "706-834-1082"
+        last_elected: 2025
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+      - name: "Lonnie Wimberly"
+        role: Commissioner
+        seat: "District 4"
+        party: Nonpartisan
+        email: "lwimberly@augustaga.gov"
+        phone: "706-564-3099"
+        last_elected: 2025
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+      - name: "Don Clark"
+        role: Commissioner
+        seat: "District 5"
+        party: Nonpartisan
+        email: "dclark@augustaga.gov"
+        phone: "706-945-4953"
+        last_elected: 2025
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+      - name: "Tony Lewis"
+        role: Commissioner
+        seat: "District 6"
+        party: Nonpartisan
+        email: "tony.lewis@augustaga.gov"
+        phone: "762-328-8491"
+        last_elected: 2023
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+      - name: "Tina Slendak"
+        role: Commissioner
+        seat: "District 7"
+        party: Nonpartisan
+        email: "tslendak@augustaga.gov"
+        phone: "706-945-3289"
+        last_elected: 2025
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+      - name: "Brandon Garrett"
+        role: Commissioner
+        seat: "District 8"
+        party: Nonpartisan
+        email: "bgarrett@augustaga.gov"
+        phone: "706-564-2983"
+        last_elected: 2023
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+      - name: "Francine Scott"
+        role: Commissioner
+        seat: "District 9"
+        party: Nonpartisan
+        email: "FScott@augustaga.gov"
+        phone: "706-564-8712"
+        last_elected: 2025
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+      - name: "Wayne Guilfoyle"
+        role: Commissioner
+        seat: "District 10"
+        party: Nonpartisan
+        email: "wguilfoyle@augustaga.gov"
+        phone: "762-328-0766"
+        last_elected: 2023
+        term_end: 2026
+        next_election: 2026
+        voting: true
+        source: "https://www.augustaga.gov/652/Augusta-Commission"
+  
   - id: atlanta
     name: City of Atlanta
     type: city                      # city | county

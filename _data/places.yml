@@ -159,6 +159,26 @@
 # meetings adapter yet (that's fine; the meetings pipeline just skips it).
 
 places:
+  - slug: augusta
+    name: Augusta-Richmond County
+    type: county
+    fips: "13245"
+    parentCounty: null
+    region: East Georgia                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/appling/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        platform: wordpress
+        base_url: https://www.augustaga.gov/652/Augusta-Commission
+        agendas_url: "https://augustarichmond-ga.municodemeetings.com/"            
+        schedule:
+          - body: Augusta Commission
+            when: "1st and 3rd Tuesday of every month, 2:00 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "Commission Chamber (second floor) Municipal Building, 535 Telfair St., Suite 260, Augusta"            # optional
+
   - slug: appling
     name: Appling County
     type: county
