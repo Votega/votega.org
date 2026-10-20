@@ -117,8 +117,10 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     vertical-align: middle;
     flex-shrink: 0;
   }
+  .order-num-sm { display: none; }
   @media (max-width: 600px) {
     .order-num { display: none; }
+    .order-num-sm { display: block; margin-top: 0.15rem; color: #888; font-size: 0.75rem; font-family: monospace; }
     .order-table th:nth-child(2) { display: none; }
   }
 </style>
@@ -252,6 +254,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
         <td class="order-num">${o.number}</td>
         <td class="order-title">
           <a href="${o.url}" target="_blank" rel="noopener">${o.title} ↗</a>
+          <span class="order-num-sm">${o.number}</span>
         </td>
         <td><span class="badge ${badgeClass(o.category)}">${o.category}</span></td>
       </tr>
