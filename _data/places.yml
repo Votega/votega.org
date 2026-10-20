@@ -756,6 +756,7 @@ places:
     type: city
     fips: null
     parentCounty: fulton
+    alsoIn: [dekalb]               # other counties the city extends into (primary = parentCounty, the county holding city hall)
     region: Atlanta
     domains:
       meetings:
@@ -1389,3 +1390,40 @@ places:
           - body: City Council
             when: "2nd Monday of every month, 6:00 p.m."
             location: "Rossville Civic Center"
+
+  - slug: palmetto
+    name: City of Palmetto
+    type: city
+    fips: null
+    parentCounty: fulton
+    alsoIn: [coweta]               # other counties the city extends into (primary = parentCounty, the county holding city hall)
+    region: Atlanta Regional Commission
+    domains:
+      meetings:
+        # No scraper adapter: citypalmetto.com is a Drupal 11 site (footer: "Government
+        # Websites by CivicPlus" -- CivicPlus's Drupal CMS, NOT the Agenda Center
+        # product, so `platform: civicplus` would be wrong: there is no /AgendaCenter)
+        # with a native "Upcoming Meetings" view at /meetings (+ /meetings/recent),
+        # filterable by department and board. Each row links a detail page
+        # (/citycouncil/meeting/<slug>, /bc/meeting/<slug>, ...) carrying the agenda
+        # and agenda-packet files, served as Drupal media entities at /media/<id>
+        # (e.g. /media/3766 agenda, /media/3771 agenda packet; ids are not
+        # per-meeting-sequential, so an adapter must read them off the detail page).
+        # No third-party portal is embedded, so none of
+        # detect_meeting_platform.py's signatures match; it would need a dedicated
+        # adapter for that view. Tracked as `unknown` so the schedule + agendas_url
+        # render on /local/palmetto/ while nothing scrapes.
+        # The origin sits behind a Cloudflare challenge (403 "Just a moment..." to any
+        # non-browser client, 2026-10-19), so `bot_protected` stops link liveness from
+        # hard-failing the run. Remove it if the 403s stop.
+        platform: unknown
+        bot_protected: true
+        agendas_url: "https://www.citypalmetto.com/meetings"
+        schedule:
+          - body: City Council
+            # Inferred from the posted calendar (work session 5:30 p.m. then regular
+            # meeting 7 p.m., 1st Tuesday; shifted to Wednesday Nov 4 around Election
+            # Day). Confirm against the city's notices.
+            when: "1st Tuesday of every month, 7:00 p.m. (work session 5:30 p.m.)"
+          - body: Planning & Zoning Board
+            when: "Typically 5:30 p.m. (dates vary)"

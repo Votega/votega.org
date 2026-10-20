@@ -63,6 +63,10 @@ breadcrumb:
   .lh-placeholder .lh-sub {
     font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: #999;
   }
+  /* "Also partly in this county" link chips for cities nested under another county */
+  .lh-also { margin: 0.6rem 0 0 1.25rem; font-size: 0.82rem; color: #666; display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; align-items: center; }
+  .lh-also-chip { border: 1px solid #cfe3d0; background: #f3faf3; color: #1b5e20; border-radius: 999px; padding: 0.1rem 0.6rem; text-decoration: none; }
+  .lh-also-chip:hover { border-color: #2e7d32; }
   .lh-empty { color: #666; font-style: italic; padding: 1rem 0; }
   .lh-note { margin: 0.5rem 0 0; font-size: 0.82rem; color: #777; }
   /* Flag pill injected onto a card when a place has a hot topic on recent agendas */
@@ -172,6 +176,17 @@ breadcrumb:
       {%- endfor %}
     </div>
     {%- endif %}
+    {%- comment %} Cities primarily in another county that also extend into this one: a
+        link chip, not a second card (one card per city keeps search and counts honest). {% endcomment -%}
+    {%- assign alsoCities = cities | where_exp: "c", "c.alsoIn contains county.slug" | sort: "name" %}
+    {%- if alsoCities.size > 0 %}
+    <p class="lh-also">
+      <span class="lh-also-label">Also partly in {{ county.name }}:</span>
+      {%- for city in alsoCities %}{% if city.hidden %}{% continue %}{% endif %}
+      <a class="lh-also-chip" href="{{ '/local/' | append: city.slug | append: '/' | relative_url }}" data-name="{{ city.name | downcase }}">{{ city.name }}</a>
+      {%- endfor %}
+    </p>
+    {%- endif %}
   </section>
   {%- endfor %}
 
@@ -237,6 +252,14 @@ breadcrumb:
           k.hidden = !show;
           if (show) anyKid = true;
         });
+        var chips = Array.prototype.slice.call(g.querySelectorAll('.lh-also-chip'));
+        chips.forEach(function (c) {
+          var show = countyMatch || matches(c.dataset.name, q);
+          c.hidden = !show;
+          if (show) anyKid = true;
+        });
+        var alsoWrap = g.querySelector('.lh-also');
+        if (alsoWrap) alsoWrap.hidden = !chips.some(function (c) { return !c.hidden; });
         var groupShown = countyMatch || anyKid;
         g.hidden = !groupShown;
         if (groupShown) shownGroups++;

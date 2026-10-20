@@ -1328,6 +1328,12 @@ def build_places(records, urls, prior, new_state):
             "parentCountyName": (parent or {}).get("name"),
             "domains": domains,  # lets place.html branch server-side (officials/meetings)
         }
+        # Cities that extend into other counties: nested under parentCounty only, linked
+        # from the others. Key is omitted when empty so single-county places don't change.
+        also = [{"slug": by_slug[c]["slug"], "name": by_slug[c].get("name") or c}
+                for c in (p.get("alsoIn") or []) if c in by_slug]
+        if also:
+            entity["alsoIn"] = also
         lastmod = resolve_lastmod(
             permalink,
             {"e": entity, "t": share_title, "d": desc, "dom": domains, "ev": events_fp},

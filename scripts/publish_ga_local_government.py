@@ -87,6 +87,8 @@ def registry(places):
             "name": p.get("name", p["slug"]),
             "type": p.get("type", "county"),
             "county": p.get("parentCounty") or (p["slug"] if p.get("type") == "county" else None),
+            "counties": [c for c in [p.get("parentCounty") or (p["slug"] if p.get("type") == "county" else None)]
+                         + list(p.get("alsoIn") or []) if c] or None,
             "fips": str(p.get("fips") or "") or None,
             "region": p.get("region") or None,
             "platform": meetings.get("platform"),

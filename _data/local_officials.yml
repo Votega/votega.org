@@ -148,6 +148,98 @@ meta:
   review_after_elections: true      # re-check every roster after each municipal cycle
 
 jurisdictions:
+  
+  - id: palmetto
+    name: City of Palmetto
+    type: city                     
+    county: Fulton                  # home county — powers county cross-linking
+    body: Council
+    partisan: false                 # municipal seats are nonpartisan -> party chip hidden
+    official_url: https://www.citypalmetto.com/citycouncil
+    related_pages:                  # cross-links to existing VoteGA content
+      - { }
+    notes: "4-year terms"
+    members:
+      - name: "Teresa Thomas-Smith"
+        role: Chair
+        title: Mayor
+        seat: "At-Large"
+        party: Nonpartisan
+        email: ""
+        phone: "770-463-3377"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: false
+        tie_break_only: true
+        source: "https://www.citypalmetto.com/administration/page/mayors-office"
+      - name: "Robert Deon Arnold"
+        role: Council Member
+        seat: ""
+        party: Nonpartisan
+        email: ""
+        phone: "770-463-3377"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.citypalmetto.com/citycouncil/directory-listing/robert-deon-arnold"
+      - name: "Mary Henry"
+        role: Council Member
+        seat: ""
+        party: Nonpartisan
+        email: ""
+        phone: "770-463-3377"
+        last_elected: 
+        term_end: 
+        next_election:
+        voting: true
+        source: "https://www.citypalmetto.com/citycouncil/directory-listing/mary-henry"
+      - name: "Perez Slaughter"
+        role: Council Member
+        seat: ""
+        party: Nonpartisan
+        email: ""
+        phone: "770-463-3377"
+        last_elected: 
+        term_end: 
+        next_election:
+        voting: true
+        source: "https://www.citypalmetto.com/citycouncil/directory-listing/perez-slaughter"
+      - name: "Jessica Wilbanks"
+        role: Council Member
+        seat: ""
+        party: Nonpartisan
+        email: ""
+        phone: "770-463-3377"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        source: "https://www.citypalmetto.com/citycouncil/directory-listing/jessica-wilbanks"
+      - name: "Connie L. Wright"
+        role: Council Member
+        seat: ""
+        party: Nonpartisan
+        email: ""
+        phone: "770-463-3377"
+        last_elected: 
+        term_end: 
+        next_election:
+        voting: true
+        source: "https://www.citypalmetto.com/citycouncil/directory-listing/connie-l-wright"
+      - name: "Carolyn Wynn"
+        role: Council Member
+        seat: ""
+        party: Nonpartisan
+        email: ""
+        phone: "770-463-3377"
+        last_elected:
+        term_end: 
+        next_election:
+        voting: true
+        source: "https://www.citypalmetto.com/citycouncil/directory-listing/carolyn-wynn"
+      
   - id: augusta
     name: Augusta-Richmond County 
     type: consolidated                     

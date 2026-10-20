@@ -164,6 +164,7 @@
   {% if e.placeType == 'city' %}City in Georgia{% else %}Georgia County{% endif %}
   {%- if e.parentCountyName and e.parentCountySlug %} &middot;
     part of <a href="{{ '/local/' | append: e.parentCountySlug | append: '/' | relative_url }}">{{ e.parentCountyName }}</a>
+    {%- for ac in e.alsoIn %} &middot; also in <a href="{{ '/local/' | append: ac.slug | append: '/' | relative_url }}">{{ ac.name }}</a>{% endfor %}
   {%- endif %}
 </p>
 

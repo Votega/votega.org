@@ -266,7 +266,7 @@ def load_places():
     Officials is a DOMAIN of a place: a jurisdiction's `id` must equal a place
     `slug` (the join key the hub renders on). Absent registry = skip the check."""
     try:
-        with open(PLACES_PATH) as f:
+        with open(PLACES_PATH, encoding="utf-8") as f:
             pdata = yaml.safe_load(f)
     except FileNotFoundError:
         return None
@@ -300,7 +300,7 @@ def cross_check_places(jurisdictions):
 
 def main():
     try:
-        with open(DATA_PATH) as f:
+        with open(DATA_PATH, encoding="utf-8") as f:
             data = yaml.safe_load(f)
     except FileNotFoundError:
         print(f"VALIDATION FAILED — {DATA_PATH} not found")
