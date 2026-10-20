@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-19T21:52:13.851874+00:00",
+    "generatedAt": "2026-10-20T02:37:56.745277+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -26,19 +26,26 @@
     ],
     "count": 147,
     "windowDays": 45,
-    "entityTagged": 94,
+    "entityTagged": 95,
     "topicCounts": {
+      "elections": 41,
       "surveillance": 2,
-      "elections": 40,
       "budget": 9,
       "healthcare": 19,
-      "education": 16,
+      "education": 15,
       "courts": 18,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
+      ]
+    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
@@ -77,13 +84,6 @@
       "url": null,
       "candidateIds": [
         "challenger-peter-hubbard-psc3-2026"
-      ]
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
       ]
     },
     "vg-ga-p-000090": {
@@ -264,6 +264,20 @@
     }
   },
   "items": [
+    {
+      "id": "8e227f6f9151",
+      "title": "Jackson will skip this weekend’s Trump rally in Macon",
+      "url": "https://georgiarecorder.com/2026/10/19/jackson-will-skip-this-weekends-trump-rally-in-macon/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-19T22:53:23+00:00",
+      "snippet": "Republican candidate for governor Rick Jackson will skip President Donald Trump’s upcoming rally in middle Georgia this weekend, opting instead to campaign in suburban Atlanta as the virtually tied ra",
+      "entityIds": [
+        "vg-ga-p-000368"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
     {
       "id": "8ec69700204b",
       "title": "512 Flock cameras boost Coastal Georgia’s growing surveillance network",
@@ -2084,18 +2098,6 @@
         "vg-ga-p-000262"
       ],
       "topics": []
-    },
-    {
-      "id": "0f9b52a9730e",
-      "title": "Georgia music education programs play on despite challenges",
-      "url": "https://georgiarecorder.com/2026/09/15/georgia-music-education-programs-play-on-despite-challenges/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-15T08:00:38+00:00",
-      "snippet": "Early fall in Georgia brings the sounds of high schoolers blaring trumpets and pounding drums from football stadiums – as well as the squeaks and squawks of beginner musicians practicing their newly r",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
     },
     {
       "id": "2da9cc5ac6c3",
