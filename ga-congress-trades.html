@@ -226,9 +226,7 @@ breadcrumb:
   @media (max-width: 640px) {
     .member-card { max-width: 100%; }
     .trade-table th:nth-child(4),
-    .trade-table td:nth-child(4),
-    .trade-table th:nth-child(6),
-    .trade-table td:nth-child(6) { display: none; }
+    .trade-table td:nth-child(4) { display: none; }
   }
 </style>
 
@@ -499,7 +497,7 @@ breadcrumb:
         : `<span class="badge-r">R</span>`;
 
       const vol = info.estVolume
-        ? `$${(info.estVolume / 1000000).toFixed(1)}M`
+        ? `~$${(info.estVolume / 1000000).toFixed(1)}M est. (range midpoints)`
         : '';
 
       const lateHtml = info.lateFilings > 0
