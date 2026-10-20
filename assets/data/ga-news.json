@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-20T13:58:58.677066+00:00",
+    "generatedAt": "2026-10-20T18:50:17.033225+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,31 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 147,
+    "count": 150,
     "windowDays": 45,
     "entityTagged": 95,
     "topicCounts": {
+      "healthcare": 21,
+      "budget": 10,
       "elections": 40,
       "surveillance": 2,
-      "budget": 9,
-      "healthcare": 19,
-      "education": 15,
+      "education": 14,
       "courts": 18,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000251": {
       "name": "Brian Jack",
       "url": null,
@@ -162,11 +172,6 @@
         "challenger-richard-woods-super-2026"
       ]
     },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
-    },
     "vg-ga-p-000256": {
       "name": "Rick W. Allen",
       "url": null,
@@ -179,11 +184,6 @@
       "candidateIds": [
         "challenger-mike-collins-senate-2026"
       ]
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
     },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
@@ -265,6 +265,67 @@
   },
   "items": [
     {
+      "id": "fae5d3533a92",
+      "title": "DOE okays construction of the next home for the nation's largest supply of nuclear warhead triggers",
+      "url": "https://www.gpb.org/news/2026/10/20/doe-okays-construction-of-the-next-home-for-the-nations-largest-supply-of-nuclear",
+      "source": "GPB News",
+      "publishedAt": "2026-10-20T18:43:00+00:00",
+      "snippet": "A $25 billion fixer-upper is full steam ahead at the Savannah River Plutonium Processing Facility.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "8065e473bc5b",
+      "title": "Come Nov. 1, expect Georgia Marketplace plans to rise as much as 30%",
+      "url": "https://www.gpb.org/news/2026/10/20/come-nov-1-expect-georgia-marketplace-plans-rise-much-30",
+      "source": "GPB News",
+      "publishedAt": "2026-10-20T18:31:00+00:00",
+      "snippet": "Georgians will find eight insurance companies offering Marketplace plans during open enrollment on the state-based marketplace, called Georgia Access.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "4f9216b346e8",
+      "title": "Warnock, Colleagues Question IRS Over Administration’s Threats to Revoke Tax-Exempt Status for Universities with Diversity Programs",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-colleagues-question-irs-over-administrations-threats-to-revoke-tax-exempt-status-for-universities-with-diversity-programs/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-10-20T17:04:46+00:00",
+      "snippet": "U.S. Senators Reverend Raphael Warnock, Ron Wyden, and Bernie Sanders are seeking answers from the Internal Revenue Service about a Trump administration proposal to revoke the tax-exempt status of pri",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "6189b365ebfe",
+      "title": "Warnock, Ossoff Secure Nearly $12.5 Million to Improve Rail Safety Across Southwest Georgia",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-secures-nearly-12-5-million-to-improve-rail-safety-across-southwest-georgia/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-10-20T16:05:39+00:00",
+      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff successfully secured nearly $12.5 million in federal grant funding from the Department of Transportation to improve railway safety in Southwest Georgia",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "07c5b4d1e4d5",
+      "title": "Health experts encourage vaccination as influenza-like illness arrives early in Georgia",
+      "url": "https://www.gpb.org/news/2026/10/20/health-experts-encourage-vaccination-influenza-illness-arrives-early-in-georgia",
+      "source": "GPB News",
+      "publishedAt": "2026-10-20T14:14:00+00:00",
+      "snippet": "Seasonal viruses, including the flu, are spreading earlier this year, and Georgia health experts are encouraging people to protect themselves and others.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
       "id": "ed88521a7047",
       "title": "'Brother of the More Famous Jack' finds its way to a new generation of readers",
       "url": "https://www.gpb.org/news/2026/10/20/brother-of-the-more-famous-jack-finds-its-way-new-generation-of-readers",
@@ -292,7 +353,7 @@
       "url": "https://georgiarecorder.com/2026/10/19/jackson-will-skip-this-weekends-trump-rally-in-macon/",
       "source": "Georgia Recorder",
       "publishedAt": "2026-10-19T22:53:23+00:00",
-      "snippet": "Republican candidate for governor Rick Jackson will skip President Donald Trump’s upcoming rally in middle Georgia this weekend, opting instead to campaign in suburban Atlanta as the virtually tied ra",
+      "snippet": "Republican candidate for governor Rick Jackson will skip President Donald Trump’s upcoming rally in middle Georgia this weekend, opting instead to campaign in suburban Atlanta as as the race, which po",
       "entityIds": [
         "vg-ga-p-000368"
       ],
@@ -360,6 +421,19 @@
       "topics": [
         "budget"
       ]
+    },
+    {
+      "id": "4f797993acbe",
+      "title": "NEWS: Sens. Ossoff & Rev. Warnock Delivering Over $25 Million in Federal Funding to Upgrade Commercial Vehicle Infrastructure",
+      "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-over-25-million-in-federal-funding-to-upgrade-commercial-vehicle-infrastructure/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-10-19T13:51:57+00:00",
+      "snippet": "Garden City, Ga. — U.S. Senators Jon Ossoff and Reverend Raphael Warnock today announced new bipartisan infrastructure law funding to upgrade truck and commercial vehicle infrastructure. Today, Sens. ",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
     },
     {
       "id": "85ffe07018a3",
@@ -1162,20 +1236,6 @@
       "topics": []
     },
     {
-      "id": "4842531b3351",
-      "title": "Warnock Secures Nearly $100 Million in Federal Funding for HBCU STEM Programs",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-secures-nearly-100-million-in-federal-funding-for-hbcu-stem-programs/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-10-05T17:15:56+00:00",
-      "snippet": "The $97.1 million award will support 10 HBCU STEM programs through the Department of Defense, including at Clark Atlanta University Since beginning his full Senate term in 2022, Senator Warnock has se",
-      "entityIds": [
-        "vg-ga-p-000263"
-      ],
-      "topics": [
-        "education"
-      ]
-    },
-    {
       "id": "76add0792bae",
       "title": "McBath Bill to Stop Human Trafficking Passes Senate, Heads to President’s Desk",
       "url": "https://mcbath.house.gov/2026/10/05/mcbath-bill-to-stop-human-trafficking-passes-senate-heads-to-presidents-desk/",
@@ -1197,19 +1257,6 @@
       "publishedAt": "2026-10-05T08:00:11+00:00",
       "snippet": "Krystina McQueen’s severely autistic foster son – who is prone to biting and hitting — has made big strides in his few weeks in specialized behavior therapy. He’s in it at the crucial time to learn ba",
       "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "a981aeb56f81",
-      "title": "Warnock, Ossoff Secure More Than $11 Million in Federal Funding for Roadway Improvements in Savannah",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-ossoff-secure-more-than-11-million-in-federal-funding-for-roadway-improvements-in-savannah/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-10-02T19:25:41+00:00",
-      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff secured more than $11.3 million in federal funding to improve Savannah’s roadways and reduce traffic congestion The funding will improve DeRenne Avenue",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
       "topics": []
     },
     {
@@ -1335,7 +1382,7 @@
     },
     {
       "id": "cc24115457a9",
-      "title": "Bookman: Whatever came of that urgent FBI probe into the 2020 election in Fulton County?",
+      "title": "Commentary: Bookman: Whatever came of that urgent FBI probe into the 2020 election in Fulton County?",
       "url": "https://georgiarecorder.com/2026/09/30/bookman-so-how-about-that-fbi-probe-into-2020-election-in-fulton-county/",
       "source": "Georgia Recorder",
       "publishedAt": "2026-09-30T08:00:31+00:00",
@@ -1675,7 +1722,7 @@
     },
     {
       "id": "1ebefb53e5a3",
-      "title": "Georgia should build on housing progress by centering families",
+      "title": "Commentary: Georgia should build on housing progress by centering families",
       "url": "https://georgiarecorder.com/2026/09/23/georgia-should-build-on-housing-progress-by-centering-families/",
       "source": "Georgia Recorder",
       "publishedAt": "2026-09-23T15:56:19+00:00",
@@ -1887,7 +1934,7 @@
     },
     {
       "id": "ce32627de272",
-      "title": "Bookman: Is Jackson’s plan just another attempt to kick the Medicaid expansion can down the road?",
+      "title": "Commentary: Bookman: Is Jackson’s plan just another attempt to kick the Medicaid expansion can down the road?",
       "url": "https://georgiarecorder.com/2026/09/18/bookman-is-jackson-just-another-politician-trying-to-kick-the-medicaid-expansion-can-down-the-road/",
       "source": "Georgia Recorder",
       "publishedAt": "2026-09-18T08:00:00+00:00",
@@ -2109,18 +2156,6 @@
       "topics": [
         "healthcare"
       ]
-    },
-    {
-      "id": "53e7c2caf3d7",
-      "title": "Sen. Ossoff Working Across the Aisle to Lower Price of Medicine for Georgia Families",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-lower-price-of-medicine-for-georgia-families/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-14T18:46:20+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working across the aisle to lower the price of life-saving medicine. Sen. Ossoff recently cosponsored the bipartisan Biosimilar Red Tape Elimination Act t",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "da7e10206977",
