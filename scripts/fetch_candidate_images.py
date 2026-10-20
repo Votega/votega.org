@@ -49,7 +49,7 @@ from lib.atomic_io import write_json_atomic
 from lib.http import fetch_bytes
 
 try:
-    from PIL import Image
+    from PIL import Image, ImageFile
 except ImportError:
     sys.exit("Pillow is required: pip install Pillow")
 
@@ -79,6 +79,12 @@ MANIFEST_FILE = "assets/data/candidate-image-cache.json"
 #: retina and the largest profile-page render with lots of headroom.
 MAX_DIM = 400
 JPEG_QUALITY = 82
+
+#: legis.ga.gov serves some large portraits cut off at exactly 1 MiB (Neal,
+#: Smith: the JPEG is missing its last few bytes, so a strict decode raises
+#: "image file is truncated"). A cap-sized body that decodes except for the
+#: tail is the full photo minus its final scanlines; accept it at 400px.
+SERVER_CAP_BYTES = 1048576
 
 # A browser-ish UA — the default 'votega.org/1.0' can be refused by some CDNs.
 UA = {"User-Agent": "Mozilla/5.0 (compatible; votega.org portrait cache)"}
@@ -135,8 +141,20 @@ def resize_to_jpeg(raw):
         img = Image.open(io.BytesIO(raw))
         img.load()
     except Exception as exc:
-        print("  not a decodable image: %s" % exc)
-        return None
+        # Tolerate truncation ONLY for a body that hit the server's size cap;
+        # any other short read is a torn download and must not be cached.
+        if len(raw) != SERVER_CAP_BYTES:
+            print("  not a decodable image: %s" % exc)
+            return None
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
+        try:
+            img = Image.open(io.BytesIO(raw))
+            img.load()
+        except Exception as exc2:
+            print("  not a decodable image: %s" % exc2)
+            return None
+        finally:
+            ImageFile.LOAD_TRUNCATED_IMAGES = False
 
     # Flatten transparency / palette / CMYK onto white so JPEG is always valid.
     if img.mode not in ("RGB", "L"):
