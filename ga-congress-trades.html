@@ -226,9 +226,7 @@ breadcrumb:
   @media (max-width: 640px) {
     .member-card { max-width: 100%; }
     .trade-table th:nth-child(4),
-    .trade-table td:nth-child(4),
-    .trade-table th:nth-child(6),
-    .trade-table td:nth-child(6) { display: none; }
+    .trade-table td:nth-child(4) { display: none; }
   }
 </style>
 
@@ -281,7 +279,7 @@ breadcrumb:
     <button id="clearFilters">Clear filters</button>
   </div>
 
-  <div id="selectPrompt">Select a member above to view their trades.</div>
+  <div id="selectPrompt">Showing the 20 most recent trades across all members. Select a member above to see their full history.</div>
   <div id="tradeCount"></div>
   <div id="tradeTableWrap">
     <table class="trade-table">
@@ -308,6 +306,7 @@ breadcrumb:
 <script>
   const DATA_URL  = 'assets/data/ga-congress-trades.json';
   const PAGE_SIZE = 50;
+  const RECENT_COUNT = 20;
 
   const ASSET_TYPE_LABELS = {
     CT: 'Crypto',
@@ -499,7 +498,7 @@ breadcrumb:
         : `<span class="badge-r">R</span>`;
 
       const vol = info.estVolume
-        ? `$${(info.estVolume / 1000000).toFixed(1)}M`
+        ? `~$${(info.estVolume / 1000000).toFixed(1)}M est. (range midpoints)`
         : '';
 
       const lateHtml = info.lateFilings > 0
@@ -698,9 +697,16 @@ breadcrumb:
   }
 
   function showPrompt() {
+    const recent = allTrades.slice()
+      .sort((a, b) => (b.transaction_date || '').localeCompare(a.transaction_date || ''))
+      .slice(0, RECENT_COUNT);
     document.getElementById('selectPrompt').style.display = 'block';
-    document.getElementById('tradeTableWrap').style.display = 'none';
-    document.getElementById('tradeCount').textContent = '';
+    document.getElementById('tradeTableWrap').style.display = '';
+    displayed = 0;
+    document.getElementById('tradeBody').innerHTML = '';
+    appendRows(recent, RECENT_COUNT);
+    document.getElementById('tradeCount').textContent =
+      `${recent.length} most recent of ${allTrades.length.toLocaleString()} trades`;
     document.getElementById('loadMore').style.display = 'none';
     document.getElementById('noResults').style.display = 'none';
   }
