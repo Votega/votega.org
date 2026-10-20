@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-20T08:02:37.214453+00:00",
+    "generatedAt": "2026-10-20T13:58:58.677066+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -28,7 +28,7 @@
     "windowDays": 45,
     "entityTagged": 95,
     "topicCounts": {
-      "elections": 41,
+      "elections": 40,
       "surveillance": 2,
       "budget": 9,
       "healthcare": 19,
@@ -39,23 +39,16 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000251": {
+      "name": "Brian Jack",
+      "url": null,
+      "bioguideId": "J000311"
+    },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
-      ]
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha R. Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
       ]
     },
     "vg-ga-p-000330": {
@@ -84,6 +77,13 @@
       "url": null,
       "candidateIds": [
         "challenger-peter-hubbard-psc3-2026"
+      ]
+    },
+    "vg-ga-p-000335": {
+      "name": "Keisha R. Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
       ]
     },
     "vg-ga-p-000090": {
@@ -180,6 +180,11 @@
         "challenger-mike-collins-senate-2026"
       ]
     },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
       "url": null,
@@ -225,11 +230,6 @@
       "url": null,
       "bioguideId": "B000490"
     },
-    "vg-ga-p-000251": {
-      "name": "Brian Jack",
-      "url": null,
-      "bioguideId": "J000311"
-    },
     "vg-ga-p-000466": {
       "name": "David Dillie",
       "url": null,
@@ -264,6 +264,28 @@
     }
   },
   "items": [
+    {
+      "id": "ed88521a7047",
+      "title": "'Brother of the More Famous Jack' finds its way to a new generation of readers",
+      "url": "https://www.gpb.org/news/2026/10/20/brother-of-the-more-famous-jack-finds-its-way-new-generation-of-readers",
+      "source": "GPB News",
+      "publishedAt": "2026-10-20T13:23:24+00:00",
+      "snippet": "It is hard not to fall in love with Katherine Browne, the eager to please, mini-skirted narrator in Barbara Trapido's 40-plus-year-old debut novel, reissued this month.",
+      "entityIds": [
+        "vg-ga-p-000251"
+      ],
+      "topics": []
+    },
+    {
+      "id": "005e302d7aaa",
+      "title": "GPB morning headlines for October 20, 2026",
+      "url": "https://www.gpb.org/news/2026/10/20/gpb-morning-headlines-for-october-20-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-20T12:52:46+00:00",
+      "snippet": "The Department of Energy has approved full-scale construction at the Savannah River Site near Augusta to produce war reserve plutonium pits; Seasonal viruses, including the flu, are spreading earlier ",
+      "entityIds": [],
+      "topics": []
+    },
     {
       "id": "8e227f6f9151",
       "title": "Jackson will skip this weekend’s Trump rally in Macon",
@@ -337,31 +359,6 @@
       "entityIds": [],
       "topics": [
         "budget"
-      ]
-    },
-    {
-      "id": "b41f9207996c",
-      "title": "Ossoff and Bottoms hold joint rally in Cobb County",
-      "url": "https://www.gpb.org/news/2026/10/19/ossoff-and-bottoms-hold-joint-rally-in-cobb-county",
-      "source": "GPB News",
-      "publishedAt": "2026-10-19T12:45:00+00:00",
-      "snippet": "Democratic U.S. Sen. Jon Ossoff and Democratic gubernatorial nominee Keisha Lance Bottoms held a joint rally in Cobb County on Saturday night.",
-      "entityIds": [
-        "vg-ga-p-000264",
-        "vg-ga-p-000335"
-      ],
-      "topics": []
-    },
-    {
-      "id": "d34a6d29f6b6",
-      "title": "GPB morning headlines for October 19, 2026",
-      "url": "https://www.gpb.org/news/2026/10/19/gpb-morning-headlines-for-october-19-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-10-19T12:39:58+00:00",
-      "snippet": "Georgia’s candidates for U.S. Senate and governor pitched to voters this weekend as early voting continues; open enrollment on the Affordable Care Act marketplace begins Nov. 1.",
-      "entityIds": [],
-      "topics": [
-        "elections"
       ]
     },
     {
