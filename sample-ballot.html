@@ -70,7 +70,9 @@ share-description: "Preview the federal and state contests on your Georgia ballo
   .contest-group > h3 { font-size: 1.05rem; border-bottom: 2px solid #eee; padding-bottom: 0.25rem; margin-bottom: 0.6rem; }
 
   .contest-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.7rem 0.9rem; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 0.5rem; text-decoration: none; color: inherit; background: #fff; transition: background 0.15s; }
-  .contest-row:hover { background: #f2f6fb; }
+  /* Zebra shading per group: the h3 is a different element type, so :nth-of-type counts only the rows. */
+  .contest-row:nth-of-type(even) { background: #eaf1fa; }
+  .contest-row:hover, .contest-row:nth-of-type(even):hover { background: #d9e6f6; }
   .contest-title { font-weight: 700; font-size: 0.98rem; }
   .contest-candidates { font-size: 0.84rem; color: #555; margin-top: 0.2rem; }
   .contest-meta { text-align: right; flex-shrink: 0; font-size: 0.78rem; color: #888; }
