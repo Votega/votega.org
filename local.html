@@ -67,6 +67,24 @@ breadcrumb:
   .lh-also { margin: 0.6rem 0 0 1.25rem; font-size: 0.82rem; color: #666; display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; align-items: center; }
   .lh-also-chip { border: 1px solid #cfe3d0; background: #f3faf3; color: #1b5e20; border-radius: 999px; padding: 0.1rem 0.6rem; text-decoration: none; }
   .lh-also-chip:hover { border-color: #2e7d32; }
+  /* A-Z jump bar + "show more" paging for the county list */
+  .lh-az { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 0 0 1rem; }
+  .lh-az a, .lh-az span {
+    min-width: 1.9rem; text-align: center; padding: 0.25rem 0.35rem; border-radius: 6px;
+    font-size: 0.85rem; font-weight: 600; line-height: 1.2;
+  }
+  .lh-az a { border: 1px solid #c9d6ea; background: #f3f7fc; color: #1a4d94; text-decoration: none; }
+  .lh-az a:hover { border-color: #1a56a8; background: #e7eef8; }
+  .lh-az span { color: #bbb; border: 1px solid transparent; }
+  .lh-more { margin: 1.25rem 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
+  .lh-more button {
+    font-size: 0.92rem; padding: 0.5rem 1rem; border: 1px solid #1a56a8; border-radius: 6px;
+    background: #fff; color: #1a4d94; cursor: pointer;
+  }
+  .lh-more button:hover { background: #e7eef8; }
+  .lh-more .lh-more-all { border: 0; background: none; text-decoration: underline; padding: 0.5rem 0; }
+  .lh-group[hidden], .lh-also[hidden], .lh-more[hidden] { display: none; }
+  .lh-group { scroll-margin-top: 4.5rem; }
   .lh-empty { color: #666; font-style: italic; padding: 1rem 0; }
   .lh-note { margin: 0.5rem 0 0; font-size: 0.82rem; color: #777; }
   /* Flag pill injected onto a card when a place has a hot topic on recent agendas */
@@ -96,6 +114,7 @@ breadcrumb:
 <div class="lh-controls">
   <input type="search" id="lhSearch" class="lh-search" placeholder="Search counties and cities…" aria-label="Search places">
 </div>
+<nav class="lh-az" id="lhAz" aria-label="Jump to counties starting with a letter"></nav>
 
 <div class="lh-legend" aria-label="What the agenda badges mean">
   <span class="lh-legend-title">What the badges mean.</span>
@@ -228,20 +247,59 @@ breadcrumb:
   {%- endfor %}
 
 </div>
+<div class="lh-more" id="lhMoreWrap" hidden>
+  <button type="button" id="lhMore"></button>
+  <button type="button" class="lh-more-all" id="lhAll">Show all</button>
+</div>
 <p class="lh-empty" id="lhEmpty" hidden>No places match your search.</p>
 
 <script>
   (function () {
     var search = document.getElementById('lhSearch');
     var empty = document.getElementById('lhEmpty');
+    var groupsEl = document.getElementById('lhGroups');
+    var azEl = document.getElementById('lhAz');
+    var moreWrap = document.getElementById('lhMoreWrap');
+    var moreBtn = document.getElementById('lhMore');
+    var allBtn = document.getElementById('lhAll');
+    var PAGE = 20;     // county groups per page; a county and its cities are never split
+    var limit = PAGE;
+
+    // Alphabetize every group (real counties and "not yet in VoteGA" placeholders
+    // together, by county name). The server order is the no-JS fallback.
     var groups = Array.prototype.slice.call(document.querySelectorAll('.lh-group'));
+    function sortName(g) { var h = g.querySelector('.lh-county'); return h ? h.dataset.name : ''; }
+    groups.sort(function (a, b) { var x = sortName(a), y = sortName(b); return x < y ? -1 : x > y ? 1 : 0; });
+    groups.forEach(function (g) { groupsEl.appendChild(g); });
+
+    // A-Z bar: letters with a county link to it; the rest are inert.
+    var firstOfLetter = {};
+    groups.forEach(function (g, i) {
+      var ch = sortName(g).charAt(0).toUpperCase();
+      if (!/[A-Z]/.test(ch)) ch = '#';
+      if (!(ch in firstOfLetter)) { firstOfLetter[ch] = i; g.id = 'lh-letter-' + ch.toLowerCase(); }
+    });
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function (ch) {
+      var el;
+      if (ch in firstOfLetter) {
+        el = document.createElement('a');
+        el.href = '#lh-letter-' + ch.toLowerCase();
+        el.dataset.letter = ch;
+      } else {
+        el = document.createElement('span');
+        el.setAttribute('aria-hidden', 'true');
+      }
+      el.textContent = ch;
+      azEl.appendChild(el);
+    });
 
     function matches(name, q) { return !q || (name && name.indexOf(q) !== -1); }
 
     function apply() {
       var q = search.value.trim().toLowerCase();
+      var searching = q !== '';
       var shownGroups = 0;
-      groups.forEach(function (g) {
+      groups.forEach(function (g, i) {
         var head = g.querySelector('.lh-county');
         var countyMatch = matches(head ? head.dataset.name : '', q);
         var kids = Array.prototype.slice.call(g.querySelectorAll('.lh-child'));
@@ -260,14 +318,48 @@ breadcrumb:
         });
         var alsoWrap = g.querySelector('.lh-also');
         if (alsoWrap) alsoWrap.hidden = !chips.some(function (c) { return !c.hidden; });
-        var groupShown = countyMatch || anyKid;
+        // Searching ignores paging: a match on page 3 must still be found.
+        var groupShown = searching ? (countyMatch || anyKid) : i < limit;
         g.hidden = !groupShown;
         if (groupShown) shownGroups++;
       });
       empty.hidden = shownGroups !== 0;
+      var remaining = groups.length - limit;
+      moreWrap.hidden = searching || remaining <= 0;
+      if (remaining > 0) moreBtn.textContent = 'Show ' + Math.min(PAGE, remaining) + ' more (' + remaining + ' remaining)';
     }
 
+    // Reveal enough groups that group index `i` is visible.
+    function reveal(i) { if (i >= limit) limit = Math.ceil((i + 1) / PAGE) * PAGE; }
+
+    function jumpTo(id) {
+      var target = id && document.getElementById(id);
+      if (!target) {
+        // Also accept a place slug: /local/#fulton
+        var card = id && document.querySelector('.lh-card[data-slug="' + id.replace(/"/g, '') + '"]');
+        target = card && card.closest('.lh-group');
+      }
+      if (!target) return false;
+      search.value = '';
+      reveal(groups.indexOf(target));
+      apply();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return true;
+    }
+
+    azEl.addEventListener('click', function (e) {
+      var a = e.target.closest('a[data-letter]');
+      if (!a) return;
+      e.preventDefault();
+      var id = a.getAttribute('href').slice(1);
+      if (jumpTo(id) && history.replaceState) history.replaceState(null, '', '#' + id);
+    });
+    moreBtn.addEventListener('click', function () { limit += PAGE; apply(); });
+    allBtn.addEventListener('click', function () { limit = groups.length; apply(); });
+
     search.addEventListener('input', apply);
+    apply();
+    if (location.hash.length > 1) jumpTo(decodeURIComponent(location.hash.slice(1)));
 
     // Hot-topic flags: badge cards whose place has an ALPR / data-center / land-use
     // item on recent agendas (enrichment sidecar local-flags.json; base-path aware).
