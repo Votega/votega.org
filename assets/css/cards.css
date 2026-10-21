@@ -296,3 +296,6 @@ layout: null
   font-size: 0.8rem;
   color: var(--color-text-muted);
 }
+
+/* Inside the Local Government card the note sits in normal flow, not tucked under a lead. */
+.rep-card-local .levels-note { margin: 0.6rem 0 0.8rem; }
