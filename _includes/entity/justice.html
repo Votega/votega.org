@@ -365,6 +365,7 @@
           <div class="justice-profile-info">
             <div class="justice-profile-title">${escHtml(justice.title)}</div>
             <h1 class="justice-profile-name">${escHtml(justice.name)}</h1>
+            ${window.VotegaShare ? VotegaShare.html({type:'justice', id:(window.VOTEGA_ENTITY||{}).id}) : ''}
             <div class="justice-meta-row">
               <span class="justice-meta-label">Appointed by</span>
               <span style="color:${partyColor(justice.appointedByParty)};font-weight:600;">${escHtml(justice.appointedBy)}</span>
