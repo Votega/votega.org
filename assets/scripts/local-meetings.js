@@ -43,6 +43,23 @@
     return MONTHS[+p[1] - 1] + ' ' + (+p[2]) + ', ' + p[0];
   }
 
+  var PAGE_SIZE = 50;
+
+  // Year (YYYY) of the newest meeting dated before `today`, or null when the place spans
+  // fewer than two years (nothing to narrow) or has no past meetings.
+  function defaultYear(meetings, today) {
+    today = today || todayStr();
+    var years = {}, newest = null;
+    (meetings || []).forEach(function (m) {
+      var v = m && typeof m.date === 'string' ? m.date.slice(0, 10) : '';
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
+      years[v.slice(0, 4)] = true;
+      if (v < today && (!newest || v > newest)) newest = v;
+    });
+    if (Object.keys(years).length < 2 || !newest) return null;
+    return newest.slice(0, 4);
+  }
+
   function init(opts) {
     var slug = opts.slug;
     var sourceFallback = opts.sourceFallback || '';
@@ -54,7 +71,9 @@
     var minutesToggle = document.getElementById(opts.minutesToggleId);
     var sourceEl = document.getElementById(opts.sourceId);
 
-    var state = { body: 'all', year: 'all', minutesOnly: false };
+    // `limit` caps how many past meetings are drawn (a place can have ~800); "Show more"
+    // raises it. Any filter change starts over at PAGE_SIZE.
+    var state = { body: 'all', year: 'all', minutesOnly: false, limit: PAGE_SIZE };
     var ALL = [];
     var BODIES = [];
 
@@ -71,18 +90,23 @@
         '<span class="cm-links">' + links + '</span></li>';
     }
 
-    function section(title, rows, showChip, upcoming) {
+    function section(title, rows, showChip, upcoming, limit) {
       if (!rows.length) return '';
+      var shown = limit ? rows.slice(0, limit) : rows;
+      var more = rows.length - shown.length;
       return '<h2 class="cm-section-heading">' + title + ' (' + rows.length + ')</h2>' +
         '<ul class="cm-list ' + (upcoming ? 'cm-upcoming' : '') + '">' +
-        rows.map(function (m) { return meetingRow(m, showChip); }).join('') + '</ul>';
+        shown.map(function (m) { return meetingRow(m, showChip); }).join('') + '</ul>' +
+        (more > 0
+          ? '<button type="button" class="cm-more" id="cmShowMore">Show ' + Math.min(PAGE_SIZE, more) +
+            ' more <span class="cm-count">' + more + ' remaining</span></button>'
+          : '');
     }
 
     function render() {
       var showChip = state.body === 'all';
       var rows = ALL;
       if (state.body !== 'all') rows = rows.filter(function (m) { return bodySlug(m.body) === state.body; });
-      if (state.year !== 'all') rows = rows.filter(function (m) { return (m.date || '').slice(0, 4) === state.year; });
       if (state.minutesOnly) rows = rows.filter(function (m) { return m.minutesUrl; });
 
       Array.prototype.forEach.call(pillsEl.querySelectorAll('.cm-pill'), function (p) {
@@ -107,10 +131,27 @@
         .sort(function (a, b) { return a.date.localeCompare(b.date); });
       var past = rows.filter(function (m) { return m.date < today; })
         .sort(function (a, b) { return b.date.localeCompare(a.date); });
+      // The year filter narrows the PAST list only: a meeting scheduled for early next year
+      // is still the next one a resident wants, whichever year is selected.
+      if (state.year !== 'all') {
+        past = past.filter(function (m) { return (m.date || '').slice(0, 4) === state.year; });
+      }
+
+      if (!upcoming.length && !past.length) {
+        container.innerHTML = '<p class="cm-empty">' +
+          (state.minutesOnly
+            ? 'No meetings with published minutes for this selection.'
+            : 'No agendas posted for this selection.') + '</p>';
+        return;
+      }
 
       container.innerHTML =
-        section('Upcoming', upcoming, showChip, true) +
-        section('Past meetings', past, showChip, false);
+        section('Upcoming', upcoming, showChip, true, 0) +
+        section('Past meetings', past, showChip, false, state.limit);
+      var moreBtn = document.getElementById('cmShowMore');
+      if (moreBtn) {
+        moreBtn.addEventListener('click', function () { state.limit += PAGE_SIZE; render(); });
+      }
     }
 
     function buildPills() {
@@ -127,6 +168,7 @@
       Array.prototype.forEach.call(pillsEl.querySelectorAll('.cm-pill'), function (btn) {
         btn.addEventListener('click', function () {
           state.body = btn.dataset.body;
+          state.limit = PAGE_SIZE;
           if (history.replaceState) {
             history.replaceState(null, '',
               state.body === 'all' ? location.pathname + location.search : '#' + state.body);
@@ -156,7 +198,7 @@
       }).join('');
 
       Array.prototype.forEach.call(yearPillsEl.querySelectorAll('.cm-pill'), function (btn) {
-        btn.addEventListener('click', function () { state.year = btn.dataset.year; render(); });
+        btn.addEventListener('click', function () { state.year = btn.dataset.year; state.limit = PAGE_SIZE; render(); });
       });
     }
 
@@ -180,12 +222,17 @@
 
         buildPills();
         buildYearPills();
+        // A long history opens on the year of the most recent past meeting, not all ~800 rows.
+        // "All" is still one click away.
+        var yr = defaultYear(ALL);
+        if (yearPillsEl && yearRowEl && !yearRowEl.hidden && yr) state.year = yr;
         applyHash();
         if (controls) controls.hidden = false;
 
         if (minutesToggle) {
           minutesToggle.addEventListener('change', function (e) {
             state.minutesOnly = e.target.checked;
+            state.limit = PAGE_SIZE;
             render();
           });
         }
@@ -244,5 +291,5 @@
     return best;
   }
 
-  global.LocalMeetings = { init: init, latestMeetingDate: latestMeetingDate };
+  global.LocalMeetings = { init: init, latestMeetingDate: latestMeetingDate, defaultYear: defaultYear };
 })(window);

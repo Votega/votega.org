@@ -133,3 +133,18 @@ test('latestMeetingDate ignores scheduled meetings and picks the newest past one
   assert.strictEqual(LM.latestMeetingDate([]), null);
   assert.strictEqual(LM.latestMeetingDate(undefined), null);
 });
+
+test('defaultYear opens a long history on the newest past year, and only when there is a choice', () => {
+  const LM = loadBrowserModules('assets/scripts/local-meetings.js').LocalMeetings;
+  const m = (d) => ({ date: d });
+  // spans two years: newest PAST meeting's year wins, scheduled future meetings are ignored
+  assert.strictEqual(LM.defaultYear([m('2025-03-01'), m('2026-09-30'), m('2027-01-05')], '2026-10-21'), '2026');
+  // early in a new year with only last year's meetings past: still the newest past year
+  assert.strictEqual(LM.defaultYear([m('2025-11-01'), m('2024-02-02'), m('2026-12-01')], '2026-01-10'), '2025');
+  // one year only: nothing to narrow, so no default
+  assert.strictEqual(LM.defaultYear([m('2026-01-01'), m('2026-02-01')], '2026-10-21'), null);
+  // no past meetings, or junk dates
+  assert.strictEqual(LM.defaultYear([m('2027-01-05'), m('2028-01-05')], '2026-10-21'), null);
+  assert.strictEqual(LM.defaultYear([m(null), {}, m('soon')], '2026-10-21'), null);
+  assert.strictEqual(LM.defaultYear([], '2026-10-21'), null);
+});

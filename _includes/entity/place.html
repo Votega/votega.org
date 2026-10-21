@@ -29,6 +29,14 @@
   .cm-pill:hover { background: var(--color-surface-tint); }
   .cm-pill.active { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); }
   .cm-pill .cm-count { opacity: 0.7; font-weight: 500; }
+  /* "Show more" under a long past-meetings list (assets/scripts/local-meetings.js) */
+  .cm-more {
+    display: block; margin: 0.9rem 0 0.4rem; font-size: 0.88rem; font-weight: 600;
+    padding: 0.45rem 1.1rem; border: 1px solid var(--color-border); border-radius: 999px;
+    background: var(--color-surface-raised); color: var(--color-link); cursor: pointer;
+  }
+  .cm-more:hover { background: var(--color-surface-tint); }
+  .cm-more .cm-count { opacity: 0.7; font-weight: 500; margin-left: 0.35rem; }
   /* Secondary year-filter row, shown only when a place spans >1 year */
   .cm-year-row { flex-basis: 100%; display: flex; align-items: center; gap: 0.55rem; margin-top: 0.15rem; }
   .cm-facet-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--color-text-muted); flex: none; }
