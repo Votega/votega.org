@@ -196,3 +196,32 @@ def assert_equal_except(before, after, *ignore_keys):
         differing = sorted({k for k in set(b) | set(a) if b.get(k) != a.get(k)})
         raise RacesGuardError(
             f"races.json changed outside {list(ignore_keys)}: fields differ = {differing}")
+
+
+# --------------------------------------------------------------------------- #
+# recorded winners — propose_race_winners
+# --------------------------------------------------------------------------- #
+def assert_only_winners_changed(before, after, expected_ids):
+    """Only `status` and `winner` on exactly the expected races changed; nothing else did.
+
+    propose_race_winners records a certified result on a race, nothing more: no candidate,
+    phase or ballot may move, and no race outside the plan may be touched.
+    """
+    assert_race_set_preserved(before, after)
+    b, a = _races_by_id(before), _races_by_id(after)
+    touched = set()
+    for rid, br in b.items():
+        ar = a[rid]
+        strip = lambda r: {k: v for k, v in r.items() if k not in ("status", "winner")}  # noqa: E731
+        if strip(br) != strip(ar):
+            raise RacesGuardError(f"{rid}: fields other than status/winner changed")
+        if (br.get("status"), br.get("winner")) != (ar.get("status"), ar.get("winner")):
+            touched.add(rid)
+    if touched != set(expected_ids):
+        raise RacesGuardError(
+            f"changed races differ from the plan: unexpected={sorted(touched - set(expected_ids))}, "
+            f"missing={sorted(set(expected_ids) - touched)}")
+    top_b = {k: v for k, v in before.items() if k not in ("races", "updatedAt")}
+    top_a = {k: v for k, v in after.items() if k not in ("races", "updatedAt")}
+    if top_b != top_a:
+        raise RacesGuardError("top-level keys changed (other than updatedAt)")

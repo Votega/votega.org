@@ -213,7 +213,7 @@ def schema():
                         "cycle": {"type": "integer"},
                         "activePhase": {"type": ["string", "null"], "description": "Which phase is current (e.g. primary, general, runoff)."},
                         "status": {"type": ["string", "null"], "enum": ["active", "complete", "certified", None], "description": "Lifecycle of the race. Absent/`active` = still on the ballot. `complete`/`certified` retire it from the active elections directory (kept for history, still on its results page) — used for a contest with no further phase, e.g. a special election that ends at its runoff."},
-                        "winner": {"type": ["object", "null"], "description": "The decided result (present once status is complete/certified): {name, candidateId, party, phase}.", "additionalProperties": True},
+                        "winner": {"type": ["object", "null"], "description": "The decided result (present once status is complete/certified): {name, candidateId, party, phase}; an incumbent listed only by member id carries memberId in place of candidateId.", "additionalProperties": True},
                         "displayTitle": {"type": ["string", "null"]},
                         "incumbentBioguideId": {"type": ["string", "null"]},
                         "phases": {

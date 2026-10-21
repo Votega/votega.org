@@ -23,26 +23,32 @@ def _key(c) -> str:
     return c.get("id") or c["name"]
 
 
-def certified_winner_id(race, all_candidate_ids) -> str | None:
-    """The winning candidate's id, only if the race is certified and that id is really in it.
+def certified_winner_id(race, all_candidate_ids, all_member_ids=()) -> str | None:
+    """The recorded winner's key, only if the race is certified and that key is really in it.
 
-    A winner id that matches nobody in the race (a typo, or a candidate id that moved) is
-    ignored rather than obeyed: obeying it would mark every candidate "lost" and nobody "won".
+    The key is the winner's candidate id, or for an incumbent listed only by member id, that
+    member id. One that matches nobody in the race (a typo, or an id that moved) is ignored
+    rather than obeyed: obeying it would mark every candidate "lost" and nobody "won".
     """
     if not race or race.get("status") != "certified":
         return None
-    wid = (race.get("winner") or {}).get("candidateId")
-    return wid if wid and wid in all_candidate_ids else None
+    w = race.get("winner") or {}
+    if w.get("candidateId"):
+        return w["candidateId"] if w["candidateId"] in all_candidate_ids else None
+    mid = w.get("memberId")
+    return mid if mid and mid in all_member_ids else None
 
 
-def standing(race, active, me_key, all_candidate_ids) -> str:
+def standing(race, active, me_key, all_candidate_ids, all_member_ids=()) -> str:
     """One of LIVE / OFF_BALLOT / LOST / WON for the candidate keyed `me_key`.
 
     `active` is the race's current-ballot candidates; `all_candidate_ids` is every candidate id
     the race has ever carried (any phase), used to validate the recorded winner.
     """
-    wid = certified_winner_id(race, all_candidate_ids)
+    wid = certified_winner_id(race, all_candidate_ids, all_member_ids)
     if wid:
+        # An incumbent listed only by member id has no candidate page (they go to their member
+        # page), so every candidate that does have one lost to them.
         return WON if me_key == wid else LOST
     if active and not any(_key(c) == me_key for c in active):
         return OFF_BALLOT

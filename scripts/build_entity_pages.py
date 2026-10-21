@@ -568,6 +568,18 @@ def _race_all_candidate_ids(race):
     return ids
 
 
+def _race_all_member_ids(race):
+    """Member ids of incumbents the race lists without a candidate id (a recorded winner may
+    be keyed on one)."""
+    ids = set()
+    for ph in (race.get("phases") or {}).values():
+        if isinstance(ph, dict):
+            for g in list((ph.get("ballots") or {}).values()) + [ph.get("candidates") or []]:
+                ids.update(c.get("memberId") or c.get("existingMemberId") for c in (g or [])
+                           if c.get("memberId") or c.get("existingMemberId"))
+    return ids
+
+
 def candidate_standing(races, cand_obj, cid, name):
     """live / off-ballot / lost / won for a candidate page (see lib/candidate_standing.py).
 
@@ -581,7 +593,7 @@ def candidate_standing(races, cand_obj, cid, name):
     for race in races:
         _phase, active = _race_active_candidates(race)
         states.append(standing(race, active, cand_obj.get("id") or cid or name,
-                               _race_all_candidate_ids(race)))
+                               _race_all_candidate_ids(race), _race_all_member_ids(race)))
     return overall(states)
 
 
