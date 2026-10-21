@@ -544,6 +544,21 @@ def _active_election_date(race, phase_key):
     return f"{label}: {d}" if d and label else None
 
 
+def candidate_is_retired(race, cand_obj, cid, name):
+    """True for a candidate who is not on the race's active ballot while that ballot exists.
+
+    Derived from the data, never a hand list: once a race has a general ballot, anyone who
+    was only on the primary or runoff ballot (or withdrew) is retired; before it exists the
+    primary candidates ARE the active ballot, so nobody is. A race with no candidates at all,
+    or no race, retires nobody. Retiring means the page stays up (links keep working) but is
+    labelled, noindex, and out of the sitemap, the directory and site search.
+    """
+    if not race:
+        return False
+    _phase, active = _race_active_candidates(race)
+    return bool(active) and not candidate_line(active, cand_obj.get("id") or cid or name, False)[0]
+
+
 def candidate_card_lines(race, cand_obj, cid, name):
     """(fact, fact2) for a candidate's share card, or None when they are not on the ballot.
 
@@ -1135,12 +1150,16 @@ def build_candidates(records, urls, prior, new_state):
                       or rid)
         race_url = urls.get("race", {}).get(rid)
         _ccat_order = _race_category(race.get("chamber"))[1]
-        _dir_add("candidates", race_label, (_ccat_order, race_label), name, name, permalink,
-                 group_url=race_url)
         # Party from the structured candidate object; fall back to the desc prefix
         # ("Republican — U.S. Senate 2026"). The old "·" split never matched (the
         # separator is an em dash), so affiliation had silently been null.
         cand_obj = (cand_index.get(cid) or ({}, None))[0] or {}
+        retired = candidate_is_retired(race, cand_obj, cid, name)
+        if retired:
+            urls.setdefault("retired", {}).setdefault("candidate", {})[cid] = True
+        else:  # the directory is the crawlable index; a noindex page does not belong in it
+            _dir_add("candidates", race_label, (_ccat_order, race_label), name, name, permalink,
+                     group_url=race_url)
         party = (cand_obj.get("party") or "").strip()
         if not party and "—" in desc:
             party = desc.split("—")[0].strip()
@@ -1191,6 +1210,8 @@ def build_candidates(records, urls, prior, new_state):
                   "about": candidate_about(name, race, cand_obj, race_label),
                   "race": {"name": race_label, "url": race_url} if race_url else None,
                   "rivals": rivals}
+        if retired:  # only when true, so a live candidate's content fingerprint (and lastmod) is untouched
+            entity["retired"] = True
         lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": page_desc},
                                   data_date, prior, new_state)
         fm = {
@@ -1202,12 +1223,15 @@ def build_candidates(records, urls, prior, new_state):
             "last_modified_at": lastmod,
             "entity": entity,
         }
+        if retired:  # kept for existing links, but not advertised (see head.html's noindex note)
+            fm.update({"noindex": "true", "sitemap": "false", "search": "false"})
         crumbs = [("Home", "/"), ("2026 Elections", "/elections/")]
         if race_url:
             crumbs.append((race_label, race_url))
         crumbs.append((name, None))
         bc = breadcrumbs(fm, crumbs)
-        body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(cid)}}};</script>\n'
+        flags = ', "retired": true' if retired else ""
+        body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(cid)}{flags}}};</script>\n'
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/candidate.html %}}")
         write_page("candidates", slug, fm, body)
