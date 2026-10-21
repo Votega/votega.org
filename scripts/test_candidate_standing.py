@@ -61,6 +61,12 @@ check("no race, no winner", C.certified_winner_id(None, ALL), None)
 N = {"name": "Solo"}
 check("name-keyed candidate on the ballot is live", C.standing(OPEN, [N], "Solo", set()), C.LIVE)
 
+# --- a winner keyed on a member id (an incumbent with no candidate page) -------
+MEM = {"status": "certified", "winner": {"name": "Clay Fuller", "memberId": "F000485"}}
+check("everyone with a candidate id lost to an incumbent listed by member id", C.standing(MEM, [A, B], "a", ALL, {"F000485"}), C.LOST)
+check("a member-id winner not in the race is ignored", C.standing(MEM, [A, B], "a", ALL, set()), C.LIVE)
+check("a candidate-id winner still wins when member ids are present", C.standing(CERT_A, [A, B], "a", ALL, {"F000485"}), C.WON)
+
 # --- a person in several races ------------------------------------------------
 check("still running anywhere stays live", C.overall([C.WON, C.LIVE, C.LOST]), C.LIVE)
 check("a win with nothing live is won", C.overall([C.WON, C.OFF_BALLOT]), C.WON)
