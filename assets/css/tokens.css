@@ -25,6 +25,7 @@
   --red-50:  #fdecec;
   --red-200: #f3b4b4;
   --ink-900: #2b2118;
+  --gray-chart: #8a8f98;
   --gray-100: #f3f4f6;
   --gray-300: #d1d5db;
   --gray-500: #6b7280;
@@ -34,11 +35,13 @@
   --clay-200: #f0e1d0;
   --white: #ffffff;
 
-  --sage-400: #7fae9d;
+  --sage-300: #a5d3b4;
   --gold-600: #b8860b;
   --teal-700: #0e7490;
-  --plum-700: #6b3f5b;
-  --olive-700: #6b7a2a;
+  --teal-50:  #e0f1f4;
+  --teal-200: #a9d4dc;
+  --slate-800: #1f2937;
+  --peach-300: #e6a97e;
 
   --blue-party: #3333ff;
   --blue-party-tint: #e7e7ff;
@@ -91,13 +94,22 @@
   /* Categorical chart series (funding sources and the like). Deliberately avoids the
      three party hues so a series is never read as a party. Always label the series. */
   --chart-pine: var(--pine-600);
-  --chart-sage: var(--sage-400);
+  --chart-sage: var(--sage-300);
   --chart-clay: var(--clay-500);
   --chart-gold: var(--gold-600);
   --chart-teal: var(--teal-700);
-  --chart-plum: var(--plum-700);
-  --chart-olive: var(--olive-700);
-  --chart-gray: var(--gray-vacant);
+  --chart-slate: var(--slate-800);
+  --chart-peach: var(--peach-300);
+  --chart-gray: var(--gray-chart);
+
+  /* Topic-watch flags on local pages (ALPR, land use, data centers). Categorical, so they avoid
+     red and green (danger and success) and every party hue. */
+  --color-watch-alpr: var(--clay-700);
+  --color-watch-alpr-tint: var(--clay-50);
+  --color-watch-alpr-line: var(--clay-300);
+  --color-watch-landuse: var(--teal-700);
+  --color-watch-landuse-tint: var(--teal-50);
+  --color-watch-landuse-line: var(--teal-200);
 
   /* Party data only. One color per party, used for that party and nothing else. */
   --color-party-d: var(--blue-party);

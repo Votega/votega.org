@@ -478,7 +478,7 @@ window.CampaignFinance = (function () {
       parts: ['party'] },
     { key: 'transfers', label: 'Transfers from the candidate\u2019s other committees', color: 'var(--chart-teal)',
       parts: ['transfers'] },
-    { key: 'self',     label: 'The candidate (contributions and loans)', color: 'var(--chart-plum)',
+    { key: 'self',     label: 'The candidate (contributions and loans)', color: 'var(--chart-slate)',
       parts: ['candidateSelf', 'candidateLoans'] },
     { key: 'other',    label: 'Other receipts', color: 'var(--chart-gray)',
       parts: ['otherLoans', 'offsets', 'otherReceipts'] },
@@ -655,11 +655,11 @@ window.CampaignFinance = (function () {
     TBSN: { label: 'Corporations & businesses', color: 'var(--chart-gold)' },
     TNCC: { label: 'Political committees',      color: 'var(--chart-clay)' },
     TCNCC: { label: 'Other candidates & campaigns', color: 'var(--chart-teal)' },
-    TSELF: { label: 'Candidate (self-funded)',   color: 'var(--chart-plum)' },
-    TSPDC: { label: 'Spouse / dependent child',  color: 'var(--chart-olive)' },
+    TSELF: { label: 'Candidate (self-funded)',   color: 'var(--chart-slate)' },
+    TSPDC: { label: 'Spouse / dependent child',  color: 'var(--chart-peach)' },
     TLOB:  { label: 'Lobbyists',                 color: 'var(--chart-gray)' },
   };
-  const GA_FALLBACK_COLORS = ['var(--chart-teal)', 'var(--chart-plum)', 'var(--chart-olive)', 'var(--chart-gray)'];
+  const GA_FALLBACK_COLORS = ['var(--chart-teal)', 'var(--chart-slate)', 'var(--chart-peach)', 'var(--chart-gray)'];
 
   function exactMoney(n) {
     return '$' + Math.round(n).toLocaleString('en-US');

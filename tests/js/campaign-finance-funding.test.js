@@ -110,7 +110,7 @@ test('labels a source too small to round as <1% rather than 0%', () => {
   });
   assert.equal(sharesByLabel(html)['Party committees'].share, '&lt;1%');
   // A sub-1% segment still has to be visible and hoverable in the bar.
-  assert.ok(/class="funding-bar-seg"[^>]*background:#a16207/.test(html));
+  assert.ok(/class="funding-bar-seg"[^>]*background:var\(--chart-gold\)/.test(html));
 });
 
 test('negative components never become a funding source', () => {

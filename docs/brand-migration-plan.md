@@ -203,3 +203,15 @@ Tracked on the last page of the style guide (page 26). The ones that block speci
 ## 9. Method notes
 
 Counts were produced by a one-off script over the working tree (not committed). Re-run a scan after each phase to see the remaining old-brand colors: search for the old blues listed in section 1, for `#c00`, `#777` and `#666` (ad hoc grays in state messages), and for emoji in page and include files.
+
+## 10. Status and decisions taken during the build (2026-10-21)
+
+Phases 0 to 3 are built on `brand-migration` (not merged). Decisions on the open items:
+
+- **Lighter peach token / reversed-logo `#e9a173`:** not adopted as site tokens. Neither is used on the site (no dark mode, peach set is not on any page); both stay in the logo files. Revisit with dark mode.
+- **Web manifest:** shipped (`site.webmanifest`, 192/512 and maskable icons, clay theme color, `display: browser`, so nothing installs as an app by default).
+- **Land-use / ALPR / data-center watch colors:** kept as categorical flags but moved off red and green (which mean danger and success): ALPR is clay, land use is teal (`--color-watch-*` tokens), data centers stay amber.
+- **Chart palette:** the original eight colors had a worst-case color distance of 7.5 under color-blind simulation. Replaced sage, plum, olive and gray with lighter sage, slate, peach and a mid gray; worst case is now 14. Tokens renamed `--chart-slate` and `--chart-peach`.
+- **`#3333FF` in large areas:** checked in the donut charts and majority-tracker bars beside the clay palette; acceptable.
+- **Trial-page stash:** superseded. Public Sans is now site-wide through `base.html`; the only unmerged idea, a monospace stack for order numbers, is applied with `--font-mono`.
+- **Not done:** stale-data stamp rule, breakpoint consolidation, topic emoji in published data (`topics.yml`, generator), candidate photo placeholder and phone/pin glyphs, per-entity share cards.
