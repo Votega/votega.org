@@ -6,6 +6,22 @@ Plan for moving the live site from the old identity (navy and civic blue, Lora a
 
 `docs/` is excluded from the Jekyll build (`_config.yml`), so this file is not published.
 
+## Decisions made
+
+**Party colors match the party discs (decided 2026-10-21).** Each party has one color, taken from the supplied disc artwork, and that hue means that party and nothing else, on every page, chart, badge and card. This replaces the old Chart / Active / Badge BG variants per party.
+
+| Party | Color | Tint (badge background) | Small text on tint | Contrast |
+|---|---|---|---|---|
+| Democratic | `#3333FF` | `#E7E7FF` | `#3333FF` | 6.6:1 on the page, 5.65:1 on its tint |
+| Republican | `#E81B23` | `#FCE4E5` | `#CF151C` | 4.4:1 on the page (fine for graphics); 4.6:1 for the text shade on its tint |
+| Independent | `#A21CAF` (magenta) | `#F4E4F5` | `#A21CAF` | 6.1:1 on the page, 5.2:1 on its tint |
+| Vacant (not a party) | `#9CA3AF` | `#F3F4F6` | `#374151` | gray, never a party |
+
+- **Independent moved from violet (`#7C3AED`) to magenta.** Violet was nearly indistinguishable from Democratic blue under simulated deuteranopia (color distance 1.7) and close under protanopia (12.5). Magenta separates from the blue (36-66) and the red (69-100) in all four vision simulations.
+- **Danger Red stays `#B91C1C`.** It no longer equals a party color. Its distance from Republican red is 18 for normal vision and 9 for protan, so the rule stands: danger is always shown with an icon and a label, and is for errors and emergencies only.
+- **Still to check:** `#3333FF` is a vivid blue; look at it in large chart areas (stacked bar, donut) beside the clay palette before the token file is finalized.
+- **Rollout effect:** every old party value moves to the table above. Values to search for and replace: `#2563eb`, `#1d4ed8`, `#dbeafe`, `#dc2626`, `#fee2e2`, `#2471a3`, `#c0392b`, `#3498db`, `#e74c3c`, and the old Independent and "Other" grays used for independents.
+
 ## 1. How the effort was measured
 
 Every page, layout, include, stylesheet and script was scanned (heuristic text counts, not visual diffs):
@@ -26,7 +42,7 @@ These move most of the site because the theme is driven by a handful of values.
 | Theme color tokens: `page-col`, `text-col`, `link-col`, `hover-col`, `navbar-col`, `navbar-text-col`, `navbar-border-col`, `footer-col`, `footer-text-col`, `footer-link-col`, `footer-hover-col`; `mobile-theme-col` is commented out today | `_config.yml` (lines ~180-200) | Body text, links, navbar, footer on every page |
 | `--body-font` / `--header-font` to Public Sans | `assets/css/beautifuljekyll.css` (variables near the top; 54 hex, 22 media queries elsewhere in the file) | Type on every page |
 | Replace the Lora and Open Sans Google Fonts links with Public Sans | `_layouts/base.html` | Font loading |
-| Introduce a shared `assets/css/tokens.css` (clay, deep clay, tint, line, pine, party, semantic, Independent violet, Vacant gray) and load it from `_includes/head.html` | new + `head.html` | Single source for the brand values; later phases delete local colors in favor of these |
+| Introduce a shared `assets/css/tokens.css` (clay, deep clay, tint, line, pine, semantic, and the party colors from "Decisions made": Democratic, Republican, Independent magenta, Vacant gray, plus each tint and text shade) and load it from `_includes/head.html` | new + `head.html` | Single source for the brand values; later phases delete local colors in favor of these |
 | Wire the favicon set and touch icons | `_includes/head.html` | New favicon; files already in `assets/img/brand/favicon/` |
 | Add Public Sans (SIL OFL) | `THIRD-PARTY-NOTICES.md` | License notice |
 | Regenerate the default share card | `tools/og-image/og-default.html`, `assets/img/og-default.png` | Still navy and blue today |
@@ -104,7 +120,7 @@ Own score includes exclusive dependencies. Pages already styled in the stash (th
 | `federal-executive` template | 87.4 | 20 generated pages, 283 `<style>` lines |
 | `local.html` | 88.5 | **12 emoji icons** |
 | `ga-congress-trades.html` | 95.3 | Party colors vs UI blue |
-| `ga-majority-tracker.html` | 115.2 | 30 inline styles; adopt Independent violet and Vacant gray (guide p.10); party seats |
+| `ga-majority-tracker.html` | 115.2 | 30 inline styles; adopt Independent magenta and Vacant gray (guide p.10); party seats |
 
 ### Tier 5: largest (117-179), one template at a time
 
@@ -120,6 +136,7 @@ Own score includes exclusive dependencies. Pages already styled in the stash (th
 ## 6. Cross-cutting checklist (applies to every phase)
 
 - [ ] Replace UI blue (`#1a56a8`, `#008aff`, `#0085a1`) with clay tokens; keep party blue and red for party data only (guide p.10)
+- [ ] Party colors: replace every old party value with the single color per party (see "Decisions made"); Independent is magenta, not violet or gray; small red text uses `#CF151C`
 - [ ] Party label wording: "Democratic", "Republican", "Independent"; Vacant uses gray (guide p.16)
 - [ ] Emoji to Font Awesome (guide p.12-13)
 - [ ] Empty / unavailable / known-gap messages standardized (amber and gray, not red `#c00`; guide p.17)
@@ -140,7 +157,6 @@ Own score includes exclusive dependencies. Pages already styled in the stash (th
 
 Tracked on the last page of the style guide (page 26). The ones that block specific steps:
 
-- Danger Red equals Rep. Active (`#b91c1c`): decide before standardizing error states
 - A lighter "peach" token, and whether to keep the reversed-logo light clay `#e9a173`
 - Whether to ship a web app manifest with the 192/512 and maskable icons
 - Dark mode: yes or no (affects the token structure)
