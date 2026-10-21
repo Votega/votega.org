@@ -17,15 +17,15 @@
  * something other than a pill (the card border on /results/).
  */
 :root {
-  --status-certified-bg:   #dcfce7;
-  --status-certified-fg:   #166534;
-  --status-certified-line: #16a34a;
-  --status-unofficial-bg:   #fef9c3;
-  --status-unofficial-fg:   #854d0e;
-  --status-unofficial-line: #ca8a04;
-  --status-upcoming-bg:   #f3f4f6;
-  --status-upcoming-fg:   #4b5563;
-  --status-upcoming-line: #6b7280;
+  --status-certified-bg:   var(--color-success-tint);
+  --status-certified-fg:   var(--color-success);
+  --status-certified-line: var(--color-success);
+  --status-unofficial-bg:   var(--color-warning-tint);
+  --status-unofficial-fg:   var(--color-warning);
+  --status-unofficial-line: var(--color-warning-line);
+  --status-upcoming-bg:   var(--color-neutral-tint);
+  --status-upcoming-fg:   var(--color-neutral-text);
+  --status-upcoming-line: var(--color-text-muted);
 }
 
 /* The badge itself. Defaults to the neutral "upcoming" treatment so an
@@ -63,10 +63,10 @@
   border-color: var(--status-certified-line);
   color: var(--status-certified-fg);
 }
-/* Upcoming: informational blue, not the amber "unofficial results" warning —
+/* Upcoming: neutral gray, not the amber "unofficial results" warning —
    nothing is provisional here because nothing has been counted yet. */
 .pr-notice-upcoming {
-  background: #eaf4fb;
-  border-color: #2471a3;
-  color: #1b4f72;
+  background: var(--status-upcoming-bg);
+  border-color: var(--status-upcoming-line);
+  color: var(--status-upcoming-fg);
 }
