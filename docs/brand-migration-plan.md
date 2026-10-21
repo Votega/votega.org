@@ -219,3 +219,11 @@ Phases 0 to 3 are built on `brand-migration` (not merged). Decisions on the open
 ### Stale-stamp rule (built, on this branch)
 
 `assets/scripts/freshness.js` + `_includes/data-freshness.html` apply "older than usual" from the windows in `_data/data_freshness.yml`. Seven update workflows record a check day (`scripts/record_data_checked.py`, `scripts/commit_freshness.sh`) so quiet datasets do not read as stale. **Release step:** `_data/freshness/` is empty until those workflows run, so right after the merge dispatch the seven (`update-ga-votes`, `update-federal-votes`, `update-fec-data`, `update-ga-campaign-finance`, `update-ga-executive-orders`, `update-ga-bills`, `update-curated-ga-bills`) or the GA executive-orders stamp (date-only, 7 days old, 3-day window) will read "older than usual" until the next scheduled run.
+
+### Added during the build
+
+- **Home page:** Tier 1 lockup with tagline replaces the title and subtitle (`hero-logo: true` front matter, no-tagline variant under 360px); a Local Government card sits centred under Federal and State.
+- **404 page:** on-brand illustration (`assets/img/404-lost-pin.svg`) and plain-voice copy; the unlicensed South Park image is deleted.
+- **Local meetings:** a place spanning more than one year opens on its newest past year; the year pill filters both Upcoming and Past, with a note linking to upcoming meetings in other years; past meetings load 50 at a time.
+- **Stale rule coverage:** adds SCOTUS decisions, congress trades, ballot measures and the election calendar at 90 days; the last two are hand-curated and use the **Record data review** workflow.
+- **Checks run before the push:** container-overflow scan (375/768/1280, 39 pages, 0 findings; negative control reproduces the congress-trades bug), 154 JS tests, Python test for the recorder, workflow validator, `claude.md` updated with the token, icon, overflow and stale-stamp conventions.
