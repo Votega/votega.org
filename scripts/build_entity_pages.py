@@ -28,6 +28,7 @@ import html
 import json
 from lib.atomic_io import write_json_atomic
 from lib.share_card import candidate_line
+from lib.candidate_standing import LIVE, OFF_BALLOT, LOST, WON, overall, standing, officeholder_target
 import os
 import re
 import sys
@@ -544,19 +545,53 @@ def _active_election_date(race, phase_key):
     return f"{label}: {d}" if d and label else None
 
 
-def candidate_is_retired(race, cand_obj, cid, name):
-    """True for a candidate who is not on the race's active ballot while that ballot exists.
+_CROSSWALK = []
 
-    Derived from the data, never a hand list: once a race has a general ballot, anyone who
-    was only on the primary or runoff ballot (or withdrew) is retired; before it exists the
-    primary candidates ARE the active ballot, so nobody is. A race with no candidates at all,
-    or no race, retires nobody. Retiring means the page stays up (links keep working) but is
-    labelled, noindex, and out of the sitemap, the directory and site search.
+
+def _crosswalk_people():
+    """id-crosswalk.json's people, loaded once; empty if the file is absent."""
+    if not _CROSSWALK:
+        try:
+            _CROSSWALK.extend((load("id-crosswalk.json") or {}).get("people") or [])
+        except (OSError, ValueError):
+            pass
+    return _CROSSWALK
+
+
+def _race_all_candidate_ids(race):
+    """Every candidate id the race has carried in any phase (validates a recorded winner)."""
+    ids = set()
+    for ph in (race.get("phases") or {}).values():
+        if isinstance(ph, dict):
+            for g in list((ph.get("ballots") or {}).values()) + [ph.get("candidates") or []]:
+                ids.update(c["id"] for c in (g or []) if c.get("id"))
+    return ids
+
+
+def candidate_standing(races, cand_obj, cid, name):
+    """live / off-ballot / lost / won for a candidate page (see lib/candidate_standing.py).
+
+    `races` is every race the candidate appears in (a person can be in a special election and
+    a full-term race at once; the page itself is about the one `_candidate_index` picked).
+    Everything is derived from races.json: a race that is `status: certified` with a
+    `winner.candidateId` decides won/lost; otherwise a candidate not on the race's active
+    ballot (while that ballot exists) is off-ballot. No races at all means live.
     """
-    if not race:
-        return False
-    _phase, active = _race_active_candidates(race)
-    return bool(active) and not candidate_line(active, cand_obj.get("id") or cid or name, False)[0]
+    states = []
+    for race in races:
+        _phase, active = _race_active_candidates(race)
+        states.append(standing(race, active, cand_obj.get("id") or cid or name,
+                               _race_all_candidate_ids(race)))
+    return overall(states)
+
+
+def _races_by_candidate(races):
+    """candidate id -> every race (any phase) that lists them."""
+    out = {}
+    for race in races:
+        for cid in _race_all_candidate_ids(race):
+            out.setdefault(cid, []).append(race)
+    return out
 
 
 def candidate_card_lines(race, cand_obj, cid, name):
@@ -1116,6 +1151,7 @@ def build_candidates(records, urls, prior, new_state):
     races = data.get("races", [])
 
     cand_index = _candidate_index(races)
+    cand_races = _races_by_candidate(races)
 
     us_urls = urls.get("us-congress", {})
     seen = set()
@@ -1154,8 +1190,12 @@ def build_candidates(records, urls, prior, new_state):
         # ("Republican — U.S. Senate 2026"). The old "·" split never matched (the
         # separator is an em dash), so affiliation had silently been null.
         cand_obj = (cand_index.get(cid) or ({}, None))[0] or {}
-        retired = candidate_is_retired(race, cand_obj, cid, name)
-        if retired:
+        state = candidate_standing(cand_races.get(cid) or ([race] if race else []), cand_obj, cid, name)
+        retired = state in (OFF_BALLOT, LOST)
+        # A winner goes to their officeholder page once the roster carries one; until then the
+        # candidate page keeps serving, noting the win (it is the only page about them).
+        redirect = officeholder_target(cand_obj.get("id") or cid, _crosswalk_people(), urls) if state == WON else None
+        if retired or redirect:
             urls.setdefault("retired", {}).setdefault("candidate", {})[cid] = True
         else:  # the directory is the crawlable index; a noindex page does not belong in it
             _dir_add("candidates", race_label, (_ccat_order, race_label), name, name, permalink,
@@ -1210,8 +1250,11 @@ def build_candidates(records, urls, prior, new_state):
                   "about": candidate_about(name, race, cand_obj, race_label),
                   "race": {"name": race_label, "url": race_url} if race_url else None,
                   "rivals": rivals}
-        if retired:  # only when true, so a live candidate's content fingerprint (and lastmod) is untouched
-            entity["retired"] = True
+        # Only set when applicable, so a live candidate's content fingerprint (and lastmod) is untouched.
+        if retired:
+            entity["retired"] = state
+        elif state == WON:
+            entity["won"] = True
         lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": page_desc},
                                   data_date, prior, new_state)
         fm = {
@@ -1223,20 +1266,23 @@ def build_candidates(records, urls, prior, new_state):
             "last_modified_at": lastmod,
             "entity": entity,
         }
-        if retired:  # kept for existing links, but not advertised (see head.html's noindex note)
+        if retired or redirect:  # kept for existing links, but not advertised (see head.html's noindex note)
             fm.update({"noindex": "true", "sitemap": "false", "search": "false"})
+        if redirect:  # jekyll-redirect-from turns this page into a redirect to the officeholder page
+            fm["redirect_to"] = redirect
         crumbs = [("Home", "/"), ("2026 Elections", "/elections/")]
         if race_url:
             crumbs.append((race_label, race_url))
         crumbs.append((name, None))
         bc = breadcrumbs(fm, crumbs)
-        flags = ', "retired": true' if retired else ""
+        flags = (f', "retired": {json.dumps(state)}' if retired
+                 else ', "won": true' if state == WON else "")
         body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(cid)}{flags}}};</script>\n'
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/candidate.html %}}")
         write_page("candidates", slug, fm, body)
-        lines = candidate_card_lines(race, cand_obj, cid, name)
-        if lines:  # not on the active ballot: no card, so the page keeps the default
+        lines = candidate_card_lines(race, cand_obj, cid, name) if state == LIVE else None
+        if lines:  # not live (off the ballot, decided, or redirected): no card, so the page keeps the default
             add_card("candidates", slug, name, kind="person",
                      role=abbrev_office(race_label) if race_label else "Candidate",
                      party=party or None,
