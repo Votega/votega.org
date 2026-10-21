@@ -1227,3 +1227,17 @@ pre {
   font-weight: 600;
   white-space: nowrap;
 }
+
+/* Home page: the Tier 1 lockup (with tagline) stands in for the title and subtitle. */
+.intro-header .page-heading h1.hero-logo {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 0;
+}
+.hero-logo img {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
