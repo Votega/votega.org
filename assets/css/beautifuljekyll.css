@@ -1213,3 +1213,9 @@ pre {
     color: var(--color-text-muted);
   }
 }
+
+/* Keyboard focus ring in the brand accent (guide: clay focus ring). */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
