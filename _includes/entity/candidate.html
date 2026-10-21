@@ -621,6 +621,7 @@
         ${photoHtml}
         <div class="candidate-header-info">
           <h1>${escHtmlGa(candidate.name)}</h1>
+          ${window.VotegaShare ? VotegaShare.html({type:'candidate', id:(window.VOTEGA_ENTITY||{}).id}) : ''}
           ${roleBadge}
           <span class="party-badge ${partyClass(candidate.party)}">${escHtmlGa(candidate.party || 'Unknown party')}</span>
           <div class="race-context">Running for: <a href="${escHtmlGa(raceUrl)}">${escHtmlGa(raceLabel)}</a></div>

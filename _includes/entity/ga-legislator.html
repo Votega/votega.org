@@ -981,6 +981,7 @@
       ${statusBannerHtml}
       ${imageHtml}
       <h1>${escHtml(name)}</h1>
+      ${window.VotegaShare ? VotegaShare.html({type:'ga-legislator', id:(window.VOTEGA_ENTITY||{}).id}) : ''}
       ${otherRaceBannerHtml}
       ${leadershipHtml}
       ${bornHtml}

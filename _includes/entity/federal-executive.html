@@ -364,6 +364,9 @@
       }
 
       document.getElementById('pageTitle').textContent = official.name;
+      if (window.VotegaShare && !document.querySelector('#pageTitle + .vg-share')) {
+        document.getElementById('pageTitle').insertAdjacentHTML('afterend', VotegaShare.html({type: 'federal-executive', id: official.id}));
+      }
       document.title = `${official.name} | Vote GA`;
 
       renderOfficial(official, detailsDiv);

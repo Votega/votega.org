@@ -1904,6 +1904,7 @@
     const html = `
       ${imageHtml}
       <h1>${escHtml(fullName)}</h1>
+      ${window.VotegaShare ? VotegaShare.html({type:'federal-legislator', id:(window.VOTEGA_ENTITY||{}).id}) : ''}
       ${runningBadgeHtml}
       ${bornHtml}
       <p style="display:flex;justify-content:space-between;"><span><strong>First Term (Current Chamber):</strong> ${startYear}</span><span><strong>Years in Office:</strong> ${yearsInOffice}</span></p>

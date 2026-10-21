@@ -963,6 +963,7 @@
     document.getElementById('raceContent').innerHTML = `
       <div class="race-header">
         <h1>${raceTitle}</h1>
+        ${window.VotegaShare ? VotegaShare.html({type:'race', id:(window.VOTEGA_ENTITY||{}).id}) : ''}
         <div class="meta">
           <span class="phase-badge ${phaseClass}">${phaseLabel}</span>
           ${dateStr ? `Election date: ${dateStr}` : ''}
