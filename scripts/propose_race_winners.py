@@ -15,6 +15,9 @@ every flagged race for a person. Review the diff and commit it like any other da
 
 Usage:
   python scripts/propose_race_winners.py              # report only
+  python scripts/propose_race_winners.py --preview-unofficial   # election night: treat counts as
+                                                      # final to check names/structure (report
+                                                      # only; refuses --apply)
   python scripts/propose_race_winners.py --apply      # write races.json
   python scripts/propose_race_winners.py --json out.json
 
@@ -121,14 +124,24 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--apply", action="store_true", help="write races.json (default: report only)")
     ap.add_argument("--json", metavar="PATH", help="also write the full proposal as JSON")
+    ap.add_argument("--preview-unofficial", action="store_true",
+                    help="REPORT ONLY: treat unofficial counts as final, to check name matching and "
+                         "structure against election night's real file before certification")
     args = ap.parse_args()
+    if args.preview_unofficial and args.apply:
+        ap.error("--preview-unofficial can never be combined with --apply: unofficial counts can still move")
 
     doc, text = load_races()
     if render(doc) != text:
         print("races.json is not in its canonical shape (2-space, CRLF, no trailing newline); "
               "refusing to rewrite it, since the diff would be noise. Format it first.", file=sys.stderr)
         return 1
-    result = propose(load_result_sets(), doc["races"], load_members())
+    sets = load_result_sets()
+    if args.preview_unofficial:
+        sets = [{**s, "status": "certified"} for s in sets]
+        print("PREVIEW: unofficial counts are being treated as final. Nothing here is a result; "
+              "use it to check names and structure only.\n")
+    result = propose(sets, doc["races"], load_members())
     changes, conflicts = plan_changes(result["proposals"], doc["races"])
     print(report(result, changes, conflicts))
     if args.json:
