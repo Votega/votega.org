@@ -131,27 +131,51 @@
         .sort(function (a, b) { return a.date.localeCompare(b.date); });
       var past = rows.filter(function (m) { return m.date < today; })
         .sort(function (a, b) { return b.date.localeCompare(a.date); });
-      // The year filter narrows the PAST list only: a meeting scheduled for early next year
-      // is still the next one a resident wants, whichever year is selected.
+      // The year filter applies to both lists, so a year pill shows exactly that year. Upcoming
+      // meetings in OTHER years are not dropped silently: a note under the filter names them,
+      // so the next meeting is never hidden without a way to it.
+      var otherYears = {};
       if (state.year !== 'all') {
-        past = past.filter(function (m) { return (m.date || '').slice(0, 4) === state.year; });
+        var inYear = function (m) { return (m.date || '').slice(0, 4) === state.year; };
+        upcoming.forEach(function (m) { if (!inYear(m)) { var y = m.date.slice(0, 4); otherYears[y] = (otherYears[y] || 0) + 1; } });
+        upcoming = upcoming.filter(inYear);
+        past = past.filter(inYear);
       }
+      var otherNote = upcomingElsewhereNote(otherYears);
 
       if (!upcoming.length && !past.length) {
-        container.innerHTML = '<p class="cm-empty">' +
+        container.innerHTML = otherNote + '<p class="cm-empty">' +
           (state.minutesOnly
             ? 'No meetings with published minutes for this selection.'
             : 'No agendas posted for this selection.') + '</p>';
+        wireYearJumps();
         return;
       }
 
-      container.innerHTML =
+      container.innerHTML = otherNote +
         section('Upcoming', upcoming, showChip, true, 0) +
         section('Past meetings', past, showChip, false, state.limit);
+      wireYearJumps();
       var moreBtn = document.getElementById('cmShowMore');
       if (moreBtn) {
         moreBtn.addEventListener('click', function () { state.limit += PAGE_SIZE; render(); });
       }
+    }
+
+    // "Upcoming meetings in other years: 2027 (1)", each year a link that selects that pill.
+    function upcomingElsewhereNote(byYear) {
+      var years = Object.keys(byYear).sort();
+      if (!years.length) return '';
+      return '<p class="cm-other-years">Upcoming meetings in other years: ' +
+        years.map(function (y) {
+          return '<button type="button" class="cm-year-jump" data-year="' + esc(y) + '">' +
+            esc(y) + ' (' + byYear[y] + ')</button>';
+        }).join(', ') + '</p>';
+    }
+    function wireYearJumps() {
+      Array.prototype.forEach.call(container.querySelectorAll('.cm-year-jump'), function (b) {
+        b.addEventListener('click', function () { state.year = b.dataset.year; state.limit = PAGE_SIZE; render(); });
+      });
     }
 
     function buildPills() {
