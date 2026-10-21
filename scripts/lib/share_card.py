@@ -167,7 +167,9 @@ body {{ font-family: "Public Sans", "Liberation Sans", Arial, sans-serif; backgr
 .p-r {{ background: var(--color-party-r-tint); color: var(--color-party-r-text); }}
 .p-i {{ background: var(--color-party-i-tint); color: var(--color-party-i-text); }}
 .p-n {{ background: var(--color-surface-tint); color: var(--color-accent-strong); }}
-.fact {{ font-size: 32px; margin-top: 26px; line-height: 1.25; }}
+.fact {{ font-size: 32px; margin-top: 22px; line-height: 1.25;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }}
+.fact2 {{ font-size: 28px; margin-top: 10px; line-height: 1.25; color: var(--color-text-muted); }}
 .foot {{ position: absolute; left: 64px; right: 64px; bottom: 44px; display: flex; justify-content: space-between;
   align-items: baseline; gap: 32px; font-size: 24px; color: var(--color-text-muted); }}
 .domain {{ color: var(--color-accent-strong); font-weight: 700; letter-spacing: .16em; white-space: nowrap; }}
@@ -179,6 +181,7 @@ body {{ font-family: "Public Sans", "Liberation Sans", Arial, sans-serif; backgr
     {f'<div class="role">{esc(row.get("role"))}</div>' if row.get("role") else ''}
     {f'<div class="pills">{"".join(pills)}</div>' if pills else ''}
     {f'<div class="fact">{esc(fact)}</div>' if fact else ''}
+    {f'<div class="fact2">{esc(row.get("fact2"))}</div>' if row.get("fact2") else ''}
   </div>
 </div>
 <div class="foot"><span>{esc(" · ".join(foot_bits))}</span><span class="domain">VOTEGA.ORG</span></div>
@@ -230,3 +233,39 @@ def patch_front_matter(path: str, img_url: str) -> bool:
     with open(path, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(front + rest)
     return True
+
+
+_PARTY_INITIAL = {"democrat": "D", "republican": "R", "independent": "I", "libertarian": "L"}
+
+
+def rivals_line(rivals) -> str | None:
+    """"vs. Jane Smith (D), John Doe (R) +2 more": a fact every candidate in a race has."""
+    bits = []
+    for c in rivals[:3]:
+        ini = next((v for k, v in _PARTY_INITIAL.items() if k in (c.get("party") or "").lower()), "")
+        bits.append(c["name"].strip() + (f" ({ini})" if ini else ""))
+    if not bits:
+        return None
+    more = len(rivals) - len(bits)
+    return "vs. " + ", ".join(bits) + (f" +{more} more" if more > 0 else "")
+
+
+def candidate_line(active, me_key, legislative: bool):
+    """(on_ballot, line) for one candidate, given the race's active-ballot candidates.
+
+    `on_ballot` is False for anyone not in the active list, who then gets no card. The line is
+    occupation and county for a legislative candidate (the only offices whose filing data has
+    them), else the opponents; it is None for an unopposed candidate with no such data.
+    """
+    key = lambda c: c.get("id") or c["name"]  # noqa: E731
+    me = next((c for c in active if key(c) == me_key), None)
+    if me is None:
+        return False, None
+    line = None
+    if legislative:
+        occ = (me.get("occupation") or "").strip()
+        county = (me.get("county") or "").strip()
+        line = " · ".join(x for x in (occ, f"{county} County" if county else "") if x) or None
+    if not line:
+        line = rivals_line([c for c in active if key(c) != key(me)])
+    return True, line

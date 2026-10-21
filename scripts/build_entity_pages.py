@@ -27,6 +27,7 @@ import hashlib
 import html
 import json
 from lib.atomic_io import write_json_atomic
+from lib.share_card import candidate_line
 import os
 import re
 import sys
@@ -530,6 +531,38 @@ def _first_election_date(race):
         if d:
             return ("General election" if key == "general" else key.capitalize()) + f": {d}"
     return None
+
+
+_LEGISLATIVE_OFFICES = ("Georgia House of Representatives", "Georgia State Senate")
+
+
+def _active_election_date(race, phase_key):
+    """"General election: November 3, 2026" for the phase the ballot is currently in."""
+    ph = (race.get("phases") or {}).get(phase_key)
+    d = _fmt_date(ph.get("electionDate")) if isinstance(ph, dict) else None
+    label = {"general": "General election", "runoff": "Runoff", "primary": "Primary"}.get(phase_key)
+    return f"{label}: {d}" if d and label else None
+
+
+def candidate_card_lines(race, cand_obj, cid, name):
+    """(fact, fact2) for a candidate's share card, or None when they are not on the ballot.
+
+    A card is drawn only for someone on the race's ACTIVE ballot (the general once it
+    exists, else the runoff or primary). Anyone who lost out keeps the site default card
+    rather than a card that implies they are still running; that is derived from the data,
+    so it needs no per-cycle edit. The distinguishing line is per office: legislative
+    candidates have occupation and county in the filing data, and nobody else does, so
+    every other office gets the opponents line. Within a race every candidate gets the
+    same kind of line.
+    """
+    if not race:
+        return None
+    phase_key, active = _race_active_candidates(race)
+    on_ballot, fact = candidate_line(active, cand_obj.get("id") or cid or name,
+                                     legislative=race.get("chamber") in _LEGISLATIVE_OFFICES)
+    if not on_ballot:
+        return None
+    return fact, _active_election_date(race, phase_key)
 
 
 def qs_id(url, key="id"):
@@ -1178,11 +1211,13 @@ def build_candidates(records, urls, prior, new_state):
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/candidate.html %}}")
         write_page("candidates", slug, fm, body)
-        add_card("candidates", slug, name, kind="person", role=abbrev_office(race_label) if race_label else "Candidate",
-                 party=party or None,
-                 badges=["Incumbent"] if cand_obj.get("isIncumbent") else [],
-                 fact=_first_election_date(race) or "Race, campaign finance & results",
-                 stamp=data_date, source="Georgia Secretary of State")
+        lines = candidate_card_lines(race, cand_obj, cid, name)
+        if lines:  # not on the active ballot: no card, so the page keeps the default
+            add_card("candidates", slug, name, kind="person",
+                     role=abbrev_office(race_label) if race_label else "Candidate",
+                     party=party or None,
+                     badges=["Incumbent"] if cand_obj.get("isIncumbent") else [],
+                     fact=lines[0], fact2=lines[1], stamp=data_date, source="Georgia Secretary of State")
         count += 1
     return count
 
