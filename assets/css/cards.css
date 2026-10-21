@@ -24,9 +24,18 @@ layout: null
   margin-top: 1.5rem;
   margin-bottom: 2.5rem;
 }
+/* A third card on its own row, centred under the two above and the same width as one of them
+   (home page: the Local Government card under Federal and State). */
+.reps-grid .rep-card-local {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc(50% - 0.75rem);
+  box-sizing: border-box;
+}
 @media (max-width: 600px) {
   .reps-grid,
   .elections-grid { grid-template-columns: 1fr; }
+  .reps-grid .rep-card-local { width: 100%; }
 }
 
 .rep-card,
