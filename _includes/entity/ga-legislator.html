@@ -1209,7 +1209,7 @@
       // label and the same place as on Voting History and Sponsored Legislation —
       // three panels that each had their own wording for one link.
       const textLink = bill.fullTextUrl
-        ? ` <a class="bill-text-inline" href="${escHtml(bill.fullTextUrl)}" target="_blank" rel="noopener">&var(--color-link); text &#8599;</a>`
+        ? ` <a class="bill-text-inline" href="${escHtml(bill.fullTextUrl)}" target="_blank" rel="noopener">&#128196; text &#8599;</a>`
         : '';
 
       return `<div class="bill-card">
@@ -1403,7 +1403,7 @@
       // the row (see split_text_url in the build script).
       const docSeg = sessionDocSeg[sid];
       const text = (docSeg && row[R_DOC])
-        ? ` <a class="spon-text" href="https://www.legis.ga.gov/api/legislation/document/${encodeURIComponent(docSeg)}/${encodeURIComponent(row[R_DOC])}" target="_blank" rel="noopener">&var(--color-link); text &#8599;</a>`
+        ? ` <a class="spon-text" href="https://www.legis.ga.gov/api/legislation/document/${encodeURIComponent(docSeg)}/${encodeURIComponent(row[R_DOC])}" target="_blank" rel="noopener">&#128196; text &#8599;</a>`
         : '';
       return `<li class="spon-item${hidden ? ' spon-hidden' : ''}">
           <a class="spon-id" href="${escHtml(href)}">${escHtml(row[R_ID] || '')}</a>
@@ -1820,7 +1820,7 @@
           : '';
         const url = billTextUrl(meta);
         const text = url
-          ? ` <a class="vh-link" href="${escHtml(url)}" target="_blank" rel="noopener">&var(--color-link); text &#8599;</a>`
+          ? ` <a class="vh-link" href="${escHtml(url)}" target="_blank" rel="noopener">&#128196; text &#8599;</a>`
           : '';
         return official + text;
       };
