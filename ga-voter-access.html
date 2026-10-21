@@ -194,7 +194,6 @@ breadcrumb:
 <p id="vaFetchNote" class="va-fetch-note" role="status" hidden></p>
 <div id="vaLoading" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}" style="padding:1.5rem 0;color:var(--color-text-secondary);">
   {%- if r and r.rows -%}
-    {% include data-freshness.html data=r noun="elections" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for e in r.rows -%}
       <li style="padding:.6rem 0;border-bottom:1px solid var(--color-border-subtle);">
@@ -383,9 +382,10 @@ breadcrumb:
 
       const src = document.getElementById('vaDataSource');
       const meta = data.metadata || {};
-      if (meta.generatedAt) {
-        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt}`
-          + (meta.source ? ` · Source: ${meta.source}` : '');
+      // No "last updated" stamp on purpose: the calendar is hand-maintained and
+      // event-driven (dates are set by the state), so its age is not a freshness signal.
+      if (meta.source) {
+        src.textContent = `Source: ${meta.source}`;
       }
     } catch (err) {
       // Never trade a working calendar for an error message. The fallback below
