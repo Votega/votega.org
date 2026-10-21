@@ -11,7 +11,9 @@
 # Fields:
 #   slug        identity; matches the generator topic + the data file name
 #   name        H1 / hub label
-#   emoji       leading glyph (matches the hub badge + place-page section)
+#   emoji       legacy glyph, kept only because generate_topic_mentions.py writes it into the
+#               metadata of each assets/data/local-topics-<slug>.json (a published field). Not rendered on the site any more.
+#   icon        Font Awesome (solid) icon name shown on the hub, topic page and place page
 #   blurb       one-line hub-card description
 #   definition  the plain-language "what is this" paragraph (2-3 sentences) shown
 #               under the H1 for a resident who arrived from a shared link
@@ -21,6 +23,7 @@ topics:
   - slug: alpr
     name: ALPR / surveillance
     emoji: 📷
+    icon: camera
     blurb: Automated license plate readers, police body and in-car cameras, drones and gunshot detection on local agendas — Flock, Axon and other vendors.
     definition: >
       An automated license plate reader (ALPR) is a camera that photographs every
@@ -40,6 +43,7 @@ topics:
   - slug: data-center
     name: Data centers
     emoji: 🏭
+    icon: industry
     blurb: Data-center rezonings, incentives, and infrastructure on local agendas.
     definition: >
       A data center is a large building full of computing and storage equipment;
@@ -53,6 +57,7 @@ topics:
   - slug: land-use
     name: Land use
     emoji: 🏗️
+    icon: trowel-bricks
     blurb: Rezonings, variances, special-use permits, annexations, and major developments.
     definition: >
       "Land use" is how a local government decides what can be built where —

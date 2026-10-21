@@ -23,7 +23,7 @@ breadcrumb:
   {%- for t in topics %}
   <a class="ti-hub-card" href="{{ '/local/topics/' | append: t.slug | append: '/' | relative_url }}"
      data-slug="{{ t.slug }}">
-    <div class="ti-hub-emoji">{{ t.emoji }}</div>
+    <div class="ti-hub-emoji"><i class="fa-solid fa-{{ t.icon }}" aria-hidden="true"></i></div>
     <div class="ti-hub-body">
       <div class="ti-hub-name">{{ t.name }}</div>
       <div class="ti-hub-blurb">{{ t.blurb }}</div>
