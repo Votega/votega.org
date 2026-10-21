@@ -56,6 +56,9 @@
           // entities to match so one result template works for both, and swap
           // the index's id-bearing shell URL for the clean entity path so a
           // click does not pay for a redirect (see entity-urls.js).
+          // Retired candidates (off the current ballot) stay in the index for the page
+          // builders but are not offered here; see VoteGA.entityUrls.isRetired.
+          entities = entities.filter(function (rec) { return !VoteGA.entityUrls.isRetired(rec, urlMaps); });
           entities = entities.map(function (rec) {
             return {
               title: rec.title,

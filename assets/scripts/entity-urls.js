@@ -133,6 +133,17 @@
     return clean ? clean.replace(/^\//, '') : url;
   }
 
+  // True for a search record whose page is retired (build_entity_pages.py lists those ids
+  // under "retired" in entity-urls.json: a candidate not on the race's current ballot).
+  // The index itself must keep them -- the page builders read it back (see the note at the
+  // top) -- so search hides them here instead. A missing map hides nothing.
+  function isRetired(rec, maps) {
+    var kind = MAP_FOR_CATEGORY[rec && rec.category];
+    var id = kind ? idFromUrl((rec && rec.url) || '') : null;
+    var set = maps && maps.retired && maps.retired[kind];
+    return !!(id && set && set[id]);
+  }
+
   global.VoteGA = global.VoteGA || {};
-  global.VoteGA.entityUrls = { load: load, href: href, get: get, resolve: resolve };
+  global.VoteGA.entityUrls = { load: load, href: href, get: get, resolve: resolve, isRetired: isRetired };
 })(window);

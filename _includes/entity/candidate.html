@@ -6,6 +6,7 @@
 <div id="candidateContent">
   {%- if page.entity -%}
     {%- assign e = page.entity -%}
+    {%- if e.retired %}<p class="retired-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><strong>No longer on the ballot.</strong> {{ e.name | escape }} is not on the current ballot for this race. This page is kept so existing links still work.{% if e.race %} <a href="{{ e.race.url | relative_url }}">See who is running</a>.{% endif %}</p>{% endif %}
     <h1 style="margin:0 0 .5rem;">{{ e.name | escape }}</h1>
     {%- if e.about %}{% for para in e.about %}<p>{{ para | escape }}</p>{% endfor %}{% endif %}
     {%- if e.race %}<p>Race page: <a href="{{ e.race.url | relative_url }}">{{ e.race.name | escape }}</a></p>{% endif %}
@@ -97,6 +98,19 @@
     color: var(--color-text-secondary);
     margin-bottom: 1rem;
   }
+
+  /* A candidate who is not on the race's current ballot (build_entity_pages.py sets
+     entity.retired; the page is also noindex). Gray, not an error: it is information. */
+  .retired-note {
+    padding: 0.75rem 1rem;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    margin: 0 0 1.25rem;
+  }
+  .retired-note i { color: var(--color-text-secondary); margin-right: 0.35rem; }
 
   .no-record-note {
     padding: 0.75rem 1rem;
@@ -614,9 +628,18 @@
         This candidate has no prior U.S. Congressional record on file, or they are running for a different chamber.
       </div>` : '';
 
+    // Set by build_entity_pages.py for someone off the race's current ballot. Say so first:
+    // the header below still names the phase they appeared in ("Running for: … Primary").
+    const isRetired = !!(window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.retired);
+    const retiredHtml = isRetired ? `
+      <p class="retired-note" role="note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><strong>No longer on the ballot.</strong>
+        ${escHtmlGa(candidate.name)} is not on the current ballot for this race. This page is kept so existing links still work.
+        <a href="${escHtmlGa(raceUrl)}">See who is running</a>.</p>` : '';
+
     document.title = `${candidate.name} — Candidate Profile`;
 
     document.getElementById('candidateContent').innerHTML = `
+      ${retiredHtml}
       <div class="candidate-header">
         ${photoHtml}
         <div class="candidate-header-info">
@@ -624,7 +647,7 @@
           ${window.VotegaShare ? VotegaShare.html({type:'candidate', id:(window.VOTEGA_ENTITY||{}).id}) : ''}
           ${roleBadge}
           <span class="party-badge ${partyClass(candidate.party)}">${escHtmlGa(candidate.party || 'Unknown party')}</span>
-          <div class="race-context">Running for: <a href="${escHtmlGa(raceUrl)}">${escHtmlGa(raceLabel)}</a></div>
+          <div class="race-context">${isRetired ? 'Was on the ballot for' : 'Running for'}: <a href="${escHtmlGa(raceUrl)}">${escHtmlGa(raceLabel)}</a></div>
           ${dateStr ? `<div class="race-context">Election date: ${escHtmlGa(dateStr)}</div>` : ''}
         </div>
       </div>

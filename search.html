@@ -78,6 +78,9 @@ breadcrumb:
       var pagesPosts = Array.isArray(res[0]) ? res[0] : [];
       var entities = (res[1] && res[1].records) ? res[1].records : [];
       var urlMaps = res[2] || {};
+      // Retired candidates (off the current ballot) stay in the index for the page builders
+      // but are not offered here; see VoteGA.entityUrls.isRetired.
+      entities = entities.filter(function (rec) { return !VoteGA.entityUrls.isRetired(rec, urlMaps); });
       entities = entities.map(function (rec) {
         return { title: rec.title, desc: rec.desc, category: rec.category,
                  url: base + '/' + VoteGA.entityUrls.resolve(rec, urlMaps) };
