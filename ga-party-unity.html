@@ -130,6 +130,14 @@ members, from the same roll-call record behind each member's page.</p>
   .pu-table td.pu-num { text-align: right; font-variant-numeric: tabular-nums; font-size: 0.85rem; color: var(--color-text-secondary); }
   .pu-table td.pu-num.pu-strong { color: var(--color-text); font-weight: 600; }
 
+  .pu-more-wrap { text-align: center; margin-top: 1rem; }
+  .pu-more {
+    font-size: 0.9rem; font-weight: 600; padding: 0.5rem 1.2rem; cursor: pointer;
+    border: 1px solid var(--color-border); border-radius: 999px;
+    background: var(--color-surface-raised); color: var(--color-link);
+  }
+  .pu-more:hover { background: var(--color-surface-tint); }
+  .pu-more .pu-more-n { opacity: 0.7; font-weight: 500; margin-left: 0.35rem; }
   .pu-foot { margin-top: 1.75rem; font-size: 0.76rem; color: var(--color-text-secondary); line-height: 1.6; }
   .pu-foot code { background: var(--color-surface-chrome); padding: 1px 4px; border-radius: 3px; }
 
@@ -223,6 +231,8 @@ members, from the same roll-call record behind each member's page.</p>
   </table>
 </div>
 
+<div class="pu-more-wrap"><button type="button" class="pu-more" id="pu-more" hidden></button></div>
+
 <p class="pu-foot" id="pu-foot"></p>
 
 <script>
@@ -243,6 +253,11 @@ members, from the same roll-call record behind each member's page.</p>
   var dataLoaded = false;
   var byId = {};
   var state = { sort: 'independence', chamber: 'all', party: 'all', min: 25 };
+  // The ranking is ~230 rows, so it draws PAGE_SIZE at a time. `limit` grows with "Show more" and
+  // starts over whenever a sort or filter changes (lastKey tracks that).
+  var PAGE_SIZE = 50;
+  var limit = PAGE_SIZE;
+  var lastKey = '';
   var highlightId = null;
 
   var $ = function (id) { return document.getElementById(id); };
@@ -307,17 +322,34 @@ members, from the same roll-call record behind each member's page.</p>
       return b.partyLineVotes - a.partyLineVotes;
     });
 
-    $('pu-count').innerHTML = 'Showing <strong>' + list.length + '</strong> members'
+    var key = [state.sort, state.chamber, state.party, state.min].join('|');
+    if (key !== lastKey) { limit = PAGE_SIZE; lastKey = key; }
+    // A deep-linked member below the fold must be on screen for the highlight and scroll to work,
+    // so open the list far enough to include them (rounded up to a whole page).
+    if (highlightId) {
+      for (var hi = 0; hi < list.length; hi++) {
+        if (list[hi].id === highlightId) {
+          if (hi >= limit) limit = Math.ceil((hi + 1) / PAGE_SIZE) * PAGE_SIZE;
+          break;
+        }
+      }
+    }
+    var total = list.length;
+    var shown = Math.min(limit, total);
+
+    $('pu-count').innerHTML = 'Showing <strong>' + (shown < total ? shown + ' of ' + total : total) + '</strong> members'
       + (state.chamber === 'all' ? '' : ' &middot; ' + (state.chamber === 'Senate' ? 'Senate' : 'House'))
       + (state.party === 'all' ? '' : ' &middot; ' + state.party)
       + (state.min > 0 ? ' &middot; min ' + state.min + ' ' + s.sample : '')
       + (s.need === 'any' ? ' &middot; presiding officer excluded' : '');
 
+    // Bars are scaled against the whole filtered list, not just the rows drawn, so they do not
+    // change width when more rows are revealed.
     var maxV = list.length ? Math.max.apply(null, list.map(s.get)) : 1;
     if (!(maxV > 0)) maxV = 1;
     var basePath = getBasePath();
 
-    var html = list.map(function (m, i) {
+    var html = list.slice(0, shown).map(function (m, i) {
       var v = s.get(m);
       var w = Math.max(2, (v / maxV) * 100);
       var frac;
@@ -358,6 +390,12 @@ members, from the same roll-call record behind each member's page.</p>
     }).join('');
 
     $('pu-rows').innerHTML = html || '<tr><td colspan="6" style="padding:1.5rem;color:var(--color-text-secondary);">No members match these filters.</td></tr>';
+    var more = $('pu-more');
+    if (more) {
+      var left = total - shown;
+      more.hidden = left <= 0;
+      more.innerHTML = 'Show ' + Math.min(PAGE_SIZE, Math.max(left, 0)) + ' more <span class="pu-more-n">' + Math.max(left, 0) + ' remaining</span>';
+    }
     updateBanner(list);
   }
 
@@ -415,6 +453,7 @@ members, from the same roll-call record behind each member's page.</p>
     return h || null;
   }
 
+  $('pu-more').addEventListener('click', function () { limit += PAGE_SIZE; render(); });
   $('pu-sort').addEventListener('change', function () { state.sort = this.value; render(); });
   $('pu-min').addEventListener('input', function () { state.min = +this.value; $('pu-minval').textContent = this.value; render(); });
   ['pu-chamber', 'pu-party'].forEach(function (gid) {
