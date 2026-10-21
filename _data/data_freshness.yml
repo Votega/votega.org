@@ -1,6 +1,9 @@
 # How old a dataset may be before its "last updated" stamp should read "older than usual".
-# NOT consumed by any page yet: the stale-stamp rule (guide p.17, "proposed") has not been built.
-# This is the agreed table it will read, so the windows live in one place.
+# Read by assets/scripts/freshness.js (via window.VOTEGA_FRESHNESS in head.html) and by
+# _includes/data-freshness.html. Each update workflow records the day it last checked its source
+# (scripts/record_data_checked.py -> _data/freshness/<dataset>.json); the rule measures from the
+# newer of a dataset's own stamp and that day. Adding a dataset: add it here, then call the
+# recorder from its workflow and pass its key where the page prints the stamp.
 #
 #   window_days  amber "older than usual" once the dataset's stamp is older than this
 #   never        true = this dataset is never flagged and shows no stale label. These files are
@@ -8,16 +11,15 @@
 #                current. Where a page used to print their date, that stamp was removed.
 #
 # Windows are roughly twice the update cadence plus slack, from the workflow cron schedules.
-# Caveat for whoever builds the rule: some generators keep an unchanged generatedAt, so a quiet
-# dataset looks old even though its job ran (EO year files, ga-executive-orders). Those need a
-# checkedAt written on every run before the rule is applied to them.
+# Some generators keep an unchanged generatedAt (or skip the commit when only it moved), so a quiet
+# dataset's stamp is old even though its job ran; that is what the recorded check day covers.
 
 datasets:
   # --- Daily ---
   current-members:           { window_days: 3,  cadence: "daily 06:00 UTC",  note: "federal roster" }
   ga-members:                { window_days: 3,  cadence: "daily 07:00 UTC",  note: "state roster" }
   federal-sponsorship-index: { window_days: 3,  cadence: "daily, with the federal roster" }
-  ga-executive-orders:       { window_days: 3,  cadence: "twice daily",      note: "needs checkedAt first" }
+  ga-executive-orders:       { window_days: 3,  cadence: "twice daily",      note: "stamp is date-only and kept when unchanged; the recorded check covers it" }
   # --- Twice weekly ---
   curated-ga-bill-votes:     { window_days: 6,  cadence: "Tue/Thu" }
   local-government:          { window_days: 5,  cadence: "Mon/Thu 08:40 UTC", note: "per-place meetings files; bot_protected places count as stale at once" }

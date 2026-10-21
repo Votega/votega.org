@@ -296,6 +296,7 @@ async function loadData() {
       window.dataStamp.render('dataStamp', {
         updated: (data.metadata || {}).generatedAt,
         source:  (data.metadata || {}).source || 'Congress.gov API',
+        dataset: 'current-members',
         repo:    { url: 'https://github.com/Votega/ga-federal-legislators' },
       });
     }

@@ -394,7 +394,7 @@ breadcrumb:
 {%- assign r = site.data.rendered.ga_bills -%}
 <div id="billsLoading" class="bills-loading" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}">
   {%- if r and r.rows -%}
-    {% include data-freshness.html data=r noun="bills" %}
+    {% include data-freshness.html data=r noun="bills" dataset="ga-bills" %}
     <ul style="list-style:none;padding:0;margin:0;text-align:left;">
       {%- for b in r.rows -%}
       <li style="padding:.4rem 0;border-bottom:1px solid var(--color-border-subtle);">
@@ -1305,7 +1305,7 @@ breadcrumb:
       const coverageNote = withVotes && withParty < withVotes
         ? ' Party-line tags and Democrat/Republican vote tallies are still being backfilled. Available for ' + withParty.toLocaleString() + ' of ' + withVotes.toLocaleString() + ' bills with recorded votes, so some party-line votes may not yet be flagged.'
         : '';
-      elDataNote.innerHTML = 'Data from the Georgia General Assembly (legis.ga.gov), refreshed weekly. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote)
+      elDataNote.innerHTML = 'Data from the Georgia General Assembly (legis.ga.gov), refreshed weekly. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) + (window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-bills', meta.generatedAt) : '') : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote)
         // Published as open data (JSON/CSV/schema) in the ga-legislation repo —
         // the stable home, not the internal asset this page fetches. See CLAUDE.md.
         + ' Open data: <a href="https://github.com/Votega/ga-legislation" target="_blank" rel="noopener">Votega/ga-legislation</a>.';

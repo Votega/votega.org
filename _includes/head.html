@@ -222,6 +222,10 @@
 
   {%- comment %} Shared front-end helpers (getBasePath, …). Loaded synchronously in
       <head> so it is defined before any page's inline scripts run. {% endcomment -%}
+  {%- comment %} Stale-stamp windows (_data/data_freshness.yml) and the day each dataset was last
+      checked (_data/freshness/*.json, written by the update workflows) for assets/scripts/freshness.js. {% endcomment -%}
+  <script>window.VOTEGA_FRESHNESS = { windows: {{ site.data.data_freshness.datasets | jsonify }}, checked: { {% for f in site.data.freshness %}{{ f[0] | jsonify }}: {{ f[1].checkedAt | jsonify }}{% unless forloop.last %}, {% endunless %}{% endfor %} } };</script>
+  <script src="{{ '/assets/scripts/freshness.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   <script src="{{ '/assets/scripts/votega-core.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   <!-- Resolves entity ids to their clean URLs so pages can link straight to
        /ga-legislators/<slug>/ etc. instead of the legacy query-string shells

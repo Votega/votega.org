@@ -457,6 +457,7 @@
         window.dataStamp.render('dataStamp', {
           updated: (data.metadata || {}).generatedAt,
           source:  (data.metadata || {}).source || 'Congress.gov API',
+          dataset: 'current-members',
         repo:    { url: 'https://github.com/Votega/ga-federal-legislators' },
         });
       }
@@ -928,7 +929,7 @@
       ${CampaignFinance.filingCommitteeNote(entry)}
       ${CampaignFinance.contributingCommitteesHtml(entry)}
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
-      ${finGenDate ? `<p class="finance-meta">Finance data from the FEC, updated ${finGenDate}.</p>` : ''}
+      ${finGenDate ? `<p class="finance-meta">Finance data from the FEC, updated ${finGenDate}${window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-fec-data', finGenIso) : ''}.</p>` : ''}
       ${CampaignFinance.fundingBreakdownHtml(entry)}
       ${employersHtml}`;
   }
@@ -1538,7 +1539,8 @@
     // build artifact we happen to fetch (CLAUDE.md on linking published datasets).
     const sourceLine = `<p style="font-size:0.78rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">`
       + `Sponsorship comes from the Congress.gov API`
-      + (sponDate ? `, updated ${escHtml(sponDate)}` : '')
+      + (sponDate ? `, updated ${escHtml(sponDate)}`
+      + (window.VotegaFreshness ? window.VotegaFreshness.suffix('federal-sponsorship-index', sponIso) : '') : '')
       + `, and is published as open data in the `
       + `<a href="https://github.com/Votega/ga-federal-legislators" target="_blank" rel="noopener">Votega/ga-federal-legislators</a> repository.</p>`;
 
@@ -1704,7 +1706,8 @@
       const voteGen = voteIdx.metadata?.generatedAt;
       const voteSourceLine = `<p style="font-size:0.78rem;color:var(--color-text-secondary);margin:0.75rem 0 0 0;">`
         + `Roll calls come from the Clerk of the U.S. House and Senate.gov`
-        + (voteGen ? `, updated ${escHtml(fmtDate(voteGen))}` : '')
+        + (voteGen ? `, updated ${escHtml(fmtDate(voteGen))}`
+        + (window.VotegaFreshness ? window.VotegaFreshness.suffix('federal-member-votes', voteGen) : '') : '')
         + `, and are published as open data in the `
         + `<a href="https://github.com/Votega/ga-federal-legislators" target="_blank" rel="noopener">Votega/ga-federal-legislators</a> repository.</p>`;
 

@@ -11,8 +11,14 @@
  * optionally, data-stamp.js (window.dataStamp) already loaded.
  *
  * Usage (from _includes/entity/place.html):
- *   LocalMeetings.init({ slug, placeName, sourceFallback,
+ *   LocalMeetings.init({ slug, placeName, sourceFallback, botProtected,
  *                        containerId, controlsId, pillsId, minutesToggleId, sourceId });
+ *
+ * The source line says when the meetings were last checked and the most recent meeting
+ * on file, so a resident can tell whether a meeting they expect should be there yet,
+ * and flags the place "older than usual" past the local-government window
+ * (_data/data_freshness.yml). A bot-protected place (the site cannot be scraped) is
+ * flagged regardless of the date, since its data only moves by hand.
  */
 (function (global) {
   'use strict';
@@ -192,10 +198,21 @@
             ? (global.dataStamp ? global.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt)
             : null;
           var url = meta.sourceUrl || sourceFallback;
+          var fresh = '';
+          var F = global.VotegaFreshness;
+          if (when && F) {
+            fresh = F.suffix('local-government', meta.generatedAt);
+            // A site we cannot scrape never refreshes on its own: flag it outright.
+            if (opts.botProtected && fresh.indexOf('stale-flag') === -1) {
+              fresh += ' <span class="stale-flag" title="This site blocks automated access, so its meetings are updated by hand."><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> older than usual</span>';
+            }
+          }
+          var latest = latestMeetingDate(ALL);
           sourceEl.innerHTML =
             'Aggregated from the ' +
             (url ? '<a href="' + esc(url) + '" target="_blank" rel="noopener">official ' + esc(opts.placeName || 'source') + ' site</a>' : 'official source') +
-            '.' + (when ? ' Updated ' + esc(when) + '.' : '');
+            '.' + (when ? ' Checked ' + esc(when) + fresh + '.' : '') +
+            (latest ? ' Most recent meeting on file: ' + esc(global.dataStamp ? global.dataStamp.formatDate(latest) : latest) + '.' : '');
         }
       })
       .catch(function (err) {
@@ -211,5 +228,21 @@
       });
   }
 
-  global.LocalMeetings = { init: init };
+  // Newest meeting dated today or earlier (YYYY-MM-DD), or null. Later dates are scheduled
+  // meetings, not ones that have happened, so they do not answer "is the last one here?".
+  function latestMeetingDate(meetings) {
+    var d = new Date();
+    var today = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    var best = null;
+    (meetings || []).forEach(function (m) {
+      var v = m && m.date;
+      if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v)) {
+        v = v.slice(0, 10);
+        if (v <= today && (!best || v > best)) best = v;
+      }
+    });
+    return best;
+  }
+
+  global.LocalMeetings = { init: init, latestMeetingDate: latestMeetingDate };
 })(window);

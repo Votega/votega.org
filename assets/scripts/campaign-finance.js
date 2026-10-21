@@ -735,12 +735,15 @@ window.CampaignFinance = (function () {
     return html;
   }
 
-  function provenanceLine(sourceName, generatedAt) {
+  // `dataset` (a key in _data/data_freshness.yml) adds the "checked" note and the
+  // "older than usual" flag from freshness.js; omit it for a line that is never flagged.
+  function provenanceLine(sourceName, generatedAt, dataset) {
     if (!generatedAt) return '';
     const d = new Date(generatedAt);
     if (isNaN(d)) return '';
     const when = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    return '<p class="finance-meta">Finance data from ' + sourceName + ', updated ' + when + '.</p>';
+    const fresh = (dataset && window.VotegaFreshness) ? window.VotegaFreshness.suffix(dataset, generatedAt) : '';
+    return '<p class="finance-meta">Finance data from ' + sourceName + ', updated ' + when + fresh + '.</p>';
   }
 
   return {

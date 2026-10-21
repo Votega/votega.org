@@ -781,7 +781,7 @@
           </div>
         </div>
         <p class="finance-meta">${escHtmlGa(filer.electionCycle || '')}${filer.office ? ' · ' + escHtmlGa(filer.office) : ''}</p>
-        ${CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt)}
+        ${CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt, 'ga-campaign-finance')}
         <div class="ga-donors-slot"></div>
         ${footer}${reconcileNote}`;
       // Donor detail is a separate, optional file: the totals above must not wait on
@@ -879,7 +879,7 @@
       ${CampaignFinance.filingCommitteeNote(entry)}
       ${CampaignFinance.contributingCommitteesHtml(entry)}
       <p class="finance-meta"><a href="${entry.fecUrl}" target="_blank" rel="noopener">View full FEC filing ↗</a></p>
-      ${CampaignFinance.provenanceLine('the FEC', fecData.metadata?.generatedAt)}
+      ${CampaignFinance.provenanceLine('the FEC', fecData.metadata?.generatedAt, 'ga-fec-data')}
       ${CampaignFinance.fundingBreakdownHtml(entry)}
       ${employersHtml}`;
   }

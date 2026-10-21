@@ -1341,6 +1341,11 @@ def build_places(records, urls, prior, new_state):
 
         place_js = {"slug": slug, "placeName": name,
                     "sourceFallback": fallback, "domains": domains}
+        # A bot-protected site cannot be scraped (registry `bot_protected`), so its meetings
+        # are as old as the last manual update however recently the job ran. Key omitted
+        # otherwise so every other place's emitted JSON is unchanged.
+        if ((p.get("domains") or {}).get("meetings") or {}).get("bot_protected"):
+            place_js["botProtected"] = True
         fm = {
             "layout": "default",
             "title": yaml_quote(name),

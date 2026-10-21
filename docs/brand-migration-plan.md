@@ -215,3 +215,7 @@ Phases 0 to 3 are built on `brand-migration` (not merged). Decisions on the open
 - **`#3333FF` in large areas:** checked in the donut charts and majority-tracker bars beside the clay palette; acceptable.
 - **Trial-page stash:** superseded. Public Sans is now site-wide through `base.html`; the only unmerged idea, a monospace stack for order numbers, is applied with `--font-mono`.
 - **Not done:** stale-data stamp rule, breakpoint consolidation, topic emoji in published data (`topics.yml`, generator), per-entity share cards.
+
+### Stale-stamp rule (built, on this branch)
+
+`assets/scripts/freshness.js` + `_includes/data-freshness.html` apply "older than usual" from the windows in `_data/data_freshness.yml`. Seven update workflows record a check day (`scripts/record_data_checked.py`, `scripts/commit_freshness.sh`) so quiet datasets do not read as stale. **Release step:** `_data/freshness/` is empty until those workflows run, so right after the merge dispatch the seven (`update-ga-votes`, `update-federal-votes`, `update-fec-data`, `update-ga-campaign-finance`, `update-ga-executive-orders`, `update-ga-bills`, `update-curated-ga-bills`) or the GA executive-orders stamp (date-only, 7 days old, 3-day window) will read "older than usual" until the next scheduled run.

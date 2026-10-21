@@ -9,6 +9,7 @@
  * Usage:
  *   dataStamp.render(el, { updated: meta.generatedAt, source: 'Congress.gov API' });
  *   dataStamp.render(el, { updated: iso, source: 'x', extra: 'Term cycle: 2023-2027' });
+ *   dataStamp.render(el, { updated: iso, source: 'x', dataset: 'ga-members' });  // + stale rule
  *   dataStamp.render(el, { updated: iso, source: 'x',
  *                          repo: { url: 'https://github.com/Votega/ga-legislators' } });
  *
@@ -62,7 +63,11 @@
     var when = formatDate(opts.updated);
     if (!when) { node.textContent = ''; return false; }
 
-    var parts = ['Data last updated: ' + escape(when)];
+    // `dataset` (a key in _data/data_freshness.yml) applies the "older than usual" rule
+    // and the "checked <date>" note; see freshness.js. Absent or never-flag: no change.
+    var fresh = (opts.dataset && window.VotegaFreshness)
+      ? window.VotegaFreshness.suffix(opts.dataset, opts.updated) : '';
+    var parts = ['Data last updated: ' + escape(when) + fresh];
     if (opts.source) parts.push('Source: ' + escape(opts.source));
     if (opts.extra) parts.push(escape(opts.extra));
     if (opts.repo && opts.repo.url) {

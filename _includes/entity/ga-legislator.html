@@ -567,6 +567,7 @@
         window.dataStamp.render('dataStamp', {
           updated: (data.metadata || {}).generatedAt,
           source:  (data.metadata || {}).source || 'legis.ga.gov official web service',
+          dataset: 'ga-members',
           repo:    { url: 'https://github.com/Votega/ga-legislators' },
         });
       }
@@ -780,7 +781,7 @@
         </div>
       </div>
       <p class="finance-meta">${escHtml(f.electionCycle || '')}${f.office ? ` · ${escHtml(f.office)}` : ''}</p>
-      ${window.CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt)}
+      ${window.CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt, 'ga-campaign-finance')}
       <div class="ga-donors-slot"></div>
       <p class="finance-meta">
         <a href="${escHtml(searchUrl)}" target="_blank" rel="noopener">View filings on PeachFile ↗</a>
@@ -1236,7 +1237,8 @@
       : null;
     const curatedSource = `<p style="font-size:0.78rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">`
       + `Key votes are selected by VoteGA. Bill text, status, and roll calls come from legis.ga.gov`
-      + (curatedDate ? `, updated ${escHtml(curatedDate)}` : '')
+      + (curatedDate ? `, updated ${escHtml(curatedDate)}`
+        + (window.VotegaFreshness ? window.VotegaFreshness.suffix('curated-ga-bill-votes', curatedIso) : '') : '')
       + `, and are published as open data in the `
       + `<a href="${escHtml(CURATED_BILLS_REPO)}" target="_blank" rel="noopener">Votega/ga-legislation</a> repository.</p>`;
 
@@ -1457,7 +1459,8 @@
     const billsDate = billsIso && window.dataStamp ? window.dataStamp.formatDate(billsIso) : null;
     const sourceLine = `<p style="font-size:0.78rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">`
       + `Sponsorship comes from legis.ga.gov`
-      + (billsDate ? `, updated ${escHtml(billsDate)}` : '')
+      + (billsDate ? `, updated ${escHtml(billsDate)}`
+      + (window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-bills', billsIso) : '') : '')
       + `, and is published as open data in the `
       + `<a href="${escHtml(GA_BILLS_REPO)}" target="_blank" rel="noopener">Votega/ga-legislation</a> repository.</p>`;
 
@@ -2022,7 +2025,7 @@
       container.innerHTML = `
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-secondary);">${session}</small>` : ''}</h2>
         <p style="font-size:0.8rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">Showing recorded passage votes, the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
-        ${votesGenDate ? `<p style="font-size:0.78rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">Vote data from legis.ga.gov, updated ${votesGenDate}.</p>` : ''}
+        ${votesGenDate ? `<p style="font-size:0.78rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">Vote data from legis.ga.gov, updated ${votesGenDate}${window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-member-votes', votesGenIso) : ''}.</p>` : ''}
         ${incompleteNote}
         ${selectHtml}
         <div id="gaVotesPanel">${panelFor(selected)}</div>`;

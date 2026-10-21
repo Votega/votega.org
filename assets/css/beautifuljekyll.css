@@ -1219,3 +1219,11 @@ pre {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
+
+/* "Older than usual" flag on a stale data stamp (assets/scripts/freshness.js). Amber is
+   always paired with an icon and a label. */
+.stale-flag {
+  color: var(--color-warning);
+  font-weight: 600;
+  white-space: nowrap;
+}

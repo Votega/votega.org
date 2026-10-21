@@ -539,7 +539,7 @@
       <p class="finance-disclaimer">
         Figures come from ${sourceName} and reflect each committee's most recent required report, so they may be several months old. All bars share one scale (the largest single figure in the table) so a wider bar always means more dollars. <strong>“No filing on record” means no report has been filed, not $0</strong>, and often reflects a candidate who hasn't begun formal fundraising${race.level === 'federal' ? '' : ' or filed before the ' + (race.cycle || '') + ' PeachFile records begin'}.
       </p>
-      ${finGenDate ? `<p class="finance-disclaimer finance-provenance">Finance data from ${sourceShort}, updated ${finGenDate}.</p>` : ''}`;
+      ${finGenDate ? `<p class="finance-disclaimer finance-provenance">Finance data from ${sourceShort}, updated ${finGenDate}${window.VotegaFreshness ? window.VotegaFreshness.suffix(race.level === 'federal' ? 'ga-fec-data' : 'ga-campaign-finance', finGenIso) : ''}.</p>` : ''}`;
   }
 
   // Clean per-entity URLs set window.VOTEGA_ENTITY; the legacy ?id= URL still works.

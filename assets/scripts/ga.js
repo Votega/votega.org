@@ -300,7 +300,9 @@ async function loadData() {
     if (stampEl) {
       const when = window.dataStamp ? window.dataStamp.formatDate((data.metadata || {}).generatedAt) : '';
       stampEl.classList.add('data-stamp');
-      stampEl.innerHTML = (when ? `Data last updated: ${when} &middot; ` : '')
+      const stale = (when && window.VotegaFreshness)
+        ? window.VotegaFreshness.suffix('ga-members', (data.metadata || {}).generatedAt) : '';
+      stampEl.innerHTML = (when ? `Data last updated: ${when}${stale} &middot; ` : '')
         + 'Source: <a href="https://www.legis.ga.gov" target="_blank" rel="noopener">Georgia General Assembly</a>&rsquo;s official web service'
         + ' and published as open data at <a href="https://github.com/Votega/ga-legislators" target="_blank" rel="noopener">Votega/ga-legislators</a>';
     }

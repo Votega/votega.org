@@ -326,7 +326,12 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
       const src = document.getElementById('dataSource');
       const eoUpdated = data.metadata?.updatedAt;
       const stamp = eoUpdated && window.dataStamp ? window.dataStamp.formatDate(eoUpdated) : (eoUpdated || year);
-      src.textContent = `Source: gov.georgia.gov · Data as of: ${stamp} · ${allOrders.length} orders · `;
+      src.textContent = `Source: gov.georgia.gov · Data as of: ${stamp}`;
+      // Only the current year's file is refreshed; earlier years are closed and never flagged.
+      if (year === CURRENT_YEAR && eoUpdated && window.VotegaFreshness) {
+        src.insertAdjacentHTML('beforeend', window.VotegaFreshness.suffix('ga-executive-orders', eoUpdated));
+      }
+      src.appendChild(document.createTextNode(` · ${allOrders.length} orders · `));
       // Machine-readable data is published (and archived per year, alongside an
       // all-years CSV + schema) in the ga-executive-orders repo — the stable open-
       // data home, not the internal per-year asset this page fetches. See the
