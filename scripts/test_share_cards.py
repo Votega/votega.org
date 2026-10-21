@@ -93,6 +93,28 @@ check("same structure for every candidate", strip(a[1]), strip(b[1]))
 race = S.card_html({"name": "GA House District 100", "kind": "race", "role": "Georgia election"}, TOKENS, HERE)
 truth("race card carries the ballot icon, not a monogram", "<svg" in race and "mono-text" not in race.split("<body>")[1])
 
+# --- candidate line: who gets a card, and what it says ----------------------
+A = {"id": "a", "name": "Ann Able", "party": "Democrat", "occupation": "Teacher", "county": "Fulton"}
+B = {"id": "b", "name": "Bob Baker", "party": "Republican"}
+C = {"id": "c", "name": "Cy Cole", "party": "Independent"}
+D = {"id": "d", "name": "Di Dunn", "party": "Libertarian"}
+E = {"id": "e", "name": "Ed Egan", "party": "Green"}
+check("legislative: occupation and county", S.candidate_line([A, B], "a", True), (True, "Teacher · Fulton County"))
+check("legislative with no filing data falls back to opponents", S.candidate_line([A, B], "b", True), (True, "vs. Ann Able (D)"))
+check("non-legislative uses opponents even with occupation", S.candidate_line([A, B], "a", False), (True, "vs. Bob Baker (R)"))
+check("someone off the active ballot gets no card", S.candidate_line([A, B], "zz", True), (False, None))
+check("unopposed with no data has no line", S.candidate_line([B], "b", False), (True, None))
+check("county alone", S.candidate_line([{"id": "x", "name": "X", "county": "Bibb"}], "x", True), (True, "Bibb County"))
+check("occupation alone", S.candidate_line([{"id": "x", "name": "X", "occupation": "Nurse"}], "x", True), (True, "Nurse"))
+check("keys fall back to the name when there is no id", S.candidate_line([{"name": "Solo"}], "Solo", False), (True, None))
+check("rivals capped at three with a count", S.rivals_line([A, B, C, D, E]), "vs. Ann Able (D), Bob Baker (R), Cy Cole (I) +2 more")
+check("unknown party gets no initial", S.rivals_line([E]), "vs. Ed Egan")
+check("no rivals, no line", S.rivals_line([]), None)
+
+two = S.card_html({**row, "fact2": "General election: November 3, 2026"}, TOKENS, HERE)
+truth("second fact line rendered", 'class="fact2"' in two and "General election: November 3, 2026" in two)
+truth("no second line when absent", 'class="fact2"' not in doc)
+
 # --- front-matter patch -----------------------------------------------------
 with tempfile.TemporaryDirectory() as tmp:
     path = os.path.join(tmp, "e.html")
