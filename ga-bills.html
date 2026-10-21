@@ -638,8 +638,8 @@ breadcrumb:
     const pO     = Math.max(0, 100 - pY - pN);
     const ch     = v.chamber === 'lower' ? 'House' : 'Senate';
     const result = v.result === 'pass' ? 'Passed' : 'Failed';
-    // motionText is e.g. "Senate Vote var(--color-link) - 2025-2026 Regular Session"
-    // strip the session suffix to get a concise label like "Senate Vote var(--color-link)"
+    // motionText is e.g. "Senate Vote #148 - 2025-2026 Regular Session"
+    // strip the session suffix to get a concise label like "Senate Vote #148"
     const motionLabel = v.motionText
       ? v.motionText.replace(/\s*[-–]\s*\d{4}-\d{4}\s+Regular Session\s*$/i, '').trim()
       : ch + ' vote';
@@ -681,9 +681,11 @@ breadcrumb:
       + '<span class="vote-no-txt">' + v.nay + ' no &#10007;</span>'
       + '</div>'
       + '<div class="vote-bar-track">'
+      // Yes, No, then Not voting/absent: the gray sat between green and red before, where it was
+      // easy to miss. Same order as the line of counts underneath.
       + '<div class="vb-yes" style="width:' + pY + '%"></div>'
-      + '<div class="vb-oth" style="width:' + pO + '%"></div>'
       + '<div class="vb-no"  style="width:' + pN + '%"></div>'
+      + '<div class="vb-oth" style="width:' + pO + '%"></div>'
       + '</div>'
       + '<div class="vote-bar-sub">' + v.yea + ' yes &nbsp;·&nbsp; ' + v.nay + ' no &nbsp;·&nbsp; ' + v.other + ' not voting/absent</div>'
       + partyLine
@@ -865,8 +867,8 @@ breadcrumb:
       : '';
     const governorDetail = governorDetailHtml(bill);
     const links = '<div class="detail-links">'
-      + (bill.billUrl ? '<a class="detail-link" href="' + escHtml(bill.billUrl) + '" target="_blank" rel="noopener">&var(--color-link); legis.ga.gov</a>' : '')
-      + (bill.textUrl ? '<a class="detail-link" href="' + escHtml(bill.textUrl) + '" target="_blank" rel="noopener">&var(--color-link); Bill text</a>' : '')
+      + (bill.billUrl ? '<a class="detail-link" href="' + escHtml(bill.billUrl) + '" target="_blank" rel="noopener">&#128279; legis.ga.gov</a>' : '')
+      + (bill.textUrl ? '<a class="detail-link" href="' + escHtml(bill.textUrl) + '" target="_blank" rel="noopener">&#128196; Bill text</a>' : '')
       + '</div>';
 
     const anchorId = billAnchorId(bill.identifier);
