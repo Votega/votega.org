@@ -54,6 +54,9 @@ SERVED_ENTITY_URLS_PATH = os.path.join(ROOT, "assets", "data", "entity-urls.json
 # the Actions cache across deploys (see deploy-pages.yml); missing = treat all as
 # changed on the current data date, a safe (if noisier) fallback.
 LASTMOD_STATE_PATH = os.path.join(ROOT, "_data", "entity_lastmod.json")
+# One row per entity for scripts/build_share_cards.py (build artifact, gitignored).
+SHARE_MANIFEST_PATH = os.path.join(ROOT, ".share-cards", "manifest.json")
+PORTRAIT_CACHE_PATH = os.path.join(SRC_DIR, "candidate-image-cache.json")
 
 SITE_URL = "https://www.votega.org"
 
@@ -495,6 +498,40 @@ def ga_legislator_about(name, role, m, is_senate):
     return paras
 
 
+_CARDS = []
+_PORTRAIT_MAP = {}
+
+
+def _portrait(url):
+    """Repo-relative path of the cached portrait for a URL, or None. The cache holds
+    government-hosted images only (CLAUDE.md), so a card never reproduces a campaign photo."""
+    if not url:
+        return None
+    if not _PORTRAIT_MAP:
+        try:
+            with open(PORTRAIT_CACHE_PATH, encoding="utf-8") as fh:
+                _PORTRAIT_MAP.update(json.load(fh).get("images") or {})
+        except (OSError, ValueError):
+            _PORTRAIT_MAP["_"] = None  # remember the miss; every card then has no photo
+    local = _PORTRAIT_MAP.get(url)
+    return local.lstrip("/") if local else None
+
+
+def add_card(section, slug, name, **fields):
+    """Queue a share-card row (see lib/share_card.card_html for the fields it reads)."""
+    _CARDS.append({"section": section, "slug": slug, "name": name, **fields})
+
+
+def _first_election_date(race):
+    """The date a card should name: the general, else the runoff, else the primary."""
+    ph = (race or {}).get("phases") or {}
+    for key in ("general", "runoff", "primary"):
+        d = _fmt_date((ph.get(key) or {}).get("electionDate")) if isinstance(ph.get(key), dict) else None
+        if d:
+            return ("General election" if key == "general" else key.capitalize()) + f": {d}"
+    return None
+
+
 def qs_id(url, key="id"):
     return (parse_qs(urlparse(url).query).get(key) or [None])[0]
 
@@ -819,6 +856,12 @@ def build_ga_legislators(records, urls, prior, new_state):
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/ga-legislator.html %}}")
         write_page("ga-legislators", slug, fm, body)
+        add_card("ga-legislators", slug, name, kind="person",
+                 role=(f"Georgia {'Senate' if is_senate else 'House'} · District {district}" if district
+                       else f"Georgia {role}"),
+                 party=party or None, badges=["Current Officeholder"],
+                 fact="Voting record, committees & campaign finance",
+                 photo=_portrait(m.get("imageUrl")), stamp=data_date, source="legis.ga.gov")
         count += 1
     return count
 
@@ -890,6 +933,13 @@ def build_federal_legislators(records, urls, prior, new_state):
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/federal-legislator.html %}}")
         write_page("us-congress", slug, fm, body)
+        add_card("us-congress", slug, name, kind="person",
+                 role=(f"U.S. House · Georgia District {district}" if district and not is_senate
+                       else f"{role} · Georgia"),
+                 party=party or None, badges=["Current Officeholder"],
+                 fact="Votes, sponsored bills & campaign finance",
+                 photo=_portrait((m.get("depiction") or {}).get("imageUrl")),
+                 stamp=data_date, source="congress.gov")
         count += 1
     return count
 
@@ -991,6 +1041,10 @@ def build_races(records, urls, prior, new_state):
                 + (f"{il}\n" if il else "")
                 + "{% include entity/race.html %}")
         write_page("races", slug, fm, body)
+        add_card("races", slug, re.sub(r"\s+20\d\d$", "", abbrev_office(name)), kind="race",
+                 role="Georgia election",
+                 fact=_first_election_date(r) or "Candidates, incumbent & results",
+                 stamp=data_date, source="Georgia Secretary of State")
         count += 1
     return count
 
@@ -1124,6 +1178,11 @@ def build_candidates(records, urls, prior, new_state):
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/candidate.html %}}")
         write_page("candidates", slug, fm, body)
+        add_card("candidates", slug, name, kind="person", role=abbrev_office(race_label) if race_label else "Candidate",
+                 party=party or None,
+                 badges=["Incumbent"] if cand_obj.get("isIncumbent") else [],
+                 fact=_first_election_date(race) or "Race, campaign finance & results",
+                 stamp=data_date, source="Georgia Secretary of State")
         count += 1
     return count
 
@@ -1183,6 +1242,8 @@ def build_federal_executives(records, urls, prior, new_state):
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/federal-executive.html %}}")
         write_page("federal-executives", slug, fm, body)
+        add_card("federal-executives", slug, name, kind="person", role=role or "Federal executive",
+                 fact="Profile, background & official actions")
         count += 1
     return count
 
@@ -1238,6 +1299,9 @@ def build_justices(records, urls, prior, new_state):
                 f"{ld}\n{bc}\n"
                 f"{{% include entity/justice.html %}}")
         write_page("justices", slug, fm, body)
+        add_card("justices", slug, name, kind="person", role=role,
+                 fact="Appointment, tenure & voting record", stamp=data_date,
+                 source="Supreme Court records")
         count += 1
     return count
 
@@ -1501,6 +1565,7 @@ def main():
     _CAND_PERMALINKS.update(plan_candidate_permalinks(
         records, load("races.json").get("races", [])))
     _DIRECTORY[:] = []  # reset the cross-builder directory accumulator
+    _CARDS[:] = []
     for label, builder in CATEGORY_BUILDERS:
         try:
             n = builder(records, urls, prior, new_state)
@@ -1518,6 +1583,8 @@ def main():
     write_json_atomic(ENTITY_URLS_PATH, urls, separators=(",", ":"))
     write_json_atomic(SERVED_ENTITY_URLS_PATH, urls, separators=(",", ":"))
     write_json_atomic(LASTMOD_STATE_PATH, new_state, separators=(",", ":"))
+    os.makedirs(os.path.dirname(SHARE_MANIFEST_PATH), exist_ok=True)
+    write_json_atomic(SHARE_MANIFEST_PATH, {"cards": _CARDS}, separators=(",", ":"))
     changed = sum(1 for k, v in new_state.items() if prior.get(k, {}).get("h") != v["h"])
     print(f"build_entity_pages: {total} pages, {sum(len(v) for v in urls.values())} URL mappings, "
           f"{changed} changed since last run")

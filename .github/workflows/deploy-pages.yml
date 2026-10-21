@@ -72,6 +72,16 @@ jobs:
       - name: Generate entity pages
         run: python3 scripts/build_entity_pages.py || echo "entity page generation failed; legacy ?id= pages still serve"
 
+      # Render a 1200x630 share card per entity into assets/img/share/ (gitignored, so
+      # the PNGs exist only in the deployed site) and point each page's `share-img` at
+      # its card (scripts/build_share_cards.py). Uses the runner's preinstalled Chrome,
+      # so there is no browser download. Non-fatal: an entity whose card is missing
+      # falls back to the default card, and a failed run leaves every page on it.
+      - name: Generate share cards
+        run: |
+          python3 -m pip install --quiet playwright
+          CHROME_CHANNEL=chrome python3 scripts/build_share_cards.py || echo "share card generation failed; pages use the default card"
+
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
