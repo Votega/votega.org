@@ -121,3 +121,7 @@ assets/data/entity-urls.json
 # from the public source URLs, ~32 MB of agenda text that must never enter git —
 # the same git-bloat rule the enrichers follow by discarding text after classifying.
 .cache/
+
+# Share cards: rendered at deploy by scripts/build_share_cards.py, never committed
+assets/img/share/
+.share-cards/
