@@ -86,7 +86,7 @@
     }
     var photo = opts.photo
       ? '<img class="fmr-photo" src="' + esc(opts.photo) + '" alt="" loading="lazy" />'
-      : '<span class="fmr-photo fmr-photo-blank">👤</span>';
+      : '<span class="fmr-photo fmr-photo-blank"><i class="fa-solid fa-user" aria-hidden="true"></i></span>';
     return '<a class="fmr-repcard" href="' + esc(opts.href) + '">' + photo
       + '<div><div class="fmr-repname">' + esc(opts.name) + chip(opts.party) + '</div>'
       + '<div class="fmr-repmeta">' + esc(opts.sub || '') + badge(opts) + '</div></div></a>';

@@ -1,15 +1,39 @@
 {%- comment -%}
   Server-rendered "last updated" line for data pages. Pass a sidecar built by
-  scripts/build_render_data.py and an optional noun for the count:
-      {% include data-freshness.html data=site.data.rendered.ga_bills noun="bills" %}
+  scripts/build_render_data.py, an optional noun for the count, and an optional
+  `dataset` key from _data/data_freshness.yml to apply the "older than usual" rule:
+      {% include data-freshness.html data=site.data.rendered.ga_bills noun="bills" dataset="ga-bills" %}
   Renders nothing when the sidecar is absent, so pages fall back safely to their
-  client-rendered freshness stamp.
+  client-rendered freshness stamp. The rule mirrors assets/scripts/freshness.js: measure
+  from the newer of the stamp and the last recorded check (_data/freshness/<dataset>.json),
+  flag past window_days. Datasets marked `never` and unknown keys are never flagged.
 {%- endcomment -%}
 {%- if include.data and include.data.updated -%}
-<p class="data-freshness" style="font-size:.85rem;color:#6b7280;margin:.25rem 0 1rem;">
+{%- assign fresh_flag = false -%}
+{%- assign fresh_checked = false -%}
+{%- if include.dataset and include.data.updatedISO -%}
+  {%- assign fresh_win = site.data.data_freshness.datasets[include.dataset] -%}
+  {%- if fresh_win and fresh_win.window_days -%}
+    {%- assign fresh_upd = include.data.updatedISO | date: '%s' | plus: 0 -%}
+    {%- assign fresh_chk_raw = site.data.freshness[include.dataset].checkedAt -%}
+    {%- if fresh_chk_raw -%}
+      {%- assign fresh_chk = fresh_chk_raw | date: '%s' | plus: 0 -%}
+      {%- if fresh_chk > fresh_upd -%}
+        {%- assign fresh_newest = fresh_chk -%}
+        {%- assign fresh_diff = fresh_chk | minus: fresh_upd -%}
+        {%- if fresh_diff >= 86400 -%}{%- assign fresh_checked = fresh_chk_raw -%}{%- endif -%}
+      {%- else -%}{%- assign fresh_newest = fresh_upd -%}{%- endif -%}
+    {%- else -%}{%- assign fresh_newest = fresh_upd -%}{%- endif -%}
+    {%- assign fresh_age = site.time | date: '%s' | minus: fresh_newest | divided_by: 86400 -%}
+    {%- if fresh_age > fresh_win.window_days -%}{%- assign fresh_flag = true -%}{%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+<p class="data-freshness" style="font-size:.85rem;color:var(--color-text-muted);margin:.25rem 0 1rem;">
   Last updated
   {%- if include.data.updatedISO %} <time datetime="{{ include.data.updatedISO }}">{{ include.data.updated }}</time>
   {%- else %} {{ include.data.updated }}{% endif -%}
   {%- if include.data.count and include.noun %} · {{ include.data.count }} {{ include.noun }}{% endif -%}
+  {%- if fresh_checked %} · checked {{ fresh_checked | date: "%B %-d, %Y" }}{% endif -%}
+  {%- if fresh_flag %} <span class="stale-flag" title="Normally refreshed within {{ fresh_win.window_days }} days; this is {{ fresh_age }} days old."><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> older than usual</span>{% endif -%}
 </p>
 {%- endif -%}

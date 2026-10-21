@@ -4,7 +4,7 @@
  * No map (that is a later build step); this is the list + filters. Base-path
  * aware (CLAUDE.md); needs html-escape.js (VoteGA.escapeHtml) loaded first.
  *
- *   TopicIndex.init({ topic: 'alpr', name: 'ALPR / surveillance', emoji: '📷' });
+ *   TopicIndex.init({ topic: 'alpr', name: 'ALPR / surveillance', icon: 'camera' });
  */
 (function (global) {
   'use strict';

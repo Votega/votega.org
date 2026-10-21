@@ -10,7 +10,7 @@
 {% endcomment -%}
 {%- assign t = site.data.topics.topics | where: "slug", page.topic | first -%}
 
-<h1>{{ t.emoji }} {{ t.name }} on Georgia local agendas</h1>
+<h1><i class="fa-solid fa-{{ t.icon }}" aria-hidden="true"></i> {{ t.name }} on Georgia local agendas</h1>
 <p class="ti-definition">{{ t.definition }}</p>
 
 <p class="ti-caveat">

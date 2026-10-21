@@ -61,7 +61,9 @@ navbar-links:
 
 # Image to show in the navigation bar - works best with a square image
 # Remove this parameter if you don't want an image in the navbar
-avatar: "/assets/img/logo.png"
+# Disabled in the brand migration: the horizontal logo in the navbar (title-img) already carries the mark,
+# and a second round mark under it overlapped the menu at desktop widths.
+#avatar: "/assets/img/brand/logo/svg/votega-mark.svg"
 
 # By default, the image is cut into a circle. You can disable this behaviour by setting 'round-avatar: false'
 round-avatar: false
@@ -73,7 +75,7 @@ og-image: "/assets/img/og-default.png"
 
 # If you want to have an image logo in the top-left corner instead of having the title of the website,
 # then specify the following parameter
-title-img: /assets/img/logo.png
+title-img: /assets/img/brand/logo/svg/votega-horizontal-notagline.svg
 
 
 #####################################
@@ -177,17 +179,17 @@ bing_site_verification: ""
 
 # Personalize the colours in your website. Colour values can be any valid CSS colour
 
-page-col: "#FFFFFF"
-text-col: "#404040"
-link-col: "#008AFF"
-hover-col: "#0085A1"
-navbar-col: "#EAEAEA"
-navbar-text-col: "#404040"
-navbar-border-col: "#DDDDDD"
-footer-col: "#EAEAEA"
-footer-text-col: "#777777"
-footer-link-col: "#404040"
-footer-hover-col: "#0085A1"
+page-col: "var(--color-surface)"
+text-col: "var(--color-text)"
+link-col: "var(--color-link)"
+hover-col: "var(--color-link-hover)"
+navbar-col: "var(--color-surface-chrome)"
+navbar-text-col: "var(--color-text)"
+navbar-border-col: "var(--color-border)"
+footer-col: "var(--color-surface-chrome)"
+footer-text-col: "var(--color-text-muted)"
+footer-link-col: "var(--color-text)"
+footer-hover-col: "var(--color-link-hover)"
 
 # Alternatively, the navbar, footer, and page background can be set to an image
 # instead of colour

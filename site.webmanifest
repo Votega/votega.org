@@ -1,0 +1,18 @@
+---
+layout: null
+---
+{
+  "name": "VoteGA.org",
+  "short_name": "VoteGA",
+  "description": "Georgia voter information: representatives, elections, bills and open civic data.",
+  "start_url": "{{ '/' | relative_url }}",
+  "scope": "{{ '/' | relative_url }}",
+  "display": "browser",
+  "background_color": "#fffaf4",
+  "theme_color": "#b4521f",
+  "icons": [
+    { "src": "{{ '/assets/img/brand/favicon/icon-192.png' | relative_url }}", "sizes": "192x192", "type": "image/png" },
+    { "src": "{{ '/assets/img/brand/favicon/icon-512.png' | relative_url }}", "sizes": "512x512", "type": "image/png" },
+    { "src": "{{ '/assets/img/brand/favicon/icon-maskable-512.png' | relative_url }}", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

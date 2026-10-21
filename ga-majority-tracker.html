@@ -19,8 +19,8 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .tracker-card {
     border-radius: 8px;
     padding: 1.25rem 1.5rem;
-    background: #f8f8f8;
-    border: 1px solid #e0e0e0;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
   }
   /* Promoted from <h3> so the outline has no h1->h3 skip (finding 4.15). */
   .tracker-card h2 {
@@ -29,7 +29,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     line-height: 1.25;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #555;
+    color: var(--color-text-secondary);
     font-weight: 600;
   }
   /* Reserve two title lines so the single-line "Senate" heading and the
@@ -47,7 +47,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .stat-block { flex: 1; }
   .stat-label {
     font-size: 0.75rem;
-    color: #777;
+    color: var(--color-text-muted);
     margin-bottom: 0.2rem;
   }
   .stat-num {
@@ -57,7 +57,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   }
   .stat-sub {
     font-size: 0.75rem;
-    color: #666;
+    color: var(--color-text-secondary);
     margin-top: 0.25rem;
     line-height: 1.3;
   }
@@ -67,18 +67,18 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     border-radius: 4px;
     overflow: hidden;
     margin: 0.85rem 0 0.5rem 0;
-    background: #e5e7eb;
+    background: var(--color-surface-chrome);
   }
-  .bar-d { background: #2563eb; }
-  .bar-r { background: #dc2626; }
-  .bar-v { background: #9ca3af; }
-  .bar-i { background: #7c3aed; }
+  .bar-d { background: var(--color-party-d); }
+  .bar-r { background: var(--color-party-r); }
+  .bar-v { background: var(--color-party-vacant); }
+  .bar-i { background: var(--color-party-i); }
   .seat-bar-legend {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
     font-size: 0.72rem;
-    color: #555;
+    color: var(--color-text-secondary);
   }
   .dot {
     display: inline-block;
@@ -89,14 +89,14 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   }
   /* Legend marks mirror the hemicycle seat shapes. */
   .dot-square { border-radius: 1px; }
-  .dot-hollow { background: #fff !important; border: 1.5px solid; border-radius: 50%; }
+  .dot-hollow { background: var(--color-surface-raised) !important; border: 1.5px solid; border-radius: 50%; }
 
   /* ── Chamber tabs ─────────────────────────────────────────────────────── */
   .chamber-tabs {
     display: flex;
     gap: 0.35rem;
     margin: 1.75rem 0 0 0;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--color-border-subtle);
   }
   .chamber-tab {
     padding: 0.45rem 1.1rem;
@@ -105,14 +105,14 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     cursor: pointer;
     font-size: 0.88rem;
     font-weight: 500;
-    color: #555;
+    color: var(--color-text-secondary);
     border-bottom: 3px solid transparent;
     margin-bottom: -2px;
     border-radius: 4px 4px 0 0;
     transition: color 0.15s, border-color 0.15s;
   }
-  .chamber-tab:hover { color: #1a56a8; }
-  .chamber-tab.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+  .chamber-tab:hover { color: var(--color-link); }
+  .chamber-tab.active { color: var(--color-link); border-bottom-color: var(--color-accent); font-weight: 600; }
 
   /* ── Chamber views ────────────────────────────────────────────────────── */
   .chamber-view { display: none; margin-top: 1.25rem; }
@@ -121,8 +121,8 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   /* ── Senate grid ──────────────────────────────────────────────────────── */
   .senate-chamber {
     position: relative;
-    background: #fafafa;
-    border: 1px solid #e0e0e0;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 1.25rem 1rem 1.5rem 1rem;
     overflow-x: auto;
@@ -142,7 +142,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     width: 32px;
     text-align: center;
     font-size: 0.65rem;
-    color: #bbb;
+    color: var(--color-text-muted);
     font-weight: 600;
     flex-shrink: 0;
   }
@@ -171,14 +171,14 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     cursor: default;
     pointer-events: none;
   }
-  .senate-seat.seat-d { background: #dbeafe; border-color: #93c5fd; }
-  .senate-seat.seat-r { background: #fee2e2; border-color: #fca5a5; }
-  .senate-seat.seat-i { background: #ede9fe; border-color: #c4b5fd; }
-  .senate-seat.seat-v { background: #f3f4f6; border-color: #d1d5db; }
+  .senate-seat.seat-d { background: var(--color-party-d-tint); border-color: var(--color-party-d); }
+  .senate-seat.seat-r { background: var(--color-party-r-tint); border-color: var(--color-party-r); }
+  .senate-seat.seat-i { background: var(--color-party-i-tint); border-color: var(--color-party-i); }
+  .senate-seat.seat-v { background: var(--color-party-vacant-tint); border-color: var(--color-party-vacant); }
   .seat-name {
     font-size: 0.66rem;
     font-weight: 600;
-    color: #333;
+    color: var(--color-text);
     text-align: center;
     line-height: 1.15;
     max-width: 52px;
@@ -188,7 +188,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   }
   .seat-dist {
     font-size: 0.58rem;
-    color: #777;
+    color: var(--color-text-muted);
     margin-top: 1px;
   }
   /* Party as a glyph, so the seat is not colour-only. */
@@ -197,26 +197,26 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     top: 2px; left: 4px;
     font-size: 0.55rem;
     font-weight: 700;
-    color: #6b7280;
+    color: var(--color-text-muted);
     line-height: 1;
   }
   /* Seats with no major-party opponent this cycle get an amber ring plus a
      star glyph, so the cue is not colour-only (WCAG 1.4.1). outline (not
      box-shadow) survives the hover box-shadow/scale without being overridden. */
-  .senate-seat.unopposed-seat { outline: 2px solid #f59e0b; outline-offset: 1px; }
+  .senate-seat.unopposed-seat { outline: 2px solid var(--color-warning); outline-offset: 1px; }
   .seat-flag {
     position: absolute;
     top: 1px; right: 3px;
     font-size: 0.6rem;
-    color: #d97706;
+    color: var(--color-warning);
     line-height: 1;
   }
-  .legend-star { color: #d97706; margin-right: 3px; font-size: 0.85rem; vertical-align: middle; }
+  .legend-star { color: var(--color-warning); margin-right: 3px; font-size: 0.85rem; vertical-align: middle; }
 
   /* ── House SVG ────────────────────────────────────────────────────────── */
   .house-chamber {
-    background: #fafafa;
-    border: 1px solid #e0e0e0;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 1rem;
     overflow-x: auto;
@@ -230,8 +230,8 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   /* ── Tooltip ──────────────────────────────────────────────────────────── */
   #seatTooltip {
     position: fixed;
-    background: rgba(20,20,30,0.92);
-    color: #fff;
+    background: color-mix(in srgb, var(--color-text) 92%, transparent);
+    color: var(--color-on-accent);
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 0.78rem;
@@ -243,20 +243,20 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     max-width: 200px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
-  #seatTooltip a { color: #93c5fd; }
+  #seatTooltip a { color: var(--color-link); }
 
   /* ── Legend ───────────────────────────────────────────────────────────── */
   .chart-legend {
     display: flex;
     gap: 1rem;
     font-size: 0.78rem;
-    color: #555;
+    color: var(--color-text-secondary);
     margin-top: 0.75rem;
     justify-content: center;
     flex-wrap: wrap;
   }
 
-  .loading { color: #888; font-style: italic; padding: 2rem 0; }
+  .loading { color: var(--color-text-muted); font-style: italic; padding: 2rem 0; }
 
   @media (max-width: 560px) {
     .tracker-banner { grid-template-columns: 1fr; }
@@ -274,7 +274,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   <div class="tracker-card" id="houseCard">
     <h2>House of Representatives</h2>
     {%- if hou -%}
-      <div>{{ hou.republican }} Republican · {{ hou.democratic }} Democratic{% if hou.other and hou.other > 0 %} · {{ hou.other }} other{% endif %} <span style="color:#6b7280;">({{ hou.total }} seats)</span></div>
+      <div>{{ hou.republican }} Republican · {{ hou.democratic }} Democratic{% if hou.other and hou.other > 0 %} · {{ hou.other }} other{% endif %} <span style="color:var(--color-text-muted);">({{ hou.total }} seats)</span></div>
     {%- else -%}
       <div class="loading">Loading…</div>
     {%- endif -%}
@@ -282,7 +282,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   <div class="tracker-card" id="senateCard">
     <h2>Senate</h2>
     {%- if sen -%}
-      <div>{{ sen.republican }} Republican · {{ sen.democratic }} Democratic{% if sen.other and sen.other > 0 %} · {{ sen.other }} other{% endif %} <span style="color:#6b7280;">({{ sen.total }} seats)</span></div>
+      <div>{{ sen.republican }} Republican · {{ sen.democratic }} Democratic{% if sen.other and sen.other > 0 %} · {{ sen.other }} other{% endif %} <span style="color:var(--color-text-muted);">({{ sen.total }} seats)</span></div>
     {%- else -%}
       <div class="loading">Loading…</div>
     {%- endif -%}
@@ -295,35 +295,35 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
 <style>
   .unopposed-callout {
     margin: 1.5rem 0;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
-    background: #f8f8f8;
+    background: var(--color-surface-sunken);
     padding: 1.25rem 1.5rem;
     text-align: center;
   }
   .unopposed-label {
     font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em;
-    color: #555; font-weight: 700; margin: 0 0 0.35rem;
+    color: var(--color-text-secondary); font-weight: 700; margin: 0 0 0.35rem;
   }
-  .unopposed-detail { font-size: 0.9rem; color: #444; margin: 0 auto 0.95rem; line-height: 1.5; max-width: 540px; }
+  .unopposed-detail { font-size: 0.9rem; color: var(--color-text); margin: 0 auto 0.95rem; line-height: 1.5; max-width: 540px; }
   /* Two chamber tiles: a Dem/Rep safe-share bar, the party counts justified
      to the bar's two ends, then the chamber total — so the total reads as the
      sum of the two safe counts above it. */
   .unopposed-chambers { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; max-width: 460px; margin: 0 auto; }
-  .unopposed-ch { border: 1px solid #e3e3e3; border-radius: 6px; background: #fff; padding: 0.6rem 0.8rem; }
-  .unopposed-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 0 0 0.45rem; background: #e5e7eb; }
+  .unopposed-ch { border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-surface-raised); padding: 0.6rem 0.8rem; }
+  .unopposed-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 0 0 0.45rem; background: var(--color-surface-chrome); }
   .unopposed-bar i { display: block; }
-  .unopposed-bar .bar-d { background: #2563eb; }
-  .unopposed-bar .bar-r { background: #dc2626; }
-  .unopposed-split { display: flex; justify-content: space-between; font-size: 0.78rem; color: #555; margin-bottom: 0.5rem; }
-  .unopposed-split .safe-d { color: #2563eb; font-weight: 700; }
-  .unopposed-split .safe-r { color: #dc2626; font-weight: 700; }
-  .unopposed-chtotal { font-size: 0.8rem; color: #555; border-top: 1px solid #eee; padding-top: 0.45rem; }
-  .unopposed-chtotal strong { color: #333; font-weight: 700; font-size: 0.95rem; }
-  .unopposed-grand { display: flex; align-items: baseline; justify-content: center; gap: 0.5rem; margin-top: 0.95rem; padding-top: 0.8rem; border-top: 1px solid #e0e0e0; }
-  .unopposed-num { font-size: 2.4rem; font-weight: 800; line-height: 1; color: #333; }
-  .unopposed-den { font-size: 0.9rem; color: #666; }
-  .unopposed-source { font-size: 0.72rem; color: #888; margin: 0.8rem auto 0; max-width: 540px; }
+  .unopposed-bar .bar-d { background: var(--color-party-d); }
+  .unopposed-bar .bar-r { background: var(--color-party-r); }
+  .unopposed-split { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--color-text-secondary); margin-bottom: 0.5rem; }
+  .unopposed-split .safe-d { color: var(--color-party-d-text); font-weight: 700; }
+  .unopposed-split .safe-r { color: var(--color-party-r-text); font-weight: 700; }
+  .unopposed-chtotal { font-size: 0.8rem; color: var(--color-text-secondary); border-top: 1px solid var(--color-border-subtle); padding-top: 0.45rem; }
+  .unopposed-chtotal strong { color: var(--color-text); font-weight: 700; font-size: 0.95rem; }
+  .unopposed-grand { display: flex; align-items: baseline; justify-content: center; gap: 0.5rem; margin-top: 0.95rem; padding-top: 0.8rem; border-top: 1px solid var(--color-border); }
+  .unopposed-num { font-size: 2.4rem; font-weight: 800; line-height: 1; color: var(--color-text); }
+  .unopposed-den { font-size: 0.9rem; color: var(--color-text-secondary); }
+  .unopposed-source { font-size: 0.72rem; color: var(--color-text-muted); margin: 0.8rem auto 0; max-width: 540px; }
   @media (max-width: 420px) { .unopposed-chambers { grid-template-columns: 1fr; } }
 </style>
 {%- assign uh = u.byChamber.house -%}
@@ -390,13 +390,13 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
 
 <div id="seatTooltip"></div>
 
-<p style="margin-top:1.75rem;padding:0.85rem 1.1rem;background:#f0f5fb;border:1px solid #d6e2f2;border-radius:8px;font-size:0.9rem;">
+<p style="margin-top:1.75rem;padding:0.85rem 1.1rem;background:var(--color-surface-tint);border:1px solid var(--color-border);border-radius:8px;font-size:0.9rem;">
   This tracker shows how many seats each party holds. To see how reliably each member
   <em>votes</em> with their party, and how often they miss votes, see the
   <a href="{{ '/ga-party-unity.html' | relative_url }}"><strong>Legislator Voting Scorecard</strong></a>.
 </p>
 
-<p style="margin-top:1.5rem;font-size:0.8rem;color:#888;">
+<p style="margin-top:1.5rem;font-size:0.8rem;color:var(--color-text-muted);">
   Party affiliation and the member roster come from the <a href="https://www.legis.ga.gov" target="_blank">Georgia General Assembly</a>'s official web service.
   Vacancies, suspensions and mid-term departures are maintained by VoteGA, since the roster records who holds a seat, not who has left one.
   Chamber layouts based on official 2026 seating charts.
@@ -473,8 +473,8 @@ const HOUSE_ROWS = [
   { r: 230, count: 36 },
 ];
 
-const COLOR = { D: '#2563eb', R: '#dc2626', I: '#7c3aed', V: '#9ca3af' };
-const BG    = { D: '#dbeafe', R: '#fee2e2', I: '#ede9fe', V: '#f3f4f6' };
+const COLOR = { D: 'var(--color-party-d-text)', R: 'var(--color-party-r-text)', I: 'var(--color-party-i-text)', V: 'var(--color-party-vacant-text)' };
+const BG    = { D: 'var(--color-party-d-tint)', R: 'var(--color-party-r-tint)', I: 'var(--color-party-i-tint)', V: 'var(--color-party-vacant-tint)' };
 
 // ── Data loading ───────────────────────────────────────────────────────────
 
@@ -503,7 +503,7 @@ function partyOf(member) {
 }
 
 const UNOPPOSED = window.UNOPPOSED_SEATS || { senate: {}, house: {} };
-const UNOPPOSED_AMBER = '#f59e0b';
+const UNOPPOSED_AMBER = 'var(--color-warning)';
 
 // Returns the sole major party on the ballot for an unopposed district, or
 // null if the seat has a two-major-party contest. `chamber` is the
@@ -571,9 +571,9 @@ function renderCard(el, title, dCount, rCount, vCount, majority, iCount = 0) {
         <div class="stat-sub">${diffSub(rDiff)}</div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:1rem;padding-top:0.75rem;border-top:1px solid #e0e0e0;font-size:0.78rem;color:#888;">
-      Total in Chamber: <strong style="color:#444">${total}</strong>
-      <div style="margin-top:0.3rem">Majority threshold: <strong style="color:#444">${majority}</strong></div>
+    <div style="text-align:center;margin-top:1rem;padding-top:0.75rem;border-top:1px solid var(--color-border);font-size:0.78rem;color:var(--color-text-muted);">
+      Total in Chamber: <strong style="color:var(--color-text)">${total}</strong>
+      <div style="margin-top:0.3rem">Majority threshold: <strong style="color:var(--color-text)">${majority}</strong></div>
     </div>
   `;
 }
@@ -755,7 +755,7 @@ function renderHouse(members) {
 // weight so the hemicycle still reads as a seating chart.
 function seatShape(party, x, y, size) {
   const common = {
-    fill: COLOR[party], opacity: '0.85', stroke: '#fff', 'stroke-width': '0.5',
+    fill: COLOR[party], opacity: '0.85', stroke: 'var(--color-border-subtle)', 'stroke-width': '0.5',
     style: 'cursor:pointer;transition:opacity 0.1s,transform 0.1s',
   };
   if (party === 'R') {
@@ -776,7 +776,7 @@ function seatShape(party, x, y, size) {
     // Hollow, so a vacancy is not just "a grey one".
     return svgEl('circle', Object.assign({}, common, {
       cx: x.toFixed(1), cy: y.toFixed(1), r: size / 2,
-      fill: '#fff', stroke: COLOR.V, 'stroke-width': '1.5',
+      fill: 'var(--color-surface-raised)', stroke: COLOR.V, 'stroke-width': '1.5',
     }));
   }
   return svgEl('circle', Object.assign({
@@ -891,7 +891,7 @@ document.querySelectorAll('.chamber-tab').forEach(btn => {
   } catch (err) {
     console.error(err);
     document.getElementById('trackerBanner').innerHTML =
-      '<p style="color:#c00">Could not load member data. ' + err.message + '</p>';
+      '<p style="color:var(--color-danger)">Could not load member data. ' + err.message + '</p>';
   }
 })();
 </script>

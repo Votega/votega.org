@@ -55,6 +55,12 @@ function getBasePath() {
   return '/';
 }
 
+// Canvas cannot take var(--token) as a fillStyle, so resolve the token to its computed color.
+function tokenColor(v) {
+  var m = /^var\((--[^)]+)\)$/.exec(v);
+  return m ? getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim() : v;
+}
+
 function drawPartyChart(members) {
   const canvas = document.getElementById('partyChart');
   const legend = document.getElementById('chartLegend');
@@ -76,9 +82,9 @@ function drawPartyChart(members) {
   if (!total) { legend.innerHTML = ''; return; }
 
   const segments = [
-    { count: d, color: '#2563eb', label: 'Democrat' },
-    { count: r, color: '#dc2626', label: 'Republican' },
-    { count: o, color: '#9ca3af', label: 'Other' },
+    { count: d, color: 'var(--color-party-d)', label: 'Democrat' },
+    { count: r, color: 'var(--color-party-r)', label: 'Republican' },
+    { count: o, color: 'var(--color-text-muted)', label: 'Other' },
   ].filter(s => s.count > 0);
 
   let startAngle = -Math.PI / 2;
@@ -88,7 +94,7 @@ function drawPartyChart(members) {
     ctx.moveTo(cx, cy);
     ctx.arc(cx, cy, radius, startAngle, startAngle + sweep);
     ctx.closePath();
-    ctx.fillStyle = seg.color;
+    ctx.fillStyle = tokenColor(seg.color);
     ctx.fill();
     startAngle += sweep;
   }
@@ -96,11 +102,11 @@ function drawPartyChart(members) {
   // Centre hole for donut effect
   ctx.beginPath();
   ctx.arc(cx, cy, radius * 0.52, 0, 2 * Math.PI);
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = tokenColor('var(--color-surface-raised)');
   ctx.fill();
 
   // Total count in centre
-  ctx.fillStyle = '#374151';
+  ctx.fillStyle = tokenColor('var(--color-text)');
   ctx.font = `bold ${Math.round(radius * 0.38)}px system-ui, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -158,11 +164,11 @@ function renderMembers() {
     // status banner on their ga-member.html detail page. Resigned/Removed/
     // Deceased are filtered out upstream in loadData().
     const suspendedPill = isSuspended
-      ? ` <span style="display:inline-block;font-size:0.72em;font-weight:600;text-transform:uppercase;letter-spacing:0.03em;color:#8a6100;background:#fff3cd;border:1px solid #f0ad00;border-radius:3px;padding:0.05em 0.4em;vertical-align:middle;">Suspended</span>`
+      ? ` <span style="display:inline-block;font-size:0.72em;font-weight:600;text-transform:uppercase;letter-spacing:0.03em;color:var(--color-warning);background:var(--color-warning-tint);border:1px solid var(--color-warning);border-radius:3px;padding:0.05em 0.4em;vertical-align:middle;">Suspended</span>`
       : '';
     const nameHtml = isVacant
-      ? `<span style="color:#888;font-style:italic;">Vacant</span>`
-      : `<span${isSuspended ? ' style="color:#888;"' : ''}>${m.name}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}</span>${suspendedPill}`;
+      ? `<span style="color:var(--color-text-muted);font-style:italic;">Vacant</span>`
+      : `<span${isSuspended ? ' style="color:var(--color-text-muted);"' : ''}>${m.name}${abbrev ? ` <span class="${pClass}">(${abbrev})</span>` : ''}</span>${suspendedPill}`;
     // Clean /ga-legislators/<slug>/ when the map has this member; the
     // ga-member.html shell (which only redirects there) is the fallback.
     const share = uncertain && locFilter && locFilter.kind === 'zip'
@@ -294,7 +300,9 @@ async function loadData() {
     if (stampEl) {
       const when = window.dataStamp ? window.dataStamp.formatDate((data.metadata || {}).generatedAt) : '';
       stampEl.classList.add('data-stamp');
-      stampEl.innerHTML = (when ? `Data last updated: ${when} &middot; ` : '')
+      const stale = (when && window.VotegaFreshness)
+        ? window.VotegaFreshness.suffix('ga-members', (data.metadata || {}).generatedAt) : '';
+      stampEl.innerHTML = (when ? `Data last updated: ${when}${stale} &middot; ` : '')
         + 'Source: <a href="https://www.legis.ga.gov" target="_blank" rel="noopener">Georgia General Assembly</a>&rsquo;s official web service'
         + ' and published as open data at <a href="https://github.com/Votega/ga-legislators" target="_blank" rel="noopener">Votega/ga-legislators</a>';
     }

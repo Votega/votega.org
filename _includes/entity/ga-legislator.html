@@ -4,7 +4,7 @@
     display: inline-block;
     margin-bottom: 1.25rem;
     font-size: 0.875rem;
-    color: #1d4ed8;
+    color: var(--color-link);
     text-decoration: none;
   }
   .back-link:hover { text-decoration: underline; }
@@ -21,7 +21,7 @@
     /* Last-resort break for unbreakable tokens such as the raw official-website URL. */
     overflow-wrap: break-word;
     padding: 1rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
   }
   .status-banner {
@@ -52,36 +52,36 @@
   .status-banner .status-successor { color: inherit; }
   .status-banner .status-successor a { color: inherit; font-weight: 600; }
   .status-running {
-    background: #f0fdf4;
-    border-color: #16a34a;
-    color: #14532d;
+    background: var(--color-success-tint);
+    border-color: var(--color-success);
+    color: var(--color-success);
   }
   .status-running a { color: inherit; font-weight: 600; }
   .status-candidacy {
-    background: #eff6ff;
-    border-color: #2563eb;
-    color: #1e3a8a;
+    background: var(--color-surface-tint);
+    border-color: var(--color-accent);
+    color: var(--color-link);
   }
   .status-candidacy a { color: inherit; font-weight: 600; }
   .status-resigned, .status-removed {
-    background: #fff3cd;
-    border-color: #f0ad00;
-    color: #5a3e00;
+    background: var(--color-warning-tint);
+    border-color: var(--color-warning);
+    color: var(--color-warning);
   }
   .status-suspended {
-    background: #fff8e1;
-    border-color: #ffca28;
-    color: #4a3500;
+    background: var(--color-warning-tint);
+    border-color: var(--color-warning);
+    color: var(--color-warning);
   }
   .status-deceased {
-    background: #f5f5f5;
-    border-color: #999;
-    color: #444;
+    background: var(--color-surface-chrome);
+    border-color: var(--color-text-muted);
+    color: var(--color-text);
   }
   .status-vacant, .status-other {
-    background: #e8f0fe;
-    border-color: #1a56a8;
-    color: #1a3a6b;
+    background: var(--color-party-vacant-tint);
+    border-color: var(--color-party-vacant);
+    color: var(--color-party-vacant-text);
   }
   /* Promoted from <h3> so the page's heading outline has no h1->h3 skip;
      font-size pinned to keep the previous visual level. Finding 4.15. */
@@ -93,10 +93,10 @@
      federal legislator page). */
   /* Voting participation summary */
   .participation-box {
-    border: 1px solid #d7dde5;
-    border-left: 4px solid #1a56a8;
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent);
     border-radius: 6px;
-    background: #f7f9fc;
+    background: var(--color-surface-sunken);
     padding: 0.75rem 1rem;
     margin: 0 0 1rem 0;
   }
@@ -105,42 +105,42 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #666;
+    color: var(--color-text-secondary);
     margin-bottom: 0.25rem;
   }
   .participation-figure {
     font-size: 1.35rem;
     font-weight: 700;
-    color: #1a3c6e;
+    color: var(--color-link);
     line-height: 1.2;
   }
   .participation-frac {
     font-size: 0.85rem;
     font-weight: 400;
-    color: #555;
+    color: var(--color-text-secondary);
   }
   .participation-note {
     font-size: 0.75rem;
-    color: #666;
+    color: var(--color-text-secondary);
     margin-top: 0.35rem;
     line-height: 1.4;
   }
   /* Tabs */
-  #votesTabs { margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1.25rem; }
-  .tab-bar { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 1.25rem; }
+  #votesTabs { margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.25rem; }
+  .tab-bar { display: flex; border-bottom: 2px solid var(--color-border); margin-bottom: 1.25rem; }
   .tab-btn {
     padding: 0.45rem 1.1rem;
     border: none;
     background: none;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #666;
+    color: var(--color-text-secondary);
     cursor: pointer;
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
   }
-  .tab-btn:hover { color: #333; }
-  .tab-active { color: #1a56a8; border-bottom-color: #1a56a8; }
+  .tab-btn:hover { color: var(--color-text); }
+  .tab-active { color: var(--color-link); border-bottom-color: var(--color-accent); }
 
   /* A non-wrapping flex row of tabs runs off the side of a phone: four tabs
      measured 376px inside a 326px container, so the last one was clipped at the
@@ -156,11 +156,11 @@
   /* Curated bill cards */
   #curatedBills h2 { margin: 0 0 0.75rem 0; font-size: 1.5rem; }
   .bill-card {
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1rem;
-    background: #fafafa;
+    background: var(--color-surface-sunken);
   }
   .bill-card-header {
     display: flex;
@@ -171,12 +171,12 @@
     margin-bottom: 0.35rem;
   }
   .bill-identifier { font-weight: bold; font-size: 0.95rem; }
-  .bill-official-link { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
-  .bill-text-inline { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
-  .vh-link { font-size: 0.7rem; color: #666; margin-left: 0.35rem; white-space: nowrap; font-weight: normal; }
-  .bill-status-tag { font-size: 0.75rem; color: #666; }
-  .bill-title { font-size: 0.875rem; color: #444; font-style: italic; margin-bottom: 0.35rem; }
-  .bill-summary { font-size: 0.875rem; color: #333; line-height: 1.5; margin-bottom: 0.75rem; }
+  .bill-official-link { font-size: 0.72rem; color: var(--color-text-secondary); margin-left: 0.4rem; white-space: nowrap; }
+  .bill-text-inline { font-size: 0.72rem; color: var(--color-text-secondary); margin-left: 0.4rem; white-space: nowrap; }
+  .vh-link { font-size: 0.7rem; color: var(--color-text-secondary); margin-left: 0.35rem; white-space: nowrap; font-weight: normal; }
+  .bill-status-tag { font-size: 0.75rem; color: var(--color-text-secondary); }
+  .bill-title { font-size: 0.875rem; color: var(--color-text); font-style: italic; margin-bottom: 0.35rem; }
+  .bill-summary { font-size: 0.875rem; color: var(--color-text); line-height: 1.5; margin-bottom: 0.75rem; }
   .bill-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
   .bill-vote-badge {
     display: inline-block;
@@ -186,16 +186,16 @@
     font-weight: bold;
     white-space: nowrap;
   }
-  .badge-yes   { background: #dcfce7; color: #15803d; }
-  .badge-no    { background: #fee2e2; color: #b91c1c; }
-  .badge-other { background: #f3f4f6; color: #6b7280; }
+  .badge-yes   { background: var(--color-success-tint); color: var(--color-success); }
+  .badge-no    { background: var(--color-danger-tint); color: var(--color-danger); }
+  .badge-other { background: var(--color-surface-chrome); color: var(--color-text-muted); }
   .party-tally { flex: 1; min-width: 180px; }
   .tally-row { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; margin-bottom: 0.25rem; }
   .tally-label { width: 2.5rem; font-weight: bold; flex-shrink: 0; }
-  .tally-bar-track { flex: 1; background: #e5e7eb; border-radius: 3px; height: 10px; overflow: hidden; }
-  .tally-bar-fill-d { height: 100%; background: #2563eb; border-radius: 3px; }
-  .tally-bar-fill-r { height: 100%; background: #dc2626; border-radius: 3px; }
-  .tally-count { width: 5rem; text-align: right; color: #555; white-space: nowrap; }
+  .tally-bar-track { flex: 1; background: var(--color-surface-chrome); border-radius: 3px; height: 10px; overflow: hidden; }
+  .tally-bar-fill-d { height: 100%; background: var(--color-party-d); border-radius: 3px; }
+  .tally-bar-fill-r { height: 100%; background: var(--color-party-r); border-radius: 3px; }
+  .tally-count { width: 5rem; text-align: right; color: var(--color-text-secondary); white-space: nowrap; }
   /* Committee assignments: the role (Chairman / Vice Chairman / Secretary /
      Ex-Officio / subcommittee chair) rides as a badge beside the committee name.
      Plain "Member" gets none - 1,060 of the 1,399 assignments are Members, so
@@ -208,14 +208,14 @@
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.02em;
-    background: #eef2ff;
-    color: #3730a3;
+    background: var(--color-surface-tint);
+    color: var(--color-link);
     vertical-align: 0.05rem;
   }
   /* Chair and vice-chair outrank the honorary and clerical roles visually. */
-  .committee-role.role-chair { background: #1a1a2e; color: #fff; }
-  .committee-role.role-vice  { background: #e0e7ff; color: #312e81; }
-  .committee-role.role-exoff { background: #f3f4f6; color: #4b5563; }
+  .committee-role.role-chair { background: var(--color-accent-strong); color: var(--color-on-accent); }
+  .committee-role.role-vice  { background: var(--color-surface-tint); color: var(--color-link); }
+  .committee-role.role-exoff { background: var(--color-surface-chrome); color: var(--color-text-secondary); }
 
   /* Sponsored legislation list */
   .spon-group { margin-bottom: 1.5rem; }
@@ -224,41 +224,41 @@
   .spon-group-head span {
     font-weight: normal;
     font-size: 0.8rem;
-    color: #666;
+    color: var(--color-text-secondary);
     margin-left: 0.25rem;
   }
-  .spon-group-note { font-size: 0.78rem; color: #666; margin: 0 0 0.6rem 0; line-height: 1.45; }
+  .spon-group-note { font-size: 0.78rem; color: var(--color-text-secondary); margin: 0 0 0.6rem 0; line-height: 1.45; }
   .spon-session { font-size: 0.9rem; margin: 0.9rem 0 0.3rem 0; }
-  .spon-session span { font-weight: normal; font-size: 0.78rem; color: #666; }
+  .spon-session span { font-weight: normal; font-size: 0.78rem; color: var(--color-text-secondary); }
   .spon-list { list-style: none; padding: 0; margin: 0; }
   .spon-item {
     padding: 0.6rem 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border-subtle);
     font-size: 0.875rem;
   }
   .spon-item:last-child { border-bottom: none; }
   .spon-hidden { display: none; }
-  .spon-id { font-weight: 600; margin-right: 0.45rem; color: #1d4ed8; white-space: nowrap; }
-  .spon-title { color: #111; }
-  .spon-official { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
-  .spon-text { font-size: 0.72rem; color: #666; margin-left: 0.4rem; white-space: nowrap; }
-  .spon-meta { color: #6b7280; font-size: 0.78rem; margin-top: 0.2rem; }
+  .spon-id { font-weight: 600; margin-right: 0.45rem; color: var(--color-link); white-space: nowrap; }
+  .spon-title { color: var(--color-text); }
+  .spon-official { font-size: 0.72rem; color: var(--color-text-secondary); margin-left: 0.4rem; white-space: nowrap; }
+  .spon-text { font-size: 0.72rem; color: var(--color-text-secondary); margin-left: 0.4rem; white-space: nowrap; }
+  .spon-meta { color: var(--color-text-muted); font-size: 0.78rem; margin-top: 0.2rem; }
   .spon-more {
     margin-top: 0.5rem;
     padding: 0.3rem 0.8rem;
     font-size: 0.8rem;
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--color-border);
     border-radius: 4px;
-    background: #f8fafc;
-    color: #1d4ed8;
+    background: var(--color-surface-sunken);
+    color: var(--color-link);
     cursor: pointer;
   }
-  .spon-more:hover { background: #eef2f7; }
+  .spon-more:hover { background: var(--color-surface-tint); }
   #stateSidebar {
     width: 240px;
     flex-shrink: 0;
     padding: 1rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     position: sticky;
     top: 1rem;
@@ -269,14 +269,14 @@
   #stateSidebar h2 {
     margin: 0 0 0.75rem 0;
     font-size: 0.95rem;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--color-border);
     padding-bottom: 0.5rem;
   }
   .sidebar-group-label {
     font-size: 0.75rem;
     font-weight: bold;
     text-transform: uppercase;
-    color: #666;
+    color: var(--color-text-secondary);
     margin: 0.75rem 0 0.25rem 0;
   }
   .sidebar-member {
@@ -288,16 +288,16 @@
     color: inherit;
     line-height: 1.3;
   }
-  .sidebar-member:hover { background: #f0f0f0; }
+  .sidebar-member:hover { background: var(--color-surface-chrome); }
   .sidebar-member.current {
-    background: #e8f0fe;
+    background: var(--color-surface-tint);
     font-weight: bold;
     cursor: default;
     pointer-events: none;
   }
   .sidebar-member-sub {
     font-size: 0.75rem;
-    color: #666;
+    color: var(--color-text-secondary);
   }
   @media (max-width: 700px) {
     /* align-items:flex-start above sizes children to min-content; once stacked that
@@ -311,7 +311,7 @@
   /* Campaign finance (PeachFile) — same card treatment as the federal member page */
   .finance-section {
     margin-top: 2rem;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--color-border);
     padding-top: 1.25rem;
   }
   /* Not every legislator has a filing, and the state data covers GA only — collapse
@@ -333,16 +333,16 @@
     margin-bottom: 0.2rem;
   }
   .finance-card-value { font-size: 1.05rem; font-weight: bold; }
-  .finance-card.raised { background: #f0fdf4; border: 1px solid #bbf7d0; }
-  .finance-card.raised .finance-card-label { color: #166534; }
-  .finance-card.raised .finance-card-value { color: #15803d; }
-  .finance-card.spent  { background: #fef2f2; border: 1px solid #fecaca; }
-  .finance-card.spent  .finance-card-label { color: #991b1b; }
-  .finance-card.spent  .finance-card-value { color: #b91c1c; }
-  .finance-card.cash   { background: #eff6ff; border: 1px solid #bfdbfe; }
-  .finance-card.cash   .finance-card-label { color: #1e40af; }
-  .finance-card.cash   .finance-card-value { color: #1d4ed8; }
-  .finance-meta { font-size: 0.78rem; color: #666; margin: 0; }
+  .finance-card.raised { background: var(--color-success-tint); border: 1px solid var(--color-success-line); }
+  .finance-card.raised .finance-card-label { color: var(--color-success); }
+  .finance-card.raised .finance-card-value { color: var(--color-success); }
+  .finance-card.spent  { background: var(--color-danger-tint); border: 1px solid var(--color-danger-line); }
+  .finance-card.spent  .finance-card-label { color: var(--color-danger); }
+  .finance-card.spent  .finance-card-value { color: var(--color-danger); }
+  .finance-card.cash   { background: var(--color-surface-tint); border: 1px solid var(--color-border); }
+  .finance-card.cash   .finance-card-label { color: var(--color-link); }
+  .finance-card.cash   .finance-card-value { color: var(--color-link); }
+  .finance-meta { font-size: 0.78rem; color: var(--color-text-secondary); margin: 0; }
 </style>
 
 <a class="back-link" href="{{ '/ga-state-reps' | relative_url }}">← Find My Reps</a>
@@ -357,13 +357,13 @@
     {%- if page.entity -%}
       {%- assign e = page.entity -%}
       <h1 style="margin:0 0 .25rem;">{{ e.name | escape }}</h1>
-      <p style="font-size:1.05rem;color:#444;margin:0 0 1rem;">
+      <p style="font-size:1.05rem;color:var(--color-text);margin:0 0 1rem;">
         {{ e.title | escape }}{% if e.district %} · District {{ e.district }}{% endif %}{% if e.party %} · {{ e.party | escape }}{% endif %}
-        {%- if e.chamber %}<br><span style="color:#6b7280;">{{ e.chamber | escape }}, Georgia General Assembly</span>{% endif -%}
+        {%- if e.chamber %}<br><span style="color:var(--color-text-muted);">{{ e.chamber | escape }}, Georgia General Assembly</span>{% endif -%}
       </p>
       {%- if e.summary %}<p>{{ e.summary | escape }}</p>{% endif -%}
       {%- if e.about %}{% for para in e.about %}<p>{{ para | escape }}</p>{% endfor %}{% endif -%}
-      <dl style="margin:0 0 1rem;font-size:0.95rem;color:#374151;">
+      <dl style="margin:0 0 1rem;font-size:0.95rem;color:var(--color-text);">
         {%- if e.nextElection %}
         <dt style="font-weight:600;display:inline;">Next election:</dt>
         <dd style="display:inline;margin:0 0 0 .25rem;">November {{ e.nextElection }} (Georgia General Assembly seats are elected to two-year terms)</dd><br>
@@ -567,6 +567,7 @@
         window.dataStamp.render('dataStamp', {
           updated: (data.metadata || {}).generatedAt,
           source:  (data.metadata || {}).source || 'legis.ga.gov official web service',
+          dataset: 'ga-members',
           repo:    { url: 'https://github.com/Votega/ga-legislators' },
         });
       }
@@ -764,7 +765,7 @@
     }
 
     container.innerHTML = `
-      <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: GA Ethics Commission</small></h2>
+      <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-muted);">Source: GA Ethics Commission</small></h2>
       <div class="finance-cards">
         <div class="finance-card raised">
           <div class="finance-card-label">Total Raised</div>
@@ -780,7 +781,7 @@
         </div>
       </div>
       <p class="finance-meta">${escHtml(f.electionCycle || '')}${f.office ? ` · ${escHtml(f.office)}` : ''}</p>
-      ${window.CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt)}
+      ${window.CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt, 'ga-campaign-finance')}
       <div class="ga-donors-slot"></div>
       <p class="finance-meta">
         <a href="${escHtml(searchUrl)}" target="_blank" rel="noopener">View filings on PeachFile ↗</a>
@@ -847,7 +848,7 @@
       : '';
 
     const leadershipHtml = member.leadershipRole
-      ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;background:#1a1a2e;color:#fff;border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${escHtml(member.leadershipRole)}</div>`
+      ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;background:var(--color-accent-strong);color:var(--color-on-accent);border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${escHtml(member.leadershipRole)}</div>`
       : '';
 
     // Distinct from "not up for election" (the common case, no banner needed)
@@ -958,7 +959,7 @@
       })();
       if (!items) {
         return committeesAvailable === false
-          ? `<p style="margin-top:1rem;font-size:0.8rem;color:#a35b00;">Committee data is temporarily unavailable (the last data refresh could not fetch it).</p>`
+          ? `<p style="margin-top:1rem;font-size:0.8rem;color:var(--color-warning);">Committee data is temporarily unavailable (the last data refresh could not fetch it).</p>`
           : '';
       }
       return `<div style="margin-top:1rem;">
@@ -1162,14 +1163,14 @@
       const dPct = dTotal ? Math.round((dYea / dTotal) * 100) : 0;
       const rPct = rTotal ? Math.round((rYea / rTotal) * 100) : 0;
       return `<div class="party-tally">
-        <div style="font-size:0.72rem;color:#666;margin-bottom:0.3rem;">Yea votes by party</div>
+        <div style="font-size:0.72rem;color:var(--color-text-secondary);margin-bottom:0.3rem;">Yea votes by party</div>
         <div class="tally-row">
-          <span class="tally-label" style="color:#2563eb;">Dem</span>
+          <span class="tally-label" style="color:var(--color-party-d-text);">Dem</span>
           <div class="tally-bar-track"><div class="tally-bar-fill-d" style="width:${dPct}%"></div></div>
           <span class="tally-count">${dYea}/${dTotal} &nbsp;${dPct}%</span>
         </div>
         <div class="tally-row">
-          <span class="tally-label" style="color:#dc2626;">Rep</span>
+          <span class="tally-label" style="color:var(--color-party-r-text);">Rep</span>
           <div class="tally-bar-track"><div class="tally-bar-fill-r" style="width:${rPct}%"></div></div>
           <span class="tally-count">${rYea}/${rTotal} &nbsp;${rPct}%</span>
         </div>
@@ -1208,7 +1209,7 @@
       // label and the same place as on Voting History and Sponsored Legislation —
       // three panels that each had their own wording for one link.
       const textLink = bill.fullTextUrl
-        ? ` <a class="bill-text-inline" href="${escHtml(bill.fullTextUrl)}" target="_blank" rel="noopener">&#128196; text &#8599;</a>`
+        ? ` <a class="bill-text-inline" href="${escHtml(bill.fullTextUrl)}" target="_blank" rel="noopener">&var(--color-link); text &#8599;</a>`
         : '';
 
       return `<div class="bill-card">
@@ -1234,15 +1235,16 @@
     const curatedDate = curatedIso && window.dataStamp
       ? window.dataStamp.formatDate(curatedIso)
       : null;
-    const curatedSource = `<p style="font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">`
+    const curatedSource = `<p style="font-size:0.78rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">`
       + `Key votes are selected by VoteGA. Bill text, status, and roll calls come from legis.ga.gov`
-      + (curatedDate ? `, updated ${escHtml(curatedDate)}` : '')
+      + (curatedDate ? `, updated ${escHtml(curatedDate)}`
+        + (window.VotegaFreshness ? window.VotegaFreshness.suffix('curated-ga-bill-votes', curatedIso) : '') : '')
       + `, and are published as open data in the `
       + `<a href="${escHtml(CURATED_BILLS_REPO)}" target="_blank" rel="noopener">Votega/ga-legislation</a> repository.</p>`;
 
     container.innerHTML = `
-      <h2>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:#666;">curated list</small></h2>
-      <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">This member's votes on a selection of significant Georgia legislation.</p>
+      <h2>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-secondary);">curated list</small></h2>
+      <p style="font-size:0.8rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">This member's votes on a selection of significant Georgia legislation.</p>
       ${curatedSource}
       ${cards}`;
   }
@@ -1313,7 +1315,7 @@
     const container = document.getElementById('sponsoredLegislation');
     if (!container || !member || !member.legisGaGovId || sponsoredLoaded) return;
     sponsoredLoaded = true;
-    container.innerHTML = '<p style="font-size:0.875rem;color:#666;">Loading sponsored legislation…</p>';
+    container.innerHTML = '<p style="font-size:0.875rem;color:var(--color-text-secondary);">Loading sponsored legislation…</p>';
 
     let data, slice;
     try {
@@ -1341,7 +1343,7 @@
       // retry rather than leaving the panel stuck on a transient error.
       sponsoredLoaded = false;
       container.innerHTML = `<h2>Sponsored Legislation</h2>
-        <p style="color:#666;font-size:0.875rem;">We couldn’t load the bill file just now — this is a temporary problem on our end, not a sign that this member has sponsored nothing. Please reload the page to try again.</p>`;
+        <p style="color:var(--color-text-secondary);font-size:0.875rem;">We couldn’t load the bill file just now — this is a temporary problem on our end, not a sign that this member has sponsored nothing. Please reload the page to try again.</p>`;
       return;
     }
 
@@ -1401,7 +1403,7 @@
       // the row (see split_text_url in the build script).
       const docSeg = sessionDocSeg[sid];
       const text = (docSeg && row[R_DOC])
-        ? ` <a class="spon-text" href="https://www.legis.ga.gov/api/legislation/document/${encodeURIComponent(docSeg)}/${encodeURIComponent(row[R_DOC])}" target="_blank" rel="noopener">&#128196; text &#8599;</a>`
+        ? ` <a class="spon-text" href="https://www.legis.ga.gov/api/legislation/document/${encodeURIComponent(docSeg)}/${encodeURIComponent(row[R_DOC])}" target="_blank" rel="noopener">&var(--color-link); text &#8599;</a>`
         : '';
       return `<li class="spon-item${hidden ? ' spon-hidden' : ''}">
           <a class="spon-id" href="${escHtml(href)}">${escHtml(row[R_ID] || '')}</a>
@@ -1455,21 +1457,22 @@
     // dated clause rather than printing a bare or wrong date.
     const billsIso  = data.metadata?.generatedAt || null;
     const billsDate = billsIso && window.dataStamp ? window.dataStamp.formatDate(billsIso) : null;
-    const sourceLine = `<p style="font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">`
+    const sourceLine = `<p style="font-size:0.78rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">`
       + `Sponsorship comes from legis.ga.gov`
-      + (billsDate ? `, updated ${escHtml(billsDate)}` : '')
+      + (billsDate ? `, updated ${escHtml(billsDate)}`
+      + (window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-bills', billsIso) : '') : '')
       + `, and is published as open data in the `
       + `<a href="${escHtml(GA_BILLS_REPO)}" target="_blank" rel="noopener">Votega/ga-legislation</a> repository.</p>`;
 
     const biennium = data.metadata?.biennium || '';
 
     container.innerHTML = `
-      <h2>Sponsored Legislation${biennium ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${escHtml(biennium)}</small>` : ''}</h2>
+      <h2>Sponsored Legislation${biennium ? ` <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-secondary);">${escHtml(biennium)}</small>` : ''}</h2>
       ${groups
-        ? `<p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Bills and resolutions this member sponsored or co-sponsored in the ${escHtml(biennium || 'current')} General Assembly, including any special session.</p>
+        ? `<p style="font-size:0.8rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">Bills and resolutions this member sponsored or co-sponsored in the ${escHtml(biennium || 'current')} General Assembly, including any special session.</p>
            ${sourceLine}
            ${groups}`
-        : `<p style="font-size:0.875rem;color:#666;">No sponsored or co-sponsored legislation is recorded for this member in the ${escHtml(biennium || 'current')} General Assembly.</p>
+        : `<p style="font-size:0.875rem;color:var(--color-text-secondary);">No sponsored or co-sponsored legislation is recorded for this member in the ${escHtml(biennium || 'current')} General Assembly.</p>
            ${sourceLine}`}`;
 
     // Delegated so one listener covers every list, and so it survives the innerHTML
@@ -1665,7 +1668,7 @@
         const note = `Not shown: this member shares a surname with another member of their chamber, and Georgia's roll calls identify such voters by surname alone, so our record misses most of their contested, party-line votes — too few remain to produce a meaningful figure`
           + (incomplete ? '. The partial session data noted above compounds this.' : '.');
         return { html: `
-      <div class="participation-box" style="border-left-color:#9ca3af;">
+      <div class="participation-box" style="border-left-color:var(--color-text-muted);">
         <div class="participation-head">Party Voting Alignment</div>
         <div class="participation-note">${note}</div>
       </div>`, suppressed: true };
@@ -1675,7 +1678,7 @@
     if (considered === 0) return { html: '', suppressed: false };
 
     const rate = Math.round(aligned / considered * 100);
-    const accent = member.party === 'Democratic' ? '#2563eb' : member.party === 'Republican' ? '#dc2626' : '#1a56a8';
+    const accent = member.party === 'Democratic' ? 'var(--color-party-d-text)' : member.party === 'Republican' ? 'var(--color-party-r-text)' : 'var(--color-party-i-text)';
     const methodology = `Share of this member's votes on <strong>party-line roll calls</strong>. Where a majority of ${escHtml(member.party)}s voted opposite a majority of the other party that matched their own caucus's position. Excludes votes where both parties largely agreed, so this reflects behavior specifically on contested, partisan votes.`
       + (incomplete ? ' Based on the partial session data noted above, so this figure may shift as more bills are fetched.' : '');
 
@@ -1733,11 +1736,11 @@
         sliceFailed = true;
       }
       if (sliceFailed) {
-        container.innerHTML = `<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">We couldn’t load this member’s voting record just now — this is a temporary problem on our end, not a sign that they have no record. Please reload the page to try again.</p>`;
+        container.innerHTML = `<h2>Voting History</h2><p style="color:var(--color-text-secondary);font-size:0.875rem;">We couldn’t load this member’s voting record just now — this is a temporary problem on our end, not a sign that they have no record. Please reload the page to try again.</p>`;
         return;
       }
       if (memberVotes.length === 0) {
-        container.innerHTML = '<h2>Voting History</h2><p style="color:#666;font-size:0.875rem;">No voting record found for this member in our data for this General Assembly. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';
+        container.innerHTML = '<h2>Voting History</h2><p style="color:var(--color-text-secondary);font-size:0.875rem;">No voting record found for this member in our data for this General Assembly. Our vote-matching data has known gaps for a small number of legislators — if you believe this is incorrect, check the member\'s official legis.ga.gov page.</p>';
         return;
       }
 
@@ -1755,7 +1758,7 @@
       // a future source reintroduces a bounded gap.
       const incomplete = data.metadata?.paginationComplete === false;
       const incompleteNote = incomplete
-        ? '<p style="font-size:0.78rem;color:#a35b00;background:#fff8ec;border:1px solid #fde7c2;border-radius:6px;padding:0.5rem 0.75rem;margin:0 0 0.75rem 0;">Note: our roll-call record covers most, but not all, of the regular session\'s bills, so some passage votes are missing. The participation, party-alignment, and chart figures below are based on the votes we have and may understate a member\'s totals.</p>'
+        ? '<p style="font-size:0.78rem;color:var(--color-warning);background:var(--color-warning-tint);border:1px solid var(--color-warning-line);border-radius:6px;padding:0.5rem 0.75rem;margin:0 0 0.75rem 0;">Note: our roll-call record covers most, but not all, of the regular session\'s bills, so some passage votes are missing. The participation, party-alignment, and chart figures below are based on the votes we have and may understate a member\'s totals.</p>'
         : '';
 
       // Sort most recent first
@@ -1817,7 +1820,7 @@
           : '';
         const url = billTextUrl(meta);
         const text = url
-          ? ` <a class="vh-link" href="${escHtml(url)}" target="_blank" rel="noopener">&#128196; text &#8599;</a>`
+          ? ` <a class="vh-link" href="${escHtml(url)}" target="_blank" rel="noopener">&var(--color-link); text &#8599;</a>`
           : '';
         return official + text;
       };
@@ -1898,7 +1901,7 @@
         // broken party-alignment figure the note above explains we won't show, so
         // pointing there would just surface it in another place.
         const scopeNote = (multiSession && sel !== SESSION_ALL)
-          ? ' <span style="color:#666;">(ranked across the full ' + escHtml(session || 'biennium') + ')</span>'
+          ? ' <span style="color:var(--color-text-secondary);">(ranked across the full ' + escHtml(session || 'biennium') + ')</span>'
           : '';
         const scorecardLink = ((participationHtml || partyLoyaltyHtml) && !partyLoyalty.suppressed)
           ? `<p style="margin:0.35rem 0 1rem 0;font-size:0.85rem;">
@@ -1910,7 +1913,7 @@
         // chart above stay computed over the whole selection (`list`), because a
         // figure that silently re-based itself on "bills matching 'school'" would
         // read as this member's record. Say so on screen whenever a filter is on.
-        const statScopeNote = `<p id="gaVotesScopeNote" style="display:none;font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">`
+        const statScopeNote = `<p id="gaVotesScopeNote" style="display:none;font-size:0.78rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">`
           + `Figures above cover all ${list.length} vote${list.length === 1 ? '' : 's'} in this view, not the filtered list.</p>`;
 
         const filterRow = VT.filterRowHtml({ searchId: 'gaVoteSearch', voteId: 'gaVoteResult' });
@@ -1944,7 +1947,7 @@
               ? `${shown.length} of ${total} vote${total === 1 ? '' : 's'}`
               : `${total} vote${total === 1 ? '' : 's'}`;
             return `<h3 style="font-size:0.95rem;margin:1.1rem 0 0.4rem 0;">${escHtml(sessionNames[sid] || sid)}` +
-              ` <span style="font-weight:normal;font-size:0.78rem;color:#666;">(${count})</span></h3>` +
+              ` <span style="font-weight:normal;font-size:0.78rem;color:var(--color-text-secondary);">(${count})</span></h3>` +
               tableFor(shown, sid);
           }).join('');
         }
@@ -2005,7 +2008,7 @@
       // more than one session with votes, and disappears again at a rollover.
       const selectHtml = multiSession ? `
         <div style="margin:0 0 0.75rem 0;">
-          <label for="gaVoteSession" style="font-size:0.8rem;color:#555;margin-right:0.4rem;">Session</label>
+          <label for="gaVoteSession" style="font-size:0.8rem;color:var(--color-text-secondary);margin-right:0.4rem;">Session</label>
           <select id="gaVoteSession" style="font-size:0.85rem;padding:0.25rem 0.4rem;">
             ${order.map(sid => `<option value="${escHtml(sid)}"${sid === selected ? ' selected' : ''}>${escHtml(sessionNames[sid] || sid)} (${bySession[sid].length})</option>`).join('')}
             <option value="${SESSION_ALL}"${selected === SESSION_ALL ? ' selected' : ''}>All sessions (${sorted.length})</option>
@@ -2020,9 +2023,9 @@
         : null;
 
       container.innerHTML = `
-        <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:#666;">${session}</small>` : ''}</h2>
-        <p style="font-size:0.8rem;color:#666;margin:0 0 0.75rem 0;">Showing recorded passage votes, the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
-        ${votesGenDate ? `<p style="font-size:0.78rem;color:#666;margin:0 0 0.75rem 0;">Vote data from legis.ga.gov, updated ${votesGenDate}.</p>` : ''}
+        <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-secondary);">${session}</small>` : ''}</h2>
+        <p style="font-size:0.8rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">Showing recorded passage votes, the final votes on whether a bill passes a chamber. Includes bills that were later signed into law, vetoed, or did not advance. Committee and procedural votes are not included.</p>
+        ${votesGenDate ? `<p style="font-size:0.78rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">Vote data from legis.ga.gov, updated ${votesGenDate}${window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-member-votes', votesGenIso) : ''}.</p>` : ''}
         ${incompleteNote}
         ${selectHtml}
         <div id="gaVotesPanel">${panelFor(selected)}</div>`;

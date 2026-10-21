@@ -11,8 +11,14 @@
  * optionally, data-stamp.js (window.dataStamp) already loaded.
  *
  * Usage (from _includes/entity/place.html):
- *   LocalMeetings.init({ slug, placeName, sourceFallback,
+ *   LocalMeetings.init({ slug, placeName, sourceFallback, botProtected,
  *                        containerId, controlsId, pillsId, minutesToggleId, sourceId });
+ *
+ * The source line says when the meetings were last checked and the most recent meeting
+ * on file, so a resident can tell whether a meeting they expect should be there yet,
+ * and flags the place "older than usual" past the local-government window
+ * (_data/data_freshness.yml). A bot-protected place (the site cannot be scraped) is
+ * flagged regardless of the date, since its data only moves by hand.
  */
 (function (global) {
   'use strict';
@@ -37,6 +43,23 @@
     return MONTHS[+p[1] - 1] + ' ' + (+p[2]) + ', ' + p[0];
   }
 
+  var PAGE_SIZE = 50;
+
+  // Year (YYYY) of the newest meeting dated before `today`, or null when the place spans
+  // fewer than two years (nothing to narrow) or has no past meetings.
+  function defaultYear(meetings, today) {
+    today = today || todayStr();
+    var years = {}, newest = null;
+    (meetings || []).forEach(function (m) {
+      var v = m && typeof m.date === 'string' ? m.date.slice(0, 10) : '';
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
+      years[v.slice(0, 4)] = true;
+      if (v < today && (!newest || v > newest)) newest = v;
+    });
+    if (Object.keys(years).length < 2 || !newest) return null;
+    return newest.slice(0, 4);
+  }
+
   function init(opts) {
     var slug = opts.slug;
     var sourceFallback = opts.sourceFallback || '';
@@ -48,7 +71,9 @@
     var minutesToggle = document.getElementById(opts.minutesToggleId);
     var sourceEl = document.getElementById(opts.sourceId);
 
-    var state = { body: 'all', year: 'all', minutesOnly: false };
+    // `limit` caps how many past meetings are drawn (a place can have ~800); "Show more"
+    // raises it. Any filter change starts over at PAGE_SIZE.
+    var state = { body: 'all', year: 'all', minutesOnly: false, limit: PAGE_SIZE };
     var ALL = [];
     var BODIES = [];
 
@@ -65,18 +90,23 @@
         '<span class="cm-links">' + links + '</span></li>';
     }
 
-    function section(title, rows, showChip, upcoming) {
+    function section(title, rows, showChip, upcoming, limit) {
       if (!rows.length) return '';
+      var shown = limit ? rows.slice(0, limit) : rows;
+      var more = rows.length - shown.length;
       return '<h2 class="cm-section-heading">' + title + ' (' + rows.length + ')</h2>' +
         '<ul class="cm-list ' + (upcoming ? 'cm-upcoming' : '') + '">' +
-        rows.map(function (m) { return meetingRow(m, showChip); }).join('') + '</ul>';
+        shown.map(function (m) { return meetingRow(m, showChip); }).join('') + '</ul>' +
+        (more > 0
+          ? '<button type="button" class="cm-more" id="cmShowMore">Show ' + Math.min(PAGE_SIZE, more) +
+            ' more <span class="cm-count">' + more + ' remaining</span></button>'
+          : '');
     }
 
     function render() {
       var showChip = state.body === 'all';
       var rows = ALL;
       if (state.body !== 'all') rows = rows.filter(function (m) { return bodySlug(m.body) === state.body; });
-      if (state.year !== 'all') rows = rows.filter(function (m) { return (m.date || '').slice(0, 4) === state.year; });
       if (state.minutesOnly) rows = rows.filter(function (m) { return m.minutesUrl; });
 
       Array.prototype.forEach.call(pillsEl.querySelectorAll('.cm-pill'), function (p) {
@@ -101,10 +131,51 @@
         .sort(function (a, b) { return a.date.localeCompare(b.date); });
       var past = rows.filter(function (m) { return m.date < today; })
         .sort(function (a, b) { return b.date.localeCompare(a.date); });
+      // The year filter applies to both lists, so a year pill shows exactly that year. Upcoming
+      // meetings in OTHER years are not dropped silently: a note under the filter names them,
+      // so the next meeting is never hidden without a way to it.
+      var otherYears = {};
+      if (state.year !== 'all') {
+        var inYear = function (m) { return (m.date || '').slice(0, 4) === state.year; };
+        upcoming.forEach(function (m) { if (!inYear(m)) { var y = m.date.slice(0, 4); otherYears[y] = (otherYears[y] || 0) + 1; } });
+        upcoming = upcoming.filter(inYear);
+        past = past.filter(inYear);
+      }
+      var otherNote = upcomingElsewhereNote(otherYears);
 
-      container.innerHTML =
-        section('Upcoming', upcoming, showChip, true) +
-        section('Past meetings', past, showChip, false);
+      if (!upcoming.length && !past.length) {
+        container.innerHTML = otherNote + '<p class="cm-empty">' +
+          (state.minutesOnly
+            ? 'No meetings with published minutes for this selection.'
+            : 'No agendas posted for this selection.') + '</p>';
+        wireYearJumps();
+        return;
+      }
+
+      container.innerHTML = otherNote +
+        section('Upcoming', upcoming, showChip, true, 0) +
+        section('Past meetings', past, showChip, false, state.limit);
+      wireYearJumps();
+      var moreBtn = document.getElementById('cmShowMore');
+      if (moreBtn) {
+        moreBtn.addEventListener('click', function () { state.limit += PAGE_SIZE; render(); });
+      }
+    }
+
+    // "Upcoming meetings in other years: 2027 (1)", each year a link that selects that pill.
+    function upcomingElsewhereNote(byYear) {
+      var years = Object.keys(byYear).sort();
+      if (!years.length) return '';
+      return '<p class="cm-other-years">Upcoming meetings in other years: ' +
+        years.map(function (y) {
+          return '<button type="button" class="cm-year-jump" data-year="' + esc(y) + '">' +
+            esc(y) + ' (' + byYear[y] + ')</button>';
+        }).join(', ') + '</p>';
+    }
+    function wireYearJumps() {
+      Array.prototype.forEach.call(container.querySelectorAll('.cm-year-jump'), function (b) {
+        b.addEventListener('click', function () { state.year = b.dataset.year; state.limit = PAGE_SIZE; render(); });
+      });
     }
 
     function buildPills() {
@@ -121,6 +192,7 @@
       Array.prototype.forEach.call(pillsEl.querySelectorAll('.cm-pill'), function (btn) {
         btn.addEventListener('click', function () {
           state.body = btn.dataset.body;
+          state.limit = PAGE_SIZE;
           if (history.replaceState) {
             history.replaceState(null, '',
               state.body === 'all' ? location.pathname + location.search : '#' + state.body);
@@ -150,7 +222,7 @@
       }).join('');
 
       Array.prototype.forEach.call(yearPillsEl.querySelectorAll('.cm-pill'), function (btn) {
-        btn.addEventListener('click', function () { state.year = btn.dataset.year; render(); });
+        btn.addEventListener('click', function () { state.year = btn.dataset.year; state.limit = PAGE_SIZE; render(); });
       });
     }
 
@@ -174,12 +246,17 @@
 
         buildPills();
         buildYearPills();
+        // A long history opens on the year of the most recent past meeting, not all ~800 rows.
+        // "All" is still one click away.
+        var yr = defaultYear(ALL);
+        if (yearPillsEl && yearRowEl && !yearRowEl.hidden && yr) state.year = yr;
         applyHash();
         if (controls) controls.hidden = false;
 
         if (minutesToggle) {
           minutesToggle.addEventListener('change', function (e) {
             state.minutesOnly = e.target.checked;
+            state.limit = PAGE_SIZE;
             render();
           });
         }
@@ -192,16 +269,27 @@
             ? (global.dataStamp ? global.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt)
             : null;
           var url = meta.sourceUrl || sourceFallback;
+          var fresh = '';
+          var F = global.VotegaFreshness;
+          if (when && F) {
+            fresh = F.suffix('local-government', meta.generatedAt);
+            // A site we cannot scrape never refreshes on its own: flag it outright.
+            if (opts.botProtected && fresh.indexOf('stale-flag') === -1) {
+              fresh += ' <span class="stale-flag" title="This site blocks automated access, so its meetings are updated by hand."><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> older than usual</span>';
+            }
+          }
+          var latest = latestMeetingDate(ALL);
           sourceEl.innerHTML =
             'Aggregated from the ' +
             (url ? '<a href="' + esc(url) + '" target="_blank" rel="noopener">official ' + esc(opts.placeName || 'source') + ' site</a>' : 'official source') +
-            '.' + (when ? ' Updated ' + esc(when) + '.' : '');
+            '.' + (when ? ' Checked ' + esc(when) + fresh + '.' : '') +
+            (latest ? ' Most recent meeting on file: ' + esc(global.dataStamp ? global.dataStamp.formatDate(latest) : latest) + '.' : '');
         }
       })
       .catch(function (err) {
         if (global.console) console.error(err);
         container.innerHTML =
-          '<p style="color:#555;">We’re working to link agendas and minutes to this ' +
+          '<p style="color:var(--color-text-secondary);">We’re working to link agendas and minutes to this ' +
           'page for ease of viewing and navigation. You can always view agendas and ' +
           'minutes directly on the ' +
           (sourceFallback
@@ -211,5 +299,21 @@
       });
   }
 
-  global.LocalMeetings = { init: init };
+  // Newest meeting dated today or earlier (YYYY-MM-DD), or null. Later dates are scheduled
+  // meetings, not ones that have happened, so they do not answer "is the last one here?".
+  function latestMeetingDate(meetings) {
+    var d = new Date();
+    var today = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    var best = null;
+    (meetings || []).forEach(function (m) {
+      var v = m && m.date;
+      if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v)) {
+        v = v.slice(0, 10);
+        if (v <= today && (!best || v > best)) best = v;
+      }
+    });
+    return best;
+  }
+
+  global.LocalMeetings = { init: init, latestMeetingDate: latestMeetingDate, defaultYear: defaultYear };
 })(window);

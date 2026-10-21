@@ -263,16 +263,16 @@ test('chartHtml renders nothing with no votes', () => {
 });
 
 test('chartHtml uses the chart palette, not the table text colors', () => {
-  // Regression guard: the pie slices are #16a34a / #dc2626 / #9ca3af, deliberately
-  // lighter than the .vote-yea (#1a7a1a) and .vote-nay (#b00020) text colors. An
-  // extraction of this function once swapped in the text colors, which a snapshot
-  // diff of the rendered panel caught; this keeps it caught here instead.
+  // Regression guard: the pie slices use the success / danger / muted tokens, not the
+  // .vote-yea and .vote-nay table text colors. An extraction of this function once
+  // swapped in the text colors, which a snapshot diff of the rendered panel caught;
+  // this keeps it caught here instead. Tokens go in through style="fill:var(...)".
   const html = VT.chartHtml(6, 3, 1, 10, {});
-  assert.ok(html.includes('#16a34a'), 'yea slice color');
-  assert.ok(html.includes('#dc2626'), 'nay slice color');
-  assert.ok(html.includes('#9ca3af'), 'other slice color');
-  assert.ok(!html.includes('#1a7a1a'), 'must not use the .vote-yea text color');
-  assert.ok(!html.includes('#b00020'), 'must not use the .vote-nay text color');
+  assert.ok(html.includes('fill:var(--color-success)'), 'yea slice color');
+  assert.ok(html.includes('fill:var(--color-danger)'), 'nay slice color');
+  assert.ok(html.includes('fill:var(--color-text-muted)'), 'other slice color');
+  assert.ok(!html.includes('vote-yea'), 'must not use the .vote-yea text color');
+  assert.ok(!html.includes('vote-nay'), 'must not use the .vote-nay text color');
 });
 
 test('filterRowHtml wires its labels to the ids it was given', () => {

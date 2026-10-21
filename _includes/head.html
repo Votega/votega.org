@@ -101,6 +101,10 @@
     {% endfor %}
   {% endif %}
 
+  {%- comment -%} Brand tokens load before every other first-party stylesheet so the theme's
+      config variables (page-col, link-col, ...) can reference the role tokens. {%- endcomment -%}
+  <link rel="stylesheet" href="{{ '/assets/css/tokens.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+
   {% if layout.common-css %}
     {% for css in layout.common-css %}
       <link rel="stylesheet" href="{{ css | relative_url }}">
@@ -199,10 +203,14 @@
   <link rel="stylesheet" href="{{ "/assets/css/staticman.css" | relative_url }}">
   {% endif %}
 
-  {% assign favicon_exists = site.static_files | where: "path", "/favicon.ico" | size %}
-  {% if favicon_exists == 1 %}
-  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" />
-  {% endif %}
+  {%- comment -%} Georgia-outline favicon set (never the peach). favicon.ico stays at the site
+      root for crawlers that request it without reading the page. {%- endcomment -%}
+  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/img/brand/favicon/favicon.svg' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/img/brand/favicon/favicon-32.png' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/img/brand/favicon/favicon-16.png' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/img/brand/favicon/apple-touch-icon.png' | relative_url }}">
+  <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
 
   {% if page.head-extra %}
     {% for file in page.head-extra %}
@@ -214,6 +222,10 @@
 
   {%- comment %} Shared front-end helpers (getBasePath, …). Loaded synchronously in
       <head> so it is defined before any page's inline scripts run. {% endcomment -%}
+  {%- comment %} Stale-stamp windows (_data/data_freshness.yml) and the day each dataset was last
+      checked (_data/freshness/*.json, written by the update workflows) for assets/scripts/freshness.js. {% endcomment -%}
+  <script>window.VOTEGA_FRESHNESS = { windows: {{ site.data.data_freshness.datasets | jsonify }}, checked: { {% for f in site.data.freshness %}{{ f[0] | jsonify }}: {{ f[1].checkedAt | jsonify }}{% unless forloop.last %}, {% endunless %}{% endfor %} } };</script>
+  <script src="{{ '/assets/scripts/freshness.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   <script src="{{ '/assets/scripts/votega-core.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   <!-- Resolves entity ids to their clean URLs so pages can link straight to
        /ga-legislators/<slug>/ etc. instead of the legacy query-string shells

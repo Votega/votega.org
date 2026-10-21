@@ -464,23 +464,23 @@ window.CampaignFinance = (function () {
   // two members comparable.
   const FUNDING_GROUPS = [
     {
-      key: 'small', label: 'Small donors (under $200)', color: '#15803d',
+      key: 'small', label: 'Small donors (under $200)', color: 'var(--chart-pine)',
       parts: ['individualUnitemized'],
       // Contributions from donors whose cycle total stays at or under $200. The
       // FEC does not require these to be itemized, so no name, employer or date
       // is disclosed for any of it -- it is a sum, not a list of people.
     },
-    { key: 'itemized', label: 'Individuals ($200 and up)', color: '#4ade80',
+    { key: 'itemized', label: 'Individuals ($200 and up)', color: 'var(--chart-sage)',
       parts: ['individualItemized'] },
-    { key: 'pac',      label: 'PACs and other committees', color: '#b45309',
+    { key: 'pac',      label: 'PACs and other committees', color: 'var(--chart-clay)',
       parts: ['pac'] },
-    { key: 'party',    label: 'Party committees', color: '#a16207',
+    { key: 'party',    label: 'Party committees', color: 'var(--chart-gold)',
       parts: ['party'] },
-    { key: 'transfers', label: 'Transfers from the candidate\u2019s other committees', color: '#1d4ed8',
+    { key: 'transfers', label: 'Transfers from the candidate\u2019s other committees', color: 'var(--chart-teal)',
       parts: ['transfers'] },
-    { key: 'self',     label: 'The candidate (contributions and loans)', color: '#6d28d9',
+    { key: 'self',     label: 'The candidate (contributions and loans)', color: 'var(--chart-slate)',
       parts: ['candidateSelf', 'candidateLoans'] },
-    { key: 'other',    label: 'Other receipts', color: '#9ca3af',
+    { key: 'other',    label: 'Other receipts', color: 'var(--chart-gray)',
       parts: ['otherLoans', 'offsets', 'otherReceipts'] },
   ];
 
@@ -510,7 +510,7 @@ window.CampaignFinance = (function () {
     if (remainder > 1000 && remainder / receipts > 0.005) {
       const other = rows.find(r => r.label === 'Other receipts');
       if (other) other.amount += remainder;
-      else rows.push({ label: 'Other receipts', color: '#9ca3af', amount: remainder });
+      else rows.push({ label: 'Other receipts', color: 'var(--chart-gray)', amount: remainder });
     }
 
     rows.sort((a, b) => b.amount - a.amount);
@@ -651,15 +651,15 @@ window.CampaignFinance = (function () {
   // Short labels for PeachFile's contributor categories; an unknown code falls back to
   // the Commission's own label so a new category still renders rather than vanishing.
   const GA_TYPE_STYLE = {
-    TIND: { label: 'Individuals',               color: '#2563eb' },
-    TBSN: { label: 'Corporations & businesses', color: '#d97706' },
-    TNCC: { label: 'Political committees',      color: '#7c3aed' },
-    TCNCC: { label: 'Other candidates & campaigns', color: '#0d9488' },
-    TSELF: { label: 'Candidate (self-funded)',   color: '#be185d' },
-    TSPDC: { label: 'Spouse / dependent child',  color: '#65a30d' },
-    TLOB:  { label: 'Lobbyists',                 color: '#9ca3af' },
+    TIND: { label: 'Individuals',               color: 'var(--chart-pine)' },
+    TBSN: { label: 'Corporations & businesses', color: 'var(--chart-gold)' },
+    TNCC: { label: 'Political committees',      color: 'var(--chart-clay)' },
+    TCNCC: { label: 'Other candidates & campaigns', color: 'var(--chart-teal)' },
+    TSELF: { label: 'Candidate (self-funded)',   color: 'var(--chart-slate)' },
+    TSPDC: { label: 'Spouse / dependent child',  color: 'var(--chart-peach)' },
+    TLOB:  { label: 'Lobbyists',                 color: 'var(--chart-gray)' },
   };
-  const GA_FALLBACK_COLORS = ['#0d9488', '#be185d', '#65a30d', '#9ca3af'];
+  const GA_FALLBACK_COLORS = ['var(--chart-teal)', 'var(--chart-slate)', 'var(--chart-peach)', 'var(--chart-gray)'];
 
   function exactMoney(n) {
     return '$' + Math.round(n).toLocaleString('en-US');
@@ -670,16 +670,16 @@ window.CampaignFinance = (function () {
     const st = document.createElement('style');
     st.id = 'ga-donors-css';
     st.textContent =
-      '.gad h3{font-size:0.88rem;margin:1.25rem 0 0.25rem;color:#374151;}'
-      + '.gad-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#e5e7eb;margin:0.5rem 0;}'
+      '.gad h3{font-size:0.88rem;margin:1.25rem 0 0.25rem;color:var(--color-text-secondary);}'
+      + '.gad-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--color-border-subtle);margin:0.5rem 0;}'
       + '.gad-bar span{display:block;height:100%;}'
       + '.gad-sw{display:inline-block;width:0.7rem;height:0.7rem;border-radius:2px;margin-right:0.4rem;}'
       + '.gad table.gad-tbl{width:100%;border-collapse:collapse;font-size:0.85rem;margin-top:0.5rem;}'
-      + '.gad table.gad-tbl th{text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.04em;color:#6b7280;'
-      + 'padding:0.3rem 0.5rem 0.3rem 0;border-bottom:1px solid #e5e7eb;}'
-      + '.gad table.gad-tbl td{padding:0.35rem 0.5rem 0.35rem 0;border-bottom:1px solid #f3f4f6;color:#111;}'
+      + '.gad table.gad-tbl th{text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--color-text-muted);'
+      + 'padding:0.3rem 0.5rem 0.3rem 0;border-bottom:1px solid var(--color-border);}'
+      + '.gad table.gad-tbl td{padding:0.35rem 0.5rem 0.35rem 0;border-bottom:1px solid var(--color-border-subtle);color:var(--color-text);}'
       + '.gad td:last-child,.gad th:last-child{text-align:right;}'
-      + '.gad td.gad-place{color:#6b7280;}';
+      + '.gad td.gad-place{color:var(--color-text-muted);}';
     document.head.appendChild(st);
   }
 
@@ -735,12 +735,15 @@ window.CampaignFinance = (function () {
     return html;
   }
 
-  function provenanceLine(sourceName, generatedAt) {
+  // `dataset` (a key in _data/data_freshness.yml) adds the "checked" note and the
+  // "older than usual" flag from freshness.js; omit it for a line that is never flagged.
+  function provenanceLine(sourceName, generatedAt, dataset) {
     if (!generatedAt) return '';
     const d = new Date(generatedAt);
     if (isNaN(d)) return '';
     const when = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    return '<p class="finance-meta">Finance data from ' + sourceName + ', updated ' + when + '.</p>';
+    const fresh = (dataset && window.VotegaFreshness) ? window.VotegaFreshness.suffix(dataset, generatedAt) : '';
+    return '<p class="finance-meta">Finance data from ' + sourceName + ', updated ' + when + fresh + '.</p>';
   }
 
   return {

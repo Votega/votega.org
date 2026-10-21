@@ -23,6 +23,17 @@
     <div class="row">
       <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
         <div class="{{ include.type }}-heading">
+          {%- if page.hero-logo -%}
+          {%- comment -%} Brand lockup in place of the title + subtitle (home page). Tier 1 with
+              the tagline; the no-tagline mark below ~360px where the tagline would be unreadable.
+              The h1 keeps the page heading in the outline and the alt text names the tagline. {%- endcomment -%}
+          <h1 class="hero-logo">
+            <picture>
+              <source media="(max-width: 359px)" srcset="{{ '/assets/img/brand/logo/svg/votega-horizontal-notagline.svg' | relative_url }}">
+              <img src="{{ '/assets/img/brand/logo/svg/votega-horizontal.svg' | relative_url }}" alt="{{ page.title | strip_html }}: {{ page.subtitle | strip_html }}" width="636" height="178">
+            </picture>
+          </h1>
+          {%- else -%}
           <h1>{% if page.title %}{{ page.title | strip_html }}{% else %}<br/>{% endif %}</h1>
           {% if page.subtitle %}
             {% if include.type == "page" %}
@@ -32,6 +43,7 @@
               <h2 class="{{ include.type }}-subheading">{{ page.subtitle | strip_html }}</h2>
             {% endif %}
           {% endif %}
+          {%- endif -%}
           
           {% if include.type == "post" %} 
             {% if page.author %}

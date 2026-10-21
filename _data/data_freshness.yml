@@ -1,0 +1,51 @@
+# How old a dataset may be before its "last updated" stamp should read "older than usual".
+# Read by assets/scripts/freshness.js (via window.VOTEGA_FRESHNESS in head.html) and by
+# _includes/data-freshness.html. Each update workflow records the day it last checked its source
+# (scripts/record_data_checked.py -> _data/freshness/<dataset>.json); the rule measures from the
+# newer of a dataset's own stamp and that day. Adding a dataset: add it here, then call the
+# recorder from its workflow and pass its key where the page prints the stamp.
+#
+#   window_days  amber "older than usual" once the dataset's stamp is older than this
+#   never        true = this dataset is never flagged and shows no stale label. These files are
+#                hand-maintained or event-driven; their age says nothing about whether they are
+#                current. Where a page used to print their date, that stamp was removed.
+#
+# Windows are roughly twice the update cadence plus slack, from the workflow cron schedules.
+# Some generators keep an unchanged generatedAt (or skip the commit when only it moved), so a quiet
+# dataset's stamp is old even though its job ran; that is what the recorded check day covers.
+
+datasets:
+  # --- Daily ---
+  current-members:           { window_days: 3,  cadence: "daily 06:00 UTC",  note: "federal roster" }
+  ga-members:                { window_days: 3,  cadence: "daily 07:00 UTC",  note: "state roster" }
+  federal-sponsorship-index: { window_days: 3,  cadence: "daily, with the federal roster" }
+  ga-executive-orders:       { window_days: 3,  cadence: "twice daily",      note: "stamp is date-only and kept when unchanged; the recorded check covers it" }
+  # --- Twice weekly ---
+  curated-ga-bill-votes:     { window_days: 6,  cadence: "Tue/Thu" }
+  local-government:          { window_days: 5,  cadence: "Mon/Thu 08:40 UTC", note: "per-place meetings files; bot_protected places count as stale at once" }
+  # --- Weekly ---
+  ga-bills:                  { window_days: 10, cadence: "weekly (Sun)" }
+  ga-member-votes:           { window_days: 10, cadence: "weekly (Mon)" }
+  federal-member-votes:      { window_days: 10, cadence: "weekly (Sun)" }
+  ga-campaign-finance:       { window_days: 10, cadence: "weekly (Sun)",      note: "PeachFile" }
+  ga-fec-data:               { window_days: 10, cadence: "weekly (Sun)",      note: "FEC" }
+
+  # --- Infrequent: 90-day window ---
+  # These change rarely, so the window is a prompt to LOOK, not a verdict: if one trips, check
+  # whether the data is actually behind or simply has not changed, then adjust the window.
+  # The stamp is "content last changed"; "checked <date>" is the last time someone/something
+  # confirmed the source. Automated ones record it from their workflow; manual ones are recorded
+  # by hand when reviewed (Actions > "Record data review", or scripts/record_data_checked.py).
+  scotus-decisions:          { window_days: 90, cadence: "weekly job, few changes", note: "SCOTUS decisions (generated)" }
+  ga-congress-trades:        { window_days: 90, cadence: "weekly (Sun) job; filings are irregular", note: "stock trade disclosures (generated)" }
+  ga-ballot-measures:        { window_days: 90, review: manual, note: "curated by hand; record a review when you verify it against the SoS and General Assembly" }
+  ga-election-calendar:      { window_days: 90, review: manual, note: "curated by hand from the SoS calendar; record a review when you verify it" }
+
+  # --- Never flagged: hand-maintained / event-driven ---
+  ga-executive:              { never: true, note: "13 statewide elected officials; changes after an election or a mid-term vacancy. Stamp removed from the page." }
+  supreme-court:             { never: true, note: "justice roster; changes only on a vacancy. Stamp removed from the page." }
+  executive:                 { never: true, note: "federal executive roster (_data/executive.json); changes with an administration." }
+  ga-legislative-candidates: { never: true, note: "candidate input for the race builder; event-driven. No stamp on any page." }
+  # --- Never flagged: closed or historical ---
+  ga-campaign-finance-history: { never: true, note: "legacy filings through 2025-12-31; not shown on any page." }
+  ga-executive-orders-closed-years: { never: true, note: "2020-2025 year files; a closed year does not change." }

@@ -14,16 +14,16 @@
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    background: #f3f4f6;
+    background: var(--color-surface-chrome);
     flex-shrink: 0;
-    border: 2px solid #e5e7eb;
+    border: 2px solid var(--color-border-subtle);
   }
   .justice-profile-info { flex: 1; min-width: 220px; }
   .justice-profile-title {
     font-size: 0.75rem;
     font-weight: bold;
     text-transform: uppercase;
-    color: #888;
+    color: var(--color-text-muted);
     letter-spacing: 0.04em;
     margin-bottom: 0.3rem;
   }
@@ -32,24 +32,24 @@
     margin: 0 0 0.6rem 0;
     font-size: 1.6rem;
     font-weight: 700;
-    color: #111;
+    color: var(--color-text);
     line-height: 1.2;
   }
   .justice-meta-row {
     font-size: 0.85rem;
-    color: #555;
+    color: var(--color-text-secondary);
     margin-bottom: 0.3rem;
     display: flex;
     gap: 0.4rem;
     align-items: baseline;
     flex-wrap: wrap;
   }
-  .justice-meta-label { color: #9ca3af; font-size: 0.78rem; }
+  .justice-meta-label { color: var(--color-text-muted); font-size: 0.78rem; }
   .back-link {
     display: inline-block;
     margin-bottom: 1.25rem;
     font-size: 0.875rem;
-    color: #1d4ed8;
+    color: var(--color-link);
     text-decoration: none;
   }
   .back-link:hover { text-decoration: underline; }
@@ -58,14 +58,14 @@
   .tab-bar {
     display: flex;
     gap: 0;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--color-border-subtle);
     margin-bottom: 1.5rem;
   }
   .tab-btn {
     padding: 0.5rem 1.1rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--color-text-muted);
     background: none;
     border: none;
     border-bottom: 2px solid transparent;
@@ -73,8 +73,8 @@
     cursor: pointer;
     transition: color 0.15s, border-color 0.15s;
   }
-  .tab-btn:hover { color: #374151; }
-  .tab-btn.active { color: #1d4ed8; border-bottom-color: #1d4ed8; }
+  .tab-btn:hover { color: var(--color-text); }
+  .tab-btn.active { color: var(--color-link); border-bottom-color: var(--color-accent); }
 
   /* A non-wrapping flex row of tabs runs off the side of a phone: four tabs
      measured 376px inside a 326px container, so the last one was clipped at the
@@ -91,11 +91,11 @@
   .tab-panel.active { display: block; }
 
   /* Voting record */
-  .votes-meta { font-size: 0.8rem; color: #6b7280; margin-bottom: 1rem; }
+  .votes-meta { font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 1rem; }
   .vote-record-list { list-style: none; padding: 0; margin: 0; }
   .vote-record-item {
     padding: 0.85rem 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
   .vote-record-item:last-child { border-bottom: none; }
   .vr-header {
@@ -108,12 +108,12 @@
   .vr-case-name {
     font-weight: 700;
     font-size: 0.95rem;
-    color: #1d4ed8;
+    color: var(--color-link);
     text-decoration: none;
   }
   .vr-case-name:hover { text-decoration: underline; }
-  .vr-docket { font-size: 0.75rem; color: #9ca3af; }
-  .vr-meta { font-size: 0.78rem; color: #9ca3af; margin-bottom: 0.35rem; }
+  .vr-docket { font-size: 0.75rem; color: var(--color-text-muted); }
+  .vr-meta { font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: 0.35rem; }
   .vote-badge {
     display: inline-block;
     padding: 0.15rem 0.55rem;
@@ -121,25 +121,25 @@
     font-size: 0.75rem;
     font-weight: 700;
   }
-  .badge-majority    { background: #dcfce7; color: #166534; }
-  .badge-minority    { background: #fee2e2; color: #991b1b; }
-  .badge-concurrence { background: #fef9c3; color: #854d0e; }
-  .badge-other       { background: #f3f4f6; color: #6b7280; }
-  .vr-desc { font-size: 0.82rem; color: #444; line-height: 1.5; margin-top: 0.3rem; }
+  .badge-majority    { background: var(--color-success-tint); color: var(--color-success); }
+  .badge-minority    { background: var(--color-danger-tint); color: var(--color-danger); }
+  .badge-concurrence { background: var(--color-warning-tint); color: var(--color-warning); }
+  .badge-other       { background: var(--color-surface-chrome); color: var(--color-text-muted); }
+  .vr-desc { font-size: 0.82rem; color: var(--color-text); line-height: 1.5; margin-top: 0.3rem; }
   .load-more-btn {
     display: block;
     width: 100%;
     margin-top: 1rem;
     padding: 0.5rem;
     background: none;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     font-size: 0.875rem;
-    color: #374151;
+    color: var(--color-text);
     cursor: pointer;
     transition: background 0.15s;
   }
-  .load-more-btn:hover { background: #f3f4f6; }
+  .load-more-btn:hover { background: var(--color-surface-chrome); }
 
   /* Biography */
   .bio-section { margin-bottom: 1.5rem; }
@@ -147,27 +147,27 @@
     font-size: 0.85rem;
     font-weight: bold;
     text-transform: uppercase;
-    color: #9ca3af;
+    color: var(--color-text-muted);
     letter-spacing: 0.04em;
     margin-bottom: 0.5rem;
   }
   .bio-text {
     font-size: 0.9rem;
-    color: #374151;
+    color: var(--color-text);
     line-height: 1.65;
   }
   .bio-roles-list {
     list-style: disc;
     padding-left: 1.25rem;
     font-size: 0.87rem;
-    color: #374151;
+    color: var(--color-text);
     line-height: 1.7;
   }
   .oyez-link {
     display: inline-block;
     margin-top: 0.75rem;
     font-size: 0.8rem;
-    color: #6b7280;
+    color: var(--color-text-muted);
     text-decoration: none;
   }
   .oyez-link:hover { text-decoration: underline; }
@@ -181,7 +181,7 @@
 <a class="back-link" id="backLink" href="{{ '/supreme-court.html' | relative_url }}">← Supreme Court</a>
 
 <div id="justiceContent">
-  <p style="color:#777;font-size:0.9rem;">Loading...</p>
+  <p style="color:var(--color-text-muted);font-size:0.9rem;">Loading...</p>
 </div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -204,8 +204,8 @@
   }
 
   function partyColor(party) {
-    if (!party) return '#6b7280';
-    return party.toLowerCase().includes('democrat') ? '#1d4ed8' : '#dc2626';
+    if (!party) return 'var(--color-text-muted)';
+    return party.toLowerCase().includes('democrat') ? 'var(--color-party-d)' : 'var(--color-party-r)';
   }
 
   function voteBadge(vote, opinionType) {
@@ -226,7 +226,7 @@
     const hasMore = slice.length < relevant.length;
 
     if (relevant.length === 0) {
-      container.innerHTML = '<p style="color:#777;font-size:0.875rem;">No decisions found for this justice in the current dataset.</p>';
+      container.innerHTML = '<p style="color:var(--color-text-muted);font-size:0.875rem;">No decisions found for this justice in the current dataset.</p>';
       return;
     }
 
@@ -264,7 +264,7 @@
   }
 
   async function loadBiography(container, oyezId) {
-    container.innerHTML = '<p style="color:#777;font-size:0.875rem;">Loading biography…</p>';
+    container.innerHTML = '<p style="color:var(--color-text-muted);font-size:0.875rem;">Loading biography…</p>';
     // Bound the wait on Oyez so a slow third party degrades to the fallback in
     // seconds instead of hanging on "Loading biography…" for the browser default.
     const timeout = new AbortController();
@@ -300,12 +300,12 @@
         </div>`;
       }
       if (!bio && !roles) {
-        html = '<p style="color:#777;font-size:0.875rem;">No biography available from Oyez.</p>';
+        html = '<p style="color:var(--color-text-muted);font-size:0.875rem;">No biography available from Oyez.</p>';
       }
       html += `<a class="oyez-link" href="https://www.oyez.org/justices/${oyezId}" target="_blank" rel="noopener">View full profile on Oyez →</a>`;
       container.innerHTML = html;
     } catch (err) {
-      container.innerHTML = `<p style="color:#777;font-size:0.875rem;">Could not load biography. <a href="https://www.oyez.org/justices/${oyezId}" target="_blank" rel="noopener">View on Oyez →</a></p>`;
+      container.innerHTML = `<p style="color:var(--color-text-muted);font-size:0.875rem;">Could not load biography. <a href="https://www.oyez.org/justices/${oyezId}" target="_blank" rel="noopener">View on Oyez →</a></p>`;
     } finally {
       clearTimeout(timer);
     }
@@ -328,7 +328,7 @@
     function showError(message) {
       content.innerHTML =
         `<h1>Justice unavailable</h1>` +
-        `<p role="alert" style="color:#c00;">${escHtml(message)}</p>` +
+        `<p role="alert" style="color:var(--color-warning);">${escHtml(message)}</p>` +
         `<p><a href="${base}supreme-court.html">&larr; Back to the Supreme Court</a></p>`;
     }
 
@@ -372,7 +372,7 @@
             <div class="justice-meta-row">
               <span class="justice-meta-label">Confirmed</span>
               <span>${fmt(justice.confirmationDate)}</span>
-              <span style="color:#9ca3af;">·</span>
+              <span style="color:var(--color-text-muted);">·</span>
               <span>${justice.confirmationVote.yeas}–${justice.confirmationVote.nays}</span>
             </div>
             <div class="justice-meta-row">
@@ -400,7 +400,7 @@
       const panelsHtml = `
         <div id="tab-voting" class="tab-panel active">
           <h2 class="sr-only">Voting Record</h2>
-          <div id="vrContainer"><p style="color:#777;font-size:0.875rem;">Loading…</p></div>
+          <div id="vrContainer"><p style="color:var(--color-text-muted);font-size:0.875rem;">Loading…</p></div>
         </div>
         <div id="tab-bio" class="tab-panel">
           <h2 class="sr-only">Biography</h2>

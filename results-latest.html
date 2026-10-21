@@ -44,7 +44,7 @@ share-description: "The most recent Georgia election results VoteGA.org has post
   <a href="{{ latest.url | relative_url }}">{{ latest.name }}</a>
   ({{ latest.date | date: "%B %-d, %Y" }})&hellip;
 </p>
-<p style="font-size:.85rem;color:#777;">
+<p style="font-size:.85rem;color:var(--color-text-muted);">
   Not redirected? <a href="{{ latest.url | relative_url }}">View the latest results</a>
   or see <a href="{{ '/results/' | relative_url }}">all Georgia election results</a>.
 </p>

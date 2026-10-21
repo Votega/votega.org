@@ -22,18 +22,18 @@ breadcrumb:
     margin: 1.25rem 0;
   }
   .bills-stat {
-    background: #f9f9f9;
-    border: 1px solid #e8e8e8;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 6px;
     padding: 0.65rem 0.9rem;
   }
-  .bills-stat-label { font-size: 0.75rem; color: #666; margin-bottom: 2px; }
-  .bills-stat-val   { font-size: 1.3rem; font-weight: 700; color: #222; }
-  .bills-stat-val.green  { color: #2d7a2d; }
-  .bills-stat-val.red    { color: #b91c1c; }
-  .bills-stat-val.blue   { color: #1a56a8; }
-  .bills-stat-val.orange { color: #c2410c; }
-  .bills-stat-sub   { font-size: 0.68rem; color: #aaa; margin-top: 2px; }
+  .bills-stat-label { font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 2px; }
+  .bills-stat-val   { font-size: 1.3rem; font-weight: 700; color: var(--color-text); }
+  .bills-stat-val.green  { color: var(--color-success); }
+  .bills-stat-val.red    { color: var(--color-danger); }
+  .bills-stat-val.blue   { color: var(--color-link); }
+  .bills-stat-val.orange { color: var(--color-danger); }
+  .bills-stat-sub   { font-size: 0.68rem; color: var(--color-text-muted); margin-top: 2px; }
 
   /* ── Filters ── */
   .bills-filter-row {
@@ -46,17 +46,17 @@ breadcrumb:
     flex: 1;
     min-width: 200px;
     padding: 0.45rem 0.75rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     font-size: 0.9rem;
   }
-  .bills-filter-row input:focus { outline: none; border-color: #1a56a8; box-shadow: 0 0 0 2px rgba(26,86,168,0.15); }
+  .bills-filter-row input:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) calc(0.15 * 100%), transparent); }
   .bills-filter-row select {
     padding: 0.45rem 0.6rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     font-size: 0.88rem;
-    background: #fff;
+    background: var(--color-surface-raised);
     /* A select with no width sizes itself to its longest OPTION, and the subject
        list carries full O.C.G.A. title names. #billSubject rendered 429px wide
        inside a 360px row on a phone, pushing the whole page 54px past the
@@ -71,7 +71,7 @@ breadcrumb:
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--color-border-subtle);
     margin: 0.75rem 0 0;
   }
   .bills-tab {
@@ -81,15 +81,15 @@ breadcrumb:
     cursor: pointer;
     font-size: 0.87rem;
     font-weight: 500;
-    color: #555;
+    color: var(--color-text-secondary);
     border-bottom: 3px solid transparent;
     margin-bottom: -2px;
     border-radius: 4px 4px 0 0;
     white-space: nowrap;
     transition: color 0.15s, border-color 0.15s;
   }
-  .bills-tab:hover { color: #1a56a8; }
-  .bills-tab.active { color: #1a56a8; border-bottom-color: #1a56a8; }
+  .bills-tab:hover { color: var(--color-link); }
+  .bills-tab.active { color: var(--color-link); border-bottom-color: var(--color-accent); }
 
   /* ── Status pills ── */
   .bills-status-bar {
@@ -100,24 +100,24 @@ breadcrumb:
   }
   .bills-status-btn {
     padding: 0.25rem 0.85rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-border);
     border-radius: 999px;
-    background: #fff;
+    background: var(--color-surface-raised);
     font-size: 0.82rem;
     cursor: pointer;
-    color: #555;
+    color: var(--color-text-secondary);
     transition: all 0.15s;
     white-space: nowrap;
   }
-  .bills-status-btn:hover { border-color: #1a56a8; color: #1a56a8; }
-  .bills-status-btn.active { background: #1a56a8; border-color: #1a56a8; color: #fff; font-weight: 600; }
+  .bills-status-btn:hover { border-color: var(--color-accent); color: var(--color-link); }
+  .bills-status-btn.active { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); font-weight: 600; }
   .bills-filter-hint {
     margin: -0.15rem 0 0.5rem;
     font-size: 0.78rem;
     line-height: 1.5;
-    color: #666;
+    color: var(--color-text-secondary);
   }
-  .bills-filter-hint strong { color: #6d28d9; font-weight: 600; }
+  .bills-filter-hint strong { color: var(--color-link); font-weight: 600; }
 
   /* ── Results bar ── */
   .bills-results-bar {
@@ -126,24 +126,24 @@ breadcrumb:
     justify-content: space-between;
     margin: 0.75rem 0 0.5rem;
     font-size: 0.85rem;
-    color: #666;
+    color: var(--color-text-secondary);
     flex-wrap: wrap;
     gap: 0.4rem;
   }
   .bills-results-bar select {
     font-size: 0.85rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     padding: 0.2rem 0.5rem;
-    background: #fff;
+    background: var(--color-surface-raised);
   }
 
   /* ── Bill cards ── */
   .bill-card {
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 7px;
     margin-bottom: 0.5rem;
-    background: #fff;
+    background: var(--color-surface-raised);
     overflow: hidden;
   }
   .bill-card-header {
@@ -151,7 +151,7 @@ breadcrumb:
     cursor: pointer;
     user-select: none;
   }
-  .bill-card-header:hover { background: #f5f8ff; }
+  .bill-card-header:hover { background: var(--color-surface-tint); }
 
   .bill-top-row {
     display: flex;
@@ -169,7 +169,7 @@ breadcrumb:
   .bill-id {
     font-size: 0.82rem;
     font-weight: 700;
-    color: #1a56a8;
+    color: var(--color-link);
   }
   .bill-status-badge {
     font-size: 0.7rem;
@@ -178,22 +178,22 @@ breadcrumb:
     border-radius: 999px;
     white-space: nowrap;
   }
-  .badge-signed   { background: #dcfce7; color: #166534; }
-  .badge-vetoed   { background: #fef3c7; color: #92400e; }
-  .badge-pending  { background: #ede9fe; color: #5b21b6; }
-  .badge-failed   { background: #fee2e2; color: #991b1b; }
-  .badge-passed   { background: #dbeafe; color: #1e40af; }
-  .badge-stalled  { background: #ffedd5; color: #9a3412; }
-  .badge-progress { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+  .badge-signed   { background: var(--color-success-tint); color: var(--color-success); }
+  .badge-vetoed   { background: var(--color-warning-tint); color: var(--color-warning); }
+  .badge-pending  { background: var(--color-surface-tint); color: var(--color-link); }
+  .badge-failed   { background: var(--color-danger-tint); color: var(--color-danger); }
+  .badge-passed   { background: var(--color-surface-tint); color: var(--color-link); }
+  .badge-stalled  { background: var(--color-warning-tint); color: var(--color-danger); }
+  .badge-progress { background: var(--color-surface-chrome); color: var(--color-text-secondary); border: 1px solid var(--color-border-subtle); }
 
   .bill-title {
     font-size: 0.93rem;
     line-height: 1.45;
-    color: #111;
+    color: var(--color-text);
     flex: 1;
   }
   .bill-chevron {
-    color: #aaa;
+    color: var(--color-text-muted);
     font-size: 1rem;
     flex-shrink: 0;
     margin-top: 0.1rem;
@@ -210,29 +210,29 @@ breadcrumb:
   }
   .bill-subject-tag {
     font-size: 0.72rem;
-    background: #f0f4ff;
-    color: #3b5bdb;
+    background: var(--color-surface-tint);
+    color: var(--color-link);
     border-radius: 999px;
     padding: 1px 8px;
     font-weight: 500;
   }
-  .bill-meta-sep { color: #ccc; font-size: 0.75rem; }
-  .bill-meta-txt { font-size: 0.78rem; color: #666; }
+  .bill-meta-sep { color: var(--color-text-muted); font-size: 0.75rem; }
+  .bill-meta-txt { font-size: 0.78rem; color: var(--color-text-secondary); }
   .bill-vote-inline {
     font-size: 0.78rem;
-    color: #666;
+    color: var(--color-text-secondary);
     display: flex;
     align-items: center;
     gap: 3px;
   }
-  .vote-yes-txt { color: #2d7a2d; font-weight: 600; }
-  .vote-no-txt  { color: #b91c1c; font-weight: 600; }
+  .vote-yes-txt { color: var(--color-success); font-weight: 600; }
+  .vote-no-txt  { color: var(--color-danger); font-weight: 600; }
 
   /* ── Expanded detail ── */
   .bill-detail {
     display: none;
     padding: 0 1rem 0.9rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--color-border-subtle);
   }
   .bill-card.open .bill-detail { display: block; }
 
@@ -242,10 +242,10 @@ breadcrumb:
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #888;
+    color: var(--color-text-muted);
     margin-bottom: 4px;
   }
-  .detail-body { font-size: 0.875rem; color: #333; line-height: 1.55; }
+  .detail-body { font-size: 0.875rem; color: var(--color-text); line-height: 1.55; }
 
   .vote-bar-section { margin-top: 0.75rem; }
   .vote-bar-header {
@@ -257,28 +257,28 @@ breadcrumb:
   .vote-bar-track {
     height: 7px;
     border-radius: 4px;
-    background: #e5e7eb;
+    background: var(--color-surface-chrome);
     overflow: hidden;
     display: flex;
     margin-bottom: 2px;
   }
-  .vb-yes { background: #16a34a; }
-  .vb-oth { background: #9ca3af; }
-  .vb-no  { background: #dc2626; }
-  .vote-bar-sub { font-size: 0.72rem; color: #888; }
+  .vb-yes { background: var(--color-success); }
+  .vb-oth { background: var(--color-text-muted); }
+  .vb-no  { background: var(--color-danger); }
+  .vote-bar-sub { font-size: 0.72rem; color: var(--color-text-muted); }
   .vote-bar-party { font-size: 0.72rem; margin-top: 2px; }
   .party-line-tag {
     display: inline-block;
     font-size: 0.68rem;
     font-weight: 700;
-    color: #7c3aed;
-    background: #f3ebff;
+    color: var(--color-party-i-text);
+    background: var(--color-party-i-tint);
     border-radius: 999px;
     padding: 1px 7px;
     margin-left: 2px;
   }
-  .badge-partyline { background: #f3ebff; color: #6d28d9; }
-  .badge-session   { background: #fff4e0; color: #a35b00; }
+  .badge-partyline { background: var(--color-surface-tint); color: var(--color-link); }
+  .badge-session   { background: var(--color-warning-tint); color: var(--color-warning); }
 
   .detail-links {
     display: flex;
@@ -288,9 +288,9 @@ breadcrumb:
   }
   .detail-link {
     font-size: 0.82rem;
-    color: #1a56a8;
+    color: var(--color-link);
     text-decoration: none;
-    border: 1px solid #c7d7f5;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     padding: 3px 10px;
     display: inline-flex;
@@ -298,7 +298,7 @@ breadcrumb:
     gap: 4px;
     transition: background 0.15s;
   }
-  .detail-link:hover { background: #f0f4ff; }
+  .detail-link:hover { background: var(--color-surface-tint); }
 
   /* ── Pagination ── */
   .bills-pagination {
@@ -312,33 +312,33 @@ breadcrumb:
   .page-btn {
     min-width: 34px;
     padding: 4px 10px;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
-    background: #fff;
+    background: var(--color-surface-raised);
     font-size: 0.85rem;
     cursor: pointer;
-    color: #555;
+    color: var(--color-text-secondary);
     transition: all 0.15s;
   }
-  .page-btn:hover:not(:disabled) { border-color: #1a56a8; color: #1a56a8; }
-  .page-btn.active { background: #1a56a8; border-color: #1a56a8; color: #fff; font-weight: 600; }
+  .page-btn:hover:not(:disabled) { border-color: var(--color-accent); color: var(--color-link); }
+  .page-btn.active { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); font-weight: 600; }
   .page-btn:disabled { opacity: 0.4; cursor: default; }
-  .page-ellipsis { font-size: 0.85rem; color: #aaa; padding: 0 2px; }
+  .page-ellipsis { font-size: 0.85rem; color: var(--color-text-muted); padding: 0 2px; }
 
   /* ── States ── */
-  .bills-loading { padding: 2rem 0; color: #666; font-size: 0.9rem; }
-  .bills-error   { padding: 1rem; background: #fff5f5; border: 1px solid #fca5a5; border-radius: 6px; color: #991b1b; font-size: 0.9rem; margin: 1rem 0; }
-  .bills-notice  { padding: 0.75rem 1rem; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; color: #713f12; font-size: 0.875rem; margin: 1rem 0; }
+  .bills-loading { padding: 2rem 0; color: var(--color-text-secondary); font-size: 0.9rem; }
+  .bills-error   { padding: 1rem; background: var(--color-danger-tint); border: 1px solid var(--color-danger-line); border-radius: 6px; color: var(--color-danger); font-size: 0.9rem; margin: 1rem 0; }
+  .bills-notice  { padding: 0.75rem 1rem; background: var(--color-warning-tint); border: 1px solid var(--color-warning-line); border-radius: 6px; color: var(--color-warning); font-size: 0.875rem; margin: 1rem 0; }
   .bill-caption { margin-top: 0.5rem; }
-  .bill-caption > summary { font-size: 0.78rem; color: #6b7280; cursor: pointer; }
-  .bill-caption > summary:hover { color: #374151; }
+  .bill-caption > summary { font-size: 0.78rem; color: var(--color-text-muted); cursor: pointer; }
+  .bill-caption > summary:hover { color: var(--color-text); }
   .bill-caption .detail-body { margin-top: 0.35rem; }
-  .bills-empty   { padding: 2rem 1rem; text-align: center; color: #888; font-size: 0.9rem; border: 1px dashed #ddd; border-radius: 6px; }
+  .bills-empty   { padding: 2rem 1rem; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border: 1px dashed var(--color-border); border-radius: 6px; }
   .data-note     {
     font-size: 0.8rem;
-    color: #555;
-    background: #f5f7fb;
-    border: 1px solid #e0e6f0;
+    color: var(--color-text-secondary);
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     padding: 0.5rem 0.85rem;
     margin: 0.75rem 0 0.5rem;
@@ -394,16 +394,16 @@ breadcrumb:
 {%- assign r = site.data.rendered.ga_bills -%}
 <div id="billsLoading" class="bills-loading" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}">
   {%- if r and r.rows -%}
-    {% include data-freshness.html data=r noun="bills" %}
+    {% include data-freshness.html data=r noun="bills" dataset="ga-bills" %}
     <ul style="list-style:none;padding:0;margin:0;text-align:left;">
       {%- for b in r.rows -%}
-      <li style="padding:.4rem 0;border-bottom:1px solid #e5e7eb;">
+      <li style="padding:.4rem 0;border-bottom:1px solid var(--color-border-subtle);">
         <strong>{{ b.identifier | escape }}</strong>{% if b.title %} — {{ b.title | escape }}{% endif %}
-        {%- if b.status %} <span style="color:#6b7280;">· {{ b.status | escape }}</span>{% endif -%}
+        {%- if b.status %} <span style="color:var(--color-text-muted);">· {{ b.status | escape }}</span>{% endif -%}
       </li>
       {%- endfor -%}
     </ul>
-    {%- if r.count > r.shown %}<p style="color:#6b7280;font-size:.85rem;margin-top:.75rem;">Showing {{ r.shown }} of {{ r.count }} bills. The full, searchable list loads below.</p>{% endif -%}
+    {%- if r.count > r.shown %}<p style="color:var(--color-text-muted);font-size:.85rem;margin-top:.75rem;">Showing {{ r.shown }} of {{ r.count }} bills. The full, searchable list loads below.</p>{% endif -%}
   {%- else -%}
     Loading bill data…
   {%- endif -%}
@@ -638,8 +638,8 @@ breadcrumb:
     const pO     = Math.max(0, 100 - pY - pN);
     const ch     = v.chamber === 'lower' ? 'House' : 'Senate';
     const result = v.result === 'pass' ? 'Passed' : 'Failed';
-    // motionText is e.g. "Senate Vote #148 - 2025-2026 Regular Session"
-    // strip the session suffix to get a concise label like "Senate Vote #148"
+    // motionText is e.g. "Senate Vote var(--color-link) - 2025-2026 Regular Session"
+    // strip the session suffix to get a concise label like "Senate Vote var(--color-link)"
     const motionLabel = v.motionText
       ? v.motionText.replace(/\s*[-–]\s*\d{4}-\d{4}\s+Regular Session\s*$/i, '').trim()
       : ch + ' vote';
@@ -652,8 +652,8 @@ breadcrumb:
       const d = v.partyTally['Democratic'];
       const r = v.partyTally['Republican'];
       const parts = [];
-      if (d) parts.push('<span style="color:#2563eb;">Dem ' + d.yea + '-' + d.nay + '</span>');
-      if (r) parts.push('<span style="color:#dc2626;">Rep ' + r.yea + '-' + r.nay + '</span>');
+      if (d) parts.push('<span style="color:var(--color-party-d-text);">Dem ' + d.yea + '-' + d.nay + '</span>');
+      if (r) parts.push('<span style="color:var(--color-party-r-text);">Rep ' + r.yea + '-' + r.nay + '</span>');
       if (!parts.length) return '';
       const sound = partyLineIsSound(v);
       const missing = unaccountedVotes(v);
@@ -661,23 +661,23 @@ breadcrumb:
         ? ' <span class="party-line-tag">&#9889; Party-line vote</span>'
         : '';
       const caveat = coveragePct == null
-        ? ' <span style="color:#aaa;">(yea-nay by party; may not include every recorded vote)</span>'
+        ? ' <span style="color:var(--color-text-muted);">(yea-nay by party; may not include every recorded vote)</span>'
         : lowCoverage
-          ? ' <span style="color:#c00;">(yea-nay by party; only ' + coveragePct + '% of the official tally matched — too incomplete for a party-line call)</span>'
+          ? ' <span style="color:var(--color-warning);">(yea-nay by party; only ' + coveragePct + '% of the official tally matched — too incomplete for a party-line call)</span>'
           : (pli && pli.isPartyLine && !sound)
             // The parties did split in this tally, but not by enough to survive
             // the votes we could not attribute — so the claim is withheld and
             // the reason is stated rather than left to a bare percentage.
-            ? ' <span style="color:#aaa;">(yea-nay by party; ' + coveragePct + '% of the official tally — '
+            ? ' <span style="color:var(--color-text-muted);">(yea-nay by party; ' + coveragePct + '% of the official tally — '
               + missing + ' unmatched vote' + (missing === 1 ? '' : 's') + ', too close to call party-line)</span>'
-            : ' <span style="color:#aaa;">(yea-nay by party; ' + coveragePct + '% of the official tally)</span>';
+            : ' <span style="color:var(--color-text-muted);">(yea-nay by party; ' + coveragePct + '% of the official tally)</span>';
       return '<div class="vote-bar-sub" style="margin-top:0.2rem;">' + parts.join(' &nbsp;&middot;&nbsp; ')
         + caveat + tag + '</div>';
     })();
     return '<div class="vote-bar-section">'
       + '<div class="vote-bar-header">'
       + '<span class="vote-yes-txt">&#10003; ' + v.yea + ' yes</span>'
-      + '<span style="color:#888;font-size:0.78rem">' + escHtml(motionLabel) + ' &middot; ' + result + ' &middot; ' + escHtml(formatDate(v.date)) + '</span>'
+      + '<span style="color:var(--color-text-muted);font-size:0.78rem">' + escHtml(motionLabel) + ' &middot; ' + result + ' &middot; ' + escHtml(formatDate(v.date)) + '</span>'
       + '<span class="vote-no-txt">' + v.nay + ' no &#10007;</span>'
       + '</div>'
       + '<div class="vote-bar-track">'
@@ -865,8 +865,8 @@ breadcrumb:
       : '';
     const governorDetail = governorDetailHtml(bill);
     const links = '<div class="detail-links">'
-      + (bill.billUrl ? '<a class="detail-link" href="' + escHtml(bill.billUrl) + '" target="_blank" rel="noopener">&#128279; legis.ga.gov</a>' : '')
-      + (bill.textUrl ? '<a class="detail-link" href="' + escHtml(bill.textUrl) + '" target="_blank" rel="noopener">&#128196; Bill text</a>' : '')
+      + (bill.billUrl ? '<a class="detail-link" href="' + escHtml(bill.billUrl) + '" target="_blank" rel="noopener">&var(--color-link); legis.ga.gov</a>' : '')
+      + (bill.textUrl ? '<a class="detail-link" href="' + escHtml(bill.textUrl) + '" target="_blank" rel="noopener">&var(--color-link); Bill text</a>' : '')
       + '</div>';
 
     const anchorId = billAnchorId(bill.identifier);
@@ -1305,7 +1305,7 @@ breadcrumb:
       const coverageNote = withVotes && withParty < withVotes
         ? ' Party-line tags and Democrat/Republican vote tallies are still being backfilled. Available for ' + withParty.toLocaleString() + ' of ' + withVotes.toLocaleString() + ' bills with recorded votes, so some party-line votes may not yet be flagged.'
         : '';
-      elDataNote.innerHTML = 'Data from the Georgia General Assembly (legis.ga.gov), refreshed weekly. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote)
+      elDataNote.innerHTML = 'Data from the Georgia General Assembly (legis.ga.gov), refreshed weekly. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) + (window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-bills', meta.generatedAt) : '') : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote)
         // Published as open data (JSON/CSV/schema) in the ga-legislation repo —
         // the stable home, not the internal asset this page fetches. See CLAUDE.md.
         + ' Open data: <a href="https://github.com/Votega/ga-legislation" target="_blank" rel="noopener">Votega/ga-legislation</a>.';

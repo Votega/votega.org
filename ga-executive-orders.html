@@ -17,19 +17,20 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     align-items: center;
   }
   .filter-btn {
+    color: var(--color-text);
     padding: 0.3rem 0.75rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 20px;
-    background: #fff;
+    background: var(--color-surface-raised);
     cursor: pointer;
     font-size: 0.85rem;
     transition: background 0.15s, border-color 0.15s;
   }
-  .filter-btn:hover { background: #f0f0f0; }
+  .filter-btn:hover { background: var(--color-surface-chrome); }
   .filter-btn.active {
-    background: #1a1a2e;
-    color: #fff;
-    border-color: #1a1a2e;
+    background: var(--color-accent-strong);
+    color: var(--color-on-accent);
+    border-color: var(--color-text-muted);
   }
   .year-nav {
     display: flex;
@@ -38,22 +39,23 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     align-items: center;
   }
   .year-btn {
+    color: var(--color-text);
     padding: 0.25rem 0.6rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 4px;
-    background: #fff;
+    background: var(--color-surface-raised);
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: bold;
   }
   .year-btn.active {
-    background: #1a1a2e;
-    color: #fff;
-    border-color: #1a1a2e;
+    background: var(--color-accent-strong);
+    color: var(--color-on-accent);
+    border-color: var(--color-text-muted);
   }
   .order-count {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--color-text-secondary);
     margin-bottom: 0.75rem;
   }
   .order-table {
@@ -64,28 +66,28 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
   .order-table th {
     text-align: left;
     padding: 0.5rem 0.6rem;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid var(--color-border);
     font-size: 0.8rem;
     text-transform: uppercase;
-    color: #555;
+    color: var(--color-text-secondary);
     white-space: nowrap;
   }
   .order-table td {
     padding: 0.55rem 0.6rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border-subtle);
     vertical-align: top;
   }
-  .order-table tr:hover td { background: #fafafa; }
+  .order-table tr:hover td { background: var(--color-surface-sunken); }
   .order-date {
     white-space: nowrap;
-    color: #555;
+    color: var(--color-text-secondary);
     font-size: 0.85rem;
   }
   .order-num {
     white-space: nowrap;
-    color: #888;
+    color: var(--color-text-muted);
     font-size: 0.8rem;
-    font-family: monospace;
+    font-family: var(--font-mono);
   }
   .order-title a {
     text-decoration: none;
@@ -100,13 +102,13 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     font-weight: bold;
     white-space: nowrap;
   }
-  .badge-emergency   { background: #ffe0e0; color: #b00; }
-  .badge-election    { background: #fff3cd; color: #856404; }
-  .badge-suspension  { background: #f8d7da; color: #721c24; }
-  .badge-appointment { background: #e8f0fe; color: #1a56a8; }
-  .badge-flag        { background: #f0f0f0; color: #444; }
-  .badge-auth        { background: #e8f5e9; color: #2e7d32; }
-  .badge-other       { background: #f5f5f5; color: #555; }
+  .badge-emergency   { background: var(--color-danger-tint); color: var(--color-danger); }
+  .badge-election    { background: var(--color-warning-tint); color: var(--color-warning); }
+  .badge-suspension  { background: var(--color-danger-tint); color: var(--color-danger); }
+  .badge-appointment { background: var(--color-surface-tint); color: var(--color-link); }
+  .badge-flag        { background: var(--color-surface-chrome); color: var(--color-text); }
+  .badge-auth        { background: var(--color-success-tint); color: var(--color-success); }
+  .badge-other       { background: var(--color-surface-chrome); color: var(--color-text-secondary); }
 
   .cat-dot {
     display: inline-block;
@@ -120,7 +122,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
   .order-num-sm { display: none; }
   @media (max-width: 600px) {
     .order-num { display: none; }
-    .order-num-sm { display: block; margin-top: 0.15rem; color: #888; font-size: 0.75rem; font-family: monospace; }
+    .order-num-sm { display: block; margin-top: 0.15rem; color: var(--color-text-muted); font-size: 0.75rem; font-family: var(--font-mono); }
     .order-table th:nth-child(2) { display: none; }
   }
 </style>
@@ -177,7 +179,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     {%- comment -%} Server-rendered fallback; JS overwrites #orderBody. See scripts/build_render_data.py {%- endcomment -%}
     {%- assign r = site.data.rendered.ga_executive_orders -%}
     {%- if r and r.rows -%}
-      {%- if r.updated -%}<tr><td colspan="4" style="color:#6b7280;font-size:.85rem;">Last updated {% if r.updatedISO %}<time datetime="{{ r.updatedISO }}">{{ r.updated }}</time>{% else %}{{ r.updated }}{% endif %}{% if r.count %} · {{ r.count }} orders{% endif %}</td></tr>{%- endif -%}
+      {%- if r.updated -%}<tr><td colspan="4" style="color:var(--color-text-muted);font-size:.85rem;">Last updated {% if r.updatedISO %}<time datetime="{{ r.updatedISO }}">{{ r.updated }}</time>{% else %}{{ r.updated }}{% endif %}{% if r.count %} · {{ r.count }} orders{% endif %}</td></tr>{%- endif -%}
       {%- for o in r.rows -%}
       <tr><td>{{ o.date | escape }}</td><td>{{ o.number | escape }}</td><td>{{ o.title | escape }}</td><td>{{ o.category | escape }}</td></tr>
       {%- endfor -%}
@@ -187,7 +189,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
   </tbody>
 </table>
 
-<p style="margin-top:1rem;font-size:0.8rem;color:#888;" id="dataSource"></p>
+<p style="margin-top:1rem;font-size:0.8rem;color:var(--color-text-muted);" id="dataSource"></p>
 
 <script>
   // update-ga-executive-orders.yml writes assets/data/ga-executive-orders-$(date +%Y).json
@@ -212,16 +214,16 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     'Other':              'badge-other',
   };
 
-  // Saturated dot colors visible on both white and dark (#1a1a2e) button backgrounds
+  // Saturated dot colors visible on both white and dark (var(--color-text)) button backgrounds
   const CATEGORY_DOT = {
-    'All':                '#888',
-    'State of Emergency': '#cc0000',
-    'Writ of Election':   '#b45309',
-    'Suspension':         '#9b1c1c',
-    'Appointment':        '#1a56a8',
-    'Flag at Half-Staff': '#6b7280',
-    'Authorization':      '#15803d',
-    'Other':              '#6b7280',
+    'All':                'var(--color-text-muted)',
+    'State of Emergency': 'var(--color-danger)',
+    'Writ of Election':   'var(--color-warning)',
+    'Suspension':         'var(--color-danger)',
+    'Appointment':        'var(--color-link)',
+    'Flag at Half-Staff': 'var(--color-text-muted)',
+    'Authorization':      'var(--color-success)',
+    'Other':              'var(--color-text-muted)',
   };
 
   let allOrders = [];
@@ -244,7 +246,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
       `Showing ${orders.length} order${orders.length !== 1 ? 's' : ''}`;
 
     if (!orders.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="color:#888;padding:1rem;">No orders match this filter.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" style="color:var(--color-text-muted);padding:1rem;">No orders match this filter.</td></tr>';
       return;
     }
 
@@ -280,7 +282,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     const bar = document.getElementById('filterBar');
     bar.innerHTML = categories.map(cat => {
       const label    = cat === 'All' ? `All (${orders.length})` : `${cat} (${counts[cat]})`;
-      const dotColor = CATEGORY_DOT[cat] || '#888';
+      const dotColor = CATEGORY_DOT[cat] || 'var(--color-text-muted)';
       return `<button class="filter-btn${cat === activeCategory ? ' active' : ''}" data-cat="${cat}">${label}<span class="cat-dot" style="background:${dotColor}"></span></button>`;
     }).join('');
 
@@ -324,7 +326,12 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
       const src = document.getElementById('dataSource');
       const eoUpdated = data.metadata?.updatedAt;
       const stamp = eoUpdated && window.dataStamp ? window.dataStamp.formatDate(eoUpdated) : (eoUpdated || year);
-      src.textContent = `Source: gov.georgia.gov · Data as of: ${stamp} · ${allOrders.length} orders · `;
+      src.textContent = `Source: gov.georgia.gov · Data as of: ${stamp}`;
+      // Only the current year's file is refreshed; earlier years are closed and never flagged.
+      if (year === CURRENT_YEAR && eoUpdated && window.VotegaFreshness) {
+        src.insertAdjacentHTML('beforeend', window.VotegaFreshness.suffix('ga-executive-orders', eoUpdated));
+      }
+      src.appendChild(document.createTextNode(` · ${allOrders.length} orders · `));
       // Machine-readable data is published (and archived per year, alongside an
       // all-years CSV + schema) in the ga-executive-orders repo — the stable open-
       // data home, not the internal per-year asset this page fetches. See the
@@ -338,7 +345,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     } catch (err) {
       console.error(err);
       document.getElementById('orderBody').innerHTML =
-        `<tr><td colspan="4" style="color:#c00;">Error loading data: ${err.message}</td></tr>`;
+        `<tr><td colspan="4" style="color:var(--color-danger);">Error loading data: ${err.message}</td></tr>`;
     }
   }
 

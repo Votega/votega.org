@@ -20,27 +20,27 @@ breadcrumb:
     margin: 1.5rem 0 2rem;
   }
   .va-hub-card {
-    border: 1px solid #ccc;
-    border-left: 5px solid #1a56a8;
+    border: 1px solid var(--color-border);
+    border-left: 5px solid var(--color-accent);
     border-radius: 8px;
-    background: #fff;
+    background: var(--color-surface-raised);
     padding: 1.1rem 1.25rem;
   }
   .va-hub-title {
     font-size: 1.05rem;
     font-weight: 700;
     margin: 0 0 0.4rem 0;
-    color: #14213d;
+    color: var(--color-text);
   }
   .va-hub-desc {
     font-size: 0.88rem;
-    color: #444;
+    color: var(--color-text);
     margin: 0 0 0.7rem 0;
     line-height: 1.5;
   }
   .va-hub-list {
     font-size: 0.82rem;
-    color: #555;
+    color: var(--color-text-secondary);
     margin: 0 0 0.85rem 1.1rem;
     padding: 0;
     line-height: 1.6;
@@ -49,17 +49,17 @@ breadcrumb:
     display: inline-block;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #fff;
-    background: #1a56a8;
+    color: var(--color-on-accent);
+    background: var(--color-accent);
     border-radius: 6px;
     padding: 0.45rem 0.9rem;
     text-decoration: none;
   }
-  .va-hub-btn:hover { background: #164a90; }
+  .va-hub-btn:hover { background: var(--color-accent); }
 
   .va-next {
-    border: 1px solid #bcd4f5;
-    background: #f0f6ff;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-tint);
     border-radius: 8px;
     padding: 1.1rem 1.3rem;
     margin-bottom: 1.5rem;
@@ -69,31 +69,31 @@ breadcrumb:
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #1a56a8;
+    color: var(--color-link);
     margin-bottom: 0.3rem;
   }
-  .va-next-name { font-size: 1.25rem; font-weight: 700; color: #14213d; margin-bottom: 0.15rem; }
-  .va-next-date { font-size: 0.95rem; color: #333; }
-  .va-next-countdown { font-size: 0.85rem; color: #1a56a8; font-weight: 600; margin-top: 0.3rem; }
+  .va-next-name { font-size: 1.25rem; font-weight: 700; color: var(--color-text); margin-bottom: 0.15rem; }
+  .va-next-date { font-size: 0.95rem; color: var(--color-text); }
+  .va-next-countdown { font-size: 0.85rem; color: var(--color-link); font-weight: 600; margin-top: 0.3rem; }
   /* Details promoted from the duplicate list card — separated from the countdown
      so the hero still reads headline-first. */
   .va-next .va-cal-details {
     margin-top: 0.8rem;
     padding-top: 0.75rem;
-    border-top: 1px solid #cfe0f7;
+    border-top: 1px solid var(--color-border);
   }
-  .va-next .va-cal-details dt { color: #5a7396; }
+  .va-next .va-cal-details dt { color: var(--color-link); }
 
   .va-fetch-note {
     margin: 0 0 1rem; padding: 0.7rem 0.9rem; font-size: 0.9rem;
-    background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px; color: #78350f;
+    background: var(--color-warning-tint); border: 1px solid var(--color-warning-line); border-radius: 8px; color: var(--color-warning);
   }
   .va-fetch-note a { color: inherit; font-weight: 600; }
   .va-section-heading {
     margin-top: 1.75rem;
     font-size: 1.15rem;
-    color: #444;
-    border-bottom: 2px solid #eee;
+    color: var(--color-text);
+    border-bottom: 2px solid var(--color-border-subtle);
     padding-bottom: 0.3rem;
   }
 
@@ -104,9 +104,9 @@ breadcrumb:
     margin-top: 1rem;
   }
   .va-cal-card {
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
-    background: #fff;
+    background: var(--color-surface-raised);
     padding: 1rem 1.25rem;
   }
   .va-cal-card.completed { opacity: 0.68; }
@@ -117,7 +117,7 @@ breadcrumb:
     gap: 0.75rem;
     flex-wrap: wrap;
   }
-  .va-cal-name { font-size: 1.02rem; font-weight: 700; color: #14213d; }
+  .va-cal-name { font-size: 1.02rem; font-weight: 700; color: var(--color-text); }
   .va-cal-badge {
     font-size: 0.7rem;
     font-weight: 700;
@@ -127,27 +127,27 @@ breadcrumb:
     border-radius: 999px;
     white-space: nowrap;
   }
-  .badge-upcoming  { background: #dbeafe; color: #1e40af; }
-  .badge-completed { background: #f3f4f6; color: #6b7280; }
-  .va-cal-date { font-size: 0.92rem; color: #333; margin-top: 0.2rem; font-weight: 600; }
+  .badge-upcoming  { background: var(--color-surface-tint); color: var(--color-link); }
+  .badge-completed { background: var(--color-surface-chrome); color: var(--color-text-muted); }
+  .va-cal-date { font-size: 0.92rem; color: var(--color-text); margin-top: 0.2rem; font-weight: 600; }
   .va-cal-details {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.4rem 1.5rem;
     margin-top: 0.65rem;
     font-size: 0.82rem;
-    color: #555;
+    color: var(--color-text-secondary);
   }
-  .va-cal-details dt { font-weight: 600; color: #777; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; margin: 0; }
+  .va-cal-details dt { font-weight: 600; color: var(--color-text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; margin: 0; }
   .va-cal-details dd { margin: 0 0 0.5rem 0; }
-  .va-cal-note { font-size: 0.78rem; color: #888; margin-top: 0.5rem; font-style: italic; }
-  .va-cal-qualifier { display: block; font-size: 0.74rem; color: #888; font-style: italic; margin-top: 0.1rem; }
+  .va-cal-note { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.5rem; font-style: italic; }
+  .va-cal-qualifier { display: block; font-size: 0.74rem; color: var(--color-text-muted); font-style: italic; margin-top: 0.1rem; }
   .va-cal-cta { margin-top: 0.65rem; }
   .va-cal-cta a {
     display: inline-block;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #1a56a8;
+    color: var(--color-link);
     text-decoration: none;
   }
   .va-cal-cta a:hover { text-decoration: underline; }
@@ -192,15 +192,15 @@ breadcrumb:
 {%- endcomment -%}
 {%- assign r = site.data.rendered.ga_election_calendar -%}
 <p id="vaFetchNote" class="va-fetch-note" role="status" hidden></p>
-<div id="vaLoading" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}" style="padding:1.5rem 0;color:#666;">
+<div id="vaLoading" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}" style="padding:1.5rem 0;color:var(--color-text-secondary);">
   {%- if r and r.rows -%}
-    {% include data-freshness.html data=r noun="elections" %}
+    {% include data-freshness.html data=r noun="elections" dataset="ga-election-calendar" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for e in r.rows -%}
-      <li style="padding:.6rem 0;border-bottom:1px solid #e5e7eb;">
+      <li style="padding:.6rem 0;border-bottom:1px solid var(--color-border-subtle);">
         <strong>{{ e.name | escape }}</strong>{% if e.date %} — <time datetime="{{ e.date }}">{{ e.date }}</time>{% endif %}
-        {%- if e.earlyVotingStart %}<br><span style="color:#444;">Early voting: {{ e.earlyVotingStart }}{% if e.earlyVotingEnd %} – {{ e.earlyVotingEnd }}{% endif %}</span>{% endif -%}
-        {%- if e.registrationDeadline %}<br><span style="color:#444;">Registration deadline: {{ e.registrationDeadline }}</span>{% endif -%}
+        {%- if e.earlyVotingStart %}<br><span style="color:var(--color-text);">Early voting: {{ e.earlyVotingStart }}{% if e.earlyVotingEnd %} – {{ e.earlyVotingEnd }}{% endif %}</span>{% endif -%}
+        {%- if e.registrationDeadline %}<br><span style="color:var(--color-text);">Registration deadline: {{ e.registrationDeadline }}</span>{% endif -%}
       </li>
       {%- endfor -%}
     </ul>
@@ -211,9 +211,9 @@ breadcrumb:
 <div id="vaNext"></div>
 <div id="vaCalendar" class="va-cal-grid"></div>
 
-<p style="margin-top:1.5rem;font-size:0.8rem;color:#888;" id="vaDataSource"></p>
+<p style="margin-top:1.5rem;font-size:0.8rem;color:var(--color-text-muted);" id="vaDataSource"></p>
 
-<p style="margin-top:2rem;font-size:0.82rem;color:#777;">
+<p style="margin-top:2rem;font-size:0.82rem;color:var(--color-text-muted);">
   See who's on your ballot in the <a href="{{ '/elections/candidates/' | relative_url }}">election guide</a>,
   what's up for a statewide vote in <a href="{{ '/ga-ballot-measures' | relative_url }}">ballot measures</a>,
   or check <a href="{{ '/results' | relative_url }}">election results</a>.
@@ -383,9 +383,16 @@ breadcrumb:
 
       const src = document.getElementById('vaDataSource');
       const meta = data.metadata || {};
+      // Hand-curated and event-driven (dates are set by the state), so the stamp is a prompt
+      // to review, not a verdict: freshness.js flags it only past the 90-day window.
       if (meta.generatedAt) {
-        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt}`
-          + (meta.source ? ` · Source: ${meta.source}` : '');
+        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt}`;
+        if (window.VotegaFreshness) {
+          src.insertAdjacentHTML('beforeend', window.VotegaFreshness.suffix('ga-election-calendar', meta.generatedAt));
+        }
+        src.appendChild(document.createTextNode(meta.source ? ` · Source: ${meta.source}` : ''));
+      } else if (meta.source) {
+        src.textContent = `Source: ${meta.source}`;
       }
     } catch (err) {
       // Never trade a working calendar for an error message. The fallback below

@@ -144,7 +144,7 @@ window.VotegaVotesTable = (function () {
       var extra = cell ? (cell(meta) || '') : '';
       var after = typeof opts.cellAfter === 'function' ? (opts.cellAfter(meta) || '') : '';
       var billCell = (meta.title
-        ? billLink + extra + '<br><span style="font-size:0.75rem;color:#555;font-weight:normal;">' + esc(meta.title) + '</span>'
+        ? billLink + extra + '<br><span style="font-size:0.75rem;color:var(--color-text-secondary);font-weight:normal;">' + esc(meta.title) + '</span>'
         : billLink + extra) + after;
       var motionCell = showMotion ? '<td>' + esc(meta.motionText || '—') + '</td>' : '';
       return '<tr>\n'
@@ -213,15 +213,16 @@ window.VotegaVotesTable = (function () {
   // Yea / Nay / Other breakdown as an SVG pie with a legend. Handles the
   // single-slice (100%) case, which an arc path cannot draw.
   // Yea / Nay / Other breakdown as an SVG pie with a legend. The slice colors are
-  // the chart's own (#16a34a / #dc2626 / #9ca3af), NOT the .vote-yea/.vote-nay text
-  // colors — they are deliberately lighter than the table text.
+  // the chart's own (success / danger / muted tokens), NOT the .vote-yea/.vote-nay text
+  // colors. Tokens are applied through style="fill:..." because var() is not valid in
+  // an SVG presentation attribute.
   function chartHtml(yea, nay, other, total, opts) {
     opts = opts || {};
     if (total === 0) return '';
     var pct = function (n) { return Math.round((n / total) * 100); };
 
     var size = 88, cx = 44, cy = 44, r = 40;
-    var COLORS = { yea: '#16a34a', nay: '#dc2626', other: '#9ca3af' };
+    var COLORS = { yea: 'var(--color-success)', nay: 'var(--color-danger)', other: 'var(--color-text-muted)' };
     var slices = [
       { label: 'Yea', value: yea, color: COLORS.yea },
       { label: 'Nay', value: nay, color: COLORS.nay },
@@ -232,7 +233,7 @@ window.VotegaVotesTable = (function () {
     // it is a plain circle.
     var svgPaths = '';
     if (slices.length === 1) {
-      svgPaths = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + slices[0].color + '"/>';
+      svgPaths = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" style="fill:' + slices[0].color + '"/>';
     } else {
       var angle = -Math.PI / 2;
       slices.forEach(function (s) {
@@ -244,7 +245,7 @@ window.VotegaVotesTable = (function () {
         var y2 = (cy + r * Math.sin(end)).toFixed(2);
         svgPaths += '<path d="M' + cx + ',' + cy + 'L' + x1 + ',' + y1
           + 'A' + r + ',' + r + ' 0 ' + (sweep > Math.PI ? 1 : 0) + ',1 ' + x2 + ',' + y2
-          + 'Z" fill="' + s.color + '"/>';
+          + 'Z" style="fill:' + s.color + '"/>';
         angle = end;
       });
     }
@@ -252,12 +253,12 @@ window.VotegaVotesTable = (function () {
     var legendItems = slices.map(function (s) {
       return '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;">'
         + '        <span style="width:11px;height:11px;border-radius:50%;background:' + s.color + ';flex-shrink:0;display:inline-block;"></span>'
-        + '        <span>' + s.label + ': <strong>' + s.value + '</strong> <span style="color:#777;">(' + pct(s.value) + '%)</span></span>'
+        + '        <span>' + s.label + ': <strong>' + s.value + '</strong> <span style="color:var(--color-text-muted);">(' + pct(s.value) + '%)</span></span>'
         + '      </div>';
     }).join('');
 
     var footnote = other > 0
-      ? '<p style="font-size:0.72rem;color:#888;margin:0.5rem 0 0 0;">* Other includes Not Voting, Absent, and Excused</p>'
+      ? '<p style="font-size:0.72rem;color:var(--color-text-muted);margin:0.5rem 0 0 0;">* Other includes Not Voting, Absent, and Excused</p>'
       : '';
 
     // The two pages had drifted to two wordings of this caption, identical but for
@@ -271,7 +272,7 @@ window.VotegaVotesTable = (function () {
         + '        <svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" style="flex-shrink:0;">' + svgPaths + '</svg>'
         + '        <div style="display:flex;flex-direction:column;gap:0.45rem;">' + legendItems + footnote + '</div>'
         + '      </div>'
-        + (caption ? '      <p style="font-size:0.72rem;color:#888;margin:0 0 1.25rem 0;max-width:32rem;">' + caption + '</p>' : '')
+        + (caption ? '      <p style="font-size:0.72rem;color:var(--color-text-muted);margin:0 0 1.25rem 0;max-width:32rem;">' + caption + '</p>' : '')
       + '    </div>';
   }
 

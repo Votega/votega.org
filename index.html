@@ -2,6 +2,7 @@
 layout: home
 title: Vote GA
 subtitle: Informing the electorate
+hero-logo: true
 share-title: "Georgia Voter Information: Reps, Bills & Elections"
 share-description: "Nonpartisan Georgia voter information. Look up your state and federal representatives, track bills in the General Assembly, check voter registration deadlines, and see election results."
 css:
@@ -15,7 +16,7 @@ css:
 
 <div class="reps-grid reps-grid-home">
   <a class="rep-card" href="{{ '/federal-reps' | relative_url }}">
-    <div class="rep-card-icon">🏛️</div>
+    <div class="rep-card-icon"><i class="fa-solid fa-building-columns" aria-hidden="true"></i></div>
     <p class="rep-card-title">Federal Representatives</p>
     <p class="rep-card-desc">Georgia's U.S. House members and two U.S. Senators represent the state in Congress. They vote on federal law, the national budget, treaties, and foreign policy... issues that affect every American.</p>
     <div class="rep-card-topics">
@@ -28,7 +29,7 @@ css:
   </a>
 
   <a class="rep-card" href="{{ '/ga-state-reps' | relative_url }}">
-    <div class="rep-card-icon">🍑</div>
+    <div class="rep-card-icon"><i class="fa-solid fa-landmark-dome" aria-hidden="true"></i></div>
     <p class="rep-card-title">Georgia State Representatives</p>
     <p class="rep-card-desc">Georgia House and Senate members represent your district in the General Assembly. They vote on state law, the state budget, education funding, transportation, and local infrastructure that shapes everyday life in Georgia.</p>
     <div class="rep-card-topics">
@@ -38,6 +39,19 @@ css:
       <span class="rep-card-topic">GA House &amp; Senate</span>
     </div>
     <span class="rep-card-cta">Find my GA state reps →</span>
+  </a>
+
+  <a class="rep-card rep-card-local" href="{{ '/local/' | relative_url }}">
+    <div class="rep-card-icon"><i class="fa-solid fa-city" aria-hidden="true"></i></div>
+    <p class="rep-card-title">Local Government</p>
+    <p class="rep-card-desc">County commissions and city councils decide land use, public safety, local budgets, and the services closest to home. See who sits on your local board, and read their meeting agendas and minutes.</p>
+    <div class="rep-card-topics">
+      <span class="rep-card-topic">County commissions</span>
+      <span class="rep-card-topic">City councils</span>
+      <span class="rep-card-topic">Meetings &amp; agendas</span>
+      <span class="rep-card-topic">Land use</span>
+    </div>
+    <span class="rep-card-cta">Find my local reps →</span>
   </a>
 </div>
 

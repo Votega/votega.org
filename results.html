@@ -15,8 +15,8 @@ share-description: "Georgia election results - certified results from the Georgi
   }
   .er-cycle-heading {
     font-size: 1.15rem;
-    color: #444;
-    border-bottom: 2px solid #eee;
+    color: var(--color-text);
+    border-bottom: 2px solid var(--color-border-subtle);
     padding-bottom: 0.3rem;
     margin-bottom: 1rem;
   }
@@ -26,10 +26,10 @@ share-description: "Georgia election results - certified results from the Georgi
     gap: 0.85rem;
   }
   .er-card {
-    border: 1px solid #ddd;
-    border-left: 5px solid #1a56a8;
+    border: 1px solid var(--color-border);
+    border-left: 5px solid var(--color-accent);
     border-radius: 8px;
-    background: #fff;
+    background: var(--color-surface-raised);
     padding: 1rem 1.25rem;
   }
   .er-card.status-upcoming   { border-left-color: var(--status-upcoming-line); }
@@ -43,15 +43,15 @@ share-description: "Georgia election results - certified results from the Georgi
     gap: 0.75rem;
     flex-wrap: wrap;
   }
-  .er-name { font-size: 1.02rem; font-weight: 700; color: #14213d; margin: 0; }
-  .er-date { font-size: 0.92rem; color: #333; margin-top: 0.2rem; font-weight: 600; }
+  .er-name { font-size: 1.02rem; font-weight: 700; color: var(--color-text); margin: 0; }
+  .er-date { font-size: 0.92rem; color: var(--color-text); margin-top: 0.2rem; font-weight: 600; }
 
-  .er-summary { font-size: 0.86rem; color: #555; margin: 0.6rem 0 0.75rem 0; line-height: 1.5; }
+  .er-summary { font-size: 0.86rem; color: var(--color-text-secondary); margin: 0.6rem 0 0.75rem 0; line-height: 1.5; }
   .er-links { display: flex; flex-wrap: wrap; gap: 1.1rem; font-size: 0.85rem; }
   .er-links a { font-weight: 600; }
-  .er-analysis { font-weight: 400 !important; color: #555; }
+  .er-analysis { font-weight: 400 !important; color: var(--color-text-secondary); }
 
-  .er-empty { color: #666; font-style: italic; }
+  .er-empty { color: var(--color-text-secondary); font-style: italic; }
 </style>
 
 {% assign cycles = site.data.election_archive | sort: 'cycle' | reverse %}
@@ -100,7 +100,7 @@ share-description: "Georgia election results - certified results from the Georgi
   {% endfor %}
 {% endif %}
 
-<p style="margin-top:2rem;font-size:0.82rem;color:#777;">
+<p style="margin-top:2rem;font-size:0.82rem;color:var(--color-text-muted);">
   Looking for what's on the ballot next? See the <a href="{{ '/elections/candidates/' | relative_url }}">current election guide</a>
   and the <a href="{{ '/ga-voter-access' | relative_url }}">voter access &amp; election calendar</a>.
 </p>

@@ -28,9 +28,9 @@ breadcrumb:
     gap: 1.25rem;
     align-items: flex-start;
     padding: 1.25rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
-    background: #fff;
+    background: var(--color-surface-raised);
   }
   .exec-photo {
     width: 100px;
@@ -48,11 +48,11 @@ breadcrumb:
     width: 100px;
     height: 120px;
     border-radius: 6px;
-    background: #e8e8e8;
+    background: var(--color-surface-chrome);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #aaa;
+    color: var(--color-text-muted);
     font-size: 0.75rem;
     text-align: center;
   }
@@ -64,7 +64,7 @@ breadcrumb:
     font-size: 0.85rem;
     font-weight: bold;
     text-transform: uppercase;
-    color: #666;
+    color: var(--color-text-secondary);
     letter-spacing: 0.04em;
     margin: 0 0 0.2rem 0;
   }
@@ -81,18 +81,18 @@ breadcrumb:
     font-size: 0.9rem;
   }
   .exec-meta-item {
-    color: #444;
+    color: var(--color-text);
   }
   .exec-term-note {
     font-size: 0.8rem;
-    color: #666;
+    color: var(--color-text-secondary);
     margin-bottom: 0.75rem;
     font-style: italic;
   }
   .exec-reelection {
     display: inline-block;
     font-size: 0.8rem;
-    color: #1a56a8;
+    color: var(--color-link);
     font-weight: 600;
     margin-bottom: 0.75rem;
     text-decoration: none;
@@ -145,14 +145,14 @@ breadcrumb:
     display: flex;
     gap: 0.75rem;
     font-size: 0.75rem;
-    color: #444;
+    color: var(--color-text);
   }
   .chart-note {
   max-width: 140px;
   font-size: 0.75rem;
   line-height: 1.3;
   text-align: center;
-  color: #666;
+  color: var(--color-text-secondary);
 }
   .legend-dot {
     display: inline-block;
@@ -167,18 +167,17 @@ breadcrumb:
 <div class="exec-grid" id="execGrid">
   {%- comment -%}
     Server-rendered fallback (see scripts/build_render_data.py). Crawlers and
-    no-JS visitors get the officials list and a freshness date in the initial
+    no-JS visitors get the officials list in the initial
     HTML; the script below overwrites #execGrid with the interactive cards.
   {%- endcomment -%}
   {%- assign r = site.data.rendered.ga_executive -%}
   {%- if r and r.rows -%}
     <div class="ssr-fallback" style="grid-column:1/-1;">
-      {% include data-freshness.html data=r noun="offices" %}
       <ul style="list-style:none;padding:0;margin:0;">
         {%- for o in r.rows -%}
-        <li style="padding:.4rem 0;border-bottom:1px solid #e5e7eb;">
+        <li style="padding:.4rem 0;border-bottom:1px solid var(--color-border-subtle);">
           <strong>{{ o.title | escape }}</strong> — {{ o.name | escape }}
-          {%- if o.party %} <span style="color:#6b7280;">({{ o.party | escape }})</span>{% endif -%}
+          {%- if o.party %} <span style="color:var(--color-text-muted);">({{ o.party | escape }})</span>{% endif -%}
         </li>
         {%- endfor -%}
       </ul>
@@ -188,10 +187,16 @@ breadcrumb:
   {%- endif -%}
 </div>
 
-<p style="margin-top:1.5rem;font-size:0.8rem;color:#888;" id="dataSource"></p>
+<p style="margin-top:1.5rem;font-size:0.8rem;color:var(--color-text-muted);" id="dataSource"></p>
 
 <script>
   const DATA_URL = 'assets/data/ga-executive.json';
+
+  // Canvas cannot take var(--token) as a fillStyle, so resolve the token to its computed color.
+    function tokenColor(v) {
+      var m = /^var\((--[^)]+)\)$/.exec(v);
+      return m ? getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim() : v;
+    }
 
   function drawPartyChart(officials) {
     const canvas = document.getElementById('partyChart');
@@ -212,9 +217,9 @@ breadcrumb:
     if (!total) { legend.innerHTML = ''; return; }
 
     const segments = [
-      { count: d,  color: '#2563eb', label: 'Democrat' },
-      { count: r,  color: '#dc2626', label: 'Republican' },
-      { count: ot, color: '#9ca3af', label: 'Other' },
+      { count: d,  color: 'var(--color-party-d)', label: 'Democrat' },
+      { count: r,  color: 'var(--color-party-r)', label: 'Republican' },
+      { count: ot, color: 'var(--color-text-muted)', label: 'Other' },
     ].filter(s => s.count > 0);
 
     let startAngle = -Math.PI / 2;
@@ -224,17 +229,17 @@ breadcrumb:
       ctx.moveTo(cx, cy);
       ctx.arc(cx, cy, radius, startAngle, startAngle + sweep);
       ctx.closePath();
-      ctx.fillStyle = seg.color;
+      ctx.fillStyle = tokenColor(seg.color);
       ctx.fill();
       startAngle += sweep;
     }
 
     ctx.beginPath();
     ctx.arc(cx, cy, radius * 0.52, 0, 2 * Math.PI);
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = tokenColor('var(--color-surface-raised)');
     ctx.fill();
 
-    ctx.fillStyle = '#374151';
+    ctx.fillStyle = tokenColor('var(--color-text)');
     ctx.font = `bold ${Math.round(radius * 0.38)}px system-ui, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -301,7 +306,7 @@ breadcrumb:
       if (profileId) {
         const profileUrl = VoteGA.entityUrls.get('candidate', profileId,
           `${getBasePath()}candidate.html?id=${encodeURIComponent(profileId)}`);
-        reelectionHtml = `<a class="exec-reelection" href="${profileUrl}">🗳 ${reelectionText} · View candidate profile →</a>`;
+        reelectionHtml = `<a class="exec-reelection" href="${profileUrl}"><i class="fa-solid fa-check-to-slot" aria-hidden="true"></i> ${reelectionText} · View candidate profile →</a>`;
       } else {
         reelectionHtml = `<span class="exec-reelection">${reelectionText}</span>`;
       }
@@ -348,14 +353,16 @@ breadcrumb:
       grid.innerHTML = officials.map(renderCard).join('');
 
       const src = document.getElementById('dataSource');
-      if (data.metadata?.updatedAt) {
-        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(data.metadata.updatedAt) : data.metadata.updatedAt}`
-          + ` · Source: ${data.metadata.source || 'georgia.gov'}`
+      // No "last updated" stamp on purpose: this roster is hand-maintained and only
+      // changes after an election (or a mid-term vacancy), so its age says nothing
+      // about whether it is current. The term cycle tells the reader what it covers.
+      if (data.metadata) {
+        src.textContent = `Source: ${data.metadata.source || 'georgia.gov'}`
           + (data.metadata.termCycle ? ` · Term cycle: ${data.metadata.termCycle}` : '');
       }
     } catch (err) {
       console.error(err);
-      grid.innerHTML = `<p style="color:#c00;">Error loading data: ${err.message}</p>`;
+      grid.innerHTML = `<p style="color:var(--color-danger);">Error loading data: ${err.message}</p>`;
     }
   }
 

@@ -22,7 +22,7 @@ breadcrumb:
     upcoming election being on file) and the footer site map.
   {%- endcomment -%}
   <a class="election-card" href="{{ '/sample-ballot' | relative_url }}">
-    <div class="election-card-icon">📋</div>
+    <div class="election-card-icon"><i class="fa-solid fa-list-check" aria-hidden="true"></i></div>
     <p class="election-card-title">What's on My Ballot</p>
     <p class="election-card-desc">A preview of the state and federal contests on your ballot. Enter your address for your exact districts, or pick your county to see every district it touches. Your official ballot also carries county and city races, so the Secretary of State's My Voter Page remains the precinct-exact source.</p>
     <div class="election-card-topics">
@@ -35,7 +35,7 @@ breadcrumb:
   </a>
 
   <a class="election-card" href="{{ '/elections/candidates/' | relative_url }}">
-    <div class="election-card-icon">🗳️</div>
+    <div class="election-card-icon"><i class="fa-solid fa-check-to-slot" aria-hidden="true"></i></div>
     <p class="election-card-title">Find Candidates</p>
     <p class="election-card-desc">See who's running for every office on your ballot. Statewide constitutional offices, U.S. Congress, and the Georgia General Assembly. Browsable by race and by district.</p>
     <div class="election-card-topics">
@@ -48,7 +48,7 @@ breadcrumb:
   </a>
 
   <a class="election-card" href="{{ '/ga-voter-access.html' | relative_url }}">
-    <div class="election-card-icon">📅</div>
+    <div class="election-card-icon"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></div>
     <p class="election-card-title">Voter Access &amp; Calendar</p>
     <p class="election-card-desc">The next election date, registration deadlines, and early-voting windows. Plus quick links to check your registration status and find your polling place through the Georgia Secretary of State.</p>
     <div class="election-card-topics">
@@ -61,7 +61,7 @@ breadcrumb:
   </a>
 
   <a class="election-card" href="{{ '/ga-ballot-measures.html' | relative_url }}">
-    <div class="election-card-icon">📜</div>
+    <div class="election-card-icon"><i class="fa-solid fa-scroll" aria-hidden="true"></i></div>
     <p class="election-card-title">Ballot Measures</p>
     <p class="election-card-desc">The statewide constitutional amendments and referenda on the ballot. A plain-language summary of what each one does, the legislation that referred it, and the result once votes are certified.</p>
     <div class="election-card-topics">
@@ -78,7 +78,7 @@ breadcrumb:
   </a>
 
   <a class="election-card" href="{{ '/results/' | relative_url }}">
-    <div class="election-card-icon">📊</div>
+    <div class="election-card-icon"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i></div>
     <p class="election-card-title">Election Results</p>
     <p class="election-card-desc">Unofficial and certified results for Georgia's recent primaries, runoffs, and special elections broken down by race.</p>
     <div class="election-card-topics">
@@ -113,8 +113,8 @@ breadcrumb:
     flex-wrap: wrap;
     margin: 3rem 0 1rem;
     padding: 1.1rem 1.35rem;
-    background: #f7f7f8;
-    border: 1px solid #e2e2e6;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
   }
   .for-candidates-callout .fcc-text { flex: 1 1 22rem; }
@@ -124,25 +124,25 @@ breadcrumb:
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: #8a8a93;
+    color: var(--color-link);
   }
   .for-candidates-callout .fcc-heading {
     margin: 0 0 0.3rem;
     font-size: 1.05rem;
     font-weight: 700;
-    color: #404040;
+    color: var(--color-text);
   }
   .for-candidates-callout .fcc-desc {
     margin: 0;
     font-size: 0.9rem;
     line-height: 1.5;
-    color: #666;
+    color: var(--color-text-secondary);
     max-width: 46rem;
   }
   .for-candidates-callout .fcc-link {
     flex: 0 0 auto;
     white-space: nowrap;
     font-weight: 600;
-    color: #008AFF;
+    color: var(--color-link);
   }
 </style>

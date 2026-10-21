@@ -1,0 +1,131 @@
+/*
+  VoteGA brand tokens: Georgia Peach & Clay.
+  Source of truth: assets/img/brand/style-guide-peach.html, docs/brand-migration-plan.md.
+
+  Two layers. Components use ONLY the role tokens (layer 2): no raw hex, no palette
+  tokens. A later dark theme redefines the role tokens in one block and touches no page.
+*/
+
+/* Layer 1: palette. Raw values, no meaning attached. */
+:root {
+  --clay-50:  #fbefe4;
+  --clay-100: #f4ebe0;
+  --clay-300: #e6c9b0;
+  --clay-500: #b4521f;
+  --clay-600: #9a4214;
+  --clay-700: #8a3b12;
+  --peach-50: #fffaf4;
+  --pine-50:  #e6f0ec;
+  --pine-300: #b7d3c9;
+  --pine-600: #2f5d50;
+  --amber-700: #806000;
+  --amber-100: #fef3c7;
+  --amber-300: #e6c96a;
+  --red-700: #b91c1c;
+  --red-50:  #fdecec;
+  --red-200: #f3b4b4;
+  --ink-900: #2b2118;
+  --gray-chart: #8a8f98;
+  --gray-100: #f3f4f6;
+  --gray-300: #d1d5db;
+  --gray-500: #6b7280;
+  --gray-700: #4b5563;
+  --ink-700: #4a3f35;
+  --clay-25:  #fdf6ee;
+  --clay-200: #f0e1d0;
+  --white: #ffffff;
+
+  --sage-300: #a5d3b4;
+  --gold-600: #b8860b;
+  --teal-700: #0e7490;
+  --teal-50:  #e0f1f4;
+  --teal-200: #a9d4dc;
+  --slate-800: #1f2937;
+  --peach-300: #e6a97e;
+
+  --blue-party: #3333ff;
+  --blue-party-tint: #e7e7ff;
+  --red-party: #e81b23;
+  --red-party-text: #cf151c;
+  --red-party-tint: #fce4e5;
+  --magenta-party: #a21caf;
+  --magenta-party-tint: #f4e4f5;
+  --gray-vacant: #9ca3af;
+  --gray-vacant-tint: #f3f4f6;
+  --gray-vacant-text: #374151;
+}
+
+/* Layer 2: role tokens. What a color is for. */
+:root {
+  color-scheme: light;
+
+  --color-surface: var(--peach-50);
+  --color-surface-raised: var(--white);
+  --color-surface-tint: var(--clay-50);
+  --color-surface-chrome: var(--clay-100);
+  --color-surface-sunken: var(--clay-25);
+  --color-border: var(--clay-300);
+  --color-border-subtle: var(--clay-200);
+
+  --color-text: var(--ink-900);
+  --color-text-secondary: var(--ink-700);
+  --color-text-muted: var(--gray-500);
+  --color-on-accent: var(--white);
+
+  --color-link: var(--clay-600);
+  --color-link-hover: var(--clay-700);
+  --color-accent: var(--clay-500);
+  --color-accent-strong: var(--clay-700);
+
+  /* Status: always paired with an icon and a label. */
+  --color-success: var(--pine-600);
+  --color-success-tint: var(--pine-50);
+  --color-success-line: var(--pine-300);
+  --color-warning: var(--amber-700);
+  --color-warning-tint: var(--amber-100);
+  --color-warning-line: var(--amber-300);
+  --color-neutral-tint: var(--gray-100);
+  --color-neutral-line: var(--gray-300);
+  --color-neutral-text: var(--gray-700);
+  --color-danger: var(--red-700);
+  --color-danger-tint: var(--red-50);
+  --color-danger-line: var(--red-200);
+
+  /* Categorical chart series (funding sources and the like). Deliberately avoids the
+     three party hues so a series is never read as a party. Always label the series. */
+  --chart-pine: var(--pine-600);
+  --chart-sage: var(--sage-300);
+  --chart-clay: var(--clay-500);
+  --chart-gold: var(--gold-600);
+  --chart-teal: var(--teal-700);
+  --chart-slate: var(--slate-800);
+  --chart-peach: var(--peach-300);
+  --chart-gray: var(--gray-chart);
+
+  /* Topic-watch flags on local pages (ALPR, land use, data centers). Categorical, so they avoid
+     red and green (danger and success) and every party hue. */
+  --color-watch-alpr: var(--clay-700);
+  --color-watch-alpr-tint: var(--clay-50);
+  --color-watch-alpr-line: var(--clay-300);
+  --color-watch-landuse: var(--teal-700);
+  --color-watch-landuse-tint: var(--teal-50);
+  --color-watch-landuse-line: var(--teal-200);
+
+  /* Party data only. One color per party, used for that party and nothing else. */
+  --color-party-d: var(--blue-party);
+  --color-party-d-tint: var(--blue-party-tint);
+  --color-party-d-text: var(--blue-party);
+  --color-party-r: var(--red-party);
+  --color-party-r-tint: var(--red-party-tint);
+  --color-party-r-text: var(--red-party-text);
+  --color-party-i: var(--magenta-party);
+  --color-party-i-tint: var(--magenta-party-tint);
+  --color-party-i-text: var(--magenta-party);
+  --color-party-vacant: var(--gray-vacant);
+  --color-party-vacant-tint: var(--gray-vacant-tint);
+  --color-party-vacant-text: var(--gray-vacant-text);
+
+  /* Type */
+  --font-sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Consolas, 'Liberation Mono', monospace;
+}

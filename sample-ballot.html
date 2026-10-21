@@ -44,43 +44,43 @@ share-description: "Preview the federal and state contests on your Georgia ballo
 {% include data-freshness.html data=site.data.rendered.sample_ballot noun="" %}
 
 <style>
-  .ballot-lookup { border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: #fafafa; }
+  .ballot-lookup { border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem 1.15rem; margin: 1.25rem 0; background: var(--color-surface-sunken); }
   .lookup-label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
   .lookup-label-spaced { margin-top: 1rem; }
-  .primary-note { border-left: 4px solid #6a8; background: #f0f7f3; padding: 0.6rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: #2b5340; margin-bottom: 1rem; }
+  .primary-note { border-left: 4px solid var(--color-success); background: var(--color-surface-chrome); padding: 0.6rem 0.85rem; border-radius: 4px; font-size: 0.85rem; color: var(--color-success); margin-bottom: 1rem; }
   .lookup-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.25rem; }
-  .lookup-input { flex: 1 1 260px; min-width: 0; padding: 0.55rem 0.7rem; font-size: 1rem; border: 1px solid #bbb; border-radius: 6px; }
-  .lookup-btn { flex: 0 0 auto; padding: 0.55rem 1.1rem; font-size: 0.95rem; font-weight: 600; color: #fff; background: #0b5394; border: none; border-radius: 6px; cursor: pointer; }
-  .lookup-btn:hover { background: #073763; }
-  .lookup-btn-secondary { background: #666; }
-  .lookup-btn-secondary:hover { background: #444; }
-  .lookup-or { margin: 0.9rem 0 0.5rem; font-size: 0.85rem; color: #666; }
+  .lookup-input { flex: 1 1 260px; min-width: 0; padding: 0.55rem 0.7rem; font-size: 1rem; border: 1px solid var(--color-border); border-radius: 6px; }
+  .lookup-btn { flex: 0 0 auto; padding: 0.55rem 1.1rem; font-size: 0.95rem; font-weight: 600; color: var(--color-on-accent); background: var(--color-accent); border: none; border-radius: 6px; cursor: pointer; }
+  .lookup-btn:hover { background: var(--color-accent-strong); }
+  .lookup-btn-secondary { background: var(--color-text); }
+  .lookup-btn-secondary:hover { background: var(--color-text); }
+  .lookup-or { margin: 0.9rem 0 0.5rem; font-size: 0.85rem; color: var(--color-text-secondary); }
   .election-static { margin: 0; padding: 0.55rem 0; font-size: 1rem; font-weight: 600; }
 
   .ballot-status { margin: 0.5rem 0; font-size: 0.95rem; }
-  .ballot-status.error { color: #a11; font-weight: 600; }
+  .ballot-status.error { color: var(--color-danger); font-weight: 600; }
 
   .ballot-header { margin: 1.5rem 0 0.25rem; }
   .ballot-header h2 { margin-bottom: 0.15rem; }
-  .ballot-subhead { font-size: 0.9rem; color: #666; margin-bottom: 0.75rem; }
+  .ballot-subhead { font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 0.75rem; }
 
-  .ambiguous-note { border-left: 4px solid #e6a700; background: #fff8e6; padding: 0.7rem 0.9rem; border-radius: 4px; font-size: 0.87rem; color: #614d00; margin-bottom: 1rem; }
+  .ambiguous-note { border-left: 4px solid var(--color-warning); background: var(--color-warning-tint); padding: 0.7rem 0.9rem; border-radius: 4px; font-size: 0.87rem; color: var(--color-warning); margin-bottom: 1rem; }
 
   .contest-group { margin-bottom: 1.5rem; }
-  .contest-group > h3 { font-size: 1.05rem; border-bottom: 2px solid #eee; padding-bottom: 0.25rem; margin-bottom: 0.6rem; }
+  .contest-group > h3 { font-size: 1.05rem; border-bottom: 2px solid var(--color-border-subtle); padding-bottom: 0.25rem; margin-bottom: 0.6rem; }
 
-  .contest-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.7rem 0.9rem; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 0.5rem; text-decoration: none; color: inherit; background: #fff; transition: background 0.15s; }
+  .contest-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.7rem 0.9rem; border: 1px solid var(--color-border); border-radius: 6px; margin-bottom: 0.5rem; text-decoration: none; color: inherit; background: var(--color-surface-raised); transition: background 0.15s; }
   /* Zebra shading per group: the h3 is a different element type, so :nth-of-type counts only the rows. */
-  .contest-row:nth-of-type(even) { background: #eaf1fa; }
-  .contest-row:hover, .contest-row:nth-of-type(even):hover { background: #d9e6f6; }
+  .contest-row:nth-of-type(even) { background: var(--color-surface-tint); }
+  .contest-row:hover, .contest-row:nth-of-type(even):hover { background: var(--color-surface-tint); }
   .contest-title { font-weight: 700; font-size: 0.98rem; }
-  .contest-candidates { font-size: 0.84rem; color: #555; margin-top: 0.2rem; }
-  .contest-meta { text-align: right; flex-shrink: 0; font-size: 0.78rem; color: #888; }
+  .contest-candidates { font-size: 0.84rem; color: var(--color-text-secondary); margin-top: 0.2rem; }
+  .contest-meta { text-align: right; flex-shrink: 0; font-size: 0.78rem; color: var(--color-text-muted); }
   .contest-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem; vertical-align: middle; }
-  .badge-ambiguous { background: #fff0c2; color: #7a5c00; }
-  .badge-pending { background: #e6eefc; color: #274690; }
+  .badge-ambiguous { background: var(--color-warning-tint); color: var(--color-warning); }
+  .badge-pending { background: var(--color-surface-tint); color: var(--color-link); }
 
-  .ballot-handoff { border: 1px solid #cde; background: #f2f7fc; border-radius: 8px; padding: 1rem 1.15rem; margin-top: 1.75rem; font-size: 0.9rem; }
+  .ballot-handoff { border: 1px solid var(--color-border); background: var(--color-surface-tint); border-radius: 8px; padding: 1rem 1.15rem; margin-top: 1.75rem; font-size: 0.9rem; }
   .ballot-handoff strong { display: block; margin-bottom: 0.3rem; }
 </style>
 

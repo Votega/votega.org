@@ -24,19 +24,28 @@ layout: null
   margin-top: 1.5rem;
   margin-bottom: 2.5rem;
 }
+/* A third card on its own row, centred under the two above and the same width as one of them
+   (home page: the Local Government card under Federal and State). */
+.reps-grid .rep-card-local {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc(50% - 0.75rem);
+  box-sizing: border-box;
+}
 @media (max-width: 600px) {
   .reps-grid,
   .elections-grid { grid-template-columns: 1fr; }
+  .reps-grid .rep-card-local { width: 100%; }
 }
 
 .rep-card,
 .election-card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 1.75rem 1.5rem;
-  background: #fff;
+  background: var(--color-surface-raised);
   text-decoration: none;
-  color: #404040;
+  color: var(--color-text);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -44,27 +53,29 @@ layout: null
 }
 .rep-card:hover,
 .election-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 138, 255, 0.12);
-  border-color: #008AFF;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-accent) 15%, transparent);
+  border-color: var(--color-accent);
+  background: var(--color-surface-tint);
   text-decoration: none;
-  color: #404040;
+  color: var(--color-text);
 }
 .rep-card-icon,
 .election-card-icon {
   font-size: 2rem;
   line-height: 1;
+  color: var(--color-accent);
 }
 .rep-card-title,
 .election-card-title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #008AFF;
+  color: var(--color-link);
   margin: 0;
 }
 .rep-card-desc,
 .election-card-desc {
   font-size: 0.92rem;
-  color: #555;
+  color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0;
   flex: 1;
@@ -79,8 +90,8 @@ layout: null
 .rep-card-topic,
 .election-card-topic {
   font-size: 0.75rem;
-  background: #f0f4ff;
-  color: #1a56a8;
+  background: var(--color-surface-tint);
+  color: var(--color-link);
   border-radius: 20px;
   padding: 0.2rem 0.65rem;
   white-space: nowrap;
@@ -91,7 +102,7 @@ layout: null
   margin-top: 0.25rem;
   font-size: 0.88rem;
   font-weight: 600;
-  color: #008AFF;
+  color: var(--color-link);
 }
 
 /* --- Next-election strip (finding 4.10) ------------------------------------ */
@@ -101,8 +112,8 @@ layout: null
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem 2rem;
-  border: 1px solid #bcd4f5;
-  background: #f0f6ff;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-tint);
   border-radius: 10px;
   padding: 1.25rem 1.5rem;
   margin-top: 1.5rem;
@@ -113,22 +124,22 @@ layout: null
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #1a56a8;
+  color: var(--color-link);
   margin: 0 0 0.3rem;
 }
 .next-election-name {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #14213d;
+  color: var(--color-text);
   margin: 0 0 0.15rem;
   line-height: 1.25;
 }
 .next-election-date {
   font-size: 0.9rem;
-  color: #333;
+  color: var(--color-text-secondary);
   margin: 0;
 }
-.next-election-countdown { color: #1a56a8; font-weight: 600; }
+.next-election-countdown { color: var(--color-link); font-weight: 600; }
 
 .next-election-facts {
   display: flex;
@@ -141,12 +152,12 @@ layout: null
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #5a7396;
+  color: var(--color-text-muted);
   margin: 0;
 }
 .next-election-facts dd {
   font-size: 0.88rem;
-  color: #14213d;
+  color: var(--color-text);
   margin: 0;
   white-space: nowrap;
 }
@@ -165,8 +176,8 @@ layout: null
 .next-election-btn {
   display: inline-block;
   padding: 0.6rem 1.15rem;
-  background: #1a56a8;
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   font-weight: 600;
   font-size: 0.9rem;
   border-radius: 6px;
@@ -175,13 +186,13 @@ layout: null
   white-space: nowrap;
 }
 .next-election-btn:hover,
-.next-election-btn:focus { background: #164a90; color: #fff; text-decoration: none; }
-/* Secondary action, in the blue's complement so the two buttons read as two
-   different destinations. #c2410c clears 4.5:1 against the white label (5.2:1). */
-.next-election-btn--alt { background: #c2410c; }
+.next-election-btn:focus { background: var(--color-accent-strong); color: var(--color-on-accent); text-decoration: none; }
+/* Secondary action, in pine against the clay primary so the two buttons read as
+   two different destinations (pine clears 4.5:1 against the light label). */
+.next-election-btn--alt { background: var(--color-success); }
 .next-election-btn--alt:hover,
-.next-election-btn--alt:focus { background: #9a3412; color: #fff; }
-.next-election-link { font-size: 0.82rem; color: #1a56a8; text-align: center; }
+.next-election-btn--alt:focus { background: color-mix(in srgb, var(--color-success) 80%, black); color: var(--color-on-accent); }
+.next-election-link { font-size: 0.82rem; color: var(--color-link); text-align: center; }
 
 /* --- Paired election cards (Next Election + Latest Results) ---------------- */
 /* The two cards share one flex row. Each starts `hidden` and is unhidden by JS
@@ -204,16 +215,16 @@ layout: null
 .election-cards .next-election { flex: 1 1 22rem; margin-top: 0; }
 
 /* Latest Results: a single clickable card in the "results" green, distinct from
-   the blue forward-looking strip. Status (unofficial/certified) rides a pill so
+   the clay forward-looking strip. Status (unofficial/certified) rides a pill so
    the green identity stays constant. */
 .results-card {
   flex: 1 1 15rem;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  border: 1px solid #bfe3c8;
-  border-left: 4px solid #1e9e4a;
-  background: #f2fbf4;
+  border: 1px solid var(--color-success-line);
+  border-left: 4px solid var(--color-success);
+  background: var(--color-success-tint);
   border-radius: 10px;
   padding: 1.25rem 1.35rem;
   text-decoration: none;
@@ -223,21 +234,21 @@ layout: null
 .results-card:focus {
   text-decoration: none;
   color: inherit;
-  border-color: #1e9e4a;
-  box-shadow: 0 2px 10px rgba(30, 158, 74, 0.15);
+  border-color: var(--color-success);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--color-success) 18%, transparent);
 }
 .results-card-label {
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #157a39;
+  color: var(--color-success);
   margin: 0;
 }
 .results-card-name {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #14213d;
+  color: var(--color-text);
   line-height: 1.25;
   margin: 0;
 }
@@ -247,7 +258,7 @@ layout: null
   flex-wrap: wrap;
   gap: 0.5rem;
   font-size: 0.85rem;
-  color: #333;
+  color: var(--color-text-secondary);
   margin: 0;
   font-variant-numeric: tabular-nums;
 }
@@ -260,14 +271,14 @@ layout: null
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
-.results-card-status.certified { background: #dcfce7; color: #166534; }
-.results-card-status.unofficial { background: #fef9c3; color: #854d0e; }
+.results-card-status.certified { background: var(--color-success-tint); color: var(--color-success); }
+.results-card-status.unofficial { background: var(--color-warning-tint); color: var(--color-warning); }
 .results-card-cta {
   margin-top: auto;
   padding-top: 0.35rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #157a39;
+  color: var(--color-success);
 }
 
 @media (max-width: 600px) {
@@ -283,5 +294,5 @@ layout: null
 .levels-note {
   margin: -0.35rem 0 1rem;
   font-size: 0.8rem;
-  color: #666;
+  color: var(--color-text-muted);
 }

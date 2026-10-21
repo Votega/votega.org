@@ -1341,6 +1341,11 @@ def build_places(records, urls, prior, new_state):
 
         place_js = {"slug": slug, "placeName": name,
                     "sourceFallback": fallback, "domains": domains}
+        # A bot-protected site cannot be scraped (registry `bot_protected`), so its meetings
+        # are as old as the last manual update however recently the job ran. Key omitted
+        # otherwise so every other place's emitted JSON is unchanged.
+        if ((p.get("domains") or {}).get("meetings") or {}).get("bot_protected"):
+            place_js["botProtected"] = True
         fm = {
             "layout": "default",
             "title": yaml_quote(name),
@@ -1363,13 +1368,13 @@ def build_places(records, urls, prior, new_state):
 
 _DIRECTORY_CSS = (
     "<style>\n"
-    "  .dir-lede { font-size: 1.05rem; color: #444; line-height: 1.6; max-width: 46rem; margin: 0 0 1.5rem; }\n"
-    "  .dir-group { font-size: 1.1rem; color: #1a2733; margin: 1.6rem 0 0.4rem; border-bottom: 1px solid #eee; padding-bottom: 0.25rem; }\n"
-    "  .dir-group a { color: #1a56a8; }\n"
-    "  .dir-count { font-size: 0.8rem; font-weight: 600; color: #8894a8; }\n"
+    "  .dir-lede { font-size: 1.05rem; color: var(--color-text); line-height: 1.6; max-width: 46rem; margin: 0 0 1.5rem; }\n"
+    "  .dir-group { font-size: 1.1rem; color: var(--color-text); margin: 1.6rem 0 0.4rem; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 0.25rem; }\n"
+    "  .dir-group a { color: var(--color-link); }\n"
+    "  .dir-count { font-size: 0.8rem; font-weight: 600; color: var(--color-text-muted); }\n"
     "  .dir-list { list-style: none; padding: 0; margin: 0.4rem 0 0; columns: 3 14rem; column-gap: 1.5rem; }\n"
     "  .dir-list li { margin: 0 0 0.3rem; break-inside: avoid; line-height: 1.4; }\n"
-    "  .dir-list a { color: #1a56a8; text-decoration: none; }\n"
+    "  .dir-list a { color: var(--color-link); text-decoration: none; }\n"
     "  .dir-list a:hover { text-decoration: underline; }\n"
     "  .dir-hub { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.6rem; max-width: 34rem; }\n"
     "  .dir-hub li { font-size: 1.1rem; }\n"
