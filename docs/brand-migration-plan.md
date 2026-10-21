@@ -26,6 +26,12 @@ Plan for moving the live site from the old identity (navy and civic blue, Lora a
 
 **Dark mode: not in this release, but the tokens must make it easy later (decided 2026-10-21).** Nothing about dark mode ships now. What we do now is structure the tokens so adding it later is a theme override, not a page-by-page rewrite (see the next section).
 
+**Scope: re-skin only (decided 2026-10-21).** The release changes colors, type, icons, the logo and the favicon. Breakpoint cleanup, layout changes and new features are out of scope and go in a later release. The checklist items about breakpoints below are therefore optional unless a page needs them to display correctly.
+
+**Fonts: Public Sans at weights 400, 600, 700 and 400 italic, loaded from Google Fonts as today (decided 2026-10-21).** The logos are outlined SVGs, so the Black and ExtraBold weights used in them are not needed on the site. Self-hosting can come later.
+
+**Navbar logo (proposed, awaiting confirmation):** the Tier 1 horizontal logo **without the tagline** (`assets/img/brand/logo/svg/votega-horizontal-notagline.svg`), at every screen size. At navbar height the tagline would be about 5px tall and unreadable. About 135px wide at 40px tall, so it should fit beside the mobile menu button at 375px; fall back to the Georgia mark (`votega-mark.svg`) only if it proves cramped. The with-tagline version is for headers, documents and the share card.
+
 ## Token architecture (dark-mode ready)
 
 `assets/css/tokens.css` is built in two layers, and components only ever use the second:
