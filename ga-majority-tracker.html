@@ -214,6 +214,29 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .legend-star { color: var(--color-warning); margin-right: 3px; font-size: 0.85rem; vertical-align: middle; }
 
   /* ── House SVG ────────────────────────────────────────────────────────── */
+  /* Grow a seat on hover and on keyboard focus. transform-box: fill-box + a centred origin makes
+     the scale pivot on the seat itself (an SVG shape's default origin is the viewBox corner). */
+  #houseSvg .seat-grow {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.1s, opacity 0.1s;
+  }
+  #houseSvg a:hover .seat-grow,
+  #houseSvg a:focus-visible .seat-grow {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+  /* Independent: a square turned 45deg. The turn lives here, not in a transform attribute, so
+     the hover scale composes with it instead of replacing it. */
+  #houseSvg .seat-diamond {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: rotate(45deg);
+  }
+  #houseSvg a:hover .seat-diamond.seat-grow,
+  #houseSvg a:focus-visible .seat-diamond.seat-grow {
+    transform: rotate(45deg) scale(1.5);
+  }
   .house-chamber {
     background: var(--color-surface-sunken);
     border: 1px solid var(--color-border);
@@ -733,14 +756,12 @@ function renderHouse(members) {
         seatNode = link;
       }
 
-      if (member) {
-        // Grow on hover *and* on keyboard focus, so tabbing through the
-        // chamber gives the same visual feedback a mouse does.
-        const grow   = () => { circle.setAttribute('opacity', '1'); circle.setAttribute('transform', growTransform(x, y)); };
-        const shrink = () => { circle.setAttribute('opacity', '0.85'); circle.removeAttribute('transform'); };
-        ['mouseenter', 'focusin'].forEach(ev => seatNode.addEventListener(ev, grow));
-        ['mouseleave', 'focusout'].forEach(ev => seatNode.addEventListener(ev, shrink));
-      }
+      // The hover/focus grow is pure CSS (.seat-grow below). It used to be a JS handler that set
+      // a `transform` attribute on the shape while the shape also had `transition: transform`:
+      // the browser animated an SVG transform from the wrong origin, so seats jumped sideways,
+      // looked tilted mid-animation, and a pointer parked on a seat's edge toggled
+      // mouseenter/mouseleave dozens of times a second (measured: 54 events in 1.2 s).
+      if (member) circle.classList.add('seat-grow');
 
       svg.appendChild(seatNode);
     }
@@ -756,7 +777,7 @@ function renderHouse(members) {
 function seatShape(party, x, y, size) {
   const common = {
     fill: COLOR[party], opacity: '0.85', stroke: 'var(--color-border-subtle)', 'stroke-width': '0.5',
-    style: 'cursor:pointer;transition:opacity 0.1s,transform 0.1s',
+    style: 'cursor:pointer',
   };
   if (party === 'R') {
     return svgEl('rect', Object.assign({
@@ -769,7 +790,7 @@ function seatShape(party, x, y, size) {
     return svgEl('rect', Object.assign({
       x: (x - size / 2).toFixed(1), y: (y - size / 2).toFixed(1),
       width: size, height: size, rx: 1.5,
-      transform: `rotate(45 ${x.toFixed(1)} ${y.toFixed(1)})`,
+      class: 'seat-diamond',   // the 45-degree turn is CSS (below) so the hover scale can keep it
     }, common));
   }
   if (party === 'V') {
@@ -799,11 +820,6 @@ function seatHalo(party, x, y, size) {
   return svgEl('circle', Object.assign({
     cx: x.toFixed(1), cy: y.toFixed(1), r: (size / 2 + 2).toFixed(1),
   }, common));
-}
-
-// Scale about the seat's own centre — works for both <circle> and <rect>.
-function growTransform(x, y) {
-  return `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(1.5) translate(${(-x).toFixed(1)} ${(-y).toFixed(1)})`;
 }
 
 // ── SVG helper ─────────────────────────────────────────────────────────────
