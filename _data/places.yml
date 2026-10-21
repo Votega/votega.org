@@ -1439,5 +1439,12 @@ places:
             when: "1st Tuesday of every month, 7:00 p.m. (work session 5:30 p.m.)"
             location: "Palmetto Community Center, 595 Main Street Palmetto, GA 30268"
           - body: Planning & Zoning Board
+            # iCal feed (/calendar/ical/calendar.ics, 2026-10-20): 4th Tuesday, moved
+            # from 7:00 p.m. to 5:30 p.m. with the Sept 2026 meeting; 5:30 p.m. is
+            # listed through 2027.
             when: "4th Tuesday of every month, 5:30 p.m. (dates and times vary)"
             location: "Palmetto Community Center, 595 Main Street Palmetto, GA 30268"
+          - body: Zoning Board of Appeals
+            # iCal feed: 2nd Monday, 7:00 p.m. (Sept 14, Oct 12, Nov 9 2026). The feed
+            # gives no location; assumed to match the other boards -- confirm.
+            when: "2nd Monday of every month, 7:00 p.m."
