@@ -212,6 +212,8 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
     line-height: 1;
   }
   .legend-star { color: var(--color-warning); margin-right: 3px; font-size: 0.85rem; vertical-align: middle; }
+  /* House legend mark: the amber ring drawn around an unopposed seat (see seatHalo). */
+  .legend-ring { display: inline-block; width: 11px; height: 11px; box-sizing: border-box; border: 2px solid var(--color-warning); border-radius: 50%; margin-right: 5px; vertical-align: middle; }
 
   /* ── House SVG ────────────────────────────────────────────────────────── */
   .house-chamber {
@@ -513,14 +515,20 @@ function unopposedPartyFor(chamber, district) {
   return (map && Object.prototype.hasOwnProperty.call(map, district)) ? map[district] : null;
 }
 
-function legendHtml(d, r, v, uCount, i = 0) {
+// `chamber` picks the no-major-party-opponent mark that chamber actually uses: the Senate grid
+// flags a seat with an amber outline and a star, the House hemicycle with an amber ring around
+// the seat. Showing the other chamber's mark would describe something that is not on screen.
+function legendHtml(d, r, v, uCount, i = 0, chamber = 'senate') {
+  const unopposedMark = chamber === 'house'
+    ? '<span class="legend-ring" aria-hidden="true"></span>'
+    : '<span class="legend-star">★</span>';
   // Marks mirror the seat shapes so the non-colour cue is decodable.
   return `
     <span><span class="dot" style="background:${COLOR.D}"></span>Democrat (${d})</span>
     <span><span class="dot dot-square" style="background:${COLOR.R}"></span>Republican (${r})</span>
     ${i ? `<span><span class="dot" style="background:${COLOR.I};border-radius:2px;transform:rotate(45deg)"></span>Independent (${i})</span>` : ''}
     ${v ? `<span><span class="dot dot-hollow" style="border-color:${COLOR.V}"></span>Vacant (${v})</span>` : ''}
-    ${uCount ? `<span><span class="legend-star">★</span>No major-party opponent (${uCount})</span>` : ''}
+    ${uCount ? `<span>${unopposedMark}No major-party opponent (${uCount})</span>` : ''}
   `;
 }
 
@@ -611,7 +619,7 @@ function renderSenate(byDistrict) {
     if (p === 'D') d++; else if (p === 'R') r++; else if (p === 'I') i++; else v++;
   });
 
-  document.getElementById('senateLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.senate || {}).length, i);
+  document.getElementById('senateLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.senate || {}).length, i, 'senate');
 }
 
 function makeSeneateSeat(dist, byDistrict) {
@@ -728,7 +736,7 @@ function renderHouse(members) {
         // Halo first, so the party shape draws on top of it.
         if (unopposed) link.appendChild(seatHalo(party, x, y, seatSize));
         link.appendChild(circle);
-        const unopposedTip = unopposed ? `<br><span style="color:${UNOPPOSED_AMBER}">★ No major-party opponent (${unopposed})</span>` : '';
+        const unopposedTip = unopposed ? `<br><span style="color:${UNOPPOSED_AMBER}"><span class="legend-ring" aria-hidden="true"></span>No major-party opponent (${unopposed})</span>` : '';
         attachTooltip(link, `District ${district}<br>${escHtml(who)}<br>${partyLabel}${unopposedTip}`);
         seatNode = link;
       }
@@ -746,7 +754,7 @@ function renderHouse(members) {
     }
   });
 
-  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.house || {}).length, i);
+  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.house || {}).length, i, 'house');
 }
 
 // ── Seat marks ─────────────────────────────────────────────────────────────
