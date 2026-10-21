@@ -166,7 +166,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   {%- comment -%} Server-rendered fallback; JS overwrites #measuresContainer. See scripts/build_render_data.py {%- endcomment -%}
   {%- assign r = site.data.rendered.ga_ballot_measures -%}
   {%- if r and r.rows -%}
-    {% include data-freshness.html data=r noun="measures" %}
+    {% include data-freshness.html data=r noun="measures" dataset="ga-ballot-measures" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for m in r.rows -%}
       <li style="padding:.6rem 0;border-bottom:1px solid var(--color-border-subtle);">
@@ -379,8 +379,11 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       const src = document.getElementById('dataSource');
       const meta = data.metadata || {};
       if (meta.generatedAt) {
-        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt}` +
-          (meta.source ? ` · Source: ${meta.source}` : '') + ` · `;
+        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt}`;
+        if (window.VotegaFreshness) {
+          src.insertAdjacentHTML('beforeend', window.VotegaFreshness.suffix('ga-ballot-measures', meta.generatedAt));
+        }
+        src.appendChild(document.createTextNode((meta.source ? ` · Source: ${meta.source}` : '') + ` · `));
         // Ballot measures are published as open data in the ga-legislation repo —
         // the stable home, not the internal asset this page fetches. See CLAUDE.md.
         const repoLink = document.createElement('a');

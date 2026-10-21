@@ -237,7 +237,7 @@ breadcrumb:
   {%- comment -%} Server-rendered fallback; JS overwrites #summaryBar. See scripts/build_render_data.py {%- endcomment -%}
   {%- assign r = site.data.rendered.ga_congress_trades -%}
   {%- if r and r.rows -%}
-    {% include data-freshness.html data=r noun="disclosed trades" %}
+    {% include data-freshness.html data=r noun="disclosed trades" dataset="ga-congress-trades" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for m in r.rows -%}
       <li style="padding:.4rem 0;border-bottom:1px solid var(--color-border-subtle);">
@@ -453,7 +453,7 @@ breadcrumb:
       <span class="divider">|</span>
       <span><strong>${totalLate.toLocaleString()}</strong> late filings</span>
       <span class="divider">|</span>
-      <span style="color:var(--color-text-muted);">Updated ${updatedAt}</span>
+      <span style="color:var(--color-text-muted);">Updated ${updatedAt}${window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-congress-trades', meta.generatedAt) : ''}</span>
     `;
 
     document.getElementById('disclaimer').textContent = meta.disclaimer || '';

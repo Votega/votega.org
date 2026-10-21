@@ -95,6 +95,16 @@ jobs:
             gh issue create --title "$ISSUE_TITLE" --body-file "$report"
           fi
 
+      # Record that the source was checked this run, even when the data step above skipped
+      # committing a quiet run. The stale-stamp rule (assets/scripts/freshness.js) measures
+      # from the newer of the data's stamp and this day. success() on purpose: a run that
+      # failed must NOT refresh the check date, so a broken job goes stale on its own.
+      - name: Record data check date
+        if: success()
+        run: |
+          python scripts/record_data_checked.py ga-congress-trades
+          bash scripts/commit_freshness.sh "Record ga-congress-trades check date"
+
       # Last on purpose (a step's `if` is evaluated when the runner reaches it).
       - name: Preserve the generated file
         if: failure() && steps.generate.outcome == 'success'

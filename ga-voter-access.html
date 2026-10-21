@@ -194,6 +194,7 @@ breadcrumb:
 <p id="vaFetchNote" class="va-fetch-note" role="status" hidden></p>
 <div id="vaLoading" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}" style="padding:1.5rem 0;color:var(--color-text-secondary);">
   {%- if r and r.rows -%}
+    {% include data-freshness.html data=r noun="elections" dataset="ga-election-calendar" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for e in r.rows -%}
       <li style="padding:.6rem 0;border-bottom:1px solid var(--color-border-subtle);">
@@ -382,9 +383,15 @@ breadcrumb:
 
       const src = document.getElementById('vaDataSource');
       const meta = data.metadata || {};
-      // No "last updated" stamp on purpose: the calendar is hand-maintained and
-      // event-driven (dates are set by the state), so its age is not a freshness signal.
-      if (meta.source) {
+      // Hand-curated and event-driven (dates are set by the state), so the stamp is a prompt
+      // to review, not a verdict: freshness.js flags it only past the 90-day window.
+      if (meta.generatedAt) {
+        src.textContent = `Data last updated: ${window.dataStamp ? window.dataStamp.formatDate(meta.generatedAt) : meta.generatedAt}`;
+        if (window.VotegaFreshness) {
+          src.insertAdjacentHTML('beforeend', window.VotegaFreshness.suffix('ga-election-calendar', meta.generatedAt));
+        }
+        src.appendChild(document.createTextNode(meta.source ? ` · Source: ${meta.source}` : ''));
+      } else if (meta.source) {
         src.textContent = `Source: ${meta.source}`;
       }
     } catch (err) {

@@ -170,7 +170,7 @@ breadcrumb:
     {%- assign d = site.data.rendered.scotus_decisions -%}
     {%- if d and d.rows -%}
     <h2 style="margin-top:2rem;">Recent decisions</h2>
-    {% include data-freshness.html data=d noun="decisions" %}
+    {% include data-freshness.html data=d noun="decisions" dataset="scotus-decisions" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for c in d.rows -%}
       <li style="padding:.45rem 0;border-bottom:1px solid var(--color-border-subtle);">
@@ -313,9 +313,16 @@ breadcrumb:
         allCases = decisionsData.cases || [];
         const meta  = decisionsData.metadata || {};
         const terms = (meta.terms || []).join(', ');
+        // Decisions are generated and change only when the Court rules, so the stamp is a
+        // prompt to review: freshness.js flags it only past the 90-day window.
+        const decGen = meta.generatedAt ? new Date(meta.generatedAt) : null;
+        const decStamp = decGen && !isNaN(decGen)
+          ? ` · Updated ${decGen.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
+            + (window.VotegaFreshness ? window.VotegaFreshness.suffix('scotus-decisions', meta.generatedAt) : '')
+          : '';
         decisionsHtml = `
           <p style="font-size:0.8rem;color:var(--color-text-muted);margin-bottom:0.75rem;">
-            ${allCases.length} decisions · ${terms} term${meta.terms?.length > 1 ? 's' : ''}
+            ${allCases.length} decisions · ${terms} term${meta.terms?.length > 1 ? 's' : ''}${decStamp}
           </p>
           <div id="decisionsContainer"></div>`;
       }

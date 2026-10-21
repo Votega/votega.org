@@ -1,0 +1,49 @@
+name: Record data review
+
+# For datasets nobody regenerates (hand-curated), "checked" means a person verified the
+# data against its source. Run this after a review: Actions > Record data review > Run
+# workflow. It records today (or the date you give) in _data/freshness/<dataset>.json, which
+# the stale-stamp rule reads (assets/scripts/freshness.js). If a dataset trips its window,
+# review it, run this, and adjust the window in _data/data_freshness.yml if it was fine.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dataset:
+        description: "Dataset you reviewed"
+        required: true
+        type: choice
+        options:
+          - ga-ballot-measures
+          - ga-election-calendar
+      date:
+        description: "Review date, YYYY-MM-DD (blank = today, UTC)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Record the review date
+        env:
+          DATASET: ${{ inputs.dataset }}
+          REVIEW_DATE: ${{ inputs.date }}
+        run: |
+          if [ -n "$REVIEW_DATE" ]; then
+            python scripts/record_data_checked.py "$DATASET" --date "$REVIEW_DATE"
+          else
+            python scripts/record_data_checked.py "$DATASET"
+          fi
+          bash scripts/commit_freshness.sh "Record $DATASET review date"

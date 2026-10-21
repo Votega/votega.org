@@ -65,10 +65,12 @@ def test_real_table_parses_and_never_entries_have_no_window():
     names = rdc.windowed_datasets()
     for expected in ("current-members", "ga-members", "ga-bills", "ga-member-votes",
                      "federal-member-votes", "ga-campaign-finance", "ga-fec-data",
-                     "ga-executive-orders", "curated-ga-bill-votes", "local-government"):
+                     "ga-executive-orders", "curated-ga-bill-votes", "local-government",
+                     "scotus-decisions", "ga-congress-trades", "ga-ballot-measures",
+                     "ga-election-calendar"):
         assert expected in names, expected
     for never in ("ga-executive", "supreme-court", "executive", "ga-legislative-candidates",
-                  "ga-election-calendar", "ga-campaign-finance-history"):
+                  "ga-campaign-finance-history"):
         assert never not in names, never
 
 
@@ -84,7 +86,26 @@ def test_every_workflow_recorder_targets_a_windowed_dataset():
             assert m.group(1) in names, f"{fn} records {m.group(1)!r}, which has no window"
             # success() only: a failed run must not refresh the check date
             assert re.search(r"Record data check date\s*\n\s*if: success\(\)", text), fn
-    assert found >= 7, f"expected the seven update workflows to record, found {found}"
+    assert found >= 9, f"expected the nine update workflows to record, found {found}"
+
+
+def test_manual_review_workflow_options_are_windowed_datasets():
+    """The 'Record data review' dispatch lists the hand-curated datasets; each must have a
+    window or the run would be refused. Also pins that they are the `review: manual` ones."""
+    names = rdc.windowed_datasets()
+    wf = os.path.join(ROOT, ".github", "workflows", "record-data-review.yml")
+    with open(wf, encoding="utf-8") as f:
+        text = f.read()
+    opts = re.findall(r"^\s+- ([a-z0-9-]+)\s*$", text.split("options:")[1].split("date:")[0], re.M)
+    assert opts, "no dataset options found"
+    manual = set()
+    with open(rdc.TABLE, encoding="utf-8") as f:
+        for line in f:
+            m = re.match(r"^  ([A-Za-z0-9_.-]+):.*review:\s*manual", line)
+            if m:
+                manual.add(m.group(1))
+    assert set(opts) == manual, (opts, manual)
+    assert set(opts) <= names
 
 
 if __name__ == "__main__":
