@@ -270,7 +270,7 @@ places:
         schedule:
           - body: Board of Commissioners
             when: "1st Tuesday of every month, 7:30 p.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
-            location: "Baker County Board of Commissioners Office, 439 Georgia Hwy NW, Newton"            # optional
+            location: "Baker County Board of Commissioners Office, 439 Georgia Hwy NW, Newton, Georgia 39870"            # optional
 
   - slug: baldwin
     name: Baldwin County
@@ -318,7 +318,8 @@ places:
           - body: City Council
             # Inferred from posted agenda dates (regular agendas fall on 2nd & 4th
             # Tuesdays); the site does not state a time or location.
-            when: "2nd and 4th Tuesday of every month"
+            when: "2nd and 4th Tuesday of every month, 6:30 p.m."
+            location: "Milledgeville City Hall - Second Floor, 119 East Hancock Street"
 
   - slug: banks
     name: Banks County
@@ -645,8 +646,8 @@ places:
         video_url: "https://www.rockdalecountyga.gov/board-of-commissioners-meeting-videos/"
         schedule:
           - body: Board of Commissioners
-            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
-            location: ""            # optional
+            when: "2nd and 4th Tuesday of every month, 10:00 a.m."                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: "901 Main Street, Conyers, GA 30012"            # optional
   
   - slug: conyers
     name: City of Conyers
@@ -917,7 +918,7 @@ places:
     type: county
     fips: "13077"
     parentCounty: null
-    region:                         # optional hub grouping label
+    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/coweta/.
@@ -940,6 +941,7 @@ places:
     type: county
     fips: "13035"
     parentCounty: null
+    region: Broader Metropolitan Statistical Area
     domains:
       meetings:
         platform: civicclerk
@@ -1053,14 +1055,22 @@ places:
         # (feed shows Regular Meeting + Workshop on the 2nd and 4th Thursdays).
         platform: agendaplus
         agendas_url: "https://agenda.savannahga.gov/publishing/ap-agendas.html"
+        # Action Minutes: a bare record of Council actions posted within ~48 working
+        # hours, ahead of the full minutes (~2 weeks). Link-only, not scraped.
+        minutes_url: "https://www.savannahga.gov/2460/Action-Minutes"
         body_map:
           - { match: "City Council", label: "City Council" }
+        schedule:
+          - body: City Council
+            when: "2nd and 4th Thursday of every month, 2:00 p.m."
+            location: "City Hall Council Chambers, 2 E Bay Street"
 
   - slug: dawson
     name: Dawson County
     type: county
     fips: "13085"
     parentCounty: null
+    region: Broader Metropolitan Statistical Area
     domains:
       meetings:
         platform: municode
@@ -1125,6 +1135,7 @@ places:
         schedule:
           - body: Mayor & Commission (Regular Session)
             when: "1st Tuesday of every month, 6:00 p.m."
+            location: "City Hall, 301 College Avenue, Athens"
           - body: Mayor & Commission (Agenda Setting Session)
             when: "3rd Tuesday of every month, 6:00 p.m."
             location: "City Hall, 301 College Avenue, Athens"
@@ -1162,7 +1173,7 @@ places:
     type: county
     fips: "13255"
     parentCounty: null
-    region:                         # optional hub grouping label
+    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
     domains:
       meetings:
         # Granicus ViewPublisher portal. The Name cell mixes body + meeting type
@@ -1188,7 +1199,7 @@ places:
     type: county
     fips: "13199"
     parentCounty: null
-    region:                         # optional hub grouping label
+    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
     domains:
       meetings:
         # CivicPlus Agenda Center (real, populated — not an empty iframe shell).
@@ -1202,15 +1213,15 @@ places:
           - { match: "Board of Commissioners", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
-            when: ""                # TODO: confirm from posted notices
-            location: ""            # optional
+            when: "2nd Monday and 4th Tuesday of every month, 6:00 p.m."                # TODO: confirm from posted notices
+            location: "17234 Roosevelt Highway, Building B, Greenville, GA 30222"            # optional
 
   - slug: morgan
     name: Morgan County
     type: county
     fips: "13211"
     parentCounty: null
-    region:                         # optional hub grouping label
+    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
     domains:
       meetings:
         # CivicPlus Agenda Center (real, populated). Validated 2026-09-10: 194 meetings.
@@ -1224,15 +1235,15 @@ places:
           - { match: "Board of Commissioners", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
-            when: ""                # TODO: confirm from posted notices
-            location: ""            # optional
+            when: "1st and 3rd Tuesday of every month, 10:00 a.m."                # TODO: confirm from posted notices
+            location: "150 East Washington Street, Madison, GA - 2nd Floor Board Room"            # optional
 
   - slug: pickens
     name: Pickens County
     type: county
     fips: "13227"
     parentCounty: null
-    region:                         # optional hub grouping label
+    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
     domains:
       meetings:
         # CivicPlus Agenda Center. Newer/re-skinned front-end, but the underlying
@@ -1367,7 +1378,8 @@ places:
         agendas_url: "https://mycityoflafayettega.org/government/agendas_minutes.php"
         schedule:
           - body: City Council
-            when: ""
+            when: "2nd Monday of every month, 6:30 p.m."
+            location: "City Hall, 207 South Duke Street, LaFayette, GA 30728"
 
   - slug: rossville
     name: City of Rossville
@@ -1425,5 +1437,7 @@ places:
             # meeting 7 p.m., 1st Tuesday; shifted to Wednesday Nov 4 around Election
             # Day). Confirm against the city's notices.
             when: "1st Tuesday of every month, 7:00 p.m. (work session 5:30 p.m.)"
+            location: "Palmetto Community Center, 595 Main Street Palmetto, GA 30268"
           - body: Planning & Zoning Board
-            when: "Typically 5:30 p.m. (dates vary)"
+            when: "4th Tuesday of every month, 5:30 p.m. (dates and times vary)"
+            location: "Palmetto Community Center, 595 Main Street Palmetto, GA 30268"
