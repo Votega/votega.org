@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-19T23:40:25Z",
+  "generatedAt": "2026-10-21T02:50:00Z",
   "source": "Gwinnett County (gwinnett agenda/minutes PDFs, poppler+OCR)",
   "place": "Gwinnett County",
-  "count": 35
+  "count": 23
  },
  "summary": {
   "flags": [
@@ -13,13 +13,13 @@
   ],
   "lastActivity": "2026-10-20",
   "topicTotals": {
-   "contract": 20,
-   "alpr": 4,
-   "appointment": 19,
-   "millage-budget": 15,
-   "rezoning": 5,
-   "variance": 5,
-   "development": 4
+   "contract": 14,
+   "alpr": 2,
+   "appointment": 12,
+   "millage-budget": 10,
+   "rezoning": 3,
+   "variance": 3,
+   "development": 1
   },
   "dataCenterItems": [],
   "landUseItems": [
@@ -50,37 +50,9 @@
      "rezoning",
      "variance"
     ]
-   },
-   {
-    "title": "Public Hearing",
-    "date": "2026-06-23",
-    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260623/a_62474_2026.06.23___Public_Hearing_Agenda.pdf",
-    "tags": [
-     "development",
-     "rezoning",
-     "variance"
-    ]
-   },
-   {
-    "title": "Business Session",
-    "date": "2026-06-02",
-    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260602/a_9567_2026.06.02___Business_Session_Agenda.pdf",
-    "tags": [
-     "development"
-    ]
-   },
-   {
-    "title": "Public Hearing",
-    "date": "2026-05-19",
-    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260519/a_24555_2026.05.19___Public_Hearing_Agenda.pdf",
-    "tags": [
-     "development",
-     "rezoning",
-     "variance"
-    ]
    }
   ],
-  "landUseMeetings": 6,
+  "landUseMeetings": 3,
   "alprItems": [
    {
     "title": "Business Session",
@@ -97,31 +69,41 @@
     "terms": [
      "skydio"
     ]
-   },
-   {
-    "title": "Work Session",
-    "date": "2026-07-14",
-    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_60682_2026.07.14___Work_Session_Agenda.pdf",
-    "terms": [
-     "axon enterprise",
-     "drone as first responder",
-     "skydio"
-    ]
-   },
-   {
-    "title": "Business Session",
-    "date": "2026-07-14",
-    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_34678_2026.07.14___Business_Session_Agenda.pdf",
-    "terms": [
-     "axon enterprise",
-     "drone as first responder",
-     "skydio"
-    ]
    }
   ],
-  "alprMeetings": 4
+  "alprMeetings": 2
  },
  "meetings": [
+  {
+   "id": "85405",
+   "date": "2026-10-20",
+   "body": "Board of Commissioners",
+   "title": "Business Session",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261020/a_85405_2026.10.20___Business_Session_Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261020/a_85405_2026.10.20___Business_Session_Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 10296,
+   "pdfSha256": "f3230b14685ea90becb742a3284813f306d200e16b54d27e1388ad7eb8d1a0d7",
+   "topics": {
+    "contract": 1
+   },
+   "tags": [
+    "contract"
+   ],
+   "matchedTerms": [
+    "contract"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… nts 2026-1218 Award BL112-26, purchase of law enforcement duty gear on an annual contract (October 6, 2026 through October 5, 2027), to multiple vendors, amount not to exceed $603,342.90. (R …",
+     "context": "unknown"
+    }
+   },
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "41056",
    "date": "2026-10-20",
@@ -968,518 +950,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "46268",
-   "date": "2026-07-23",
-   "body": "Board of Commissioners",
-   "title": "Special Meeting",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260723/a_46268_2026.07.23___Special_Called_Meeting_Agenda_2026_Proposed_Millage_Rate_630pm.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260723/a_46268_2026.07.23___Special_Called_Meeting_Agenda_2026_Proposed_Millage_Rate_630pm.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 292,
-   "pdfSha256": "bc14b6c62aadf1016c714ea93e909b6b5bb66897c26181615e37ed97fdc312fb",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "millage"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "millage",
-     "excerpt": "… Call To Order II. Opening Remarks by Chairwoman III. Approval of Agenda IV. Public Hearing on 2026 Proposed Millage Rate V. Adjournment",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "98323",
-   "date": "2026-07-14",
-   "body": "Board of Commissioners",
-   "title": "Informal Presentation",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_98323_2026.07.14___Informal_Presentation_Agenda_1100am.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_98323_2026.07.14___Informal_Presentation_Agenda_1100am.pdf",
-   "textMethod": "ocr",
-   "textChars": 420,
-   "pdfSha256": "18be16af0a91fdd970469e2a84d9a4e2f0f727b86209ed46936411ef4f64350b",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "millage"
-   ],
-   "topicExcerpts": {},
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "87095",
-   "date": "2026-07-14",
-   "body": "Board of Commissioners",
-   "title": "Informal Business Discussion (This meeting has been canceled)",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_87095_2026.07.14___Informal_Business_Discussion_Agenda_1200pm.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_87095_2026.07.14___Informal_Business_Discussion_Agenda_1200pm.pdf",
-   "textMethod": "ocr",
-   "textChars": 386,
-   "pdfSha256": "2a69ff2820fde333ab93ceb995e3e157c9104eb042df31605224efeda2260cf0",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "73369",
-   "date": "2026-07-14",
-   "body": "Board of Commissioners",
-   "title": "Special Meeting",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_73369_2026.07.14___Special_Called_Meeting_Agenda_Legislative_Recap_300pm.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_73369_2026.07.14___Special_Called_Meeting_Agenda_Legislative_Recap_300pm.pdf",
-   "textMethod": "ocr",
-   "textChars": 397,
-   "pdfSha256": "d7b56ebfb145837d8dd215b8f4689e56efbdf934a91dfcffc08a8d00772aceb3",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "60682",
-   "date": "2026-07-14",
-   "body": "Board of Commissioners",
-   "title": "Work Session",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_60682_2026.07.14___Work_Session_Agenda.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_60682_2026.07.14___Work_Session_Agenda.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 15116,
-   "pdfSha256": "bd4e19aae224ecca76a55e1b8ba58d853a657d98e761189dc3b1d8a773525b7d",
-   "topics": {
-    "alpr": 1,
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "alpr",
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "axon enterprise",
-    "budget",
-    "contract",
-    "drone as first responder",
-    "skydio"
-   ],
-   "topicExcerpts": {
-    "alpr": {
-     "term": "skydio",
-     "excerpt": "… commendation: Approval) 7. Police Services/James D. McClure 2026-0888 Award SS022-26, purchase of Skydio Drone as First Responder on a multi-year contract, to Axon Enterprise, Inc. The initial term of this …",
-     "context": "unknown"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Tuesday, July 14, 2026 - 10:00 AM Page 3 IV. New Business 1. Commissioners 2026-0811 Approval to appoint Michael Skarda (Incumbent Keith Asher) and Incumbents Helen Ellis and Eric Marlowe to the Upper Ocmulgee R …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Tuesday, July 14, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-0832 Approval to renew BL070-24, purchase and installati …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… 2026-0771 Approval/authorization of the May 31, 2026 Monthly Financial Report and ratification of all budget amendments. 5. Law Department/Jenny Carter 2026-0813 Approval/authorization to amend Chapter 62 …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget",
-    "alpr"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "34678",
-   "date": "2026-07-14",
-   "body": "Board of Commissioners",
-   "title": "Business Session",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_34678_2026.07.14___Business_Session_Agenda.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260714/a_34678_2026.07.14___Business_Session_Agenda.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 16258,
-   "pdfSha256": "9a669d31036a304438ed7b08df29dc48d2a955ad67bebb199516f93046ee2b11",
-   "topics": {
-    "alpr": 1,
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "alpr",
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "axon enterprise",
-    "budget",
-    "contract",
-    "drone as first responder",
-    "skydio"
-   ],
-   "topicExcerpts": {
-    "alpr": {
-     "term": "skydio",
-     "excerpt": "… dation: Approval) 9. Police Services/James D. McClure 2026-0888 Award SS022-26, purchase of Skydio Drone as First Responder on a multi-year contract, to Axon Enterprise, Inc. The initial …",
-     "context": "unknown"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… h VI. Consent Agenda A. New Business 1. Commissioners 2026-0811 Approval to appoint Michael Skarda (Incumbent Keith Asher) and Incumbents Helen Ellis and Eric Marlowe to the Upper Ocmu …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ultiple Departments 2026-0853 Award BL079-26, purchase of stormwater pipe on an annual contract (August 25, 2026 through August 24, 2027) to Foley Products Company, LLC and Southeast Culvert, Inc., a …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… 2026-0771 Approval/authorization of the May 31, 2026 Monthly Financial Report and ratification of all budget amendments. 6. Information Technology Services/Dorothy Parks 2026-0831 Approval to renew OS …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget",
-    "alpr"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "68171",
-   "date": "2026-06-23",
-   "body": "Board of Commissioners",
-   "title": "Special Meeting",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260623/a_68171_2026.06.23___Agenda_Multi_Jurisdictional_Solid_Waste_Management_Plan_Public_Hearing.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260623/a_68171_2026.06.23___Agenda_Multi_Jurisdictional_Solid_Waste_Management_Plan_Public_Hearing.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 344,
-   "pdfSha256": "493d837c4b98482edae68fe7e66524801ac1b24d15a4e06f30e57de89c210569",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "62474",
-   "date": "2026-06-23",
-   "body": "Board of Commissioners",
-   "title": "Public Hearing",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260623/a_62474_2026.06.23___Public_Hearing_Agenda.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260623/a_62474_2026.06.23___Public_Hearing_Agenda.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 6570,
-   "pdfSha256": "529d503913b0e30be8f9f235a5910f74568850377851525061c0ab96d45e9530",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "development": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "development",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "rezon",
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Recommendation: Approve with Conditions] VI. Old Business 1. Commissioners 2026-0474 Approval to appoint Larry Cobb to the Gwinnett Historical Restoration & Preservation Board to fill the unexpired term of Shelly …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… e McAllister 2026-0672 Award RP001-26, provision of a voluntary benefits program on a multi-year contract, to Continental American Insurance Company, a member of the Aflac Family. The initial term of this contract …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… 004 and 039; 3379 and 3409 Camp Branch Road; RA-200 and R-100 to OSC for a Single-Family Detached Subdivision; 33.19 acres; District 4/Holtkamp [Planning Department Recommendation: Approve with Conditions] [Planning Co …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… Department Recommendation: Deny] [Planning Commission Recommendation: Approve with Conditions] 3. Rezonings 2026-0788 REZ2026-00022, Applicant: Ashton Atlanta Residential, LLC c/o Wilson Brock & Irby, …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… Wilson Brock & Irby, LLC; Owners: David Greer and Ledford Living Trust; Rezoning with Concurrent Variance of Tax Parcel Nos. R7183 004 and 039; 3379 and 3409 Camp Branch Road; RA-200 and R-100 to OSC for a Single-F …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "9935",
-   "date": "2026-06-16",
-   "body": "Board of Commissioners",
-   "title": "Work Session",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260616/a_9935_2026.06.16___Work_Session_Agenda.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260616/a_9935_2026.06.16___Work_Session_Agenda.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 17251,
-   "pdfSha256": "0c7ec0782966f8307afff58e9cf863f52a5bc0fcb6d66ba7477bab236e3eea6d",
-   "topics": {
-    "appointment": 1,
-    "contract": 1
-   },
-   "tags": [
-    "appointment",
-    "contract"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "purchase order"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… roved on June 8, 2026, Vote 4-0.) IV. New Business 1. Commissioners 2026-0731 Approval to appoint Beverly Boucaud Taylor to the Gwinnett County Recreation Authority to fill the unexpired term of Pam Cox. Te …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Tuesday, June 16, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-0483 Approval to renew BL031-25, preventive maintenance, repair …",
-     "context": "unknown"
-    }
-   },
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "88775",
-   "date": "2026-06-16",
-   "body": "Board of Commissioners",
-   "title": "Business Session",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260616/a_88775_2026.06.16___Business_Session_Agenda.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260616/a_88775_2026.06.16___Business_Session_Agenda.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 19556,
-   "pdfSha256": "a853203bff1738b5f9bea0999c07226fc44a2a9d07e8d1aeb5ed7af7c70c0feb",
-   "topics": {
-    "appointment": 1,
-    "contract": 1
-   },
-   "tags": [
-    "appointment",
-    "contract"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "purchase order"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… ice VI. Consent Agenda A. New Business 1. Commissioners 2026-0731 Approval to appoint Beverly Boucaud Taylor to the Gwinnett County Recreation Authority to fill the unexpired term of Pam …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… repair, and replacement services for uninterruptible power supplies and battery systems on an annual contract (July 1, 2026 through June 30, 2027), with EOLA Power, LLC, amount not to exceed $325,683.00. …",
-     "context": "unknown"
-    }
-   },
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "9567",
-   "date": "2026-06-02",
-   "body": "Board of Commissioners",
-   "title": "Business Session",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260602/a_9567_2026.06.02___Business_Session_Agenda.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260602/a_9567_2026.06.02___Business_Session_Agenda.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 22897,
-   "pdfSha256": "80858873c3d8945d1a04f5a62edb90aa89bf36a7dcb1962f0270564ee496f877",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "development",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "mixed-use",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… th VI. Consent Agenda A. New Business 1. Commissioners 2026-0571 Approval to appoint Jennifer Fennell to the Development Authority of Gwinnett County. Term expires June 13, 2030. Incumb …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… 2026-0549 Approval to renew BL063-24, provision of comprehensive HVAC services on an annual contract (July 1, 2026 through April 17, 2027), with Maxair Mechanical, LLC, amount not to exceed $572,333.00. …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "mixed-use",
-     "excerpt": "… e, Assignment of Ground Lease, Option Agreement, Sublease, and related documents to facilitate the GGSC mixed-use development at the Gas South District; (2) an Amendment to Ground Lease, Amendment to S …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… 2026-0601 Approval of the April 30, 2026 Monthly Financial Status Report and ratification of all budget amendments. (Recommendation: Approval) 2026-0705 Approval/authorization for the Chairw …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "87241",
-   "date": "2026-06-02",
-   "body": "Board of Commissioners",
-   "title": "Informal Presentation",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260602/a_87241_2026.06.02___Informal_Presentation_Agenda_1100am.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260602/a_87241_2026.06.02___Informal_Presentation_Agenda_1100am.pdf",
-   "textMethod": "ocr",
-   "textChars": 436,
-   "pdfSha256": "c18466a2af66b94d65448fb4bdd8e3b6c78de8540068ebc2ebe52195dce49d73",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "24555",
-   "date": "2026-05-19",
-   "body": "Board of Commissioners",
-   "title": "Public Hearing",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260519/a_24555_2026.05.19___Public_Hearing_Agenda.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260519/a_24555_2026.05.19___Public_Hearing_Agenda.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 3837,
-   "pdfSha256": "1d03c1e357a6028afa368f5e09d90ad6d9e80823a127bef33a5ff21becb9129f",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "development": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "development",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "rezon",
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Tuesday, May 19, 2026 - 7:00 PM Page 3 VII. Old Business 1. Commissioners 2026-0474 Approval to appoint Larry Cobb to the Gwinnett Historical Restoration & Preservation Board to fill the unexpired term of Shell …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… 821 Petty Road; Special Use Permit with Concurrent Variances in an M-1 Zoning District for a Contractor Office with Outdoor Storage; 7.19 acres; District 4/Holtkamp [Planning Department Recommendation: Approv …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… 3724, 3754, 3774, and 3784 Ridge Road; RA-200 to R-TH for a Townhouse and Single-Family Detached Subdivision; 11.59 acres; District 4/Holtkamp [Planning Department Recommendation: Approve with Conditions] [Planning …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… ndation: Approve with Conditions] [Planning Commission Recommendation: Approve with Conditions] 2. Rezonings 2026-0613 REZ2026-00008, Applicant: MBC Developers, LLC c/o Mahaffey Pickens Tucker, LLP …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… Owner: Rooker Gwinnett, LLC; Tax Parcel No. R7013 100; 821 Petty Road; Special Use Permit with Concurrent Variances in an M-1 Zoning District for a Contractor Office with Outdoor Storage; 7.19 acres; District 4/Holtkamp …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }
