@@ -214,4 +214,4 @@ Phases 0 to 3 are built on `brand-migration` (not merged). Decisions on the open
 - **Chart palette:** the original eight colors had a worst-case color distance of 7.5 under color-blind simulation. Replaced sage, plum, olive and gray with lighter sage, slate, peach and a mid gray; worst case is now 14. Tokens renamed `--chart-slate` and `--chart-peach`.
 - **`#3333FF` in large areas:** checked in the donut charts and majority-tracker bars beside the clay palette; acceptable.
 - **Trial-page stash:** superseded. Public Sans is now site-wide through `base.html`; the only unmerged idea, a monospace stack for order numbers, is applied with `--font-mono`.
-- **Not done:** stale-data stamp rule, breakpoint consolidation, topic emoji in published data (`topics.yml`, generator), candidate photo placeholder and phone/pin glyphs, per-entity share cards.
+- **Not done:** stale-data stamp rule, breakpoint consolidation, topic emoji in published data (`topics.yml`, generator), per-entity share cards.
