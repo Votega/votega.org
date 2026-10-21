@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>VoteGA Logo Set</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&display=swap">
+<style>
+:root{--ink:#2b2118;--brand:#b4521f;--deep:#8a3b12;--tint:#fbefe4;--page:#fffaf4;--line:#e6c9b0;--nav:#f4ebe0;--muted:#6b7280}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:15px/1.5 'Public Sans',system-ui,sans-serif;color:var(--ink);background:var(--page);padding:32px 16px 64px}
+main{max-width:1040px;margin:0 auto}
+h1{font-size:28px;font-weight:800}
+.sub{color:var(--muted);max-width:680px;margin:6px 0 24px}
+h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--deep);margin:32px 0 12px;font-weight:700}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.cell{border:1px solid var(--line);border-radius:10px;padding:18px;background:#fff;display:flex;flex-direction:column;gap:12px;justify-content:space-between}
+.cell.nav{background:var(--nav)}.cell.dark{background:var(--ink);border-color:var(--ink)}
+.cell img{width:100%;height:auto;display:block;max-height:190px;object-fit:contain}
+.cell.sm img{max-width:140px;margin:0 auto}
+.lbl{font-size:12px;color:var(--muted)}.lbl b{display:block;color:var(--ink);font-size:13px}.lbl code{font:11px ui-monospace,Consolas,monospace;color:var(--deep)}
+.cell.dark .lbl,.cell.dark .lbl b{color:#fbefe4}.cell.dark .lbl code{color:#e9a173}
+.note{font-size:13px;background:var(--tint);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-top:14px}
+</style></head><body><main>
+<h1>VoteGA logo set</h1>
+<p class="sub">Final artwork: every letter is outlined from Public Sans (SIL OFL), so these files render identically everywhere with no font dependency. Georgia is the US Census boundary; the peach is the secondary set. SVGs are in <code>logo/svg/</code>, PNGs (transparent) in <code>logo/png/</code> and <code>logo/png/web/</code>.</p>
+
+<h2>Tier 1 &middot; Horizontal (primary)</h2>
+<div class="row">
+ <div class="cell"><img src="logo/svg/votega-horizontal.svg" alt=""><div class="lbl"><b>Horizontal, with tagline</b><code>votega-horizontal</code></div></div>
+ <div class="cell"><img src="logo/svg/votega-horizontal-notagline.svg" alt=""><div class="lbl"><b>Horizontal, no tagline</b>Use under about 320px wide. <code>votega-horizontal-notagline</code></div></div>
+ <div class="cell dark"><img src="logo/svg/votega-horizontal-reversed.svg" alt=""><div class="lbl"><b>Reversed (on dark)</b>Light clay GA is provisional. <code>votega-horizontal-reversed</code></div></div>
+ <div class="cell"><img src="logo/svg/votega-horizontal-mono-ink.svg" alt=""><div class="lbl"><b>One colour, ink</b>Georgia is a knockout. <code>votega-horizontal-mono-ink</code></div></div>
+ <div class="cell dark"><img src="logo/svg/votega-horizontal-mono-cream.svg" alt=""><div class="lbl"><b>One colour, cream</b><code>votega-horizontal-mono-cream</code></div></div>
+</div>
+
+<h2>Tier 2 &middot; Stacked</h2>
+<div class="row">
+ <div class="cell"><img src="logo/svg/votega-stacked.svg" alt=""><div class="lbl"><b>Stacked</b><code>votega-stacked</code></div></div>
+ <div class="cell dark"><img src="logo/svg/votega-stacked-reversed.svg" alt=""><div class="lbl"><b>Stacked, reversed</b><code>votega-stacked-reversed</code></div></div>
+ <div class="cell"><img src="logo/svg/votega-stacked-mono-ink.svg" alt=""><div class="lbl"><b>Stacked, ink</b><code>votega-stacked-mono-ink</code></div></div>
+ <div class="cell dark"><img src="logo/svg/votega-stacked-mono-cream.svg" alt=""><div class="lbl"><b>Stacked, cream</b><code>votega-stacked-mono-cream</code></div></div>
+</div>
+
+<h2>Mark</h2>
+<div class="row">
+ <div class="cell sm"><img src="logo/svg/votega-mark.svg" alt=""><div class="lbl"><b>Georgia mark</b>Round badge, for avatars where the peach isn&rsquo;t used. <code>votega-mark</code></div></div>
+</div>
+
+<h2>Alternate set &middot; Peach</h2>
+<div class="row">
+ <div class="cell nav"><img src="logo/svg/votega-peach-horizontal.svg" alt=""><div class="lbl"><b>Peach, horizontal</b><code>votega-peach-horizontal</code></div></div>
+ <div class="cell nav"><img src="logo/svg/votega-peach-stacked.svg" alt=""><div class="lbl"><b>Peach, stacked</b><code>votega-peach-stacked</code></div></div>
+ <div class="cell nav"><img src="logo/svg/votega-peach-emblem.svg" alt=""><div class="lbl"><b>Emblem + slogan</b>Light grounds only. <code>votega-peach-emblem</code></div></div>
+ <div class="cell nav sm"><img src="logo/svg/votega-peach-mark.svg" alt=""><div class="lbl"><b>Peach mark</b>No ring, transparent. <code>votega-peach-mark</code></div></div>
+ <div class="cell sm"><img src="logo/svg/votega-peach-avatar.svg" alt="" style="border-radius:50%"><div class="lbl"><b>Peach avatar</b>Square tile; platforms crop it round. <code>votega-peach-avatar</code></div></div>
+</div>
+<div class="note"><b>Notes.</b> The peach set is for light grounds; a reversed peach isn&rsquo;t provided because the pine leaf loses contrast on dark. The reversed Georgia lockups use a light clay (#e9a173) that is not yet a palette token (open item in the style guide).</div>
+</main></body></html>
