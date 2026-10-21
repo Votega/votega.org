@@ -307,7 +307,7 @@ breadcrumb:
       if (profileId) {
         const profileUrl = VoteGA.entityUrls.get('candidate', profileId,
           `${getBasePath()}candidate.html?id=${encodeURIComponent(profileId)}`);
-        reelectionHtml = `<a class="exec-reelection" href="${profileUrl}">🗳 ${reelectionText} · View candidate profile →</a>`;
+        reelectionHtml = `<a class="exec-reelection" href="${profileUrl}"><i class="fa-solid fa-check-to-slot" aria-hidden="true"></i> ${reelectionText} · View candidate profile →</a>`;
       } else {
         reelectionHtml = `<span class="exec-reelection">${reelectionText}</span>`;
       }

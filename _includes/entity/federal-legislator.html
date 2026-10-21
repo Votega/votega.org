@@ -1814,7 +1814,7 @@
     const contactInfo = member.contactInfo || {};
     let contactHtml = '';
     if (contactInfo.phoneNumber || contactInfo.officeAddress) {
-      const phone = contactInfo.phoneNumber ? `<br>📞 ${escHtml(contactInfo.phoneNumber)}` : '';
+      const phone = contactInfo.phoneNumber ? `<br><i class="fa-solid fa-phone" aria-hidden="true"></i> ${escHtml(contactInfo.phoneNumber)}` : '';
       let addressStr = contactInfo.officeAddress || '';
       if (addressStr) {
         const zip = contactInfo.zipCode ? String(contactInfo.zipCode) : '';
@@ -1824,7 +1824,7 @@
           addressStr = [addressStr, city, region, zip].filter(Boolean).join(', ').replace(/, (\d{5})$/, ' $1');
         }
       }
-      const address = addressStr ? `<br>📍 ${escHtml(addressStr)}` : '';
+      const address = addressStr ? `<br><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escHtml(addressStr)}` : '';
       contactHtml = `<p><strong>Office Contact:</strong>${address}${phone}</p>`;
     }
 

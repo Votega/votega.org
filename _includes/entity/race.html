@@ -592,9 +592,9 @@
       const src = window.VotegaPortraits ? VotegaPortraits.src(url) : url;
       return `<img class="candidate-photo" src="${src}" alt="${name}" ` +
              `loading="lazy" decoding="async" width="120" height="120" ` +
-             `onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',textContent:'👤'}))">`;
+             `onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',innerHTML:'<i class=&quot;fa-solid fa-user&quot; aria-hidden=&quot;true&quot;></i>'}))">`;
     }
-    return `<div class="candidate-photo-placeholder">👤</div>`;
+    return `<div class="candidate-photo-placeholder"><i class="fa-solid fa-user" aria-hidden="true"></i></div>`;
   }
 
   function renderIncumbentCard(candidate, member, race) {

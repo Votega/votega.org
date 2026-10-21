@@ -556,7 +556,7 @@
       : '');
     const photoHtml = photoSrc
       ? `<img class="candidate-photo" src="${escHtmlGa(window.VotegaPortraits ? VotegaPortraits.src(photoSrc) : photoSrc)}" alt="${escHtmlGa(candidate.name)}" loading="lazy" decoding="async" width="120" height="120" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'candidate-photo-placeholder',textContent:'👤'}))">`
-      : `<div class="candidate-photo-placeholder">👤</div>`;
+      : `<div class="candidate-photo-placeholder"><i class="fa-solid fa-user" aria-hidden="true"></i></div>`;
 
     // Role and party badges
     const roleBadge = isDisqualified
