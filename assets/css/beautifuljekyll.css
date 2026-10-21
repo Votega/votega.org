@@ -19,8 +19,8 @@ layout: null
   --footer-hover-col: {{ site.footer-hover-col | default: "#0085A1" }};
 
   /* common CSS variables */
-  --body-font: 'Lora', 'Times New Roman', serif;
-  --header-font: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --body-font: var(--font-sans);
+  --header-font: var(--font-sans);
   --mid-col: #808080;
 }
 
@@ -54,7 +54,7 @@ p {
 }
 h1,h2,h3,h4,h5,h6 {
   font-family: var(--header-font);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
 }
 h1 {
@@ -191,7 +191,12 @@ img {
   padding-bottom: 0.3125rem;
 }
 
+.navbar-custom .navbar-brand-logo {
+  flex-shrink: 0;
+}
+
 .navbar-custom .navbar-brand-logo img {
+  max-width: none;
   -webkit-transition: height .5s ease-in-out;
   -moz-transition: height .5s ease-in-out;
   transition: height .5s ease-in-out;
@@ -217,7 +222,7 @@ img {
 
 .navbar-custom .navbar-brand,
 .navbar-custom .navbar-nav .nav-link {
-  font-weight: 800;
+  font-weight: 700;
   color: var(--navbar-text-col);
 }
 
@@ -249,13 +254,15 @@ img {
     padding-bottom: 0;
   }
 
+  /* The wide horizontal logo needs room beside the nav; keep it at the
+     compact height and tighten link padding so the menu does not wrap. */
   .navbar-custom .navbar-brand-logo img {
-    height: 3.125rem;
+    height: 2.5rem;
   }
 
   .navbar-expand-xl .navbar-nav .nav-link {
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 
   .navbar-expand-xl .navbar-nav .nav-item:not(.dropdown):last-child .nav-link {
@@ -639,7 +646,7 @@ footer .footer-custom-content {
 }
 
 .post-preview .post-read-more {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 @media (min-width: 768px) {
@@ -859,7 +866,7 @@ nav.top-nav-short-permanent ~ header > .intro-header.big-img {
   font-family: var(--header-font);
   text-transform: uppercase;
   font-size: 0.875rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 1px;
   padding: 0.625rem 0.3125rem;
   background-color: var(--page-col);

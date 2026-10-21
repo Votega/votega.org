@@ -101,6 +101,10 @@
     {% endfor %}
   {% endif %}
 
+  {%- comment -%} Brand tokens load before every other first-party stylesheet so the theme's
+      config variables (page-col, link-col, ...) can reference the role tokens. {%- endcomment -%}
+  <link rel="stylesheet" href="{{ '/assets/css/tokens.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+
   {% if layout.common-css %}
     {% for css in layout.common-css %}
       <link rel="stylesheet" href="{{ css | relative_url }}">
@@ -199,10 +203,13 @@
   <link rel="stylesheet" href="{{ "/assets/css/staticman.css" | relative_url }}">
   {% endif %}
 
-  {% assign favicon_exists = site.static_files | where: "path", "/favicon.ico" | size %}
-  {% if favicon_exists == 1 %}
-  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" />
-  {% endif %}
+  {%- comment -%} Georgia-outline favicon set (never the peach). favicon.ico stays at the site
+      root for crawlers that request it without reading the page. {%- endcomment -%}
+  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/img/brand/favicon/favicon.svg' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/img/brand/favicon/favicon-32.png' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/img/brand/favicon/favicon-16.png' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/img/brand/favicon/apple-touch-icon.png' | relative_url }}">
 
   {% if page.head-extra %}
     {% for file in page.head-extra %}

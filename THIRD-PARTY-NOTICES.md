@@ -89,7 +89,7 @@ the files the CDN serves.
 | jQuery (slim) | 3.5.1 | code.jquery.com | MIT |
 | Popper.js | 1.16.0 | cdn.jsdelivr.net | MIT |
 | Font Awesome Free | 6.5.2 | cdnjs.cloudflare.com | Icons CC BY 4.0, fonts SIL OFL 1.1, code MIT |
-| Lora, Open Sans (web fonts) | n/a | fonts.googleapis.com | SIL Open Font License 1.1 |
+| Public Sans (web font) | n/a | fonts.googleapis.com | SIL Open Font License 1.1 |
 | Simple-Jekyll-Search | latest | unpkg.com | MIT |
 
 ## Build-time tools (not distributed with the site)
