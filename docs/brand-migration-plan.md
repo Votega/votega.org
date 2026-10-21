@@ -22,6 +22,38 @@ Plan for moving the live site from the old identity (navy and civic blue, Lora a
 - **Still to check:** `#3333FF` is a vivid blue; look at it in large chart areas (stacked bar, donut) beside the clay palette before the token file is finalized.
 - **Rollout effect:** every old party value moves to the table above. Values to search for and replace: `#2563eb`, `#1d4ed8`, `#dbeafe`, `#dc2626`, `#fee2e2`, `#2471a3`, `#c0392b`, `#3498db`, `#e74c3c`, and the old Independent and "Other" grays used for independents.
 
+**Warning Amber moves to `#806000` (decided 2026-10-21).** The old `#854d0e` was too close to Deep Clay `#8a3b12` (hues 32 and 21 degrees; color distance 13). `#806000` is a golden brown (hue 45): distance from Deep Clay 29 for normal vision, 17 protan, 10 deutan; 5.3:1 on the amber callout background `#FEF3C7` and 5.6:1 on the page. Under deuteranopia any dark brown sits near Deep Clay, so the rule stands: amber is always shown with an icon and a label. Used for Open Seat, "Unofficial" and "temporarily unavailable" treatments and callout borders.
+
+**Dark mode: not in this release, but the tokens must make it easy later (decided 2026-10-21).** Nothing about dark mode ships now. What we do now is structure the tokens so adding it later is a theme override, not a page-by-page rewrite (see the next section).
+
+## Token architecture (dark-mode ready)
+
+`assets/css/tokens.css` is built in two layers, and components only ever use the second:
+
+1. **Palette tokens**: raw brand values with no meaning attached, for example `--clay-500: #b4521f`, `--clay-700: #8a3b12`, `--clay-50: #fbefe4`, `--pine-600: #2f5d50`, `--amber-700: #806000`, `--blue-party: #3333ff`.
+2. **Role tokens**: what a color is *for*, defined from the palette. Components use these and nothing else.
+
+| Role token | Light value | Used for |
+|---|---|---|
+| `--color-surface` | `#fffaf4` | page background |
+| `--color-surface-raised` | `#ffffff` | cards, inputs |
+| `--color-surface-tint` | `#fbefe4` | hover rows, banners |
+| `--color-surface-chrome` | `#f4ebe0` | navbar, footer |
+| `--color-border` | `#e6c9b0` | borders, dividers |
+| `--color-text` / `--color-text-muted` | `#2b2118` / `#6b7280` | body and meta text |
+| `--color-link` / `--color-link-hover` | `#9a4214` / `#8a3b12` | links |
+| `--color-accent` / `--color-accent-strong` | `#b4521f` / `#8a3b12` | focus ring, active tab / buttons |
+| `--color-success`, `--color-warning`, `--color-danger` | `#2f5d50`, `#806000`, `#b91c1c` | status, always with an icon and label |
+| `--color-party-d`, `-r`, `-i`, `-vacant` (+ `-tint`, `-text`) | party table above | party data only |
+
+Rules that keep dark mode cheap:
+
+- No raw hex, and no palette tokens, in component CSS or in JS-built markup: use role tokens (JS can read them with `getComputedStyle` or set a class).
+- Set `color-scheme: light` on `:root` now; a later dark theme would add a `[data-theme="dark"]` (or `prefers-color-scheme: dark`) block that redefines only the role tokens. Illustrative, not built: `--color-surface: #2b2118; --color-text: #fbefe4;`.
+- Party colors and status colors get their own dark values at that time; contrast must be re-checked (the guide shows ratios against the light ground only).
+- Images: use the reversed logo variants (already in `assets/img/brand/logo/`); the peach set is light-ground only and would need a dark-ground version; icons inherit `currentColor`.
+- Anything that cannot be a token (a one-off tint in a chart) is listed in the page's migration notes, not hidden in CSS.
+
 ## 1. How the effort was measured
 
 Every page, layout, include, stylesheet and script was scanned (heuristic text counts, not visual diffs):
@@ -42,7 +74,7 @@ These move most of the site because the theme is driven by a handful of values.
 | Theme color tokens: `page-col`, `text-col`, `link-col`, `hover-col`, `navbar-col`, `navbar-text-col`, `navbar-border-col`, `footer-col`, `footer-text-col`, `footer-link-col`, `footer-hover-col`; `mobile-theme-col` is commented out today | `_config.yml` (lines ~180-200) | Body text, links, navbar, footer on every page |
 | `--body-font` / `--header-font` to Public Sans | `assets/css/beautifuljekyll.css` (variables near the top; 54 hex, 22 media queries elsewhere in the file) | Type on every page |
 | Replace the Lora and Open Sans Google Fonts links with Public Sans | `_layouts/base.html` | Font loading |
-| Introduce a shared `assets/css/tokens.css` (clay, deep clay, tint, line, pine, semantic, and the party colors from "Decisions made": Democratic, Republican, Independent magenta, Vacant gray, plus each tint and text shade) and load it from `_includes/head.html` | new + `head.html` | Single source for the brand values; later phases delete local colors in favor of these |
+| Introduce a shared `assets/css/tokens.css`, in two layers (see "Token architecture"): palette values, then role tokens (clay, deep clay, tint, line, pine, semantic, and the party colors from "Decisions made": Democratic, Republican, Independent magenta, Vacant gray, plus each tint and text shade) and load it from `_includes/head.html` | new + `head.html` | Single source for the brand values; later phases delete local colors in favor of these |
 | Wire the favicon set and touch icons | `_includes/head.html` | New favicon; files already in `assets/img/brand/favicon/` |
 | Add Public Sans (SIL OFL) | `THIRD-PARTY-NOTICES.md` | License notice |
 | Regenerate the default share card | `tools/og-image/og-default.html`, `assets/img/og-default.png` | Still navy and blue today |
@@ -136,6 +168,7 @@ Own score includes exclusive dependencies. Pages already styled in the stash (th
 ## 6. Cross-cutting checklist (applies to every phase)
 
 - [ ] Replace UI blue (`#1a56a8`, `#008aff`, `#0085a1`) with clay tokens; keep party blue and red for party data only (guide p.10)
+- [ ] No raw hex in edited CSS or JS-built markup: use the role tokens so dark mode can be added later
 - [ ] Party colors: replace every old party value with the single color per party (see "Decisions made"); Independent is magenta, not violet or gray; small red text uses `#CF151C`
 - [ ] Party label wording: "Democratic", "Republican", "Independent"; Vacant uses gray (guide p.16)
 - [ ] Emoji to Font Awesome (guide p.12-13)
@@ -159,7 +192,6 @@ Tracked on the last page of the style guide (page 26). The ones that block speci
 
 - A lighter "peach" token, and whether to keep the reversed-logo light clay `#e9a173`
 - Whether to ship a web app manifest with the 192/512 and maskable icons
-- Dark mode: yes or no (affects the token structure)
 - Land-use and ALPR "watch" colors on place pages: keep as semantic or fold into the palette
 
 ## 9. Method notes
