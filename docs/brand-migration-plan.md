@@ -30,7 +30,7 @@ Plan for moving the live site from the old identity (navy and civic blue, Lora a
 
 **Fonts: Public Sans at weights 400, 600, 700 and 400 italic, loaded from Google Fonts as today (decided 2026-10-21).** The logos are outlined SVGs, so the Black and ExtraBold weights used in them are not needed on the site. Self-hosting can come later.
 
-**Navbar logo (proposed, awaiting confirmation):** the Tier 1 horizontal logo **without the tagline** (`assets/img/brand/logo/svg/votega-horizontal-notagline.svg`), at every screen size. At navbar height the tagline would be about 5px tall and unreadable. About 135px wide at 40px tall, so it should fit beside the mobile menu button at 375px; fall back to the Georgia mark (`votega-mark.svg`) only if it proves cramped. The with-tagline version is for headers, documents and the share card.
+**Navbar logo (decided 2026-10-21):** the Tier 1 horizontal logo **without the tagline** (`assets/img/brand/logo/svg/votega-horizontal-notagline.svg`), at every screen size. At navbar height the tagline would be about 5px tall and unreadable. About 135px wide at 40px tall, so it should fit beside the mobile menu button at 375px; fall back to the Georgia mark (`votega-mark.svg`) only if it proves cramped when the navbar is built and tested. The with-tagline version is for headers, documents and the share card.
 
 ## Token architecture (dark-mode ready)
 
