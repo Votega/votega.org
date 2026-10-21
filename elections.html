@@ -20,16 +20,16 @@ breadcrumb:
 <style>
   label { display: block; margin-top: 1.2rem; }
   select { width: 100%; max-width: 400px; padding: 8px; box-sizing: border-box; }
-  .msg { margin-top: 1rem; color: #c00; }
+  .msg { margin-top: 1rem; color: var(--color-danger); }
 
   .phase-note {
     margin-top: 0.6rem;
     padding: 0.5rem 0.8rem;
-    background: #fffbeb;
-    border-left: 3px solid #f59e0b;
+    background: var(--color-warning-tint);
+    border-left: 3px solid var(--color-warning);
     border-radius: 0 4px 4px 0;
     font-size: 0.9rem;
-    color: #7c5b12;
+    color: var(--color-warning);
   }
 
   #racesOutput { margin-top: 2rem; }
@@ -40,8 +40,8 @@ breadcrumb:
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #555;
-    border-bottom: 1px solid #ddd;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
     padding-bottom: 0.4rem;
     margin-bottom: 0.75rem;
   }
@@ -52,22 +52,22 @@ breadcrumb:
     justify-content: space-between;
     gap: 1rem;
     padding: 0.75rem 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     margin-bottom: 0.5rem;
     text-decoration: none;
     color: inherit;
-    background: #fff;
+    background: var(--color-surface-raised);
     transition: background 0.15s;
   }
-  .race-row:hover { background: #f5f8ff; }
+  .race-row:hover { background: var(--color-surface-tint); }
 
   .race-info { flex: 1; min-width: 0; }
   .race-title { font-weight: bold; font-size: 1rem; }
-  .race-candidates { font-size: 0.85rem; color: #555; margin-top: 0.2rem; }
-  .race-note { font-size: 0.78rem; font-weight: normal; color: #555; margin-top: 2px; }
+  .race-candidates { font-size: 0.85rem; color: var(--color-text-secondary); margin-top: 0.2rem; }
+  .race-note { font-size: 0.78rem; font-weight: normal; color: var(--color-text-secondary); margin-top: 2px; }
   /* Matches the sample ballot's .contest-badge / .badge-ambiguous. */
-  .race-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem; vertical-align: middle; background: #fff0c2; color: #7a5c00; }
+  .race-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem; vertical-align: middle; background: var(--color-warning-tint); color: var(--color-warning); }
 
   .race-meta { text-align: right; flex-shrink: 0; }
   .phase-badge {
@@ -77,21 +77,21 @@ breadcrumb:
     font-size: 0.75rem;
     font-weight: bold;
   }
-  .phase-primary { background: #dcfce7; color: #166534; }
-  .phase-general { background: #dcfce7; color: #166534; }
-  .phase-runoff  { background: #fef9c3; color: #854d0e; }
-  .phase-open-seat { background: #fee2e2; color: #991b1b; }
-  .race-date { font-size: 0.8rem; color: #777; margin-top: 0.3rem; }
+  .phase-primary { background: var(--color-success-tint); color: var(--color-success); }
+  .phase-general { background: var(--color-success-tint); color: var(--color-success); }
+  .phase-runoff  { background: var(--color-warning-tint); color: var(--color-warning); }
+  .phase-open-seat { background: var(--color-danger-tint); color: var(--color-danger); }
+  .race-date { font-size: 0.8rem; color: var(--color-text-muted); margin-top: 0.3rem; }
 
-  .view-arrow { color: #1a56a8; font-size: 1.1rem; flex-shrink: 0; }
+  .view-arrow { color: var(--color-link); font-size: 1.1rem; flex-shrink: 0; }
 
   .empty-note {
     padding: 1rem;
-    background: #f9f9f9;
+    background: var(--color-surface-sunken);
     border-radius: 6px;
-    border: 1px dashed #ccc;
+    border: 1px dashed var(--color-border);
     font-size: 0.9rem;
-    color: #666;
+    color: var(--color-text-secondary);
   }
 
   .tab-bar {
@@ -99,7 +99,7 @@ breadcrumb:
     flex-wrap: wrap;
     gap: 0.35rem;
     margin: 1.25rem 0 1rem 0;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--color-border-subtle);
     padding-bottom: 0;
   }
   .tab-btn {
@@ -109,34 +109,34 @@ breadcrumb:
     cursor: pointer;
     font-size: 0.88rem;
     font-weight: 500;
-    color: #555;
+    color: var(--color-text-secondary);
     border-bottom: 3px solid transparent;
     margin-bottom: -2px;
     border-radius: 4px 4px 0 0;
     transition: color 0.15s, border-color 0.15s;
     white-space: nowrap;
   }
-  .tab-btn:hover { color: #1a56a8; }
-  .tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+  .tab-btn:hover { color: var(--color-link); }
+  .tab-btn.active { color: var(--color-link); border-bottom-color: var(--color-accent); font-weight: 600; }
 
   .county-filter {
     display: none;
     margin-bottom: 1rem;
   }
   .county-filter.visible { display: block; }
-  .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; }
+  .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: var(--color-text); }
 
   .address-filter { display: none; margin-bottom: 1rem; }
   .address-filter.visible { display: block; }
-  .address-filter > label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; font-weight: 600; }
+  .address-filter > label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: var(--color-text); font-weight: 600; }
   .address-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .address-row input { flex: 1; min-width: 240px; padding: 8px; border: 1px solid #cbd0d8; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
-  .address-row button { flex: 0 0 auto; padding: 8px 16px; font-size: 0.95rem; font-weight: 600; color: #fff; background: #1a56a8; border: none; border-radius: 6px; cursor: pointer; white-space: nowrap; }
-  .address-row button:hover { background: #164a90; }
+  .address-row input { flex: 1; min-width: 240px; padding: 8px; border: 1px solid var(--color-border); border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+  .address-row button { flex: 0 0 auto; padding: 8px 16px; font-size: 0.95rem; font-weight: 600; color: var(--color-on-accent); background: var(--color-accent); border: none; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+  .address-row button:hover { background: var(--color-accent); }
   .address-row button:disabled { opacity: 0.6; cursor: default; }
-  .address-hint { font-size: 0.78rem; color: #666; margin: 0.4rem 0 0; }
-  .address-error { color: #c00; font-size: 0.85rem; margin-top: 0.35rem; }
-  .address-or { font-size: 0.9rem; color: #555; font-weight: 600; margin: 0.9rem 0 0.5rem; }
+  .address-hint { font-size: 0.78rem; color: var(--color-text-secondary); margin: 0.4rem 0 0; }
+  .address-error { color: var(--color-danger); font-size: 0.85rem; margin-top: 0.35rem; }
+  .address-or { font-size: 0.9rem; color: var(--color-text-secondary); font-weight: 600; margin: 0.9rem 0 0.5rem; }
 
   .voter-banner {
     display: none;
@@ -147,15 +147,15 @@ breadcrumb:
     padding: 0.6rem 0.9rem;
     margin-bottom: 1rem;
     border-radius: 6px;
-    background: #eef6ff;
-    border: 1px solid #cfe3fb;
+    background: var(--color-surface-tint);
+    border: 1px solid var(--color-border);
     font-size: 0.88rem;
-    color: #1a3f6b;
+    color: var(--color-link);
   }
   .voter-banner.visible { display: flex; }
   .voter-banner button {
     background: none; border: none; padding: 0;
-    color: #1a56a8; font-weight: 600; font-size: 0.85rem;
+    color: var(--color-link); font-weight: 600; font-size: 0.85rem;
     text-decoration: underline; cursor: pointer;
   }
 
@@ -171,7 +171,7 @@ breadcrumb:
     align-items: center;
     gap: 0.4rem;
     font-size: 0.88rem;
-    color: #444;
+    color: var(--color-text);
     cursor: pointer;
     user-select: none;
   }
@@ -186,22 +186,22 @@ breadcrumb:
   .phase-btn {
     padding: 0.5rem 1.4rem;
     border-radius: 20px;
-    border: 2px solid #ddd;
-    background: #fff;
+    border: 2px solid var(--color-border);
+    background: var(--color-surface-raised);
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 500;
-    color: #555;
+    color: var(--color-text-secondary);
     transition: border-color 0.15s, color 0.15s, background 0.15s;
     white-space: nowrap;
   }
-  .phase-btn:hover { border-color: #888; color: #222; }
-  .phase-btn.active[data-phase="primary"] { background: #dcfce7; border-color: #166534; color: #166534; font-weight: 700; }
-  .phase-btn.active[data-phase="runoff"]  { background: #fef9c3; border-color: #854d0e; color: #854d0e; font-weight: 700; }
-  .phase-btn.active[data-phase="general"] { background: #dcfce7; border-color: #166534; color: #166534; font-weight: 700; }
+  .phase-btn:hover { border-color: var(--color-text-muted); color: var(--color-text); }
+  .phase-btn.active[data-phase="primary"] { background: var(--color-success-tint); border-color: var(--color-success); color: var(--color-success); font-weight: 700; }
+  .phase-btn.active[data-phase="runoff"]  { background: var(--color-warning-tint); border-color: var(--color-warning); color: var(--color-warning); font-weight: 700; }
+  .phase-btn.active[data-phase="general"] { background: var(--color-success-tint); border-color: var(--color-success); color: var(--color-success); font-weight: 700; }
   /* When only one phase is in play the button is a status label, not a control. */
   .phase-toggle.single .phase-btn { cursor: default; }
-  .phase-toggle.single .phase-btn:hover { border-color: #166534; color: #166534; }
+  .phase-toggle.single .phase-btn:hover { border-color: var(--color-success); color: var(--color-success); }
 
   @media (max-width: 600px) {
     .race-row { flex-wrap: wrap; }
@@ -253,7 +253,7 @@ breadcrumb:
       <input type="checkbox" id="openSeatOnly">
       Show open seats only
     </label>
-    <div style="font-size:0.78rem;color:#777;margin-top:0.25rem;margin-left:1.4rem;">An open seat is when an elected position does not have a current incumbent and/or the current incumbent is not running again.</div>
+    <div style="font-size:0.78rem;color:var(--color-text-muted);margin-top:0.25rem;margin-left:1.4rem;">An open seat is when an elected position does not have a current incumbent and/or the current incumbent is not running again.</div>
   </div>
 </div>
 
@@ -266,7 +266,7 @@ breadcrumb:
     <p style="margin:.25rem 0 .5rem;">Georgia's {{ r.count }} races on the ballot this cycle:</p>
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for row in r.rows -%}
-      <li style="padding:.4rem 0;border-bottom:1px solid #e5e7eb;"><strong>{{ row.count }}</strong> {{ row.label | escape }}</li>
+      <li style="padding:.4rem 0;border-bottom:1px solid var(--color-border-subtle);"><strong>{{ row.count }}</strong> {{ row.label | escape }}</li>
       {%- endfor -%}
     </ul>
   {%- endif -%}
@@ -668,7 +668,7 @@ breadcrumb:
       // exact districts, so only show it when we're not address-filtered.
       const addressExact = voterLoc && voterLoc.source === 'address' && COUNTY_TABS.has(activeTab);
       if ((activeTab === 'us-senate' || COUNTY_TABS.has(activeTab)) && !addressExact) {
-        html += `<p class="box-note" style="margin-bottom:1rem;font-size:0.82rem;color:#555;">Many counties are served by multiple districts. If you are unsure which district you're in, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> and scroll to the bottom to see your districts.</p>`;
+        html += `<p class="box-note" style="margin-bottom:1rem;font-size:0.82rem;color:var(--color-text-secondary);">Many counties are served by multiple districts. If you are unsure which district you're in, use the <a href="https://mvp.sos.ga.gov/s/mvp-landing-page" target="_blank">GA Secretary of State My Voter Page</a> and scroll to the bottom to see your districts.</p>`;
       }
 
       // More than one district in play from a county or ZIP means none is known to be the

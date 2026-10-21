@@ -16,57 +16,57 @@ css:
 
 <style>
   .fmr-lookup { margin: 1.25rem 0 2rem; }
-  .fmr-label { display:block; margin-bottom:0.3rem; font-size:0.88rem; color:#444; font-weight:600; }
+  .fmr-label { display:block; margin-bottom:0.3rem; font-size:0.88rem; color:var(--color-text); font-weight:600; }
   .fmr-row { display:flex; gap:0.5rem; flex-wrap:wrap; }
   .fmr-input {
     flex:1; min-width:240px; padding:8px; font-size:1rem;
-    border:1px solid #cbd0d8; border-radius:6px;
+    border:1px solid var(--color-border); border-radius:6px;
   }
   .fmr-btn {
     padding:8px 16px; font-size:0.95rem; font-weight:600; cursor:pointer;
-    background:#1a56a8; color:#fff; border:0; border-radius:6px; white-space:nowrap;
+    background:var(--color-accent); color:var(--color-on-accent); border:0; border-radius:6px; white-space:nowrap;
   }
   .fmr-btn:disabled { opacity:0.6; cursor:default; }
-  .fmr-privacy { font-size:0.78rem; color:#666; margin:0.4rem 0 0; }
+  .fmr-privacy { font-size:0.78rem; color:var(--color-text-secondary); margin:0.4rem 0 0; }
   .fmr-status { margin-top:0.9rem; font-size:0.9rem; }
-  .fmr-status.err { color:#b91c1c; }
+  .fmr-status.err { color:var(--color-danger); }
   .fmr-results { margin-top:1rem; display:grid; gap:0.9rem; }
-  .fmr-matched { font-size:0.85rem; color:#555; margin:0 0 0.25rem; }
-  .fmr-office { font-size:0.72rem; letter-spacing:0.05em; text-transform:uppercase; color:#777; font-weight:700; margin:0 0 0.4rem; }
+  .fmr-matched { font-size:0.85rem; color:var(--color-text-secondary); margin:0 0 0.25rem; }
+  .fmr-office { font-size:0.72rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--color-text-muted); font-weight:700; margin:0 0 0.4rem; }
   .fmr-repcard {
     display:flex; align-items:center; gap:0.9rem; padding:0.85rem 1rem;
-    border:1px solid #e0e0e0; border-radius:10px; background:#fff; text-decoration:none; color:inherit;
+    border:1px solid var(--color-border); border-radius:10px; background:var(--color-surface-raised); text-decoration:none; color:inherit;
   }
-  .fmr-repcard:hover { border-color:#1a56a8; box-shadow:0 2px 10px rgba(26,86,168,0.08); }
-  .fmr-photo { width:52px; height:52px; border-radius:50%; object-fit:cover; background:#eef1f5; flex-shrink:0; }
-  .fmr-photo-blank { display:flex; align-items:center; justify-content:center; font-size:1.3rem; color:#9aa3af; }
+  .fmr-repcard:hover { border-color:var(--color-accent); box-shadow:0 2px 10px color-mix(in srgb, var(--color-accent) calc(0.08 * 100%), transparent); }
+  .fmr-photo { width:52px; height:52px; border-radius:50%; object-fit:cover; background:var(--color-surface-chrome); flex-shrink:0; }
+  .fmr-photo-blank { display:flex; align-items:center; justify-content:center; font-size:1.3rem; color:var(--color-text-muted); }
   .fmr-repname { font-weight:600; font-size:1.02rem; }
-  .fmr-repmeta { font-size:0.82rem; color:#555; margin-top:1px; }
+  .fmr-repmeta { font-size:0.82rem; color:var(--color-text-secondary); margin-top:1px; }
   .fmr-chip { font-size:0.68rem; font-weight:700; padding:0.05rem 0.4rem; border-radius:100px; margin-left:0.4rem; }
-  .fmr-chip.D { background:#dbe4f8; color:#1e40af; }
-  .fmr-chip.R { background:#f6dcdc; color:#b91c1c; }
-  .fmr-chip.I { background:#eee; color:#555; }
+  .fmr-chip.D { background:var(--color-party-d-tint); color:var(--color-party-d-text); }
+  .fmr-chip.R { background:var(--color-party-r-tint); color:var(--color-party-r-text); }
+  .fmr-chip.I { background:var(--color-party-i-tint); color:var(--color-party-i-text); }
   /* Matches the sample ballot's .contest-badge / .badge-ambiguous. */
   .fmr-badge { display:inline-block; font-size:0.72rem; font-weight:700; padding:0.1rem 0.45rem; border-radius:999px; margin-left:0.35rem; vertical-align:middle; }
-  .fmr-badge-ambiguous { background:#fff0c2; color:#7a5c00; }
-  .fmr-vacant { color:#a35b00; font-style:italic; }
-  .fmr-browse-lead { margin:0.5rem 0 1rem; font-weight:600; color:#444; }
-  .fmr-or { margin:0.9rem 0 0.5rem; font-size:0.9rem; color:#555; font-weight:600; }
+  .fmr-badge-ambiguous { background:var(--color-warning-tint); color:var(--color-warning); }
+  .fmr-vacant { color:var(--color-warning); font-style:italic; }
+  .fmr-browse-lead { margin:0.5rem 0 1rem; font-weight:600; color:var(--color-text); }
+  .fmr-or { margin:0.9rem 0 0.5rem; font-size:0.9rem; color:var(--color-text-secondary); font-weight:600; }
   .fmr-select {
     flex:1; min-width:240px; max-width:400px; padding:0.6rem 0.75rem; font-size:1rem;
-    border:1px solid #cbd0d8; border-radius:8px; background:#fff;
+    border:1px solid var(--color-border); border-radius:8px; background:var(--color-surface-raised);
   }
-  .fmr-btn-secondary { background:#fff; color:#1a56a8; border:1px solid #1a56a8; }
+  .fmr-btn-secondary { background:var(--color-surface-raised); color:var(--color-link); border:1px solid var(--color-accent); }
   .fmr-zip-head { font-size:1.25rem; margin:0 0 0.4rem; }
-  .fmr-group-note { font-size:0.85rem; color:#555; margin:0 0 0.75rem; }
+  .fmr-group-note { font-size:0.85rem; color:var(--color-text-secondary); margin:0 0 0.75rem; }
   .fmr-carry {
     margin-top:0.9rem; padding:0.6rem 0.8rem; font-size:0.88rem;
-    background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; color:#1e3a8a;
+    background:var(--color-surface-tint); border:1px solid var(--color-border); border-radius:8px; color:var(--color-link);
     display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;
   }
   .fmr-carry button {
     padding:0.25rem 0.7rem; font-size:0.82rem; cursor:pointer;
-    background:#fff; color:#1e3a8a; border:1px solid #1e3a8a; border-radius:6px;
+    background:var(--color-surface-raised); color:var(--color-link); border:1px solid var(--color-accent); border-radius:6px;
   }
 </style>
 
@@ -115,7 +115,7 @@ css:
 
 <div class="reps-grid">
   <a class="rep-card" href="{{ '/federal-reps' | relative_url }}">
-    <div class="rep-card-icon">🏛️</div>
+    <div class="rep-card-icon"><i class="fa-solid fa-building-columns" aria-hidden="true"></i></div>
     <p class="rep-card-title">Federal Representatives</p>
     <p class="rep-card-desc">Georgia's U.S. House members and two U.S. Senators represent the state in Congress. They vote on federal law, the national budget, treaties, and foreign policy — issues that affect every American.</p>
     <div class="rep-card-topics">
@@ -128,7 +128,7 @@ css:
   </a>
 
   <a class="rep-card" href="{{ '/ga-state-reps' | relative_url }}">
-    <div class="rep-card-icon">🍑</div>
+    <div class="rep-card-icon"><i class="fa-solid fa-landmark-dome" aria-hidden="true"></i></div>
     <p class="rep-card-title">Georgia State Representatives</p>
     <p class="rep-card-desc">Georgia House and Senate members represent your district in the General Assembly. They vote on state law, the state budget, education funding, transportation, and local infrastructure that shapes everyday life in Georgia.</p>
     <div class="rep-card-topics">

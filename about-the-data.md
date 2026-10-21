@@ -109,7 +109,7 @@ Fetched weekly from the Georgia General Assembly's official web service (`webser
 
 - Strips the full per-bill action history (too large for client-side use), leaving only the latest action as `status` / `statusDate`.
 - Derives the Governor's action (signed, vetoed, or sent and still pending) as a structured `governorAction` field (see below), read from the bill's official legis.ga.gov status history rather than guessed from free text.
-- Keeps passage vote counts (yes/no/not voting) and the roll call motion text (i.e., Senate Vote #148) for each chamber vote. Because bills and votes now come from the same official source, every bill's recorded votes line up exactly with the roll-call data.
+- Keeps passage vote counts (yes/no/not voting) and the roll call motion text (i.e., Senate Vote var(--color-link)) for each chamber vote. Because bills and votes now come from the same official source, every bill's recorded votes line up exactly with the roll-call data.
 - Assigns subject tags from the O.C.G.A. Code Title(s) each bill amends — the official legislative subject classification — parsed from the bill summary and named from the legislature's own title taxonomy. Bills citing no code title, predominantly county-specific local legislation, get a **"Local / Municipal"** tag when the bill title starts with a Georgia county name.
 
 **What's included per bill:**

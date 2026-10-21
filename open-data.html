@@ -60,46 +60,46 @@ breadcrumb:
 
 <h1>Open Data</h1>
 <p>{{ site.data.open_data.meta.intro }}</p>
-<p style="font-size:0.92rem;color:#666;">Curious how each dataset is built and kept current? See <a href="{{ '/about-the-data' | relative_url }}">About the Data</a>.</p>
+<p style="font-size:0.92rem;color:var(--color-text-secondary);">Curious how each dataset is built and kept current? See <a href="{{ '/about-the-data' | relative_url }}">About the Data</a>.</p>
 
 <style>
   .od-section-title { margin:2.5rem 0 0.25rem; }
   .od-family-title { margin:2rem 0 0.25rem; font-size:1.15rem; }
-  .od-section-sub { color:#666; font-size:0.95rem; margin:0 0 1.25rem; }
+  .od-section-sub { color:var(--color-text-secondary); font-size:0.95rem; margin:0 0 1.25rem; }
 
   .od-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:1.25rem; }
 
   .od-card {
-    border:1px solid #ddd; border-radius:10px; padding:1.4rem; background:#fff;
+    border:1px solid var(--color-border); border-radius:10px; padding:1.4rem; background:var(--color-surface-raised);
     display:flex; flex-direction:column; gap:0.65rem;
   }
-  .od-card.is-featured { border-color:#008AFF; box-shadow:0 2px 12px rgba(0,138,255,0.10); }
+  .od-card.is-featured { border-color:var(--color-accent); box-shadow:0 2px 12px color-mix(in srgb, var(--color-accent) calc(0.10 * 100%), transparent); }
 
   .od-card-head { display:flex; align-items:baseline; justify-content:space-between; gap:0.5rem; flex-wrap:wrap; }
-  .od-card h3 { margin:0; font-size:1.12rem; color:#1a56a8; }
+  .od-card h3 { margin:0; font-size:1.12rem; color:var(--color-link); }
   .od-badge { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; border-radius:20px; padding:0.15rem 0.6rem; white-space:nowrap; }
-  .od-badge.repo { background:#e8f0fe; color:#1a56a8; }
-  .od-badge.site { background:#eef7ee; color:#2f7a34; }
+  .od-badge.repo { background:var(--color-surface-tint); color:var(--color-link); }
+  .od-badge.site { background:var(--color-success-tint); color:var(--color-success); }
 
-  .od-summary { font-size:0.9rem; color:#444; line-height:1.55; margin:0; }
+  .od-summary { font-size:0.9rem; color:var(--color-text); line-height:1.55; margin:0; }
 
-  .od-meta { display:grid; grid-template-columns:auto 1fr; gap:0.2rem 0.75rem; font-size:0.8rem; color:#555; margin:0.25rem 0; }
-  .od-meta dt { font-weight:600; color:#666; }
+  .od-meta { display:grid; grid-template-columns:auto 1fr; gap:0.2rem 0.75rem; font-size:0.8rem; color:var(--color-text-secondary); margin:0.25rem 0; }
+  .od-meta dt { font-weight:600; color:var(--color-text-secondary); }
   .od-meta dd { margin:0; }
 
-  .od-coverage { font-size:0.78rem; color:#7a5; background:#fbfdf9; border-left:3px solid #cfe3c0; padding:0.4rem 0.65rem; border-radius:0 5px 5px 0; margin:0; }
+  .od-coverage { font-size:0.78rem; color:var(--color-success); background:var(--color-surface-sunken); border-left:3px solid var(--color-success-line); padding:0.4rem 0.65rem; border-radius:0 5px 5px 0; margin:0; }
 
-  .od-stability { font-size:0.78rem; color:#8a6d3b; background:#fdfbf6; border-left:3px solid #e6d3a3; padding:0.4rem 0.65rem; border-radius:0 5px 5px 0; margin:0; }
+  .od-stability { font-size:0.78rem; color:var(--color-warning); background:var(--color-surface-sunken); border-left:3px solid var(--color-warning-line); padding:0.4rem 0.65rem; border-radius:0 5px 5px 0; margin:0; }
 
   .od-files { list-style:none; padding:0; margin:0.25rem 0 0; display:flex; flex-direction:column; gap:0.35rem; }
   .od-files li { font-size:0.85rem; }
-  .od-files a { font-weight:600; color:#008AFF; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
-  .od-files .od-file-desc { color:#777; font-family:inherit; font-weight:400; }
+  .od-files a { font-weight:600; color:var(--color-link); font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .od-files .od-file-desc { color:var(--color-text-muted); font-family:inherit; font-weight:400; }
 
   .od-links { display:flex; flex-wrap:wrap; gap:0.5rem 1rem; margin-top:auto; padding-top:0.5rem; font-size:0.85rem; }
   .od-links a { font-weight:600; }
 
-  .od-reuse { margin-top:3rem; border:1px solid #e5e7eb; border-radius:10px; background:#fafbfc; padding:1.5rem; }
+  .od-reuse { margin-top:3rem; border:1px solid var(--color-border-subtle); border-radius:10px; background:var(--color-surface-sunken); padding:1.5rem; }
   .od-reuse h2 { margin-top:0; }
   .od-reuse ul { margin:0.5rem 0 0; padding-left:1.2rem; }
   .od-reuse li { margin:0.3rem 0; font-size:0.92rem; }

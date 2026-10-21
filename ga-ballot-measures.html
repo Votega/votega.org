@@ -18,32 +18,32 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   }
   .measure-card {
     padding: 1.25rem 1.35rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
-    background: #fff;
-    border-left: 5px solid #1a56a8;
+    background: var(--color-surface-raised);
+    border-left: 5px solid var(--color-accent);
   }
   /* A measure that has passed the General Assembly but has not been referred to
      the ballot (the Governor has not signed). Struck through so it cannot be read
      as something voters will see; the status note says what happens next. */
   .measure-card.potential {
-    border-left-color: #c98a00;
-    background: #fffdf6;
+    border-left-color: var(--color-warning);
+    background: var(--color-warning-tint);
   }
   .measure-card.potential .measure-title,
   .measure-card.potential .measure-summary {
     text-decoration: line-through;
-    color: #777;
+    color: var(--color-text-muted);
   }
   /* Deliberately grey and recessive: this measure is not on anyone's ballot, so
      it must not compete visually with the three a voter actually decides. */
   .measure-card.not-on-ballot {
-    border-left-color: #9aa3af;
-    background: #f7f8fa;
+    border-left-color: var(--color-text-muted);
+    background: var(--color-surface-sunken);
   }
   .measure-card.not-on-ballot .measure-title,
   .measure-card.not-on-ballot .measure-summary {
-    color: #4b5563;
+    color: var(--color-text-secondary);
     text-decoration: line-through;
   }
   .measure-badges {
@@ -67,21 +67,21 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
      geometry above is this page's own. */
   .badge-certified { background: var(--status-certified-bg); color: var(--status-certified-fg); }
   .badge-potential { background: var(--status-unofficial-bg); color: var(--status-unofficial-fg); }
-  .badge-type { background: #e7eef8; color: #1a4d94; }
-  .badge-passed { background: #d7efd8; color: #1b5e20; }
-  .badge-failed { background: #f6dcdc; color: #a02121; }
+  .badge-type { background: var(--color-surface-tint); color: var(--color-link); }
+  .badge-passed { background: var(--color-success-tint); color: var(--color-success); }
+  .badge-failed { background: var(--color-danger-tint); color: var(--color-danger); }
   /* Neutral grey, not red: the measure did not lose a vote, it never got one. */
-  .badge-not-on-ballot { background: #e5e7eb; color: #374151; }
+  .badge-not-on-ballot { background: var(--color-surface-chrome); color: var(--color-text); }
   .measure-sub {
     font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #6b7280;
+    color: var(--color-text-muted);
     font-weight: 700;
     margin: 0.9rem 0 0.3rem;
   }
   .measure-intent p, .measure-opposition p { margin: 0; font-size: 0.93rem; }
-  .measure-opposition p { color: #4b5563; }
+  .measure-opposition p { color: var(--color-text-secondary); }
   .measure-sources ul { list-style: none; padding: 0; margin: 0; }
   .measure-sources li { padding: 0.22rem 0; font-size: 0.9rem; }
   /* The kind tag is the whole point of the reading list: a voter should see at a
@@ -92,12 +92,12 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     letter-spacing: 0.03em; padding: 0.08rem 0.4rem; border-radius: 100px;
     vertical-align: 0.05rem;
   }
-  .src-official { background: #e7eef8; color: #1a4d94; }
-  .src-news     { background: #eef0f3; color: #374151; }
-  .src-support  { background: #e3f2e4; color: #1b5e20; }
-  .src-oppose   { background: #f6e3e3; color: #a02121; }
-  .src-analysis { background: #f1ebf8; color: #553c9a; }
-  .src-pub { color: #6b7280; }
+  .src-official { background: var(--color-surface-tint); color: var(--color-link); }
+  .src-news     { background: var(--color-surface-chrome); color: var(--color-text); }
+  .src-support  { background: var(--color-success-tint); color: var(--color-success); }
+  .src-oppose   { background: var(--color-danger-tint); color: var(--color-danger); }
+  .src-analysis { background: var(--color-surface-tint); color: var(--color-link); }
+  .src-pub { color: var(--color-text-muted); }
   .measure-title {
     font-size: 1.2rem;
     font-weight: bold;
@@ -106,26 +106,26 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   }
   .measure-summary {
     font-size: 0.95rem;
-    color: #333;
+    color: var(--color-text);
     margin: 0 0 0.8rem 0;
     line-height: 1.5;
   }
   .measure-subjects {
     font-size: 0.8rem;
-    color: #666;
+    color: var(--color-text-secondary);
     margin-bottom: 0.75rem;
   }
   .measure-subjects .subj {
     display: inline-block;
-    background: #f0f0f0;
+    background: var(--color-surface-chrome);
     border-radius: 4px;
     padding: 0.1rem 0.45rem;
     margin: 0.1rem 0.25rem 0.1rem 0;
-    color: #444;
+    color: var(--color-text);
   }
   .measure-status-note {
     font-size: 0.85rem;
-    color: #8a5a00;
+    color: var(--color-warning);
     font-style: italic;
     margin-bottom: 0.75rem;
   }
@@ -134,7 +134,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     flex-wrap: wrap;
     gap: 0.5rem 1.5rem;
     font-size: 0.875rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--color-border-subtle);
     padding-top: 0.7rem;
   }
   .measure-footer a { text-decoration: none; }
@@ -149,15 +149,15 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     border-radius: 4px;
     overflow: hidden;
     margin: 0.4rem 0;
-    background: #eee;
+    background: var(--color-surface-chrome);
   }
-  .result-yes { background: #2e7d32; }
-  .result-no  { background: #b23b3b; }
+  .result-yes { background: var(--color-success); }
+  .result-no  { background: var(--color-danger); }
   .section-heading {
     margin-top: 2rem;
     font-size: 1.1rem;
-    color: #444;
-    border-bottom: 2px solid #eee;
+    color: var(--color-text);
+    border-bottom: 2px solid var(--color-border-subtle);
     padding-bottom: 0.3rem;
   }
 </style>
@@ -169,10 +169,10 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     {% include data-freshness.html data=r noun="measures" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for m in r.rows -%}
-      <li style="padding:.6rem 0;border-bottom:1px solid #e5e7eb;">
+      <li style="padding:.6rem 0;border-bottom:1px solid var(--color-border-subtle);">
         <strong>{{ m.title | escape }}</strong>
-        {%- if m.status %} <span style="color:#6b7280;">({{ m.status | escape }})</span>{% endif %}
-        {%- if m.summary %}<br><span style="color:#444;">{{ m.summary | escape }}</span>{% endif -%}
+        {%- if m.status %} <span style="color:var(--color-text-muted);">({{ m.status | escape }})</span>{% endif %}
+        {%- if m.summary %}<br><span style="color:var(--color-text);">{{ m.summary | escape }}</span>{% endif -%}
       </li>
       {%- endfor -%}
     </ul>
@@ -181,9 +181,9 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   {%- endif -%}
 </div>
 
-<p style="margin-top:1.5rem;font-size:0.8rem;color:#888;" id="dataSource"></p>
+<p style="margin-top:1.5rem;font-size:0.8rem;color:var(--color-text-muted);" id="dataSource"></p>
 
-<p style="margin-top:2rem;font-size:0.82rem;color:#777;">
+<p style="margin-top:2rem;font-size:0.82rem;color:var(--color-text-muted);">
   See who's on your ballot in the <a href="{{ '/elections/candidates/' | relative_url }}">election guide</a>,
   find registration and polling info on the <a href="{{ '/ga-voter-access' | relative_url }}">voter access &amp; calendar</a> page,
   or check <a href="{{ '/results' | relative_url }}">election results</a>.
@@ -208,8 +208,8 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
           <div class="result-yes" style="width:${yes}%"></div>
           <div class="result-no" style="width:${no}%"></div>
         </div>
-        <span style="color:#2e7d32;">Yes ${yes}%</span> &nbsp;·&nbsp;
-        <span style="color:#b23b3b;">No ${no}%</span>
+        <span style="color:var(--color-success);">Yes ${yes}%</span> &nbsp;·&nbsp;
+        <span style="color:var(--color-danger);">No ${no}%</span>
       </div>`;
   }
 
@@ -348,7 +348,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
         // Counts the measures actually on the ballot, so the line cannot read as
         // a claim about a 'not-on-ballot' card further down the page.
         const n = onBallot.length;
-        html += `<p style="font-weight:600;color:#444;margin-top:0.5rem;">`
+        html += `<p style="font-weight:600;color:var(--color-text);margin-top:0.5rem;">`
           + (n ? `${n} statewide ${n === 1 ? 'measure is' : 'measures are'} on the ballot for the ${escHtml(election)}.`
                : `On the ballot for the ${escHtml(election)}.`)
           + `</p>`;
@@ -367,7 +367,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       // nothing and keep looking for it.
       if (notOnBallot.length) {
         html += `<h2 class="section-heading">Proposed but Not on the Ballot</h2>`;
-        html += `<p style="font-size:0.9rem;color:#666;">These were proposed for this election but were never referred to voters, so they will <strong>not</strong> appear on your ballot. They are listed for the record.</p>`;
+        html += `<p style="font-size:0.9rem;color:var(--color-text-secondary);">These were proposed for this election but were never referred to voters, so they will <strong>not</strong> appear on your ballot. They are listed for the record.</p>`;
         html += `<div class="measure-grid">${notOnBallot.map(renderCard).join('')}</div>`;
       }
       if (unknown.length) {
@@ -392,7 +392,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       }
     } catch (err) {
       console.error(err);
-      container.innerHTML = `<p style="color:#c00;">Error loading ballot measures: ${escHtml(err.message)}. If this persists, the data file may be missing.</p>`;
+      container.innerHTML = `<p style="color:var(--color-danger);">Error loading ballot measures: ${escHtml(err.message)}. If this persists, the data file may be missing.</p>`;
     }
   }
 

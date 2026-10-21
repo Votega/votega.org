@@ -19,28 +19,28 @@ breadcrumb:
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #555;
-    border-bottom: 2px solid #ddd;
+    color: var(--color-text-secondary);
+    border-bottom: 2px solid var(--color-border);
     padding-bottom: 0.4rem;
     margin: 2rem 0 1rem 0;
   }
   /* Justice cards */
   .chief-card {
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 1.25rem;
     display: flex;
     gap: 1.25rem;
     align-items: flex-start;
     margin-bottom: 1.25rem;
-    background: #fff;
+    background: var(--color-surface-raised);
     text-decoration: none;
     color: inherit;
     transition: box-shadow 0.15s, border-color 0.15s;
   }
   .chief-card:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    border-color: #aaa;
+    border-color: var(--color-text-muted);
     text-decoration: none;
     color: inherit;
   }
@@ -51,7 +51,7 @@ breadcrumb:
     margin-bottom: 2rem;
   }
   .justice-card {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border-subtle);
     border-radius: 8px;
     padding: 1rem;
     display: flex;
@@ -59,14 +59,14 @@ breadcrumb:
     align-items: center;
     text-align: center;
     gap: 0.4rem;
-    background: #fff;
+    background: var(--color-surface-raised);
     text-decoration: none;
     color: inherit;
     transition: box-shadow 0.15s, border-color 0.15s;
   }
   .justice-card:hover {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    border-color: #bbb;
+    border-color: var(--color-border);
     text-decoration: none;
     color: inherit;
   }
@@ -75,25 +75,25 @@ breadcrumb:
     height: 72px;
     border-radius: 50%;
     object-fit: cover;
-    background: #f3f4f6;
+    background: var(--color-surface-chrome);
   }
   .justice-photo-lg {
     width: 90px;
     height: 90px;
     border-radius: 50%;
     object-fit: cover;
-    background: #f3f4f6;
+    background: var(--color-surface-chrome);
     flex-shrink: 0;
   }
-  .justice-name { font-weight: 700; font-size: 0.95rem; color: #111; line-height: 1.3; }
-  .justice-title { font-size: 0.72rem; font-weight: bold; text-transform: uppercase; color: #888; letter-spacing: 0.04em; }
-  .justice-appt { font-size: 0.78rem; color: #6b7280; }
-  .justice-view { font-size: 0.8rem; color: #1d4ed8; font-weight: 500; margin-top: 0.25rem; }
+  .justice-name { font-weight: 700; font-size: 0.95rem; color: var(--color-text); line-height: 1.3; }
+  .justice-title { font-size: 0.72rem; font-weight: bold; text-transform: uppercase; color: var(--color-text-muted); letter-spacing: 0.04em; }
+  .justice-appt { font-size: 0.78rem; color: var(--color-text-muted); }
+  .justice-view { font-size: 0.8rem; color: var(--color-link); font-weight: 500; margin-top: 0.25rem; }
   /* Decision cards */
   .decision-list { list-style: none; padding: 0; margin: 0 0 2rem 0; }
   .decision-item {
     padding: 0.9rem 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
   .decision-item:last-child { border-bottom: none; }
   .decision-header {
@@ -106,13 +106,13 @@ breadcrumb:
   .decision-name {
     font-weight: 700;
     font-size: 0.95rem;
-    color: #1d4ed8;
+    color: var(--color-link);
     text-decoration: none;
   }
   .decision-name:hover { text-decoration: underline; }
-  .decision-docket { font-size: 0.75rem; color: #9ca3af; }
-  .decision-meta { font-size: 0.78rem; color: #9ca3af; margin-bottom: 0.35rem; }
-  .decision-desc { font-size: 0.82rem; color: #444; line-height: 1.5; margin-bottom: 0.5rem; }
+  .decision-docket { font-size: 0.75rem; color: var(--color-text-muted); }
+  .decision-meta { font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: 0.35rem; }
+  .decision-desc { font-size: 0.82rem; color: var(--color-text); line-height: 1.5; margin-bottom: 0.5rem; }
   .vote-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
   .vote-chip {
     display: inline-block;
@@ -122,18 +122,18 @@ breadcrumb:
     font-weight: 600;
     white-space: nowrap;
   }
-  .chip-majority    { background: #dcfce7; color: #166534; }
-  .chip-minority    { background: #fee2e2; color: #991b1b; }
-  .chip-concurrence { background: #fef9c3; color: #854d0e; }
-  .chip-recused     { background: #f3f4f6; color: #6b7280; }
+  .chip-majority    { background: var(--color-success-tint); color: var(--color-success); }
+  .chip-minority    { background: var(--color-danger-tint); color: var(--color-danger); }
+  .chip-concurrence { background: var(--color-warning-tint); color: var(--color-warning); }
+  .chip-recused     { background: var(--color-surface-chrome); color: var(--color-text-muted); }
   .tally-badge {
     display: inline-block;
     padding: 0.15rem 0.55rem;
     border-radius: 4px;
     font-size: 0.78rem;
     font-weight: 700;
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--color-surface-chrome);
+    color: var(--color-text);
     margin-right: 0.4rem;
   }
   .load-more-btn {
@@ -142,14 +142,14 @@ breadcrumb:
     margin-top: 1rem;
     padding: 0.5rem;
     background: none;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     font-size: 0.875rem;
-    color: #374151;
+    color: var(--color-text);
     cursor: pointer;
     transition: background 0.15s;
   }
-  .load-more-btn:hover { background: #f3f4f6; }
+  .load-more-btn:hover { background: var(--color-surface-chrome); }
   @media (max-width: 600px) {
     .chief-card { flex-direction: column; align-items: center; text-align: center; }
   }
@@ -162,9 +162,9 @@ breadcrumb:
     {% include data-freshness.html data=r noun="justices" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for j in r.rows -%}
-      <li style="padding:.45rem 0;border-bottom:1px solid #e5e7eb;">
+      <li style="padding:.45rem 0;border-bottom:1px solid var(--color-border-subtle);">
         <strong>{{ j.name | escape }}</strong>{% if j.title %} — {{ j.title | escape }}{% endif %}
-        {%- if j.appointedBy %} <span style="color:#6b7280;">· appointed by {{ j.appointedBy | escape }}</span>{% endif -%}
+        {%- if j.appointedBy %} <span style="color:var(--color-text-muted);">· appointed by {{ j.appointedBy | escape }}</span>{% endif -%}
       </li>
       {%- endfor -%}
     </ul>
@@ -174,16 +174,16 @@ breadcrumb:
     {% include data-freshness.html data=d noun="decisions" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for c in d.rows -%}
-      <li style="padding:.45rem 0;border-bottom:1px solid #e5e7eb;">
+      <li style="padding:.45rem 0;border-bottom:1px solid var(--color-border-subtle);">
         <strong>{{ c.name | escape }}</strong>
-        {%- if c.term %} <span style="color:#6b7280;">· {{ c.term | escape }} term</span>{% endif %}
-        {%- if c.decidedDate %} <span style="color:#6b7280;">· decided {{ c.decidedDate | escape }}</span>{% endif -%}
+        {%- if c.term %} <span style="color:var(--color-text-muted);">· {{ c.term | escape }} term</span>{% endif %}
+        {%- if c.decidedDate %} <span style="color:var(--color-text-muted);">· decided {{ c.decidedDate | escape }}</span>{% endif -%}
       </li>
       {%- endfor -%}
     </ul>
     {%- endif -%}
   {%- else -%}
-    <p style="color:#777;font-size:0.9rem;">Loading...</p>
+    <p style="color:var(--color-text-muted);font-size:0.9rem;">Loading...</p>
   {%- endif -%}
 </div>
 
@@ -200,8 +200,8 @@ breadcrumb:
   }
 
   function apptPartyColor(party) {
-    if (!party) return '#6b7280';
-    return party.toLowerCase().includes('democrat') ? '#1d4ed8' : '#dc2626';
+    if (!party) return 'var(--color-text-muted)';
+    return party.toLowerCase().includes('democrat') ? 'var(--color-party-d)' : 'var(--color-party-r)';
   }
 
   function voteChip(v) {
@@ -231,9 +231,9 @@ breadcrumb:
         : '';
       const chips = (c.votes || []).map(voteChip).join('');
       const links = [
-        c.oyezUrl       ? `<a href="${c.oyezUrl}" target="_blank" rel="noopener" style="font-size:0.75rem;color:#6b7280;">Oyez</a>` : '',
-        c.justiaUrl     ? `<a href="${c.justiaUrl}" target="_blank" rel="noopener" style="font-size:0.75rem;color:#6b7280;">Justia</a>` : '',
-        c.courtListenerUrl ? `<a href="${c.courtListenerUrl}" target="_blank" rel="noopener" style="font-size:0.75rem;color:#6b7280;">CourtListener</a>` : '',
+        c.oyezUrl       ? `<a href="${c.oyezUrl}" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--color-text-muted);">Oyez</a>` : '',
+        c.justiaUrl     ? `<a href="${c.justiaUrl}" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--color-text-muted);">Justia</a>` : '',
+        c.courtListenerUrl ? `<a href="${c.courtListenerUrl}" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--color-text-muted);">CourtListener</a>` : '',
       ].filter(Boolean).join(' · ');
 
       return `<li class="decision-item">
@@ -306,7 +306,7 @@ breadcrumb:
         </a>`).join('');
 
       // Decisions section
-      let decisionsHtml = `<p style="color:#777;font-size:0.875rem;">Recent decisions are temporarily unavailable. Please try again shortly.</p>`;
+      let decisionsHtml = `<p style="color:var(--color-text-muted);font-size:0.875rem;">Recent decisions are temporarily unavailable. Please try again shortly.</p>`;
       let allCases = [];
 
       if (decisionsRes.ok) {
@@ -315,7 +315,7 @@ breadcrumb:
         const meta  = decisionsData.metadata || {};
         const terms = (meta.terms || []).join(', ');
         decisionsHtml = `
-          <p style="font-size:0.8rem;color:#6b7280;margin-bottom:0.75rem;">
+          <p style="font-size:0.8rem;color:var(--color-text-muted);margin-bottom:0.75rem;">
             ${allCases.length} decisions · ${terms} term${meta.terms?.length > 1 ? 's' : ''}
           </p>
           <div id="decisionsContainer"></div>`;
@@ -335,7 +335,7 @@ breadcrumb:
 
     } catch (err) {
       console.error('supreme-court:', err);
-      container.innerHTML = `<p style="color:#c00;">${err.message}</p>`;
+      container.innerHTML = `<p style="color:var(--color-danger);">${err.message}</p>`;
     }
   })();
 </script>

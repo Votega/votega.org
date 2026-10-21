@@ -6,7 +6,7 @@
   client-rendered freshness stamp.
 {%- endcomment -%}
 {%- if include.data and include.data.updated -%}
-<p class="data-freshness" style="font-size:.85rem;color:#6b7280;margin:.25rem 0 1rem;">
+<p class="data-freshness" style="font-size:.85rem;color:var(--color-text-muted);margin:.25rem 0 1rem;">
   Last updated
   {%- if include.data.updatedISO %} <time datetime="{{ include.data.updatedISO }}">{{ include.data.updated }}</time>
   {%- else %} {{ include.data.updated }}{% endif -%}

@@ -201,7 +201,7 @@
       .catch(function (err) {
         if (global.console) console.error(err);
         container.innerHTML =
-          '<p style="color:#555;">We’re working to link agendas and minutes to this ' +
+          '<p style="color:var(--color-text-secondary);">We’re working to link agendas and minutes to this ' +
           'page for ease of viewing and navigation. You can always view agendas and ' +
           'minutes directly on the ' +
           (sourceFallback

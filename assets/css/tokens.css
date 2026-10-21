@@ -22,6 +22,8 @@
   --amber-100: #fef3c7;
   --amber-300: #e6c96a;
   --red-700: #b91c1c;
+  --red-50:  #fdecec;
+  --red-200: #f3b4b4;
   --ink-900: #2b2118;
   --gray-100: #f3f4f6;
   --gray-300: #d1d5db;
@@ -83,6 +85,8 @@
   --color-neutral-line: var(--gray-300);
   --color-neutral-text: var(--gray-700);
   --color-danger: var(--red-700);
+  --color-danger-tint: var(--red-50);
+  --color-danger-line: var(--red-200);
 
   /* Categorical chart series (funding sources and the like). Deliberately avoids the
      three party hues so a series is never read as a party. Always label the series. */

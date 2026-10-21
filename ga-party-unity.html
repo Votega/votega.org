@@ -25,8 +25,8 @@ members, from the same roll-call record behind each member's page.</p>
   .pu-card {
     border-radius: 8px;
     padding: 1.1rem 1.35rem;
-    background: #f8f8f8;
-    border: 1px solid #e0e0e0;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
   }
   .pu-card h2 {
     margin: 0 0 0.4rem 0;
@@ -37,7 +37,7 @@ members, from the same roll-call record behind each member's page.</p>
     gap: 0.5rem;
   }
   .pu-card h2 .pu-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .pu-card p { margin: 0; font-size: 0.82rem; color: #555; line-height: 1.5; }
+  .pu-card p { margin: 0; font-size: 0.82rem; color: var(--color-text-secondary); line-height: 1.5; }
 
   /* ── Controls ─────────────────────────────────────────────── */
   .pu-controls {
@@ -47,36 +47,36 @@ members, from the same roll-call record behind each member's page.</p>
     align-items: flex-end;
     margin: 1.75rem 0 0.5rem 0;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
   .pu-ctl label {
     display: block;
     font-size: 0.68rem;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: #777;
+    color: var(--color-text-muted);
     font-weight: 600;
     margin-bottom: 0.35rem;
   }
-  .pu-seg { display: inline-flex; border: 1px solid #cbd0d8; border-radius: 8px; overflow: hidden; background: #fff; }
+  .pu-seg { display: inline-flex; border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; background: var(--color-surface-raised); }
   .pu-seg button {
-    border: 0; border-left: 1px solid #e5e7eb; background: transparent;
-    color: #555; cursor: pointer; font: inherit; font-size: 0.85rem;
+    border: 0; border-left: 1px solid var(--color-border-subtle); background: transparent;
+    color: var(--color-text-secondary); cursor: pointer; font: inherit; font-size: 0.85rem;
     font-weight: 500; padding: 0.4rem 0.8rem;
   }
   .pu-seg button:first-child { border-left: 0; }
-  .pu-seg button[aria-pressed="true"] { background: #1a56a8; color: #fff; font-weight: 600; }
+  .pu-seg button[aria-pressed="true"] { background: var(--color-accent); color: var(--color-on-accent); font-weight: 600; }
   .pu-controls select {
-    font: inherit; font-size: 0.88rem; font-weight: 500; color: #222;
-    background: #fff; border: 1px solid #cbd0d8; border-radius: 8px;
+    font: inherit; font-size: 0.88rem; font-weight: 500; color: var(--color-text);
+    background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: 8px;
     padding: 0.4rem 0.6rem; cursor: pointer; min-width: 240px;
   }
   .pu-range { display: flex; align-items: center; gap: 0.6rem; }
-  .pu-range input { accent-color: #1a56a8; width: 130px; }
+  .pu-range input { accent-color: var(--color-link); width: 130px; }
   .pu-rangeval { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 2ch; }
 
-  .pu-count { font-size: 0.8rem; color: #666; margin: 0.9rem 0 0.25rem; }
-  .pu-count strong { color: #222; }
+  .pu-count { font-size: 0.8rem; color: var(--color-text-secondary); margin: 0.9rem 0 0.25rem; }
+  .pu-count strong { color: var(--color-text); }
 
   /* ── Highlight banner ─────────────────────────────────────── */
   .pu-banner {
@@ -84,10 +84,10 @@ members, from the same roll-call record behind each member's page.</p>
     margin: 1rem 0 0;
     padding: 0.6rem 0.9rem;
     border-radius: 8px;
-    background: #fff8ec;
-    border: 1px solid #fde7c2;
+    background: var(--color-warning-tint);
+    border: 1px solid var(--color-warning-line);
     font-size: 0.85rem;
-    color: #333;
+    color: var(--color-text);
   }
   .pu-banner a { cursor: pointer; }
 
@@ -96,42 +96,42 @@ members, from the same roll-call record behind each member's page.</p>
   table.pu-table { border-collapse: collapse; width: 100%; min-width: 620px; }
   .pu-table thead th {
     text-align: right; font-size: 0.68rem; letter-spacing: 0.05em;
-    text-transform: uppercase; color: #888; font-weight: 700;
-    padding: 0 0.6rem 0.6rem; border-bottom: 1px solid #d0d0d0; white-space: nowrap;
+    text-transform: uppercase; color: var(--color-text-muted); font-weight: 700;
+    padding: 0 0.6rem 0.6rem; border-bottom: 1px solid var(--color-border); white-space: nowrap;
   }
   .pu-table thead th.l { text-align: left; }
-  .pu-table tbody td { padding: 0.65rem 0.6rem; border-bottom: 1px solid #eee; vertical-align: middle; }
-  .pu-table tbody tr:hover { background: #f6f8fb; }
-  .pu-table tbody tr.pu-hl { background: #fff4d6; }
-  .pu-table tbody tr.pu-hl:hover { background: #ffeec2; }
-  .pu-rank { color: #999; font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; width: 2.4rem; }
+  .pu-table tbody td { padding: 0.65rem 0.6rem; border-bottom: 1px solid var(--color-border-subtle); vertical-align: middle; }
+  .pu-table tbody tr:hover { background: var(--color-surface-sunken); }
+  .pu-table tbody tr.pu-hl { background: var(--color-warning-tint); }
+  .pu-table tbody tr.pu-hl:hover { background: var(--color-warning-tint); }
+  .pu-rank { color: var(--color-text-muted); font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; width: 2.4rem; }
   .pu-name { font-weight: 600; font-size: 0.95rem; }
-  .pu-name a { color: #1a56a8; }
-  .pu-sub { font-size: 0.74rem; color: #666; margin-top: 1px; }
+  .pu-name a { color: var(--color-link); }
+  .pu-sub { font-size: 0.74rem; color: var(--color-text-secondary); margin-top: 1px; }
   .pu-chip {
     font-size: 0.64rem; font-weight: 700; letter-spacing: 0.03em;
     padding: 0.1rem 0.4rem; border-radius: 100px; text-transform: uppercase;
     margin-left: 0.4rem; white-space: nowrap;
   }
-  .pu-chip.D { background: #dbe4f8; color: #1e40af; }
-  .pu-chip.R { background: #f6dcdc; color: #b91c1c; }
-  .pu-chip.I { background: #eee; color: #555; }
+  .pu-chip.D { background: var(--color-party-d-tint); color: var(--color-party-d-text); }
+  .pu-chip.R { background: var(--color-party-r-tint); color: var(--color-party-r-text); }
+  .pu-chip.I { background: var(--color-party-i-tint); color: var(--color-party-i-text); }
   .pu-tag {
     font-size: 0.62rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
-    color: #9a6a12; background: #f4e7cd; padding: 0.1rem 0.35rem; border-radius: 4px;
+    color: var(--color-warning); background: var(--color-warning-tint); padding: 0.1rem 0.35rem; border-radius: 4px;
     margin-left: 0.4rem; white-space: nowrap;
   }
   .pu-metric { width: 230px; }
   .pu-barrow { display: flex; align-items: center; gap: 0.6rem; }
-  .pu-track { flex: 1; height: 8px; border-radius: 100px; background: #eceff3; overflow: hidden; min-width: 70px; }
+  .pu-track { flex: 1; height: 8px; border-radius: 100px; background: var(--color-surface-chrome); overflow: hidden; min-width: 70px; }
   .pu-fill { height: 100%; border-radius: 100px; }
   .pu-pct { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 0.9rem; min-width: 3.3rem; text-align: right; }
-  .pu-frac { font-size: 0.7rem; color: #999; font-variant-numeric: tabular-nums; }
-  .pu-table td.pu-num { text-align: right; font-variant-numeric: tabular-nums; font-size: 0.85rem; color: #666; }
-  .pu-table td.pu-num.pu-strong { color: #222; font-weight: 600; }
+  .pu-frac { font-size: 0.7rem; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+  .pu-table td.pu-num { text-align: right; font-variant-numeric: tabular-nums; font-size: 0.85rem; color: var(--color-text-secondary); }
+  .pu-table td.pu-num.pu-strong { color: var(--color-text); font-weight: 600; }
 
-  .pu-foot { margin-top: 1.75rem; font-size: 0.76rem; color: #666; line-height: 1.6; }
-  .pu-foot code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; }
+  .pu-foot { margin-top: 1.75rem; font-size: 0.76rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .pu-foot code { background: var(--color-surface-chrome); padding: 1px 4px; border-radius: 3px; }
 
   @media (max-width: 640px) {
     .pu-method { grid-template-columns: 1fr; }
@@ -141,14 +141,14 @@ members, from the same roll-call record behind each member's page.</p>
 
 <div class="pu-method">
   <div class="pu-card">
-    <h2><span class="pu-dot" style="background:#8a6a1c;"></span>Party unity</h2>
+    <h2><span class="pu-dot" style="background:var(--color-warning);"></span>Party unity</h2>
     <p>Of the <em>party-line</em> roll calls. Where a majority of one caucus voted
       against a majority of the other, the share on which the member sided with their
       own party. Lopsided and bipartisan votes are excluded, because they say nothing
       about a member's independence.</p>
   </div>
   <div class="pu-card">
-    <h2><span class="pu-dot" style="background:#777;"></span>Participation</h2>
+    <h2><span class="pu-dot" style="background:var(--color-text-muted);"></span>Participation</h2>
     <p>Of the passage roll calls held in the member's chamber, the share on which they
       cast a Yea or Nay. Absences, excused absences, and "not voting" count against it.
       A floor-vote participation rate, not full attendance.</p>
@@ -210,11 +210,11 @@ members, from the same roll-call record behind each member's page.</p>
     {%- assign r = site.data.rendered.ga_party_unity -%}
     <tbody id="pu-rows" data-fallback="{% if r and r.rows %}1{% else %}0{% endif %}">
       {%- if r and r.rows -%}
-        {%- if r.updated -%}<tr><td colspan="6" style="color:#6b7280;font-size:.85rem;">Last updated {% if r.updatedISO %}<time datetime="{{ r.updatedISO }}">{{ r.updated }}</time>{% else %}{{ r.updated }}{% endif %}{% if r.count %} · {{ r.count }} members{% endif %}</td></tr>{%- endif -%}
+        {%- if r.updated -%}<tr><td colspan="6" style="color:var(--color-text-muted);font-size:.85rem;">Last updated {% if r.updatedISO %}<time datetime="{{ r.updatedISO }}">{{ r.updated }}</time>{% else %}{{ r.updated }}{% endif %}{% if r.count %} · {{ r.count }} members{% endif %}</td></tr>{%- endif -%}
         {%- for m in r.rows -%}
         <tr>
           <td>{{ forloop.index }}</td>
-          <td>{{ m.name | escape }}{% if m.party %} <span style="color:#6b7280;">({{ m.party | escape }}{% if m.chamber %}, {{ m.chamber | escape }}{% endif %}{% if m.district %} {{ m.district | escape }}{% endif %})</span>{% endif %}</td>
+          <td>{{ m.name | escape }}{% if m.party %} <span style="color:var(--color-text-muted);">({{ m.party | escape }}{% if m.chamber %}, {{ m.chamber | escape }}{% endif %}{% if m.district %} {{ m.district | escape }}{% endif %})</span>{% endif %}</td>
           <td colspan="4">{% if m.partyUnity %}Party unity {{ m.partyUnity | times: 100 | round: 1 }}%{% endif %}{% if m.votedWithParty %} · voted with party {{ m.votedWithParty }}{% endif %}</td>
         </tr>
         {%- endfor -%}
@@ -248,7 +248,7 @@ members, from the same roll-call record behind each member's page.</p>
   var $ = function (id) { return document.getElementById(id); };
   var pct = function (x) { return (x * 100).toFixed(1) + '%'; };
   var letter = function (p) { return p === 'Democratic' ? 'D' : p === 'Republican' ? 'R' : 'I'; };
-  var partyColor = function (p) { return p === 'Democratic' ? '#2563eb' : p === 'Republican' ? '#dc2626' : '#888'; };
+  var partyColor = function (p) { return p === 'Democratic' ? 'var(--color-party-d)' : p === 'Republican' ? 'var(--color-party-r)' : 'var(--color-text-muted)'; };
   function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
 
   // `denom` is the sample the active metric is computed over, and so the number
@@ -258,10 +258,10 @@ members, from the same roll-call record behind each member's page.</p>
   // second for "missed votes" at 45.5%, directly above members with a 790-vote
   // denominator, while the slider still read 25.
   var SORTS = {
-    independence: { head: 'Independence', get: function (m) { return m.independenceRate; }, need: 'unity', denom: function (m) { return m.partyLineVotes; },  sample: 'party-line votes', color: function () { return '#8a6a1c'; } },
+    independence: { head: 'Independence', get: function (m) { return m.independenceRate; }, need: 'unity', denom: function (m) { return m.partyLineVotes; },  sample: 'party-line votes', color: function () { return 'var(--color-warning)'; } },
     unity:        { head: 'Party unity',  get: function (m) { return m.partyUnity; },       need: 'unity', denom: function (m) { return m.partyLineVotes; },  sample: 'party-line votes', color: function (m) { return partyColor(m.party); } },
-    missed:       { head: 'Missed-vote rate', get: function (m) { return m.missedRate; },    need: 'any',   denom: function (m) { return m.totalRollCalls; }, sample: 'roll calls',       color: function () { return '#9a6a12'; } },
-    participation:{ head: 'Participation', get: function (m) { return m.participationRate; }, need: 'any',  denom: function (m) { return m.totalRollCalls; }, sample: 'roll calls',       color: function () { return '#777'; } }
+    missed:       { head: 'Missed-vote rate', get: function (m) { return m.missedRate; },    need: 'any',   denom: function (m) { return m.totalRollCalls; }, sample: 'roll calls',       color: function () { return 'var(--color-warning)'; } },
+    participation:{ head: 'Participation', get: function (m) { return m.participationRate; }, need: 'any',  denom: function (m) { return m.totalRollCalls; }, sample: 'roll calls',       color: function () { return 'var(--color-text-muted)'; } }
   };
 
   // Full-session roll-call count per chamber, used to tag a partial term under
@@ -357,7 +357,7 @@ members, from the same roll-call record behind each member's page.</p>
         + '</tr>';
     }).join('');
 
-    $('pu-rows').innerHTML = html || '<tr><td colspan="6" style="padding:1.5rem;color:#666;">No members match these filters.</td></tr>';
+    $('pu-rows').innerHTML = html || '<tr><td colspan="6" style="padding:1.5rem;color:var(--color-text-secondary);">No members match these filters.</td></tr>';
     updateBanner(list);
   }
 
@@ -495,7 +495,7 @@ members, from the same roll-call record behind each member's page.</p>
         $('pu-count').innerHTML = 'The sortable scorecard could not be loaded just now. '
           + 'The figures we last published are shown below.';
       } else {
-        rows.innerHTML = '<tr><td colspan="6" style="padding:1.5rem;color:#a00;">'
+        rows.innerHTML = '<tr><td colspan="6" style="padding:1.5rem;color:var(--color-danger);">'
           + 'The scorecard could not be loaded. Please try again later.</td></tr>';
         $('pu-count').textContent = '';
       }

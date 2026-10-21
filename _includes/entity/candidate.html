@@ -46,8 +46,8 @@
   .candidate-rivals {
     margin: 1.25rem 0;
     padding: 0.75rem 1rem;
-    background: #f9fafb;
-    border-left: 3px solid #d1d5db;
+    background: var(--color-surface-sunken);
+    border-left: 3px solid var(--color-border);
     font-size: 0.95rem;
   }
   .candidate-rivals h2 { font-size: 1rem; margin: 0 0 0.35rem; }
@@ -70,12 +70,12 @@
     width: 140px;
     height: 140px;
     border-radius: 50%;
-    background: #e5e7eb;
+    background: var(--color-surface-chrome);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 3rem;
-    color: #9ca3af;
+    color: var(--color-text-muted);
     flex-shrink: 0;
   }
   .candidate-header-info h1 { margin: 0 0 0.4rem 0; }
@@ -88,23 +88,23 @@
     font-weight: bold;
     margin-bottom: 0.6rem;
   }
-  .party-R     { background: #fee2e2; color: #b91c1c; }
-  .party-D     { background: #dbeafe; color: #1d4ed8; }
-  .party-other { background: #f3f4f6; color: #374151; }
+  .party-R     { background: var(--color-party-r-tint); color: var(--color-party-r-text); }
+  .party-D     { background: var(--color-party-d-tint); color: var(--color-party-d-text); }
+  .party-other { background: var(--color-surface-chrome); color: var(--color-text); }
 
   .race-context {
     font-size: 0.9rem;
-    color: #555;
+    color: var(--color-text-secondary);
     margin-bottom: 1rem;
   }
 
   .no-record-note {
     padding: 0.75rem 1rem;
-    background: #f9f9f9;
-    border-left: 3px solid #d1d5db;
+    background: var(--color-surface-sunken);
+    border-left: 3px solid var(--color-border);
     border-radius: 0 6px 6px 0;
     font-size: 0.88rem;
-    color: #555;
+    color: var(--color-text-secondary);
     margin: 1.25rem 0;
   }
 
@@ -120,24 +120,24 @@
     align-items: center;
     gap: 0.4rem;
     padding: 0.6rem 1rem;
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
+    background: var(--color-surface-tint);
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     font-size: 0.88rem;
-    color: #1d4ed8;
+    color: var(--color-link);
     text-decoration: none;
     margin: 1rem 0 1.25rem 0;
   }
-  .member-record-link:hover { background: #dbeafe; }
+  .member-record-link:hover { background: var(--color-surface-tint); }
 
   .service-section {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 8px;
     padding: 1.25rem 1.5rem;
     margin-bottom: 1.5rem;
   }
-  .service-section h2 { font-size: 1rem; margin: 0 0 0.75rem 0; color: #111; }
+  .service-section h2 { font-size: 1rem; margin: 0 0 0.75rem 0; color: var(--color-text); }
   .service-section dl {
     display: grid;
     grid-template-columns: 180px 1fr;
@@ -147,12 +147,12 @@
   .service-section dt {
     font-size: 0.8rem;
     font-weight: bold;
-    color: #6b7280;
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.04em;
     padding-top: 0.15rem;
   }
-  .service-section dd { margin: 0; font-size: 0.95rem; color: #111; }
+  .service-section dd { margin: 0; font-size: 0.95rem; color: var(--color-text); }
   @media (max-width: 500px) {
     .service-section dl { grid-template-columns: 1fr; }
     .service-section dt { margin-top: 0.5rem; }
@@ -160,7 +160,7 @@
 
   .finance-section {
     margin: 1.5rem 0;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--color-border-subtle);
     padding-top: 1.25rem;
   }
   .finance-section h2 { margin: 0 0 0.75rem 0; font-size: 1rem; }
@@ -182,27 +182,27 @@
     margin-bottom: 0.2rem;
   }
   .finance-card-value { font-size: 1.05rem; font-weight: bold; }
-  .finance-card.raised  { background: #f0fdf4; border: 1px solid #bbf7d0; }
-  .finance-card.raised  .finance-card-label { color: #166534; }
-  .finance-card.raised  .finance-card-value { color: #15803d; }
+  .finance-card.raised  { background: var(--color-success-tint); border: 1px solid var(--color-success-line); }
+  .finance-card.raised  .finance-card-label { color: var(--color-success); }
+  .finance-card.raised  .finance-card-value { color: var(--color-success); }
   /* The "Includes N committees" list under a combined figure. Tight and
      unbulleted so it reads as a caption, not a content list. */
   .finance-committees { margin: 0.15rem 0 0 0; padding-left: 1rem; list-style: none; }
   .finance-committees li { margin: 0.1rem 0; }
-  .finance-card.spent   { background: #fef2f2; border: 1px solid #fecaca; }
-  .finance-card.spent   .finance-card-label { color: #991b1b; }
-  .finance-card.spent   .finance-card-value { color: #b91c1c; }
-  .finance-card.cash    { background: #eff6ff; border: 1px solid #bfdbfe; }
-  .finance-card.cash    .finance-card-label { color: #1e40af; }
-  .finance-card.cash    .finance-card-value { color: #1d4ed8; }
-  .finance-meta { font-size: 0.78rem; color: #666; margin: 0; }
+  .finance-card.spent   { background: var(--color-danger-tint); border: 1px solid var(--color-danger-line); }
+  .finance-card.spent   .finance-card-label { color: var(--color-danger); }
+  .finance-card.spent   .finance-card-value { color: var(--color-danger); }
+  .finance-card.cash    { background: var(--color-surface-tint); border: 1px solid var(--color-border); }
+  .finance-card.cash    .finance-card-label { color: var(--color-link); }
+  .finance-card.cash    .finance-card-value { color: var(--color-link); }
+  .finance-meta { font-size: 0.78rem; color: var(--color-text-secondary); margin: 0; }
 
   /* "Where the money came from" (receipt composition) — rendered by
      CampaignFinance.fundingBreakdownHtml() so both finance panels share it. */
   .finance-subhead {
     font-size: 0.88rem;
     margin: 1.25rem 0 0.25rem 0;
-    color: #374151;
+    color: var(--color-text);
   }
   .funding-note { margin-bottom: 0.5rem; }
   .funding-bar {
@@ -211,7 +211,7 @@
     height: 10px;
     border-radius: 999px;
     overflow: hidden;
-    background: #f3f4f6;
+    background: var(--color-surface-chrome);
     margin: 0.1rem 0 0.25rem 0;
   }
   /* Segments are sized by share, so a 0.4% source would otherwise render as a
@@ -239,16 +239,16 @@
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #6b7280;
+    color: var(--color-text-muted);
     padding: 0.3rem 0.5rem 0.3rem 0;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
   .employers-table td {
     padding: 0.35rem 0.5rem 0.35rem 0;
-    border-bottom: 1px solid #f3f4f6;
-    color: #111;
+    border-bottom: 1px solid var(--color-border-subtle);
+    color: var(--color-text);
   }
-  .employers-table td:not(:first-child) { text-align: right; color: #374151; }
+  .employers-table td:not(:first-child) { text-align: right; color: var(--color-text); }
 
   .back-link { margin-top: 2rem; font-size: 0.9rem; }
 
@@ -263,13 +263,13 @@
     margin-bottom: 0.6rem;
     margin-right: 0.3rem;
   }
-  .role-incumbent      { background: #e0f2fe; color: #0369a1; }
-  .role-withdrawn      { background: #fef2f2; color: #991b1b; }
-  .role-disqualified   { background: #fefce8; color: #854d0e; }
+  .role-incumbent      { background: var(--color-surface-tint); color: var(--color-link); }
+  .role-withdrawn      { background: var(--color-danger-tint); color: var(--color-danger); }
+  .role-disqualified   { background: var(--color-warning-tint); color: var(--color-warning); }
 
   .profile-details {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 8px;
     padding: 1.25rem 1.5rem;
     margin-bottom: 1.5rem;
@@ -283,12 +283,12 @@
   .profile-details dt {
     font-size: 0.8rem;
     font-weight: bold;
-    color: #6b7280;
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.04em;
     padding-top: 0.15rem;
   }
-  .profile-details dd { margin: 0; font-size: 0.95rem; color: #111; }
+  .profile-details dd { margin: 0; font-size: 0.95rem; color: var(--color-text); }
 
   @media (max-width: 500px) {
     .profile-details dl { grid-template-columns: 1fr; }
@@ -299,9 +299,9 @@
      the public-record profile above it. Styles shared conceptually with
      assets/scripts/candidate-claims.js output. */
   .claim-block {
-    border: 1px solid #bfdbef;
-    border-left: 4px solid #008AFF;
-    background: #f7fbff;
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent);
+    background: var(--color-surface-sunken);
     border-radius: 0 8px 8px 0;
     padding: 1.1rem 1.35rem;
     margin: 1.5rem 0;
@@ -318,62 +318,62 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #0a5aa8;
-    background: #dceefb;
+    color: var(--color-link);
+    background: var(--color-surface-tint);
     border-radius: 20px;
     padding: 0.2rem 0.7rem;
   }
-  .claim-label-date { font-size: 0.8rem; color: #6b7280; }
+  .claim-label-date { font-size: 0.8rem; color: var(--color-text-muted); }
   .claim-bio { line-height: 1.65; margin-bottom: 0.5rem; }
   .claim-bio p { margin: 0; }
   .claim-subhead {
     font-size: 0.98rem;
-    color: #1a2733;
+    color: var(--color-text);
     margin: 1.1rem 0 0.5rem;
   }
   .claim-qa { margin-bottom: 0.75rem; }
-  .claim-q { font-weight: 600; color: #1a2733; margin: 0 0 0.15rem; font-size: 0.9rem; }
-  .claim-a { margin: 0; line-height: 1.55; color: #333; font-size: 0.92rem; }
+  .claim-q { font-weight: 600; color: var(--color-text); margin: 0 0 0.15rem; font-size: 0.9rem; }
+  .claim-a { margin: 0; line-height: 1.55; color: var(--color-text); font-size: 0.92rem; }
   .claim-votes ul, .claim-endorsements ul { margin: 0.25rem 0 0; padding-left: 1.15rem; }
   .claim-votes li, .claim-endorsements li { line-height: 1.6; }
   .claim-vote-bill { font-weight: 600; }
   .claim-vote-pos {
     font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.03em; color: #0a5aa8; margin-left: 0.4rem;
+    letter-spacing: 0.03em; color: var(--color-link); margin-left: 0.4rem;
   }
-  .claim-vote-note { display: block; font-size: 0.85rem; color: #555; }
-  .claim-unverified { font-size: 0.82rem; color: #6b7280; font-style: italic; margin: 0 0 0.35rem; }
+  .claim-vote-note { display: block; font-size: 0.85rem; color: var(--color-text-secondary); }
+  .claim-unverified { font-size: 0.82rem; color: var(--color-text-muted); font-style: italic; margin: 0 0 0.35rem; }
   .claim-links {
     display: flex; flex-wrap: wrap; gap: 0.5rem 1rem;
-    margin-top: 0.9rem; padding-top: 0.75rem; border-top: 1px solid #dbeafe;
+    margin-top: 0.9rem; padding-top: 0.75rem; border-top: 1px solid var(--color-border);
     font-size: 0.88rem;
   }
 
   /* "Are you this candidate?" claim CTA (shown when unclaimed) */
   .claim-cta {
-    border: 1px dashed #c7ccd4;
-    background: #fafbfc;
+    border: 1px dashed var(--color-border);
+    background: var(--color-surface-sunken);
     border-radius: 8px;
     padding: 1rem 1.25rem;
     margin: 1.5rem 0;
   }
-  .claim-cta-text { font-size: 0.9rem; color: #555; line-height: 1.55; margin: 0 0 0.75rem; }
+  .claim-cta-text { font-size: 0.9rem; color: var(--color-text-secondary); line-height: 1.55; margin: 0 0 0.75rem; }
   .claim-cta-btn {
     display: inline-block;
     padding: 0.55rem 1.1rem;
-    background: #1a56a8;
-    color: #fff;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
     font-weight: 600;
     font-size: 0.9rem;
     border-radius: 6px;
     text-decoration: none;
   }
-  .claim-cta-btn:hover { background: #164a90; color: #fff; text-decoration: none; }
+  .claim-cta-btn:hover { background: var(--color-accent); color: var(--color-on-accent); text-decoration: none; }
   .claim-cta-learn {
     display: inline-block;
     margin-left: 0.85rem;
     font-size: 0.88rem;
-    color: #1a56a8;
+    color: var(--color-link);
   }
 
 </style>
@@ -765,7 +765,7 @@
       }
 
       container.innerHTML = `
-        <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: GA Ethics Commission</small></h2>
+        <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-muted);">Source: GA Ethics Commission</small></h2>
         <div class="finance-cards">
           <div class="finance-card raised">
             <div class="finance-card-label">Total Raised</div>
@@ -798,7 +798,7 @@
     if (!fecData) {
       container.innerHTML = `
         <h2>Campaign Finance</h2>
-        <p style="font-size:0.875rem;color:#666;">
+        <p style="font-size:0.875rem;color:var(--color-text-secondary);">
           Finance data unavailable.
           <a href="${CampaignFinance.fecSearchUrl()}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
         </p>`;
@@ -818,7 +818,7 @@
         : 'No FEC filing found for this candidate.';
       container.innerHTML = `
         <h2>Campaign Finance</h2>
-        <p style="font-size:0.875rem;color:#666;">
+        <p style="font-size:0.875rem;color:var(--color-text-secondary);">
           ${msg}
           <a href="${CampaignFinance.fecSearchUrl(fecCycle)}" target="_blank" rel="noopener">Search FEC.gov ↗</a>
         </p>`;
@@ -840,7 +840,7 @@
       : cycleLabel;
 
     const employersHtml = (entry.topEmployers || []).length ? `
-      <h3 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:#374151;">Top Donors by Employer</h3>
+      <h3 style="font-size:0.88rem;margin:1.25rem 0 0.25rem 0;color:var(--color-text);">Top Donors by Employer</h3>
       <table class="employers-table">
         <thead><tr><th>Employer</th><th>Donors</th><th>Total</th></tr></thead>
         <tbody>
@@ -855,7 +855,7 @@
 
 
     container.innerHTML = `
-      <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:#777;">Source: FEC</small></h2>
+      <h2>Campaign Finance <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-muted);">Source: FEC</small></h2>
       <div class="finance-cards">
         <div class="finance-card raised">
           <div class="finance-card-label">Total Raised</div>
@@ -870,9 +870,9 @@
           <div class="finance-card-value">${fmtMoney(entry.cashOnHand)}</div>
         </div>
         ${entry.totalIndividual != null ? `
-        <div class="finance-card" style="background:#f5f3ff;border:1px solid #ddd6fe;">
-          <div class="finance-card-label" style="color:#5b21b6;">From Individuals</div>
-          <div class="finance-card-value" style="color:#6d28d9;">${fmtMoney(entry.totalIndividual)}</div>
+        <div class="finance-card" style="background:var(--color-surface-tint);border:1px solid var(--color-border);">
+          <div class="finance-card-label" style="color:var(--color-link);">From Individuals</div>
+          <div class="finance-card-value" style="color:var(--color-link);">${fmtMoney(entry.totalIndividual)}</div>
         </div>` : ''}
       </div>
       <p class="finance-meta">${coverageNote}</p>

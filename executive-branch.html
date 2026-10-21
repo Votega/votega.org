@@ -17,8 +17,8 @@ share-description: "The federal executive branch - the President, Vice President
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #555;
-    border-bottom: 2px solid #ddd;
+    color: var(--color-text-secondary);
+    border-bottom: 2px solid var(--color-border);
     padding-bottom: 0.4rem;
     margin: 2rem 0 1rem 0;
   }
@@ -32,14 +32,14 @@ share-description: "The federal executive branch - the President, Vice President
     flex: 1;
     min-width: 220px;
     max-width: 360px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 1.25rem;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     gap: 1rem;
-    background: #fff;
+    background: var(--color-surface-raised);
     text-decoration: none;
     color: inherit;
     transition: box-shadow 0.15s, border-color 0.15s;
@@ -60,7 +60,7 @@ share-description: "The federal executive branch - the President, Vice President
   }
   .elected-card:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    border-color: #aaa;
+    border-color: var(--color-text-muted);
     text-decoration: none;
     color: inherit;
   }
@@ -68,27 +68,27 @@ share-description: "The federal executive branch - the President, Vice President
     font-size: 0.75rem;
     font-weight: bold;
     text-transform: uppercase;
-    color: #666;
+    color: var(--color-text-secondary);
     letter-spacing: 0.04em;
   }
   .elected-card .official-name {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #111;
+    color: var(--color-text);
   }
   .elected-card .official-party {
     font-size: 0.875rem;
-    color: #555;
+    color: var(--color-text-secondary);
   }
   .elected-card .official-term {
     font-size: 0.8rem;
-    color: #777;
+    color: var(--color-text-muted);
     margin-top: 0.25rem;
   }
   .elected-card .view-link {
     margin-top: 0.75rem;
     font-size: 0.875rem;
-    color: #1d4ed8;
+    color: var(--color-link);
     font-weight: 500;
   }
   .cabinet-grid {
@@ -98,13 +98,13 @@ share-description: "The federal executive branch - the President, Vice President
     margin-bottom: 2rem;
   }
   .cabinet-card {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border-subtle);
     border-radius: 8px;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    background: #fafafa;
+    background: var(--color-surface-sunken);
     text-decoration: none;
     color: inherit;
     transition: box-shadow 0.15s, border-color 0.15s;
@@ -119,7 +119,7 @@ share-description: "The federal executive branch - the President, Vice President
   }
   .cabinet-card:hover {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    border-color: #bbb;
+    border-color: var(--color-border);
     text-decoration: none;
     color: inherit;
   }
@@ -127,32 +127,32 @@ share-description: "The federal executive branch - the President, Vice President
     font-size: 0.72rem;
     font-weight: bold;
     text-transform: uppercase;
-    color: #888;
+    color: var(--color-text-muted);
     letter-spacing: 0.04em;
   }
   .cabinet-card .cabinet-name {
     font-size: 1rem;
     font-weight: 600;
-    color: #111;
+    color: var(--color-text);
   }
   .cabinet-card .cabinet-role {
     font-size: 0.8rem;
-    color: #555;
+    color: var(--color-text-secondary);
     line-height: 1.35;
   }
   .cabinet-card .policy-badge {
     display: inline-block;
     margin-top: 0.5rem;
     padding: 0.15rem 0.5rem;
-    background: #eef2ff;
+    background: var(--color-surface-tint);
     border-radius: 4px;
     font-size: 0.7rem;
-    color: #4338ca;
+    color: var(--color-link);
     font-weight: 600;
   }
   .data-note {
     font-size: 0.8rem;
-    color: #888;
+    color: var(--color-text-muted);
     margin-top: 0.5rem;
   }
   @media (max-width: 600px) {
@@ -190,7 +190,7 @@ share-description: "The federal executive branch - the President, Vice President
 </div>
 
 <div class="exec-section-header" id="cabinet"><a class="exec-section-anchor" href="#cabinet">The President's Cabinet</a></div>
-<p style="font-size:0.875rem;color:#555;margin-bottom:1rem;">
+<p style="font-size:0.875rem;color:var(--color-text-secondary);margin-bottom:1rem;">
   The Cabinet includes the Vice President and the heads of 15 executive departments.
   All department secretaries are nominated by the President and confirmed by the U.S. Senate.
 </p>
@@ -208,7 +208,7 @@ share-description: "The federal executive branch - the President, Vice President
       site instead of promising rule tracking it can't offer.
     {%- endcomment -%}
     {%- if o.department == "Office of the Director of National Intelligence" -%}
-    <span class="policy-badge" style="background:#f3f4f6;color:#6b7280;">Visit official website &rarr;</span>
+    <span class="policy-badge" style="background:var(--color-surface-chrome);color:var(--color-text-muted);">Visit official website &rarr;</span>
     {%- else -%}
     <span class="policy-badge">View agency rules &amp; regulations &rarr;</span>
     {%- endif -%}

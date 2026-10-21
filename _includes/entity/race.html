@@ -4,9 +4,9 @@
   {%- if page.entity -%}
     {%- assign e = page.entity -%}
     <h1 style="margin:0 0 .25rem;">{{ e.name | escape }}</h1>
-    <p style="font-size:1.05rem;color:#444;margin:0 0 1rem;">
+    <p style="font-size:1.05rem;color:var(--color-text);margin:0 0 1rem;">
       {%- if e.chamber %}{{ e.chamber | escape }}{% endif %}{% if e.cycle %} · {{ e.cycle }} election{% endif %}
-      {%- if e.summary %}<br><span style="color:#6b7280;">{{ e.summary | escape }}</span>{% endif -%}
+      {%- if e.summary %}<br><span style="color:var(--color-text-muted);">{{ e.summary | escape }}</span>{% endif -%}
     </p>
       {%- if e.about %}{% for para in e.about %}<p>{{ para | escape }}</p>{% endfor %}{% endif -%}
     {%- if e.candidates and e.candidates.size > 0 %}
@@ -53,7 +53,7 @@
   .voter-links { margin-top: 1.25rem; font-size: 0.95rem; }
   .race-header { margin-bottom: 1.5rem; }
   .race-header h1 { margin-bottom: 0.25rem; }
-  .race-header .meta { font-size: 0.9rem; color: #555; }
+  .race-header .meta { font-size: 0.9rem; color: var(--color-text-secondary); }
 
   .phase-badge {
     display: inline-block;
@@ -63,29 +63,29 @@
     font-weight: bold;
     margin-right: 0.5rem;
   }
-  .phase-primary { background: #fef9c3; color: #854d0e; }
-  .phase-runoff  { background: #fef9c3; color: #854d0e; }
-  .phase-general { background: #dcfce7; color: #166534; }
+  .phase-primary { background: var(--color-warning-tint); color: var(--color-warning); }
+  .phase-runoff  { background: var(--color-warning-tint); color: var(--color-warning); }
+  .phase-general { background: var(--color-success-tint); color: var(--color-success); }
 
   .race-related {
     padding: 0.75rem 1rem;
-    background: #eef4fb;
-    border-left: 4px solid #1a56a8;
+    background: var(--color-surface-tint);
+    border-left: 4px solid var(--color-accent);
     border-radius: 0 6px 6px 0;
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
-    color: #22364d;
+    color: var(--color-text);
   }
   .race-related .race-related-link { display: inline-block; margin-top: 0.3rem; font-weight: 600; }
   /* A `_note` that is not an open-seat note -- neutral, no "Open Seat" label. */
   .race-note {
     padding: 0.75rem 1rem;
-    background: #f4f5f7;
-    border-left: 4px solid #6b7280;
+    background: var(--color-surface-chrome);
+    border-left: 4px solid var(--color-text-muted);
     border-radius: 0 6px 6px 0;
     margin-bottom: 1.25rem;
     font-size: 0.9rem;
-    color: #374151;
+    color: var(--color-text);
     line-height: 1.5;
   }
 
@@ -100,13 +100,13 @@
     flex: 1;
     min-width: 240px;
     max-width: 360px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 1.25rem;
     position: relative;
   }
-  .candidate-card.incumbent { border-left: 4px solid #1a56a8; }
-  .candidate-card.challenger { border-left: 4px solid #888; }
+  .candidate-card.incumbent { border-left: 4px solid var(--color-accent); }
+  .candidate-card.challenger { border-left: 4px solid var(--color-text-muted); }
   .candidate-card.withdrawn     { opacity: 0.55; }
   .candidate-card.disqualified  { opacity: 0.55; }
 
@@ -120,8 +120,8 @@
     letter-spacing: 0.04em;
     margin-bottom: 0.6rem;
   }
-  .role-incumbent  { background: #1a56a8; color: #fff; box-shadow: 0 1px 3px rgba(26,86,168,0.35); }
-  .role-challenger { background: #f3f4f6; color: #374151; }
+  .role-incumbent  { background: var(--color-accent); color: var(--color-on-accent); box-shadow: 0 1px 3px color-mix(in srgb, var(--color-accent) calc(0.35 * 100%), transparent); }
+  .role-challenger { background: var(--color-surface-chrome); color: var(--color-text); }
 
   /* Chip marking a candidate who has claimed and added campaign-submitted content */
   .claim-card-badge {
@@ -130,14 +130,14 @@
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.02em;
-    color: #0a5aa8;
-    background: #dceefb;
+    color: var(--color-link);
+    background: var(--color-surface-tint);
     border-radius: 20px;
     padding: 0.15rem 0.55rem;
     vertical-align: middle;
   }
-  .role-withdrawn      { background: #fef2f2; color: #991b1b; }
-  .role-disqualified   { background: #fefce8; color: #854d0e; }
+  .role-withdrawn      { background: var(--color-danger-tint); color: var(--color-danger); }
+  .role-disqualified   { background: var(--color-warning-tint); color: var(--color-warning); }
 
   .candidate-photo {
     width: 80px;
@@ -151,12 +151,12 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: #e5e7eb;
+    background: var(--color-surface-chrome);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.8rem;
-    color: #9ca3af;
+    color: var(--color-text-muted);
     margin-bottom: 0.75rem;
   }
 
@@ -170,22 +170,22 @@
     font-weight: bold;
     margin-bottom: 0.75rem;
   }
-  .party-R    { background: #fee2e2; color: #b91c1c; }
-  .party-D    { background: #dbeafe; color: #1d4ed8; }
-  .party-other { background: #f3f4f6; color: #374151; }
+  .party-R    { background: var(--color-party-r-tint); color: var(--color-party-r-text); }
+  .party-D    { background: var(--color-party-d-tint); color: var(--color-party-d-text); }
+  .party-other { background: var(--color-surface-chrome); color: var(--color-text); }
 
-  .candidate-bio { font-size: 0.88rem; color: #444; margin-bottom: 0.75rem; line-height: 1.5; }
+  .candidate-bio { font-size: 0.88rem; color: var(--color-text); margin-bottom: 0.75rem; line-height: 1.5; }
 
   .candidate-links { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.75rem; }
   .candidate-links a { font-size: 0.88rem; }
 
   .no-candidates {
     padding: 1rem;
-    background: #f9f9f9;
+    background: var(--color-surface-sunken);
     border-radius: 6px;
-    border: 1px dashed #ccc;
+    border: 1px dashed var(--color-border);
     font-size: 0.9rem;
-    color: #666;
+    color: var(--color-text-secondary);
   }
 
   /* Open primary ballot sections */
@@ -200,12 +200,12 @@
     letter-spacing: 0.05em;
     margin-bottom: 0.75rem;
   }
-  .ballot-D     { background: #dbeafe; color: #1d4ed8; }
-  .ballot-R     { background: #fee2e2; color: #b91c1c; }
-  .ballot-other { background: #f3f4f6; color: #374151; }
+  .ballot-D     { background: var(--color-party-d-tint); color: var(--color-party-d-text); }
+  .ballot-R     { background: var(--color-party-r-tint); color: var(--color-party-r-text); }
+  .ballot-other { background: var(--color-surface-chrome); color: var(--color-text); }
   .ballot-unopposed {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--color-text-secondary);
     font-style: italic;
     margin-top: 0.5rem;
   }
@@ -215,12 +215,12 @@
     align-items: flex-start;
     gap: 0.6rem;
     padding: 0.75rem 1rem;
-    background: #fff7ed;
-    border-left: 4px solid #ea580c;
+    background: var(--color-warning-tint);
+    border-left: 4px solid var(--color-warning);
     border-radius: 0 6px 6px 0;
     margin-bottom: 1.25rem;
     font-size: 0.9rem;
-    color: #7c2d12;
+    color: var(--color-warning);
     line-height: 1.5;
   }
   .open-seat-banner .open-seat-label {
@@ -240,7 +240,7 @@
     flex-wrap: wrap;
     gap: 0.35rem;
     margin: 0.5rem 0 1.25rem 0;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--color-border-subtle);
   }
   .race-tab-btn {
     padding: 0.5rem 1.25rem;
@@ -249,29 +249,29 @@
     cursor: pointer;
     font-size: 0.92rem;
     font-weight: 500;
-    color: #555;
+    color: var(--color-text-secondary);
     border-bottom: 3px solid transparent;
     margin-bottom: -2px;
     border-radius: 4px 4px 0 0;
     transition: color 0.15s, border-color 0.15s;
   }
-  .race-tab-btn:hover { color: #111; }
-  .race-tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+  .race-tab-btn:hover { color: var(--color-text); }
+  .race-tab-btn.active { color: var(--color-link); border-bottom-color: var(--color-accent); font-weight: 600; }
   .race-panel[hidden] { display: none; }
-  .cand-finance-load { font-size: 0.85rem; color: #9aa0a6; }
+  .cand-finance-load { font-size: 0.85rem; color: var(--color-text-muted); }
 
   /* Earlier-this-cycle results */
   .prior-round { margin-bottom: 1.6rem; }
   .prior-round-head { margin-bottom: 0.6rem; }
   /* Promoted from <h3> so the outline has no h1->h3 skip (finding 4.15). */
-  .prior-round-head h2 { font-size: 1rem; font-weight: 700; color: #14213d; margin: 0 0 0.15rem; }
-  .prior-round-meta { font-size: 0.78rem; color: #777; }
+  .prior-round-head h2 { font-size: 1rem; font-weight: 700; color: var(--color-text); margin: 0 0 0.15rem; }
+  .prior-round-meta { font-size: 0.78rem; color: var(--color-text-muted); }
   .prior-contest {
-    border: 1px solid #e3e3e3;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 0.7rem 0.9rem;
     margin-bottom: 0.6rem;
-    background: #fff;
+    background: var(--color-surface-raised);
   }
   .prior-contest-head {
     display: flex; align-items: center; gap: 0.5rem;
@@ -280,34 +280,34 @@
   .party-pill {
     font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: 0.03em; padding: 0.1rem 0.45rem; border-radius: 10px;
-    background: #f0f0f0; color: #555;
+    background: var(--color-surface-chrome); color: var(--color-text-secondary);
   }
-  .party-pill.rep { background: #fdf0ef; color: #c0392b; }
-  .party-pill.dem { background: #eaf4fb; color: #2471a3; }
+  .party-pill.rep { background: var(--color-party-r-tint); color: var(--color-party-r-text); }
+  .party-pill.dem { background: var(--color-party-d-tint); color: var(--color-party-d-text); }
   .prior-uncontested {
     font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.03em; color: #6b7280; background: #f3f4f6;
+    letter-spacing: 0.03em; color: var(--color-text-muted); background: var(--color-surface-chrome);
     padding: 0.1rem 0.45rem; border-radius: 10px;
   }
-  .prior-total { font-size: 0.72rem; color: #888; margin-left: auto; }
+  .prior-total { font-size: 0.72rem; color: var(--color-text-muted); margin-left: auto; }
   .prior-cand { margin-bottom: 0.5rem; }
   .prior-cand:last-child { margin-bottom: 0; }
   .prior-cand-top {
     display: flex; justify-content: space-between; align-items: baseline;
     gap: 0.75rem; margin-bottom: 0.2rem;
   }
-  .prior-name { font-size: 0.85rem; color: #222; }
-  .prior-lead { color: #27ae60; margin-right: 0.15rem; }
-  .prior-inc { font-size: 0.7rem; color: #888; }
+  .prior-name { font-size: 0.85rem; color: var(--color-text); }
+  .prior-lead { color: var(--color-success); margin-right: 0.15rem; }
+  .prior-inc { font-size: 0.7rem; color: var(--color-text-muted); }
   .prior-figures { display: flex; gap: 0.6rem; align-items: baseline; white-space: nowrap; }
-  .prior-votes { font-size: 0.76rem; color: #777; }
+  .prior-votes { font-size: 0.76rem; color: var(--color-text-muted); }
   .prior-pct { font-size: 0.85rem; font-weight: 600; min-width: 3.1rem; text-align: right; }
-  .prior-bar { height: 6px; background: #eee; border-radius: 4px; overflow: hidden; }
-  .prior-bar-fill { height: 100%; border-radius: 4px; background: #888; }
-  .prior-bar-fill.rep { background: #e74c3c; }
-  .prior-bar-fill.dem { background: #3498db; }
+  .prior-bar { height: 6px; background: var(--color-surface-chrome); border-radius: 4px; overflow: hidden; }
+  .prior-bar-fill { height: 100%; border-radius: 4px; background: var(--color-text-muted); }
+  .prior-bar-fill.rep { background: var(--color-party-r); }
+  .prior-bar-fill.dem { background: var(--color-party-d); }
   .prior-link { font-size: 0.8rem; }
-  .prior-link a { color: #1a56a8; font-weight: 600; text-decoration: none; }
+  .prior-link a { color: var(--color-link); font-weight: 600; text-decoration: none; }
   .prior-link a:hover { text-decoration: underline; }
 
   /* Campaign finance comparison table */
@@ -322,14 +322,14 @@
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #6b7280;
+    color: var(--color-text-muted);
     font-weight: 600;
     padding: 0.4rem 0.75rem;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--color-border-subtle);
     white-space: nowrap;
   }
   .finance-compare thead th:not(:first-child) { text-align: right; }
-  .finance-compare tbody tr { border-bottom: 1px solid #f0f1f3; }
+  .finance-compare tbody tr { border-bottom: 1px solid var(--color-border-subtle); }
   .fin-name {
     text-align: left;
     font-weight: 600;
@@ -339,30 +339,30 @@
   }
   .fin-name-main { display: block; }
   .fin-name .party-badge { margin: 0.2rem 0 0 0; font-size: 0.68rem; }
-  .fin-asof { display: block; font-size: 0.68rem; color: #9aa0a6; font-weight: 400; margin-top: 0.2rem; }
+  .fin-asof { display: block; font-size: 0.68rem; color: var(--color-text-muted); font-weight: 400; margin-top: 0.2rem; }
   .fin-cell { padding: 0.7rem 0.75rem; vertical-align: middle; min-width: 120px; }
   .fin-bar-track {
-    background: #f1f2f4;
+    background: var(--color-surface-chrome);
     border-radius: 4px;
     height: 8px;
     overflow: hidden;
     margin-bottom: 0.25rem;
   }
   .fin-bar { height: 100%; border-radius: 4px; }
-  .fin-bar-raised { background: #16a34a; }
-  .fin-bar-spent  { background: #dc2626; }
-  .fin-bar-cash   { background: #2563eb; }
+  .fin-bar-raised { background: var(--color-success); }
+  .fin-bar-spent  { background: var(--color-danger); }
+  .fin-bar-cash   { background: var(--color-accent); }
   .fin-bar-value { font-size: 0.9rem; font-weight: 700; }
-  .fin-cell.fin-empty { color: #b6bcc2; font-weight: 400; text-align: left; }
-  .fin-note { color: #8a8f94; font-size: 0.82rem; }
+  .fin-cell.fin-empty { color: var(--color-text-muted); font-weight: 400; text-align: left; }
+  .fin-note { color: var(--color-text-muted); font-size: 0.82rem; }
   .fin-note a { font-size: inherit; }
-  .fin-row-none .fin-name-main { color: #6b7280; }
+  .fin-row-none .fin-name-main { color: var(--color-text-muted); }
 
   .finance-disclaimer {
     font-size: 0.78rem;
-    color: #666;
-    background: #f9fafb;
-    border: 1px solid #eef0f2;
+    color: var(--color-text-secondary);
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 6px;
     padding: 0.6rem 0.85rem;
     margin: 1.25rem 0 0 0;
@@ -645,7 +645,7 @@
         ${photoEl(photo, name)}
         <p class="candidate-name">${name}</p>
         <span class="party-badge ${partyClass(party)}">${party || 'Unknown party'}</span>
-        ${subtitle ? `<p style="font-size:0.85rem;color:#555;margin:0 0 0.75rem 0;">${subtitle}</p>` : ''}
+        ${subtitle ? `<p style="font-size:0.85rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">${subtitle}</p>` : ''}
         ${candidate.bio ? `<p class="candidate-bio">${candidate.bio}</p>` : ''}
         <div class="candidate-links">
           <a href="${memberUrl}">View legislative record →</a>

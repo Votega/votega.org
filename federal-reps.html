@@ -23,7 +23,7 @@ Select a Chamber (House or Senate), search your address, ZIP code, or select a c
     flex-wrap: wrap;
     gap: 0.35rem;
     margin: 1.25rem 0 0 0;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--color-border-subtle);
   }
   .tab-btn {
     padding: 0.45rem 1.1rem;
@@ -32,51 +32,51 @@ Select a Chamber (House or Senate), search your address, ZIP code, or select a c
     cursor: pointer;
     font-size: 0.88rem;
     font-weight: 500;
-    color: #555;
+    color: var(--color-text-secondary);
     border-bottom: 3px solid transparent;
     margin-bottom: -2px;
     border-radius: 4px 4px 0 0;
     transition: color 0.15s, border-color 0.15s;
     white-space: nowrap;
   }
-  .tab-btn:hover { color: #1a56a8; }
-  .tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; font-weight: 600; }
+  .tab-btn:hover { color: var(--color-link); }
+  .tab-btn.active { color: var(--color-link); border-bottom-color: var(--color-accent); font-weight: 600; }
 
   /* Address lookup. Mirrors the control on find-my-reps.html, which uses the
      same Census geocoder; the class prefix is local so the two pages' styles
      cannot drift into each other. */
   .frp-lookup { margin: 1.25rem 0 0.25rem 0; }
-  .frp-label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; font-weight: 600; }
+  .frp-label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: var(--color-text); font-weight: 600; }
   .frp-row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
-  .frp-input { flex: 1; min-width: 240px; padding: 8px; box-sizing: border-box; font-size: 1rem; border: 1px solid #cbd0d8; border-radius: 6px; }
+  .frp-input { flex: 1; min-width: 240px; padding: 8px; box-sizing: border-box; font-size: 1rem; border: 1px solid var(--color-border); border-radius: 6px; }
   .frp-btn {
     padding: 8px 16px; cursor: pointer; border-radius: 6px;
-    background: #1a56a8; color: #fff; border: 0; font-size: 0.95rem; font-weight: 600; white-space: nowrap;
+    background: var(--color-accent); color: var(--color-on-accent); border: 0; font-size: 0.95rem; font-weight: 600; white-space: nowrap;
   }
   .frp-btn:disabled { opacity: 0.6; cursor: default; }
-  .frp-privacy { margin: 0.4rem 0 0 0; font-size: 0.78rem; color: #666; }
-  .frp-or { margin: 0.9rem 0 0.5rem; font-size: 0.9rem; color: #555; font-weight: 600; }
-  .frp-status { margin-top: 0.5rem; font-size: 0.88rem; color: #444; min-height: 1.2em; }
-  .frp-status[data-state="error"] { color: #c00; }
+  .frp-privacy { margin: 0.4rem 0 0 0; font-size: 0.78rem; color: var(--color-text-secondary); }
+  .frp-or { margin: 0.9rem 0 0.5rem; font-size: 0.9rem; color: var(--color-text-secondary); font-weight: 600; }
+  .frp-status { margin-top: 0.5rem; font-size: 0.88rem; color: var(--color-text); min-height: 1.2em; }
+  .frp-status[data-state="error"] { color: var(--color-danger); }
 
   #lookupNote:not(:empty) {
     margin: 0.75rem 0 0 0; padding: 0.6rem 0.9rem; font-size: 0.88rem;
-    background: #eef4ff; border: 1px solid #c7d9f7; border-radius: 6px;
+    background: var(--color-surface-tint); border: 1px solid var(--color-border); border-radius: 6px;
   }
-  .member-note { display: block; font-size: 0.78rem; font-weight: normal; color: #555; margin-top: 2px; }
+  .member-note { display: block; font-size: 0.78rem; font-weight: normal; color: var(--color-text-secondary); margin-top: 2px; }
   /* Matches the sample ballot's .contest-badge / .badge-ambiguous. */
-  .member-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem; vertical-align: middle; background: #fff0c2; color: #7a5c00; }
-  #lookupNote .lookup-source { margin-top: 0.35rem; font-size: 0.78rem; color: #555; }
+  .member-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; margin-left: 0.35rem; vertical-align: middle; background: var(--color-warning-tint); color: var(--color-warning); }
+  #lookupNote .lookup-source { margin-top: 0.35rem; font-size: 0.78rem; color: var(--color-text-secondary); }
   .lookup-reset {
     margin-left: 0.4rem; padding: 0.15rem 0.6rem; font-size: 0.8rem; cursor: pointer;
-    background: #fff; color: #1a56a8; border: 1px solid #1a56a8; border-radius: 6px;
+    background: var(--color-surface-raised); color: var(--color-link); border: 1px solid var(--color-accent); border-radius: 6px;
   }
 
   .county-filter { margin: 1rem 0 0.5rem 0; max-width: 400px; }
-  .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: #444; }
+  .county-filter label { display: block; margin-bottom: 0.3rem; font-size: 0.88rem; color: var(--color-text); }
   .county-filter select { width: 100%; padding: 8px; box-sizing: border-box; }
 
-  .msg { margin-top: 1rem; color: #c00; }
+  .msg { margin-top: 1rem; color: var(--color-danger); }
 
   #membersOutput { margin-top: 1rem; }
 
@@ -85,20 +85,20 @@ Select a Chamber (House or Senate), search your address, ZIP code, or select a c
     align-items: center;
     justify-content: space-between;
     padding: 0.65rem 0.9rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     margin-bottom: 0.4rem;
     text-decoration: none;
     color: inherit;
-    background: #fff;
+    background: var(--color-surface-raised);
     transition: background 0.15s;
   }
-  .member-row:hover { background: #f5f8ff; }
-  .member-row-vacant { color: #666; }
+  .member-row:hover { background: var(--color-surface-tint); }
+  .member-row-vacant { color: var(--color-text-secondary); }
   .member-district {
     font-size: 0.78rem;
     font-weight: bold;
-    color: #777;
+    color: var(--color-text-muted);
     min-width: 90px;
   }
   .member-name {
@@ -106,16 +106,16 @@ Select a Chamber (House or Senate), search your address, ZIP code, or select a c
     font-size: 0.95rem;
     flex: 1;
   }
-  .member-arrow { color: #1a56a8; margin-left: 0.75rem; flex-shrink: 0; }
-  .party-d { color: #1d4ed8; }
-  .party-r { color: #b91c1c; }
+  .member-arrow { color: var(--color-link); margin-left: 0.75rem; flex-shrink: 0; }
+  .party-d { color: var(--color-party-d-text); }
+  .party-r { color: var(--color-party-r-text); }
   .empty-note {
     padding: 1rem;
-    background: #f9f9f9;
+    background: var(--color-surface-sunken);
     border-radius: 6px;
-    border: 1px dashed #ccc;
+    border: 1px dashed var(--color-border);
     font-size: 0.9rem;
-    color: #666;
+    color: var(--color-text-secondary);
   }
   @media (max-width: 520px) {
     .tab-btn { font-size: 0.82rem; padding: 0.4rem 0.75rem; }

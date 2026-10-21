@@ -29,81 +29,81 @@ breadcrumb:
 <style>
   .lh-controls {
     display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem;
-    margin: 1.25rem 0 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;
+    margin: 1.25rem 0 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border-subtle);
   }
   .lh-search {
     flex: 1 1 16rem; font-size: 0.95rem; padding: 0.5rem 0.7rem;
-    border: 1px solid #ccc; border-radius: 6px;
+    border: 1px solid var(--color-border); border-radius: 6px;
   }
   .lh-groups { display: flex; flex-direction: column; gap: 1.5rem; }
   .lh-card {
-    display: block; padding: 1rem 1.15rem; border: 1px solid #ddd; border-radius: 8px;
-    background: #fff; text-decoration: none; color: inherit; border-left: 4px solid #1a56a8;
+    display: block; padding: 1rem 1.15rem; border: 1px solid var(--color-border); border-radius: 8px;
+    background: var(--color-surface-raised); text-decoration: none; color: inherit; border-left: 4px solid var(--color-accent);
   }
-  a.lh-card:hover { border-color: #1a56a8; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .lh-card.city { border-left-color: #2e7d32; }
-  .lh-name { font-size: 1.05rem; font-weight: 700; color: #111; margin-bottom: 0.35rem; }
+  a.lh-card:hover { border-color: var(--color-accent); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .lh-card.city { border-left-color: var(--color-success); }
+  .lh-name { font-size: 1.05rem; font-weight: 700; color: var(--color-text); margin-bottom: 0.35rem; }
   .lh-child .lh-name { font-size: 0.98rem; }
-  .lh-meta { font-size: 0.78rem; color: #777; margin-bottom: 0.5rem; }
+  .lh-meta { font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: 0.5rem; }
   .lh-badge {
     display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: 0.03em; border-radius: 4px; padding: 0.1rem 0.4rem; margin-right: 0.3rem;
   }
-  .lh-badge-county { background: #e7eef8; color: #1a4d94; }
-  .lh-badge-city { background: #e3f2e4; color: #1b5e20; }
-  .lh-domains { font-size: 0.8rem; color: #444; }
+  .lh-badge-county { background: var(--color-surface-tint); color: var(--color-link); }
+  .lh-badge-city { background: var(--color-success-tint); color: var(--color-success); }
+  .lh-domains { font-size: 0.8rem; color: var(--color-text); }
   /* Cities nested beneath their county */
   .lh-children {
-    margin: 0.7rem 0 0 1.25rem; padding-left: 1rem; border-left: 2px solid #e5e7eb;
+    margin: 0.7rem 0 0 1.25rem; padding-left: 1rem; border-left: 2px solid var(--color-border-subtle);
     display: grid; grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr)); gap: 0.75rem;
   }
   /* Placeholder header for a county not yet in the system */
-  .lh-placeholder { border-left-color: #bbb; background: #fafafa; color: #555; }
-  .lh-placeholder .lh-name { color: #555; }
+  .lh-placeholder { border-left-color: var(--color-border); background: var(--color-surface-sunken); color: var(--color-text-secondary); }
+  .lh-placeholder .lh-name { color: var(--color-text-secondary); }
   .lh-placeholder .lh-sub {
-    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: #999;
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--color-text-muted);
   }
   /* "Also partly in this county" link chips for cities nested under another county */
-  .lh-also { margin: 0.6rem 0 0 1.25rem; font-size: 0.82rem; color: #666; display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; align-items: center; }
-  .lh-also-chip { border: 1px solid #cfe3d0; background: #f3faf3; color: #1b5e20; border-radius: 999px; padding: 0.1rem 0.6rem; text-decoration: none; }
-  .lh-also-chip:hover { border-color: #2e7d32; }
+  .lh-also { margin: 0.6rem 0 0 1.25rem; font-size: 0.82rem; color: var(--color-text-secondary); display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; align-items: center; }
+  .lh-also-chip { border: 1px solid var(--color-success-line); background: var(--color-surface-sunken); color: var(--color-success); border-radius: 999px; padding: 0.1rem 0.6rem; text-decoration: none; }
+  .lh-also-chip:hover { border-color: var(--color-success); }
   /* A-Z jump bar + "show more" paging for the county list */
   .lh-az { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 0 0 1rem; }
   .lh-az a, .lh-az span {
     min-width: 1.9rem; text-align: center; padding: 0.25rem 0.35rem; border-radius: 6px;
     font-size: 0.85rem; font-weight: 600; line-height: 1.2;
   }
-  .lh-az a { border: 1px solid #c9d6ea; background: #f3f7fc; color: #1a4d94; text-decoration: none; }
-  .lh-az a:hover { border-color: #1a56a8; background: #e7eef8; }
-  .lh-az span { color: #bbb; border: 1px solid transparent; }
+  .lh-az a { border: 1px solid var(--color-border); background: var(--color-surface-tint); color: var(--color-link); text-decoration: none; }
+  .lh-az a:hover { border-color: var(--color-accent); background: var(--color-surface-tint); }
+  .lh-az span { color: var(--color-text-muted); border: 1px solid transparent; }
   .lh-more { margin: 1.25rem 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
   .lh-more button {
-    font-size: 0.92rem; padding: 0.5rem 1rem; border: 1px solid #1a56a8; border-radius: 6px;
-    background: #fff; color: #1a4d94; cursor: pointer;
+    font-size: 0.92rem; padding: 0.5rem 1rem; border: 1px solid var(--color-accent); border-radius: 6px;
+    background: var(--color-surface-raised); color: var(--color-link); cursor: pointer;
   }
-  .lh-more button:hover { background: #e7eef8; }
+  .lh-more button:hover { background: var(--color-surface-tint); }
   .lh-more .lh-more-all { border: 0; background: none; text-decoration: underline; padding: 0.5rem 0; }
   .lh-group[hidden], .lh-also[hidden], .lh-more[hidden] { display: none; }
   .lh-group { scroll-margin-top: 4.5rem; }
-  .lh-empty { color: #666; font-style: italic; padding: 1rem 0; }
-  .lh-note { margin: 0.5rem 0 0; font-size: 0.82rem; color: #777; }
+  .lh-empty { color: var(--color-text-secondary); font-style: italic; padding: 1rem 0; }
+  .lh-note { margin: 0.5rem 0 0; font-size: 0.82rem; color: var(--color-text-muted); }
   /* Flag pill injected onto a card when a place has a hot topic on recent agendas */
   .lh-flags { margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
   .lh-flag { font-size: 0.7rem; font-weight: 700; border-radius: 999px; padding: 0.12rem 0.5rem; }
-  .lh-flag-dc { background: #fde8cf; color: #b35a00; }
-  .lh-flag-lu { background: #e3f2e4; color: #1b5e20; }
-  .lh-flag-alpr { background: #fbe0e0; color: #b02020; }
+  .lh-flag-dc { background: var(--color-warning-tint); color: var(--color-warning); }
+  .lh-flag-lu { background: var(--color-success-tint); color: var(--color-success); }
+  .lh-flag-alpr { background: var(--color-danger-tint); color: var(--color-danger); }
   /* Legend explaining the agenda flag pills above */
   .lh-legend {
-    margin: 0 0 1.25rem; padding: 0.75rem 0.9rem; background: #f8f9fb;
-    border: 1px solid #e5e7eb; border-radius: 8px; font-size: 0.82rem; color: #555;
+    margin: 0 0 1.25rem; padding: 0.75rem 0.9rem; background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border-subtle); border-radius: 8px; font-size: 0.82rem; color: var(--color-text-secondary);
   }
-  .lh-legend-title { font-weight: 700; color: #333; margin-right: 0.15rem; }
+  .lh-legend-title { font-weight: 700; color: var(--color-text); margin-right: 0.15rem; }
   .lh-legend-items { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 0.5rem; }
   .lh-legend-item { display: flex; align-items: baseline; gap: 0.4rem; flex: 1 1 18rem; }
   .lh-legend-item .lh-flag { flex: none; white-space: nowrap; }
-  .lh-legend-caveat { margin: 0.7rem 0 0; padding-top: 0.6rem; border-top: 1px solid #e5e7eb; }
-  .lh-legend-caveat strong { color: #333; }
+  .lh-legend-caveat { margin: 0.7rem 0 0; padding-top: 0.6rem; border-top: 1px solid var(--color-border-subtle); }
+  .lh-legend-caveat strong { color: var(--color-text); }
 </style>
 
 <p class="lh-note">
@@ -121,15 +121,15 @@ breadcrumb:
   Some places show a badge when we detect certain topics on their recent published meeting agendas:
   <div class="lh-legend-items">
     <span class="lh-legend-item">
-      <span class="lh-flag lh-flag-dc">🏭 Data centers on agenda</span>
+      <span class="lh-flag lh-flag-dc"><i class="fa-solid fa-industry" aria-hidden="true"></i> Data centers on agenda</span>
       A data-center project came before this government recently — a rezoning, permit, incentive, or moratorium.
     </span>
     <span class="lh-legend-item">
-      <span class="lh-flag lh-flag-lu">🏗️ Land use</span>
+      <span class="lh-flag lh-flag-lu"><i class="fa-solid fa-trowel-bricks" aria-hidden="true"></i> Land use</span>
       Land-use business on recent agendas — rezonings, variances, special-use permits, annexations, or major developments.
     </span>
     <span class="lh-legend-item">
-      <span class="lh-flag lh-flag-alpr">📷 ALPR / surveillance</span>
+      <span class="lh-flag lh-flag-alpr"><i class="fa-solid fa-camera" aria-hidden="true"></i> ALPR / surveillance</span>
       Automated license plate readers or surveillance cameras discussed on recent agendas — Flock and other vendors.
     </span>
   </div>
@@ -169,8 +169,8 @@ breadcrumb:
       <div class="lh-name">{{ county.name }}</div>
       <div class="lh-meta"><span class="lh-badge lh-badge-county">county</span>{% if county.region %}{{ county.region }}{% endif %}</div>
       <div class="lh-domains">
-        {%- if coOfficials %}👥 Officials{% endif %}
-        {%- if county.domains.meetings %}{% if coOfficials %} &middot; {% endif %}📅 Meetings{% endif %}
+        {%- if coOfficials %}<i class="fa-solid fa-users" aria-hidden="true"></i> Officials{% endif %}
+        {%- if county.domains.meetings %}{% if coOfficials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
         {%- unless coOfficials or county.domains.meetings %}Coming soon{% endunless %}
       </div>
     </a>
@@ -187,8 +187,8 @@ breadcrumb:
         <div class="lh-name">{{ city.name }}</div>
         <div class="lh-meta"><span class="lh-badge lh-badge-city">city</span>{% if city.region %}{{ city.region }}{% endif %}</div>
         <div class="lh-domains">
-          {%- if ciOfficials %}👥 Officials{% endif %}
-          {%- if city.domains.meetings %}{% if ciOfficials %} &middot; {% endif %}📅 Meetings{% endif %}
+          {%- if ciOfficials %}<i class="fa-solid fa-users" aria-hidden="true"></i> Officials{% endif %}
+          {%- if city.domains.meetings %}{% if ciOfficials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
           {%- unless ciOfficials or city.domains.meetings %}Coming soon{% endunless %}
         </div>
       </a>
@@ -236,8 +236,8 @@ breadcrumb:
         <div class="lh-name">{{ c2.name }}</div>
         <div class="lh-meta"><span class="lh-badge lh-badge-city">city</span>{% if c2.region %}{{ c2.region }}{% endif %}</div>
         <div class="lh-domains">
-          {%- if c2Officials %}👥 Officials{% endif %}
-          {%- if c2.domains.meetings %}{% if c2Officials %} &middot; {% endif %}📅 Meetings{% endif %}
+          {%- if c2Officials %}<i class="fa-solid fa-users" aria-hidden="true"></i> Officials{% endif %}
+          {%- if c2.domains.meetings %}{% if c2Officials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
           {%- unless c2Officials or c2.domains.meetings %}Coming soon{% endunless %}
         </div>
       </a>
@@ -378,12 +378,12 @@ breadcrumb:
           // the citation count (like data centers) so the badge never appears
           // without ALPR items behind it on the place page.
           if (f.alprCount > 0) {
-            html += '<span class="lh-flag lh-flag-alpr">📷 ALPR / surveillance</span>';
+            html += '<span class="lh-flag lh-flag-alpr"><i class="fa-solid fa-camera" aria-hidden="true"></i> ALPR / surveillance</span>';
           }
           if (f.dataCenterCount > 0) {
-            html += '<span class="lh-flag lh-flag-dc">🏭 Data centers on agenda</span>';
+            html += '<span class="lh-flag lh-flag-dc"><i class="fa-solid fa-industry" aria-hidden="true"></i> Data centers on agenda</span>';
           } else if (f.flags.indexOf('land-use') !== -1) {
-            html += '<span class="lh-flag lh-flag-lu">🏗️ Land use</span>';
+            html += '<span class="lh-flag lh-flag-lu"><i class="fa-solid fa-trowel-bricks" aria-hidden="true"></i> Land use</span>';
           }
           wrap.innerHTML = html;
           if (wrap.children.length) card.appendChild(wrap);

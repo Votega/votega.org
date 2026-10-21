@@ -20,23 +20,23 @@ breadcrumb:
 ---
 
 <h1>Search VoteGA</h1>
-<p style="color:#555;">Find Georgia legislators, members of Congress, races, candidates, and pages across the site.</p>
+<p style="color:var(--color-text-secondary);">Find Georgia legislators, members of Congress, races, candidates, and pages across the site.</p>
 
 <form id="searchForm" role="search" style="margin:1rem 0;">
   <label for="searchQuery" class="sr-only">Search VoteGA</label>
   <input type="search" id="searchQuery" name="q" placeholder="Search legislators, races, bills…"
          autocomplete="off" style="width:100%;max-width:32rem;padding:.6rem .8rem;font-size:1rem;
-         border:1px solid #d9dfe5;border-radius:8px;">
+         border:1px solid var(--color-border);border-radius:8px;">
 </form>
 
-<p id="searchStatus" style="color:#6b7280;font-size:.9rem;" role="status" aria-live="polite"></p>
+<p id="searchStatus" style="color:var(--color-text-muted);font-size:.9rem;" role="status" aria-live="polite"></p>
 <ul id="searchResults" style="list-style:none;padding:0;margin:0;"></ul>
 
 <style>
   .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
-  #searchResults li { padding:.6rem 0;border-bottom:1px solid #e5e7eb; }
+  #searchResults li { padding:.6rem 0;border-bottom:1px solid var(--color-border-subtle); }
   #searchResults .search-cat { display:inline-block;font-size:.7em;text-transform:uppercase;
-    letter-spacing:.04em;color:#6b7280;margin-right:.5em; }
+    letter-spacing:.04em;color:var(--color-text-muted);margin-right:.5em; }
 </style>
 
 <script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
@@ -88,7 +88,7 @@ breadcrumb:
         resultsContainer: results,
         json: pagesPosts.concat(entities),
         searchResultTemplate: '<li><a href="{url}"><span class="search-cat">{category}</span>{title}</a></li>',
-        noResultsText: '<li style="border:0;color:#6b7280;">No results found.</li>',
+        noResultsText: '<li style="border:0;color:var(--color-text-muted);">No results found.</li>',
         limit: 50,
         fuzzy: false
       });

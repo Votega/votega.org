@@ -13,17 +13,17 @@ share-description: "Candidates on Georgia's 2026 general election ballot can add
 <style>
   .cc-lede {
     font-size: 1.08rem;
-    color: #444;
+    color: var(--color-text);
     line-height: 1.65;
     max-width: 42rem;
   }
   .cc-section { margin: 2.5rem 0; }
   .cc-section h2 {
     font-size: 1.35rem;
-    color: #008AFF;
+    color: var(--color-link);
     margin-bottom: 0.75rem;
   }
-  .cc-section p { line-height: 1.65; color: #404040; }
+  .cc-section p { line-height: 1.65; color: var(--color-text); }
 
   /* What you can add / can't change — the firewall */
   .cc-firewall {
@@ -36,8 +36,8 @@ share-description: "Candidates on Georgia's 2026 general election ballot can add
   .cc-panel {
     border-radius: 10px;
     padding: 1.4rem 1.5rem;
-    border: 1px solid #ddd;
-    background: #fff;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-raised);
   }
   .cc-panel h3 {
     font-size: 1.05rem;
@@ -46,10 +46,10 @@ share-description: "Candidates on Georgia's 2026 general election ballot can add
     align-items: center;
     gap: 0.5rem;
   }
-  .cc-panel.can-add   { border-color: #bfdbef; background: #f0f6ff; }
-  .cc-panel.cant      { border-color: #e2e5ea; background: #f7f8fa; }
+  .cc-panel.can-add   { border-color: var(--color-border); background: var(--color-surface-tint); }
+  .cc-panel.cant      { border-color: var(--color-border-subtle); background: var(--color-surface-sunken); }
   .cc-panel ul { margin: 0; padding-left: 1.15rem; }
-  .cc-panel li { line-height: 1.7; color: #333; }
+  .cc-panel li { line-height: 1.7; color: var(--color-text); }
 
   /* How it works — numbered steps */
   .cc-steps {
@@ -65,7 +65,7 @@ share-description: "Candidates on Georgia's 2026 general election ballot can add
     position: relative;
     padding-left: 3rem;
     line-height: 1.6;
-    color: #404040;
+    color: var(--color-text);
     min-height: 2.1rem;
   }
   .cc-steps li::before {
@@ -75,8 +75,8 @@ share-description: "Candidates on Georgia's 2026 general election ballot can add
     top: 0;
     width: 2.1rem;
     height: 2.1rem;
-    background: #008AFF;
-    color: #fff;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -84,18 +84,18 @@ share-description: "Candidates on Georgia's 2026 general election ballot can add
     font-weight: 700;
     font-size: 0.95rem;
   }
-  .cc-steps li strong { color: #1a2733; }
+  .cc-steps li strong { color: var(--color-text); }
 
   /* Callout box */
   .cc-callout {
-    border-left: 4px solid #008AFF;
-    background: #f0f6ff;
+    border-left: 4px solid var(--color-accent);
+    background: var(--color-surface-tint);
     border-radius: 0 8px 8px 0;
     padding: 1rem 1.25rem;
     margin: 1.25rem 0;
     line-height: 1.6;
   }
-  .cc-callout.plain { border-left-color: #9ca3af; background: #f7f8fa; }
+  .cc-callout.plain { border-left-color: var(--color-text-muted); background: var(--color-surface-sunken); }
 
   /* CTA */
   .cc-cta-row {
@@ -107,22 +107,22 @@ share-description: "Candidates on Georgia's 2026 general election ballot can add
   .cc-btn {
     display: inline-block;
     padding: 0.7rem 1.4rem;
-    background: #1a56a8;
-    color: #fff;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
     font-weight: 600;
     border-radius: 6px;
     text-decoration: none;
   }
-  .cc-btn:hover { background: #164a90; color: #fff; text-decoration: none; }
+  .cc-btn:hover { background: var(--color-accent); color: var(--color-on-accent); text-decoration: none; }
   .cc-btn.secondary {
-    background: #fff;
-    color: #1a56a8;
-    border: 1px solid #1a56a8;
+    background: var(--color-surface-raised);
+    color: var(--color-link);
+    border: 1px solid var(--color-accent);
   }
-  .cc-btn.secondary:hover { background: #f0f6ff; color: #1a56a8; }
+  .cc-btn.secondary:hover { background: var(--color-surface-tint); color: var(--color-link); }
 
-  .cc-policy dt { font-weight: 700; color: #1a2733; margin-top: 1rem; }
-  .cc-policy dd { margin: 0.25rem 0 0 0; line-height: 1.65; color: #404040; }
+  .cc-policy dt { font-weight: 700; color: var(--color-text); margin-top: 1rem; }
+  .cc-policy dd { margin: 0.25rem 0 0 0; line-height: 1.65; color: var(--color-text); }
 </style>
 
 <!-- Firewall: the trust core — first thing a campaign reads -->
@@ -146,7 +146,7 @@ share-description: "Candidates on Georgia's 2026 general election ballot can add
         <li>Your voting record, if you've held office</li>
         <li>Your campaign finance data</li>
       </ul>
-      <p style="font-size:0.88rem;color:#555;margin:0.85rem 0 0;">These come from public records and stay as they are. If something in the public-record part is wrong, we'll correct it.</p>
+      <p style="font-size:0.88rem;color:var(--color-text-secondary);margin:0.85rem 0 0;">These come from public records and stay as they are. If something in the public-record part is wrong, we'll correct it.</p>
     </div>
   </div>
 </div>

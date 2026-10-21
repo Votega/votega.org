@@ -20,20 +20,20 @@ breadcrumb:
 <style>
   /* Summary bar */
   #summaryBar {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 0.85rem 1.1rem;
     margin: 1.25rem 0 1.5rem;
     font-size: 0.9rem;
-    color: #374151;
+    color: var(--color-text);
     display: flex;
     flex-wrap: wrap;
     gap: 1.25rem;
     align-items: center;
   }
   #summaryBar strong { font-size: 1.05rem; }
-  #summaryBar .divider { color: #cbd5e1; }
+  #summaryBar .divider { color: var(--color-text-muted); }
 
   /* Member cards */
   #memberCards {
@@ -43,44 +43,44 @@ breadcrumb:
     margin-bottom: 1.5rem;
   }
   .member-card {
-    border: 2px solid #e5e7eb;
+    border: 2px solid var(--color-border-subtle);
     border-radius: 10px;
     padding: 0.75rem 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    background: #fff;
+    background: var(--color-surface-raised);
     transition: border-color 0.15s, box-shadow 0.15s;
     min-width: 200px;
     flex: 1;
     max-width: 300px;
   }
-  .member-card:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .member-card.active { border-color: #1d4ed8; background: #eff6ff; }
+  .member-card:hover { border-color: var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .member-card.active { border-color: var(--color-accent); background: var(--color-surface-tint); }
   .member-card img {
     width: 44px; height: 44px; border-radius: 50%;
-    object-fit: cover; flex-shrink: 0; background: #e5e7eb;
+    object-fit: cover; flex-shrink: 0; background: var(--color-surface-chrome);
   }
   .member-card-info { min-width: 0; }
   .member-card-name { font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-  .member-card-office { font-size: 0.75rem; color: #6b7280; margin-top: 0.1rem; }
+  .member-card-office { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.1rem; }
   .member-card-stats { display: flex; gap: 0.75rem; margin-top: 0.35rem; font-size: 0.75rem; }
-  .stat-trades { color: #1d4ed8; font-weight: 600; }
-  .stat-late { color: #b91c1c; font-weight: 600; }
-  .stat-volume { color: #374151; }
+  .stat-trades { color: var(--color-link); font-weight: 600; }
+  .stat-late { color: var(--color-danger); font-weight: 600; }
+  .stat-volume { color: var(--color-text); }
   .member-card-profile-link {
     display: inline-block;
     font-size: 0.72rem;
-    color: #1a56a8;
+    color: var(--color-link);
     text-decoration: none;
     margin-top: 0.3rem;
   }
   .member-card-profile-link:hover { text-decoration: underline; }
 
   /* Party badge */
-  .badge-r { background: #fee2e2; color: #991b1b; font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 3px; }
-  .badge-d { background: #dbeafe; color: #1e40af; font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 3px; }
+  .badge-r { background: var(--color-party-r-tint); color: var(--color-party-r-text); font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 3px; }
+  .badge-d { background: var(--color-party-d-tint); color: var(--color-party-d-text); font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.35rem; border-radius: 3px; }
 
   /* Filters */
   .filter-row {
@@ -90,25 +90,25 @@ breadcrumb:
     align-items: flex-end;
     margin-bottom: 1rem;
   }
-  .filter-row label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 0.2rem; }
+  .filter-row label { display: block; font-size: 0.8rem; color: var(--color-text-secondary); margin-bottom: 0.2rem; }
   .filter-row select, .filter-row input {
     padding: 0.4rem 0.6rem;
     font-size: 0.875rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
-    background: #fff;
+    background: var(--color-surface-raised);
   }
   #clearFilters {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
-    background: #fff;
+    background: var(--color-surface-raised);
     cursor: pointer;
-    color: #374151;
+    color: var(--color-text);
     align-self: flex-end;
   }
-  #clearFilters:hover { background: #f3f4f6; }
+  #clearFilters:hover { background: var(--color-surface-chrome); }
 
   /* Trade table */
   #tradeTableWrap { overflow-x: auto; }
@@ -120,43 +120,43 @@ breadcrumb:
   .trade-table th {
     text-align: left;
     padding: 0.5rem 0.75rem;
-    background: #f3f4f6;
+    background: var(--color-surface-chrome);
     font-weight: 600;
-    color: #374151;
-    border-bottom: 2px solid #e5e7eb;
+    color: var(--color-text);
+    border-bottom: 2px solid var(--color-border-subtle);
     white-space: nowrap;
     cursor: pointer;
     user-select: none;
   }
-  .trade-table th:hover { background: #e9eaec; }
-  .trade-table th .sort-icon { color: #9ca3af; margin-left: 0.25rem; font-size: 0.7rem; }
+  .trade-table th:hover { background: var(--color-surface-chrome); }
+  .trade-table th .sort-icon { color: var(--color-text-muted); margin-left: 0.25rem; font-size: 0.7rem; }
   .trade-table th.sort-asc .sort-icon::after  { content: ' ▲'; }
   .trade-table th.sort-desc .sort-icon::after { content: ' ▼'; }
   .trade-table td {
     padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--color-border-subtle);
     vertical-align: middle;
   }
-  .trade-table tr:hover td { background: #fafafa; }
-  .trade-table tr.is-late td { background: #fff7ed; }
-  .trade-table tr.is-late:hover td { background: #ffedd5; }
+  .trade-table tr:hover td { background: var(--color-surface-sunken); }
+  .trade-table tr.is-late td { background: var(--color-warning-tint); }
+  .trade-table tr.is-late:hover td { background: var(--color-warning-tint); }
 
-  .type-purchase { color: #15803d; font-weight: 600; }
-  .type-sale     { color: #b91c1c; font-weight: 600; }
+  .type-purchase { color: var(--color-success); font-weight: 600; }
+  .type-sale     { color: var(--color-danger); font-weight: 600; }
   .ticker-chip {
     display: inline-block;
-    background: #f3f4f6;
+    background: var(--color-surface-chrome);
     border-radius: 4px;
     padding: 0.1rem 0.4rem;
     font-family: monospace;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #1d4ed8;
+    color: var(--color-link);
   }
   .late-badge {
     display: inline-block;
-    background: #fee2e2;
-    color: #991b1b;
+    background: var(--color-danger-tint);
+    color: var(--color-danger);
     font-size: 0.7rem;
     font-weight: 700;
     padding: 0.1rem 0.35rem;
@@ -165,8 +165,8 @@ breadcrumb:
   }
   .owner-badge {
     display: inline-block;
-    background: #f3f4f6;
-    color: #6b7280;
+    background: var(--color-surface-chrome);
+    color: var(--color-text-muted);
     font-size: 0.7rem;
     padding: 0.1rem 0.3rem;
     border-radius: 3px;
@@ -181,44 +181,44 @@ breadcrumb:
     vertical-align: middle;
     white-space: nowrap;
   }
-  .asset-CT { background: #fef3c7; color: #92400e; }  /* Crypto */
-  .asset-ST { background: #ede9fe; color: #5b21b6; }  /* Stock */
-  .asset-GS { background: #dcfce7; color: #166534; }  /* Gov Security */
-  .asset-CS { background: #e0f2fe; color: #0c4a6e; }  /* Corporate Security */
-  .asset-OT { background: #f3f4f6; color: #374151; }  /* Other */
-  .asset-HN { background: #fce7f3; color: #9d174d; }  /* Hedge/Note */
+  .asset-CT { background: var(--color-warning-tint); color: var(--color-warning); }  /* Crypto */
+  .asset-ST { background: var(--color-surface-tint); color: var(--color-link); }  /* Stock */
+  .asset-GS { background: var(--color-success-tint); color: var(--color-success); }  /* Gov Security */
+  .asset-CS { background: var(--color-surface-tint); color: var(--color-link); }  /* Corporate Security */
+  .asset-OT { background: var(--color-surface-chrome); color: var(--color-text); }  /* Other */
+  .asset-HN { background: var(--color-surface-tint); color: var(--color-link); }  /* Hedge/Note */
 
-  #tradeCount { font-size: 0.85rem; color: #6b7280; margin-bottom: 0.5rem; }
+  #tradeCount { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 0.5rem; }
   #loadMore {
     display: none;
     margin: 1rem auto;
     padding: 0.5rem 1.5rem;
     font-size: 0.875rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
-    background: #fff;
+    background: var(--color-surface-raised);
     cursor: pointer;
-    color: #374151;
+    color: var(--color-text);
     text-align: center;
   }
-  #loadMore:hover { background: #f3f4f6; }
+  #loadMore:hover { background: var(--color-surface-chrome); }
 
   .disclaimer {
     margin-top: 2rem;
     padding: 0.85rem 1rem;
-    background: #fffbeb;
-    border: 1px solid #fde68a;
+    background: var(--color-warning-tint);
+    border: 1px solid var(--color-warning-line);
     border-radius: 6px;
     font-size: 0.8rem;
-    color: #78350f;
+    color: var(--color-warning);
   }
-  #noResults { display: none; padding: 2rem; text-align: center; color: #6b7280; font-size: 0.9rem; }
+  #noResults { display: none; padding: 2rem; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; }
   #selectPrompt {
     padding: 3rem 1rem;
     text-align: center;
-    color: #6b7280;
+    color: var(--color-text-muted);
     font-size: 0.95rem;
-    border: 2px dashed #e5e7eb;
+    border: 2px dashed var(--color-border-subtle);
     border-radius: 8px;
     margin-top: 0.5rem;
   }
@@ -237,8 +237,8 @@ breadcrumb:
     {% include data-freshness.html data=r noun="disclosed trades" %}
     <ul style="list-style:none;padding:0;margin:0;">
       {%- for m in r.rows -%}
-      <li style="padding:.4rem 0;border-bottom:1px solid #e5e7eb;">
-        <strong>{{ m.name | escape }}</strong>{% if m.office %} <span style="color:#6b7280;">· {{ m.office | escape }}</span>{% endif %}
+      <li style="padding:.4rem 0;border-bottom:1px solid var(--color-border-subtle);">
+        <strong>{{ m.name | escape }}</strong>{% if m.office %} <span style="color:var(--color-text-muted);">· {{ m.office | escape }}</span>{% endif %}
         {%- if m.tradeCount %} — {{ m.tradeCount }} trades{% endif -%}
       </li>
       {%- endfor -%}
@@ -247,7 +247,7 @@ breadcrumb:
     Loading trade data…
   {%- endif -%}
 </div>
-<div id="loadError" role="alert" style="display:none;padding:1rem;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;color:#991b1b;font-size:0.9rem;"></div>
+<div id="loadError" role="alert" style="display:none;padding:1rem;background:var(--color-danger-tint);border:1px solid var(--color-danger-line);border-radius:6px;color:var(--color-danger);font-size:0.9rem;"></div>
 
 <div id="tradesApp">
   <div id="memberCards"></div>
@@ -450,7 +450,7 @@ breadcrumb:
       <span class="divider">|</span>
       <span><strong>${totalLate.toLocaleString()}</strong> late filings</span>
       <span class="divider">|</span>
-      <span style="color:#6b7280;">Updated ${updatedAt}</span>
+      <span style="color:var(--color-text-muted);">Updated ${updatedAt}</span>
     `;
 
     document.getElementById('disclaimer').textContent = meta.disclaimer || '';
@@ -507,7 +507,7 @@ breadcrumb:
 
       const imgHtml = info.photoUrl
         ? `<img src="${info.photoUrl}" alt="${name}" loading="lazy">`
-        : `<div style="width:44px;height:44px;border-radius:50%;background:#e5e7eb;flex-shrink:0;"></div>`;
+        : `<div style="width:44px;height:44px;border-radius:50%;background:var(--color-surface-chrome);flex-shrink:0;"></div>`;
 
       const district = (info.office || '').split('·')[1]?.trim() || '';
 
@@ -634,7 +634,7 @@ breadcrumb:
 
       const tickerHtml = t.ticker
         ? `<span class="ticker-chip">${t.ticker}</span>`
-        : `<span style="color:#9ca3af;font-size:0.8rem;">—</span>`;
+        : `<span style="color:var(--color-text-muted);font-size:0.8rem;">—</span>`;
 
       const daysHtml = t.days_to_file != null
         ? `${t.days_to_file}d${t.is_late ? ' <span class="late-badge">LATE</span>' : ''}`
@@ -652,7 +652,7 @@ breadcrumb:
         <td>${fmt(t.transaction_date)}</td>
         <td>${memberHtml}</td>
         <td>${tickerHtml}</td>
-        <td style="font-size:0.8rem;color:#374151;max-width:200px;" title="${t.asset_name || ''}">${renderAssetName(t.asset_name, t.ticker)}</td>
+        <td style="font-size:0.8rem;color:var(--color-text);max-width:200px;" title="${t.asset_name || ''}">${renderAssetName(t.asset_name, t.ticker)}</td>
         <td class="${typeClass}">${typeLabel}</td>
         <td>${t.amount_range_label || '—'}</td>
         <td>${daysHtml}</td>`;
