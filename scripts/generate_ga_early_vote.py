@@ -243,8 +243,21 @@ def main(argv=None):
     ballots = sum(c["ballots"] for c in counties)
     active = sum(c["active"] for c in counties)
     metro = [c for c in counties if c["name"] in BIG_FOUR]
+    metro_keys = {key(n) for n in BIG_FOUR}
+
+    def metro_part(by_county):  # share of a {countyKey: n} tally that sits in the big four
+        t = sum(by_county.values())
+        return round(100.0 * sum(n for k, n in by_county.items() if k in metro_keys) / t, 1) if t else None
+
     metro_share = {
         "counties": [c["name"] for c in metro],
+        # the same share split by how the ballot was cast
+        "inPersonPct": round(100.0 * sum(c["inPerson"] for c in metro) / sum(c["inPerson"] for c in counties), 1),
+        "mailPct": round(100.0 * sum(c["mail"] for c in metro) / sum(c["mail"] for c in counties), 1),
+        "priorInPersonPct": {
+            y: metro_part({k: n - priors_mail[y].get(k, 0) for k, n in priors[y].items()}) for y in priors
+        },
+        "priorMailPct": {y: metro_part(priors_mail[y]) for y in priors},
         "pct": round(100.0 * sum(c["ballots"] for c in metro) / ballots, 1) if ballots else None,
         "prior": {
             y: round(100.0 * sum(c["prior"][y] for c in metro) / t, 1)
