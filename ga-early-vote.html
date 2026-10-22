@@ -74,7 +74,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
 
 <p class="ev-note">
   Source: Georgia Secretary of State absentee and early voting file and active voter registration table.
-  Turnout is ballots cast divided by <em>active</em> registered voters. Early voting ends Friday, October 30.
+  Turnout is ballots cast divided by <em>active</em> registered voters. Counts run through the end of {{ ev.metadata.asOf | date: "%B %-d" }}; the Secretary of State's own dashboard updates more often and may show higher totals. Early voting ends Friday, October 30.
   Past years count accepted ballots returned by the same number of days before each election day ({% for y in ev.metadata.comparisons %}{{ y[0] }}: {{ y[1].cutoff | date: "%B %-d" }}{% unless forloop.last %}; {% endunless %}{% endfor %}).
   Data generated {{ ev.metadata.generatedAt | date: "%B %-d, %Y" }}.
 </p>
