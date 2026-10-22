@@ -1,0 +1,125 @@
+---
+layout: page
+title: Georgia Early Vote Turnout by County
+permalink: /ga-early-vote/
+share-description: "How many Georgians have already voted in the November 3, 2026 general election, county by county, compared with the same point in 2022."
+---
+{%- assign ev = site.data.early_vote["ga-general-2026"] -%}
+{%- assign sw = ev.statewide -%}
+
+<style>
+  .ev-stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 8px; }
+  .ev-stat { flex: 1 1 160px; background: var(--color-surface-2, var(--color-surface)); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 14px; }
+  .ev-stat .n { font-size: 1.6rem; font-weight: 700; color: var(--color-text); display: block; }
+  .ev-stat .l { font-size: .85rem; color: var(--color-text-muted, var(--color-text)); }
+  .ev-controls { margin: 16px 0 8px; }
+  .ev-controls input { width: 100%; max-width: 320px; padding: 8px 10px; border: 1px solid var(--color-border); border-radius: 6px; }
+  .ev-wrap { overflow-x: auto; }
+  table.ev { width: 100%; border-collapse: collapse; font-size: .95rem; }
+  table.ev th, table.ev td { padding: 8px 10px; border-bottom: 1px solid var(--color-border); text-align: right; white-space: nowrap; }
+  table.ev th:first-child, table.ev td:first-child { text-align: left; }
+  table.ev th button { all: inherit; cursor: pointer; font-weight: 700; }
+  table.ev th[aria-sort="ascending"] button::after { content: " \25B2"; font-size: .7em; }
+  table.ev th[aria-sort="descending"] button::after { content: " \25BC"; font-size: .7em; }
+  .ev-note { font-size: .85rem; color: var(--color-text-muted, var(--color-text)); margin-top: 12px; }
+</style>
+
+
+{% if ev %}
+<p>
+  Ballots already cast in Georgia's November 3, 2026 general election, as of
+  <strong>{{ ev.metadata.asOf | date: "%B %-d, %Y" }}</strong>, by county.
+  The comparison columns show ballots cast by the same point in past elections, {{ ev.metadata.daysBeforeElection }} days before election day.
+</p>
+
+<div class="ev-stats">
+  <div class="ev-stat"><span class="n" data-n="{{ sw.ballots }}">{{ sw.ballots }}</span><span class="l">ballots cast</span></div>
+  <div class="ev-stat"><span class="n">{{ sw.turnoutPct }}%</span><span class="l">of <span data-n="{{ sw.active }}">{{ sw.active }}</span> active voters</span></div>
+  <div class="ev-stat"><span class="n" data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</span><span class="l">early in person</span></div>
+  <div class="ev-stat"><span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">by mail or electronic</span></div>
+  {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<div class="ev-stat"><span class="n" data-n="{{ sw.prior[yk] }}">{{ sw.prior[yk] }}</span><span class="l">at this point in {{ yk }}</span></div>{% endfor %}
+</div>
+
+<div class="ev-controls">
+  <label for="ev-search" class="sr-only">Search counties</label>
+  <input id="ev-search" type="search" placeholder="Search counties" autocomplete="off">
+</div>
+
+<div class="ev-wrap">
+<table class="ev" id="ev-table">
+  <thead>
+    <tr>
+      <th aria-sort="ascending" data-type="text"><button type="button">County</button></th>
+      <th data-type="num"><button type="button">Ballots cast</button></th>
+      <th data-type="num"><button type="button">Active voters</button></th>
+      <th data-type="num"><button type="button">Turnout</button></th>
+      {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">{{ y[0] }} (same point)</button></th>
+      <th data-type="num"><button type="button">vs. {{ y[0] }}</button></th>{% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in ev.counties %}
+    <tr>
+      <td>{{ c.name }}</td>
+      <td data-v="{{ c.ballots }}">{{ c.ballots }}</td>
+      <td data-v="{{ c.active }}">{{ c.active }}</td>
+      <td data-v="{{ c.turnoutPct }}">{{ c.turnoutPct }}%</td>
+      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = c.prior[yk] %}<td data-v="{{ p }}">{{ p }}</td>
+      {% if p > 0 %}{% assign diff = c.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 %}<td data-v="{{ diff }}">{% if diff > 0 %}+{% endif %}{{ diff }}%</td>{% else %}<td data-v="">&ndash;</td>{% endif %}{% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<p class="ev-note">
+  Source: Georgia Secretary of State absentee and early voting file and active voter registration table.
+  Turnout is ballots cast divided by <em>active</em> registered voters. Early voting ends Friday, October 30.
+  Past years count accepted ballots returned by the same number of days before each election day ({% for y in ev.metadata.comparisons %}{{ y[0] }}: {{ y[1].cutoff | date: "%B %-d" }}{% unless forloop.last %}; {% endunless %}{% endfor %}).
+  Data generated {{ ev.metadata.generatedAt | date: "%B %-d, %Y" }}.
+</p>
+{% else %}
+<p>Early vote data is not available yet.</p>
+{% endif %}
+
+<script>
+(function () {
+  var table = document.getElementById('ev-table');
+  if (!table) return;
+  var tbody = table.tBodies[0];
+  var rows = Array.prototype.slice.call(tbody.rows);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-n]'), function (el) { el.textContent = Number(el.dataset.n).toLocaleString('en-US'); });
+  // Format numbers with thousands separators client-side so the data stays plain in the JSON.
+  rows.forEach(function (r) {
+    for (var i = 1; i < r.cells.length; i++) {
+      var td = r.cells[i];
+      if (i === 3 || (i >= 5 && i % 2 === 1)) continue; // turnout % and change % stay as rendered
+      if (td.dataset.v !== '' && td.dataset.v != null) td.textContent = Number(td.dataset.v).toLocaleString('en-US');
+    }
+  });
+  function val(row, i, num) {
+    var c = row.cells[i];
+    if (!num) return c.textContent.trim().toLowerCase();
+    var v = c.dataset.v;
+    return v === '' || v == null ? -Infinity : parseFloat(v);
+  }
+  var ths = table.tHead.rows[0].cells;
+  Array.prototype.forEach.call(ths, function (th, i) {
+    th.querySelector('button').addEventListener('click', function () {
+      var num = th.dataset.type === 'num';
+      var dir = th.getAttribute('aria-sort') === 'ascending' ? -1 : 1;
+      Array.prototype.forEach.call(ths, function (o) { o.removeAttribute('aria-sort'); });
+      th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
+      rows.sort(function (a, b) {
+        var x = val(a, i, num), y = val(b, i, num);
+        return (x < y ? -1 : x > y ? 1 : 0) * dir;
+      });
+      rows.forEach(function (r) { tbody.appendChild(r); });
+    });
+  });
+  document.getElementById('ev-search').addEventListener('input', function (e) {
+    var q = e.target.value.trim().toLowerCase();
+    rows.forEach(function (r) { r.hidden = q && r.cells[0].textContent.toLowerCase().indexOf(q) === -1; });
+  });
+})();
+</script>
