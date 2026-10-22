@@ -1,0 +1,26 @@
+{%- comment -%}
+  One small horizontal bar chart comparing a value across election years (server-rendered, no JS).
+      {% include ev-bars.html title="..." pairs="2022=10.6,2024=6.7,2026=4.7" unit="pct" highlight="2026" %}
+  unit="count" prints thousands separators client-side (data-n); unit="pct" appends %. Bars are scaled to the
+  largest value in THIS chart, so charts are never compared with each other. `highlight` colors one year.
+{%- endcomment -%}
+{%- assign ev_items = include.pairs | split: "," -%}
+{%- assign ev_max = 0.0 -%}
+{%- for it in ev_items -%}
+  {%- assign ev_v = it | split: "=" | last | plus: 0.0 -%}
+  {%- if ev_v > ev_max -%}{%- assign ev_max = ev_v -%}{%- endif -%}
+{%- endfor -%}
+<figure class="ev-bars" role="group" aria-label="{{ include.title }}">
+  <figcaption>{{ include.title }}</figcaption>
+  {%- for it in ev_items -%}
+    {%- assign ev_parts = it | split: "=" -%}
+    {%- assign ev_year = ev_parts[0] -%}
+    {%- assign ev_val = ev_parts[1] | plus: 0.0 -%}
+    {%- if ev_max > 0 -%}{%- assign ev_w = ev_val | times: 100.0 | divided_by: ev_max | round: 1 -%}{%- else -%}{%- assign ev_w = 0 -%}{%- endif %}
+  <div class="ev-bar-row">
+    <span class="ev-bar-year">{{ ev_year }}</span>
+    <span class="ev-bar-track"><span class="ev-bar{% if ev_year == include.highlight %} is-now{% endif %}" style="width: {{ ev_w }}%"></span></span>
+    <span class="ev-bar-val"{% if include.unit == "count" %} data-n="{{ ev_parts[1] }}"{% endif %}>{{ ev_parts[1] }}{% if include.unit == "pct" %}%{% endif %}</span>
+  </div>
+  {%- endfor %}
+</figure>

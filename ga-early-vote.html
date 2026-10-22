@@ -33,6 +33,16 @@ share-description: "How many Georgians have already voted in the November 3, 202
   table.ev th button { all: inherit; cursor: pointer; font-weight: 700; }
   table.ev th[aria-sort="ascending"] button::after { content: " \25B2"; font-size: .7em; }
   table.ev th[aria-sort="descending"] button::after { content: " \25BC"; font-size: .7em; }
+  .ev-h2 { font-size: 1.25rem; margin: 28px 0 4px; }
+  .ev-sub { font-size: .85rem; margin: 0 0 12px; color: var(--color-text-muted, var(--color-text)); }
+  .ev-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .ev-bars { margin: 0; background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 14px; }
+  .ev-bars figcaption { font-size: .9rem; font-weight: 600; margin-bottom: 8px; }
+  .ev-bar-row { display: grid; grid-template-columns: 2.6rem 1fr auto; align-items: center; gap: 8px; margin: 4px 0; font-size: .9rem; }
+  .ev-bar-track { display: block; height: 14px; }
+  .ev-bar { display: block; height: 100%; min-width: 2px; border-radius: 3px; background: var(--chart-gray); }
+  .ev-bar.is-now { background: var(--color-accent); }
+  .ev-bar-val { text-align: right; font-variant-numeric: tabular-nums; min-width: 4.2rem; }
   .ev-note { font-size: .85rem; color: var(--color-text-muted, var(--color-text)); margin-top: 12px; }
 </style>
 
@@ -49,12 +59,25 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <div class="ev-stat"><span class="n">{{ sw.turnoutPct }}%</span><span class="l">of <span data-n="{{ sw.active }}">{{ sw.active }}</span> active voters</span></div>
   <div class="ev-stat"><span class="n" data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</span><span class="l">early in person</span></div>
   <div class="ev-stat"><span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">by mail or electronic</span></div>
-  <div class="ev-stat"><span class="n">{{ sw.mailPct }}%</span><span class="l">of ballots are mail or electronic{% for y in ev.metadata.comparisons %}{% assign yk = y[0] %} &middot; {{ sw.priorMailPct[yk] }}% in {{ yk }}{% endfor %}</span></div>
-  <div class="ev-stat"><span class="n">{{ sw.metro.pct }}%</span><span class="l">from {{ sw.metro.counties | join: ", " }}{% for y in ev.metadata.comparisons %}{% assign yk = y[0] %} &middot; {{ sw.metro.prior[yk] }}% in {{ yk }}{% endfor %}</span></div>
-  {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<div class="ev-stat"><span class="n">{{ sw.repeatPct[yk] }}%</span><span class="l">also voted early or absentee in {{ yk }}</span></div>{% endfor %}
-  {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<div class="ev-stat"><span class="n" data-n="{{ sw.prior[yk] }}">{{ sw.prior[yk] }}</span><span class="l">at this point in {{ yk }}{% if sw.priorPct[yk] %} ({{ sw.priorPct[yk] }}% of active voters){% endif %}</span></div>{% endfor %}
 </div>
 
+<h2 class="ev-h2">How {{ ev.metadata.electionDate | date: "%Y" }} compares</h2>
+<p class="ev-sub">Each chart is scaled to its own largest bar. Past years are cut at the same number of days before election day.</p>
+{%- assign cur_year = ev.metadata.electionDate | date: "%Y" -%}
+<div class="ev-panels">
+  {%- capture p_ballots -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.prior[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.ballots }}{%- endcapture -%}
+  {%- capture p_pct -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{%- if sw.priorPct[yk] -%}{{ yk }}={{ sw.priorPct[yk] }},{%- endif -%}{%- endfor -%}{{ cur_year }}={{ sw.turnoutPct }}{%- endcapture -%}
+  {%- capture p_mail -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.priorMailPct[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.mailPct }}{%- endcapture -%}
+  {%- capture p_metro -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.metro.prior[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.metro.pct }}{%- endcapture -%}
+  {%- capture p_repeat -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.repeatPct[yk] }}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}{%- endcapture -%}
+  {% include ev-bars.html title="Ballots cast at this point" pairs=p_ballots unit="count" highlight=cur_year %}
+  {% include ev-bars.html title="Share of active voters who have voted" pairs=p_pct unit="pct" highlight=cur_year %}
+  {% include ev-bars.html title="Share cast by mail or electronic delivery" pairs=p_mail unit="pct" highlight=cur_year %}
+  {% include ev-bars.html title="Share from Cobb, DeKalb, Fulton and Gwinnett" pairs=p_metro unit="pct" highlight=cur_year %}
+  {% include ev-bars.html title="Of this year's early voters, share who also voted early or absentee in…" pairs=p_repeat unit="pct" %}
+</div>
+
+<h2 class="ev-h2">By county</h2>
 <div class="ev-controls">
   <label for="ev-search" class="sr-only">Search counties</label>
   <input id="ev-search" type="search" placeholder="Search counties" autocomplete="off">
