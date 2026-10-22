@@ -97,6 +97,12 @@
    "region": "Broader Metropolitan Statistical Area"
   },
   {
+   "placeId": "spalding",
+   "placeName": "Spalding County",
+   "placeType": "county",
+   "region": "Broader Metropolitan Statistical Area"
+  },
+  {
    "placeId": "walton",
    "placeName": "Walton County",
    "placeType": "county",
@@ -104,6 +110,27 @@
   }
  ],
  "mentions": [
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-10-22",
+   "docType": "minutes",
+   "excerpt": "… rt of the millage rate. She stated that this was the first year that staff were anticipating some of the money from the data center vendors. She stated that the County was anticipating receiving an additional $7.7 million from personal properties from …",
+   "excerptTerm": "data center",
+   "fips": "13113",
+   "placeId": "fayette",
+   "placeName": "Fayette County",
+   "placeType": "county",
+   "region": "Atlanta Regional Commission",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/10-22-2026%20BOC%20Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
   {
    "body": "Board of Commissioners",
    "confidence": "high",
@@ -1430,27 +1457,6 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "unknown",
-   "date": "2026-06-25",
-   "docType": "agenda",
-   "excerpt": "… AR-1 (Agricultural and Residential) and R-2 (Single-Family Residential) to C-1C (Manufacturing Light) for a data center campus. 4. Application 26-01S: LBM Associates, owner, 0 Tomochichi Road and 1221 Tomochichi Road, …",
-   "excerptTerm": "data center",
-   "fips": "13255",
-   "placeId": "spalding",
-   "placeName": "Spalding County",
-   "placeType": "county",
-   "region": "Broader Metropolitan Statistical Area",
-   "sourceType": "ocr",
-   "sourceUrl": "https://spaldingcounty.granicus.com/AgendaViewer.php?view_id=1&event_id=959",
-   "tags": [],
-   "terms": [
-    "data center"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
    "context": "public-comment",
    "date": "2026-06-23",
    "docType": "agenda",
@@ -2252,10 +2258,10 @@
   "consolidatedScanned": 4,
   "countiesScanned": 31,
   "emoji": "🏭",
-  "generatedAt": "2026-10-21T02:54:13Z",
+  "generatedAt": "2026-10-22T14:13:31Z",
   "label": "Data centers",
   "placesScanned": 39,
-  "placesWithMentions": 22,
+  "placesWithMentions": 21,
   "topic": "data-center",
   "universeCities": 537,
   "universeConsolidated": 9,

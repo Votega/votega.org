@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-21T02:54:11Z",
+  "generatedAt": "2026-10-22T14:13:29Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -12,10 +12,10 @@
   ],
   "lastActivity": "2026-11-09",
   "topicTotals": {
-   "development": 10,
+   "development": 11,
    "variance": 4,
    "contract": 8,
-   "millage-budget": 7,
+   "millage-budget": 6,
    "appointment": 5
   },
   "dataCenterItems": [],
@@ -23,13 +23,21 @@
    {
     "title": "Planning Commission Regular Meeting",
     "date": "2026-11-09",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4413,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4417,plainText=false)",
     "tags": [
      "development",
      "variance"
     ],
     "excerpt": "… Case 207 is requesting a variance to Section 26-70 (b) to allow a manufactured home/ mobile home within a platted subdivision. • ADJOURNMENT",
     "excerptTerm": "subdivision"
+   },
+   {
+    "title": "Land Use & Development Regulations Review Committee Meeting",
+    "date": "2026-10-26",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4418,plainText=false)",
+    "tags": [
+     "development"
+    ]
    },
    {
     "title": "Land Use & Development Regulations Review Committee Meeting",
@@ -113,7 +121,7 @@
     "excerptTerm": "subdivision"
    }
   ],
-  "landUseMeetings": 10,
+  "landUseMeetings": 11,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -123,12 +131,12 @@
    "date": "2026-11-09",
    "body": "Planning Commission",
    "title": "Planning Commission Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4413,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4417,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4413,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4417,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 902,
-   "pdfSha256": "51cbde962e136003021bc594fd72e1c0b0d468c60004acba35b63c48707c2fc0",
+   "textChars": 828,
+   "pdfSha256": "859312a8255c78307508bab1a8438a26bc79f0ffe32f7489a7eccab7fd234dc1",
    "topics": {
     "development": 1,
     "variance": 1
@@ -151,6 +159,38 @@
      "term": "variance",
      "excerpt": "… ant: Benjamin Schmidt Parcel Number: 117-078 Character Area: Residential Growth Case 207 is requesting a variance to Section 26-70 (b) to allow a manufactured home/ mobile home within a platted subdivision. • ADJOURNMENT",
      "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1420",
+   "date": "2026-10-26",
+   "body": "Land Use & Development Regulations Review Committee",
+   "title": "Land Use & Development Regulations Review Committee Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4418,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4418,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 677,
+   "pdfSha256": "a8e51b0ffa0e3f2e11b045c751eb1b81ed0756a72626391c9d214bd5aec01bad",
+   "topics": {
+    "development": 1
+   },
+   "tags": [
+    "development"
+   ],
+   "matchedTerms": [
+    "multi-family"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "multi-family",
+     "excerpt": "… R • OTHER ITEMS 1. Approve the October 13, 2026; Land Use & Development Regulations Committee Meeting 2. Multi-Family Development in Chapter 26 and 27 • PUBLIC COMMENT • ADJOURNMENT",
+     "context": "unknown"
     }
    },
    "flags": [
@@ -940,38 +980,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1302",
-   "date": "2026-08-07",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Special Work Session",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4188,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4188,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 393,
-   "pdfSha256": "0044ac9d054c8c1b2fbbb4638e0cdd8d4b7228b43185a7ba75e0ee839924dc4a",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… August 7, 2026 9:00 AM • CALL TO ORDER • OTHER ITEMS 1. DISCUSS 2027 COUNTY BUDGET • ADJOURNMENT",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   }
