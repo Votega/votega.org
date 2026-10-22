@@ -37,6 +37,9 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <div class="ev-stat"><span class="n">{{ sw.turnoutPct }}%</span><span class="l">of <span data-n="{{ sw.active }}">{{ sw.active }}</span> active voters</span></div>
   <div class="ev-stat"><span class="n" data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</span><span class="l">early in person</span></div>
   <div class="ev-stat"><span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">by mail or electronic</span></div>
+  <div class="ev-stat"><span class="n">{{ sw.mailPct }}%</span><span class="l">of ballots are mail or electronic{% for y in ev.metadata.comparisons %}{% assign yk = y[0] %} &middot; {{ sw.priorMailPct[yk] }}% in {{ yk }}{% endfor %}</span></div>
+  <div class="ev-stat"><span class="n">{{ sw.metro.pct }}%</span><span class="l">from {{ sw.metro.counties | join: ", " }}{% for y in ev.metadata.comparisons %}{% assign yk = y[0] %} &middot; {{ sw.metro.prior[yk] }}% in {{ yk }}{% endfor %}</span></div>
+  {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<div class="ev-stat"><span class="n">{{ sw.repeatPct[yk] }}%</span><span class="l">also voted early or absentee in {{ yk }}</span></div>{% endfor %}
   {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<div class="ev-stat"><span class="n" data-n="{{ sw.prior[yk] }}">{{ sw.prior[yk] }}</span><span class="l">at this point in {{ yk }}{% if sw.priorPct[yk] %} ({{ sw.priorPct[yk] }}% of active voters){% endif %}</span></div>{% endfor %}
 </div>
 
@@ -53,6 +56,8 @@ share-description: "How many Georgians have already voted in the November 3, 202
       <th data-type="num"><button type="button">Ballots cast</button></th>
       <th data-type="num"><button type="button">Active voters</button></th>
       <th data-type="num"><button type="button">Turnout</button></th>
+      <th data-type="num"><button type="button">Mail share</button></th>
+      {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">Also voted early in {{ y[0] }}</button></th>{% endfor %}
       {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">{{ y[0] }} (same point)</button></th>
       <th data-type="num"><button type="button">vs. {{ y[0] }}</button></th>{% endfor %}
     </tr>
@@ -61,10 +66,12 @@ share-description: "How many Georgians have already voted in the November 3, 202
     {% for c in ev.counties %}
     <tr>
       <td>{{ c.name }}</td>
-      <td data-v="{{ c.ballots }}">{{ c.ballots }}</td>
-      <td data-v="{{ c.active }}">{{ c.active }}</td>
+      <td data-f="n" data-v="{{ c.ballots }}">{{ c.ballots }}</td>
+      <td data-f="n" data-v="{{ c.active }}">{{ c.active }}</td>
       <td data-v="{{ c.turnoutPct }}">{{ c.turnoutPct }}%</td>
-      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = c.prior[yk] %}<td data-v="{{ p }}">{{ p }}</td>
+      <td data-v="{{ c.mailPct }}">{{ c.mailPct }}%</td>
+      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<td data-v="{{ c.repeatPct[yk] }}">{{ c.repeatPct[yk] }}%</td>{% endfor %}
+      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = c.prior[yk] %}<td data-f="n" data-v="{{ p }}">{{ p }}</td>
       {% if p > 0 %}{% assign diff = c.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 %}<td data-v="{{ diff }}">{% if diff > 0 %}+{% endif %}{{ diff }}%</td>{% else %}<td data-v="">&ndash;</td>{% endif %}{% endfor %}
     </tr>
     {% endfor %}
@@ -74,7 +81,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
 
 <p class="ev-note">
   Source: Georgia Secretary of State absentee and early voting file and active voter registration table.
-  Turnout is ballots cast divided by <em>active</em> registered voters. Counts run through the end of {{ ev.metadata.asOf | date: "%B %-d" }}; the Secretary of State's own dashboard updates more often and may show higher totals. Early voting ends Friday, October 30.
+  Turnout is ballots cast divided by <em>active</em> registered voters. Counts run through the end of {{ ev.metadata.asOf | date: "%B %-d" }}; the Secretary of State's own dashboard updates more often and may show higher totals. "Also voted early" is the share of this year's early and absentee voters who also cast an accepted early or absentee ballot in that election (any date); it can't tell a first-time voter from someone who voted on election day. Early voting ends Friday, October 30.
   Past years count accepted ballots returned by the same number of days before each election day ({% for y in ev.metadata.comparisons %}{{ y[0] }}: {{ y[1].cutoff | date: "%B %-d" }}{% unless forloop.last %}; {% endunless %}{% endfor %}).
   Data generated {{ ev.metadata.generatedAt | date: "%B %-d, %Y" }}.
 </p>
@@ -91,11 +98,9 @@ share-description: "How many Georgians have already voted in the November 3, 202
   Array.prototype.forEach.call(document.querySelectorAll('[data-n]'), function (el) { el.textContent = Number(el.dataset.n).toLocaleString('en-US'); });
   // Format numbers with thousands separators client-side so the data stays plain in the JSON.
   rows.forEach(function (r) {
-    for (var i = 1; i < r.cells.length; i++) {
-      var td = r.cells[i];
-      if (i === 3 || (i >= 5 && i % 2 === 1)) continue; // turnout % and change % stay as rendered
+    Array.prototype.forEach.call(r.querySelectorAll('td[data-f]'), function (td) {
       if (td.dataset.v !== '' && td.dataset.v != null) td.textContent = Number(td.dataset.v).toLocaleString('en-US');
-    }
+    });
   });
   function val(row, i, num) {
     var c = row.cells[i];

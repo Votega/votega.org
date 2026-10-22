@@ -42,6 +42,7 @@ STYLES = {
     "ABSENTEE BY MAIL": "mail",
     "ELECTRONIC BALLOT DELIVERY": "electronic",
 }
+BIG_FOUR = ("Fulton", "DeKalb", "Cobb", "Gwinnett")  # display names; the four largest early-vote counties
 DISPLAY_FIXES = {"DEKALB": "DeKalb", "MCDUFFIE": "McDuffie", "MCINTOSH": "McIntosh"}
 
 
@@ -60,31 +61,39 @@ def parse_date(s):
 
 
 def count_current(path):
-    """-> {countyKey: {'name', 'total', 'inPerson', 'mail', 'electronic'}} (deduped by voter id)."""
-    seen = set()
+    """-> ({countyKey: {total, inPerson, mail, electronic}}, {voterId: countyKey}), deduped by voter id.
+
+    The id map lives only in memory, for the repeat-voter match; it is never written out.
+    """
+    seen = {}
     out = {}
     with open(path, newline="", encoding="utf-8-sig") as f:
         for row in csv.DictReader(f):
             vid = row["Voter Registration Number"]
             if vid in seen:
                 continue
-            seen.add(vid)
             k = key(row["County Name"])
+            seen[vid] = k
             c = out.setdefault(k, {"total": 0, "inPerson": 0, "mail": 0, "electronic": 0})
             c["total"] += 1
             style = STYLES.get(row["Ballot Style"].strip().upper())
             if style:
                 c[style] += 1
-    return out
+    return out, seen
 
 
 def count_prior(directory, cutoff):
     """Accepted ballots returned on or before `cutoff`, per county, deduped by voter id.
 
+    -> (totals {countyKey: n}, mail {countyKey: n of absentee/electronic}, voted {voterId, ...})
+    `voted` is every voter with an accepted ballot in that election REGARDLESS of date, for the
+    repeat-voter match ("voted early or absentee in 2024"); it never leaves memory.
     STATEWIDE.csv in these dumps repeats every county row, so it is skipped.
     """
     seen = set()
+    voted = set()
     out = {}
+    mail = {}
     paths = sorted(glob.glob(os.path.join(directory, "*.csv")))
     if not paths:
         # A wrong or emptied folder must not publish as "0 ballots that year".
@@ -99,6 +108,7 @@ def count_prior(directory, cutoff):
                 ret = row.get("Ballot Return Date", "").strip()
                 if not ret:
                     continue
+                voted.add(row["Voter Registration #"])
                 try:
                     if parse_date(ret) > cutoff:
                         continue
@@ -110,7 +120,18 @@ def count_prior(directory, cutoff):
                 seen.add(vid)
                 k = key(row["County"])
                 out[k] = out.get(k, 0) + 1
-    return out
+                if row.get("Ballot Style", "").strip().upper() != "EARLY IN-PERSON":
+                    mail[k] = mail.get(k, 0) + 1
+    return out, mail, voted
+
+
+def match_repeat(voter_county, voted):
+    """{countyKey: how many current voters are also in `voted`} (aggregate only)."""
+    matched = {}
+    for vid, k in voter_county.items():
+        if vid in voted:
+            matched[k] = matched.get(k, 0) + 1
+    return matched
 
 
 def read_registration(path):
@@ -133,7 +154,7 @@ def read_registration(path):
     return out
 
 
-def build(current, registration, priors, as_of, election_date):
+def build(current, registration, priors, as_of, election_date, priors_mail=None, repeat=None):
     """priors: {year: {countyKey: n}} plus meta in `priors_meta` is added by caller."""
     counties = []
     for k, reg in sorted(registration.items(), key=lambda kv: kv[1]["name"]):
@@ -145,8 +166,20 @@ def build(current, registration, priors, as_of, election_date):
             "mail": cur["mail"] + cur["electronic"],
             "active": reg["active"],
             "turnoutPct": round(100.0 * cur["total"] / reg["active"], 1) if reg["active"] else None,
+            "mailPct": round(100.0 * (cur["mail"] + cur["electronic"]) / cur["total"], 1) if cur["total"] else None,
             "prior": {str(y): counts.get(k, 0) for y, counts in priors.items()},
         }
+        if priors_mail:
+            rec["priorMailPct"] = {
+                str(y): round(100.0 * priors_mail[y].get(k, 0) / counts[k], 1) if counts.get(k) else None
+                for y, counts in priors.items()
+            }
+        if repeat:
+            # share of this county's 2026 ballots cast by someone who also voted early/absentee in that year
+            rec["repeatPct"] = {
+                str(y): round(100.0 * r.get(k, 0) / cur["total"], 1) if cur["total"] else None
+                for y, r in repeat.items()
+            }
         counties.append(rec)
     return counties
 
@@ -181,15 +214,18 @@ def main(argv=None):
     election = dt.date.fromisoformat(a.election_date)
     days_before = (election - as_of).days
 
-    current = count_current(a.current)
+    current, voter_county = count_current(a.current)
     registration = read_registration(a.registration)
-    priors, prior_meta = {}, {}
+    priors, priors_mail, repeat, prior_meta = {}, {}, {}, {}
     for spec in a.prior:
         year, rest = spec.split("=", 1)
         directory, edate = rest.rsplit(":", 1)
         pe = dt.date.fromisoformat(edate)
         cutoff = pe - dt.timedelta(days=days_before)
-        priors[year] = count_prior(os.path.expanduser(directory), cutoff)
+        totals, mail, voted = count_prior(os.path.expanduser(directory), cutoff)
+        priors[year], priors_mail[year] = totals, mail
+        repeat[year] = match_repeat(voter_county, voted)
+        del voted  # millions of voter ids: drop as soon as the match is done
         prior_meta[year] = {"electionDate": edate, "cutoff": cutoff.isoformat()}
 
     for spec in a.prior_active:
@@ -198,7 +234,7 @@ def main(argv=None):
             sys.exit(f"--prior-active {year}: no matching --prior")
         prior_meta[year]["activeStatewide"] = int(n)
 
-    counties = build(current, registration, priors, as_of, election)
+    counties = build(current, registration, priors, as_of, election, priors_mail, repeat)
     errs = validate(counties, current, registration)
     if errs:
         print("\n".join(errs), file=sys.stderr)
@@ -206,6 +242,15 @@ def main(argv=None):
 
     ballots = sum(c["ballots"] for c in counties)
     active = sum(c["active"] for c in counties)
+    metro = [c for c in counties if c["name"] in BIG_FOUR]
+    metro_share = {
+        "counties": [c["name"] for c in metro],
+        "pct": round(100.0 * sum(c["ballots"] for c in metro) / ballots, 1) if ballots else None,
+        "prior": {
+            y: round(100.0 * sum(c["prior"][y] for c in metro) / t, 1)
+            for y in priors if (t := sum(c["prior"][y] for c in counties))
+        },
+    }
     data = {
         "metadata": {
             "generatedAt": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -222,6 +267,15 @@ def main(argv=None):
             "mail": sum(c["mail"] for c in counties),
             "active": active,
             "turnoutPct": round(100.0 * ballots / active, 1) if active else None,
+            "mailPct": round(100.0 * sum(c["mail"] for c in counties) / ballots, 1) if ballots else None,
+            "priorMailPct": {
+                y: round(100.0 * sum(priors_mail[y].values()) / sum(priors[y].values()), 1)
+                for y in priors if sum(priors[y].values())
+            },
+            "repeatPct": {
+                y: round(100.0 * sum(repeat[y].values()) / ballots, 1) for y in repeat
+            } if ballots else {},
+            "metro": metro_share,
             "prior": {y: sum(c["prior"][y] for c in counties) for y in priors},
             "priorPct": {
                 y: round(100.0 * sum(c["prior"][y] for c in counties) / m["activeStatewide"], 1)

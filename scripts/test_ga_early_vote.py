@@ -33,7 +33,8 @@ def test_current_dedupes_and_splits_styles():
             ["FULTON", "1", "EARLY IN-PERSON"],  # duplicate voter
             ["FULTON", "2", "ABSENTEE BY MAIL"],
         ])
-        out = g.count_current(p)
+        out, ids = g.count_current(p)
+        assert ids == {"1": "FULTON", "2": "FULTON"}
         assert out["FULTON"] == {"total": 2, "inPerson": 1, "mail": 1, "electronic": 0}
 
 
@@ -48,8 +49,9 @@ def test_prior_cutoff_status_and_statewide_skip():
         ]
         _write(os.path.join(tmp, "COBB.csv"), hdr, rows)
         _write(os.path.join(tmp, "STATEWIDE.csv"), hdr, rows)  # repeats every county
-        out = g.count_prior(tmp, dt.date(2022, 10, 26))
+        out, mail, voted = g.count_prior(tmp, dt.date(2022, 10, 26))
         assert out == {"COBB": 1}, out
+        assert voted == {"1", "2"}, voted  # repeat match ignores the cutoff, still only accepted ballots with a return date
 
 
 def test_prior_missing_directory_is_fatal():
@@ -59,6 +61,11 @@ def test_prior_missing_directory_is_fatal():
         except SystemExit:
             return
         raise AssertionError("an empty prior directory must not yield zero counts")
+
+
+def test_match_repeat_counts_by_county():
+    cur = {"1": "A", "2": "A", "3": "B"}
+    assert g.match_repeat(cur, {"1", "3", "99"}) == {"A": 1, "B": 1}
 
 
 def test_validate_flags_ballots_above_active():
