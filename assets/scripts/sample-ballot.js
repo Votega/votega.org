@@ -27,7 +27,7 @@ const CENSUS_GEOCODER_URL = 'https://geocoding.geo.census.gov/geocoder/geographi
 // Census sends no CORS header, so the browser must use JSONP (a <script> tag with a
 // callback), not fetch(). benchmark/vintage "Current" track the active districts.
 const CENSUS_PARAMS = 'benchmark=Public_AR_Current&vintage=Current_Current&layers=all&format=jsonp';
-const CENSUS_TIMEOUT_MS = 12000;
+const CENSUS_TIMEOUT_MS = 8000;
 
 function sbBasePath() {
   return '/';
@@ -90,7 +90,15 @@ function geocodeAddress(address) {
       try { delete window[cb]; } catch (_) { window[cb] = undefined; }
       clearTimeout(timer);
     };
-    const fail = msg => { if (done) return; done = true; cleanup(); reject(new Error(msg)); };
+    // transient = the geocoder is slow or down (not "address not found"), which
+    // address-lookup.js answers from the static ZIP table when it can.
+    const fail = msg => {
+      if (done) return;
+      done = true; cleanup();
+      const err = new Error(msg);
+      err.transient = true;
+      reject(err);
+    };
 
     const timer = setTimeout(
       () => fail('The address lookup timed out. Check your connection and try again.'),
@@ -115,7 +123,9 @@ function geocodeAddress(address) {
         }
         resolve(loc);
       } catch (e) {
-        reject(new Error('The address lookup returned unexpected data. Try your county above.'));
+        const err = new Error('The address lookup returned unexpected data. Try your county above.');
+        err.transient = true;
+        reject(err);
       }
     };
 

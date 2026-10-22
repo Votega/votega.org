@@ -46,6 +46,14 @@
     return { kind: 'ok', value: value };
   }
 
+  // The ZIP a full address ends with ("..., Covington, GA 30016" or "...30016-1234"),
+  // or null. End-anchored on purpose: a leading five-digit number is a street number.
+  var TRAILING_ZIP_RE = /(?:^|[\s,])(\d{5})(?:-\d{4})?(?:\s*,?\s*(?:USA?|United States))?\s*$/i;
+  function trailingZip(value) {
+    var m = TRAILING_ZIP_RE.exec(String(value == null ? '' : value));
+    return m ? m[1] : null;
+  }
+
   /**
    * The messages, in one place so wording cannot drift between pages while the
    * page-specific parts stay substitutable.
@@ -63,6 +71,10 @@
       working: 'Looking up ' + subject + '…',
       unavailable: 'Address lookup is unavailable right now' + orFallback + '.',
       failed: 'That address could not be looked up' + orFallback + '.',
+      zipFallback: function (zip) {
+        return 'The address lookup is unavailable right now, so this shows every district touching ZIP '
+          + zip + '. Try again later for your exact ' + subject.replace(/^your /, '') + '.';
+      },
     };
   }
 
@@ -70,7 +82,10 @@
    * Wire an address lookup. Config:
    *   input          element-like with .value (required)
    *   button         element-like, disabled during a lookup (optional)
-   *   setStatus(msg, isError)   how this page shows a message (required)
+   *   setStatus(msg, isError, kind)   how this page shows a message (required).
+   *                  kind is 'fallback' for the one non-error message a page that
+   *                  shows only errors must still display (a geocoder outage answered
+   *                  from the ZIP table); otherwise undefined.
    *   onResolve(loc) what this page does with a resolved location (required).
    *                  May return an outcome string to replace 'success' -- a page
    *                  that got a location with no district of its own says so --
@@ -192,8 +207,29 @@
         })
         .catch(function (err) {
           if (typeof cfg.onReject === 'function') cfg.onReject(err);
-          cfg.setStatus((err && err.message) || msg.failed, true);
-          return 'error';
+          function giveUp() {
+            cfg.setStatus((err && err.message) || msg.failed, true);
+            return 'error';
+          }
+          // The geocoder itself is down or slow (err.transient, set by
+          // geocodeAddress) -- not "address not found". A page that can answer a
+          // bare ZIP from its own static table does so with the ZIP the voter
+          // typed, so a Census outage degrades to "every district touching your
+          // ZIP" instead of a dead end. Only a successful ZIP answer replaces the
+          // error; any other outcome keeps the original, more useful, message.
+          var zip = !zipHandler && err && err.transient && typeof cfg.onZip === 'function'
+            ? trailingZip(parsed.value) : null;
+          if (!zip) return giveUp();
+          return Promise.resolve()
+            .then(function () { return cfg.onZip(zip, parsed.value); })
+            .then(function (outcome) {
+              if (typeof outcome === 'string' && outcome !== 'zip') return giveUp();
+              // Third argument 'fallback': a page that shows only errors (elections)
+              // must still show this, or the outage would be silent.
+              cfg.setStatus(msg.zipFallback(zip), false, 'fallback');
+              return 'zip_fallback';
+            })
+            .catch(giveUp);
         })
         .then(function (outcome) {
           setBusy(false);
@@ -211,6 +247,7 @@
 
   var AddressLookup = {
     classifyAddress: classifyAddress,
+    trailingZip: trailingZip,
     createAddressLookup: createAddressLookup,
     messages: messages,
     ZIP_RE: ZIP_RE,
