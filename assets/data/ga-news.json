@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-22T18:58:48.516295+00:00",
+    "generatedAt": "2026-10-22T23:47:05.336919+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,29 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 129,
+    "count": 149,
     "windowDays": 45,
-    "entityTagged": 72,
+    "entityTagged": 88,
     "topicCounts": {
-      "elections": 41,
-      "courts": 17,
+      "elections": 45,
+      "budget": 12,
+      "courts": 19,
       "education": 13,
-      "budget": 9,
+      "healthcare": 16,
       "surveillance": 2,
-      "healthcare": 12,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000021": {
+      "name": "Brad Raffensperger",
+      "url": null,
+      "rosterId": "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1",
+      "candidateIds": [
+        "challenger-brad-raffensperger-gov-2026"
+      ]
+    },
     "vg-ga-p-000008": {
       "name": "Ben Watson",
       "url": null,
@@ -54,6 +62,11 @@
       "candidateIds": [
         "ga-senate-1-2026-d-2"
       ]
+    },
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
     },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
@@ -86,6 +99,11 @@
       "candidateIds": [
         "challenger-josh-mclaurin-ltgov-2026"
       ]
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
     },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
@@ -120,11 +138,6 @@
       "candidateIds": [
         "challenger-mike-collins-senate-2026"
       ]
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
     },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
@@ -188,11 +201,6 @@
         "ga-house-161-2026-d-1"
       ]
     },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
-    },
     "vg-ga-p-000258": {
       "name": "Earl L. \"Buddy\" Carter",
       "url": null,
@@ -213,6 +221,90 @@
     }
   },
   "items": [
+    {
+      "id": "17298ccff3d5",
+      "title": "Voters will decide whether to expand a tax relief program for Georgia farmers",
+      "url": "https://georgiarecorder.com/2026/10/22/voters-will-decide-whether-to-expand-a-tax-relief-program-for-georgia-farmers/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-22T23:13:14+00:00",
+      "snippet": "Georgia voters will have a chance to weigh in on a ballot measure that would expand a property tax relief program to include those who own larger swaths of farmland. The proposed constitutional amendm",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "budget"
+      ]
+    },
+    {
+      "id": "db5dc5bf3521",
+      "title": "Secretary of state launches complaint challenging Georgia residency of House candidate",
+      "url": "https://georgiarecorder.com/2026/10/22/secretary-of-state-launches-complaint-challenging-georgia-residency-of-house-candidate/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-22T23:00:45+00:00",
+      "snippet": "Secretary of State Brad Raffensperger has filed a formal complaint against a Georgia House candidate accused of voting in two states, arguing that he does not meet the residency requirements to serve ",
+      "entityIds": [
+        "vg-ga-p-000021"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "f326031d0477",
+      "title": "Lawmakers hear fallout from Georgia Supreme Court ruling against a fire fee",
+      "url": "https://capitol-beat.org/2026/10/lawmakers-hear-fallout-from-georgia-supreme-court-ruling-against-a-fire-fee/?utm_source=rss&utm_medium=rss&utm_campaign=lawmakers-hear-fallout-from-georgia-supreme-court-ruling-against-a-fire-fee",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-10-22T21:14:42+00:00",
+      "snippet": "ATLANTA — Georgia lawmakers are hearing concerns about the potential impact of a state Supreme Court ruling that struck down a firefighting fee in Chatham County last week. The court ordered the count",
+      "entityIds": [],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "f783f116c727",
+      "title": "Atlanta Dream fans pack watch parties, celebrate Game 3 victory",
+      "url": "https://www.gpb.org/news/2026/10/22/atlanta-dream-fans-pack-watch-parties-celebrate-game-3-victory",
+      "source": "GPB News",
+      "publishedAt": "2026-10-22T19:39:00+00:00",
+      "snippet": "Fans across Atlanta filled bars to watch the Atlanta Dream win the third of seven WNBA finals games.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "acc8409edb29",
+      "title": "GPB evening headlines for October 22, 2026",
+      "url": "https://www.gpb.org/news/2026/10/22/gpb-evening-headlines-for-october-22-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-22T19:35:15+00:00",
+      "snippet": "A federal judge has ordered the Trump administration to halt investigations in Georgia and eight other states into whether noncitizens are registered to vote.\nSeveral Georgia water systems have tested",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
+      "id": "006b095ae4ba",
+      "title": "REPORT: Harmful 'forever chemicals' found across Georgia water systems",
+      "url": "https://www.gpb.org/news/2026/10/22/report-harmful-forever-chemicals-found-across-georgia-water-systems",
+      "source": "GPB News",
+      "publishedAt": "2026-10-22T19:01:00+00:00",
+      "snippet": "Water samples show widespread PFAS contamination in rivers and streams.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "3b76cc03c9d9",
+      "title": "Georgia Today: Election investigations halted; PFAS found; Atlanta Dream wins first home game",
+      "url": "https://www.gpb.org/news/2026/10/22/georgia-today-election-investigations-halted-pfas-found-atlanta-dream-wins-first",
+      "source": "GPB News",
+      "publishedAt": "2026-10-22T18:40:00+00:00",
+      "snippet": "On the Oct. 22 edition: Election investigations in Georgia and eight other states by the Trump administration have been halted; PFAS, also known as \"forever chemicals,\" have been found in Georgia's wa",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
     {
       "id": "d5c62b116192",
       "title": "Federal judge orders Trump administration to halt noncitizen voting probe in Georgia, 8 other states",
@@ -272,6 +364,18 @@
       "topics": [
         "elections"
       ]
+    },
+    {
+      "id": "8bb543fc6bb4",
+      "title": "Warnock, Colleagues Launch Bicameral Inquiry Into Trump Administration’s Handling of Tariff Refunds",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-colleagues-launch-bicameral-inquiry-into-trump-administrations-handling-of-tariff-refunds/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-10-22T13:40:37+00:00",
+      "snippet": "Senator Reverend Raphael Warnock led a bicameral coalition in pressing the Government Accountability Office to investigate the Trump administration’s failure to deliver timely and accurate tariff refu",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": []
     },
     {
       "id": "35c2a1a278bd",
@@ -344,6 +448,20 @@
       "snippet": "The Department of Energy approved full-scale construction of the Savannah River Plutonium Processing Facility to produce up to 125 plutonium pits annually, despite ongoing concerns from watchdog group",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "8f73e11855b5",
+      "title": "Ahead of Midterms, New Warnock Report Finds Election Officials Across Georgia Confident in Election Security",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/ahead-of-midterms-new-warnock-report-finds-election-officials-across-georgia-confident-in-election-security/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-10-21T14:04:44+00:00",
+      "snippet": "Senator Reverend Raphael Warnock released a new report examining Georgia’s election preparedness ahead of the November elections The report features testimony from election administrators across 10 Ge",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "elections"
+      ]
     },
     {
       "id": "6d0f389d8170",
@@ -422,6 +540,62 @@
       ]
     },
     {
+      "id": "8950928b9dbf",
+      "title": "Warnock, Ossoff Secure Nearly $12.5 Million to Improve Rail Safety Across Southwest Georgia",
+      "url": "https://www.ossoff.senate.gov/press-releases/warnock-ossoff-secure-nearly-12-5-million-to-improve-rail-safety-across-southwest-georgia/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-10-20T19:12:13+00:00",
+      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff successfully secured nearly $12.5 million in federal grant funding from the Department of Transportation to improve railway safety in Southwest Georgia",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "2e84c9778956",
+      "title": "New Warnock Report Details How Errors in State Medicaid Systems Threaten Health Care Access and Increase Taxpayer Costs",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/new-warnock-report-details-how-errors-in-state-medicaid-systems-threaten-health-care-access-and-increase-taxpayer-costs/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-10-20T19:00:24+00:00",
+      "snippet": "Senators Reverend Raphael Warnock, Ron Wyden, and Elizabeth Warren detail how delays and errors in state Medicaid eligibility systems lead to loss of health care coverage and higher costs for American",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "budget",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "d2cbe95bcc32",
+      "title": "NEW: Georgians Report Prolonged Suffering & Untreated Conditions as a Result of Insurance Companies Denying or Delaying Care Doctors Say They Need",
+      "url": "https://www.ossoff.senate.gov/press-releases/new-georgians-report-prolonged-suffering-untreated-conditions-as-a-result-of-insurance-companies-denying-or-delaying-care-doctors-say-they-need/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-10-20T18:48:01+00:00",
+      "snippet": "Click here to read Sen. Ossoff’s fourth report from his ongoing investigation into health care costs, loss of services, and delays or denials of needed care Washington, D.C. — Georgians say they are s",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "4f9216b346e8",
+      "title": "Warnock, Colleagues Question IRS Over Administration’s Threats to Revoke Tax-Exempt Status for Universities with Diversity Programs",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-colleagues-question-irs-over-administrations-threats-to-revoke-tax-exempt-status-for-universities-with-diversity-programs/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-10-20T17:04:46+00:00",
+      "snippet": "U.S. Senators Reverend Raphael Warnock, Ron Wyden, and Bernie Sanders are seeking answers from the Internal Revenue Service about a Trump administration proposal to revoke the tax-exempt status of pri",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
       "id": "8e227f6f9151",
       "title": "Jackson will skip this weekend’s Trump rally in Perry",
       "url": "https://georgiarecorder.com/2026/10/19/jackson-will-skip-this-weekends-trump-rally-in-macon/",
@@ -471,6 +645,19 @@
       "topics": [
         "budget"
       ]
+    },
+    {
+      "id": "4f797993acbe",
+      "title": "NEWS: Sens. Ossoff & Rev. Warnock Delivering Over $25 Million in Federal Funding to Upgrade Commercial Vehicle Infrastructure",
+      "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-over-25-million-in-federal-funding-to-upgrade-commercial-vehicle-infrastructure/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-10-19T13:51:57+00:00",
+      "snippet": "Garden City, Ga. — U.S. Senators Jon Ossoff and Reverend Raphael Warnock today announced new bipartisan infrastructure law funding to upgrade truck and commercial vehicle infrastructure. Today, Sens. ",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
     },
     {
       "id": "85ffe07018a3",
@@ -552,6 +739,18 @@
       "entityIds": [
         "vg-ga-p-000330",
         "vg-ga-p-000373"
+      ],
+      "topics": []
+    },
+    {
+      "id": "3e2382f9c522",
+      "title": "Warnock Names New Chief of Staff, Deputy Chief of Staff",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-names-new-chief-of-staff-deputy-chief-of-staff/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-10-16T16:08:22+00:00",
+      "snippet": "Washington, D.C. – Today, U.S. Senator Reverend Raphael Warnock (D-GA) named Dylan Laslovich as his Chief of Staff and promoted Josh Delaney to Deputy Chief of Staff/Legislative Director. Mark Libell ",
+      "entityIds": [
+        "vg-ga-p-000263"
       ],
       "topics": []
     },
@@ -765,16 +964,6 @@
       ]
     },
     {
-      "id": "87e29e2f0f51",
-      "title": "Georgia Tech to get temporary leader amid search for Cabrera successor",
-      "url": "https://capitol-beat.org/2026/10/georgia-tech-to-get-temporary-leader-amid-search-for-cabrera-successor/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-tech-to-get-temporary-leader-amid-search-for-cabrera-successor",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-13T15:37:55+00:00",
-      "snippet": "ATLANTA — An executive vice president at Georgia Tech will step temporarily into the top job amid a search for a permanent president. Chancellor Sonny Perdue on Tuesday named Timothy Charles Lieuwen a",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "6ccfd9f20eef",
       "title": "Gov. Kemp Announces Solicitor General Appointment",
       "url": "https://gov.georgia.gov/press-releases/2026-10-13/gov-kemp-announces-solicitor-general-appointment",
@@ -970,6 +1159,18 @@
       "topics": []
     },
     {
+      "id": "c984bd769518",
+      "title": "Sen. Ossoff Statement on 3rd Anniversary of October 7th",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-statement-on-3rd-anniversary-of-october-7th/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-10-07T12:17:02+00:00",
+      "snippet": "“Three years ago today, Hamas terrorists massacred over 1,000 civilians; kidnapped innocent men, women, and children; and committed brutal atrocities. Today we remember and honor the lives lost, while",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
       "id": "bd0df96b4d20",
       "title": "Bottoms, Jackson debate healthcare, data centers in sole scheduled forum",
       "url": "https://thecurrentga.org/2026/10/07/bottoms-jackson-debate-healthcare-data-centers-in-sole-scheduled-forum/",
@@ -1141,6 +1342,18 @@
       ]
     },
     {
+      "id": "f3d7fa8b5cd7",
+      "title": "NEWS: U.S. Senate Passes Sen. Ossoff’s Bipartisan Bill to Strengthen Emergency Alerts; Heads to President’s Desk to Become Law",
+      "url": "https://www.ossoff.senate.gov/press-releases/news-u-s-senate-passes-sen-ossoffs-bipartisan-bill-to-strengthen-emergency-alerts-heads-to-presidents-desk-to-become-law/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-10-01T14:03:45+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff’s bipartisan bill to strengthen emergency alerts during natural disasters has passed the Senate. Last night, the U.S. Senate passed Sens. Ossoff and John Cor",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
       "id": "60bd9686483f",
       "title": "Gov. Kemp: MEC Plans Approximately 140 New Jobs in Thomson",
       "url": "https://gov.georgia.gov/press-releases/2026-10-01/gov-kemp-mec-plans-approximately-140-new-jobs-thomson",
@@ -1250,6 +1463,20 @@
       ],
       "topics": [
         "elections"
+      ]
+    },
+    {
+      "id": "d955e5924ea4",
+      "title": "11Alive: “Gwinnett woman highlights struggles with health insurance authorization”",
+      "url": "https://www.ossoff.senate.gov/press-releases/11alive-gwinnett-woman-highlights-struggles-with-health-insurance-authorization/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-29T14:50:12+00:00",
+      "snippet": "11Alive: “Ossoff reportedly received dozens of reports from Georgia patients, who have reported that prior authorization issues with their insurance companies have resulted in delays and denials of me",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
       ]
     },
     {
@@ -1522,6 +1749,18 @@
       "topics": []
     },
     {
+      "id": "f24761915773",
+      "title": "Sen. Ossoff Working Across the Aisle to Improve Sewer and Stormwater Infrastructure Across Georgia",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-improve-sewer-and-stormwater-infrastructure-across-georgia/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-23T14:42:10+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working to improve sewer and stormwater infrastructure across Georgia. Sen. Ossoff is cosponsoring the bipartisan Clean Water Allotment Modernization Act ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
       "id": "a63cecf87395",
       "title": "Carr: Behavioral Health Provider Facing 31-Count Medicaid Fraud Indictment in DeKalb County",
       "url": "https://law.georgia.gov/press-releases/2026-09-23/carr-behavioral-health-provider-facing-31-count-medicaid-fraud-indictment",
@@ -1611,6 +1850,18 @@
       ]
     },
     {
+      "id": "7344344f66e7",
+      "title": "Sen. Ossoff Working to Improve Public Transportation Across Georgia",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-to-improve-public-transportation-across-georgia/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-21T14:37:34+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working with Republicans and Democrats to improve public transportation across Georgia. Sen. Ossoff is cosponsoring the bipartisan Streamline Transit Proj",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
       "id": "096e1c52a455",
       "title": "Carr: Three Convicted of Gang and Drug Charges in Fulton County Following Operation Heatwave",
       "url": "https://law.georgia.gov/press-releases/2026-09-21/carr-three-convicted-gang-and-drug-charges-fulton-county-following",
@@ -1648,6 +1899,18 @@
       ]
     },
     {
+      "id": "b21246e8613e",
+      "title": "VIDEO: Sen. Ossoff Celebrates Hispanic Heritage Month",
+      "url": "https://www.ossoff.senate.gov/press-releases/video-sen-ossoff-celebrates-hispanic-heritage-month/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-18T19:20:32+00:00",
+      "snippet": "Atlanta, Ga, — U.S. Senator Jon Ossoff is celebrating Hispanic Heritage Month with a new video message. “This is U.S. Senator Jon Ossoff, and it is my pleasure to join with Georgians across our state ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
       "id": "38f190eda780",
       "title": "ICYMI: Congresswoman Nikema Williams Speaks and Introduces Fighting Fifth Small Business Owner at “Fighting for an Affordable America”",
       "url": "https://nikemawilliams.house.gov/posts/icymi-congresswoman-nikema-williams-speaks-and-introduces-fighting-fifth-small-business-owner-at-fighting-for-an-affordable-america",
@@ -1674,6 +1937,20 @@
       ]
     },
     {
+      "id": "bef27bb14747",
+      "title": "NEW: Georgians Report Experiencing Prolonged Pain as Insurance Companies Deny or Delay Care Doctors Say They Need",
+      "url": "https://www.ossoff.senate.gov/press-releases/new-georgians-report-experiencing-prolonged-pain-as-insurance-companies-deny-or-delay-care-doctors-say-they-need/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-09-18T14:13:37+00:00",
+      "snippet": "Click here to read Sen. Ossoff’s third report from his ongoing investigation into health care costs, loss of services, and delays or denials of needed care Washington, D.C. — A new report from U.S. Se",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
       "id": "ce32627de272",
       "title": "Commentary: Bookman: Is Jackson’s plan just another attempt to kick the Medicaid expansion can down the road?",
       "url": "https://georgiarecorder.com/2026/09/18/bookman-is-jackson-just-another-politician-trying-to-kick-the-medicaid-expansion-can-down-the-road/",
@@ -1683,18 +1960,6 @@
       "entityIds": [],
       "topics": [
         "healthcare"
-      ]
-    },
-    {
-      "id": "0032e639b770",
-      "title": "Lawmakers mull cybersecurity concerns as they prepare for overhaul of Georgia’s voting system",
-      "url": "https://georgiarecorder.com/2026/09/17/lawmakers-mull-cybersecurity-concerns-as-they-prepare-for-overhaul-of-georgias-voting-system/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-17T23:13:27+00:00",
-      "snippet": "Georgia seems poised to switch to a hand-marked paper ballot system for the 2028 election, but researchers and cybersecurity experts say there is a lot more to consider to ensure that voting stays sec",
-      "entityIds": [],
-      "topics": [
-        "elections"
       ]
     },
     {
