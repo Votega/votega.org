@@ -33,7 +33,7 @@ function harness(overrides = {}) {
     fallbackPhrase: 'pick your county below',
     eventName: 'reps_lookup',
     eventParams: { page: 'federal_reps' },
-    setStatus: (m, isError) => calls.status.push([m, !!isError]),
+    setStatus: (m, isError, kind) => { calls.status.push([m, !!isError]); calls.statusKind = kind; },
     track: (name, params) => calls.tracked.push([name, params]),
     save: (loc) => calls.saved.push(loc),
     onResolve: (loc) => { calls.resolved.push(loc); },
@@ -337,4 +337,95 @@ test('negative control: a page WITHOUT onZip still refuses a bare ZIP', async ()
   assert.equal(geocoded, 0);
   assert.deepEqual(calls.refused, ['zip_only']);
   assert.match(lastStatus(calls)[0], /ZIP code alone/);
+});
+
+// --- geocoder outage falls back to the page's ZIP table --------------------
+
+function transientError(msg = 'The address lookup timed out.') {
+  const err = new Error(msg);
+  err.transient = true;
+  return err;
+}
+
+test('trailingZip reads the ZIP an address ends with, never a street number', () => {
+  const { trailingZip } = win.AddressLookup;
+  assert.equal(trailingZip('1 Main St, Covington, GA 30016'), '30016');
+  assert.equal(trailingZip('1 Main St, Covington GA 30016-1234'), '30016');
+  assert.equal(trailingZip('1 Main St, Covington, GA 30016, USA'), '30016');
+  assert.equal(trailingZip('12345 Main St, Covington, GA'), null, 'a street number is not a ZIP');
+  assert.equal(trailingZip('1 Main St, Covington, GA'), null);
+  assert.equal(trailingZip(''), null);
+});
+
+test('a transient geocoder failure answers from onZip with the typed ZIP and says so', async () => {
+  const zips = [];
+  const { lookup, input, calls } = harness({
+    geocode: async () => { throw transientError(); },
+    onZip: (zip, raw) => { zips.push([zip, raw]); },
+  });
+  input.value = '1 Main St, Covington, GA 30016';
+  assert.equal(await lookup.run(), 'zip_fallback');
+  assert.deepEqual(zips, [['30016', '1 Main St, Covington, GA 30016']]);
+  const [text, isError] = lastStatus(calls);
+  assert.equal(isError, false);
+  assert.equal(calls.statusKind, 'fallback');
+  assert.match(text, /30016/);
+  assert.match(text, /unavailable/);
+  assert.equal(lastEvent(calls)[1].outcome, 'zip_fallback');
+  assert.equal(calls.saved.length, 0, 'a ZIP fallback must not save a location');
+});
+
+test('onReject still fires on a fallback, so a page clears its stale exact result', async () => {
+  const { lookup, input, calls } = harness({
+    geocode: async () => { throw transientError('slow'); },
+    onZip: () => {},
+  });
+  input.value = '1 Main St, Covington, GA 30016';
+  await lookup.run();
+  assert.deepEqual(calls.rejected, ['slow']);
+});
+
+test('"address not found" is not a transient failure and never falls back', async () => {
+  let zipCalls = 0;
+  const { lookup, input, calls } = harness({
+    geocode: async () => { throw new Error('That address could not be found.'); },
+    onZip: () => { zipCalls++; },
+  });
+  input.value = '1 Main St, Covington, GA 30016';
+  assert.equal(await lookup.run(), 'error');
+  assert.equal(zipCalls, 0);
+  assert.deepEqual(lastStatus(calls), ['That address could not be found.', true]);
+});
+
+test('no trailing ZIP, or a page without onZip, keeps the original error', async () => {
+  let a = harness({ geocode: async () => { throw transientError('down'); }, onZip: () => {} });
+  a.input.value = '1 Main St, Covington, GA';
+  assert.equal(await a.lookup.run(), 'error');
+  assert.deepEqual(lastStatus(a.calls), ['down', true]);
+
+  let b = harness({ geocode: async () => { throw transientError('down'); } });
+  b.input.value = '1 Main St, Covington, GA 30016';
+  assert.equal(await b.lookup.run(), 'error');
+  assert.deepEqual(lastStatus(b.calls), ['down', true]);
+});
+
+test('a ZIP the page cannot answer keeps the outage message, not the ZIP error', async () => {
+  const { lookup, input, calls } = harness({
+    geocode: async () => { throw transientError('down'); },
+    onZip: () => 'zip_unknown',
+  });
+  input.value = '1 Main St, Harahan, LA 70123';
+  assert.equal(await lookup.run(), 'error');
+  assert.deepEqual(lastStatus(calls), ['down', true]);
+});
+
+test('a throwing onZip during fallback still ends in the original error and frees the latch', async () => {
+  const { lookup, input, button, calls } = harness({
+    geocode: async () => { throw transientError('down'); },
+    onZip: async () => { throw new Error('table fetch failed'); },
+  });
+  input.value = '1 Main St, Covington, GA 30016';
+  assert.equal(await lookup.run(), 'error');
+  assert.deepEqual(lastStatus(calls), ['down', true]);
+  assert.equal(button.disabled, false);
 });

@@ -750,7 +750,8 @@ breadcrumb:
     fallbackPhrase: 'use the county filter below',
     eventName: 'races_lookup',
     eventParams: { page: 'elections' },
-    setStatus: (message, isError) => { addressError.textContent = isError ? message : ''; },
+    // 'fallback' is the geocoder-outage note: not an error, but it must show.
+    setStatus: (message, isError, kind) => { addressError.textContent = (isError || kind === 'fallback') ? message : ''; },
     // This page swaps the button's label as well as disabling it, so it owns the
     // latch rather than taking the module's default.
     setBusy: (busy) => {
