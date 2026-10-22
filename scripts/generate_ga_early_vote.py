@@ -272,6 +272,9 @@ def main(argv=None):
                 y: round(100.0 * sum(priors_mail[y].values()) / sum(priors[y].values()), 1)
                 for y in priors if sum(priors[y].values())
             },
+            # counts at the same point, by how the ballot was cast (mail = absentee by mail + electronic delivery)
+            "priorMail": {y: sum(priors_mail[y].values()) for y in priors},
+            "priorInPerson": {y: sum(priors[y].values()) - sum(priors_mail[y].values()) for y in priors},
             "repeatPct": {
                 y: round(100.0 * sum(repeat[y].values()) / ballots, 1) for y in repeat
             } if ballots else {},
