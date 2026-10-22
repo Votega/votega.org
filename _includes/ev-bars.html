@@ -2,7 +2,7 @@
   One small horizontal bar chart comparing a value across election years (server-rendered, no JS).
       {% include ev-bars.html title="..." pairs="2022=10.6,2024=6.7,2026=4.7" unit="pct" highlight="2026" %}
   unit="count" prints thousands separators client-side (data-n); unit="pct" appends %. Bars are scaled to the
-  largest value in THIS chart, so charts are never compared with each other. `highlight` colors one year.
+  largest value in THIS chart, so charts are never compared with each other. `highlight` colors one year. `caption` is a one-or-two-sentence plain-language note under the bars.
 {%- endcomment -%}
 {%- assign ev_items = include.pairs | split: "," -%}
 {%- assign ev_max = 0.0 -%}
@@ -23,4 +23,7 @@
     <span class="ev-bar-val"{% if include.unit == "count" %} data-n="{{ ev_parts[1] }}"{% endif %}>{{ ev_parts[1] }}{% if include.unit == "pct" %}%{% endif %}</span>
   </div>
   {%- endfor %}
+  {%- if include.caption %}
+  <p class="ev-cap">{{ include.caption }}</p>
+  {%- endif %}
 </figure>
