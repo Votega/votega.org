@@ -85,7 +85,11 @@ def count_prior(directory, cutoff):
     """
     seen = set()
     out = {}
-    for path in sorted(glob.glob(os.path.join(directory, "*.csv"))):
+    paths = sorted(glob.glob(os.path.join(directory, "*.csv")))
+    if not paths:
+        # A wrong or emptied folder must not publish as "0 ballots that year".
+        sys.exit(f"no CSV files in prior-year directory: {directory}")
+    for path in paths:
         if os.path.basename(path).upper().startswith("STATEWIDE"):
             continue
         with open(path, newline="", encoding="utf-8-sig") as f:

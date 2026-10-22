@@ -52,6 +52,15 @@ def test_prior_cutoff_status_and_statewide_skip():
         assert out == {"COBB": 1}, out
 
 
+def test_prior_missing_directory_is_fatal():
+    with tempfile.TemporaryDirectory() as tmp:
+        try:
+            g.count_prior(os.path.join(tmp, "nope"), dt.date(2022, 10, 26))
+        except SystemExit:
+            return
+        raise AssertionError("an empty prior directory must not yield zero counts")
+
+
 def test_validate_flags_ballots_above_active():
     cur = {"X": {"total": 5, "inPerson": 5, "mail": 0, "electronic": 0}}
     reg = {"X": {"name": "X", "active": 3, "total": 3}}
