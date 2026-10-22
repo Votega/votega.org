@@ -168,6 +168,8 @@ def main(argv=None):
     ap.add_argument("--as-of", required=True, help="YYYY-MM-DD the current file reflects")
     ap.add_argument("--election-date", required=True)
     ap.add_argument("--prior", action="append", default=[], help="YEAR=DIR:ELECTION_DATE")
+    ap.add_argument("--prior-active", action="append", default=[],
+                    help="YEAR=N statewide active voters on that election day (SoS turnout dashboard)")
     ap.add_argument("--out", default=OUT)
     a = ap.parse_args(argv)
 
@@ -185,6 +187,12 @@ def main(argv=None):
         cutoff = pe - dt.timedelta(days=days_before)
         priors[year] = count_prior(os.path.expanduser(directory), cutoff)
         prior_meta[year] = {"electionDate": edate, "cutoff": cutoff.isoformat()}
+
+    for spec in a.prior_active:
+        year, n = spec.split("=", 1)
+        if year not in prior_meta:
+            sys.exit(f"--prior-active {year}: no matching --prior")
+        prior_meta[year]["activeStatewide"] = int(n)
 
     counties = build(current, registration, priors, as_of, election)
     errs = validate(counties, current, registration)
@@ -211,6 +219,10 @@ def main(argv=None):
             "active": active,
             "turnoutPct": round(100.0 * ballots / active, 1) if active else None,
             "prior": {y: sum(c["prior"][y] for c in counties) for y in priors},
+            "priorPct": {
+                y: round(100.0 * sum(c["prior"][y] for c in counties) / m["activeStatewide"], 1)
+                for y, m in prior_meta.items() if m.get("activeStatewide")
+            },
         },
         "counties": counties,
     }

@@ -37,7 +37,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <div class="ev-stat"><span class="n">{{ sw.turnoutPct }}%</span><span class="l">of <span data-n="{{ sw.active }}">{{ sw.active }}</span> active voters</span></div>
   <div class="ev-stat"><span class="n" data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</span><span class="l">early in person</span></div>
   <div class="ev-stat"><span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">by mail or electronic</span></div>
-  {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<div class="ev-stat"><span class="n" data-n="{{ sw.prior[yk] }}">{{ sw.prior[yk] }}</span><span class="l">at this point in {{ yk }}</span></div>{% endfor %}
+  {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<div class="ev-stat"><span class="n" data-n="{{ sw.prior[yk] }}">{{ sw.prior[yk] }}</span><span class="l">at this point in {{ yk }}{% if sw.priorPct[yk] %} ({{ sw.priorPct[yk] }}% of active voters){% endif %}</span></div>{% endfor %}
 </div>
 
 <div class="ev-controls">
