@@ -723,7 +723,8 @@ function renderHouse(members) {
     .sort((a, b) => a.district - b.district);
 
   let memberIdx = 0;
-  let d = 0, r = 0, i = 0, v = 0, sus = 0;
+  // `ind`, not `i`: the seat loop below declares its own `i`, which would shadow this counter.
+  let d = 0, r = 0, ind = 0, v = 0, sus = 0;
 
   HOUSE_ROWS.forEach(({ r: radius, count }) => {
     for (let i = 0; i < count; i++) {
@@ -737,7 +738,7 @@ function renderHouse(members) {
       const party  = partyOf(member);
       const suspended = isSuspended(member);
       if (suspended) sus++;
-      else if (party === 'D') d++; else if (party === 'R') r++; else if (party === 'I') i++; else v++;
+      else if (party === 'D') d++; else if (party === 'R') r++; else if (party === 'I') ind++; else v++;
 
       const seatSize = 9;
       // Party must not be colour-only (WCAG 1.4.1), and a 9px seat is too small
@@ -803,7 +804,7 @@ function renderHouse(members) {
     }
   });
 
-  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.house || {}).length, i, 'house', sus);
+  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.house || {}).length, ind, 'house', sus);
 }
 
 // ── Seat marks ─────────────────────────────────────────────────────────────
