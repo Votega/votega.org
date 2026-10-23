@@ -38,6 +38,7 @@ datasets:
   # by hand when reviewed (Actions > "Record data review", or scripts/record_data_checked.py).
   scotus-decisions:          { window_days: 90, cadence: "weekly job, few changes", note: "SCOTUS decisions (generated)" }
   ga-congress-trades:        { window_days: 90, cadence: "weekly (Sun) job; filings are irregular", note: "stock trade disclosures (generated)" }
+  ga-early-vote:             { window_days: 3,  review: manual, note: "manual SoS file drop through Oct 30, then run scripts/generate_ga_early_vote.py" }
   ga-ballot-measures:        { window_days: 90, review: manual, note: "curated by hand; record a review when you verify it against the SoS and General Assembly" }
   ga-election-calendar:      { window_days: 90, review: manual, note: "curated by hand from the SoS calendar; record a review when you verify it" }
 

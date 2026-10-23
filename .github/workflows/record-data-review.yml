@@ -15,6 +15,7 @@ on:
         type: choice
         options:
           - ga-ballot-measures
+          - ga-early-vote
           - ga-election-calendar
       date:
         description: "Review date, YYYY-MM-DD (blank = today, UTC)"
