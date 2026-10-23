@@ -133,6 +133,45 @@ t2 = json.loads(arts["data/tracts.json"]); t2["tracts"] = {}
 bad["data/tracts.json"] = json.dumps(t2).encode()
 raises("an empty tract file is refused", lambda: P.validate(bad), "need >=")
 
+# ---- district -> county (the county table read from the district's side) ----------------
+dc = list(csv.DictReader(io.StringIO(arts["data/district-counties.csv"].decode())))
+cd_rows = list(csv.DictReader(io.StringIO(arts["data/county-districts.csv"].decode())))
+
+
+def dcs(chamber, district):
+    return [r for r in dc if r["chamber"] == chamber and r["district"] == str(district)]
+
+
+check("district-counties uses the 5-digit county FIPS", all(len(r["county_fips"]) == 5 and r["county_fips"].startswith("13") for r in dc), True)
+check("Newton is 13217 here and 217 in the county table",
+      ("13217" in {r["county_fips"] for r in dc}, "217" in counties), (True, True))
+check("one row per county-district pair, same count as county-districts.csv", len(dc), len(cd_rows))
+check("county-districts.csv gained a coverage column", cd_rows[0]["coverage"] in ("full", "partial"), True)
+check("coverage is full exactly when share_of_county is 1",
+      all((r["coverage"] == "full") == (float(r["share_of_county"]) == 1.0) for r in cd_rows + dc), True)
+for chamber in ("state-senate", "state-house", "us-house"):
+    sums = {}
+    for r in dc:
+        if r["chamber"] == chamber:
+            sums[r["district"]] = sums.get(r["district"], 0) + float(r["share_of_district"])
+    check(f"{chamber}: each district's county shares sum to 1", all(abs(v - 1) < 0.005 for v in sums.values()), True)
+newton = lambda ch: sorted(int(r["district"]) for r in dc if r["chamber"] == ch and r["county_fips"] == "13217")
+check("Newton County is in House 113, 114, 118", newton("state-house"), [113, 114, 118])
+check("Newton County is in Senate 42, 43", newton("state-senate"), [42, 43])
+check("Newton County is in congressional 10, 13", newton("us-house"), [10, 13])
+check("House 113 lies wholly in Newton", [(r["county"], r["share_of_district"]) for r in dcs("state-house", 113)], [("Newton", "1.0")])
+check("House 112, House 144 and Senate 25 hold no Newton residents",
+      [r for r in dc if r["county_fips"] == "13217" and (r["chamber"], r["district"]) in
+       {("state-house", "112"), ("state-house", "144"), ("state-senate", "25")}], [])
+bad_fips = copy.deepcopy(arts)
+bad_fips["data/district-counties.csv"] = bad_fips["data/district-counties.csv"].replace(b",13217,", b",217,", 1)
+raises("a 3-digit county FIPS in district-counties is refused", lambda: P.validate(bad_fips), "5-digit")
+bad_share = copy.deepcopy(arts)
+_rows = list(csv.reader(io.StringIO(bad_share["data/district-counties.csv"].decode())))
+_rows[1][_rows[0].index("share_of_district")] = "0.5"      # first data row's district no longer sums to 1
+bad_share["data/district-counties.csv"] = P._csv(_rows[0], _rows[1:])
+raises("district shares that stop summing to 1 are refused", lambda: P.validate(bad_share), "sum to 1")
+
 if failures:
     print(f"\n{len(failures)} failure(s)")
     sys.exit(1)

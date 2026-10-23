@@ -13,7 +13,13 @@ Three datasets, from the same reconciled source, each as JSON + CSV + JSON Schem
 
   County -> districts          derived from scripts/data/ga-tract-districts.json
       data/counties.json            each county's 2020 population in each district
-      data/county-districts.csv     one row per (county, chamber, district)
+      data/county-districts.csv     one row per (county, chamber, district); `coverage` is
+                                    "full" when the whole county lies in that district
+      data/district-counties.csv    the same table read from the district's side: one row per
+                                    (chamber, district, county) with the share of the DISTRICT
+                                    in that county as well as the share of the county. Its
+                                    county_fips is the 5-digit state+county code (13013), the
+                                    form Georgia Civic Data and the Census use
       data/counties.schema.json
 
   Census tract -> districts    scripts/data/ga-tract-districts.json
@@ -42,7 +48,7 @@ from lib.sibling_publish import build_json, min_items, publish_or_dry_run
 
 REPO = "Votega/ga-district-information"
 TOKEN_ENV = "GA_DISTRICT_INFORMATION_TOKEN"
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"   # 1.1.0: + data/district-counties.csv, + coverage column on county-districts.csv
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ZIPS_SRC = os.path.join(HERE, "..", "assets", "data", "ga-zip-districts.json")
@@ -50,6 +56,8 @@ TRACTS_SRC = os.path.join(HERE, "data", "ga-tract-districts.json")
 
 #: tract-table key -> (name used in the published files, plan name key in metadata.plans)
 CHAMBERS = {"s": "state-senate", "h": "state-house", "c": "us-house"}
+#: the two-digit state prefix of a 5-digit county FIPS; the county tables key on the 3-digit rest
+GA_STATE_FIPS = "13"
 #: ga-zip-districts.json list key -> the same public chamber name
 ZIP_LISTS = {"stateSenate": "state-senate", "stateHouse": "state-house", "usHouse": "us-house"}
 #: floors: Georgia has ~880 delivery ZIPs, 159 counties and 2,796 tracts
@@ -140,13 +148,46 @@ def counties_doc(tracts):
     }
 
 
+def coverage(population, county_population):
+    """"full" when every resident of the county lives in the district, else "partial"."""
+    return "full" if population == county_population else "partial"
+
+
 def county_districts_csv(doc):
     rows = []
     for fips, c in doc["counties"].items():
         for chamber in CHAMBERS.values():
             for r in c[chamber]:
-                rows.append([fips, c["name"], chamber, r["district"], r["population"], r["share"]])
-    return _csv(["county_fips", "county", "chamber", "district", "population", "share_of_county"], rows)
+                rows.append([fips, c["name"], chamber, r["district"], r["population"], r["share"],
+                             coverage(r["population"], c["population"])])
+    return _csv(["county_fips", "county", "chamber", "district", "population", "share_of_county",
+                 "coverage"], rows)
+
+
+def district_counties_rows(doc):
+    """One row per (chamber, district, county), from the county table's other side. Population
+    is the county's residents inside the district; the share of the district divides by the
+    district's total. County FIPS is the full 5-digit code (state 13 + county)."""
+    total = {}
+    for c in doc["counties"].values():
+        for chamber in CHAMBERS.values():
+            for r in c[chamber]:
+                total[(chamber, r["district"])] = total.get((chamber, r["district"]), 0) + r["population"]
+    rows = []
+    for fips, c in doc["counties"].items():
+        for chamber in CHAMBERS.values():
+            for r in c[chamber]:
+                rows.append([chamber, r["district"], GA_STATE_FIPS + fips, c["name"], r["population"],
+                             round(r["population"] / total[(chamber, r["district"])], 5),
+                             r["share"], coverage(r["population"], c["population"])])
+    chamber_order = {name: i for i, name in enumerate(CHAMBERS.values())}
+    rows.sort(key=lambda r: (chamber_order[r[0]], r[1], -r[4], r[2]))
+    return rows
+
+
+def district_counties_csv(doc):
+    return _csv(["chamber", "district", "county_fips", "county", "population", "share_of_district",
+                 "share_of_county", "coverage"], district_counties_rows(doc))
 
 
 def tracts_doc(tracts):
@@ -268,6 +309,7 @@ def build_artifacts():
         "data/zips.schema.json": build_json(zips_schema()),
         "data/counties.json": build_json(counties),
         "data/county-districts.csv": county_districts_csv(counties),
+        "data/district-counties.csv": district_counties_csv(counties),
         "data/counties.schema.json": build_json(counties_schema()),
         "data/tracts.json": compact_json(tracts_pub),
         "data/tract-districts.csv": tract_districts_csv(tracts),
@@ -292,6 +334,20 @@ def validate(artifacts):
             if s != c["population"]:
                 raise ValueError(f"refusing to publish: county {fips} {chamber} districts sum to "
                                  f"{s:,}, county population is {c['population']:,}")
+    rows = list(csv.DictReader(io.StringIO(artifacts["data/district-counties.csv"].decode())))
+    if not rows or any(len(r["county_fips"]) != 5 or not r["county_fips"].startswith(GA_STATE_FIPS)
+                       for r in rows):
+        raise ValueError("refusing to publish: district-counties.csv has no rows or a county_fips "
+                         "that is not a 5-digit Georgia code")
+    for chamber in CHAMBERS.values():
+        share = {}
+        for r in rows:
+            if r["chamber"] == chamber:
+                share[r["district"]] = share.get(r["district"], 0) + float(r["share_of_district"])
+        bad = [d for d, v in share.items() if abs(v - 1) > 0.005]
+        if bad:
+            raise ValueError(f"refusing to publish: {chamber} districts {bad[:5]} do not sum to 1 "
+                             f"across their counties")
 
 
 def main():
