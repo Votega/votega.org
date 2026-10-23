@@ -47,8 +47,15 @@ share-description: "How many Georgians have already voted in the November 3, 202
   .ev-svg .ln.now { stroke-width: 3.4; }
   .ev-svg .guide { stroke: var(--color-text-muted); stroke-width: 1; stroke-dasharray: 4 3; }
   .ev-svg .today text { fill: var(--color-text); font-weight: 600; }
-  .ev-readout { font-size: .9rem; min-height: 2.6em; margin: 6px 0 0; }
-  .ev-readout b { font-variant-numeric: tabular-nums; }
+  .ev-readout { font-size: .9rem; margin: 8px 0 0; min-height: 7.2em; text-align: center; }
+  table.ev-ro { display: table; width: auto; margin: 4px auto 0; border-collapse: collapse; overflow: visible; }
+  table.ev-ro tr { border: 0; background: none; } /* the theme gives rows a top border and a fill */
+  table.ev-ro th, table.ev-ro td { padding: 2px 0; border: 0; background: none; font-weight: 400; text-align: left; white-space: nowrap; }
+  table.ev-ro th { padding-right: 18px; }
+  table.ev-ro th i { display: inline-block; width: 18px; height: 0; border-top: 3px solid; margin-right: 8px; vertical-align: middle; }
+  table.ev-ro td { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ev-ro-sub { color: var(--color-text-muted); }
+  table.ev-ro i.s-2022 { border-color: var(--chart-pine); } table.ev-ro i.s-2024 { border-color: var(--chart-gold); } table.ev-ro i.s-now { border-color: var(--color-accent); }
   .s-2022 { color: var(--chart-pine); stroke: var(--chart-pine); }
   .s-2024 { color: var(--chart-gold); stroke: var(--chart-gold); }
   .s-now  { color: var(--color-accent); stroke: var(--color-accent); }
@@ -402,12 +409,14 @@ share-description: "How many Georgians have already voted in the November 3, 202
   }
   function readout(d) {
     var label = view === 'cum' ? 'running total' : 'that day';
-    var parts = years.map(function (y) {
+    // newest year on top, so the rows read 2026, 2024, 2022
+    var rows = years.slice().reverse().map(function (y) {
       var v = S[y][d];
-      return '<b class="' + cls(y) + '" style="stroke:none">' + y + '</b> ' + (v == null ? '&ndash;' : '<b>' + fmt(v) + '</b>');
-    });
+      return '<tr><th scope="row"><i class="' + cls(y) + '"></i>' + y + '</th><td>' + (v == null ? '&ndash;' : fmt(v)) + '</td></tr>';
+    }).join('');
     document.getElementById('ev-readout').innerHTML =
-      '<strong>' + d + ' day' + (d === 1 ? '' : 's') + ' before election day</strong> (' + label + '): ' + parts.join(' &middot; ');
+      '<strong>' + d + ' day' + (d === 1 ? '' : 's') + ' before election day</strong> <span class="ev-ro-sub">(' + label + ')</span>' +
+      '<table class="ev-ro">' + rows + '</table>';
   }
   function pointer(e) {
     var r = svg.getBoundingClientRect();
