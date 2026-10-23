@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-23T18:48:45.824095+00:00",
+    "generatedAt": "2026-10-23T23:40:55.242535+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,26 +24,21 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 134,
+    "count": 138,
     "windowDays": 45,
-    "entityTagged": 80,
+    "entityTagged": 82,
     "topicCounts": {
-      "elections": 44,
-      "surveillance": 3,
+      "elections": 47,
+      "courts": 18,
       "healthcare": 13,
+      "surveillance": 3,
       "budget": 12,
-      "courts": 17,
       "education": 13,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
-    },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
       "url": null,
@@ -52,12 +47,24 @@
         "challenger-chris-carr-gov-2026"
       ]
     },
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
+      ]
+    },
     "vg-ga-p-000335": {
       "name": "Keisha R. Lance Bottoms",
       "url": null,
       "candidateIds": [
         "challenger-keisha-bottoms-gov-2026"
       ]
+    },
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000021": {
       "name": "Brad Raffensperger",
@@ -119,13 +126,6 @@
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
-      ]
     },
     "vg-ga-p-000330": {
       "name": "Joshua \"Josh\" Tolbert",
@@ -221,6 +221,83 @@
     }
   },
   "items": [
+    {
+      "id": "5b04754b053e",
+      "title": "Georgia attorney general: kratom products should be presumed illegal",
+      "url": "https://capitol-beat.org/2026/10/georgia-attorney-general-kratom-products-should-be-presumed-illegal/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-attorney-general-kratom-products-should-be-presumed-illegal",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-10-23T21:59:35+00:00",
+      "snippet": "ATLANTA — Amid a debate about the safety of kratom and how much to regulate it, Georgia Attorney General Chris Carr advised lawmakers on Friday to treat all products derived from the substance as ille",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
+      "id": "e56169762f67",
+      "title": "Jackson changes course after initially saying he would skip second Trump rally this month",
+      "url": "https://georgiarecorder.com/2026/10/23/jackson-changes-course-after-initially-saying-he-would-skip-second-trump-rally/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-23T21:30:19+00:00",
+      "snippet": "Republican candidate for governor Rick Jackson will join President Donald Trump at a second rally this month after all. Jackson’s campaign said on Monday that he would skip Trump’s upcoming Saturday r",
+      "entityIds": [
+        "vg-ga-p-000368"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "bc91f1a3769d",
+      "title": "Candidates appeal to base in final days of tight governor's race",
+      "url": "https://www.gpb.org/news/2026/10/23/candidates-appeal-base-in-final-days-of-tight-governors-race",
+      "source": "GPB News",
+      "publishedAt": "2026-10-23T19:28:45+00:00",
+      "snippet": "The election is 11 days away, and candidates are making a final push to get Georgians out to vote.",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
+      "id": "e79047b712b4",
+      "title": "GPB evening headlines for October 23, 2026",
+      "url": "https://www.gpb.org/news/2026/10/23/gpb-evening-headlines-for-october-23-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-23T19:25:50+00:00",
+      "snippet": "Republican gubernatorial candidate Rick Jackson says he's concerned about the vote in rural Georgia.\nHis Democratic challenger Keisha Lance Bottoms held an event with Latino community leaders on Thurs",
+      "entityIds": [
+        "vg-ga-p-000368",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "1fcfc83c170d",
+      "title": "'Elsbeth' star and Macon native Carrie Preston has some advice for Georgia's aspiring actors",
+      "url": "https://www.gpb.org/news/2026/10/23/elsbeth-star-and-macon-native-carrie-preston-has-some-advice-for-georgias-aspiring",
+      "source": "GPB News",
+      "publishedAt": "2026-10-23T19:06:00+00:00",
+      "snippet": "The Emmy-winning Georgia actress just launched the fourth season of her hit TV series, Elsbeth.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "0b00acb1a1ce",
+      "title": "Georgia Today: Early in-person voting; Governor race; Autism service cuts",
+      "url": "https://www.gpb.org/news/2026/10/23/georgia-today-early-in-person-voting-governor-race-autism-service-cuts",
+      "source": "GPB News",
+      "publishedAt": "2026-10-23T17:03:30+00:00",
+      "snippet": "On the October 23rd edition: Today is the last day to request an absentee ballot for the November midterm elections; Gubernatorial candidates urge voters to go to the polls; And Insurance company Amer",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "healthcare"
+      ]
+    },
     {
       "id": "f67be8af8a1b",
       "title": "There is a thread through data centers, your power bill and this election",
@@ -905,21 +982,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "da4e12737850",
-      "title": "Bottoms attacks Jackson over abortion at solo debate",
-      "url": "https://capitol-beat.org/2026/10/bottoms-attacks-jackson-over-abortion-at-solo-debate/?utm_source=rss&utm_medium=rss&utm_campaign=bottoms-attacks-jackson-over-abortion-at-solo-debate",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-13T23:10:34+00:00",
-      "snippet": "ATLANTA — Democrat Keisha Lance Bottoms attacked her Republican opponent, Rick Jackson, on data centers, fuel costs and abortion when he skipped what would have been their final debate Monday night. B",
-      "entityIds": [
-        "vg-ga-p-000368",
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "healthcare"
       ]
     },
     {
@@ -1745,18 +1807,6 @@
       "topics": [
         "budget",
         "education"
-      ]
-    },
-    {
-      "id": "24aae5ea3b30",
-      "title": "Three Georgia counties flagged by Trump administration for using non-English election materials",
-      "url": "https://georgiarecorder.com/2026/09/18/three-georgia-counties-flagged-by-trump-administration-for-using-non-english-election-materials/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-18T21:52:34+00:00",
-      "snippet": "At least three Georgia counties were listed on an internal memo of jurisdictions across the country that offer election materials in languages other than English, according to internal records from th",
-      "entityIds": [],
-      "topics": [
-        "elections"
       ]
     },
     {
