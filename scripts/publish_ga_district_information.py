@@ -17,9 +17,10 @@ Three datasets, from the same reconciled source, each as JSON + CSV + JSON Schem
                                     "full" when the whole county lies in that district
       data/district-counties.csv    the same table read from the district's side: one row per
                                     (chamber, district, county) with the share of the DISTRICT
-                                    in that county as well as the share of the county. Its
-                                    county_fips is the 5-digit state+county code (13013), the
-                                    form Georgia Civic Data and the Census use
+                                    in that county as well as the share of the county
+
+Every county code in every file is the 5-digit state+county FIPS (13013), the form the Census
+and Georgia Civic Data use; the source tables keep the 3-digit suffix (013) and it is widened here.
       data/counties.schema.json
 
   Census tract -> districts    scripts/data/ga-tract-districts.json
@@ -48,7 +49,8 @@ from lib.sibling_publish import build_json, min_items, publish_or_dry_run
 
 REPO = "Votega/ga-district-information"
 TOKEN_ENV = "GA_DISTRICT_INFORMATION_TOKEN"
-SCHEMA_VERSION = "1.1.0"   # 1.1.0: + data/district-counties.csv, + coverage column on county-districts.csv
+SCHEMA_VERSION = "2.0.0"   # 2.0.0: every county code is the 5-digit FIPS (13013), not the 3-digit suffix (013);
+#                            # 1.1.0: + data/district-counties.csv, + coverage column on county-districts.csv
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ZIPS_SRC = os.path.join(HERE, "..", "assets", "data", "ga-zip-districts.json")
@@ -56,8 +58,18 @@ TRACTS_SRC = os.path.join(HERE, "data", "ga-tract-districts.json")
 
 #: tract-table key -> (name used in the published files, plan name key in metadata.plans)
 CHAMBERS = {"s": "state-senate", "h": "state-house", "c": "us-house"}
-#: the two-digit state prefix of a 5-digit county FIPS; the county tables key on the 3-digit rest
+#: Georgia's state FIPS. The source tables key counties on the 3-digit suffix; everything published
+#: carries the full 5-digit code (13013), the form the Census and Georgia Civic Data use.
 GA_STATE_FIPS = "13"
+
+
+def fips5(code):
+    """The 5-digit county FIPS for a source table's 3-digit county code (or for a 5-digit one)."""
+    code = str(code)
+    full = code if len(code) == 5 else GA_STATE_FIPS + code
+    if len(full) != 5 or not full.startswith(GA_STATE_FIPS) or not full.isdigit():
+        raise ValueError(f"not a Georgia county code: {code!r}")
+    return full
 #: ga-zip-districts.json list key -> the same public chamber name
 ZIP_LISTS = {"stateSenate": "state-senate", "stateHouse": "state-house", "usHouse": "us-house"}
 #: floors: Georgia has ~880 delivery ZIPs, 159 counties and 2,796 tracts
@@ -83,6 +95,16 @@ def _csv(header, rows):
 
 # ---- ZIP code -> districts --------------------------------------------------------
 
+def zips_doc(zips):
+    """The site's ZIP file with each county code widened to the 5-digit FIPS. The source file keeps
+    the 3-digit suffix because the site's own scripts read it, so the change is made here only."""
+    out = json.loads(json.dumps(zips))
+    for e in out["zips"].values():
+        for c in e.get("counties") or []:
+            c["fips"] = fips5(c["fips"])
+    return out
+
+
 def zip_districts_csv(doc):
     rows = []
     for z, e in sorted(doc["zips"].items()):
@@ -96,7 +118,7 @@ def zip_counties_csv(doc):
     rows = []
     for z, e in sorted(doc["zips"].items()):
         for rank, r in enumerate(e.get("counties") or [], start=1):
-            rows.append([z, e.get("city"), e["kind"], r["fips"], r["name"], r["share"], rank])
+            rows.append([z, e.get("city"), e["kind"], fips5(r["fips"]), r["name"], r["share"], rank])
     return _csv(["zip", "city", "kind", "county_fips", "county", "share", "rank"], rows)
 
 
@@ -104,12 +126,12 @@ def zip_counties_csv(doc):
 
 def county_table(tracts):
     """{fips: {name, population, <chamber>: [{district, population, share}]}} from the
-    tract table. County FIPS is characters 3-5 of a tract id (state 13 + county)."""
+    tract table, keyed by the 5-digit county FIPS (the first five characters of a tract id)."""
     names = tracts["counties"]
     pop = {}
     by = {}
     for tract_id, rec in tracts["tracts"].items():
-        fips = tract_id[2:5]
+        fips = tract_id[:5]                          # state 13 + county
         pop[fips] = pop.get(fips, 0) + rec["p"]
         for key in CHAMBERS:
             bucket = by.setdefault(fips, {}).setdefault(key, {})
@@ -117,7 +139,7 @@ def county_table(tracts):
                 bucket[district] = bucket.get(district, 0) + p
     out = {}
     for fips in sorted(pop):
-        entry = {"name": names.get(fips), "population": pop[fips]}
+        entry = {"name": names.get(fips[2:]), "population": pop[fips]}
         for key, chamber in CHAMBERS.items():
             entry[chamber] = [
                 {"district": int(d), "population": p,
@@ -177,7 +199,7 @@ def district_counties_rows(doc):
     for fips, c in doc["counties"].items():
         for chamber in CHAMBERS.values():
             for r in c[chamber]:
-                rows.append([chamber, r["district"], GA_STATE_FIPS + fips, c["name"], r["population"],
+                rows.append([chamber, r["district"], fips, c["name"], r["population"],
                              round(r["population"] / total[(chamber, r["district"])], 5),
                              r["share"], coverage(r["population"], c["population"])])
     chamber_order = {name: i for i, name in enumerate(CHAMBERS.values())}
@@ -194,7 +216,8 @@ def tracts_doc(tracts):
     meta = dict(tracts["metadata"])
     meta["schemaVersion"] = SCHEMA_VERSION
     meta["count"] = len(tracts["tracts"])
-    return {"metadata": meta, "counties": tracts["counties"], "tracts": tracts["tracts"]}
+    return {"metadata": meta, "counties": {fips5(k): v for k, v in tracts["counties"].items()},
+            "tracts": tracts["tracts"]}
 
 
 def tract_districts_csv(tracts):
@@ -202,7 +225,7 @@ def tract_districts_csv(tracts):
     for tract_id, rec in sorted(tracts["tracts"].items()):
         for key, chamber in CHAMBERS.items():
             for district, p in sorted(rec[key].items(), key=lambda kv: int(kv[0])):
-                rows.append([tract_id, tract_id[2:5], chamber, int(district), p, rec["p"]])
+                rows.append([tract_id, tract_id[:5], chamber, int(district), p, rec["p"]])
     return _csv(["tract_geoid", "county_fips", "chamber", "district", "population", "tract_population"], rows)
 
 
@@ -239,7 +262,7 @@ def zips_schema():
                                             "ZIP is not in the USPS Georgia facility list (campus, "
                                             "government, military); treat like standard."},
                     "counties": {"type": ["array", "null"], "items": {"type": "object", "properties": {
-                        "fips": {"type": "string"}, "name": {"type": ["string", "null"]},
+                        "fips": {"type": "string", "description": "5-digit county FIPS (state 13 + county), e.g. 13089."}, "name": {"type": ["string", "null"]},
                         "share": {"type": "number"}}}},
                     "stateSenate": SHARE_LIST, "stateHouse": SHARE_LIST, "usHouse": SHARE_LIST,
                 },
@@ -266,7 +289,7 @@ def counties_schema():
         "required": ["metadata", "counties"],
         "properties": {
             "metadata": {"type": "object"},
-            "counties": {"type": "object", "description": "Keyed by 3-digit county FIPS.",
+            "counties": {"type": "object", "description": "Keyed by 5-digit county FIPS (state 13 + county), e.g. 13013.",
                          "additionalProperties": {"type": "object", "properties": props,
                                                   "required": ["population"] + list(CHAMBERS.values())}},
         },
@@ -284,7 +307,7 @@ def tracts_schema():
         "required": ["metadata", "counties", "tracts"],
         "properties": {
             "metadata": {"type": "object"},
-            "counties": {"type": "object", "description": "3-digit county FIPS -> name"},
+            "counties": {"type": "object", "description": "5-digit county FIPS (state 13 + county) -> name"},
             "tracts": {"type": "object", "description": "Keyed by 11-digit tract GEOID.",
                        "additionalProperties": {"type": "object", "properties": {
                            "p": {"type": "integer", "description": "2020 tract population"},
@@ -303,7 +326,7 @@ def build_artifacts():
     counties = counties_doc(tracts)
     tracts_pub = tracts_doc(tracts)
     return {
-        "data/zips.json": compact_json(zips),
+        "data/zips.json": compact_json(zips_doc(zips)),
         "data/zip-districts.csv": zip_districts_csv(zips),
         "data/zip-counties.csv": zip_counties_csv(zips),
         "data/zips.schema.json": build_json(zips_schema()),
