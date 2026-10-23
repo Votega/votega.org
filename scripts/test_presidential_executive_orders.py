@@ -52,6 +52,28 @@ class Helpers(unittest.TestCase):
             g.normalize_title("Eliminating Disease-Carrying Pests and Restoring Enjoyment of the Great Outdoors"))
         self.assertEqual(g.normalize_title("America�s Hunting"), g.normalize_title("America’s Hunting"))
 
+    def test_normalize_title_collapses_a_phrase_typed_twice(self):
+        # whitehouse.gov's H-1B title (issue #253) vs the Register's.
+        self.assertEqual(
+            g.normalize_title("Enhancing Program Integrity and Integrity and Interagency Coordination in the Administration of the H-1B Nonimmigrant Visa Program"),
+            g.normalize_title("Enhancing Program Integrity and Interagency Coordination in the Administration of the H-1B Nonimmigrant Visa Program"))
+        # A single repeated word, and a phrase that repeats non-adjacently, are real text.
+        self.assertNotEqual(g.normalize_title("Making Making America"), g.normalize_title("Making America"))
+        self.assertEqual(g.normalize_title("Taxes and Fees Taxes and Fees"), g.normalize_title("Taxes and Fees"))
+        self.assertNotEqual(g.normalize_title("Taxes and Fees and Taxes and Fees"), g.normalize_title("Taxes and Fees"))
+        self.assertEqual(g.normalize_title("Fees and Rules and Fees"), "feesandrulesandfees")
+
+    def test_doubled_phrase_in_the_whitehouse_title_still_matches_the_register(self):
+        url = "https://www.whitehouse.gov/presidential-actions/2026/09/h-1b/"
+        orders, expired = g.reconcile(
+            [fr(14431, "Enhancing Program Integrity and Interagency Coordination in the Administration of the H-1B Nonimmigrant Visa Program", "2026-09-18")],
+            [wh("Enhancing Program Integrity and Integrity and Interagency Coordination in the Administration of the H-1B Nonimmigrant Visa Program", "2026-09-18", url)],
+            date(2026, 10, 23))
+        self.assertEqual(expired, [])
+        self.assertEqual(len(orders), 1)
+        self.assertEqual(orders[0]["whitehouse_url"], url)
+        self.assertFalse(orders[0]["provisional"])
+
     def test_clean_title_repairs_fffd_apostrophe(self):
         self.assertEqual(g.clean_title("Reinvigorating America�s Hunting Heritage"),
                          "Reinvigorating America’s Hunting Heritage")
