@@ -57,7 +57,7 @@ ROW_WIDTHS = {"750": 97}
 
 
 def read_geo(path):
-    """(block_pop {15-digit GEOID: pop}, counties {3-digit FIPS: name})."""
+    """(block_pop {15-digit GEOID: pop}, counties {5-digit county FIPS: name})."""
     pop, counties = {}, {}
     with open(path, encoding="latin-1") as f:
         for line in f:
@@ -69,7 +69,7 @@ def read_geo(path):
                              "the field offsets need re-checking")
                 pop[row[9]] = int(row[POP_FROM_END])
             elif level == "050":
-                counties[row[9][2:]] = re.sub(r" County$", "", row[COUNTY_BASENAME_FROM_END])
+                counties[row[9]] = re.sub(r" County$", "", row[COUNTY_BASENAME_FROM_END])
     return pop, counties
 
 
@@ -127,7 +127,7 @@ def reconcile(label, bef, block_pop, counties, county_report, packet):
     for block, district in bef.items():
         p = block_pop.get(block, 0)
         dist[district] += p
-        cd[(counties[block[2:5]], district)] += p
+        cd[(counties[block[:5]], district)] += p
     if county_report and not packet:
         # No packet for this plan: the report's own district sums stand in for it.
         packet = collections.Counter()

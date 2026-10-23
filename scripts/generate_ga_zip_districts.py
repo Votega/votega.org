@@ -153,7 +153,7 @@ def build_entries(hud, tract_table, usps):
         entry = {"city": title_city(city.get(z)) or None, "kind": kind,
                  "counties": None, "stateSenate": None, "stateHouse": None, "usHouse": None}
         if kind != "po-box" and z in by["zip-tract"]:
-            counties = _ranked({g[2:]: w for g, w in _weights(by["zip-county"].get(z, []))
+            counties = _ranked({g: w for g, w in _weights(by["zip-county"].get(z, []))
                                 if g.startswith(GA_STATE_FIPS)})
             if counties:
                 entry["counties"] = [{"fips": f, "name": county_names.get(f), "share": s} for f, s in counties]

@@ -196,8 +196,21 @@ check("county names agree with the library's slugs",
       all(c["name"].lower().replace(" ", "-").replace(".", "") == {v: k for k, v in GA_COUNTY_FIPS.items()}[f]
           for f, c in counties.items()), True)
 raises("a non-Georgia or malformed code is refused", lambda: P.fips5("0130"), "not a Georgia county code")
-check("a source file's three-digit code is not touched on disk",
-      all(len(c["fips"]) == 3 for e in json.load(open(P.ZIPS_SRC))["zips"].values() for c in (e.get("counties") or [])), True)
+check("the source files themselves carry five-digit codes",
+      (all(len(c["fips"]) == 5 for e in json.load(open(P.ZIPS_SRC))["zips"].values() for c in (e.get("counties") or [])),
+       set(json.load(open(P.TRACTS_SRC))["counties"]) == ALL), (True, True))
+
+# ---- the 3-digit -> 5-digit crosswalk ------------------------------------------------------
+xw = list(csv.DictReader(io.StringIO(arts["data/county-codes.csv"].decode())))
+check("county-codes.csv has all 159 counties", {r["county_fips"] for r in xw}, ALL)
+check("each 5-digit code is 13 plus its 3-digit suffix", all(r["county_fips"] == "13" + r["county_code_3digit"] for r in xw), True)
+check("the 3-digit suffixes are unique", len({r["county_code_3digit"] for r in xw}), 159)
+by3 = {r["county_code_3digit"]: r for r in xw}
+check("old code 217 walks back to Newton, 13217", (by3["217"]["county"], by3["217"]["county_fips"], by3["217"]["slug"]), ("Newton", "13217", "newton"))
+check("old code 089 walks back to DeKalb, 13089", (by3["089"]["county"], by3["089"]["county_fips"]), ("DeKalb", "13089"))
+bad_xw = copy.deepcopy(arts)
+bad_xw["data/county-codes.csv"] = bad_xw["data/county-codes.csv"].replace(b"13217,217,", b"13217,218,", 1)
+raises("a crosswalk row whose 5-digit code is not 13 + its suffix is refused", lambda: P.validate(bad_xw), "county-codes.csv")
 
 if failures:
     print(f"\n{len(failures)} failure(s)")
