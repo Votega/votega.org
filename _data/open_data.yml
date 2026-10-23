@@ -198,6 +198,8 @@ datasets:
       - { name: "data/zips.json", desc: "Every ZIP: counties and districts it touches, with shares", url: "https://github.com/Votega/ga-district-information/blob/main/data/zips.json" }
       - { name: "data/zip-districts.csv", desc: "Same, flat: one row per ZIP and district", url: "https://github.com/Votega/ga-district-information/blob/main/data/zip-districts.csv" }
       - { name: "data/counties.json", desc: "County population in each district", url: "https://github.com/Votega/ga-district-information/blob/main/data/counties.json" }
+      - { name: "data/district-counties.csv", desc: "Each district's counties, with shares of the district and of the county (5-digit county FIPS)", url: "https://github.com/Votega/ga-district-information/blob/main/data/district-counties.csv" }
+      - { name: "data/county-codes.csv", desc: "County FIPS crosswalk: 5-digit code, the 3-digit suffix older releases used, name, slug", url: "https://github.com/Votega/ga-district-information/blob/main/data/county-codes.csv" }
       - { name: "data/tracts.json", desc: "Census-tract population in each district (build your own crosswalk)", url: "https://github.com/Votega/ga-district-information/blob/main/data/tracts.json" }
     contribute: https://github.com/Votega/ga-district-information/issues
 
