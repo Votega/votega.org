@@ -190,6 +190,11 @@ share-description: "How many Georgians have already voted in the November 3, 202
 </table>
 </div>
 
+<p class="ev-note">
+  Turnout is ballots cast divided by <em>active</em> registered voters. "Also voted early" is the share of this year's early and absentee voters who also cast an accepted early or absentee ballot in that election (any date); it can't tell a first-time voter from someone who voted on election day.
+  Past years count accepted ballots returned by the same number of days before each election day ({% for y in ev.metadata.comparisons %}{{ y[0] }}: {{ y[1].cutoff | date: "%B %-d" }}{% unless forloop.last %}; {% endunless %}{% endfor %}).
+</p>
+
 <div class="ev-stats ev-stats-solo">
   <div class="ev-stat ev-stat-solo">
     <span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">mail or electronic, accepted</span>
@@ -266,8 +271,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
 
 <p class="ev-note">
   Source: Georgia Secretary of State absentee and early voting file and active voter registration table.
-  Turnout is ballots cast divided by <em>active</em> registered voters. Counts run through the end of {{ ev.metadata.asOf | date: "%B %-d" }}; the Secretary of State's own dashboard updates more often and may show higher totals. "Also voted early" is the share of this year's early and absentee voters who also cast an accepted early or absentee ballot in that election (any date); it can't tell a first-time voter from someone who voted on election day. Early voting ends Friday, October 30.
-  Past years count accepted ballots returned by the same number of days before each election day ({% for y in ev.metadata.comparisons %}{{ y[0] }}: {{ y[1].cutoff | date: "%B %-d" }}{% unless forloop.last %}; {% endunless %}{% endfor %}).
+  Counts run through the end of {{ ev.metadata.asOf | date: "%B %-d" }}; the Secretary of State's own dashboard updates more often and may show higher totals. Early voting ends Friday, October 30.
   Data generated {{ ev.metadata.generatedAt | date: "%B %-d, %Y" }}.
 </p>
 {% else %}
