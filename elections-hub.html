@@ -91,6 +91,29 @@ breadcrumb:
   </a>
 </div>
 
+{%- comment -%}
+  Plain server-rendered links to the statewide and congressional race pages. The cards
+  above are the voter's path; this is also the crawlable path to the races themselves
+  (the candidate finder lists them with JS, so it carries no <a> in the raw HTML).
+  _data/featured_races.json is a build artifact of scripts/build_entity_pages.py; when
+  that script has not run the file is absent and this section is simply omitted.
+{%- endcomment -%}
+{%- assign featured = site.data.featured_races.groups -%}
+{%- if featured and featured.size > 0 -%}
+<section class="featured-races" aria-labelledby="featuredRacesHeading">
+  <h2 id="featuredRacesHeading">Major races on the ballot</h2>
+  {%- for group in featured %}
+  <h3>{{ group.name }}</h3>
+  <ul class="featured-races-list">
+    {%- for race in group.races %}
+    <li><a href="{{ race.url | relative_url }}">{{ race.name }}</a></li>
+    {%- endfor %}
+  </ul>
+  {%- endfor %}
+  <p class="featured-races-more"><a href="{{ '/directory/races/' | relative_url }}">All races, including state legislative, judicial and district attorney &rarr;</a></p>
+</section>
+{%- endif %}
+
 <!-- Candidate-facing CTA, deliberately set apart from and below the
      voter-facing cards above: muted styling and its own audience heading so a
      voter scanning the hub isn't steered to the "claim your profile" flow that
@@ -105,6 +128,17 @@ breadcrumb:
 </section>
 
 <style>
+  .featured-races { margin: 2.5rem 0 0; }
+  .featured-races h3 { margin: 1.25rem 0 0.4rem; font-size: 1rem; font-weight: 700; color: var(--color-text); }
+  .featured-races-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 0.35rem 1.25rem;
+  }
+  .featured-races-more { margin: 1rem 0 0; font-weight: 600; }
   .for-candidates-callout {
     display: flex;
     align-items: center;
