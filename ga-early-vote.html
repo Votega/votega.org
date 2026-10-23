@@ -2,17 +2,64 @@
 layout: page
 title: Georgia Early Vote Turnout by County
 permalink: /ga-early-vote/
-share-description: "How many Georgians have already voted in the November 3, 2026 general election, county by county, compared with the same point in 2022."
+share-description: "How many Georgians have already voted in the November 3, 2026 general election, how the pace compares with 2022 and 2024, and where mail ballots stand, county by county."
 ---
 {%- assign ev = site.data.early_vote["ga-general-2026"] -%}
 {%- assign sw = ev.statewide -%}
+{%- assign cur_year = ev.metadata.electionDate | date: "%Y" -%}
+{%- assign mp = sw.mailPipeline -%}
 
 <style>
   .ev-stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 8px; }
-  .ev-stat { flex: 1 1 160px; background: var(--color-surface-2, var(--color-surface)); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 14px; }
+  .ev-stat { flex: 1 1 180px; background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 14px; }
   .ev-stat .n { font-size: 1.6rem; font-weight: 700; color: var(--color-text); display: block; }
-  .ev-stat .l { font-size: .85rem; color: var(--color-text-muted, var(--color-text)); }
-  .ev-controls { margin: 16px 0 8px; }
+  .ev-stat .l { font-size: .85rem; color: var(--color-text-muted); display: block; }
+  .ev-stat .d { font-size: .8rem; color: var(--color-text-muted); display: block; margin-top: 4px; }
+  .ev-h2 { font-size: 1.25rem; margin: 32px 0 4px; }
+  .ev-sub { font-size: .9rem; margin: 0 0 12px; color: var(--color-text-muted); }
+
+  /* ---- daily line chart ---- */
+  .ev-chart { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 14px; }
+  .ev-toggles { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 8px; }
+  .ev-seg { display: inline-flex; border: 1px solid var(--color-border); border-radius: 6px; overflow: hidden; }
+  .ev-seg button { all: unset; cursor: pointer; padding: 5px 12px; font-size: .85rem; color: var(--color-text); }
+  .ev-seg button + button { border-left: 1px solid var(--color-border); }
+  .ev-seg button[aria-pressed="true"] { background: var(--color-accent); color: var(--color-surface-raised); font-weight: 600; }
+  .ev-seg button:focus-visible { outline: 2px solid var(--color-accent-strong); outline-offset: -2px; }
+  .ev-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: .85rem; margin: 4px 0 6px; }
+  .ev-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .ev-legend i { width: 22px; height: 0; border-top: 3px solid; display: inline-block; }
+  .ev-svg { width: 100%; height: auto; display: block; touch-action: pan-y; }
+  .ev-svg text { font-family: inherit; font-size: 11px; fill: var(--color-text-muted); }
+  .ev-svg .grid { stroke: var(--color-border); stroke-width: 1; }
+  .ev-svg .axis { stroke: var(--color-text-muted); stroke-width: 1; }
+  .ev-svg .ln { fill: none; stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }
+  .ev-svg .ln.now { stroke-width: 3.4; }
+  .ev-svg .guide { stroke: var(--color-text-muted); stroke-width: 1; stroke-dasharray: 4 3; }
+  .ev-svg .today text { fill: var(--color-text); font-weight: 600; }
+  .ev-readout { font-size: .9rem; min-height: 2.6em; margin: 6px 0 0; }
+  .ev-readout b { font-variant-numeric: tabular-nums; }
+  .s-2022 { color: var(--chart-pine); stroke: var(--chart-pine); }
+  .s-2024 { color: var(--chart-gold); stroke: var(--chart-gold); }
+  .s-now  { color: var(--color-accent); stroke: var(--color-accent); }
+  .ev-legend .s-2022, .ev-legend .s-2024, .ev-legend .s-now { stroke: none; }
+  .ev-legend i.s-2022 { border-color: var(--chart-pine); } .ev-legend i.s-2024 { border-color: var(--chart-gold); } .ev-legend i.s-now { border-color: var(--color-accent); }
+
+  /* ---- mail pipeline ---- */
+  .ev-pipe { display: flex; height: 22px; border-radius: 5px; overflow: hidden; border: 1px solid var(--color-border); background: var(--color-surface-sunken); }
+  .ev-pipe span { display: block; height: 100%; min-width: 0; }
+  .p-accepted { background: var(--chart-pine); } .p-outstanding { background: var(--chart-sage); } .p-pending { background: var(--chart-peach); }
+  .p-rejected { background: var(--chart-gold); } .p-cancelled { background: var(--chart-slate); }
+  .ev-pipe-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px 16px; margin: 12px 0; font-size: .9rem; }
+  .ev-pipe-legend div { display: grid; grid-template-columns: 14px 1fr; gap: 0 8px; align-items: start; }
+  .ev-pipe-legend i { width: 14px; height: 14px; border-radius: 3px; margin-top: 3px; display: block; }
+  .ev-pipe-legend b { font-variant-numeric: tabular-nums; }
+  .ev-pipe-legend small { color: var(--color-text-muted); display: block; }
+  td.pipebar { min-width: 150px; }
+  td.pipebar .ev-pipe { height: 12px; }
+
+  /* ---- tables ---- */
+  .ev-controls { margin: 12px 0 8px; }
   .ev-controls input { width: 100%; max-width: 320px; padding: 8px 10px; border: 1px solid var(--color-border); border-radius: 6px; }
   /* Scroll inside a bounded box so the horizontal scrollbar is always on screen, not at the bottom of 159 rows. */
   .ev-wrap { overflow: auto; max-height: 75vh; border: 1px solid var(--color-border); border-radius: 8px;
@@ -22,7 +69,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
       linear-gradient(to left, var(--color-surface) 30%, transparent) right center / 40px 100% no-repeat local,
       linear-gradient(to right, color-mix(in srgb, var(--color-text) 25%, transparent), transparent) left center / 14px 100% no-repeat scroll,
       linear-gradient(to left, color-mix(in srgb, var(--color-text) 25%, transparent), transparent) right center / 14px 100% no-repeat scroll; }
-  .ev-hint { font-size: .85rem; margin: 4px 0; color: var(--color-text-muted, var(--color-text)); }
+  .ev-hint { font-size: .85rem; margin: 4px 0; color: var(--color-text-muted); }
   table.ev thead th { position: sticky; top: 0; z-index: 2; background: var(--color-surface-chrome); }
   table.ev th:first-child, table.ev td:first-child { position: sticky; left: 0; background: var(--color-surface-raised); }
   table.ev thead th:first-child { z-index: 3; background: var(--color-surface-chrome); }
@@ -33,57 +80,126 @@ share-description: "How many Georgians have already voted in the November 3, 202
   table.ev th button { all: inherit; cursor: pointer; font-weight: 700; }
   table.ev th[aria-sort="ascending"] button::after { content: " \25B2"; font-size: .7em; }
   table.ev th[aria-sort="descending"] button::after { content: " \25BC"; font-size: .7em; }
-  .ev-h2 { font-size: 1.25rem; margin: 28px 0 4px; }
-  .ev-sub { font-size: .85rem; margin: 0 0 12px; color: var(--color-text-muted, var(--color-text)); }
-  .ev-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
-  .ev-bars { margin: 0; background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 14px; }
-  .ev-bars figcaption { font-size: .9rem; font-weight: 600; margin-bottom: 8px; }
-  .ev-bar-row { display: grid; grid-template-columns: 2.6rem 1fr auto; align-items: center; gap: 8px; margin: 4px 0; font-size: .9rem; }
-  .ev-bar-track { display: block; height: 14px; }
-  .ev-bar { display: block; height: 100%; min-width: 2px; border-radius: 3px; background: var(--chart-pine); }
-  .ev-bar.is-now { background: var(--color-accent); }
-  .ev-cap { font-size: .8rem; line-height: 1.4; margin: 10px 0 0; color: var(--color-text-muted, var(--color-text)); }
-  .ev-bar-val { text-align: right; font-variant-numeric: tabular-nums; min-width: 4.2rem; }
-  .ev-note { font-size: .85rem; color: var(--color-text-muted, var(--color-text)); margin-top: 12px; }
+  .ev-note { font-size: .85rem; color: var(--color-text-muted); margin-top: 12px; }
 </style>
-
 
 {% if ev %}
 <p>
   Ballots already cast in Georgia's November 3, 2026 general election, as of
-  <strong>{{ ev.metadata.asOf | date: "%B %-d, %Y" }}</strong>, by county.
-  The comparison columns show ballots cast by the same point in past elections, {{ ev.metadata.daysBeforeElection }} days before election day.
+  <strong>{{ ev.metadata.asOf | date: "%B %-d, %Y" }}</strong>, compared with the same point
+  ({{ ev.metadata.daysBeforeElection }} days before election day) in past elections.
 </p>
 
 <div class="ev-stats">
-  <div class="ev-stat"><span class="n" data-n="{{ sw.ballots }}">{{ sw.ballots }}</span><span class="l">ballots cast</span></div>
-  <div class="ev-stat"><span class="n">{{ sw.turnoutPct }}%</span><span class="l">of <span data-n="{{ sw.active }}">{{ sw.active }}</span> active voters</span></div>
-  <div class="ev-stat"><span class="n" data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</span><span class="l">early in person</span></div>
-  <div class="ev-stat"><span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">by mail or electronic</span></div>
+  <div class="ev-stat">
+    <span class="n" data-n="{{ sw.ballots }}">{{ sw.ballots }}</span><span class="l">ballots cast</span>
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = sw.prior[yk] %}
+    <span class="d">{% assign diff = sw.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 %}{% if diff > 0 %}+{% endif %}{{ diff }}% vs. {{ yk }} at this point</span>
+    {%- endfor %}
+  </div>
+  <div class="ev-stat">
+    <span class="n">{{ sw.turnoutPct }}%</span><span class="l">of <span data-n="{{ sw.active }}">{{ sw.active }}</span> active voters</span>
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.priorPct[yk] %}
+    <span class="d">{{ sw.priorPct[yk] }}% in {{ yk }}</span>{% endif %}
+    {%- endfor %}
+  </div>
+  <div class="ev-stat">
+    <span class="n" data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</span><span class="l">early in person</span>
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}
+    <span class="d"><span data-n="{{ sw.priorInPerson[yk] }}">{{ sw.priorInPerson[yk] }}</span> in {{ yk }}</span>
+    {%- endfor %}
+  </div>
+  <div class="ev-stat">
+    <span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">mail or electronic, accepted</span>
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}
+    <span class="d"><span data-n="{{ sw.priorMail[yk] }}">{{ sw.priorMail[yk] }}</span> in {{ yk }}</span>
+    {%- endfor %}
+  </div>
 </div>
 
-<h2 class="ev-h2">How {{ ev.metadata.electionDate | date: "%Y" }} compares</h2>
-<p class="ev-sub">Each chart is scaled to its own largest bar. Past years are cut at the same number of days before election day.</p>
-{%- assign cur_year = ev.metadata.electionDate | date: "%Y" -%}
-<div class="ev-panels">
-  {%- capture p_ballots -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.prior[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.ballots }}{%- endcapture -%}
-  {%- capture p_inperson -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.priorInPerson[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.inPerson }}{%- endcapture -%}
-  {%- capture p_mailn -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.priorMail[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.mail }}{%- endcapture -%}
-  {%- capture p_pct -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{%- if sw.priorPct[yk] -%}{{ yk }}={{ sw.priorPct[yk] }},{%- endif -%}{%- endfor -%}{{ cur_year }}={{ sw.turnoutPct }}{%- endcapture -%}
-  {%- capture p_mail -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.priorMailPct[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.mailPct }}{%- endcapture -%}
-  {%- capture p_metro -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.metro.prior[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.metro.pct }}{%- endcapture -%}
-  {%- capture p_metro_ip -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.metro.priorInPersonPct[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.metro.inPersonPct }}{%- endcapture -%}
-  {%- capture p_metro_mail -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.metro.priorMailPct[yk] }},{%- endfor -%}{{ cur_year }}={{ sw.metro.mailPct }}{%- endcapture -%}
-  {%- capture p_repeat -%}{%- for y in ev.metadata.comparisons -%}{%- assign yk = y[0] -%}{{ yk }}={{ sw.repeatPct[yk] }}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}{%- endcapture -%}
-  {% include ev-bars.html title="Ballots cast at this point" pairs=p_ballots unit="count" highlight=cur_year caption="How many people had already voted by the same number of days before election day. A presidential year like 2024 draws far more voters, so 2022, the last midterm, is the closer comparison." %}
-  {% include ev-bars.html title="Early in-person ballots at this point" pairs=p_inperson unit="count" highlight=cur_year caption="Early in-person ballots counted by the same number of days before election day. This is most of the early vote in every year shown." %}
-  {% include ev-bars.html title="Mail and electronic ballots accepted at this point" pairs=p_mailn unit="count" highlight=cur_year caption="Mail and electronic ballots accepted so far. Mail ballots can arrive until polls close on election day, so more will be counted in the days ahead in every year, and this chart only shows the same point in time." %}
-  {% include ev-bars.html title="Share of active voters who have voted" pairs=p_pct unit="pct" highlight=cur_year caption="The same comparison as a share of active registered voters, which adjusts for the voter rolls growing between elections." %}
-  {% include ev-bars.html title="Share cast by mail or electronic delivery" pairs=p_mail unit="pct" highlight=cur_year caption="Mail and electronic ballots as a share of all early ballots counted so far. Mail ballots keep arriving until election day, and changes in mail-voting rules and habits both affect this, so a lower share is not by itself a sign of fewer voters." %}
-  {% include ev-bars.html title="Share from Cobb, DeKalb, Fulton and Gwinnett" pairs=p_metro unit="pct" highlight=cur_year caption="How much of the early vote comes from the four largest counties. A higher share means those counties are voting early faster than the rest of the state. It does not say who is voting." %}
-  {% include ev-bars.html title="…of early in-person ballots, share from those four counties" pairs=p_metro_ip unit="pct" highlight=cur_year caption="Of all early in-person ballots counted so far, the share cast in these four counties." %}
-  {% include ev-bars.html title="…of mail and electronic ballots, share from those four counties" pairs=p_metro_mail unit="pct" highlight=cur_year caption="Of all mail and electronic ballots accepted so far, the share from these four counties. Mail totals are still rising, so this share can move." %}
-  {% include ev-bars.html title="Of this year's early voters, share who also voted early or absentee in…" pairs=p_repeat unit="pct" caption="Of this year's early voters so far, the share who also cast an early or absentee ballot in that election. It cannot tell a first-time voter from someone who voted on election day before." %}
+<h2 class="ev-h2">The pace of early voting</h2>
+<p class="ev-sub">Ballots accepted each day, lined up by the number of days before election day. Hover or tap the chart to read a day.</p>
+<div class="ev-chart" id="ev-chart">
+  <div class="ev-toggles">
+    <div class="ev-seg" role="group" aria-label="Ballot type" id="ev-type">
+      <button type="button" data-v="all" aria-pressed="true">All</button>
+      <button type="button" data-v="ip" aria-pressed="false">In person</button>
+      <button type="button" data-v="mail" aria-pressed="false">Mail</button>
+    </div>
+    <div class="ev-seg" role="group" aria-label="Chart view" id="ev-view">
+      <button type="button" data-v="cum" aria-pressed="true">Running total</button>
+      <button type="button" data-v="day" aria-pressed="false">Per day</button>
+    </div>
+  </div>
+  <div class="ev-legend" id="ev-legend"></div>
+  <svg class="ev-svg" id="ev-svg" viewBox="0 0 640 320" role="img" aria-labelledby="ev-svg-t"><title id="ev-svg-t">Ballots accepted by days before election day, for each election year</title></svg>
+  <p class="ev-readout" id="ev-readout" aria-live="polite"></p>
+  <p class="ev-note" style="margin-top:4px">Days are counted back from election day, so a given day lines up across years but not always by weekday. Mail ballots keep arriving through election day; early in-person voting ends Friday, October 30.</p>
+</div>
+
+<h2 class="ev-h2">Where mail ballots stand</h2>
+<p class="ev-sub">
+  Every mail and electronic ballot on record, by status, as of {{ ev.metadata.asOf | date: "%B %-d" }}.
+  This counts ballots, not people: a cancelled ballot that was re-issued shows up as one cancelled and one outstanding.
+</p>
+{%- assign pt = mp.total -%}
+<div class="ev-pipe" role="img" aria-label="Mail and electronic ballots by status: {{ mp.accepted }} accepted, {{ mp.outstanding }} outstanding, {{ mp.rejected }} rejected, {{ mp.cancelled }} cancelled or spoiled, {{ mp.other }} pending">
+  <span class="p-accepted" style="width: {{ mp.accepted | times: 100.0 | divided_by: pt | round: 2 }}%"></span>
+  <span class="p-outstanding" style="width: {{ mp.outstanding | times: 100.0 | divided_by: pt | round: 2 }}%"></span>
+  <span class="p-pending" style="width: {{ mp.other | times: 100.0 | divided_by: pt | round: 2 }}%"></span>
+  <span class="p-cancelled" style="width: {{ mp.cancelled | times: 100.0 | divided_by: pt | round: 2 }}%"></span>
+  <span class="p-rejected" style="width: {{ mp.rejected | times: 100.0 | divided_by: pt | round: 2 }}%"></span>
+</div>
+<div class="ev-pipe-legend">
+  <div><i class="p-accepted"></i><span><b data-n="{{ mp.accepted }}">{{ mp.accepted }}</b> accepted<small>{{ mp.accepted | times: 100.0 | divided_by: pt | round: 1 }}% of ballots on record</small></span></div>
+  <div><i class="p-outstanding"></i><span><b data-n="{{ mp.outstanding }}">{{ mp.outstanding }}</b> outstanding<small>sent to the voter, not yet returned</small></span></div>
+  <div><i class="p-pending"></i><span><b data-n="{{ mp.other }}">{{ mp.other }}</b> pending<small>on record with no status yet</small></span></div>
+  <div><i class="p-cancelled"></i><span><b data-n="{{ mp.cancelled }}">{{ mp.cancelled }}</b> cancelled or spoiled<small>the voter voted another way, or the ballot was replaced</small></span></div>
+  <div><i class="p-rejected"></i><span><b data-n="{{ mp.rejected }}">{{ mp.rejected }}</b> rejected<small>{% assign returned = mp.accepted | plus: mp.rejected %}{{ mp.rejected | times: 100.0 | divided_by: returned | round: 2 }}% of returned ballots so far</small></span></div>
+</div>
+<p class="ev-sub">
+  Rejection is decided during review, and some ballots are fixed afterward, so the rejected count is expected to move.
+  Past elections are not charted here because the files record rejected and cancelled ballots differently from year to year.
+</p>
+
+<div class="ev-controls">
+  <label for="mp-search" class="sr-only">Search counties</label>
+  <input id="mp-search" type="search" placeholder="Search counties" autocomplete="off">
+</div>
+<div class="ev-wrap">
+<table class="ev" id="mp-table">
+  <thead>
+    <tr>
+      <th aria-sort="ascending" data-type="text"><button type="button">County</button></th>
+      <th data-type="num"><button type="button">On record</button></th>
+      <th data-type="num"><button type="button">Accepted</button></th>
+      <th data-type="num"><button type="button">Outstanding</button></th>
+      <th data-type="num"><button type="button">Rejected</button></th>
+      <th data-type="num"><button type="button">Cancelled or spoiled</button></th>
+      <th data-type="num"><button type="button">Accepted share</button></th>
+      <th>Status mix</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in ev.counties %}
+    {%- assign m = c.mailPipeline -%}
+    {%- assign t = m.accepted | plus: m.outstanding | plus: m.other | plus: m.cancelled | plus: m.rejected -%}
+    <tr>
+      <td>{{ c.name }}</td>
+      <td data-f="n" data-v="{{ t }}">{{ t }}</td>
+      <td data-f="n" data-v="{{ m.accepted }}">{{ m.accepted }}</td>
+      <td data-f="n" data-v="{{ m.outstanding }}">{{ m.outstanding }}</td>
+      <td data-f="n" data-v="{{ m.rejected }}">{{ m.rejected }}</td>
+      <td data-f="n" data-v="{{ m.cancelled }}">{{ m.cancelled }}</td>
+      {% if t > 0 %}{% assign sh = m.accepted | times: 100.0 | divided_by: t | round: 1 %}<td data-v="{{ sh }}">{{ sh }}%</td>
+      <td class="pipebar"><div class="ev-pipe" role="img" aria-label="{{ c.name }}: {{ m.accepted }} accepted, {{ m.outstanding }} outstanding, {{ m.other }} pending, {{ m.cancelled }} cancelled, {{ m.rejected }} rejected">
+        <span class="p-accepted" style="width: {{ m.accepted | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-outstanding" style="width: {{ m.outstanding | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-pending" style="width: {{ m.other | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-cancelled" style="width: {{ m.cancelled | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-rejected" style="width: {{ m.rejected | times: 100.0 | divided_by: t | round: 1 }}%"></span>
+      </div></td>
+      {% else %}<td data-v="">&ndash;</td><td class="pipebar"></td>{% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 </div>
 
 <h2 class="ev-h2">By county</h2>
@@ -136,40 +252,157 @@ share-description: "How many Georgians have already voted in the November 3, 202
 
 <script>
 (function () {
-  var table = document.getElementById('ev-table');
-  if (!table) return;
-  var tbody = table.tBodies[0];
-  var rows = Array.prototype.slice.call(tbody.rows);
-  Array.prototype.forEach.call(document.querySelectorAll('[data-n]'), function (el) { el.textContent = Number(el.dataset.n).toLocaleString('en-US'); });
-  // Format numbers with thousands separators client-side so the data stays plain in the JSON.
-  rows.forEach(function (r) {
-    Array.prototype.forEach.call(r.querySelectorAll('td[data-f]'), function (td) {
-      if (td.dataset.v !== '' && td.dataset.v != null) td.textContent = Number(td.dataset.v).toLocaleString('en-US');
-    });
+  var fmt = function (n) { return Number(n).toLocaleString('en-US'); };
+  Array.prototype.forEach.call(document.querySelectorAll('[data-n]'), function (el) { el.textContent = fmt(el.dataset.n); });
+  Array.prototype.forEach.call(document.querySelectorAll('td[data-f]'), function (td) {
+    if (td.dataset.v !== '' && td.dataset.v != null) td.textContent = fmt(td.dataset.v);
   });
-  function val(row, i, num) {
-    var c = row.cells[i];
-    if (!num) return c.textContent.trim().toLowerCase();
-    var v = c.dataset.v;
-    return v === '' || v == null ? -Infinity : parseFloat(v);
-  }
-  var ths = table.tHead.rows[0].cells;
-  Array.prototype.forEach.call(ths, function (th, i) {
-    th.querySelector('button').addEventListener('click', function () {
-      var num = th.dataset.type === 'num';
-      var dir = th.getAttribute('aria-sort') === 'ascending' ? -1 : 1;
-      Array.prototype.forEach.call(ths, function (o) { o.removeAttribute('aria-sort'); });
-      th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
-      rows.sort(function (a, b) {
-        var x = val(a, i, num), y = val(b, i, num);
-        return (x < y ? -1 : x > y ? 1 : 0) * dir;
+
+  // ---- sortable, searchable tables ----
+  function sortable(tableId, searchId) {
+    var table = document.getElementById(tableId);
+    if (!table) return;
+    var tbody = table.tBodies[0];
+    var rows = Array.prototype.slice.call(tbody.rows);
+    var ths = table.tHead.rows[0].cells;
+    function val(row, i, num) {
+      var c = row.cells[i];
+      if (!num) return c.textContent.trim().toLowerCase();
+      var v = c.dataset.v;
+      return v === '' || v == null ? -Infinity : parseFloat(v);
+    }
+    Array.prototype.forEach.call(ths, function (th, i) {
+      var b = th.querySelector('button');
+      if (!b) return;
+      b.addEventListener('click', function () {
+        var num = th.dataset.type === 'num';
+        var dir = th.getAttribute('aria-sort') === 'ascending' ? -1 : 1;
+        Array.prototype.forEach.call(ths, function (o) { o.removeAttribute('aria-sort'); });
+        th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
+        rows.sort(function (a, c) {
+          var x = val(a, i, num), y = val(c, i, num);
+          return (x < y ? -1 : x > y ? 1 : 0) * dir;
+        });
+        rows.forEach(function (r) { tbody.appendChild(r); });
       });
-      rows.forEach(function (r) { tbody.appendChild(r); });
     });
-  });
-  document.getElementById('ev-search').addEventListener('input', function (e) {
-    var q = e.target.value.trim().toLowerCase();
-    rows.forEach(function (r) { r.hidden = q && r.cells[0].textContent.toLowerCase().indexOf(q) === -1; });
-  });
+    var s = document.getElementById(searchId);
+    if (s) s.addEventListener('input', function (e) {
+      var q = e.target.value.trim().toLowerCase();
+      rows.forEach(function (r) { r.hidden = q && r.cells[0].textContent.toLowerCase().indexOf(q) === -1; });
+    });
+  }
+  sortable('ev-table', 'ev-search');
+  sortable('mp-table', 'mp-search');
+
+  // ---- daily line chart ----
+  var DAILY = {{ ev.daily | jsonify }};
+  var NOW = '{{ cur_year }}';
+  var SAME = {{ ev.metadata.daysBeforeElection }};
+  var AS_OF = '{{ ev.metadata.asOf | date: "%B %-d" }}';
+  var svg = document.getElementById('ev-svg');
+  if (!svg || !DAILY[NOW]) return;
+  var years = Object.keys(DAILY).sort();
+  var cls = function (y) { return y === NOW ? 's-now' : 's-' + y; };
+  var type = 'all', view = 'cum';
+  var X0 = 24, W = 640, H = 320, L = 52, R = 14, T = 14, B = 36;
+  var NS = 'http://www.w3.org/2000/svg';
+
+  document.getElementById('ev-legend').innerHTML = years.map(function (y) {
+    return '<span><i class="' + cls(y) + '"></i>' + y + (y === NOW ? ' (so far)' : '') + '</span>';
+  }).join('');
+
+  // value series per year: {daysBefore: n}; running totals include everything before the left edge
+  function series(y) {
+    var out = {}, run = 0, rows = {};
+    DAILY[y].forEach(function (r) { rows[r[0]] = r; });
+    var last = y === NOW ? SAME : 0;
+    for (var d = 45; d >= last; d--) {
+      var r = rows[d] || [d, 0, 0];
+      var v = type === 'ip' ? r[1] : type === 'mail' ? r[2] : r[1] + r[2];
+      if (view === 'cum') { run += v; out[d] = run; } else { out[d] = v; }
+    }
+    return out;
+  }
+  function el(name, attrs, text) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function nice(max) {
+    var p = Math.pow(10, Math.floor(Math.log10(max || 1))), f = max / p;
+    var step = (f <= 1.5 ? 0.25 : f <= 3 ? 0.5 : f <= 7 ? 1 : 2) * p;
+    return step;
+  }
+  function short(n) { return n >= 1e6 ? (n / 1e6).toFixed(n % 1e6 ? 1 : 0) + 'M' : n >= 1e3 ? Math.round(n / 1e3) + 'k' : String(n); }
+  var xs = function (d) { return L + (X0 - d) / X0 * (W - L - R); };
+
+  var S, ys, guide, hoverDots;
+  function draw() {
+    while (svg.lastChild && svg.lastChild.nodeName !== 'title') svg.removeChild(svg.lastChild);
+    S = {}; var max = 0;
+    years.forEach(function (y) {
+      S[y] = series(y);
+      for (var d = X0; d >= 0; d--) if (S[y][d] != null && S[y][d] > max) max = S[y][d];
+    });
+    var step = nice(max), top = Math.ceil(max / step) * step || 1;
+    ys = function (v) { return T + (1 - v / top) * (H - T - B); };
+    for (var v = 0; v <= top + 1e-6; v += step) {
+      svg.appendChild(el('line', { x1: L, x2: W - R, y1: ys(v), y2: ys(v), 'class': v === 0 ? 'axis' : 'grid' }));
+      svg.appendChild(el('text', { x: L - 6, y: ys(v) + 4, 'text-anchor': 'end' }, short(Math.round(v))));
+    }
+    [24, 20, 16, 12, 8, 4, 0].forEach(function (d) {
+      svg.appendChild(el('text', { x: xs(d), y: H - 18, 'text-anchor': 'middle' }, String(d)));
+    });
+    svg.appendChild(el('text', { x: (L + W - R) / 2, y: H - 3, 'text-anchor': 'middle' }, 'Days before election day'));
+    // "as of" marker
+    var tg = el('g', { 'class': 'today' });
+    tg.appendChild(el('line', { x1: xs(SAME), x2: xs(SAME), y1: T, y2: H - B, 'class': 'guide' }));
+    tg.appendChild(el('text', { x: xs(SAME) + 4, y: T + 10 }, AS_OF));
+    svg.appendChild(tg);
+    years.forEach(function (y) {
+      var pts = [];
+      for (var d = X0; d >= (y === NOW ? SAME : 0); d--) pts.push(xs(d).toFixed(1) + ',' + ys(S[y][d]).toFixed(1));
+      svg.appendChild(el('polyline', { points: pts.join(' '), 'class': 'ln ' + cls(y) + (y === NOW ? ' now' : '') }));
+      var sd = SAME;
+      svg.appendChild(el('circle', { cx: xs(sd), cy: ys(S[y][sd]), r: y === NOW ? 5 : 4, 'class': cls(y), fill: 'currentColor', stroke: 'none' }));
+    });
+    guide = el('line', { y1: T, y2: H - B, 'class': 'guide', visibility: 'hidden' });
+    svg.appendChild(guide);
+    readout(SAME);
+  }
+  function readout(d) {
+    var label = view === 'cum' ? 'running total' : 'that day';
+    var parts = years.map(function (y) {
+      var v = S[y][d];
+      return '<b class="' + cls(y) + '" style="stroke:none">' + y + '</b> ' + (v == null ? '&ndash;' : '<b>' + fmt(v) + '</b>');
+    });
+    document.getElementById('ev-readout').innerHTML =
+      '<strong>' + d + ' day' + (d === 1 ? '' : 's') + ' before election day</strong> (' + label + '): ' + parts.join(' &middot; ');
+  }
+  function pointer(e) {
+    var r = svg.getBoundingClientRect();
+    var x = (e.clientX - r.left) / r.width * W;
+    var d = Math.round(X0 - (x - L) / (W - L - R) * X0);
+    d = Math.max(0, Math.min(X0, d));
+    guide.setAttribute('x1', xs(d)); guide.setAttribute('x2', xs(d)); guide.setAttribute('visibility', 'visible');
+    readout(d);
+  }
+  svg.addEventListener('pointermove', pointer);
+  svg.addEventListener('pointerdown', pointer);
+  svg.addEventListener('pointerleave', function () { guide.setAttribute('visibility', 'hidden'); readout(SAME); });
+
+  function toggles(id, set) {
+    var g = document.getElementById(id);
+    g.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      Array.prototype.forEach.call(g.querySelectorAll('button'), function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+      set(b.dataset.v); draw();
+    });
+  }
+  toggles('ev-type', function (v) { type = v; });
+  toggles('ev-view', function (v) { view = v; });
+  draw();
 })();
 </script>

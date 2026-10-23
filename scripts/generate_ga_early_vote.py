@@ -2,15 +2,20 @@
 """Aggregate Georgia SoS absentee/early-vote files into a county-level JSON.
 
 The SoS files are VOTER-LEVEL (names, addresses). Nothing from them is written out:
-the only output is per-county counts in _data/early_vote/<election>.json. Never commit
-the raw files.
+the only output is per-county counts and daily totals in _data/early_vote/<election>.json.
+Never commit the raw files.
 
 Inputs (manual downloads, since the SoS site is behind a bot challenge):
-  --current   current-election absentee/early CSV (one row per voter who has voted;
-              columns include 'County Name', 'Voter Registration Number', 'Ballot Style')
+  --absentee  folder of per-county CSVs of the CURRENT election's absentee/early file
+              (the same layout as the past-year dumps: dates, ballot status, reasons).
+              STATEWIDE.csv repeats every county and is skipped.
   --registration  SoS active/inactive voter table (.xlsx or .csv: County, Totals, Active, Inactive)
-  --prior     YEAR=DIR:ELECTION_DATE  directory of per-county CSVs from a past election
+  --prior     YEAR=DIR:ELECTION_DATE  folder of per-county CSVs from a past election
               (e.g. 2022=~/Downloads/A-12054:2022-11-08). May be repeated.
+  --prior-active  YEAR=N  statewide active voters on that election day (SoS turnout dashboard).
+
+The as-of date is the latest day with an accepted in-person ballot in the file (mail return
+dates include a few stray ones). --as-of overrides it.
 
 Comparison rule: a past year is cut at the SAME number of days before its election day
 as the current data is (as-of date vs. election date), counting only accepted ballots
@@ -18,9 +23,10 @@ as the current data is (as-of date vs. election date), counting only accepted ba
 would make the current year look far behind.
 
 Usage:
-  python scripts/generate_ga_early_vote.py --current A-12601.csv --registration reg.xlsx \
-      --as-of 2026-10-21 --election-date 2026-11-03 \
-      --prior 2022=A-12054:2022-11-08 --prior 2024=A-13000:2024-11-05
+  python scripts/generate_ga_early_vote.py --absentee ~/Downloads/A-12601 \
+      --registration reg.xlsx --election-date 2026-11-03 \
+      --prior 2022=A-12054:2022-11-08 --prior 2024=A-12311:2024-11-05 \
+      --prior-active 2022=6961501 --prior-active 2024=7267985
 """
 import argparse
 import csv
@@ -36,14 +42,21 @@ from lib.atomic_io import write_json_atomic  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "_data", "early_vote", "ga-general-2026.json")
 
-# Ballot Style values from the SoS file -> short key used in the output.
-STYLES = {
-    "EARLY IN-PERSON": "inPerson",
-    "ABSENTEE BY MAIL": "mail",
-    "ELECTRONIC BALLOT DELIVERY": "electronic",
-}
+IN_PERSON = "EARLY IN-PERSON"
 BIG_FOUR = ("Fulton", "DeKalb", "Cobb", "Gwinnett")  # display names; the four largest early-vote counties
 DISPLAY_FIXES = {"DEKALB": "DeKalb", "MCDUFFIE": "McDuffie", "MCINTOSH": "McIntosh"}
+DAILY_WINDOW = 45  # days before election day kept in the daily series
+
+# Where a mail/electronic ballot stands. A voter can have several records (a ballot cancelled and
+# re-issued, a mailed ballot surrendered to vote in person); the one furthest along wins.
+PIPELINE_ORDER = ["accepted", "rejected", "outstanding", "other", "cancelled"]  # best first
+STATUS_GROUP = {
+    "A": "accepted",
+    "R": "rejected",
+    "I": "outstanding",   # issued, not yet returned
+    "C": "cancelled",
+    "S": "cancelled",     # spoiled
+}
 
 
 def key(name):
@@ -57,50 +70,121 @@ def display(name):
 
 
 def parse_date(s):
-    return dt.datetime.strptime(s.strip(), "%m/%d/%Y").date()
+    """MM/DD/YYYY, optionally followed by a time."""
+    return dt.datetime.strptime(s.strip().split()[0], "%m/%d/%Y").date()
 
 
-def count_current(path):
-    """-> ({countyKey: {total, inPerson, mail, electronic}}, {voterId: countyKey}), deduped by voter id.
+def _csv_paths(directory, label):
+    paths = [p for p in sorted(glob.glob(os.path.join(directory, "*.csv")))
+             if not os.path.basename(p).upper().startswith("STATEWIDE")]
+    if not paths:
+        # A wrong or emptied folder must not publish as "0 ballots".
+        sys.exit(f"no CSV files in {label} directory: {directory}")
+    return paths
 
-    The id map lives only in memory, for the repeat-voter match; it is never written out.
+
+def _days_before(ret, election):
+    """Days before election day for the daily series. Anything earlier than the window is folded into
+    its first day, so the series always adds up to the headline total; after election day is dropped."""
+    d = (election - ret).days
+    return min(d, DAILY_WINDOW) if d >= 0 else None
+
+
+def read_current(directory, election, as_of=None):
+    """Current-election absentee/early folder.
+
+    -> dict with:
+       as_of        the day the file runs through (given, or the latest accepted in-person day)
+       counties     {countyKey: {inPerson, mail, pipeline{...}}}; pipeline = mail/electronic ballot RECORDS by status
+       daily        {daysBefore: [inPerson, mail]}  accepted ballots by return date, up to as_of
+       voters       {voterId: countyKey}  accepted voters (in memory only, for the repeat-voter match)
     """
-    seen = {}
-    out = {}
-    with open(path, newline="", encoding="utf-8-sig") as f:
-        for row in csv.DictReader(f):
-            vid = row["Voter Registration Number"]
-            if vid in seen:
-                continue
-            k = key(row["County Name"])
-            seen[vid] = k
-            c = out.setdefault(k, {"total": 0, "inPerson": 0, "mail": 0, "electronic": 0})
-            c["total"] += 1
-            style = STYLES.get(row["Ballot Style"].strip().upper())
-            if style:
-                c[style] += 1
-    return out, seen
+    best = {}  # voterId -> (rank, countyKey, isInPerson, group, returnDate or None)
+    rank = {g: i for i, g in enumerate(PIPELINE_ORDER)}
+    # The mail pipeline counts BALLOT RECORDS, not voters (as the SoS dashboard does): a cancelled
+    # ballot that was re-issued is one cancelled and one outstanding. Accepted ones wait for as_of.
+    records = {}       # countyKey -> {group: n}, every non-accepted mail/electronic record
+    accepted_mail = []  # (countyKey, returnDate or None) of accepted mail/electronic records
+    for path in _csv_paths(directory, "current"):
+        with open(path, newline="", encoding="utf-8-sig") as f:
+            for row in csv.DictReader(f):
+                inp = row["Ballot Style"].strip().upper() == IN_PERSON
+                group = STATUS_GROUP.get(row["Ballot Status"].strip().upper(), "other")
+                ret = None
+                raw = row["Ballot Return Date"].strip()
+                if raw:
+                    try:
+                        ret = parse_date(raw)
+                    except ValueError:
+                        ret = None
+                rec = (rank[group], key(row["County"]), inp, group, ret)
+                if not inp:
+                    if group == "accepted":
+                        accepted_mail.append((rec[1], ret))
+                    else:
+                        r = records.setdefault(rec[1], {g: 0 for g in PIPELINE_ORDER})
+                        r[group] += 1
+                vid = row["Voter Registration #"]
+                cur = best.get(vid)
+                if cur is None or rec[0] < cur[0]:
+                    best[vid] = rec
+
+    if as_of is None:
+        days = [r[4] for r in best.values() if r[3] == "accepted" and r[2] and r[4] and r[4] <= election]
+        if not days:
+            sys.exit("cannot work out the as-of date: no accepted in-person ballots with a return date")
+        as_of = max(days)
+
+    counties = {}
+    daily = {}
+    voters = {}
+    for vid, (_, k, inp, group, ret) in best.items():
+        c = counties.setdefault(k, {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}})
+        if inp:
+            # in-person early voting only ever produces accepted ballots; anything else is a stray record
+            if group == "accepted" and ret and ret <= as_of:
+                c["inPerson"] += 1
+                voters[vid] = k
+                d = _days_before(ret, election)
+                if d is not None:
+                    daily.setdefault(d, [0, 0])[0] += 1
+            continue
+        if group == "accepted":
+            if not ret or ret > as_of:
+                continue  # a stray return date: not a counted ballot
+            c["mail"] += 1
+            voters[vid] = k
+            d = _days_before(ret, election)
+            if d is not None:
+                daily.setdefault(d, [0, 0])[1] += 1
+    for k, r in records.items():
+        c = counties.setdefault(k, {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}})
+        for g, n in r.items():
+            c["pipeline"][g] += n
+    for k, ret in accepted_mail:
+        if ret and ret <= as_of:  # a stray return date (the file has a few years out) is not a counted ballot
+            c = counties.setdefault(k, {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}})
+            c["pipeline"]["accepted"] += 1
+    return {"as_of": as_of, "counties": counties, "daily": daily, "voters": voters}
 
 
-def count_prior(directory, cutoff):
+def count_prior(directory, cutoff, election=None):
     """Accepted ballots returned on or before `cutoff`, per county, deduped by voter id.
 
-    -> (totals {countyKey: n}, mail {countyKey: n of absentee/electronic}, voted {voterId, ...})
+    -> (totals {countyKey: n}, mail {countyKey: n of absentee/electronic},
+        voted {voterId, ...}, daily {daysBefore: [inPerson, mail]})
     `voted` is every voter with an accepted ballot in that election REGARDLESS of date, for the
     repeat-voter match ("voted early or absentee in 2024"); it never leaves memory.
-    STATEWIDE.csv in these dumps repeats every county row, so it is skipped.
+    `daily` covers the whole early period up to election day, not just up to the cutoff, so the
+    chart can draw the full past curve. STATEWIDE.csv in these dumps repeats every county row,
+    so it is skipped.
     """
     seen = set()
     voted = set()
     out = {}
     mail = {}
-    paths = sorted(glob.glob(os.path.join(directory, "*.csv")))
-    if not paths:
-        # A wrong or emptied folder must not publish as "0 ballots that year".
-        sys.exit(f"no CSV files in prior-year directory: {directory}")
-    for path in paths:
-        if os.path.basename(path).upper().startswith("STATEWIDE"):
-            continue
+    daily = {}
+    for path in _csv_paths(directory, "prior-year"):
         with open(path, newline="", encoding="utf-8-sig") as f:
             for row in csv.DictReader(f):
                 if row.get("Ballot Status", "").strip().upper() != "A":
@@ -108,21 +192,27 @@ def count_prior(directory, cutoff):
                 ret = row.get("Ballot Return Date", "").strip()
                 if not ret:
                     continue
-                voted.add(row["Voter Registration #"])
+                vid = row["Voter Registration #"]
+                voted.add(vid)
                 try:
-                    if parse_date(ret) > cutoff:
-                        continue
+                    rd = parse_date(ret)
                 except ValueError:
                     continue
-                vid = row["Voter Registration #"]
                 if vid in seen:
+                    continue
+                inp = row.get("Ballot Style", "").strip().upper() == IN_PERSON
+                if election is not None:
+                    d = _days_before(rd, election)
+                    if d is not None:
+                        daily.setdefault(d, [0, 0])[0 if inp else 1] += 1
+                if rd > cutoff:
                     continue
                 seen.add(vid)
                 k = key(row["County"])
                 out[k] = out.get(k, 0) + 1
-                if row.get("Ballot Style", "").strip().upper() != "EARLY IN-PERSON":
+                if not inp:
                     mail[k] = mail.get(k, 0) + 1
-    return out, mail, voted
+    return out, mail, voted, daily
 
 
 def match_repeat(voter_county, voted):
@@ -154,19 +244,22 @@ def read_registration(path):
     return out
 
 
-def build(current, registration, priors, as_of, election_date, priors_mail=None, repeat=None):
-    """priors: {year: {countyKey: n}} plus meta in `priors_meta` is added by caller."""
+def build(current, registration, priors, priors_mail=None, repeat=None):
+    """`current` is read_current()'s `counties`; priors/priors_mail/repeat are {year: {countyKey: n}}."""
+    empty = {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}}
     counties = []
     for k, reg in sorted(registration.items(), key=lambda kv: kv[1]["name"]):
-        cur = current.get(k, {"total": 0, "inPerson": 0, "mail": 0, "electronic": 0})
+        cur = current.get(k, empty)
+        total = cur["inPerson"] + cur["mail"]
         rec = {
             "name": display(reg["name"]),
-            "ballots": cur["total"],
+            "ballots": total,
             "inPerson": cur["inPerson"],
-            "mail": cur["mail"] + cur["electronic"],
+            "mail": cur["mail"],
             "active": reg["active"],
-            "turnoutPct": round(100.0 * cur["total"] / reg["active"], 1) if reg["active"] else None,
-            "mailPct": round(100.0 * (cur["mail"] + cur["electronic"]) / cur["total"], 1) if cur["total"] else None,
+            "turnoutPct": round(100.0 * total / reg["active"], 1) if reg["active"] else None,
+            "mailPct": round(100.0 * cur["mail"] / total, 1) if total else None,
+            "mailPipeline": dict(cur["pipeline"]),
             "prior": {str(y): counts.get(k, 0) for y, counts in priors.items()},
         }
         if priors_mail:
@@ -177,7 +270,7 @@ def build(current, registration, priors, as_of, election_date, priors_mail=None,
         if repeat:
             # share of this county's 2026 ballots cast by someone who also voted early/absentee in that year
             rec["repeatPct"] = {
-                str(y): round(100.0 * r.get(k, 0) / cur["total"], 1) if cur["total"] else None
+                str(y): round(100.0 * r.get(k, 0) / total, 1) if total else None
                 for y, r in repeat.items()
             }
         counties.append(rec)
@@ -198,11 +291,16 @@ def validate(counties, current, registration):
     return errs
 
 
+def daily_series(daily):
+    """{daysBefore: [ip, mail]} -> [[daysBefore, ip, mail], ...] from the earliest day to election day."""
+    return [[d, daily[d][0], daily[d][1]] for d in sorted(daily, reverse=True)]
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--current", required=True)
+    ap.add_argument("--absentee", required=True, help="folder of per-county CSVs, current election")
     ap.add_argument("--registration", required=True)
-    ap.add_argument("--as-of", required=True, help="YYYY-MM-DD the current file reflects")
+    ap.add_argument("--as-of", default=None, help="YYYY-MM-DD the file runs through (default: derived)")
     ap.add_argument("--election-date", required=True)
     ap.add_argument("--prior", action="append", default=[], help="YEAR=DIR:ELECTION_DATE")
     ap.add_argument("--prior-active", action="append", default=[],
@@ -210,21 +308,22 @@ def main(argv=None):
     ap.add_argument("--out", default=OUT)
     a = ap.parse_args(argv)
 
-    as_of = dt.date.fromisoformat(a.as_of)
     election = dt.date.fromisoformat(a.election_date)
+    cur = read_current(os.path.expanduser(a.absentee), election,
+                       dt.date.fromisoformat(a.as_of) if a.as_of else None)
+    as_of = cur["as_of"]
     days_before = (election - as_of).days
-
-    current, voter_county = count_current(a.current)
     registration = read_registration(a.registration)
-    priors, priors_mail, repeat, prior_meta = {}, {}, {}, {}
+
+    priors, priors_mail, repeat, prior_meta, prior_daily = {}, {}, {}, {}, {}
     for spec in a.prior:
         year, rest = spec.split("=", 1)
         directory, edate = rest.rsplit(":", 1)
         pe = dt.date.fromisoformat(edate)
         cutoff = pe - dt.timedelta(days=days_before)
-        totals, mail, voted = count_prior(os.path.expanduser(directory), cutoff)
-        priors[year], priors_mail[year] = totals, mail
-        repeat[year] = match_repeat(voter_county, voted)
+        totals, mail, voted, daily = count_prior(os.path.expanduser(directory), cutoff, pe)
+        priors[year], priors_mail[year], prior_daily[year] = totals, mail, daily
+        repeat[year] = match_repeat(cur["voters"], voted)
         del voted  # millions of voter ids: drop as soon as the match is done
         prior_meta[year] = {"electionDate": edate, "cutoff": cutoff.isoformat()}
 
@@ -234,8 +333,8 @@ def main(argv=None):
             sys.exit(f"--prior-active {year}: no matching --prior")
         prior_meta[year]["activeStatewide"] = int(n)
 
-    counties = build(current, registration, priors, as_of, election, priors_mail, repeat)
-    errs = validate(counties, current, registration)
+    counties = build(cur["counties"], registration, priors, priors_mail, repeat)
+    errs = validate(counties, cur["counties"], registration)
     if errs:
         print("\n".join(errs), file=sys.stderr)
         sys.exit(1)
@@ -264,12 +363,19 @@ def main(argv=None):
             for y in priors if (t := sum(c["prior"][y] for c in counties))
         },
     }
+    pipeline = {g: sum(c["mailPipeline"][g] for c in counties) for g in PIPELINE_ORDER}
+    pipeline["total"] = sum(pipeline.values())
+
+    election_year = str(election.year)
+    daily = {election_year: daily_series(cur["daily"])}
+    daily.update({y: daily_series(d) for y, d in prior_daily.items()})
+
     data = {
         "metadata": {
             "generatedAt": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "source": "Georgia Secretary of State absentee ballot file and active voter registration table",
             "electionDate": a.election_date,
-            "asOf": a.as_of,
+            "asOf": as_of.isoformat(),
             "daysBeforeElection": days_before,
             "count": len(counties),
             "comparisons": prior_meta,
@@ -292,17 +398,20 @@ def main(argv=None):
                 y: round(100.0 * sum(repeat[y].values()) / ballots, 1) for y in repeat
             } if ballots else {},
             "metro": metro_share,
+            "mailPipeline": pipeline,
             "prior": {y: sum(c["prior"][y] for c in counties) for y in priors},
             "priorPct": {
                 y: round(100.0 * sum(c["prior"][y] for c in counties) / m["activeStatewide"], 1)
                 for y, m in prior_meta.items() if m.get("activeStatewide")
             },
         },
+        "daily": daily,
         "counties": counties,
     }
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     write_json_atomic(a.out, data)
-    print(f"wrote {a.out}: {len(counties)} counties, {ballots:,} ballots, {data['statewide']['turnoutPct']}% of active")
+    print(f"wrote {a.out}: {len(counties)} counties, {ballots:,} ballots through {as_of}, "
+          f"{data['statewide']['turnoutPct']}% of active")
 
 
 if __name__ == "__main__":
