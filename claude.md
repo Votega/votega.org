@@ -86,6 +86,7 @@ votega.org/
 │   │                                     # 2026-10; no API key, no quota). generate_ga_members_data.py
 │   │                                     # is the retired Open States producer, kept for rollback
 │   ├── generate_ga_votes_soap.py        # legis.ga.gov SOAP (official) → ga-member-votes.json (canonical since 2026-10; OS producer retired to scripts/archive/generate_ga_votes_data.py)
+│   │                                     # `--archive <tag>` (2023_24 … 2017_18, lib/ga_sessions.ARCHIVE_SESSIONS) backfills ONE closed biennium to out/archive/ga-votes-<tag>.json (votes + thin roster; never touches live files, refuses their paths). Publish with `publish_ga_legislators.py archive <tag> <file> [--overwrite]` → sessions/<YYYY-YYYY>/ only, no pointer files. Tested by test_publish_ga_legislators_archive.py
 │   ├── generate_ga_bills_soap.py (legis.ga.gov SOAP → ga-bills.json; canonical since 2026-10, OS producer retired to scripts/archive/generate_ga_bills_data.py; subjects via ga-bills-subjects-base.json overlay) / enrich_bills_with_party_votes.py / generate_curated_ga_bills.py (curated key votes; reads the committed SOAP artifacts, SOAP-fetches only a session they do not cover — no Open States, no API key, canonical since 2026-10)
 │   ├── generate_federal_votes_data.py / generate_fec_data.py / generate_ga_congress_trades.py
 │   ├── generate_ga_executive_orders.py / generate_scotus_decisions.py / generate_presidential_laws.py / generate_vp_tie_votes.py
