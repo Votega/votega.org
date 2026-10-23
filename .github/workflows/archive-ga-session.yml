@@ -1,0 +1,51 @@
+name: Archive a closed GA session (manual backfill)
+
+# Deliberate backfill of ONE closed biennium into Votega/ga-legislators sessions/<slug>/.
+# Fetches votes + the thin roster from legis.ga.gov SOAP (generate_ga_votes_soap.py
+# --archive) and publishes them (publish_ga_legislators.py archive). It writes ONLY under
+# sessions/<slug>/ and never touches latest.json, scorecard-latest.json or data/*, and it
+# refuses to replace a session already published unless `overwrite` is ticked.
+# Nothing here changes the site or any committed file in this repo.
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      session:
+        description: Closed biennium to archive
+        type: choice
+        required: true
+        options:
+          - '2023_24'
+          - '2021_22'
+          - '2019_20'
+          - '2017_18'
+      overwrite:
+        description: Replace the session if it is already published
+        type: boolean
+        default: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Fetch the session from legis.ga.gov
+        env:
+          SESSION: ${{ inputs.session }}
+        run: python3 scripts/generate_ga_votes_soap.py --archive "$SESSION"
+
+      - name: Publish to ga-legislators sessions/<slug>/
+        env:
+          GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
+          SESSION: ${{ inputs.session }}
+          OVERWRITE: ${{ inputs.overwrite && '--overwrite' || '' }}
+        run: python3 scripts/publish_ga_legislators.py archive "$SESSION" "out/archive/ga-votes-$SESSION.json" $OVERWRITE
