@@ -15,6 +15,13 @@ share-description: "How many Georgians have already voted in the November 3, 202
   .ev-stat .n { font-size: 1.6rem; font-weight: 700; color: var(--color-text); display: block; }
   .ev-stat .l { font-size: .85rem; color: var(--color-text-muted); display: block; }
   .ev-stat .d { font-size: .8rem; color: var(--color-text-muted); display: block; margin-top: 4px; }
+  .ev-cmps { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin-top: 8px; }
+  .ev-cmp-row { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+  .ev-cmp { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border: 1px solid; border-radius: 999px; font-size: .8rem; font-weight: 600; }
+  .ev-cmp.is-up { background: var(--color-success-tint); color: var(--color-success); border-color: var(--color-success-line); }
+  .ev-cmp.is-down { background: var(--color-warning-tint); color: var(--color-warning); border-color: var(--color-warning-line); }
+  .ev-cmp.is-flat { background: var(--color-surface-sunken); color: var(--color-text-muted); border-color: var(--color-border); }
+  .ev-cmp-detail { font-size: .8rem; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
   .ev-h2 { font-size: 1.25rem; margin: 32px 0 4px; }
   .ev-sub { font-size: .9rem; margin: 0 0 12px; color: var(--color-text-muted); }
 
@@ -93,21 +100,32 @@ share-description: "How many Georgians have already voted in the November 3, 202
 <div class="ev-stats">
   <div class="ev-stat">
     <span class="n" data-n="{{ sw.ballots }}">{{ sw.ballots }}</span><span class="l">ballots cast</span>
+    <span class="ev-cmps">
     {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = sw.prior[yk] %}
-    <span class="d">{% assign diff = sw.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 %}{% if diff > 0 %}+{% endif %}{{ diff }}% vs. {{ yk }} at this point</span>
+      {%- assign diff = sw.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 -%}
+      {% include ev-cmp.html delta=diff unit="%" year=yk detail=p n=true %}
     {%- endfor %}
+    </span>
   </div>
   <div class="ev-stat">
     <span class="n">{{ sw.turnoutPct }}%</span><span class="l">of <span data-n="{{ sw.active }}">{{ sw.active }}</span> active voters</span>
+    <span class="ev-cmps">
     {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.priorPct[yk] %}
-    <span class="d">{{ sw.priorPct[yk] }}% in {{ yk }}</span>{% endif %}
-    {%- endfor %}
+      {%- assign pp = sw.priorPct[yk] -%}
+      {%- assign diff = sw.turnoutPct | minus: pp | round: 1 -%}
+      {%- capture pdetail %}{{ pp }}%{% endcapture -%}
+      {% include ev-cmp.html delta=diff unit=" pts" year=yk detail=pdetail %}
+    {%- endif %}{% endfor %}
+    </span>
   </div>
   <div class="ev-stat">
     <span class="n" data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</span><span class="l">early in person</span>
-    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}
-    <span class="d"><span data-n="{{ sw.priorInPerson[yk] }}">{{ sw.priorInPerson[yk] }}</span> in {{ yk }}</span>
+    <span class="ev-cmps">
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = sw.priorInPerson[yk] %}
+      {%- assign diff = sw.inPerson | minus: p | times: 100.0 | divided_by: p | round: 1 -%}
+      {% include ev-cmp.html delta=diff unit="%" year=yk detail=p n=true %}
     {%- endfor %}
+    </span>
   </div>
   <div class="ev-stat">
     <span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">mail or electronic, accepted</span>
