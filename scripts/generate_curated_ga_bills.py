@@ -40,7 +40,7 @@ from datetime import datetime, timezone
 from lib.atomic_io import write_json_atomic
 from lib.ga_passage import native_is_passage, normalize_bill
 from lib.ga_sessions import legis_session_id
-from lib.ga_soap import (CHAMBERS, VACANT_ID, RollCallNotPublished, get_title_index,
+from lib.ga_soap import (CHAMBERS, VACANT_ID, RollCallNotPublished, get_text_url, get_title_index,
                          get_vote_detail, get_vote_listings)
 from lib.ga_voters import VOTING_CHAMBERS, MemberIndex, new_stats, summarize
 from lib.votes_schema import member_votes_map
@@ -315,7 +315,9 @@ def soap_bill_record(entry, crosswalk, party_lookup, stats=None):
         "status":        "",
         "statusDate":    "",
         "billUrl":       BILL_URL % legislation_id if legislation_id else "",
-        "fullTextUrl":   "",
+        # Best-effort, same as the title lookup: the older session isn't in ga-bills.json,
+        # so the text link comes from the bill's own SOAP detail.
+        "fullTextUrl":   get_text_url(legislation_id) if legislation_id else "",
         "votes":         votes,
         "source":        "soap",
     }
