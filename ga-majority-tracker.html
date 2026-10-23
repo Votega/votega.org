@@ -73,6 +73,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .bar-r { background: var(--color-party-r); }
   .bar-v { background: var(--color-party-vacant); }
   .bar-i { background: var(--color-party-i); }
+  .bar-s { background: repeating-linear-gradient(45deg, var(--color-party-vacant) 0 3px, var(--color-surface-raised) 3px 6px); }
   .seat-bar-legend {
     display: flex;
     justify-content: space-between;
@@ -89,6 +90,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   }
   /* Legend marks mirror the hemicycle seat shapes. */
   .dot-square { border-radius: 1px; }
+  .dot-suspended { background: var(--color-surface-raised) !important; border: 1.5px dashed; border-radius: 50%; }
   .dot-hollow { background: var(--color-surface-raised) !important; border: 1.5px solid; border-radius: 50%; }
 
   /* ── Chamber tabs ─────────────────────────────────────────────────────── */
@@ -174,6 +176,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   .senate-seat.seat-d { background: var(--color-party-d-tint); border-color: var(--color-party-d); }
   .senate-seat.seat-r { background: var(--color-party-r-tint); border-color: var(--color-party-r); }
   .senate-seat.seat-i { background: var(--color-party-i-tint); border-color: var(--color-party-i); }
+  .senate-seat.seat-suspended { border-style: dashed; background: var(--color-surface-raised); }
   .senate-seat.seat-v { background: var(--color-party-vacant-tint); border-color: var(--color-party-vacant); }
   .seat-name {
     font-size: 0.66rem;
@@ -299,7 +302,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   <div class="tracker-card" id="houseCard">
     <h2>House of Representatives</h2>
     {%- if hou -%}
-      <div>{{ hou.republican }} Republican · {{ hou.democratic }} Democratic{% if hou.other and hou.other > 0 %} · {{ hou.other }} other{% endif %} <span style="color:var(--color-text-muted);">({{ hou.total }} seats)</span></div>
+      <div>{{ hou.republican }} Republican · {{ hou.democratic }} Democratic{% if hou.other and hou.other > 0 %} · {{ hou.other }} other{% endif %}{% if hou.suspended and hou.suspended > 0 %} · {{ hou.suspended }} suspended (not counted){% endif %} <span style="color:var(--color-text-muted);">({{ hou.total }} seats)</span></div>
     {%- else -%}
       <div class="loading">Loading…</div>
     {%- endif -%}
@@ -307,7 +310,7 @@ share-description: "Current partisan balance of the Georgia General Assembly. Se
   <div class="tracker-card" id="senateCard">
     <h2>Senate</h2>
     {%- if sen -%}
-      <div>{{ sen.republican }} Republican · {{ sen.democratic }} Democratic{% if sen.other and sen.other > 0 %} · {{ sen.other }} other{% endif %} <span style="color:var(--color-text-muted);">({{ sen.total }} seats)</span></div>
+      <div>{{ sen.republican }} Republican · {{ sen.democratic }} Democratic{% if sen.other and sen.other > 0 %} · {{ sen.other }} other{% endif %}{% if sen.suspended and sen.suspended > 0 %} · {{ sen.suspended }} suspended (not counted){% endif %} <span style="color:var(--color-text-muted);">({{ sen.total }} seats)</span></div>
     {%- else -%}
       <div class="loading">Loading…</div>
     {%- endif -%}
@@ -515,6 +518,12 @@ async function loadMembers() {
 
 // ── Shared helpers ─────────────────────────────────────────────────────────
 
+// A suspended member keeps the title and the seat but cannot act (Ga. Const. Art. II, Sec. III),
+// so the seat is drawn in the member's party colour with a dashed outline but is counted for
+// neither party. Bills still need a majority of ALL members the chamber is entitled to
+// (Art. III, Sec. V, Para. V), so the majority line below does not move.
+function isSuspended(member) { return !!member && member.status === 'Suspended'; }
+
 function partyOf(member) {
   if (!member) return 'V';
   if (member.status === 'Vacant') return 'V';
@@ -541,7 +550,7 @@ function unopposedPartyFor(chamber, district) {
 // `chamber` picks the no-major-party-opponent mark that chamber actually uses: the Senate grid
 // flags a seat with an amber outline and a star, the House hemicycle with an amber ring around
 // the seat. Showing the other chamber's mark would describe something that is not on screen.
-function legendHtml(d, r, v, uCount, i = 0, chamber = 'senate') {
+function legendHtml(d, r, v, uCount, i = 0, chamber = 'senate', s = 0) {
   const unopposedMark = chamber === 'house'
     ? '<span class="legend-ring" aria-hidden="true"></span>'
     : '<span class="legend-star">★</span>';
@@ -551,14 +560,16 @@ function legendHtml(d, r, v, uCount, i = 0, chamber = 'senate') {
     <span><span class="dot dot-square" style="background:${COLOR.R}"></span>Republican (${r})</span>
     ${i ? `<span><span class="dot" style="background:${COLOR.I};border-radius:2px;transform:rotate(45deg)"></span>Independent (${i})</span>` : ''}
     ${v ? `<span><span class="dot dot-hollow" style="border-color:${COLOR.V}"></span>Vacant (${v})</span>` : ''}
+    ${s ? `<span><span class="dot dot-suspended" style="border-color:${COLOR.V}"></span>Suspended, not counted (${s})</span>` : ''}
     ${uCount ? `<span>${unopposedMark}No major-party opponent (${uCount})</span>` : ''}
   `;
 }
 
 // ── Stats banner ───────────────────────────────────────────────────────────
 
-function renderCard(el, title, dCount, rCount, vCount, majority, iCount = 0) {
-  const total = dCount + rCount + iCount + vCount;
+function renderCard(el, title, dCount, rCount, vCount, majority, iCount = 0, suspended = []) {
+  const sCount = suspended.length;
+  const total = dCount + rCount + iCount + vCount + sCount;
 
   // Signed distance from the majority line: a positive number means the party
   // holds the majority by that many seats, negative means it is that many
@@ -583,11 +594,13 @@ function renderCard(el, title, dCount, rCount, vCount, majority, iCount = 0) {
       <div class="bar-r" style="width:${(rCount/total*100).toFixed(1)}%"></div>
       <div class="bar-i" style="width:${(iCount/total*100).toFixed(1)}%"></div>
       <div class="bar-v" style="width:${(vCount/total*100).toFixed(1)}%"></div>
+      <div class="bar-s" style="width:${(sCount/total*100).toFixed(1)}%"></div>
     </div>
     <div class="seat-bar-legend">
       <span><span class="dot" style="background:${COLOR.D}"></span>D ${dCount}</span>
       ${iCount ? `<span><span class="dot" style="background:${COLOR.I}"></span>I ${iCount}</span>` : ''}
       ${vCount ? `<span><span class="dot" style="background:${COLOR.V}"></span>Vacant ${vCount}</span>` : ''}
+      ${sCount ? `<span><span class="dot dot-suspended" style="border-color:${COLOR.V}"></span>Suspended ${sCount}</span>` : ''}
       <span>R ${rCount}<span class="dot" style="background:${COLOR.R};margin:0 0 0 3px"></span></span>
     </div>
     <div class="chamber-stats" style="margin-top:1rem">
@@ -605,6 +618,8 @@ function renderCard(el, title, dCount, rCount, vCount, majority, iCount = 0) {
     <div style="text-align:center;margin-top:1rem;padding-top:0.75rem;border-top:1px solid var(--color-border);font-size:0.78rem;color:var(--color-text-muted);">
       Total in Chamber: <strong style="color:var(--color-text)">${total}</strong>
       <div style="margin-top:0.3rem">Majority threshold: <strong style="color:var(--color-text)">${majority}</strong></div>
+      <div style="margin-top:0.3rem">A bill needs a majority of all members the chamber is entitled to, whether or not every seat can vote (Ga. Const. Art. III, Sec. V, Para. V).</div>
+      ${sCount ? `<div style="margin-top:0.3rem">Not counted for either party while suspended (Art. II, Sec. III): ${suspended.map(m => `${escHtml(m.name)} (${escHtml(partyOf(m))}), District ${escHtml(m.district)}`).join('; ')}.</div>` : ''}
     </div>
   `;
 }
@@ -615,7 +630,7 @@ function renderSenate(byDistrict) {
   const grid = document.getElementById('senateGrid');
   grid.innerHTML = '';
 
-  let d = 0, r = 0, i = 0, v = 0;
+  let d = 0, r = 0, i = 0, v = 0, sus = 0;
   SENATE_ROWS.forEach(row => {
     const rowEl = document.createElement('div');
     rowEl.className = 'senate-row';
@@ -639,10 +654,11 @@ function renderSenate(byDistrict) {
   // Tally
   Object.values(byDistrict).filter(m => m.chamber === 'Senate').forEach(m => {
     const p = partyOf(m);
-    if (p === 'D') d++; else if (p === 'R') r++; else if (p === 'I') i++; else v++;
+    if (isSuspended(m)) sus++;
+    else if (p === 'D') d++; else if (p === 'R') r++; else if (p === 'I') i++; else v++;
   });
 
-  document.getElementById('senateLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.senate || {}).length, i, 'senate');
+  document.getElementById('senateLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.senate || {}).length, i, 'senate', sus);
 }
 
 function makeSeneateSeat(dist, byDistrict) {
@@ -660,7 +676,8 @@ function makeSeneateSeat(dist, byDistrict) {
   // truthy doesn't by itself mean there's a legislator to link to.
   const isVacant = party === 'V';
   el.href = (member && !isVacant) ? memberUrl(member.id) : raceUrl('Senate', dist);
-  el.className = `senate-seat seat-${party.toLowerCase()}`;
+  const suspended = isSuspended(member);
+  el.className = `senate-seat seat-${party.toLowerCase()}${suspended ? ' seat-suspended' : ''}`;
 
   const lastName = (member && !isVacant)
     ? member.name.split(',')[0].split(' ').pop()
@@ -682,13 +699,14 @@ function makeSeneateSeat(dist, byDistrict) {
     <div class="seat-dist">${dist}</div>
   `;
   const unopposedLabel = unopposed ? `, no major-party opponent (${unopposed} unopposed)` : '';
-  el.setAttribute('aria-label', `District ${dist}, ${fullName}, ${partyLabel}${unopposedLabel}`);
+  const suspendedLabel = suspended ? ', suspended, not counted for either party' : '';
+  el.setAttribute('aria-label', `District ${dist}, ${fullName}, ${partyLabel}${suspendedLabel}${unopposedLabel}`);
 
   // The "View 2026 race" link used to live inside the hover tooltip, where it
   // was unreachable by keyboard or touch. A filled seat leads to the member
   // page, which already surfaces that race; a vacancy links to the race direct.
   const unopposedTip = unopposed ? `<br><span style="color:${UNOPPOSED_AMBER}">★ No major-party opponent (${unopposed})</span>` : '';
-  attachTooltip(el, `District ${dist}<br>${escHtml(fullName)}<br>${partyLabel}${unopposedTip}`);
+  attachTooltip(el, `District ${dist}<br>${escHtml(fullName)}<br>${partyLabel}${suspended ? ' (suspended)' : ''}${unopposedTip}`);
   return el;
 }
 
@@ -705,7 +723,7 @@ function renderHouse(members) {
     .sort((a, b) => a.district - b.district);
 
   let memberIdx = 0;
-  let d = 0, r = 0, i = 0, v = 0;
+  let d = 0, r = 0, i = 0, v = 0, sus = 0;
 
   HOUSE_ROWS.forEach(({ r: radius, count }) => {
     for (let i = 0; i < count; i++) {
@@ -717,7 +735,9 @@ function renderHouse(members) {
 
       const member = house[memberIdx++] || null;
       const party  = partyOf(member);
-      if (party === 'D') d++; else if (party === 'R') r++; else if (party === 'I') i++; else v++;
+      const suspended = isSuspended(member);
+      if (suspended) sus++;
+      else if (party === 'D') d++; else if (party === 'R') r++; else if (party === 'I') i++; else v++;
 
       const seatSize = 9;
       // Party must not be colour-only (WCAG 1.4.1), and a 9px seat is too small
@@ -725,6 +745,14 @@ function renderHouse(members) {
       // Republicans squares, vacancies hollow. The legend shows the same marks.
       // See CODEBASE-REVIEW-2026-08-18.md finding 4.2.
       const circle = seatShape(party, x, y, seatSize);
+      if (suspended) {
+        // Hollow with a dashed party-colour outline: distinct from a vacancy (solid grey ring).
+        circle.setAttribute('fill', 'var(--color-surface-raised)');
+        circle.setAttribute('stroke', COLOR[party]);
+        circle.setAttribute('stroke-width', '1.5');
+        circle.setAttribute('stroke-dasharray', '2 1.5');
+        circle.setAttribute('opacity', '1');
+      }
 
       // A seat is "filled" if it has a member record whose status isn't
       // Vacant — ga-members.json injects a placeholder record (with a real
@@ -753,14 +781,14 @@ function renderHouse(members) {
         // <title> is the accessible name of an SVG node — this is what makes
         // all 180 seats readable instead of one chart-level aria-label.
         const title = svgEl('title', {});
-        title.textContent = `District ${district}, ${who}, ${partyLabel}`
+        title.textContent = `District ${district}, ${who}, ${partyLabel}${suspended ? ', suspended, not counted for either party' : ''}`
           + (unopposed ? `, no major-party opponent (${unopposed} unopposed)` : '');
         link.appendChild(title);
         // Halo first, so the party shape draws on top of it.
         if (unopposed) link.appendChild(seatHalo(party, x, y, seatSize));
         link.appendChild(circle);
         const unopposedTip = unopposed ? `<br><span style="color:${UNOPPOSED_AMBER}"><span class="legend-ring" aria-hidden="true"></span>No major-party opponent (${unopposed})</span>` : '';
-        attachTooltip(link, `District ${district}<br>${escHtml(who)}<br>${partyLabel}${unopposedTip}`);
+        attachTooltip(link, `District ${district}<br>${escHtml(who)}<br>${partyLabel}${suspended ? ' (suspended)' : ''}${unopposedTip}`);
         seatNode = link;
       }
 
@@ -775,7 +803,7 @@ function renderHouse(members) {
     }
   });
 
-  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.house || {}).length, i, 'house');
+  document.getElementById('houseLegend').innerHTML = legendHtml(d, r, v, Object.keys(UNOPPOSED.house || {}).length, i, 'house', sus);
 }
 
 // ── Seat marks ─────────────────────────────────────────────────────────────
@@ -896,18 +924,20 @@ document.querySelectorAll('.chamber-tab').forEach(btn => {
     // Tally per chamber
     const tally = (map) => {
       let d = 0, r = 0, i = 0, v = 0;
+      const suspended = [];
       Object.values(map).forEach(m => {
         const p = partyOf(m);
-        if (p === 'D') d++; else if (p === 'R') r++; else if (p === 'I') i++; else v++;
+        if (isSuspended(m)) suspended.push(m);
+        else if (p === 'D') d++; else if (p === 'R') r++; else if (p === 'I') i++; else v++;
       });
-      return { d, r, i, v };
+      return { d, r, i, v, suspended };
     };
 
     const ht = tally(houseByDist);
     const st = tally(senateByDist);
 
-    renderCard(document.getElementById('houseCard'),  'House of Representatives', ht.d, ht.r, ht.v, HOUSE_MAJORITY, ht.i);
-    renderCard(document.getElementById('senateCard'), 'Senate',                   st.d, st.r, st.v, SENATE_MAJORITY, st.i);
+    renderCard(document.getElementById('houseCard'),  'House of Representatives', ht.d, ht.r, ht.v, HOUSE_MAJORITY, ht.i, ht.suspended);
+    renderCard(document.getElementById('senateCard'), 'Senate',                   st.d, st.r, st.v, SENATE_MAJORITY, st.i, st.suspended);
 
     renderSenate(senateByDist);
     renderHouse(members);

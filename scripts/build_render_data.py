@@ -142,9 +142,13 @@ def build_majority(data, cfg):
             continue
         party = (m.get("party") or "").lower()
         c = chambers.setdefault(ch, {"chamber": ch, "republican": 0, "democratic": 0, "other": 0,
-                                     "vacant": 0, "total": 0})
+                                     "vacant": 0, "suspended": 0, "total": 0})
         if m.get("status") == "Vacant":
             c["vacant"] += 1
+        elif m.get("status") == "Suspended":
+            # Keeps the seat but cannot act (Ga. Const. Art. II, Sec. III): counted in the
+            # chamber total, not for either party.
+            c["suspended"] += 1
         elif party.startswith("rep"):
             c["republican"] += 1
         elif party.startswith("dem"):
