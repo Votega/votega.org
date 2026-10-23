@@ -22,6 +22,9 @@ share-description: "How many Georgians have already voted in the November 3, 202
   .ev-cmp.is-down { background: var(--color-warning-tint); color: var(--color-warning); border-color: var(--color-warning-line); }
   .ev-cmp.is-flat { background: var(--color-surface-sunken); color: var(--color-text-muted); border-color: var(--color-border); }
   .ev-cmp-detail { font-size: .8rem; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+  .ev-stats-solo { justify-content: center; margin-top: 24px; }
+  .ev-stat-solo { flex: 0 1 380px; text-align: center; }
+  .ev-stat-solo .ev-cmps { align-items: center; }
   .ev-h2 { font-size: 1.25rem; margin: 32px 0 4px; }
   .ev-sub { font-size: .9rem; margin: 0 0 12px; color: var(--color-text-muted); }
 
@@ -127,12 +130,6 @@ share-description: "How many Georgians have already voted in the November 3, 202
     {%- endfor %}
     </span>
   </div>
-  <div class="ev-stat">
-    <span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">mail or electronic, accepted</span>
-    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}
-    <span class="d"><span data-n="{{ sw.priorMail[yk] }}">{{ sw.priorMail[yk] }}</span> in {{ yk }}</span>
-    {%- endfor %}
-  </div>
 </div>
 
 <h2 class="ev-h2">The pace of early voting</h2>
@@ -153,6 +150,15 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <svg class="ev-svg" id="ev-svg" viewBox="0 0 640 320" role="img" aria-labelledby="ev-svg-t"><title id="ev-svg-t">Ballots accepted by days before election day, for each election year</title></svg>
   <p class="ev-readout" id="ev-readout" aria-live="polite"></p>
   <p class="ev-note" style="margin-top:4px">Days are counted back from election day, so a given day lines up across years but not always by weekday. Mail ballots keep arriving through election day; early in-person voting ends Friday, October 30.</p>
+</div>
+
+<div class="ev-stats ev-stats-solo">
+  <div class="ev-stat ev-stat-solo">
+    <span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">mail or electronic, accepted</span>
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}
+    <span class="d"><span data-n="{{ sw.priorMail[yk] }}">{{ sw.priorMail[yk] }}</span> in {{ yk }}</span>
+    {%- endfor %}
+  </div>
 </div>
 
 <h2 class="ev-h2">Where mail ballots stand</h2>
