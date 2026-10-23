@@ -268,7 +268,15 @@ def members_schema(schema_path="data/members.schema.json"):
                         "chamber": {"type": "string", "enum": ["Senate", "House of Representatives", "executive"]},
                         "district": {"type": ["integer", "null"]},
                         "title": {"type": ["string", "null"]},
-                        "status": {"type": ["string", "null"], "description": "null = sitting; else Vacant/Suspended/Resigned/Removed/Deceased."},
+                        "status": {"type": ["string", "null"], "description":
+                                   "null = sitting; else Vacant/Suspended/Resigned/Removed/Deceased. "
+                                   "Suspended: the member keeps the title and the seat but cannot act. "
+                                   "Under the Georgia Constitution no replacement is seated for a suspended "
+                                   "General Assembly member unless the member is convicted of a felony, in "
+                                   "which case a replacement is elected to serve only for the duration of the "
+                                   "suspension. A suspension lasts until final disposition of the case or the "
+                                   "end of the member's elected term, whichever comes first; a final "
+                                   "conviction declares the seat vacant."},
                         "phone": {"type": ["string", "null"]},
                         "email": {"type": ["string", "null"]},
                         "officialWebsiteUrl": {"type": ["string", "null"]},
