@@ -101,6 +101,82 @@ def test_match_repeat_counts_by_county():
     assert g.match_repeat(cur, {"1", "3", "99"}) == {"A": 1, "B": 1}
 
 
+def _out(**over):
+    import copy
+    d = {
+        "metadata": {"electionDate": "2026-11-03", "asOf": "2026-10-21", "quality": {},
+                     "comparisons": {"2022": {"electionDate": "2022-11-08", "cutoff": "2022-10-26"}}},
+        "statewide": {"ballots": 10, "mail": 4, "mailPipeline": {"accepted": 4}, "prior": {"2022": 6}},
+        "daily": {"2026": [[13, 6, 4]], "2022": [[13, 0, 6], [5, 0, 3]]},
+        "counties": [{"name": "A", "ballots": 10}],
+    }
+    d = copy.deepcopy(d)
+    for path, v in over.items():  # "metadata.asOf" -> d["metadata"]["asOf"]
+        node = d
+        *head, last = path.split(".")
+        for h in head:
+            node = node[h]
+        node[last] = v
+    return d
+
+
+def _check(data, prev=None, today=None):
+    import datetime as dt
+    return g.check_output(data, prev, today or dt.date(2026, 10, 22))
+
+
+def test_check_output_clean_passes_silently():
+    errs, warns = _check(_out())
+    assert errs == [] and warns == [], (errs, warns)
+
+
+def test_check_output_gates_on_each_contradiction():
+    import datetime as dt
+    cases = {
+        "daily does not add up": _out(**{"daily": {"2026": [[13, 5, 4]], "2022": [[13, 0, 6]]}}),
+        "a past year counted zero": _out(**{"statewide.prior": {"2022": 0}}),
+        "as-of after election day": _out(**{"metadata.asOf": "2026-11-04"}),
+        "as-of in the future": _out(**{"metadata.asOf": "2026-10-30"}),
+        "mail pipeline disagrees": _out(**{"statewide.mailPipeline": {"accepted": 99}}),
+        "too many stray dates": _out(**{"metadata.quality": {"strayAccepted": 500}}),
+    }
+    for name, data in cases.items():
+        errs, _ = _check(data)
+        assert errs, f"no error for: {name}"
+
+
+def test_check_output_refuses_to_replace_good_data_with_worse():
+    prev_ok = _out()
+    assert _check(_out(), prev_ok)[0] == []
+    older = _out(**{"metadata.asOf": "2026-10-20"})
+    assert any("OLDER" in e for e in _check(older, prev_ok)[0])
+    smaller = _out(**{"statewide.ballots": 10})
+    prev_big = _out(**{"statewide.ballots": 100})
+    assert any("fell" in e for e in _check(smaller, prev_big)[0])
+    other_election = _out(**{"metadata.electionDate": "2026-12-01"})
+    assert not any("OLDER" in e or "fell" in e for e in _check(_out(), other_election)[0])
+
+
+def test_check_output_warns_about_what_was_dropped_and_stale_files():
+    import datetime as dt
+    data = _out(**{"metadata.quality": {"strayAccepted": 2, "badDates": 3, "unknownStatuses": {"X": 4}, "duplicateRecords": 7}})
+    errs, warns = _check(data, today=dt.date(2026, 10, 28))
+    assert errs == []
+    text = " ".join(warns)
+    for needle in ("dropped", "could not be read", "unrecognized", "merged", "refresh"):
+        assert needle in text, (needle, warns)
+
+
+def test_emit_is_loud():
+    import contextlib
+    import io
+    buf = io.StringIO()
+    with contextlib.redirect_stderr(buf):
+        g.emit(["something broke"], ["be careful"])
+    out = buf.getvalue()
+    assert "CHECK FAILED" in out and "ERROR: something broke" in out and "WARNING: be careful" in out
+
+
 def test_validate_flags_ballots_above_active():
     cur = {"X": {"inPerson": 5, "mail": 0, "pipeline": {k: 0 for k in g.PIPELINE_ORDER}}}
     reg = {"X": {"name": "X", "active": 3, "total": 3}}

@@ -45,6 +45,7 @@ OUT = os.path.join(ROOT, "_data", "early_vote", "ga-general-2026.json")
 IN_PERSON = "EARLY IN-PERSON"
 BIG_FOUR = ("Fulton", "DeKalb", "Cobb", "Gwinnett")  # display names; the four largest early-vote counties
 DISPLAY_FIXES = {"DEKALB": "DeKalb", "MCDUFFIE": "McDuffie", "MCINTOSH": "McIntosh"}
+KNOWN_STATUSES = {"A", "R", "I", "C", "S", "PROV", ""}  # anything else is reported, not silently bucketed
 DAILY_WINDOW = 45  # days before election day kept in the daily series
 
 # Where a mail/electronic ballot stands. A voter can have several records (a ballot cancelled and
@@ -98,6 +99,7 @@ def read_current(directory, election, as_of=None):
        counties     {countyKey: {inPerson, mail, pipeline{...}}}; pipeline = mail/electronic ballot RECORDS by status
        daily        {daysBefore: [inPerson, mail]}  accepted ballots by return date, up to as_of
        voters       {voterId: countyKey}  accepted voters (in memory only, for the repeat-voter match)
+       quality      what the cleaning dropped (rows, badDates, strayAccepted, duplicateRecords, unknownStatuses)
     """
     best = {}  # voterId -> (rank, countyKey, isInPerson, group, returnDate or None)
     rank = {g: i for i, g in enumerate(PIPELINE_ORDER)}
@@ -105,17 +107,23 @@ def read_current(directory, election, as_of=None):
     # ballot that was re-issued is one cancelled and one outstanding. Accepted ones wait for as_of.
     records = {}       # countyKey -> {group: n}, every non-accepted mail/electronic record
     accepted_mail = []  # (countyKey, returnDate or None) of accepted mail/electronic records
+    q = {"rows": 0, "badDates": 0, "unknownStatuses": {}}  # what the cleaning dropped or could not read
     for path in _csv_paths(directory, "current"):
         with open(path, newline="", encoding="utf-8-sig") as f:
             for row in csv.DictReader(f):
+                q["rows"] += 1
                 inp = row["Ballot Style"].strip().upper() == IN_PERSON
-                group = STATUS_GROUP.get(row["Ballot Status"].strip().upper(), "other")
+                status = row["Ballot Status"].strip().upper()
+                if status not in KNOWN_STATUSES:
+                    q["unknownStatuses"][status] = q["unknownStatuses"].get(status, 0) + 1
+                group = STATUS_GROUP.get(status, "other")
                 ret = None
                 raw = row["Ballot Return Date"].strip()
                 if raw:
                     try:
                         ret = parse_date(raw)
                     except ValueError:
+                        q["badDates"] += 1
                         ret = None
                 rec = (rank[group], key(row["County"]), inp, group, ret)
                 if not inp:
@@ -138,7 +146,11 @@ def read_current(directory, election, as_of=None):
     counties = {}
     daily = {}
     voters = {}
+    q["duplicateRecords"] = q["rows"] - len(best)  # extra rows for voters already seen (a cancelled and a re-issued ballot, say)
+    q["strayAccepted"] = 0     # accepted ballots with no usable return date, or one after the as-of date
     for vid, (_, k, inp, group, ret) in best.items():
+        if group == "accepted" and (not ret or ret > as_of):
+            q["strayAccepted"] += 1
         c = counties.setdefault(k, {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}})
         if inp:
             # in-person early voting only ever produces accepted ballots; anything else is a stray record
@@ -165,7 +177,7 @@ def read_current(directory, election, as_of=None):
         if ret and ret <= as_of:  # a stray return date (the file has a few years out) is not a counted ballot
             c = counties.setdefault(k, {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}})
             c["pipeline"]["accepted"] += 1
-    return {"as_of": as_of, "counties": counties, "daily": daily, "voters": voters}
+    return {"as_of": as_of, "counties": counties, "daily": daily, "voters": voters, "quality": q}
 
 
 def count_prior(directory, cutoff, election=None):
@@ -291,6 +303,95 @@ def validate(counties, current, registration):
     return errs
 
 
+def check_output(data, prev=None, today=None):
+    """Whole-output checks. -> (errors, warnings).
+
+    Errors mean the file contradicts itself or would replace good data with worse data: they stop the
+    run and nothing is written. Warnings are things the cleaning dropped or could not explain; they are
+    printed loudly and kept in metadata.quality, but do not stop the run.
+    """
+    errors, warnings = [], []
+    md, sw = data["metadata"], data["statewide"]
+    election = dt.date.fromisoformat(md["electionDate"])
+    as_of = dt.date.fromisoformat(md["asOf"])
+    today = today or dt.datetime.now(dt.timezone.utc).date()
+    cur_year = str(election.year)
+
+    # the daily series must add up to the headline numbers it is drawn beside
+    cur_sum = sum(r[1] + r[2] for r in data["daily"].get(cur_year, []))
+    if cur_sum != sw["ballots"]:
+        errors.append(f"daily series for {cur_year} adds up to {cur_sum:,} but the headline is {sw['ballots']:,} ballots")
+    for y, meta in md["comparisons"].items():
+        total = sw["prior"].get(y, 0)
+        if total <= 0:
+            errors.append(f"{y}: no ballots counted at the same point (wrong or empty folder, or a wrong election date?)")
+            continue
+        edate = dt.date.fromisoformat(meta["electionDate"])
+        cutoff_days = (edate - dt.date.fromisoformat(meta["cutoff"])).days
+        s = sum(r[1] + r[2] for r in data["daily"].get(y, []) if r[0] >= cutoff_days)
+        if s != total:
+            errors.append(f"{y}: daily series up to the cutoff adds up to {s:,} but the same-point total is {total:,}")
+
+    if as_of > election:
+        errors.append(f"as-of date {as_of} is after election day {election}")
+    if as_of > today + dt.timedelta(days=1):
+        errors.append(f"as-of date {as_of} is in the future (today is {today})")
+
+    # never replace a good file with an older or smaller one
+    if prev and prev.get("metadata", {}).get("electionDate") == md["electionDate"]:
+        pm, ps = prev["metadata"], prev["statewide"]
+        if as_of < dt.date.fromisoformat(pm["asOf"]):
+            errors.append(f"as-of {as_of} is OLDER than the committed file's {pm['asOf']}: is this an old download?")
+        if sw["ballots"] < ps["ballots"] * 0.995:
+            errors.append(f"ballots fell from {ps['ballots']:,} to {sw['ballots']:,} (more than 0.5%): a truncated file?")
+
+    pipe_acc, mail = sw["mailPipeline"]["accepted"], sw["mail"]
+    if pipe_acc != mail:
+        (errors if abs(pipe_acc - mail) > max(1, mail * 0.01) else warnings).append(
+            f"mail pipeline says {pipe_acc:,} accepted but the headline has {mail:,} mail ballots")
+
+    # what the cleaning dropped, said out loud
+    q = md.get("quality", {})
+    if q.get("strayAccepted", 0) > max(5, sw["ballots"] * 0.001):
+        errors.append(f"{q['strayAccepted']:,} accepted ballots have no usable return date or one after {as_of}: more than 0.1% of the total")
+    elif q.get("strayAccepted"):
+        warnings.append(f"{q['strayAccepted']:,} accepted ballots were dropped for a missing or out-of-range return date")
+    if q.get("badDates"):
+        warnings.append(f"{q['badDates']:,} return dates could not be read")
+    if q.get("unknownStatuses"):
+        warnings.append(f"unrecognized ballot status codes (counted as 'pending'): {q['unknownStatuses']}")
+    if q.get("duplicateRecords"):
+        warnings.append(f"{q['duplicateRecords']:,} repeat records for the same voter were merged (best status kept)")
+    if (today - as_of).days > 2:
+        warnings.append(f"the file runs through {as_of}, {(today - as_of).days} days ago: refresh the download")
+    empty = [c["name"] for c in data["counties"] if c["ballots"] == 0]
+    if empty:
+        warnings.append(f"{len(empty)} counties have zero ballots so far: {', '.join(empty[:6])}")
+    return errors, warnings
+
+
+def emit(errors, warnings):
+    """Say it loudly: a banner on stderr, plus GitHub Actions annotations when run in CI."""
+    ci = os.environ.get("GITHUB_ACTIONS") == "true"
+    if errors:
+        bar = "!" * 72
+        print(bar, file=sys.stderr)
+        print("!!! EARLY VOTE DATA CHECK FAILED. NOTHING WAS WRITTEN. !!!", file=sys.stderr)
+        print(bar, file=sys.stderr)
+        for e in errors:
+            print(f"ERROR: {e}", file=sys.stderr)
+            if ci:
+                print(f"::error title=Early vote data check::{e}")
+        print(bar, file=sys.stderr)
+    if warnings:
+        print("--- WARNINGS (the run continues; read these) ---", file=sys.stderr)
+        for w in warnings:
+            print(f"WARNING: {w}", file=sys.stderr)
+            if ci:
+                print(f"::warning title=Early vote data check::{w}")
+        print("---", file=sys.stderr)
+
+
 def daily_series(daily):
     """{daysBefore: [ip, mail]} -> [[daysBefore, ip, mail], ...] from the earliest day to election day."""
     return [[d, daily[d][0], daily[d][1]] for d in sorted(daily, reverse=True)]
@@ -379,6 +480,7 @@ def main(argv=None):
             "daysBeforeElection": days_before,
             "count": len(counties),
             "comparisons": prior_meta,
+            "quality": {k: v for k, v in cur["quality"].items() if k != "rows"},
         },
         "statewide": {
             "ballots": ballots,
@@ -408,6 +510,18 @@ def main(argv=None):
         "daily": daily,
         "counties": counties,
     }
+    prev = None
+    if os.path.exists(a.out):
+        try:
+            with open(a.out, encoding="utf-8") as f:
+                prev = json.load(f)
+        except (OSError, ValueError):
+            prev = None
+    errs, warns = check_output(data, prev)
+    emit(errs, warns)
+    if errs:
+        sys.exit(1)
+    data["metadata"]["quality"]["warnings"] = warns
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     write_json_atomic(a.out, data)
     print(f"wrote {a.out}: {len(counties)} counties, {ballots:,} ballots through {as_of}, "
