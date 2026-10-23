@@ -52,17 +52,17 @@ def pop(fips, chamber, district):
 # Values copied from the Office of Legislative and Congressional Reapportionment's
 # county reports (Senate-2023 / House-2023 / Congress-2023), so this test fails if the
 # roll-up ever drifts from the official numbers.
-check("Appling is wholly Senate 19 (18,444)", pop("001", "state-senate", 19), 18444)
-check("Barrow Senate 45 = 39,217 (official county report)", pop("013", "state-senate", 45), 39217)
-check("Barrow Senate 46 = 17,116", pop("013", "state-senate", 46), 17116)
-check("Barrow Senate 47 = 27,172", pop("013", "state-senate", 47), 27172)
-check("Bartow Senate 37 = 11,130", pop("015", "state-senate", 37), 11130)
-check("Bartow Senate 52 = 97,771", pop("015", "state-senate", 52), 97771)
+check("Appling is wholly Senate 19 (18,444)", pop("13001", "state-senate", 19), 18444)
+check("Barrow Senate 45 = 39,217 (official county report)", pop("13013", "state-senate", 45), 39217)
+check("Barrow Senate 46 = 17,116", pop("13013", "state-senate", 46), 17116)
+check("Barrow Senate 47 = 27,172", pop("13013", "state-senate", 47), 27172)
+check("Bartow Senate 37 = 11,130", pop("13015", "state-senate", 37), 11130)
+check("Bartow Senate 52 = 97,771", pop("13015", "state-senate", 52), 97771)
 check("Appling House 157 = 12,825 and 178 = 5,619",
-      (pop("001", "state-house", 157), pop("001", "state-house", 178)), (12825, 5619))
-check("Appling is wholly Congress 1 (18,444)", pop("001", "us-house", 1), 18444)
+      (pop("13001", "state-house", 157), pop("13001", "state-house", 178)), (12825, 5619))
+check("Appling is wholly Congress 1 (18,444)", pop("13001", "us-house", 1), 18444)
 check("Barrow's three Senate districts add to the county",
-      sum(r["population"] for r in counties["013"]["state-senate"]), counties["013"]["population"])
+      sum(r["population"] for r in counties["13013"]["state-senate"]), counties["13013"]["population"])
 
 check("159 counties", len(counties), 159)
 check("county populations add to the statewide total",
@@ -91,7 +91,7 @@ cd = rows("data/county-districts.csv")
 check("county-districts.csv has one row per county district",
       len(cd), sum(len(c[ch]) for c in counties.values() for ch in P.CHAMBERS.values()))
 check("county CSV reproduces Barrow Senate 45",
-      [r["population"] for r in cd if r["county_fips"] == "013" and r["chamber"] == "state-senate"
+      [r["population"] for r in cd if r["county_fips"] == "13013" and r["chamber"] == "state-senate"
        and r["district"] == "45"], ["39217"])
 
 tracts = json.loads(arts["data/tracts.json"])
@@ -114,7 +114,7 @@ P.validate(arts)
 check("a sound build passes the gate", True, True)
 
 bad = dict(arts)
-c2 = json.loads(arts["data/counties.json"]); c2["counties"]["013"]["state-senate"][0]["population"] += 1
+c2 = json.loads(arts["data/counties.json"]); c2["counties"]["13013"]["state-senate"][0]["population"] += 1
 bad["data/counties.json"] = json.dumps(c2).encode()
 raises("a county whose districts do not add up is refused", lambda: P.validate(bad), "districts sum to")
 
@@ -132,6 +132,72 @@ bad = dict(arts)
 t2 = json.loads(arts["data/tracts.json"]); t2["tracts"] = {}
 bad["data/tracts.json"] = json.dumps(t2).encode()
 raises("an empty tract file is refused", lambda: P.validate(bad), "need >=")
+
+# ---- district -> county (the county table read from the district's side) ----------------
+dc = list(csv.DictReader(io.StringIO(arts["data/district-counties.csv"].decode())))
+cd_rows = list(csv.DictReader(io.StringIO(arts["data/county-districts.csv"].decode())))
+
+
+def dcs(chamber, district):
+    return [r for r in dc if r["chamber"] == chamber and r["district"] == str(district)]
+
+
+check("district-counties uses the 5-digit county FIPS", all(len(r["county_fips"]) == 5 and r["county_fips"].startswith("13") for r in dc), True)
+check("Newton is 13217 in both the county table and district-counties",
+      ("13217" in {r["county_fips"] for r in dc}, "13217" in counties), (True, True))
+check("one row per county-district pair, same count as county-districts.csv", len(dc), len(cd_rows))
+check("county-districts.csv gained a coverage column", cd_rows[0]["coverage"] in ("full", "partial"), True)
+check("coverage is full exactly when share_of_county is 1",
+      all((r["coverage"] == "full") == (float(r["share_of_county"]) == 1.0) for r in cd_rows + dc), True)
+for chamber in ("state-senate", "state-house", "us-house"):
+    sums = {}
+    for r in dc:
+        if r["chamber"] == chamber:
+            sums[r["district"]] = sums.get(r["district"], 0) + float(r["share_of_district"])
+    check(f"{chamber}: each district's county shares sum to 1", all(abs(v - 1) < 0.005 for v in sums.values()), True)
+newton = lambda ch: sorted(int(r["district"]) for r in dc if r["chamber"] == ch and r["county_fips"] == "13217")
+check("Newton County is in House 113, 114, 118", newton("state-house"), [113, 114, 118])
+check("Newton County is in Senate 42, 43", newton("state-senate"), [42, 43])
+check("Newton County is in congressional 10, 13", newton("us-house"), [10, 13])
+check("House 113 lies wholly in Newton", [(r["county"], r["share_of_district"]) for r in dcs("state-house", 113)], [("Newton", "1.0")])
+check("House 112, House 144 and Senate 25 hold no Newton residents",
+      [r for r in dc if r["county_fips"] == "13217" and (r["chamber"], r["district"]) in
+       {("state-house", "112"), ("state-house", "144"), ("state-senate", "25")}], [])
+bad_fips = copy.deepcopy(arts)
+bad_fips["data/district-counties.csv"] = bad_fips["data/district-counties.csv"].replace(b",13217,", b",217,", 1)
+raises("a 3-digit county FIPS in district-counties is refused", lambda: P.validate(bad_fips), "5-digit")
+bad_share = copy.deepcopy(arts)
+_rows = list(csv.reader(io.StringIO(bad_share["data/district-counties.csv"].decode())))
+_rows[1][_rows[0].index("share_of_district")] = "0.5"      # first data row's district no longer sums to 1
+bad_share["data/district-counties.csv"] = P._csv(_rows[0], _rows[1:])
+raises("district shares that stop summing to 1 are refused", lambda: P.validate(bad_share), "sum to 1")
+
+# ---- every published county code is the 5-digit FIPS, and all 159 are present -------------
+from lib.ga_county_fips import GA_COUNTY_FIPS  # noqa: E402
+
+ALL = set(GA_COUNTY_FIPS.values())
+
+
+def csv_col(name, col):
+    return {r[col] for r in csv.DictReader(io.StringIO(arts[name].decode()))}
+
+
+zip_codes = {c["fips"] for e in zips["zips"].values() for c in (e.get("counties") or [])}
+check("counties.json is keyed by all 159 five-digit codes", set(counties), ALL)
+check("tracts.json lists all 159 counties by five-digit code", set(json.loads(arts["data/tracts.json"])["counties"]), ALL)
+check("county-districts.csv covers all 159", csv_col("data/county-districts.csv", "county_fips"), ALL)
+check("district-counties.csv covers all 159", csv_col("data/district-counties.csv", "county_fips"), ALL)
+check("tract-districts.csv covers all 159", csv_col("data/tract-districts.csv", "county_fips"), ALL)
+check("every tract's county_fips is the first five characters of its GEOID",
+      all(r["tract_geoid"][:5] == r["county_fips"] for r in csv.DictReader(io.StringIO(arts["data/tract-districts.csv"].decode()))), True)
+check("zips.json uses five-digit codes, all real", zip_codes <= ALL and all(len(c) == 5 for c in zip_codes), True)
+check("zip-counties.csv uses five-digit codes, all real", csv_col("data/zip-counties.csv", "county_fips") <= ALL, True)
+check("county names agree with the library's slugs",
+      all(c["name"].lower().replace(" ", "-").replace(".", "") == {v: k for k, v in GA_COUNTY_FIPS.items()}[f]
+          for f, c in counties.items()), True)
+raises("a non-Georgia or malformed code is refused", lambda: P.fips5("0130"), "not a Georgia county code")
+check("a source file's three-digit code is not touched on disk",
+      all(len(c["fips"]) == 3 for e in json.load(open(P.ZIPS_SRC))["zips"].values() for c in (e.get("counties") or [])), True)
 
 if failures:
     print(f"\n{len(failures)} failure(s)")
