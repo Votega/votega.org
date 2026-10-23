@@ -152,6 +152,44 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <p class="ev-note" style="margin-top:4px">Days are counted back from election day, so a given day lines up across years but not always by weekday. Mail ballots keep arriving through election day; early in-person voting ends Friday, October 30.</p>
 </div>
 
+<h2 class="ev-h2">By county</h2>
+<div class="ev-controls">
+  <label for="ev-search" class="sr-only">Search counties</label>
+  <input id="ev-search" type="search" placeholder="Search counties" autocomplete="off">
+</div>
+
+<p class="ev-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> Scroll or swipe the table sideways to see more columns. Tap a column name to sort.</p>
+<div class="ev-wrap">
+<table class="ev" id="ev-table">
+  <thead>
+    <tr>
+      <th aria-sort="ascending" data-type="text"><button type="button">County</button></th>
+      <th data-type="num"><button type="button">Ballots cast</button></th>
+      <th data-type="num"><button type="button">Active voters</button></th>
+      <th data-type="num"><button type="button">Turnout</button></th>
+      <th data-type="num"><button type="button">Mail share</button></th>
+      {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">Also voted early in {{ y[0] }}</button></th>{% endfor %}
+      {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">{{ y[0] }} (same point)</button></th>
+      <th data-type="num"><button type="button">vs. {{ y[0] }}</button></th>{% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in ev.counties %}
+    <tr>
+      <td>{{ c.name }}</td>
+      <td data-f="n" data-v="{{ c.ballots }}">{{ c.ballots }}</td>
+      <td data-f="n" data-v="{{ c.active }}">{{ c.active }}</td>
+      <td data-v="{{ c.turnoutPct }}">{{ c.turnoutPct }}%</td>
+      <td data-v="{{ c.mailPct }}">{{ c.mailPct }}%</td>
+      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<td data-v="{{ c.repeatPct[yk] }}">{{ c.repeatPct[yk] }}%</td>{% endfor %}
+      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = c.prior[yk] %}<td data-f="n" data-v="{{ p }}">{{ p }}</td>
+      {% if p > 0 %}{% assign diff = c.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 %}<td data-v="{{ diff }}">{% if diff > 0 %}+{% endif %}{{ diff }}%</td>{% else %}<td data-v="">&ndash;</td>{% endif %}{% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
 <div class="ev-stats ev-stats-solo">
   <div class="ev-stat ev-stat-solo">
     <span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">mail or electronic, accepted</span>
@@ -220,44 +258,6 @@ share-description: "How many Georgians have already voted in the November 3, 202
         <span class="p-accepted" style="width: {{ m.accepted | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-outstanding" style="width: {{ m.outstanding | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-pending" style="width: {{ m.other | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-cancelled" style="width: {{ m.cancelled | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-rejected" style="width: {{ m.rejected | times: 100.0 | divided_by: t | round: 1 }}%"></span>
       </div></td>
       {% else %}<td data-v="">&ndash;</td><td class="pipebar"></td>{% endif %}
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-</div>
-
-<h2 class="ev-h2">By county</h2>
-<div class="ev-controls">
-  <label for="ev-search" class="sr-only">Search counties</label>
-  <input id="ev-search" type="search" placeholder="Search counties" autocomplete="off">
-</div>
-
-<p class="ev-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> Scroll or swipe the table sideways to see more columns. Tap a column name to sort.</p>
-<div class="ev-wrap">
-<table class="ev" id="ev-table">
-  <thead>
-    <tr>
-      <th aria-sort="ascending" data-type="text"><button type="button">County</button></th>
-      <th data-type="num"><button type="button">Ballots cast</button></th>
-      <th data-type="num"><button type="button">Active voters</button></th>
-      <th data-type="num"><button type="button">Turnout</button></th>
-      <th data-type="num"><button type="button">Mail share</button></th>
-      {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">Also voted early in {{ y[0] }}</button></th>{% endfor %}
-      {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">{{ y[0] }} (same point)</button></th>
-      <th data-type="num"><button type="button">vs. {{ y[0] }}</button></th>{% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for c in ev.counties %}
-    <tr>
-      <td>{{ c.name }}</td>
-      <td data-f="n" data-v="{{ c.ballots }}">{{ c.ballots }}</td>
-      <td data-f="n" data-v="{{ c.active }}">{{ c.active }}</td>
-      <td data-v="{{ c.turnoutPct }}">{{ c.turnoutPct }}%</td>
-      <td data-v="{{ c.mailPct }}">{{ c.mailPct }}%</td>
-      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<td data-v="{{ c.repeatPct[yk] }}">{{ c.repeatPct[yk] }}%</td>{% endfor %}
-      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = c.prior[yk] %}<td data-f="n" data-v="{{ p }}">{{ p }}</td>
-      {% if p > 0 %}{% assign diff = c.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 %}<td data-v="{{ diff }}">{% if diff > 0 %}+{% endif %}{{ diff }}%</td>{% else %}<td data-v="">&ndash;</td>{% endif %}{% endfor %}
     </tr>
     {% endfor %}
   </tbody>
