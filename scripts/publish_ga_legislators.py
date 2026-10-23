@@ -49,9 +49,9 @@ import os
 import sys
 
 from lib.ga_voters import VOTING_CHAMBERS
-from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
+from lib.ga_sessions import (ACTIVE_SESSION, ARCHIVE_SESSIONS, BIENNIUM, all_session_ids,
                              session_name, session_slug, tag_session)
-from lib.sibling_publish import build_json, publish_or_dry_run, min_items
+from lib.sibling_publish import (_get_sha, build_json, publish_or_dry_run, min_items)
 from lib.votes_schema import member_votes_map
 
 REPO = "Votega/ga-legislators"
@@ -643,6 +643,121 @@ def build_freeze_roster(slug):
     }
 
 
+# --------------------------------------------------------------------------- #
+# archive mode (deliberate backfill of ONE closed biennium)
+# --------------------------------------------------------------------------- #
+#: Pointers the daily modes rewrite in place. An archive run must never emit them: they
+#: describe the CURRENT biennium, so overwriting them would repoint consumers at history.
+POINTER_FILES = {"latest.json", "scorecard-latest.json", "data/all.json",
+                 "data/members.csv", "data/members.schema.json", "ROSTER.md"}
+
+
+def archive_members_csv(members, session):
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(["id", "legisGaGovId", "name", "party", "chamber", "district",
+                "dateVacated", "session"])
+    for m in sorted(members, key=lambda m: (m.get("chamber") or "", m.get("district") or 0,
+                                            m.get("name") or "")):
+        w.writerow([m.get("id"), m.get("legisGaGovId"), m.get("name"), m.get("party"),
+                    m.get("chamber"), m.get("district"), m.get("dateVacated"), session])
+    return buf.getvalue().encode()
+
+
+def archive_members_schema(schema_path):
+    """The closed-session roster is the thin Members/GetMembersBySession listing: no
+    committees, leadership, contact details or terms. A separate schema keeps a consumer
+    from reading its absence as data loss against the live data/members.schema.json."""
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": schema_url(schema_path),
+        "title": "Georgia General Assembly roster (closed session, thin listing)",
+        "schemaVersion": SCHEMA_VERSION,
+        "schemaStability": "Fields: id, legisGaGovId, name, party, chamber, district, "
+                           "dateVacated, plus a trailing `session` column in the CSV. "
+                           "`id` joins to votes.json memberVotes and equals the live "
+                           "roster id for members who still sit, else `legis-<legisGaGovId>`.",
+        "type": "object",
+        "properties": {
+            "metadata": {"type": "object"},
+            "members": {"type": "array", "items": {"type": "object", "properties": {
+                "id": {"type": "string"}, "legisGaGovId": {"type": "integer"},
+                "name": {"type": "string"}, "party": {"type": ["string", "null"]},
+                "chamber": {"type": ["string", "null"]},
+                "district": {"type": ["integer", "null"]},
+                "dateVacated": {"type": ["string", "null"]}}}},
+        },
+    }
+
+
+def build_archive(tag, path):
+    """Publish one closed biennium, produced by `generate_ga_votes_soap.py --archive`,
+    under sessions/<slug>/ ONLY. Pure: no network, returns the artifact dict."""
+    if tag not in ARCHIVE_SESSIONS:
+        sys.exit(f"archive: '{tag}' is not an archive session "
+                 f"({', '.join(ARCHIVE_SESSIONS)}). Current-biennium sessions publish "
+                 f"through the daily modes.")
+    doc = json.load(open(path, encoding="utf-8"))
+    meta = doc.get("metadata", {})
+    if not meta.get("archive") or meta.get("session") != tag:
+        sys.exit(f"archive: {path} is not an archive file for '{tag}' "
+                 f"(metadata.archive={meta.get('archive')!r}, session={meta.get('session')!r})")
+    if meta.get("partial"):
+        sys.exit(f"archive: {path} is a partial (--sample/--chamber) run; refusing to publish.")
+    votes, members = doc.get("votes", {}), doc.get("members", [])
+    if not votes or not members:
+        sys.exit(f"archive: {path} has no votes or no roster; refusing to publish.")
+    slug = session_slug(tag)
+    base = f"sessions/{slug}"
+    sess_doc = {
+        "metadata": {
+            "session": tag, "sessionName": meta.get("sessionName") or session_name(tag),
+            "biennium": meta.get("biennium"), "generatedAt": meta.get("generatedAt"),
+            "source": meta.get("source"), "totalVotes": len(votes), "archive": True,
+            "passageClassification": meta.get("passageClassification"),
+            "amendmentRuleApplied": meta.get("amendmentRuleApplied"),
+            "memberIdSource": meta.get("memberIdSource"),
+        },
+        "votes": votes,
+        "memberVotes": member_votes_map(doc),
+    }
+    artifacts = {
+        f"{base}/votes.json": compact_json(sess_doc),
+        f"{base}/votes.csv": votes_csv(votes, tag),
+        f"{base}/votes.schema.json": build_json(votes_schema(f"{base}/votes.schema.json")),
+        f"{base}/members.json": compact_json({"metadata": sess_doc["metadata"],
+                                              "members": members}),
+        f"{base}/members.csv": archive_members_csv(members, tag),
+        f"{base}/members.schema.json":
+            build_json(archive_members_schema(f"{base}/members.schema.json")),
+    }
+    assert_archive_paths(artifacts, slug)
+    return artifacts
+
+
+def assert_archive_paths(artifacts, slug):
+    """Every artifact lives under sessions/<slug>/ and none is a daily pointer. The
+    LICENSE/NOTICE the publisher injects later are byte-identical across publishers."""
+    bad = [p for p in artifacts
+           if not p.startswith(f"sessions/{slug}/") or p in POINTER_FILES]
+    if bad:
+        sys.exit(f"archive: refusing to publish outside sessions/{slug}/: {bad}")
+
+
+def refuse_if_published(slug, overwrite):
+    """The Contents API PUT silently replaces a file that exists. Re-publishing a closed
+    biennium is rarely intended, so require --overwrite when its votes.json is already
+    there. Only checks when a token is set (a dry run writes to disk, not the repo)."""
+    token = os.environ.get(TOKEN_ENV)
+    if not token or overwrite:
+        return
+    url = f"https://api.github.com/repos/{REPO}/contents/sessions/{slug}/votes.json"
+    if _get_sha(url, {"Authorization": f"token {token}",
+                      "Accept": "application/vnd.github.v3+json"}):
+        sys.exit(f"archive: sessions/{slug}/votes.json already exists in {REPO}; "
+                 f"re-run with --overwrite to replace it deliberately.")
+
+
 def resolve_slug(explicit):
     """Slug for a freeze-roster run. Explicit arg wins; otherwise default to the biennium
     (BIENNIUM). The roster is the same sitting membership across a biennium's regular and
@@ -670,8 +785,14 @@ def main():
     elif mode == "freeze-roster":
         slug = resolve_slug(sys.argv[2] if len(sys.argv) > 2 else None)
         artifacts = build_freeze_roster(slug)
+    elif mode == "archive":
+        args = [a for a in sys.argv[2:] if not a.startswith("--")]
+        if len(args) != 2:
+            sys.exit("usage: publish_ga_legislators.py archive <session-tag> <archive-file> [--overwrite]")
+        artifacts = build_archive(args[0], args[1])
+        refuse_if_published(session_slug(args[0]), "--overwrite" in sys.argv)
     else:
-        sys.exit("usage: publish_ga_legislators.py <members|votes|scorecard|freeze-roster> [session-slug]")
+        sys.exit("usage: publish_ga_legislators.py <members|votes|scorecard|freeze-roster|archive> [session-slug]")
     publish_or_dry_run(REPO, artifacts, TOKEN_ENV, validate=validate)
 
 

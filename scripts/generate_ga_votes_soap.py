@@ -86,6 +86,8 @@ Usage:
   python generate_ga_votes_soap.py --session 2025_26   # re-fetch one, preserve the rest
   python generate_ga_votes_soap.py --chamber House     # one chamber (partial: preserves nothing)
   python generate_ga_votes_soap.py --inspect          # a few roll calls, diagnostics, write nothing
+  python generate_ga_votes_soap.py --archive 2023_24 [OUT.json]
+                                                   # closed biennium -> standalone file, see archive_main
   python generate_ga_votes_soap.py --no-titles        # skip the per-session title index call
 """
 
@@ -100,10 +102,11 @@ from datetime import datetime, timezone
 from lib.atomic_io import write_json_atomic
 from lib.ga_passage import classify, load_os_passage_index, normalize_bill
 from lib.ga_vote_rules import is_state_constitutional_amendment, vote_passed
-from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
+from lib.ga_sessions import (ACTIVE_SESSION, ARCHIVE_SESSIONS, BIENNIUM, all_session_ids,
                              legis_session_id, session_name, preserved_session_ids)
 from lib.ga_soap import (CHAMBER_NAMES, CHAMBERS, VACANT_ID, RollCallNotPublished,
-                         get_title_index, get_vote_detail, get_vote_listings)
+                         get_members_by_session, get_title_index, get_vote_detail,
+                         get_vote_listings)
 from lib.votes_schema import (encode_member_votes, merge_member_votes,
                               preserved_layer)
 
@@ -323,11 +326,16 @@ def build_session(our_session, by_legis_id, os_index, title_index,
 def parse_args(argv=None):
     p = argparse.ArgumentParser(
         description="Generate ga-member-votes.json from the legis.ga.gov SOAP service.")
-    p.add_argument("output_file", nargs="?", default=DEFAULT_OUTPUT,
+    p.add_argument("output_file", nargs="?", default=None,
                    help="output path (default: %(default)s)")
     p.add_argument("--session", default=None, metavar="TAG",
                    help="one session tag to run (default: ALL configured sessions). "
                         "Must be configured in lib/ga_sessions.py.")
+    p.add_argument("--archive", default=None, metavar="TAG",
+                   help="backfill ONE closed biennium (%s) into a standalone file for "
+                        "`publish_ga_legislators.py archive`. Never merges with, reads or "
+                        "writes the live files; OUT.json defaults to out/archive/."
+                        % ", ".join(ARCHIVE_SESSIONS))
     p.add_argument("--chamber", choices=["House", "Senate", "both"], default="both")
     p.add_argument("--full-refresh", action="store_true",
                    default=os.environ.get("FULL_REFRESH") == "1",
@@ -347,10 +355,112 @@ def parse_args(argv=None):
     return p.parse_args(argv)
 
 
+# ------------------------------------------------------------------------ archive
+
+#: Files an archive run must never write: the live artifacts and their parallel file.
+LIVE_OUTPUTS = (OS_VOTES_FILE, DEFAULT_OUTPUT)
+ARCHIVE_DEFAULT_DIR = "out/archive"
+
+
+class ArchiveIds(dict):
+    """Crosswalk for a closed biennium: the committed id-crosswalk covers current
+    members only, so anyone who has since left would be dropped as unresolved. Fall back
+    to the roster's own `legis-<legisGaGovId>` convention (see build_crosswalk) so every
+    voter keeps a stable id, and a member who is still sitting keeps their roster id."""
+    def get(self, key, default=None):
+        return super().get(key) or "legis-%d" % key
+
+
+def archive_output_ok(path):
+    """False if `path` is one of the live artifacts (compared by resolved path)."""
+    target = os.path.realpath(path)
+    return not any(os.path.realpath(live) == target for live in LIVE_OUTPUTS)
+
+
+def archive_roster(legis_session, ids):
+    """Slim roster for a closed session from Members/GetMembersBySession."""
+    out = []
+    for m in get_members_by_session(legis_session):
+        name = " ".join(x for x in (m["first"], m["middle"], m["last"], m["suffix"]) if x)
+        out.append({"id": ids.get(m["id"]), "legisGaGovId": m["id"], "name": name,
+                    "party": m["party"], "chamber": m["chamber"],
+                    "district": m["district"], "dateVacated": m["dateVacated"]})
+    return out
+
+
+def archive_main(args, chambers, sample):
+    """Fetch ONE closed biennium into a standalone file.
+
+    No preservation, no merge, no overlay: the file is self-contained and the run cannot
+    touch the live data. The Open States overlay and the ga-bills constitutional-amendment
+    list only cover the current biennium, so passage is classified by caption alone and
+    the two-thirds amendment rule is not applied (recorded in metadata, since it can flip
+    a Pass/Fail on those resolutions)."""
+    tag = args.archive
+    if tag not in ARCHIVE_SESSIONS:
+        sys.exit("Error: unknown archive session '%s'. Available: %s."
+                 % (tag, ", ".join(ARCHIVE_SESSIONS)))
+    legis_session = legis_session_id(tag)
+    if legis_session is None:
+        sys.exit("Error: '%s' has no legis id in assets/data/ga-legis-sessions.json." % tag)
+    # args.output_file is None unless the caller named a path, so naming a live file
+    # explicitly is refused below rather than mistaken for "no path given".
+    out_path = args.output_file or os.path.join(ARCHIVE_DEFAULT_DIR, "ga-votes-%s.json" % tag)
+    if not archive_output_ok(out_path):
+        sys.exit("Error: refusing to write the live file %s in archive mode." % out_path)
+    if sample or chambers != CHAMBERS:
+        print("Warning: --sample/--chamber writes a PARTIAL archive file.", file=sys.stderr)
+
+    ids = ArchiveIds(build_crosswalk())
+    print("Archive %s (legis %d): crosswalk %d ids, others fall back to legis-<id>"
+          % (tag, legis_session, len(ids)))
+    title_index = {} if args.no_titles else get_title_index(legis_session)
+    votes_meta, mv, stats = build_session(tag, ids, {}, title_index, chambers=chambers,
+                                          sample=sample)
+    if not votes_meta or not mv:
+        sys.exit("Error: zero roll calls or member rows for %s — refusing to write." % tag)
+    compact, vote_ids = encode_member_votes(mv, list(votes_meta.keys()))
+    output = {
+        "metadata": {
+            "schemaVersion": 2,
+            "archive": True,
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
+            "session": tag,
+            "sessionName": ARCHIVE_SESSIONS[tag],
+            "biennium": ARCHIVE_SESSIONS[tag].split(" ")[0],
+            "legisSessionId": legis_session,
+            "source": "legis.ga.gov SOAP (webservices.legis.ga.gov/GGAServices)",
+            "totalVotes": len(votes_meta),
+            "rollCalls": stats["rollCalls"],
+            "droppedNonPassage": stats["droppedNonPassage"],
+            "unpublished": stats["unpublished"],
+            "partial": bool(sample) or chambers != CHAMBERS,
+            "passageClassification": "caption only (no Open States overlay)",
+            "amendmentRuleApplied": False,
+            "memberIdSource": "id-crosswalk rosterId, else legis-<legisGaGovId>",
+        },
+        "members": archive_roster(legis_session, ids),
+        "voteIds": vote_ids,
+        "votes": votes_meta,
+        "memberVotes": compact,
+    }
+    write_json_atomic(out_path, output, separators=(",", ":"))
+    print("Done. %d bill-votes · %d voting members · %d roster rows -> %s"
+          % (len(votes_meta), len(mv), len(output["members"]), out_path))
+
+
 def main():
     args = parse_args()
     sample = args.sample if args.sample is not None else (5 if args.inspect else None)
     chambers = CHAMBERS if args.chamber == "both" else [args.chamber]
+
+    explicit_output = args.output_file
+    args.output_file = explicit_output or DEFAULT_OUTPUT
+    if args.archive:
+        args.output_file = explicit_output
+        if args.session or args.full_refresh:
+            sys.exit("Error: --archive cannot be combined with --session/--full-refresh.")
+        return archive_main(args, chambers, sample)
 
     if args.session:
         if args.session not in all_session_ids():

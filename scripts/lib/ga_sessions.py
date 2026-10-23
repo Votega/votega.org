@@ -57,6 +57,20 @@ ACTIVE_SESSION = "2026_ss"
 # to the session that was the sole pin at the time. Used once, to migrate the old file.
 UNTAGGED_SESSION = "2025_26"
 
+# CLOSED bienniums that can be backfilled into the sibling-repo archive, tag -> the
+# legislature's description. Deliberately NOT part of SESSION_NAMES: nothing here is
+# iterated by the daily producers or publishers (all_session_ids() and
+# preserved_session_ids() never see it), so adding an entry cannot change what they
+# fetch, merge or publish. Only the explicit archive modes of generate_ga_votes_soap.py
+# and publish_ga_legislators.py read it. Regular sessions only; the legis id resolves
+# from assets/data/ga-legis-sessions.json via regular_session_description().
+ARCHIVE_SESSIONS = {
+    "2023_24": "2023-2024 Regular Session",
+    "2021_22": "2021-2022 Regular Session",
+    "2019_20": "2019-2020 Regular Session",
+    "2017_18": "2017-2018 Regular Session",
+}
+
 # Label for the biennium as a whole, for UI copy ("the 2025-2026 General Assembly").
 BIENNIUM = "2025-2026"
 
@@ -168,7 +182,7 @@ def legis_session_library(session_id):
 
 def session_name(session_id):
     """Human-readable name for a session id (falls back to the id itself)."""
-    return SESSION_NAMES.get(session_id, session_id)
+    return SESSION_NAMES.get(session_id) or ARCHIVE_SESSIONS.get(session_id, session_id)
 
 
 def session_slug(session_id):
@@ -176,7 +190,10 @@ def session_slug(session_id):
     biennium span ('2025_26' -> '2025-2026'); a special session keeps its identifier
     ('2026_ss' -> '2026-ss'), since its name carries only one year. Kept here so both
     publishers derive the same slug from the record's session tag."""
-    name = SESSION_NAMES.get(session_id, "")
+    # An archive (closed-biennium) tag is not in SESSION_NAMES; without this it fell
+    # through to '2023-24', which is not the '2023-2024' directory the archive uses.
+    name = (SESSION_NAMES.get(session_id) or ARCHIVE_SESSIONS.get(session_id)
+            or regular_session_description(session_id))
     m = re.search(r"(\d{4})\D+(\d{4})", name)
     return f"{m.group(1)}-{m.group(2)}" if m else session_id.replace("_", "-")
 
@@ -184,6 +201,11 @@ def session_slug(session_id):
 def all_session_ids():
     """Every session in the current biennium, in display order."""
     return list(SESSION_NAMES)
+
+
+def archive_session_ids():
+    """Closed bienniums available to the explicit archive modes (never iterated daily)."""
+    return list(ARCHIVE_SESSIONS)
 
 
 def preserved_session_ids():
