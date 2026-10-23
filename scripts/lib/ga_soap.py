@@ -50,6 +50,7 @@ ACTION = {
     "GetVotes":                 SVC_NS + "VoteFinder/GetVotes",
     "GetVote":                  SVC_NS + "VoteFinder/GetVote",
     "GetLegislationForSession": SVC_NS + "LegislationSearch/GetLegislationForSession",
+    "GetLegislationDetail":     SVC_NS + "LegislationSearch/GetLegislationDetail",
     # The Session contract is the odd one out: its soapAction is the BARE operation
     # name, with no namespace and no contract prefix. Taken from the WSDL, not guessed.
     "GetSessions":              "GetSessions",
@@ -398,3 +399,15 @@ def get_title_index(legis_session):
         if lid is not None:
             idx[lid] = _text(li, "Caption") or ""
     return idx
+
+
+def get_text_url(legislation_id):
+    """GetLegislationDetail -> the bill's LatestVersion document URL, or "" when the
+    call fails or the bill has no published version. Best-effort, like
+    get_title_index: a missing link renders as no link, never as a wrong one."""
+    root = soap_call(LEG_URL, "GetLegislationDetail",
+                     "<s:LegislationId>%d</s:LegislationId>" % int(legislation_id))
+    if root is None:
+        return ""
+    latest = root.find(".//d:LatestVersion", ns)
+    return (_text(latest, "Url") or "") if latest is not None else ""
