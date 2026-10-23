@@ -54,6 +54,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.ga_roster import injects_for_session  # noqa: E402  (stdlib-only module)
+from lib import ga_suspension_signals  # noqa: E402  (stdlib-only module)
 
 # Georgia's General Assembly has a constitutionally fixed size. These are the
 # seats that EXIST, not the seats that are filled: the count may legitimately sit
@@ -242,9 +243,12 @@ def with_context(new, sections):
     ])]
 
 
-def tier2(new, old):
-    """Material facts and changes, as (heading, [lines]) sections."""
-    sections = []
+def tier2(new, old, signals=()):
+    """Material facts and changes, as (heading, [lines]) sections.
+
+    `signals` are sections from outside the file (executive orders, roll-call votes) that
+    ga_suspension_signals computes; they ride along so they open the same tracking issue."""
+    sections = list(signals)
 
     short = under_strength(new)
     if short:
@@ -360,7 +364,12 @@ def main():
           f"House {len(seated(members, 'House of Representatives'))}/"
           f"{CHAMBER_MAX['House of Representatives']}).")
 
-    sections = tier2(new, old)
+    eo_glob, votes_path = ga_suspension_signals.default_paths(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    signals = ga_suspension_signals.signal_sections(
+        members, ga_suspension_signals.load_orders(eo_glob),
+        ga_suspension_signals.load_member_votes(votes_path))
+    sections = tier2(new, old, signals)
     report = render(args.path, sections)
     if args.report_out:
         with open(args.report_out, "w", encoding="utf-8") as f:
