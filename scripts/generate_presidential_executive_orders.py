@@ -74,8 +74,24 @@ _MONTHS = ("January February March April May June July August September "
 
 def normalize_title(title):
     """Join key: lowercase, alphanumerics only. 'Of'/'of' and curly/straight
-    apostrophes (and the U+FFFD whitehouse.gov sometimes ships for one) agree."""
-    return re.sub(r"[^a-z0-9]", "", (title or "").lower())
+    apostrophes (and the U+FFFD whitehouse.gov sometimes ships for one) agree.
+
+    A phrase of two or more words typed twice running collapses to one, because
+    whitehouse.gov has published titles like 'Program Integrity and Integrity and
+    Interagency Coordination' that the Register's record of the same order lacks, and
+    the exact-title join otherwise strands the order as an expired provisional. A
+    single repeated word is left alone, and the match still needs the signing dates to
+    sit within MATCH_WINDOW_DAYS, so collapsing both sides cannot join two orders."""
+    tokens = re.findall(r"[a-z0-9]+", (title or "").lower())
+    i = 0
+    while i < len(tokens):
+        for n in range(2, (len(tokens) - i) // 2 + 1):
+            if tokens[i:i + n] == tokens[i + n:i + 2 * n]:
+                del tokens[i + n:i + 2 * n]
+                break
+        else:
+            i += 1
+    return "".join(tokens)
 
 
 def clean_title(title):
