@@ -135,9 +135,21 @@ def build_majority(data, cfg):
         ch = m.get("chamber")
         if ch in (None, "", "executive"):
             continue
+        # Same filter as the tracker's loadMembers(): departed members are historical
+        # records kept for vote joins, and the seat is already held by a successor or a
+        # Vacant placeholder, so counting them would inflate the chamber past its seats.
+        if m.get("status") in ("Resigned", "Removed", "Deceased"):
+            continue
         party = (m.get("party") or "").lower()
-        c = chambers.setdefault(ch, {"chamber": ch, "republican": 0, "democratic": 0, "other": 0, "total": 0})
-        if party.startswith("rep"):
+        c = chambers.setdefault(ch, {"chamber": ch, "republican": 0, "democratic": 0, "other": 0,
+                                     "vacant": 0, "suspended": 0, "total": 0})
+        if m.get("status") == "Vacant":
+            c["vacant"] += 1
+        elif m.get("status") == "Suspended":
+            # Keeps the seat but cannot act (Ga. Const. Art. II, Sec. III): counted in the
+            # chamber total, not for either party.
+            c["suspended"] += 1
+        elif party.startswith("rep"):
             c["republican"] += 1
         elif party.startswith("dem"):
             c["democratic"] += 1
