@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-23T08:05:34.273267+00:00",
+    "generatedAt": "2026-10-23T13:56:48.027342+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,28 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 149,
+    "count": 138,
     "windowDays": 45,
-    "entityTagged": 88,
+    "entityTagged": 80,
     "topicCounts": {
-      "elections": 45,
+      "elections": 46,
+      "surveillance": 3,
+      "healthcare": 13,
       "budget": 12,
-      "courts": 19,
+      "courts": 18,
       "education": 13,
-      "healthcare": 16,
-      "surveillance": 2,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000335": {
+      "name": "Keisha R. Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
     "vg-ga-p-000021": {
       "name": "Brad Raffensperger",
       "url": null,
@@ -152,13 +159,6 @@
         "challenger-chris-carr-gov-2026"
       ]
     },
-    "vg-ga-p-000335": {
-      "name": "Keisha R. Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
-    },
     "vg-ga-p-000030": {
       "name": "Burt Jones",
       "url": null,
@@ -221,6 +221,34 @@
     }
   },
   "items": [
+    {
+      "id": "f67be8af8a1b",
+      "title": "There is a thread through data centers, your power bill and this election",
+      "url": "https://www.gpb.org/news/2026/10/23/there-thread-through-data-centers-your-power-bill-and-election",
+      "source": "GPB News",
+      "publishedAt": "2026-10-23T12:49:05+00:00",
+      "snippet": "The forces driving up your Georgia Power bill increasingly have ties to the data center industry. The elected members of the Georgia Public Service Commission have the power to regulate how much of th",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "e8e7700252e6",
+      "title": "Bottoms is vowing to expand Medicaid. But has the longtime Democratic priority lost its zip?",
+      "url": "https://georgiarecorder.com/2026/10/23/bottoms-is-vowing-to-expand-medicaid-but-has-the-longtime-democratic-priority-lost-its-zip/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-23T08:00:22+00:00",
+      "snippet": "Keisha Lance Bottoms stood outside the DeKalb County elections headquarters facing more than 20 reporters and news cameras as early voting got underway earlier this month. Flanked by U.S. Sen. Raphael",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections",
+        "surveillance",
+        "healthcare"
+      ]
+    },
     {
       "id": "17298ccff3d5",
       "title": "Voters will decide whether to expand a tax relief program for Georgia farmers",
@@ -306,29 +334,6 @@
       ]
     },
     {
-      "id": "d5c62b116192",
-      "title": "Federal judge orders Trump administration to halt noncitizen voting probe in Georgia, 8 other states",
-      "url": "https://www.gpb.org/news/2026/10/22/federal-judge-orders-trump-administration-halt-noncitizen-voting-probe-in-georgia-8",
-      "source": "GPB News",
-      "publishedAt": "2026-10-22T18:07:00+00:00",
-      "snippet": "A federal judge has ordered the Trump administration to halt investigations in nine states into whether noncitizens are registered to vote.",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "courts"
-      ]
-    },
-    {
-      "id": "7cb65fde8dad",
-      "title": "Hyundai's South Georgia plant expands its wastewater permit to support 200,000 vehicle production",
-      "url": "https://www.gpb.org/news/2026/10/22/hyundais-south-georgia-plant-expands-its-wastewater-permit-support-200000-vehicle",
-      "source": "GPB News",
-      "publishedAt": "2026-10-22T16:33:00+00:00",
-      "snippet": "Production ramps up at Georgia's largest investment project in history, pushing more treated wastewater into the river.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "32f3ae34cd8a",
       "title": "ACT scores decrease",
       "url": "https://capitol-beat.org/2026/10/act-scores-decrease/?utm_source=rss&utm_medium=rss&utm_campaign=act-scores-decrease",
@@ -339,16 +344,6 @@
       "topics": [
         "education"
       ]
-    },
-    {
-      "id": "c47aa30816cb",
-      "title": "Atlanta Dream beat the Golden State Valkyries 97-71 for a 2-1 lead in the WNBA Finals",
-      "url": "https://www.gpb.org/news/2026/10/22/atlanta-dream-beat-the-golden-state-valkyries-97-71-for-2-1-lead-in-the-wnba-finals",
-      "source": "GPB News",
-      "publishedAt": "2026-10-22T15:55:42+00:00",
-      "snippet": "Angel Reese had 21 points and 12 rebounds to help the Atlanta Dream beat the Golden State Valkyries 97-71 on Wednesday night and take a 2-1 lead in the WNBA Finals.",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "1b64462ec0b2",
@@ -540,19 +535,6 @@
       ]
     },
     {
-      "id": "8950928b9dbf",
-      "title": "Warnock, Ossoff Secure Nearly $12.5 Million to Improve Rail Safety Across Southwest Georgia",
-      "url": "https://www.ossoff.senate.gov/press-releases/warnock-ossoff-secure-nearly-12-5-million-to-improve-rail-safety-across-southwest-georgia/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-20T19:12:13+00:00",
-      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff successfully secured nearly $12.5 million in federal grant funding from the Department of Transportation to improve railway safety in Southwest Georgia",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "2e84c9778956",
       "title": "New Warnock Report Details How Errors in State Medicaid Systems Threaten Health Care Access and Increase Taxpayer Costs",
       "url": "https://www.warnock.senate.gov/newsroom/press-releases/new-warnock-report-details-how-errors-in-state-medicaid-systems-threaten-health-care-access-and-increase-taxpayer-costs/",
@@ -564,20 +546,6 @@
       ],
       "topics": [
         "budget",
-        "healthcare"
-      ]
-    },
-    {
-      "id": "d2cbe95bcc32",
-      "title": "NEW: Georgians Report Prolonged Suffering & Untreated Conditions as a Result of Insurance Companies Denying or Delaying Care Doctors Say They Need",
-      "url": "https://www.ossoff.senate.gov/press-releases/new-georgians-report-prolonged-suffering-untreated-conditions-as-a-result-of-insurance-companies-denying-or-delaying-care-doctors-say-they-need/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-20T18:48:01+00:00",
-      "snippet": "Click here to read Sen. Ossoff’s fourth report from his ongoing investigation into health care costs, loss of services, and delays or denials of needed care Washington, D.C. — Georgians say they are s",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
         "healthcare"
       ]
     },
@@ -594,6 +562,19 @@
       "topics": [
         "budget"
       ]
+    },
+    {
+      "id": "6189b365ebfe",
+      "title": "Warnock, Ossoff Secure Nearly $12.5 Million to Improve Rail Safety Across Southwest Georgia",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-secures-nearly-12-5-million-to-improve-rail-safety-across-southwest-georgia/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-10-20T16:05:39+00:00",
+      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff successfully secured nearly $12.5 million in federal grant funding from the Department of Transportation to improve railway safety in Southwest Georgia",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
     },
     {
       "id": "8e227f6f9151",
@@ -645,19 +626,6 @@
       "topics": [
         "budget"
       ]
-    },
-    {
-      "id": "4f797993acbe",
-      "title": "NEWS: Sens. Ossoff & Rev. Warnock Delivering Over $25 Million in Federal Funding to Upgrade Commercial Vehicle Infrastructure",
-      "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-over-25-million-in-federal-funding-to-upgrade-commercial-vehicle-infrastructure/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-19T13:51:57+00:00",
-      "snippet": "Garden City, Ga. — U.S. Senators Jon Ossoff and Reverend Raphael Warnock today announced new bipartisan infrastructure law funding to upgrade truck and commercial vehicle infrastructure. Today, Sens. ",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "85ffe07018a3",
@@ -1159,18 +1127,6 @@
       "topics": []
     },
     {
-      "id": "c984bd769518",
-      "title": "Sen. Ossoff Statement on 3rd Anniversary of October 7th",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-statement-on-3rd-anniversary-of-october-7th/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-07T12:17:02+00:00",
-      "snippet": "“Three years ago today, Hamas terrorists massacred over 1,000 civilians; kidnapped innocent men, women, and children; and committed brutal atrocities. Today we remember and honor the lives lost, while",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "bd0df96b4d20",
       "title": "Bottoms, Jackson debate healthcare, data centers in sole scheduled forum",
       "url": "https://thecurrentga.org/2026/10/07/bottoms-jackson-debate-healthcare-data-centers-in-sole-scheduled-forum/",
@@ -1342,18 +1298,6 @@
       ]
     },
     {
-      "id": "f3d7fa8b5cd7",
-      "title": "NEWS: U.S. Senate Passes Sen. Ossoff’s Bipartisan Bill to Strengthen Emergency Alerts; Heads to President’s Desk to Become Law",
-      "url": "https://www.ossoff.senate.gov/press-releases/news-u-s-senate-passes-sen-ossoffs-bipartisan-bill-to-strengthen-emergency-alerts-heads-to-presidents-desk-to-become-law/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-01T14:03:45+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff’s bipartisan bill to strengthen emergency alerts during natural disasters has passed the Senate. Last night, the U.S. Senate passed Sens. Ossoff and John Cor",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "60bd9686483f",
       "title": "Gov. Kemp: MEC Plans Approximately 140 New Jobs in Thomson",
       "url": "https://gov.georgia.gov/press-releases/2026-10-01/gov-kemp-mec-plans-approximately-140-new-jobs-thomson",
@@ -1463,20 +1407,6 @@
       ],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "d955e5924ea4",
-      "title": "11Alive: “Gwinnett woman highlights struggles with health insurance authorization”",
-      "url": "https://www.ossoff.senate.gov/press-releases/11alive-gwinnett-woman-highlights-struggles-with-health-insurance-authorization/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-29T14:50:12+00:00",
-      "snippet": "11Alive: “Ossoff reportedly received dozens of reports from Georgia patients, who have reported that prior authorization issues with their insurance companies have resulted in delays and denials of me",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
       ]
     },
     {
@@ -1749,18 +1679,6 @@
       "topics": []
     },
     {
-      "id": "f24761915773",
-      "title": "Sen. Ossoff Working Across the Aisle to Improve Sewer and Stormwater Infrastructure Across Georgia",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-improve-sewer-and-stormwater-infrastructure-across-georgia/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-23T14:42:10+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working to improve sewer and stormwater infrastructure across Georgia. Sen. Ossoff is cosponsoring the bipartisan Clean Water Allotment Modernization Act ",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "a63cecf87395",
       "title": "Carr: Behavioral Health Provider Facing 31-Count Medicaid Fraud Indictment in DeKalb County",
       "url": "https://law.georgia.gov/press-releases/2026-09-23/carr-behavioral-health-provider-facing-31-count-medicaid-fraud-indictment",
@@ -1850,18 +1768,6 @@
       ]
     },
     {
-      "id": "7344344f66e7",
-      "title": "Sen. Ossoff Working to Improve Public Transportation Across Georgia",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-to-improve-public-transportation-across-georgia/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-21T14:37:34+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working with Republicans and Democrats to improve public transportation across Georgia. Sen. Ossoff is cosponsoring the bipartisan Streamline Transit Proj",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "096e1c52a455",
       "title": "Carr: Three Convicted of Gang and Drug Charges in Fulton County Following Operation Heatwave",
       "url": "https://law.georgia.gov/press-releases/2026-09-21/carr-three-convicted-gang-and-drug-charges-fulton-county-following",
@@ -1899,18 +1805,6 @@
       ]
     },
     {
-      "id": "b21246e8613e",
-      "title": "VIDEO: Sen. Ossoff Celebrates Hispanic Heritage Month",
-      "url": "https://www.ossoff.senate.gov/press-releases/video-sen-ossoff-celebrates-hispanic-heritage-month/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-18T19:20:32+00:00",
-      "snippet": "Atlanta, Ga, — U.S. Senator Jon Ossoff is celebrating Hispanic Heritage Month with a new video message. “This is U.S. Senator Jon Ossoff, and it is my pleasure to join with Georgians across our state ",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "38f190eda780",
       "title": "ICYMI: Congresswoman Nikema Williams Speaks and Introduces Fighting Fifth Small Business Owner at “Fighting for an Affordable America”",
       "url": "https://nikemawilliams.house.gov/posts/icymi-congresswoman-nikema-williams-speaks-and-introduces-fighting-fifth-small-business-owner-at-fighting-for-an-affordable-america",
@@ -1934,32 +1828,6 @@
       ],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "bef27bb14747",
-      "title": "NEW: Georgians Report Experiencing Prolonged Pain as Insurance Companies Deny or Delay Care Doctors Say They Need",
-      "url": "https://www.ossoff.senate.gov/press-releases/new-georgians-report-experiencing-prolonged-pain-as-insurance-companies-deny-or-delay-care-doctors-say-they-need/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-18T14:13:37+00:00",
-      "snippet": "Click here to read Sen. Ossoff’s third report from his ongoing investigation into health care costs, loss of services, and delays or denials of needed care Washington, D.C. — A new report from U.S. Se",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "ce32627de272",
-      "title": "Commentary: Bookman: Is Jackson’s plan just another attempt to kick the Medicaid expansion can down the road?",
-      "url": "https://georgiarecorder.com/2026/09/18/bookman-is-jackson-just-another-politician-trying-to-kick-the-medicaid-expansion-can-down-the-road/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-18T08:00:00+00:00",
-      "snippet": "Georgians strongly support Medicaid expansion to provide health insurance to their lower-income neighbors, and they have done so for years.  Yet somehow, their clear policy preference has not yet been",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
       ]
     },
     {
