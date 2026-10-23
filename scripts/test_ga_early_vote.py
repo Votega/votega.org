@@ -82,7 +82,8 @@ def test_prior_cutoff_status_and_statewide_skip():
         ]
         _write(os.path.join(tmp, "COBB.csv"), hdr, rows)
         _write(os.path.join(tmp, "STATEWIDE.csv"), hdr, rows)  # repeats every county
-        out, mail, voted, daily = g.count_prior(tmp, dt.date(2022, 10, 26), dt.date(2022, 11, 8))
+        out, mail, voted, daily, final = g.count_prior(tmp, dt.date(2022, 10, 26), dt.date(2022, 11, 8))
+        assert final == {"COBB": 2}, final  # every accepted ballot with a date, whatever the date
         assert out == {"COBB": 1}, out
         assert voted == {"1", "2"}, voted  # repeat match ignores the cutoff, still only accepted ballots with a return date
 
@@ -175,6 +176,56 @@ def test_emit_is_loud():
         g.emit(["something broke"], ["be careful"])
     out = buf.getvalue()
     assert "CHECK FAILED" in out and "ERROR: something broke" in out and "WARNING: be careful" in out
+
+
+def test_results_json_normalizes_method_labels_and_requires_159_counties():
+    import json
+    def county(i, labels):
+        return {"name": f"{chr(65 + i // 26)}{chr(65 + i % 26)} County", "ballotItems": [{"name": "Governor", "ballotOptions": [
+            {"groupResults": [{"groupName": labels[0], "voteCount": 6}, {"groupName": labels[1], "voteCount": 2},
+                              {"groupName": labels[2], "voteCount": 4}, {"groupName": "Provisional", "voteCount": 1}]}]}]}
+    for labels in (("Advanced Voting", "Absentee by Mail", "Election Day"),
+                   ("Advance Voting Votes", "Absentee by Mail Votes", "Election Day Votes")):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "e.json")
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump({"localResults": [county(i, labels) for i in range(159)]}, f)
+            res, contest = g.read_results_json(path)
+            assert contest == "Governor" and len(res) == 159
+            assert res["AA"] == {"early": 6, "mail": 2, "eday": 4, "prov": 1, "total": 13}, res["AA"]
+    with tempfile.TemporaryDirectory() as tmp:
+        path = os.path.join(tmp, "e.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump({"localResults": [county(i, labels) for i in range(158)]}, f)
+        try:
+            g.read_results_json(path)
+        except SystemExit:
+            return
+        raise AssertionError("158 counties must not load")
+
+
+def test_check_output_past_year_gap_gate():
+    gap = [{"county": "Fulton", "file": 133278, "official": 305815}]
+    undeclared = _out(**{"metadata.pastYearGaps": {"2022": gap}})
+    errs, _ = _check(undeclared)
+    assert any("3% short" in e and "Fulton" in e for e in errs), errs
+    declared = _out(**{"metadata.pastYearGaps": {"2022": gap},
+                       "metadata.comparisons": {"2022": {"electionDate": "2022-11-08", "cutoff": "2022-10-22",
+                                                         "daysBefore": 17, "lastCompleteDate": "2022-10-22"}}})
+    declared["statewide"]["prior"] = {"2022": 6}
+    declared["daily"]["2022"] = [[17, 0, 6]]
+    errs, warns = _check(declared)
+    assert errs == [] and any("last complete day" in w for w in warns), (errs, warns)
+    unneeded = dict(declared); unneeded["metadata"] = dict(declared["metadata"]); unneeded["metadata"]["pastYearGaps"] = {"2022": []}
+    errs, warns = _check(unneeded)
+    assert errs == [] and any("still needed" in w for w in warns), (errs, warns)
+
+
+def test_check_output_point_must_match_headline_when_same_day():
+    bad = _out(**{"statewide.atPoint": {"2022": {"ballots": 9}}, "metadata.comparisons": {"2022": {
+        "electionDate": "2022-11-08", "cutoff": "2022-10-26", "daysBefore": 13}}, "metadata.daysBeforeElection": 13})
+    errs, _ = _check(bad)
+    assert any("comparison point" in e for e in errs), errs
 
 
 def test_validate_flags_ballots_above_active():

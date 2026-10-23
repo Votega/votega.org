@@ -54,6 +54,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
   table.ev-ro th { padding-right: 18px; }
   table.ev-ro th i { display: inline-block; width: 18px; height: 0; border-top: 3px solid; margin-right: 8px; vertical-align: middle; }
   table.ev-ro td { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ev-legend small, table.ev-ro th small { color: var(--color-text-muted); font-size: .8em; }
   .ev-ro-sub { color: var(--color-text-muted); }
   table.ev-ro i.s-2022 { border-color: var(--chart-pine); } table.ev-ro i.s-2024 { border-color: var(--chart-gold); } table.ev-ro i.s-now { border-color: var(--color-accent); }
   .s-2022 { color: var(--chart-pine); stroke: var(--chart-pine); }
@@ -103,17 +104,22 @@ share-description: "How many Georgians have already voted in the November 3, 202
 {% if ev %}
 <p>
   Ballots already cast in Georgia's November 3, 2026 general election, as of
-  <strong>{{ ev.metadata.asOf | date: "%B %-d, %Y" }}</strong>, compared with the same point
-  ({{ ev.metadata.daysBeforeElection }} days before election day) in past elections.
+  <strong>{{ ev.metadata.asOf | date: "%B %-d, %Y" }}</strong>, compared with past elections at the same number of
+  days before election day:
+  {%- for y in ev.metadata.comparisons %} {{ y[0] }} at {{ y[1].daysBefore }} days out{% unless forloop.last %};{% endunless %}{% endfor %}.
+  {%- for y in ev.metadata.comparisons %}{% if y[1].lastCompleteDate %}
+  {{ y[0] }} is compared earlier than the other years ({{ y[1].daysBefore }} days out, {{ y[1].lastCompleteDate | date: "%B %-d" }}) because the Secretary of State's {{ y[0] }} absentee file is missing most ballots from some large counties after that day.
+  {%- endif %}{% endfor %}
 </p>
 
 <div class="ev-stats">
   <div class="ev-stat">
     <span class="n" data-n="{{ sw.ballots }}">{{ sw.ballots }}</span><span class="l">ballots cast</span>
     <span class="ev-cmps">
-    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = sw.prior[yk] %}
-      {%- assign diff = sw.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 -%}
-      {% include ev-cmp.html delta=diff unit="%" year=yk detail=p n=true %}
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = sw.prior[yk] %}{% assign pt = sw.atPoint[yk] %}
+      {%- assign diff = pt.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 -%}
+      {%- capture sfx %} at {{ y[1].daysBefore }} days out{% endcapture -%}
+      {% include ev-cmp.html delta=diff unit="%" year=yk detail=p n=true suffix=sfx %}
     {%- endfor %}
     </span>
   </div>
@@ -122,8 +128,8 @@ share-description: "How many Georgians have already voted in the November 3, 202
     <span class="ev-cmps">
     {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.priorPct[yk] %}
       {%- assign pp = sw.priorPct[yk] -%}
-      {%- assign diff = sw.turnoutPct | minus: pp | round: 1 -%}
-      {%- capture pdetail %}{{ pp }}%{% endcapture -%}
+      {%- assign diff = sw.atPoint[yk].pct | minus: pp | round: 1 -%}
+      {%- capture pdetail %}{{ pp }}% at {{ y[1].daysBefore }} days out{% endcapture -%}
       {% include ev-cmp.html delta=diff unit=" pts" year=yk detail=pdetail %}
     {%- endif %}{% endfor %}
     </span>
@@ -132,12 +138,18 @@ share-description: "How many Georgians have already voted in the November 3, 202
     <span class="n" data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</span><span class="l">early in person</span>
     <span class="ev-cmps">
     {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = sw.priorInPerson[yk] %}
-      {%- assign diff = sw.inPerson | minus: p | times: 100.0 | divided_by: p | round: 1 -%}
-      {% include ev-cmp.html delta=diff unit="%" year=yk detail=p n=true %}
+      {%- assign diff = sw.atPoint[yk].inPerson | minus: p | times: 100.0 | divided_by: p | round: 1 -%}
+      {%- capture sfx %} at {{ y[1].daysBefore }} days out{% endcapture -%}
+      {% include ev-cmp.html delta=diff unit="%" year=yk detail=p n=true suffix=sfx %}
     {%- endfor %}
     </span>
   </div>
 </div>
+
+{%- assign pres_year = "" -%}{%- assign mid_year = "" -%}
+{%- for y in ev.metadata.comparisons -%}{%- assign yr_rem = y[0] | plus: 0 | modulo: 4 -%}{%- if yr_rem == 0 -%}{%- assign pres_year = y[0] -%}{%- else -%}{%- assign mid_year = y[0] -%}{%- endif -%}{%- endfor -%}
+{%- assign cur_rem = cur_year | plus: 0 | modulo: 4 -%}
+{% if pres_year != "" and cur_rem != 0 %}<p class="ev-note">{{ pres_year }} was a presidential election year, which usually draws far more voters than a midterm like {{ cur_year }}, so part of the gap with {{ pres_year }} is expected.{% if mid_year != "" %} {{ mid_year }}, also a midterm, is the closer comparison.{% endif %}</p>{% endif %}
 
 <h2 class="ev-h2">The pace of early voting</h2>
 <p class="ev-sub">Ballots accepted each day, lined up by the number of days before election day. Hover or tap the chart to read a day.</p>
@@ -156,6 +168,9 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <div class="ev-legend" id="ev-legend"></div>
   <svg class="ev-svg" id="ev-svg" viewBox="0 0 640 320" role="img" aria-labelledby="ev-svg-t"><title id="ev-svg-t">Ballots accepted by days before election day, for each election year</title></svg>
   <p class="ev-readout" id="ev-readout" aria-live="polite"></p>
+  {%- for y in ev.metadata.comparisons %}{% if y[1].lastCompleteDate %}
+  <p class="ev-note" style="margin-top:4px">{{ y[0] }} stops at {{ y[1].lastCompleteDate | date: "%B %-d" }} ({{ y[1].lastCompleteDaysBefore }} days before election day): the Secretary of State's {{ y[0] }} absentee file is missing most ballots from some large counties after that day, so later days are not drawn.</p>
+  {%- endif %}{% endfor %}
   <p class="ev-note" style="margin-top:4px">Days are counted back from election day, so a given day lines up across years but not always by weekday. Mail ballots keep arriving through election day; early in-person voting ends Friday, October 30.</p>
 </div>
 
@@ -175,8 +190,9 @@ share-description: "How many Georgians have already voted in the November 3, 202
       <th data-type="num"><button type="button">Active voters</button></th>
       <th data-type="num"><button type="button">Turnout</button></th>
       <th data-type="num"><button type="button">Mail share</button></th>
-      {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">Also voted early in {{ y[0] }}</button></th>{% endfor %}
-      {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">{{ y[0] }} (same point)</button></th>
+      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.earlyShare[yk] %}<th data-type="num"><button type="button">Early share of {{ yk }} turnout</button></th>{% endif %}{% endfor %}
+      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.repeatPct[yk] %}<th data-type="num"><button type="button">Also voted early in {{ yk }}</button></th>{% endif %}{% endfor %}
+      {% for y in ev.metadata.comparisons %}<th data-type="num"><button type="button">{{ y[0] }} ({{ y[1].daysBefore }} days out)</button></th>
       <th data-type="num"><button type="button">vs. {{ y[0] }}</button></th>{% endfor %}
     </tr>
   </thead>
@@ -188,9 +204,10 @@ share-description: "How many Georgians have already voted in the November 3, 202
       <td data-f="n" data-v="{{ c.active }}">{{ c.active }}</td>
       <td data-v="{{ c.turnoutPct }}">{{ c.turnoutPct }}%</td>
       <td data-v="{{ c.mailPct }}">{{ c.mailPct }}%</td>
-      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}<td data-v="{{ c.repeatPct[yk] }}">{{ c.repeatPct[yk] }}%</td>{% endfor %}
+      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.earlyShare[yk] %}<td data-v="{{ c.earlyShare[yk] }}">{{ c.earlyShare[yk] }}%</td>{% endif %}{% endfor %}
+      {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.repeatPct[yk] %}<td data-v="{{ c.repeatPct[yk] }}">{{ c.repeatPct[yk] }}%</td>{% endif %}{% endfor %}
       {% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = c.prior[yk] %}<td data-f="n" data-v="{{ p }}">{{ p }}</td>
-      {% if p > 0 %}{% assign diff = c.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 %}<td data-v="{{ diff }}">{% if diff > 0 %}+{% endif %}{{ diff }}%</td>{% else %}<td data-v="">&ndash;</td>{% endif %}{% endfor %}
+      {% if p > 0 %}{% assign diff = c.atPoint[yk] | minus: p | times: 100.0 | divided_by: p | round: 1 %}<td data-v="{{ diff }}">{% if diff > 0 %}+{% endif %}{{ diff }}%</td>{% else %}<td data-v="">&ndash;</td>{% endif %}{% endfor %}
     </tr>
     {% endfor %}
   </tbody>
@@ -198,7 +215,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
 </div>
 
 <p class="ev-note">
-  Turnout is ballots cast divided by <em>active</em> registered voters. "Also voted early" is the share of this year's early and absentee voters who also cast an accepted early or absentee ballot in that election (any date); it can't tell a first-time voter from someone who voted on election day.
+  Turnout is ballots cast divided by <em>active</em> registered voters. "Early share of turnout" is the share of a past election's votes cast in advance or by mail, from the Secretary of State's results export; it reflects each year's rules, early voting sites and type of election, so 2022 and 2024 are not directly comparable. "Also voted early" is the share of this year's early and absentee voters who also cast an accepted early or absentee ballot in that election (any date); it can't tell a first-time voter from someone who voted on election day, and it is left out for any year whose absentee file is incomplete.
   Past years count accepted ballots returned by the same number of days before each election day ({% for y in ev.metadata.comparisons %}{{ y[0] }}: {{ y[1].cutoff | date: "%B %-d" }}{% unless forloop.last %}; {% endunless %}{% endfor %}).
 </p>
 
@@ -206,7 +223,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <div class="ev-stat ev-stat-solo">
     <span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">mail or electronic, accepted</span>
     {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}
-    <span class="d"><span data-n="{{ sw.priorMail[yk] }}">{{ sw.priorMail[yk] }}</span> in {{ yk }}</span>
+    <span class="d"><span data-n="{{ sw.priorMail[yk] }}">{{ sw.priorMail[yk] }}</span> in {{ yk }} at {{ ev.metadata.comparisons[yk].daysBefore }} days out</span>
     {%- endfor %}
   </div>
 </div>
@@ -335,23 +352,28 @@ share-description: "How many Georgians have already voted in the November 3, 202
   var NOW = '{{ cur_year }}';
   var SAME = {{ ev.metadata.daysBeforeElection }};
   var AS_OF = '{{ ev.metadata.asOf | date: "%B %-d" }}';
+  var CMP = {{ ev.metadata.comparisons | jsonify }};  // per past year: the day it is compared at, and where its file stops being complete
+  function endDay(y) { return y === NOW ? SAME : ((CMP[y] && CMP[y].lastCompleteDaysBefore) || 0); }
+  function pointDay(y) { return y === NOW ? SAME : CMP[y].daysBefore; }
+  function shortDate(iso) { return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
   var svg = document.getElementById('ev-svg');
   if (!svg || !DAILY[NOW]) return;
   var years = Object.keys(DAILY).sort();
   var cls = function (y) { return y === NOW ? 's-now' : 's-' + y; };
+  var kind = function (y) { return (+y % 4 === 0) ? 'presidential' : 'midterm'; }  // US presidential elections fall on years divisible by 4
   var type = 'all', view = 'cum';
   var X0 = 24, W = 640, H = 320, L = 52, R = 14, T = 14, B = 36;
   var NS = 'http://www.w3.org/2000/svg';
 
   document.getElementById('ev-legend').innerHTML = years.map(function (y) {
-    return '<span><i class="' + cls(y) + '"></i>' + y + (y === NOW ? ' (so far)' : '') + '</span>';
+    return '<span><i class="' + cls(y) + '"></i>' + y + ' <small>' + kind(y) + (y === NOW ? ', so far' : (CMP[y] && CMP[y].lastCompleteDate ? ', through ' + shortDate(CMP[y].lastCompleteDate) : '')) + '</small></span>';
   }).join('');
 
   // value series per year: {daysBefore: n}; running totals include everything before the left edge
   function series(y) {
     var out = {}, run = 0, rows = {};
     DAILY[y].forEach(function (r) { rows[r[0]] = r; });
-    var last = y === NOW ? SAME : 0;
+    var last = endDay(y);
     for (var d = 45; d >= last; d--) {
       var r = rows[d] || [d, 0, 0];
       var v = type === 'ip' ? r[1] : type === 'mail' ? r[2] : r[1] + r[2];
@@ -395,13 +417,23 @@ share-description: "How many Georgians have already voted in the November 3, 202
     var tg = el('g', { 'class': 'today' });
     tg.appendChild(el('line', { x1: xs(SAME), x2: xs(SAME), y1: T, y2: H - B, 'class': 'guide' }));
     tg.appendChild(el('text', { x: xs(SAME) + 4, y: T + 10 }, AS_OF));
+    // a year compared on an earlier day gets its own marker, so the dots are read at the right place
+    years.forEach(function (y) {
+      if (y === NOW || pointDay(y) === SAME) return;
+      tg.appendChild(el('line', { x1: xs(pointDay(y)), x2: xs(pointDay(y)), y1: T, y2: H - B, 'class': 'guide' }));
+      tg.appendChild(el('text', { x: xs(pointDay(y)) - 4, y: T + 10, 'text-anchor': 'end' }, y + ' compared here'));
+    });
     svg.appendChild(tg);
     years.forEach(function (y) {
       var pts = [];
-      for (var d = X0; d >= (y === NOW ? SAME : 0); d--) pts.push(xs(d).toFixed(1) + ',' + ys(S[y][d]).toFixed(1));
+      for (var d = X0; d >= endDay(y); d--) pts.push(xs(d).toFixed(1) + ',' + ys(S[y][d]).toFixed(1));
       svg.appendChild(el('polyline', { points: pts.join(' '), 'class': 'ln ' + cls(y) + (y === NOW ? ' now' : '') }));
-      var sd = SAME;
-      svg.appendChild(el('circle', { cx: xs(sd), cy: ys(S[y][sd]), r: y === NOW ? 5 : 4, 'class': cls(y), fill: 'currentColor', stroke: 'none' }));
+      var days = [pointDay(y)];
+      if (y === NOW) years.forEach(function (o) { if (o !== NOW && days.indexOf(pointDay(o)) < 0) days.push(pointDay(o)); });
+      days.forEach(function (sd) {
+        if (S[y][sd] == null) return;
+        svg.appendChild(el('circle', { cx: xs(sd), cy: ys(S[y][sd]), r: y === NOW ? 5 : 4, 'class': cls(y), fill: 'currentColor', stroke: 'none' }));
+      });
     });
     guide = el('line', { y1: T, y2: H - B, 'class': 'guide', visibility: 'hidden' });
     svg.appendChild(guide);
@@ -412,7 +444,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
     // newest year on top, so the rows read 2026, 2024, 2022
     var rows = years.slice().reverse().map(function (y) {
       var v = S[y][d];
-      return '<tr><th scope="row"><i class="' + cls(y) + '"></i>' + y + '</th><td>' + (v == null ? '&ndash;' : fmt(v)) + '</td></tr>';
+      return '<tr><th scope="row"><i class="' + cls(y) + '"></i>' + y + ' <small>' + kind(y) + '</small></th><td>' + (v == null ? (y !== NOW && d < endDay(y) ? '<span class="ev-ro-sub">file incomplete</span>' : '&ndash;') : fmt(v)) + '</td></tr>';
     }).join('');
     document.getElementById('ev-readout').innerHTML =
       '<strong>' + d + ' day' + (d === 1 ? '' : 's') + ' before election day</strong> <span class="ev-ro-sub">(' + label + ')</span>' +

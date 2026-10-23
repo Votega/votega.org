@@ -145,6 +145,7 @@ def read_current(directory, election, as_of=None):
 
     counties = {}
     daily = {}
+    county_daily = {}  # countyKey -> {daysBefore: [inPerson, mail]}, to count 2026 at an earlier comparison point
     voters = {}
     q["duplicateRecords"] = q["rows"] - len(best)  # extra rows for voters already seen (a cancelled and a re-issued ballot, say)
     q["strayAccepted"] = 0     # accepted ballots with no usable return date, or one after the as-of date
@@ -160,6 +161,7 @@ def read_current(directory, election, as_of=None):
                 d = _days_before(ret, election)
                 if d is not None:
                     daily.setdefault(d, [0, 0])[0] += 1
+                    county_daily.setdefault(k, {}).setdefault(d, [0, 0])[0] += 1
             continue
         if group == "accepted":
             if not ret or ret > as_of:
@@ -169,6 +171,7 @@ def read_current(directory, election, as_of=None):
             d = _days_before(ret, election)
             if d is not None:
                 daily.setdefault(d, [0, 0])[1] += 1
+                county_daily.setdefault(k, {}).setdefault(d, [0, 0])[1] += 1
     for k, r in records.items():
         c = counties.setdefault(k, {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}})
         for g, n in r.items():
@@ -177,14 +180,16 @@ def read_current(directory, election, as_of=None):
         if ret and ret <= as_of:  # a stray return date (the file has a few years out) is not a counted ballot
             c = counties.setdefault(k, {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}})
             c["pipeline"]["accepted"] += 1
-    return {"as_of": as_of, "counties": counties, "daily": daily, "voters": voters, "quality": q}
+    return {"as_of": as_of, "counties": counties, "daily": daily, "county_daily": county_daily,
+            "voters": voters, "quality": q}
 
 
 def count_prior(directory, cutoff, election=None):
     """Accepted ballots returned on or before `cutoff`, per county, deduped by voter id.
 
     -> (totals {countyKey: n}, mail {countyKey: n of absentee/electronic},
-        voted {voterId, ...}, daily {daysBefore: [inPerson, mail]})
+        voted {voterId, ...}, daily {daysBefore: [inPerson, mail]},
+        final {countyKey: n}  every accepted ballot with a return date, whatever the date)
     `voted` is every voter with an accepted ballot in that election REGARDLESS of date, for the
     repeat-voter match ("voted early or absentee in 2024"); it never leaves memory.
     `daily` covers the whole early period up to election day, not just up to the cutoff, so the
@@ -196,6 +201,7 @@ def count_prior(directory, cutoff, election=None):
     out = {}
     mail = {}
     daily = {}
+    final = {}
     for path in _csv_paths(directory, "prior-year"):
         with open(path, newline="", encoding="utf-8-sig") as f:
             for row in csv.DictReader(f):
@@ -205,6 +211,9 @@ def count_prior(directory, cutoff, election=None):
                 if not ret:
                     continue
                 vid = row["Voter Registration #"]
+                k = key(row["County"])
+                if vid not in voted:
+                    final[k] = final.get(k, 0) + 1
                 voted.add(vid)
                 try:
                     rd = parse_date(ret)
@@ -220,11 +229,55 @@ def count_prior(directory, cutoff, election=None):
                 if rd > cutoff:
                     continue
                 seen.add(vid)
-                k = key(row["County"])
                 out[k] = out.get(k, 0) + 1
                 if not inp:
                     mail[k] = mail.get(k, 0) + 1
-    return out, mail, voted, daily
+    return out, mail, voted, daily, final
+
+
+TOP_TICKET = ("President", "Governor", "US Senate")  # the contest every voter sees, in order of preference
+
+
+def _method(group_name):
+    """Normalize the SoS results export's voting-method labels, which change by year
+    ("Advanced Voting" in 2024, "Advance Voting Votes" in 2022)."""
+    n = group_name.lower()
+    if "advance" in n:
+        return "early"
+    if "absentee" in n:
+        return "mail"
+    if "election day" in n:
+        return "eday"
+    return "prov"
+
+
+def read_results_json(path):
+    """SoS results export (export-YYYYNovGen.json) -> ({countyKey: {early, mail, eday, prov, total}}, contest).
+
+    Votes by voting method for the top-of-ticket race, final counts. Used to check a past-year absentee
+    file against the official results, and for each county's early share of final turnout."""
+    with open(path, encoding="utf-8") as f:
+        counties = (json.load(f).get("localResults")) or []
+    if not counties:
+        sys.exit(f"{path}: no county results (localResults) in this export")
+    for prefix in TOP_TICKET:
+        out = {}
+        for c in counties:
+            item = next((b for b in c["ballotItems"] if b["name"].startswith(prefix)), None)
+            if item is None:
+                out = None
+                break
+            g = {"early": 0, "mail": 0, "eday": 0, "prov": 0}
+            for o in item["ballotOptions"]:
+                for gr in o.get("groupResults") or []:
+                    g[_method(gr["groupName"])] += gr["voteCount"]
+            g["total"] = sum(g.values())
+            out[key(c["name"].replace(" County", ""))] = g
+        if out:
+            if len(out) != 159:
+                sys.exit(f"{path}: {len(out)} counties for {prefix}, expected 159")
+            return out, prefix
+    sys.exit(f"{path}: none of {TOP_TICKET} is on every county's ballot")
 
 
 def match_repeat(voter_county, voted):
@@ -256,7 +309,7 @@ def read_registration(path):
     return out
 
 
-def build(current, registration, priors, priors_mail=None, repeat=None):
+def build(current, registration, priors, priors_mail=None, repeat=None, at_point=None, early_share=None):
     """`current` is read_current()'s `counties`; priors/priors_mail/repeat are {year: {countyKey: n}}."""
     empty = {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}}
     counties = []
@@ -279,6 +332,12 @@ def build(current, registration, priors, priors_mail=None, repeat=None):
                 str(y): round(100.0 * priors_mail[y].get(k, 0) / counts[k], 1) if counts.get(k) else None
                 for y, counts in priors.items()
             }
+        if at_point:
+            # this year's ballots at each past year's comparison point (it differs from the headline when a past
+            # year can only be compared at an earlier day)
+            rec["atPoint"] = {str(y): sum(c.get(k, [0, 0])) for y, c in at_point.items()}
+        if early_share:
+            rec["earlyShare"] = {str(y): c.get(k) for y, c in early_share.items()}
         if repeat:
             # share of this county's 2026 ballots cast by someone who also voted early/absentee in that year
             rec["repeatPct"] = {
@@ -331,6 +390,25 @@ def check_output(data, prev=None, today=None):
         s = sum(r[1] + r[2] for r in data["daily"].get(y, []) if r[0] >= cutoff_days)
         if s != total:
             errors.append(f"{y}: daily series up to the cutoff adds up to {s:,} but the same-point total is {total:,}")
+
+    # a comparison made at this year's own latest day must equal the headline
+    for y, meta in md["comparisons"].items():
+        pt = sw.get("atPoint", {}).get(y)
+        if pt and meta.get("daysBefore") == md["daysBeforeElection"] and pt["ballots"] != sw["ballots"]:
+            errors.append(f"{y}: this year's ballots at the comparison point ({pt['ballots']:,}) differ from the headline ({sw['ballots']:,})")
+
+    # a past year's absentee file must agree with that election's official results, county by county
+    for y, short in md.get("pastYearGaps", {}).items():
+        declared = "lastCompleteDate" in md["comparisons"].get(y, {})
+        names = ", ".join(f"{g['county']} ({g['file']:,} in the file vs {g['official']:,} official)" for g in short[:6])
+        if short and not declared:
+            errors.append(f"{y}: the absentee file is more than 3% short of the official early + mail votes in {len(short)} counties: {names}. "
+                          f"Get a complete file, or declare the last complete day with --prior-last-good")
+        elif short:
+            warnings.append(f"{y}: {len(short)} counties are short in the absentee file ({names}); the comparison is cut at "
+                            f"{md['comparisons'][y]['lastCompleteDate']}, the last complete day, and the repeat-voter figure is omitted")
+        elif declared:
+            warnings.append(f"{y}: declared incomplete after {md['comparisons'][y]['lastCompleteDate']}, but no county is more than 3% off the official totals: is the cut still needed?")
 
     if as_of > election:
         errors.append(f"as-of date {as_of} is after election day {election}")
@@ -404,6 +482,11 @@ def main(argv=None):
     ap.add_argument("--as-of", default=None, help="YYYY-MM-DD the file runs through (default: derived)")
     ap.add_argument("--election-date", required=True)
     ap.add_argument("--prior", action="append", default=[], help="YEAR=DIR:ELECTION_DATE")
+    ap.add_argument("--prior-last-good", action="append", default=[],
+                    help="YEAR=YYYY-MM-DD last day that year's absentee file is complete; later days are not used")
+    ap.add_argument("--prior-json", action="append", default=[],
+                    help="YEAR=path to that year's SoS results export (export-YYYYNovGen.json): cross-checks the "
+                         "absentee file and gives each county's early share of final turnout")
     ap.add_argument("--prior-active", action="append", default=[],
                     help="YEAR=N statewide active voters on that election day (SoS turnout dashboard)")
     ap.add_argument("--out", default=OUT)
@@ -416,17 +499,63 @@ def main(argv=None):
     days_before = (election - as_of).days
     registration = read_registration(a.registration)
 
-    priors, priors_mail, repeat, prior_meta, prior_daily = {}, {}, {}, {}, {}
+    last_good = {}
+    for spec in a.prior_last_good:
+        year, d = spec.split("=", 1)
+        last_good[year] = dt.date.fromisoformat(d)
+    results = {}
+    for spec in a.prior_json:
+        year, path = spec.split("=", 1)
+        results[year] = read_results_json(os.path.expanduser(path))
+
+    priors, priors_mail, repeat, prior_meta, prior_daily, prior_final = {}, {}, {}, {}, {}, {}
     for spec in a.prior:
         year, rest = spec.split("=", 1)
         directory, edate = rest.rsplit(":", 1)
         pe = dt.date.fromisoformat(edate)
         cutoff = pe - dt.timedelta(days=days_before)
-        totals, mail, voted, daily = count_prior(os.path.expanduser(directory), cutoff, pe)
-        priors[year], priors_mail[year], prior_daily[year] = totals, mail, daily
-        repeat[year] = match_repeat(cur["voters"], voted)
+        meta = {"electionDate": edate}
+        if year in last_good and last_good[year] < cutoff:
+            # this year's file is only complete up to a day before the same-point cutoff: compare there instead
+            cutoff = last_good[year]
+            meta["lastCompleteDate"] = cutoff.isoformat()
+            meta["lastCompleteDaysBefore"] = (pe - cutoff).days
+        meta["cutoff"] = cutoff.isoformat()
+        meta["daysBefore"] = (pe - cutoff).days
+        totals, mail, voted, daily, final = count_prior(os.path.expanduser(directory), cutoff, pe)
+        if "lastCompleteDaysBefore" in meta:  # the series stops where the file stops being complete
+            daily = {d: v for d, v in daily.items() if d >= meta["lastCompleteDaysBefore"]}
+        priors[year], priors_mail[year], prior_daily[year], prior_final[year] = totals, mail, daily, final
+        if "lastCompleteDaysBefore" not in meta:
+            repeat[year] = match_repeat(cur["voters"], voted)
+        # (an incomplete file would undercount who voted before, so no repeat-voter figure for that year)
         del voted  # millions of voter ids: drop as soon as the match is done
-        prior_meta[year] = {"electionDate": edate, "cutoff": cutoff.isoformat()}
+        prior_meta[year] = meta
+
+    # this year's ballots at each past year's comparison point, per county
+    at_point = {}
+    for year, meta in prior_meta.items():
+        dmin = meta["daysBefore"]
+        at_point[year] = {k: [sum(v[0] for d, v in days.items() if d >= dmin),
+                              sum(v[1] for d, v in days.items() if d >= dmin)]
+                          for k, days in cur["county_daily"].items()}
+    early_share = {}
+    for year, (res, contest) in results.items():
+        early_share[year] = {k: round(100.0 * (g["early"] + g["mail"]) / g["total"], 1) if g["total"] else None
+                             for k, g in res.items()}
+
+    # past-year absentee file vs the official results: which counties are short?
+    past_gaps = {}
+    for year, (res, contest) in results.items():
+        if year not in prior_final:
+            continue
+        short = []
+        for k, g in res.items():
+            official = g["early"] + g["mail"]
+            have = prior_final[year].get(k, 0)
+            if official and abs(have - official) / official > 0.03:
+                short.append({"county": display(k), "file": have, "official": official})
+        past_gaps[year] = short
 
     for spec in a.prior_active:
         year, n = spec.split("=", 1)
@@ -434,7 +563,7 @@ def main(argv=None):
             sys.exit(f"--prior-active {year}: no matching --prior")
         prior_meta[year]["activeStatewide"] = int(n)
 
-    counties = build(cur["counties"], registration, priors, priors_mail, repeat)
+    counties = build(cur["counties"], registration, priors, priors_mail, repeat, at_point, early_share)
     errs = validate(counties, cur["counties"], registration)
     if errs:
         print("\n".join(errs), file=sys.stderr)
@@ -481,6 +610,7 @@ def main(argv=None):
             "count": len(counties),
             "comparisons": prior_meta,
             "quality": {k: v for k, v in cur["quality"].items() if k != "rows"},
+            "pastYearGaps": past_gaps,
         },
         "statewide": {
             "ballots": ballots,
@@ -502,6 +632,21 @@ def main(argv=None):
             "metro": metro_share,
             "mailPipeline": pipeline,
             "prior": {y: sum(c["prior"][y] for c in counties) for y in priors},
+            # this year's own ballots at each past year's comparison point (the headline is as of the file's last day)
+            "atPoint": {
+                y: {"ballots": sum(ip + m for ip, m in pts.values()),
+                    "inPerson": sum(ip for ip, m in pts.values()),
+                    "mail": sum(m for ip, m in pts.values()),
+                    "pct": round(100.0 * sum(ip + m for ip, m in pts.values()) / active, 1) if active else None}
+                for y, pts in at_point.items()
+            },
+            # share of each past election's final votes cast early or by mail (SoS results export)
+            "earlyShare": {
+                y: {"pct": round(100.0 * sum(g["early"] + g["mail"] for g in res.values())
+                                 / sum(g["total"] for g in res.values()), 1),
+                    "contest": contest}
+                for y, (res, contest) in results.items()
+            },
             "priorPct": {
                 y: round(100.0 * sum(c["prior"][y] for c in counties) / m["activeStatewide"], 1)
                 for y, m in prior_meta.items() if m.get("activeStatewide")

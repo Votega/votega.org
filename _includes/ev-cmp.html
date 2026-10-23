@@ -3,10 +3,10 @@
   guide: green (success) = ahead, amber (warning) = behind, neutral = level, and every state carries an
   icon AND a word, never color alone. Red is not used: being behind is not an error.
       {% include ev-cmp.html delta="11.1" unit="%" year="2022" detail="1,197,404" %}
-  `delta` is the signed difference as a plain number; `detail` (optional) is the past year's own value; n=true formats it with thousands separators.
+  `delta` is the signed difference as a plain number; `detail` (optional) is the past year's own value; n=true formats it with thousands separators; `suffix` (optional) is plain text after it, such as " at 17 days out".
 {%- endcomment -%}
 {%- assign cmp_v = include.delta | plus: 0.0 -%}
 {%- if cmp_v > 0 -%}{%- assign cmp_dir = "up" -%}{%- assign cmp_word = "ahead of" -%}{%- assign cmp_icon = "fa-arrow-up" -%}
 {%- elsif cmp_v < 0 -%}{%- assign cmp_dir = "down" -%}{%- assign cmp_word = "behind" -%}{%- assign cmp_icon = "fa-arrow-down" -%}
 {%- else -%}{%- assign cmp_dir = "flat" -%}{%- assign cmp_word = "level with" -%}{%- assign cmp_icon = "fa-equals" -%}{%- endif -%}
-<span class="ev-cmp-row"><span class="ev-cmp is-{{ cmp_dir }}"><i class="fa-solid {{ cmp_icon }}" aria-hidden="true"></i>{% if cmp_v > 0 %}+{% endif %}{{ include.delta }}{{ include.unit }} {{ cmp_word }} {{ include.year }}</span>{% if include.detail %}<span class="ev-cmp-detail"{% if include.n %} data-n="{{ include.detail }}"{% endif %}>{{ include.detail }}</span>{% endif %}</span>
+<span class="ev-cmp-row"><span class="ev-cmp is-{{ cmp_dir }}"><i class="fa-solid {{ cmp_icon }}" aria-hidden="true"></i>{% if cmp_v > 0 %}+{% endif %}{{ include.delta }}{{ include.unit }} {{ cmp_word }} {{ include.year }}</span>{% if include.detail %}<span class="ev-cmp-detail"><span{% if include.n %} data-n="{{ include.detail }}"{% endif %}>{{ include.detail }}</span>{{ include.suffix }}</span>{% endif %}</span>
