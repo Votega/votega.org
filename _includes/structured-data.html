@@ -13,11 +13,12 @@
       "@type": "Organization",
       "@id": "{{ site.url }}/#organization",
       "name": {{ site.title | jsonify }},
-      {% if site.author %}"alternateName": {{ site.author | jsonify }},{% endif %}
+      "alternateName": ["VoteGA", "VoteGA.org", "Vote GA"],
+      "sameAs": ["https://github.com/Votega"],
       "url": "{{ site.url }}/",
       "logo": {
         "@type": "ImageObject",
-        "url": "{{ '/assets/img/logo.png' | absolute_url }}"
+        "url": "{{ '/assets/img/brand/logo/png/votega-mark.png' | absolute_url }}"
       },
       "description": "Nonpartisan Georgia voter information: representatives, elections, bills, and open civic data."
     },

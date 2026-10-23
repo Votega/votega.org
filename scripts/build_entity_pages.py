@@ -866,6 +866,44 @@ def _race_category(chamber):
     return ("Other Races", 6)
 
 
+# The races a voter looks for first, as plain server-rendered links on /elections/.
+# Race pages were reachable only from the 363-link /directory/races/ (Search Console:
+# the Governor race showed "Referring page: None detected, Last crawl: N/A"), and the
+# hub's own race lists are built by JS, so there was no <a> for a crawler to follow.
+# Derived from the directory records, never a hand-kept slug list, so it follows the cycle.
+FEATURED_RACE_GROUPS = ("Statewide Executive", "U.S. Congress")
+FEATURED_RACES_PATH = os.path.join(ROOT, "_data", "featured_races.json")
+
+
+def _natural_key(text):
+    return [int(p) if p.isdigit() else p.lower() for p in re.split(r"(\d+)", text or "")]
+
+
+def featured_races(directory):
+    """{"groups": [{"name", "races": [{"name", "url"}]}]} from _dir_add() records.
+    Natural sort keeps "District 2" before "District 10"."""
+    by_group = {}
+    for rec in directory:
+        if rec["section"] == "races" and rec["group"] in FEATURED_RACE_GROUPS:
+            by_group.setdefault((rec["group_order"], rec["group"]), []).append(rec)
+    groups = []
+    for (_order, name) in sorted(by_group):
+        # U.S. Senate leads its group, then natural order by name.
+        rows = sorted(by_group[(_order, name)],
+                      key=lambda r: (not r["sort"].startswith("U.S. Senate"), _natural_key(r["sort"])))
+        names = [r["name"] for r in rows]
+        races = []
+        for r in rows:
+            label = r["name"]
+            # A special election shares its regular race's name (U.S. House District 13);
+            # without a label the two links are indistinguishable.
+            if names.count(label) > 1 and "-special-" in r["url"]:
+                label += " (special election)"
+            races.append({"name": label, "url": r["url"]})
+        groups.append({"name": name, "races": races})
+    return {"groups": groups}
+
+
 def build_ga_legislators(records, urls, prior, new_state):
     data = load("ga-members.json")
     members = {m["id"]: m for m in data.get("members", [])}
@@ -1699,6 +1737,7 @@ def main():
         print(f"  Directory: FAILED — {exc}", file=sys.stderr)
     write_json_atomic(ENTITY_URLS_PATH, urls, separators=(",", ":"))
     write_json_atomic(SERVED_ENTITY_URLS_PATH, urls, separators=(",", ":"))
+    write_json_atomic(FEATURED_RACES_PATH, featured_races(_DIRECTORY), separators=(",", ":"))
     write_json_atomic(LASTMOD_STATE_PATH, new_state, separators=(",", ":"))
     os.makedirs(os.path.dirname(SHARE_MANIFEST_PATH), exist_ok=True)
     write_json_atomic(SHARE_MANIFEST_PATH, {"cards": _CARDS}, separators=(",", ":"))

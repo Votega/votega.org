@@ -16,34 +16,40 @@ At the bottom of your **November 3, 2026** ballot, past the candidates, you'll f
 
 ## The three certified constitutional amendments
 
-These three have cleared every step and **will** appear on the ballot.
+These three have cleared every step and **will** appear on the ballot, numbered as they appear on the official ballot.
 
-### 1. Next Generation 9-1-1 Fund
+### Amendment 1: Conservation-Use Acreage Limit for Farms and Timberland {#amendment-1}
+
+*Enabling legislation: [HR 32](https://www.legis.ga.gov/legislation/69433){:target="_blank"}*
+
+> Shall the Constitution of Georgia, for the purpose of protecting family farmland, be amended so as to increase the maximum acreage to qualify for assessment and taxation as a bona fide conservation use property from 2,000 acres to 4,000 acres?
+
+**What it does:** Georgia taxes "bona fide conservation use" agricultural and timber land at 40% of its value, a break meant to keep working land in production. This measure raises the maximum acreage that can qualify from **2,000 acres to 4,000 acres**.
+
+- **A YES vote** doubles the acreage cap, extending the lower-tax conservation classification to larger farm and timber operations.
+- **A NO vote** keeps the current 2,000-acre limit.
+
+### Amendment 2: Nonpartisan Elections for Probate Judges {#amendment-2}
+
+*Enabling legislation: [HR 251](https://www.legis.ga.gov/legislation/70279){:target="_blank"}*
+
+> Shall the Constitution of Georgia be amended so as to require that all probate court judges be elected in nonpartisan elections?
+
+**What it does:** Requires that Georgia's probate judges, who handle wills, estates, some marriage and firearms licenses, and in many counties election administration, be elected **without party labels** on the ballot.
+
+- **A YES vote** removes party affiliation (D/R) from probate judge races statewide.
+- **A NO vote** keeps probate judges running under party labels where they currently do.
+
+### Amendment 3: Next Generation 9-1-1 Fund {#amendment-3}
 
 *Enabling legislation: [HR 1243](https://www.legis.ga.gov/legislation/72891){:target="_blank"}*
+
+> Shall the Constitution of Georgia be amended so as to authorize the General Assembly to dedicate certain existing revenues, including revenues reallocated by law, to a nonlapsing fund to be used exclusively for the expansion, maintenance, and operation of emergency 9-1-1 systems in this state?
 
 **What it does:** Lets the state legislature create a dedicated "Georgia Next Generation 9-1-1 Fund" and set aside revenue that can only be spent on modernizing the state's 911 emergency systems.
 
 - **A YES vote** allows the creation of this restricted-use fund, meaning money raised for 911 upgrades must be spent on 911 upgrades and not diverted elsewhere.
 - **A NO vote** leaves 911 funding without that constitutional protection.
-
-### 2. Conservation-Use Acreage Limit for Farms and Timberland
-
-*Enabling legislation: [HR 32](https://www.legis.ga.gov/legislation/69433){:target="_blank"}*
-
-**What it does:** Georgia taxes "bona fide conservation use" agricultural and timber land at 40% of its value a break meant to keep working land in production. This measure raises the maximum acreage that can qualify from **2,000 acres to 4,000 acres**.
-
-- **A YES vote** doubles the acreage cap, extending the lower-tax conservation classification to larger farm and timber operations.
-- **A NO vote** keeps the current 2,000-acre limit.
-
-### 3. Nonpartisan Elections for Probate Judges
-
-*Enabling legislation: [HR 251](https://www.legis.ga.gov/legislation/70279){:target="_blank"}*
-
-**What it does:** Requires that Georgia's probate judges who handle wills, estates, some marriage and firearms licenses, and in many counties election administration be elected **without party labels** on the ballot.
-
-- **A YES vote** removes party affiliation (D/R) from probate judge races statewide.
-- **A NO vote** keeps probate judges running under party labels where they currently do.
 
 ## One measure that did not make the ballot
 
@@ -70,5 +76,7 @@ New to the whole ballot? Start with our [2026 Georgia General Election Guide]({%
 
 {: .box-success}
 Bookmark the [Ballot Measures Page]({{ '/ga-ballot-measures.html' | relative_url }}). We'll post the unofficial and certified results there once they're in.
+
+*Last updated October 22, 2026: amendment numbering and ballot wording now follow the official ballot order.*
 
 *VoteGA is a nonpartisan, volunteer civic-data project. Measure summaries and legislation links are compiled from the Georgia Secretary of State and the Georgia General Assembly; see [About the Data]({{ '/about-the-data' | relative_url }}) for sources and methodology. This guide explains the measures on the ballot, it does not recommend how to vote.*
