@@ -20,7 +20,8 @@ Three datasets, from the same reconciled source, each as JSON + CSV + JSON Schem
                                     in that county as well as the share of the county
 
 Every county code in every file is the 5-digit state+county FIPS (13013), the form the Census
-and Georgia Civic Data use; the source tables keep the 3-digit suffix (013) and it is widened here.
+and Georgia Civic Data use. Releases before 2.0.0 published the 3-digit suffix (013) under the same
+column name; data/county-codes.csv lists both forms with the county name and VoteGA's slug.
       data/counties.schema.json
 
   Census tract -> districts    scripts/data/ga-tract-districts.json
@@ -45,11 +46,12 @@ import json
 import os
 import sys
 
+from lib.ga_county_fips import GA_COUNTY_FIPS
 from lib.sibling_publish import build_json, min_items, publish_or_dry_run
 
 REPO = "Votega/ga-district-information"
 TOKEN_ENV = "GA_DISTRICT_INFORMATION_TOKEN"
-SCHEMA_VERSION = "2.0.0"   # 2.0.0: every county code is the 5-digit FIPS (13013), not the 3-digit suffix (013);
+SCHEMA_VERSION = "2.0.0"   # 2.0.0: every county code is the 5-digit FIPS (13013), not the 3-digit suffix (013), + data/county-codes.csv;
 #                            # 1.1.0: + data/district-counties.csv, + coverage column on county-districts.csv
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -58,13 +60,15 @@ TRACTS_SRC = os.path.join(HERE, "data", "ga-tract-districts.json")
 
 #: tract-table key -> (name used in the published files, plan name key in metadata.plans)
 CHAMBERS = {"s": "state-senate", "h": "state-house", "c": "us-house"}
-#: Georgia's state FIPS. The source tables key counties on the 3-digit suffix; everything published
-#: carries the full 5-digit code (13013), the form the Census and Georgia Civic Data use.
+#: Georgia's state FIPS. Every county code, in the source tables and in everything published, is the full
+#: 5-digit code (13013), the form the Census and Georgia Civic Data use. Releases before 2.0.0 published the
+#: 3-digit suffix (013); data/county-codes.csv maps one to the other.
 GA_STATE_FIPS = "13"
 
 
 def fips5(code):
-    """The 5-digit county FIPS for a source table's 3-digit county code (or for a 5-digit one)."""
+    """The 5-digit county FIPS for a county code, refusing anything that is not a Georgia county. A
+    3-digit suffix is widened, so a stale input cannot publish the short form."""
     code = str(code)
     full = code if len(code) == 5 else GA_STATE_FIPS + code
     if len(full) != 5 or not full.startswith(GA_STATE_FIPS) or not full.isdigit():
@@ -96,8 +100,8 @@ def _csv(header, rows):
 # ---- ZIP code -> districts --------------------------------------------------------
 
 def zips_doc(zips):
-    """The site's ZIP file with each county code widened to the 5-digit FIPS. The source file keeps
-    the 3-digit suffix because the site's own scripts read it, so the change is made here only."""
+    """The site's ZIP file with each county code checked as a 5-digit Georgia FIPS (and widened if a
+    stale input still carries the 3-digit suffix)."""
     out = json.loads(json.dumps(zips))
     for e in out["zips"].values():
         for c in e.get("counties") or []:
@@ -139,7 +143,7 @@ def county_table(tracts):
                 bucket[district] = bucket.get(district, 0) + p
     out = {}
     for fips in sorted(pop):
-        entry = {"name": names.get(fips[2:]), "population": pop[fips]}
+        entry = {"name": names.get(fips), "population": pop[fips]}
         for key, chamber in CHAMBERS.items():
             entry[chamber] = [
                 {"district": int(d), "population": p,
@@ -210,6 +214,17 @@ def district_counties_rows(doc):
 def district_counties_csv(doc):
     return _csv(["chamber", "district", "county_fips", "county", "population", "share_of_district",
                  "share_of_county", "coverage"], district_counties_rows(doc))
+
+
+def county_codes_csv(tracts):
+    """The 159 counties with their 5-digit FIPS, the 3-digit suffix earlier releases published in the
+    same column name, the name, and the slug VoteGA's other datasets use, so anyone holding old codes
+    can walk back to the 5-digit form (or forward to a slug)."""
+    names = tracts["counties"]
+    rows = []
+    for slug, fips in sorted(GA_COUNTY_FIPS.items(), key=lambda kv: kv[1]):
+        rows.append([fips, fips[len(GA_STATE_FIPS):], names.get(fips), slug])
+    return _csv(["county_fips", "county_code_3digit", "county", "slug"], rows)
 
 
 def tracts_doc(tracts):
@@ -333,6 +348,7 @@ def build_artifacts():
         "data/counties.json": build_json(counties),
         "data/county-districts.csv": county_districts_csv(counties),
         "data/district-counties.csv": district_counties_csv(counties),
+        "data/county-codes.csv": county_codes_csv(tracts),
         "data/counties.schema.json": build_json(counties_schema()),
         "data/tracts.json": compact_json(tracts_pub),
         "data/tract-districts.csv": tract_districts_csv(tracts),
@@ -357,6 +373,13 @@ def validate(artifacts):
             if s != c["population"]:
                 raise ValueError(f"refusing to publish: county {fips} {chamber} districts sum to "
                                  f"{s:,}, county population is {c['population']:,}")
+    codes = list(csv.DictReader(io.StringIO(artifacts["data/county-codes.csv"].decode())))
+    if len(codes) != MIN_COUNTIES or any(
+            r["county_fips"] != GA_STATE_FIPS + r["county_code_3digit"] or not r["county"] for r in codes):
+        raise ValueError(f"refusing to publish: county-codes.csv must list all {MIN_COUNTIES} counties, "
+                         "each with a name and a 5-digit code that is 13 + its 3-digit suffix")
+    if {r["county_fips"] for r in codes} != set(counties["counties"]):
+        raise ValueError("refusing to publish: county-codes.csv and counties.json disagree on the county list")
     rows = list(csv.DictReader(io.StringIO(artifacts["data/district-counties.csv"].decode())))
     if not rows or any(len(r["county_fips"]) != 5 or not r["county_fips"].startswith(GA_STATE_FIPS)
                        for r in rows):

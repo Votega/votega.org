@@ -62,7 +62,7 @@ check("USPS table holds only Georgia ZIPs (no 37316)", "37316" in USPS["zips"], 
 # Tract D: 50 people, Senate 3 and House 12.
 toy = {
     "metadata": {"plans": {"s": "S", "h": "H"}, "censusVintage": "toy"},
-    "counties": {"001": "Alpha", "002": "Beta"},
+    "counties": {"13001": "Alpha", "13002": "Beta"},
     "tracts": {
         "13001000100": {"p": 100, "s": {"001": 100}, "h": {"010": 80, "011": 20}, "c": {"005": 60, "004": 40}},
         "13001000200": {"p": 300, "s": {"001": 100, "002": 200}, "h": {"011": 300}, "c": {"005": 300}},
@@ -104,7 +104,7 @@ check("House shares are ranked largest first",
 # Congress 5: .25*.6 + .75*1 = .9 ; Congress 4: .25*.4 = .1
 check("congressional shares use the same tract method, ranked",
       [(r["district"], r["share"]) for r in e["usHouse"]], [(5, 0.9), (4, 0.1)])
-check("county names are attached", e["counties"], [{"fips": "001", "name": "Alpha", "share": 1.0}])
+check("county names are attached", e["counties"], [{"fips": "13001", "name": "Alpha", "share": 1.0}])
 check("the HUD city is title-cased for display", e["city"], "Alpha Town")
 
 check("a PO-box ZIP carries no districts",
