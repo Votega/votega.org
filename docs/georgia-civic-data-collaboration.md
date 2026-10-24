@@ -46,6 +46,36 @@ Ground rules: records only (votes, bills, outcomes as published); nonpartisan; n
 - API terms and rate limits? Do they hold legis.ga.gov member IDs for sponsors?
 - How should VoteGA credit their data, and what do they want from us?
 - Do they have legislative-district boundaries? (We have tract to district.)
+- Would GCD accept a joint product released under CC BY-SA 4.0? Would they want our geographic tables under CC BY or CC0 so they can load them?
+- For the school attendance zones and any dataset sourced from Pew, MPI, CMS or Georgia Insights: what upstream terms apply to redistribution of figures derived from them?
+
+## Licensing: CC BY-SA 4.0 (VoteGA) and CC BY 4.0 (GCD)
+
+Added 2026-10-23. A reading of the license text, not legal advice; have counsel confirm before any joint publication.
+
+**The rule.** CC BY-SA 4.0 is one-way compatible with CC BY. GCD data can flow into a VoteGA adaptation released as BY-SA (we already do this; see `NOTICE.md`). VoteGA data cannot flow into a GCD dataset released as CC BY, because any adaptation of our BY-SA material must stay BY-SA. A combined work built from both is BY-SA overall; GCD's originals stay CC BY at their source.
+
+| Path | License impact |
+|---|---|
+| Join on shared keys (county FIPS, tract GEOID, `legisGaGovId`), link out, chain MCP servers | None. Nothing is redistributed, so ShareAlike never triggers. |
+| Query-time joins (a page or assistant pulls from both, stores neither) | None. Attribute each source. |
+| Joint published product (e.g. district profiles from GCD Census facts weighted by our tract populations) | Product is BY-SA, both credited. GCD must accept that. |
+| GCD ingests our tables into their star schema | Only if we also license those tables to them under CC BY or CC0 (dual license; our decision, and it gives up share-alike on those tables). |
+| VoteGA ingests Georgia Commons text | Blocked until they state a license. |
+
+**What GCD's own terms say (checked 2026-10-23 via their MCP server).** The catalog-level `license` object is CC BY 4.0, attribution "Georgia Civic Data (georgiacivicdata.org)", and its scope reads: it covers GCD's "cleaning, standardization, compilation, and documentation. Source data stays under its original publisher's terms; each dataset names its source." Terms page: `https://georgiacivicdata.org/about#license`. The per-dataset ODCS contracts carry no license field, only `source` and `source_url`, so the rule for any dataset is: GCD's CC BY covers GCD's work, and the upstream publisher's terms cover the rest.
+
+- **Safe to build on:** the Census-derived topics (ACS, P.L. 94-171, TIGER) and `school_attendance_zone_tracts`, a GCD-built crosswalk from Census blocks and district/vendor zone maps. The zone maps' own terms are not stated; ask GCD before publishing zone-based figures.
+- **Check upstream before reuse:** `undocumented_population_estimates` (Pew, MPI, Center for Migration Studies; DHS is public), `undocumented_population_characteristics`, `ccrpi_*` and other "georgia insights" education topics, and anything from the Deportation Data Project. GCD cannot license a third party's figures to us, so a CC BY label here is not a clearance.
+- **Public record, no issue:** GOSA education files, DHS/OHSS, EOIR, ICE FOIA releases, DOL OFLC, State Department refugee data.
+
+**Other points.**
+- Facts get thin protection in the US (and the EU database right does not reach us), so BY-SA bites mainly on our original text and our arrangement of data. Treat it as binding regardless.
+- Our own inputs are mixed: legis.ga.gov, FEC and Census are public records; the `openstates/people` crosswalk is CC0; PeachFile terms are unverified. Our BY-SA label covers only what we author.
+- PolyForm Noncommercial applies to site code only and does not touch data sharing.
+- Georgia Commons: no license means all rights reserved. Link-out is fine. If they choose CC BY or CC0 we can use the text; BY-NC or BY-ND would not be compatible with BY-SA reuse. AI-written text has unsettled copyright, so ask what they claim.
+
+**Recommended position.** Keep the integration loose (keys, link-outs, chained MCP). If a joint dataset is wanted, release it BY-SA and ask GCD whether they accept that. Optionally offer our purely geographic tables (tract to district, county to district) to GCD under CC BY or CC0. Get a license from Georgia Commons before touching their text.
 
 ## Caveats to keep in view
 - County shares are 2020 population shares under the 2023 plans and must be rebuilt if Georgia redraws. `build_ga_tract_district_table.py` now emits 5-digit codes, but it needs inputs that are not in the repo, so that two-line change has not been run end to end.
