@@ -190,7 +190,7 @@ def read_current(directory, election, as_of=None):
             "voters": voters, "quality": q}
 
 
-def count_prior(directory, cutoff, election=None):
+def count_prior(directory, cutoff, election=None, county_daily=None):
     """Accepted ballots returned on or before `cutoff`, per county, deduped by voter id.
 
     -> (totals {countyKey: n}, mail {countyKey: n of absentee/electronic},
@@ -200,7 +200,8 @@ def count_prior(directory, cutoff, election=None):
     repeat-voter match ("voted early or absentee in 2024"); it never leaves memory.
     `daily` covers the whole early period up to election day, not just up to the cutoff, so the
     chart can draw the full past curve. STATEWIDE.csv in these dumps repeats every county row,
-    so it is skipped.
+    so it is skipped. If a dict is passed as `county_daily` it is filled with the same daily counts per
+    county ({countyKey: {daysBefore: [inPerson, mail]}}), for the published county-by-day table.
     """
     seen = set()
     voted = set()
@@ -232,6 +233,8 @@ def count_prior(directory, cutoff, election=None):
                     d = _days_before(rd, election)
                     if d is not None:
                         daily.setdefault(d, [0, 0])[0 if inp else 1] += 1
+                        if county_daily is not None:
+                            county_daily.setdefault(k, {}).setdefault(d, [0, 0])[0 if inp else 1] += 1
                 if rd > cutoff:
                     continue
                 seen.add(vid)
@@ -646,6 +649,47 @@ def _adult_block(counties, context, vintage, ballots, prior_meta, at_point):
     return out
 
 
+def build_county_daily(counties, current, prior_county_daily, election, as_of, statewide_daily, generated_at):
+    """The published county-by-day document, and its check against the statewide series.
+
+    `current` is read_current()'s county_daily ({countyKey: {daysBefore: [ip, mail]}}); `prior_county_daily` is
+    {year: {electionDate, counties: same shape}} for past years whose absentee file is complete. Day 45 holds
+    everything 45 or more days out (the same fold the statewide chart uses). Raises ValueError if a year's county
+    rows do not add up to the statewide series they are published beside."""
+    names = {key(c["name"]): c["name"] for c in counties}
+    years = {}
+    sources = {str(election.year): {"electionDate": election.isoformat(), "asOf": as_of.isoformat(), "counties": current}}
+    sources.update({y: v for y, v in prior_county_daily.items()})
+    for y, src in sources.items():
+        out = {}
+        totals = {}
+        for k, days in src["counties"].items():
+            name = names.get(k)
+            if name is None:
+                raise ValueError(f"{y}: county {k!r} is not in the registration table")
+            out[name] = [[d, v[0], v[1]] for d, v in sorted(days.items(), reverse=True)]
+            for d, v in days.items():
+                t = totals.setdefault(d, [0, 0])
+                t[0] += v[0]
+                t[1] += v[1]
+        want = {r[0]: [r[1], r[2]] for r in statewide_daily[y]}
+        if totals != want:
+            bad = sorted(d for d in set(totals) | set(want) if totals.get(d) != want.get(d))[:5]
+            raise ValueError(f"{y}: county-by-day does not add up to the statewide series on days {bad}")
+        years[y] = {"electionDate": src["electionDate"], "counties": dict(sorted(out.items()))}
+        if y == str(election.year):
+            years[y]["asOf"] = as_of.isoformat()
+    return {
+        "metadata": {
+            "generatedAt": generated_at,
+            "note": "Accepted ballots by county and days before election day: [daysBefore, inPerson, mail]. "
+                    "Day 45 holds everything 45 or more days out. Only years whose absentee file is complete are included.",
+            "years": sorted(years),
+        },
+        "years": years,
+    }
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--absentee", required=True, help="folder of per-county CSVs, current election")
@@ -667,6 +711,8 @@ def main(argv=None):
     ap.add_argument("--prior-active", action="append", default=[],
                     help="YEAR=N statewide active voters on that election day (SoS turnout dashboard)")
     ap.add_argument("--out", default=OUT)
+    ap.add_argument("--out-county-daily", default=None,
+                    help="county-by-day file for the published dataset (default: beside --out, -county-daily.json)")
     a = ap.parse_args(argv)
 
     election = dt.date.fromisoformat(a.election_date)
@@ -692,6 +738,7 @@ def main(argv=None):
         history[year] = read_history(os.path.expanduser(path))
 
     priors, priors_mail, repeat, prior_meta, prior_daily, prior_final = {}, {}, {}, {}, {}, {}
+    prior_county_daily = {}
     for spec in a.prior:
         year, rest = spec.split("=", 1)
         directory, edate = rest.rsplit(":", 1)
@@ -705,7 +752,10 @@ def main(argv=None):
             meta["lastCompleteDaysBefore"] = (pe - cutoff).days
         meta["cutoff"] = cutoff.isoformat()
         meta["daysBefore"] = (pe - cutoff).days
-        totals, mail, voted, daily, final = count_prior(os.path.expanduser(directory), cutoff, pe)
+        cd = {}
+        totals, mail, voted, daily, final = count_prior(os.path.expanduser(directory), cutoff, pe, county_daily=cd)
+        if "lastCompleteDaysBefore" not in meta:  # an incomplete file is not published day by day
+            prior_county_daily[year] = {"electionDate": edate, "counties": cd}
         if "lastCompleteDaysBefore" in meta:  # the series stops where the file stops being complete
             daily = {d: v for d, v in daily.items() if d >= meta["lastCompleteDaysBefore"]}
         priors[year], priors_mail[year], prior_daily[year], prior_final[year] = totals, mail, daily, final
@@ -875,8 +925,12 @@ def main(argv=None):
     if errs:
         sys.exit(1)
     data["metadata"]["quality"]["warnings"] = warns
+    cd_doc = build_county_daily(counties, cur["county_daily"], prior_county_daily, election, as_of, daily,
+                                data["metadata"]["generatedAt"])  # a mismatch raises: nothing is written
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     write_json_atomic(a.out, data)
+    cd_out = a.out_county_daily or a.out[:-len(".json")] + "-county-daily.json"
+    write_json_atomic(cd_out, cd_doc, separators=(",", ":"))
     print(f"wrote {a.out}: {len(counties)} counties, {ballots:,} ballots through {as_of}, "
           f"{data['statewide']['turnoutPct']}% of active")
 

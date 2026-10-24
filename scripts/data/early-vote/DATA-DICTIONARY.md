@@ -17,6 +17,11 @@ file `A-12054` (2,316,950 rows) and the 2024 file `A-12311` (4,096,244 rows). Al
 The voter-level files (sections 1 and 2) contain names and addresses and are never committed or published.
 Only county totals leave the machine.
 
+**Provenance.** The files described here are the SoS's absentee-ballot and voter-history downloads, its active/inactive
+voter table and its certified results exports. They are not the SoS's voter list products (the Voter List and Statewide
+Voter File that are ordered under O.C.G.A. § 21-2-225, whose order form carries a commercial-use warning); VoteGA does not
+use those. What VoteGA publishes from these files is county-level aggregates only.
+
 ---
 
 ## 1. Absentee / early voting file (`A-xxxxx-VoterAbsentee`)

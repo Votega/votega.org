@@ -7,6 +7,8 @@ not mean re-finding them.
 
 What every field in the SoS files means, and the traps in them, is in [DATA-DICTIONARY.md](DATA-DICTIONARY.md).
 
+**Provenance.** Everything here is a county-level aggregate derived from the Secretary of State's absentee-ballot and voter-history downloads, its county active/inactive voter counts and its certified results. It contains no elector-level data (no names, addresses or voter IDs), nothing below the county, and it does not use the Secretary of State's voter list products (the Voter List and Statewide Voter File ordered under O.C.G.A. § 21-2-225).
+
 ## In this folder (committed)
 
 | File | What it is | Replace when |
@@ -59,7 +61,14 @@ the repository and unzip each one into its own directory.
 4. Read the warnings it prints (they are also kept in the output's `metadata.quality`). The expected ones are the
    2022 Fulton/Gwinnett shortfall, a handful of accepted ballots with a bad return date, and merged repeat records.
    Any error stops the run without writing.
-5. Check the page locally, then commit `_data/early_vote/ga-general-2026.json` (and the new registration CSV).
+5. Check the page locally, then commit `_data/early_vote/ga-general-2026.json`, its sibling
+   `_data/early_vote/ga-general-2026-county-daily.json` (county by day; the two must be committed together, because the
+   publisher refuses files that run through different days) and the new registration CSV.
+6. To publish the dataset: run the **Publish early-vote data to ga-races-elections (manual)** workflow, or locally
+   `OUT_DIR=<dir> python scripts/publish_early_vote.py` for a dry run. It writes `early-vote/<year>-general/` in
+   Votega/ga-races-elections: county totals, county by day (this year and complete past years), schemas, a README
+   and the source-file dictionary. Aggregates at county level only; counts of 1 to 9 in the rejected, cancelled
+   and other mail statuses are withheld.
 
 ## After election night
 

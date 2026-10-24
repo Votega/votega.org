@@ -1,0 +1,89 @@
+name: Publish early-vote data to ga-races-elections (manual)
+
+# Requires secret: GA_RACES_PUSH_TOKEN (the same one publish-races-to-ga-races-elections.yml uses)
+#   A GitHub Personal Access Token (classic) with repo scope on Votega/ga-races-elections.
+#
+# Manual on purpose. The early-vote files are refreshed by hand (generate_ga_early_vote.py, from Secretary of
+# State downloads), so there is nothing to poll for, and a scheduled run would only republish the same files.
+# To publish after every refresh instead, add a push trigger on the two _data/early_vote files and the publisher
+# (copy the `push:` block from publish-races-to-ga-races-elections.yml). Do that only once the
+# Secretary of State's terms for these files have been read: this workflow writes to a PUBLIC repo.
+#
+# Writes only early-vote/<year>-general/ plus the shared LICENSE and NOTICE.md; races.json is untouched.
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      - name: Validate the early-vote sources
+        id: src
+        run: |
+          asof=$(python -c "
+          import json
+          t = json.load(open('_data/early_vote/ga-general-2026.json'))
+          d = json.load(open('_data/early_vote/ga-general-2026-county-daily.json'))
+          assert len(t['counties']) == 159, len(t['counties'])
+          year = t['metadata']['electionDate'][:4]
+          assert d['years'][year]['asOf'] == t['metadata']['asOf'], 'the two files run through different days'
+          print(t['metadata']['asOf'])
+          ")
+          echo "early-vote sources valid: 159 counties, as of $asof"
+          echo "asof=$asof" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: Votega/ga-races-elections
+          token: ${{ secrets.GA_RACES_PUSH_TOKEN }}
+          path: target-repo
+
+      - name: Commit and push to ga-races-elections
+        working-directory: target-repo
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Re-apply the source files onto the current target tree. Used for the first commit and
+          # again after a reset when a push loses a race with the daily races publisher.
+          restage() {
+            ( cd "$GITHUB_WORKSPACE" && OUT_DIR="$GITHUB_WORKSPACE/target-repo" python3 scripts/publish_early_vote.py )
+            git add -A
+          }
+
+          restage
+          if git diff --cached --quiet; then
+            echo "No changes — files are already up to date"
+            exit 0
+          fi
+
+          # Same idempotent mirror as the races publisher: on a non-fast-forward push (it targets this
+          # repo daily), take the remote tip and re-apply our files rather than rebasing.
+          pushed=0
+          for attempt in 1 2 3; do
+            git commit -m "Update early-vote data (as of ${{ steps.src.outputs.asof }})" || true
+            if git push; then pushed=1; break; fi
+            echo "Push rejected (attempt $attempt) — syncing to remote and re-applying"
+            git fetch origin main
+            git reset --hard origin/main
+            restage
+            if git diff --cached --quiet; then
+              echo "Remote already carries our content"; pushed=1; break
+            fi
+          done
+          if [ "$pushed" -ne 1 ]; then
+            echo "::error::Push to ga-races-elections failed after 3 attempts"
+            exit 1
+          fi

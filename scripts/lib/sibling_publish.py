@@ -67,7 +67,10 @@ REPO_SOURCES = {
                              "(Plural Policy) for topical subject tags",
     "Votega/ga-federal-legislators": "Congress.gov, the Clerk of the U.S. House, "
                                      "and the U.S. Senate",
-    "Votega/ga-races-elections": "the Georgia Secretary of State",
+    # The early-vote/ folder also carries county Census figures (ACS, compiled by Georgia Civic Data, CC BY 4.0).
+    "Votega/ga-races-elections": "the Georgia Secretary of State; the county Census figures in early-vote/ come from "
+                                 "the U.S. Census Bureau's American Community Survey, compiled by Georgia Civic Data "
+                                 "(georgiacivicdata.org, CC BY 4.0)",
     "Votega/ga-executive-orders": "the Office of the Governor of Georgia "
                                   "(gov.georgia.gov)",
     "Votega/ga-local-government": "the published agendas and minutes of Georgia "

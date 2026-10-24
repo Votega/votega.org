@@ -216,6 +216,31 @@ def test_distilled_results_read_back_identically_to_the_raw_export():
         raise AssertionError("a distilled file for one contest must not answer for another")
 
 
+def test_county_daily_adds_up_to_the_statewide_series_or_refuses():
+    import datetime as dt
+    counties = [{"name": "Alpha"}, {"name": "Beta"}]
+    current = {g.key("Alpha"): {13: [5, 1], 12: [4, 0]}, g.key("Beta"): {13: [2, 2]}}
+    prior = {"2024": {"electionDate": "2024-11-05", "counties": {g.key("Alpha"): {45: [0, 3], 0: [1, 9]}}}}
+    statewide = {"2026": [[13, 7, 3], [12, 4, 0]], "2024": [[45, 0, 3], [0, 1, 9]]}
+    doc = g.build_county_daily(counties, current, prior, dt.date(2026, 11, 3), dt.date(2026, 10, 21), statewide, "t")
+    assert doc["metadata"]["years"] == ["2024", "2026"]
+    assert doc["years"]["2026"]["counties"]["Alpha"] == [[13, 5, 1], [12, 4, 0]] and doc["years"]["2026"]["asOf"] == "2026-10-21"
+    assert doc["years"]["2024"]["counties"]["Alpha"] == [[45, 0, 3], [0, 1, 9]]
+    try:  # the county rows no longer add up to the statewide chart's numbers
+        g.build_county_daily(counties, current, prior, dt.date(2026, 11, 3), dt.date(2026, 10, 21),
+                             {"2026": [[13, 7, 4], [12, 4, 0]], "2024": statewide["2024"]}, "t")
+    except ValueError as e:
+        assert "does not add up" in str(e)
+    else:
+        raise AssertionError("a county-by-day that disagrees with the statewide series must stop the run")
+    try:  # a county the registration table has never heard of
+        g.build_county_daily(counties, {g.key("Gamma"): {1: [1, 0]}}, {}, dt.date(2026, 11, 3), dt.date(2026, 10, 21), {"2026": [[1, 1, 0]]}, "t")
+    except ValueError as e:
+        assert "not in the registration table" in str(e)
+    else:
+        raise AssertionError("an unknown county must stop the run")
+
+
 def _out(**over):
     import copy
     d = {
