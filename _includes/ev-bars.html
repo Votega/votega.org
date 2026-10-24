@@ -1,0 +1,37 @@
+{%- comment -%}
+  Zero-based bars for the stat cards on /ga-early-vote/. Two bars when `vb` is given (a past year's
+  value at its comparison point, and this year's at the same point), one when it is not. Every bar on
+  one card shares one scale, so the same quantity is never drawn at two lengths (per-pair scaling drew
+  2026's 21.0% full width against 2022 and 62% against 2024). The page works the card's largest value
+  out before the loop and passes it as `mx`.
+      {% include ev-bars.html ya="2022" va=825378 vy="2026" vb=839209 mx=2619705 point="at 17 days out" n=true %}
+      {% include ev-bars.html ya="2022" va=64.1 mx=76.7 unit="%" point="Governor" %}
+  `ya`/`va` are the past year and its value, `vy`/`vb` this year and its value at the same point.
+  `mx` is the largest value anywhere on the card; it falls back to the larger of this pair.
+  `cls` (optional) overrides the first bar's color class, which is otherwise ev-bar-y<year> - the
+  current year has no year class of its own, so a lone bar for it passes cls="ev-bar-now".
+  `point` (optional) is a small note beside both year labels - the comparison day, say, so a card
+  showing this year twice says why the two differ, or the contest a share belongs to.
+  `n=true` formats thousands separators (the page's data-n script); otherwise the value is printed
+  with `unit`. Each bar is labelled with its own year and value, so identity is never color alone.
+{%- endcomment -%}
+{%- assign bars_a = include.va | plus: 0.0 -%}
+{%- assign bars_two = false -%}{%- if include.vb -%}{%- assign bars_two = true -%}{%- endif -%}
+{%- assign bars_b = include.vb | plus: 0.0 -%}
+{%- assign bars_mx = include.mx | plus: 0.0 -%}
+{%- if bars_mx <= 0 -%}{%- assign bars_mx = bars_a -%}{%- if bars_b > bars_mx -%}{%- assign bars_mx = bars_b -%}{%- endif -%}{%- endif -%}
+{%- if bars_mx > 0 -%}
+{%- assign bars_wa = bars_a | times: 100.0 | divided_by: bars_mx | round: 1 -%}
+{%- assign bars_wb = bars_b | times: 100.0 | divided_by: bars_mx | round: 1 -%}
+{%- if bars_a > 0 and bars_wa < 1.5 -%}{%- assign bars_wa = 1.5 -%}{%- endif -%}
+{%- if bars_b > 0 and bars_wb < 1.5 -%}{%- assign bars_wb = 1.5 -%}{%- endif -%}
+{%- capture bars_pt %}{% if include.point %} <small>{{ include.point }}</small>{% endif %}{% endcapture -%}
+{%- capture bars_cls %}{% if include.cls %}{{ include.cls }}{% else %}ev-bar-y{{ include.ya }}{% endif %}{% endcapture -%}
+{%- capture bars_lbl %}{{ include.ya }}{% if bars_two %} compared with {{ include.vy }}{% endif %}{% if include.point %}, {{ include.point }}{% endif %}{% endcapture -%}
+<span class="ev-vis ev-bars" role="group" aria-label="{{ bars_lbl }}">
+  <span class="ev-grow-row"><span class="ev-grow-top"><span class="ev-grow-l">{{ include.ya }}{{ bars_pt }}</span><span class="ev-grow-v">{% if include.n %}<span data-n="{{ include.va }}">{{ include.va }}</span>{% else %}{{ include.va }}{{ include.unit }}{% endif %}</span></span><span class="ev-grow-t"><span class="ev-grow-b {{ bars_cls }}" style="width:{{ bars_wa }}%"></span></span></span>
+  {%- if bars_two %}
+  <span class="ev-grow-row"><span class="ev-grow-top"><span class="ev-grow-l">{{ include.vy }}{{ bars_pt }}</span><span class="ev-grow-v">{% if include.n %}<span data-n="{{ include.vb }}">{{ include.vb }}</span>{% else %}{{ include.vb }}{{ include.unit }}{% endif %}</span></span><span class="ev-grow-t"><span class="ev-grow-b ev-bar-now" style="width:{{ bars_wb }}%"></span></span></span>
+  {%- endif %}
+</span>
+{%- endif -%}

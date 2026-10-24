@@ -8,25 +8,61 @@ share-description: "How many Georgians have already voted in the November 3, 202
 {%- assign sw = ev.statewide -%}
 {%- assign cur_year = ev.metadata.electionDate | date: "%Y" -%}
 {%- assign mp = sw.mailPipeline -%}
+{%- comment -%}Georgia's advance voting ends the Friday before a Tuesday election: four days out, derived so nothing here is a per-cycle edit.{%- endcomment -%}
+{%- assign ev_end = ev.metadata.electionDate | date: "%s" | minus: 345600 -%}
+{%- assign ev_days_left = ev.metadata.daysBeforeElection | minus: 4 -%}
 
 <style>
   .ev-stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 8px; }
-  .ev-stat { flex: 1 1 180px; background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 14px; }
+  .ev-stat { flex: 1 1 300px; background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 14px; }
   .ev-stat .n { font-size: 1.6rem; font-weight: 700; color: var(--color-text); display: block; }
   .ev-stat .l { font-size: .85rem; color: var(--color-text-muted); display: block; }
-  .ev-stat .d { font-size: .8rem; color: var(--color-text-muted); display: block; margin-top: 4px; }
   .ev-cmps { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin-top: 8px; }
   .ev-cmp-row { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
   .ev-cmp { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border: 1px solid; border-radius: 999px; font-size: .8rem; font-weight: 600; }
   .ev-cmp.is-up { background: var(--color-success-tint); color: var(--color-success); border-color: var(--color-success-line); }
   .ev-cmp.is-down { background: var(--color-warning-tint); color: var(--color-warning); border-color: var(--color-warning-line); }
   .ev-cmp.is-flat { background: var(--color-surface-sunken); color: var(--color-text-muted); border-color: var(--color-border); }
-  .ev-cmp-detail { font-size: .8rem; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
-  .ev-stats-solo { justify-content: center; margin-top: 24px; }
-  .ev-stat-solo { flex: 0 1 380px; text-align: center; }
-  .ev-stat-solo .ev-cmps { align-items: center; }
+  .ev-cmps > .ev-vis { align-self: stretch; display: block; width: 100%; margin: 4px 0 10px; font-size: .8rem; color: var(--color-text-muted); }
+  .ev-vis > span { display: block; }
+  .ev-grow-row { display: block; margin-bottom: 8px; }
+  .ev-grow-top { display: flex !important; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+  .ev-grow-l small { color: var(--color-text-muted); }
+  /* every bar on a card is zero-based and shares that card's scale, so lengths compare across years */
+  .ev-grow-t { display: block; position: relative; height: 14px; background: var(--color-surface-sunken); border-radius: 3px; }
+  .ev-grow-b { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 0 3px 3px 0; }
+  .ev-bar-y2022 { background: var(--chart-pine); } .ev-bar-y2024 { background: var(--chart-gold); } .ev-bar-now { background: var(--color-accent); }
+  .ev-grow-v { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--color-text); }
+  .ev-grow-n { margin-top: 2px; margin-bottom: 6px; }
+  .ev-cmp sup { margin-left: 2px; }
+  .ev-foot { font-size: .8rem; color: var(--color-text-muted); margin: 4px 0 0; }
+  /* how the ballots were cast, inside the "ballots cast" card */
+  .ev-split { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--color-border); }
+  .ev-split-h { display: block; font-size: .85rem; font-weight: 600; color: var(--color-text); margin-bottom: 6px; }
+  .ev-pipe-split { gap: 2px; }
+  .ev-split .ev-grow-n, .ev-left-k { display: block; font-size: .8rem; color: var(--color-text-muted); }
+  .p-inperson { background: var(--color-accent); } .p-mail { background: var(--chart-teal); }
+  /* the share card carries two denominators behind one toggle */
+  .ev-seg-sm { margin-bottom: 10px; }
+  .ev-seg-sm button { padding: 3px 10px; font-size: .78rem; }
+  .ev-denom-pane { display: block; }
+  .ev-denom-pane[hidden] { display: none; }
+  .ev-left-k { display: block; font-size: .8rem; color: var(--color-text-muted); margin-top: 2px; }
   .ev-h2 { font-size: 1.25rem; margin: 32px 0 4px; }
   .ev-sub { font-size: .9rem; margin: 0 0 12px; color: var(--color-text-muted); }
+
+  /* ---- the running-total sparkline in the "ballots cast" card ---- */
+  .ev-spark { display: block; width: 100%; height: auto; margin: 8px 0 2px; }
+  .ev-spark .ln { fill: none; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
+  .ev-spark .ln.now { stroke-width: 2.6; }
+  .ev-spark .spark-base { stroke: var(--color-border); stroke-width: 1; }
+  .ev-spark .spark-now { stroke: var(--color-text-muted); stroke-width: 1; stroke-dasharray: 3 3; }
+  .ev-spark .spark-dot { fill: var(--color-accent); stroke: var(--color-surface-raised); stroke-width: 1.5; }
+  .ev-spark text { font-family: inherit; font-size: 9px; fill: var(--color-text-muted); }
+  .ev-spark-k { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: .75rem; color: var(--color-text-muted); margin-bottom: 10px; }
+  .ev-spark-k > span { display: inline-flex; align-items: center; gap: 5px; }
+  .ev-spark-k i { width: 14px; height: 0; border-top: 3px solid; display: inline-block; }
+  .ev-spark-k i.s-2022 { border-color: var(--chart-pine); } .ev-spark-k i.s-2024 { border-color: var(--chart-gold); } .ev-spark-k i.s-now { border-color: var(--color-accent); }
 
   /* ---- daily line chart ---- */
   .ev-chart { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: 8px; padding: 12px 14px; }
@@ -83,6 +119,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
   .ev-pipe-legend i { width: 14px; height: 14px; border-radius: 3px; margin-top: 3px; display: block; }
   .ev-pipe-legend b { font-variant-numeric: tabular-nums; }
   .ev-pipe-legend small { color: var(--color-text-muted); display: block; }
+  .ev-pipe-legend-tight { grid-template-columns: 1fr; gap: 7px; margin: 8px 0 6px; font-size: .8rem; }
   td.pipebar { min-width: 150px; }
   td.pipebar .ev-pipe { height: 12px; }
 
@@ -117,57 +154,145 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <strong>{{ ev.metadata.asOf | date: "%B %-d, %Y" }}</strong>, compared with past elections at the same number of
   days before election day:
   {%- for y in ev.metadata.comparisons %} {{ y[0] }} at {{ y[1].daysBefore }} days out{% unless forloop.last %};{% endunless %}{% endfor %}.
-  {%- for y in ev.metadata.comparisons %}{% if y[1].lastCompleteDate %}
-  {{ y[0] }} is compared earlier than the other years ({{ y[1].daysBefore }} days out, {{ y[1].lastCompleteDate | date: "%B %-d" }}) because the Secretary of State's {{ y[0] }} absentee file is missing most ballots from some large counties after that day.
-  {%- endif %}{% endfor %}
 </p>
 
 <div class="ev-stats">
   <div class="ev-stat">
     <span class="n" data-n="{{ sw.ballots }}">{{ sw.ballots }}</span><span class="l">ballots cast</span>
+    <span class="ev-spark-box" id="ev-spark"></span>
     <span class="ev-cmps">
+    {%- assign mx = 0 -%}
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}
+      {%- if sw.prior[yk] > mx %}{% assign mx = sw.prior[yk] %}{% endif -%}
+      {%- if sw.atPoint[yk].ballots > mx %}{% assign mx = sw.atPoint[yk].ballots %}{% endif -%}
+    {%- endfor %}
     {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = sw.prior[yk] %}{% assign pt = sw.atPoint[yk] %}
       {%- assign diff = pt.ballots | minus: p | times: 100.0 | divided_by: p | round: 1 -%}
-      {%- capture sfx %} at {{ y[1].daysBefore }} days out{% endcapture -%}
-      {% include ev-cmp.html delta=diff unit="%" year=yk detail=p n=true suffix=sfx %}
+      {%- assign mk = "" -%}{%- if y[1].lastCompleteDate -%}{%- assign mk = "†" -%}{%- endif -%}
+      {%- capture dayl %}at {{ y[1].daysBefore }} days out{% endcapture -%}
+      {%- assign now_b = pt.ballots -%}
+      {%- capture vis %}{% include ev-bars.html ya=yk va=p vy=cur_year vb=now_b mx=mx point=dayl n=true %}{% endcapture -%}
+      {% include ev-cmp.html delta=diff unit="%" year=yk mark=mk visual=vis %}
     {%- endfor %}
     </span>
+    {%- assign ip_pct = sw.inPerson | times: 100.0 | divided_by: sw.ballots | round: 1 -%}
+    {%- assign mail_hist = "" | split: "" -%}
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.priorMailPct[yk] %}
+      {%- capture mh %}{{ sw.priorMailPct[yk] }}% in {{ yk }}{% endcapture %}{% assign mail_hist = mail_hist | push: mh -%}
+    {%- endif %}{% endfor %}
+    <div class="ev-split">
+      <span class="ev-split-h">How those ballots were cast</span>
+      <div class="ev-pipe ev-pipe-split" role="img" aria-label="{{ ip_pct }}% early in person, {{ sw.mailPct }}% mail or electronic">
+        <span class="p-inperson" style="width: {{ ip_pct }}%"></span><span class="p-mail" style="width: {{ sw.mailPct }}%"></span>
+      </div>
+      <div class="ev-pipe-legend ev-pipe-legend-tight">
+        <div><i class="p-inperson"></i><span><b data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</b> early in person<small>{{ ip_pct }}% of ballots cast</small></span></div>
+        <div><i class="p-mail"></i><span><b data-n="{{ sw.mail }}">{{ sw.mail }}</b> mail or electronic<small>{{ sw.mailPct }}% of ballots cast</small></span></div>
+      </div>
+      {%- if mail_hist.size > 0 %}
+      <span class="ev-grow-n">Mail was {{ mail_hist | array_to_sentence_string }} at the same point.</span>
+      {%- endif %}
+    </div>
   </div>
   <div class="ev-stat">
+    {%- if sw.adultPct %}
+    <span class="ev-seg ev-seg-sm" role="group" aria-label="Share of which population" id="ev-denom">
+      <button type="button" data-v="active" aria-pressed="true">Active voters</button>
+      <button type="button" data-v="adults" aria-pressed="false">Citizen adults</button>
+    </span>
+    {%- endif %}
+    <span class="ev-denom-pane" data-pane="active">
     <span class="n">{{ sw.turnoutPct }}%</span><span class="l">of <span data-n="{{ sw.active }}">{{ sw.active }}</span> active voters</span>
     <span class="ev-cmps">
+    {%- assign mx = 0 -%}
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.priorPct[yk] %}
+      {%- if sw.priorPct[yk] > mx %}{% assign mx = sw.priorPct[yk] %}{% endif -%}
+      {%- if sw.atPoint[yk].pct > mx %}{% assign mx = sw.atPoint[yk].pct %}{% endif -%}
+    {%- endif %}{% endfor %}
     {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.priorPct[yk] %}
       {%- assign pp = sw.priorPct[yk] -%}
       {%- assign diff = sw.atPoint[yk].pct | minus: pp | round: 1 -%}
-      {%- capture pdetail %}{{ pp }}% at {{ y[1].daysBefore }} days out{% endcapture -%}
-      {% include ev-cmp.html delta=diff unit=" pts" year=yk detail=pdetail %}
+      {%- assign mk = "" -%}{%- if y[1].lastCompleteDate -%}{%- assign mk = "†" -%}{%- endif -%}
+      {%- capture dayl %}at {{ y[1].daysBefore }} days out{% endcapture -%}
+      {%- assign now_p = sw.atPoint[yk].pct -%}
+      {%- capture vis %}{% include ev-bars.html ya=yk va=pp vy=cur_year vb=now_p mx=mx unit="%" point=dayl %}{% endcapture -%}
+      {%- assign act0 = y[1].activeStatewide -%}
+      {%- if act0 -%}
+      {%- assign bal_g = sw.atPoint[yk].ballots | minus: sw.prior[yk] | times: 100.0 | divided_by: sw.prior[yk] | round: 1 -%}
+      {%- capture vis %}{{ vis }}<span class="ev-vis"><span class="ev-grow-n"><span data-n="{{ act0 }}">{{ act0 }}</span> active voters in {{ yk }}, <span data-n="{{ sw.active }}">{{ sw.active }}</span> now.{% if diff < 0 and bal_g > 0 %} Registration grew faster than ballots, so the share is lower.{% endif %}</span></span>{% endcapture -%}
+      {%- endif -%}
+      {% include ev-cmp.html delta=diff unit=" pts" year=yk mark=mk visual=vis %}
     {%- endif %}{% endfor %}
     </span>
-  </div>
-  {%- if sw.adultPct %}
-  <div class="ev-stat">
+    </span>
+    {%- if sw.adultPct %}
+    <span class="ev-denom-pane" data-pane="adults" hidden>
     <span class="n">{{ sw.adultPct }}%</span><span class="l">of about <span data-n="{{ sw.citizenAdults }}">{{ sw.citizenAdults }}</span> citizen adults (estimated)</span>
     <span class="ev-cmps">
+    {%- assign mx = 0 -%}
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.priorAdultPct[yk] %}
+      {%- if sw.priorAdultPct[yk] > mx %}{% assign mx = sw.priorAdultPct[yk] %}{% endif -%}
+      {%- if sw.atPointAdultPct[yk] > mx %}{% assign mx = sw.atPointAdultPct[yk] %}{% endif -%}
+    {%- endif %}{% endfor %}
     {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.priorAdultPct[yk] %}
       {%- assign pp = sw.priorAdultPct[yk] -%}
       {%- assign diff = sw.atPointAdultPct[yk] | minus: pp | round: 1 -%}
-      {%- capture pdetail %}{{ pp }}% at {{ y[1].daysBefore }} days out{% endcapture -%}
-      {% include ev-cmp.html delta=diff unit=" pts" year=yk detail=pdetail %}
+      {%- assign mk = "" -%}{%- if y[1].lastCompleteDate -%}{%- assign mk = "†" -%}{%- endif -%}
+      {%- capture dayl %}at {{ y[1].daysBefore }} days out{% endcapture -%}
+      {%- assign now_a = sw.atPointAdultPct[yk] -%}{%- capture vis %}{% include ev-bars.html ya=yk va=pp vy=cur_year vb=now_a mx=mx unit="%" point=dayl %}{% endcapture -%}
+      {% include ev-cmp.html delta=diff unit=" pts" year=yk mark=mk visual=vis %}
     {%- endif %}{% endfor %}
+    </span>
+    </span>
+    {%- endif %}
+  </div>
+  <div class="ev-stat">
+    {%- if ev_days_left > 0 %}
+    <span class="n">{{ ev_days_left }}</span><span class="l">more {% if ev_days_left == 1 %}day{% else %}days{% endif %} to vote early in person</span>
+    <span class="ev-left-k">Through {{ ev_end | date: "%A, %B %-d" }}. Election day is {{ ev.metadata.electionDate | date: "%A, %B %-d" }}, {{ ev.metadata.daysBeforeElection }} days away; mail ballots have until then to arrive.</span>
+    {%- else %}
+    <span class="n">{{ ev.metadata.daysBeforeElection }}</span><span class="l">{% if ev.metadata.daysBeforeElection == 1 %}day{% else %}days{% endif %} to election day</span>
+    <span class="ev-left-k">Early in-person voting ended {{ ev_end | date: "%A, %B %-d" }}. Mail ballots have until {{ ev.metadata.electionDate | date: "%A, %B %-d" }} to arrive.</span>
+    {%- endif %}
+    {%- assign mx = 0 -%}
+    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.earlyShare[yk] %}
+      {%- if sw.earlyShare[yk].pct > mx %}{% assign mx = sw.earlyShare[yk].pct %}{% endif -%}
+    {%- endif %}{% endfor %}
+    {%- if mx > 0 %}
+    <span class="ev-cmps">
+      <span class="ev-vis"><span class="ev-split-h">Share of all votes cast before election day</span></span>
+      {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if sw.earlyShare[yk] %}
+      {%- assign es = sw.earlyShare[yk].pct -%}{%- assign esc = sw.earlyShare[yk].contest -%}
+      {% include ev-bars.html ya=yk va=es mx=mx unit="%" point=esc %}
+      {%- endif %}{% endfor %}
+      <span class="ev-vis"><span class="ev-grow-n">Most Georgians vote before election day, so much of the electorate is already counted here. This year's share is not known until the votes are in.</span></span>
+    </span>
+    {%- endif %}
+  </div>
+  {%- assign metro = sw.metro %}
+  {%- if metro.pct %}
+  <div class="ev-stat">
+    <span class="n">{{ metro.pct }}%</span><span class="l">of ballots from metro Atlanta</span>
+    <span class="ev-left-k">{{ metro.counties | array_to_sentence_string }}: the four counties that cast the most early ballots.</span>
+    <span class="ev-cmps">
+      {%- assign mx = metro.pct -%}
+      {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if metro.prior[yk] %}
+        {%- if metro.prior[yk] > mx %}{% assign mx = metro.prior[yk] %}{% endif -%}
+      {%- endif %}{% endfor %}
+      {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if metro.prior[yk] %}
+      {%- assign mv = metro.prior[yk] -%}{%- capture dayl %}at {{ y[1].daysBefore }} days out{% endcapture -%}
+      {% include ev-bars.html ya=yk va=mv mx=mx unit="%" point=dayl %}
+      {%- endif %}{% endfor %}
+      {%- capture dayl %}so far, at {{ ev.metadata.daysBeforeElection }} days out{% endcapture -%}
+      {% include ev-bars.html ya=cur_year va=metro.pct mx=mx unit="%" point=dayl cls="ev-bar-now" %}
+      <span class="ev-vis"><span class="ev-grow-n">Each year is that year's own share at its own stage, not a like-for-like pair. Metro counties cast {{ metro.inPersonPct }}% of this year's early in-person ballots but {{ metro.mailPct }}% of its mail ballots.</span></span>
     </span>
   </div>
   {%- endif %}
-  <div class="ev-stat">
-    <span class="n" data-n="{{ sw.inPerson }}">{{ sw.inPerson }}</span><span class="l">early in person</span>
-    <span class="ev-cmps">
-    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign p = sw.priorInPerson[yk] %}
-      {%- assign diff = sw.atPoint[yk].inPerson | minus: p | times: 100.0 | divided_by: p | round: 1 -%}
-      {%- capture sfx %} at {{ y[1].daysBefore }} days out{% endcapture -%}
-      {% include ev-cmp.html delta=diff unit="%" year=yk detail=p n=true suffix=sfx %}
-    {%- endfor %}
-    </span>
-  </div>
 </div>
+{%- for y in ev.metadata.comparisons %}{% if y[1].lastCompleteDate %}
+<p class="ev-foot">&dagger; {{ y[0] }} is compared at {{ y[1].daysBefore }} days out ({{ y[1].lastCompleteDate | date: "%B %-d" }}), not {{ ev.metadata.daysBeforeElection }}, because the Secretary of State's {{ y[0] }} absentee file is missing most ballots from some large counties after that day. {{ cur_year }} is shown at the same point for a fair comparison.</p>
+{%- endif %}{% endfor %}
 
 {%- assign lean_last = "" -%}{%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if ev.counties[0].lean[yk] %}{% assign lean_last = yk %}{% endif %}{% endfor -%}
 {%- assign pres_year = "" -%}{%- assign mid_year = "" -%}
@@ -195,7 +320,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
   {%- for y in ev.metadata.comparisons %}{% if y[1].lastCompleteDate %}
   <p class="ev-note" style="margin-top:4px">{{ y[0] }} stops at {{ y[1].lastCompleteDate | date: "%B %-d" }} ({{ y[1].lastCompleteDaysBefore }} days before election day): the Secretary of State's {{ y[0] }} absentee file is missing most ballots from some large counties after that day, so later days are not drawn.</p>
   {%- endif %}{% endfor %}
-  <p class="ev-note" style="margin-top:4px">Days are counted back from election day, so a given day lines up across years but not always by weekday. Mail ballots keep arriving through election day; early in-person voting ends Friday, October 30.</p>
+  <p class="ev-note" style="margin-top:4px">Days are counted back from election day, so a given day lines up across years but not always by weekday. Mail ballots keep arriving through election day; early in-person voting {% if ev_days_left > 0 %}ends{% else %}ended{% endif %} {{ ev_end | date: "%A, %B %-d" }}.</p>
 </div>
 
 {%- if ev.counties[0].adultPct %}
@@ -275,15 +400,6 @@ share-description: "How many Georgians have already voted in the November 3, 202
   Past years count accepted ballots returned by the same number of days before each election day ({% for y in ev.metadata.comparisons %}{{ y[0] }}: {{ y[1].cutoff | date: "%B %-d" }}{% unless forloop.last %}; {% endunless %}{% endfor %}).
 </p>
 
-<div class="ev-stats ev-stats-solo">
-  <div class="ev-stat ev-stat-solo">
-    <span class="n" data-n="{{ sw.mail }}">{{ sw.mail }}</span><span class="l">mail or electronic, accepted</span>
-    {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}
-    <span class="d"><span data-n="{{ sw.priorMail[yk] }}">{{ sw.priorMail[yk] }}</span> in {{ yk }} at {{ ev.metadata.comparisons[yk].daysBefore }} days out</span>
-    {%- endfor %}
-  </div>
-</div>
-
 <h2 class="ev-h2">Where mail ballots stand</h2>
 <p class="ev-sub">
   Every mail and electronic ballot on record, by status, as of {{ ev.metadata.asOf | date: "%B %-d" }}.
@@ -351,7 +467,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
 
 <p class="ev-note">
   Source: Georgia Secretary of State absentee and early voting file and active voter registration table.
-  Counts run through the end of {{ ev.metadata.asOf | date: "%B %-d" }}; the Secretary of State's own dashboard updates more often and may show higher totals. Early voting ends Friday, October 30.
+  Counts run through the end of {{ ev.metadata.asOf | date: "%B %-d" }}; the Secretary of State's own dashboard updates more often and may show higher totals. Early in-person voting {% if ev_days_left > 0 %}ends{% else %}ended{% endif %} {{ ev_end | date: "%A, %B %-d" }}.
   Data generated {{ ev.metadata.generatedAt | date: "%B %-d, %Y" }}.
 </p>
 {% else %}
@@ -365,6 +481,18 @@ share-description: "How many Georgians have already voted in the November 3, 202
   Array.prototype.forEach.call(document.querySelectorAll('td[data-f]'), function (td) {
     if (td.dataset.v !== '' && td.dataset.v != null) td.textContent = fmt(td.dataset.v);
   });
+
+  // ---- the share card's two denominators ----
+  var denom = document.getElementById('ev-denom');
+  if (denom) {
+    var card = denom.parentNode;
+    denom.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (!b) return;
+      Array.prototype.forEach.call(denom.querySelectorAll('button'), function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+      Array.prototype.forEach.call(card.querySelectorAll('.ev-denom-pane'), function (pane) { pane.hidden = pane.dataset.pane !== b.dataset.v; });
+    });
+  }
 
   // ---- sortable, searchable tables ----
   function sortable(tableId, searchId) {
@@ -436,6 +564,56 @@ share-description: "How many Georgians have already voted in the November 3, 202
   function endDay(y) { return y === NOW ? SAME : ((CMP[y] && CMP[y].lastCompleteDaysBefore) || 0); }
   function pointDay(y) { return y === NOW ? SAME : CMP[y].daysBefore; }
   function shortDate(iso) { return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+  // ---- running-total sparkline in the "ballots cast" card ----
+  // Same data and the same day window as the big chart below, drawn small: where this year's
+  // running total sits on the curve, against the shape of the years it is compared with.
+  (function () {
+    var box = document.getElementById('ev-spark');
+    if (!box || !DAILY[NOW]) return;
+    var X0 = 24, W = 320, H = 76, PT = 7, PB = 15, PX = 5;
+    function running(y) {  // [daysBefore, running total] from X0 days out to that year's last complete day
+      var rows = {}, out = [], run = 0, last = endDay(y);
+      DAILY[y].forEach(function (r) { rows[r[0]] = r; });
+      for (var d = 45; d >= last; d--) {
+        var r = rows[d] || [d, 0, 0];
+        run += r[1] + r[2];
+        if (d <= X0) out.push([d, run]);
+      }
+      return out;
+    }
+    var years = Object.keys(DAILY).sort();
+    var ser = years.map(function (y) { return { y: y, pts: running(y) }; });
+    var max = 0;
+    ser.forEach(function (s) { s.pts.forEach(function (pt) { if (pt[1] > max) max = pt[1]; }); });
+    if (!max) return;
+    var px = function (d) { return (PX + (X0 - d) / X0 * (W - PX * 2)).toFixed(1); };
+    var py = function (v) { return (H - PB - v / max * (H - PT - PB)).toFixed(1); };
+    var mine = ser.filter(function (s) { return s.y === NOW; })[0];
+    var here = mine.pts.filter(function (pt) { return pt[0] === SAME; })[0];
+    var out = ['<svg class="ev-spark" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Running total of accepted ballots from ' + X0 +
+      ' days before election day onwards, for ' + years.join(', ') + '. ' + NOW + ' stands at ' + (here ? fmt(here[1]) : '') +
+      ' with ' + SAME + ' days to go.">'];
+    out.push('<line class="spark-base" x1="' + px(X0) + '" y1="' + py(0) + '" x2="' + px(0) + '" y2="' + py(0) + '"/>');
+    out.push('<line class="spark-now" x1="' + px(SAME) + '" y1="' + py(max) + '" x2="' + px(SAME) + '" y2="' + py(0) + '"/>');
+    ser.forEach(function (s) {
+      if (!s.pts.length) return;
+      var d = s.pts.map(function (pt, i) { return (i ? 'L' : 'M') + px(pt[0]) + ' ' + py(pt[1]); }).join(' ');
+      var end = s.pts[s.pts.length - 1];
+      var note = s.y === NOW ? 'so far' : (CMP[s.y] && CMP[s.y].lastCompleteDate ? 'file ends ' + shortDate(CMP[s.y].lastCompleteDate) : 'through election day');
+      out.push('<path class="ln ' + (s.y === NOW ? 'now s-now' : 's-' + s.y) + '" d="' + d + '"><title>' + s.y + ': ' +
+        fmt(end[1]) + ' by ' + end[0] + ' days out (' + note + ')</title></path>');
+    });
+    if (here) out.push('<circle class="spark-dot" cx="' + px(here[0]) + '" cy="' + py(here[1]) + '" r="3.2"/>');
+    out.push('<text x="' + px(X0) + '" y="' + (H - 3) + '">' + X0 + ' days out</text>');
+    out.push('<text x="' + px(0) + '" y="' + (H - 3) + '" text-anchor="end">election day</text>');
+    out.push('</svg>');
+    out.push('<span class="ev-spark-k">' + years.map(function (y) {
+      var note = y === NOW ? 'so far' : (CMP[y] && CMP[y].lastCompleteDate ? 'to ' + shortDate(CMP[y].lastCompleteDate) : 'to election day');
+      return '<span><i class="' + (y === NOW ? 's-now' : 's-' + y) + '"></i>' + y + ' <small>' + note + '</small></span>';
+    }).join('') + '</span>');
+    box.innerHTML = out.join('');
+  }());
+
   var svg = document.getElementById('ev-svg');
   if (!svg || !DAILY[NOW]) return;
   var years = Object.keys(DAILY).sort();
