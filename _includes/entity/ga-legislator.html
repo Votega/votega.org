@@ -404,9 +404,14 @@
   /ga-member.html?id= shell has no page.entity and so nothing to derive from: it
   renders nothing here, deliberately — the line is entirely entity-derived, and
   that route's JS profile already shows the seat's election banner.
+
+  The wording is about the SEAT, not the person: nextElection is set for every
+  sitting member whether or not they are running again, and the roster has no
+  field saying whether an incumbent filed. A bare "Next election" would read as a
+  claim that this member is on the ballot.
 {%- endcomment -%}
 {%- if page.entity.nextElection %}
-<p class="next-election"><strong>Next election:</strong> November {{ page.entity.nextElection }} (Georgia General Assembly seats are elected to two-year terms)</p>
+<p class="next-election"><strong>This seat's next election:</strong> November {{ page.entity.nextElection }} (Georgia General Assembly seats are elected to two-year terms)</p>
 {%- endif %}
 
 <div class="msg" id="status" role="alert"></div>
