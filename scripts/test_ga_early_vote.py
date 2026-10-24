@@ -127,6 +127,27 @@ def test_history_missing_file_is_fatal():
     raise AssertionError("a missing history file must stop the run")
 
 
+def test_county_winners_use_share_of_all_votes_and_the_majority_line():
+    import json
+    def county(name, votes):
+        return {"name": name, "ballotItems": [{"name": "Governor", "ballotOptions": [
+            {"name": n, "voteCount": v, "politicalParty": party} for n, v, party in votes]}]}
+    data = {"localResults": [
+        county("Cobb County", [("A", 600, "REP"), ("B", 380, "DEM"), ("C", 20, "LIB")]),
+        county("Dekalb County", [("A", 450, "REP"), ("B", 480, "DEM"), ("C", 70, "LIB")]),   # plurality, not a majority
+        county("Clay County", [("A", 0, "REP"), ("B", 0, "DEM")]),                            # no votes: skipped
+    ]}
+    with tempfile.TemporaryDirectory() as d:
+        p = os.path.join(d, "r.json")
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+        out = g.read_county_winners(p, "Governor")
+    cobb, dekalb = out[g.key("Cobb")], out[g.key("Dekalb")]
+    assert (cobb["party"], cobb["pct"], cobb["majority"]) == ("R", 60.0, True)
+    assert (dekalb["party"], dekalb["pct"], dekalb["majority"]) == ("D", 48.0, False)
+    assert g.key("Clay") not in out
+
+
 def _out(**over):
     import copy
     d = {

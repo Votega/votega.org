@@ -283,6 +283,37 @@ def read_results_json(path):
     sys.exit(f"{path}: none of {TOP_TICKET} is on every county's ballot")
 
 
+PARTY_CODE = {"REP": "R", "DEM": "D"}
+
+
+def read_county_winners(path, contest):
+    """SoS results export -> {countyKey: {party, candidate, pct, majority}} for `contest` (the top-of-ticket race).
+
+    `party` is R or D (anyone else is O) for the candidate with the most votes; `pct` is that candidate's
+    share of ALL the county's votes in the contest, third parties and write-ins included. `majority` is
+    pct > 50: a county where nobody cleared half is not called for a party on the page."""
+    with open(path, encoding="utf-8") as f:
+        counties = (json.load(f).get("localResults")) or []
+    out = {}
+    for c in counties:
+        item = next((b for b in c["ballotItems"] if b["name"].startswith(contest)), None)
+        if item is None or not item["ballotOptions"]:
+            continue
+        opts = item["ballotOptions"]
+        total = sum(o["voteCount"] for o in opts)
+        if not total:
+            continue
+        top = max(opts, key=lambda o: o["voteCount"])
+        pct = round(100.0 * top["voteCount"] / total, 1)
+        out[key(c["name"].replace(" County", ""))] = {
+            "party": PARTY_CODE.get((top.get("politicalParty") or "").upper(), "O"),
+            "candidate": top["name"],
+            "pct": pct,
+            "majority": 100.0 * top["voteCount"] / total > 50.0,
+        }
+    return out
+
+
 def match_repeat(voter_county, voted):
     """{countyKey: how many current voters are also in `voted`} (aggregate only)."""
     matched = {}
@@ -353,7 +384,7 @@ def read_registration(path):
     return out
 
 
-def build(current, registration, priors, priors_mail=None, repeat=None, at_point=None, early_share=None):
+def build(current, registration, priors, priors_mail=None, repeat=None, at_point=None, early_share=None, lean=None):
     """`current` is read_current()'s `counties`; priors/priors_mail/repeat are {year: {countyKey: n}}."""
     empty = {"inPerson": 0, "mail": 0, "pipeline": {g: 0 for g in PIPELINE_ORDER}}
     counties = []
@@ -382,6 +413,9 @@ def build(current, registration, priors, priors_mail=None, repeat=None, at_point
             rec["atPoint"] = {str(y): sum(c.get(k, [0, 0])) for y, c in at_point.items()}
         if early_share:
             rec["earlyShare"] = {str(y): c.get(k) for y, c in early_share.items()}
+        if lean:
+            # who carried the county in each past election's top-of-ticket race (None: no result for the county)
+            rec["lean"] = {str(y): c.get(k) for y, c in lean.items()}
         if repeat:
             # share of this county's 2026 ballots cast by someone who also voted early/absentee in that year
             rec["repeatPct"] = {
@@ -552,10 +586,11 @@ def main(argv=None):
     for spec in a.prior_last_good:
         year, d = spec.split("=", 1)
         last_good[year] = dt.date.fromisoformat(d)
-    results = {}
+    results, lean = {}, {}
     for spec in a.prior_json:
         year, path = spec.split("=", 1)
         results[year] = read_results_json(os.path.expanduser(path))
+        lean[year] = read_county_winners(os.path.expanduser(path), results[year][1])
 
     history = {}
     for spec in a.prior_history:
@@ -632,7 +667,7 @@ def main(argv=None):
             sys.exit(f"--prior-active {year}: no matching --prior")
         prior_meta[year]["activeStatewide"] = int(n)
 
-    counties = build(cur["counties"], registration, priors, priors_mail, repeat, at_point, early_share)
+    counties = build(cur["counties"], registration, priors, priors_mail, repeat, at_point, early_share, lean)
     errs = validate(counties, cur["counties"], registration)
     if errs:
         print("\n".join(errs), file=sys.stderr)

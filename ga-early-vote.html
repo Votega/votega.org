@@ -68,6 +68,13 @@ share-description: "How many Georgians have already voted in the November 3, 202
   .ev-pipe span { display: block; height: 100%; min-width: 0; }
   .p-accepted { background: var(--chart-pine); } .p-outstanding { background: var(--chart-sage); } .p-pending { background: var(--chart-peach); }
   .p-rejected { background: var(--chart-gold); } .p-cancelled { background: var(--chart-slate); }
+  .ev-flabel { font-size: .85rem; color: var(--color-text-muted, var(--color-text)); }
+  .ev-count { font-size: .85rem; margin-left: auto; }
+  .ev-lean { display: inline-block; font-weight: 700; font-size: .85rem; padding: .1rem .45rem; border-radius: 3px; white-space: nowrap; }
+  .ev-lean.sm { font-size: .7rem; padding: .05rem .3rem; margin-left: .25rem; vertical-align: .1em; }
+  .ev-lean.d { background: var(--color-party-d-tint); color: var(--color-party-d-text); }
+  .ev-lean.r { background: var(--color-party-r-tint); color: var(--color-party-r-text); }
+  .ev-lean.n { background: var(--color-party-vacant-tint); color: var(--color-party-vacant-text); }
   .ev-pipe-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px 16px; margin: 12px 0; font-size: .9rem; }
   .ev-pipe-legend div { display: grid; grid-template-columns: 14px 1fr; gap: 0 8px; align-items: start; }
   .ev-pipe-legend i { width: 14px; height: 14px; border-radius: 3px; margin-top: 3px; display: block; }
@@ -77,7 +84,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
   td.pipebar .ev-pipe { height: 12px; }
 
   /* ---- tables ---- */
-  .ev-controls { margin: 12px 0 8px; }
+  .ev-controls { margin: 12px 0 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
   .ev-controls input { width: 100%; max-width: 320px; padding: 8px 10px; border: 1px solid var(--color-border); border-radius: 6px; }
   /* Scroll inside a bounded box so the horizontal scrollbar is always on screen, not at the bottom of 159 rows. */
   .ev-wrap { overflow: auto; max-height: 75vh; border: 1px solid var(--color-border); border-radius: 8px;
@@ -178,6 +185,23 @@ share-description: "How many Georgians have already voted in the November 3, 202
 <div class="ev-controls">
   <label for="ev-search" class="sr-only">Search counties</label>
   <input id="ev-search" type="search" placeholder="Search counties" autocomplete="off">
+  {%- assign lean_years = "" | split: "" -%}
+  {%- for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% if ev.counties[0].lean[yk] %}{% assign lean_years = lean_years | push: yk %}{% endif %}{% endfor -%}
+  {%- if lean_years.size > 0 %}
+  <span class="ev-flabel">Carried in</span>
+  <div class="ev-seg" role="group" aria-label="Election to filter counties by" id="ev-lean-year">
+    {%- for yk in lean_years %}
+    <button type="button" data-v="{{ yk }}" aria-pressed="{% if forloop.last %}true{% else %}false{% endif %}">{{ yk }}</button>
+    {%- endfor %}
+  </div>
+  <span class="ev-flabel">by</span>
+  <div class="ev-seg" role="group" aria-label="Party that carried the county" id="ev-lean-party">
+    <button type="button" data-v="" aria-pressed="true">Any</button>
+    <button type="button" data-v="D" aria-pressed="false">Democrats</button>
+    <button type="button" data-v="R" aria-pressed="false">Republicans</button>
+  </div>
+  {%- endif %}
+  <span class="ev-count" id="ev-count" aria-live="polite"></span>
 </div>
 
 <p class="ev-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> Scroll or swipe the table sideways to see more columns. Tap a column name to sort.</p>
@@ -198,8 +222,8 @@ share-description: "How many Georgians have already voted in the November 3, 202
   </thead>
   <tbody>
     {% for c in ev.counties %}
-    <tr>
-      <td>{{ c.name }}</td>
+    <tr{% for y in ev.metadata.comparisons %}{% assign yk = y[0] %}{% assign l = c.lean[yk] %}{% if l %} data-lean-{{ yk }}="{% if l.majority %}{{ l.party }}{% else %}N{% endif %}"{% endif %}{% endfor %}>
+      <td>{{ c.name }}{% include ev-lean-pills.html c=c %}</td>
       <td data-f="n" data-v="{{ c.ballots }}">{{ c.ballots }}</td>
       <td data-f="n" data-v="{{ c.active }}">{{ c.active }}</td>
       <td data-v="{{ c.turnoutPct }}">{{ c.turnoutPct }}%</td>
@@ -215,7 +239,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
 </div>
 
 <p class="ev-note">
-  Turnout is ballots cast divided by <em>active</em> registered voters. "Early share of turnout" is the share of a past election's votes cast in advance or by mail, from the Secretary of State's results export; it reflects each year's rules, early voting sites and type of election, so 2022 and 2024 are not directly comparable. "Also voted early" is the share of this year's early and absentee voters who also cast an accepted early or absentee ballot in that election (any date); it can't tell a first-time voter from someone who voted on election day. For 2022 it comes from the Secretary of State's voter history file, because the 2022 absentee file is missing most Fulton and Gwinnett ballots; the history file matches the official early and mail totals but has no return dates, which is why the 2022 daily comparison still stops at 17 days out.
+  Turnout is ballots cast divided by <em>active</em> registered voters. "Early share of turnout" is the share of a past election's votes cast in advance or by mail, from the Secretary of State's results export; it reflects each year's rules, early voting sites and type of election, so 2022 and 2024 are not directly comparable. The <span class="ev-lean sm d">&rsquo;22 D</span> and <span class="ev-lean sm r">&rsquo;24 R</span> tags beside a county name show which party's candidate won more than half of that county's votes for Governor in 2022 and President in 2024 (third parties count in the total); a dash would mean no one cleared half. Hover or tap a tag for the percentage. "Also voted early" is the share of this year's early and absentee voters who also cast an accepted early or absentee ballot in that election (any date); it can't tell a first-time voter from someone who voted on election day. For 2022 it comes from the Secretary of State's voter history file, because the 2022 absentee file is missing most Fulton and Gwinnett ballots; the history file matches the official early and mail totals but has no return dates, which is why the 2022 daily comparison still stops at 17 days out.
   Past years count accepted ballots returned by the same number of days before each election day ({% for y in ev.metadata.comparisons %}{{ y[0] }}: {{ y[1].cutoff | date: "%B %-d" }}{% unless forloop.last %}; {% endunless %}{% endfor %}).
 </p>
 
@@ -276,7 +300,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
     {%- assign m = c.mailPipeline -%}
     {%- assign t = m.accepted | plus: m.outstanding | plus: m.other | plus: m.cancelled | plus: m.rejected -%}
     <tr>
-      <td>{{ c.name }}</td>
+      <td>{{ c.name }}{% include ev-lean-pills.html c=c %}</td>
       <td data-f="n" data-v="{{ t }}">{{ t }}</td>
       <td data-f="n" data-v="{{ m.accepted }}">{{ m.accepted }}</td>
       <td data-f="n" data-v="{{ m.outstanding }}">{{ m.outstanding }}</td>
@@ -339,10 +363,34 @@ share-description: "How many Georgians have already voted in the November 3, 202
       });
     });
     var s = document.getElementById(searchId);
-    if (s) s.addEventListener('input', function (e) {
-      var q = e.target.value.trim().toLowerCase();
-      rows.forEach(function (r) { r.hidden = q && r.cells[0].textContent.toLowerCase().indexOf(q) === -1; });
-    });
+    var q = '', lean = { year: null, party: '' };
+    function refresh() {
+      var shown = 0;
+      rows.forEach(function (r) {
+        var hide = (q && r.cells[0].textContent.toLowerCase().indexOf(q) === -1) ||
+                   (lean.party && lean.year && r.getAttribute('data-lean-' + lean.year) !== lean.party);
+        r.hidden = !!hide;
+        if (!hide) shown++;
+      });
+      var cnt = document.getElementById('ev-count');
+      if (cnt && tableId === 'ev-table') cnt.textContent = (q || lean.party) ? 'Showing ' + shown + ' of ' + rows.length + ' counties' : '';
+    }
+    if (s) s.addEventListener('input', function (e) { q = e.target.value.trim().toLowerCase(); refresh(); });
+    if (tableId === 'ev-table') {
+      ['ev-lean-year', 'ev-lean-party'].forEach(function (id) {
+        var g = document.getElementById(id);
+        if (!g) return;
+        var on = g.querySelector('[aria-pressed="true"]');
+        if (on) lean[id === 'ev-lean-year' ? 'year' : 'party'] = on.dataset.v;
+        g.addEventListener('click', function (e) {
+          var b = e.target.closest('button');
+          if (!b) return;
+          Array.prototype.forEach.call(g.querySelectorAll('button'), function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+          lean[id === 'ev-lean-year' ? 'year' : 'party'] = b.dataset.v;
+          refresh();
+        });
+      });
+    }
   }
   sortable('ev-table', 'ev-search');
   sortable('mp-table', 'mp-search');
