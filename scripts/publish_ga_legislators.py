@@ -644,6 +644,92 @@ def build_freeze_roster(slug):
 
 
 # --------------------------------------------------------------------------- #
+# identifiers (data dictionary for every id a consumer will meet)
+# --------------------------------------------------------------------------- #
+#: One source for the identifier dictionary: it renders IDENTIFIERS.md and is embedded in
+#: the archive schemas, so the two cannot drift. `acrossSessions` is the one claim
+#: consumers act on, and exactly one id may make it unconditionally.
+IDENTIFIERS = [
+    {"name": "legisGaGovId", "acrossSessions": "Yes -- the only id that is",
+     "type": "integer",
+     "what": "The General Assembly's own member number.",
+     "source": "legis.ga.gov web services (Member.Id on every roll-call row and roster row). "
+               "Stable back to 2001.",
+     "where": "Every roster row and every session's members.json/members.csv; the live "
+              "roster; id-crosswalk.json. Votes carry it inside the member `id` only as "
+              "the `legis-<id>` form, so join through members.json.",
+     "coverage": "Every legislator who ever voted. No gaps. Use this to follow a person "
+                 "across sessions."},
+    {"name": "id (roster id)", "acrossSessions": "No -- do not join sessions on it",
+     "type": "string, opaque",
+     "what": "The join key between a session's votes.json memberVotes and its "
+             "members.json. Do not read meaning into its shape.",
+     "source": "`ocd-person/<uuid>` is inherited from Open States for members it "
+               "catalogued. Otherwise `legis-<legisGaGovId>`, which the site builds.",
+     "where": "memberVotes keys in votes.json; `id` in members.json/members.csv; live "
+              "ga-members.json and ga-member-votes.json.",
+     "coverage": "Every roster row has one, but the form differs by person, and the same "
+                 "person can carry a different form in another file or session."},
+    {"name": "ocdPersonId", "acrossSessions": "No",
+     "type": "string or null",
+     "what": "Open States' person id.",
+     "source": "Open States (the site no longer uses it as its source of record).",
+     "where": "Live ga-members.json and id-crosswalk.json only. Not in the session "
+              "archive files.",
+     "coverage": "Null for anyone Open States never catalogued."},
+    {"name": "vgId", "acrossSessions": "Yes where it exists, but not yet published per session",
+     "type": "string, e.g. vg-ga-p-000001",
+     "what": "The site's own person id. Append-only ledger: once minted it is never "
+             "reassigned to another person.",
+     "source": "Minted by the site's crosswalk builder, keyed on legisGaGovId for "
+               "state legislators.",
+     "where": "id-crosswalk.json only.",
+     "coverage": "Every current state legislator. Not minted for members who left "
+                 "before the site began tracking them. Absent from session files."},
+    {"name": "ballotpediaId", "acrossSessions": "No",
+     "type": "string or null",
+     "what": "The person's Ballotpedia page name.",
+     "source": "Ballotpedia, matched by the site.",
+     "where": "Live ga-members.json and id-crosswalk.json only.",
+     "coverage": "Partial."},
+    {"name": "legislationId", "acrossSessions": "Unique within the legislature's system",
+     "type": "integer",
+     "what": "The legislature's bill/resolution id.",
+     "source": "legis.ga.gov web services.",
+     "where": "billUrl in votes; ga-bills.json.",
+     "coverage": "Every vote record."},
+    {"name": "voteId", "acrossSessions": "Unique within the legislature's system",
+     "type": "string `<voteId>-<legislationId>`",
+     "what": "One roll call exploded to one record per bundled bill.",
+     "source": "legis.ga.gov web services, combined by the site.",
+     "where": "votes keys in votes.json; the voteId column of votes.csv.",
+     "coverage": "Every vote record."},
+]
+
+
+def identifiers_md():
+    L = ["# Identifiers in this dataset", "",
+         "> **Follow a person across sessions with `legisGaGovId`.** It is the only "
+         "identifier that is present for every legislator in every session. The others "
+         "are cross-references, each with limits listed below.", "",
+         "A session's `votes.json` keys `memberVotes` by the member `id`; look that `id` "
+         "up in the same session's `members.json` to get the person's `legisGaGovId`.", ""]
+    for i in IDENTIFIERS:
+        L += [f"## `{i['name']}`", "",
+              f"- **Carries across sessions:** {i['acrossSessions']}",
+              f"- **Type:** {i['type']}",
+              f"- **What it is:** {i['what']}",
+              f"- **Source:** {i['source']}",
+              f"- **Where it appears:** {i['where']}",
+              f"- **Coverage:** {i['coverage']}", ""]
+    return "\n".join(L).encode()
+
+
+def build_identifiers():
+    return {"IDENTIFIERS.md": identifiers_md()}
+
+
+# --------------------------------------------------------------------------- #
 # archive mode (deliberate backfill of ONE closed biennium)
 # --------------------------------------------------------------------------- #
 #: Pointers the daily modes rewrite in place. An archive run must never emit them: they
@@ -677,6 +763,8 @@ def archive_members_schema(schema_path):
                            "dateVacated, plus a trailing `session` column in the CSV. "
                            "`id` joins to votes.json memberVotes and equals the live "
                            "roster id for members who still sit, else `legis-<legisGaGovId>`.",
+        "identifiers": {i["name"]: {"acrossSessions": i["acrossSessions"], "what": i["what"],
+                                    "source": i["source"]} for i in IDENTIFIERS},
         "type": "object",
         "properties": {
             "metadata": {"type": "object"},
@@ -717,6 +805,8 @@ def build_archive(tag, path):
             "passageClassification": meta.get("passageClassification"),
             "amendmentRuleApplied": meta.get("amendmentRuleApplied"),
             "memberIdSource": meta.get("memberIdSource"),
+            "memberVotesKey": "the `id` of the same session's members.json; follow a "
+                              "person across sessions with legisGaGovId (see IDENTIFIERS.md)",
         },
         "votes": votes,
         "memberVotes": member_votes_map(doc),
@@ -785,6 +875,8 @@ def main():
     elif mode == "freeze-roster":
         slug = resolve_slug(sys.argv[2] if len(sys.argv) > 2 else None)
         artifacts = build_freeze_roster(slug)
+    elif mode == "identifiers":
+        artifacts = build_identifiers()
     elif mode == "archive":
         args = [a for a in sys.argv[2:] if not a.startswith("--")]
         if len(args) != 2:
@@ -792,7 +884,7 @@ def main():
         artifacts = build_archive(args[0], args[1])
         refuse_if_published(session_slug(args[0]), "--overwrite" in sys.argv)
     else:
-        sys.exit("usage: publish_ga_legislators.py <members|votes|scorecard|freeze-roster|archive> [session-slug]")
+        sys.exit("usage: publish_ga_legislators.py <members|votes|scorecard|freeze-roster|identifiers|archive> [session-slug]")
     publish_or_dry_run(REPO, artifacts, TOKEN_ENV, validate=validate)
 
 
