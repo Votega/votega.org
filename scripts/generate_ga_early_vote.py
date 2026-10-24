@@ -9,9 +9,12 @@ Inputs (manual downloads, since the SoS site is behind a bot challenge):
   --absentee  folder of per-county CSVs of the CURRENT election's absentee/early file
               (the same layout as the past-year dumps: dates, ballot status, reasons).
               STATEWIDE.csv repeats every county and is skipped.
-  --registration  SoS active/inactive voter table (.xlsx or .csv: County, Totals, Active, Inactive)
+  --registration  SoS active/inactive voter table (.xlsx, or the committed .csv in scripts/data/early-vote/)
   --prior     YEAR=DIR:ELECTION_DATE  folder of per-county CSVs from a past election
               (e.g. 2022=~/Downloads/A-12054:2022-11-08). May be repeated.
+  --prior-json    YEAR=FILE  that year's SoS results export, or the small file distill_early_vote_inputs.py made from it
+              (scripts/data/early-vote/results-YEAR.json): cross-checks the absentee file and gives each county's
+              early share of final turnout and which party carried it.
   --prior-active  YEAR=N  statewide active voters on that election day (SoS turnout dashboard).
   --prior-history YEAR=CSV  SoS voter history file for a past election (who voted early/by mail, no dates).
               Supplies the repeat-voter figure for a year whose absentee file is incomplete (2022: Fulton and
@@ -254,13 +257,48 @@ def _method(group_name):
     return "prov"
 
 
+DISTILLED_SCHEMA = "early-vote-results/1"
+
+
+def _from_distilled(path, doc):
+    """A file written by distill_results() -> the same ({countyKey: {early, mail, eday, prov, total}}, contest)."""
+    out = {key(n): {k: c[k] for k in ("early", "mail", "eday", "prov", "total")} for n, c in doc["counties"].items()}
+    if len(out) != 159:
+        sys.exit(f"{path}: {len(out)} counties, expected 159")
+    return out, doc["contest"]
+
+
+def distill_results(raw_path, election_date, source_note=""):
+    """Reduce a full SoS results export (tens of MB) to what this page reads: the top-of-ticket race's
+    county totals by voting method, and the county winner. -> dict ready to write as JSON."""
+    res, contest = read_results_json(raw_path)
+    winners = read_county_winners(raw_path, contest)
+    with open(raw_path, encoding="utf-8") as f:
+        names = {key(c["name"].replace(" County", "")): c["name"].replace(" County", "") for c in json.load(f)["localResults"]}
+    return {
+        "schema": DISTILLED_SCHEMA,
+        "metadata": {
+            "electionDate": election_date,
+            "source": "Georgia Secretary of State certified results export (export-YYYYNovGen.json)" + (f"; {source_note}" if source_note else ""),
+            "generatedAt": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "count": len(res),
+            "note": "Votes by voting method for the contest named below, final counts; winner = most votes, majority = more than half of all votes in the county.",
+        },
+        "contest": contest,
+        "counties": {names[k]: dict(g, winner=winners.get(k)) for k, g in sorted(res.items(), key=lambda kv: names[kv[0]])},
+    }
+
+
 def read_results_json(path):
     """SoS results export (export-YYYYNovGen.json) -> ({countyKey: {early, mail, eday, prov, total}}, contest).
 
     Votes by voting method for the top-of-ticket race, final counts. Used to check a past-year absentee
     file against the official results, and for each county's early share of final turnout."""
     with open(path, encoding="utf-8") as f:
-        counties = (json.load(f).get("localResults")) or []
+        doc = json.load(f)
+    if doc.get("schema") == DISTILLED_SCHEMA:
+        return _from_distilled(path, doc)
+    counties = doc.get("localResults") or []
     if not counties:
         sys.exit(f"{path}: no county results (localResults) in this export")
     for prefix in TOP_TICKET:
@@ -323,7 +361,12 @@ def read_county_winners(path, contest):
     share of ALL the county's votes in the contest, third parties and write-ins included. `majority` is
     pct > 50: a county where nobody cleared half is not called for a party on the page."""
     with open(path, encoding="utf-8") as f:
-        counties = (json.load(f).get("localResults")) or []
+        doc = json.load(f)
+    if doc.get("schema") == DISTILLED_SCHEMA:
+        if doc["contest"] != contest:
+            sys.exit(f"{path}: distilled for {doc['contest']}, not {contest}")
+        return {key(n): c["winner"] for n, c in doc["counties"].items() if c.get("winner")}
+    counties = doc.get("localResults") or []
     out = {}
     for c in counties:
         item = next((b for b in c["ballotItems"] if b["name"].startswith(contest)), None)

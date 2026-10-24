@@ -188,6 +188,34 @@ def test_add_context_and_statewide_adult_block():
     assert blk["citizenAdults"] == 2 * 2924 and blk["adultVintage"] == "2024"
 
 
+def test_distilled_results_read_back_identically_to_the_raw_export():
+    import json
+    def county(i):
+        nm = "County" + chr(97 + i // 26) + chr(97 + i % 26) + " County"
+        groups = lambda e, m, d: [{"groupName": "Advance Voting Votes", "voteCount": e}, {"groupName": "Absentee by Mail Votes", "voteCount": m},
+                                  {"groupName": "Election Day Votes", "voteCount": d}]
+        return {"name": nm, "ballotItems": [{"name": "Governor", "ballotOptions": [
+            {"name": "A (Rep)", "voteCount": 60 + i, "politicalParty": "REP", "groupResults": groups(30 + i, 10, 20)},
+            {"name": "B (Dem)", "voteCount": 35, "politicalParty": "DEM", "groupResults": groups(15, 5, 15)},
+            {"name": "C (Lib)", "voteCount": 5, "politicalParty": "LIB", "groupResults": groups(2, 1, 2)}]}]}
+    raw = {"localResults": [county(i) for i in range(159)]}
+    with tempfile.TemporaryDirectory() as d:
+        rp, dp = os.path.join(d, "raw.json"), os.path.join(d, "distilled.json")
+        with open(rp, "w", encoding="utf-8") as f:
+            json.dump(raw, f)
+        doc = g.distill_results(rp, "2022-11-08")
+        with open(dp, "w", encoding="utf-8") as f:
+            json.dump(doc, f)
+        assert g.read_results_json(dp) == g.read_results_json(rp)
+        assert g.read_county_winners(dp, "Governor") == g.read_county_winners(rp, "Governor")
+        assert len(os.listdir(d)) == 2 and os.path.getsize(dp) < os.path.getsize(rp)
+        try:
+            g.read_county_winners(dp, "President")
+        except SystemExit:
+            return
+        raise AssertionError("a distilled file for one contest must not answer for another")
+
+
 def _out(**over):
     import copy
     d = {
