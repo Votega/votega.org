@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-24T13:00:28.770308+00:00",
+    "generatedAt": "2026-10-24T17:43:38.051527+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,69 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 137,
+    "count": 136,
     "windowDays": 45,
-    "entityTagged": 81,
+    "entityTagged": 83,
     "topicCounts": {
       "elections": 47,
       "courts": 19,
       "healthcare": 13,
-      "surveillance": 3,
-      "budget": 12,
+      "surveillance": 2,
+      "budget": 11,
       "education": 13,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000189": {
+      "name": "Ron Stephens",
+      "url": null,
+      "ocdPersonId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
+      "rosterId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
+      "candidateIds": [
+        "ga-house-164-2026-r-1"
+      ]
+    },
+    "vg-ga-p-000468": {
+      "name": "Stephanie O Burgess",
+      "url": null,
+      "candidateIds": [
+        "ga-house-164-2026-d-1"
+      ]
+    },
+    "vg-ga-p-000104": {
+      "name": "Jesse Petrea",
+      "url": null,
+      "ocdPersonId": "ocd-person/38c596a4-df69-4a56-9329-be73f26bc7d5",
+      "rosterId": "ocd-person/38c596a4-df69-4a56-9329-be73f26bc7d5",
+      "candidateIds": [
+        "ga-house-166-2026-r-1"
+      ]
+    },
+    "vg-ga-p-000472": {
+      "name": "Pat Daley",
+      "url": null,
+      "candidateIds": [
+        "ga-house-166-2026-d-1"
+      ]
+    },
+    "vg-ga-p-000002": {
+      "name": "Al Williams",
+      "url": null,
+      "ocdPersonId": "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77",
+      "rosterId": "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77",
+      "candidateIds": [
+        "ga-house-168-2026-d-1"
+      ]
+    },
+    "vg-ga-p-000475": {
+      "name": "Kevin Remillard",
+      "url": null,
+      "candidateIds": [
+        "ga-house-168-2026-r-1"
+      ]
+    },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
       "url": null,
@@ -207,6 +255,47 @@
     }
   },
   "items": [
+    {
+      "id": "7a82ed06bb07",
+      "title": "Georgia House Dist. 164: Ron Stephens, Stephanie Burgess",
+      "url": "https://thecurrentga.org/2026/10/24/georgia-house-dist-164-ron-stephens-stephanie-burgess/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-24T15:33:59+00:00",
+      "snippet": "Incumbent Republican Ron Stephens and Democratic challenger Stephanie Burgess outlined their priorities for Georgia's House of Representatives District 164 seat ahead of the 2027 legislative session.\n",
+      "entityIds": [
+        "vg-ga-p-000189",
+        "vg-ga-p-000468"
+      ],
+      "topics": []
+    },
+    {
+      "id": "7312c81c8b69",
+      "title": "Georgia House Dist. 166: Jesse Petrea, Pat Daley",
+      "url": "https://thecurrentga.org/2026/10/24/georgia-house-dist-166-jesse-petrea-pat-daley/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-24T15:31:19+00:00",
+      "snippet": "Incumbent Republican Jesse Petrea and Democratic challenger Pat Daley outline their platforms and motivations for the Georgia State House of Representatives District 166 election.\nThe Current is an in",
+      "entityIds": [
+        "vg-ga-p-000104",
+        "vg-ga-p-000472"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "edc9f357e07f",
+      "title": "Georgia House Dist. 168: Al Williams, Kevin Remillard",
+      "url": "https://thecurrentga.org/2026/10/24/georgia-house-dist-168-al-williams-kevin-remillard/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-24T15:29:48+00:00",
+      "snippet": "Incumbent Democrat Al Williams and Republican challenger Kevin Remillard present their platforms, priorities for the Georgia State House of Representatives District 168 seat.\nThe Current is an inclusi",
+      "entityIds": [
+        "vg-ga-p-000002",
+        "vg-ga-p-000475"
+      ],
+      "topics": []
+    },
     {
       "id": "dc87b7dc7a3c",
       "title": "Judge blocks Homeland Security from conducting election-related sweeps in Georgia, 8 other states",
@@ -646,31 +735,6 @@
       ]
     },
     {
-      "id": "8ec69700204b",
-      "title": "512 Flock cameras boost Coastal Georgia’s growing surveillance network",
-      "url": "https://thecurrentga.org/2026/10/19/512-flock-cameras-boost-coastal-georgias-growing-surveillance-network/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-19T21:48:34+00:00",
-      "snippet": "A network of at least 512 cameras are used by law enforcement officials across Georgia's coast, raising privacy and transparency concerns.\nThe Current is an inclusive nonprofit, non-partisan news orga",
-      "entityIds": [],
-      "topics": [
-        "surveillance"
-      ]
-    },
-    {
-      "id": "95b051586d7b",
-      "title": "Funding disparity grows in Senate, Coastal Georgia congressional contests",
-      "url": "https://thecurrentga.org/2026/10/19/funding-disparity-grows-in-senate-coastal-georgia-congressional-contests/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-19T21:38:24+00:00",
-      "snippet": "Campaign finance reports reveal significant funding disparities in Georgia congressional and Senate races, highlighting massive contributions from both candidates and record-breaking outside spending ",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "budget"
-      ]
-    },
-    {
       "id": "d2582159f465",
       "title": "Georgia tax collections continued growing in September",
       "url": "https://capitol-beat.org/2026/10/georgia-tax-collections-continued-growing-in-september/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-tax-collections-continued-growing-in-september",
@@ -717,16 +781,6 @@
       "topics": [
         "education"
       ]
-    },
-    {
-      "id": "558a6583ffde",
-      "title": "Chatham $80M emergency center delayed again",
-      "url": "https://thecurrentga.org/2026/10/17/chatham-80-mln-emergency-center-delayed-again/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-17T17:15:00+00:00",
-      "snippet": "Chatham County's long-delayed emergency operations HQ costs rise above $80M and will not be done until after 2027 hurricane season \nThe Current is an inclusive nonprofit, non-partisan news organizatio",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "4d854c237d84",
@@ -1973,18 +2027,6 @@
       "sha256": "dd49c7fd355c46afb7e10831905fd0845ee0ac8054b383c53971cdd3d1c9df31",
       "entityIds": [
         "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
-      "id": "906a184a60e4",
-      "title": "Government Watchdog Finds Defense Department is Robbing Workers of Fair Wages and Benefits in Report Requested by McBath, Ranking Member Scott",
-      "url": "https://mcbath.house.gov/2026/09/09/government-watchdog-finds-defense-department-is-robbing-workers-of-fair-wages-and-benefits-in-report-requested-by-mcbath-ranking-member-scott/",
-      "source": "Rep. Lucy McBath (GA-06, press)",
-      "publishedAt": "2026-09-09T13:07:00+00:00",
-      "snippet": "Washington, DC – Today, the Government Accountability Office (GAO) released a new report on the Department of Defense’s (DOD) use of Intergovernmental Support Agreements (IGSAs) to obtain services fro",
-      "entityIds": [
-        "vg-ga-p-000262"
       ],
       "topics": []
     }
