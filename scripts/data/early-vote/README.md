@@ -5,6 +5,8 @@ Inputs for `scripts/generate_ga_early_vote.py`, which writes `_data/early_vote/g
 challenge, so every download is manual, in a browser. This folder keeps the small aggregates so a refresh does
 not mean re-finding them.
 
+What every field in the SoS files means, and the traps in them, is in [DATA-DICTIONARY.md](DATA-DICTIONARY.md).
+
 ## In this folder (committed)
 
 | File | What it is | Replace when |
