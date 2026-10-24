@@ -102,6 +102,31 @@ def test_match_repeat_counts_by_county():
     assert g.match_repeat(cur, {"1", "3", "99"}) == {"A": 1, "B": 1}
 
 
+def test_history_ids_are_normalized_and_only_early_styles_count():
+    with tempfile.TemporaryDirectory() as d:
+        p = os.path.join(d, "h.csv")
+        with open(p, "w", newline="", encoding="utf-8") as f:
+            w = csv.writer(f)
+            w.writerow(["County Name", "Voter Registration Number", "Election Date", "Election Type", "Party",
+                        "Ballot Style", "Absentee", "Provisional", "Supplemental"])
+            w.writerow(["FULTON", "00001234", "11/08/2022", "GENERAL", "", "EARLY IN-PERSON", "Y", "", "N"])
+            w.writerow(["FULTON", "00001234", "11/08/2022", "GENERAL", "", "ABSENTEE BY MAIL", "Y", "", "N"])  # same voter twice
+            w.writerow(["COBB", "00005678", "11/08/2022", "GENERAL", "", "REGULAR", "", "", "N"])  # election day
+            w.writerow(["COBB", "00009999", "11/08/2022", "GENERAL", "", "ELECTRONIC BALLOT DELIVERY", "Y", "", "N"])
+        voted, counts = g.read_history(p)
+    assert voted == {"1234", "9999"} and counts == {g.key("Fulton"): 1, g.key("Cobb"): 1}
+    # the absentee files carry the id without its zero padding
+    assert g.match_repeat_history({"1234": "A", "5678": "B", "01234": "A"}, voted) == {"A": 2}
+
+
+def test_history_missing_file_is_fatal():
+    try:
+        g.read_history(os.path.join(tempfile.gettempdir(), "no-such-history.csv"))
+    except SystemExit:
+        return
+    raise AssertionError("a missing history file must stop the run")
+
+
 def _out(**over):
     import copy
     d = {
@@ -219,6 +244,10 @@ def test_check_output_past_year_gap_gate():
     unneeded = dict(declared); unneeded["metadata"] = dict(declared["metadata"]); unneeded["metadata"]["pastYearGaps"] = {"2022": []}
     errs, warns = _check(unneeded)
     assert errs == [] and any("still needed" in w for w in warns), (errs, warns)
+    # when the voter history supplies the repeat figure, the warning says so instead of "omitted"
+    declared["metadata"]["comparisons"]["2022"]["repeatSource"] = "voter history"
+    errs, warns = _check(declared)
+    assert errs == [] and any("voter history" in w and "omitted" not in w for w in warns), (errs, warns)
 
 
 def test_check_output_point_must_match_headline_when_same_day():

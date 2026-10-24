@@ -13,6 +13,9 @@ Inputs (manual downloads, since the SoS site is behind a bot challenge):
   --prior     YEAR=DIR:ELECTION_DATE  folder of per-county CSVs from a past election
               (e.g. 2022=~/Downloads/A-12054:2022-11-08). May be repeated.
   --prior-active  YEAR=N  statewide active voters on that election day (SoS turnout dashboard).
+  --prior-history YEAR=CSV  SoS voter history file for a past election (who voted early/by mail, no dates).
+              Supplies the repeat-voter figure for a year whose absentee file is incomplete (2022: Fulton and
+              Gwinnett are short, and the SoS has no other download); checked against --prior-json.
 
 The as-of date is the latest day with an accepted in-person ballot in the file (mail return
 dates include a few stray ones). --as-of overrides it.
@@ -289,6 +292,47 @@ def match_repeat(voter_county, voted):
     return matched
 
 
+HISTORY_EARLY = {"EARLY IN-PERSON", "ABSENTEE BY MAIL", "ELECTRONIC BALLOT DELIVERY", "EARLY", "ABSENTEE"}
+
+
+def _vid(raw):
+    """A voter id with its leading zeros dropped: the voter history file zero-pads to 8 digits, the absentee files do not."""
+    return str(raw).strip().lstrip("0")
+
+
+def read_history(path):
+    """SoS voter history file for a past election (who voted, and how; NO return dates).
+
+    -> (voted {normalized voter id} who cast an early or absentee ballot, counts {countyKey: n of those voters}).
+    Used only where that year's absentee file is incomplete, for the repeat-voter match: it has every
+    county but cannot rebuild a daily series. `path` is the CSV or a folder holding it.
+    """
+    paths = sorted(glob.glob(os.path.join(path, "*.csv"))) if os.path.isdir(path) else [path]
+    if not paths or not all(os.path.isfile(p) for p in paths):
+        sys.exit(f"voter history: no CSV at {path}")
+    voted, counts = set(), {}
+    for p in paths:
+        with open(p, newline="", encoding="utf-8-sig", errors="replace") as f:
+            for row in csv.DictReader(f):
+                if row["Ballot Style"].strip().upper() not in HISTORY_EARLY:
+                    continue
+                vid = _vid(row["Voter Registration Number"])
+                if vid and vid not in voted:
+                    voted.add(vid)
+                    k = key(row["County Name"])
+                    counts[k] = counts.get(k, 0) + 1
+    return voted, counts
+
+
+def match_repeat_history(voter_county, voted):
+    """match_repeat, for a `voted` set of normalized ids (read_history): current ids are normalized the same way."""
+    matched = {}
+    for vid, k in voter_county.items():
+        if _vid(vid) in voted:
+            matched[k] = matched.get(k, 0) + 1
+    return matched
+
+
 def read_registration(path):
     """-> {countyKey: {'name', 'active', 'total'}}, statewide row excluded."""
     if path.lower().endswith(".xlsx"):
@@ -406,7 +450,9 @@ def check_output(data, prev=None, today=None):
                           f"Get a complete file, or declare the last complete day with --prior-last-good")
         elif short:
             warnings.append(f"{y}: {len(short)} counties are short in the absentee file ({names}); the comparison is cut at "
-                            f"{md['comparisons'][y]['lastCompleteDate']}, the last complete day, and the repeat-voter figure is omitted")
+                            f"{md['comparisons'][y]['lastCompleteDate']}, the last complete day"
+                            + ("; the repeat-voter figure comes from the voter history file"
+                               if md["comparisons"][y].get("repeatSource") else ", and the repeat-voter figure is omitted"))
         elif declared:
             warnings.append(f"{y}: declared incomplete after {md['comparisons'][y]['lastCompleteDate']}, but no county is more than 3% off the official totals: is the cut still needed?")
 
@@ -487,6 +533,9 @@ def main(argv=None):
     ap.add_argument("--prior-json", action="append", default=[],
                     help="YEAR=path to that year's SoS results export (export-YYYYNovGen.json): cross-checks the "
                          "absentee file and gives each county's early share of final turnout")
+    ap.add_argument("--prior-history", action="append", default=[],
+                    help="YEAR=path to that year's SoS voter history CSV (or its folder): gives the repeat-voter "
+                         "figure for a year whose absentee file is incomplete (it has no return dates, so no daily series)")
     ap.add_argument("--prior-active", action="append", default=[],
                     help="YEAR=N statewide active voters on that election day (SoS turnout dashboard)")
     ap.add_argument("--out", default=OUT)
@@ -508,6 +557,11 @@ def main(argv=None):
         year, path = spec.split("=", 1)
         results[year] = read_results_json(os.path.expanduser(path))
 
+    history = {}
+    for spec in a.prior_history:
+        year, path = spec.split("=", 1)
+        history[year] = read_history(os.path.expanduser(path))
+
     priors, priors_mail, repeat, prior_meta, prior_daily, prior_final = {}, {}, {}, {}, {}, {}
     for spec in a.prior:
         year, rest = spec.split("=", 1)
@@ -526,9 +580,24 @@ def main(argv=None):
         if "lastCompleteDaysBefore" in meta:  # the series stops where the file stops being complete
             daily = {d: v for d, v in daily.items() if d >= meta["lastCompleteDaysBefore"]}
         priors[year], priors_mail[year], prior_daily[year], prior_final[year] = totals, mail, daily, final
-        if "lastCompleteDaysBefore" not in meta:
+        if year in history:
+            # the history file has every county but no dates, so it is held to the official totals the way
+            # the absentee file is: a short one would undercount who voted before
+            h_voted, h_counts = history[year]
+            if year in results:
+                short = [k for k, g in results[year][0].items()
+                         if (g["early"] + g["mail"]) and abs(h_counts.get(k, 0) - (g["early"] + g["mail"])) / (g["early"] + g["mail"]) > 0.03]
+                if short:
+                    sys.exit(f"--prior-history {year}: the voter history is more than 3% off the official early + mail votes in "
+                             f"{len(short)} counties ({', '.join(display(k) for k in short[:6])}): not a complete file")
+            else:
+                print(f"WARNING: --prior-history {year} was not checked against official results (no --prior-json {year})", file=sys.stderr)
+            repeat[year] = match_repeat_history(cur["voters"], h_voted)
+            meta["repeatSource"] = "voter history"
+            del h_voted
+        elif "lastCompleteDaysBefore" not in meta:
             repeat[year] = match_repeat(cur["voters"], voted)
-        # (an incomplete file would undercount who voted before, so no repeat-voter figure for that year)
+        # (an incomplete file would undercount who voted before, so no repeat-voter figure for that year unless history supplies it)
         del voted  # millions of voter ids: drop as soon as the match is done
         prior_meta[year] = meta
 
