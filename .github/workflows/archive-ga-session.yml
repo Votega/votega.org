@@ -5,6 +5,8 @@ name: Archive a closed GA session (manual backfill)
 # --archive) and publishes them (publish_ga_legislators.py archive). It writes ONLY under
 # sessions/<slug>/ and never touches latest.json, scorecard-latest.json or data/*, and it
 # refuses to replace a session already published unless `overwrite` is ticked.
+# It also (re)publishes IDENTIFIERS.md at the repo root, the id dictionary the session
+# files refer to; that file is generated, so republishing it is idempotent.
 # Nothing here changes the site or any committed file in this repo.
 
 permissions:
@@ -49,3 +51,8 @@ jobs:
           SESSION: ${{ inputs.session }}
           OVERWRITE: ${{ inputs.overwrite && '--overwrite' || '' }}
         run: python3 scripts/publish_ga_legislators.py archive "$SESSION" "out/archive/ga-votes-$SESSION.json" $OVERWRITE
+
+      - name: Publish the identifier dictionary (IDENTIFIERS.md)
+        env:
+          GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
+        run: python3 scripts/publish_ga_legislators.py identifiers

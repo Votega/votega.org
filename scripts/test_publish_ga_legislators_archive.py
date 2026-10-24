@@ -119,6 +119,19 @@ check("path guard rejects pointer",
 check("path guard rejects other slug",
       exits(P.assert_archive_paths, {"sessions/2025-2026/votes.json": b"x"}, "2023-2024"), True)
 
+print("identifier dictionary")
+check("exactly one id carries across all sessions unconditionally",
+      [i["name"] for i in P.IDENTIFIERS if i["acrossSessions"].startswith("Yes --")],
+      ["legisGaGovId"])
+check("identifiers mode emits only IDENTIFIERS.md", sorted(P.build_identifiers()), ["IDENTIFIERS.md"])
+md = P.build_identifiers()["IDENTIFIERS.md"].decode()
+check("dictionary names every id", all(f"`{i['name']}`" in md for i in P.IDENTIFIERS), True)
+sch = json.loads(art["sessions/2023-2024/members.schema.json"])
+check("archive schema embeds the dictionary", set(sch["identifiers"]),
+      {i["name"] for i in P.IDENTIFIERS})
+check("votes.json says how to join members",
+      "legisGaGovId" in v["metadata"]["memberVotesKey"], True)
+
 if failures:
     print(f"\n{len(failures)} failure(s)")
     sys.exit(1)
