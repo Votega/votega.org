@@ -15,6 +15,7 @@
     align-items: flex-start;
     margin-top: 2rem;
   }
+  .next-election { margin-top: 1.25rem; font-size: 0.95rem; }
   #memberDetails {
     flex: 1;
     min-width: 0;
@@ -364,10 +365,6 @@
       {%- if e.summary %}<p>{{ e.summary | escape }}</p>{% endif -%}
       {%- if e.about %}{% for para in e.about %}<p>{{ para | escape }}</p>{% endfor %}{% endif -%}
       <dl style="margin:0 0 1rem;font-size:0.95rem;color:var(--color-text);">
-        {%- if e.nextElection %}
-        <dt style="font-weight:600;display:inline;">Next election:</dt>
-        <dd style="display:inline;margin:0 0 0 .25rem;">November {{ e.nextElection }} (Georgia General Assembly seats are elected to two-year terms)</dd><br>
-        {%- endif -%}
         {%- if e.committees and e.committees != empty %}
         <dt style="font-weight:600;display:inline;">Committees:</dt>
         <dd style="display:inline;margin:0 0 0 .25rem;">{{ e.committees | join: ", " | escape }}</dd><br>
@@ -390,6 +387,32 @@
     <div id="sidebarContent"></div>
   </div>
 </div>
+
+{%- comment -%}
+  The next-election line lives OUTSIDE #memberDetails on purpose. The script below
+  replaces that container's innerHTML wholesale once the member data resolves, so
+  anything the Liquid fallback renders that the JS template does not repeat is
+  destroyed about a second into every real page view. This line was in the
+  fallback and in view-source (so it survived review) but never in the live DOM.
+  A sibling element the JS never touches keeps a single copy instead of
+  duplicating the markup into the JS template, where the two would drift. Do not
+  move it back in.
+
+  The year comes from the entity's own nextElection, derived by
+  ga_next_general_election() in scripts/build_entity_pages.py — never hardcoded
+  (its cycle-agnostic rule). It is unset for departed members. The legacy
+  /ga-member.html?id= shell has no page.entity and so nothing to derive from: it
+  renders nothing here, deliberately — the line is entirely entity-derived, and
+  that route's JS profile already shows the seat's election banner.
+
+  The wording is about the SEAT, not the person: nextElection is set for every
+  sitting member whether or not they are running again, and the roster has no
+  field saying whether an incumbent filed. A bare "Next election" would read as a
+  claim that this member is on the ballot.
+{%- endcomment -%}
+{%- if page.entity.nextElection %}
+<p class="next-election"><strong>This seat's next election:</strong> November {{ page.entity.nextElection }} (Georgia General Assembly seats are elected to two-year terms)</p>
+{%- endif %}
 
 <div class="msg" id="status" role="alert"></div>
 
