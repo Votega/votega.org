@@ -67,6 +67,17 @@ for live in G.LIVE_OUTPUTS:
     check(f"refuses live output {live}", G.archive_output_ok(live), False)
 check("allows out/archive path", G.archive_output_ok("out/archive/x.json"), True)
 
+print("anomalous roll calls")
+ok_rows = [(i, "Yea") for i in range(1, 91)] + [(i, "Nay") for i in range(91, 181)]
+check("clean House roll call passes", G.roll_call_anomaly(ok_rows, 90, 90, "House"), None)
+check("vacant sentinel rows ignored",
+      G.roll_call_anomaly(ok_rows + [(G.VACANT_ID, "Nay")] * 3, 90, 90, "House"), None)
+dup_rows = [(i, o) for i in range(1, 181) for o in ("Yea", "Yea", "Nay", "Nay")]
+check("4 rows per member is flagged",
+      "180 members listed more than once" in (G.roll_call_anomaly(dup_rows, 360, 360, "House") or ""), True)
+check("tally above seat count is flagged",
+      "exceeds the 56 seats" in (G.roll_call_anomaly([(1, "Yea")], 40, 20, "Senate") or ""), True)
+
 print("publisher archive")
 votes = {"1-2": {"bill": "HB 1", "title": "T", "session": "2023_24", "motionText": "m",
                  "chamber": "House of Representatives", "date": "2023-03-01",
@@ -107,6 +118,7 @@ check("members.csv rows", len(rows), 2)
 v = json.loads(art["sessions/2023-2024/votes.json"])
 check("votes.json memberVotes decoded to legacy shape",
       v["memberVotes"]["legis-1"], [{"voteId": "1-2", "vote": "Yea"}])
+check("votes.json carries excludedRollCalls", v["metadata"]["excludedRollCalls"], [])
 check("votes.json names its session", v["metadata"]["session"], "2023_24")
 
 check("rejects a current-biennium tag", exits(P.build_archive, "2025_26", good), True)

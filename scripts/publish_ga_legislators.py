@@ -805,6 +805,7 @@ def build_archive(tag, path):
             "passageClassification": meta.get("passageClassification"),
             "amendmentRuleApplied": meta.get("amendmentRuleApplied"),
             "memberIdSource": meta.get("memberIdSource"),
+            "excludedRollCalls": meta.get("excludedRollCalls", []),
             "memberVotesKey": "the `id` of the same session's members.json; follow a "
                               "person across sessions with legisGaGovId (see IDENTIFIERS.md)",
         },

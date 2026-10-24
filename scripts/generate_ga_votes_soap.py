@@ -175,8 +175,30 @@ def build_crosswalk(path=CROSSWALK_FILE):
 
 # ---------------------------------------------------------------------------- build
 
+#: Voting seats per chamber, used to recognise a roll call whose tally cannot be real.
+SEATS = {"House": 180, "Senate": 56}
+
+
+def roll_call_anomaly(rows, yea, nay, branch):
+    """Why a roll call's member rows cannot be trusted, or None.
+
+    Two symptoms of the same source fault, both seen in 2021-22: a member listed more
+    than once (legis.ga.gov returned 4 rows per member, 720 for 180 seats, on two
+    'Local Calendar' roll calls that each bundle 3,287 bills), and a Yea+Nay tally above
+    the chamber's seat count. Such a roll call cannot say how any member voted, so the
+    archive mode leaves it out and records it."""
+    per_member = Counter(mid for mid, _ in rows if mid != VACANT_ID)
+    dup = sum(1 for n in per_member.values() if n > 1)
+    if dup:
+        return "%d members listed more than once (%d rows for %d members)" % (
+            dup, sum(per_member.values()), len(per_member))
+    if yea + nay > SEATS.get(branch, float("inf")):
+        return "tally %d-%d exceeds the %d seats" % (yea, nay, SEATS[branch])
+    return None
+
 def build_session(our_session, by_legis_id, os_index, title_index,
-                  chambers=CHAMBERS, sample=None, verbose=True, amendment_ids=frozenset()):
+                  chambers=CHAMBERS, sample=None, verbose=True, amendment_ids=frozenset(),
+                  skip_anomalous=False):
     """Fetch one session's roll calls across `chambers`, keep PASSAGE votes (overlay-
     primary), resolve members by id ONLY, and explode each roll call into one record
     per bundled bill. Returns (votes_meta, member_votes, stats)."""
@@ -186,6 +208,7 @@ def build_session(our_session, by_legis_id, os_index, title_index,
     stats = Counter()
     unresolved_members = Counter()
     unresolved_names = {}
+    anomalous = []
 
     for branch in chambers:
         listings = get_vote_listings(legis_session, branch)
@@ -239,6 +262,20 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                     stats["unresolvedRows"] += 1
                     unresolved_members[mid] += 1
             stats["resolvedRows"] += len(resolved)
+
+            # Archive mode only (the daily run is unchanged): leave out a roll call whose
+            # rows are self-contradictory, and say so in the output.
+            if skip_anomalous:
+                why = roll_call_anomaly(rows, yea, nay, branch)
+                if why:
+                    stats["anomalousSkipped"] += 1
+                    stats["rollCalls"] -= 1
+                    stats["passageByOverlay" if source == "overlay" else "passageByNative"] -= 1
+                    anomalous.append({"voteId": vid, "caption": caption.strip(), "date": date10,
+                                      "chamber": CHAMBER_NAMES[branch],
+                                      "bundledBills": len([e for e in legn if e["legislationId"] is not None]),
+                                      "reason": why})
+                    continue
 
             # The GetVotes listing carries the chamber's OFFICIAL tally, produced
             # independently of the per-member rows GetVote returns. Comparing the two
@@ -314,6 +351,8 @@ def build_session(our_session, by_legis_id, os_index, title_index,
         if sample is not None and len(seen) >= sample:
             break
 
+    if anomalous:
+        stats["anomalousRollCalls"] = anomalous
     stats["unresolvedMembers"] = len(unresolved_members)
     stats["unresolvedGap"] = sorted(
         ({"legisId": mid, "name": unresolved_names.get(mid), "rows": n}
@@ -416,7 +455,7 @@ def archive_main(args, chambers, sample):
           % (tag, legis_session, len(ids)))
     title_index = {} if args.no_titles else get_title_index(legis_session)
     votes_meta, mv, stats = build_session(tag, ids, {}, title_index, chambers=chambers,
-                                          sample=sample)
+                                          sample=sample, skip_anomalous=True)
     if not votes_meta or not mv:
         sys.exit("Error: zero roll calls or member rows for %s — refusing to write." % tag)
     compact, vote_ids = encode_member_votes(mv, list(votes_meta.keys()))
@@ -434,6 +473,9 @@ def archive_main(args, chambers, sample):
             "rollCalls": stats["rollCalls"],
             "droppedNonPassage": stats["droppedNonPassage"],
             "unpublished": stats["unpublished"],
+            "excludedRollCalls": stats.get("anomalousRollCalls", []),
+            "excludedRollCallsNote": "Left out because the source's member rows contradict "
+                                     "themselves; see each entry's reason.",
             "partial": bool(sample) or chambers != CHAMBERS,
             "passageClassification": "caption only (no Open States overlay)",
             "amendmentRuleApplied": False,
@@ -558,7 +600,7 @@ def main():
         for ocd, entries in mv.items():
             member_votes.setdefault(ocd, []).extend(entries)
         for k, val in stats.items():
-            if k in ("unresolvedGap", "unresolvedMembers"):
+            if k in ("unresolvedGap", "unresolvedMembers", "anomalousRollCalls"):
                 continue
             agg[k] += val
         for g in stats.get("unresolvedGap", []):
