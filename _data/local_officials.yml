@@ -824,8 +824,28 @@ jurisdictions:
 
     # ---- PHASE 1 — ROSTER --------------------------------------------------
     members:
+      - name: "Tommy Davis"
+        role: Chair
+        title: "Interim Chairman"
+        actingFor: "Marcello Banes"           # serves during his suspension
+        actingSince: 2026-10-23               # date of the appointing EO 10.23.26.01
+        seat: At-large
+        party: ""                             # not yet confirmed — fill in from a source
+        email: ""
+        phone: ""
+        last_elected: null                    # appointed, not elected
+        term_end: null                        # serves only for the duration of Banes's suspension
+        next_election: 2028
+        voting: false               # verify: Banes was tie-break only; confirm whether the interim chair votes
+        tie_break_only: true
+        notes: "Appointed by Gov. Brian Kemp on October 23, 2026 to fill the temporary vacancy in the Office of Chairman for the duration of Marcello Banes's suspension (Code Section 45-5-6(d)(1))."
+        statusSource: "https://gov.georgia.gov/document/2026-executive-order/10232601/download"
+        source: "https://gov.georgia.gov/document/2026-executive-order/10232601/download"
       - name: "Marcello Banes"
-        role: Chair                 # countywide-elected board chair
+        role: Commissioner          # was countywide-elected Chair; Davis presides during the suspension
+        title: "Chairman (suspended)"
+        replacedBy: "Tommy Davis"             # interim appointee, EO 10.23.26.01
+        replacedDate: 2026-10-23              # interim named; his suspension began 2026-09-24 (statusDate)
         seat: At-large
         party: "Democratic"                   # Republican | Democratic
         email: "mbanes@co.newton.ga.us"
@@ -837,7 +857,7 @@ jurisdictions:
         tie_break_only: true
         status: Suspended           # still holds the seat; badged pending an interim appointment
         statusDate: 2026-09-24      # Executive Order 09.24.26.03
-        statusNote: "Suspended by Gov. Brian Kemp by executive order following the indictment review commission (EO 09.04.26.02). The Board of Commissioners is submitting three nominees to the Governor, who will appoint an interim chair."
+        statusNote: "Suspended by Gov. Brian Kemp by executive order following the indictment review commission (EO 09.04.26.02). Gov. Kemp appointed Tommy Davis to fill the temporary vacancy in the Office of Chairman on October 23, 2026 (EO 10.23.26.01)."
         statusSource: "https://gov.georgia.gov/document/2026-executive-order/09242603/download"
         photo: "https://www.newtoncountyga.gov/ImageRepository/Document?documentId=868"
         source: "https://www.newtoncountyga.gov/158/Marcello-Banes"
