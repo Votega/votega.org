@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-24T17:43:38.051527+00:00",
+    "generatedAt": "2026-10-24T19:58:56.240074+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -30,9 +30,9 @@
     "topicCounts": {
       "elections": 47,
       "courts": 19,
+      "budget": 12,
       "healthcare": 13,
       "surveillance": 2,
-      "budget": 11,
       "education": 13,
       "ethics": 5
     },
@@ -87,6 +87,29 @@
         "ga-house-168-2026-r-1"
       ]
     },
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
+    "vg-ga-p-000030": {
+      "name": "Burt Jones",
+      "url": null,
+      "ocdPersonId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
+      "rosterId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
+      "candidateIds": [
+        "challenger-burt-jones-gov-2026"
+      ]
+    },
+    "vg-ga-p-000111": {
+      "name": "Jon Burns",
+      "url": null,
+      "ocdPersonId": "ocd-person/64012657-d026-411c-9525-3232524a5145",
+      "rosterId": "ocd-person/64012657-d026-411c-9525-3232524a5145",
+      "candidateIds": [
+        "ga-house-159-2026-r-1"
+      ]
+    },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
       "url": null,
@@ -108,11 +131,6 @@
       "candidateIds": [
         "challenger-keisha-bottoms-gov-2026"
       ]
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000021": {
       "name": "Brad Raffensperger",
@@ -192,31 +210,6 @@
       "name": "Lucy McBath",
       "url": null,
       "bioguideId": "M001208"
-    },
-    "vg-ga-p-000030": {
-      "name": "Burt Jones",
-      "url": null,
-      "ocdPersonId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
-      "rosterId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
-      "candidateIds": [
-        "challenger-burt-jones-gov-2026"
-      ]
-    },
-    "vg-ga-p-000111": {
-      "name": "Jon Burns",
-      "url": null,
-      "ocdPersonId": "ocd-person/64012657-d026-411c-9525-3232524a5145",
-      "rosterId": "ocd-person/64012657-d026-411c-9525-3232524a5145",
-      "candidateIds": [
-        "ga-house-159-2026-r-1"
-      ]
-    },
-    "vg-ga-p-000384": {
-      "name": "Tyler J. Harper",
-      "url": null,
-      "candidateIds": [
-        "challenger-tyler-harper-agcom-2026"
-      ]
     },
     "vg-ga-p-000261": {
       "name": "Sanford D. Bishop",
@@ -307,6 +300,22 @@
       "topics": [
         "elections",
         "courts"
+      ]
+    },
+    {
+      "id": "ec07cc806895",
+      "title": "Gov. Kemp Extends Suspension of State Gas Tax",
+      "url": "https://gov.georgia.gov/press-releases/2026-10-24/gov-kemp-extends-suspension-state-gas-tax",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-10-24T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp, in consultation with Lieutenant Governor Burt Jones and Speaker of the House Jon Burns, today announced he is extending a state of emergency due to global market vola",
+      "entityIds": [
+        "vg-ga-p-000024",
+        "vg-ga-p-000030",
+        "vg-ga-p-000111"
+      ],
+      "topics": [
+        "budget"
       ]
     },
     {
@@ -1272,21 +1281,6 @@
       "snippet": "WASHINGTON, D.C. — Congresswoman Nikema Williams (GA-05) joined U.S. Senator John Fetterman (D-PA) and U.S. Senator Cynthia Lummis (R-WY) in a letter to U.S. Department of Housing and Urban Developmen",
       "entityIds": [
         "vg-ga-p-000254"
-      ],
-      "topics": []
-    },
-    {
-      "id": "60058159a24e",
-      "title": "Gov. Kemp Suspends Penalties for Off-Road “Dyed” Diesel Use, Provides Further Relief for Truckers and Farmers",
-      "url": "https://gov.georgia.gov/press-releases/2026-10-06/gov-kemp-suspends-penalties-road-dyed-diesel-use-provides-further-relief",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-10-06T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that, in consultation with Lt. Governor Burt Jones, Speaker of the House Jon Burns, and Commissioner of Agriculture Tyler Harper, he has amended the St",
-      "entityIds": [
-        "vg-ga-p-000024",
-        "vg-ga-p-000030",
-        "vg-ga-p-000111",
-        "vg-ga-p-000384"
       ],
       "topics": []
     },
