@@ -8,6 +8,13 @@ it like this:
 
 > Source: VoteGA.org (https://www.votega.org), CC BY-SA 4.0.
 
+Some county figures (population, citizenship and education) are compiled from U.S.
+Census Bureau American Community Survey estimates by Georgia Civic Data
+(georgiacivicdata.org), which licenses its compilation under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Those figures keep that
+license and credit; we have changed them (for example, estimating citizen adults),
+and the changes are described on the page that uses them.
+
 The underlying facts come from public and government sources whose own terms may
 apply to anything you redistribute. See <https://www.votega.org/about-the-data>
 and <https://www.votega.org/open-data>.

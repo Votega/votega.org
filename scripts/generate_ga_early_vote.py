@@ -283,6 +283,36 @@ def read_results_json(path):
     sys.exit(f"{path}: none of {TOP_TICKET} is on every county's ballot")
 
 
+CONTEXT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "ga-county-context.json")
+
+
+def read_county_context(path):
+    """scripts/data/ga-county-context.json (build_ga_county_context.py) -> ({countyKey: {vintage: {...}}}, [vintages], metadata).
+
+    ACS 5-year county context from Georgia Civic Data. Each election uses the vintage ending in its
+    own year, and this year (no vintage of its own yet) uses the newest one."""
+    if not os.path.isfile(path):
+        return None, [], {}
+    with open(path, encoding="utf-8") as f:
+        doc = json.load(f)
+    vintages = sorted(doc["metadata"]["vintages"])
+    out = {key(c["name"]): {v: c[v] for v in vintages if v in c} for c in doc["counties"].values()}
+    if len(out) != 159:
+        sys.exit(f"{path}: {len(out)} counties, expected 159")
+    return out, vintages, doc["metadata"]
+
+
+def add_context(counties, context, vintage):
+    """Attach each county's estimated citizen adults, ballots as a share of them, and bachelor's share (this year's vintage)."""
+    for c in counties:
+        ctx = (context.get(key(c["name"])) or {}).get(vintage)
+        if not ctx or not ctx["citizenAdults"]:
+            sys.exit(f"county context: no {vintage} figures for {c['name']}")
+        c["citizenAdults"] = ctx["citizenAdults"]
+        c["adultPct"] = round(100.0 * c["ballots"] / ctx["citizenAdults"], 1)
+        c["bachelorsPct"] = ctx["bachelorsPct"]
+
+
 PARTY_CODE = {"REP": "R", "DEM": "D"}
 
 
@@ -555,6 +585,24 @@ def daily_series(daily):
     return [[d, daily[d][0], daily[d][1]] for d in sorted(daily, reverse=True)]
 
 
+def _adult_block(counties, context, vintage, ballots, prior_meta, at_point):
+    """Statewide citizen-adult figures: this year's headline, and each past year at ITS OWN vintage so the
+    comparison is like for like (2022 ballots over the 2022 vintage, this year's ballots at that point over this year's)."""
+    now = sum(c["citizenAdults"] for c in counties)
+    out = {"citizenAdults": now, "adultPct": round(100.0 * ballots / now, 1) if now else None, "adultVintage": vintage,
+           "priorAdultPct": {}, "atPointAdultPct": {}}
+    for y, meta in prior_meta.items():
+        v = y if all(y in c for c in context.values()) else vintage  # the vintage ending in that election's year, if we have it
+        denom = sum(c[v]["citizenAdults"] for c in context.values())
+        prior = sum(c["prior"][y] for c in counties)
+        pt = sum(sum(x) for x in at_point[y].values()) if y in at_point else None
+        if denom:
+            out["priorAdultPct"][y] = round(100.0 * prior / denom, 1)
+            if pt is not None and now:
+                out["atPointAdultPct"][y] = round(100.0 * pt / now, 1)
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--absentee", required=True, help="folder of per-county CSVs, current election")
@@ -570,6 +618,9 @@ def main(argv=None):
     ap.add_argument("--prior-history", action="append", default=[],
                     help="YEAR=path to that year's SoS voter history CSV (or its folder): gives the repeat-voter "
                          "figure for a year whose absentee file is incomplete (it has no return dates, so no daily series)")
+    ap.add_argument("--county-context", default=CONTEXT,
+                    help="county Census context snapshot (build_ga_county_context.py); gives ballots as a share of "
+                         "estimated citizen adults and the bachelor's share. Skipped, with a warning, if the file is missing")
     ap.add_argument("--prior-active", action="append", default=[],
                     help="YEAR=N statewide active voters on that election day (SoS turnout dashboard)")
     ap.add_argument("--out", default=OUT)
@@ -673,6 +724,12 @@ def main(argv=None):
         print("\n".join(errs), file=sys.stderr)
         sys.exit(1)
 
+    context, ctx_vintages, ctx_meta = read_county_context(os.path.expanduser(a.county_context))
+    ctx_vintage = ctx_vintages[-1] if ctx_vintages else None
+    if context is None:
+        print(f"WARNING: no county context at {a.county_context}: no citizen-adult figures this run", file=sys.stderr)
+    else:
+        add_context(counties, context, ctx_vintage)
     ballots = sum(c["ballots"] for c in counties)
     active = sum(c["active"] for c in counties)
     metro = [c for c in counties if c["name"] in BIG_FOUR]
@@ -715,6 +772,9 @@ def main(argv=None):
             "comparisons": prior_meta,
             "quality": {k: v for k, v in cur["quality"].items() if k != "rows"},
             "pastYearGaps": past_gaps,
+            **({"countyContext": {"vintage": ctx_vintage, "source": ctx_meta.get("source"), "license": ctx_meta.get("license"),
+                                  "generatedAt": ctx_meta.get("generatedAt"), "note": ctx_meta.get("citizenAdultsNote")}}
+               if context else {}),
         },
         "statewide": {
             "ballots": ballots,
@@ -751,6 +811,7 @@ def main(argv=None):
                     "contest": contest}
                 for y, (res, contest) in results.items()
             },
+            **(_adult_block(counties, context, ctx_vintage, ballots, prior_meta, at_point) if context else {}),
             "priorPct": {
                 y: round(100.0 * sum(c["prior"][y] for c in counties) / m["activeStatewide"], 1)
                 for y, m in prior_meta.items() if m.get("activeStatewide")

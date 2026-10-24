@@ -148,6 +148,46 @@ def test_county_winners_use_share_of_all_votes_and_the_majority_line():
     assert g.key("Clay") not in out
 
 
+def _ctx_file(d, n=159, vintages=("2022", "2024")):
+    import json
+    names = ["County" + chr(97 + i // 26) + chr(97 + i % 26) for i in range(n)]  # key() ignores digits, so the names must be letters
+    doc = {"metadata": {"vintages": list(vintages), "source": "x", "license": "CC BY 4.0"},
+           "counties": {f"13{i:03d}": dict({"name": nm}, **{v: {"adults": 1000 + int(v), "noncitizens": 100, "citizenAdults": 900 + int(v),
+                                                               "bachelorsPct": 25.0} for v in vintages})
+                        for i, nm in enumerate(names)}}
+    p = os.path.join(d, "ctx.json")
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(doc, f)
+    return p
+
+
+def test_county_context_reads_by_county_key_and_demands_159():
+    with tempfile.TemporaryDirectory() as d:
+        ctx, vints, meta = g.read_county_context(_ctx_file(d))
+        assert vints == ["2022", "2024"] and ctx[g.key("Countyab")]["2024"]["citizenAdults"] == 2924
+        try:
+            g.read_county_context(_ctx_file(d, n=158))
+        except SystemExit:
+            pass
+        else:
+            raise AssertionError("a short context file must stop the run")
+        assert g.read_county_context(os.path.join(d, "missing.json"))[0] is None
+
+
+def test_add_context_and_statewide_adult_block():
+    with tempfile.TemporaryDirectory() as d:
+        ctx, vints, _ = g.read_county_context(_ctx_file(d))
+    counties = [{"name": "Countyab", "ballots": 292, "prior": {"2022": 90}}, {"name": "Countyac", "ballots": 0, "prior": {"2022": 0}}]
+    g.add_context(counties, {k: v for k, v in ctx.items() if k in {g.key("Countyab"), g.key("Countyac")}}, "2024")
+    assert counties[0]["adultPct"] == 10.0 and counties[0]["bachelorsPct"] == 25.0 and counties[1]["adultPct"] == 0.0
+    sub = {k: v for k, v in ctx.items() if k in {g.key("Countyab"), g.key("Countyac")}}
+    blk = g._adult_block(counties, sub, "2024", 292, {"2022": {}}, {"2022": {g.key("Countyab"): [100, 0]}})
+    # 2022 ballots over the 2022 vintage; this year's ballots at that point over the 2024 vintage
+    assert blk["priorAdultPct"]["2022"] == round(100.0 * 90 / (2 * 2922), 1)
+    assert blk["atPointAdultPct"]["2022"] == round(100.0 * 100 / (2 * 2924), 1)
+    assert blk["citizenAdults"] == 2 * 2924 and blk["adultVintage"] == "2024"
+
+
 def _out(**over):
     import copy
     d = {
