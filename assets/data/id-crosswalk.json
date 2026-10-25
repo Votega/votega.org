@@ -2,7 +2,7 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId and ballotpediaId; ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-10-25T13:41:00+00:00",
+  "generatedAt": "2026-10-25T18:07:30+00:00",
   "count": 746,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
@@ -32,15 +32,7 @@
    "unkeyed": 78,
    "withAnyFiling": 649,
    "candidacies": 716,
-   "ambiguous": [
-    "vg-ga-p-000056",
-    "vg-ga-p-000067",
-    "vg-ga-p-000194",
-    "vg-ga-p-000207",
-    "vg-ga-p-000225",
-    "vg-ga-p-000227",
-    "vg-ga-p-000241"
-   ]
+   "ambiguous": []
   }
  },
  "people": [
@@ -4387,7 +4379,7 @@
     "rosterId": "ocd-person/83a7bbf2-d69c-4813-bbeb-52820e6b9af4",
     "ocdPersonId": "ocd-person/83a7bbf2-d69c-4813-bbeb-52820e6b9af4",
     "legisGaGovId": 760,
-    "ballotpediaId": null,
+    "ballotpediaId": "David_Wilkerson_(Georgia)",
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -4440,11 +4432,11 @@
     "ballotpediaId": {
      "method": "authoritative",
      "source": "openstates/people (CC0 1.0)",
-     "confidence": "ambiguous",
-     "candidates": [
-      "David_Wilkerson",
-      "David_Wilkerson_(Georgia)"
-     ]
+     "confidence": "medium",
+     "aliases": [
+      "David_Wilkerson"
+     ],
+     "note": "the person file lists these Ballotpedia titles for one person; the (Georgia) or fuller title is kept and the rest are aliases"
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -5255,7 +5247,7 @@
     "rosterId": "ocd-person/81dde544-49e9-4fb0-9313-32eacaf6194b",
     "ocdPersonId": "ocd-person/81dde544-49e9-4fb0-9313-32eacaf6194b",
     "legisGaGovId": 184,
-    "ballotpediaId": null,
+    "ballotpediaId": "Don_Parsons_(Georgia)",
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -5308,11 +5300,11 @@
     "ballotpediaId": {
      "method": "authoritative",
      "source": "openstates/people (CC0 1.0)",
-     "confidence": "ambiguous",
-     "candidates": [
-      "Don_Parsons",
-      "Don_Parsons_(Georgia)"
-     ]
+     "confidence": "medium",
+     "aliases": [
+      "Don_Parsons"
+     ],
+     "note": "the person file lists these Ballotpedia titles for one person; the (Georgia) or fuller title is kept and the rest are aliases"
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -15288,7 +15280,7 @@
     "rosterId": "ocd-person/2ba0916f-40b1-4255-9496-94b12ccabd1e",
     "ocdPersonId": "ocd-person/2ba0916f-40b1-4255-9496-94b12ccabd1e",
     "legisGaGovId": 4901,
-    "ballotpediaId": null,
+    "ballotpediaId": "Samuel_Park",
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -15339,13 +15331,10 @@
      "note": "matched on the member's legisGaGovId appearing in the person file's legis.ga.gov profile link; openstates/people declares no such identifier"
     },
     "ballotpediaId": {
-     "method": "authoritative",
-     "source": "openstates/people (CC0 1.0)",
-     "confidence": "ambiguous",
-     "candidates": [
-      "Samuel_Park",
-      "Samuel_Park_(Georgia)"
-     ]
+     "method": "reviewed",
+     "source": "assets/data/id-crosswalk-overrides.json",
+     "confidence": "high",
+     "note": "Wikidata Q28033863 (the person en.wikipedia.org/wiki/Sam_Park resolves to) carries Ballotpedia ID (P2390) 'Samuel_Park'. openstates/people lists both Samuel_Park and Samuel_Park_(Georgia); the resolver's (Georgia)-title rule would pick the latter, so this pins the title Wikidata names. Ballotpedia itself blocks automated reads, so the live page was not opened."
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -16343,7 +16332,7 @@
     "rosterId": "ocd-person/b278b399-5ca3-4cd7-bc19-4053166577a2",
     "ocdPersonId": "ocd-person/b278b399-5ca3-4cd7-bc19-4053166577a2",
     "legisGaGovId": 143,
-    "ballotpediaId": null,
+    "ballotpediaId": "Sheila_Jones_(Georgia)",
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -16396,11 +16385,11 @@
     "ballotpediaId": {
      "method": "authoritative",
      "source": "openstates/people (CC0 1.0)",
-     "confidence": "ambiguous",
-     "candidates": [
-      "Sheila_Jones",
-      "Sheila_Jones_(Georgia)"
-     ]
+     "confidence": "medium",
+     "aliases": [
+      "Sheila_Jones"
+     ],
+     "note": "the person file lists these Ballotpedia titles for one person; the (Georgia) or fuller title is kept and the rest are aliases"
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -17757,7 +17746,7 @@
     "rosterId": "ocd-person/93f45299-bfa2-4458-844a-5c6b9bdd8c1d",
     "ocdPersonId": "ocd-person/93f45299-bfa2-4458-844a-5c6b9bdd8c1d",
     "legisGaGovId": 62,
-    "ballotpediaId": null,
+    "ballotpediaId": "Timothy_Bearden",
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -17810,11 +17799,11 @@
     "ballotpediaId": {
      "method": "authoritative",
      "source": "openstates/people (CC0 1.0)",
-     "confidence": "ambiguous",
-     "candidates": [
-      "Tim_Bearden",
-      "Timothy_Bearden"
-     ]
+     "confidence": "medium",
+     "aliases": [
+      "Tim_Bearden"
+     ],
+     "note": "the person file lists these Ballotpedia titles for one person; the (Georgia) or fuller title is kept and the rest are aliases"
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -17927,7 +17916,7 @@
     "rosterId": "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c",
     "ocdPersonId": "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c",
     "legisGaGovId": 4885,
-    "ballotpediaId": null,
+    "ballotpediaId": "Todd_Jones_(Georgia)",
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -17980,11 +17969,11 @@
     "ballotpediaId": {
      "method": "authoritative",
      "source": "openstates/people (CC0 1.0)",
-     "confidence": "ambiguous",
-     "candidates": [
-      "Todd_Jones",
-      "Todd_Jones_(Georgia)"
-     ]
+     "confidence": "medium",
+     "aliases": [
+      "Todd_Jones"
+     ],
+     "note": "the person file lists these Ballotpedia titles for one person; the (Georgia) or fuller title is kept and the rest are aliases"
     },
     "legisGaGovId": {
      "method": "authoritative",
@@ -18904,7 +18893,7 @@
     "rosterId": "ocd-person/23ffff2b-3ce6-46dc-996c-7b4fd71607bc",
     "ocdPersonId": "ocd-person/23ffff2b-3ce6-46dc-996c-7b4fd71607bc",
     "legisGaGovId": 5015,
-    "ballotpediaId": null,
+    "ballotpediaId": "Nabilah_Islam_Parkes",
     "bioguideId": null,
     "govtrackId": null,
     "openSecretsId": null,
@@ -18929,11 +18918,11 @@
     "ballotpediaId": {
      "method": "authoritative",
      "source": "openstates/people (CC0 1.0)",
-     "confidence": "ambiguous",
-     "candidates": [
-      "Nabilah_Islam",
-      "Nabilah_Islam_Parkes"
-     ]
+     "confidence": "medium",
+     "aliases": [
+      "Nabilah_Islam"
+     ],
+     "note": "the person file lists these Ballotpedia titles for one person; the (Georgia) or fuller title is kept and the rest are aliases"
     },
     "legisGaGovId": {
      "method": "authoritative",
