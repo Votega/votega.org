@@ -325,12 +325,18 @@ share-description: "How many Georgians have already voted in the November 3, 202
 
 {%- if ev.counties[0].adultPct %}
 <h2 class="ev-h2">Turnout and education, county by county</h2>
-<p class="ev-sub">Each dot is a county: the share of its adults 25 and over with a bachelor&rsquo;s degree, against the share of its estimated citizen adults who have already voted. Diamonds voted Republican and circles Democratic in {{ lean_last }}. Tap or hover a dot to read it.</p>
+<p class="ev-sub">Each dot is a county: the share of its adults 25 and over with a bachelor&rsquo;s degree, against the share who have already voted. Switch the measure to see the same counties against their citizen adults or against their registered voters &mdash; the two disagree most where students and soldiers live. Diamonds voted Republican and circles Democratic in {{ lean_last }}. Tap or hover a dot to read it.</p>
 <div class="ev-chart">
-  <svg class="ev-svg" id="sc-svg" viewBox="0 0 640 340" role="img" aria-labelledby="sc-svg-t"><title id="sc-svg-t">Scatter plot of each Georgia county: share of adults with a bachelor&rsquo;s degree against the share of citizen adults who have voted early or by mail</title></svg>
+  <div class="ev-toggles">
+    <div class="ev-seg" role="group" aria-label="Turnout measure" id="sc-ymode">
+      <button type="button" data-v="adults" aria-pressed="true">Of citizen adults</button>
+      <button type="button" data-v="active" aria-pressed="false">Of active voters</button>
+    </div>
+  </div>
+  <svg class="ev-svg" id="sc-svg" viewBox="0 0 640 340" role="img" aria-labelledby="sc-svg-t"><title id="sc-svg-t">Scatter plot of each Georgia county: share of adults with a bachelor&rsquo;s degree against the share who have voted early or by mail, measured against either citizen adults or active registered voters</title></svg>
   <p class="ev-readout" id="sc-readout" aria-live="polite" style="min-height:3.2em"></p>
   <p class="ev-note" id="sc-note" style="margin-top:4px"></p>
-  <p class="ev-note" style="margin-top:4px">This compares counties; it says nothing about any one voter. Education stands in for many things at once (age, income, how urban a county is). Education and adult-population counts are estimates from the Census Bureau&rsquo;s American Community Survey ({{ ev.metadata.countyContext.vintage }} 5-year, via <a href="https://georgiacivicdata.org">Georgia Civic Data</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), and small counties carry wide margins of error. &ldquo;Citizen adults&rdquo; is residents 18 and over minus non-citizen residents of every age, so it runs slightly low. The same figures are in the table below.</p>
+  <p class="ev-note" style="margin-top:4px">This compares counties; it says nothing about any one voter. Education stands in for many things at once (age, income, how urban a county is). A county with a large university or military post sits low against citizen adults, because students and service members are counted among its adults while many of them are registered to vote somewhere else; switching the measure to active registered voters drops that effect, since it counts only people registered in the county. Education and adult-population counts are estimates from the Census Bureau&rsquo;s American Community Survey ({{ ev.metadata.countyContext.vintage }} 5-year, via <a href="https://georgiacivicdata.org">Georgia Civic Data</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), and small counties carry wide margins of error. &ldquo;Citizen adults&rdquo; is residents 18 and over minus non-citizen residents of every age, so it runs slightly low. The same figures are in the table below.</p>
 </div>
 {%- endif %}
 
@@ -741,13 +747,21 @@ share-description: "How many Georgians have already voted in the November 3, 202
   var LEAN_YEAR = '{{ lean_last }}';
   var DOTS = [
     {%- for c in ev.counties %}{% assign l = c.lean[lean_last] %}
-    [{{ c.name | jsonify }}, {{ c.bachelorsPct }}, {{ c.adultPct }}, "{% if l and l.majority %}{{ l.party }}{% endif %}", {{ c.ballots }}]{% unless forloop.last %},{% endunless %}
+    [{{ c.name | jsonify }}, {{ c.bachelorsPct }}, {{ c.adultPct }}, "{% if l and l.majority %}{{ l.party }}{% endif %}", {{ c.ballots }}, {{ c.turnoutPct }}]{% unless forloop.last %},{% endunless %}
     {%- endfor %}
   ];
+  // Two denominators for the same ballots. Citizen adults counts everyone old enough to vote,
+  // including students and soldiers registered elsewhere; active voters counts only this county's roll.
+  var MODES = {
+    adults: { i: 2, axis: 'Citizen adults who have voted', word: 'of citizen adults', den: 'citizen adults' },
+    active: { i: 5, axis: 'Active voters who have voted', word: 'of active voters', den: 'active registered voters' }
+  };
+  var mode = 'adults';
+  var yv = function (d) { return d[MODES[mode].i]; };
   var NS = 'http://www.w3.org/2000/svg';
   var W = 640, H = 340, L = 50, R = 14, T = 12, B = 42;
   var xmax = Math.ceil(Math.max.apply(null, DOTS.map(function (d) { return d[1]; })) / 10) * 10;
-  var ymax = Math.ceil(Math.max.apply(null, DOTS.map(function (d) { return d[2]; })) / 5) * 5;
+  var ymax;
   var xs = function (v) { return L + v / xmax * (W - L - R); };
   var ys = function (v) { return T + (1 - v / ymax) * (H - T - B); };
   function el(name, attrs, text) {
@@ -757,6 +771,15 @@ share-description: "How many Georgians have already voted in the November 3, 202
     return e;
   }
   var fmt = function (n) { return Number(n).toLocaleString('en-US'); };
+  var shapes = [], sel = null;
+  var out = document.getElementById('sc-readout');
+  var partyWord = function (p) { return p === 'D' ? 'Democratic' : p === 'R' ? 'Republican' : 'no majority'; };
+
+  function render() {
+  var title = svg.querySelector('title');
+  while (svg.lastChild) svg.removeChild(svg.lastChild);
+  if (title) svg.appendChild(title);
+  ymax = Math.ceil(Math.max.apply(null, DOTS.map(yv)) / 5) * 5;
   var v;
   for (v = 0; v <= ymax; v += 5) {
     svg.appendChild(el('line', { x1: L, x2: W - R, y1: ys(v), y2: ys(v), 'class': v === 0 ? 'axis' : 'grid' }));
@@ -765,11 +788,11 @@ share-description: "How many Georgians have already voted in the November 3, 202
   for (v = 0; v <= xmax; v += 10) svg.appendChild(el('text', { x: xs(v), y: H - 24, 'text-anchor': 'middle' }, v + '%'));
   svg.appendChild(el('text', { x: (L + W - R) / 2, y: H - 6, 'text-anchor': 'middle' }, 'Adults 25 and over with a bachelor’s degree or higher'));
   var ymid = (T + H - B) / 2;
-  svg.appendChild(el('text', { x: 12, y: ymid, 'text-anchor': 'middle', transform: 'rotate(-90 12 ' + ymid + ')' }, 'Citizen adults who have voted'));
+  svg.appendChild(el('text', { x: 12, y: ymid, 'text-anchor': 'middle', transform: 'rotate(-90 12 ' + ymid + ')' }, MODES[mode].axis));
 
   // least-squares line and the correlation across the counties
   var n = DOTS.length, sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
-  DOTS.forEach(function (d) { sx += d[1]; sy += d[2]; sxx += d[1] * d[1]; syy += d[2] * d[2]; sxy += d[1] * d[2]; });
+  DOTS.forEach(function (d) { var y = yv(d); sx += d[1]; sy += y; sxx += d[1] * d[1]; syy += y * y; sxy += d[1] * y; });
   var slope = (n * sxy - sx * sy) / (n * sxx - sx * sx), icpt = (sy - slope * sx) / n;
   var r = (n * sxy - sx * sy) / Math.sqrt((n * sxx - sx * sx) * (n * syy - sy * sy));
   var xl = DOTS.map(function (d) { return d[1]; });
@@ -778,8 +801,8 @@ share-description: "How many Georgians have already voted in the November 3, 202
 
   // colour through style so the role token resolves; the shape carries the party as well as the colour
   var party = function (p) { return p === 'D' ? 'var(--color-party-d)' : p === 'R' ? 'var(--color-party-r)' : 'var(--color-party-vacant)'; };
-  var shapes = DOTS.map(function (d) {
-    var cx = xs(d[1]), cy = ys(d[2]), q = 4.5, e;
+  shapes = DOTS.map(function (d) {
+    var cx = xs(d[1]), cy = ys(yv(d)), q = 4.5, e;
     if (d[3] === 'R') e = el('rect', { x: cx - q, y: cy - q, width: 2 * q, height: 2 * q, transform: 'rotate(45 ' + cx + ' ' + cy + ')', 'class': 'sc-dot' });
     else e = el('circle', { cx: cx, cy: cy, r: q, 'class': 'sc-dot' });
     e.setAttribute('style', 'fill:' + party(d[3]));
@@ -788,24 +811,37 @@ share-description: "How many Georgians have already voted in the November 3, 202
     return e;
   });
   document.getElementById('sc-note').textContent = 'Across the ' + n + ' counties, a larger college-educated share goes with ' +
-    (r >= 0 ? 'higher' : 'lower') + ' early and mail turnout so far (correlation ' + r.toFixed(2) + '). The dashed line is the straight-line fit.';
+    (r >= 0 ? 'higher' : 'lower') + ' early and mail turnout so far, measured against ' + MODES[mode].den +
+    ' (correlation ' + r.toFixed(2) + '). The dashed line is the straight-line fit.';
+  sel = null;
+  out.textContent = 'Hover or tap a dot to read a county.';
+  }
 
-  var out = document.getElementById('sc-readout'), sel = null;
-  var partyWord = function (p) { return p === 'D' ? 'Democratic' : p === 'R' ? 'Republican' : 'no majority'; };
   function show(i) {
     if (sel != null) shapes[sel].classList.remove('sel');
     sel = i; shapes[i].classList.add('sel'); svg.appendChild(shapes[i]);
     var d = DOTS[i];
-    out.innerHTML = '<strong>' + d[0] + '</strong><br>' + d[1] + '% of adults 25+ have a bachelor’s &middot; ' + d[2] + '% of citizen adults have voted (' + fmt(d[4]) + ' ballots)<br>' + partyWord(d[3]) + ' in ' + LEAN_YEAR;
+    out.innerHTML = '<strong>' + d[0] + '</strong><br>' + d[1] + '% of adults 25+ have a bachelor’s &middot; ' + yv(d) + '% ' +
+      MODES[mode].word + ' have voted (' + fmt(d[4]) + ' ballots)<br>' + partyWord(d[3]) + ' in ' + LEAN_YEAR;
   }
   function nearest(e) {
     var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
     var m = pt.matrixTransform(svg.getScreenCTM().inverse()), best = -1, bd = 1e9;
-    DOTS.forEach(function (d, i) { var dx = xs(d[1]) - m.x, dy = ys(d[2]) - m.y, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } });
+    DOTS.forEach(function (d, i) { var dx = xs(d[1]) - m.x, dy = ys(yv(d)) - m.y, dd = dx * dx + dy * dy; if (dd < bd) { bd = dd; best = i; } });
     return bd < 18 * 18 ? best : -1;
   }
   svg.addEventListener('pointermove', function (e) { var i = nearest(e); if (i >= 0) show(i); });
   svg.addEventListener('pointerdown', function (e) { var i = nearest(e); if (i >= 0) show(i); });
-  out.textContent = 'Hover or tap a dot to read a county.';
+
+  var ymodes = document.getElementById('sc-ymode');
+  if (ymodes) ymodes.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b || b.dataset.v === mode) return;
+    Array.prototype.forEach.call(ymodes.querySelectorAll('button'), function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+    mode = b.dataset.v;
+    render();
+  });
+
+  render();
 })();
 </script>
