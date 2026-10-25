@@ -2,10 +2,13 @@
 """Build consumer-friendly race artifacts for the Votega/ga-races-elections repo.
 
 Source: assets/data/races.json (nested: race -> phases -> ballots/candidates).
-Artifacts (repo root, matching the repo's layout):
+Artifacts, under races/<cycle>/ (one folder per election cycle, like early-vote/<election>/):
   races.json           Passthrough
   races.csv            One row per race (top-level fields flattened)
-  candidates.csv       One row per (race, phase, candidate) — unnests the deep candidate data
+  candidates.csv       One row per (race, phase, candidate) — unnests the deep candidate data.
+                       candidateId is blank for an incumbent listed by reference; memberId/memberSource
+                       carry the member record they point at, and candidateKey is candidateId when there
+                       is one, else memberId, so every row has one join key
   races.schema.json    JSON Schema for races.json
   RACES.md             Overview: counts by cycle, level, and active phase
 
@@ -28,6 +31,28 @@ TOKEN_ENV = "GA_RACES_TOKEN"
 SRC_RACES = "assets/data/races.json"
 SRC_FEDERAL = "assets/data/current-members.json"
 SRC_STATE = "assets/data/ga-members.json"
+
+RAW_BASE = "https://raw.githubusercontent.com/Votega/ga-races-elections/main"
+#: Where these files used to live (the repo root, until 2026-10). The publish workflow removes them from the
+#: target repo, because publishing only ever adds files. Do not reuse these names at the root.
+LEGACY_ROOT_FILES = ("races.json", "races.csv", "candidates.csv", "races.schema.json", "RACES.md")
+
+
+def group_by_cycle(races):
+    """{cycle: [races]} -- each cycle is published to its own folder, races/<cycle>/.
+
+    races.json may keep a past cycle's races alongside the current one once a new cycle starts
+    (see RECURRING-TASKS.md section 2), and the older cycle's folder must keep describing only
+    that cycle. A race with no integer cycle is refused: the folder name is part of the URL."""
+    out = {}
+    for r in races:
+        c = r.get("cycle")
+        if not isinstance(c, int) or isinstance(c, bool):
+            raise ValueError(f"refusing to publish: race {r.get('id')!r} has no integer cycle ({c!r})")
+        out.setdefault(c, []).append(r)
+    if not out:
+        raise ValueError("refusing to publish: races.json holds no races")
+    return dict(sorted(out.items()))
 
 
 def load_name_maps():
@@ -137,11 +162,27 @@ def races_csv(races):
     return buf.getvalue().encode()
 
 
+def member_ref(cand):
+    """(memberId, memberSource) for a candidate that is, or points at, a sitting member.
+
+    A federal incumbent is stored as a reference (`memberId` + `memberSource`, no candidate `id`);
+    a candidate who also holds a seat carries their own `id` AND `existingMemberId`. Same precedence
+    as resolve_name, so the id published here is the one the name was looked up with."""
+    mid = cand.get("existingMemberId") or cand.get("memberId")
+    src = cand.get("existingMemberSource") or cand.get("memberSource")
+    return (mid or "", (src or "") if mid else "")
+
+
+# Columns are only ever APPENDED, so a consumer reading by position keeps working.
+CANDIDATE_COLUMNS = ["raceId", "level", "chamber", "district", "cycle", "phase", "electionDate",
+                     "party", "name", "type", "isIncumbent", "candidateId",
+                     "memberId", "memberSource", "candidateKey"]
+
+
 def candidates_csv(races, fed, state):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
-    w.writerow(["raceId", "level", "chamber", "district", "cycle", "phase", "electionDate",
-                "party", "name", "type", "isIncumbent", "candidateId"])
+    w.writerow(CANDIDATE_COLUMNS)
     for r in races:
         for phase_name, phase in (r.get("phases") or {}).items():
             if not isinstance(phase, dict):
@@ -149,6 +190,7 @@ def candidates_csv(races, fed, state):
             for c in phase_candidates(phase):
                 if c.get("withdrawn"):
                     continue
+                member_id, member_source = member_ref(c)
                 w.writerow([
                     r.get("id"), r.get("level"), r.get("chamber"),
                     "" if r.get("district") is None else r.get("district"),
@@ -156,6 +198,8 @@ def candidates_csv(races, fed, state):
                     c.get("party"), resolve_name(c, fed, state), c.get("type"),
                     bool(c.get("isIncumbent") or c.get("type") == "incumbent"),
                     c.get("id"),
+                    member_id, member_source,
+                    c.get("id") or member_id,
                 ])
     return buf.getvalue().encode()
 
@@ -188,10 +232,10 @@ def races_md(doc):
     return ("\n".join(L) + "\n").encode()
 
 
-def schema():
+def schema(schema_path="races/2026/races.schema.json"):
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://raw.githubusercontent.com/Votega/ga-races-elections/main/races.schema.json",
+        "$id": f"{RAW_BASE}/{schema_path}",
         "title": "Georgia Races & Elections",
         "description": "Curated Georgia election races. Each race carries per-phase ballots; "
                        "partisan races use party-keyed `ballots`, nonpartisan (judicial) races use "
@@ -207,7 +251,7 @@ def schema():
                     "required": ["id", "level", "chamber", "cycle"],
                     "properties": {
                         "id": {"type": "string"},
-                        "level": {"type": "string", "enum": ["federal", "state", "state-executive", "state-judicial"]},
+                        "level": {"type": "string", "enum": ["federal", "state", "state-executive", "state-judicial", "local"]},
                         "chamber": {"type": "string"},
                         "district": {"type": ["integer", "null"]},
                         "cycle": {"type": "integer"},
@@ -230,22 +274,40 @@ def schema():
 
 
 def build_artifacts():
-    doc = json.load(open(SRC_RACES, encoding="utf-8"))
+    raw = open(SRC_RACES, "rb").read()
+    doc = json.loads(raw)
     races = doc.get("races", [])
     check_active_phase(races)  # refuse to publish a stale/forgotten phase bump
+    by_cycle = group_by_cycle(races)
     fed, state = load_name_maps()
-    return {
-        "races.json": open(SRC_RACES, "rb").read(),
-        "races.csv": races_csv(races),
-        "candidates.csv": candidates_csv(races, fed, state),
-        "races.schema.json": build_json(schema()),
-        "RACES.md": races_md(doc),
-    }
+    out = {}
+    for cycle, cycle_races in by_cycle.items():
+        folder = f"races/{cycle}"
+        if len(by_cycle) == 1:
+            cycle_doc, cycle_json = doc, raw  # one cycle: the source file, byte for byte
+        else:
+            cycle_doc = {**doc, "races": cycle_races}
+            cycle_json = build_json(cycle_doc)
+        out.update({
+            f"{folder}/races.json": cycle_json,
+            f"{folder}/races.csv": races_csv(cycle_races),
+            f"{folder}/candidates.csv": candidates_csv(cycle_races, fed, state),
+            f"{folder}/races.schema.json": build_json(schema(f"{folder}/races.schema.json")),
+            f"{folder}/RACES.md": races_md(cycle_doc),
+        })
+    return out
+
+
+def validate(artifacts):
+    folders = sorted(p for p in artifacts if p.endswith("/races.json"))
+    if not folders:
+        raise ValueError("refusing to publish: no races.json artifact was built")
+    for path in folders:
+        min_items(path, "races")(artifacts)
 
 
 def main():
-    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV,
-                       validate=min_items("races.json", "races"))
+    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV, validate=validate)
 
 
 if __name__ == "__main__":

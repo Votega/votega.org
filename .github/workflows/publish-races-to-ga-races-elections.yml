@@ -56,6 +56,9 @@ jobs:
           # first commit and again after a reset when a push loses a race.
           restage() {
             ( cd "$GITHUB_WORKSPACE" && OUT_DIR="$GITHUB_WORKSPACE/target-repo" python3 scripts/publish_races.py )
+            # Layout move (2026-10): these files used to sit at the repo root and now live in races/<cycle>/.
+            # Publishing only ever adds files, so remove the old root copies here (a no-op once they are gone).
+            git rm -q --ignore-unmatch -- races.json races.csv candidates.csv races.schema.json RACES.md
             git add -A
           }
 
