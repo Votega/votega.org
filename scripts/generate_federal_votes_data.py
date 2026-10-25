@@ -62,6 +62,7 @@ from datetime import date, datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.http import fetch_bytes
+from lib import voteview
 from lib.congress_session import current_congress, congress_years
 
 LEGISLATORS_BASE = "https://raw.githubusercontent.com/unitedstates/congress-legislators/main"
@@ -597,12 +598,17 @@ def main():
     # Reuse layer. A roll call is immutable once the chamber has published it, so
     # anything already in the committed file is taken as-is and never re-fetched.
     existing_votes, existing_member_votes = {}, {}
+    #: Senate roll calls a previous run took from Voteview (senate.gov was
+    #: unreachable). Voteview is a derivative, so these are NOT immutable: they
+    #: are re-fetched from the official record as soon as it is reachable again.
+    provisional = set()
     if not args.full_refresh:
         try:
             with open(out_file, encoding="utf-8") as fh:
                 prev = json.load(fh)
             existing_votes = prev.get("votes") or {}
             existing_member_votes = prev.get("memberVotes") or {}
+            provisional = set((prev.get("metadata") or {}).get("senateRollsFromVoteview") or [])
             print(f"Reusing {len(existing_votes)} roll calls already in {out_file}")
         except (OSError, ValueError):
             print(f"No reusable {out_file} — building from scratch")
@@ -633,25 +639,76 @@ def main():
 
     # -- Senate: two index fetches enumerate the whole universe ---------------
     print(f"\nSenate roll calls, {CURRENT_CONGRESS}th Congress...")
-    for session in (1, 2):
-        for number in senate_vote_numbers(CURRENT_CONGRESS, session):
+    indexes = {session: senate_vote_numbers(CURRENT_CONGRESS, session) for session in (1, 2)}
+    new_provisional = set()
+
+    if indexes[1]:
+        for session in (1, 2):
+            for number in indexes[session]:
+                vote_key = senate_key(CURRENT_CONGRESS, session, number)
+                if vote_key in existing_votes and vote_key not in provisional:
+                    record(vote_key, existing_votes[vote_key], reusable_ga.get(vote_key, {}))
+                    reused += 1
+                    continue
+                time.sleep(XML_DELAY)
+                raw = fetch_raw(senate_vote_url(CURRENT_CONGRESS, session, number), vote_key)
+                if not raw:
+                    print(f"    {vote_key}: detail XML unavailable — skipped")
+                    continue
+                vote_meta, ga_votes = parse_senate_vote(raw, lis_to_bioguide)
+                if not vote_meta:
+                    continue
+                record(vote_key, vote_meta, ga_votes)
+                fetched += 1
+                if fetched % 50 == 0:
+                    print(f"    {fetched} fetched · {reused} reused · {len(votes_meta)} total")
+    else:
+        # Session 1 always has an index once a Congress is under way, so an empty
+        # one means senate.gov is refusing us (Akamai 403 since 2026-10-25), not
+        # that the Senate held no votes. Take roll calls we do not hold from
+        # Voteview, and carry everything we already hold forward untouched.
+        print("  senate.gov index unreachable — falling back to Voteview for new roll calls",
+              file=sys.stderr)
+        vv = voteview.load_senate(CURRENT_CONGRESS)
+        if vv is None:
+            print("  Voteview unreachable too — Senate roll calls carried forward only",
+                  file=sys.stderr)
+            vv = {"rolls": {}, "casts": {}, "members": {}}
+        ga_senators = sitting_ga_bioguides(members_file) or set()
+        held = {k for k in existing_votes if k.startswith(f"S{CURRENT_CONGRESS}_")}
+        for session, number in sorted(vv["rolls"]):
             vote_key = senate_key(CURRENT_CONGRESS, session, number)
-            if vote_key in existing_votes:
-                record(vote_key, existing_votes[vote_key], reusable_ga.get(vote_key, {}))
-                reused += 1
+            if vote_key in held:
                 continue
-            time.sleep(XML_DELAY)
-            raw = fetch_raw(senate_vote_url(CURRENT_CONGRESS, session, number), vote_key)
-            if not raw:
-                print(f"    {vote_key}: detail XML unavailable — skipped")
-                continue
-            vote_meta, ga_votes = parse_senate_vote(raw, lis_to_bioguide)
-            if not vote_meta:
-                continue
-            record(vote_key, vote_meta, ga_votes)
+            roll = voteview.senate_roll(vv, session, number, ga_senators)
+            bill_label, bill_page = bill_fields(roll["bill_type"], roll["bill_number"])
+            record(vote_key, {
+                "bill":       bill_label,
+                "billUrl":    bill_page,
+                "billType":   roll["bill_type"],
+                "billNumber": roll["bill_number"],
+                "title":      clean_text(roll["title"]),
+                "motionText": roll["question"],
+                "date":       roll["date"],
+                "yea":        roll["yea"],
+                "nay":        roll["nay"],
+                "chamber":    "Senate",
+                "session":    session,
+                "rollNumber": number,
+                "result":     pass_fail(roll["result"]),
+                "resultText": clean_text(roll["result"]),
+                "partyTally": roll["party_tally"],
+            }, roll["member_votes"])
+            new_provisional.add(vote_key)
             fetched += 1
-            if fetched % 50 == 0:
-                print(f"    {fetched} fetched · {reused} reused · {len(votes_meta)} total")
+        # Carry forward what we hold: official records as they were, earlier
+        # Voteview-derived ones still marked provisional.
+        for vote_key in sorted(held):
+            record(vote_key, existing_votes[vote_key], reusable_ga.get(vote_key, {}))
+            reused += 1
+        new_provisional |= provisional & held
+        print(f"  Voteview supplied {len(new_provisional - provisional)} new Senate roll call(s); "
+              f"{len(new_provisional)} provisional in total")
 
     # -- House: no index, so walk the roll numbers per calendar year ----------
     print(f"\nHouse roll calls, {CURRENT_CONGRESS}th Congress...")
@@ -720,7 +777,10 @@ def main():
             "generatedAt": datetime.now(timezone.utc).isoformat(),
             "congress":    CURRENT_CONGRESS,
             "sessionName": f"{CURRENT_CONGRESS}th Congress",
-            "source":      "Clerk of the House + Senate.gov roll-call XML",
+            "source":      "Clerk of the House + Senate.gov roll-call XML"
+                           + (" (some Senate roll calls from Voteview while senate.gov "
+                              "is unreachable; replaced by the official record on the "
+                              "next successful run)" if new_provisional else ""),
             "scope":       "every recorded roll call of the Congress, including "
                            "failed measures, amendments, procedural motions and "
                            "Senate nominations",
@@ -731,6 +791,7 @@ def main():
             "memberCount": len(member_votes),
             "updateMode":  "full" if args.full_refresh else "incremental",
             "rollCallsFetchedThisRun": fetched,
+            **({"senateRollsFromVoteview": sorted(new_provisional)} if new_provisional else {}),
             **vote_stats,
         },
         "votes":       votes_meta,

@@ -25,8 +25,10 @@ import urllib.error
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
+from lib import voteview
 from lib.http import fetch_bytes
 from lib.congress_session import current_congress
+from generate_federal_votes_data import pass_fail
 
 #: Derived from today's date, not pinned here - see lib/congress_session.py.
 CURRENT_CONGRESS = current_congress()
@@ -121,14 +123,16 @@ def normalize_date(raw):
 def get_tied_votes_from_list(congress, session):
     """
     Fetch the vote list XML for a session and return vote numbers where yeas == nays.
-    Returns list of zero-padded vote number strings (e.g. "00392").
+    Returns list of zero-padded vote number strings (e.g. "00392"), or None when
+    the list itself could not be fetched (a session not yet begun, or senate.gov
+    refusing us) - which is different from [] (fetched, nothing tied).
     """
     url = VOTE_LIST_URL.format(congress=congress, session=session)
     print(f"  Fetching vote list: vote_menu_{congress}_{session}.xml")
     raw = fetch_raw(url, f"vote_menu_{congress}_{session}.xml")
     if not raw:
         print(f"  Session {session} not found — skipping")
-        return []
+        return None
 
     try:
         root = ET.fromstring(raw)
@@ -216,13 +220,85 @@ def parse_vote_detail(raw, congress, session, vote_number):
     return vote
 
 
+#: Document label per Voteview bill type, as the Senate XML writes it.
+_DOC_LABEL = {"hr": "H.R.", "s": "S.", "hjres": "H.J.Res.", "sjres": "S.J.Res.",
+              "hconres": "H.Con.Res.", "sconres": "S.Con.Res.", "hres": "H.Res.",
+              "sres": "S.Res."}
+
+
+def voteview_tie_breaks(congress, known):
+    """Tie-breaking votes found in Voteview that `known` (a set of (session,
+    voteNumber)) does not already hold. Used only when senate.gov is unreachable.
+
+    Voteview does not record the Vice President's vote, so a tie-break is inferred:
+    an equal tally on a question that CARRIED can only have carried with the VP's
+    Yea. A VP Nay on a tie changes nothing - the question fails either way - so it
+    is indistinguishable from a failed tie and is not found. Voteview's count
+    excludes the VP, matching the Senate's own 50-50.
+    """
+    data = voteview.load_senate(congress)
+    if data is None:
+        print("  Voteview unreachable too — keeping the committed votes only", file=sys.stderr)
+        return []
+    found = []
+    for (session, number), row in sorted(data["rolls"].items()):
+        yeas, nays = int(row["yea_count"] or 0), int(row["nay_count"] or 0)
+        if yeas == 0 or yeas != nays or pass_fail(row["vote_result"]) != "Pass":
+            continue
+        padded = f"{number:05d}"
+        if (session, padded) in known:
+            continue
+        doc_type, doc_number = voteview.split_bill_number(row["bill_number"])
+        document = f"{_DOC_LABEL[doc_type]} {doc_number}" if doc_type else ""
+        vote = {
+            "voteNumber":    padded,
+            "congress":      congress,
+            "session":       session,
+            "date":          row["date"],
+            "question":      row["vote_question"],
+            "title":         document or row["vote_desc"],
+            "resultText":    f"{row['vote_result']} ({yeas}-{nays}, Vice President of the "
+                             f"United States, voted Yea)",
+            "result":        row["vote_result"],
+            "vpVote":        "Yea",
+            "yeas":          yeas,
+            "nays":          nays,
+            "document":      document,
+            "documentTitle": row["vote_desc"] if document else None,
+            "url":           VOTE_PAGE_URL.format(congress=congress, session=session,
+                                                  vote_number=padded),
+        }
+        vote["summary"] = build_summary(vote)
+        found.append(vote)
+    return found
+
+
 def main():
     all_votes = []
+    fallback_votes = []
 
+    existing = []
+    try:
+        with open(OUTPUT_FILE, encoding="utf-8") as fh:
+            prev = json.load(fh)
+        if (prev.get("metadata") or {}).get("congress") == CURRENT_CONGRESS:
+            existing = prev.get("votes") or []
+            fallback_votes = list((prev.get("metadata") or {}).get("votesFromVoteview") or [])
+    except (OSError, ValueError):
+        pass
+
+    senate_reachable = True
     for session in SESSIONS:
         print(f"\nScanning Congress {CURRENT_CONGRESS}, Session {session}...")
         tied_numbers = get_tied_votes_from_list(CURRENT_CONGRESS, session)
 
+        if tied_numbers is None:
+            # Session 1 always has a list once a Congress is under way, so its
+            # absence is senate.gov refusing us (Akamai 403 since 2026-10-25).
+            if session == SESSIONS[0]:
+                senate_reachable = False
+                break
+            continue
         if not tied_numbers:
             continue
 
@@ -246,6 +322,21 @@ def main():
             else:
                 print(f"    vote {padded}: tied tally but no VP vote (failed 50-50)")
 
+    if not senate_reachable:
+        # Recorded tie-breaks are immutable, so keep every committed one and add
+        # what Voteview shows that we do not hold. Marked in metadata; the next
+        # run that reaches senate.gov rebuilds from scratch and replaces them.
+        print("  senate.gov unreachable — keeping committed votes, adding from Voteview",
+              file=sys.stderr)
+        all_votes = list(existing)
+        known = {(v["session"], v["voteNumber"]) for v in all_votes}
+        for vote in voteview_tie_breaks(CURRENT_CONGRESS, known):
+            print(f"    VP tie-breaker (Voteview): vote {vote['voteNumber']} — {vote['question'][:60]}")
+            all_votes.append(vote)
+            fallback_votes.append(f"{vote['session']}-{vote['voteNumber']}")
+    else:
+        fallback_votes = []
+
     # Sort chronologically
     all_votes.sort(key=lambda v: v["date"])
 
@@ -253,8 +344,11 @@ def main():
         "metadata": {
             "generatedAt": datetime.now(timezone.utc).isoformat(),
             "congress":    CURRENT_CONGRESS,
-            "source":      "Senate.gov roll call XML",
+            "source":      "Senate.gov roll call XML"
+                           + (" (newer votes inferred from Voteview while senate.gov is "
+                              "unreachable)" if fallback_votes else ""),
             "count":       len(all_votes),
+            **({"votesFromVoteview": fallback_votes} if fallback_votes else {}),
         },
         "votes": all_votes,
     }
