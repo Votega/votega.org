@@ -71,13 +71,17 @@ GEN = "2026-10-19T00:00:00+00:00"
 def resolver_cases():
     print("resolver (injected people, no network)")
     roster = [member(101, ocd(1)), member(102, "legis-102"), member(103, ocd(3)),
-              member(104, ocd(4)), member(105, "legis-105")]
+              member(104, ocd(4)), member(105, "legis-105"), member(115, ocd(5)), member(116, ocd(6)),
+              member(117, ocd(7))]
     docs = [
         entry(doc(1, 101, ["Alpha_One"])),
         entry(doc(2, 102, [])),                                  # no ballotpedia link
         entry(doc(3, 103, ["Gamma", "Gamma_(Georgia)"])),        # two pages
         entry(doc(4, 104), "retired"),
         entry(doc(14, 104), "retired"),                          # two retired claimants
+        entry(doc(15, 115, ["Tim_Gamma", "Timothy_Gamma"])),
+        entry(doc(16, 116, ["Nab_Islam", "Nab_Islam_Parkes"]), "retired"),
+        entry(doc(17, 117, ["Some_Person", "Other_Human"])),      # unrelated: still ambiguous
         entry(doc(9, 999, ["Stray"])),                           # nobody on our roster
     ]
     sc, reg = R.build_sidecar(docs, roster, generated_at=GEN)
@@ -92,9 +96,23 @@ def resolver_cases():
     check("no ballotpedia link is 'no-match', not a bare null",
           (p["102"]["ballotpediaId"], p["102"]["provenance"]["ballotpediaId"]["confidence"]),
           (None, "no-match"))
-    check("two ballotpedia pages are ambiguous, none picked",
-          (p["103"]["ballotpediaId"], p["103"]["provenance"]["ballotpediaId"]["confidence"]),
+    check("a plain and a (Georgia) title are one person: the (Georgia) one is kept",
+          (p["103"]["ballotpediaId"], p["103"]["provenance"]["ballotpediaId"]["confidence"],
+           p["103"]["provenance"]["ballotpediaId"]["aliases"]),
+          ("Gamma_(Georgia)", "medium", ["Gamma"]))
+    check("nickname vs full name: the fuller title is kept",
+          (p["115"]["ballotpediaId"], p["115"]["provenance"]["ballotpediaId"]["aliases"]),
+          ("Timothy_Gamma", ["Tim_Gamma"]))
+    check("married name: the longer title is kept",
+          (p["116"]["ballotpediaId"], p["116"]["provenance"]["ballotpediaId"]["aliases"]),
+          ("Nab_Islam_Parkes", ["Nab_Islam"]))
+    check("unrelated titles in one file stay ambiguous, none picked",
+          (p["117"]["ballotpediaId"], p["117"]["provenance"]["ballotpediaId"]["confidence"]),
           (None, "ambiguous"))
+    check("two Georgia-qualified titles tie, so stay ambiguous",
+          R.choose_ballotpedia(["A_B_(Georgia)", "A_C_(Georgia)"]), None)
+    check("merged variants are reported for review",
+          len(sc["review"]["ballotpediaVariantsMerged"]), 3)
     check("two non-current claimants are ambiguous",
           (p["104"]["ocdPersonId"], p["104"]["provenance"]["ocdPersonId"]["confidence"]),
           (None, "ambiguous"))

@@ -31,7 +31,9 @@ How a person is matched (verified against the live repo on 2026-10-19)
   file and a retired duplicate). The rule is deterministic: if exactly one claimant is in
   `legislature/` it wins and the retired duplicates are listed in `review`; if there is
   not exactly one, the member is `ambiguous` and gets NO value rather than a guess.
-* A person with two distinct Ballotpedia links (8 files) is `ambiguous` for that slot.
+* A person with two Ballotpedia links that are variants of one page name (a `_(Georgia)`
+  qualifier, a nickname, a married name) keeps the `(Georgia)`/fuller title, medium
+  confidence, the other as an alias. Unrelated titles are `ambiguous` for that slot.
 * Two members resolving to the same ocdPersonId / ballotpediaId would be a join error;
   both are demoted to `ambiguous` and null.
 * There is no wikidataId slot: the repo does not carry one and no other source we read does,
@@ -104,6 +106,40 @@ def ballotpedia_ids(doc):
 
 # --------------------------------------------------------------------------- resolution
 
+GEORGIA_QUALIFIER = re.compile(r"_\(Georgia\)$", re.I)
+
+
+def _name_tokens(title):
+    return re.sub(r"_\([^)]*\)$", "", title).split("_")
+
+
+def choose_ballotpedia(titles):
+    """(primary, aliases) when one person file's Ballotpedia titles are variants of
+    one page name, else None (a real ambiguity).
+
+    A person file lists a redirect or disambiguation title beside the real one
+    (`Samuel_Park` and `Samuel_Park_(Georgia)`; `Tim_Bearden` and `Timothy_Bearden`;
+    `Nabilah_Islam` and `Nabilah_Islam_Parkes`). They are the SAME person - the file
+    asserts it - so the question is only which title to link. Variants must share a
+    first or last name token, so two unrelated people in one file stay ambiguous.
+    Primary: the `_(Georgia)` title, else the longer (fuller or newer) name; a tie on
+    both is still ambiguous. Ballotpedia blocks automated reads, so this is a rule,
+    not a check against the live page: the confidence recorded is "medium", and a
+    human can override it with `pinSlots`.
+    """
+    titles = sorted(set(titles))
+    if len(titles) < 2:
+        return None
+    tokens = [_name_tokens(t) for t in titles]
+    if not (len({t[0].lower() for t in tokens}) == 1 or len({t[-1].lower() for t in tokens}) == 1):
+        return None
+    rank = lambda t: (bool(GEORGIA_QUALIFIER.search(t)), len(t))  # noqa: E731
+    ranked = sorted(titles, key=rank, reverse=True)
+    if rank(ranked[0]) == rank(ranked[1]):
+        return None
+    return ranked[0], sorted(ranked[1:])
+
+
 def _prov(confidence, **extra):
     out = {"method": "authoritative", "source": OPENSTATES_SOURCE, "confidence": confidence}
     out.update(extra)
@@ -145,7 +181,8 @@ def build_sidecar(people_docs, roster, *, generated_at, upstream_commit=None, pr
     members = sorted({m["legisGaGovId"]: m for m in roster
                       if m.get("legisGaGovId") is not None}.items())
     out, review = {}, {"noMatch": [], "ambiguous": [], "supersededRetiredDuplicates": {},
-                       "ocdDiffersFromRosterId": [], "duplicateValueDemoted": []}
+                       "ocdDiffersFromRosterId": [], "duplicateValueDemoted": [],
+                       "ballotpediaVariantsMerged": []}
 
     for lid, m in members:
         pick, ocd_prov, superseded = resolve_member(lid, claims)
@@ -163,6 +200,13 @@ def build_sidecar(people_docs, roster, *, generated_at, upstream_commit=None, pr
                 rec["ballotpediaId"] = bp[0]
                 rec["provenance"]["ballotpediaId"] = _prov("high", note=(
                     "the Ballotpedia page title from the person file's sources"))
+            elif len(bp) > 1 and choose_ballotpedia(bp):
+                primary, aliases = choose_ballotpedia(bp)
+                rec["ballotpediaId"] = primary
+                rec["provenance"]["ballotpediaId"] = _prov("medium", aliases=aliases, note=(
+                    "the person file lists these Ballotpedia titles for one person; "
+                    "the (Georgia) or fuller title is kept and the rest are aliases"))
+                review["ballotpediaVariantsMerged"].append(f"{m.get('name')} ({lid}): {primary} <- {aliases}")
             elif len(bp) > 1:
                 rec["provenance"]["ballotpediaId"] = _prov("ambiguous", candidates=bp)
                 review["ambiguous"].append(f"{m.get('name')} ({lid}): ballotpedia {bp}")
