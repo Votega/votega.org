@@ -19,7 +19,7 @@
 # ============================================================================
 
 meta:
-  last_reviewed: 2026-08-27
+  last_reviewed: 2026-10-24
   intro: >
     Structured, machine-readable civic data we already maintain for VoteGA.org,
     published for anyone to reuse — civic apps, researchers, journalists, or
@@ -151,8 +151,36 @@ datasets:
     cadence: Daily
     repo_url: https://github.com/Votega/ga-races-elections
     files:
-      - { name: "races.json", desc: "Races and candidates", url: "https://github.com/Votega/ga-races-elections/blob/main/races/2026/races.json" }
+      - { name: "races/2026/races.json", desc: "Races and candidates (full, nested)", url: "https://github.com/Votega/ga-races-elections/blob/main/races/2026/races.json" }
+      - { name: "races/2026/races.csv", desc: "One row per race", url: "https://github.com/Votega/ga-races-elections/blob/main/races/2026/races.csv" }
+      - { name: "races/2026/candidates.csv", desc: "One row per race, phase and candidate; incumbents listed by reference carry a memberId", url: "https://github.com/Votega/ga-races-elections/blob/main/races/2026/candidates.csv" }
+      - { name: "races/2026/races.schema.json", desc: "Field definitions", url: "https://github.com/Votega/ga-races-elections/blob/main/races/2026/races.schema.json" }
     docs: /about-the-data#2026-election-races--candidates
+    contribute: https://github.com/Votega/ga-races-elections/issues
+
+  - id: ga-early-vote
+    title: Georgia Early Voting Turnout (2026 General)
+    hosting: repo
+    summary: >
+      Early in-person and mail ballots cast in Georgia's November 2026 general election,
+      by county, with 2022 and 2024 compared at the same number of days before election
+      day, plus accepted ballots per county per day for 2026 and 2024. County-level
+      aggregates only: no voter-level data, nothing below the county, and counts of 1 to 9
+      in the sensitive mail statuses (rejected, cancelled, other) are withheld. The 2022
+      comparison stops 17 days out because the Secretary of State's 2022 file is incomplete
+      for Fulton and Gwinnett.
+    source: Georgia Secretary of State absentee-ballot and voter-history files, active voter counts and certified results · U.S. Census Bureau American Community Survey via Georgia Civic Data (CC BY 4.0)
+    scope: 2026 general election, with 2024 day by day for comparison
+    cadence: Manual — refreshed when the Secretary of State posts a new file; each file names the day it runs through
+    repo_url: https://github.com/Votega/ga-races-elections/tree/main/early-vote/2026-general
+    files:
+      - { name: "county-totals.csv", desc: "Start here — one row per county: ballots, mail pipeline, turnout, and 2022/2024 same-point comparisons", url: "https://github.com/Votega/ga-races-elections/blob/main/early-vote/2026-general/county-totals.csv" }
+      - { name: "county-totals.json", desc: "The same, as JSON with metadata", url: "https://github.com/Votega/ga-races-elections/blob/main/early-vote/2026-general/county-totals.json" }
+      - { name: "county-by-day.csv", desc: "Accepted ballots per county per day before election day (2026 and 2024)", url: "https://github.com/Votega/ga-races-elections/blob/main/early-vote/2026-general/county-by-day.csv" }
+      - { name: "county-by-day.json", desc: "The same, as JSON with metadata", url: "https://github.com/Votega/ga-races-elections/blob/main/early-vote/2026-general/county-by-day.json" }
+      - { name: "county-totals.schema.json", desc: "Field definitions", url: "https://github.com/Votega/ga-races-elections/blob/main/early-vote/2026-general/county-totals.schema.json" }
+      - { name: "source-data-dictionary.md", desc: "What each field in the Secretary of State's source files means", url: "https://github.com/Votega/ga-races-elections/blob/main/early-vote/2026-general/source-data-dictionary.md" }
+    docs: /about-the-data#early-voting-turnout
     contribute: https://github.com/Votega/ga-races-elections/issues
 
   - id: ga-local-government
