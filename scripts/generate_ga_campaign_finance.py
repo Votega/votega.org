@@ -32,6 +32,7 @@ Notes on the API, all learned the hard way:
 
 import json
 from lib.atomic_io import write_json_atomic
+from lib import ga_finance_scope
 import os
 import re
 import sys
@@ -44,6 +45,7 @@ API_BASE    = "https://api-peachfile.ethics.ga.gov/api"
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/ga-campaign-finance.json"
 OVERRIDES_FILE = "assets/data/ga-campaign-finance-overrides.json"
 RACES_FILE  = "assets/data/races.json"
+MEMBERS_FILE = "assets/data/ga-members.json"
 PAGE_SIZE   = 100          # anything much larger is rejected by the WAF
 DELAY       = 1.0
 FALLBACK_CYCLE = 2026      # only used if races.json can't be read
@@ -127,7 +129,11 @@ def fetch_office(office_id):
             "totalRaisedMax": None, "totalRaisedMin": None,
             "totalSpentMax": None, "totalSpentMin": None,
             "balanceFundsMax": None, "balanceFundsMin": None,
-            "accountStatus": "FACT",       # active committees only
+            # No status filter: "FACT" returned active committees only, which dropped a
+            # committee's final totals the day it closed. The caller keeps active
+            # filers always and a terminated one only if its seat is still in play
+            # (lib/ga_finance_scope.py).
+            "accountStatus": None,
             "election": None, "electionCycle": None,
             "transactionSourceTypeCode": None, "treasurerName": None,
             "jurisdictionId": None, "campaignName": None, "cityDistrictId": None,
@@ -165,12 +171,34 @@ def norm_name(first, last, full):
     return " ".join(base.split())
 
 
+def office_entry(r, label, office_id):
+    """The identity fields of a PeachFile row, shaped like a finance-file filer entry."""
+    district = r.get("districtName")
+    return {"firstName": r.get("candidateFirstName"), "lastName": r.get("candidateLastName"),
+            "filerName": r.get("filerName"), "office": label, "officeId": office_id,
+            "district": str(district) if district not in (None, "") else None}
+
+
+def load_scope():
+    """The seats still in play, for deciding which terminated committees to keep."""
+    def read(path, key):
+        try:
+            with open(path, encoding="utf-8") as f:
+                return json.load(f).get(key) or []
+        except (OSError, ValueError) as e:
+            print(f"  (could not read {path}: {e}) - terminated committees will be dropped")
+            return []
+    return ga_finance_scope.build_scope(read(RACES_FILE, "races"), read(MEMBERS_FILE, "members"))
+
+
 def main():
     cycle = target_cycle()
     print(f"Target election cycle: {cycle}")
 
     filers, by_seat, by_name, by_office = {}, {}, {}, {}
     skipped_other_cycle = 0
+    terminated_kept, terminated_dropped = [], []
+    scope = load_scope()
     rows_fetched = 0
     incomplete_offices = []   # offices whose pagination stopped on a failed page
 
@@ -181,6 +209,10 @@ def main():
         if not complete:
             incomplete_offices.append(label)
         kept = 0
+        active = {ga_finance_scope.person_key(office_entry(r, label, office_id))
+                  for r in rows
+                  if (r.get("filerStatus") or "Active") == "Active"
+                  and cycle_year(r.get("electionCycleName")) == cycle}
         for r in rows:
             if cycle_year(r.get("electionCycleName")) != cycle:
                 skipped_other_cycle += 1
@@ -190,6 +222,7 @@ def main():
             if fid is None:
                 continue
             fid = str(fid)
+            terminated = (r.get("filerStatus") or "Active") != "Active"
 
             district = r.get("districtName")
             entry = {
@@ -213,6 +246,13 @@ def main():
                 entry["committeeName"] = r["committeeName"]
             if r.get("filerStatus") and r["filerStatus"] != "Active":
                 entry["filerStatus"] = r["filerStatus"]
+            if terminated:
+                if not ga_finance_scope.keep_terminated(entry, chamber, scope, active):
+                    if fid not in terminated_dropped:
+                        terminated_dropped.append(fid)
+                    continue
+                if fid not in terminated_kept:
+                    terminated_kept.append(fid)
             filers[fid] = entry
             kept += 1
 
@@ -297,6 +337,10 @@ def main():
             "rowsFetched":       rows_fetched,
             "incompleteOffices": incomplete_offices,
             "droppedOverrides":  unknown,
+            # Terminated committees whose seat is still held or contested are kept (their
+            # entry carries filerStatus); the rest are counted, not published.
+            "terminatedKept":    sorted(terminated_kept),
+            "terminatedDropped": len(terminated_dropped),
         },
         "filers":           filers,
         "candidateOverrides": overrides,
@@ -309,7 +353,8 @@ def main():
 
     size_kb = os.path.getsize(OUTPUT_FILE) // 1024
     print(f"\nDone. {len(filers)} filers for cycle {cycle} "
-          f"({skipped_other_cycle} skipped from other cycles) | {size_kb} KB -> {OUTPUT_FILE}")
+          f"({skipped_other_cycle} skipped from other cycles, "
+          f"{len(terminated_kept)} terminated kept, {len(terminated_dropped)} dropped) | {size_kb} KB -> {OUTPUT_FILE}")
     print(f"  seats covered: {len(by_seat)} | statewide offices: {len(by_office)} "
           f"| manual overrides: {len(overrides)}")
 

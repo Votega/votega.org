@@ -746,8 +746,18 @@ window.CampaignFinance = (function () {
     return '<p class="finance-meta">Finance data from ' + sourceName + ', updated ' + when + fresh + '.</p>';
   }
 
+  // A committee the Ethics Commission lists as Terminated stays in the file only while
+  // its person still holds or is running for the seat (scripts/lib/ga_finance_scope.py),
+  // so its figures are final, not a running campaign's. Says so; '' for an active one.
+  function terminatedNote(filer) {
+    if (!filer || !filer.filerStatus || filer.filerStatus === 'Active') return '';
+    return '<p class="finance-meta"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> '
+      + 'This committee is listed as ' + esc(String(filer.filerStatus).toLowerCase())
+      + ' with the Commission, so these are its final reported totals.</p>';
+  }
+
   return {
-    getFecData, getGaFinanceData, getGaDonors, gaDonorsHtml, fmtMoney, provenanceLine,
+    getFecData, getGaFinanceData, getGaDonors, gaDonorsHtml, fmtMoney, provenanceLine, terminatedNote,
     normalizeName, candidateLastName, findFecId, findFecMatch,
     narrowFecMatches, fecHasActivity,
     gaCandidatePool, findGaFilers,

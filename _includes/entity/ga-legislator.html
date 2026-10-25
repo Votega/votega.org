@@ -804,6 +804,7 @@
         </div>
       </div>
       <p class="finance-meta">${escHtml(f.electionCycle || '')}${f.office ? ` · ${escHtml(f.office)}` : ''}</p>
+      ${window.CampaignFinance.terminatedNote ? window.CampaignFinance.terminatedNote(f) : ''}
       ${window.CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt, 'ga-campaign-finance')}
       <div class="ga-donors-slot"></div>
       <p class="finance-meta">

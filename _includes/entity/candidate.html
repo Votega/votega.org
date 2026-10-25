@@ -820,6 +820,7 @@
           </div>
         </div>
         <p class="finance-meta">${escHtmlGa(filer.electionCycle || '')}${filer.office ? ' · ' + escHtmlGa(filer.office) : ''}</p>
+        ${CampaignFinance.terminatedNote ? CampaignFinance.terminatedNote(filer) : ''}
         ${CampaignFinance.provenanceLine('the GA Ethics Commission (PeachFile)', data.metadata?.generatedAt, 'ga-campaign-finance')}
         <div class="ga-donors-slot"></div>
         ${footer}${reconcileNote}`;
