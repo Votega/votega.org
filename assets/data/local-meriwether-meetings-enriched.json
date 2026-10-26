@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-22T14:13:29Z",
+  "generatedAt": "2026-10-26T15:34:38Z",
   "source": "Meriwether County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Meriwether County",
   "count": 25
@@ -11,17 +11,24 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-12",
+  "lastActivity": "2026-10-27",
   "topicTotals": {
    "appointment": 15,
+   "data-center": 2,
    "millage-budget": 11,
    "rezoning": 6,
-   "data-center": 1,
-   "contract": 8,
+   "contract": 7,
    "variance": 1,
    "annexation": 1
   },
   "dataCenterItems": [
+   {
+    "title": "Agenda October 27, 2026, Regular Meeting 6:00 p.m.",
+    "date": "2026-10-27",
+    "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_10272026-661",
+    "excerpt": "… Consider Approval of 90-Day Extension of R-1 Residential Lot Moratorium 9. Consider Approval of 90-Day Extension of Data Center Moratorium 10. Update and Discussion — Enterprise Fleet Management for Public Works 11. Renewal of Agreement for ACCG F …",
+    "excerptTerm": "data center"
+   },
    {
     "title": "Agenda July 28, 2026 Regular Meeting 6:00 p.m.",
     "date": "2026-07-28",
@@ -112,11 +119,60 @@
     "excerptTerm": "annexation"
    }
   ],
-  "landUseMeetings": 9,
+  "landUseMeetings": 10,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "661",
+   "date": "2026-10-27",
+   "body": "Board of Commissioners",
+   "title": "Agenda October 27, 2026, Regular Meeting 6:00 p.m.",
+   "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_10272026-661",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_10272026-661",
+   "textMethod": "pdftotext",
+   "textChars": 4576,
+   "pdfSha256": "303567a7979b840ef11fda4b15f7e0bdc33d9590708268968ebc315497c270a1",
+   "topics": {
+    "appointment": 1,
+    "data-center": 1
+   },
+   "tags": [
+    "appointment",
+    "data-center"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "data center"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… IX. MINUTES 1. Minutes, Monday, October 12, 2026, Regular Meeting at 6:00 p.m. X. PUBLIC HEARING XI. APPOINTMENTS 1. Appointment to the Meriwether County Airport Authority — District 4. This is a 5-year term that will …",
+     "context": "agenda-action"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… Consider Approval of 90-Day Extension of R-1 Residential Lot Moratorium 9. Consider Approval of 90-Day Extension of Data Center Moratorium 10. Update and Discussion — Enterprise Fleet Management for Public Works 11. Renewal of Agreement for ACCG F …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Agenda October 27, 2026, Regular Meeting 6:00 p.m.",
+     "date": "2026-10-27",
+     "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_10272026-661",
+     "excerpt": "… Consider Approval of 90-Day Extension of R-1 Residential Lot Moratorium 9. Consider Approval of 90-Day Extension of Data Center Moratorium 10. Update and Discussion — Enterprise Fleet Management for Public Works 11. Renewal of Agreement for ACCG F …",
+     "excerptTerm": "data center"
+    }
+   ]
+  },
   {
    "id": "660",
    "date": "2026-10-12",
@@ -996,44 +1052,6 @@
    "flags": [
     "land-use"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "636",
-   "date": "2026-03-09",
-   "body": "Board of Commissioners",
-   "title": "Agenda March 9, 2026, Regular Meeting 6:00 p.m.",
-   "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03092026-636",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03092026-636",
-   "textMethod": "pdftotext",
-   "textChars": 5620,
-   "pdfSha256": "3c48c91639ca8dabdc65cad628c63cf2f0b90baa042027bfd8c5664f890e81ed",
-   "topics": {
-    "appointment": 1,
-    "contract": 1
-   },
-   "tags": [
-    "appointment",
-    "contract"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… to the corner of 969 Dobson Road. - Agenda was Amended to correct the Case #PC26-044 to Case #PC26-004 XI. APPOINTMENTS 1. Appointment for Camera Ready© Liason for Meriwether County XII. UNFINISHED BUSINESS 1. Approval of Grant …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… T Funds from the E911 Parking Lot to Road Striping 7. Approval of Courthouse Roof Project Change Orders — River City Contracting a. Consideration and Approval of Change Order #3 or #4 — Annex b. Consideration and Approval of Change O …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [],
    "dataCenterItems": []
   }
  ]

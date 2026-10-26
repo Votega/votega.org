@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-22T14:13:27Z",
+  "generatedAt": "2026-10-26T15:34:22Z",
   "source": "Gwinnett County (gwinnett agenda/minutes PDFs, poppler+OCR)",
   "place": "Gwinnett County",
-  "count": 23
+  "count": 24
  },
  "summary": {
   "flags": [
@@ -11,18 +11,27 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-20",
+  "lastActivity": "2026-10-27",
   "topicTotals": {
-   "contract": 14,
+   "contract": 15,
+   "rezoning": 4,
+   "variance": 4,
    "alpr": 2,
    "appointment": 12,
    "millage-budget": 10,
-   "rezoning": 3,
-   "variance": 3,
    "development": 1
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Public Hearing",
+    "date": "2026-10-27",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261027/a_22349_2026.10.27___Public_Hearing_Agenda.pdf",
+    "tags": [
+     "rezoning",
+     "variance"
+    ]
+   },
    {
     "title": "Public Hearing",
     "date": "2026-09-22",
@@ -52,7 +61,7 @@
     ]
    }
   ],
-  "landUseMeetings": 3,
+  "landUseMeetings": 4,
   "alprItems": [
    {
     "title": "Business Session",
@@ -74,6 +83,55 @@
   "alprMeetings": 2
  },
  "meetings": [
+  {
+   "id": "22349",
+   "date": "2026-10-27",
+   "body": "Board of Commissioners",
+   "title": "Public Hearing",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261027/a_22349_2026.10.27___Public_Hearing_Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261027/a_22349_2026.10.27___Public_Hearing_Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 3612,
+   "pdfSha256": "b40d960318e1e1adbb3e4efe4af731461552a84ef88557a654fcaa1f05e2ce91",
+   "topics": {
+    "contract": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "contract",
+    "purchase order",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… thy Parks 2026-1281 Award OS030-26, provision of voice and data network services on a multi-year contract, to AT&T, Inc, using a competitively procured State of Georgia contract. The initial term of this contract s …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ommendation: Approve with Conditions][Planning Commission Recommendation: Approve with Conditions] 2. Rezonings 2026-1372 REZ2026-00028, Applicant: Hasnain Lakhani c/o Mahaffey Pickens Tucker, LLP; Owner: H …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… t Lease Properties; Tax Parcel No. R6061 034; 5112 Stone Mountain Highway; Special Use Permit with Concurrent Variance(s) in a C-2 Zoning District for a Vehicle Service Establishment; 0.86 acres; District 2/Ku [Planning …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "85405",
    "date": "2026-10-20",

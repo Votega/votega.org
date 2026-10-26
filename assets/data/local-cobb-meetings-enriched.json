@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-22T14:13:27Z",
+  "generatedAt": "2026-10-26T15:34:23Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -15,13 +15,13 @@
   "topicTotals": {
    "variance": 8,
    "special-land-use": 6,
+   "annexation": 4,
+   "appointment": 5,
    "contract": 9,
+   "millage-budget": 6,
    "development": 3,
    "rezoning": 4,
-   "annexation": 3,
-   "appointment": 5,
-   "data-center": 3,
-   "millage-budget": 6
+   "data-center": 3
   },
   "dataCenterItems": [
    {
@@ -57,12 +57,22 @@
    {
     "title": "Planning Commission Zoning Hearing",
     "date": "2026-11-03",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10241,plainText=false)",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10307,plainText=false)",
     "tags": [
      "special-land-use"
     ],
-    "excerpt": "… LUP-37-2026 District 3 - 230 Rocky Top Court 11. LUP-38-2026 District 3 - 568 Tate Creek Court 12. SLUP-10-2026 District 1 - 3261 Ernest Barrett Parkway 13. SLUP-11-2026 District 2 - 465 Big Shanty Road Other Busi …",
+    "excerpt": "… 12. LUP-19-2026 District 3 - 1884 Addison Road 13. LUP-35-2026 District 4 - 448 Hurt Road 14. SLUP-8-2026 District 2 - 2967 Olympic Industrial Drive 15. SLUP-9-2026 District 2 - 114 Townpark Drive Regular Cas …",
     "excerptTerm": "slup"
+   },
+   {
+    "title": "BOC Regular Meeting",
+    "date": "2026-10-27",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10304,plainText=false)",
+    "tags": [
+     "annexation"
+    ],
+    "excerpt": "… for animals who are victims of human cruelty or neglect. Community Development 18. To approve an annexation notice of Non-Objection per HB 489 Intergovernmental Agreement and HB 2 regarding a petition for the annexa …",
+    "excerptTerm": "annexation"
    },
    {
     "title": "BOC Zoning Hearing",
@@ -168,7 +178,7 @@
     "excerptTerm": "slup"
    }
   ],
-  "landUseMeetings": 16,
+  "landUseMeetings": 17,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -278,12 +288,12 @@
    "date": "2026-11-03",
    "body": "Planning Commission",
    "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10241,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10307,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10241,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10307,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1027,
-   "pdfSha256": "9099f0fdbaa1656048e4517b78e71322695889e3f9f2d2aee67d526267758a05",
+   "textChars": 1999,
+   "pdfSha256": "6882d6b187078796f23f254dd6518f5f9088e7b4c4fbee254ccf19ce0b328bdf",
    "topics": {
     "special-land-use": 1
    },
@@ -296,12 +306,72 @@
    "topicExcerpts": {
     "special-land-use": {
      "term": "slup",
-     "excerpt": "… LUP-37-2026 District 3 - 230 Rocky Top Court 11. LUP-38-2026 District 3 - 568 Tate Creek Court 12. SLUP-10-2026 District 1 - 3261 Ernest Barrett Parkway 13. SLUP-11-2026 District 2 - 465 Big Shanty Road Other Busi …",
+     "excerpt": "… 12. LUP-19-2026 District 3 - 1884 Addison Road 13. LUP-35-2026 District 4 - 448 Hurt Road 14. SLUP-8-2026 District 2 - 2967 Olympic Industrial Drive 15. SLUP-9-2026 District 2 - 114 Townpark Drive Regular Cas …",
      "context": "agenda-action"
     }
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1203",
+   "date": "2026-10-27",
+   "body": "Board of Commissioners",
+   "title": "BOC Regular Meeting",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10304,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10304,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 10132,
+   "pdfSha256": "31533e5aeb62038dff1e778d7d893ba91d9cdb1e991df28df11b8d3d3a947ac4",
+   "topics": {
+    "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "annexation",
+    "appointment",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "annexation",
+    "appoint",
+    "budget",
+    "contract",
+    "fiscal year",
+    "procurement",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annexation",
+     "excerpt": "… for animals who are victims of human cruelty or neglect. Community Development 18. To approve an annexation notice of Non-Objection per HB 489 Intergovernmental Agreement and HB 2 regarding a petition for the annexa …",
+     "context": "agenda-action"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… er will be allotted a maximum of three (3) minutes. Speakers should address their comments toward the Chairwoman only. APPOINTMENTS 34. To announce the appointments to the Cobb Workforce Development Board. COMMISSIONERS' PUBLIC ADDRESS …",
+     "context": "public-comment"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… AGENDA Page 2 of 6 6. To authorize the use of available State Contracts, Sourcewell (formerly NJPA), and other Contracted or Cooperative Pricing Agreements for the procurement of …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "fiscal year",
+     "excerpt": "… b County Make A Wish 5k. Police Department 15. To authorize the application for grant funding for the Federal Fiscal Year 2027, Counter Unmanned Aircraft Systems (C-UAS) Grant Program, through the U.S. Department of H …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -1098,59 +1168,6 @@
      "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10080,plainText=false)"
     }
    ]
-  },
-  {
-   "id": "1200",
-   "date": "2026-07-28",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10086,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10086,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 7192,
-   "pdfSha256": "43ad705e92048412a2cc243fb87e1f0a9f4516c9550b167fff653b7a8ca6e45f",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "fiscal year",
-    "millage",
-    "procurement",
-    "reappoint",
-    "task order"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… er will be allotted a maximum of three (3) minutes. Speakers should address their comments toward the Chairwoman only. APPOINTMENTS 28. To approve the reappointment of Avril Morguarge to the Family and Children Services Boa …",
-     "context": "public-comment"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… oward the Chairwoman only. CONSENT AGENDA Water System 6. To approve Change Order No. 1 to the construction contract with IHC Construction Companies, LLC for the R. L. Sutton Water Reclamation Facility Clarifier Rehabilitati …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "millage",
-     "excerpt": "… oposed property tax increase as defined by Georgia law. 2. To adopt a resolution setting the 2026 millage rates for the Cobb County General Fund, Fire Fund, and the Cumberland Special Services District II Fund (CS …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
   }
  ]
 }

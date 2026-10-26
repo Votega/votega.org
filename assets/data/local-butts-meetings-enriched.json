@@ -1,28 +1,39 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-22T14:13:28Z",
+  "generatedAt": "2026-10-26T15:34:35Z",
   "source": "Butts County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Butts County",
-  "count": 17
+  "count": 18
  },
  "summary": {
   "flags": [
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-28",
+  "lastActivity": "2026-10-26",
   "topicTotals": {
+   "comprehensive-plan": 2,
+   "rezoning": 3,
    "contract": 9,
    "millage-budget": 11,
    "appointment": 8,
-   "comprehensive-plan": 1,
    "development": 5,
-   "rezoning": 2,
    "special-land-use": 1,
    "variance": 1
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-10-26",
+    "sourceUrl": "https://buttsco.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1084,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "rezoning"
+    ],
+    "excerpt": "… ing | Case # 06-04-2026 SU (Special Use) Brad Vaughan ◻ 2026-10-005 Hearing: Case # 06-05-2026 FLUM (Future Land Use Map) Brad Vaughan ◻ 2026-10-006 Report | Chief Financial Officer Rhonda Blissit ◻ 202 …",
+    "excerptTerm": "future land use"
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-06-08",
@@ -71,11 +82,51 @@
     ]
    }
   ],
-  "landUseMeetings": 5,
+  "landUseMeetings": 6,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "175",
+   "date": "2026-10-26",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://buttsco.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1084,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://buttsco.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1084,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2240,
+   "pdfSha256": "6b7cc2c92ed123043d9f1d85c64f81af6b04325735429c8458fcea3a8d6d9189",
+   "topics": {
+    "comprehensive-plan": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "future land use",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "future land use",
+     "excerpt": "… ing | Case # 06-04-2026 SU (Special Use) Brad Vaughan ◻ 2026-10-005 Hearing: Case # 06-05-2026 FLUM (Future Land Use Map) Brad Vaughan ◻ 2026-10-006 Report | Chief Financial Officer Rhonda Blissit ◻ 202 …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… nt Agenda: Workshop Items D, E, F, G Board Chairman ◻ 2026-10-003 Hearing | Case # 06-03-2026 RZ (Rezoning) Brad Vaughan ◻ 2026-10-004 Hearing | Case # 06-04-2026 SU (Special Use) Brad Vaugh …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "174",
    "date": "2026-09-28",

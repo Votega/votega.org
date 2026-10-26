@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-22T14:13:24Z",
+  "generatedAt": "2026-10-26T15:34:17Z",
   "source": "Columbus-Muscogee County (Legistar structured API)",
   "place": "Columbus-Muscogee County",
   "count": 25
@@ -12,19 +12,26 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-26",
+  "lastActivity": "2026-11-02",
   "topicTotals": {
-   "rezoning": 77,
-   "development": 88,
-   "variance": 176,
-   "contract": 771,
-   "millage-budget": 305,
-   "appointment": 125,
-   "annexation": 32,
-   "alpr": 7,
-   "data-center": 3
+   "rezoning": 74,
+   "development": 90,
+   "variance": 164,
+   "contract": 735,
+   "data-center": 4,
+   "millage-budget": 290,
+   "appointment": 120,
+   "annexation": 29,
+   "alpr": 6
   },
   "dataCenterItems": [
+   {
+    "title": "To authorize the Director of Finance and Management, on behalf of the Office of Construction Management, to modify and increase the architectural / engineering services agreement w",
+    "date": "2026-10-26",
+    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6219&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+    "excerpt": "… ruction Management, to modify and increase the architectural / engineering services agreement with TechSite; for the IT Data Center Facility project; and to authorize an expenditure up to $245,850.00 within the Information Services Capital Projects Fu …",
+    "excerptTerm": "data center"
+   },
    {
     "title": "To authorize the Director of Finance and Management, on behalf of the Office of Construction Management, to enter into a professional architectural / engineering services agreement",
     "date": "2026-06-22",
@@ -41,6 +48,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Zoning Committee",
+    "date": "2026-11-02",
+    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6220&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… cres located on the east side of North Hague Avenue, 900± feet south of Trabue Road, From: R, Rural District, To: AR-1, Apartment Residential District (Rezoning #Z25-011). Ordinance",
+    "excerptTerm": "apartment"
+   },
    {
     "title": "Zoning Committee",
     "date": "2026-10-26",
@@ -248,30 +267,6 @@
     ],
     "excerpt": "… e north side of Hard Road, 150± feet west of Stoneford Drive, From: L-RR, Limited Rural Residential District, To: AR-1, Apartment Residential District (Rezoning #Z25-044). Ordinance",
     "excerptTerm": "apartment"
-   },
-   {
-    "title": "Zoning Committee",
-    "date": "2026-05-11",
-    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6180&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-    "tags": [
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "REZONINGS/AMENDMENTS",
-    "excerptTerm": "rezon"
-   },
-   {
-    "title": "Columbus City Council",
-    "date": "2026-05-11",
-    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6182&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-    "tags": [
-     "annexation",
-     "development",
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "To accept the application (AN25-021) of Dublin MHP LLC for the annexation of certain territory containing 4.46± acres in Washington Township. ($0.00) Ordinance",
-    "excerptTerm": "annexation"
    }
   ],
   "landUseMeetings": 23,
@@ -324,21 +319,119 @@
     ],
     "excerpt": "To authorize the Director of the Department of Public Safety to enter into a contract with SoundThinking Inc., formerly ShotSpotter, Inc., for the use of a gunfire detection, alert, and analysis program; to authorize reimbur …",
     "excerptTerm": "soundthinking"
-   },
-   {
-    "title": "Columbus City Council",
-    "date": "2026-05-11",
-    "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6182&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-    "terms": [
-     "body worn"
-    ],
-    "excerpt": "… t of Finance and Management to modify and extend a Universal Term Contract for the option to purchase Video Storage for Body Worn Cameras with CDW Government, LLC. and to declare an emergency. ($0.00) Ordinance",
-    "excerptTerm": "body worn"
    }
   ],
-  "alprMeetings": 5
+  "alprMeetings": 4
  },
  "meetings": [
+  {
+   "eventId": 6220,
+   "date": "2026-11-02",
+   "body": "Zoning Committee",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6220&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "itemCount": 14,
+   "topics": {
+    "rezoning": 2,
+    "development": 2,
+    "variance": 4
+   },
+   "matchedTerms": [
+    "apartment",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "REZONINGS/AMENDMENTS",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… cres located on the east side of North Hague Avenue, 900± feet south of Trabue Road, From: R, Rural District, To: AR-1, Apartment Residential District (Rezoning #Z25-011). Ordinance",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "VARIANCES",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "REZONINGS/AMENDMENTS",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To rezone 1696 N. HAGUE AVE. (43204), being 8.34± acres located on the east side of North Hague Avenue, 900± feet south of Trabue Road, From: R, Rural District, To: AR-1, Apartment",
+     "matterFile": "1925-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "VARIANCES",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3333.18, Building lines; and 3332.255, Perimeter yard, of the Columbus City Codes; for the property located at 1696 N. HAGUE AVE",
+     "matterFile": "1926-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3332.029, SR, Suburban residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property loca",
+     "matterFile": "2953-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Section 34.E.20.100.A, Uses, Use Table; of the Columbus City Codes, for the property located at 4480 GROVES RD. (43232), to allow a tempo",
+     "matterFile": "2959-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
   {
    "eventId": 6218,
    "date": "2026-10-26",
@@ -441,6 +534,180 @@
      "tags": [
       "development",
       "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
+  {
+   "eventId": 6219,
+   "date": "2026-10-26",
+   "body": "Columbus City Council",
+   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6219&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+   "itemCount": 148,
+   "topics": {
+    "contract": 46,
+    "data-center": 1,
+    "development": 4,
+    "millage-budget": 16,
+    "rezoning": 2,
+    "variance": 4
+   },
+   "matchedTerms": [
+    "apartment",
+    "budget",
+    "contract",
+    "data center",
+    "procurement",
+    "purchase order",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… he Department of Technology to enter an agreement with Dell Marketing LP, utilizing a State of Ohio State Term Schedule contract for Microsoft Enterprise software licensing and professional services; to appropriate $3,932,230.79 from the unappropri …",
+     "context": "agenda-action"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… ruction Management, to modify and increase the architectural / engineering services agreement with TechSite; for the IT Data Center Facility project; and to authorize an expenditure up to $245,850.00 within the Information Services Capital Projects Fu …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "apartment",
+     "excerpt": "… ment to enter into a Housing Development Agreement (HDA) with Columbus Housing Partnership Inc., for the George’s Creek apartment community. ($0.00) Ordinance",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "To authorize the Director of the Department of Finance and Management to associate all General Budget Reservations resulting from this ordinance with the appropriate Universal Term Contract Purchase Agreements for the pur …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "REZONINGS/AMENDMENTS",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "VARIANCES",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center",
+    "millage-budget"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "To authorize the Director of Finance and Management, on behalf of the Office of Construction Management, to modify and increase the architectural / engineering services agreement w",
+     "date": "2026-10-26",
+     "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6219&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
+     "excerpt": "… ruction Management, to modify and increase the architectural / engineering services agreement with TechSite; for the IT Data Center Facility project; and to authorize an expenditure up to $245,850.00 within the Information Services Capital Projects Fu …",
+     "excerptTerm": "data center"
+    }
+   ],
+   "landUseItems": [
+    {
+     "title": "To authorize the Director of Finance and Management, on behalf of the Office of Construction Management, to modify and increase the architectural / engineering services agreement w",
+     "matterFile": "2756-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "data-center"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To authorize the Director of the Department of Development to enter into a Housing Development Agreement (HDA) with Columbus Housing Partnership Inc., for the George’s Creek apartm",
+     "matterFile": "2920-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To authorize the Director of the Department of Development to enter into a Housing Development Agreement (HDA) with Columbus Housing Partnership Inc., for the Pheasant Run apartmen",
+     "matterFile": "2921-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "REZONINGS/AMENDMENTS",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To rezone 1696 N. HAGUE AVE. (43204), being 8.34± acres located on the east side of North Hague Avenue, 900± feet south of Trabue Road, From: R, Rural District, To: AR-1, Apartment",
+     "matterFile": "1925-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "VARIANCES",
+     "matterFile": null,
+     "matterType": null,
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3333.18, Building lines; and 3332.255, Perimeter yard, of the Columbus City Codes; for the property located at 1696 N. HAGUE AVE",
+     "matterFile": "1926-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "development",
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Sections 3332.029, SR, Suburban residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property loca",
+     "matterFile": "2953-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "To grant a Variance from the provisions of Section 34.E.20.100.A, Uses, Use Table; of the Columbus City Codes, for the property located at 4480 GROVES RD. (43232), to allow a tempo",
+     "matterFile": "2959-2026",
+     "matterType": "Ordinance",
+     "tags": [
+      "variance"
      ],
      "passed": null,
      "action": null,
@@ -4538,453 +4805,6 @@
      "passed": "Pass",
      "action": "Approved",
      "mover": "Tiara Ross"
-    }
-   ]
-  },
-  {
-   "eventId": 6180,
-   "date": "2026-05-11",
-   "body": "Zoning Committee",
-   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6180&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 24,
-   "topics": {
-    "rezoning": 3,
-    "variance": 13
-   },
-   "matchedTerms": [
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "REZONINGS/AMENDMENTS",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "VARIANCES",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": [],
-   "landUseItems": [
-    {
-     "title": "REZONINGS/AMENDMENTS",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "rezoning"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To rezone 4860-4900 E. DUBLIN-GRANVILLE RD. (43081), being 24.71± acres located on the north side of East Dublin-Granville Road; at the northern terminus of Old Hamilton Road, From",
-     "matterFile": "1271-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "rezoning"
-     ],
-     "passed": "Pass",
-     "action": "Waive the 2nd Reading",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "VARIANCES",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3356.03, C-4 permitted uses; 3361.02, CPD permitted uses; 3312.49(C), Required parking; and 3361.04(B), Performance criteria, of",
-     "matterFile": "1272-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Waive the 2nd Reading",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.029, SR suburban residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property locat",
-     "matterFile": "1291-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; and 3312.49, Required parking, of the Columbus City Codes; for the property located at 1309 ",
-     "matterFile": "1292-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Waive the 2nd Reading",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To rezone 4860-4900 E. DUBLIN-GRANVILLE RD. (43081), being 24.71± acres located on the north side of East Dublin-Granville Road; at the northern terminus of Old Hamilton Road, From",
-     "matterFile": "1271-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "rezoning"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3356.03, C-4 permitted uses; 3361.02, CPD permitted uses; 3312.49(C), Required parking; and 3361.04(B), Performance criteria, of",
-     "matterFile": "1272-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3356.03, C-4 permitted uses; 3361.02, CPD permitted uses; 3312.49(C), Required parking; and 3361.04(B), Performance criteria, of",
-     "matterFile": "1272-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3356.03, C-4 permitted uses; 3361.02, CPD permitted uses; 3312.49(C), Required parking; and 3361.04(B), Performance criteria, of",
-     "matterFile": "1272-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.029, SR suburban residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property locat",
-     "matterFile": "1291-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.029, SR suburban residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property locat",
-     "matterFile": "1291-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Amended to Emergency",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.029, SR suburban residential district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property locat",
-     "matterFile": "1291-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved as Amended",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; and 3312.49, Required parking, of the Columbus City Codes; for the property located at 1309 ",
-     "matterFile": "1292-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Accept entire staff report into evidence as an exhibit",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; and 3312.49, Required parking, of the Columbus City Codes; for the property located at 1309 ",
-     "matterFile": "1292-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Adopt the findings of staff as the findings of Council",
-     "mover": "Rob Dorans"
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; and 3312.49, Required parking, of the Columbus City Codes; for the property located at 1309 ",
-     "matterFile": "1292-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Rob Dorans"
-    }
-   ]
-  },
-  {
-   "eventId": 6182,
-   "date": "2026-05-11",
-   "body": "Columbus City Council",
-   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6182&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "itemCount": 209,
-   "topics": {
-    "contract": 82,
-    "millage-budget": 31,
-    "alpr": 1,
-    "annexation": 3,
-    "appointment": 5,
-    "rezoning": 4,
-    "development": 4,
-    "variance": 7
-   },
-   "matchedTerms": [
-    "annexation",
-    "apartment",
-    "appoint",
-    "body worn",
-    "budget",
-    "contract",
-    "procurement",
-    "purchase order",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "To authorize the Director of the Department of Technology to enter into a contract with Carahsoft Technology Corp for VMWare Technical Account Manager (TAM) services software licensing; to waive the com …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… o authorize the Director of Finance and Management, on behalf of the Department of Technology, to associate all General Budget Reservations resulting from this ordinance with the Purchase Agreement with Harris and Heavener Excavating, Inc. for fi …",
-     "context": "agenda-action"
-    },
-    "alpr": {
-     "term": "body worn",
-     "excerpt": "… t of Finance and Management to modify and extend a Universal Term Contract for the option to purchase Video Storage for Body Worn Cameras with CDW Government, LLC. and to declare an emergency. ($0.00) Ordinance",
-     "context": "agenda-action"
-    },
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "To accept the application (AN25-021) of Dublin MHP LLC for the annexation of certain territory containing 4.46± acres in Washington Township. ($0.00) Ordinance",
-     "context": "agenda-action"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "APPOINTMENTS",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "REZONINGS/AMENDMENTS",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "apartment",
-     "excerpt": "… e north side of Hard Road, 150± feet west of Stoneford Drive, From: L-RR, Limited Rural Residential District, To: AR-1, Apartment Residential District (Rezoning #Z25-044). Ordinance",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "VARIANCES",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget",
-    "alpr"
-   ],
-   "dataCenterItems": [],
-   "landUseItems": [
-    {
-     "title": "To accept the application (AN25-021) of Dublin MHP LLC for the annexation of certain territory containing 4.46± acres in Washington Township. ($0.00)",
-     "matterFile": "0985-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "annexation"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Tiara Ross"
-    },
-    {
-     "title": "To accept the application (AN25-027) of Joseph R. and Lexie C. Blalock, Richard C. Wolf, and Bruce L., Andrea V., Robert B., and Karen L. Minto for the annexation of certain territ",
-     "matterFile": "0999-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "annexation"
-     ],
-     "passed": "Pass",
-     "action": "Postponed to Date Certain",
-     "mover": "Nicholas Bankston"
-    },
-    {
-     "title": "To authorize the Director of the Department of Development, or designee, on behalf of the City of Columbus, to amend the Madison Township Joint Economic Development District Contra",
-     "matterFile": "1317-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "annexation",
-      "contract"
-     ],
-     "passed": "Pass",
-     "action": "Approved",
-     "mover": "Tiara Ross"
-    },
-    {
-     "title": "REZONINGS/AMENDMENTS",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "rezoning"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To rezone 2100 HARD RD. (43123), being 5.0± acres located on the north side of Hard Road, 150± feet west of Stoneford Drive, From: L-RR, Limited Rural Residential District, To: AR-",
-     "matterFile": "0290-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "rezoning"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To rezone 7801 & 7809 OLENTANGY RIVER RD. (43235), being 5.82± acres located on the west side of Olentangy River Road, 370± feet south of Clubview Boulevard, From: R-1, Residential",
-     "matterFile": "1035-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "rezoning"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To rezone 3600 PARK MILL RUN DR. (43026), being 12.56± acres located at the northwest corner of Spring Mill Drive and Fishinger Boulevard, From: CPD, Commercial Planned Development",
-     "matterFile": "1294-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "rezoning"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "VARIANCES",
-     "matterFile": null,
-     "matterType": null,
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3312.27, Parking setback line; 3333.18, Building lines; and 3332.255, Perimeter yard, of the Columbus City Codes; for the propert",
-     "matterFile": "0291-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Section 3370.05, Permitted uses, of the Columbus City Codes; for the property located at 1905 JETWAY BLVD. (43219) to allow a recreation ",
-     "matterFile": "1031-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3333.02(5), AR-12, ARLD and AR-1 apartment residential district use; 3333.41(H)(I)(J), Standards, of the Columbus City codes; fo",
-     "matterFile": "1036-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "development",
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3356.03, C-4 permitted uses; and 3361.02, Permitted uses of the Columbus City Codes; for the property located at 3600 PARK MILL ",
-     "matterFile": "1295-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3367.01, M-2 manufacturing district; and 3312.49(C), Required parking, of the Columbus City Codes; for the property located at 3",
-     "matterFile": "1346-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
-    },
-    {
-     "title": "To grant a Variance from the provisions of Sections 3332.035, R-3 residential district; 3312.49(C), Required parking; 3321.05(B)(2), Vision clearance; and 3332.05(A)(4), Area distr",
-     "matterFile": "1350-2026",
-     "matterType": "Ordinance",
-     "tags": [
-      "variance"
-     ],
-     "passed": null,
-     "action": "Read for the First Time",
-     "mover": null
     }
    ]
   }

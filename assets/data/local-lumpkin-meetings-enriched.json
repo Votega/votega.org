@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-22T14:13:29Z",
+  "generatedAt": "2026-10-26T15:34:37Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -12,8 +12,8 @@
   ],
   "lastActivity": "2026-11-09",
   "topicTotals": {
-   "development": 11,
-   "variance": 4,
+   "development": 10,
+   "variance": 3,
    "contract": 8,
    "millage-budget": 6,
    "appointment": 5
@@ -108,20 +108,9 @@
     "tags": [
      "development"
     ]
-   },
-   {
-    "title": "Planning Commission Regular Meeting",
-    "date": "2026-08-10",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4199,plainText=false)",
-    "tags": [
-     "development",
-     "variance"
-    ],
-    "excerpt": "… wth Case 177 is requesting a variance to Section 26-70 (b) to allow a manufactured home/ mobile home within a subdivision. 8. Location: Eden Grove Class II Subdivision (1049 Ben Higgens Road, Dahlonega, GA 30533) Applicant: Jace …",
-    "excerptTerm": "subdivision"
    }
   ],
-  "landUseMeetings": 11,
+  "landUseMeetings": 10,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -164,6 +153,24 @@
    "flags": [
     "land-use"
    ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1423",
+   "date": "2026-10-27",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Special Called Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4427,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4427,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 496,
+   "pdfSha256": "5e2a2bdc27b2b7ea5849c098cf49eaeb9cdbe5c962fd2b3e33671e0d1014967d",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
    "dataCenterItems": []
   },
   {
@@ -941,46 +948,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1153",
-   "date": "2026-08-10",
-   "body": "Planning Commission",
-   "title": "Planning Commission Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4199,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4199,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 3119,
-   "pdfSha256": "4eeb7d707dabddca0c1d3b28973102f32b4036541905b37c2742442333399163",
-   "topics": {
-    "development": 1,
-    "variance": 1
-   },
-   "tags": [
-    "development",
-    "variance"
-   ],
-   "matchedTerms": [
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… wth Case 177 is requesting a variance to Section 26-70 (b) to allow a manufactured home/ mobile home within a subdivision. 8. Location: Eden Grove Class II Subdivision (1049 Ben Higgens Road, Dahlonega, GA 30533) Applicant: Jace …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… Parcel Number: 012-015 Character Area: Rural Places Case 165 is requesting a 100 ft rear setback and buffer variance to Section 27-2.2.3 (Chart of Performance Standards) Table 1: Performance Standards requiring a telecommunica …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]
