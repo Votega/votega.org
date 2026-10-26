@@ -3,7 +3,7 @@
 
 Phase 1 of Roadmap/ROSTER-SOAP-MIGRATION-SPEC.md: this is the producer behind
 `assets/data/ga-members.json`. It replaces the Open States producer
-(`generate_ga_members_data.py`, kept for rollback per spec §9) and needs no API key and
+(`archive/generate_ga_members_data.py`, archived and not a working fallback) and needs no API key and
 no quota. Run `compare_members_soap_vs_os.py` against a saved Open States roster to
 re-prove equivalence before any change to the mapping.
 
