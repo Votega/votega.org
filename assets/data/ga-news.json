@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-26T08:17:26.457231+00:00",
+    "generatedAt": "2026-10-26T15:37:57.863462+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,14 +24,14 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 130,
+    "count": 133,
     "windowDays": 45,
     "entityTagged": 85,
     "topicCounts": {
-      "elections": 46,
-      "budget": 10,
+      "healthcare": 13,
+      "budget": 11,
+      "elections": 47,
       "surveillance": 2,
-      "healthcare": 12,
       "courts": 15,
       "education": 11,
       "ethics": 5
@@ -39,6 +39,11 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
+    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
@@ -48,11 +53,6 @@
       "name": "Brian Kemp",
       "url": null,
       "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
-    },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
     },
     "vg-ga-p-000014": {
       "name": "Bill Hitchens",
@@ -220,14 +220,70 @@
       "name": "Andrew S. Clyde",
       "url": null,
       "bioguideId": "C001116"
-    },
-    "vg-ga-p-000257": {
-      "name": "Barry Loudermilk",
-      "url": null,
-      "bioguideId": "L000583"
     }
   },
   "items": [
+    {
+      "id": "487ef0370ab5",
+      "title": "Savannah-based journalist is 'good friends with bad news'",
+      "url": "https://www.gpb.org/news/2026/10/26/savannah-based-journalist-good-friends-bad-news",
+      "source": "GPB News",
+      "publishedAt": "2026-10-26T15:06:00+00:00",
+      "snippet": "Savannah-based journalist Justin Glawe talks with GPB's Orlando Montoya about covering \"domestic war zones\" like Ferguson, Minneapolis and Baltimore — and the toll it took on his mental health.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "79e54566a65e",
+      "title": "Six Flags says it will install seat belts on Georgia roller coaster after rider's death",
+      "url": "https://www.gpb.org/news/2026/10/26/six-flags-says-it-will-install-seat-belts-on-georgia-roller-coaster-after-riders",
+      "source": "GPB News",
+      "publishedAt": "2026-10-26T14:55:55+00:00",
+      "snippet": "Six Flags says it will install seat belts on the Georgia roller coaster from which a rider fell to his death earlier this month.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "31011f36e528",
+      "title": "Warnock, Ossoff Demand Investigation into Folkston ICE Facility After Hunger Strike, Issues Raised by Detainees",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-ossoff-demand-investigation-into-folkston-ice-facility-after-hunger-strike-issues-raised-by-detainees/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-10-26T14:00:23+00:00",
+      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff are demanding that the U.S. Department of Homeland Security investigate conditions at Folkston ICE Processing Center According to reports from local ad",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "d54771ebda53",
+      "title": "GPB morning headlines for October 26, 2026",
+      "url": "https://www.gpb.org/news/2026/10/26/gpb-morning-headlines-for-october-26-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-26T13:20:18+00:00",
+      "snippet": "Gov. Brian Kemp has extended the state's gas tax suspension through Thanksgiving; President Donald Trump held a rally in Perry this weekend.",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "59b2eae07878",
+      "title": "Trump makes major economic announcement at second October campaign stop in Georgia",
+      "url": "https://www.gpb.org/news/2026/10/26/trump-makes-major-economic-announcement-at-second-october-campaign-stop-in-georgia",
+      "source": "GPB News",
+      "publishedAt": "2026-10-26T13:04:00+00:00",
+      "snippet": "Over the weekend, President Donald Trump held a rally in Perry south of Macon.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
     {
       "id": "c1d446e26eed",
       "title": "Georgia draws high-profile boosters to the campaign trail as candidates enter the homestretch",
@@ -803,18 +859,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "3e2382f9c522",
-      "title": "Warnock Names New Chief of Staff, Deputy Chief of Staff",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-names-new-chief-of-staff-deputy-chief-of-staff/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-10-16T16:08:22+00:00",
-      "snippet": "Washington, D.C. – Today, U.S. Senator Reverend Raphael Warnock (D-GA) named Dylan Laslovich as his Chief of Staff and promoted Josh Delaney to Deputy Chief of Staff/Legislative Director. Mark Libell ",
-      "entityIds": [
-        "vg-ga-p-000263"
-      ],
-      "topics": []
     },
     {
       "id": "d027d0adae4d",
@@ -1917,18 +1961,6 @@
       "snippet": "Washington, DC — This week, Congresswoman Lucy McBath (GA-06) introduced the bipartisan Net Effective Cost Transparency and Prescription Drug Affordability Act of 2026, legislation to increase transpa",
       "entityIds": [
         "vg-ga-p-000262"
-      ],
-      "topics": []
-    },
-    {
-      "id": "da7e10206977",
-      "title": "Remembering 9/11/01",
-      "url": "https://loudermilk.house.gov/2026/09/11/remembering-9-11-01/",
-      "source": "Rep. Barry Loudermilk (GA-11, press)",
-      "publishedAt": "2026-09-11T13:37:30+00:00",
-      "snippet": "We Will Not Forget Washington, D.C. (September 11, 2026) | Rep. Barry Loudermilk (GA-11), issued the following statement in rememberance of the 25th Anniversary of the attacks on September 11, 2001. “",
-      "entityIds": [
-        "vg-ga-p-000257"
       ],
       "topics": []
     }
