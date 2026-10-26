@@ -115,7 +115,7 @@ def load_places(places_path: str) -> dict:
         out[p["slug"]] = {
             "name": p.get("name", p["slug"]),
             "type": p.get("type", "county"),
-            "fips": str(p.get("fips") or ""),
+            "fips": str(p["fips"]) if p.get("fips") else None,  # null, never "" (a city has no county FIPS)
             "region": p.get("region") or "",
         }
     return out
@@ -210,7 +210,7 @@ def build_topic(topic: str, enriched_files: list[str], places: dict) -> dict:
         meta = places.get(slug, {})
         place_name = meta.get("name") or doc.get("metadata", {}).get("place") or slug
         place_type = meta.get("type", "county")
-        fips = meta.get("fips", "")
+        fips = meta.get("fips")
         region = meta.get("region", "")
         scanned.append((slug, place_name, place_type, region))
 
