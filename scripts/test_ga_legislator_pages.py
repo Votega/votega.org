@@ -14,6 +14,15 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import types  # noqa: E402
+
+try:
+    import yaml  # noqa: F401
+except ImportError:
+    # run-script-tests.yml installs no pip packages and build_entity_pages imports yaml at
+    # module level; the GA-legislator path never calls it, so a stub is enough here.
+    sys.modules["yaml"] = types.ModuleType("yaml")
+
 import build_entity_pages as B  # noqa: E402
 import generate_search_corpus as C  # noqa: E402
 from lib import ga_legislator_pages as P  # noqa: E402
