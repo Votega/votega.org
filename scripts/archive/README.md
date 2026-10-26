@@ -52,3 +52,21 @@ field). Topical **subjects** — which SOAP lacks — come from the frozen overl
 This file keeps its own copy of the local-subject inference (`GA_COUNTIES`,
 `infer_local_subject`, …); the live SOAP producer uses the shared
 `scripts/lib/ga_bill_subjects.py` extracted from it.
+
+
+## `generate_ga_members_data.py` — archived 2026-10-26 (NOT a working fallback)
+
+The Open States producer of `assets/data/ga-members.json`, replaced by
+`scripts/generate_ga_members_soap.py`. Unlike the votes and bills producers above, **do not
+restore this one expecting a publishable roster.** It re-implements the editorial overrides
+layer inline instead of calling `lib/ga_roster.apply_member_overrides`, and has drifted:
+
+- `_inject` entries are skipped, not merged, when the source carries the member.
+- No `_session` scoping, so after a biennium rollover it would apply the outgoing class's
+  departures to the incoming roster.
+- Its output has no `metadata.session` / `legisGaGovId` / identity slots / `review`, so
+  `publish_ga_legislators.py` exits 1 on it and tier-1 validation fails.
+
+Making it work again means a partial rewrite, not a file move. The fallback for a SOAP
+outage is the committed roster, which a failed run leaves untouched. Kept only as a record of
+the Open States field mapping.

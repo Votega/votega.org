@@ -49,7 +49,7 @@ votega.org/
 │   │   ├── current-members.json         # Federal Congress members (daily, from Congress.gov API)
 │   │   ├── ga-members.json              # Georgia state legislators (legis.ga.gov SOAP Members
 │   │   │                                #   service; canonical since 2026-10 — OS producer retired
-│   │   │                                #   to generate_ga_members_data.py, still runnable)
+│   │   │                                #   to scripts/archive/generate_ga_members_data.py — NOT a working fallback, see below)
 │   │   ├── ga-openstates-crosswalk.json # legisGaGovId → ocdPersonId/ballotpediaId sidecar (monthly, from the CC0
 │   │   │                                #   openstates/people repo); merged into the roster as nullable slots
 │   │   ├── ga-members-overrides.json    # Editorial patches/injections applied after the fetch —
@@ -83,8 +83,8 @@ votega.org/
 │   │                                     # (GA delegation's complete sponsored + cosponsored
 │   │                                     # record, via lib/federal_sponsorship.py)
 │   ├── generate_ga_members_soap.py      # legis.ga.gov SOAP → ga-members.json (canonical since
-│   │                                     # 2026-10; no API key, no quota). generate_ga_members_data.py
-│   │                                     # is the retired Open States producer, kept for rollback
+│   │                                     # 2026-10; no API key, no quota). scripts/archive/generate_ga_members_data.py
+│   │                                     # is the retired Open States producer, archived for reference
 │   ├── generate_ga_votes_soap.py        # legis.ga.gov SOAP (official) → ga-member-votes.json (canonical since 2026-10; OS producer retired to scripts/archive/generate_ga_votes_data.py)
 │   │                                     # `--archive <tag>` (2023_24 … 2017_18, lib/ga_sessions.ARCHIVE_SESSIONS) backfills ONE closed biennium to out/archive/ga-votes-<tag>.json (votes + thin roster; never touches live files, refuses their paths). Publish with `publish_ga_legislators.py archive <tag> <file> [--overwrite]` → sessions/<YYYY-YYYY>/ only, no pointer files. Tested by test_publish_ga_legislators_archive.py
 │   ├── generate_ga_bills_soap.py (legis.ga.gov SOAP → ga-bills.json; canonical since 2026-10, OS producer retired to scripts/archive/generate_ga_bills_data.py; subjects via ga-bills-subjects-base.json overlay) / enrich_bills_with_party_votes.py / generate_curated_ga_bills.py (curated key votes; reads the committed SOAP artifacts, SOAP-fetches only a session they do not cover — no Open States, no API key, canonical since 2026-10)
@@ -305,7 +305,7 @@ Built by `scripts/build_id_crosswalk.py` from the roster, finance and races file
 - Prefer OCD ID keys over name keys for precision.
 - Only include fields that need changing — all other fields are preserved from the API.
 - Use `_inject` for net-new entries; they must include all required schema fields.
-- After changes, re-run `generate_ga_members_data.py` locally or trigger the workflow to regenerate `ga-members.json`.
+- After changes, re-run `generate_ga_members_soap.py` locally or trigger the `update-ga-members` workflow to regenerate `ga-members.json`. (The Open States producer in `scripts/archive/` predates `_session` scoping, the `_inject` merge and the roster contract; it is not a working fallback.)
 
 ## Project-Specific Conventions
 - **Portrait cache is government-sources-only, and idempotent** — `scripts/fetch_candidate_images.py` downloads portraits, resizes them to ≤400px JPEG under `assets/img/candidates/`, and writes the URL→local-path manifest `assets/data/candidate-image-cache.json`; the render layer swaps via `VotegaPortraits` in `votega-core.js` (wired into the race/candidate/ga-legislator/federal-legislator entity includes). Two invariants must hold. (1) **Only add government hosts to `ALLOWED_HOSTS`** (currently `congress.gov`, `legis.ga.gov`). Re-hosting a campaign/Ballotpedia/social photo is a reproduction of a copyrighted work — attribution is not a license — so those stay hot-linked (the render layer only lazy-loads them). (2) **Never make the fetcher re-download cached files.** Images are binary and do not delta-compress, so skip-if-exists (stable hash filenames) is what keeps the weekly `update-candidate-images.yml` commit empty on a quiet week and stops `.git` from bloating; a blind re-fetch every run would add ~10 MB/run of undeletable history. The `legis.ga.gov` originals are ~3–15 MB each (the real cause of slow race pages), shrunk to ~15 KB. Renaming that workflow means updating `notify-workflow-failure.yml` in the same commit (see the renaming convention above).
@@ -340,7 +340,7 @@ Built by `scripts/build_id_crosswalk.py` from the roster, finance and races file
 - Check for API key exposure before suggesting any code changes.
 - If proposing live API calls, suggest static/build-time alternatives first.
 - For new features, verify against Congress.gov API docs and test with sample data.
-- When modifying `normalize_member()` in `generate_ga_members_data.py`, ensure all schema fields are present in the output — missing fields cause silent JS failures downstream.
+- When modifying the member shaping in `generate_ga_members_soap.py` / `lib/ga_roster.py`, ensure all schema fields are present in the output — missing fields cause silent JS failures downstream.
 - Do not use empty strings for optional fields — use `None`/`null`.
 
 ## Scaling & GitHub limits (REVISIT — findings 2026-09)

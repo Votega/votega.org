@@ -31,9 +31,9 @@ jobs:
           python-version: '3.x'
 
       # legis.ga.gov's own Members service — no API key, no quota. The Open States
-      # producer is kept at scripts/generate_ga_members_data.py for the rollback in
-      # ROSTER-SOAP-MIGRATION-SPEC.md §9 and is archived in Phase 2, which is also
-      # when OPENSTATES_API_KEY leaves this workflow.
+      # producer is archived at scripts/archive/generate_ga_members_data.py and is NOT
+      # a working fallback (see scripts/archive/README.md). The fallback is the
+      # committed roster, which a failed run leaves untouched.
       - name: Generate GA member data
         id: generate
         run: python scripts/generate_ga_members_soap.py assets/data/ga-members.json ${{ inputs.new_biennium && '--new-biennium' || '' }}
