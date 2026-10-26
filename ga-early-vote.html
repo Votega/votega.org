@@ -123,6 +123,11 @@ share-description: "How many Georgians have already voted in the November 3, 202
   td.pipebar { min-width: 150px; }
   td.pipebar .ev-pipe { height: 12px; }
 
+  /* a plain informational callout: no status colour, since nothing here is an error */
+  .ev-flag { display: flex; gap: 10px; align-items: baseline; background: var(--color-surface-sunken);
+    border-left: 3px solid var(--color-accent); border-radius: 0 6px 6px 0; padding: 10px 14px; margin: 12px 0; font-size: .95rem; }
+  .ev-flag i { color: var(--color-accent); flex: none; }
+
   /* ---- tables ---- */
   .ev-controls { margin: 12px 0 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
   .ev-controls input { width: 100%; max-width: 320px; padding: 8px 10px; border: 1px solid var(--color-border); border-radius: 6px; }
@@ -426,6 +431,11 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <div><i class="p-cancelled"></i><span><b data-n="{{ mp.cancelled }}">{{ mp.cancelled }}</b> cancelled or spoiled<small>the voter voted another way, or the ballot was replaced</small></span></div>
   <div><i class="p-rejected"></i><span><b data-n="{{ mp.rejected }}">{{ mp.rejected }}</b> rejected<small>{% assign returned = mp.accepted | plus: mp.rejected %}{{ mp.rejected | times: 100.0 | divided_by: returned | round: 2 }}% of returned ballots so far</small></span></div>
 </div>
+{%- assign live_mail = mp.accepted | plus: mp.rejected | plus: mp.outstanding -%}
+<p class="ev-flag"><i class="fa-solid fa-envelope" aria-hidden="true"></i>
+  <span><strong><span data-n="{{ mp.outstanding }}">{{ mp.outstanding }}</span> mail ballots are still out</strong> &mdash; sent to voters and not yet returned, {{ mp.outstanding | times: 100.0 | divided_by: live_mail | round: 0 }}% of the mail ballots in play.
+  A mail ballot has to <em>reach</em> the county election office by the time polls close on {{ ev.metadata.electionDate | date: "%A, %B %-d" }}; a postmark by election day is not enough. The table below shows how many are still out in each county.</span></p>
+
 <p class="ev-sub">
   Rejection is decided during review, and some ballots are fixed afterward, so the rejected count is expected to move.
   Past elections are not charted here because the files record rejected and cancelled ballots differently from year to year.
@@ -446,6 +456,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
       <th data-type="num"><button type="button">Rejected</button></th>
       <th data-type="num"><button type="button">Cancelled or spoiled</button></th>
       <th data-type="num"><button type="button">Accepted share</button></th>
+      <th data-type="num"><button type="button">Returned</button></th>
       <th>Status mix</th>
     </tr>
   </thead>
@@ -461,10 +472,12 @@ share-description: "How many Georgians have already voted in the November 3, 202
       <td data-f="n" data-v="{{ m.rejected }}">{{ m.rejected }}</td>
       <td data-f="n" data-v="{{ m.cancelled }}">{{ m.cancelled }}</td>
       {% if t > 0 %}{% assign sh = m.accepted | times: 100.0 | divided_by: t | round: 1 %}<td data-v="{{ sh }}">{{ sh }}%</td>
+      {%- assign live = m.accepted | plus: m.rejected | plus: m.outstanding -%}
+      {%- if live > 0 %}{% assign back = m.accepted | plus: m.rejected %}{% assign rt = back | times: 100.0 | divided_by: live | round: 1 %}<td data-v="{{ rt }}">{{ rt }}%</td>{% else %}<td data-v="">&ndash;</td>{% endif %}
       <td class="pipebar"><div class="ev-pipe" role="img" aria-label="{{ c.name }}: {{ m.accepted }} accepted, {{ m.outstanding }} outstanding, {{ m.other }} pending, {{ m.cancelled }} cancelled, {{ m.rejected }} rejected">
         <span class="p-accepted" style="width: {{ m.accepted | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-outstanding" style="width: {{ m.outstanding | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-pending" style="width: {{ m.other | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-cancelled" style="width: {{ m.cancelled | times: 100.0 | divided_by: t | round: 1 }}%"></span><span class="p-rejected" style="width: {{ m.rejected | times: 100.0 | divided_by: t | round: 1 }}%"></span>
       </div></td>
-      {% else %}<td data-v="">&ndash;</td><td class="pipebar"></td>{% endif %}
+      {% else %}<td data-v="">&ndash;</td><td data-v="">&ndash;</td><td class="pipebar"></td>{% endif %}
     </tr>
     {% endfor %}
   </tbody>
