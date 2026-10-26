@@ -28,6 +28,7 @@ import html
 import json
 from lib.atomic_io import write_json_atomic
 from lib.share_card import candidate_line
+from lib.ga_legislator_record import legislator_record
 from lib.candidate_standing import LIVE, OFF_BALLOT, LOST, WON, overall, standing, officeholder_target
 import os
 import re
@@ -476,7 +477,7 @@ def candidate_about(name, race, cand, race_label):
     return paras
 
 
-def ga_legislator_about(name, role, m, is_senate):
+def ga_legislator_about(name, role, m, is_senate, record=()):
     chamber = "State Senate" if is_senate else "House of Representatives"
     party = (m.get("party") or "").strip()
     d = m.get("district")
@@ -488,6 +489,7 @@ def ga_legislator_about(name, role, m, is_senate):
     if comms:
         paras.append(f"Committee assignments: {', '.join(comms)}. Committees review bills in their "
                      "subject area before those bills reach a vote of the full chamber.")
+    paras.extend(record)
     if m.get("address"):
         paras.append(f"Capitol office: {m['address'].strip()}.")
     paras.append(("The Georgia State Senate has 56 members" if is_senate else
@@ -908,6 +910,9 @@ def build_ga_legislators(records, urls, prior, new_state):
     data = load("ga-members.json")
     members = {m["id"]: m for m in data.get("members", [])}
     data_date = _date_only((data.get("metadata") or {}).get("generatedAt"))
+    # Record sentences come from the generated files, never recomputed here.
+    unity = {u["id"]: u for u in load("ga-party-unity.json").get("members", [])}
+    spon = load("ga-sponsorship-index.json").get("members", {})
     seen = set()
     count = 0
     for rec in records:
@@ -972,7 +977,9 @@ def build_ga_legislators(records, urls, prior, new_state):
                   "title": role_short, "chamber": chamber, "district": district,
                   "party": party, "committees": committees, "phone": phone,
                   "website": website, "nextElection": next_election,
-                  "about": ga_legislator_about(name, role, m, is_senate)}
+                  "about": ga_legislator_about(
+                      name, role, m, is_senate,
+                      legislator_record(m, unity.get(mid), spon.get(str(m.get("legisGaGovId")))))}
         lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
                                   data_date, prior, new_state)
         fm = {
