@@ -7,7 +7,10 @@ and read by generate_ga_zip_districts.py, so the quarterly job needs none of the
 inputs below. Re-run it only when Georgia redraws its maps or the Census vintage
 changes.
 
-Inputs (all public; none are committed):
+Inputs (all public; none are committed). Get the reapportionment office's files from
+https://www.legis.ga.gov/joint-office/reapportionment (block-equivalency xlsx, plan packets
+and county reports as PDFs; convert the PDFs with `pdftotext -layout`), and the Census file
+from the 2020 PL 94-171 redistricting data for Georgia (ga2020.pl.zip -> gageo2020.pl):
   * the General Assembly Office of Legislative & Congressional Reapportionment's
     block-equivalency files for the Senate-2023, House-2023 and Congress-2023 plans (xlsx:
     columns "Block" = 15-digit census block GEOID, "DistrictID:1");
@@ -18,9 +21,10 @@ Inputs (all public; none are committed):
 Optional reconciliation, which this script runs whenever its inputs are given:
   * the plans' county reports and packets (pdftotext -layout .txt). The table must
     reproduce the packets' district populations and the county reports'
-    county x district populations EXACTLY. (The Congress-2023 plan has no packet in
-    our files, so its district totals are checked against the sums of its county
-    report instead.) The same numbers come from the same
+    county x district populations EXACTLY. (The script reads no Congress-2023 packet, so
+    that plan's district totals are checked against the sums of its county report.
+    The office does publish congress-2023-packet-upd.pdf, but it is not wired in.)
+    The same numbers come from the same
     census blocks, so any difference means a wrong or mismatched input, and the
     script exits 1 without writing.
 
