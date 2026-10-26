@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-26T15:37:57.863462+00:00",
+    "generatedAt": "2026-10-26T22:06:20.241893+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,26 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 133,
+    "count": 137,
     "windowDays": 45,
-    "entityTagged": 85,
+    "entityTagged": 84,
     "topicCounts": {
-      "healthcare": 13,
-      "budget": 11,
       "elections": 47,
+      "courts": 16,
+      "budget": 12,
+      "education": 12,
+      "healthcare": 13,
       "surveillance": 2,
-      "courts": 15,
-      "education": 11,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
@@ -48,11 +53,6 @@
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000014": {
       "name": "Bill Hitchens",
@@ -85,54 +85,6 @@
       "rosterId": "ocd-person/d40576ac-fbc0-4b42-98ee-f6362063784d",
       "candidateIds": [
         "ga-house-167-2026-r-1"
-      ]
-    },
-    "vg-ga-p-000189": {
-      "name": "Ron Stephens",
-      "url": null,
-      "ocdPersonId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
-      "rosterId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
-      "candidateIds": [
-        "ga-house-164-2026-r-1"
-      ]
-    },
-    "vg-ga-p-000468": {
-      "name": "Stephanie O Burgess",
-      "url": null,
-      "candidateIds": [
-        "ga-house-164-2026-d-1"
-      ]
-    },
-    "vg-ga-p-000104": {
-      "name": "Jesse Petrea",
-      "url": null,
-      "ocdPersonId": "ocd-person/38c596a4-df69-4a56-9329-be73f26bc7d5",
-      "rosterId": "ocd-person/38c596a4-df69-4a56-9329-be73f26bc7d5",
-      "candidateIds": [
-        "ga-house-166-2026-r-1"
-      ]
-    },
-    "vg-ga-p-000472": {
-      "name": "Pat Daley",
-      "url": null,
-      "candidateIds": [
-        "ga-house-166-2026-d-1"
-      ]
-    },
-    "vg-ga-p-000002": {
-      "name": "Al Williams",
-      "url": null,
-      "ocdPersonId": "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77",
-      "rosterId": "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77",
-      "candidateIds": [
-        "ga-house-168-2026-d-1"
-      ]
-    },
-    "vg-ga-p-000475": {
-      "name": "Kevin Remillard",
-      "url": null,
-      "candidateIds": [
-        "ga-house-168-2026-r-1"
       ]
     },
     "vg-ga-p-000030": {
@@ -224,6 +176,101 @@
   },
   "items": [
     {
+      "id": "20f68842ae85",
+      "title": "Kemp says Audi plant delivers on pledge to grow jobs in rural Georgia",
+      "url": "https://capitol-beat.org/2026/10/kemp-says-audi-plant-delivers-on-pledge-to-grow-jobs-in-rural-georgia/?utm_source=rss&utm_medium=rss&utm_campaign=kemp-says-audi-plant-delivers-on-pledge-to-grow-jobs-in-rural-georgia",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-10-26T21:59:53+00:00",
+      "snippet": "ATLANTA — German automaker Audi’s decision to locate its first U.S. plant in Georgia was a trifecta for Gov. Brian Kemp, who sees it as a major part of his legacy as he prepares to leave office. When ",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "541ee481d432",
+      "title": "Campaigns make final pitches in Coastal Georgia",
+      "url": "https://thecurrentga.org/2026/10/26/campaigns-make-final-pitches-in-coastal-georgia/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-26T21:40:48+00:00",
+      "snippet": "Candidates in several key Georgia races made final campaign pitches ahead of the upcoming midterm elections.\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth wa",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "0d55f6331f3d",
+      "title": "Art lovers Sam Taylor-Johnson and Michael Stipe open 'She Was I' photo exhibition in Atlanta",
+      "url": "https://www.gpb.org/news/2026/10/26/art-lovers-sam-taylor-johnson-and-michael-stipe-open-she-was-i-photo-exhibition-in",
+      "source": "GPB News",
+      "publishedAt": "2026-10-26T20:44:00+00:00",
+      "snippet": "The British filmmaker kicked off her solo photography show with the R.E.M singer at Jackson Fine Art in Buckhead.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "2938e863cf33",
+      "title": "Georgia Today: Audi manufacturing plant; Six Flags Goliath seat belts; Screen time research",
+      "url": "https://www.gpb.org/news/2026/10/26/georgia-today-audi-manufacturing-plant-six-flags-goliath-seat-belts-screen-time",
+      "source": "GPB News",
+      "publishedAt": "2026-10-26T19:56:48+00:00",
+      "snippet": "On the Oct. 26 edition: Audi's CEO announced a new manufacturing plant in Middle Georgia at a political rally that included Donald Trump; Six Flags says it will add seat belts to the Goliath roller co",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "c68ee858459e",
+      "title": "Justice Department targets Chatham, other Democratic areas for election monitors",
+      "url": "https://thecurrentga.org/2026/10/26/justice-department-targets-chatham-other-democratic-areas-for-election-monitors/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-26T19:55:46+00:00",
+      "snippet": "The U.S. Justice Department announced plans to deploy monitors to several Georgia counties, including Democratic strongholds like Chatham and Fulton, during next week's midterm elections.\nThe Current ",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
+      "id": "09db3670e74f",
+      "title": "Brantley County activist Tanya Tomanek heads to court after being jailed for speech to commissioners",
+      "url": "https://thecurrentga.org/2026/10/26/brantley-county-activist-tanya-tomanek-heads-to-court-after-being-jailed-for-speech-to-commissioners/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-26T18:59:53+00:00",
+      "snippet": "Brantley County resident Tanya Tomanek faces trial for criminal trespass following her arrest during a heated county commission meeting regarding the expansion of data centers in rural Georgia.\nThe Cu",
+      "entityIds": [],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "89c2e2a70558",
+      "title": "GPB evening headlines for October 26, 2026",
+      "url": "https://www.gpb.org/news/2026/10/26/gpb-evening-headlines-for-october-26-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-26T18:19:44+00:00",
+      "snippet": "German automaker Audi plans to invest $4.2 billion in a new manufacturing plant in Middle Georgia's Peach County.\nGov. Brian Kemp has extended the state's gas tax suspension through the busy Thanksgiv",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "70e539cd4ed6",
+      "title": "How bad is screen time for kids? Study says it should be measured by quality, not time",
+      "url": "https://www.gpb.org/news/2026/10/26/how-bad-screen-time-for-kids-study-says-it-should-be-measured-by-quality-not-time",
+      "source": "GPB News",
+      "publishedAt": "2026-10-26T16:56:00+00:00",
+      "snippet": "The effects of screen time on young children may depend on more than just how long they spend in front of a device, according to a new publication from the University of Georgia.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
       "id": "487ef0370ab5",
       "title": "Savannah-based journalist is 'good friends with bad news'",
       "url": "https://www.gpb.org/news/2026/10/26/savannah-based-journalist-good-friends-bad-news",
@@ -278,7 +325,7 @@
       "url": "https://www.gpb.org/news/2026/10/26/trump-makes-major-economic-announcement-at-second-october-campaign-stop-in-georgia",
       "source": "GPB News",
       "publishedAt": "2026-10-26T13:04:00+00:00",
-      "snippet": "Over the weekend, President Donald Trump held a rally in Perry south of Macon.",
+      "snippet": "Over the weekend, President Donald Trump held a rally in Perry, south of Macon, in support of Republicans on the Georgia ballot. In the process, he made a surprise announcement.",
       "entityIds": [],
       "topics": [
         "elections"
@@ -391,47 +438,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "7a82ed06bb07",
-      "title": "Georgia House Dist. 164: Ron Stephens, Stephanie Burgess",
-      "url": "https://thecurrentga.org/2026/10/24/georgia-house-dist-164-ron-stephens-stephanie-burgess/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-24T15:33:59+00:00",
-      "snippet": "Incumbent Republican Ron Stephens and Democratic challenger Stephanie Burgess outlined their priorities for Georgia's House of Representatives District 164 seat ahead of the 2027 legislative session.\n",
-      "entityIds": [
-        "vg-ga-p-000189",
-        "vg-ga-p-000468"
-      ],
-      "topics": []
-    },
-    {
-      "id": "7312c81c8b69",
-      "title": "Georgia House Dist. 166: Jesse Petrea, Pat Daley",
-      "url": "https://thecurrentga.org/2026/10/24/georgia-house-dist-166-jesse-petrea-pat-daley/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-24T15:31:19+00:00",
-      "snippet": "Incumbent Republican Jesse Petrea and Democratic challenger Pat Daley outline their platforms and motivations for the Georgia State House of Representatives District 166 election.\nThe Current is an in",
-      "entityIds": [
-        "vg-ga-p-000104",
-        "vg-ga-p-000472"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "edc9f357e07f",
-      "title": "Georgia House Dist. 168: Al Williams, Kevin Remillard",
-      "url": "https://thecurrentga.org/2026/10/24/georgia-house-dist-168-al-williams-kevin-remillard/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-24T15:29:48+00:00",
-      "snippet": "Incumbent Democrat Al Williams and Republican challenger Kevin Remillard present their platforms, priorities for the Georgia State House of Representatives District 168 seat.\nThe Current is an inclusi",
-      "entityIds": [
-        "vg-ga-p-000002",
-        "vg-ga-p-000475"
-      ],
-      "topics": []
     },
     {
       "id": "454d0dd52047",
@@ -896,19 +902,6 @@
         "elections",
         "courts",
         "healthcare"
-      ]
-    },
-    {
-      "id": "e536d691ef7a",
-      "title": "Ballot measure would remove party labels from probate judge elections",
-      "url": "https://capitol-beat.org/2026/10/ballot-measure-would-remove-party-labels-from-probate-judge-elections/?utm_source=rss&utm_medium=rss&utm_campaign=ballot-measure-would-remove-party-labels-from-probate-judge-elections",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-15T21:18:42+00:00",
-      "snippet": "ATLANTA — Georgia voters have a lot of decisions to make when selecting among so many candidates this year, but prominent figures from both major parties are pointing to one easy choice on the ballot.",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "courts"
       ]
     },
     {
