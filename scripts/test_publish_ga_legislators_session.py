@@ -45,8 +45,12 @@ check("members.csv keeps every pre-existing column in place",
       rows[0][:14], ["id", "name", "firstName", "lastName", "party", "chamber", "district",
                      "title", "status", "phone", "email", "website", "committees",
                      "legisGaGovId"])
-check("members.csv ends with a session column", rows[0][-1], "session")
-check("every row carries the session", {r[-1] for r in rows[1:]}, {"2025_26"})
+# `session` was the last column until votegaUrl was appended after it (new columns are
+# appended, never inserted), so consumers find it by header name.
+si = rows[0].index("session")
+check("members.csv has a session column at its original position", si, 14)
+check("every row carries the session", {r[si] for r in rows[1:]}, {"2025_26"})
+check("votegaUrl is appended after session", rows[0][-1], "votegaUrl")
 check("rows match the header width", {len(r) for r in rows}, {len(rows[0])})
 try:
     P.members_csv(MEMBERS, None)
@@ -102,7 +106,7 @@ if os.path.exists(src):
     check("committed ga-members.json carries metadata.session",
           bool(doc["metadata"].get("session")), True)
     check("build_members emits the session column",
-          P.build_members()["data/members.csv"].decode().splitlines()[0].endswith(",session"), True)
+          P.build_members()["data/members.csv"].decode().splitlines()[0].split(",")[14] == "session", True)
 
 # --- votes / scorecard CSVs ------------------------------------------------ #
 v = list(csv.reader(io.StringIO(P.votes_csv({"x": {"date": "d"}}, "2026_ss").decode())))
