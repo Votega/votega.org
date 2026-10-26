@@ -112,7 +112,7 @@ def sitting_legislators(members):
 # --------------------------------------------------------------------------- #
 MEMBERS_CSV_HEADER = ["id", "name", "firstName", "lastName", "party", "chamber", "district",
                       "title", "status", "phone", "email", "website", "committees",
-                      "legisGaGovId", "session"]
+                      "legisGaGovId", "session", "votegaUrl"]
 
 
 def members_csv(legislators, session):
@@ -136,7 +136,7 @@ def members_csv(legislators, session):
             m.get("officialWebsiteUrl"),
             "; ".join(c.get("name", c) if isinstance(c, dict) else c
                       for c in (m.get("committees") or [])),
-            m.get("legisGaGovId"), session,
+            m.get("legisGaGovId"), session, m.get("votegaUrl"),
         ])
     return buf.getvalue().encode()
 
@@ -151,6 +151,8 @@ def roster_md(legislators, meta, session=None):
         status = "" if not m.get("status") else f" _({m['status']})_"
         web = f"[site]({m['officialWebsiteUrl']})" if m.get("officialWebsiteUrl") else ""
         name = (m.get("name") or "").replace("|", "\\|")
+        if m.get("votegaUrl"):
+            name = f"[{name}]({m['votegaUrl']})"
         return (f"| {m.get('district', '')} | {name}{status} | {m.get('party') or ''} "
                 f"| {m.get('phone') or ''} | {web} |")
 
@@ -282,6 +284,12 @@ def members_schema(schema_path="data/members.schema.json"):
                         "officialWebsiteUrl": {"type": ["string", "null"]},
                         "committees": {"type": "array", "description":
                                        "Committee names exactly as legis.ga.gov publishes them."},
+                        "votegaUrl": {"type": ["string", "null"], "description":
+                                      "Absolute URL of this member's page on votega.org, or null "
+                                      "when the member has none (vacant placeholders, executives, "
+                                      "Resigned/Removed/Deceased). Derived from name, chamber and "
+                                      "district, so it moves if the member's displayed name "
+                                      "changes; join on legisGaGovId, not on this."},
                         "legisGaGovId": {"type": ["integer", "null"], "description":
                                          "The General Assembly's own member id, and the stable "
                                          "join key. Null only for the statewide executives, who "
