@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-27T15:01:47.655761+00:00",
+    "generatedAt": "2026-10-27T21:36:49.445634+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,30 +24,38 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 133,
+    "count": 139,
     "windowDays": 45,
-    "entityTagged": 83,
+    "entityTagged": 84,
     "topicCounts": {
       "elections": 49,
       "courts": 18,
+      "healthcare": 13,
       "budget": 10,
       "surveillance": 2,
-      "healthcare": 12,
-      "education": 11,
+      "education": 12,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
       "bioguideId": "W000790"
     },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
+    "vg-ga-p-000021": {
+      "name": "Brad Raffensperger",
       "url": null,
-      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+      "rosterId": "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1",
+      "candidateIds": [
+        "challenger-brad-raffensperger-gov-2026"
+      ]
     },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
@@ -68,23 +76,6 @@
       "url": null,
       "candidateIds": [
         "ga-house-161-2026-d-1"
-      ]
-    },
-    "vg-ga-p-000021": {
-      "name": "Brad Raffensperger",
-      "url": null,
-      "rosterId": "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1",
-      "candidateIds": [
-        "challenger-brad-raffensperger-gov-2026"
-      ]
-    },
-    "vg-ga-p-000029": {
-      "name": "Buddy DeLoach",
-      "url": null,
-      "ocdPersonId": "ocd-person/d40576ac-fbc0-4b42-98ee-f6362063784d",
-      "rosterId": "ocd-person/d40576ac-fbc0-4b42-98ee-f6362063784d",
-      "candidateIds": [
-        "ga-house-167-2026-r-1"
       ]
     },
     "vg-ga-p-000030": {
@@ -132,6 +123,11 @@
       "url": null,
       "bioguideId": "W000788"
     },
+    "vg-ga-p-000262": {
+      "name": "Lucy McBath",
+      "url": null,
+      "bioguideId": "M001208"
+    },
     "vg-ga-p-000256": {
       "name": "Rick W. Allen",
       "url": null,
@@ -144,11 +140,6 @@
       "candidateIds": [
         "challenger-mike-collins-senate-2026"
       ]
-    },
-    "vg-ga-p-000262": {
-      "name": "Lucy McBath",
-      "url": null,
-      "bioguideId": "M001208"
     },
     "vg-ga-p-000261": {
       "name": "Sanford D. Bishop",
@@ -175,6 +166,100 @@
     }
   },
   "items": [
+    {
+      "id": "d728bef8203e",
+      "title": "DNR backtracks on dock length, settling on 1,000-foot limit",
+      "url": "https://thecurrentga.org/2026/10/27/dnr-backtracks-on-dock-length-settling-on-1000-foot-limit/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-27T21:07:15+00:00",
+      "snippet": "A Georgia Board of Natural Resources committee recommended limiting private recreational docks to 1,000 feet following intense opposition to a proposal that would have extended them up to 1,650 feet.\n",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "d437ba9ed0ab",
+      "title": "Atlanta mahjong players build community one tile at a time",
+      "url": "https://www.gpb.org/news/2026/10/27/atlanta-mahjong-players-build-community-one-tile-at-time",
+      "source": "GPB News",
+      "publishedAt": "2026-10-27T20:25:00+00:00",
+      "snippet": "The Chinese tile game has become a popular option for people in Georgia interested in a new hobby.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "e84f284e20fa",
+      "title": "GPB evening headlines for October 27, 2026",
+      "url": "https://www.gpb.org/news/2026/10/27/gpb-evening-headlines-for-october-27-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-10-27T18:54:25+00:00",
+      "snippet": "Gov. Brian Kemp says German automaker Audi's decision to locate its first U.S. manufacturing facility in Middle Georgia caps years of back-and-forth dealmaking.\nGeorgia U.S. Sen. Raphael Warnock is ca",
+      "entityIds": [
+        "vg-ga-p-000024",
+        "vg-ga-p-000263"
+      ],
+      "topics": []
+    },
+    {
+      "id": "a6401b7ddbf3",
+      "title": "The deal for an Audi factory in Middle Georgia was years in the works",
+      "url": "https://www.gpb.org/news/2026/10/27/the-deal-for-audi-factory-in-middle-georgia-was-years-in-the-works",
+      "source": "GPB News",
+      "publishedAt": "2026-10-27T17:40:54+00:00",
+      "snippet": "The work that resulted in a promise from German car company Audi to build a factory in Georgia began years ago.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "42da83132e6e",
+      "title": "Fulton elections officials say they're not concerned about DOJ poll watchers",
+      "url": "https://www.gpb.org/news/2026/10/27/fulton-elections-officials-say-theyre-not-concerned-about-doj-poll-watchers",
+      "source": "GPB News",
+      "publishedAt": "2026-10-27T16:50:00+00:00",
+      "snippet": "The U.S. Department of Justice is sending 1,000 poll watchers around the country, including to Georgia.",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
+      "id": "b92dd74ac6ea",
+      "title": "AI company Anthropic only accessed free, public election info, says Georgia secretary of state",
+      "url": "https://www.gpb.org/news/2026/10/27/ai-company-anthropic-only-accessed-free-public-election-info-says-georgia-secretary",
+      "source": "GPB News",
+      "publishedAt": "2026-10-27T16:04:00+00:00",
+      "snippet": "The Georgia secretary of state says a so-called “breach” of their website by artificial intelligence company Anthropic found only public information.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "f73c256b5d7c",
+      "title": "Georgia Today: Secretary of State data breach; Healthcare enrollment; Warnock Campaigns",
+      "url": "https://www.gpb.org/news/2026/10/27/georgia-today-secretary-of-state-data-breach-healthcare-enrollment-warnock",
+      "source": "GPB News",
+      "publishedAt": "2026-10-27T15:11:22+00:00",
+      "snippet": "On the October 27th edition: Brad Raffensperger is telling voters not to worry after an AI model accessed some of the Secretary of State's data; Georgia is proposing a new financial assistance program",
+      "entityIds": [
+        "vg-ga-p-000021",
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "elections",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "25cf208349ea",
+      "title": "Dream star Angel Reese, coach Karl Smesko frustrated with fouling by Golden State in WNBA Finals",
+      "url": "https://www.gpb.org/news/2026/10/27/dream-star-angel-reese-coach-karl-smesko-frustrated-fouling-by-golden-state-in-wnba",
+      "source": "GPB News",
+      "publishedAt": "2026-10-27T15:00:07+00:00",
+      "snippet": "Angel Reese is plenty accustomed to physical play, yet these WNBA Finals are at a different level even for the do-everything Atlanta Dream star. Reese managed only eight shots and was held to seven po",
+      "entityIds": [],
+      "topics": []
+    },
     {
       "id": "c119779107c7",
       "title": "Warnock, Johnson Press EPA to Regulate and Monitor Harmful Pollutants Emitted by Data Centers",
@@ -373,35 +458,6 @@
       "entityIds": [
         "vg-ga-p-000014",
         "vg-ga-p-000466"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "696b921c5590",
-      "title": "Secretary of State files complaint against Georgia House candidate David Dillie over dual voting claims",
-      "url": "https://thecurrentga.org/2026/10/24/secretary-of-state-files-complaint-against-georgia-house-candidate-david-dillie-over-dual-voting-claims/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-24T20:31:56+00:00",
-      "snippet": "Georgia Secretary of State Brad Raffensperger has filed a formal complaint seeking to disqualify Democratic House candidate David Dillie over allegations that he violated residency requirements by vot",
-      "entityIds": [
-        "vg-ga-p-000021",
-        "vg-ga-p-000466"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "61b98e5a0431",
-      "title": "Georgia House Dist. 167: Buddy DeLoach, Nathaniel Hicks, Jr.",
-      "url": "https://thecurrentga.org/2026/10/24/georgia-house-dist-167-buddy-deloach-nathaniel-hicks-jr/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-24T20:14:26+00:00",
-      "snippet": "Incumbent Republican Buddy DeLoach and Democratic challenger Nathaniel Hicks shared their priorities and motivations ahead of the upcoming elections for Georgia's House of Representatives District 167",
-      "entityIds": [
-        "vg-ga-p-000029"
       ],
       "topics": [
         "elections"
@@ -640,6 +696,20 @@
       "entityIds": [],
       "topics": [
         "elections"
+      ]
+    },
+    {
+      "id": "2c1a62576a3f",
+      "title": "McBath Bill to Stop Human Trafficking Signed Into Law",
+      "url": "https://mcbath.house.gov/2026/10/21/mcbath-bill-to-stop-human-trafficking-signed-into-law/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-10-21T15:03:00+00:00",
+      "snippet": "Atlanta, GA – Bipartisan legislation led by Rep. Lucy McBath (D-GA) and House Education and Workforce Committee Chairman Tim Walberg (R-MI) has been signed into law. H.R. 4307, the Enhancing Detection",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": [
+        "education"
       ]
     },
     {
@@ -1734,19 +1804,6 @@
         "vg-ga-p-000039"
       ],
       "topics": []
-    },
-    {
-      "id": "4b752920bec4",
-      "title": "A new Georgia law makes most Atlanta-area county elections nonpartisan. Two DAs are pushing back.",
-      "url": "https://georgiarecorder.com/2026/09/22/a-new-georgia-law-makes-most-atlanta-area-county-elections-nonpartisan-two-das-are-pushing-back/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-22T08:00:07+00:00",
-      "snippet": "The fate of a Georgia law that will make the district attorney’s seat and other roles nonpartisan in five metro Atlanta counties rests in the hands of a Fulton County judge after two district attorney",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "courts"
-      ]
     },
     {
       "id": "128fb2dac8a2",
