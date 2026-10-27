@@ -1,0 +1,105 @@
+{%- comment -%}
+  County winner map for one statewide race, shown only once results are certified.
+  Params: data = path under assets/data/ of the county results file (e.g. ga-governor-2026-county.json)
+  Shapes come from assets/data/ga-counties.json (scripts/build_ga_county_shapes.py).
+  The results file: {"office": "Governor", "candidates": [{"id","name","party"}], "counties": {"13001": {"id": votes, ...}}}
+  Stays hidden while every county is at zero votes.
+{%- endcomment -%}
+<section class="cm" id="cm" hidden aria-labelledby="cm-h">
+  <style>
+    .cm { margin: 1.5rem 0; }
+    .cm h2 { font-size: 1.15rem; margin: 0 0 .25rem; }
+    .cm-sub { color: var(--color-text-muted); font-size: .9rem; margin: 0 0 .75rem; }
+    .cm-wrap { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start; }
+    .cm-svg { flex: 1 1 280px; max-width: 460px; height: auto; }
+    .cm-svg path { stroke: var(--color-surface); stroke-width: .7; cursor: pointer; }
+    .cm-svg path.on { stroke: var(--color-text); stroke-width: 1.6; }
+    .cm-r { fill: var(--color-party-r); } .cm-d { fill: var(--color-party-d); }
+    .cm-o { fill: var(--color-party-vacant); } .cm-t { fill: var(--color-border); }
+    .cm-side { flex: 1 1 200px; font-size: .95rem; }
+    .cm-key { list-style: none; padding: 0; margin: 0 0 .75rem; }
+    .cm-key li { display: flex; align-items: center; gap: .5rem; margin: .2rem 0; }
+    .cm-key i { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+    .cm-key i.cm-r { background: var(--color-party-r); } .cm-key i.cm-d { background: var(--color-party-d); }
+    .cm-key i.cm-o { background: var(--color-party-vacant); } .cm-key i.cm-t { background: var(--color-border); }
+    .cm-read { min-height: 4.5rem; padding: .5rem .75rem; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-surface-raised); }
+    .cm details { margin-top: .75rem; }
+    .cm table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+    .cm th, .cm td { text-align: left; padding: .2rem .5rem; border-bottom: 1px solid var(--color-border); }
+    .cm td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  </style>
+  <h2 id="cm-h"></h2>
+  <p class="cm-sub">Each county is colored by the candidate with the most votes there. Hover or tap a county to read it.</p>
+  <div class="cm-wrap">
+    <svg class="cm-svg" id="cm-svg" role="img" aria-labelledby="cm-t"><title id="cm-t"></title></svg>
+    <div class="cm-side">
+      <ul class="cm-key" id="cm-key"></ul>
+      <div class="cm-read" id="cm-read" aria-live="polite">Select a county.</div>
+    </div>
+  </div>
+  <details><summary>County results as a table</summary><div id="cm-table"></div></details>
+  <script>
+  (function () {
+    var NS = 'http://www.w3.org/2000/svg';
+    var sec = document.getElementById('cm');
+    var fmt = function (n) { return n.toLocaleString('en-US'); };
+    var esc = window.escHtml || function (s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+    Promise.all([
+      fetch({{ '/assets/data/ga-counties.json' | relative_url | jsonify }}).then(function (r) { return r.json(); }),
+      fetch({{ include.data | prepend: '/assets/data/' | relative_url | jsonify }}).then(function (r) { return r.json(); })
+    ]).then(function (res) {
+      var shapes = res[0], data = res[1];
+      var cands = data.candidates, byId = {};
+      cands.forEach(function (c) { byId[c.id] = c; });
+      var cls = function (c) { return c.party === 'rep' ? 'cm-r' : c.party === 'dem' ? 'cm-d' : 'cm-o'; };
+      var rows = shapes.counties.map(function (c) {
+        var v = data.counties[c.fips] || {}, tot = 0, top = null, tie = false;
+        cands.forEach(function (k) {
+          var n = v[k.id] || 0; tot += n;
+          if (!top || n > top.n) { top = { k: k, n: n }; tie = false; } else if (n === top.n) tie = true;
+        });
+        return { c: c, v: v, tot: tot, top: tot && !tie ? top.k : null };
+      });
+      if (!rows.some(function (r) { return r.tot > 0; })) return;  // nothing counted yet: leave the section hidden
+      document.getElementById('cm-h').textContent = data.office + ': winner by county';
+      document.getElementById('cm-t').textContent = 'Map of Georgia counties colored by the ' + data.office + ' candidate with the most votes';
+      var svg = document.getElementById('cm-svg');
+      svg.setAttribute('viewBox', shapes.viewBox.join(' '));
+      var read = document.getElementById('cm-read'), cur;
+      function show(r) {
+        if (cur) cur.classList.remove('on');
+        cur = r.el; r.el.classList.add('on');
+        var lines = cands.slice().sort(function (a, b) { return (r.v[b.id] || 0) - (r.v[a.id] || 0); }).map(function (k) {
+          var n = r.v[k.id] || 0;
+          return esc(k.name) + ': ' + fmt(n) + (r.tot ? ' (' + (n / r.tot * 100).toFixed(1) + '%)' : '');
+        });
+        read.innerHTML = '<strong>' + esc(r.c.name) + ' County</strong><br>' + lines.join('<br>');
+      }
+      rows.forEach(function (r) {
+        var p = document.createElementNS(NS, 'path');
+        p.setAttribute('d', r.c.d);
+        p.setAttribute('class', r.top ? cls(r.top) : 'cm-t');
+        var t = document.createElementNS(NS, 'title');
+        t.textContent = r.c.name + ' County: ' + (r.top ? r.top.name : r.tot ? 'tie' : 'no votes');
+        p.appendChild(t);
+        p.addEventListener('pointerenter', function () { show(r); });
+        p.addEventListener('pointerdown', function () { show(r); });
+        r.el = p; svg.appendChild(p);
+      });
+      var wins = {};
+      rows.forEach(function (r) { if (r.top) wins[r.top.id] = (wins[r.top.id] || 0) + 1; });
+      document.getElementById('cm-key').innerHTML = cands.map(function (k) {
+        var n = wins[k.id] || 0;
+        return '<li><i class="' + cls(k) + '"></i>' + esc(k.name) + ' <small>(' + n + ' count' + (n === 1 ? 'y' : 'ies') + ')</small></li>';
+      }).join('') + '<li><i class="cm-t"></i>Tie or no votes</li>';
+      document.getElementById('cm-table').innerHTML = '<table><thead><tr><th>County</th><th>Winner</th>' +
+        cands.map(function (k) { return '<th class="n">' + esc(k.name) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+        rows.map(function (r) {
+          return '<tr><td>' + esc(r.c.name) + '</td><td>' + (r.top ? esc(r.top.name) : '&ndash;') + '</td>' +
+            cands.map(function (k) { return '<td class="n">' + fmt(r.v[k.id] || 0) + '</td>'; }).join('') + '</tr>';
+        }).join('') + '</tbody></table>';
+      sec.hidden = false;
+    }).catch(function () {});
+  }());
+  </script>
+</section>

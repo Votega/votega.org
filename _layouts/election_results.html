@@ -120,6 +120,8 @@ Front-matter contract
 
 {{ content }}
 
+{%- if page.county_map and result_status == 'certified' -%}{% include county-map.html data=page.county_map %}{%- endif -%}
+
 {% if page.notice %}
   <div class="pr-notice {% if result_status == 'certified' %}pr-notice-certified{% elsif result_status == 'upcoming' %}pr-notice-upcoming{% endif %}">{{ page.notice }}</div>
 {% elsif result_status == 'upcoming' and page.notice_upcoming %}
