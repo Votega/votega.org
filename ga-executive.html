@@ -83,6 +83,11 @@ breadcrumb:
   .exec-meta-item {
     color: var(--color-text);
   }
+  .exec-presides {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+  }
   .exec-term-note {
     font-size: 0.8rem;
     color: var(--color-text-secondary);
@@ -191,6 +196,10 @@ breadcrumb:
 
 <script>
   const DATA_URL = 'assets/data/ga-executive.json';
+  // Facts about an office (e.g. the Lt. Governor presides over the Senate) live on its seat,
+  // not on the person, so they carry over to the next holder. Optional: the cards render
+  // without it.
+  const SEATS_URL = 'assets/data/ga-executive-seats.json';
 
   // Canvas cannot take var(--token) as a fillStyle, so resolve the token to its computed color.
     function tokenColor(v) {
@@ -264,8 +273,24 @@ breadcrumb:
     return '';
   }
 
-  function renderCard(official) {
+  async function loadSeats() {
+    try {
+      const res = await fetch(getBasePath() + SEATS_URL);
+      if (!res.ok) return {};
+      const data = await res.json();
+      return Object.fromEntries((data.seats || []).map(s => [s.id, s]));
+    } catch (err) {
+      console.warn('Seat data unavailable; cards render without office facts.', err);
+      return {};
+    }
+  }
+
+  function renderCard(official, seats) {
     const currentYear = new Date().getFullYear();
+    const seat = (seats || {})[official.officeId];
+    const presidesHtml = seat && seat.presidesOver
+      ? `<div class="exec-presides"><i class="fa-solid fa-gavel" aria-hidden="true"></i> Presides over the ${seat.presidesOver}</div>`
+      : '';
 
     const photoHtml = official.imageUrl
       ? `<img src="${official.imageUrl}" alt="${official.name}" loading="lazy" decoding="async">`
@@ -330,6 +355,7 @@ breadcrumb:
             </span>
             ${termHtml}
           </div>
+          ${presidesHtml}
           ${termNoteHtml}
           ${reelectionHtml}
           ${contactParts.length || campaignHtml ? `<div class="exec-contact">${[...contactParts, campaignHtml].filter(Boolean).join('')}</div>` : ''}
@@ -342,7 +368,7 @@ breadcrumb:
     const grid = document.getElementById('execGrid');
     try {
       await VoteGA.entityUrls.load(getBasePath());
-      const res = await fetch(DATA_URL);
+      const [res, seats] = await Promise.all([fetch(DATA_URL), loadSeats()]);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
@@ -350,7 +376,7 @@ breadcrumb:
       if (!officials.length) throw new Error('No officials found in data.');
 
       drawPartyChart(officials);
-      grid.innerHTML = officials.map(renderCard).join('');
+      grid.innerHTML = officials.map(o => renderCard(o, seats)).join('');
 
       const src = document.getElementById('dataSource');
       // No "last updated" stamp on purpose: this roster is hand-maintained and only
