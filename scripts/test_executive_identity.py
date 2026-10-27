@@ -92,9 +92,21 @@ check("every official has a unique executive id",
 check("executive ids are lower-case slugs",
       all(re.fullmatch(r"exec:[a-z0-9-]+", i) for i in ids), True)
 check("13 statewide officials", len(officials), 13)
-check("only the Lt. Governor presides over a chamber",
-      {o["name"]: o["presidesOver"] for o in officials if o.get("presidesOver")},
-      {"Burt Jones": "Senate"})
+seats = load("assets/data/ga-executive-seats.json")["seats"]
+seat_by_id = {s["id"]: s for s in seats}
+check("13 seats with unique ids", (len(seats), len(seat_by_id)), (13, 13))
+check("every official points at a seat, one official per seat",
+      sorted(o["officeId"] for o in officials), sorted(seat_by_id))
+check("each seat's current holder is the official pointing at it",
+      all(seat_by_id[o["officeId"]]["holders"][0]["execId"] == o["id"] for o in officials), True)
+check("presidesOver lives on the Lt. Governor seat only, never on a person",
+      ({s["id"]: s["presidesOver"] for s in seats if s.get("presidesOver")},
+       any("presidesOver" in o for o in officials)),
+      ({"ga-lt-governor": "Senate"}, False))
+check("history is declared not backfilled, so empty start/end dates are not a claim",
+      (load("assets/data/ga-executive-seats.json")["metadata"]["historyStatus"],
+       all(h["start"] is None and h["end"] is None for s in seats for h in s["holders"])),
+      ("not-backfilled", True))
 check("the roster's executive rows are each claimed by an official",
       set(roster) <= {o.get("legacyRosterId") for o in officials}, True)
 
