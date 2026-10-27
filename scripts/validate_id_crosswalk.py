@@ -48,6 +48,7 @@ CROSSWALK_FILE = "assets/data/id-crosswalk.json"
 LEDGER_FILE    = "assets/data/id-crosswalk-ledger.json"
 OVERRIDES_FILE = "assets/data/id-crosswalk-overrides.json"
 MEMBERS_FILE   = "assets/data/ga-members.json"
+EXECUTIVE_FILE = "assets/data/ga-executive.json"
 FEDERAL_FILE   = "assets/data/current-members.json"
 FINANCE_FILE   = "assets/data/ga-campaign-finance.json"
 FEC_FILE       = "assets/data/ga-fec-data.json"
@@ -131,6 +132,20 @@ def unaccounted_inputs(people, members, federal, cand_ids):
             errors.append(f"{len(missing)} {label} have no record in the crosswalk, "
                           f"e.g. {', '.join(missing[:3])} -- a partial build")
     return errors
+
+
+def known_ocd_ids(members, executives):
+    """Every OCD-shaped id the crosswalk may legitimately reference.
+
+    The roster's ids and ocdPersonId slots, plus the statewide executives'. Executives left
+    the roster, so the id an executive carries (their `legacyRosterId`, and `ocdPersonId`
+    where the file holds one) is known only through ga-executive.json. Omitting them
+    rejected Burt Jones's carried OCD id the day his roster row was removed.
+    """
+    ids = {m["id"] for m in members} | {m["ocdPersonId"] for m in members if m.get("ocdPersonId")}
+    for o in executives:
+        ids |= {v for v in (o.get("legacyRosterId"), o.get("ocdPersonId")) if v}
+    return ids
 
 
 def slot_errors(people, members):
@@ -313,8 +328,7 @@ def main():
     fec     = load(FEC_FILE)
     races   = load(RACES_FILE)
 
-    ocd_ids  = {m["id"] for m in members} | {m["ocdPersonId"] for m in members
-                                              if m.get("ocdPersonId")}
+    ocd_ids  = known_ocd_ids(members, load(EXECUTIVE_FILE)["officials"])
     bio_ids  = {m["bioguideId"] for m in federal}
     filer_ids = set(filers)
     fec_ids  = set(fec.get("candidates", {}))
