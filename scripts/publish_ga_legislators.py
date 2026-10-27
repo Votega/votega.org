@@ -35,9 +35,11 @@ alongside votes — it is frozen by an explicit, deliberate `freeze-roster` run 
 end-of-session (sine die), before that bump replaces the outgoing roster.
 See RECURRING-TASKS.md §3.
 
-ga-members.json also carries 4 statewide executives (chamber == "executive") and
-departed members (status Resigned/Removed/Deceased); both are excluded from the roster
-and CSV using VOTING_CHAMBERS — the same filter ga.js and the search-corpus builder use.
+ga-members.json carries departed members (status Resigned/Removed/Deceased), which are
+excluded from the roster and CSV using VOTING_CHAMBERS — the same filter ga.js and the
+search-corpus builder use. It used to carry 4 statewide executives (chamber == "executive");
+they are identified from ga-executive.json now and the roster producer drops them, but the
+filter stays so an older committed file or a frozen snapshot is still handled.
 
 Publishing/dry-run behavior comes from lib.sibling_publish. Usage:
     python3 scripts/publish_ga_legislators.py <members|votes|freeze-roster> [session-slug]
@@ -207,10 +209,11 @@ def members_schema(schema_path="data/members.schema.json"):
         "schemaStability": STABILITY["members"],
         "title": "Georgia General Assembly — Members",
         "description": "Georgia state legislators, sourced from the General Assembly's own web "
-                       "service at legis.ga.gov. NOTE: also includes 4 statewide executives "
-                       "(chamber == 'executive'); filter to chamber in "
-                       "['Senate', 'House of Representatives'] for legislators only. The target repo "
-                       "splits this file into house.json / senate.json.",
+                       "service at legis.ga.gov. NOTE: snapshots taken before 2026-10-26 also include 4 "
+                       "statewide executives (chamber == 'executive'); the current roster does not, "
+                       "but filter to chamber in ['Senate', 'House of Representatives'] if you "
+                       "read older copies. The target repo splits this file into house.json / "
+                       "senate.json.",
         "type": "object",
         "required": ["members"],
         "properties": {

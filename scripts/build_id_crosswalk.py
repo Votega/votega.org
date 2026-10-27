@@ -62,7 +62,7 @@ from datetime import datetime, timezone
 from lib.ga_match import CHAMBER_TO_PEACHFILE, find_filers, member_scope, toks
 from lib.atomic_io import write_json_atomic, atomic_write
 from lib.ga_identity import (is_ocd_id, ledger_keys, executive_keys, SLOTS as IDENTITY_SLOTS, ambiguities,
-                             pin_patch, apply_slot_pins, KIND_LABELS)
+                             pin_patch, apply_slot_pins, KIND_LABELS, out_of_scope)
 
 SCHEMA_VERSION = 2
 
@@ -480,6 +480,14 @@ def executive_member(official, roster_exec):
                 "firstName": official.get("firstName"), "lastName": official.get("lastName"),
                 "party": official.get("party"), "chamber": "executive", "district": None,
                 "status": None, "title": official["title"]}
+        # The identity slots the roster row used to carry. Only values the official file
+        # holds are published; every other slot is "out-of-scope" (no legisGaGovId as a
+        # MEMBER), the same wording the roster producer used.
+        prov = dict(official.get("idProvenance") or {})
+        for slot in IDENTITY_SLOTS:
+            base[slot] = official.get(slot)
+            prov.setdefault(slot, out_of_scope())
+        base["idProvenance"] = prov
     if base.get("legisGaGovId") is None and official.get("legisGaGovId") is not None:
         base["legisGaGovId"] = official["legisGaGovId"]
         base["_legisIdFromExecutiveFile"] = True
@@ -572,7 +580,8 @@ def main():
             raise SystemExit(f"Error: bad pinSlots override: {e}")
         apply_slot_pins(ids, provenance, pins, pin_note)
         if ids["legisGaGovId"] is not None:
-            if exec_official and m.get("_legisIdFromExecutiveFile"):
+            if (exec_official and m.get("_legisIdFromExecutiveFile")
+                    and exec_official.get("legisGaGovIdBasis") != "members-service"):
                 provenance["legisGaGovId"] = {
                     "method": "curated", "confidence": "unreviewed",
                     "source": EXECUTIVE_FILE, "note": exec_official.get("legisGaGovIdNote")}

@@ -2,7 +2,7 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId, executiveId (statewide executives, from ga-executive.json) and ballotpediaId; ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-10-27T00:00:58+00:00",
+  "generatedAt": "2026-10-27T00:13:31+00:00",
   "count": 756,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
@@ -44122,6 +44122,14 @@
      "method": "out-of-scope",
      "confidence": null,
      "note": "no PeachFile office mapping for this chamber"
+    },
+    "ocdPersonId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "ballotpediaId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
     }
    }
   },
@@ -44160,6 +44168,14 @@
      "method": "out-of-scope",
      "confidence": null,
      "note": "no PeachFile office mapping for this chamber"
+    },
+    "ocdPersonId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "ballotpediaId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
     },
     "legisGaGovId": {
      "method": "curated",
@@ -44204,6 +44220,14 @@
      "method": "out-of-scope",
      "confidence": null,
      "note": "no PeachFile office mapping for this chamber"
+    },
+    "ocdPersonId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "ballotpediaId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
     }
    }
   },
@@ -44242,6 +44266,14 @@
      "method": "out-of-scope",
      "confidence": null,
      "note": "no PeachFile office mapping for this chamber"
+    },
+    "ocdPersonId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "ballotpediaId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
     }
    }
   },
@@ -44280,6 +44312,14 @@
      "method": "out-of-scope",
      "confidence": null,
      "note": "no PeachFile office mapping for this chamber"
+    },
+    "ocdPersonId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "ballotpediaId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
     },
     "legisGaGovId": {
      "method": "curated",
@@ -44324,6 +44364,14 @@
      "method": "out-of-scope",
      "confidence": null,
      "note": "no PeachFile office mapping for this chamber"
+    },
+    "ocdPersonId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "ballotpediaId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
     }
    }
   },
@@ -44362,6 +44410,14 @@
      "method": "out-of-scope",
      "confidence": null,
      "note": "no PeachFile office mapping for this chamber"
+    },
+    "ocdPersonId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "ballotpediaId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
     }
    }
   },
@@ -44400,6 +44456,14 @@
      "method": "out-of-scope",
      "confidence": null,
      "note": "no PeachFile office mapping for this chamber"
+    },
+    "ocdPersonId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "ballotpediaId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
     }
    }
   },
@@ -44438,6 +44502,14 @@
      "method": "out-of-scope",
      "confidence": null,
      "note": "no PeachFile office mapping for this chamber"
+    },
+    "ocdPersonId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "ballotpediaId": {
+     "method": "out-of-scope",
+     "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
     }
    }
   },

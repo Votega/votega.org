@@ -1,0 +1,166 @@
+{
+  "metadata": {
+    "note": "Statewide offices as SEATS. A seat is the office, with a stable id; ga-executive.json holds the PEOPLE and each official's `officeId` points here. Facts about the office (presidesOver) live on the seat, so they do not have to be copied to the next holder. `holders` is newest first. History is NOT backfilled: each seat lists only its current holder, with start/end/endedBy null, because no source of prior holders has been chosen or reviewed. Hand-maintained; nothing reads this file yet.",
+    "historyStatus": "not-backfilled",
+    "seatCount": 13
+  },
+  "seats": [
+    {
+      "id": "ga-governor",
+      "title": "Governor",
+      "holders": [
+        {
+          "execId": "exec:ga-kemp-brian",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-lt-governor",
+      "title": "Lieutenant Governor",
+      "presidesOver": "Senate",
+      "holders": [
+        {
+          "execId": "exec:ga-jones-burt",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-secretary-of-state",
+      "title": "Secretary of State",
+      "holders": [
+        {
+          "execId": "exec:ga-raffensperger-brad",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-attorney-general",
+      "title": "Attorney General",
+      "holders": [
+        {
+          "execId": "exec:ga-carr-chris",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-school-superintendent",
+      "title": "State School Superintendent",
+      "holders": [
+        {
+          "execId": "exec:ga-woods-richard",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-agriculture-commissioner",
+      "title": "Commissioner of Agriculture",
+      "holders": [
+        {
+          "execId": "exec:ga-harper-tyler",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-labor-commissioner",
+      "title": "Commissioner of Labor",
+      "holders": [
+        {
+          "execId": "exec:ga-rivera-holmes-barbara",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-insurance-commissioner",
+      "title": "Commissioner of Insurance",
+      "holders": [
+        {
+          "execId": "exec:ga-king-john",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-psc-1",
+      "title": "Public Service Commission - District 1",
+      "holders": [
+        {
+          "execId": "exec:ga-shaw-jason",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-psc-2",
+      "title": "Public Service Commission - District 2",
+      "holders": [
+        {
+          "execId": "exec:ga-johnson-alicia",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-psc-3",
+      "title": "Public Service Commission - District 3",
+      "holders": [
+        {
+          "execId": "exec:ga-hubbard-peter",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-psc-4",
+      "title": "Public Service Commission - District 4",
+      "holders": [
+        {
+          "execId": "exec:ga-mcdonald-lauren",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    },
+    {
+      "id": "ga-psc-5",
+      "title": "Public Service Commission - District 5",
+      "holders": [
+        {
+          "execId": "exec:ga-pridemore-tricia",
+          "start": null,
+          "end": null,
+          "endedBy": null
+        }
+      ]
+    }
+  ]
+}

@@ -219,7 +219,10 @@ def plain_run_cases():
     try:
         check("exits 0", env.run(), 0)
         out = env.out()
-        check("the Lt. Governor is preserved", LTGOV in {m.get("legisGaGovId") for m in out["members"]}, True)
+        check("the committed Lt. Governor row is dropped, not preserved",
+              LTGOV in {m.get("legisGaGovId") for m in out["members"]}, False)
+        check("no executive row remains in the roster",
+              [m for m in out["members"] if m.get("chamber") == "executive"], [])
         check("no rollover marker in metadata", "rollover" in out["metadata"], False)
         check("no rollover queues in review",
               sorted(k for k in out["review"] if k in (
@@ -287,10 +290,10 @@ def rollover_cases():
         members = out["members"]
         voting = [m for m in members if m["chamber"] in V.CHAMBER_MAX]
         check("236 voting members", len(voting), 236)
-        check("+ the Lt. Governor, who has a legisGaGovId but is not a member",
-              len(members), 237)
-        check("the Lt. Governor survives",
-              LTGOV in {m.get("legisGaGovId") for m in members}, True)
+        check("the roster is the 236 voting members and nothing else",
+              len(members), 236)
+        check("the Lt. Governor is not republished (ga-executive.json owns him)",
+              LTGOV in {m.get("legisGaGovId") for m in members}, False)
         gone = {m["id"] for m in env.committed if m["chamber"] != "executive"
                 and m["district"] in ((1, 2, 3) if m["chamber"] == "Senate" else range(1, 31))}
         check("no departed member is republished as sitting", gone & ids(out), set())
@@ -310,8 +313,8 @@ def rollover_cases():
         check("name review queue names the entity URL a new member will get",
               out["review"]["newMemberNameReview"][0].split(" -> ")[1].split(" ")[0].startswith(
                   "/ga-legislators/"), True)
-        check("the Lt. Governor is flagged for a human to verify",
-              len(out["review"]["rolloverPreservedNonMembers"]), 1)
+        check("no executive is queued for a human to verify (ga-executive.json owns them)",
+              out["review"]["rolloverPreservedNonMembers"], [])
         check("out-of-scope overrides are reported",
               out["review"]["overridesOutOfScope"], ["_inject: Senate Member 1"])
         check("the file passes tier 1 against the tagged overrides",

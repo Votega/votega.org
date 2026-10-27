@@ -92,6 +92,21 @@ check("every official has a unique executive id",
 check("executive ids are lower-case slugs",
       all(re.fullmatch(r"exec:[a-z0-9-]+", i) for i in ids), True)
 check("13 statewide officials", len(officials), 13)
+seats = load("assets/data/ga-executive-seats.json")["seats"]
+seat_by_id = {s["id"]: s for s in seats}
+check("13 seats with unique ids", (len(seats), len(seat_by_id)), (13, 13))
+check("every official points at a seat, one official per seat",
+      sorted(o["officeId"] for o in officials), sorted(seat_by_id))
+check("each seat's current holder is the official pointing at it",
+      all(seat_by_id[o["officeId"]]["holders"][0]["execId"] == o["id"] for o in officials), True)
+check("presidesOver lives on the Lt. Governor seat only, never on a person",
+      ({s["id"]: s["presidesOver"] for s in seats if s.get("presidesOver")},
+       any("presidesOver" in o for o in officials)),
+      ({"ga-lt-governor": "Senate"}, False))
+check("history is declared not backfilled, so empty start/end dates are not a claim",
+      (load("assets/data/ga-executive-seats.json")["metadata"]["historyStatus"],
+       all(h["start"] is None and h["end"] is None for s in seats for h in s["holders"])),
+      ("not-backfilled", True))
 check("the roster's executive rows are each claimed by an official",
       set(roster) <= {o.get("legacyRosterId") for o in officials}, True)
 
@@ -128,6 +143,30 @@ try:
     check("a duplicate executive id stops the build", "no error", "SystemExit")
 except SystemExit:
     check("a duplicate executive id stops the build", "SystemExit", "SystemExit")
+
+# --- the roster no longer carries executives: everything must still resolve ----------------
+from lib.ga_match import member_scope  # noqa: E402
+
+no_rows = B.officeholder_inputs([], officials)
+check("with no roster rows all 13 officials still come through", len(no_rows), 13)
+by_name = {o["name"]: m for m, o in no_rows}
+check("the four keep their legacy roster id as the member id",
+      {n: by_name[n]["id"] for n in ORIGINAL},
+      {o["name"]: o["legacyRosterId"] for o in officials if o["name"] in ORIGINAL})
+check("a new official's member id is its executive id",
+      by_name["Richard Woods"]["id"], "exec:ga-woods-richard")
+jones = by_name["Burt Jones"]
+check("Burt Jones keeps the OCD id and provenance the roster row carried",
+      (jones["ocdPersonId"], jones["idProvenance"]["ocdPersonId"]["method"]),
+      ("ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b", "authoritative"))
+check("an executive with no slot value is out-of-scope, never a bare null",
+      by_name["Brian Kemp"]["idProvenance"]["ocdPersonId"]["method"], "out-of-scope")
+check("finance scope: the four still map to their office",
+      {n: member_scope(by_name[n])[0] for n in ORIGINAL},
+      {"Brad Raffensperger": "Secretary of State", "Brian Kemp": "Governor",
+       "Burt Jones": "Lieutenant Governor", "Chris Carr": "Attorney General"})
+check("finance scope: the nine others map to no office (matching stays off)",
+      sorted({member_scope(m)[0] for m, o in no_rows if o["name"] not in ORIGINAL}), [None])
 
 # --- news: only the four constitutional offices are bare-surname eligible -------------------
 def person(vgid, first, last, title):

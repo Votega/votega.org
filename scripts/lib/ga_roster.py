@@ -66,8 +66,7 @@ def listing_is_too_short(n_listing, n_committed, tolerance=LISTING_TOLERANCE):
     """Is this listing short enough to be a truncated fetch rather than real attrition?
 
     A roster-count floor cannot catch this on its own. Because any committed member
-    absent from the listing is PRESERVED verbatim — the rule that keeps the Lt. Governor,
-    who is not a member of either chamber — a truncated listing does not shrink the
+    absent from the listing is PRESERVED verbatim, a truncated listing does not shrink the
     roster, it backfills it with stale records and still passes a 56/180 check. Nothing
     then looks wrong while most of the roster quietly stops updating.
 
@@ -82,6 +81,11 @@ def listing_is_too_short(n_listing, n_committed, tolerance=LISTING_TOLERANCE):
 #: Chambers whose members cast roll-call votes. Duplicated from lib/ga_voters.VOTING_CHAMBERS
 #: on purpose: this module stays import-free so the no-pip CI job can load it alone.
 VOTING_CHAMBERS = ("Senate", "House of Representatives")
+
+#: The chamber the roster once gave the four statewide executives it happened to carry.
+#: They are identified from ga-executive.json now (see build_id_crosswalk.py), so the roster
+#: producer drops any such row rather than preserving it: this file is the General Assembly.
+EXECUTIVE_CHAMBER = "executive"
 
 #: Override keys carrying a departure. They say a member LEFT, which is a fact about one
 #: biennium's seat, so at a rollover an entry without `_session` is ambiguous.
@@ -181,15 +185,16 @@ def convening_date(year):
 def split_for_rollover(existing, in_listing):
     """(preserved, departing) when the biennium changes.
 
-    `preserved` keeps only what the Members service never carries: anyone outside the
-    two voting chambers who holds a legisGaGovId (the Lt. Governor presides over the
-    Senate but is not a member). Keyed on chamber, not on lacking an id, for the same
-    reason the ordinary rule is keyed on absence: an id-based rule dropped him.
+    `preserved` keeps what the Members service never carries and that is not a statewide
+    executive: a record outside the two voting chambers. Executives are not preserved (they
+    live in ga-executive.json, not this roster). Keyed on chamber, not on lacking an id,
+    for the same reason the ordinary rule is keyed on absence.
     `departing` is every voting-chamber record the incoming listing does not carry,
     including a Vacant placeholder, which describes a seat of the outgoing biennium.
     """
     absent = [m for m in existing if m.get("legisGaGovId") not in in_listing]
-    preserved = [m for m in absent if m.get("chamber") not in VOTING_CHAMBERS]
+    preserved = [m for m in absent if m.get("chamber") not in VOTING_CHAMBERS
+                 and m.get("chamber") != EXECUTIVE_CHAMBER]
     departing = [m for m in absent if m.get("chamber") in VOTING_CHAMBERS]
     return preserved, departing
 

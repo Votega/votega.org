@@ -43,7 +43,7 @@ from lib.atomic_io import write_json_atomic
 from lib.ga_identity import apply_identity_slots, load_pin_overrides
 from lib.ga_legislator_pages import assign_votega_urls, base_slug
 from lib.ga_leadership import committee_index, normalize_title
-from lib.ga_roster import (apply_member_overrides, biennium_slug, convening_date,
+from lib.ga_roster import (EXECUTIVE_CHAMBER, apply_member_overrides, biennium_slug, convening_date,
                            detect_rollover, display_committee, listing_is_too_short,
                            normalize_address, out_of_scope_entries, split_for_rollover,
                            untagged_departures)
@@ -349,14 +349,16 @@ def main(argv=None):
         return 1
 
     # Anyone in the committed roster the Members service does not return is PRESERVED
-    # VERBATIM, keyed on absence from the listing rather than on lacking a legisGaGovId.
-    # That distinction matters: the Lt. Governor has one (805, he presides over the
-    # Senate) but is not a member, so an id-based rule silently dropped him.
+    # VERBATIM, keyed on absence from the listing rather than on lacking a legisGaGovId
+    # (an id-based rule silently dropped anyone the service lacks but who has one).
+    # Statewide executives are the exception: they are identified from ga-executive.json,
+    # so a committed `executive` row is dropped here, once, and never re-added.
     in_listing = {l["id"] for l in listings}
     if rollover:
         preserved, departing = split_for_rollover(existing, in_listing)
     else:
-        preserved = [m for m in existing if m.get("legisGaGovId") not in in_listing]
+        preserved = [m for m in existing if m.get("legisGaGovId") not in in_listing
+                     and m.get("chamber") != EXECUTIVE_CHAMBER]
         departing = []
     print(f"  members: {len(listings)} listings — fetching detail")
     print(f"  preserved (not in the Members service): "

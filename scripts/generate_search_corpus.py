@@ -28,8 +28,8 @@ from urllib.parse import quote
 
 
 # The two chambers of the General Assembly. Shared so the definition of "is a
-# legislator" lives in one place -- ga-members.json also carries statewide
-# executives, and every consumer has to exclude them the same way.
+# legislator" lives in one place -- ga-members.json used to carry statewide
+# executives, and every consumer excluded them the same way (kept as a defence).
 from lib.ga_voters import VOTING_CHAMBERS
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -122,8 +122,9 @@ def build_ga_legislators(records, seen):
             continue
         chamber = clean(m.get("chamber"))
         if chamber not in VOTING_CHAMBERS:
-            # ga-members.json also carries the four statewide executives under a
-            # fifth chamber, "executive" (Governor, Lt. Governor, AG, SoS). They
+            # ga-members.json used to carry the four statewide executives under a
+            # fifth chamber, "executive" (Governor, Lt. Governor, AG, SoS); the roster
+            # producer drops them now, and this filter stays as a defence. They
             # have no ga-member.html page worth linking, they are already indexed
             # from ga-executive.json under "GA Executive", and their `title` is a
             # raw enum -- Burt Jones surfaced in search as a "GA Legislator"
