@@ -37,6 +37,7 @@
       <a class="next-election-btn" href="{{ '/sample-ballot' | relative_url }}">See what's on my ballot &rarr;</a>
       <a class="next-election-btn next-election-btn--alt" id="nextElectionRaces" href="{{ '/elections/candidates/' | relative_url }}">See all races &rarr;</a>
       <a class="next-election-link" href="{{ '/ga-voter-access' | relative_url }}">Voter access &amp; deadlines</a>
+      <a class="next-election-link" id="nextElectionEarlyVote" href="{{ '/ga-early-vote/' | relative_url }}" hidden>Early vote turnout</a>
     </div>
   </section>
 
@@ -58,6 +59,7 @@
 
   // How long a decided election keeps its home-page card after election day.
   const RESULTS_WINDOW_DAYS = 30;
+  const EARLY_VOTE_DATE = {{ site.data.early_vote['ga-general-2026'].metadata.electionDate | default: '' | jsonify }};
 
   function basePath() {
     return '/';
@@ -125,6 +127,10 @@
     }
     document.getElementById('nextElectionFacts').innerHTML = facts
       .map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('');
+
+    // The turnout dashboard covers one election, named by its dataset, so the link
+    // shows only while that election is the one on this card and goes away after it.
+    if (next.date === EARLY_VOTE_DATE) document.getElementById('nextElectionEarlyVote').hidden = false;
 
     document.getElementById('nextElectionRaces').innerHTML =
       `See all races for ${esc(fmtOrdinalDay(next.date))} &rarr;`;
