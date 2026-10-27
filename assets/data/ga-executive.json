@@ -32,7 +32,23 @@
       "id": "exec:ga-jones-burt",
       "legacyRosterId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
       "legisGaGovId": 805,
-      "legisGaGovIdNote": "Matched by surname and first name in legis.ga.gov GetMembersBySession (Senate 25, 2013-2022); not yet confirmed by a person",
+      "legisGaGovIdNote": "Published by the Members service itself: GetMember(805) returns Burt Jones, sessions 2013-2022 (Senate 25); carried on his legislator roster row, whose official page is legis.ga.gov/members/senate/805",
+      "legisGaGovIdBasis": "members-service",
+      "presidesOver": "Senate",
+      "ocdPersonId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
+      "idProvenance": {
+        "ocdPersonId": {
+          "method": "authoritative",
+          "source": "Open States (carried in the roster id since before 2026-10)",
+          "confidence": "high"
+        },
+        "ballotpediaId": {
+          "method": "authoritative",
+          "source": "openstates/people (CC0 1.0)",
+          "confidence": "no-match",
+          "note": "the person was not resolved, so there is no file to read"
+        }
+      },
       "party": "Republican",
       "termStartYear": 2023,
       "termNote": "Serving first term.",

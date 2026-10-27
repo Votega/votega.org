@@ -54,6 +54,11 @@ EXECUTIVE_TITLE_TO_OFFICE = {
     'Lt_Governor':       'Lieutenant Governor',
     'Secretary Of State': 'Secretary of State',
     'Attorney General':  'Attorney General',
+    # The titles ga-executive.json uses (the executives' source of truth now that the
+    # roster no longer carries them). The other nine officials are deliberately absent:
+    # an unmapped title scopes to no office, so finance matching skips them.
+    'Lieutenant Governor': 'Lieutenant Governor',
+    'Secretary of State':  'Secretary of State',
 }
 
 SUFFIXES = r'\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b'
