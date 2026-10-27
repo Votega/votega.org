@@ -45,8 +45,38 @@ Former-member pages `noindex`, out of the sitemap, until we decide (avoids a thi
 ### D5. Contact details on former members' pages — Proposed
 Hide phone, address and email. Today the legacy shell for a resigned member still shows them. Also fix the "This seat is up for election in 2026" banner, which belongs to the seat, not the person.
 
-### D6. Departure taxonomy and wording — Proposed
-Keep `status` for mid-term events (Resigned, Removed, Deceased). Add a separate departure classification filled in at the rollover from certified results and then reviewed by a person: `not-seeking-reelection`, `ran-for-other-office` (with that race's result), `lost-primary`, `lost-general`. Show only the fact and the date ("Lost the 2026 Republican primary", "Did not seek re-election"). Use "defeated" only where results say so; never imply a reason for a withdrawal. The `departingCohort` queue is the natural hook, and certified winners are already recorded in `races.json`. Open: exact wording, who reviews and approves, and whether the classification is public in the roster and `ga-legislators`. Estimate 35-50k tokens. Caveat: the classification can't be final until results and any general-election runoff are certified.
+### D6. Departure classification and wording — Proposed, worked through 2026-10-27
+**Principle.** `status` keeps recording mid-term events (Resigned, Removed, Deceased) and stays hand-maintained. A **separate** `departure` classification records how a member's service ends at the rollover. The pipeline proposes, a person confirms (the same rule as suspensions), and only the fact and date are shown.
+
+**Categories.** Wording is the display text; use "lost" and "did not run", never "retired", "ousted" or "unseated".
+
+| `departure.type` | Meaning | Display text (example) | Evidence |
+|---|---|---|---|
+| `resigned`, `removed`, `deceased` | Left mid-term (existing `status`) | "Resigned March 9, 2026" | Roster `status` and `statusDate` (legislature's date) |
+| `did-not-run` | No 2026 ballot for any office | "Did not run for re-election in 2026" | Absent from `races.json` ballots and certified results |
+| `ran-for-other-office` | On another office's ballot; carries `office` and `result` (`won`, `lost-primary`, `lost-primary-runoff`, `lost-general`, `pending`) | "Ran for Secretary of State in 2026 (won the Republican nomination)" | The other office's certified result |
+| `lost-primary` | Lost the primary or its runoff for their own seat | "Lost the 2026 Democratic primary runoff" | Certified primary and runoff results |
+| `lost-general` | Lost the November election for their own seat | "Lost the 2026 general election" | Certified general results (after November 3 and any runoff) |
+| `unresolved` | The pipeline cannot tell; a person must decide | (not shown until resolved) | n/a |
+
+Wording choices to confirm: whether labels name the winner (default: no, link to the results page); "did not run" vs "not seeking re-election"; a member who withdrew after qualifying needs a source (the Secretary of State's withdrawal list) before the label says so, otherwise use "Not on the 2026 ballot".
+
+**Matching rules.** Match on the roster member's full name, chamber and district, never surname alone. Do **not** trust the results files' `incumbent` flag.
+
+**Why (evidence from the 2026 primary data).** Two automated methods disagreed, and a person had to settle each case:
+- The results' `incumbent` flag found only 2 incumbents who lost (House 117 Santos, House 157 Werkheiser). It missed **Alvin Payton** (House 177, seated by special election, flagged non-incumbent, lost both the primary and the runoff) and **Ed Harbison** (Senate 15, in office since 1993, flagged non-incumbent, lost to Tremaine "Teddy" Reese). So four members lost primaries.
+- Surname matching put **Edna Jackson** (House 165) on a primary ballot: a false match on other Jacksons. She appears on no 2026 ballot.
+- **Freddie Powell Sims** (Senate 12) is on a `races.json` primary ballot but absent from the certified primary results: unresolved (withdrew or not certified).
+- Of the 33 sitting members not on their own seat's general ballot: 11 did not run (the 10 found earlier plus Jackson), 4 lost primaries, 1 is unresolved, and 17 ran for another office. By the results, 11 of those 17 appear to have won a nomination (Wade, Miller, Draper, Romman, J. Clark, Fleming, Gaines, Reese, McLaurin, Dolezal, Strickland), 6 trailed (D. Jackson, D. Clark, Henderson in Senate 43, E. Jones, Tillery, Gooch). The final outcome of the 11 is pending the general election. Matching here is by name and approximate.
+
+**Process.**
+1. A classifier reads the roster, `races.json` and the certified results, and writes a review queue (extending `departingCohort`) with the evidence for each member.
+2. A person confirms or corrects each entry in an overrides file keyed by `legisGaGovId`, the way `ga-members-overrides.json` works for statuses.
+3. **Hard gate:** the rollover run fails if any departing member has an `unresolved` or unconfirmed classification.
+4. Confirmed entries flow into the former-members index (D3).
+Build the classifier and queue now against the primary and runoff data; finish after the general election and any runoff are certified.
+
+**Open decisions:** (a) the exact wording above; (b) who approves entries and by when; (c) whether `departure` is public in the live roster and `ga-legislators` or only in the former-members index and pages (proposed: index and pages only; the live roster until the member actually leaves); (d) whether the hard gate is acceptable. Estimate 35-50k tokens.
 
 ### D7. Scope: which bienniums — Open
 Keep former members for any biennium Georgia Commons covers, or only the one just ended?
