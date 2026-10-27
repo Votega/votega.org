@@ -78,6 +78,8 @@ share-description: "How many Georgians have already voted in the November 3, 202
   .ev-svg { width: 100%; height: auto; display: block; touch-action: pan-y; }
   .ev-svg text { font-family: inherit; font-size: 11px; fill: var(--color-text-muted); }
   .ev-svg .grid { stroke: var(--color-border); stroke-width: 1; }
+  .ev-svg .weekend { fill: var(--color-text-muted); fill-opacity: 0.1; }
+  .ev-svg .weekend-k { fill: var(--color-text-muted); font-size: 9px; }
   .ev-svg .axis { stroke: var(--color-text-muted); stroke-width: 1; }
   .ev-svg .ln { fill: none; stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }
   .ev-svg .ln.now { stroke-width: 3.4; }
@@ -682,6 +684,13 @@ share-description: "How many Georgians have already voted in the November 3, 202
     });
     var step = nice(max), top = Math.ceil(max / step) * step || 1;
     ys = function (v) { return T + (1 - v / top) * (H - T - B); };
+    // shade Saturdays and Sundays; every general election is on a Tuesday, so d % 7 is 3 for Saturday and 2 for Sunday
+    for (var wd = X0; wd >= 0; wd--) {
+      if (wd % 7 !== 3 && wd % 7 !== 2) continue;
+      var x1 = xs(Math.min(X0, wd + 0.5)), x2 = xs(Math.max(0, wd - 0.5));
+      svg.appendChild(el('rect', { x: x1, y: T, width: x2 - x1, height: H - T - B, 'class': 'weekend' }));
+    }
+    svg.appendChild(el('text', { x: W - R - 2, y: T + 10, 'text-anchor': 'end', 'class': 'weekend-k' }, 'Shaded: weekends'));
     for (var v = 0; v <= top + 1e-6; v += step) {
       svg.appendChild(el('line', { x1: L, x2: W - R, y1: ys(v), y2: ys(v), 'class': v === 0 ? 'axis' : 'grid' }));
       svg.appendChild(el('text', { x: L - 6, y: ys(v) + 4, 'text-anchor': 'end' }, short(Math.round(v))));
