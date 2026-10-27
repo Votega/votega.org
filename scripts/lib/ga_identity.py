@@ -68,6 +68,31 @@ def ledger_keys(legis_id, roster_id):
     return keys
 
 
+def executive_keys(legacy_roster_id, legis_id, exec_id):
+    """Ledger keys for a statewide executive, in RESOLUTION ORDER.
+
+    Executives are identified in ga-executive.json, not the legislator roster. Four of them
+    were minted under their legacy roster id before that, and the first key already in the
+    ledger wins, so the legacy id comes first and their vgId cannot move. A former legislator
+    (the Members service goes back to 2001) also answers to `legis:<legisGaGovId>`, so the
+    same vgId is reached whether the person is met as an executive or as a past member. A
+    brand-new executive is minted under the FIRST key present; `exec_id` is the hand-assigned
+    `id` in ga-executive.json and is the key of last resort - never derived from a name at
+    build time, so a respelling cannot mint a second vgId.
+
+    The single implementation: build_id_crosswalk.py resolves with it and
+    validate_id_crosswalk.py audits with it.
+    """
+    keys = []
+    if legacy_roster_id:
+        keys.append(legacy_roster_id)
+    if legis_id is not None:
+        keys.append(f"legis:{int(legis_id)}")
+    if exec_id:
+        keys.append(exec_id)
+    return keys
+
+
 def _prov(method, source=None, confidence=None, **extra):
     out = {"method": method}
     if source:

@@ -61,12 +61,13 @@ from datetime import datetime, timezone
 
 from lib.ga_match import CHAMBER_TO_PEACHFILE, find_filers, member_scope, toks
 from lib.atomic_io import write_json_atomic, atomic_write
-from lib.ga_identity import (is_ocd_id, ledger_keys, SLOTS as IDENTITY_SLOTS, ambiguities,
+from lib.ga_identity import (is_ocd_id, ledger_keys, executive_keys, SLOTS as IDENTITY_SLOTS, ambiguities,
                              pin_patch, apply_slot_pins, KIND_LABELS)
 
 SCHEMA_VERSION = 2
 
 MEMBERS_FILE   = "assets/data/ga-members.json"
+EXECUTIVE_FILE = "assets/data/ga-executive.json"
 FEDERAL_FILE   = "assets/data/current-members.json"
 FINANCE_FILE   = "assets/data/ga-campaign-finance.json"
 FEC_FILE       = "assets/data/ga-fec-data.json"
@@ -411,7 +412,7 @@ def external_ids(member):
 
 def blank_ids():
     return {
-        "rosterId": None, "ocdPersonId": None, "legisGaGovId": None,
+        "rosterId": None, "executiveId": None, "ocdPersonId": None, "legisGaGovId": None,
         "ballotpediaId": None, "bioguideId": None,
         "govtrackId": None, "openSecretsId": None,
         "fecCandidateIds": [], "peachfileFilerEntityIds": [],
@@ -463,6 +464,49 @@ def add_filing(person, kind, filing_id):
 
 # ---------------------------------------------------------------------------
 
+def executive_member(official, roster_exec):
+    """A roster-shaped dict for one ga-executive.json official, so the officeholder loop and
+    the filing matcher treat executives like every other officeholder.
+
+    An official with a `legacyRosterId` that still has a roster row keeps that row's fields
+    (name, slots, title), so nothing published for the four original executives changes. The
+    rest are built from the executive file; their `title` is not an OFFICE_MAP key, so
+    ga_match scopes them to no office and they resolve to no filer - finance matching for
+    them is deliberately not switched on here.
+    """
+    base = dict(roster_exec.get(official.get("legacyRosterId")) or {})
+    if not base:
+        base = {"id": official.get("legacyRosterId") or official["id"], "name": official["name"],
+                "firstName": official.get("firstName"), "lastName": official.get("lastName"),
+                "party": official.get("party"), "chamber": "executive", "district": None,
+                "status": None, "title": official["title"]}
+    if base.get("legisGaGovId") is None and official.get("legisGaGovId") is not None:
+        base["legisGaGovId"] = official["legisGaGovId"]
+        base["_legisIdFromExecutiveFile"] = True
+    return base
+
+
+def officeholder_inputs(members, executives):
+    """[(roster-shaped member, ga-executive.json official or None)] in output order.
+
+    Legislators come from the roster. Statewide executives come from ga-executive.json; a
+    roster row with chamber "executive" that no official claims via `legacyRosterId` stops
+    the build rather than silently dropping a person who already holds a published vgId.
+    """
+    roster_exec = {m["id"]: m for m in members if m.get("chamber") == "executive"}
+    claimed = {o["legacyRosterId"] for o in executives if o.get("legacyRosterId")}
+    orphans = sorted(set(roster_exec) - claimed)
+    if orphans:
+        raise SystemExit("Error: ga-members.json has executive row(s) no ga-executive.json "
+                         f"entry claims via legacyRosterId: {orphans}")
+    ids = [o.get("id") for o in executives]
+    if None in ids or len(set(ids)) != len(ids):
+        raise SystemExit("Error: every ga-executive.json official needs a unique `id`")
+    out = [(m, None) for m in members if m.get("chamber") != "executive"]
+    out += [(executive_member(o, roster_exec), o) for o in executives]
+    return out
+
+
 def main():
     members   = load(MEMBERS_FILE)["members"]
     federal   = load(FEDERAL_FILE)["members"]
@@ -472,6 +516,8 @@ def main():
     overrides = {k: v for k, v in load(OVERRIDES_FILE, {}).items() if not k.startswith("_")}
     xwalk_overrides = {k: v for k, v in load(XWALK_OVERRIDES_FILE, {}).items()
                        if not k.startswith("_")}
+
+    officeholders_in = officeholder_inputs(members, load(EXECUTIVE_FILE)["officials"])
 
     ledger      = Ledger(LEDGER_FILE)
     candidacies = collect_candidacies(races)
@@ -483,14 +529,24 @@ def main():
     filing_owner = {}    # "peachfile:x" / "fec:x" -> vgId
 
     # --- Officeholders -------------------------------------------------------
-    for m in members:
+    for m, exec_official in officeholders_in:
         # Primary key is legisGaGovId; the roster id is an opaque handle (the legacy ledger
-        # key). `ocdPersonId` is a SLOT, only ever OCD-shaped or null.
-        vg = ledger.id_for_any(ledger_keys(m.get("legisGaGovId"), m["id"]))
+        # key). `ocdPersonId` is a SLOT, only ever OCD-shaped or null. A statewide executive
+        # is keyed by its ga-executive.json entry (see executive_keys).
+        if exec_official:
+            keys = executive_keys(exec_official.get("legacyRosterId"), m.get("legisGaGovId"),
+                                  exec_official["id"])
+        else:
+            keys = ledger_keys(m.get("legisGaGovId"), m["id"])
+        vg = ledger.id_for_any(keys)
+        if exec_official:                   # every key an executive answers to lands on one vgId
+            for k in keys:
+                ledger.alias(k, vg)
         filer, prov = resolve_member_filing(m, finance, overrides, xwalk_overrides,
                                             backrefs, sought)
         ids = blank_ids()
-        ids["rosterId"] = m["id"]
+        ids["rosterId"] = exec_official.get("legacyRosterId") if exec_official else m["id"]
+        ids["executiveId"] = exec_official["id"] if exec_official else None
         ids["legisGaGovId"] = m.get("legisGaGovId")
         slot_prov = m.get("idProvenance") or {}
         for slot in IDENTITY_SLOTS:
@@ -516,9 +572,14 @@ def main():
             raise SystemExit(f"Error: bad pinSlots override: {e}")
         apply_slot_pins(ids, provenance, pins, pin_note)
         if ids["legisGaGovId"] is not None:
-            provenance["legisGaGovId"] = {
-                "method": "authoritative",
-                "source": "legis.ga.gov (General Assembly web services, Members)"}
+            if exec_official and m.get("_legisIdFromExecutiveFile"):
+                provenance["legisGaGovId"] = {
+                    "method": "curated", "confidence": "unreviewed",
+                    "source": EXECUTIVE_FILE, "note": exec_official.get("legisGaGovIdNote")}
+            else:
+                provenance["legisGaGovId"] = {
+                    "method": "authoritative",
+                    "source": "legis.ga.gov (General Assembly web services, Members)"}
 
         people[vg] = {
             "vgId": vg,
@@ -528,6 +589,7 @@ def main():
                 "office": "legislator" if m.get("chamber") in VOTING_CHAMBERS else "statewide-executive",
                 "chamber": m.get("chamber"), "district": m.get("district"),
                 "party": m.get("party"), "status": m.get("status"),
+                **({"title": exec_official["title"]} if exec_official else {}),
             },
             "ids": ids, "candidacies": [], "provenance": provenance,
         }
@@ -667,7 +729,8 @@ def main():
         "metadata": {
             "schemaVersion": SCHEMA_VERSION,
             "schemaStability": (
-                "Stable field names and meanings. Additive since version 2: rosterId "
+                "Stable field names and meanings. Additive since version 2: rosterId, "
+                "executiveId (statewide executives, from ga-executive.json) "
                 "and ballotpediaId; ocdPersonId is now ONLY an OCD person id "
                 "or null (it used to carry the roster id, which can be legis-<id>). "
                 "Changed in version 2: "

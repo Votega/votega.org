@@ -239,6 +239,7 @@ def build(mod, d, members, ledger_assign=None):
         return p
     mod.MEMBERS_FILE = w("members.json", {"members": members})
     mod.FEDERAL_FILE = w("fed.json", {"members": []})
+    mod.EXECUTIVE_FILE = w("exec.json", {"officials": []})   # no statewide officials in this fixture
     mod.FINANCE_FILE = w("fin.json", {"filers": {}, "bySeat": {}, "byOffice": {}})
     mod.FEC_FILE = w("fec.json", {"candidates": {}})
     mod.RACES_FILE = w("races.json", {"races": []})

@@ -41,7 +41,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.ga_identity import (SLOTS, is_ocd_id, ledger_keys, ambiguities, pin_patch,  # noqa: E402
+from lib.ga_identity import (SLOTS, is_ocd_id, ledger_keys, executive_keys, ambiguities, pin_patch,  # noqa: E402
                              REMEDIES, KIND_LABELS, PINS_FIELD)
 
 CROSSWALK_FILE = "assets/data/id-crosswalk.json"
@@ -74,7 +74,7 @@ POSITIONAL_ID = re.compile(r'^ga-(house|senate)-\d+-\d{4}-[a-z]+-\d+$')
 #: legacy key) for a member Open States had not catalogued.
 VALID_LEDGER_KEY = re.compile(
     r'^(legis:\d+|legis-\d+|ocd-person/[0-9a-f-]+|[A-Z]\d{6}|ga-(house|senate)-\d+-[a-z]+'
-    r'|peachfile:\d+|fec:[A-Z0-9]+)$')
+    r'|peachfile:\d+|fec:[A-Z0-9]+|exec:[a-z0-9-]+)$')
 
 errors, warnings = [], []
 
@@ -184,7 +184,10 @@ def ledger_identity_errors(people, assign):
         if not vg:
             continue
         who = f"{vg} ({(p.get('name') or {}).get('full')})"
-        keys = ledger_keys(ids.get("legisGaGovId"), ids.get("rosterId"))
+        if ids.get("executiveId"):
+            keys = executive_keys(ids.get("rosterId"), ids.get("legisGaGovId"), ids["executiveId"])
+        else:
+            keys = ledger_keys(ids.get("legisGaGovId"), ids.get("rosterId"))
         if not keys and ids.get("ocdPersonId"):         # an older file with no rosterId
             keys = [ids["ocdPersonId"]]
         if ids.get("bioguideId"):
@@ -381,7 +384,7 @@ def main():
     # --- No upstream id may be claimed by two people -------------------------
     # The invariant that makes the file safe to join on: two people sharing a
     # filing means one is being credited with the other's fundraising.
-    scalar_keys = ("rosterId", "ocdPersonId", "ballotpediaId", "bioguideId",
+    scalar_keys = ("rosterId", "executiveId", "ocdPersonId", "ballotpediaId", "bioguideId",
                    "legisGaGovId", "govtrackId", "openSecretsId")
     list_keys   = ("peachfileFilerEntityIds", "fecCandidateIds", "votegaCandidateIds")
     for key in scalar_keys + list_keys:
@@ -419,7 +422,8 @@ def main():
         if not p.get("vgId"):
             continue
         ids = p["ids"]
-        if ids.get("rosterId") or ids.get("ocdPersonId") or ids.get("bioguideId"):
+        if (ids.get("rosterId") or ids.get("executiveId") or ids.get("ocdPersonId")
+                or ids.get("bioguideId")):
             continue
         # Candidate-only: every filing it carries must point at this same vgId.
         keys = [f"peachfile:{f}" for f in ids.get("peachfileFilerEntityIds") or []]
