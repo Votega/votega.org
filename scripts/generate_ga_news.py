@@ -106,6 +106,9 @@ DISCLAIMER = (
 #: these never tags on the surname alone -- it must appear right after a given
 #: name. Prevents "still blocking", "the Price of...", "White House",
 #: "on the other hand" from tagging an officeholder with that surname.
+#: Statewide offices whose holders may be matched on a bare surname (see build_entity_index).
+BARE_EXECUTIVE_TITLES = ("Governor", "Lieutenant Governor", "Secretary of State", "Attorney General")
+
 COMMON_WORD_SURNAMES = {
     "white", "brown", "black", "green", "gray", "grey", "young", "long", "short",
     "house", "price", "rice", "cook", "park", "day", "new", "may", "march", "will",
@@ -199,8 +202,13 @@ def build_entity_index(people):
         # 249 state legislators are excluded: their surnames (Mitchell, Martin,
         # Harper) are common enough that a bare occurrence often means someone
         # else ("Pat Mitchell", a DNC "Martin"), so they require a given name.
+        # Only the four constitutional offices count as nationally covered. The other
+        # statewide officials (agriculture, labor, insurance, school superintendent, PSC) have
+        # surnames like Shaw or Hubbard that a bare mention does not pin to them. A record
+        # with no title is from a crosswalk built before titles existed and keeps the old rule.
         bare_class = bool(role) and (role.get("level") == "federal"
-                                     or role.get("office") == "statewide-executive")
+                                     or (role.get("office") == "statewide-executive"
+                                         and role.get("title") in (None, *BARE_EXECUTIVE_TITLES)))
         by_surname.setdefault(surname_key, []).append({
             "vgId": p.get("vgId"),
             "name": (p.get("name") or {}).get("full"),

@@ -1,9 +1,9 @@
 {
  "metadata": {
   "schemaVersion": 2,
-  "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId and ballotpediaId; ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-10-25T18:07:30+00:00",
-  "count": 746,
+  "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId, executiveId (statewide executives, from ga-executive.json) and ballotpediaId; ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
+  "generatedAt": "2026-10-27T00:00:58+00:00",
+  "count": 756,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
    "legis.ga.gov (General Assembly web services) — legisGaGovId, the primary key for state legislators",
@@ -25,12 +25,12 @@
    "unresolved": "no lookup has populated this identifier yet; a null here is NOT a claim that none exists"
   },
   "coverage": {
-   "people": 746,
-   "officeholders": 267,
-   "candidateOnly": 479,
-   "withVgId": 668,
-   "unkeyed": 78,
-   "withAnyFiling": 649,
+   "people": 756,
+   "officeholders": 276,
+   "candidateOnly": 480,
+   "withVgId": 679,
+   "unkeyed": 77,
+   "withAnyFiling": 651,
    "candidacies": 716,
    "ambiguous": []
   }
@@ -53,6 +53,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/938f2479-c51f-446a-87f0-76d4f07c61e5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/938f2479-c51f-446a-87f0-76d4f07c61e5",
     "legisGaGovId": 5089,
     "ballotpediaId": "Muhammad_Akbar_Ali",
@@ -134,6 +135,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/a5a0998b-3837-4c4e-a66b-a567dc2f9d77",
     "legisGaGovId": 230,
     "ballotpediaId": "Al_Williams_(Georgia_legislator)",
@@ -215,6 +217,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/bb48e87c-29db-4a4d-a278-fa299be2020e",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/bb48e87c-29db-4a4d-a278-fa299be2020e",
     "legisGaGovId": 187,
     "ballotpediaId": "Alan_Powell",
@@ -296,6 +299,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b001a55f-61fa-4e62-85fd-ac6c282f2711",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b001a55f-61fa-4e62-85fd-ac6c282f2711",
     "legisGaGovId": 5008,
     "ballotpediaId": "Angela_Moore_(Georgia)",
@@ -377,6 +381,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/1d0deded-daaa-425b-b6aa-3612492dca5b",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/1d0deded-daaa-425b-b6aa-3612492dca5b",
     "legisGaGovId": 5084,
     "ballotpediaId": "Angie_O'Steen",
@@ -460,6 +465,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e16d6516-badc-4682-9e3a-84f30a44b060",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e16d6516-badc-4682-9e3a-84f30a44b060",
     "legisGaGovId": 5054,
     "ballotpediaId": "Anne_Westbrook",
@@ -541,6 +547,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3b3da57c-2f96-4a94-a7bc-eb6a814cc627",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3b3da57c-2f96-4a94-a7bc-eb6a814cc627",
     "legisGaGovId": 5076,
     "ballotpediaId": "Arlene_Beckles",
@@ -622,6 +629,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c",
     "legisGaGovId": 784,
     "ballotpediaId": "Ben_Watson",
@@ -703,6 +711,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e4e40f68-0970-4392-b739-3c68f749bcdc",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e4e40f68-0970-4392-b739-3c68f749bcdc",
     "legisGaGovId": 5004,
     "ballotpediaId": "Beth_Camp",
@@ -784,6 +793,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/8b4b00cb-6f78-4b69-b788-796b19d94752",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/8b4b00cb-6f78-4b69-b788-796b19d94752",
     "legisGaGovId": 5051,
     "ballotpediaId": "Bethany_Ballard",
@@ -865,6 +875,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/c2c81ffc-f4b1-40f4-96b0-6309f89902ee",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/c2c81ffc-f4b1-40f4-96b0-6309f89902ee",
     "legisGaGovId": 4943,
     "ballotpediaId": "Betsy_Holland",
@@ -946,6 +957,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4dc87191-fa52-4c2f-bc9c-8823a8b4c882",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4dc87191-fa52-4c2f-bc9c-8823a8b4c882",
     "legisGaGovId": 9,
     "ballotpediaId": "Bill_Cowsert",
@@ -1001,6 +1013,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/f2444048-8c14-45b2-b700-37f7899fa5bb",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/f2444048-8c14-45b2-b700-37f7899fa5bb",
     "legisGaGovId": 5092,
     "ballotpediaId": "Bill_Fincher",
@@ -1082,6 +1095,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4a9ef816-9130-4510-a19e-3124e3f2aeed",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4a9ef816-9130-4510-a19e-3124e3f2aeed",
     "legisGaGovId": 823,
     "ballotpediaId": "Bill_Hitchens",
@@ -1163,6 +1177,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/adefd0ba-43cd-4aae-9321-12f67e57ac8a",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/adefd0ba-43cd-4aae-9321-12f67e57ac8a",
     "legisGaGovId": 863,
     "ballotpediaId": "Bill_Werkheiser",
@@ -1170,7 +1185,9 @@
     "govtrackId": null,
     "openSecretsId": null,
     "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
+    "peachfileFilerEntityIds": [
+     "100157"
+    ],
     "votegaCandidateIds": [
      "ga-house-157-2026-r-2"
     ]
@@ -1190,20 +1207,20 @@
      "isIncumbent": true,
      "withdrawn": false,
      "disqualified": false,
-     "peachfileFilerEntityId": null,
+     "peachfileFilerEntityId": "100157",
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "seat+surname",
-      "confidence": "no-match",
-      "note": "no filing matched this person's seat or the office they seek"
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
      "method": "seat+surname",
-     "confidence": "no-match",
-     "note": "no filing matched this person's seat or the office they seek"
+     "confidence": "high",
+     "source": "scripts/lib/ga_match.py"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -1241,6 +1258,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/23dfc274-73d1-45df-b381-67e597cf0b84",
     "legisGaGovId": 4969,
     "ballotpediaId": "Bill_Yearta",
@@ -1322,6 +1340,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/449db918-10b7-4fa7-a047-eb9de416dce3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/449db918-10b7-4fa7-a047-eb9de416dce3",
     "legisGaGovId": 4972,
     "ballotpediaId": "Billy_Hickman_(Georgia)",
@@ -1403,6 +1422,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/96307d79-07d4-4f59-9dd3-b7f994d566d5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/96307d79-07d4-4f59-9dd3-b7f994d566d5",
     "legisGaGovId": 172,
     "ballotpediaId": "Billy_Mitchell",
@@ -1484,6 +1504,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e9c5a2fc-3354-49e1-ac29-783502155fe7",
     "legisGaGovId": 4908,
     "ballotpediaId": "Blake_Tillery",
@@ -1539,6 +1560,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/60bb96c4-f20c-4918-b88b-d7857341e5f4",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/60bb96c4-f20c-4918-b88b-d7857341e5f4",
     "legisGaGovId": 4984,
     "ballotpediaId": "Bo_Hatchett",
@@ -1616,12 +1638,14 @@
     "chamber": "executive",
     "district": null,
     "party": "Republican",
-    "status": null
+    "status": null,
+    "title": "Secretary of State"
    },
    "ids": {
     "rosterId": "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1",
+    "executiveId": "exec:ga-raffensperger-brad",
     "ocdPersonId": null,
-    "legisGaGovId": null,
+    "legisGaGovId": 875,
     "ballotpediaId": null,
     "bioguideId": null,
     "govtrackId": null,
@@ -1672,6 +1696,12 @@
     "ballotpediaId": {
      "method": "out-of-scope",
      "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "legisGaGovId": {
+     "method": "curated",
+     "confidence": "unreviewed",
+     "source": "assets/data/ga-executive.json",
+     "note": "Matched by surname and first name in legis.ga.gov GetMembersBySession (House 50, 2015-2018); not yet confirmed by a person"
     }
    }
   },
@@ -1692,6 +1722,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/933a841a-19d6-42c2-a046-991ff9903a23",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/933a841a-19d6-42c2-a046-991ff9903a23",
     "legisGaGovId": 4991,
     "ballotpediaId": "Brad_Thomas_(Georgia)",
@@ -1773,6 +1804,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/c0b205e2-1542-4802-896d-fa7b2b6fc4d9",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/c0b205e2-1542-4802-896d-fa7b2b6fc4d9",
     "legisGaGovId": 5021,
     "ballotpediaId": "Brent_Cox",
@@ -1850,12 +1882,14 @@
     "chamber": "executive",
     "district": null,
     "party": "Republican",
-    "status": null
+    "status": null,
+    "title": "Governor"
    },
    "ids": {
     "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f",
+    "executiveId": "exec:ga-kemp-brian",
     "ocdPersonId": null,
-    "legisGaGovId": null,
+    "legisGaGovId": 271,
     "ballotpediaId": null,
     "bioguideId": null,
     "govtrackId": null,
@@ -1878,6 +1912,12 @@
     "ballotpediaId": {
      "method": "out-of-scope",
      "note": "no legisGaGovId — not a member of the General Assembly (statewide executive or vacant placeholder)"
+    },
+    "legisGaGovId": {
+     "method": "curated",
+     "confidence": "unreviewed",
+     "source": "assets/data/ga-executive.json",
+     "note": "Matched by surname and first name in legis.ga.gov GetMembersBySession (Senate 46, 2003-2006); not yet confirmed by a person"
     }
    }
   },
@@ -1898,6 +1938,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/a53e6bbd-a5b8-436b-94ae-bebf957c5b61",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/a53e6bbd-a5b8-436b-94ae-bebf957c5b61",
     "legisGaGovId": 847,
     "ballotpediaId": "Brian_Prince",
@@ -1979,6 +2020,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3a5721a0-d848-40d0-a48a-66b797e7d7d9",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3a5721a0-d848-40d0-a48a-66b797e7d7d9",
     "legisGaGovId": 835,
     "ballotpediaId": "Brian_Strickland",
@@ -2064,6 +2106,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/13b7af1b-5b56-481b-a81a-2001846188a6",
     "legisGaGovId": 778,
     "ballotpediaId": "Bruce_Williamson_(Georgia)",
@@ -2145,6 +2188,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b1187e7a-8cea-4e91-9c9f-7c7c61df3c85",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b1187e7a-8cea-4e91-9c9f-7c7c61df3c85",
     "legisGaGovId": 5069,
     "ballotpediaId": "Bryce_Berry",
@@ -2226,6 +2270,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/d40576ac-fbc0-4b42-98ee-f6362063784d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/d40576ac-fbc0-4b42-98ee-f6362063784d",
     "legisGaGovId": 303,
     "ballotpediaId": "Buddy_DeLoach",
@@ -2303,10 +2348,12 @@
     "chamber": "executive",
     "district": null,
     "party": "Republican",
-    "status": null
+    "status": null,
+    "title": "Lieutenant Governor"
    },
    "ids": {
     "rosterId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
+    "executiveId": "exec:ga-jones-burt",
     "ocdPersonId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
     "legisGaGovId": 805,
     "ballotpediaId": null,
@@ -2387,6 +2434,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/842218b5-88ae-4ba8-8395-756bf3340e16",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/842218b5-88ae-4ba8-8395-756bf3340e16",
     "legisGaGovId": 183,
     "ballotpediaId": "Butch_Parrish",
@@ -2468,6 +2516,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/98850c9f-1c37-4177-9ad8-17d2b4d3c8d4",
     "legisGaGovId": 4971,
     "ballotpediaId": "Carden_Summers",
@@ -2549,6 +2598,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/562e162f-2a60-441c-956b-11db12eef266",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/562e162f-2a60-441c-956b-11db12eef266",
     "legisGaGovId": 4881,
     "ballotpediaId": "Carl_Gilliard",
@@ -2604,6 +2654,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3646e872-85a6-4383-97c5-36ff96ca7113",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3646e872-85a6-4383-97c5-36ff96ca7113",
     "legisGaGovId": 5064,
     "ballotpediaId": "Carmen_Rice",
@@ -2685,6 +2736,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76",
     "legisGaGovId": 133,
     "ballotpediaId": "Carolyn_Hugley",
@@ -2766,6 +2818,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/72370a62-92f4-46f1-ab7b-193a643085b8",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/72370a62-92f4-46f1-ab7b-193a643085b8",
     "legisGaGovId": 5020,
     "ballotpediaId": "Carter_Barrett",
@@ -2847,6 +2900,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/0d75f0d9-0242-4f72-b4f3-1cd085eb26b6",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/0d75f0d9-0242-4f72-b4f3-1cd085eb26b6",
     "legisGaGovId": 75,
     "ballotpediaId": "Charlice_Byrd",
@@ -2928,6 +2982,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/cba2f06c-773c-49d3-949c-b1a2db377c21",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/cba2f06c-773c-49d3-949c-b1a2db377c21",
     "legisGaGovId": 5058,
     "ballotpediaId": "Charles_Cannon",
@@ -3005,10 +3060,12 @@
     "chamber": "executive",
     "district": null,
     "party": "Republican",
-    "status": null
+    "status": null,
+    "title": "Attorney General"
    },
    "ids": {
     "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+    "executiveId": "exec:ga-carr-chris",
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -3081,6 +3138,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/d79c3e9b-b73d-416b-9bfd-8a0338d8256c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/d79c3e9b-b73d-416b-9bfd-8a0338d8256c",
     "legisGaGovId": 4965,
     "ballotpediaId": "Chris_Erwin",
@@ -3162,6 +3220,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3ff894cb-f2e4-47d0-9f67-b125245a10c3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3ff894cb-f2e4-47d0-9f67-b125245a10c3",
     "legisGaGovId": 846,
     "ballotpediaId": "Chuck_Efstration",
@@ -3243,6 +3302,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b11d0191-cd84-4a93-add6-ee65494caff2",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b11d0191-cd84-4a93-add6-ee65494caff2",
     "legisGaGovId": 838,
     "ballotpediaId": "Chuck_Hufstetler",
@@ -3324,6 +3384,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/42517dd7-eccb-4d22-a795-cbd010b69ee6",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/42517dd7-eccb-4d22-a795-cbd010b69ee6",
     "legisGaGovId": 164,
     "ballotpediaId": "Charles_Martin_Jr.",
@@ -3405,6 +3466,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/1ac93f89-f367-4de3-82ba-79fa78d4d134",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/1ac93f89-f367-4de3-82ba-79fa78d4d134",
     "legisGaGovId": 4909,
     "ballotpediaId": "Chuck_Payne",
@@ -3486,6 +3548,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e1a9102d-f845-47f5-882e-e344eef060ec",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e1a9102d-f845-47f5-882e-e344eef060ec",
     "legisGaGovId": 5002,
     "ballotpediaId": "Clint_Crowe",
@@ -3567,6 +3630,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/17a7e011-73f2-4ac5-8470-3436b47a6744",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/17a7e011-73f2-4ac5-8470-3436b47a6744",
     "legisGaGovId": 4982,
     "ballotpediaId": "Clint_Dixon",
@@ -3648,6 +3712,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/ec6cf250-ebcc-4dda-89a5-12da9ebbe51a",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/ec6cf250-ebcc-4dda-89a5-12da9ebbe51a",
     "legisGaGovId": 4958,
     "ballotpediaId": "Dale_Washburn",
@@ -3729,6 +3794,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/1a9598cc-056f-4725-a3fb-64c3f0fd26ed",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/1a9598cc-056f-4725-a3fb-64c3f0fd26ed",
     "legisGaGovId": 4959,
     "ballotpediaId": "Danny_Mathis",
@@ -3810,6 +3876,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/1f94316e-fb58-401f-bbfc-5ada0a717b6b",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/1f94316e-fb58-401f-bbfc-5ada0a717b6b",
     "legisGaGovId": 770,
     "ballotpediaId": null,
@@ -3891,6 +3958,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/d00eb950-0fb6-41ab-ae22-8e9ce84d7cf0",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/d00eb950-0fb6-41ab-ae22-8e9ce84d7cf0",
     "legisGaGovId": 786,
     "ballotpediaId": "Darlene_Taylor",
@@ -3972,6 +4040,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/ad18dba4-9247-4542-95b1-2ccef815dbc7",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/ad18dba4-9247-4542-95b1-2ccef815dbc7",
     "legisGaGovId": 867,
     "ballotpediaId": "David_Clark_(Georgia)",
@@ -3980,37 +4049,11 @@
     "openSecretsId": null,
     "fecCandidateIds": [],
     "peachfileFilerEntityIds": [
-     "100053"
+     "103780"
     ],
-    "votegaCandidateIds": [
-     "ga-house-100-2026-r-2"
-    ]
+    "votegaCandidateIds": []
    },
-   "candidacies": [
-    {
-     "raceId": "ga-house-100-2026",
-     "candidateId": "ga-house-100-2026-r-2",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 100,
-     "party": "Republican",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": true,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "100053",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
+   "candidacies": [],
    "provenance": {
     "peachfileFilerEntityIds": {
      "method": "seat+surname",
@@ -4053,6 +4096,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9bcfa0eb-ee7d-4762-9555-7bc4a67d6417",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9bcfa0eb-ee7d-4762-9555-7bc4a67d6417",
     "legisGaGovId": 5033,
     "ballotpediaId": "David_Huddleston",
@@ -4134,6 +4178,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/0f288c5b-484a-4b70-8209-0a23f922edd1",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/0f288c5b-484a-4b70-8209-0a23f922edd1",
     "legisGaGovId": 5005,
     "ballotpediaId": "David_Jenkins_(Georgia)",
@@ -4215,6 +4260,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4b05e770-4423-4b64-8ae1-9600e8c73244",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4b05e770-4423-4b64-8ae1-9600e8c73244",
     "legisGaGovId": 157,
     "ballotpediaId": "David_Lucas_Sr.",
@@ -4296,6 +4342,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9a8e7b0c-3c19-473f-b04a-d3a17037af0a",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9a8e7b0c-3c19-473f-b04a-d3a17037af0a",
     "legisGaGovId": 5052,
     "ballotpediaId": "David_Sampson",
@@ -4377,6 +4424,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/83a7bbf2-d69c-4813-bbeb-52820e6b9af4",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/83a7bbf2-d69c-4813-bbeb-52820e6b9af4",
     "legisGaGovId": 760,
     "ballotpediaId": "David_Wilkerson_(Georgia)",
@@ -4461,6 +4509,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/5061bc6b-83af-46d0-a78d-30ebe10a63db",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/5061bc6b-83af-46d0-a78d-30ebe10a63db",
     "legisGaGovId": 71,
     "ballotpediaId": "Debbie_Buckner",
@@ -4542,6 +4591,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b824f8fd-7343-449d-8027-fcd0afaf1949",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b824f8fd-7343-449d-8027-fcd0afaf1949",
     "legisGaGovId": 4887,
     "ballotpediaId": "Deborah_Silcox",
@@ -4623,6 +4673,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/1bb8d14b-9d5d-4edd-8c93-37e95991a8e4",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/1bb8d14b-9d5d-4edd-8c93-37e95991a8e4",
     "legisGaGovId": 4890,
     "ballotpediaId": "Debra_Bazemore",
@@ -4630,9 +4681,7 @@
     "govtrackId": null,
     "openSecretsId": null,
     "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "101102"
-    ],
+    "peachfileFilerEntityIds": [],
     "votegaCandidateIds": [
      "ga-house-69-2026-d-2"
     ]
@@ -4653,20 +4702,20 @@
      "isIncumbent": true,
      "withdrawn": false,
      "disqualified": false,
-     "peachfileFilerEntityId": "101102",
+     "peachfileFilerEntityId": null,
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "confidence": "no-match",
+      "note": "no filing matched this person's seat or the office they seek"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
      "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "confidence": "no-match",
+     "note": "no filing matched this person's seat or the office they seek"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -4704,6 +4753,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/016fb7f0-2b08-4587-b7f2-8d18c1d9b8f5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/016fb7f0-2b08-4587-b7f2-8d18c1d9b8f5",
     "legisGaGovId": 817,
     "ballotpediaId": "Demetrius_Douglas",
@@ -4785,6 +4835,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/73918c45-83c1-4d52-a84d-3ad7ad8de40b",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/73918c45-83c1-4d52-a84d-3ad7ad8de40b",
     "legisGaGovId": 5007,
     "ballotpediaId": "Derek_Mallow",
@@ -4866,6 +4917,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9046fcb2-f3eb-4233-bd92-32c94e60f9df",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9046fcb2-f3eb-4233-bd92-32c94e60f9df",
     "legisGaGovId": 4891,
     "ballotpediaId": "Derrick_Jackson",
@@ -4947,6 +4999,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3a323603-753e-4380-993c-9bb2a7fc55f3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3a323603-753e-4380-993c-9bb2a7fc55f3",
     "legisGaGovId": 5022,
     "ballotpediaId": "Derrick_McCollum",
@@ -5028,6 +5081,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/8f76af22-98dc-4e1e-ba99-75b87c1129d6",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/8f76af22-98dc-4e1e-ba99-75b87c1129d6",
     "legisGaGovId": 5009,
     "ballotpediaId": "Devan_Seabaugh",
@@ -5109,6 +5163,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/8afda706-7afa-462c-89f2-0d6d5da010ff",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/8afda706-7afa-462c-89f2-0d6d5da010ff",
     "legisGaGovId": 845,
     "ballotpediaId": "Dewey_McClain",
@@ -5164,6 +5219,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/efb9168c-b45a-4f43-bba5-d6f05e7d9cbe",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/efb9168c-b45a-4f43-bba5-d6f05e7d9cbe",
     "legisGaGovId": 855,
     "ballotpediaId": "Michael_A._Rhett",
@@ -5245,6 +5301,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/81dde544-49e9-4fb0-9313-32eacaf6194b",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/81dde544-49e9-4fb0-9313-32eacaf6194b",
     "legisGaGovId": 184,
     "ballotpediaId": "Don_Parsons_(Georgia)",
@@ -5329,6 +5386,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/7f88fadb-2f51-48c7-8ae5-e20cd2f33e4a",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/7f88fadb-2f51-48c7-8ae5-e20cd2f33e4a",
     "legisGaGovId": 372,
     "ballotpediaId": "Donzella_James",
@@ -5410,6 +5468,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/818f1afb-2850-448e-99c1-be63a9acfe95",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/818f1afb-2850-448e-99c1-be63a9acfe95",
     "legisGaGovId": 3877,
     "ballotpediaId": "Doreen_Carter",
@@ -5491,6 +5550,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/6be704ef-6250-4e08-86d3-f5fa2e1eebf3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/6be704ef-6250-4e08-86d3-f5fa2e1eebf3",
     "legisGaGovId": 5067,
     "ballotpediaId": "Drew_Echols",
@@ -5572,6 +5632,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4cf7c975-678b-4e21-9877-6d22d7b37916",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4cf7c975-678b-4e21-9877-6d22d7b37916",
     "legisGaGovId": 17,
     "ballotpediaId": "Ed_Harbison",
@@ -5652,6 +5713,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/777f58bb-9d6b-4755-ab7b-b94d11629cb5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/777f58bb-9d6b-4755-ab7b-b94d11629cb5",
     "legisGaGovId": 203,
     "ballotpediaId": "Ed_Setzler",
@@ -5733,6 +5795,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/f33d979c-554c-433e-ad0f-837eef1da589",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/f33d979c-554c-433e-ad0f-837eef1da589",
     "legisGaGovId": 826,
     "ballotpediaId": "Eddie_Lumsden",
@@ -5814,6 +5877,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/18427775-e3e7-4730-bb6f-722616e6aebe",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/18427775-e3e7-4730-bb6f-722616e6aebe",
     "legisGaGovId": 5011,
     "ballotpediaId": "Edna_Jackson",
@@ -5894,6 +5958,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4615e308-db74-408f-89df-02be56b5013b",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4615e308-db74-408f-89df-02be56b5013b",
     "legisGaGovId": 4954,
     "ballotpediaId": "El-Mahdi_Holly",
@@ -5975,6 +6040,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3f15ad5e-877d-44aa-b5b3-b24587c42685",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3f15ad5e-877d-44aa-b5b3-b24587c42685",
     "legisGaGovId": 768,
     "ballotpediaId": "Elena_Parent",
@@ -6030,6 +6096,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/acc7c167-6251-4ce8-8021-511acfa291ef",
     "legisGaGovId": 28,
     "ballotpediaId": "Emanuel_Jones",
@@ -6085,6 +6152,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3b2b9f31-6859-4582-8d82-581597c0c178",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3b2b9f31-6859-4582-8d82-581597c0c178",
     "legisGaGovId": 797,
     "ballotpediaId": "Emory_West_Dunahoo_Jr.",
@@ -6140,6 +6208,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/fe4b934e-8976-4c62-bcb0-ed8ae9782560",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/fe4b934e-8976-4c62-bcb0-ed8ae9782560",
     "legisGaGovId": 5061,
     "ballotpediaId": "Eric_Bell_II_(Georgia)",
@@ -6221,6 +6290,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/abece831-30a8-4cf8-94ff-d41f7f48197f",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/abece831-30a8-4cf8-94ff-d41f7f48197f",
     "legisGaGovId": 5091,
     "ballotpediaId": "Eric_Gisler",
@@ -6302,6 +6372,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/bdc621be-7296-4383-8c45-b4533d1c106c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/bdc621be-7296-4383-8c45-b4533d1c106c",
     "legisGaGovId": 5026,
     "ballotpediaId": "Esther_Panitch",
@@ -6383,6 +6454,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b261086c-7b16-4a8e-82a6-22df4445af84",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b261086c-7b16-4a8e-82a6-22df4445af84",
     "legisGaGovId": 5083,
     "ballotpediaId": "Floyd_Griffin",
@@ -6464,6 +6536,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9e417b67-da09-4516-b858-6b2458f53633",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9e417b67-da09-4516-b858-6b2458f53633",
     "legisGaGovId": 751,
     "ballotpediaId": "Frank_Ginn",
@@ -6545,6 +6618,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/dc99efc3-076b-4d00-b4b0-66a0507a4057",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/dc99efc3-076b-4d00-b4b0-66a0507a4057",
     "legisGaGovId": 5041,
     "ballotpediaId": "Gabe_Okoye",
@@ -6626,6 +6700,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/bd990496-ea34-4b79-8d6f-68cfed424c15",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/bd990496-ea34-4b79-8d6f-68cfed424c15",
     "legisGaGovId": 5068,
     "ballotpediaId": "Gabriel_Sanchez_(Georgia)",
@@ -6707,6 +6782,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/df023a79-0194-4d1a-8755-5dee4053e1cc",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/df023a79-0194-4d1a-8755-5dee4053e1cc",
     "legisGaGovId": 10,
     "ballotpediaId": "Gail_Davenport",
@@ -6788,6 +6864,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/47fd36f3-f5d4-4ef6-a429-1ffc7681e233",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/47fd36f3-f5d4-4ef6-a429-1ffc7681e233",
     "legisGaGovId": 5063,
     "ballotpediaId": "Gary_Richardson_(Georgia)",
@@ -6869,6 +6946,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/570a213a-a475-4fd3-ac36-23e1bd1190be",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/570a213a-a475-4fd3-ac36-23e1bd1190be",
     "legisGaGovId": 115,
     "ballotpediaId": "Gerald_Greene",
@@ -6950,6 +7028,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/be05ace3-ea73-4f3f-85ae-c5ed313d4cbe",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/be05ace3-ea73-4f3f-85ae-c5ed313d4cbe",
     "legisGaGovId": 4937,
     "ballotpediaId": "Ginny_Ehrhart",
@@ -7031,6 +7110,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/1f7d013a-8861-4e08-b6bf-7c8d36f8107c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/1f7d013a-8861-4e08-b6bf-7c8d36f8107c",
     "legisGaGovId": 4925,
     "ballotpediaId": "Greg_Dolezal",
@@ -7086,6 +7166,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/d7bfd125-d343-4acd-a4dc-480daf241af3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/d7bfd125-d343-4acd-a4dc-480daf241af3",
     "legisGaGovId": 851,
     "ballotpediaId": "Harold_V._Jones_II",
@@ -7167,6 +7248,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b39e2164-d570-45f2-b271-5e2fbe99c8d6",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b39e2164-d570-45f2-b271-5e2fbe99c8d6",
     "legisGaGovId": 5060,
     "ballotpediaId": "Holt_Persinger",
@@ -7248,6 +7330,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e73cb2a6-bf3e-4211-a386-142c18a4f607",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e73cb2a6-bf3e-4211-a386-142c18a4f607",
     "legisGaGovId": 4955,
     "ballotpediaId": "Houston_Gaines",
@@ -7303,6 +7386,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/2a68d594-e7d5-49cd-b615-6efb872430c3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/2a68d594-e7d5-49cd-b615-6efb872430c3",
     "legisGaGovId": 5037,
     "ballotpediaId": "Imani_Barnes",
@@ -7384,6 +7468,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/f02d369f-2d48-4d8d-853d-77ce5a8810fc",
     "legisGaGovId": 5027,
     "ballotpediaId": "Inga_Willis",
@@ -7465,6 +7550,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/37602f7b-947e-4067-8f2e-b2fec620643e",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/37602f7b-947e-4067-8f2e-b2fec620643e",
     "legisGaGovId": 5085,
     "ballotpediaId": "Jaclyn_Ford_(Georgia)",
@@ -7546,6 +7632,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/fcd57129-480c-4fba-a0d1-7fb369706611",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/fcd57129-480c-4fba-a0d1-7fb369706611",
     "legisGaGovId": 5090,
     "ballotpediaId": "Jaha_Howard",
@@ -7627,6 +7714,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/dbce462d-74e3-42d3-bd6c-3b9f8eeb69fe",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/dbce462d-74e3-42d3-bd6c-3b9f8eeb69fe",
     "legisGaGovId": 4967,
     "ballotpediaId": "James_Burchett",
@@ -7708,6 +7796,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/85740034-23b0-4001-9190-8948bd9f3b37",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/85740034-23b0-4001-9190-8948bd9f3b37",
     "legisGaGovId": 142,
     "ballotpediaId": "Jan_Jones",
@@ -7763,6 +7852,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/0461f02b-df18-4984-8b3b-ada287879d0a",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/0461f02b-df18-4984-8b3b-ada287879d0a",
     "legisGaGovId": 4953,
     "ballotpediaId": "Jasmine_Clark",
@@ -7844,6 +7934,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/cb7d8c1d-3c26-4f35-8d37-d1cf8a7ce207",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/cb7d8c1d-3c26-4f35-8d37-d1cf8a7ce207",
     "legisGaGovId": 4980,
     "ballotpediaId": "Jason_Anavitarte",
@@ -7925,6 +8016,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/584267b0-e40b-4d6e-a7fe-4c076eb6214c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/584267b0-e40b-4d6e-a7fe-4c076eb6214c",
     "legisGaGovId": 5088,
     "ballotpediaId": "Jason_Dickerson_(Georgia)",
@@ -8006,6 +8098,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/594aa971-500b-42a4-9d7a-1ceb4c029220",
     "legisGaGovId": 4883,
     "ballotpediaId": "Jason_Ridley",
@@ -8087,6 +8180,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/38c596a4-df69-4a56-9329-be73f26bc7d5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/38c596a4-df69-4a56-9329-be73f26bc7d5",
     "legisGaGovId": 862,
     "ballotpediaId": "Jesse_L._Petrea",
@@ -8168,6 +8262,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/c862c17f-ed00-41d7-97e5-1138f451a96c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/c862c17f-ed00-41d7-97e5-1138f451a96c",
     "legisGaGovId": 4970,
     "ballotpediaId": "Joe_Campbell_(Georgia)",
@@ -8249,6 +8344,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/ac1cac30-3fec-4c56-b172-b483db465a6b",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/ac1cac30-3fec-4c56-b172-b483db465a6b",
     "legisGaGovId": 754,
     "ballotpediaId": "John_Albers",
@@ -8330,6 +8426,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/713cac52-0a57-4baa-8273-6eeca5b491df",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/713cac52-0a57-4baa-8273-6eeca5b491df",
     "legisGaGovId": 795,
     "ballotpediaId": "John_Carson_(Georgia)",
@@ -8411,6 +8508,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/a34c9a5a-f307-4c07-b766-3b3b1148d7b1",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/a34c9a5a-f307-4c07-b766-3b3b1148d7b1",
     "legisGaGovId": 859,
     "ballotpediaId": "John_L._Corbett",
@@ -8492,6 +8590,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9249be26-54d2-467a-88ec-2588b886148d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9249be26-54d2-467a-88ec-2588b886148d",
     "legisGaGovId": 4923,
     "ballotpediaId": "John_LaHood",
@@ -8573,6 +8672,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/8106e2d8-e1e3-42a8-b550-fbd2627fa474",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/8106e2d8-e1e3-42a8-b550-fbd2627fa474",
     "legisGaGovId": 5057,
     "ballotpediaId": "Johnny_Chastain",
@@ -8654,6 +8754,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/64012657-d026-411c-9525-3232524a5145",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/64012657-d026-411c-9525-3232524a5145",
     "legisGaGovId": 73,
     "ballotpediaId": "Jon_G._Burns",
@@ -8735,6 +8836,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/56f28f8a-9296-4e69-9bd4-d0101a42b359",
     "legisGaGovId": 5019,
     "ballotpediaId": "Jordan_Ridley",
@@ -8816,6 +8918,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/f36d2507-b19a-4ee5-b4f9-5c06df761edf",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/f36d2507-b19a-4ee5-b4f9-5c06df761edf",
     "legisGaGovId": 4936,
     "ballotpediaId": "Joseph_Gullett",
@@ -8897,6 +9000,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/0e45048c-c1a4-415f-9ee4-5d09ea857e2e",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/0e45048c-c1a4-415f-9ee4-5d09ea857e2e",
     "legisGaGovId": 4893,
     "ballotpediaId": "Josh_Bonner",
@@ -8978,6 +9082,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b83b0486-773f-4979-a1ce-e2f7f3e6d7e1",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b83b0486-773f-4979-a1ce-e2f7f3e6d7e1",
     "legisGaGovId": 4942,
     "ballotpediaId": "Josh_McLaurin",
@@ -9061,6 +9166,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/8b62e64b-bf80-4967-832b-8fb92cd6c4b3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/8b62e64b-bf80-4967-832b-8fb92cd6c4b3",
     "legisGaGovId": 5073,
     "ballotpediaId": "Justin_Howard",
@@ -9142,6 +9248,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/eb28f991-35c9-4d84-a907-5be56aed1aff",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/eb28f991-35c9-4d84-a907-5be56aed1aff",
     "legisGaGovId": 5035,
     "ballotpediaId": "Karen_Lupton",
@@ -9223,6 +9330,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/f8db50e0-08ab-406c-ac8b-39c7038ef5ca",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/f8db50e0-08ab-406c-ac8b-39c7038ef5ca",
     "legisGaGovId": 4894,
     "ballotpediaId": "Karen_Mathiak",
@@ -9304,6 +9412,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/27365f19-a138-4a9e-9f6e-11352932e5d5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/27365f19-a138-4a9e-9f6e-11352932e5d5",
     "legisGaGovId": 95,
     "ballotpediaId": "Karla_Drenner",
@@ -9385,6 +9494,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4b3fdb35-d3fb-40aa-843e-d3900df37ce4",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4b3fdb35-d3fb-40aa-843e-d3900df37ce4",
     "legisGaGovId": 5056,
     "ballotpediaId": "Karlton_Howard",
@@ -9466,6 +9576,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/97a40ea4-674f-4b84-8fd3-8bc2f3b4a35d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/97a40ea4-674f-4b84-8fd3-8bc2f3b4a35d",
     "legisGaGovId": 4911,
     "ballotpediaId": "Kasey_Carpenter",
@@ -9547,6 +9658,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/bf68b3dc-ca81-49f9-8e33-fe27317183d3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/bf68b3dc-ca81-49f9-8e33-fe27317183d3",
     "legisGaGovId": 92,
     "ballotpediaId": "Katie_Dempsey",
@@ -9628,6 +9740,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/fc31ab02-026c-4173-86db-570c0b297c64",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/fc31ab02-026c-4173-86db-570c0b297c64",
     "legisGaGovId": 4910,
     "ballotpediaId": "Kay_Kirkpatrick",
@@ -9709,6 +9822,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/0a816fbf-e5ec-4056-8b3e-08184400e71b",
     "legisGaGovId": 5065,
     "ballotpediaId": "Kenya_Wicks",
@@ -9790,6 +9904,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/2f8621bc-0548-457c-8b0d-9148e14b77fe",
     "legisGaGovId": 4981,
     "ballotpediaId": "Kim_Jackson",
@@ -9871,6 +9986,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/eff357d0-3187-4a7b-93fe-2d54d010b093",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/eff357d0-3187-4a7b-93fe-2d54d010b093",
     "legisGaGovId": 4916,
     "ballotpediaId": "Kim_Schofield",
@@ -9952,6 +10068,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/275b772e-6407-4aaa-8bd6-ceddad1da7fa",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/275b772e-6407-4aaa-8bd6-ceddad1da7fa",
     "legisGaGovId": 806,
     "ballotpediaId": "Kimberly_Alexander_(Georgia_state_representative)",
@@ -10033,6 +10150,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/fc1a5e1f-6ce4-47ab-987b-095afa166359",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/fc1a5e1f-6ce4-47ab-987b-095afa166359",
     "legisGaGovId": 5030,
     "ballotpediaId": "Kimberly_New",
@@ -10114,6 +10232,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/1d9bb111-bf4f-4e4f-aa63-a2f6a94b566c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/1d9bb111-bf4f-4e4f-aa63-a2f6a94b566c",
     "legisGaGovId": 5079,
     "ballotpediaId": "L_C_Myles_Jr.",
@@ -10195,6 +10314,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/ae6e08e3-6971-4cd2-982a-48d650a343d5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/ae6e08e3-6971-4cd2-982a-48d650a343d5",
     "legisGaGovId": 5094,
     "ballotpediaId": "Lanny_Thomas",
@@ -10276,6 +10396,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/44a51125-9e82-41f6-8d4f-a646895b5994",
     "legisGaGovId": 4878,
     "ballotpediaId": "Larry_Walker_(Georgia)",
@@ -10357,6 +10478,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/7767ee85-7961-45ba-adc2-c3606b1c39b8",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/7767ee85-7961-45ba-adc2-c3606b1c39b8",
     "legisGaGovId": 4992,
     "ballotpediaId": "Lauren_W._McDonald_III",
@@ -10438,6 +10560,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e11cecf4-f2e5-49d9-ba9e-47681f779438",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e11cecf4-f2e5-49d9-ba9e-47681f779438",
     "legisGaGovId": 723,
     "ballotpediaId": "Lee_Anderson",
@@ -10519,6 +10642,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/69493144-3e3e-49a8-9e1f-f9a948fd0ff3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/69493144-3e3e-49a8-9e1f-f9a948fd0ff3",
     "legisGaGovId": 19,
     "ballotpediaId": "Lee_Hawkins",
@@ -10600,6 +10724,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/df874c28-6403-42c1-9cbb-0855508cda85",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/df874c28-6403-42c1-9cbb-0855508cda85",
     "legisGaGovId": 5010,
     "ballotpediaId": "Leesa_Hagan",
@@ -10681,6 +10806,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/6971bb34-9ea4-4bdc-971e-c1a2c5de344c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/6971bb34-9ea4-4bdc-971e-c1a2c5de344c",
     "legisGaGovId": 5053,
     "ballotpediaId": "Lehman_Franklin",
@@ -10762,6 +10888,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3a23acfd-5ce6-4e47-b641-1efdab05bdca",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3a23acfd-5ce6-4e47-b641-1efdab05bdca",
     "legisGaGovId": 5023,
     "ballotpediaId": "Lisa_Campbell_(Georgia)",
@@ -10843,6 +10970,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/7475f989-a4f9-4ac8-9188-26903a012d71",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/7475f989-a4f9-4ac8-9188-26903a012d71",
     "legisGaGovId": 5034,
     "ballotpediaId": "Long_Tran",
@@ -10924,6 +11052,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/ee575d7a-b5a1-419c-949d-4aa9290a67a1",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/ee575d7a-b5a1-419c-949d-4aa9290a67a1",
     "legisGaGovId": 5031,
     "ballotpediaId": "Lydia_Glaize",
@@ -11005,6 +11134,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/945875f7-f3c5-4c75-acd6-a195a0f76b12",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/945875f7-f3c5-4c75-acd6-a195a0f76b12",
     "legisGaGovId": 212,
     "ballotpediaId": "Lynn_Smith_(Georgia)",
@@ -11060,6 +11190,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/8e209d95-2333-4aa2-a628-1bdcec0674f5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/8e209d95-2333-4aa2-a628-1bdcec0674f5",
     "legisGaGovId": 738,
     "ballotpediaId": "Mack_Jackson",
@@ -11115,6 +11246,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/5e12fb82-1f69-46df-9ac5-a09ce51dd95b",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/5e12fb82-1f69-46df-9ac5-a09ce51dd95b",
     "legisGaGovId": 4902,
     "ballotpediaId": "Mark_Newton",
@@ -11196,6 +11328,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/6552dd8d-1020-4bbb-abfc-88975573ebd4",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/6552dd8d-1020-4bbb-abfc-88975573ebd4",
     "legisGaGovId": 4935,
     "ballotpediaId": "Martin_Momtahan",
@@ -11277,6 +11410,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/078246e9-90b8-43aa-bb92-d7016f517b8e",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/078246e9-90b8-43aa-bb92-d7016f517b8e",
     "legisGaGovId": 850,
     "ballotpediaId": "Marty_Harbin",
@@ -11358,6 +11492,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9531d502-440c-48db-83c4-70dfbe9a9ea1",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9531d502-440c-48db-83c4-70dfbe9a9ea1",
     "legisGaGovId": 4999,
     "ballotpediaId": "Marvin_Lim",
@@ -11439,6 +11574,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/7deae3f1-5548-4afe-9018-e8112945fd8d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/7deae3f1-5548-4afe-9018-e8112945fd8d",
     "legisGaGovId": 5078,
     "ballotpediaId": "Mary_Ann_Santos",
@@ -11519,6 +11655,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4aec761f-5117-4f43-a487-9d77418f0bfa",
     "legisGaGovId": 4938,
     "ballotpediaId": "Mary_Frances_Williams",
@@ -11600,6 +11737,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e6ca1b23-0972-4df6-ab04-6186cf9da814",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e6ca1b23-0972-4df6-ab04-6186cf9da814",
     "legisGaGovId": 181,
     "ballotpediaId": "Mary_Margaret_Oliver",
@@ -11681,6 +11819,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9103b29e-964b-4637-9304-0e73216d7796",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9103b29e-964b-4637-9304-0e73216d7796",
     "legisGaGovId": 4966,
     "ballotpediaId": "Matt_Barton",
@@ -11762,6 +11901,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/81b84318-8c9f-467f-a7c1-776d9c415f51",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/81b84318-8c9f-467f-a7c1-776d9c415f51",
     "legisGaGovId": 4907,
     "ballotpediaId": "Matt_Brass",
@@ -11843,6 +11983,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/99f0a2a7-8817-4756-a40e-575e259890e7",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/99f0a2a7-8817-4756-a40e-575e259890e7",
     "legisGaGovId": 4886,
     "ballotpediaId": "Matt_Dubnik",
@@ -11924,6 +12065,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/c81779f3-65bf-4714-b295-79cac3b0da28",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/c81779f3-65bf-4714-b295-79cac3b0da28",
     "legisGaGovId": 781,
     "ballotpediaId": "Matt_Hatchett",
@@ -12005,6 +12147,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/0f4f3c5a-1192-4ec1-9698-4aef005b4875",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/0f4f3c5a-1192-4ec1-9698-4aef005b4875",
     "legisGaGovId": 5040,
     "ballotpediaId": "Matt_Reeves",
@@ -12086,6 +12229,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/909e9026-e549-494b-be99-e8562a389e0c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/909e9026-e549-494b-be99-e8562a389e0c",
     "legisGaGovId": 4934,
     "ballotpediaId": "Matthew_Gambill",
@@ -12167,6 +12311,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/918888ac-edc7-4178-9133-d058f0f21010",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/918888ac-edc7-4178-9133-d058f0f21010",
     "legisGaGovId": 4979,
     "ballotpediaId": "Max_Burns",
@@ -12248,6 +12393,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/f0af2586-d535-4e44-bcaa-65239f9390b1",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/f0af2586-d535-4e44-bcaa-65239f9390b1",
     "legisGaGovId": 5070,
     "ballotpediaId": "Mekyah_McQueen",
@@ -12329,6 +12475,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/68185f1d-fa54-4571-b305-fcd6c7dc024e",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/68185f1d-fa54-4571-b305-fcd6c7dc024e",
     "legisGaGovId": 832,
     "ballotpediaId": "Michael_Smith_(Georgia_state_representative)",
@@ -12410,6 +12557,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/48b46caf-d38e-46ab-96ff-c268e23a7d76",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/48b46caf-d38e-46ab-96ff-c268e23a7d76",
     "legisGaGovId": 4983,
     "ballotpediaId": "Michelle_Au",
@@ -12491,6 +12639,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/f4f9be12-5d7c-4fae-8b7b-9e9d19d2282f",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/f4f9be12-5d7c-4fae-8b7b-9e9d19d2282f",
     "legisGaGovId": 4986,
     "ballotpediaId": "Mike_Cameron",
@@ -12572,6 +12721,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/1831cc73-e694-4cea-83a4-b55c3495f76a",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/1831cc73-e694-4cea-83a4-b55c3495f76a",
     "legisGaGovId": 81,
     "ballotpediaId": "Mike_Cheokas",
@@ -12653,6 +12803,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/011995be-4dd0-43b2-ae75-57ae45f53576",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/011995be-4dd0-43b2-ae75-57ae45f53576",
     "legisGaGovId": 5013,
     "ballotpediaId": "Mike_Hodges",
@@ -12734,6 +12885,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/bad14891-c7bc-4ac4-b23a-fb5ae3878d67",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/bad14891-c7bc-4ac4-b23a-fb5ae3878d67",
     "legisGaGovId": 794,
     "ballotpediaId": "Miriam_Paris",
@@ -12815,6 +12967,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/c4c6c741-0cb4-4179-b46d-9983421b8fdd",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/c4c6c741-0cb4-4179-b46d-9983421b8fdd",
     "legisGaGovId": 5018,
     "ballotpediaId": "Mitchell_Horner",
@@ -12896,6 +13049,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/7ac30a66-1649-4a8c-a72f-a4b9a7ab1534",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/7ac30a66-1649-4a8c-a72f-a4b9a7ab1534",
     "legisGaGovId": 4964,
     "ballotpediaId": "Mitchell_Scoggins",
@@ -12977,6 +13131,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/bf2c1ec5-d995-4605-85ac-139adb037d99",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/bf2c1ec5-d995-4605-85ac-139adb037d99",
     "legisGaGovId": 33,
     "ballotpediaId": "Nan_Orrock",
@@ -13058,6 +13213,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/57ad1f65-9969-4be2-b262-684bf53123fb",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/57ad1f65-9969-4be2-b262-684bf53123fb",
     "legisGaGovId": 4978,
     "ballotpediaId": "Nikki_Merritt",
@@ -13139,6 +13295,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/55074030-4d64-4da0-b68a-5e3945d00f25",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/55074030-4d64-4da0-b68a-5e3945d00f25",
     "legisGaGovId": 5081,
     "ballotpediaId": "Anissa_Jones",
@@ -13220,6 +13377,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3252da04-a17e-4298-b19d-9dd2fbf29ded",
     "legisGaGovId": 4960,
     "ballotpediaId": "Noel_Williams_Jr.",
@@ -13301,6 +13459,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/fdf78e39-985f-48c3-8ed3-ccf15946871f",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/fdf78e39-985f-48c3-8ed3-ccf15946871f",
     "legisGaGovId": 5075,
     "ballotpediaId": "Noelle_Kahaian",
@@ -13382,6 +13541,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/dbb81f07-2181-48dd-b383-19870e08d4fd",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/dbb81f07-2181-48dd-b383-19870e08d4fd",
     "legisGaGovId": 5036,
     "ballotpediaId": "Omari_Crawford",
@@ -13463,6 +13623,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/5c5ab5cb-54f6-4218-8d1d-a99d36bca436",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/5c5ab5cb-54f6-4218-8d1d-a99d36bca436",
     "legisGaGovId": 4880,
     "ballotpediaId": "Park_Cannon",
@@ -13518,6 +13679,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/af51c2db-8871-45a4-803d-314fa2b9d18d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/af51c2db-8871-45a4-803d-314fa2b9d18d",
     "legisGaGovId": 811,
     "ballotpediaId": "Patty_Stinson",
@@ -13599,6 +13761,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/80928bd9-c963-4b21-954c-c62ee9373064",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/80928bd9-c963-4b21-954c-c62ee9373064",
     "legisGaGovId": 5028,
     "ballotpediaId": "Phil_Olaleye",
@@ -13680,6 +13843,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/069fb4fa-766b-40e4-90b7-ce96b4fa2ace",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/069fb4fa-766b-40e4-90b7-ce96b4fa2ace",
     "legisGaGovId": 5066,
     "ballotpediaId": "Rashaun_Kemp",
@@ -13761,6 +13925,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/8798a822-fee8-4546-bcdd-455f788bef44",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/8798a822-fee8-4546-bcdd-455f788bef44",
     "legisGaGovId": 161,
     "ballotpediaId": "Randal_Mangham",
@@ -13842,6 +14007,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/6da7fe11-4436-4854-8e1b-4c45dc4cdaac",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/6da7fe11-4436-4854-8e1b-4c45dc4cdaac",
     "legisGaGovId": 4926,
     "ballotpediaId": "Randy_Robertson",
@@ -13923,6 +14089,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/21651856-bba6-49fd-b3f8-8ed1b723e804",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/21651856-bba6-49fd-b3f8-8ed1b723e804",
     "legisGaGovId": 5001,
     "ballotpediaId": "Regina_Lewis-Ward",
@@ -14004,6 +14171,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/08ee45fd-d3f4-4129-9e7c-27cf52533ed2",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/08ee45fd-d3f4-4129-9e7c-27cf52533ed2",
     "legisGaGovId": 5045,
     "ballotpediaId": "Reynaldo_\"Rey\"_Martinez",
@@ -14085,6 +14253,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e04bd985-5b75-4551-84a1-f9797ac495d2",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e04bd985-5b75-4551-84a1-f9797ac495d2",
     "legisGaGovId": 4895,
     "ballotpediaId": "Rhonda_Burnough",
@@ -14166,6 +14335,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/bc40f904-9c20-41d0-80d5-e5645d3e6935",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/bc40f904-9c20-41d0-80d5-e5645d3e6935",
     "legisGaGovId": 4998,
     "ballotpediaId": "Rhonda_Taylor_(Georgia)",
@@ -14247,6 +14417,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4d1f5379-01e9-4f58-9868-42acc07ec7a8",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4d1f5379-01e9-4f58-9868-42acc07ec7a8",
     "legisGaGovId": 755,
     "ballotpediaId": "Rick_Jasperse",
@@ -14328,6 +14499,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/1da20ad9-1a05-42ab-addb-7fbf295a0e5d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/1da20ad9-1a05-42ab-addb-7fbf295a0e5d",
     "legisGaGovId": 5055,
     "ballotpediaId": "Rick_Townsend",
@@ -14409,6 +14581,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/c7860bae-9d9c-449c-9903-20230eec50ac",
     "legisGaGovId": 4905,
     "ballotpediaId": "Ricky_Williams",
@@ -14490,6 +14663,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/84eb7371-a332-4534-b3b3-542500c798f8",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/84eb7371-a332-4534-b3b3-542500c798f8",
     "legisGaGovId": 5080,
     "ballotpediaId": "Rob_Clifton_(Georgia)",
@@ -14571,6 +14745,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/29210f3f-ec97-47c8-9492-b81154275109",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/29210f3f-ec97-47c8-9492-b81154275109",
     "legisGaGovId": 4993,
     "ballotpediaId": "Rob_Leverett",
@@ -14652,6 +14827,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/5d77204f-89e7-43df-bccb-a08b9956132d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/5d77204f-89e7-43df-bccb-a08b9956132d",
     "legisGaGovId": 5072,
     "ballotpediaId": "Robert_Dawson_(Georgia)",
@@ -14733,6 +14909,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/f863b50d-c865-463a-830a-e5648837d9f7",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/f863b50d-c865-463a-830a-e5648837d9f7",
     "legisGaGovId": 791,
     "ballotpediaId": "Robert_Dickey",
@@ -14814,6 +14991,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/32c3fbdd-4034-47d0-b7ab-0411bd200737",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/32c3fbdd-4034-47d0-b7ab-0411bd200737",
     "legisGaGovId": 5074,
     "ballotpediaId": "Robert_Flournoy_Jr.",
@@ -14895,6 +15073,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
     "legisGaGovId": 219,
     "ballotpediaId": "Ron_Stephens_(Georgia_Representative)",
@@ -14976,6 +15155,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b90b899d-87f0-43a5-9d15-6e310187ac41",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b90b899d-87f0-43a5-9d15-6e310187ac41",
     "legisGaGovId": 4977,
     "ballotpediaId": "Russ_Goodman",
@@ -15057,6 +15237,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/d291834f-70cd-48b5-b7db-b05d23d74a4c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/d291834f-70cd-48b5-b7db-b05d23d74a4c",
     "legisGaGovId": 5039,
     "ballotpediaId": "Ruwa_Romman",
@@ -15142,6 +15323,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/2a66b922-b812-4c45-9786-478187cd5e33",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/2a66b922-b812-4c45-9786-478187cd5e33",
     "legisGaGovId": 5038,
     "ballotpediaId": "Saira_Draper",
@@ -15197,6 +15379,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/218a4fc4-a568-4b78-b350-0d60c6b12d4c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/218a4fc4-a568-4b78-b350-0d60c6b12d4c",
     "legisGaGovId": 311,
     "ballotpediaId": "Sally_Harrell",
@@ -15278,6 +15461,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/2ba0916f-40b1-4255-9496-94b12ccabd1e",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/2ba0916f-40b1-4255-9496-94b12ccabd1e",
     "legisGaGovId": 4901,
     "ballotpediaId": "Samuel_Park",
@@ -15359,6 +15543,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/cbcdfca3-e47d-4b32-9164-ec0709a134bf",
     "legisGaGovId": 837,
     "ballotpediaId": "Sam_Watson",
@@ -15440,6 +15625,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/21c6cae1-bcd2-4403-ad39-af04b64ce55c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/21c6cae1-bcd2-4403-ad39-af04b64ce55c",
     "legisGaGovId": 766,
     "ballotpediaId": "Sandra_Scott",
@@ -15521,6 +15707,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4ab15127-5b7a-40bc-8807-26e8e8a73397",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4ab15127-5b7a-40bc-8807-26e8e8a73397",
     "legisGaGovId": 5077,
     "ballotpediaId": "Sandy_Donatucci",
@@ -15602,6 +15789,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/91abe321-5ea4-4f17-b8d8-573d7cb913e6",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/91abe321-5ea4-4f17-b8d8-573d7cb913e6",
     "legisGaGovId": 4899,
     "ballotpediaId": "Scott_Hilton_(Georgia)",
@@ -15683,6 +15871,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/99ef9b20-6b1f-4831-8e58-a523de606cda",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/99ef9b20-6b1f-4831-8e58-a523de606cda",
     "legisGaGovId": 769,
     "ballotpediaId": "Scott_Holcomb_(Georgia)",
@@ -15764,6 +15953,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/702658f4-8382-479a-9416-79928239d5e7",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/702658f4-8382-479a-9416-79928239d5e7",
     "legisGaGovId": 5044,
     "ballotpediaId": "Segun_Adeyina",
@@ -15845,6 +16035,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/15db25fc-273b-467f-b8f9-897337f40b65",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/15db25fc-273b-467f-b8f9-897337f40b65",
     "legisGaGovId": 86,
     "ballotpediaId": "Sharon_Cooper",
@@ -15926,6 +16117,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e51d36a7-9684-4540-aae7-a5e60e434681",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e51d36a7-9684-4540-aae7-a5e60e434681",
     "legisGaGovId": 5003,
     "ballotpediaId": "Sharon_Henderson",
@@ -16006,6 +16198,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/ee145624-3295-4db4-b3ce-9d1583e4ef6e",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/ee145624-3295-4db4-b3ce-9d1583e4ef6e",
     "legisGaGovId": 1878,
     "ballotpediaId": "Shaw_Blackmon",
@@ -16087,6 +16280,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/314d7845-ba55-4bd4-809a-c7c7aea26690",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/314d7845-ba55-4bd4-809a-c7c7aea26690",
     "legisGaGovId": 5016,
     "ballotpediaId": "Shawn_Still",
@@ -16168,6 +16362,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9007dcd9-3246-4cf3-9185-7478b3a9ad7a",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9007dcd9-3246-4cf3-9185-7478b3a9ad7a",
     "legisGaGovId": 4994,
     "ballotpediaId": "Shea_Roberts",
@@ -16249,6 +16444,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/5b6e0e37-802b-4103-b401-551532aba2e7",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/5b6e0e37-802b-4103-b401-551532aba2e7",
     "legisGaGovId": 4924,
     "ballotpediaId": "Sheikh_Rahman",
@@ -16330,6 +16526,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b278b399-5ca3-4cd7-bc19-4053166577a2",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b278b399-5ca3-4cd7-bc19-4053166577a2",
     "legisGaGovId": 143,
     "ballotpediaId": "Sheila_Jones_(Georgia)",
@@ -16414,6 +16611,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/059c0e54-cc7b-4605-aee6-58388026a2fb",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/059c0e54-cc7b-4605-aee6-58388026a2fb",
     "legisGaGovId": 4903,
     "ballotpediaId": "Sheila_Clark_Nelson",
@@ -16495,6 +16693,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/5474fbe2-6cdb-4ad2-9831-cdffaca442af",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/5474fbe2-6cdb-4ad2-9831-cdffaca442af",
     "legisGaGovId": 5025,
     "ballotpediaId": "Solomon_Adesanya",
@@ -16576,6 +16775,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/2abbbe23-8cb6-4f33-afaf-38ce88a4e10c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/2abbbe23-8cb6-4f33-afaf-38ce88a4e10c",
     "legisGaGovId": 4985,
     "ballotpediaId": "Sonya_Halpern",
@@ -16657,6 +16857,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/64721c9b-451c-4bc9-9040-4ca232ffd746",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/64721c9b-451c-4bc9-9040-4ca232ffd746",
     "legisGaGovId": 5042,
     "ballotpediaId": "Soo_Hong",
@@ -16738,6 +16939,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e6ae8d30-4b1b-4b06-8918-2be6fa7f8108",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e6ae8d30-4b1b-4b06-8918-2be6fa7f8108",
     "legisGaGovId": 819,
     "ballotpediaId": "Spencer_Frye",
@@ -16819,6 +17021,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/fa5d8d09-a0b9-4ba4-93da-a24902530416",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/fa5d8d09-a0b9-4ba4-93da-a24902530416",
     "legisGaGovId": 762,
     "ballotpediaId": "Stacey_Evans",
@@ -16900,6 +17103,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/432ef767-d4c8-4736-b2ac-96397205fb3d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/432ef767-d4c8-4736-b2ac-96397205fb3d",
     "legisGaGovId": 4987,
     "ballotpediaId": "Stan_Gunter",
@@ -16981,6 +17185,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e2c141e9-9e04-4e2b-8e5b-57db594c7abc",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e2c141e9-9e04-4e2b-8e5b-57db594c7abc",
     "legisGaGovId": 752,
     "ballotpediaId": "Steve_Gooch",
@@ -17065,6 +17270,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/80f4bbdf-02f3-4233-8456-e550e7e745af",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/80f4bbdf-02f3-4233-8456-e550e7e745af",
     "legisGaGovId": 849,
     "ballotpediaId": "Steve_Tarvin",
@@ -17146,6 +17352,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/516cb969-9467-490f-9a05-02c3e7decae3",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/516cb969-9467-490f-9a05-02c3e7decae3",
     "legisGaGovId": 5093,
     "ballotpediaId": "Steven_McNeel",
@@ -17227,6 +17434,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3194a8e0-aaf8-4686-b2c9-a22521f85fff",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3194a8e0-aaf8-4686-b2c9-a22521f85fff",
     "legisGaGovId": 4961,
     "ballotpediaId": "Steven_Meeks",
@@ -17308,6 +17516,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/99082062-acd6-4c6b-bb45-2cfa071f19fc",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/99082062-acd6-4c6b-bb45-2cfa071f19fc",
     "legisGaGovId": 4962,
     "ballotpediaId": "Steven_Sainz",
@@ -17389,6 +17598,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/cabc1e6f-ba7c-4063-a778-707579f91ec8",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/cabc1e6f-ba7c-4063-a778-707579f91ec8",
     "legisGaGovId": 5071,
     "ballotpediaId": "Sylvia_Wayfer",
@@ -17472,6 +17682,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/c5766526-3a5a-4d33-b5ff-a0d1d358d7ae",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/c5766526-3a5a-4d33-b5ff-a0d1d358d7ae",
     "legisGaGovId": 5082,
     "ballotpediaId": "Tangie_Herring",
@@ -17553,6 +17764,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/6e5432a3-09ed-4813-b11d-e97222bb7e4d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/6e5432a3-09ed-4813-b11d-e97222bb7e4d",
     "legisGaGovId": 5029,
     "ballotpediaId": "Tanya_Miller",
@@ -17608,6 +17820,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9fe70ed7-31a0-4732-92b1-54d2a79a4654",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9fe70ed7-31a0-4732-92b1-54d2a79a4654",
     "legisGaGovId": 5050,
     "ballotpediaId": "Teddy_Reese",
@@ -17663,6 +17876,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/aa7405f9-5c37-4ce8-a7eb-ac5949a6e776",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/aa7405f9-5c37-4ce8-a7eb-ac5949a6e776",
     "legisGaGovId": 5024,
     "ballotpediaId": "Terry_Cummings",
@@ -17744,6 +17958,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/93f45299-bfa2-4458-844a-5c6b9bdd8c1d",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/93f45299-bfa2-4458-844a-5c6b9bdd8c1d",
     "legisGaGovId": 62,
     "ballotpediaId": "Timothy_Bearden",
@@ -17828,6 +18043,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/cf955c60-cbda-4414-9266-3d8dca3553fe",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/cf955c60-cbda-4414-9266-3d8dca3553fe",
     "legisGaGovId": 5046,
     "ballotpediaId": "Tim_Fleming",
@@ -17914,6 +18130,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c",
     "legisGaGovId": 4885,
     "ballotpediaId": "Todd_Jones_(Georgia)",
@@ -17998,6 +18215,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/d9f1ea57-7b90-484a-9664-927a36c87e0c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/d9f1ea57-7b90-484a-9664-927a36c87e0c",
     "legisGaGovId": 807,
     "ballotpediaId": "Tonya_Anderson",
@@ -18079,6 +18297,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/6ac8933e-8dde-4902-8eec-61cc5a91c844",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/6ac8933e-8dde-4902-8eec-61cc5a91c844",
     "legisGaGovId": 825,
     "ballotpediaId": "Trey_Kelley",
@@ -18160,6 +18379,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9dfc8ec3-0935-4d1d-877d-e05cf7a5dca5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9dfc8ec3-0935-4d1d-877d-e05cf7a5dca5",
     "legisGaGovId": 876,
     "ballotpediaId": "Trey_Rhodes",
@@ -18241,6 +18461,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4b162447-89a7-4ffc-acbf-617e1ad87e2a",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4b162447-89a7-4ffc-acbf-617e1ad87e2a",
     "legisGaGovId": 4990,
     "ballotpediaId": "Tyler_Smith_(Georgia)",
@@ -18322,6 +18543,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/9deeb60b-4d1e-42b8-8052-d2808a30ea9a",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/9deeb60b-4d1e-42b8-8052-d2808a30ea9a",
     "legisGaGovId": 215,
     "ballotpediaId": "Vance_Smith",
@@ -18403,6 +18625,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b9050158-4a6d-4332-8ad2-769472f52e3e",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b9050158-4a6d-4332-8ad2-769472f52e3e",
     "legisGaGovId": 5095,
     "ballotpediaId": "Venola_Mason",
@@ -18484,6 +18707,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/546d682f-b256-4060-8fd3-084d7f118d43",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/546d682f-b256-4060-8fd3-084d7f118d43",
     "legisGaGovId": 4989,
     "ballotpediaId": "Victor_Anderson",
@@ -18565,6 +18789,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e3b1be9c-b244-4466-9192-adc365a31cfb",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e3b1be9c-b244-4466-9192-adc365a31cfb",
     "legisGaGovId": 4947,
     "ballotpediaId": "Viola_Davis",
@@ -18646,6 +18871,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/97a002db-6151-4fdf-9bce-013a6344764f",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/97a002db-6151-4fdf-9bce-013a6344764f",
     "legisGaGovId": 4988,
     "ballotpediaId": "Will_Wade",
@@ -18728,6 +18954,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/6f986b42-14f6-4147-9466-c49294331db9",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/6f986b42-14f6-4147-9466-c49294331db9",
     "legisGaGovId": 765,
     "ballotpediaId": "Yasmin_Neal",
@@ -18809,6 +19036,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/a0bfdc0d-4110-4cd2-b83c-834bba4300f5",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/a0bfdc0d-4110-4cd2-b83c-834bba4300f5",
     "legisGaGovId": 209,
     "ballotpediaId": "Freddie_Sims",
@@ -18891,6 +19119,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/23ffff2b-3ce6-46dc-996c-7b4fd71607bc",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/23ffff2b-3ce6-46dc-996c-7b4fd71607bc",
     "legisGaGovId": 5015,
     "ballotpediaId": "Nabilah_Islam_Parkes",
@@ -18947,6 +19176,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/b0587620-8c43-45b8-8212-285a13a4d47c",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/b0587620-8c43-45b8-8212-285a13a4d47c",
     "legisGaGovId": 831,
     "ballotpediaId": "Dexter_Sharper",
@@ -19000,6 +19230,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/e6dcaefd-8ecd-4f08-990f-e4443ae53ee8",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/e6dcaefd-8ecd-4f08-990f-e4443ae53ee8",
     "legisGaGovId": 5014,
     "ballotpediaId": "Jason_Esteves",
@@ -19053,6 +19284,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/ffa17688-2ca9-40ba-9eb3-3991f930bf53",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/ffa17688-2ca9-40ba-9eb3-3991f930bf53",
     "legisGaGovId": 852,
     "ballotpediaId": "John_F._Kennedy_(Georgia)",
@@ -19106,6 +19338,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/8d6562cb-cdd0-405f-a165-8463cde26594",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/8d6562cb-cdd0-405f-a165-8463cde26594",
     "legisGaGovId": 840,
     "ballotpediaId": "Brandon_Beach",
@@ -19159,6 +19392,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/031b880f-171c-448f-b1c1-62ac47693909",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/031b880f-171c-448f-b1c1-62ac47693909",
     "legisGaGovId": 5048,
     "ballotpediaId": "Lynn_Gladney",
@@ -19212,6 +19446,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/cabee039-e73e-4dc6-95ec-3e22d8e529ff",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/cabee039-e73e-4dc6-95ec-3e22d8e529ff",
     "legisGaGovId": 810,
     "ballotpediaId": "Karen_Bennett_(Georgia)",
@@ -19267,6 +19502,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/d6a8848d-a637-4c2e-ae37-84440c614400",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/d6a8848d-a637-4c2e-ae37-84440c614400",
     "legisGaGovId": 808,
     "ballotpediaId": "Mandi_Ballinger",
@@ -19320,6 +19556,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/ff24cea3-8582-4cfe-b015-74ee7c5ebeef",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/ff24cea3-8582-4cfe-b015-74ee7c5ebeef",
     "legisGaGovId": 4956,
     "ballotpediaId": "Marcus_Wiedower",
@@ -19373,6 +19610,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -19438,6 +19676,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -19503,6 +19742,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -19568,6 +19808,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -19637,6 +19878,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -19702,6 +19944,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -19767,6 +20010,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -19832,6 +20076,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -19877,6 +20122,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -19944,6 +20190,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20009,6 +20256,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20074,6 +20322,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20139,6 +20388,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20204,6 +20454,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20249,6 +20500,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20307,6 +20559,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20363,6 +20616,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20419,6 +20673,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20477,6 +20732,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20533,6 +20789,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20589,6 +20846,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20645,6 +20903,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20702,6 +20961,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20758,6 +21018,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20814,6 +21075,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20870,6 +21132,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20926,6 +21189,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -20982,6 +21246,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21038,6 +21303,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21094,6 +21360,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21150,6 +21417,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21206,6 +21474,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21263,6 +21532,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21319,6 +21589,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21375,6 +21646,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21432,6 +21704,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21490,6 +21763,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21547,6 +21821,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21603,6 +21878,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21659,6 +21935,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21739,6 +22016,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21795,6 +22073,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21851,6 +22130,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21908,6 +22188,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -21965,6 +22246,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22021,6 +22303,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22078,6 +22361,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22134,6 +22418,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22190,6 +22475,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22246,6 +22532,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22303,6 +22590,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22359,6 +22647,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22415,6 +22704,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22471,6 +22761,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22529,6 +22820,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22585,6 +22877,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22641,6 +22934,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22698,6 +22992,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22755,6 +23050,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22811,6 +23107,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22867,6 +23164,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22923,6 +23221,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -22979,6 +23278,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23035,6 +23335,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23091,6 +23392,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23148,6 +23450,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23204,6 +23507,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23260,6 +23564,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23316,6 +23621,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23374,6 +23680,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23430,6 +23737,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23487,6 +23795,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23544,6 +23853,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23601,6 +23911,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23657,6 +23968,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23715,6 +24027,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23772,6 +24085,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23828,6 +24142,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23884,6 +24199,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23941,6 +24257,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -23998,6 +24315,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24056,6 +24374,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24113,6 +24432,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24169,6 +24489,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24225,6 +24546,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24282,6 +24604,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24338,6 +24661,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24394,6 +24718,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24450,6 +24775,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24507,6 +24833,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24564,6 +24891,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24621,6 +24949,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24677,6 +25006,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24733,6 +25063,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24790,6 +25121,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24846,6 +25178,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24902,6 +25235,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -24958,6 +25292,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25014,6 +25349,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25072,6 +25408,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25128,6 +25465,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25184,6 +25522,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25241,6 +25580,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25297,6 +25637,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25353,6 +25694,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25411,6 +25753,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25468,6 +25811,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25524,6 +25868,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25580,6 +25925,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25636,6 +25982,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25693,6 +26040,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25749,6 +26097,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25809,6 +26158,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25866,6 +26216,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25922,6 +26273,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -25978,6 +26330,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26035,6 +26388,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26092,6 +26446,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26148,6 +26503,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26204,6 +26560,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26261,6 +26618,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26317,6 +26675,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26373,6 +26732,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26429,6 +26789,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26487,6 +26848,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26543,6 +26905,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26600,6 +26963,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26657,6 +27021,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26714,6 +27079,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26770,6 +27136,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26826,6 +27193,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26883,6 +27251,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26939,6 +27308,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -26996,6 +27366,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27044,6 +27415,64 @@
    }
   },
   {
+   "vgId": "vg-ga-p-000393",
+   "name": {
+    "full": "Josh Clark",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [
+     "100053"
+    ],
+    "votegaCandidateIds": [
+     "ga-house-100-2026-r-2"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-100-2026",
+     "candidateId": "ga-house-100-2026-r-2",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 100,
+     "party": "Republican",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": true,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "100053",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "seat+surname",
+     "confidence": "high",
+     "source": "scripts/lib/ga_match.py"
+    }
+   }
+  },
+  {
    "vgId": "vg-ga-p-000394",
    "name": {
     "full": "Chris Luchey",
@@ -27053,6 +27482,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27110,6 +27540,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27167,6 +27598,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27224,6 +27656,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27280,6 +27713,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27337,6 +27771,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27393,6 +27828,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27450,6 +27886,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27506,6 +27943,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27563,6 +28001,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27620,6 +28059,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27677,6 +28117,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27734,6 +28175,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27790,6 +28232,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27847,6 +28290,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27904,6 +28348,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -27961,6 +28406,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28018,6 +28464,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28075,6 +28522,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28132,6 +28580,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28188,6 +28637,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28245,6 +28695,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28301,6 +28752,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28357,6 +28809,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28414,6 +28867,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28471,6 +28925,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28528,6 +28983,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28585,6 +29041,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28641,6 +29098,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28698,6 +29156,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28755,6 +29214,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28812,6 +29272,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28869,6 +29330,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28926,6 +29388,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -28983,6 +29446,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29042,6 +29506,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29099,6 +29564,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29156,6 +29622,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29213,6 +29680,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29269,6 +29737,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29325,6 +29794,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29381,6 +29851,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29437,6 +29908,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29494,6 +29966,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29550,6 +30023,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29607,6 +30081,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29663,6 +30138,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29720,6 +30196,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29777,6 +30254,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29834,6 +30312,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29891,6 +30370,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -29948,6 +30428,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30005,6 +30486,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30061,6 +30543,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30118,6 +30601,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30175,6 +30659,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30231,6 +30716,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30288,6 +30774,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30345,6 +30832,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30401,6 +30889,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30458,6 +30947,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30515,6 +31005,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30572,6 +31063,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30629,6 +31121,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30685,6 +31178,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30742,6 +31236,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30799,6 +31294,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30856,6 +31352,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30912,6 +31409,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -30969,6 +31467,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31026,6 +31525,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31082,6 +31582,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31139,6 +31640,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31196,6 +31698,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31253,6 +31756,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31310,6 +31814,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31366,6 +31871,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31422,6 +31928,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31479,6 +31986,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31536,6 +32044,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31592,6 +32101,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31648,6 +32158,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31705,6 +32216,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31761,6 +32273,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31818,6 +32331,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31875,6 +32389,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31932,6 +32447,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -31989,6 +32505,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32045,6 +32562,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32103,6 +32621,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32160,6 +32679,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32216,6 +32736,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32274,6 +32795,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32331,6 +32853,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32387,6 +32910,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32444,6 +32968,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32501,6 +33026,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32557,6 +33083,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32614,6 +33141,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32670,6 +33198,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32727,6 +33256,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32784,6 +33314,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32841,6 +33372,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32898,6 +33430,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -32955,6 +33488,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33011,6 +33545,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33068,6 +33603,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33125,6 +33661,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33182,6 +33719,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33239,6 +33777,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33295,6 +33834,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33352,6 +33892,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33408,6 +33949,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33465,6 +34007,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33522,6 +34065,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33579,6 +34123,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33636,6 +34181,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33693,6 +34239,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33750,6 +34297,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33807,6 +34355,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33863,6 +34412,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33920,6 +34470,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -33976,6 +34527,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34033,6 +34585,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34090,6 +34643,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34147,6 +34701,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34204,6 +34759,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34261,6 +34817,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34317,6 +34874,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34374,6 +34932,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34430,6 +34989,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34487,6 +35047,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34543,6 +35104,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34599,6 +35161,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34656,6 +35219,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34713,6 +35277,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34769,6 +35334,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34826,6 +35392,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34883,6 +35450,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34939,6 +35507,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -34995,6 +35564,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35052,6 +35622,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35109,6 +35680,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35165,6 +35737,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35222,6 +35795,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35278,6 +35852,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35334,6 +35909,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35391,6 +35967,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35448,6 +36025,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35505,6 +36083,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35562,6 +36141,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35619,6 +36199,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35675,6 +36256,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35732,6 +36314,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35788,6 +36371,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35845,6 +36429,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35902,6 +36487,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -35959,6 +36545,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36015,6 +36602,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36071,6 +36659,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36127,6 +36716,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36183,6 +36773,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36239,6 +36830,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36295,6 +36887,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36352,6 +36945,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36408,6 +37002,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36465,6 +37060,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36521,6 +37117,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36578,6 +37175,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36635,6 +37233,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36692,6 +37291,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36749,6 +37349,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36806,6 +37407,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36863,6 +37465,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36920,6 +37523,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -36976,6 +37580,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37033,6 +37638,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37090,6 +37696,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37147,6 +37754,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37204,6 +37812,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37261,6 +37870,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37317,6 +37927,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37373,6 +37984,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37430,6 +38042,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37486,6 +38099,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37542,6 +38156,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37599,6 +38214,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37655,6 +38271,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37711,6 +38328,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37767,6 +38385,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37823,6 +38442,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37879,6 +38499,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37935,6 +38556,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -37991,6 +38613,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38047,6 +38670,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38104,6 +38728,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38160,6 +38785,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38216,6 +38842,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38273,6 +38900,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38329,6 +38957,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38386,6 +39015,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38442,6 +39072,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38498,6 +39129,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38555,6 +39187,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38611,6 +39244,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38667,6 +39301,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38724,6 +39359,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38771,6 +39407,64 @@
    }
   },
   {
+   "vgId": "vg-ga-p-000607",
+   "name": {
+    "full": "Furquan Stafford",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [
+     "104275"
+    ],
+    "votegaCandidateIds": [
+     "ga-senate-10-2026-r-1"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-senate-10-2026",
+     "candidateId": "ga-senate-10-2026-r-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia State Senate",
+     "district": 10,
+     "party": "Republican",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "104275",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "seat+surname",
+     "confidence": "high",
+     "source": "scripts/lib/ga_match.py"
+    }
+   }
+  },
+  {
    "vgId": "vg-ga-p-000608",
    "name": {
     "full": "Corey B Morgan",
@@ -38780,6 +39474,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38836,6 +39531,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38893,6 +39589,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -38949,6 +39646,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39005,6 +39703,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39061,6 +39760,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39118,6 +39818,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39174,6 +39875,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39230,6 +39932,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39287,6 +39990,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39343,6 +40047,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39399,6 +40104,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39456,6 +40162,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39513,6 +40220,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39569,6 +40277,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39626,6 +40335,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39682,6 +40392,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39738,6 +40449,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39795,6 +40507,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39852,6 +40565,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39908,6 +40622,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -39964,6 +40679,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40021,6 +40737,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40077,6 +40794,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40134,6 +40852,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40190,6 +40909,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40247,6 +40967,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40303,6 +41024,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40360,6 +41082,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40417,6 +41140,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40473,6 +41197,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40530,6 +41255,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40587,6 +41313,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40644,6 +41371,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40700,6 +41428,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40757,6 +41486,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40813,6 +41543,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40869,6 +41600,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40926,6 +41658,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -40983,6 +41716,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41039,6 +41773,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41096,6 +41831,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41152,6 +41888,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41209,6 +41946,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41266,6 +42004,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41322,6 +42061,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41379,6 +42119,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41436,6 +42177,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41493,6 +42235,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41549,6 +42292,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41606,6 +42350,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41663,6 +42408,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41720,6 +42466,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41776,6 +42523,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41832,6 +42580,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41889,6 +42638,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -41945,6 +42695,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42002,6 +42753,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42058,6 +42810,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42115,6 +42868,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42172,6 +42926,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42228,6 +42983,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42285,6 +43041,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42342,6 +43099,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42398,6 +43156,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42455,6 +43214,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42511,6 +43271,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42567,6 +43328,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42624,6 +43386,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42681,6 +43444,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42737,6 +43501,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42793,6 +43558,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42850,6 +43616,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42904,6 +43671,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -42965,6 +43733,7 @@
    },
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43035,6 +43804,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/3cfc8d4f-68d4-44b2-81f4-a162465e1aed",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/3cfc8d4f-68d4-44b2-81f4-a162465e1aed",
     "legisGaGovId": 5097,
     "ballotpediaId": "Adrienne_White_(Georgia)",
@@ -43088,6 +43858,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/8aa7ee05-bf64-4c51-8821-ad905d25741b",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/8aa7ee05-bf64-4c51-8821-ad905d25741b",
     "legisGaGovId": 5096,
     "ballotpediaId": "Alvin_Payton_Jr.",
@@ -43168,6 +43939,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/6ebda9ee-2203-4b66-9bb3-64d2307157a0",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/6ebda9ee-2203-4b66-9bb3-64d2307157a0",
     "legisGaGovId": 4933,
     "ballotpediaId": "Colton_Moore",
@@ -43221,6 +43993,7 @@
    },
    "ids": {
     "rosterId": "ocd-person/4161e949-6ea2-4df9-8248-cabcf40286ae",
+    "executiveId": null,
     "ocdPersonId": "ocd-person/4161e949-6ea2-4df9-8248-cabcf40286ae",
     "legisGaGovId": 4952,
     "ballotpediaId": "Shelly_Hutchinson",
@@ -43267,6 +44040,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43314,6 +44088,360 @@
    }
   },
   {
+   "vgId": "vg-ga-p-000691",
+   "name": {
+    "full": "Richard Woods",
+    "first": "Richard",
+    "last": "Woods"
+   },
+   "role": {
+    "level": "state",
+    "office": "statewide-executive",
+    "chamber": "executive",
+    "district": null,
+    "party": "Republican",
+    "status": null,
+    "title": "State School Superintendent"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": "exec:ga-woods-richard",
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "out-of-scope",
+     "confidence": null,
+     "note": "no PeachFile office mapping for this chamber"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000692",
+   "name": {
+    "full": "Tyler Harper",
+    "first": "Tyler",
+    "last": "Harper"
+   },
+   "role": {
+    "level": "state",
+    "office": "statewide-executive",
+    "chamber": "executive",
+    "district": null,
+    "party": "Republican",
+    "status": null,
+    "title": "Commissioner of Agriculture"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": "exec:ga-harper-tyler",
+    "ocdPersonId": null,
+    "legisGaGovId": 804,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "out-of-scope",
+     "confidence": null,
+     "note": "no PeachFile office mapping for this chamber"
+    },
+    "legisGaGovId": {
+     "method": "curated",
+     "confidence": "unreviewed",
+     "source": "assets/data/ga-executive.json",
+     "note": "Matched by surname and first name in legis.ga.gov GetMembersBySession (Senate 7, 2013-2022); not yet confirmed by a person"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000693",
+   "name": {
+    "full": "Barbara Rivera Holmes",
+    "first": "Barbara",
+    "last": "Rivera Holmes"
+   },
+   "role": {
+    "level": "state",
+    "office": "statewide-executive",
+    "chamber": "executive",
+    "district": null,
+    "party": "Republican",
+    "status": null,
+    "title": "Labor Commissioner"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": "exec:ga-rivera-holmes-barbara",
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "out-of-scope",
+     "confidence": null,
+     "note": "no PeachFile office mapping for this chamber"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000694",
+   "name": {
+    "full": "John King",
+    "first": "John",
+    "last": "King"
+   },
+   "role": {
+    "level": "state",
+    "office": "statewide-executive",
+    "chamber": "executive",
+    "district": null,
+    "party": "Republican",
+    "status": null,
+    "title": "Insurance Commissioner"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": "exec:ga-king-john",
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "out-of-scope",
+     "confidence": null,
+     "note": "no PeachFile office mapping for this chamber"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000695",
+   "name": {
+    "full": "Jason Shaw",
+    "first": "Jason",
+    "last": "Shaw"
+   },
+   "role": {
+    "level": "state",
+    "office": "statewide-executive",
+    "chamber": "executive",
+    "district": null,
+    "party": "Republican",
+    "status": null,
+    "title": "Public Service Commission - District 1 (Chairman)"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": "exec:ga-shaw-jason",
+    "ocdPersonId": null,
+    "legisGaGovId": 787,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "out-of-scope",
+     "confidence": null,
+     "note": "no PeachFile office mapping for this chamber"
+    },
+    "legisGaGovId": {
+     "method": "curated",
+     "confidence": "unreviewed",
+     "source": "assets/data/ga-executive.json",
+     "note": "Matched by surname and first name in legis.ga.gov GetMembersBySession (House 176, 2011-2018); not yet confirmed by a person"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000696",
+   "name": {
+    "full": "Alicia M. Johnson",
+    "first": "Alicia",
+    "last": "Johnson"
+   },
+   "role": {
+    "level": "state",
+    "office": "statewide-executive",
+    "chamber": "executive",
+    "district": null,
+    "party": "Democrat",
+    "status": null,
+    "title": "Public Service Commission - District 2"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": "exec:ga-johnson-alicia",
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "out-of-scope",
+     "confidence": null,
+     "note": "no PeachFile office mapping for this chamber"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000697",
+   "name": {
+    "full": "Peter Hubbard",
+    "first": "Peter",
+    "last": "Hubbard"
+   },
+   "role": {
+    "level": "state",
+    "office": "statewide-executive",
+    "chamber": "executive",
+    "district": null,
+    "party": "Democrat",
+    "status": null,
+    "title": "Public Service Commission - District 3"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": "exec:ga-hubbard-peter",
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "out-of-scope",
+     "confidence": null,
+     "note": "no PeachFile office mapping for this chamber"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000698",
+   "name": {
+    "full": "Lauren McDonald",
+    "first": "Lauren",
+    "last": "McDonald"
+   },
+   "role": {
+    "level": "state",
+    "office": "statewide-executive",
+    "chamber": "executive",
+    "district": null,
+    "party": "Republican",
+    "status": null,
+    "title": "Public Service Commission - District 4 (Vice Chairman)"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": "exec:ga-mcdonald-lauren",
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "out-of-scope",
+     "confidence": null,
+     "note": "no PeachFile office mapping for this chamber"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000699",
+   "name": {
+    "full": "Tricia Pridemore",
+    "first": "Tricia",
+    "last": "Pridemore"
+   },
+   "role": {
+    "level": "state",
+    "office": "statewide-executive",
+    "chamber": "executive",
+    "district": null,
+    "party": "Republican",
+    "status": null,
+    "title": "Public Service Commission - District 5"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": "exec:ga-pridemore-tricia",
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "out-of-scope",
+     "confidence": null,
+     "note": "no PeachFile office mapping for this chamber"
+    }
+   }
+  },
+  {
    "vgId": null,
    "name": {
     "full": "Alisha Adams Johnson",
@@ -43323,6 +44451,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43376,6 +44505,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43428,6 +44558,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43480,6 +44611,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43534,6 +44666,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43587,6 +44720,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43639,6 +44773,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43691,6 +44826,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43744,6 +44880,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43799,6 +44936,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43851,6 +44989,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43903,6 +45042,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -43957,6 +45097,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44009,6 +45150,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44063,6 +45205,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44117,6 +45260,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44171,6 +45315,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44223,6 +45368,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44275,6 +45421,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44327,6 +45474,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44379,6 +45527,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44433,6 +45582,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44485,6 +45635,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44540,6 +45691,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44585,59 +45737,6 @@
   {
    "vgId": null,
    "name": {
-    "full": "Furquan Stafford",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "rosterId": null,
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "ballotpediaId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "ga-senate-10-2026-r-1"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-senate-10-2026",
-     "candidateId": "ga-senate-10-2026-r-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia State Senate",
-     "district": 10,
-     "party": "Republican",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "no-match"
-     }
-    }
-   ],
-   "provenance": {
-    "vgId": {
-     "method": "unkeyed",
-     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
-    }
-   }
-  },
-  {
-   "vgId": null,
-   "name": {
     "full": "Grace Mcclain",
     "first": null,
     "last": null
@@ -44645,6 +45744,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44699,6 +45799,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44753,6 +45854,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44805,6 +45907,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44857,6 +45960,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44911,6 +46015,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -44966,6 +46071,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45019,6 +46125,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45074,6 +46181,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45129,6 +46237,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45183,6 +46292,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45236,6 +46346,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45288,6 +46399,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45340,6 +46452,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45396,6 +46509,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45451,6 +46565,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45505,6 +46620,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45558,6 +46674,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45612,6 +46729,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45664,6 +46782,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45718,6 +46837,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45771,6 +46891,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45825,6 +46946,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45878,6 +47000,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45933,6 +47056,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -45987,6 +47111,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46041,6 +47166,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46093,6 +47219,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46148,6 +47275,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46200,6 +47328,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46253,6 +47382,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46307,6 +47437,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46360,6 +47491,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46414,6 +47546,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46469,6 +47602,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46524,6 +47658,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46578,6 +47713,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46633,6 +47769,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46687,6 +47824,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46741,6 +47879,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46794,6 +47933,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46847,6 +47987,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46901,6 +48042,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -46953,6 +48095,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -47007,6 +48150,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -47061,6 +48205,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -47115,6 +48260,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -47170,6 +48316,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -47224,6 +48371,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -47276,6 +48424,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -47328,6 +48477,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -47381,6 +48531,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
@@ -47435,6 +48586,7 @@
    "role": null,
    "ids": {
     "rosterId": null,
+    "executiveId": null,
     "ocdPersonId": null,
     "legisGaGovId": null,
     "ballotpediaId": null,
