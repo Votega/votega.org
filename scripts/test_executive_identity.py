@@ -131,6 +131,15 @@ house_mcd = [p["vgId"] for p in people if p["ids"].get("legisGaGovId") == 4992]
 check("the PSC commissioner is not the House 26 member of the same name",
       (mcd not in house_mcd, bool(house_mcd)), (True, True))
 
+# --- the validator knows executives that are no longer in the roster ---------------------
+import validate_id_crosswalk as V  # noqa: E402
+
+jones_official = next(o for o in officials if o["name"] == "Burt Jones")
+check("a carried OCD id is known through ga-executive.json when the roster lacks the row",
+      jones_official["ocdPersonId"] in V.known_ocd_ids([], officials), True)
+check("...and is not invented when no executive carries it",
+      jones_official["ocdPersonId"] in V.known_ocd_ids([], []), False)
+
 # --- a roster executive nobody claims stops the build ------------------------------------
 try:
     B.officeholder_inputs([{"id": "ocd-person/orphan", "chamber": "executive", "name": "X"}],
