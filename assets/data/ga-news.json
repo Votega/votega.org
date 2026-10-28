@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-28T11:50:52.275410+00:00",
+    "generatedAt": "2026-10-28T17:39:25.650652+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,26 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 133,
+    "count": 136,
     "windowDays": 45,
-    "entityTagged": 83,
+    "entityTagged": 84,
     "topicCounts": {
+      "education": 13,
+      "healthcare": 14,
       "elections": 48,
       "courts": 17,
       "budget": 10,
       "surveillance": 2,
-      "healthcare": 12,
-      "education": 12,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
     "vg-ga-p-000361": {
       "name": "Penny Brown Reynolds",
       "url": null,
@@ -125,11 +130,6 @@
         "challenger-brad-raffensperger-gov-2026"
       ]
     },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
-    },
     "vg-ga-p-000262": {
       "name": "Lucy McBath",
       "url": null,
@@ -174,6 +174,54 @@
   },
   "items": [
     {
+      "id": "a72532d93fa5",
+      "title": "Congresswoman Nikema Williams Condemns Trump’s Continued Effort to Remove Federal Reserve Governor Lisa Cook",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-condemns-trumps-continued-effort-to-remove-federal-reserve-governor-lisa-cook",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-10-28T15:31:41+00:00",
+      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) led 11 Congressional colleagues in a letter condemning President Trump’s October 7 memorandum establishing a “committee of inquiry” to investig",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": []
+    },
+    {
+      "id": "54b9793493f9",
+      "title": "3 people, including two minors, arrested in connection with a school shooting plot in metro Atlanta",
+      "url": "https://www.gpb.org/news/2026/10/28/3-people-including-two-minors-arrested-in-connection-school-shooting-plot-in-metro",
+      "source": "GPB News",
+      "publishedAt": "2026-10-28T14:57:00+00:00",
+      "snippet": "Police in Georgia say three people, including two juveniles, have been arrested in connection with a plot to carry out a shooting at a high school in metro Atlanta.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "a52e2630fd48",
+      "title": "As the monthly cost for health insurance goes up, Georgia proposes its own financial assistance",
+      "url": "https://www.gpb.org/news/2026/10/28/the-monthly-cost-for-health-insurance-goes-georgia-proposes-its-own-financial",
+      "source": "GPB News",
+      "publishedAt": "2026-10-28T12:56:00+00:00",
+      "snippet": "The state is hoping to amend its reinsurance program and take control of Marketplace subsidies, but needs approval from the federal government.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "583a43ced99d",
+      "title": "Georgia health department reports 25 cases of measles so far this year",
+      "url": "https://www.gpb.org/news/2026/10/28/georgia-health-department-reports-25-cases-of-measles-so-far-year",
+      "source": "GPB News",
+      "publishedAt": "2026-10-28T12:07:00+00:00",
+      "snippet": "The Georgia Department of Public Health reported three more cases of measles in Macon County.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
       "id": "bc24c74da39d",
       "title": "Fleming, Brown Reynolds compete to be Georgia’s next top elections officer",
       "url": "https://georgiarecorder.com/2026/10/28/fleming-brown-reynolds-compete-to-be-georgias-next-top-elections-officer/",
@@ -210,16 +258,6 @@
       "source": "The Current GA",
       "publishedAt": "2026-10-27T21:07:15+00:00",
       "snippet": "A Georgia Board of Natural Resources committee recommended limiting private recreational docks to 1,000 feet following intense opposition to a proposal that would have extended them up to 1,650 feet.\n",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "d437ba9ed0ab",
-      "title": "Atlanta mahjong players build community one tile at a time",
-      "url": "https://www.gpb.org/news/2026/10/27/atlanta-mahjong-players-build-community-one-tile-at-time",
-      "source": "GPB News",
-      "publishedAt": "2026-10-27T20:25:00+00:00",
-      "snippet": "The Chinese tile game has become a popular option for people in Georgia interested in a new hobby.",
       "entityIds": [],
       "topics": []
     },
