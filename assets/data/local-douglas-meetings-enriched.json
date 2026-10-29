@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-26T15:34:22Z",
+  "generatedAt": "2026-10-29T15:40:10Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -12,18 +12,18 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-20",
+  "lastActivity": "2026-11-04",
   "topicTotals": {
+   "comprehensive-plan": 2,
+   "development": 4,
+   "rezoning": 4,
    "annexation": 5,
-   "contract": 15,
-   "millage-budget": 18,
+   "contract": 14,
+   "millage-budget": 17,
    "variance": 6,
-   "rezoning": 3,
-   "development": 3,
-   "appointment": 7,
-   "comprehensive-plan": 1,
+   "appointment": 6,
    "data-center": 2,
-   "alpr": 4
+   "alpr": 3
   },
   "dataCenterItems": [
    {
@@ -38,6 +38,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Planning Zoning and BOC",
+    "date": "2026-11-04",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7612,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning"
+    ],
+    "excerpt": "… 2 November 4, 2026 M2026- Brightstar Development Partners – a request for a Future Land Use 02/Z2026-89 Map amendment from MUC (mixed use corridor) to SL (suburban living) and a rezoning from R-LD …",
+    "excerptTerm": "future land use"
+   },
    {
     "title": "BOC Commission Meeting",
     "date": "2026-10-20",
@@ -140,7 +152,7 @@
     ]
    }
   ],
-  "landUseMeetings": 13,
+  "landUseMeetings": 14,
   "alprItems": [
    {
     "title": "BOC Commission Meeting",
@@ -171,19 +183,61 @@
     ],
     "excerpt": "… 7. Approval of a corrective total amount for the previously approved Comcast Smart Solutions contract for Eagle Eye Avigilon video management hardware in the amount of $1,796.40, (Difference of $46.70) with the total monthly service amount …",
     "excerptTerm": "avigilon"
-   },
-   {
-    "title": "BOC Work Session",
-    "date": "2026-07-20",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7435,plainText=false)",
-    "terms": [
-     "avigilon"
-    ]
    }
   ],
-  "alprMeetings": 4
+  "alprMeetings": 3
  },
  "meetings": [
+  {
+   "id": "1378",
+   "date": "2026-11-04",
+   "body": "Planning & Zoning",
+   "title": "Planning Zoning and BOC",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7612,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7612,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 5374,
+   "pdfSha256": "df4e6400539c69d8439cd7ea9dd45b579d779159d5090a97a0446ef2641fbf7c",
+   "topics": {
+    "comprehensive-plan": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "future land use",
+    "mixed use",
+    "rezon",
+    "subdivision",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "future land use",
+     "excerpt": "… 2 November 4, 2026 M2026- Brightstar Development Partners – a request for a Future Land Use 02/Z2026-89 Map amendment from MUC (mixed use corridor) to SL (suburban living) and a rezoning from R-LD …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "mixed use",
+     "excerpt": "… 026 M2026- Brightstar Development Partners – a request for a Future Land Use 02/Z2026-89 Map amendment from MUC (mixed use corridor) to SL (suburban living) and a rezoning from R-LD (residential low-density) to R-MD …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… rove the minutes from the October 6, 2026 zoning meeting. AGENDA Z2026-81 Anmi De La Rosa Lugo – a request for a rezoning from R-LD-C (residential low-density w/conditions) to C-H (heavy commercial) for a 5,0 …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1179",
    "date": "2026-10-20",
@@ -1272,63 +1326,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1135",
-   "date": "2026-07-20",
-   "body": "Board of Commissioners",
-   "title": "BOC Work Session",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7435,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7435,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 6512,
-   "pdfSha256": "b09bd8b93476941ffae653e8792c726f17447ea6d5d2d5a0c79733fd34428126",
-   "topics": {
-    "alpr": 1,
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "alpr",
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "avigilon",
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "alpr": {
-     "term": "avigilon",
-     "excerpt": "… 7. Approval of a corrective total amount for the previously approved Comcast Smart Solutions contract for Eagle Eye Avigilon video management hardware in the amount of $1,796.40, (Difference of $46.70) with the total monthly service amount …",
-     "context": "public-comment"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… s account and authorize the Chairman to sign all related documents pending final legal review. (Anthony Choice) 21. Appointment to the Douglas County Housing Authority. (Sherri Mathis) APPROVAL OF EXPENSES 22. Approval of Commissioner Whitney …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… d authorize the Chairman to sign all related documents pending final legal review. (Justin Ricks) 13. Approval of a contract with Daikin Applied Americas, Inc. for a maintenance agreement at the Boundary Waters Aquatic Center in the amount …",
-     "context": "public-comment"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… 2 July 20, 2026 30, 2027 for Douglas CORE, establish the budget and authorize the Chairman to sign all related documents pending final legal review. (Jill Hopson) 8. Approval to ac …",
-     "context": "public-comment"
-    }
-   },
-   "flags": [
-    "millage-budget",
-    "alpr"
    ],
    "dataCenterItems": []
   }
