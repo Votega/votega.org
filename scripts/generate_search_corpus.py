@@ -79,13 +79,20 @@ def clean(value):
     return str(value).strip()
 
 
-def add(records, seen, title, desc, category, url):
+def add(records, seen, title, desc, category, url, slug_name=None):
     """Append a record, skipping blanks and duplicate title+url pairs.
 
     Deduping on (title, url) rather than url alone lets several people share a
     single overview page (e.g. the GA executives all point at
     ga-executive.html) while still collapsing the same candidate listed in both
     the primary and general phase of one race.
+
+    `slug_name` pins the page URL to a name other than the displayed one.
+    build_entity_pages.py slugs a candidate page from this record's title, so
+    switching 78 candidates to the name printed on their ballot would have moved
+    66 live URLs days before the election. The ballot name is what a voter needs
+    to SEE; the URL only needs to be stable, so the two were separated. Dropping
+    `slug_name` later is a deliberate rename, and wants redirect_from.
     """
     title = clean(title)
     url = clean(url)
@@ -95,14 +102,16 @@ def add(records, seen, title, desc, category, url):
     if key in seen:
         return
     seen.add(key)
-    records.append(
-        {
-            "title": title,
-            "desc": clean(desc),
-            "category": category,
-            "url": url,
-        }
-    )
+    record = {
+        "title": title,
+        "desc": clean(desc),
+        "category": category,
+        "url": url,
+    }
+    slug_name = clean(slug_name)
+    if slug_name and slug_name != title:
+        record["slugName"] = slug_name
+    records.append(record)
 
 
 def build_ga_legislators(records, seen):
@@ -260,7 +269,15 @@ def build_races_and_candidates(records, seen):
                             f"&memberId={quote(mid, safe='')}"
                             f"&memberSource={quote(src, safe='')}"
                         )
+                    # `name` is the ballot name; `legalName` is what races.json
+                    # carried before the rename. Both reach the record: the ballot
+                    # name is displayed and searched, the legal name goes in desc so
+                    # someone searching "Larry Parrish" still finds Butch Parrish,
+                    # and pins the URL, which was slugged from it before.
+                    legal = clean(cand.get("legalName"))
                     desc_bits = [b for b in [clean(cand.get("party")) or party, title] if b]
+                    if legal and legal != name:
+                        desc_bits.append(legal)
                     add(
                         records,
                         seen,
@@ -268,6 +285,7 @@ def build_races_and_candidates(records, seen):
                         desc=" — ".join(desc_bits),
                         category="Candidate",
                         url=url,
+                        slug_name=legal,
                     )
 
 

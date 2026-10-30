@@ -368,7 +368,12 @@ def plan_candidate_permalinks(records, races):
         cid = qs_id(rec["url"])
         if not cid:  # federal incumbent: redirected to /us-congress/, no page of its own
             continue
-        name = rec.get("title") or ""
+        # slugName, when present, is the name this page was ALREADY slugged from
+        # before the candidate's displayed name became the one on their ballot.
+        # Preferring it keeps 66 live URLs where they are; the title is what the
+        # page shows. Dropping slugName from the search corpus is what turns this
+        # into a real rename, and that wants redirect_from on the old paths.
+        name = rec.get("slugName") or rec.get("title") or ""
         desc = rec.get("desc") or ""
         race = (index.get(cid) or (None, {}))[1]
         rid = race.get("id") or ""
