@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-26T15:34:22Z",
+  "generatedAt": "2026-10-29T15:40:10Z",
   "source": "Carroll County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Carroll County",
   "count": 25
@@ -13,14 +13,14 @@
   ],
   "lastActivity": "2026-11-05",
   "topicTotals": {
-   "variance": 6,
+   "variance": 5,
+   "contract": 9,
    "special-land-use": 6,
    "appointment": 3,
-   "contract": 9,
    "millage-budget": 7,
    "annexation": 3,
    "data-center": 2,
-   "rezoning": 6
+   "rezoning": 5
   },
   "dataCenterItems": [
    {
@@ -139,25 +139,9 @@
     ],
     "excerpt": "… licant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-04-01 and C-26-04-01: Rezoning request with a Conditional Use to rezone 1 acre from Agriculture to Industrial for bulk storage of propane at 2904 S …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Board of Commissioners Special Called Meeting",
-    "date": "2026-04-14",
-    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2895,plainText=false)",
-    "tags": [
-     "rezoning"
-    ]
-   },
-   {
-    "title": "Board of Appeals",
-    "date": "2026-04-09",
-    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2873,plainText=false)",
-    "tags": [
-     "variance"
-    ]
    }
   ],
-  "landUseMeetings": 16,
+  "landUseMeetings": 14,
   "alprItems": [],
   "alprMeetings": 0
  },
@@ -192,6 +176,54 @@
    "flags": [
     "land-use"
    ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "838",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3036,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3036,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2394,
+   "pdfSha256": "718d6f09cc6bce522571712339be6195fb9bb861868e1a6e6300d0a3ad22953c",
+   "topics": {
+    "contract": 1
+   },
+   "tags": [
+    "contract"
+   ],
+   "matchedTerms": [
+    "contract"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… er to replace the Victory Church Road Bridge, and authorize the Chairman to negotiate and execute the contract and take all necessary action in connection with the project. -Danny Yates, Public Works Director …",
+     "context": "public-comment"
+    }
+   },
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "825",
+   "date": "2026-10-29",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session  (Cancelled)",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3035,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3035,plainText=false)",
+   "textMethod": "ocr",
+   "textChars": 266,
+   "pdfSha256": "14a92c63331c0864384e493464cf7630fe292db3cc369a4fa242a584e7499025",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
    "dataCenterItems": []
   },
   {
@@ -1008,78 +1040,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "782",
-   "date": "2026-04-14",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Special Called Meeting",
-   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2895,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2895,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4608,
-   "pdfSha256": "5cf7961e14219cc699a9e82def764de68596b8b8fd93b13a555da2b8227aedd1",
-   "topics": {
-    "contract": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "contract",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "contract",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… r Solid Waste Hauling Services from convenience centers to the transfer station and termination of renewal of contract with the current vendor, and authorize the Chairman to negotiate and execute the contract and to take all …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… take any action on the comments...…. speakers are limited to 3 minutes. 9. ZONING SESSION 9.I. Z-26-03-02: Rezoning request for 3.5 acres from Agriculture to Residential (2.5 acres) and Commercial (1 acre), for an existing …",
-     "context": "public-comment"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "757",
-   "date": "2026-04-09",
-   "body": "Board of Appeals",
-   "title": "Board of Appeals",
-   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2873,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2873,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 998,
-   "pdfSha256": "e49d972361f3fede69dfd6c8e1c005ec16d35e433cfeddc3c38cf7f39b10c9b2",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "… shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-04-01: Intrafamily-Lot Size Variance, zoned Agriculture, to split off 2 acres from 22.82 acres, which is less than the required 4 acre minimum. This propert …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

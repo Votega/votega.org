@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-26T15:34:22Z",
+  "generatedAt": "2026-10-29T15:40:11Z",
   "source": "Henry County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Henry County",
   "count": 25
@@ -12,14 +12,14 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-20",
+  "lastActivity": "2026-11-03",
   "topicTotals": {
    "appointment": 5,
-   "comprehensive-plan": 4,
    "contract": 15,
+   "development": 9,
    "millage-budget": 16,
    "rezoning": 9,
-   "development": 9,
+   "comprehensive-plan": 3,
    "special-land-use": 1,
    "variance": 3,
    "annexation": 4,
@@ -38,8 +38,19 @@
   "landUseItems": [
    {
     "title": "Board of Commissioners Meeting",
+    "date": "2026-11-03",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2684,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning"
+    ],
+    "excerpt": "… e reasonable accommodations for those persons. and the request is for a single-family conservation subdivision. District III (Presenter: Alexius Jones, Planner II)(Exhibit 15) B. SU-26-01 (Publi …",
+    "excerptTerm": "subdivision"
+   },
+   {
+    "title": "Board of Commissioners Meeting",
     "date": "2026-10-20",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2670,plainText=false)",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2679,plainText=false)",
     "tags": [
      "comprehensive-plan",
      "rezoning"
@@ -175,18 +186,6 @@
     ],
     "excerpt": "… REGULAR AGENDA) AX-26-02 (Not a Public Hearing) The City of McDonough has received a request for annexation of properties at 820 and 964 Racetrack Road, consisting of 79.04 +/- acres in Land Lot 169 of the 7th Distri …",
     "excerptTerm": "annexation"
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-03-17",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2463,plainText=false)",
-    "tags": [
-     "comprehensive-plan",
-     "development",
-     "rezoning"
-    ],
-    "excerpt": "… . Ordinance 26-01 B. COMP-AM-26-01 (Public Hearing) Resolution to amend the Henry County Comprehensive Plan to modify text and policy language to ensure consistency with the adopted 2026 Unified Land Devel …",
-    "excerptTerm": "comprehensive plan"
    }
   ],
   "landUseMeetings": 15,
@@ -216,16 +215,82 @@
  },
  "meetings": [
   {
+   "id": "822",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2684,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2684,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 12448,
+   "pdfSha256": "eeaf25e81aed3cec0123f17371d7d8e1388ebadc1861fa676f61cbc6b99c9c6a",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "reappoint",
+    "rezon",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Director, Transportation Planning; and Erin Thoresen, Consultant with Gresham Smith) VIII. Appointments A. District III Henry County Water Authority Appointment: Charles Wesley Cobb Jr …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… $68,534 for roof replacement at the Heritage Park Veterans Museum, utilizing Omnia Partners MICPA Contract with funding provided through Restricted Hotel/Motel Taxes. (Presenter: Lynn Planchon, Capital Projec …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… e reasonable accommodations for those persons. and the request is for a single-family conservation subdivision. District III (Presenter: Alexius Jones, Planner II)(Exhibit 15) B. SU-26-01 (Publi …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ure, LLC in the amount of $169,015.17, for the Burg Road improvements project and a budget amendment in the amount of $50,000. SPLOST V (SP5131) District I (Presenter: Dana Holder, SPLOST Depu …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… lanning & Zoning A. RZ-26-03 (Public Hearing) David Curry of McDonough, GA requests a rezoning from RA (Residential Agricultural) to R-3 (Single Family Residential) for property located at 238 …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
+  {
    "id": "821",
    "date": "2026-10-20",
    "body": "Board of Commissioners",
    "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2670,plainText=false)",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2679,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2670,plainText=false)",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2679,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 14322,
-   "pdfSha256": "56195a5dff4c2dbb1fb0ac7a6a96b57458f87a642e43365302578f40d8a11f23",
+   "textChars": 11960,
+   "pdfSha256": "e814de7dfc4b7b131747dfce33edee51f3633fe3b3efd781b53cc52d45ea36be",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
@@ -251,7 +316,7 @@
    "topicExcerpts": {
     "appointment": {
      "term": "appoint",
-     "excerpt": "… mal Care and Control)(Exhibit 1) Board of Commissioners A. Resolution appointing an Executive Assistant to the Henry County Board of Commissioners. (Presenter: Carlotta Harrell, C …",
+     "excerpt": "… imal Care and Control)(Exhibit 1) Resolution 26-363 Board of Commissioners A. Resolution appointing an Executive Assistant to the Henry County Board of Commissioners. (Presenter: Carlotta Harrell, Chairperso …",
      "context": "agenda-action"
     },
     "comprehensive-plan": {
@@ -261,12 +326,12 @@
     },
     "contract": {
      "term": "contract",
-     "excerpt": "… Inc. in the amount of $204,987.13 for the future Community Resource Center, utilizing OMNIA Partners Contract #3341; funding for this project shall be provided through the County’s American Rescue Plan Act (ARPA …",
+     "excerpt": "… Inc. in the amount of $204,987.13 for the future Community Resource Center, utilizing OMNIA Partners Contract #3341; funding for this project shall be provided through the County’s American Rescue Plan Act (ARPA) funds. …",
      "context": "agenda-action"
     },
     "millage-budget": {
      "term": "budget",
-     "excerpt": "… AR AGENDA VII. Financial Services A. Resolution approving an update to the FY27 General Fund budget to recognize deferred revenue items as revenue items. (Presenter: Joy Robinson, CFO)(Exhibit …",
+     "excerpt": "… 6-0-0. REGULAR AGENDA VII. Financial Services A. Resolution approving an update to the FY27 General Fund budget to recognize deferred revenue items as revenue items. (Presenter: Joy Robinson, CFO)(Exhibit 9) …",
      "context": "agenda-action"
     },
     "rezoning": {
@@ -1306,80 +1371,6 @@
      "excerptTerm": "data center"
     }
    ]
-  },
-  {
-   "id": "807",
-   "date": "2026-03-17",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2463,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2463,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 15632,
-   "pdfSha256": "06a8233a3d3a869af6533fa0d9e0dc5f48e83a56bd85111d6ea19b3c115d661c",
-   "topics": {
-    "appointment": 1,
-    "comprehensive-plan": 1,
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "appointment",
-    "comprehensive-plan",
-    "contract",
-    "development",
-    "millage-budget",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "comprehensive plan",
-    "contract",
-    "reappoint",
-    "rezon",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Director) E. Safe Haven Baby Boxes Presentation (Presenter: Deputy Chief Frank Robinson/HCFR) VIII. Appointments A. Council on Aging Appointment(s): 4-year term 1) BOC Chair - Reappointment of Joni McRae …",
-     "context": "unknown"
-    },
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… . Ordinance 26-01 B. COMP-AM-26-01 (Public Hearing) Resolution to amend the Henry County Comprehensive Plan to modify text and policy language to ensure consistency with the adopted 2026 Unified Land Devel …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… feet of Driveway Easement, more or less, in Land Lots 191 of the 12th District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19 (Fairview Road - Phase I …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… the 7th District. The property consists of 143.41 +/- acres and the request is for single-family residential subdivision. District 1. Announcement #2: We have updated Exhibit 2 which is an ARC Grant. We will be author …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… s A. March 31, 2026 is a regularly-scheduled BOC Meeting at 9:00 a.m. B. April 14, 2026 is a Called Budget Workshop Meeting at 4:00 p.m. C. April 14, 2026 is a regularly-scheduled BOC Meeting at 6:30 p.m. XVIII. A …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… licant: RZ-24-31 (Public Hearing) TABLED Dean Conn of Grovetown, GA requests a rezoning from RA (Residential Agricultural) to RA (Residential Agricultural) and R-1 (Single-Family Resid …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
   }
  ]
 }

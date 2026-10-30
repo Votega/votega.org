@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-26T15:34:08Z",
+  "generatedAt": "2026-10-29T15:39:52Z",
   "source": "DeKalb County (Legistar structured API)",
   "place": "DeKalb County",
   "count": 25
@@ -12,17 +12,17 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-27",
+  "lastActivity": "2026-11-05",
   "topicTotals": {
-   "rezoning": 55,
-   "appointment": 122,
-   "contract": 781,
-   "special-land-use": 42,
+   "rezoning": 63,
+   "special-land-use": 49,
+   "comprehensive-plan": 7,
+   "appointment": 108,
+   "contract": 732,
    "development": 24,
-   "millage-budget": 22,
+   "millage-budget": 20,
    "data-center": 35,
-   "alpr": 10,
-   "comprehensive-plan": 6
+   "alpr": 10
   },
   "dataCenterItems": [
    {
@@ -90,6 +90,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-11-05",
+    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4535&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+    "tags": [
+     "comprehensive-plan",
+     "rezoning",
+     "special-land-use"
+    ],
+    "excerpt": "… anning and Sustainability for a text amendment to amend Chapter 01: Issues, Opportunities, & Goals of the Comprehensive Land Use Plan. This amendment is for the adoption of the Comprehensive Housing Plan and its vision, goals, and strategies for address …",
+    "excerptTerm": "land use plan"
+   },
    {
     "title": "Board of Commissioners",
     "date": "2026-10-27",
@@ -179,7 +191,7 @@
     "excerptTerm": "subdivision"
    }
   ],
-  "landUseMeetings": 21,
+  "landUseMeetings": 22,
   "alprItems": [
    {
     "title": "Board of Commissioners",
@@ -271,14 +283,224 @@
  },
  "meetings": [
   {
+   "eventId": 4535,
+   "date": "2026-11-05",
+   "body": "Planning Commission",
+   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4535&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+   "itemCount": 24,
+   "topics": {
+    "rezoning": 6,
+    "special-land-use": 7,
+    "comprehensive-plan": 1
+   },
+   "matchedTerms": [
+    "land use permit",
+    "land use plan",
+    "rezon",
+    "slup",
+    "special land use"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "Commission District(s): 3 and 6 Application of Eisenhower Services, Inc. c/o Tracy Swearington, Sr. to rezone property from Tier 4a of the Bouldercrest Overlay District within the Soapstone Historic District with an underlying M …",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "special land use",
+     "excerpt": "Commission District(s): 4 and 7 Application of Rooted in Christ Academy, LLC c/o Chiquita Stokes for a Special Land Use Permit (SLUP) to allow a child daycare facility for up to six children in the R-100 (Residential Medium Lot-100) zoning …",
+     "context": "agenda-action"
+    },
+    "comprehensive-plan": {
+     "term": "land use plan",
+     "excerpt": "… anning and Sustainability for a text amendment to amend Chapter 01: Issues, Opportunities, & Goals of the Comprehensive Land Use Plan. This amendment is for the adoption of the Comprehensive Housing Plan and its vision, goals, and strategies for address …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "Commission District(s): 3 and 6 Application of Eisenhower Services, Inc. c/o Tracy Swearington, Sr. to rezone property from Tier 4a of the Bouldercrest Overlay District within the ",
+     "matterFile": "2026-0151",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "3 and 6 Application of Eisenhower Services, Inc. c/o Tracy Swearington, Sr. to rezone property from Tier 4a of the Bouldercrest Overlay District within the Soapstone Historic District with an underlying M (Industrial) zoning district to Tier 5 of the Bouldercrest Overlay District within the Soapstone Historic District with an underlying R-100 (Residential Medium Lot-100) zoning district to allow a single-family, residential development, at 1680, 1690 and 1700 Henrico Road"
+    },
+    {
+     "title": "Commission District(s): 4 and 7 Application of Rooted in Christ Academy, LLC c/o Chiquita Stokes for a Special Land Use Permit (SLUP) to allow a child daycare facility for up to si",
+     "matterFile": "2026-0712",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "4 and 7 Application of Rooted in Christ Academy, LLC c/o Chiquita Stokes for a Special Land Use Permit (SLUP) to allow a child daycare facility for up to six children in the R-100 (Residential Medium Lot-100) zoning district, at 6706 Princeton Park Trail"
+    },
+    {
+     "title": "Commission District(s): 4 and 6 Application of Jared Samples to rezone property from C-1 (Local Commercial) zoning district to MR-2 (Medium Density Residential-2) zoning district t",
+     "matterFile": "2026-1100",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "4 and 6 Application of Jared Samples to rezone property from C-1 (Local Commercial) zoning district to MR-2 (Medium Density Residential-2) zoning district to allow residential development, at 5561-5567 Memorial Drive"
+    },
+    {
+     "title": "Commission District(s): 4 and 6 Application of David Metzger to rezone property from R-85 (Residential Medium Lot-85) zoning district to OIT (Office-Institutional-Transitional) zon",
+     "matterFile": "2026-1102",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "4 and 6 Application of David Metzger to rezone property from R-85 (Residential Medium Lot-85) zoning district to OIT (Office-Institutional-Transitional) zoning district to allow a child daycare center, for more than seven (7) children, at 3970 Norman Road"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): All Districts Application of the Director of Planning and Sustainability to adopt the 2027-28 Zoning, Special Land Use Permit (SLUP), and Land Use Calendar ",
+     "matterFile": "2026-1260",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "All Districts Application of the Director of Planning and Sustainability to adopt the 2027-28 Zoning, Special Land Use Permit (SLUP), and Land Use Calendar and Resolution. This text amendment is County-wide"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): All Districts Application of the Director of Planning and Sustainability for a text amendment to amend Chapter 01: Issues, Opportunities, & Goals of the Com",
+     "matterFile": "2026-1261",
+     "matterType": "Ordinance",
+     "tags": [
+      "comprehensive-plan"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "All Districts Application of the Director of Planning and Sustainability for a text amendment to amend Chapter 01: Issues, Opportunities, & Goals of the Comprehensive Land Use Plan. This amendment is for the adoption of the Comprehensive Housing Plan and its vision, goals, and strategies for addressing housing affordability and housing quality challenges. This text amendment is County-wide"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 2 and 6 Application of Vipin Bhimji c/o Battle Law, P.C. to rezone property from R-100 (Residential Medium Lot-100) zoning district to RSM (Small Lot Reside",
+     "matterFile": "2026-1263",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "2 and 6 Application of Vipin Bhimji c/o Battle Law, P.C. to rezone property from R-100 (Residential Medium Lot-100) zoning district to RSM (Small Lot Residential Mix) zoning district to allow the development of single-family homes, at 3430 N. Druid Hills Road"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 3 and 7 Application of Cultivate Communities c/o Battle Law, P.C. to rezone property from the R-100 (Residential Medium Lot-100) zoning district to the RSM ",
+     "matterFile": "2026-1264",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "3 and 7 Application of Cultivate Communities c/o Battle Law, P.C. to rezone property from the R-100 (Residential Medium Lot-100) zoning district to the RSM (Small Lot Residential Mix) zoning district to allow a residential development"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 3 and 6 Application of Old Dominion Freight Line c/o Battle Law, P.C. for a Special Land Use Permit (SLUP) to allow a maintenance shop and trailer parking i",
+     "matterFile": "2026-1265",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "3 and 6 Application of Old Dominion Freight Line c/o Battle Law, P.C. for a Special Land Use Permit (SLUP) to allow a maintenance shop and trailer parking in Tier 4 of the Bouldercrest Overlay District and the M (Light Industrial) zoning district, at 4271 Bowman Industrial Court"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 3 and 6 Application of Safe Haven Transitional, Inc. c/o Battle Law, P.C. for a Special Land Use Permit (SLUP) to allow an office building in Tier 5 Corrido",
+     "matterFile": "2026-1266",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "3 and 6 Application of Safe Haven Transitional, Inc. c/o Battle Law, P.C. for a Special Land Use Permit (SLUP) to allow an office building in Tier 5 Corridor 1 of the Bouldercrest Overlay District and the C-1 (Local Commercial) zoning district, at 2001 River Road"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 5 and 7 Application of Reginald Crayton to rezone property from RSM (Small Lot Residential Mix) zoning district to the R-85 (Residential Medium Lot-85) zoni",
+     "matterFile": "2026-1267",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "5 and 7 Application of Reginald Crayton to rezone property from RSM (Small Lot Residential Mix) zoning district to the R-85 (Residential Medium Lot-85) zoning district to allow the expansion of an existing place of worship, at 4710 Mandy Wicker Lane"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 5 and 7 Application of Reginald Crayton for a Special Land Use Permit (SLUP) to allow the expansion of an existing place of worship in the R-85 (Residential",
+     "matterFile": "2026-1268",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "5 and 7 Application of Reginald Crayton for a Special Land Use Permit (SLUP) to allow the expansion of an existing place of worship in the R-85 (Residential Medium Lot-85) zoning district, 4710 Mandy Wicker Lane; 1821 S. Hairston Road"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow fuel pumps in Tier 1 of the Bouldercrest Overlay District and the C-1 (Loca",
+     "matterFile": "2026-1269",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow fuel pumps in Tier 1 of the Bouldercrest Overlay District and the C-1 (Local Commercial) zoning district, at 2510 Bouldercrest Road"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow an accessory alcohol outlet Tier 1 of the Bouldercrest Overlay District and",
+     "matterFile": "2026-1270",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow an accessory alcohol outlet Tier 1 of the Bouldercrest Overlay District and in the C-1 (Local Commercial) zoning district, at 2510 Bouldercrest Road"
+    }
+   ]
+  },
+  {
    "eventId": 4495,
    "date": "2026-10-27",
    "body": "Board of Commissioners",
    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4495&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-   "itemCount": 140,
+   "itemCount": 150,
    "topics": {
-    "rezoning": 2,
-    "appointment": 4,
+    "rezoning": 4,
+    "appointment": 6,
     "contract": 39,
     "special-land-use": 1,
     "development": 1
@@ -332,9 +554,9 @@
      "tags": [
       "rezoning"
      ],
-     "passed": null,
-     "action": null,
-     "mover": null,
+     "passed": "Pass",
+     "action": "Tabled",
+     "mover": "Ted Terry",
      "districts": "3 and 6 Application of Tikay Investments, LLC c/o Battle Law, P.C. to rezone properties from R-75 (Residential Medium Lot-75) zoning district to MR-1 (Medium Density Residential-1) zoning district to allow for a mixed residential community, at 2666, 2674, 2682 and 2690 Gresham Road"
     },
     {
@@ -344,9 +566,9 @@
      "tags": [
       "special-land-use"
      ],
-     "passed": null,
-     "action": null,
-     "mover": null,
+     "passed": "Pass",
+     "action": "Approved with conditions",
+     "mover": "Chakira Johnson",
      "districts": "4 and 7 Application of Lorraine Canada for a Special Land Use Permit (SLUP) to allow a drive through for a restaurant in the C-1 (Local Commercial) zoning district and Tier 2 of the Hidden Hills Overlay District, at 4850 Redan Road"
     },
     {
@@ -357,10 +579,34 @@
       "development",
       "rezoning"
      ],
-     "passed": null,
-     "action": null,
-     "mover": null,
+     "passed": "Pass",
+     "action": "Approved with conditions",
+     "mover": "Michelle Long Spears",
      "districts": "2 and 6 Application of Chad Jacobs to rezone property from O-I (Office-Institutional) zoning district to MR-1 (Medium Density Residential-1) zoning district to allow for a single-family attached (townhome) development, at 729 Old Briarcliff Road"
+    },
+    {
+     "title": "Commission District(s): 3 and 6 Application of Tikay Investments, LLC c/o Battle Law, P.C. to rezone properties from R-75 (Residential Medium Lot-75) zoning district to MR-1 (Mediu",
+     "matterFile": "2026-0143",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": "Pass",
+     "action": "Taken off table",
+     "mover": "Nicole Massiah",
+     "districts": "3 and 6 Application of Tikay Investments, LLC c/o Battle Law, P.C. to rezone properties from R-75 (Residential Medium Lot-75) zoning district to MR-1 (Medium Density Residential-1) zoning district to allow for a mixed residential community, at 2666, 2674, 2682 and 2690 Gresham Road"
+    },
+    {
+     "title": "Commission District(s): 3 and 6 Application of Tikay Investments, LLC c/o Battle Law, P.C. to rezone properties from R-75 (Residential Medium Lot-75) zoning district to MR-1 (Mediu",
+     "matterFile": "2026-0143",
+     "matterType": "Ordinance",
+     "tags": [
+      "rezoning"
+     ],
+     "passed": "Pass",
+     "action": "Deferred substitute",
+     "mover": "Nicole Massiah",
+     "districts": "3 and 6 Application of Tikay Investments, LLC c/o Battle Law, P.C. to rezone properties from R-75 (Residential Medium Lot-75) zoning district to MR-1 (Medium Density Residential-1) zoning district to allow for a mixed residential community, at 2666, 2674, 2682 and 2690 Gresham Road"
     }
    ]
   },
@@ -3610,47 +3856,6 @@
     "millage-budget": {
      "term": "millage",
      "excerpt": "Commission District(s): All To Adopt Tentative 2026 Millage Rates. Resolution",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": [],
-   "landUseItems": []
-  },
-  {
-   "eventId": 4473,
-   "date": "2026-05-21",
-   "body": "Committee of the Whole",
-   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4473&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-   "itemCount": 143,
-   "topics": {
-    "appointment": 16,
-    "contract": 49,
-    "millage-budget": 2
-   },
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "millage",
-    "purchase order",
-    "reappoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "Commission District(s): All Commission Districts Record the Appointment of Dr. Tiffany Hogan to the DeKalb County Women’s Commission as the DeKalb County Board of Education Appointee Reso …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "Purchasing & Contracting",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "millage",
-     "excerpt": "2026 Tax Digest and Millage Rate Process",
      "context": "agenda-action"
     }
    },
