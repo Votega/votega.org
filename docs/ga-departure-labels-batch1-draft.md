@@ -28,7 +28,7 @@ Sources: the roster (`ga-members.json`, `status` and `statusDate`), the certifie
 | legisGaGovId | Member | Seat | Draft label | Evidence |
 |---|---|---|---|---|
 | 209 | Freddie Powell Sims (D) | Senate 12 | Withdrew her candidacy for re-election on March 23, 2026 and announced she will leave the Senate at the end of her current term. | Qualifying export: Qualified 03/03/2026, status Withdrawn; affidavit of withdrawal dated 2026-03-23; WALB, 2026-03-23 |
-| 5011 | Edna Jackson (D) | House 165 | Withdrew her candidacy for re-election after qualifying. | Qualifying export: Qualified 03/04/2026, status Withdrawn; no withdrawal date in any source we hold. Our overrides note records an announcement on March 19, 2026, but its source is not recorded here, so I left it out. |
+| 5011 | Edna Jackson (D) | House 165 | Withdrew her candidacy for re-election after qualifying. Announced on March 19, 2026 that she was leaving the Legislature. | Qualifying export: Qualified 03/04/2026, status Withdrawn (no withdrawal date in any source we hold). Announcement: Savannah Tribune, 2026-03-25, https://www.savannahtribune.com/articles/georgia-state-representative-edna-jackson-retires-from-public-office/ ("formally announced her retirement from the Georgia Legislature on Friday, March 19th"; the paper's word, so the label says "leaving the Legislature") |
 | 17 | Ed Harbison (D) | Senate 15 | Announced in March 2026 he would retire after the 2026 session. Appeared on the 2026 Democratic primary ballot and received 5,574 votes. | Wording decided 2026-10-29; WTVM 2026-03-04, Senate Press Office 2026-03-06; qualifying export: Qualified 03/06/2026, never withdrawn |
 
 ## C. Lost the primary or runoff for their own seat
@@ -73,13 +73,15 @@ Evidence for all eight: absent from the qualifying export and from the certified
 |---|---|---|---|---|
 | 5097 | Adrienne White Carden (D) | Senate 7 | Won the June 16, 2026 special election for this seat and was sworn in June 26, 2026. Served the remainder of the term and did not run for the full term. | Wording decided 2026-10-29; Senate Press Office; Capitol Beat |
 
-## Things for you to decide
+## Decisions (answered 2026-10-30)
 
-1. **Resigned members who then ran for another office** (Esteves, Kennedy, Moore, Parkes): I added a second sentence for the 2026 race. The first sentence alone is the safe option if you would rather show only the departure.
-2. **Resignation dates** for seven of the eleven come from the legislature's "seat vacated" record, which is the vacancy date and can differ from the day a letter was sent (earlier checks against the Governor's writs found 1 to 17 days). "Resigned" with that date is the roster's own wording.
-3. **Edna Jackson's announcement** (March 19, 2026): add it only with a source.
-4. **Vote figures** are kept out of the label text except Harbison's. Say if you want them in every label.
-5. **Henderson**: he is Suspended, not resigned. The label says so without the word "resigned", as decided.
+1. **Resigned members who then ran for another office** (Esteves, Kennedy, Moore, Parkes): keep the second sentence about the 2026 race.
+2. **Resignation dates** from the legislature's "seat vacated" record: accepted; the label says "Resigned" with that date.
+3. **Edna Jackson's announcement:** sourced to the Savannah Tribune (2026-03-25) and added to her label, worded "leaving the Legislature" because "retirement" is the newspaper's word, not hers.
+4. **Vote figures:** left out of the label text (Harbison's, decided earlier, stays).
+5. **Henderson:** confirmed as written.
+
+Batch 1 is ready for your final approval; nothing is built or published.
 
 ## Not covered
 
