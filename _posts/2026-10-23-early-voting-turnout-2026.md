@@ -3,20 +3,20 @@ layout: post
 title: How Georgia's Early Voting Is Tracking Against 2022 and 2024
 subtitle: County-by-county ballot counts, compared at the same point before election day
 share-title: How Georgia's 2026 Early Voting Is Tracking
-share-description: Georgia voters have cast about 2.3 million early and mail ballots so far. See how that compares with 2022 and 2024, county by county.
+share-description: Georgia voters have cast about 2.5 million early and mail ballots so far. See how that compares with 2022 and 2024, county by county.
 tags: [early voting, turnout, 2026 general election, data]
 ---
 
 > **See the live numbers:** The [Early Voting Turnout page]({{ '/ga-early-vote/' | relative_url }}) has every county, the daily pace, and the mail ballot pipeline. It is refreshed each time the Secretary of State posts a new file.
 
-Early voting for the **November 3, 2026** general election began on October 13. As of **October 28**, Georgians had cast **2,308,775** early in-person and accepted mail ballots, about 30.7% of the state's active voters.
+Early voting for the **November 3, 2026** general election began on October 13. As of **October 29**, Georgians had cast **2,513,642** early in-person and accepted mail ballots, about 33.4% of the state's active voters.
 
 A raw count means little without a comparison, so the page lines 2026 up against past elections at the same number of days before election day.
 
 ## What the numbers show so far
 
 - **Against 2022, the last midterm:** at 17 days out, 2026 is about 1.7% ahead in ballots, and level when measured against the estimated number of citizen adults (10.8% in both years). Early in-person voting is up about 8%, while accepted mail ballots are down by more than half.
-- **Against 2024:** at 6 days out, 2026 is roughly 34% behind. 2024 was a presidential year, which draws far more voters, so a midterm is expected to trail it.
+- **Against 2024:** at 5 days out, 2026 is roughly 32% behind. 2024 was a presidential year, which draws far more voters, so a midterm is expected to trail it.
 
 Early voting runs through **Friday, October 30**, and mail ballots keep arriving until the polls close, so these figures will keep moving.
 
