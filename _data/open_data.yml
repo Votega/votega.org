@@ -76,13 +76,17 @@ datasets:
       signed legislation — assembled from Congress.gov plus authoritative
       Clerk-of-the-House and Senate.gov roll-call XML.
     source: Congress.gov API · Clerk of the U.S. House · U.S. Senate
-    scope: Current Congress, Georgia delegation only
-    cadence: Members daily · votes weekly
+    scope: Current Congress, Georgia delegation only; each finished Congress is frozen under sessions/ (the 119th first)
+    cadence: Members daily · votes weekly · a frozen record at the end of each Congress
     family: georgia-officials
     repo_url: https://github.com/Votega/ga-federal-legislators
     files:
       - { name: "data/members.json", desc: "GA delegation roster", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/members.json" }
       - { name: "data/votes.json",   desc: "Voting history on signed legislation", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/votes.json" }
+      - { name: "sessions/119th/members.json", desc: "119th Congress delegation roster (frozen)", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/members.json" }
+      - { name: "sessions/119th/votes.json", desc: "119th Congress roll-call record (frozen)", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/votes.json" }
+      - { name: "sessions/119th/scorecard.csv", desc: "Party-unity + participation per member, 119th (derived)", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/scorecard.csv" }
+      - { name: "sessions/119th/sponsorship.csv", desc: "Sponsored and cosponsored bills per member, 119th", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/sponsorship.csv" }
     docs: /about-the-data#federal-legislators
     contribute: https://github.com/Votega/ga-federal-legislators/issues
 
