@@ -215,6 +215,38 @@ def ballots(sections):
     return out
 
 
+def counted_votes(path):
+    """Votes in the committed preview; None when the file does not exist yet.
+
+    None and 0 both mean "safe to write"; only a positive count refuses. They
+    are distinguished because --check treats a missing file as an error while
+    the writer treats it as the first run.
+
+    This is what separates a placeholder from real results, so BOTH the write
+    and --check gate on it. Keeping it in one place is the point: the guard
+    used to live only inside --check, while the workflow's first step ran the
+    writer with no flags — so a run on the morning after election night
+    overwrote the real counts with zeros and committed them, and the --check
+    in the following step then passed because the file it was handed had just
+    been zeroed.
+    """
+    try:
+        with open(path, encoding='utf-8') as f:
+            committed = json.load(f)
+    except FileNotFoundError:
+        return None
+    # Candidate tallies count too, not just the contest total. build_results_json
+    # sets totalVotes only from a literal "Total Votes" row in the SoS export, so
+    # an export without one yields contests whose candidates hold real votes while
+    # totalVotes is 0 — and a guard reading only the total would wave that through
+    # and zero it.
+    return sum(max(c.get('totalVotes', 0) or 0,
+                   sum(k.get('votes', 0) or 0 for k in c.get('candidates', [])))
+               for sec in committed
+               for race in sec.get('races', [])
+               for c in race.get('contests', []))
+
+
 def report_drift(committed, fresh):
     """Print how the committed preview differs from what races.json says now."""
     a, b = ballots(committed), ballots(fresh)
@@ -242,32 +274,38 @@ if __name__ == '__main__':
     os.makedirs(OUT_DIR, exist_ok=True)
     out_path = os.path.join(OUT_DIR, f'ga-general-{CYCLE}-results.json')
 
+    counted = counted_votes(out_path)
+
     if check_only:
         # The preview is a pure derivation, so a difference can only mean the
         # committed copy predates a races.json edit. Votes are the one thing that
         # legitimately differ — once real results are loaded this file is no
         # longer a placeholder and the check retires itself rather than
         # proposing to overwrite them with zeros.
-        try:
-            with open(out_path, encoding='utf-8') as f:
-                committed = json.load(f)
-        except FileNotFoundError:
+        if counted is None:
             sys.exit(f"STALE: {out_path} does not exist yet — run without --check.")
 
-        counted = sum(c.get('totalVotes', 0)
-                      for sec in committed
-                      for race in sec.get('races', [])
-                      for c in race.get('contests', []))
         if counted:
             print(f"{out_path} holds {counted:,} votes — real results, not a "
                   f"placeholder. Nothing to check.")
             sys.exit(0)
 
+        with open(out_path, encoding='utf-8') as f:
+            committed = json.load(f)
         drift = report_drift(committed, sections)
         if drift:
             sys.exit(f"\nSTALE: {drift} office(s) differ from races.json. "
                      f"Re-run without --check and commit.")
         print(f"Up to date with races.json ({len(ballots(sections))} offices).")
+        sys.exit(0)
+
+    # Refuse to replace real results with a zero-vote ballot preview. The
+    # workflow runs this writer daily and on every races.json push, so without
+    # this the first scheduled run after polls close reverts the page to
+    # "Awaiting Results" and commits it.
+    if counted:
+        print(f"{out_path} holds {counted:,} votes — real results, not a "
+              f"placeholder. Refusing to overwrite it with zeros.")
         sys.exit(0)
 
     write_json_atomic(out_path, sections, separators=(',', ':'))

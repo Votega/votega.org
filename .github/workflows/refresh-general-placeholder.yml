@@ -7,9 +7,17 @@ name: Refresh general-election ballot preview (daily, 07:30 UTC)
 # naming the opponent a candidate had already beaten in the primary rather than
 # the person actually on the ballot.
 #
-# Once real results are loaded the script's --check retires itself (it sees
-# counted votes and stops), so this cannot overwrite election-night numbers
-# with zeros.
+# Once real results are loaded the WRITER itself refuses (counted_votes() sees
+# votes in the committed file and exits 0 without writing), so this cannot
+# overwrite election-night numbers with zeros.
+#
+# That guard used to live only in the script's --check branch, while the
+# rebuild step below runs the writer with no flags — so the write was
+# unguarded, and the --check in the "Validate the rebuild" step then passed
+# because the file it was handed had already been zeroed and committed. Keep
+# the guard on the write path, not just the check: this job runs daily and on
+# every races.json push, including the morning after polls close.
+# Pinned by scripts/test_general_placeholder_guard.py.
 
 permissions:
   contents: write

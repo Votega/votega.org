@@ -195,6 +195,9 @@ const CFG = {
   advances: {{ page.runoff_advances | default: 2 }},
   labels: {
     winner:      {{ page.label_winner | jsonify }},
+    // What a leading candidate is called BEFORE certification. `winner` is a
+    // result; this is a standing. See badgeText().
+    winnerProvisional: {{ page.label_winner_provisional | jsonify }},
     runoff:      {{ page.label_runoff | jsonify }},
     uncontested: {{ page.label_uncontested | jsonify }},
     noResults:   {{ page.label_noresults | jsonify }},
@@ -346,7 +349,16 @@ const partyLabel = ResultsContest.partyLabel;
 
 function badgeText(kind){
   const L = CFG.labels;
-  if(kind==='winner')      return L.winner || (CFG.mode==='final' ? (CFG.status==='certified' ? 'Winner' : 'Leads') : 'Advances');
+  // A 'winner' badge before certification would be a call we are not making.
+  // ResultsContest.status() returns 'winner' as soon as the leader passes 50%
+  // of the votes counted SO FAR, so at 3% reporting every leader qualifies —
+  // and `label_winner: Elected` on the general page used to short-circuit the
+  // certification check below, badging uncalled races "Elected" on partial
+  // counts. The configured winner label now applies only once certified.
+  if(kind==='winner'){
+    if(CFG.status!=='certified') return L.winnerProvisional || 'Leads';
+    return L.winner || (CFG.mode==='final' ? 'Winner' : 'Advances');
+  }
   if(kind==='runoff')      return L.runoff || 'Runoff';
   if(kind==='uncontested') return L.uncontested || 'Uncontested';
   return L.noResults || (CFG.status==='certified' ? 'No Results' : 'Awaiting Results');

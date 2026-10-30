@@ -17,9 +17,10 @@
     "_race": "ga-house-102-2026"
   },
   "ga-house-108-2026-r-1": {
-    "noFiling": true,
+    "filerEntityId": "104068",
     "_name": "Elvia Davila-Pelayo",
-    "_race": "ga-house-108-2026"
+    "_race": "ga-house-108-2026",
+    "_note": "Previously (wrongly) marked noFiling. Filer 104068 'Davila, Elvia' is House 108 / REP, committee 'Elvia and Friends', $1,000 raised. The ballot name is the compound 'Davila-Pelayo' and candidateLastName() takes only the last token ('Pelayo'), so the seat+surname matcher could not join them. Same failure mode as ga-senate-12-2026-d-3."
   },
   "ga-house-114-2026-r-2": {
     "noFiling": true,
@@ -72,9 +73,10 @@
     "_race": "ga-house-165-2026"
   },
   "ga-house-167-2026-d-2": {
-    "noFiling": true,
+    "filerEntityId": "106455",
     "_name": "Nathaniel Hicks Jr",
-    "_race": "ga-house-167-2026"
+    "_race": "ga-house-167-2026",
+    "_note": "Previously (wrongly) marked noFiling. Filer 106455 'Hicks Jr, Nathaniel' is House 167 / DEM with $0 raised — a real filing reporting zero, which is not the same claim as no filing."
   },
   "ga-house-169-2026-r-1": {
     "filerEntityId": "100914",
@@ -203,9 +205,10 @@
     "_race": "ga-senate-28-2026"
   },
   "ga-senate-29-2026-d-1": {
-    "noFiling": true,
+    "filerEntityId": "105966",
     "_name": "Jeff Lowe",
-    "_race": "ga-senate-29-2026"
+    "_race": "ga-senate-29-2026",
+    "_note": "Previously (wrongly) marked noFiling. Filer 105966 'Lowe, Jeffrey C.' is Senate 29 / DEM with $0 raised — a real filing reporting zero. The ballot name 'Jeff' vs the filing's 'Jeffrey' is why the matcher missed it."
   },
   "ga-senate-31-2026-r-1": {
     "noFiling": true,
