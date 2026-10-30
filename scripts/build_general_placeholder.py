@@ -9,9 +9,9 @@ Every candidate is written with 0 votes; the shared results layout
 Results" regardless of candidate count, so this is a safe pre-election
 preview, not a projection.
 
-The `courts` section is emitted EMPTY on purpose — see PREVIEW_EMPTY_SECTIONS.
-Judicial races are left off the preview but still show their results once the
-SoS reports any.
+Judicial races are left off the preview on purpose — see
+PREVIEW_EXCLUDED_LEVELS — but still show their results once the SoS reports any.
+The `courts` section is therefore the ten District Attorney races until then.
 
 This is the placeholder generator, not the results builder. Once official
 Nov 3 results are available as a Georgia SoS "Total Votes Results" CSV,
@@ -105,23 +105,23 @@ def resolve_name(cand, congress_by_id, ga_by_id):
     return None
 
 
-# Sections the BALLOT PREVIEW leaves empty on purpose. Judicial races are
+# Races the BALLOT PREVIEW leaves off on purpose, by `level`. Judicial races are
 # nonpartisan and decided at the May general primary, so they are deliberately
 # not advertised as "on the ballot" here — see the page's notice_upcoming.
 #
 # This is an exclusion from the PREVIEW ONLY, never from the results. Once polls
 # close, the page is rebuilt from the Secretary of State's CSV by
-# build_results_json.py, which buckets judicial contests into this same `courts`
-# section (ga-primary-results.json carries 88 of them). So judicial results
-# appear of their own accord the moment the SoS reports any, and none appear if
-# the SoS reports none. Nothing here has to be flipped on election night.
+# build_results_json.py, which buckets judicial contests into the same `courts`
+# section this builder uses (ga-primary-results.json carries 88 of them). So
+# judicial results appear of their own accord the moment the SoS reports any, and
+# none appear if the SoS reports none. Nothing here has to be flipped on
+# election night.
 #
-# The section itself is still emitted, empty: the file keeps its five sections
-# (what validate_general_placeholder.py expects, and an empty one is a tier-2
-# report rather than a gate), and _layouts/election_results.html already hides a
-# tab whose panel has no race cards, so the Courts tab stays out of sight until
-# there is something in it.
-PREVIEW_EMPTY_SECTIONS = {'courts'}
+# It is keyed on the RACE, not the section, because `courts` also carries the ten
+# District Attorney races, which are partisan, are on the November ballot, and
+# must be listed. An earlier version excluded the whole section and took the DA
+# races down with it.
+PREVIEW_EXCLUDED_LEVELS = {'state-judicial'}
 
 
 def classify(race):
@@ -134,6 +134,13 @@ def classify(race):
     if chamber == 'Georgia House of Representatives':
         return 'state-house'
     if level == 'state-judicial':
+        return 'courts'
+    # A District Attorney is `level: "local"` in races.json, and `courts` is where
+    # the SoS export puts one: build_results_json.classify() sends any office name
+    # containing "district attorney" there. Matching it is the whole point — put
+    # these anywhere else and all ten races jump to a different tab on election
+    # night, when the CSV replaces this file.
+    if level == 'local' and chamber == 'District Attorney':
         return 'courts'
     if level in ('federal', 'state-executive'):
         return 'statewide'
@@ -150,6 +157,11 @@ def office_name(race, section):
         return f"District {race.get('district')}"
     if section == 'courts':
         seat = race.get('seat', '')
+        if chamber == 'District Attorney':
+            # Spelled exactly as the SoS export spells it (ASCII hyphen, not the
+            # em dash in races.json's displayTitle), so the office key is the
+            # same string before and after the real results land.
+            return f"District Attorney - {race.get('circuit', '')}"
         if chamber == 'Superior Court':
             return f"Superior Court - {race.get('circuit', '')} ({seat})"
         if chamber == 'Georgia Court of Appeals':
@@ -163,27 +175,29 @@ def build_contests(race, section, congress_by_id, ga_by_id):
     general = race.get('phases', {}).get('general', {})
     by_party = OrderedDict()  # party code -> [candidate dicts]
 
-    if section == 'courts':
-        for cand in general.get('candidates') or []:
-            name = resolve_name(cand, congress_by_id, ga_by_id)
-            if not name:
-                continue
-            by_party.setdefault('np', []).append({
-                'name': name, 'votes': 0,
-                'incumbent': bool(cand.get('isIncumbent') or cand.get('type') == 'incumbent'),
-            })
-    else:
-        ballots = general.get('ballots') or {}
+    def take(cand, code):
+        name = resolve_name(cand, congress_by_id, ga_by_id)
+        if not name:
+            return
+        by_party.setdefault(code, []).append({
+            'name': name, 'votes': 0,
+            'incumbent': bool(cand.get('isIncumbent') or cand.get('type') == 'incumbent'),
+        })
+
+    # Read whichever shape the phase uses, NOT whichever the section implies. A
+    # nonpartisan race carries a flat `candidates` list and a partisan one carries
+    # `ballots` keyed by party — and `courts` holds both: judicial races are
+    # nonpartisan, District Attorney races are not. Keying this on the section
+    # silently emitted zero contests for a DA race.
+    ballots = general.get('ballots') or {}
+    if ballots:
         for party_label, cands in ballots.items():
             code = party_code(party_label)
             for cand in cands or []:
-                name = resolve_name(cand, congress_by_id, ga_by_id)
-                if not name:
-                    continue
-                by_party.setdefault(code, []).append({
-                    'name': name, 'votes': 0,
-                    'incumbent': bool(cand.get('isIncumbent') or cand.get('type') == 'incumbent'),
-                })
+                take(cand, code)
+    else:
+        for cand in general.get('candidates') or []:
+            take(cand, 'np')
 
     order = {'rep': 0, 'dem': 1, 'np': 2}
     contests = []
@@ -204,7 +218,7 @@ def build_sections(races, congress_by_id, ga_by_id):
         if race.get('cycle') != CYCLE or 'general' not in race.get('phases', {}):
             continue
         section = classify(race)
-        if section is None or section in PREVIEW_EMPTY_SECTIONS:
+        if section is None or race.get('level') in PREVIEW_EXCLUDED_LEVELS:
             continue
         contests = build_contests(race, section, congress_by_id, ga_by_id)
         if not contests:

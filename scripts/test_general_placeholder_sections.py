@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
-"""Assert the ballot preview leaves judicial races out but keeps the section.
+"""Assert the ballot preview drops judicial races and keeps District Attorney ones.
 
-Judicial races are nonpartisan and decided at the May general primary, so the
-November ballot preview does not advertise them. They are excluded from the
-PREVIEW only: on election night the page is rebuilt from the SoS CSV by
-build_results_json.py, which buckets judicial contests into this same `courts`
-section, so results appear without anything being flipped.
+Both live in the `courts` section, so the two policies are easy to confuse and a
+fix to one has already broken the other:
 
-Two things have to stay true for that to work, and neither is obvious from
-reading build_sections() alone:
+  * Judicial races are nonpartisan and decided at the May general primary, so the
+    November preview does not advertise them. On election night the page is
+    rebuilt from the SoS CSV by build_results_json.py, which buckets judicial
+    contests into this same section, so results appear with nothing flipped.
+  * District Attorney races ARE on the November ballot and partisan. An earlier
+    version excluded the whole `courts` SECTION to hide the judicial races and
+    took all ten DA races off the page with it.
 
-  * the `courts` section is still EMITTED, empty. validate_general_placeholder
-    expects five sections, and _layouts/election_results.html hides a tab whose
-    panel has no race cards - which is what keeps the Courts tab out of sight
-    without any judicial-specific code in the layout.
-  * excluding judicial must not disturb any other section.
+So the exclusion is keyed on the race's `level`, and these checks pin that:
+judicial out, DA in, every other section untouched, and classify() still
+RECOGNISING judicial as courts - the exclusion is a policy on top of
+classification, not a hole in it.
+
+The DA office name is pinned to the SoS's own spelling, because the office name
+is the key the page is rebuilt under: get it wrong and the ten races look like
+ten new offices appearing and ten disappearing when the real results land.
 
 Usage:
   python scripts/test_general_placeholder_sections.py
@@ -42,9 +47,10 @@ def check(label, got, want):
 def race(**kw):
     """A race with a general phase, defaulting to this build's cycle."""
     cand = {'id': kw.pop('cid', 'c1'), 'name': kw.pop('cname', 'A Candidate')}
+    party = kw.pop('party', 'Republican')
     nonpartisan = kw.pop('nonpartisan', False)
     general = ({'candidates': [cand]} if nonpartisan
-               else {'ballots': {'Republican': [cand]}})
+               else {'ballots': {party: [cand]}})
     base = {'cycle': B.CYCLE, 'phases': {'general': general}}
     base.update(kw)
     return base
@@ -57,6 +63,14 @@ JUDICIAL = [
          seat='Doyle', nonpartisan=True),
     race(level='state-judicial', chamber='Superior Court',
          circuit='Atlanta', seat='Eaton', nonpartisan=True),
+]
+
+DA = [
+    race(level='local', chamber='District Attorney',
+         circuit='Atlantic Judicial Circuit', cname='Billy Joe Nelson Jr.'),
+    race(level='local', chamber='District Attorney',
+         circuit='Rockdale Judicial Circuit', party='Democrat',
+         cname='Alisha Adams Johnson'),
 ]
 
 OTHERS = [
@@ -73,35 +87,58 @@ def sections_by_id(races):
 
 def cases():
     # The policy constant itself, so a silent rename is caught here rather than
-    # by a section mysteriously filling up again.
-    check("courts is the excluded section",
-          B.PREVIEW_EMPTY_SECTIONS, {'courts'})
+    # by a section mysteriously filling up or emptying again.
+    check("judicial is the excluded level",
+          B.PREVIEW_EXCLUDED_LEVELS, {'state-judicial'})
 
-    # classify() must still RECOGNISE judicial as courts - the exclusion is a
-    # policy on top of classification, not a hole in it. If this regressed to
-    # None the test below would pass for the wrong reason.
+    # If this regressed to None the judicial checks below would pass for the
+    # wrong reason.
     check("a judicial race still classifies as courts",
           {B.classify(r) for r in JUDICIAL}, {'courts'})
+    check("a DA race classifies as courts",
+          {B.classify(r) for r in DA}, {'courts'})
 
-    both = sections_by_id(JUDICIAL + OTHERS)
+    everything = sections_by_id(JUDICIAL + DA + OTHERS)
     check("all five sections are emitted",
-          sorted(both), ['courts', 'state-house', 'state-senate',
-                         'statewide', 'us-house'])
-    check("courts is emitted empty", both['courts']['races'], [])
-    check("courts keeps its label", bool(both['courts'].get('label')), True)
+          sorted(everything), ['courts', 'state-house', 'state-senate',
+                               'statewide', 'us-house'])
 
-    # Judicial races present or absent must make no difference anywhere else.
-    check("excluding judicial changes no other section",
-          sections_by_id(OTHERS), {k: v for k, v in both.items()})
+    # courts holds the DA races and ONLY the DA races.
+    check("courts holds just the DA races",
+          [r['office'] for r in everything['courts']['races']],
+          ['District Attorney - Atlantic Judicial Circuit',
+           'District Attorney - Rockdale Judicial Circuit'])
+
+    # The office name is the key the page is rebuilt under on election night, and
+    # the SoS writes an ASCII hyphen where races.json's displayTitle has an em
+    # dash. ga-primary-results.json carries all ten in this exact form.
+    check("the DA office name matches the SoS spelling",
+          B.office_name(DA[0], 'courts'),
+          'District Attorney - Atlantic Judicial Circuit')
+
+    # A DA race is partisan: its candidates come from `ballots`, not the flat
+    # `candidates` list a judicial race uses. Reading the wrong shape yields an
+    # empty contest list, which build_sections() then drops silently.
+    contests = B.build_contests(DA[1], 'courts', {}, {})
+    check("a DA contest carries its party and candidate",
+          [(c['party'], [k['name'] for k in c['candidates']]) for c in contests],
+          [('dem', ['Alisha Adams Johnson'])])
+
+    # Judicial races present or absent must make no difference anywhere.
+    check("excluding judicial changes nothing else",
+          sections_by_id(DA + OTHERS), everything)
 
     check("the other sections still fill",
-          {k: len(v['races']) for k, v in both.items() if k != 'courts'},
+          {k: len(v['races']) for k, v in everything.items() if k != 'courts'},
           {'statewide': 1, 'us-house': 1, 'state-senate': 1, 'state-house': 1})
 
-    # A judicial-only build is the realistic pre-election case for that tab.
+    # A judicial-only build is the case that used to be the whole courts section.
     only = sections_by_id(JUDICIAL)
     check("a judicial-only build yields no offices at all",
           sum(len(s['races']) for s in only.values()), 0)
+    check("courts is still emitted when it is empty",
+          [s['id'] for s in B.build_sections(JUDICIAL, {}, {})],
+          ['statewide', 'us-house', 'state-senate', 'state-house', 'courts'])
 
 
 if __name__ == "__main__":
