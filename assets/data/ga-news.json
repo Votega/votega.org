@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-29T22:34:33.531576+00:00",
+    "generatedAt": "2026-10-30T03:33:15.502353+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,26 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 140,
+    "count": 138,
     "windowDays": 45,
     "entityTagged": 83,
     "topicCounts": {
-      "elections": 54,
+      "elections": 53,
+      "education": 14,
       "courts": 18,
-      "education": 13,
-      "surveillance": 2,
       "budget": 9,
-      "healthcare": 12,
+      "surveillance": 1,
+      "healthcare": 11,
       "ethics": 5
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
       "url": null,
@@ -62,11 +67,6 @@
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
       ]
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
     },
     "vg-ga-p-000335": {
       "name": "Keisha R. Lance Bottoms",
@@ -165,6 +165,31 @@
   },
   "items": [
     {
+      "id": "a42ee76b5156",
+      "title": "Kamala Harris drops into Georgia to stump for Ossoff, down-ballot Democrats",
+      "url": "https://georgiarecorder.com/2026/10/29/kamala-harris-drops-into-georgia-to-stump-for-ossoff-down-ballot-democrats/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-10-30T00:36:45+00:00",
+      "snippet": "Former Vice President Kamala Harris and U.S. Sen. Jon Ossoff urged young voters at Atlanta’s historically Black colleges and universities to make their way to the polls as early voting wraps up Friday",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "elections",
+        "education"
+      ]
+    },
+    {
+      "id": "e30271c3d992",
+      "title": "New housing agreement guarantees right to return for some Yamacraw Village residents",
+      "url": "https://thecurrentga.org/2026/10/29/new-housing-agreement-guarantees-right-to-return-for-some-yamacraw-village-residents/",
+      "source": "The Current GA",
+      "publishedAt": "2026-10-29T22:38:26+00:00",
+      "snippet": "The Housing Authority of Savannah and the Yamacraw Village Residents Council have reached an agreement to build 100 new low-income units and provide relocation assistance for current residents followi",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "44896bc14948",
       "title": "Gray scores 23 points to help hot-shooting Dream beat Valkyries 80-69 to force Game 7 of WNBA Finals",
       "url": "https://www.gpb.org/news/2026/10/29/gray-scores-23-points-help-hot-shooting-dream-beat-valkyries-80-69-force-game-7-of",
@@ -232,31 +257,6 @@
       "entityIds": [],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "f913fc123527",
-      "title": "GPB morning headlines for October 29, 2026",
-      "url": "https://www.gpb.org/news/2026/10/29/gpb-morning-headlines-for-october-29-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-10-29T12:40:27+00:00",
-      "snippet": "Thousands of Democratic voters flocked to Clayton County on Wednesday to hear former President Barack Obama campaign for Democrats up and down the ballot; six Democratic-leaning Georgia counties confi",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "surveillance"
-      ]
-    },
-    {
-      "id": "081980452fd2",
-      "title": "Former President Obama rallies voters in Clayton County",
-      "url": "https://www.gpb.org/news/2026/10/29/former-president-obama-rallies-voters-in-clayton-county",
-      "source": "GPB News",
-      "publishedAt": "2026-10-29T12:18:00+00:00",
-      "snippet": "Former President Barack Obama energized thousands of voters in Clayton County less than a week before the election.",
-      "entityIds": [],
-      "topics": [
-        "elections"
       ]
     },
     {
@@ -533,19 +533,6 @@
         "elections",
         "budget"
       ]
-    },
-    {
-      "id": "49cc10de3682",
-      "title": "Warnock, Ossoff call for investigation at South Georgia ICE facility as hunger strike said to continue",
-      "url": "https://thecurrentga.org/2026/10/24/warnock-ossoff-call-for-investigation-at-south-georgia-ice-facility-as-hunger-strike-said-to-continue/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-24T21:46:05+00:00",
-      "snippet": "Georgia senators Raphael Warnock and Jon Ossoff requested a federal investigation into allegations of retaliation against hunger strikers at the Folkston ICE processing center following reports of med",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "454d0dd52047",
@@ -1765,18 +1752,6 @@
       "topics": [
         "ethics",
         "budget"
-      ]
-    },
-    {
-      "id": "8417c4b8f5fb",
-      "title": "Most Georgians struggle with cost of living, researchers say",
-      "url": "https://georgiarecorder.com/2026/09/23/most-georgians-struggle-with-cost-of-living-researchers-say/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-23T21:00:24+00:00",
-      "snippet": "As many as 70% of Georgia residents are struggling to afford basic necessities, such as food, housing, healthcare or childcare, according to new data from the Georgetown Center on Poverty and Inequali",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
       ]
     },
     {
