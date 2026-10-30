@@ -36,7 +36,6 @@ import sys
 from datetime import datetime, date
 from urllib.parse import urlparse, parse_qs, unquote
 
-import yaml
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.join(ROOT, "assets", "data")
@@ -1500,6 +1499,13 @@ def build_places(records, urls, prior, new_state):
     """
     if not os.path.exists(PLACES_PATH):
         return 0
+    # Imported here, below the early return, not at module scope. run-script-tests.yml
+    # installs no pip packages, so a module-level `import yaml` makes this whole module
+    # unimportable in CI — a test that imports it for slugify/plan_candidate_permalinks
+    # then dies with ModuleNotFoundError while passing locally. PyYAML is only needed to
+    # read the places registry, which is the one path that reaches it.
+    import yaml
+
     with open(PLACES_PATH, encoding="utf-8") as fh:
         places = (yaml.safe_load(fh) or {}).get("places", [])
     by_slug = {p["slug"]: p for p in places}
