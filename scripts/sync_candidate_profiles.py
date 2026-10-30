@@ -234,16 +234,19 @@ def main():
     names = [c for c in all_changes if c[3] == "name"]
     if names:
         print("\n  name changes:")
-        for race_id, cand_id, phase, _, before, after in names:
-            print(f"    {race_id} {cand_id} [{phase}]: {before!r} -> {after!r}")
+        # old_name/new_name, not before/after: `before` is the guard's snapshot of the
+        # whole document, and reusing it here made every run with a name change crash
+        # in assert_active_phases_unchanged with "'str' object has no attribute 'get'".
+        for race_id, cand_id, phase, _, old_name, new_name in names:
+            print(f"    {race_id} {cand_id} [{phase}]: {old_name!r} -> {new_name!r}")
 
     if NAME_LOSSES:
         print(f"\n  WARNING: {len(NAME_LOSSES)} name change(s) lose a match against "
               f"the Secretary of State's ballot name, so the results pages will stop "
               f"linking that name to its profile. Put the called name in quotes "
               f"instead, e.g. Anthony \"Scott\" Tippetts:")
-        for race_id, cand_id, before, after in NAME_LOSSES:
-            print(f"    {race_id} {cand_id}: {before!r} -> {after!r}")
+        for race_id, cand_id, old_name, new_name in NAME_LOSSES:
+            print(f"    {race_id} {cand_id}: {old_name!r} -> {new_name!r}")
 
     if check_only:
         print("\nOut of step. Re-run without --check to reconcile.")

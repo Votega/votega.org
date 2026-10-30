@@ -17,16 +17,22 @@ See CODEBASE-REVIEW-2026-08-18.md finding 1.1.
 Usage:
   python scripts/build_legislative_races.py
   python scripts/build_legislative_races.py --allow-loss    # accept a reduction
+  python scripts/build_legislative_races.py --allow-editorial-loss
+                                                            # accept curated fields vanishing
   python scripts/build_legislative_races.py --force-reset --allow-loss
                                                             # old behaviour:
                                                             # reset every race
                                                             # back to the primary
 """
-import json, re, string, sys
+import copy, json, re, string, sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import apply_overrides
+import sync_candidate_profiles
 from lib.atomic_io import write_json_atomic
+from lib.races_guard import (RacesGuardError, assert_editorial_fields_preserved,
+                             name_parts, phase_candidates)
 
 SRC       = Path("assets/data/ga-legislative-candidates.json")
 DEST      = Path("assets/data/races.json")
@@ -35,6 +41,7 @@ OVERRIDES  = Path("assets/data/ga-race-candidate-overrides.json")
 
 FORCE_RESET = "--force-reset" in sys.argv
 ALLOW_LOSS  = "--allow-loss" in sys.argv
+ALLOW_EDITORIAL_LOSS = "--allow-editorial-loss" in sys.argv
 
 # --- Cycle parameters: the one place to change at a cycle rollover (2026 -> 2028).
 # Race IDs, the `cycle` field, and the phase election dates all derive from these,
@@ -290,11 +297,24 @@ def shares_a_name(candidate_name: str, member_name: str) -> bool:
     return bool(cand & seat)
 
 
+def _name_tokens(name: str) -> list:
+    """Lowercased name parts with generational suffixes and honorifics dropped.
+
+    Without this the last word of "Alvin Payton Jr" is "jr", so the incumbent
+    fallback could never match him to the roster's "Alvin Payton" (HD 177)."""
+    n = (name or "").lower().replace("'", "").replace("’", "")
+    n = re.sub(r"\([^)]*\)", " ", n)                   # "(Dem)"-style tags
+    n = re.sub(r"[^a-z\s]", " ", n)
+    n = re.sub(r"\b(jr|sr|ii|iii|iv|v)\b", " ", n)     # generational suffixes
+    n = re.sub(r"\b(dr|mr|mrs|ms|rev|hon)\b", " ", n)  # honorifics
+    return n.split()
+
+
 def names_match(candidate_name: str, member_name: str) -> bool:
     """Return True if candidate_name likely refers to the same person as member_name.
     Requires last name match plus first name or first-initial match."""
-    cn = candidate_name.lower().split()
-    mn = member_name.lower().split()
+    cn = _name_tokens(candidate_name)
+    mn = _name_tokens(member_name)
     if not cn or not mn:
         return False
     if cn[-1] != mn[-1]:  # last names must match
@@ -443,6 +463,36 @@ def build_races(src_data: dict, member_lookup: dict, candidate_overrides: dict, 
 
     return races
 
+CARRIED_FIELDS = ("bio", "imageUrl", "website", "email")
+
+
+def carry_forward_editorial(before: dict, after: dict) -> int:
+    """Copy each curated field the previous races.json held onto the rebuilt candidate.
+
+    Matches on (race, phase, candidate id) AND a shared name part: ids are positional,
+    so an id that now names someone else must not inherit their bio. The previous value
+    wins over whatever the rebuild produced; a field the previous file lacked is left
+    for the rebuild (or the roster) to fill. Returns the number of fields carried."""
+    before_by_race = {r["id"]: r for r in before.get("races", [])}
+    n = 0
+    for race in after.get("races", []):
+        old_race = before_by_race.get(race["id"])
+        if not old_race:
+            continue
+        for ph, new_phase in (race.get("phases") or {}).items():
+            old_by_id = {c.get("id"): c
+                         for c in phase_candidates((old_race.get("phases") or {}).get(ph))}
+            for c in phase_candidates(new_phase):
+                old = old_by_id.get(c.get("id"))
+                if not old or not (name_parts(old.get("name")) & name_parts(c.get("name"))):
+                    continue
+                for f in CARRIED_FIELDS:
+                    if old.get(f) not in (None, "", [], {}) and c.get(f) != old[f]:
+                        c[f] = old[f]
+                        n += 1
+    return n
+
+
 def main():
     with open(SRC, encoding="utf-8") as f:
         src = json.load(f)
@@ -502,6 +552,7 @@ def main():
 
     with open(DEST, encoding="utf-8") as f:
         dest = json.load(f)
+    dest_snapshot = copy.deepcopy(dest)       # baseline for the editorial-loss guard
 
     dest_races = dest.get("races", [])
     existing_by_id = {r["id"]: r for r in dest_races if is_legislative(r["id"])}
@@ -557,6 +608,47 @@ def main():
 
     dest["races"] = out_races
     dest["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # The rebuilt primary ballots come straight from the source export, so every bio,
+    # photo, website, email, display name and hand-pinned member link curated since the
+    # export is gone from them (the later phases are carried forward and keep theirs).
+    # Put them back in-process, before anything is written, by running the same two
+    # steps RECURRING-TASKS expects after a rebuild: the overrides, then the
+    # latest-phase-wins profile sync. A run used to leave races.json half-curated
+    # until someone remembered both.
+    # A candidate who exists only in the primary (lost, or was eliminated) has no later
+    # phase to restore from, and the rebuild would otherwise overwrite their curated
+    # value with the source's (or the roster's portrait). Curation beats the source for
+    # these four fields: the source's website had typos and its email was a personal
+    # address the campaign had replaced.
+    carried = carry_forward_editorial(dest_snapshot, dest)
+    overrides_doc = json.load(open(OVERRIDES, encoding="utf-8")) if OVERRIDES.exists() else {}
+    ov_stats = apply_overrides.apply(dest, overrides_doc, verbose=False)
+    if ov_stats["mismatches"]:
+        print("\nERROR: 'remove' override(s) point at a different candidate than their "
+              "_name — refusing to delete the wrong person:", file=sys.stderr)
+        for cid, expected, actual in ov_stats["mismatches"]:
+            print(f"  {cid}: expected {expected!r}, found {actual!r}", file=sys.stderr)
+        sys.exit(1)
+    ballot_keys = sync_candidate_profiles.ballot_name_keys()
+    restored = sum(len(sync_candidate_profiles.reconcile(r, ballot_keys))
+                   for r in dest["races"])
+    print(f"\nCarried {carried} curated field(s) forward from the previous races.json; "
+          f"re-applied overrides ({ov_stats['patched']} patched); restored "
+          f"{restored} field(s) from later phases")
+
+    # Backstop: whatever the steps above could not restore (a candidate who exists only
+    # in the primary and whose curation is in no override) must not be silently lost.
+    try:
+        assert_editorial_fields_preserved(dest_snapshot, dest)
+    except RacesGuardError as e:
+        if not ALLOW_EDITORIAL_LOSS:
+            print(f"\nERROR: {e}\n\nraces.json holds curated candidate data that the source "
+                  f"export cannot regenerate, and nothing above restored it. Nothing was "
+                  f"written.\nPut the value in ga-race-candidate-overrides.json, or if the "
+                  f"loss is intended re-run with --allow-editorial-loss.", file=sys.stderr)
+            sys.exit(1)
+        print(f"\nnote: --allow-editorial-loss: {e}")
 
     write_json_atomic(DEST, dest, indent=2)
 

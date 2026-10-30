@@ -225,3 +225,56 @@ def assert_only_winners_changed(before, after, expected_ids):
     top_a = {k: v for k, v in after.items() if k not in ("races", "updatedAt")}
     if top_b != top_a:
         raise RacesGuardError("top-level keys changed (other than updatedAt)")
+
+
+# Fields a person curates by hand (or that a hand-pinned link carries). A rebuild from
+# the source export cannot regenerate them, so losing one is data loss, not a refresh.
+EDITORIAL_FIELDS = ("bio", "imageUrl", "website", "email",
+                    "existingMemberId", "existingMemberSource")
+
+
+def name_parts(name):
+    import re
+    n = (name or "").lower().replace("'", "")
+    n = re.sub(r"\([^)]*\)", " ", n)
+    n = re.sub(r"[^a-z\s]", " ", n)
+    n = re.sub(r"\b(jr|sr|ii|iii|iv|v|dr|mr|mrs|ms|rev|hon)\b", " ", n)
+    return {t for t in n.split() if len(t) > 1}
+
+
+def assert_editorial_fields_preserved(before, after, fields=EDITORIAL_FIELDS):
+    """No candidate may lose a non-empty editorial field in a rebuild.
+
+    Compares candidates present in both documents at the same (race, phase, id) and
+    flags any in `fields` that was set before and is empty or missing after. Values
+    that merely change are not blocked (the source may correct a spelling, the roster
+    may supply a better portrait); only disappearance is.
+
+    Candidate ids are positional (a row index into the source export), so an id that
+    now names a DIFFERENT person is skipped: nothing to carry across, and flagging it
+    would make a re-ordered export look like data loss. "Different person" means the
+    two names share no name part.
+    """
+    b, a = _races_by_id(before), _races_by_id(after)
+    lost = []
+    for rid, br in b.items():
+        ar = a.get(rid)
+        if ar is None:
+            continue
+        for ph, bp in (br.get("phases") or {}).items():
+            after_by_id = {c.get("id"): c
+                           for c in phase_candidates((ar.get("phases") or {}).get(ph))}
+            for bc in phase_candidates(bp):
+                ac = after_by_id.get(bc.get("id"))
+                if ac is None:
+                    continue
+                if not (name_parts(bc.get("name")) & name_parts(ac.get("name"))):
+                    continue
+                for f in fields:
+                    if bc.get(f) not in (None, "", [], {}) and ac.get(f) in (None, "", [], {}):
+                        lost.append((rid, ph, bc.get("id"), bc.get("name"), f))
+    if lost:
+        shown = "; ".join(f"{r} {ph} {cid} ({n}): {f}" for r, ph, cid, n, f in lost[:8])
+        raise RacesGuardError(
+            f"{len(lost)} curated field(s) would be erased: {shown}"
+            + (" ..." if len(lost) > 8 else ""))
