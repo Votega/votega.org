@@ -23,21 +23,33 @@ target repo), each artifact is PUT via the GitHub Contents API. Without it, the 
 runs as a DRY RUN, writing the artifacts to $OUT_DIR (default ./out) so the generators
 can be tested locally. Exits non-zero on fatal errors so CI catches failures.
 """
+import base64
 import csv
 import io
 import json
 import os
+import re
 import sys
+import urllib.error
+import urllib.request
 from datetime import datetime, timezone
 
-from lib.sibling_publish import build_json, publish_or_dry_run, min_items
+from lib.congress_session import congress_ordinal, congress_years
+from lib.federal_sponsorship import bill_url
+from lib.sibling_publish import build_json, publish_or_dry_run, min_items, _urlopen_retry
 
 REPO = "Votega/ga-federal-legislators"
 TOKEN_ENV = "GA_FEDERAL_LEGISLATORS"
 SCHEMA_VERSION = "1.0.0"
+RAW_BASE = f"https://raw.githubusercontent.com/{REPO}/main"
+SESSIONS_DIR = "sessions"
+SCHEMA_STABILITY = ("Additive changes only within a major version: new properties and new CSV columns (appended, never inserted); no property is ever newly required. `congress` is carried in the metadata and as the last CSV column so a downloaded copy says which Congress it describes.")
 
 SRC_MEMBERS = os.environ.get("SRC_MEMBERS", "assets/data/current-members.json")
 SRC_VOTES = os.environ.get("SRC_VOTES", "assets/data/federal-member-votes.json")
+SRC_UNITY = os.environ.get("SRC_UNITY", "assets/data/federal-party-unity.json")
+SRC_SPONSOR_INDEX = os.environ.get("SRC_SPONSOR_INDEX", "assets/data/federal-sponsorship-index.json")
+SRC_SPONSOR_DIR = os.environ.get("SRC_SPONSOR_DIR", "assets/data/federal-sponsorship")
 
 
 # --------------------------------------------------------------------------- #
@@ -67,12 +79,12 @@ def normalize_member(m):
 # --------------------------------------------------------------------------- #
 # CSV builders
 # --------------------------------------------------------------------------- #
-def members_csv(members):
+def members_csv(members, congress=None):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
     w.writerow(["bioguideId", "name", "firstName", "lastName", "party", "chamber",
                 "district", "phone", "website", "birthYear", "officeAddress",
-                "committees", "imageUrl"])
+                "committees", "imageUrl", "congress"])
     for m in members:
         ci = m.get("contactInfo") or {}
         w.writerow([
@@ -81,29 +93,33 @@ def members_csv(members):
             "" if m.get("district") is None else m.get("district"),
             ci.get("phoneNumber"), m.get("officialWebsiteUrl"), m.get("birthYear"),
             ci.get("officeAddress"), "; ".join(m.get("committees") or []),
-            (m.get("depiction") or {}).get("imageUrl"),
+            (m.get("depiction") or {}).get("imageUrl"), _cell(congress),
         ])
     return buf.getvalue().encode()
 
 
-def votes_csv(votes):
+def _cell(value):
+    return "" if value is None else value
+
+
+def votes_csv(votes, congress=None):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
     w.writerow(["voteId", "chamber", "date", "bill", "title", "motionText",
-                "result", "yea", "nay", "billUrl"])
+                "result", "yea", "nay", "billUrl", "congress"])
     for vid, v in sorted(votes.items(), key=lambda kv: (kv[1].get("date") or "", kv[0])):
         w.writerow([vid, v.get("chamber"), v.get("date"), v.get("bill"), v.get("title"),
                     v.get("motionText"), v.get("result"), v.get("yea"), v.get("nay"),
-                    v.get("billUrl")])
+                    v.get("billUrl"), _cell(congress)])
     return buf.getvalue().encode()
 
 
-def member_votes_csv(members, votes, member_votes):
+def member_votes_csv(members, votes, member_votes, congress=None):
     by_id = {m["bioguideId"]: m for m in members}
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
     w.writerow(["bioguideId", "name", "party", "chamber", "district",
-                "voteId", "date", "bill", "title", "vote"])
+                "voteId", "date", "bill", "title", "vote", "congress"])
     for bid, recs in member_votes.items():
         m = by_id.get(bid, {})
         for r in recs:
@@ -111,14 +127,14 @@ def member_votes_csv(members, votes, member_votes):
             w.writerow([bid, m.get("name"), m.get("partyName"), m.get("chamber"),
                         "" if m.get("district") is None else m.get("district"),
                         r.get("voteId"), v.get("date"), v.get("bill"), v.get("title"),
-                        r.get("vote")])
+                        r.get("vote"), _cell(congress)])
     return buf.getvalue().encode()
 
 
 # --------------------------------------------------------------------------- #
 # Markdown roster
 # --------------------------------------------------------------------------- #
-def roster_md(members, meta):
+def roster_md(members, meta, session=None):
     sens = sorted([m for m in members if m.get("chamber") == "Senate"],
                   key=lambda m: (m.get("lastName") or ""))
     reps = sorted([m for m in members if m.get("chamber") == "House of Representatives"],
@@ -131,7 +147,11 @@ def roster_md(members, meta):
         u = m.get("officialWebsiteUrl")
         return f"[site]({u})" if u else ""
 
-    L = ["# Georgia Federal Delegation", ""]
+    cong = meta.get("congress")
+    title = "# Georgia Federal Delegation"
+    if cong:
+        title += f" ({congress_ordinal(cong)} Congress)"
+    L = [title, ""]
     L.append("_Auto-generated from [votega.org](https://votega.org) — do not edit by hand._  ")
     L.append(f"_Last updated {meta['generatedAt']} · {meta['count']} members "
              f"({len(sens)} Senate, {len(reps)} House)._")
@@ -139,6 +159,14 @@ def roster_md(members, meta):
     L.append("> Machine-readable versions: [`data/members.json`](data/members.json), "
              "[`data/members.csv`](data/members.csv). Roll-call votes: "
              "[`data/votes.csv`](data/votes.csv), [`data/member-votes.csv`](data/member-votes.csv).")
+    L.append("")
+    if session:
+        L.append(f"> This is the frozen record of the {session} Congress, kept as history. "
+                 "The current Congress is in [`data/`](../../data); every frozen Congress lives under "
+                 "[`sessions/`](../).")
+    else:
+        L.append("> Prior Congresses are preserved under [`sessions/`](sessions); the files "
+                 "below describe the current Congress only and are replaced at each new Congress.")
     L.append("")
     L.append("## U.S. Senate")
     L.append("")
@@ -161,10 +189,18 @@ def roster_md(members, meta):
 # --------------------------------------------------------------------------- #
 # JSON Schemas
 # --------------------------------------------------------------------------- #
-def members_schema():
+def schema_url(path):
+    """Canonical $id for a schema published at `path`. A frozen Congress's schema declares
+    sessions/<slug>/..., not the live data/ file, so two documents never share one $id."""
+    return f"{RAW_BASE}/{path}"
+
+
+def members_schema(path="data/members.schema.json"):
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://raw.githubusercontent.com/Votega/ga-federal-legislators/main/data/members.schema.json",
+        "$id": schema_url(path),
+        "schemaVersion": SCHEMA_VERSION,
+        "schemaStability": SCHEMA_STABILITY,
         "title": "Georgia Federal Delegation — Members",
         "description": "Georgia's current U.S. Senators and Representatives, filtered from "
                        "votega.org's national Congress.gov roster (state == 'Georgia').",
@@ -251,10 +287,12 @@ def members_schema():
     }
 
 
-def votes_schema():
+def votes_schema(path="data/votes.schema.json"):
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://raw.githubusercontent.com/Votega/ga-federal-legislators/main/data/votes.schema.json",
+        "$id": schema_url(path),
+        "schemaVersion": SCHEMA_VERSION,
+        "schemaStability": SCHEMA_STABILITY,
         "title": "Georgia Federal Delegation — Roll-call Votes",
         "description": "Roll-call votes for Georgia's federal delegation in the current Congress. "
                        "SCOPE: every recorded roll call both chambers held, enumerated from the "
@@ -366,20 +404,271 @@ def build_artifacts():
         "schemaVersion": SCHEMA_VERSION,
     }
 
+    congress = meta["congress"]
     return {
         "data/members.json": build_json({"metadata": meta, "members": ga}),
         "data/votes.json": build_json(votes_doc),
-        "data/members.csv": members_csv(ga),
-        "data/votes.csv": votes_csv(votes),
-        "data/member-votes.csv": member_votes_csv(ga, votes, member_votes),
+        "data/members.csv": members_csv(ga, congress),
+        "data/votes.csv": votes_csv(votes, congress),
+        "data/member-votes.csv": member_votes_csv(ga, votes, member_votes, congress),
         "data/members.schema.json": build_json(members_schema()),
         "data/votes.schema.json": build_json(votes_schema()),
         "ROSTER.md": roster_md(ga, meta),
     }
 
 
+# --------------------------------------------------------------------------- #
+# freeze mode: keep a finished Congress as history under sessions/<slug>/
+# --------------------------------------------------------------------------- #
+# The daily publish replaces data/ in place, so on 3 January 2027 data/ stops describing
+# the 119th and starts describing the 120th. `freeze` writes the 119th's whole Georgia
+# record into sessions/119th/ first, and nothing the daily publish writes can reach
+# that directory (assert_no_archive_paths). Run it twice: a provisional freeze any time,
+# and a --final one after the Congress's last roll call and BEFORE the first daily run of
+# the new Congress (the date-derived Congress number flips at 00:00 UTC on 3 January, 11
+# hours before the 120th convenes, so "final by 2 January").
+FREEZE_KINDS = ("provisional", "final")
+SLUG_RE = re.compile(r"^\d+(st|nd|rd|th)$")
+
+
+def resolve_freeze_slug(explicit, votes_doc):
+    """`119th`. An explicit slug wins; otherwise it is derived from the votes file's Congress."""
+    if explicit:
+        if not SLUG_RE.match(explicit):
+            sys.exit(f"freeze: slug must look like '119th', got {explicit!r}")
+        return explicit
+    congress = (votes_doc.get("metadata") or {}).get("congress")
+    if not isinstance(congress, int):
+        sys.exit("freeze: federal-member-votes.json has no metadata.congress; pass the slug explicitly")
+    return congress_ordinal(congress)
+
+
+def assert_same_congress(slug, congresses):
+    """Every source file must describe the Congress being frozen.
+
+    After 3 January the live files describe the 120th, so a late run of `freeze 119th`
+    would otherwise file the 120th's data under the 119th's name -- and a final freeze
+    of it could not be told apart from the real one. `congresses` is {source: number}.
+    """
+    bad = {k: v for k, v in congresses.items() if not isinstance(v, int) or congress_ordinal(v) != slug}
+    if bad:
+        sys.exit(f"freeze: refusing to file data under sessions/{slug}/ -- these sources "
+                 f"describe a different Congress: {bad}")
+
+
+def assert_archive_paths(artifacts, slug):
+    """Every freeze artifact lives under sessions/<slug>/ (LICENSE/NOTICE are injected later)."""
+    bad = [pth for pth in artifacts if not pth.startswith(f"sessions/{slug}/")]
+    if bad:
+        sys.exit(f"freeze: refusing to publish outside sessions/{slug}/: {bad}")
+
+
+def assert_no_archive_paths(artifacts):
+    """The daily publish must never write into sessions/: that is the whole point of the archive."""
+    bad = [pth for pth in artifacts if pth.startswith("sessions/")]
+    if bad:
+        sys.exit(f"daily publish: refusing to write into the frozen archive: {bad}")
+
+
+def check_freeze_state(existing_kind, kind, overwrite):
+    """A final freeze is not replaced casually. provisional -> provisional/final is fine
+    (that is the plan); final -> anything needs --overwrite."""
+    if kind not in FREEZE_KINDS:
+        sys.exit(f"freeze: kind must be one of {FREEZE_KINDS}, got {kind!r}")
+    if existing_kind == "final" and not overwrite:
+        sys.exit("freeze: this Congress already has a FINAL freeze; re-run with --overwrite "
+                 "to replace it deliberately.")
+
+
+def existing_freeze_kind(slug):
+    """`kind` of the freeze already published at sessions/<slug>/freeze.json, or None.
+    Only checks when a token is set (a dry run writes to disk, not the repo)."""
+    token = os.environ.get(TOKEN_ENV)
+    if not token:
+        return None
+    url = f"https://api.github.com/repos/{REPO}/contents/{SESSIONS_DIR}/{slug}/freeze.json"
+    req = urllib.request.Request(url, headers={"Authorization": f"token {token}",
+                                               "Accept": "application/vnd.github.v3+json"})
+    try:
+        body = json.loads(_urlopen_retry(req))
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+    try:
+        return json.loads(base64.b64decode(body["content"])).get("kind")
+    except (KeyError, ValueError):
+        return None
+
+
+def scorecard_csv(unity_doc, congress):
+    cols = ["bioguideId", "name", "chamber", "party", "totalRollCalls", "cast", "missed",
+            "participationRate", "missedRate", "partyUnity", "partyLineVotes", "votedWithParty",
+            "independenceRate", "unityRank", "participationRank", "cohortSize"]
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(cols + ["congress"])
+    for bid, rec in sorted((unity_doc.get("members") or {}).items()):
+        w.writerow([bid] + [_cell(rec.get(c)) for c in cols[1:]] + [_cell(congress)])
+    return buf.getvalue().encode()
+
+
+def sponsorship_csv(slices, congress):
+    """Decode the positional sponsorship slices into one flat row per bill.
+
+    Slice rows are [type, number, title, introducedDate, actionDate, actionIdx, policyIdx],
+    the last two indexing the slice's own `actions` / `policyAreas` tables (see
+    lib/federal_sponsorship.py). A flat table is what a spreadsheet user can actually open;
+    the raw slices are published beside it for anyone who wants the compact form."""
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(["bioguideId", "role", "billType", "billNumber", "title", "introducedDate",
+                "actionDate", "latestAction", "policyArea", "billUrl", "congress"])
+    for bid in sorted(slices):
+        sl = slices[bid]
+        actions, policies = sl.get("actions") or [], sl.get("policyAreas") or []
+        for role, key in (("sponsor", "primary"), ("cosponsor", "cosponsored")):
+            for row in sl.get(key) or []:
+                typ, num, title, intro, act, ai, pi = (list(row) + [None] * 7)[:7]
+                w.writerow([bid, role, typ, num, title, _cell(intro), _cell(act),
+                            actions[ai] if isinstance(ai, int) and 0 <= ai < len(actions) else "",
+                            policies[pi] if isinstance(pi, int) and 0 <= pi < len(policies) else "",
+                            bill_url(congress, typ, num), _cell(congress)])
+    return buf.getvalue().encode()
+
+
+def freeze_readme(slug, congress, kind, meta, counts):
+    first, second = congress_years(congress)
+    L = [f"# {slug} Congress: Georgia delegation (frozen record)", "",
+         f"The Georgia federal delegation's record for the {slug} Congress "
+         f"(January 3, {first} to January 3, {second + 1}), kept as history. "
+         f"Freeze kind: **{kind}**, taken {meta['frozenAt']}."]
+    if kind == "provisional":
+        L += ["", "> **Provisional.** The Congress was still sitting when this was taken, so later "
+              "votes, sponsorships and roster changes are missing. A final freeze replaces it "
+              "once the Congress has adjourned."]
+    L += ["", "The live files in [`data/`](../../data) describe the current Congress and are "
+          "replaced at each new Congress. Nothing in this directory is touched by the daily "
+          "publish.", "", "## Files", "",
+          f"- `members.json`, `members.csv`: the {counts['members']} delegation members "
+          "(`members.schema.json`).",
+          f"- `votes.json`: every recorded roll call ({counts['votes']}) joined to the "
+          "delegation, in the same shape as the live file (`votes.schema.json`). `votes.csv` "
+          "and `member-votes.csv` are flat versions.",
+          "- `scorecard.json`, `scorecard.csv`: party-unity and participation per member.",
+          f"- `sponsorship/`: each member's complete sponsored and cosponsored record "
+          f"({counts['sponsored']} sponsored, {counts['cosponsored']} cosponsored) in the compact "
+          "form the site uses: `index.json` plus one `<bioguideId>.json` per member, where each "
+          "row is `[type, number, title, introducedDate, actionDate, actionIdx, policyIdx]` and "
+          "the last two index that file's own `actions` and `policyAreas` lists. "
+          "`sponsorship.csv` is the same data, one flat row per bill.",
+          "- `freeze.json`: what was frozen, when, from which sources, and with what counts.", "",
+          "## Notes", "",
+          "- Members are keyed by `bioguideId`, Congress.gov's stable id.",
+          "- Where a Senate roll call is marked in `votes.json` `metadata.senateRollsFromVoteview`, "
+          "it was taken from Voteview because senate.gov was unreachable; those records may "
+          "differ slightly from the official one.",
+          "- Reuse is governed by the repository's `LICENSE` and `NOTICE.md`.", ""]
+    return ("\n".join(L) + "\n").encode()
+
+
+def build_freeze(slug, kind, src_members_doc, votes_doc, unity_doc, sponsor_index, slices, now=None):
+    """The whole sessions/<slug>/ artifact set. Pure: no network, no disk."""
+    congress = (votes_doc.get("metadata") or {}).get("congress")
+    assert_same_congress(slug, {
+        "federal-member-votes.json": congress,
+        "federal-party-unity.json": (unity_doc.get("metadata") or {}).get("congress"),
+        "federal-sponsorship-index.json": (sponsor_index.get("metadata") or {}).get("congress"),
+    })
+    ga = [normalize_member(m) for m in src_members_doc.get("members", [])
+          if m.get("state") == "Georgia"]
+    for warning in check_sources(ga, votes_doc):
+        print(f"WARNING: {warning}")
+    votes = votes_doc.get("votes", {})
+    member_votes = votes_doc.get("memberVotes", {})
+    base = f"{SESSIONS_DIR}/{slug}"
+    frozen_at = (now or datetime.now(timezone.utc)).isoformat()
+
+    sponsor_meta = sponsor_index.get("metadata") or {}
+    counts = {"members": len(ga), "votes": len(votes),
+              "sponsored": sponsor_meta.get("totalSponsored", 0),
+              "cosponsored": sponsor_meta.get("totalCosponsored", 0)}
+    manifest = {
+        "congress": congress, "slug": slug, "kind": kind, "frozenAt": frozen_at,
+        "congressYears": list(congress_years(congress)), "counts": counts,
+        "sources": {
+            "members": (src_members_doc.get("metadata") or {}).get("generatedAt"),
+            "votes": (votes_doc.get("metadata") or {}).get("generatedAt"),
+            "scorecard": (unity_doc.get("metadata") or {}).get("generatedAt"),
+            "sponsorship": sponsor_meta.get("generatedAt"),
+        },
+        "schemaVersion": SCHEMA_VERSION,
+    }
+    meta = {
+        "generatedAt": frozen_at,
+        "source": "Congress.gov API, filtered to Georgia from votega.org current-members.json",
+        "sourceGeneratedAt": (src_members_doc.get("metadata") or {}).get("generatedAt"),
+        "count": len(ga), "congress": congress, "schemaVersion": SCHEMA_VERSION,
+        "freeze": {"kind": kind, "frozenAt": frozen_at, "slug": slug},
+    }
+    artifacts = {
+        f"{base}/members.json": build_json({"metadata": meta, "members": ga}),
+        f"{base}/members.csv": members_csv(ga, congress),
+        f"{base}/members.schema.json": build_json(members_schema(f"{base}/members.schema.json")),
+        f"{base}/votes.json": build_json(votes_doc),
+        f"{base}/votes.csv": votes_csv(votes, congress),
+        f"{base}/member-votes.csv": member_votes_csv(ga, votes, member_votes, congress),
+        f"{base}/votes.schema.json": build_json(votes_schema(f"{base}/votes.schema.json")),
+        f"{base}/scorecard.json": build_json(unity_doc),
+        f"{base}/scorecard.csv": scorecard_csv(unity_doc, congress),
+        f"{base}/sponsorship/index.json": build_json(sponsor_index),
+        f"{base}/sponsorship.csv": sponsorship_csv(slices, congress),
+        f"{base}/README.md": freeze_readme(slug, congress, kind, manifest, counts),
+        f"{base}/freeze.json": build_json(manifest),
+    }
+    for bid, sl in slices.items():
+        artifacts[f"{base}/sponsorship/{bid}.json"] = build_json(sl)
+    assert_archive_paths(artifacts, slug)
+    return artifacts
+
+
+def load_sponsorship_slices(sponsor_index):
+    out = {}
+    for bid in sorted((sponsor_index.get("members") or {})):
+        path = os.path.join(SRC_SPONSOR_DIR, f"{bid}.json")
+        try:
+            out[bid] = json.load(open(path, encoding="utf-8"))
+        except (OSError, ValueError):
+            sys.exit(f"freeze: the sponsorship index lists {bid} but {path} is missing or unreadable")
+    return out
+
+
+def run_freeze(argv):
+    flags = {a for a in argv if a.startswith("--")}
+    unknown = flags - {"--final", "--overwrite"}
+    if unknown:
+        sys.exit(f"freeze: unknown option(s) {sorted(unknown)}; use --final and/or --overwrite")
+    args = [a for a in argv if not a.startswith("--")]
+    kind = "final" if "--final" in flags else "provisional"
+    votes_doc = json.load(open(SRC_VOTES, encoding="utf-8"))
+    slug = resolve_freeze_slug(args[0] if args else None, votes_doc)
+    check_freeze_state(existing_freeze_kind(slug), kind, "--overwrite" in flags)
+    sponsor_index = json.load(open(SRC_SPONSOR_INDEX, encoding="utf-8"))
+    artifacts = build_freeze(
+        slug, kind, json.load(open(SRC_MEMBERS, encoding="utf-8")), votes_doc,
+        json.load(open(SRC_UNITY, encoding="utf-8")), sponsor_index,
+        load_sponsorship_slices(sponsor_index))
+    publish_or_dry_run(REPO, artifacts, TOKEN_ENV,
+                       validate=min_items(f"{SESSIONS_DIR}/{slug}/members.json", "members"))
+
+
 def main():
-    publish_or_dry_run(REPO, build_artifacts(), TOKEN_ENV,
+    if len(sys.argv) > 1 and sys.argv[1] == "freeze":
+        run_freeze(sys.argv[2:])
+        return
+    artifacts = build_artifacts()
+    assert_no_archive_paths(artifacts)
+    publish_or_dry_run(REPO, artifacts, TOKEN_ENV,
                        validate=min_items("data/members.json", "members"))
 
 

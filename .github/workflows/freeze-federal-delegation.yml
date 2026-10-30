@@ -1,0 +1,67 @@
+name: Freeze federal delegation record (manual, per Congress)
+
+# Deliberate, twice-per-Congress action. The daily publish (publish-federal-delegation-to-
+# ga-federal-legislators.yml) replaces data/ in Votega/ga-federal-legislators, so when a new
+# Congress is seated data/ stops describing the old one. This job keeps the outgoing Congress's
+# whole Georgia record (roster, votes, party-unity scorecard, sponsorship) under
+# sessions/<slug>/ -- e.g. sessions/119th/ -- which nothing the daily publish writes can reach.
+#
+#   1. Provisional freeze, any time (default). Safe to repeat; each run replaces the last
+#      provisional one.
+#   2. FINAL freeze, after the Congress's last roll call and BEFORE the first daily run of the
+#      next Congress. lib/congress_session.py derives the Congress number from the UTC date,
+#      so it flips at 00:00 UTC on 3 January -- 11 hours before the new Congress convenes at
+#      noon Eastern. For the 119th: run the final freeze by 2 January 2027, after the last
+#      update-current-members and update-federal-votes runs have committed.
+#
+# The script refuses to file data under a slug whose Congress it does not describe, and
+# refuses to replace a final freeze without the overwrite input.
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: >-
+          Congress to freeze, e.g. 119th. Leave blank to derive it from
+          federal-member-votes.json (metadata.congress).
+        type: string
+        required: false
+        default: ''
+      final:
+        description: Mark this as the FINAL freeze (leave unchecked for a provisional one).
+        type: boolean
+        required: false
+        default: false
+      overwrite:
+        description: Replace an existing FINAL freeze (almost never wanted).
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  freeze:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general -- see RECURRING-TASKS.md
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Freeze the delegation into ga-federal-legislators sessions/<slug>/
+        env:
+          GA_FEDERAL_LEGISLATORS: ${{ secrets.GA_FEDERAL_LEGISLATORS }}
+          SLUG: ${{ inputs.slug }}
+          FINAL: ${{ inputs.final }}
+          OVERWRITE: ${{ inputs.overwrite }}
+        run: |
+          args=()
+          if [ -n "$SLUG" ]; then args+=("$SLUG"); fi
+          if [ "$FINAL" = "true" ]; then args+=("--final"); fi
+          if [ "$OVERWRITE" = "true" ]; then args+=("--overwrite"); fi
+          python3 scripts/publish_federal_delegation.py freeze "${args[@]}"

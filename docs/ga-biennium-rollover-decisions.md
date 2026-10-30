@@ -121,8 +121,17 @@ Scorecards are per biennium. Proposed: a frozen final scorecard for 2025-2026; t
 ### D11. Roster and votes across the rollover — Open
 `ga-member-votes.json` (4.1 MB) is replaced at the rollover. Decide whether a returning member's page shows only the current biennium's votes with a link to the archive, or several.
 
-### D12. Federal side — Open
-The 120th Congress convenes in January 2027. I have not checked how the federal pages and data archive (members, votes, party unity, stock trades) handle it.
+### D12. Federal side — Partly decided 2026-10-29 (checked from the code, nothing run)
+The 120th Congress convenes **January 3, 2027**, eight days before the General Assembly. What the code does at the turnover:
+- `lib/congress_session.py` derives the Congress number from the UTC date, so the four generators switch to the 120th at 00:00 UTC on January 3, about 11 hours before it convenes at noon Eastern.
+- The votes pipeline and publisher were built for a new Congress (empty start exempt from the id-set check, no roll-call floor, empty votes non-fatal), **but nothing archived the 119th**: a run builds only the 120th and the sibling repo's `data/` is replaced in place.
+- The roster generator exits without committing if more than 25 members are flagged no longer serving (`generate_current_members_data.py`); a normal turnover exceeds 25, so expect that run to fail until someone intervenes. Not verified against Congress.gov's actual timing.
+- `curated-federal-bills.json` is the 119th's list; the 120th has no key votes until one is curated.
+- `/us-congress/<slug>/` pages build from `current-members.json`, so a departed member's page disappears (the federal side of D3). Georgia's House members not returning: Carter (GA-1) and Loudermilk (GA-11), not on their seats' November ballots; Collins (GA-10), running for Senate; Blair (GA-13), who won the special election (July 28, runoff August 25) after David Scott's death but finished third in the regular primary. Clay Fuller (GA-14) won the April special and is the nominee.
+
+**Decided 2026-10-29: freeze the 119th into `sessions/119th/` of `Votega/ga-federal-legislators`, Georgia delegation only, sibling repo only (no on-site copy), in two freezes.** Built: `publish_federal_delegation.py freeze [slug] [--final] [--overwrite]` and the manual workflow `freeze-federal-delegation.yml`. It writes the roster, votes, flat CSVs, the party-unity scorecard, and each member's full sponsorship record (raw compact slices plus a flat `sponsorship.csv`), with per-path schemas, a manifest (`freeze.json`) and a README, and refuses to file one Congress's data under another's name. Daily publishes cannot write into `sessions/`, and every live CSV now ends with a `congress` column. **Provisional freeze now; the FINAL freeze must run by January 2, 2027,** after the last roster, votes and sponsorship runs have committed and before the first run of the new Congress. Dry-run output and tests verified; the first real publish has not been run.
+
+**Still open:** whether departed federal members keep a page, the transition guard on the roster run, who curates the 120th's key votes, and whether the D6 departure labels extend to federal members.
 
 ### D13. Georgia Commons — Open
 Tell them that links to members who leave office will be preserved, or hold the sponsor-link request until D1-D4 are settled. Include the licensing questions from `docs/georgia-civic-data-collaboration.md`.
