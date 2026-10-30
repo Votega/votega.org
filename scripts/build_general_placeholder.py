@@ -211,7 +211,43 @@ def district_number(name):
     return int(m.group(1)) if m else 0
 
 
-def build_sections(races, congress_by_id, ga_by_id):
+def measure_races():
+    """The statewide ballot questions, as zero-vote Yes/No contests.
+
+    Three constitutional amendments are certified for 3 November 2026 and a voter
+    decides them alongside every office on this page, so the page has to say so.
+
+    Titled from our own data, NOT from a guessed ballot number: ga-ballot-measures.json
+    records no official designation, and the Secretary of State numbers these
+    ("Proposed Constitutional Amendment 1"). Inventing a number would be a fact we
+    do not have. Once the CSV lands, build_results_json.py rebuilds this section
+    under the SoS's own names, which is the right label at that point.
+
+    `status: certified` is what puts a measure on the ballot; "potential" and
+    "not-on-ballot" are the other lifecycle values and are deliberately skipped.
+    """
+    path = os.path.join(ROOT, 'assets', 'data', 'ga-ballot-measures.json')
+    try:
+        with open(path, encoding='utf-8') as f:
+            data = json.load(f)
+    except (OSError, ValueError):
+        return []
+    out = []
+    for m in data.get('measures') or []:
+        if m.get('status') != 'certified':
+            continue
+        if (m.get('electionDate') or '')[:4] != str(CYCLE):
+            continue
+        label = ' — '.join(x for x in (m.get('type'), m.get('title')) if x)
+        out.append({'office': label, 'contests': [{
+            'party': 'np', 'totalVotes': 0,
+            'candidates': [{'name': 'Yes', 'votes': 0, 'incumbent': False},
+                           {'name': 'No', 'votes': 0, 'incumbent': False}],
+        }]})
+    return out
+
+
+def build_sections(races, congress_by_id, ga_by_id, measures=None):
     buckets = {k: OrderedDict() for k in ('statewide', 'us-house', 'state-senate', 'state-house', 'courts')}
 
     for race in races:
@@ -238,6 +274,8 @@ def build_sections(races, congress_by_id, ga_by_id):
         {'id': 'state-senate', 'label': 'GA State Senate', 'races': races_from(buckets['state-senate'], sorted(buckets['state-senate'], key=district_number))},
         {'id': 'state-house', 'label': 'GA State House', 'races': races_from(buckets['state-house'], sorted(buckets['state-house'], key=district_number))},
         {'id': 'courts', 'label': 'Courts', 'races': races_from(buckets['courts'], sorted(buckets['courts']))},
+        {'id': 'measures', 'label': 'Ballot Questions',
+         'races': measure_races() if measures is None else measures},
     ]
 
 

@@ -172,6 +172,7 @@ Front-matter contract
   <button class="tab-btn" data-tab="state-senate">GA State Senate</button>
   <button class="tab-btn" data-tab="state-house">GA State House</button>
   <button class="tab-btn" data-tab="courts">Courts</button>
+  <button class="tab-btn" data-tab="measures">Ballot Questions</button>
 </div>
 
 <div class="pr-filter-bar">
@@ -189,6 +190,7 @@ Front-matter contract
 <div id="tab-state-senate" class="tab-panel"></div>
 <div id="tab-state-house"  class="tab-panel"></div>
 <div id="tab-courts"       class="tab-panel"></div>
+<div id="tab-measures"     class="tab-panel"></div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/results-contest.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -360,8 +362,23 @@ function pct(v,t){ return ResultsContest.percent(v,t); }
 function fmt(n){ return (n||0).toLocaleString(); }
 const partyLabel = ResultsContest.partyLabel;
 
-function badgeText(kind){
+function badgeText(kind, section, yesLeads){
   const L = CFG.labels;
+  // A ballot question is passed or defeated, never elected. Without this the
+  // general page's `label_winner: Elected` badged a constitutional amendment
+  // "Elected", and the pre-certification standing read "Leads".
+  //
+  // And it is the YES side passing that decides it, not whichever option leads:
+  // the shared status logic calls the front-runner the winner, so a referendum
+  // defeated 55-45 first rendered as "Passed".
+  if (section === 'measures') {
+    if (kind === 'winner') {
+      if (CFG.status === 'certified') return yesLeads ? 'Passed' : 'Defeated';
+      return yesLeads ? 'Passing' : 'Failing';
+    }
+    if (kind === 'runoff') return 'Too close to call';
+    if (kind === 'uncontested') return 'Unopposed';
+  }
   // A 'winner' badge before certification would be a call we are not making.
   // ResultsContest.status() returns 'winner' as soon as the leader passes 50%
   // of the votes counted SO FAR, so at 3% reporting every leader qualifies —
@@ -379,7 +396,7 @@ function badgeText(kind){
 
 function getStatus(c){ return ResultsContest.status(c, CFG); }
 
-function renderContest(c, office, candidateIndex){
+function renderContest(c, office, candidateIndex, section){
   const status = getStatus(c);
   const p = c.party || 'np';
   const noRes = status==='no-results';
@@ -409,6 +426,12 @@ function renderContest(c, office, candidateIndex){
   // searching "carter" or "mccolumn" hid the US Senate card instead of finding
   // it — on 49 contests across the results pages. race.html renders the same
   // data and escapes it; this copy did not.
+  // Which side is ahead, for the measure badge. Read off the candidate list
+  // rather than assuming Yes is listed first: build_results_json sorts a
+  // contest's options by votes, so the order is the result, not the ballot.
+  const lead = (c.candidates||[]).reduce((a,b)=>(b.votes||0)>(a.votes||0)?b:a,
+                                         (c.candidates||[])[0] || {});
+  const yesLeads = String(lead.name||'').trim().toLowerCase() === 'yes';
   const candSearch = (c.candidates||[]).map(x=>x.name.toLowerCase()).join(' ');
   // Guarded, per the cache-busting note in CLAUDE.md: the `?v=` on the script
   // tag means a stale results-contest.js cannot be served with this HTML, but
@@ -423,8 +446,8 @@ function renderContest(c, office, candidateIndex){
     <div class="race-header">
       <span class="race-title">${escHtml(office)}</span>
       <div class="race-meta">
-        <span class="party-badge ${p}">${partyLabel(p)}</span>
-        <span class="status-badge ${status}">${badgeText(status)}</span>
+        <span class="party-badge ${p}">${section === 'measures' ? 'Ballot Question' : partyLabel(p)}</span>
+        <span class="status-badge ${status}">${badgeText(status, section, yesLeads)}</span>
       </div>
     </div>
     ${noteHtml}
@@ -457,8 +480,8 @@ SECTIONS.forEach(s=>{
     ? `<p style="color:var(--color-text-muted);font-size:.85rem;padding:.5rem 0">${CFG.emptyText}</p>`
     : s.races.map(r =>
         r.contests.length===1
-          ? renderContest(r.contests[0], r.office, candidateIndex)
-          : r.contests.map(c => renderContest(c, r.office, candidateIndex)).join('')
+          ? renderContest(r.contests[0], r.office, candidateIndex, s.id)
+          : r.contests.map(c => renderContest(c, r.office, candidateIndex, s.id)).join('')
       ).join('');
 });
 

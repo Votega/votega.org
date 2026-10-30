@@ -41,6 +41,8 @@ def sound():
         {"id": "state-senate", "label": "SS", "races": [race("District 2", "D")]},
         {"id": "state-house", "label": "SH", "races": [race("District 3", "E")]},
         {"id": "courts", "label": "C", "races": [race("Supreme Court of Georgia (Seat 1)", "F")]},
+        {"id": "measures", "label": "BQ",
+         "races": [race("Proposed Constitutional Amendment 1", "Yes")]},
     ]
 
 
@@ -87,7 +89,7 @@ def tier2_cases():
     d = sound(); d.pop()
     secs = dict(V.tier2(d, None))
     check("a missing section is reported and named",
-          "`courts`" in "".join(secs.get("Sections differ from the expected five", [])), True)
+          "`measures`" in "".join(secs.get("Sections differ from the expected five", [])), True)
 
     d = sound(); d[3]["races"] = []
     secs = dict(V.tier2(d, None))

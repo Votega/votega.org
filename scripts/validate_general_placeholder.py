@@ -41,7 +41,8 @@ import sys
 # The sections build_sections() emits. Structural, not a count of anything the
 # world controls, but a missing one is still the world (or races.json) talking,
 # so it is reported rather than gated.
-EXPECTED_SECTIONS = ["statewide", "us-house", "state-senate", "state-house", "courts"]
+EXPECTED_SECTIONS = ["statewide", "us-house", "state-senate", "state-house", "courts",
+                     "measures"]
 
 # Cap on named lines per heading; the first run after a races.json edit can
 # touch a hundred offices.

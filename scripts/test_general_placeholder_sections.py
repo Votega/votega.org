@@ -82,7 +82,10 @@ OTHERS = [
 
 
 def sections_by_id(races):
-    return {s['id']: s for s in B.build_sections(races, {}, {})}
+    # measures=[] so these stay unit tests: the ballot-questions section is read
+    # from ga-ballot-measures.json, not from `races`, and letting the live file in
+    # would make every assertion here move with the next election's measures.
+    return {s['id']: s for s in B.build_sections(races, {}, {}, measures=[])}
 
 
 def cases():
@@ -99,9 +102,9 @@ def cases():
           {B.classify(r) for r in DA}, {'courts'})
 
     everything = sections_by_id(JUDICIAL + DA + OTHERS)
-    check("all five sections are emitted",
-          sorted(everything), ['courts', 'state-house', 'state-senate',
-                               'statewide', 'us-house'])
+    check("all six sections are emitted",
+          sorted(everything), ['courts', 'measures', 'state-house',
+                               'state-senate', 'statewide', 'us-house'])
 
     # courts holds the DA races and ONLY the DA races.
     check("courts holds just the DA races",
@@ -129,7 +132,8 @@ def cases():
           sections_by_id(DA + OTHERS), everything)
 
     check("the other sections still fill",
-          {k: len(v['races']) for k, v in everything.items() if k != 'courts'},
+          {k: len(v['races']) for k, v in everything.items()
+           if k not in ('courts', 'measures')},
           {'statewide': 1, 'us-house': 1, 'state-senate': 1, 'state-house': 1})
 
     # A judicial-only build is the case that used to be the whole courts section.
@@ -137,8 +141,9 @@ def cases():
     check("a judicial-only build yields no offices at all",
           sum(len(s['races']) for s in only.values()), 0)
     check("courts is still emitted when it is empty",
-          [s['id'] for s in B.build_sections(JUDICIAL, {}, {})],
-          ['statewide', 'us-house', 'state-senate', 'state-house', 'courts'])
+          [s['id'] for s in B.build_sections(JUDICIAL, {}, {}, measures=[])],
+          ['statewide', 'us-house', 'state-senate', 'state-house', 'courts',
+           'measures'])
 
 
 if __name__ == "__main__":

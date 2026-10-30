@@ -70,7 +70,16 @@ def classify(office_name):
     if ('judge' in on or 'justice' in on or 'court of appeals' in on or
             'supreme court' in on or 'district attorney' in on):
         return 'courts'
-    return None  # party questions etc. — skip
+    # Statewide ballot questions. The names are the Secretary of State's own, taken
+    # from the 2024 general export: "Proposed Constitutional Amendment 1" and
+    # "Statewide Referendum Question A", each with Yes/No ballot options and, unhelpfully,
+    # contestType "Candidate" — so the office name is the only thing to key on.
+    # Without this they fell into the `return None` below with the party straw polls,
+    # and three constitutional amendments on the 2026 ballot would have reported no
+    # result at all while every other contest filled in.
+    if on.startswith('proposed constitutional amendment') or on.startswith('statewide referendum'):
+        return 'measures'
+    return None  # county party questions etc. — skip
 
 
 def base_display_name(office_name):
@@ -155,7 +164,7 @@ def _contests_for_office(contest_list):
 
 def build_sections(contests):
     buckets = {k: OrderedDict() for k in
-               ('statewide', 'us-house', 'state-senate', 'state-house', 'courts')}
+               ('statewide', 'us-house', 'state-senate', 'state-house', 'courts', 'measures')}
     for contest in contests.values():
         section = classify(contest['office_name'])
         if section is None:
@@ -165,6 +174,8 @@ def build_sections(contests):
             display = statewide_display(on)
         elif section == 'courts':
             display = courts_display(on)
+        elif section == 'measures':
+            display = base_display_name(on)
         else:
             base = base_display_name(on)
             if 'special' in on.lower():
@@ -193,6 +204,7 @@ def build_sections(contests):
         {'id': 'state-senate', 'label': 'GA State Senate',       'races': races_from(buckets['state-senate'], split_specials(buckets['state-senate']))},
         {'id': 'state-house',  'label': 'GA State House',        'races': races_from(buckets['state-house'], sorted(buckets['state-house'], key=district_number))},
         {'id': 'courts',       'label': 'Courts',                'races': races_from(buckets['courts'], list(buckets['courts']))},
+        {'id': 'measures',     'label': 'Ballot Questions',      'races': races_from(buckets['measures'], list(buckets['measures']))},
     ]
 
 
