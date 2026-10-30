@@ -75,6 +75,61 @@
     return party === 'rep' ? 'Republican' : party === 'dem' ? 'Democrat' : 'Nonpartisan';
   }
 
+  /*
+   * An office can carry a standing note that the vote numbers cannot express:
+   * the Atlantic Judicial Circuit's District Attorney contest on 3 Nov 2026 is
+   * a SPECIAL PRIMARY with a 1 Dec runoff, not a general election, and a card
+   * that just says "District Attorney" tells a voter the wrong thing about what
+   * their vote decides.
+   *
+   * The notes live in the results page's own front matter, deliberately NOT in
+   * the results data: _data/election_results/*.json is rebuilt wholesale from
+   * the Secretary of State's CSV on election night, which would drop any field
+   * added here exactly when the page matters most. Front matter survives that
+   * rebuild untouched.
+   *
+   * Matching is normalized because the key has to survive the handover from the
+   * ballot preview to that CSV. Both sides spell the office "District Attorney
+   * - Atlantic Judicial Circuit" today, but case, dash style, doubled spaces and
+   * the CSV's trailing "- Rep" / "- Dem" party suffix are all things that drift
+   * between the two sources without changing which office is meant.
+   */
+  function normalizeOffice(value) {
+    return String(value == null ? '' : value)
+      .toLowerCase()
+      .replace(/[‐-―]/g, '-')      // en dash, em dash, figure dash
+      .replace(/\s*-\s*(rep|dem)\s*$/, '')     // the CSV's party suffix
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
+  }
+
+  /* The note for `office`, as { label, text }, or null. A bare string is
+   * accepted as a note with no label. */
+  function officeNote(notes, office) {
+    if (!notes || typeof notes !== 'object') return null;
+    var want = normalizeOffice(office);
+    if (!want) return null;
+    for (var key in notes) {
+      if (!Object.prototype.hasOwnProperty.call(notes, key)) continue;
+      if (normalizeOffice(key) !== want) continue;
+      var note = notes[key];
+      if (typeof note === 'string') return note ? { label: '', text: note } : null;
+      if (note && note.text) return { label: note.label || '', text: note.text };
+      return null;
+    }
+    return null;
+  }
+
+  /* Configured notes that match no office on the page. A note that silently
+   * matches nothing is the failure mode worth surfacing: it looks identical to
+   * having no note at all, so the caller logs these rather than discarding them. */
+  function unmatchedNotes(notes, offices) {
+    if (!notes || typeof notes !== 'object') return [];
+    var present = {};
+    (offices || []).forEach(function (o) { present[normalizeOffice(o)] = true; });
+    return Object.keys(notes).filter(function (k) { return !present[normalizeOffice(k)]; });
+  }
+
   global.ResultsContest = {
     percent: percent,
     status: status,
@@ -83,5 +138,8 @@
     percentText: percentText,
     barWidth: barWidth,
     partyLabel: partyLabel,
+    normalizeOffice: normalizeOffice,
+    officeNote: officeNote,
+    unmatchedNotes: unmatchedNotes,
   };
 })(window);

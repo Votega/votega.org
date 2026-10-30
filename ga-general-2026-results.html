@@ -21,6 +21,22 @@ notice_upcoming: >-
   are tallied. A statewide race where no candidate wins a majority goes to a
   December 1 runoff. See who is on the ballot on the
   <a href="/elections/">elections page</a>.
+# Per-office notes, rendered on the race card by _layouts/election_results.html.
+# These live here, not in the generated results data, because
+# _data/election_results/*.json is rebuilt wholesale from the Secretary of
+# State's CSV once polls close — anything added to that file would vanish on
+# election night. Keys are matched case-, dash- and party-suffix-insensitively
+# (ResultsContest.officeNote); a key matching no office warns in the console.
+race_notes:
+  "District Attorney - Atlantic Judicial Circuit":
+    label: Special Primary
+    text: >-
+      This is a special primary to choose the Republican nominee, not a general
+      election. The Secretary of State called it after incumbent Billy Joe
+      Nelson Jr. withdrew, and only Republicans could qualify, so there is no
+      Democrat on this ballot. Voters in Bryan, Evans, Liberty, Long, McIntosh
+      and Tattnall Counties decide it; a runoff, if needed, is December 1.
+
 # --- Live and indexable ------------------------------------------------------
 # This page is crawlable (and in the sitemap and on-site search) BEFORE election
 # day so it already ranks and is bookmarked when people look for results. While no

@@ -73,6 +73,15 @@ Front-matter contract
   .race-card.winner-race { background: var(--color-success-tint); }
   .race-card.runoff-race { background: var(--color-warning-tint); }
   .race-card.no-results  { opacity: .6; }
+  /* A standing fact about the CONTEST that the vote numbers cannot say —
+     e.g. a special primary held on general-election day. Amber + icon +
+     label, never red: this is a notice, not an error. */
+  .race-note { display: flex; gap: .45rem; align-items: flex-start; margin: 0 .75rem .55rem;
+    padding: .45rem .6rem; background: var(--color-warning-tint);
+    border: 1px solid var(--color-warning-line); border-radius: 6px;
+    font-size: .8rem; line-height: 1.4; color: var(--color-text); }
+  .race-note i { color: var(--color-warning); margin-top: .15rem; flex: none; }
+  .race-note .race-note-label { font-weight: 700; }
   .race-header { display: flex; align-items: center; justify-content: space-between; padding: .6rem 1rem .35rem; flex-wrap: wrap; gap: .25rem; }
   .race-title  { font-weight: 600; font-size: .92rem; }
   .race-meta   { display: flex; gap: .4rem; align-items: center; flex-shrink: 0; }
@@ -203,6 +212,10 @@ const CFG = {
     noResults:   {{ page.label_noresults | jsonify }},
   },
   emptyText: {{ page.empty_section_text | default: 'No races in this section.' | jsonify }},
+  // Per-office notes, keyed by office name, from this page's own front
+  // matter. NOT in the results data: that file is rebuilt wholesale from the
+  // SoS CSV on election night and would drop them. See officeNote().
+  raceNotes: {{ page.race_notes | default: nil | jsonify }},
 };
 
 
@@ -397,6 +410,15 @@ function renderContest(c, office, candidateIndex){
   // it — on 49 contests across the results pages. race.html renders the same
   // data and escapes it; this copy did not.
   const candSearch = (c.candidates||[]).map(x=>x.name.toLowerCase()).join(' ');
+  // Guarded, per the cache-busting note in CLAUDE.md: the `?v=` on the script
+  // tag means a stale results-contest.js cannot be served with this HTML, but
+  // an unguarded call to a newly-added method is precisely what blanked every
+  // entity page once before. A missing method costs the note, not the page.
+  const note = ResultsContest.officeNote
+    ? ResultsContest.officeNote(CFG.raceNotes, office) : null;
+  const noteHtml = note
+    ? `<div class="race-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>${note.label ? `<span class="race-note-label">${escHtml(note.label)}.</span> ` : ''}${escHtml(note.text)}</span></div>`
+    : '';
   return `<div class="race-card ${p} ${cardCls}" data-party="${p}" data-office="${escHtml(office.toLowerCase())}" data-cands="${escHtml(candSearch)}">
     <div class="race-header">
       <span class="race-title">${escHtml(office)}</span>
@@ -405,6 +427,7 @@ function renderContest(c, office, candidateIndex){
         <span class="status-badge ${status}">${badgeText(status)}</span>
       </div>
     </div>
+    ${noteHtml}
     <div class="race-total">${total}</div>
     <div class="candidates">${cands}</div>
   </div>`;
@@ -438,6 +461,18 @@ SECTIONS.forEach(s=>{
           : r.contests.map(c => renderContest(c, r.office, candidateIndex)).join('')
       ).join('');
 });
+
+// A race_notes key that matches no office on the page renders nothing and
+// looks exactly like having configured no note at all — which is how a note
+// would quietly disappear if the SoS spells an office differently from the
+// ballot preview. Say so rather than failing silently.
+const unmatched = ResultsContest.unmatchedNotes
+  ? ResultsContest.unmatchedNotes(
+      CFG.raceNotes, SECTIONS.flatMap(s => s.races.map(r => r.office)))
+  : [];
+if (unmatched.length) {
+  console.warn('race_notes entries matched no office on this page:', unmatched);
+}
 
 // Hide empty tabs; determine the default (first tab that actually has races).
 let firstWithContent = null;
