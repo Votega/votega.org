@@ -4,7 +4,7 @@ Drafted 2026-10-30 for the approval step in D6 of `ga-biennium-rollover-decision
 
 Sources: the roster (`ga-members.json`, `status` and `statusDate`), the certified Secretary of State primary (5/19, certified 6/5) and runoff (6/16, certified 8/20) files, and the Secretary of State qualifying export (`ga-legislative-candidates.json`, matched by a second download on 2026-10-30). Vote figures are in the evidence column only; they are not in the label text, except Harbison's, which was decided earlier.
 
-**Scope: 33 sitting members who are not on the November ballot for their own seat, plus the 11 who resigned or were removed.** Batch 1 is every member whose outcome is already settled. Batch 2 (after November certification) is the 11 who won another office's nomination: Miller, Strickland, McLaurin, Dolezal, Fleming, J. Clark, Gaines, Draper, Romman, Reese, Wade.
+**Scope: 33 labels.** 11 members who resigned, 1 suspended, and 21 sitting members who are not on the November ballot for their own seat and whose outcome is already settled. (The earlier figure of 44 double-counted: the 33 sitting members off their own ballot include the 11 who won another office's nomination, who belong to batch 2.) Batch 2 (after November certification) is those 11: Miller, Strickland, McLaurin, Dolezal, Fleming, J. Clark, Gaines, Draper, Romman, Reese, Wade.
 
 ## A. Left mid-term (11 resigned) and one suspended
 
@@ -81,7 +81,7 @@ Evidence for all eight: absent from the qualifying export and from the certified
 4. **Vote figures:** left out of the label text (Harbison's, decided earlier, stays).
 5. **Henderson:** confirmed as written.
 
-Batch 1 is ready for your final approval; nothing is built or published.
+Batch 1 was approved on 2026-10-30 and recorded as data in `assets/data/ga-departure-labels.json` (checked by `scripts/test_ga_departure_labels.py`). No page reads it yet; labels will appear only on the former-members index and pages.
 
 ## Not covered
 
