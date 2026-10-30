@@ -73,7 +73,7 @@ DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 # meeting URL is the Drive /file/d/<id>/view page, which drive_download_url() rewrites
 # to the direct-download endpoint before fetching (the view page is HTML, not the PDF).
 OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'primegov', 'teammunicode',
-                 'gwinnett', 'iqm2', 'municode', 'agendapub', 'revize', 'gdrive'}
+                 'gwinnett', 'iqm2', 'municode', 'agendapub', 'revize', 'gdrive', 'pdflinks'}
 
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (meeting-topic-enricher)',
