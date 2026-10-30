@@ -9,6 +9,10 @@ Every candidate is written with 0 votes; the shared results layout
 Results" regardless of candidate count, so this is a safe pre-election
 preview, not a projection.
 
+The `courts` section is emitted EMPTY on purpose — see PREVIEW_EMPTY_SECTIONS.
+Judicial races are left off the preview but still show their results once the
+SoS reports any.
+
 This is the placeholder generator, not the results builder. Once official
 Nov 3 results are available as a Georgia SoS "Total Votes Results" CSV,
 replace this file's output by running the real builder instead:
@@ -101,6 +105,25 @@ def resolve_name(cand, congress_by_id, ga_by_id):
     return None
 
 
+# Sections the BALLOT PREVIEW leaves empty on purpose. Judicial races are
+# nonpartisan and decided at the May general primary, so they are deliberately
+# not advertised as "on the ballot" here — see the page's notice_upcoming.
+#
+# This is an exclusion from the PREVIEW ONLY, never from the results. Once polls
+# close, the page is rebuilt from the Secretary of State's CSV by
+# build_results_json.py, which buckets judicial contests into this same `courts`
+# section (ga-primary-results.json carries 88 of them). So judicial results
+# appear of their own accord the moment the SoS reports any, and none appear if
+# the SoS reports none. Nothing here has to be flipped on election night.
+#
+# The section itself is still emitted, empty: the file keeps its five sections
+# (what validate_general_placeholder.py expects, and an empty one is a tier-2
+# report rather than a gate), and _layouts/election_results.html already hides a
+# tab whose panel has no race cards, so the Courts tab stays out of sight until
+# there is something in it.
+PREVIEW_EMPTY_SECTIONS = {'courts'}
+
+
 def classify(race):
     level = race.get('level')
     chamber = race.get('chamber')
@@ -181,7 +204,7 @@ def build_sections(races, congress_by_id, ga_by_id):
         if race.get('cycle') != CYCLE or 'general' not in race.get('phases', {}):
             continue
         section = classify(race)
-        if section is None:
+        if section is None or section in PREVIEW_EMPTY_SECTIONS:
             continue
         contests = build_contests(race, section, congress_by_id, ga_by_id)
         if not contests:
