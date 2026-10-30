@@ -553,20 +553,34 @@
     return null;
   }
 
-  // Find any race where this member appears as a challenger running for a different office
+  // The phase whose ballot says who is STILL running: the race's active phase,
+  // else the latest one present, and the previous phase when that ballot has not
+  // been filled in yet. Reading every phase left "Running for ..." on the page of
+  // anyone who lost the primary or withdrew, because their primary entry stays in
+  // races.json as history.
+  function currentBallot(race) {
+    const flat = phase => phase
+      ? (phase.ballots ? Object.values(phase.ballots).flat() : (phase.candidates || []))
+      : [];
+    const order = ['primary', 'runoff', 'general'].filter(p => race.phases?.[p]);
+    const active = race.activePhase && order.includes(race.activePhase)
+      ? order.indexOf(race.activePhase) : order.length - 1;
+    for (let i = active; i >= 0; i--) {
+      const cands = flat(race.phases[order[i]]);
+      if (cands.length) return { phase: order[i], candidates: cands };
+    }
+    return null;
+  }
+
+  // Find any race where this member is still on the current ballot, running for a different office
   function findMemberInRaces(memberId, races) {
     for (const race of races) {
-      for (const phaseName of ['primary', 'general']) {
-        const phase = race.phases?.[phaseName];
-        if (!phase) continue;
-        const allCandidates = phase.ballots
-          ? Object.values(phase.ballots).flat()
-          : (phase.candidates || []);
-        const match = allCandidates.find(
-          c => c.existingMemberId === memberId && c.existingMemberSource === 'state'
-        );
-        if (match) return { race, phase: phaseName, challenger: match };
-      }
+      const ballot = currentBallot(race);
+      if (!ballot) continue;
+      const match = ballot.candidates.find(
+        c => c.existingMemberId === memberId && c.existingMemberSource === 'state' && !c.withdrawn
+      );
+      if (match) return { race, phase: ballot.phase, challenger: match };
     }
     return null;
   }

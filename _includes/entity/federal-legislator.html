@@ -570,23 +570,28 @@
 
   function findMemberInRaces(bioguideId, races) {
     for (const race of races) {
-      for (const phaseName of ['primary', 'general']) {
-        const phase = race.phases?.[phaseName];
-        if (!phase) continue;
-
-        const allCandidates = phase.ballots
-          ? Object.values(phase.ballots).flat()
-          : (phase.candidates || []);
-
+      // Only the current ballot says who is still running: the race's active
+      // phase, else the latest present, falling back to the previous phase while
+      // that ballot is empty. Reading every phase kept "Running for ..." on the
+      // page of anyone who lost the primary or withdrew.
+      const order = ['primary', 'runoff', 'general'].filter(p => race.phases?.[p]);
+      const flat = phase => phase.ballots ? Object.values(phase.ballots).flat() : (phase.candidates || []);
+      let phaseName = null, allCandidates = [];
+      for (let i = (race.activePhase && order.includes(race.activePhase) ? order.indexOf(race.activePhase) : order.length - 1); i >= 0; i--) {
+        const cands = flat(race.phases[order[i]]);
+        if (cands.length) { phaseName = order[i]; allCandidates = cands; break; }
+      }
+      if (!phaseName) continue;
+      {
         // Reelection: member is listed as incumbent in this race
         const asIncumbent = allCandidates.find(
-          c => c.type === 'incumbent' && c.memberId === bioguideId && c.memberSource === 'congress'
+          c => c.type === 'incumbent' && c.memberId === bioguideId && c.memberSource === 'congress' && !c.withdrawn
         );
         if (asIncumbent) return { type: 'reelection', race, phase: phaseName };
 
         // Different office: member's bioguideId appears as existingMemberId on a challenger entry
         const asChallenger = allCandidates.find(
-          c => c.type === 'challenger' && c.existingMemberId === bioguideId && c.existingMemberSource === 'congress'
+          c => c.type === 'challenger' && c.existingMemberId === bioguideId && c.existingMemberSource === 'congress' && !c.withdrawn
         );
         if (asChallenger) return { type: 'different-office', race, phase: phaseName, challenger: asChallenger };
       }
