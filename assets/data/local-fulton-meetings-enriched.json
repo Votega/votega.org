@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-29T15:39:39Z",
+  "generatedAt": "2026-10-30T19:34:03Z",
   "source": "Fulton County (Legistar structured API)",
   "place": "Fulton County",
-  "count": 21
+  "count": 22
  },
  "summary": {
   "flags": [
@@ -12,12 +12,12 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-21",
+  "lastActivity": "2026-11-04",
   "topicTotals": {
+   "contract": 204,
+   "millage-budget": 40,
+   "development": 71,
    "appointment": 58,
-   "development": 70,
-   "contract": 189,
-   "millage-budget": 37,
    "data-center": 4,
    "alpr": 1
   },
@@ -45,6 +45,16 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-11-04",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6399&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "tags": [
+     "development"
+    ],
+    "excerpt": "… y neighborhood by approving a grant from funds previously set aside to aid in the construction of a 200-unit affordable multifamily development, and for other purposes. (Barrett) Commissioners Action Item",
+    "excerptTerm": "multifamily"
+   },
    {
     "title": "Board of Commissioners",
     "date": "2026-10-21",
@@ -156,7 +166,7 @@
     "excerptTerm": "multifamily"
    }
   ],
-  "landUseMeetings": 14,
+  "landUseMeetings": 15,
   "alprItems": [
    {
     "title": "Board of Commissioners",
@@ -172,6 +182,60 @@
   "alprMeetings": 1
  },
  "meetings": [
+  {
+   "eventId": 6399,
+   "date": "2026-11-04",
+   "body": "Board of Commissioners",
+   "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6399&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+   "itemCount": 72,
+   "topics": {
+    "contract": 15,
+    "millage-budget": 3,
+    "development": 1
+   },
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "millage",
+    "multifamily",
+    "procurement"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "Request approval to accept assignment and assumption of the contract - Department of Real Estate and Asset Management and the Department of Purchasing & Contract Compliance, pursuant to Ar …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "millage",
+     "excerpt": "Request approval of the Fulton County, Georgia Supplemental Tax Resolution adopting the 2026 Millage Rate for the Fulton County School Board. CM Action Item - Open & Responsible Government",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… y neighborhood by approving a grant from funds previously set aside to aid in the construction of a 200-unit affordable multifamily development, and for other purposes. (Barrett) Commissioners Action Item",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "Request approval of a Resolution to support affordable housing in the Vine City neighborhood by approving a grant from funds previously set aside to aid in the construction of a 20",
+     "matterFile": "26-0763",
+     "matterType": "Commissioners Action Item",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
   {
    "eventId": 6398,
    "date": "2026-10-21",

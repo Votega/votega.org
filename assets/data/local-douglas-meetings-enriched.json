@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-29T15:40:10Z",
+  "generatedAt": "2026-10-30T19:35:55Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -17,10 +17,10 @@
    "comprehensive-plan": 2,
    "development": 4,
    "rezoning": 4,
+   "contract": 15,
+   "millage-budget": 18,
    "annexation": 5,
-   "contract": 14,
-   "millage-budget": 17,
-   "variance": 6,
+   "variance": 5,
    "appointment": 6,
    "data-center": 2,
    "alpr": 3
@@ -142,17 +142,9 @@
     ],
     "excerpt": "… tes from the July 7, 2026 Zoning Meeting. AGENDA Z2026- Terry Boomer/GA 5 Land Holdings, LLC – a request for a rezoning 47/S2026-48 from C-G(general commercial) to C-H(heavy commercial) and a Special Use Permit to allo …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "P&Z Variance Meeting",
-    "date": "2026-07-20",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7427,plainText=false)",
-    "tags": [
-     "variance"
-    ]
    }
   ],
-  "landUseMeetings": 14,
+  "landUseMeetings": 13,
   "alprItems": [
    {
     "title": "BOC Commission Meeting",
@@ -235,6 +227,46 @@
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1377",
+   "date": "2026-11-02",
+   "body": "Board of Commissioners",
+   "title": "BOC Combined Work Session and Commission Meeting 11-02-26",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7617,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7617,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4950,
+   "pdfSha256": "dd15460cd52640f53532d7eae77abdec1a30237a796167404ea00bd927eb6e36",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… authorize the Chairman to sign all related documents pending final legal review. (Joey McKelvey) 13. Approval of a contract with Green Heart Enterprises in the amount of $100,000.00 (Option 2 $87,290.50 + Contingency $12,709.50) for the Ch …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… anka) PUBLIC HEARING Work Session 2 November 2, 2026 8. 2027 Budget Public Hearing. () GRANTS 9. Acceptance of the FY 25 GEMA/HS Emergency Management Performance Grant (EMPG) Base awa …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "millage-budget"
    ],
    "dataCenterItems": []
   },
@@ -1294,38 +1326,6 @@
    "flags": [
     "millage-budget",
     "alpr"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1307",
-   "date": "2026-07-20",
-   "body": "Board of Commissioners",
-   "title": "P&Z Variance Meeting",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7427,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7427,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1703,
-   "pdfSha256": "c3d978afb539bb84f2519794de1034cb4a1788aee5528b5e338069c713136ae6",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "DOUGLAS COUNTY ZONING VARIANCE HEARING AGENDA July 20, 2026 Call to Order - Plannin …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

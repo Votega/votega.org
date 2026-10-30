@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-29T15:40:10Z",
+  "generatedAt": "2026-10-30T19:35:55Z",
   "source": "Clayton County (primegov agenda/minutes PDFs, poppler+OCR)",
   "place": "Clayton County",
   "count": 25
@@ -12,17 +12,17 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-20",
+  "lastActivity": "2026-11-03",
   "topicTotals": {
-   "appointment": 11,
-   "comprehensive-plan": 4,
    "contract": 13,
-   "development": 7,
    "millage-budget": 18,
+   "appointment": 10,
+   "comprehensive-plan": 4,
+   "development": 7,
    "rezoning": 3,
    "special-land-use": 6,
    "variance": 2,
-   "alpr": 3,
+   "alpr": 2,
    "data-center": 4
   },
   "dataCenterItems": [
@@ -141,19 +141,52 @@
     ],
     "excerpt": "… gh Resolution 2023-080 to create a video and data collection system, and to update the vendor’s name change, from FUSUS to Axon Enterprise Video and Data Collection Renewal Package. 24. Resolution 2026-107: A resolution authorizin …",
     "excerptTerm": "fusus"
-   },
-   {
-    "title": "Regular Business Meeting",
-    "date": "2026-05-05",
-    "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5335&compileOutputType=1",
-    "terms": [
-     "axon enterprise"
-    ]
    }
   ],
-  "alprMeetings": 3
+  "alprMeetings": 2
  },
  "meetings": [
+  {
+   "id": "691",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Regular Business Meeting",
+   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5439&compileOutputType=1",
+   "textSource": "agenda",
+   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5439&compileOutputType=1",
+   "textMethod": "pdftotext",
+   "textChars": 17332,
+   "pdfSha256": "200ba0a930b4363b6fe399597ebe5e102f1b280d51fc75ff20f9dd6bae7360c1",
+   "topics": {
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "fiscal year"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… NT AGENDA: 1. Approval of October 20, 2026, Regular Business Board Meeting Minutes. 2. Recommendation for Contract Amendment: CP #23-08 Consulting Services with Civic Initiatives LLC for Clayton County, Georgia. (Central Services …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… ed 865 Battle Creek Rd., Jonesboro, Georgia 30236. Funding is available through the County’s General Fund. 9. Budget Amendment FY27 2-21 To carry forward Wellness funds received from the Medical carrier in the amount of $29 …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "690",
    "date": "2026-10-20",
@@ -1327,64 +1360,6 @@
      "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5343&compileOutputType=1"
     }
    ]
-  },
-  {
-   "id": "678",
-   "date": "2026-05-05",
-   "body": "Board of Commissioners",
-   "title": "Regular Business Meeting",
-   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5335&compileOutputType=1",
-   "textSource": "agenda",
-   "textSourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5335&compileOutputType=1",
-   "textMethod": "pdftotext",
-   "textChars": 23016,
-   "pdfSha256": "80ac8cb0a17ab41a1db804e0e7aaa502390244c62122779f11fbc0ad416405b6",
-   "topics": {
-    "alpr": 1,
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "alpr",
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "axon enterprise",
-    "budget",
-    "contract",
-    "fiscal year"
-   ],
-   "topicExcerpts": {
-    "alpr": {
-     "term": "axon enterprise",
-     "excerpt": "… Code of Ordinances. The recommendation is to utilize the Sourcewell cooperative contract #101223-AXN with Axon Enterprise Inc., located in Scottsdale, Arizona for the purchase and installation of law enforcement equipment, products, or …",
-     "context": "unknown"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… for 2 Friends Transport, LLC. located in College Park, Georgia for the continuation of services for medical appointments and transportation to senior centers until we reprocure the services. The term is for six (6) months with th …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… t Side $7,260.00 5. Recommendation for Award: SS #26-22 Courts Monitoring Devices and Services Annual Contract for Clayton County, Georgia. (Clayton County Judicial Circuit). Pursuant to Section 2-116 of the Clayton County C …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… products, or services the total amount of $314,425.91. Funding is available through the 2021 SPLOST Fund. 10. Budget Amendment 2-46 To provide funding for medical claims expense for the remainder of fiscal year 2026 in the …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget",
-    "alpr"
-   ],
-   "dataCenterItems": []
   }
  ]
 }

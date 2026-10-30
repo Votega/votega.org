@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-29T15:40:19Z",
+  "generatedAt": "2026-10-30T19:36:32Z",
   "source": "Walker County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Walker County",
-  "count": 22
+  "count": 23
  },
  "summary": {
   "flags": [
@@ -11,11 +11,11 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-20",
+  "lastActivity": "2026-11-05",
   "topicTotals": {
+   "variance": 9,
    "contract": 12,
    "data-center": 3,
-   "variance": 8,
    "appointment": 6,
    "millage-budget": 13,
    "rezoning": 9
@@ -30,6 +30,14 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-11-05",
+    "sourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4291,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-09-03",
@@ -109,11 +117,43 @@
     ]
    }
   ],
-  "landUseMeetings": 12,
+  "landUseMeetings": 13,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "3214",
+   "date": "2026-11-05",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4291,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4291,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4456,
+   "pdfSha256": "74a1ff78b33a8ed7b2f7915d730febe138133aaddf6f53a4b4db0abc6d243788",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… sentation by all speakers for each side shall not exceed 12 minutes per side. 10.1. Antonio Criscuoli: Requests a variance for his business in an R-1 (Residential) zone for property located at 913 Garden Street, Rossville, GA. …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "3225",
    "date": "2026-10-20",

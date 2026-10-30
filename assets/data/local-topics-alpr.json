@@ -1,16 +1,34 @@
 {
  "coveredNoMention": [
   {
+   "placeId": "appling",
+   "placeName": "Appling County",
+   "placeType": "county",
+   "region": ""
+  },
+  {
    "placeId": "clarke",
    "placeName": "Athens-Clarke County",
    "placeType": "consolidated",
    "region": "Northeast Georgia"
   },
   {
+   "placeId": "atkinson",
+   "placeName": "Atkinson County",
+   "placeType": "county",
+   "region": ""
+  },
+  {
    "placeId": "augusta",
    "placeName": "Augusta-Richmond County",
    "placeType": "consolidated",
    "region": "East Georgia"
+  },
+  {
+   "placeId": "bacon",
+   "placeName": "Bacon County",
+   "placeType": "county",
+   "region": ""
   },
   {
    "placeId": "baldwin",
@@ -116,6 +134,28 @@
   }
  ],
  "mentions": [
+  {
+   "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-11-06",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1750&Inline=True",
+   "tags": [],
+   "terms": [
+    "axon enterprise",
+    "surveillance camera"
+   ],
+   "vendors": []
+  },
   {
    "body": "Board of Commissioners",
    "confidence": "high",
@@ -1270,52 +1310,6 @@
    ]
   },
   {
-   "body": "Columbus City Council",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-05-18",
-   "docType": "agenda",
-   "excerpt": "To authorize the Director of the Department of Public Safety to enter into a contract with SoundThinking Inc., formerly ShotSpotter, Inc., for the use of a gunfire detection, alert, and analysis program; to authorize reimbur …",
-   "excerptTerm": "soundthinking",
-   "fips": "13215",
-   "placeId": "muscogee",
-   "placeName": "Columbus-Muscogee County",
-   "placeType": "consolidated",
-   "region": "West Georgia",
-   "sourceType": "legistar",
-   "sourceUrl": "https://columbus.legistar.com/MeetingDetail.aspx?LEGID=6184&GID=139&G=4F637594-17B0-4E92-8196-37F14328D337",
-   "tags": [],
-   "terms": [
-    "gunfire detection",
-    "shotspotter",
-    "soundthinking"
-   ],
-   "vendors": [
-    "ShotSpotter (SoundThinking)"
-   ]
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-05-05",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13063",
-   "placeId": "clayton",
-   "placeName": "Clayton County",
-   "placeType": "county",
-   "region": "Atlanta Regional Commission",
-   "sourceType": "ocr",
-   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5335&compileOutputType=1",
-   "tags": [],
-   "terms": [
-    "axon enterprise"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "medium",
    "context": null,
@@ -1404,6 +1398,27 @@
    "body": "Board of Commissioners",
    "confidence": "medium",
    "context": null,
+   "date": "2026-03-13",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1732&Inline=True",
+   "tags": [],
+   "terms": [
+    "axon enterprise"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
    "date": "2026-02-26",
    "docType": "minutes",
    "excerpt": null,
@@ -1423,24 +1438,26 @@
   },
   {
    "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2025-12-19",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-01-09",
    "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
+   "excerpt": "… p, unserviceable equipment and vehicles that cannot be economically repaired H. Annual renewal Police Flock Group, Inc. $60,000 Restricted Court of the lease DBA Flock Safety, …",
+   "excerptTerm": "flock",
    "fips": "13051",
    "placeId": "chatham",
    "placeName": "Chatham County",
    "placeType": "county",
    "region": "Coastal Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1725&Inline=True",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1727&Inline=True",
    "tags": [],
    "terms": [
-    "axon enterprise"
+    "flock"
    ],
-   "vendors": []
+   "vendors": [
+    "Flock Safety"
+   ]
   },
   {
    "body": "City Council",
@@ -1469,11 +1486,11 @@
  "metadata": {
   "citiesScanned": 4,
   "consolidatedScanned": 4,
-  "countiesScanned": 31,
+  "countiesScanned": 34,
   "emoji": "📷",
-  "generatedAt": "2026-10-29T15:40:23Z",
+  "generatedAt": "2026-10-30T19:36:34Z",
   "label": "ALPR / surveillance",
-  "placesScanned": 39,
+  "placesScanned": 42,
   "placesWithMentions": 20,
   "topic": "alpr",
   "universeCities": 537,

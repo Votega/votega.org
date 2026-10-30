@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-29T15:40:13Z",
+  "generatedAt": "2026-10-30T19:36:10Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -11,19 +11,39 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-20",
+  "lastActivity": "2026-11-05",
   "topicTotals": {
-   "alpr": 2,
-   "contract": 12,
-   "millage-budget": 5,
    "rezoning": 16,
    "variance": 17,
+   "contract": 12,
+   "alpr": 2,
+   "millage-budget": 4,
    "appointment": 2,
-   "special-land-use": 10,
+   "special-land-use": 8,
    "development": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-11-05",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13908,plainText=false)",
+    "tags": [
+     "rezoning",
+     "variance"
+    ]
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-11-03",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13906,plainText=false)",
+    "tags": [
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… Commissioner Melear 1. (I2b1) RZ26-10-04, Rezoning from a split zoned P-1 (Professional) and C-2 (General Commercial) to P-1 (Professi …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-10-20",
@@ -208,29 +228,6 @@
     ],
     "excerpt": "… tee Commissioner Carraway a. (H2a) Ancillary Dwelling Variance, 5314 Magnolia Lane, Tax map 060 Parcel 142, 3.0 +/- acres, and currently zoned R-A (Residential Ag …",
     "excerptTerm": "variance"
-   },
-   {
-    "title": "Planning Commission",
-    "date": "2026-05-21",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13574,plainText=false)",
-    "tags": [
-     "rezoning",
-     "special-land-use"
-    ],
-    "excerpt": "… Chairman Moody 1. New Business a. Public Hearing 1. (H1a1) RZ26-05-06, Conditional Use for Therapeutic Massage, 120 North Belair Road, Tax Map 073C Parcel 053, 1.16 +/- acres, and c …",
-    "excerptTerm": "conditional use"
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-05-19",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13582,plainText=false)",
-    "tags": [
-     "rezoning",
-     "special-land-use",
-     "variance"
-    ],
-    "excerpt": "… zoned R-2 (Single Family Residential). 3. (I1a3) RZ26-05-01, Rezoning from R-A (Residential Agricultural) to PRD (Planned Residential Development), 5703 …",
-    "excerptTerm": "rezon"
    }
   ],
   "landUseMeetings": 21,
@@ -259,6 +256,94 @@
   "alprMeetings": 2
  },
  "meetings": [
+  {
+   "id": "2628",
+   "date": "2026-11-05",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13908,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13908,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 5310,
+   "pdfSha256": "11dec3a1caca88d85e1f3a70ff8eff9f326b3267f9dfc8e6399d9ab28d64b630",
+   "topics": {
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Commission District 4. Staff Assignment Danielle Montgomery. 3. (H1b3) RZ26-11-01, Rezoning from R-A (Residential Agricultural) to S-1 (Special), 3894 Gordon Hwy, Tax Map 043 portion …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… -18-70. Page 1 of 2 4. (H1b4) VA26-11-01, Variance to Section 90-98 List of lot & structure requirements, 601 Ponder Place Drive, Tax Map 073 Parce …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2576",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13906,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13906,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 9764,
+   "pdfSha256": "099ab95a8b24f67500db1f21f498bcf99cf8ca1aedc8b8a0da0c6e627c5b67d9",
+   "topics": {
+    "contract": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "contract",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… 50-18-70. Page 1 of 3 d. (H2d) Independent Contractor Agreement with Goodwyn Mills Cawood, LLC to complete the State Environmental Review Process for t …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Commissioner Melear 1. (I2b1) RZ26-10-04, Rezoning from a split zoned P-1 (Professional) and C-2 (General Commercial) to P-1 (Professi …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Commissioner Melear 1. (I1a1) VA26-09-01, Variance to Section 90-147(g)(10)(b)(2)(v) Use Provisions, 5549 Columbia Road, Tax Map 050 Parc …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2589",
    "date": "2026-10-20",
@@ -1264,119 +1349,6 @@
     "special-land-use": {
      "term": "conditional use",
      "excerpt": "… Chairman Moody 1. New Business a. Public Hearing 1. (H1a1) RZ26-05-06, Conditional Use for Therapeutic Massage, 120 North Belair Road, Tax Map 073C Parcel 053, 1.16 +/- acres, and c …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2584",
-   "date": "2026-05-19",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13582,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13582,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 11084,
-   "pdfSha256": "f7180644e278d9bab7e6c4fb376cbc0d75d86682f55b6432b5a3eceb0654652f",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget",
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "budget",
-    "conditional use",
-    "contract",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… of Clariti Permitting and Licensing Solution g. (H1g) Award Bid # 2026015-BID3000 and Contract to Sommers Construction, LLC for the Construction of the Restroom Facilities at Evans Towne Center …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Chairman Duncan 1. (E1) May 05, 2025 Commission Minutes 2. (E2) May 05, 2026 Budget Public Hearing F. PRESENTATION AND APPROVAL OF THE AGENDA …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… zoned R-2 (Single Family Residential). 3. (I1a3) RZ26-05-01, Rezoning from R-A (Residential Agricultural) to PRD (Planned Residential Development), 5703 …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… rrently zoned C-2 (General Commercial). 6. (I1a6) RZ26-05-03, Conditional Use for Indoor Recreation, 3001 McCrary Court, Tax Map 072 Parcel 231G, 1.95 +/- acres, a …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… Commissioner Melear 1. (I1a1) VA26-05-01, Variance to Section 90-53 List of lot and structure requirements, 417 Hastings Place, Tax Map …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2505",
-   "date": "2026-05-07",
-   "body": "Planning Commission",
-   "title": "Planning Commission",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13540,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13540,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 6880,
-   "pdfSha256": "9b5d0ff221780e48adfbe0e469abf65ea8406eb7b6dbc5e7e7413bac8d70ea4f",
-   "topics": {
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "conditional use",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… Commission District 1. Staff Assignment Dylan Douglas. 3. (H1c3) RZ26-05-01, Rezoning from R-A (Residential Agricultural) to PRD (Planned Residential Development), 5703 Wrightsbor …",
-     "context": "unknown"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… Commission District 4. Staff Assignment Danielle Montgomery. 6. (H1c6) RZ26-05-03, Conditional Use for Indoor Recreation, 3001 McCrary Court, Tax Map 072 Parcel 231G, 1.95 +/- acres, and currentl …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… sion District 4. Staff Assignment Danielle Montgomery. c. Public Hearing 1. (H1c1) VA26-05-01, Variance to Section 90-53 List of lot and structure requirements, 417 Hastings Place, Tax Map 082I Parc …",
      "context": "agenda-action"
     }
    },

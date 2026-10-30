@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-29T15:40:11Z",
+  "generatedAt": "2026-10-30T19:35:56Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -14,13 +14,13 @@
   "lastActivity": "2026-12-09",
   "topicTotals": {
    "variance": 8,
+   "development": 4,
+   "rezoning": 5,
    "special-land-use": 6,
    "annexation": 4,
    "appointment": 5,
    "contract": 9,
    "millage-budget": 6,
-   "development": 3,
-   "rezoning": 4,
    "data-center": 3
   },
   "dataCenterItems": [
@@ -49,7 +49,7 @@
    {
     "title": "Board of Zoning Appeals Variance Hearing",
     "date": "2026-11-12",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10237,plainText=false)",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10318,plainText=false)",
     "tags": [
      "variance"
     ]
@@ -57,12 +57,14 @@
    {
     "title": "Planning Commission Zoning Hearing",
     "date": "2026-11-03",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10307,plainText=false)",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10315,plainText=false)",
     "tags": [
+     "development",
+     "rezoning",
      "special-land-use"
     ],
-    "excerpt": "… 12. LUP-19-2026 District 3 - 1884 Addison Road 13. LUP-35-2026 District 4 - 448 Hurt Road 14. SLUP-8-2026 District 2 - 2967 Olympic Industrial Drive 15. SLUP-9-2026 District 2 - 114 Townpark Drive Regular Cas …",
-    "excerptTerm": "slup"
+    "excerpt": "… CQUISITIONS, LLC (Linkpoint 1100 Cobb, LLC, Owner) requesting rezoning from CRC to LI for Small Business Warehouse Spaces in Land Lot 208 of the 20th District. The property is located on the northwest sid …",
+    "excerptTerm": "warehouse"
    },
    {
     "title": "BOC Regular Meeting",
@@ -256,12 +258,12 @@
    "date": "2026-11-12",
    "body": "Board of Zoning Appeals",
    "title": "Board of Zoning Appeals Variance Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10237,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10318,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10237,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10318,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2004,
-   "pdfSha256": "124eef26ffeb9e882f7f772d1af7565c14f079a7564ea0041d6347c0669ea2ce",
+   "textChars": 1904,
+   "pdfSha256": "97bcce4838be2598ea4e3a18791990766f4657c1fc3e6af41a2024a79d0c5f93",
    "topics": {
     "variance": 1
    },
@@ -274,7 +276,7 @@
    "topicExcerpts": {
     "variance": {
      "term": "variance",
-     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING AGENDA November 12, 2026 AGENDA AND MINUTES HELD AND CONTINUED CASES …",
+     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING AGENDA November 12, 2026 AGENDA AND MINUTES BZA Variance Agenda 11-12-2026 HELD …",
      "context": "unknown"
     }
    },
@@ -288,25 +290,42 @@
    "date": "2026-11-03",
    "body": "Planning Commission",
    "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10307,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10315,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10307,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10315,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1999,
-   "pdfSha256": "6882d6b187078796f23f254dd6518f5f9088e7b4c4fbee254ccf19ce0b328bdf",
+   "textChars": 8561,
+   "pdfSha256": "6c77c8282c450759a05a7688d23485123b341daffa78a56e300639f3ff460f8d",
    "topics": {
+    "development": 1,
+    "rezoning": 1,
     "special-land-use": 1
    },
    "tags": [
+    "development",
+    "rezoning",
     "special-land-use"
    ],
    "matchedTerms": [
-    "slup"
+    "land use permit",
+    "rezon",
+    "slup",
+    "warehouse"
    ],
    "topicExcerpts": {
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… CQUISITIONS, LLC (Linkpoint 1100 Cobb, LLC, Owner) requesting rezoning from CRC to LI for Small Business Warehouse Spaces in Land Lot 208 of the 20th District. The property is located on the northwest sid …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 2026 Zoning Cases Z-46(2026) JOCABED ROBLES ARELLANES (Jocabed Robles Arellanes, Owner) requesting rezoning from CF to R-15 for a single‐family residence in Land Lot 224 of the 17th District. The property is l …",
+     "context": "agenda-action"
+    },
     "special-land-use": {
      "term": "slup",
-     "excerpt": "… 12. LUP-19-2026 District 3 - 1884 Addison Road 13. LUP-35-2026 District 4 - 448 Hurt Road 14. SLUP-8-2026 District 2 - 2967 Olympic Industrial Drive 15. SLUP-9-2026 District 2 - 114 Townpark Drive Regular Cas …",
+     "excerpt": "… r 6, 2026 and November 3, 2026 PC hearings until the December 1, 2026 PC hearing.) 2 SLUP-9-2026 THE STANDARD AT KENNESAW, LLC (Continued by Staff from the October 6, 2026 and Nove …",
      "context": "agenda-action"
     }
    },
