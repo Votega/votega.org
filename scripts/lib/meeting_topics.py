@@ -57,8 +57,29 @@ TOPIC_RULES = {
                            'mixed-use', 'townhome', 'multifamily', 'multi-family'],
     'comprehensive-plan': ['comprehensive plan', 'future land use', 'land use plan'],
     'millage-budget':     ['millage', 'ad valorem', 'tax rate', 'budget', 'fiscal year'],
+    # Taxes and ballot questions a resident pays or votes on. Separate from
+    # 'millage-budget', whose bare 'budget' / 'fiscal year' match nearly every agenda.
+    # Georgia's local-option sales taxes are known by acronym: SPLOST (special purpose),
+    # ESPLOST (education), TSPLOST (transportation), FLOST (floating), HOST (homestead
+    # option), LOST (local option). 'splost' as a substring carries splost / esplost /
+    # tsplost / t-splost in one keyword. Deliberately NOT matched: bare 'lost' and 'most'
+    # (ordinary English - "lost time", "most members") and bare 'host' (hosted by);
+    # those taxes are caught by their spelled-out names below. Bare 'tax' is also out:
+    # it fires on every fee and permit line. Measured against the corpus before
+    # shipping - see scripts/score_topic_lexicon.py --topic local-taxes.
+    'local-taxes':        ['splost', 'special purpose local option',
+                           'local option sales tax', 'homestead option sales tax',
+                           'floating local option', 'education local option',
+                           'millage', 'rollback rate', 'ad valorem', 'tax digest',
+                           'property tax increase', 'notice of property tax',
+                           'homestead exemption',
+                           'hotel-motel tax', 'hotel/motel tax', 'hotel motel tax',
+                           'tax allocation district', 'tax increment',
+                           'tax abatement', 'bond for title', 'bond-for-title',
+                           'general obligation bond', 'bond referendum',
+                           'referendum'],
     'contract':           ['contract', 'procurement', 'task order', 'award of', 'purchase order'],
-    'appointment':        ['appoint', 'reappoint'],
+    'appointment':       ['appoint', 'reappoint'],
     'alpr':               ['license plate reader', 'license plate recognition',
                            'automated license plate', 'automatic license plate',
                            'plate reader', 'lpr camera', 'safer city',
@@ -260,6 +281,10 @@ TOPIC_WORD_RULES = {
     # 'lpr' / 'anpr' / 'rtcc' are acronyms, so whole-word only (never inside another
     # word). 'lpr' is near-unambiguous in agendas; 'rtcc' = real-time crime center.
     'alpr': ['flock', 'alpr', 'lpr', 'anpr', 'rtcc'],
+    # 'flost' (floating LOST) is the one tax acronym not already carried by the
+    # 'splost' substring; whole-word so it cannot fire inside a longer word. TAD (tax
+    # allocation district) is omitted: it is also a first name and a car part.
+    'local-taxes': ['flost'],
 }
 _WORD_RE = {kw: re.compile(r'\b' + re.escape(kw) + r'\b')
             for kws in TOPIC_WORD_RULES.values() for kw in kws}
@@ -634,6 +659,8 @@ def topic_flags(topics):
         flags.append('millage-budget')
     if 'alpr' in present:
         flags.append('alpr')
+    if 'local-taxes' in present:
+        flags.append('local-taxes')
     return flags
 
 

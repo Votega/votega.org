@@ -130,7 +130,7 @@ jobs:
       - name: Score the shipped lexicon (report only)
         continue-on-error: true
         run: |
-          for topic in alpr data-center land-use; do
+          for topic in alpr data-center land-use local-taxes; do
             echo "### $topic"
             python scripts/score_topic_lexicon.py --topic "$topic" \
               --cache .cache/meeting-text || true

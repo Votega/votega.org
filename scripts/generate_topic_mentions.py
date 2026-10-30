@@ -61,6 +61,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.meeting_topics import (  # noqa: E402
     TOPIC_RULES,
+    TOPIC_WORD_RULES,
     LAND_USE,
     ALPR_TERMS,
     ALPR_HIGH_TERMS,
@@ -100,6 +101,7 @@ TOPICS = {
     "alpr":        {"label": "ALPR / surveillance",     "emoji": "📷"},
     "data-center": {"label": "Data centers",            "emoji": "🏭"},
     "land-use":    {"label": "Land use",                "emoji": "🏗️"},
+    "local-taxes": {"label": "Local taxes & referenda", "emoji": "🗳️"},
 }
 
 ENRICHED_GLOB = "local-*-meetings-enriched.json"
@@ -159,6 +161,15 @@ def topic_hit(topic: str, meeting: dict):
         confidence = "high"
         tags = present
         ex = next((excerpts[t] for t in present if t in excerpts), None)
+    elif topic == "local-taxes":
+        if "local-taxes" not in topics:
+            return None
+        tax_keywords = set(TOPIC_RULES["local-taxes"]) | set(TOPIC_WORD_RULES["local-taxes"])
+        terms = sorted(matched & tax_keywords)
+        vendors = []
+        confidence = "high"
+        tags = []
+        ex = excerpts.get("local-taxes")
     else:
         return None
 

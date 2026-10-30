@@ -56,9 +56,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLACES_YML = os.path.join(ROOT, "_data", "places.yml")
 DATA_DIR = os.path.join(ROOT, "assets", "data")
 
-TOPICS = ["alpr", "data-center", "land-use"]
+TOPICS = ["alpr", "data-center", "land-use", "local-taxes"]
 TOPIC_LABEL = {"alpr": "ALPR / surveillance", "data-center": "Data centers",
-               "land-use": "Land use"}
+               "land-use": "Land use", "local-taxes": "Local taxes & referenda"}
 
 # Excerpts are published only for this context (see module docstring).
 EXCERPT_CONTEXT = "agenda-action"
@@ -223,7 +223,8 @@ def keywords_doc():
     method that produced the mentions. Per topic: the taxonomy tags it rolls up,
     and per tag the case-insensitive SUBSTRING terms and the WHOLE-WORD terms."""
     topic_tags = {"alpr": ["alpr"], "data-center": ["data-center"],
-                  "land-use": sorted(mt.LAND_USE - {"data-center"})}
+                  "land-use": sorted(mt.LAND_USE - {"data-center"}),
+                  "local-taxes": ["local-taxes"]}
     tags = {}
     for tag in sorted({t for ts in topic_tags.values() for t in ts}):
         tags[tag] = {"substring": sorted(mt.TOPIC_RULES.get(tag, [])),
