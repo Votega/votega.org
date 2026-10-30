@@ -87,7 +87,7 @@ def link_alive(url, timeout=25, retries=2):
 # Kept in sync with generate_place_meetings.py. Platforms with a scraper adapter…
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
                      'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
-                     'agendaplus', 'revize', 'gdrive', 'wpdatatables'}
+                     'agendaplus', 'revize', 'gdrive', 'wpdatatables', 'pdflinks'}
 # …and recognized platforms/markers we have NO scraper for (unknown + bespoke CMSs
 # like Wix/WordPress): they produce no JSON, so there is nothing to validate
 # and they are skipped silently. A value in neither set is a likely typo → warned.
