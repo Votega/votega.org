@@ -1,24 +1,34 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:34:29Z",
+  "generatedAt": "2026-10-31T01:34:52Z",
   "source": "Augusta-Richmond County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Augusta-Richmond County",
-  "count": 11
+  "count": 12
  },
  "summary": {
   "flags": [
+   "data-center",
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-27",
+  "lastActivity": "2026-11-03",
   "topicTotals": {
-   "contract": 7,
-   "development": 1,
+   "contract": 8,
+   "data-center": 1,
+   "development": 2,
    "appointment": 1,
    "millage-budget": 1,
    "rezoning": 1
   },
-  "dataCenterItems": [],
+  "dataCenterItems": [
+   {
+    "title": "Commission Meeting",
+    "date": "2026-11-03",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-3e833accc3794092aaa9eb3565191ecf.pdf",
+    "excerpt": "… ipients. DELEGATION(S) B. Ms. Ashley Benton-Harold request Commission review of the September 15 and October 6, 2026 data center ordinance proceedings, verification and correction of the reported 11–0 versus 6–5 voting discrepancy, review of pub …",
+    "excerptTerm": "data center"
+   }
+  ],
   "landUseItems": [
    {
     "title": "Engineering Services Committee Meeting",
@@ -39,11 +49,70 @@
     "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 2,
+  "landUseMeetings": 3,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "90",
+   "date": "2026-11-03",
+   "body": "Augusta Commission",
+   "title": "Commission Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-3e833accc3794092aaa9eb3565191ecf.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-3e833accc3794092aaa9eb3565191ecf.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 9448,
+   "pdfSha256": "1fddb80aa91c5f9d50cb3c7793e564546b44adb3b37f7e728df68cbd1811fdaa",
+   "topics": {
+    "contract": 1,
+    "data-center": 1,
+    "development": 1
+   },
+   "tags": [
+    "contract",
+    "data-center",
+    "development"
+   ],
+   "matchedTerms": [
+    "award of",
+    "contract",
+    "data center",
+    "procurement",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "award of",
+     "excerpt": "… CONSENT AGENDA (Items 1-##) PUBLIC SERVICES 1. Motion to approve award of RFP #26-905—Waterpark Feasibility Study to CPL Architects, Engineers and Landscape Architects, D.P.C, and to authori …",
+     "context": "agenda-action"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… ipients. DELEGATION(S) B. Ms. Ashley Benton-Harold request Commission review of the September 15 and October 6, 2026 data center ordinance proceedings, verification and correction of the reported 11–0 versus 6–5 voting discrepancy, review of pub …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… ng, and construction administration of the water main interconnection between the Sand Ridge and Pinnacle Place subdivisions. Infrastructure System Management is on the prequalified Engineering Consultants list RFQ 24-132 approved on 6/24/ …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Commission Meeting",
+     "date": "2026-11-03",
+     "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-3e833accc3794092aaa9eb3565191ecf.pdf",
+     "excerpt": "… ipients. DELEGATION(S) B. Ms. Ashley Benton-Harold request Commission review of the September 15 and October 6, 2026 data center ordinance proceedings, verification and correction of the reported 11–0 versus 6–5 voting discrepancy, review of pub …",
+     "excerptTerm": "data center"
+    }
+   ]
+  },
   {
    "id": "95",
    "date": "2026-10-27",
@@ -222,7 +291,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-2be765c71368411b88ac3be97ee6b878.pdf",
    "textMethod": "pdftotext",
-   "textChars": 8286,
+   "textChars": 8289,
    "pdfSha256": "25f83a48e5c5b22ef9ce5ffe435c0dbcc92d168a8d34b6608930859d1f0770a1",
    "topics": {
     "appointment": 1,
@@ -247,7 +316,7 @@
    "topicExcerpts": {
     "appointment": {
      "term": "appoint",
-     "excerpt": "… renew for four (4) additional one (1) year terms. (Requested by Administration on behalf of the Sheriff’s Office) APPOINTMENT(S) 21. Motion to approve the reappointment of Angela Overstreet Wright, MD and Jamie DeStefano, DMD, PhD to the …",
+     "excerpt": "… renew for four (4) additional one (1) year terms. (Requested by Administration on behalf of the Sheriff’s Office) APPOINTMENT(S) 21. Motion to approve the reappointment of Angela Overstreet Wright, MD and Jamie DeStefano, DMD, PhD to th …",
      "context": "agenda-action"
     },
     "contract": {

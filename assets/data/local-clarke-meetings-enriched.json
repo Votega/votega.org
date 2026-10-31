@@ -1,13 +1,16 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:36:32Z",
+  "generatedAt": "2026-10-31T02:07:03Z",
   "source": "Athens-Clarke County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Athens-Clarke County",
   "count": 25
  },
  "summary": {
   "flags": [
+   "alpr",
+   "data-center",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-11-18",
@@ -16,10 +19,21 @@
    "comprehensive-plan": 6,
    "contract": 5,
    "development": 5,
+   "local-taxes": 7,
    "rezoning": 6,
-   "millage-budget": 2
+   "alpr": 1,
+   "data-center": 1,
+   "millage-budget": 3,
+   "special-land-use": 1,
+   "variance": 1
   },
-  "dataCenterItems": [],
+  "dataCenterItems": [
+   {
+    "title": "October 6, 2026 - Mayor and Commission Regular Session",
+    "date": "2026-10-06",
+    "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10062026-3101"
+   }
+  ],
   "landUseItems": [
    {
     "title": "Mayor &amp; Commission Regular Session agenda - November 4, 2026",
@@ -45,16 +59,6 @@
     "title": "October 20, 2026 - Mayor and Commission Agenda Setting Session",
     "date": "2026-10-20",
     "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10202026-3108",
-    "tags": [
-     "comprehensive-plan",
-     "development",
-     "rezoning"
-    ]
-   },
-   {
-    "title": "October 6, 2026 - Mayor and Commission Regular Session",
-    "date": "2026-10-06",
-    "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10062026-3101",
     "tags": [
      "comprehensive-plan",
      "development",
@@ -95,8 +99,18 @@
    }
   ],
   "landUseMeetings": 7,
-  "alprItems": [],
-  "alprMeetings": 0
+  "alprItems": [
+   {
+    "title": "October 6, 2026 - Mayor and Commission Regular Session",
+    "date": "2026-10-06",
+    "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10062026-3101",
+    "terms": [
+     "axon enterprise",
+     "body cam"
+    ]
+   }
+  ],
+  "alprMeetings": 1
  },
  "meetings": [
   {
@@ -133,6 +147,7 @@
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "rezoning": 1
    },
    "tags": [
@@ -140,6 +155,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "rezoning"
    ],
    "matchedTerms": [
@@ -148,7 +164,8 @@
     "contract",
     "future land use",
     "mixed use",
-    "rezon"
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -171,6 +188,11 @@
      "excerpt": "… gn Area on 2.47 acres known as 363 Reese Street, 600 and 660 W. Broad Street and 0 Finley Street. Proposed use Mixed Use Development. This will require an amendment to the Future Land Use Map from Mixed-Density Residential and Majo …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… m. Only one vote will be taken. 1. ADOPT: Clerk of Superior Court FY27 Supplement Adjustment 2. ADOPT: SPLOST 2020 Project 06, Fire Station #5 Replacement - Proposed Schematic Design Approval 3. ADOPT: TSPLOST 2026 Imp …",
+     "context": "unknown"
+    },
     "rezoning": {
      "term": "rezon",
      "excerpt": "… TIONS. 11. Request of Michael Greenlee/Athens-Clarke County; Unified Government of Athens-Clarke County, Rezone from Agricultural Residential (AR) to Government (G) on 7.52 acres known as 4730 Old Lexington Road. Proposed …",
@@ -178,7 +200,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -257,7 +280,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10212026-3099",
    "textMethod": "pdftotext",
-   "textChars": 14140,
+   "textChars": 14151,
    "pdfSha256": "553d9e742d6a3441414adfc511bdb8e8e0c9d4732b1c34ed613d8913cceb6d68",
    "topics": {
     "development": 1
@@ -289,18 +312,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10202026-3108",
    "textMethod": "pdftotext",
-   "textChars": 12093,
+   "textChars": 12096,
    "pdfSha256": "1dc03e26396b1bd8f4843973096003ac9763898fa2ee8a77f8dc5b52051c767b",
    "topics": {
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "rezoning": 1
    },
    "tags": [
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "rezoning"
    ],
    "matchedTerms": [
@@ -308,7 +333,8 @@
     "contract",
     "future land use",
     "mixed use",
-    "rezon"
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "comprehensive-plan": {
@@ -326,6 +352,11 @@
      "excerpt": "… gn Area on 2.47 acres known as 363 Reese Street, 600 and 660 W. Broad Street and 0 Finley Street. Proposed use Mixed Use Development. This will require an amendment to the Future Land Use Map from Mixed-Density Residential and Majo …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… utory salary calculation and the ACCGov FY27 employee market increase granted July 1, 2026. 2. SPLOST 2020 Project 27, Sub-Project #6, DFACS HVAC System Replacement – 155/2026 This agenda requests approva …",
+     "context": "unknown"
+    },
     "rezoning": {
      "term": "rezon",
      "excerpt": "… MINUTES. 7. Request of Michael Greenlee/Athens-Clarke County; Unified Government of Athens-Clarke County, Rezone from Agricultural Residential (AR) to Government (G) on 7.52 acres known as 4730 Old Lexington Road. Proposed …",
@@ -333,7 +364,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -366,11 +398,25 @@
    "textMethod": "pdftotext",
    "textChars": 1174,
    "pdfSha256": "003d7a1cfd1fd591f2113cbf5d3baa552492902311fe74d887c0998a50444adc",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
+   "topics": {
+    "local-taxes": 1
+   },
+   "tags": [
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "flost"
+   ],
+   "topicExcerpts": {
+    "local-taxes": {
+     "term": "flost",
+     "excerpt": "… Lord Housing & Community Development Director B. FLOST Public Education Strategy ................................................. Jeff Montgomery …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -382,61 +428,140 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10062026-3101",
    "textMethod": "pdftotext",
-   "textChars": 9381,
-   "pdfSha256": "46473d44fc6d90f6e9fed9afe4529cc70fd5bb5be094ab95d9fab38dbed6877c",
+   "textChars": 8323424,
+   "pdfSha256": "21b201d1637ffc799db5ceb515b6339fa8ac6fddd7c52f60419484588154b677",
    "topics": {
+    "alpr": 1,
     "appointment": 1,
     "comprehensive-plan": 1,
     "contract": 1,
+    "data-center": 1,
     "development": 1,
-    "rezoning": 1
+    "local-taxes": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
+    "alpr",
     "appointment",
     "comprehensive-plan",
     "contract",
+    "data-center",
     "development",
-    "rezoning"
+    "local-taxes",
+    "millage-budget",
+    "rezoning",
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
+    "apartment",
     "appoint",
     "award of",
+    "axon enterprise",
+    "body cam",
+    "budget",
+    "comprehensive plan",
+    "conditional use",
     "contract",
+    "data center",
+    "fiscal year",
     "future land use",
+    "general obligation bond",
+    "homestead exemption",
+    "land use plan",
+    "local option sales tax",
+    "millage",
+    "mixed use",
     "mixed-use",
-    "rezon"
+    "multi-family",
+    "multifamily",
+    "procurement",
+    "purchase order",
+    "referendum",
+    "rezon",
+    "special purpose local option",
+    "splost",
+    "subdivision",
+    "task order",
+    "tax digest",
+    "townhome",
+    "variance",
+    "warehouse"
    ],
    "topicExcerpts": {
+    "alpr": {
+     "term": "body cam",
+     "excerpt": "… Awarded Contracts: Total $997,173.26 08/21/2026 AXON ENTERPRISE INC FY27 Axon Taser and Body Cam Renewal/Upgrade Agreement 997,173.26 Police General Fund Purchas …",
+     "context": "unknown"
+    },
     "appointment": {
      "term": "appoint",
-     "excerpt": "… New business – Consider under suspension of Rules 22. Nominating Committee Report – Board of Elections appointment K. Public input. If you wish to address the Mayor and Commission on any item other than those listed on …",
+     "excerpt": "… nsider under suspension of Rules APPROVED - unanimous 22. Nominating Committee Report – Board of Elections appointment – APPROVED – unanimous ***Agenda amended to add: 24. East Athens Affordable Housing – Potenti …",
      "context": "unknown"
     },
     "comprehensive-plan": {
      "term": "future land use",
-     "excerpt": "… as 1295 US 29 Highway North. Proposed use Retail Sales and Service. This will require an amendment to the Future Land Use map from Neighborhood Center to Major Corridor. Type I Rezone District 9 Planning Commission: Fut …",
+     "excerpt": "… 1295 US 29 Highway North. Proposed use Retail Sales and Service. This will require an amendment to the Future Land Use map from Neighborhood Center to Major Corridor. Type I Rezone District 9 APPROVED - unanimous …",
      "context": "unknown"
     },
     "contract": {
      "term": "award of",
-     "excerpt": "… rial Park Improvements – Public Art Style 8. APPROVE: Middle Oconee East Sewer Trunk Line Improvements Phase 1A - Award of Contract 9. APPROVE: Georgia Power Underground Utility Easement at 155 Paradise Boulevard 10. APPROVE: LRC Repo …",
+     "excerpt": "… rial Park Improvements – Public Art Style 8. APPROVE: Middle Oconee East Sewer Trunk Line Improvements Phase 1A - Award of Contract 9. APPROVE: Georgia Power Underground Utility Easement at 155 Paradise Boulevard 10. APPROVE: L …",
+     "context": "unknown"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… l Sales (7) Kennels (8) Mortuary (9) Drive-Through Facilities (10) Gas Stations (11) Data Centers G. Residential density. The maximum residential density within the WCX Overlay District shall be fifty (50) bedroo …",
      "context": "unknown"
     },
     "development": {
      "term": "mixed-use",
-     "excerpt": "… erlay from E-O (PD) to C-G (WCX Overlay) on 19.48 acres known as 100 & 130 Newton Bridge Road. Proposed use Mixed-Use. Type I District 9 – REVISED 10/6/26 Planning Commission: PD Amendment: Approv …",
+     "excerpt": "… from E-O (PD) to C-G (WCX Overlay) on 19.48 acres known as 100 & 130 Newton Bridge Road. Proposed use Mixed-Use. Type I District 9 – APPROVED – unanimous REVISED 10/6/26 Planning Commissio …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ort Layout Plan Update 4. ADOPT: FY25 FEMA Assistance to Firefighter Grant Acceptance - REVISED 5. APPROVE: SPLOST 2020 Project 11, SP #17 – 2026 Solar Initiatives – Project Concepts; Facilities & Landscape Building Solar 6. …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… Attachment #1 AN ORDINANCE TO AMEND THE FY2027 OPERATING AND CAPITAL BUDGET FOR ATHENS-CLARKE COUNTY, GEORGIA SO AS TO PROVIDE GRANT FUNDING, IF AWARDED, TO THE HOUSING AND COMMUNITY DEVELOPMENT …",
+     "context": "agenda-action"
     },
     "rezoning": {
      "term": "rezon",
-     "excerpt": "… O ATTACHMENT A FOR TIME LIMITS FOR PRESENTATIONS. 13. Request of Russell Edwards; Owner Fun Town LLC for rezone to remove 2 parcels from existing Planned Development and Overlay from E-O (PD) to C-G (WCX Overlay) on 19 …",
+     "excerpt": "… ENT A FOR TIME LIMITS FOR PRESENTATIONS. 13. Request of Russell Edwards; Owner Fun Town LLC for rezone to remove 2 parcels from existing Planned Development and Overlay from E-O (PD) to C-G (WCX Overlay) …",
+     "context": "unknown"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… (8,000 sq. ft. min. lot area) Conditional Use RS-15, Single-Family Residential …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… rate how the applicant will retain conserved canopy. Applicant notes in their proposal that this plan necessitates a variance from buffer requirements listed in Athens-Clarke County Code §9-15-3 and explains they plan to pursue that variance …",
      "context": "unknown"
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "data-center",
+    "millage-budget",
+    "alpr",
+    "local-taxes"
    ],
-   "dataCenterItems": []
+   "dataCenterItems": [
+    {
+     "title": "October 6, 2026 - Mayor and Commission Regular Session",
+     "date": "2026-10-06",
+     "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10062026-3101"
+    }
+   ]
   },
   {
    "id": "3096",
@@ -483,7 +608,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10012026-3079",
    "textMethod": "pdftotext",
-   "textChars": 3891,
+   "textChars": 3892,
    "pdfSha256": "3307b836a7cc1fbc2c969e2d933bfa379bda5a3130e98a06d8d5b5a404275065",
    "topics": {
     "comprehensive-plan": 1,
@@ -525,11 +650,25 @@
    "textMethod": "pdftotext",
    "textChars": 934,
    "pdfSha256": "2a16a87065841976af26eecb930f8a4ade2b633f699859e8630f22e059112fe6",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
+   "topics": {
+    "local-taxes": 1
+   },
+   "tags": [
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "tax allocation district"
+   ],
+   "topicExcerpts": {
+    "local-taxes": {
+     "term": "tax allocation district",
+     "excerpt": "… Review Themes from Day One • Applying our Framework o Tax Allocation District Policies o Legislative Program • From Priorities to A …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -561,11 +700,25 @@
    "textMethod": "pdftotext",
    "textChars": 974,
    "pdfSha256": "92a1d339382b8e3ccdac0839cc2c6330832b2ddf34e3ee3861b1ab044d898bc5",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
+   "topics": {
+    "local-taxes": 1
+   },
+   "tags": [
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "splost"
+   ],
+   "topicExcerpts": {
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 0 p.m. – 1:00 p.m. Lunch 1:00 p.m. – 4:30 p.m. • Applying our Framework SPLOST28 Planning Process • Making Progress on Difficult Issues • Closin …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -631,7 +784,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09162026-3046",
    "textMethod": "pdftotext",
-   "textChars": 8436,
+   "textChars": 8442,
    "pdfSha256": "a1df0cc26e50ca12bd81c440843517d74162f866571e8e9beebff3dd4e1f02e0",
    "topics": {},
    "tags": [],
@@ -649,12 +802,13 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09152026-3078",
    "textMethod": "pdftotext",
-   "textChars": 12101,
+   "textChars": 12104,
    "pdfSha256": "a9bbf3096254aa832da3d175192ad2ee812b5bdec8881f2dbd563ede35a23d2b",
    "topics": {
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
@@ -662,6 +816,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -670,8 +825,10 @@
     "contract",
     "fiscal year",
     "future land use",
+    "homestead exemption",
     "mixed-use",
-    "rezon"
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "comprehensive-plan": {
@@ -689,6 +846,11 @@
      "excerpt": "… and Overlay from E-O (PD) to C-G (WCX Overlay) on 19.48 acres known as 100 & 130 Newton Bridge Road. Proposed use Mixed-Use. Title I District 9 Planning Commission: PD AMENDMENT: Approval with conditions …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "homestead exemption",
+     "excerpt": "… ittee reviewed the feasibility and implications of modifying the “definition of family” for properties receiving a homestead exemption and recommends passing the topic out with no action. 4. Approve: FY27 Change Order for Radio System Main …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "fiscal year",
      "excerpt": "… ng expiration date of March 1 each year through June 30. This extension will align the agreement with the County's fiscal year, allowing future contract terms to coincide with the beginning of each fiscal year. 5. Approve: Lease A …",
@@ -702,7 +864,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -783,7 +946,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09032026-3039",
    "textMethod": "pdftotext",
-   "textChars": 2805,
+   "textChars": 2806,
    "pdfSha256": "e5bc4fe718b8b9d6f6bb61105dfea29b3f0424236148c2a4c3e8cebcfd809fb1",
    "topics": {
     "comprehensive-plan": 1,

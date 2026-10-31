@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:36:32Z",
+  "generatedAt": "2026-10-31T02:07:09Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -8,15 +8,17 @@
  "summary": {
   "flags": [
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-11-09",
   "topicTotals": {
    "development": 10,
    "variance": 3,
-   "contract": 8,
-   "millage-budget": 6,
-   "appointment": 5
+   "appointment": 6,
+   "contract": 9,
+   "local-taxes": 8,
+   "millage-budget": 7
   },
   "dataCenterItems": [],
   "landUseItems": [
@@ -156,6 +158,64 @@
    "dataCenterItems": []
   },
   {
+   "id": "1098",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Lumpkin County Board of Commissioners Work Session",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4441,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4441,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 3706,
+   "pdfSha256": "8be083af49db29d2e09bb940ba462b8e5e9d983d89900ef76b98bbf0357317b3",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "local-taxes": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "local-taxes",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "reappoint",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… ideration of the Lumpkin County 2027 Budget Calendar for FY 2028 Budget (Finance Director Abby Branan) 11. 2026-62 Reappoint Members to Lumpkin County Building Committee - Wayne Marshall to Seat 8, Charles Trammell to Seat 9, and Matt Cain …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… a Department of Transportation (GDOT) to Expedite Intersection Improvements at State Route 9 & Auraria Road • CONTRACTS/AGREEMENTS 19. 2026-091 Halls Mill Enterprises LLC d/b/a Chestatee River Adventures c/o Rhett Stringer – Canoe L …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Members of the Lumpkin County Board of Commissioners (District 3 Commissioner Nathan Davis) 16. 2026-67 IGA for TSPLOST Distribution Regular Meeting 17. 2026-68 TSPLOST Resolution Call for Election Regular Meeting 18. 2026-69 Resolution …",
+     "context": "agenda-action"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… hedule (Community & Employee Services Director Alicia Davis) 10. 2026-61 Consideration of the Lumpkin County 2027 Budget Calendar for FY 2028 Budget (Finance Director Abby Branan) 11. 2026-62 Reappoint Members to Lumpkin County Buildin …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
+  {
    "id": "1423",
    "date": "2026-10-27",
    "body": "Board of Commissioners",
@@ -232,25 +292,35 @@
    "textSource": "agenda",
    "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4388,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2606,
+   "textChars": 2608,
    "pdfSha256": "65d63dc45ba8b883a18593199ca9cb41fd9231fd2d34f1dc2bd052e8909666d5",
    "topics": {
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "… Clerk Melissa Witcher) • REPORTS Department reports can be viewed on www.lumpkincounty.gov • ELECTED OFFICIALS • CONTRACTS/AGREEMENTS 10. 2026-085 Animal Services Professional Vet Services (Animal Services Manager Wayne Marshall) 11. …",
      "context": "public-comment"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… by Branan) 18. Amendment of Pay in Lieu of Benefits for Elected Officials (Finance Director Abby Branan) 19. 2026 SPLOST 2026 Work Plan Amendment (Finance Director Abby Branan) • COUNTY MANAGER • ASSISTANT COUNTY MANAGER & DEPARTMENT H …",
+     "context": "public-comment"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -262,25 +332,35 @@
    "textSource": "agenda",
    "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4405,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2462,
+   "textChars": 2464,
    "pdfSha256": "c207458cb02f7ebac96a5793e069d59c2d4442e72e9f5fe9a67276d413bddb0c",
    "topics": {
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
-     "excerpt": "… tion Establishing a Code of Conduct for Boards, Authorities, & Committee Members (County Clerk Melissa Witcher) • CONTRACTS/AGREEMENTS 10. 2026-085 Animal Services Professional Vet Services (Animal Services Manager Wayne Marshall) 11. …",
+     "excerpt": "… ion Establishing a Code of Conduct for Boards, Authorities, & Committee Members (County Clerk Melissa Witcher) • CONTRACTS/AGREEMENTS 10. 2026-085 Animal Services Professional Vet Services (Animal Services Manager Wayne Marshall) 11. …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… by Branan) 18. Amendment of Pay in Lieu of Benefits for Elected Officials (Finance Director Abby Branan) 19. 2026 SPLOST 2026 Work Plan Amendment (Finance Director Abby Branan) • COUNTY MANAGER • ASSISTANT COUNTY MANAGER & DEPARTMENT H …",
      "context": "unknown"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -295,9 +375,11 @@
    "textChars": 591,
    "pdfSha256": "1116eb041f32b24281afe20e9bee5bdcac416b00aa2b474a79962f1282f6734f",
    "topics": {
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -306,6 +388,11 @@
     "millage"
    ],
    "topicExcerpts": {
+    "local-taxes": {
+     "term": "ad valorem",
+     "excerpt": "… RESOLUTIONS 1. 2026-56 Amend the 2027 Budget (Finance Director Abby Branan) 2. 2026-57 Resolution Revising 2026 Ad Valorem Tax Millage Rate (Finance Director Abby Branan) • ADJOURNMENT",
+     "context": "public-comment"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… 4:10 PM • CALL TO ORDER • PUBLIC COMMENTS • RESOLUTIONS 1. 2026-56 Amend the 2027 Budget (Finance Director Abby Branan) 2. 2026-57 Resolution Revising 2026 Ad Valorem Tax Millage Rate (Finance Directo …",
@@ -313,7 +400,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -391,7 +479,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4351,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1883,
+   "textChars": 1884,
    "pdfSha256": "833f3e640eaf879273ae3841b6024af320a8280f9d7d771dd4d624da4546ac5e",
    "topics": {
     "development": 1,
@@ -432,25 +520,35 @@
    "textSource": "agenda",
    "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4379,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2454,
+   "textChars": 2456,
    "pdfSha256": "41506d5ed441887e1512d8e7080d0537626ff24a9d4094b376882c2c3bf6a685",
    "topics": {
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
-     "excerpt": "… ution Establishing a Code of Conduct for Boards, Authorities, & Committee Members (County Clerk Melissa Witcher) • CONTRACTS/AGREEMENTS 10. 2026-085 Animal Services Professional Vet Services (Animal Services Manager Wayne Marshall) 11. …",
+     "excerpt": "… tion Establishing a Code of Conduct for Boards, Authorities, & Committee Members (County Clerk Melissa Witcher) • CONTRACTS/AGREEMENTS 10. 2026-085 Animal Services Professional Vet Services (Animal Services Manager Wayne Marshall) 11. …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… by Branan) 18. Amendment of Pay in Lieu of Benefits for Elected Officials (Finance Director Abby Branan) 19. 2026 SPLOST 2026 Work Plan Amendment (Finance Director Abby Branan) • COUNTY MANAGER • ASSISTANT COUNTY MANAGER & DEPARTMENT H …",
      "context": "unknown"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -531,9 +629,11 @@
    "textChars": 613,
    "pdfSha256": "c6214d29395bf5b22c9d7c5f9c0f06a2425a4b1822a9fd02d71cff9568922880",
    "topics": {
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -542,6 +642,11 @@
     "millage"
    ],
    "topicExcerpts": {
+    "local-taxes": {
+     "term": "ad valorem",
+     "excerpt": "… Establishing & Adopting the 2027 Budget (Finance Director Abby Branan) 2. 2026-54 Resolution Establishing 2026 Ad Valorem Tax Millage Rate (Finance Director Abby Branan) • ADJOURNMENT",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… 5:00 PM • CALL TO ORDER • RESOLUTIONS 1. 2026-53 Resolution Establishing & Adopting the 2027 Budget (Finance Director Abby Branan) 2. 2026-54 Resolution Establishing 2026 Ad Valorem Tax Millage Rate (Finance …",
@@ -549,7 +654,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -562,7 +668,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4337,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2039,
+   "textChars": 2041,
    "pdfSha256": "88e6e23608820f62f426ae1719261db912caee402a751f3d3b56ba52cf6979f9",
    "topics": {
     "appointment": 1,
@@ -579,7 +685,7 @@
    "topicExcerpts": {
     "appointment": {
      "term": "appoint",
-     "excerpt": "… 8, 2026 5:30 PM 5. Board of Commissioners - Regular Meeting - August 18, 2026 6:00 PM • RESOLUTIONS 6. 2026-50 Appoint Member to Airport Authority - Alan Redmon to Seat B, of an unexpired term ending 02/19/2029 7. 2026-51 Update th …",
+     "excerpt": "… 8, 2026 5:30 PM 5. Board of Commissioners - Regular Meeting - August 18, 2026 6:00 PM • RESOLUTIONS 6. 2026-50 Appoint Member to Airport Authority - Alan Redmon to Seat B, of an unexpired term ending 02/19/2029 7. 2026-51 Update t …",
      "context": "public-comment"
     },
     "contract": {
@@ -600,7 +706,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4308,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1860,
+   "textChars": 1861,
    "pdfSha256": "425e2434922d0fa393002517283fa3a83bc0ece2840ebd1bd723d37fb5383a47",
    "topics": {
     "appointment": 1,
@@ -743,7 +849,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4302,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1947,
+   "textChars": 1948,
    "pdfSha256": "f2d1ea2f00c838e385b30cd30ffb0a1da13ba3289c3651689955097dc540b57f",
    "topics": {
     "appointment": 1,
@@ -845,22 +951,25 @@
    "textSource": "agenda",
    "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4257,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2677,
+   "textChars": 2679,
    "pdfSha256": "3e8905a820b566530e547972024665dd02709ef7eb6cfac7a17ca6cff4440d41",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -873,14 +982,20 @@
      "excerpt": "… nty Manager Alan Ours) • REPORTS Department reports can be viewed on www.lumpkincounty.gov • ELECTED OFFICIALS • CONTRACTS/AGREEMENTS 9. 2026-075 Recycling & Transfer Station Lease Agreement - Mark Robinson Hauling (Assistant County …",
      "context": "public-comment"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ard) • OTHER ITEMS 16. Voting Delegate - Legislative Leadership Conference (County Clerk Melissa Witcher) 17. TSPLOST 2023 Work Plan Amendment (Finance Director Abby Branan) Ratify 18. SPLOST 2026 Work Plan Amendment (Finance Direct …",
+     "context": "public-comment"
+    },
     "millage-budget": {
      "term": "budget",
-     "excerpt": "… mber to DFACS Board - Christina Wise to Seat 3, with a term expiring 06/30/2031. 6. 2026-47 Lumpkin County 2026 Budget Calendar for FY2027 Budget – Amendment #2 (Finance Director Abby Branan) 7. 2026-48 Adopt Planning Commission Co …",
+     "excerpt": "… mber to DFACS Board - Christina Wise to Seat 3, with a term expiring 06/30/2031. 6. 2026-47 Lumpkin County 2026 Budget Calendar for FY2027 Budget – Amendment #2 (Finance Director Abby Branan) 7. 2026-48 Adopt Planning Commission C …",
      "context": "public-comment"
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -893,22 +1008,25 @@
    "textSource": "agenda",
    "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4259,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2440,
+   "textChars": 2442,
    "pdfSha256": "3f6298a8e3a3a2c632cc31b78e435095f61df9944d18ac92b26f34928fd9ebb1",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -921,6 +1039,11 @@
      "excerpt": "… 8. 2026-49 Georgia Transportation Infrastructure Bank (GTIB) Funding Resolution (County Manager Alan Ours) • CONTRACTS/AGREEMENTS 9. 2026-075 Recycling & Transfer Station Lease Agreement - Mark Robinson Hauling (Assistant County …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ard) • OTHER ITEMS 16. Voting Delegate - Legislative Leadership Conference (County Clerk Melissa Witcher) 17. TSPLOST 2023 Work Plan Amendment (Finance Director Abby Branan) Ratify 18. SPLOST 2026 Work Plan Amendment (Finance Direct …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… mber to DFACS Board - Christina Wise to Seat 3, with a term expiring 06/30/2031. 6. 2026-47 Lumpkin County 2026 Budget Calendar for FY2027 Budget – Amendment #2 (Finance Director Abby Branan) 7. 2026-48 Adopt Planning Commission C …",
@@ -928,26 +1051,9 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1304",
-   "date": "2026-08-11",
-   "body": "Land Use & Development Regulations Review Committee",
-   "title": "Land Use & Development Regulations Review Committee",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4228,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4228,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 603,
-   "pdfSha256": "b8cfd7911ac86d458819ec8a43d2ab06f37ad43d7569a819a24b94f4b8f126f3",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   }
  ]

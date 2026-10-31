@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:36:34Z",
+  "generatedAt": "2026-10-31T02:23:05Z",
   "source": "Catoosa County (granicus agenda HTML)",
   "place": "Catoosa County",
   "count": 25
@@ -8,15 +8,17 @@
  "summary": {
   "flags": [
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-27",
+  "lastActivity": "2026-11-03",
   "topicTotals": {
    "rezoning": 12,
    "contract": 9,
    "development": 3,
    "millage-budget": 10,
-   "variance": 5,
+   "variance": 4,
+   "local-taxes": 3,
    "appointment": 3
   },
   "dataCenterItems": [],
@@ -153,21 +155,31 @@
     "tags": [
      "rezoning"
     ]
-   },
-   {
-    "title": "Board of Commissioners",
-    "date": "2026-05-05",
-    "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=205",
-    "tags": [
-     "variance"
-    ]
    }
   ],
-  "landUseMeetings": 15,
+  "landUseMeetings": 14,
   "alprItems": [],
   "alprMeetings": 0
  },
  "meetings": [
+  {
+   "id": "270",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners",
+   "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=270",
+   "textSource": "agenda",
+   "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=270",
+   "textMethod": "pdftotext",
+   "textChars": 2049,
+   "contentSha256": "d09cd357269d2c026145f2070a78a26875523ef14636210e75748e093a4423d1",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "264",
    "date": "2026-10-27",
@@ -257,7 +269,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=258",
    "textMethod": "pdftotext",
-   "textChars": 3630,
+   "textChars": 3631,
    "contentSha256": "9bc02b45fd7385183c1033755f63ad3c336fa9d2795feb8d32d78093d8b77945",
    "topics": {
     "millage-budget": 1
@@ -289,7 +301,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=253",
    "textMethod": "pdftotext",
-   "textChars": 2805,
+   "textChars": 2806,
    "contentSha256": "324bfaa790ab76121ec2ae604f4df1a249619f843b224eb9bf366eabb7951e74",
    "topics": {
     "rezoning": 1,
@@ -329,7 +341,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=251",
    "textMethod": "pdftotext",
-   "textChars": 5315,
+   "textChars": 5317,
    "contentSha256": "8d19eb4c963543c23d5919ace8b43909abc8cf1ed751500810bf752dd2db22ff",
    "topics": {
     "millage-budget": 1,
@@ -400,7 +412,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=246",
    "textMethod": "pdftotext",
-   "textChars": 4369,
+   "textChars": 4370,
    "contentSha256": "0c625fb211981cf91247b1a75084a7502650566d3caaa4f7b2af7006b3616ead",
    "topics": {
     "contract": 1,
@@ -440,7 +452,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=245",
    "textMethod": "pdftotext",
-   "textChars": 2607,
+   "textChars": 2608,
    "contentSha256": "08955268536baaa2f580239efa7a9143b0fc97b1214ba9280f4f52806646383a",
    "topics": {
     "rezoning": 1,
@@ -480,27 +492,35 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=244",
    "textMethod": "pdftotext",
-   "textChars": 3811,
+   "textChars": 3812,
    "contentSha256": "705f017414674efe5a9ff3906027a7ac7b73f87b73de6101e98ed5b8fe7eefe4",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
    "matchedTerms": [
     "contract",
     "millage",
-    "rezon"
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "… ak. 7. Administrative Fiscal Matters 7.1 Proposed Approval of Georgia DHS Coordinated Transportation System Subcontractor Agreement - (Jason Warren, Transit Director) Catoosa County Transit GA DHS FY27 Coord. Transp. …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Inc. (Public Entities, 5307, 5310, 5311 & CSB Providers)(v1.0)(9.11.25)(7012026).pdf 7.2 Proposed Approval of SPLOST Funds for the Sheriff's Office Project 2024-04 CCSO Jail Expansion - (Sheriff Gary Sisk) Bid Tab …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -516,7 +536,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -529,25 +550,30 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=240",
    "textMethod": "pdftotext",
-   "textChars": 5736,
+   "textChars": 5738,
    "contentSha256": "56835d7d302c9027e1adf5986cef797d328753d4288f6564710593c88ee2ba50",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
     "contract",
+    "flost",
+    "local option sales tax",
     "millage",
+    "referendum",
     "subdivision"
    ],
    "topicExcerpts": {
@@ -566,6 +592,11 @@
      "excerpt": "… REGULAR MEETING 1. Public Hearing 1.1 Gentry Road Widening Plan for Gentry Road Subdivision - (Alex Wooten, Projects Supervisor) Gentry Road Subdivision.pdf Gentry Road_Pavement & Subgrade Ev …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… Website_Contract_DebtBook_Redacted_2026.03.09.pdf 9.8 Adoption of the FY2027 Budget & 2026 County Government Millage Rate - (Rachel Clark, Chief Financial Officer) 9.9 Adoption of 2026 Catoosa County Board of Education …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… GA_OF_OMNIA_7.10.26.pdf Website_Contract_DebtBook_Redacted_2026.03.09.pdf 9.8 Adoption of the FY2027 Budget & 2026 County Government Millage Rate - (Rachel Clark, Chief Financial Officer) 9.9 Adoption of 2026 C …",
@@ -574,7 +605,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -669,7 +701,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=233",
    "textMethod": "pdftotext",
-   "textChars": 3311,
+   "textChars": 3312,
    "contentSha256": "e758c22f83f0b50c0b443b03f2796b222b8db4db82ac79b65800fa3664edad5d",
    "topics": {
     "contract": 1,
@@ -718,7 +750,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=231",
    "textMethod": "pdftotext",
-   "textChars": 2210,
+   "textChars": 2211,
    "contentSha256": "f0340c1f1894ac1956c28ed78d3c8c23d0ef574bb9bcb6a9288e52be29a571f4",
    "topics": {
     "appointment": 1
@@ -781,7 +813,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=229",
    "textMethod": "pdftotext",
-   "textChars": 3136,
+   "textChars": 3137,
    "contentSha256": "f725e396ce5fbc4d085ec34b65148122d0f5108a81e921914bced68f1c9483e6",
    "topics": {
     "rezoning": 1,
@@ -821,7 +853,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=228",
    "textMethod": "pdftotext",
-   "textChars": 3492,
+   "textChars": 3493,
    "contentSha256": "8bd414aa195a77cdf31040af5d1c35a04d8ee6884c0b20b87dd66a6f3ee07f44",
    "topics": {
     "contract": 1,
@@ -911,15 +943,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=210",
    "textMethod": "pdftotext",
-   "textChars": 2910,
+   "textChars": 2911,
    "contentSha256": "cf89739368198f28bcd368f7e15bedd50662b5617c803d920a4657b8bef1701c",
    "topics": {
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
+    "lhost",
+    "referendum",
     "task order"
    ],
    "topicExcerpts": {
@@ -927,9 +963,16 @@
      "term": "task order",
      "excerpt": "… Tyler Cybersecurity Quote for Catoosa County, GA Cyber Bundle May 2026 Updated (1).pdf 7.2 Proposed Approval of Task Order No. CC26-05 CTI Engineers - (Alex Wooten, Projects Supervisor) CTI Task Order CC26-05.pdf CTI Tas …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "lhost",
+     "excerpt": "… olution Requesting Local Legislative Delegation to introduce Local Legislation Authorizing the Imposition of LHOST and calling for Referendum - (Chad Young, County Attorney) LHOST Request.Resolution.pdf 11. Commissioner …",
+     "context": "agenda-action"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -973,7 +1016,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=208",
    "textMethod": "pdftotext",
-   "textChars": 2740,
+   "textChars": 2741,
    "contentSha256": "b0573d40c4aad70f03f6df93d75f8d358cd66d6d85884d7841a9e437e822dcd4",
    "topics": {
     "rezoning": 1,
@@ -1013,7 +1056,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=207",
    "textMethod": "pdftotext",
-   "textChars": 4081,
+   "textChars": 4082,
    "contentSha256": "065b7273949890cf92583c125aa4b68ae9a947e76a0bb8403f95557511202b96",
    "topics": {
     "appointment": 1,
@@ -1059,38 +1102,6 @@
    "flags": [
     "land-use",
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "205",
-   "date": "2026-05-05",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners",
-   "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=205",
-   "textSource": "agenda",
-   "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=205",
-   "textMethod": "pdftotext",
-   "textChars": 2664,
-   "contentSha256": "acfa94194ed798b6a604b6205efcd7f3370b87a06e28bb422df3d4f6b86792ed",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "… FY2026 March Financial Reports at BOC Meeting 5.5.26.pdf 9. Old Business 9.1 Appeal of Zoning Case 1649-26, Variance of Front Setback for Tax Map 38N Parcel 22 (43 Cork Oak Circle) - (Clint Underwood, Director of Planning and …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

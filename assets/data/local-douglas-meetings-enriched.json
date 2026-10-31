@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:35:55Z",
+  "generatedAt": "2026-10-31T01:41:36Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -10,6 +10,7 @@
    "alpr",
    "data-center",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-11-04",
@@ -18,6 +19,7 @@
    "development": 4,
    "rezoning": 4,
    "contract": 15,
+   "local-taxes": 17,
    "millage-budget": 18,
    "annexation": 5,
    "variance": 5,
@@ -243,20 +245,28 @@
    "pdfSha256": "dd15460cd52640f53532d7eae77abdec1a30237a796167404ea00bd927eb6e36",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "… authorize the Chairman to sign all related documents pending final legal review. (Joey McKelvey) 13. Approval of a contract with Green Heart Enterprises in the amount of $100,000.00 (Option 2 $87,290.50 + Contingency $12,709.50) for the Ch …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… n 2 $87,290.50 + Contingency $12,709.50) for the Chicago Avenue Maintenance Complex fence and gates to be funded by SPLOST 2022 and authorize the Chairman to sign all related documents pending final legal review. (Julia Janka) 14. App …",
      "context": "agenda-action"
     },
     "millage-budget": {
@@ -266,7 +276,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -284,12 +295,14 @@
    "topics": {
     "annexation": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
    "tags": [
     "annexation",
     "contract",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
@@ -297,6 +310,7 @@
     "annexation",
     "budget",
     "contract",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
@@ -308,6 +322,11 @@
     "contract": {
      "term": "contract",
      "excerpt": "… on to confirm James Worthington as the Assistant County Administrator/Chief of operations and to approve employment contract and authorize the Chairman to sign all related documents pending legal review. 11. Motion to approve job descriptio …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ff's Department indoor shooting range (Building improvement) in the amount of $119,000 to be funded by the 2022 SPLOST fund and authorize the Chairman to sign all related documents pending final legal review. 23. Approval of the BIS D …",
      "context": "agenda-action"
     },
     "millage-budget": {
@@ -323,7 +342,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -368,27 +388,35 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7601,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 9062,
+   "textChars": 9065,
    "pdfSha256": "f1d00ef498166da1a16293e19bcbd5729d517c8fcfb727b4582b7e5680c50c92",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
    "matchedTerms": [
     "budget",
     "contract",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "… hairman to sign all related documents pending final legal review. (Susan Shehata) BUSINESS ITEMS 14. Approval of a contract with Judicial Alternatives of Georgia, Inc. (JAG) for misdemeanor probation services for State Court for January 1, …",
+     "context": "public-comment"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ff's Department indoor shooting range (Building improvement) in the amount of $119,000 to be funded by the 2022 SPLOST fund and authorize the Chairman to sign all related documents pending final legal review. (Tavarreus Pounds) Work …",
      "context": "public-comment"
     },
     "millage-budget": {
@@ -404,7 +432,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -417,7 +446,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7572,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2474,
+   "textChars": 2475,
    "pdfSha256": "1976d8b71b6a5779a0c434b93f0433522cac0c8088b440331321e1d5dd1d3e2a",
    "topics": {
     "rezoning": 1
@@ -449,18 +478,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7587,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11231,
+   "textChars": 11235,
    "pdfSha256": "7510f1715fdbeedebb083c4970a21a41cc3e0ceab3b65f9466fde74d1dc3630e",
    "topics": {
     "annexation": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "annexation",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -468,6 +499,7 @@
     "budget",
     "contract",
     "millage",
+    "splost",
     "warehouse"
    ],
    "topicExcerpts": {
@@ -486,6 +518,11 @@
      "excerpt": "… l legal review. 18. Approval for the Board of Elections & Voter Registration is to enter into a Lease Agreement for warehouse storage space in the Amount of $1,051.33 per month to be funded through the Board of Elections budget and authorize …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… 6. 2. Work Session Minutes of September 14, 2026. 3. Executive Session Minutes of September 14, 2026. 4. Special Called Millage Rate Public Hearing Minutes of September 15, 2026 and September 24, 2026. PROCLAMATIONS 5. Proclaiming October 4 - …",
+     "context": "public-comment"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… 6. 2. Work Session Minutes of September 14, 2026. 3. Executive Session Minutes of September 14, 2026. 4. Special Called Millage Rate Public Hearing Minutes of September 15, 2026 and September 24, 2026. PROCLAMATIONS 5. Proclaiming October 4 - …",
@@ -494,7 +531,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -507,18 +545,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7583,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7780,
+   "textChars": 7782,
    "pdfSha256": "fbd0090a6691ce33d0db630b5a4a3bfda8ac33fc6dd1279c75c5421a6d5872b3",
    "topics": {
     "annexation": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "annexation",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -526,6 +566,7 @@
     "budget",
     "contract",
     "millage",
+    "splost",
     "warehouse"
    ],
    "topicExcerpts": {
@@ -544,6 +585,11 @@
      "excerpt": "… a Jennings) 16. Approval for the Board of Elections & Voter Registration is to enter into a Lease Agreement for warehouse storage space in the Amount of $1,051.33 per month to be funded through the Board of Elections budget and authorize …",
      "context": "public-comment"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… Work Session Minutes of September 14, 2026. () 3. Executive Session Minutes of September 14, 2026. () 4. Special Called Millage Rate Public Hearing Minutes of September 15, 2026 and September 24, 2026. () PROCLAMATIONS 5. Proclaiming October 4 …",
+     "context": "public-comment"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… Work Session Minutes of September 14, 2026. () 3. Executive Session Minutes of September 14, 2026. () 4. Special Called Millage Rate Public Hearing Minutes of September 15, 2026 and September 24, 2026. () PROCLAMATIONS 5. Proclaiming October 4 …",
@@ -552,7 +598,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -568,15 +615,22 @@
    "textChars": 512,
    "pdfSha256": "e569de258febffb9c6aef1cf2c2c653fbcbccdce8bb58bf3ea1db85737ca7724",
    "topics": {
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "millage"
    ],
    "topicExcerpts": {
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… 10:00 AM -- CITIZENS HALL COMMISSION MEETING CALL TO ORDER PUBLIC HEARING 1. Millage Rate NEW BUSINESS 2. Resolution to adopt the Douglas County Board of Commissioner's 2026 Millage Rate and authorize …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… 10:00 AM -- CITIZENS HALL COMMISSION MEETING CALL TO ORDER PUBLIC HEARING 1. Millage Rate NEW BUSINESS 2. Resolution to adopt the Douglas County Board of Commissioner's 2026 Millage Rate and authorize …",
@@ -584,7 +638,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -632,15 +687,22 @@
    "textChars": 282,
    "pdfSha256": "c3b5243d3cc7587eeaa901e6a263ec2f90b954d40dcb77213139cc52976d20f5",
    "topics": {
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "millage"
    ],
    "topicExcerpts": {
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) RECESS",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) RECESS",
@@ -648,7 +710,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -661,7 +724,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7551,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1033195,
+   "textChars": 1033562,
    "pdfSha256": "a36eba8b1953ef56ad671ebc57d7d712e19297bd8712c38b51110a57a476f19b",
    "topics": {
     "appointment": 1,
@@ -669,6 +732,7 @@
     "contract": 1,
     "data-center": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
@@ -678,6 +742,7 @@
     "contract",
     "data-center",
     "development",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
@@ -691,10 +756,13 @@
     "contract",
     "data center",
     "fiscal year",
+    "local option sales tax",
     "millage",
     "multi-family",
     "procurement",
     "purchase order",
+    "special purpose local option",
+    "splost",
     "subdivision",
     "task order",
     "variance",
@@ -726,6 +794,11 @@
      "excerpt": "… GA Pwr Land Exchange - Grading for Fire Sta. # 9 182,000 Stone Haven Subdivision - Unassigned …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… Proclaiming September 2026 as National Hispanic Heritage Month in Douglas County. (Wendy Caudle) PUBLIC HEARING 8. Millage Rate (Commission Meeting/Tuesday) 9. Second Public Hearing on an amendment to the Douglas County Code of Ordinances …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… 31, 2026. 3. Executive Session Minutes of August 31, 2026. FINANCIAL REPORT • Acceptance of the monthly Financial/Budget Report for August 2026. (Dominic Ochei) PROCLAMATIONS Commission Meeting 2 …",
@@ -740,7 +813,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -759,20 +833,23 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7542,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7895,
+   "textChars": 7898,
    "pdfSha256": "e184e27ee7277da299d65a04eea50d6a99289f0135133f9398ff57d100ba26de",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "budget",
     "contract",
     "millage",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -781,6 +858,11 @@
      "excerpt": "… ending final legal review. (Chadwick Griffin) BUSINESS ITEMS 12. Approval for Parks and Recreation to enter into a contract with the American Red Cross for lifeguard training services in the amount of $250 for new certification and $15 …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… , smathis@douglascountyga.gov or 770-920-7416. PRESENTATIONS • Mauldin & Jenkins 2025 Audit Presentation () • TSPLOST Update () • Citizen Recognition of David Anderson (Commission Meeting/Tuesday) (Chief Allen) • Presentati …",
+     "context": "public-comment"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… , 2026. () 3. Executive Session Minutes of August 31, 2026. () FINANCIAL REPORT 4. Acceptance of the monthly Financial/Budget Report for August 2026. (Dominic Ochei) PROCLAMATIONS 5. Proclaiming September 14-18, 2026 as National Construction …",
@@ -788,7 +870,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -801,7 +884,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7504,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3892,
+   "textChars": 3893,
    "pdfSha256": "21e779107ef85c2448c2c4e45746d8468fc202753e7124db2dc80ff0c921af66",
    "topics": {
     "rezoning": 1
@@ -833,23 +916,26 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7525,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11062,
+   "textChars": 11067,
    "pdfSha256": "b9a59146dae86aa5a9476044dffd76655afef238c4a293e9cae4846a91beef9e",
    "topics": {
     "alpr": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "alpr",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "axon enterprise",
     "budget",
     "contract",
-    "millage"
+    "millage",
+    "splost"
    ],
    "topicExcerpts": {
     "alpr": {
@@ -859,8 +945,13 @@
     },
     "contract": {
      "term": "contract",
-     "excerpt": "… view. Commission Meeting 3 September 1, 2026 9. Approval to renew the contract with Mobile Communications America for Outdoor Siren Maintenance for $14,862.00 to be funded by the EMA budget, an …",
+     "excerpt": "… iew. Commission Meeting 3 September 1, 2026 9. Approval to renew the contract with Mobile Communications America for Outdoor Siren Maintenance for $14,862.00 to be funded by the EMA budget, an …",
      "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… ugust 17, 2026. 3. Executive Session Minutes of August 17, 2026 and August 18, 2026. 4. Special Called Meeting Minutes (Millage Rate) of August 10, 2026 and August 18, 2026. FINANCIAL REPORT 5. Acceptance of the monthly Financial/Budget Repo …",
+     "context": "public-comment"
     },
     "millage-budget": {
      "term": "millage",
@@ -870,7 +961,8 @@
    },
    "flags": [
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -883,23 +975,26 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7517,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5921,
+   "textChars": 5923,
    "pdfSha256": "4cafa86e636c654e3a525bc7c34c6db1b6e11c63c1053842dfcb8dd8d40a5f91",
    "topics": {
     "alpr": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "alpr",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "axon enterprise",
     "budget",
     "contract",
-    "millage"
+    "millage",
+    "splost"
    ],
    "topicExcerpts": {
     "alpr": {
@@ -912,6 +1007,11 @@
      "excerpt": "… ze the Chairman to sign all related documents pending final legal review. (Steve Balfour) 15. Approval to renew the contract with Mobile Communications America for Outdoor Siren Maintenance for $14,862.00 to be funded by the EMA budget, and …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… 17, 2026. () 3. Executive Session Minutes of August 17, 2026 and August 18, 2026. () 4. Special Called Meeting Minutes (Millage Rate) of August 10, 2026 and August 18, 2026. () FINANCIAL REPORT 5. Acceptance of the monthly Financial/Budget Rep …",
+     "context": "public-comment"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… 17, 2026. () 3. Executive Session Minutes of August 17, 2026 and August 18, 2026. () 4. Special Called Meeting Minutes (Millage Rate) of August 10, 2026 and August 18, 2026. () FINANCIAL REPORT 5. Acceptance of the monthly Financial/Budget Rep …",
@@ -920,7 +1020,8 @@
    },
    "flags": [
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -933,13 +1034,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7495,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11478,
+   "textChars": 11482,
    "pdfSha256": "820362c5f3680e2a8e5943428e18fb5a9f126afa0fbb51015c72704a234d2dd4",
    "topics": {
     "annexation": 1,
     "appointment": 1,
     "contract": 1,
     "data-center": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
@@ -947,6 +1049,7 @@
     "appointment",
     "contract",
     "data-center",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -955,7 +1058,8 @@
     "budget",
     "contract",
     "data center",
-    "millage"
+    "millage",
+    "splost"
    ],
    "topicExcerpts": {
     "annexation": {
@@ -978,6 +1082,11 @@
      "excerpt": "… create a legacy of awareness, prevention, and hope for future generations. Commissioner Henry Mitchell III will host “Data Centers and Douglas County: Separating Fact from Fiction” on Wednesday, August 26, from 6 p.m. to 8 p.m. in Citizens Hall. The …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… August 3, 2026. FINANCIAL REPORT 4. Approval of the Financial Report for the month of July 2026. () PUBLIC HEARING 5. Millage Rate (Dominic Ochei) NEW BUSINESS 6. Resolution to adopt the Douglas County Board of Education's 2026 Millage Rate. 7. …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… August 3, 2026. FINANCIAL REPORT 4. Approval of the Financial Report for the month of July 2026. () PUBLIC HEARING 5. Millage Rate (Dominic Ochei) NEW BUSINESS 6. Resolution to adopt the Douglas County Board of Education's 2026 Millage Rate. 7. …",
@@ -987,7 +1096,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -1009,15 +1119,22 @@
    "textChars": 280,
    "pdfSha256": "c5fab05b9876170fef9d71c86783acae356e33d74ee6693dbec38af437b8f174",
    "topics": {
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "millage"
    ],
    "topicExcerpts": {
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) RECESS",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) RECESS",
@@ -1025,7 +1142,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1056,25 +1174,28 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7477,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7201,
+   "textChars": 7203,
    "pdfSha256": "e880a436b101c1eef01169703373b5c015efcaa82ca45f0c35ee65e2eef4124c",
    "topics": {
     "annexation": 1,
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "annexation",
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "annexation",
     "appoint",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "annexation": {
@@ -1092,6 +1213,11 @@
      "excerpt": "… orize the Chairman to sign all related documents pending final legal review. (Justin Ricks) 16 Approval of an annual contract with Front Line Mobile Health under Solicitation# 26- . 003 to provide 28 Hazmat team specific physicals and 220 NFPA 1 …",
      "context": "public-comment"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 1 Backup . Facility Project, extending the contract through 8/31/26, with an increase of $21,014.00, to be funded by SPLOST 2022's Public Safety funds and authorizing the Chairman to sign all related documents pending final legal review. (J …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… stice Assistance Grant (JAG) (15PBJA-25-GG-02974-JAGX) in the amount of $19,072 with no match required, amend the budget and authorize the Chairman to sign all related documents subject to final legal review. (Jamie Dapremont) 8. Authori …",
@@ -1100,7 +1226,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1116,15 +1243,22 @@
    "textChars": 279,
    "pdfSha256": "5af608dd5c94cccaf1822fa83983653b433d1f8f91f5099165639b776b1d9174",
    "topics": {
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "millage"
    ],
    "topicExcerpts": {
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) ADJOURN",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) ADJOURN",
@@ -1132,7 +1266,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1145,7 +1280,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7445,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2645,
+   "textChars": 2646,
    "pdfSha256": "0cbf69dbf26a5817333a0bf587eb5b06129d767f2e36e5a5d5cf8082baca28c1",
    "topics": {
     "contract": 1,
@@ -1185,22 +1320,25 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7453,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11406,
+   "textChars": 11410,
    "pdfSha256": "81b7af444df9950a2a42f32b94230bd719fbf33798ee88fc79a636580d83bbc3",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -1213,6 +1351,11 @@
      "excerpt": "… stablish the budget and authorize the Chairman to sign all related documents pending legal review. 10. Approval of a contract between the Superior Accountability Courts and Talitrix for GPS tracking services for the period of August 1, 2026 …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… nt of $33,745.93 (quote in the amount of $30,678.12 + 10% contingency amount of $3,067.81) to be funded by 2022 SPLOST funds and authorize the Chairman to sign all related documents pending final legal review. 20. Approval of a contra …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… (AW-ACFP-27-018) in the amount of $363,848 with a match of $64,208 to be funded through the department's existing budget for the Drug Court/Veterans Court Program, establish the budget and authorize the Chairman to sign all related docum …",
@@ -1220,7 +1363,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1233,22 +1377,25 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7449,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7664,
+   "textChars": 7666,
    "pdfSha256": "5757db8e3ccaf917562b17ba1c2ce3059dc16dddf17ae25b83877133cda239fb",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -1261,6 +1408,11 @@
      "excerpt": "… the Chairman to sign all related documents pending legal review. (Karen Alexander) BUSINESS ITEMS 10. Approval of a contract between the Superior Accountability Courts and Talitrix for GPS tracking services for the period of August 1, 2026 …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… nt of $33,745.93 (quote in the amount of $30,678.12 + 10% contingency amount of $3,067.81) to be funded by 2022 SPLOST funds and authorize the Chairman to sign all related documents pending final legal review. (Julia Janka) 20. Approv …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… (AW-ACFP-27-018) in the amount of $363,848 with a match of $64,208 to be funded through the department's existing budget for the Drug Court/Veterans Court Program, establish the budget and Work Session 2 …",
@@ -1268,7 +1420,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1281,7 +1434,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7439,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10842,
+   "textChars": 10846,
    "pdfSha256": "cb5dfed5f66b50972c542fb84c719e1a828b0ddb8d717b537db5442d153e7bfd",
    "topics": {
     "alpr": 1,

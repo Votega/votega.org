@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:35:55Z",
+  "generatedAt": "2026-10-31T01:39:56Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -9,6 +9,7 @@
   "flags": [
    "alpr",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-10-20",
@@ -16,6 +17,7 @@
    "alpr": 1,
    "contract": 24,
    "development": 12,
+   "local-taxes": 14,
    "millage-budget": 21,
    "rezoning": 18,
    "comprehensive-plan": 6,
@@ -152,7 +154,7 @@
      "special-land-use",
      "variance"
     ],
-    "excerpt": "… ng and Community Development (2) Public Hearing and possible vote regarding the County-Initiated request to rezone Regular Meeting / Public Hearings Agenda Page 4 July 23, 2026 …",
+    "excerpt": "… ng and Community Development (2) Public Hearing and possible vote regarding the County-Initiated request to rezone Regular Meeting / Public Hearings Agenda Page 4 July 23, 202 …",
     "excerptTerm": "rezon"
    },
    {
@@ -250,12 +252,13 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5383,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13433,
+   "textChars": 13437,
    "pdfSha256": "118880d6c11bb1695012388d52c747b4e8469fa837d72b74978bd2838e45a180",
    "topics": {
     "alpr": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
@@ -263,6 +266,7 @@
     "alpr",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -272,6 +276,7 @@
     "contract",
     "dashcam",
     "rezon",
+    "splost",
     "task order",
     "warehouse"
    ],
@@ -291,6 +296,11 @@
      "excerpt": "… l Construction Administration in the amount of $11,760.00 for the Water & Sewer Maintenance Warehouse project - Vertical Capital Projects Manager, Department of Capital Projects (24) Board consider …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Services As- Needed Agreement for Volkert, Inc. in an amount not to exceed $141,365.00 for SPLOST IX Transportation Bundle 7, Holtzclaw Road at Chattahoochee Road (PE148) Roundabout Project – Transportat …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… rofessional Services Contract with University of Georgia Extension as approved in the Forsyth County 2027 budget - Director, Forsyth County Extension Services (4) Board consideration and approval to authoriz …",
@@ -305,7 +315,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -318,12 +329,13 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5377,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 18826,
+   "textChars": 18831,
    "pdfSha256": "875f52f5e84ffdbbba656094fb2d16190b62482677e5a85c6e0d081d721d32f5",
    "topics": {
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "variance": 1
@@ -332,6 +344,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "variance"
@@ -342,6 +355,7 @@
     "contract",
     "fiscal year",
     "rezon",
+    "splost",
     "task order",
     "variance",
     "warehouse"
@@ -362,6 +376,11 @@
      "excerpt": "… - CP260013 - to operate an open storage yard with an overall site including a contractor's establishment/warehouse/wholesale in existing buildings totaling 17,638 sq. ft. with 19 parking spaces on 6.70 acres zoned Restr …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Management and Construction Engineering & Inspection (CEI) Services As- Needed Agreement for SPLOST IX Bundle 5, Old Atlanta Road Safety Improvement (PERS1) with Spicer Group Inc., in the amount no …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… ociated services agreement – Fire Chief, Fire Department (B) Board approval of a Budget Resolution for replacement of total loss Unit #399 - Chief of Staff, Sheriff's Office …",
@@ -380,7 +399,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -393,17 +413,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5364,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8028,
+   "textChars": 8030,
    "pdfSha256": "c963a557a0df2b2b530b5ce82900eac098f0716f7835d4e31b058179690217de",
    "topics": {
     "comprehensive-plan": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
    "tags": [
     "comprehensive-plan",
     "contract",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -414,6 +436,7 @@
     "contract",
     "fiscal year",
     "rezon",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -425,6 +448,11 @@
     "contract": {
      "term": "task order",
      "excerpt": "… sidered on a \"Time Sensitive\" basis – Chief of Staff, Sheriff’s Office (4) Board approval of a Task Order with Steele & Associates, Inc. in the amount of $191,659.00 to provide services under the Trails Repair a …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Management and Construction Engineering & Inspection (CEI) Services As-Needed Agreement for SPLOST IX Bundle 5, Old Atlanta Road Safety Improvement (PERS1) with Spicer Group Inc., in the amount not to ex …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -440,7 +468,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -453,12 +482,13 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5354,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10562,
+   "textChars": 10565,
    "pdfSha256": "f71de035940ce4ed5f0d3f518068580522d540867097f1eeb1b15292d6266150",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
     "contract": 1,
+    "local-taxes": 1,
     "rezoning": 1,
     "variance": 1
    },
@@ -466,6 +496,7 @@
     "appointment",
     "comprehensive-plan",
     "contract",
+    "local-taxes",
     "rezoning",
     "variance"
    ],
@@ -474,6 +505,7 @@
     "comprehensive plan",
     "contract",
     "rezon",
+    "splost",
     "task order",
     "variance"
    ],
@@ -493,6 +525,11 @@
      "excerpt": "… Cover Replacement project (IDQ-053) with R2T, Inc. under the Indefinite Quantity Mechanical Contractor Contract (Contract No. 1202500014) in the amount of $445,456.89 for the replacement of anoxic a …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ward RFP 26-65-1514 to Backbone Infrastructure, LLC for Progressive Design Build Services for the SPLOST IX Bundle 5 Project, with a Preliminary Stage Cost of $692,500.00, and a Design-Builder's Fee of …",
+     "context": "unknown"
+    },
     "rezoning": {
      "term": "rezon",
      "excerpt": "… ing and Community Development (N) Board approval to postpone a Board generated rezoning for ZA4163, Tipton Development LLC, to the October 20, 2026, Work Session meeting. In …",
@@ -505,7 +542,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -518,18 +556,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5347,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7370,
+   "textChars": 7372,
    "pdfSha256": "940c2811a098e444d31aefdc420b21bac7c1efb02a00291e21d44456764424a4",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
     "contract": 1,
+    "local-taxes": 1,
     "rezoning": 1
    },
    "tags": [
     "appointment",
     "comprehensive-plan",
     "contract",
+    "local-taxes",
     "rezoning"
    ],
    "matchedTerms": [
@@ -537,6 +577,7 @@
     "comprehensive plan",
     "contract",
     "rezon",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -555,6 +596,11 @@
      "excerpt": "… Anoxic Zone Cover Replacement project (IDQ-053) with R2T, Inc. under the Indefinite Quantity Mechanical Contractor Contract (Contract No. 1202500014) in the amount of $445,456.89 for the replacement of anoxic and pre-a …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… val to award RFP 26-65-1514 to Backbone Infrastructure, LLC for Progressive Design Build Services for the SPLOST IX Bundle 5 Project, with a Preliminary Stage Cost of $692,500.00, and a Design-Builder's Fee …",
+     "context": "unknown"
+    },
     "rezoning": {
      "term": "rezon",
      "excerpt": "… nt of Planning and Community Development (14) Board consideration and possible direction of a Board generated rezoning for ZA4163, Tipton Development LLC. In accordance with UDC 8-5.5(I), if an application f …",
@@ -562,7 +608,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -575,7 +622,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5329,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 18218,
+   "textChars": 18223,
    "pdfSha256": "13275845c73f7c542bfe0ce2ad11b421a90edd4aca435bf64ffd29b13e1634bb",
    "topics": {
     "contract": 1,
@@ -642,7 +689,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5311,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8079,
+   "textChars": 8081,
    "pdfSha256": "7c78a37a5b29a7026dd93f8d5b9f3e54cbd66f5b4d05b68b1b7753d7d41b810a",
    "topics": {
     "contract": 1,
@@ -685,7 +732,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5298,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 14823,
+   "textChars": 14829,
    "pdfSha256": "28c7f3769bae0c97d3f60fad539b8c2d37f8320213b21c2819bed9364356b0c9",
    "topics": {
     "contract": 1,
@@ -718,7 +765,7 @@
     },
     "development": {
      "term": "warehouse",
-     "excerpt": "… ERS, for Additional Design Services in the amount of $54,105.00 for the Water & Sewer Maintenance Warehouse project - Vertical Capital Projects Manager, Department of Capital Projects Regular Meeting / Pub …",
+     "excerpt": "… ERS, for Additional Design Services in the amount of $54,105.00 for the Water & Sewer Maintenance Warehouse project - Vertical Capital Projects Manager, Department of Capital Projects Regular Meeting / Pu …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -752,24 +799,27 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5290,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11298,
+   "textChars": 11301,
    "pdfSha256": "9eae057d5915277a3e1414095f3314c5a9ea01d0cb26b5fd91dddde730ee4783",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
     "contract",
+    "splost",
     "task order",
     "warehouse"
    ],
@@ -789,6 +839,11 @@
      "excerpt": "… G ENGINEERS, for Additional Design Services in the amount of $54,105.00 for the Water & Sewer Maintenance Warehouse project - Vertical Capital Projects Manager, Department of Capital Projects (20) Board consider …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… e Department - County Manager V. Items for Consideration and Discussion (1) Update on the SPLOST IX projects - County Manager (2) Board consideration and approval for Forsyth County, on behalf of the Sher …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… required match to purchase ten Automatic External Defibrillators (AED), with approval of a Budget Resolution and authorization for the Grants Manager to accept the award in the DOJ's JustGrants system - …",
@@ -797,7 +852,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -810,7 +866,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5276,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13103,
+   "textChars": 13107,
    "pdfSha256": "b6cb922162b8c10b017294b7efc111f2ec048b6bacb3d8db71fa383dd84108c5",
    "topics": {
     "contract": 1,
@@ -877,7 +933,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5258,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7464,
+   "textChars": 7466,
    "pdfSha256": "10fe4dea47b011531c5a9b5856951222ce63faa88875146da0dc1fbf68c4d1b6",
    "topics": {
     "contract": 1,
@@ -918,12 +974,13 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5247,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 20615,
+   "textChars": 20621,
    "pdfSha256": "a579f53e83d8206b8138679373e608deb3c6c6cfe08e432c8280d00019dbc283",
    "topics": {
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "variance": 1
@@ -932,6 +989,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "variance"
@@ -962,6 +1020,11 @@
      "excerpt": "… th County, Georgia with respect to conservation areas located in Silverwood Subdivision, Phase 1 and Phase 2 - County Attorney (R) Board authorization for staff to move forward with the Pu …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… , 2026) IX. Time Set Public Hearing - 6:00 p.m. (1) Public Hearing regarding proposed Fiscal Year 2026 Millage Rates - Chief Financial Officer, Department of Finance X. Public Comments XI. Old Business …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… 026 (as anticipated by Board Rule 1.07.01): (A) Board authorization to advertise the FY 2027 Proposed Budget and 2027- 2031 Capital Improvement Program (CIP), Public Hearing and possible …",
@@ -980,7 +1043,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -993,7 +1057,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5239,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11032,
+   "textChars": 11035,
    "pdfSha256": "d40e3125dca1eb212d477b223dbc0e94e46d56961f170ba54515e05cf74e1262",
    "topics": {
     "appointment": 1,
@@ -1068,7 +1132,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5227,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 15189,
+   "textChars": 15193,
    "pdfSha256": "465c26f4193303f99e943c490bb350a1982863137ae59fd82e604a40ff22137b",
    "topics": {
     "contract": 1,
@@ -1116,7 +1180,7 @@
     },
     "rezoning": {
      "term": "rezon",
-     "excerpt": "… ng and Community Development (2) Public Hearing and possible vote regarding the County-Initiated request to rezone Regular Meeting / Public Hearings Agenda Page 4 July 23, 2026 …",
+     "excerpt": "… ng and Community Development (2) Public Hearing and possible vote regarding the County-Initiated request to rezone Regular Meeting / Public Hearings Agenda Page 4 July 23, 202 …",
      "context": "agenda-action"
     },
     "special-land-use": {
@@ -1145,14 +1209,16 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5219,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13178,
+   "textChars": 13182,
    "pdfSha256": "9be3689543af62f10841089d94370b6462857013615283ce7cafae89bfb6b099",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1160,12 +1226,18 @@
     "budget",
     "contract",
     "fiscal year",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "award of",
      "excerpt": "… of Staff, Sheriff's Office (2) Board consideration and authorization for the Sheriff’s Office to accept the award of the BJA FY25 Byrne Discretionary Community Project Funding in the amount of $277,598.00 wit …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Program Services As-Needed Agreement with Volkert, Inc. in the amount of $488,800.00 for the SPLOST IX Bundle 1 Projects. Staff requests this Item be considered on a \"Time Sensitive\" basis - Transportation …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -1175,7 +1247,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1188,11 +1261,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5202,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 18567,
+   "textChars": 18572,
    "pdfSha256": "7f663d63309675b38e8e3767cb1ad68995f590614c3eebf4573245038a78a183",
    "topics": {
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
@@ -1201,6 +1275,7 @@
    "tags": [
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use",
@@ -1211,6 +1286,7 @@
     "conditional use",
     "contract",
     "rezon",
+    "splost",
     "subdivision",
     "task order",
     "variance",
@@ -1225,6 +1301,11 @@
     "development": {
      "term": "warehouse",
      "excerpt": "… potential to include associated land use applications as necessary, for the industrial warehouse project on Piney Grove Road as discussed - Director, Department of Planning & Community Developme …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Infrastructure, Inc. in the amount of $1,697,350.00 to provide design services for SPLOST IX Bundle 2 Projects - Director, Department of Capital Projects (J) Board approval of Commitment Cha …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -1250,7 +1331,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1263,17 +1345,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5188,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11839,
+   "textChars": 11842,
    "pdfSha256": "7f61f7e0687398ea2285388b30bb8ba498be1f92e1a78ba406fb533c4c0cba05",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "special-land-use": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget",
     "special-land-use"
    ],
@@ -1282,6 +1366,7 @@
     "budget",
     "conditional use",
     "contract",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -1293,6 +1378,11 @@
     "contract": {
      "term": "task order",
      "excerpt": "… Agreement – Director, Department of Parks and Recreation (4) Board consideration and approval of a Task Order with Townley Construction Company, Inc., under the Emergency Water & Sewer Line Repairs As-Needed …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… with GFT Infrastructure, Inc. in the amount of $1,697,350.00 to provide design services for SPLOST IX Bundle 2 Projects - Director, Department of Capital Projects Work Session Agenda …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -1308,7 +1398,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1321,11 +1412,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5174,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 16620,
+   "textChars": 16625,
    "pdfSha256": "ee9133af52d3095f087939de97b3d9e06fd2758f1f1d59a342cb9dd4c7048132",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
@@ -1334,6 +1426,7 @@
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use",
@@ -1346,6 +1439,7 @@
     "contract",
     "reappoint",
     "rezon",
+    "splost",
     "task order",
     "variance"
    ],
@@ -1358,6 +1452,11 @@
     "contract": {
      "term": "contract",
      "excerpt": "… Agreement – Director, Department of Public Facilities (N) Board approval of a contract with Generac Power Systems, Inc. and Energy Systems Southeast, LLC under the Sourcewell 092222-GN …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… and Consultants Inc. in the amount of $2,418,406.99 to provide design services for SPLOST IX Bundle 3 Projects - Director, Department of Capital Projects (H) Board appr …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -1383,7 +1482,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1396,17 +1496,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5154,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10533,
+   "textChars": 10536,
    "pdfSha256": "be4bb01aad8fb0e19bac7f6aa980612776339571a0209e48059c4f1ba4f0b439",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "special-land-use": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget",
     "special-land-use"
    ],
@@ -1416,6 +1518,7 @@
     "conditional use",
     "contract",
     "reappoint",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -1427,6 +1530,11 @@
     "contract": {
      "term": "contract",
      "excerpt": "… greement – Director, Department of Public Facilities (16) Board consideration and approval of a contract with Generac Power Systems, Inc. and Energy Systems Southeast, LLC under the Sourcewell 092222-GNR Electr …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Engineers and Consultants Inc. in the amount of $2,418,406.99 to provide design services for SPLOST IX Bundle 3 Projects - Director, Department of Capital Projects (10) Board consideration and approval of a Pr …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -1442,7 +1550,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1455,25 +1564,33 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5141,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8003,
+   "textChars": 8006,
    "pdfSha256": "de4b286394f30a85d42fbf571a2b39490201385b93d6bebac9f3c310cb236629",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "budget",
     "contract",
+    "lhost",
     "task order"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "task order",
      "excerpt": "… ons #1 & #12 - Director, Department of Public Facilities (F) Board approval of Task Order HS-19 with Hazen and Sawyer under the Standard Service Agreement for Water and Sewer Engineering …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "lhost",
+     "excerpt": "… County's local delegation to the General Assembly asking for local law to conduct a LHOST - County Manager (Item first discussed at the May 12, 2026 Work Session Meeting) …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -1483,7 +1600,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1496,25 +1614,33 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5130,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8427,
+   "textChars": 8429,
    "pdfSha256": "c9c8800343a2199731ef8bdc7ecbeabb94833582a3c097d69b9ecb38f1a8b21e",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "budget",
     "contract",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "… application documents - Chief of Staff, Sheriff's Office (3) Board consideration and approval to engage in a contract in the amount of $393,218.00 with Tyler Technologies to migrate the Enterprise Assessment & …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… roval to award RFP 26-45-1514 to E.R. Snell Contractor Inc. for Progressive Design Build Services for the SPLOST IX Bundle 1 Project, with a Preliminary Stage Cost of $2,309,800.00 and a Design-Builder's Fee …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -1524,7 +1650,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1537,7 +1664,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5113,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10625,
+   "textChars": 10628,
    "pdfSha256": "fd21028362d65bbadc797ed76771a6472789370034fb4945d6c1610508a346de",
    "topics": {
     "contract": 1,
@@ -1602,7 +1729,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5101,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6635,
+   "textChars": 6637,
    "pdfSha256": "c4fc65f9a2b95522934e74a7eea3a900e677d55842e0839e4be2c50f1850a152",
    "topics": {
     "contract": 1,
@@ -1651,7 +1778,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5092,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 25173,
+   "textChars": 25180,
    "pdfSha256": "a04c8eae8790c5ed99296c615502216b5b2c5e709171ffb4665620f38fe270d5",
    "topics": {
     "contract": 1,

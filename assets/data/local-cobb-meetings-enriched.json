@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:35:56Z",
+  "generatedAt": "2026-10-31T01:41:55Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -9,6 +9,7 @@
   "flags": [
    "data-center",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-12-09",
@@ -20,6 +21,7 @@
    "annexation": 4,
    "appointment": 5,
    "contract": 9,
+   "local-taxes": 5,
    "millage-budget": 6,
    "data-center": 3
   },
@@ -194,7 +196,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10297,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1896,
+   "textChars": 1897,
    "pdfSha256": "6f6de4578017acefcb45499c76d629c356c2de3b76125aadbedabae5530dbba2",
    "topics": {
     "variance": 1
@@ -349,12 +351,14 @@
     "annexation": 1,
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "annexation",
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -364,6 +368,7 @@
     "contract",
     "fiscal year",
     "procurement",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -382,6 +387,11 @@
      "excerpt": "… AGENDA Page 2 of 6 6. To authorize the use of available State Contracts, Sourcewell (formerly NJPA), and other Contracted or Cooperative Pricing Agreements for the procurement of …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… rive, Smyrna, Georgia, to accommodate Highland Rivers Behavioral Health under Facilities Management’s 2022 SPLOST project, Program B0910. PUBLIC COMMENT Those persons wishing to address the Board of Commissioners will …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "fiscal year",
      "excerpt": "… b County Make A Wish 5k. Police Department 15. To authorize the application for grant funding for the Federal Fiscal Year 2027, Counter Unmanned Aircraft Systems (C-UAS) Grant Program, through the U.S. Department of H …",
@@ -390,7 +400,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -403,7 +414,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10292,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 19649,
+   "textChars": 19657,
    "pdfSha256": "7af9bf36a4f023da9dec4d391c0042dd9af7bdb86d23f38e9f066996dea475f9",
    "topics": {
     "contract": 1,
@@ -468,7 +479,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10260,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2164,
+   "textChars": 2165,
    "pdfSha256": "9b762f05341a04451a84084891a9352f6ce0fb1e60d9e9424800247ef0b35970",
    "topics": {
     "variance": 1
@@ -500,13 +511,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10282,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 11814,
+   "textChars": 11820,
    "pdfSha256": "320c1e883cf9ae76ca2d41e77077fbbcecdaa719c0a913b3a874964ed1ec20c9",
    "topics": {
     "annexation": 1,
     "appointment": 1,
     "contract": 1,
     "data-center": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
@@ -514,6 +526,7 @@
     "appointment",
     "contract",
     "data-center",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -525,6 +538,7 @@
     "fiscal year",
     "procurement",
     "reappoint",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -548,6 +562,11 @@
      "excerpt": "… under the Cobb County Solicitor General's Office. 5. To provide a presentation and discussion on data centers and their impacts. PUBLIC HEARING 6. To conduct the first public hearing on the proposed amendments to Part …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… for sixty-five (65) additional User Licenses and Reporting. This Order Form is partially funded by 2016 SPLOST, Support Services Technology Improvements Program X0020. 41. To approve a Purchase Instrument an …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… related to Cobb County 3-1-1, originally filed in 2008. Finance 28. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. 29. To authorize the increase of fund balance …",
@@ -557,7 +576,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -578,7 +598,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10264,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 13694,
+   "textChars": 13699,
    "pdfSha256": "d5e84a4c6e541690e6f7f85258c6c322b017d9924a6040ca2cc3e9e59c0a2aa2",
    "topics": {
     "contract": 1,
@@ -653,22 +673,25 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10246,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 9705,
+   "textChars": 9709,
    "pdfSha256": "60baab4021ac331222b68603413fb9a9327a771ee40e05adee5ab876ddb65802",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
     "contract",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -682,6 +705,11 @@
      "excerpt": "… Court Clerk, to include one-time operating and capital purchases. Water System 5. To approve a construction contract with IHC Construction Companies, LLC for the South Cobb Water Reclamation Facility Secondary Clarifier Reha …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… platform, under provisions of an OMNIA Partners contract (OMNIA). This project is partially funded by 2022 SPLOST Projects Support Services Information Services program B0040 and Countywide Improvements program B0010. …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… ty Insurance coverage effective October 1, 2026. Finance 16. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. 17. To approve the carry forward of previousl …",
@@ -689,7 +717,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -702,7 +731,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10219,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 18438,
+   "textChars": 18445,
    "pdfSha256": "112e852643aab0245ed6f15feff5259e3945a9325b7197e285bdc91dc01f3206",
    "topics": {
     "appointment": 1,
@@ -775,7 +804,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10203,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2038,
+   "textChars": 2039,
    "pdfSha256": "598232a535ade8705f322374e811b72d4bcf7a1424c8e481fa00c8de34ecf3d6",
    "topics": {
     "variance": 1
@@ -807,7 +836,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10216,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10228,
+   "textChars": 10233,
    "pdfSha256": "b7c4d2b9042dad003d78604a46200f8e967f0cee3535d368f2a90bbbd8bd1d63",
    "topics": {
     "annexation": 1,
@@ -874,7 +903,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10191,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2103,
+   "textChars": 2104,
    "pdfSha256": "4fc5260a32819087234d0ad3388346dd91fd7b19cd6abfd7639d1e33abbe8da2",
    "topics": {},
    "tags": [],
@@ -910,13 +939,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10169,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10232,
+   "textChars": 10237,
    "pdfSha256": "aaa1aef3c05391fdef02a63ac51301aa205bf380f24a40a8bcda376a8fdb529b",
    "topics": {
     "annexation": 1,
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
@@ -924,6 +954,7 @@
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -933,6 +964,7 @@
     "contract",
     "procurement",
     "reappoint",
+    "splost",
     "warehouse"
    ],
    "topicExcerpts": {
@@ -956,6 +988,11 @@
      "excerpt": "… t and the expenditure of any associated land acquisition costs for the purchase of a 15,000 +/- Square Foot Warehouse/Office Building on approximately 1.83 +/- acres of land, located at 550 Commerce Park Drive, Ma …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… or the LED sports field lighting fixtures on all four fields at Hubert Soccer Complex under the 2022 PARKS SPLOST program. Support Services Agency Facilities Management 34. To approve a Purchase Agreem …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… ARPA Public Safety and Community Violence Reduction grant award from the Governor's Office of Planning and Budget. Community Development 21. To approve an annexation Intent to Object and the Basis of Objection per HB 489 …",
@@ -964,7 +1001,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -977,7 +1015,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10154,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2140,
+   "textChars": 2141,
    "pdfSha256": "06060a6b0c55a9a8524f57bc5ad73ac1b4b55e0652a26eab8ace16ebd1a5efbb",
    "topics": {
     "special-land-use": 1
@@ -1027,7 +1065,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10099,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2051,
+   "textChars": 2052,
    "pdfSha256": "b6fc770014ee4e63ab4fe049500525f8b03d38bda3d70dd092f6d58150935742",
    "topics": {
     "variance": 1
@@ -1059,17 +1097,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10156,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 10693,
+   "textChars": 10698,
    "pdfSha256": "bf2dd8550c21ce08f71f15e59889f2d20813ff94d862c5ee7b0ad788a5d96760",
    "topics": {
     "contract": 1,
     "data-center": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
    "tags": [
     "contract",
     "data-center",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -1077,7 +1117,8 @@
     "budget",
     "contract",
     "data center",
-    "rezon"
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
@@ -1088,6 +1129,11 @@
     "data-center": {
      "term": "data center",
      "excerpt": "… 27. To adopt a resolution extending a temporary moratorium on rezoning applications and permits for new data centers in unincorporated Cobb County. Internal Audit 28. To approve an updated Internal Audit Department Charter in …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… of a State of Texas Department of Information Resources Contract (Texas DIR). This is a 2022 SPLOST project, Countywide Improvements Program B0010. PUBLIC COMMENT Those persons wishing to address the Board of Commissi …",
      "context": "agenda-action"
     },
     "millage-budget": {
@@ -1104,7 +1150,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -1125,7 +1172,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10096,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6088,
+   "textChars": 6090,
    "pdfSha256": "a173b4500de1481aa1128364c64b0840777bf3f0dcd65500028381b5e69bf1a0",
    "topics": {
     "special-land-use": 1

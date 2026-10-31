@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:36:33Z",
+  "generatedAt": "2026-10-31T02:22:12Z",
   "source": "Barrow County (granicus agenda HTML)",
   "place": "Barrow County",
   "count": 25
@@ -9,12 +9,14 @@
   "flags": [
    "alpr",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-10-27",
   "topicTotals": {
    "appointment": 14,
    "contract": 6,
+   "local-taxes": 4,
    "comprehensive-plan": 7,
    "development": 9,
    "rezoning": 10,
@@ -215,15 +217,18 @@
    "contentSha256": "4c5674280347705752b8a9a7fd07cb81ee17bf91638904eeb9c8c9cb62b0616b",
    "topics": {
     "appointment": 1,
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
     "appointment",
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
     "appoint",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -235,9 +240,16 @@
      "term": "contract",
      "excerpt": "… t. d) Consideration to approve the RFB2027-02 2027 TSPLOST Paving County Road Construction Services Contract Agreement from The Scruggs Company d/b/a/ Sunbelt Asphalt Surfaces, Inc. of Auburn, GA, in the amount of $1 …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… o authorize the Chairman to execute the agreement. d) Consideration to approve the RFB2027-02 2027 TSPLOST Paving County Road Construction Services Contract Agreement from The Scruggs Company d/b/a/ Sun …",
+     "context": "unknown"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -335,7 +347,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1171",
    "textMethod": "pdftotext",
-   "textChars": 8200,
+   "textChars": 8202,
    "contentSha256": "8e5c4a46d0c3da4d8d8ff7c343107e9295c75595bd7a2a6930ac97570fa6b016",
    "topics": {
     "appointment": 1,
@@ -440,7 +452,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1164",
    "textMethod": "pdftotext",
-   "textChars": 6280,
+   "textChars": 6281,
    "contentSha256": "c0a1b5335ab30c2981d6bd38ab2e49beb22dbb69973c7624305e0d340ecdb9b8",
    "topics": {
     "appointment": 1,
@@ -537,7 +549,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1160",
    "textMethod": "pdftotext",
-   "textChars": 7698,
+   "textChars": 7699,
    "contentSha256": "5a569050849fe2bc76670ac3bd98ca02a1c608725e65bfa2f90c688ee8f61ae4",
    "topics": {
     "appointment": 1,
@@ -594,7 +606,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1154",
    "textMethod": "pdftotext",
-   "textChars": 7137,
+   "textChars": 7138,
    "contentSha256": "081542ac3e98a08f2e8a1183d40d09339c83589f249428308faf29225a1bba06",
    "topics": {
     "alpr": 1,
@@ -762,7 +774,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1147",
    "textMethod": "pdftotext",
-   "textChars": 10452,
+   "textChars": 10455,
    "contentSha256": "81329dc8a14da9abc38b21248a5ad4fdc61d3aaec7c352fe02553c09fc799d28",
    "topics": {
     "annexation": 1,
@@ -881,7 +893,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1144",
    "textMethod": "pdftotext",
-   "textChars": 6291,
+   "textChars": 6292,
    "contentSha256": "3c75ddc93a4c23d91dc1b69d2e68482c33f2123939b51667e048df7ba2fd93da",
    "topics": {
     "appointment": 1
@@ -968,12 +980,13 @@
    "textSource": "agenda",
    "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1140",
    "textMethod": "pdftotext",
-   "textChars": 8753,
+   "textChars": 8755,
    "contentSha256": "60feecafef028f3cd95387313868af0fa3868477c43a9d47680b9ac5c231dcb8",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "variance": 1
@@ -982,6 +995,7 @@
     "appointment",
     "comprehensive-plan",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "variance"
@@ -1011,6 +1025,11 @@
      "excerpt": "… an Creek Capital, LLC / Owners. Request for a Special Use for a proposed density of 3.95 du/acre for a townhome subdivision. Change in Conditions to remove condition #1 from previous rezone case RZ 2025-036. …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… he Chairman to execute the agreement. b) Consideration to adopt the 2026 Board of Education's millage rates and authorize the Chairman to execute any additional documents. c) Consideration to app …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… he Chairman to execute the agreement. b) Consideration to adopt the 2026 Board of Education's millage rates and authorize the Chairman to execute any additional documents. c) Consideration to app …",
@@ -1029,7 +1048,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1074,16 +1094,18 @@
    "textSource": "agenda",
    "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1136",
    "textMethod": "pdftotext",
-   "textChars": 6334,
+   "textChars": 6335,
    "contentSha256": "7a2d70b319938daba9c5bb2e39ad264c4cb4bd1349ede3b913dfedcbee7a7d2d",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1091,7 +1113,8 @@
     "budget",
     "contract",
     "millage",
-    "reappoint"
+    "reappoint",
+    "tax digest"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -1104,6 +1127,11 @@
      "excerpt": "… he Chairman to execute the agreement. e) Consideration to approve the FY 2027 Food Services Contract for the Barrow County Senior Center from G.A. Food Services of Pinellas County LLC, of St. …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… Consideration to adopt the FY 2027 Budget and the FY 2027 Budget Resolution. c) Consideration to adopt the Millage Rate for the 2026 Tax Digest. d) Consideration to approve Strongside Solutions as Barrow County's Medical …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… and authorize the Chairman to execute the resolution. b) Consideration to adopt the FY 2027 Budget and the FY 2027 Budget Resolution. c) Consideration to adopt the Millage Rate for the 2026 Tax Digest. …",
@@ -1111,7 +1139,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1245,11 +1274,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1129",
    "textMethod": "pdftotext",
-   "textChars": 8770,
+   "textChars": 8772,
    "contentSha256": "087296958c41f393857fd7c03a079ed538f1c853c9f8a137dd039304d88666e5",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "variance": 1
@@ -1257,6 +1287,7 @@
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "variance"
@@ -1266,6 +1297,7 @@
     "budget",
     "contract",
     "rezon",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
@@ -1277,6 +1309,11 @@
     "contract": {
      "term": "contract",
      "excerpt": "… n to approve Change Order No. 1 for additional funding for the 2025 Local Road Assistance (LRA) Paving Contract from The Scruggs Company d/b/a Sunbelt Asphalt Surfaces, Inc. of Auburn, GA, in the amount of $31,297. …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… rize the Chairman to execute the application. d) Consideration to approve the RFB2026-17 TSPLOST Sidewalk Improvements with R&B Developers Inc., of Suwanee, GA, in the amount of $1,694,239.00 …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -1297,7 +1334,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },

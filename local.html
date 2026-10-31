@@ -22,7 +22,11 @@ breadcrumb:
   official governmental site. Cities are grouped under their county, you may search to jump to a place.
 </p>
 <p id="localTopicsLink">
-  Or browse by subject: see where <a href="{{ '/local/topics/' | relative_url }}">surveillance cameras, data centers, and land-use decisions</a>
+  Or browse by subject: see where <a href="{{ '/local/topics/' | relative_url }}">{%- assign topics = site.data.topics.topics | sort: "order" -%}
+  {%- for t in topics -%}
+    {%- if forloop.first -%}{%- elsif forloop.last -%}{% if topics.size > 2 %},{% endif %} and {% else %}, {% endif -%}
+    {{- t.phrase | default: t.name | downcase -}}
+  {%- endfor -%}</a>
   are appearing on local agendas across every jurisdiction we cover.
 </p>
 
@@ -94,6 +98,7 @@ breadcrumb:
   .lh-flag-dc { background: var(--color-warning-tint); color: var(--color-warning); }
   .lh-flag-lu { background: var(--color-watch-landuse-tint); color: var(--color-watch-landuse); }
   .lh-flag-alpr { background: var(--color-watch-alpr-tint); color: var(--color-watch-alpr); }
+  .lh-flag-tax { background: var(--color-watch-taxes-tint); color: var(--color-watch-taxes); }
   /* Legend explaining the agenda flag pills above */
   .lh-legend {
     margin: 0 0 1.25rem; padding: 0.75rem 0.9rem; background: var(--color-surface-sunken);
@@ -133,6 +138,10 @@ breadcrumb:
     <span class="lh-legend-item">
       <span class="lh-flag lh-flag-alpr"><i class="fa-solid fa-camera" aria-hidden="true"></i> ALPR / surveillance</span>
       Automated license plate readers or surveillance cameras discussed on recent agendas — Flock and other vendors.
+    </span>
+    <span class="lh-legend-item">
+      <span class="lh-flag lh-flag-tax"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Local taxes</span>
+      A SPLOST, ESPLOST, TSPLOST, bond, or other local tax or referendum on recent agendas.
     </span>
   </div>
   <p class="lh-legend-caveat">
@@ -363,7 +372,7 @@ breadcrumb:
     apply();
     if (location.hash.length > 1) jumpTo(decodeURIComponent(location.hash.slice(1)));
 
-    // Hot-topic flags: badge cards whose place has an ALPR / data-center / land-use
+    // Hot-topic flags: badge cards whose place has an ALPR / data-center / land-use / local-taxes
     // item on recent agendas (enrichment sidecar local-flags.json; base-path aware).
     fetch(getBasePath() + 'assets/data/local-flags.json')
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -386,6 +395,9 @@ breadcrumb:
             html += '<span class="lh-flag lh-flag-dc"><i class="fa-solid fa-industry" aria-hidden="true"></i> Data centers on agenda</span>';
           } else if (f.flags.indexOf('land-use') !== -1) {
             html += '<span class="lh-flag lh-flag-lu"><i class="fa-solid fa-trowel-bricks" aria-hidden="true"></i> Land use</span>';
+          }
+          if (f.flags.indexOf('local-taxes') !== -1) {
+            html += '<span class="lh-flag lh-flag-tax"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Local taxes</span>';
           }
           wrap.innerHTML = html;
           if (wrap.children.length) card.appendChild(wrap);

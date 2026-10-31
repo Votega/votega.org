@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:36:19Z",
+  "generatedAt": "2026-10-31T02:06:07Z",
   "source": "Macon-Bibb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Macon-Bibb County",
   "count": 25
@@ -9,6 +9,7 @@
   "flags": [
    "alpr",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-11-03",
@@ -16,6 +17,7 @@
    "appointment": 24,
    "contract": 24,
    "development": 17,
+   "local-taxes": 24,
    "millage-budget": 25,
    "variance": 8,
    "alpr": 7,
@@ -278,12 +280,14 @@
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -293,9 +297,12 @@
     "budget",
     "contract",
     "fiscal year",
+    "local option sales tax",
+    "olost",
     "procurement",
     "purchase order",
     "reappoint",
+    "referendum",
     "subdivision"
    ],
    "topicExcerpts": {
@@ -314,6 +321,11 @@
      "excerpt": "… e “Industrial Authority Act”), and MACON-BIBB COUNTY, GEORGIA (the “County”), a consolidated government and a political subdivision of the State of Georgia, created under Article IX, Section III, Paragraph II of the Constitution of Georgia, Ga. Law 20 …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "local option sales tax",
+     "excerpt": "… The Purpose Of Funding Site Work And Planning Services (Sponsored by: Lester M. Miller, Mayor) 7. Other Local Option Sales Tax a. A Resolution Of The Macon-Bibb County Commission Requesting The Elections Superintendent To Iss …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… Theatre Roof Replacement, In The Amount Of $194,200.00, To Be Paid From The Facilities Management Budget – Administration, Other Supplies, Building Maintenance Line Item (Sponsored by: Lester M. Miller, Mayor) 6. …",
@@ -322,7 +334,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -341,12 +354,14 @@
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -356,7 +371,10 @@
     "budget",
     "contract",
     "fiscal year",
+    "local option sales tax",
+    "olost",
     "procurement",
+    "referendum",
     "subdivision"
    ],
    "topicExcerpts": {
@@ -375,6 +393,11 @@
      "excerpt": "… e “Industrial Authority Act”), and MACON-BIBB COUNTY, GEORGIA (the “County”), a consolidated government and a political subdivision of the State of Georgia, created under Article IX, Section III, Paragraph II of the Constitution of Georgia, Ga. Law 20 …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "referendum",
+     "excerpt": "… esolution Of The Macon-Bibb County Commission Requesting The Elections Superintendent To Issue A Call For A Referendum On The Question Of Whether To Renew The Other Local Option Sales Tax (“OLOST”) For A Period Of Five …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… he Douglass Theatre Roof Replacement, In The Amount Of $194,200.00, To Be Paid From The Facilities Management Budget – Administration, Other Supplies, Building Maintenance Line Item (Sponsored by: Lester M. Miller, Mayor) …",
@@ -383,7 +406,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -396,30 +420,36 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3740,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 304222,
+   "textChars": 304377,
    "pdfSha256": "aa97bda258b0faf7d54f7bac4ebd55fd4fe8386d63c50ed3342fa1925978157e",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "ad valorem",
     "appoint",
     "award of",
+    "bond-for-title",
     "budget",
     "contract",
     "fiscal year",
     "millage",
     "procurement",
     "purchase order",
+    "referendum",
+    "special purpose local option",
+    "splost",
     "subdivision",
     "warehouse"
    ],
@@ -439,6 +469,11 @@
      "excerpt": "… are of its citizens; and WHEREAS, Macon-Bibb County is a fully consolidated city-county government and political subdivision of the State of Georgia; and WHEREAS, the Macon-Bibb County Emergency Management Agency (MBEMA) is the agency w …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ommunications, Inc., For The Replacement Of Radio Equipment In The Amount Of $235,582.27, To Be Paid From The SPLOST 2025 Fund – Public Safety – Public Safety Other – Property Line Item; (Sponsored by: Lester M. Miller, Mayor) c. …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… Of Operations Services For The District Attorney’s Office For FY 27, To Be Paid From The District Attorney’s Budget – Contract Labor – Contractual Services Line Item; (Sponsored by: Lester M. Miller, Mayor) f. A Resolution Of Th …",
@@ -447,7 +482,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -460,30 +496,36 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3738,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 306962,
+   "textChars": 307153,
    "pdfSha256": "9bdd0e142aaeafcdc0b4d3eed11b521db3c149d8338ff77a34fbc18aa1c7b91b",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "ad valorem",
     "appoint",
     "award of",
+    "bond-for-title",
     "budget",
     "contract",
     "fiscal year",
     "millage",
     "procurement",
     "purchase order",
+    "referendum",
+    "special purpose local option",
+    "splost",
     "subdivision",
     "warehouse"
    ],
@@ -503,6 +545,11 @@
      "excerpt": "… are of its citizens; and WHEREAS, Macon-Bibb County is a fully consolidated city-county government and political subdivision of the State of Georgia; and WHEREAS, the Macon-Bibb County Emergency Management Agency (MBEMA) is the agency w …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ommunications, Inc., For The Replacement Of Radio Equipment In The Amount Of $235,582.27, To Be Paid From The SPLOST 2025 Fund – Public Safety – Public Safety Other – Property Line Item; (Sponsored by: Lester M. Miller, Mayor) c. …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… Of Operations Services For The District Attorney’s Office For FY 27, To Be Paid From The District Attorney’s Budget – Contract Labor – Contractual Services Line Item; (Sponsored by: Lester M. Miller, Mayor) f. A Resolution Of Th …",
@@ -511,7 +558,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -524,16 +572,18 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3726,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 147294,
+   "textChars": 147508,
    "pdfSha256": "7e4a9a192907e9159a7c9e817bb82401cda1b8f4def26317e3a91c42e5487041",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -543,7 +593,9 @@
     "fiscal year",
     "millage",
     "purchase order",
-    "reappoint"
+    "reappoint",
+    "special purpose local option",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -556,6 +608,11 @@
      "excerpt": "… ervices In The Amount Of Up To $59,500.00, To Be Paid From The Tobesofkee Recreation Area Fund – Lake Tobesofkee – Contract Labor – Contractual Services Line Item (Sponsored by: ) f. A Resolution Of The Macon-Bibb County Commission Auth …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 1 Construction Services For The Macon Arena Project, In The Total Amount Of $14,230,428.00, Payable From 2025 SPLOST Proceeds And 2026 Arena Bond Proceeds (Sponsored by: ) h. An Ordinance Of The Macon-Bibb County Commission To Au …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… look into that program. • Renoalda Scott addressed the Commission asking them not to increase the millage 6. Approval of Minutes On motion of Commissioner Cooke, seconded by Commissioner Bailey and carried unani …",
@@ -563,7 +620,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -576,16 +634,18 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3724,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 167682,
+   "textChars": 167940,
    "pdfSha256": "e1d109daeb9370ee6c218cec78ddd753d28d8f9b3e5754d0388a70f92ba34cf1",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -594,8 +654,11 @@
     "contract",
     "fiscal year",
     "millage",
+    "notice of property tax",
     "purchase order",
-    "reappoint"
+    "reappoint",
+    "special purpose local option",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -608,6 +671,11 @@
      "excerpt": "… Page 1 of 259 4. Agreements, Contracts and Purchase Orders a. A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Ex …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Construction Services For The Macon Arena Project, In The Total Amount Of $14,230,428.00, Payable From 2025 SPLOST Proceeds And 2026 Arena Bond Proceeds (Sponsored by: Lester M. Miller, Mayor) 5. Appropriations a. …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… Lester M. Miller Mayor Lester M. Miller called the Public Hearing to order and gave a brief overview of the millage rates since 2021. 2. Notice of Property Tax a. The Macon-Bibb County Commission has tentatively adopted a …",
@@ -615,7 +683,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -628,17 +697,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3691,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 321244,
+   "textChars": 321668,
    "pdfSha256": "65f30066af32cb7e61ea61e7f3c0c7752f7a07b735fb994e57a269dadefdd1d2",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
@@ -653,6 +724,9 @@
     "procurement",
     "purchase order",
     "reappoint",
+    "splost",
+    "tax allocation district",
+    "tax digest",
     "variance"
    ],
    "topicExcerpts": {
@@ -665,6 +739,11 @@
      "term": "contract",
      "excerpt": "… r, Mayor) k. A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Enter Into An Independent Contractor Agreement With Playsouth, LLC, D/B/A Play South Playground Creators In The Amount Of Ninety-Eight Thousand, Two …",
      "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… t Of A Multiuse Trail And Sidewalk Loop Along Gray Highway; Appropriating Up To $1,407,610.00 From The 2018 Splost Fund – Roads, Other Line Item, To Be Used As The Required Local Match Funds; (Sponsored by: Les …",
+     "context": "unknown"
     },
     "millage-budget": {
      "term": "budget",
@@ -679,7 +758,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -692,17 +772,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3685,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 345607,
+   "textChars": 346039,
    "pdfSha256": "bd6660538d86becc6f3d0f77f8d40eaf02512f558d219919c08d93b3b7b76d55",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
@@ -717,6 +799,9 @@
     "procurement",
     "purchase order",
     "reappoint",
+    "splost",
+    "tax allocation district",
+    "tax digest",
     "variance"
    ],
    "topicExcerpts": {
@@ -729,6 +814,11 @@
      "term": "contract",
      "excerpt": "… herry Street, Macon, GA Legal recommends approval. (Sponsored by: Lester M. Miller, Mayor) 5. Agreements, Contracts and Purchase Orders a. A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Ex …",
      "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Page 2 of 433 Appropriating Up To $1,407,610.00 From The 2018 Splost Fund – Roads, Other Line Item, To Be Used As The Required Local Match Funds; (Sponsored by: Les …",
+     "context": "unknown"
     },
     "millage-budget": {
      "term": "budget",
@@ -743,7 +833,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -756,7 +847,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3651,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 552973,
+   "textChars": 553310,
    "pdfSha256": "2fcbef53b388ad9ad8a19d14aef32be0632b83fbb1b09676da123a5a297b7158",
    "topics": {
     "alpr": 1,
@@ -764,6 +855,7 @@
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
@@ -773,6 +865,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
@@ -784,8 +877,11 @@
     "contract",
     "fiscal year",
     "flock",
+    "local option sales tax",
     "procurement",
     "purchase order",
+    "referendum",
+    "splost",
     "subdivision",
     "variance"
    ],
@@ -815,6 +911,11 @@
      "excerpt": "… “[t]he state, or any institution, department, or other agency thereof, and any . . . or other political subdivision of the state may contract for any period not exceeding 50 years with each other or with any other public agency …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… The Amount Of $206,580.49 For Recreation Department Network Infrastructure Improvements, To Be Paid From The SPLOST 2025 Fund – Recreation – It Upgrade – Property Line Item (Sponsored by: Lester M. Miller, Mayor) e. A Resolution …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… onth, For A Term Of Up To Two Years, For Legal Services In Dependency Proceedings, Payable From The Juvenile Court Budget – Professional Services – Panel Attorney Line Item; (Sponsored by: ) i. A Resolution Of The Macon-Bibb County Co …",
@@ -829,7 +930,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -842,13 +944,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3649,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 571606,
+   "textChars": 571947,
    "pdfSha256": "66180d8507cbeccd22046f7be37fab6dd83b8141dbaa298a481d3d6aa186fe84",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
@@ -857,6 +960,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
@@ -867,8 +971,11 @@
     "comprehensive plan",
     "contract",
     "fiscal year",
+    "local option sales tax",
     "procurement",
     "purchase order",
+    "referendum",
+    "splost",
     "subdivision",
     "variance"
    ],
@@ -893,6 +1000,11 @@
      "excerpt": "… “[t]he state, or any institution, department, or other agency thereof, and any . . . or other political subdivision of the state may contract for any period not exceeding 50 years with each other or with any other public agency …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… $206,580.49 For Recreation Department Network Infrastructure Improvements, To Be Paid From The SPLOST 2025 Fund – Recreation – It Upgrade – Property Line Item (Sponsored by: Lester M. Miller, Mayor) …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… onth, For A Term Of Up To Two Years, For Legal Services In Dependency Proceedings, Payable From The Juvenile Court Budget – Professional Services – Panel Attorney Line Item; (Sponsored by: ) f. A Resolution Of The Macon-Bibb County Co …",
@@ -906,7 +1018,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -919,7 +1032,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3633,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 697475,
+   "textChars": 697840,
    "pdfSha256": "ce46cc5c012733f051641ae96b97db5c221f0c31b45b4e8c01645d723b4f3b26",
    "topics": {
     "alpr": 1,
@@ -927,6 +1040,7 @@
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
@@ -935,6 +1049,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -947,11 +1062,15 @@
     "fiscal year",
     "flock",
     "future land use",
+    "hotel-motel tax",
     "land use plan",
+    "local option sales tax",
     "mixed-use",
     "procurement",
     "purchase order",
     "reappoint",
+    "special purpose local option",
+    "splost",
     "subdivision",
     "task order"
    ],
@@ -981,6 +1100,11 @@
      "excerpt": "… ion as C-23-0082, is made this ___ day of ___________________, 20___, by and between the Macon-Bibb County, a political subdivision of the State of Georgia, (“County”), and Blue Cedar Counseling, LLC, (“Contractor”), collectively the Parties (“Parties …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… greement With Williams Communications, Inc., For Radio Equipment In The Amount Of $204,800.00, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Property Line Item; (Sponsored by: Lester M. Miller, Mayor) …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… ormation Officer And Strategic Advisor Services In The Amount Of $54,000.00, To Be Paid From The District Attorney Budget – Other Services – Investigative/Informant Fees Line Item (Sponsored by: Lester M. Miller, Mayor) h. A Resolutio …",
@@ -990,7 +1114,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1003,13 +1128,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3630,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 703667,
+   "textChars": 704034,
    "pdfSha256": "1a427e8c129cc4a54bc7e525c1b5f804977817a703a59dbe3ff50d64ad918460",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
@@ -1017,6 +1143,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1028,11 +1155,15 @@
     "contract",
     "fiscal year",
     "future land use",
+    "hotel-motel tax",
     "land use plan",
+    "local option sales tax",
     "mixed-use",
     "procurement",
     "purchase order",
     "reappoint",
+    "special purpose local option",
+    "splost",
     "subdivision",
     "task order"
    ],
@@ -1057,6 +1188,11 @@
      "excerpt": "… ion as C-23-0082, is made this ___ day of ___________________, 20___, by and between the Macon-Bibb County, a political subdivision of the State of Georgia, (“County”), and Blue Cedar Counseling, LLC, (“Contractor”), collectively the Parties (“Parties …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ent With Williams Communications, Inc., For Radio Equipment In The Amount Of $204,800.00, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Property Line Item; (Sponsored by: Lester M. Mill …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… ion Officer And Strategic Advisor Services In The Amount Of $54,000.00, To Be Paid From The District Attorney Budget – Other Services – Investigative/Informant Fees Line Item (Sponsored by: Lester M. Miller, Mayor) e. A …",
@@ -1065,7 +1201,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1078,18 +1215,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3599,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 240097,
+   "textChars": 240340,
    "pdfSha256": "06f1debdd05bd3ab00a30f0c1bd9d65046589c3bd4d3a77efcb6cbbbdeeb6a9a",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1102,6 +1241,8 @@
     "multifamily",
     "procurement",
     "purchase order",
+    "special purpose local option",
+    "splost",
     "subdivision"
    ],
    "topicExcerpts": {
@@ -1120,6 +1261,11 @@
      "excerpt": "… The prohibition on disability discrimination includes the requirement that new multifamily fi fi housing with four or more dwelling units— i.e., the publ …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… In The Amount Of $148,913.49, For The Purchase Of Furniture For Code Enforcement Offices, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Machinery & Equipment Line Item (Sponsored by: Lester M. Miller, …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… ibb County Commission To Adopt The Economic And Community Development Department ESG, Home, And CDBG Proposed Budgets For Fiscal Year 2027 (Sponsored by: Lester M. Miller, Mayor) l. An Ordinance Of The Macon-Bibb County Commission To …",
@@ -1128,7 +1274,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1141,13 +1288,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3600,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 239842,
+   "textChars": 240088,
    "pdfSha256": "5196926f52e852b8b20be58ce124304aafc369732b04f89d534b5e3243f7eb05",
    "topics": {
     "alpr": 1,
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
@@ -1155,6 +1303,7 @@
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1168,6 +1317,8 @@
     "multifamily",
     "procurement",
     "purchase order",
+    "special purpose local option",
+    "splost",
     "subdivision"
    ],
    "topicExcerpts": {
@@ -1191,6 +1342,11 @@
      "excerpt": "… The prohibition on disability discrimination includes the requirement that new multifamily fi fi housing with four or more dwelling units— i.e., the publ …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… t Of $148,913.49, For The Purchase Of Furniture For Code Enforcement Offices, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Machinery & Equipment Line Item (Sponsored by: Lester M. M …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… ide Assistance To Enhance Security During Fifa Events (Sponsored by: Lester M. Miller, Mayor) 7. Proposed Budgets for FY2027 a. An Ordinance Of The Macon-Bibb County Commission To Adopt The Economic And Community …",
@@ -1200,7 +1356,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1213,13 +1370,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3550,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 458930,
+   "textChars": 459154,
    "pdfSha256": "162ad31f213a0e278e75126b8df29de90dedc4489040d7a339d77e7f8325b89b",
    "topics": {
     "alpr": 1,
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "special-land-use": 1,
     "variance": 1
@@ -1229,6 +1387,7 @@
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "special-land-use",
     "variance"
@@ -1239,13 +1398,17 @@
     "conditional use",
     "contract",
     "fiscal year",
+    "general obligation bond",
     "gunshot detection",
+    "local option sales tax",
     "multi-family",
     "multifamily",
     "procurement",
     "purchase order",
     "reappoint",
     "shotspotter",
+    "special purpose local option",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
@@ -1269,6 +1432,11 @@
      "excerpt": "… ouseholds, including garbage, trash, and sanitary waste in septic tanks and means solid waste from single-family and multifamily residences, hotels and motels, bunkhouses, campgrounds, picnic grounds, and day use recreation areas. The term inclu …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… er, Mayor) d. An Ordinance of the Macon-Bibb County Commission to Authorize Transfers and Appropriations of 2018 SPLOST Funds to Fund Recreation, Courthouse and Road Projects as Provided Herein. (Sponsored by: Lester M. Miller, Mayor) …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… of 225 (Sponsored by: Lester M. Miller, Mayor) c. An Ordinance Of The Macon-Bibb County Commission To Authorize Budget Transfers, In A Total Amount Of $313,910.00, As Provided Herein, To Fund Purchases For The I.T., Aviation, So …",
@@ -1288,7 +1456,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1301,13 +1470,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3536,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 461490,
+   "textChars": 461715,
    "pdfSha256": "2cc1c01e40d369fa222d512afed7acfc6ba121daa8c7d5d0386b1a50d77d6985",
    "topics": {
     "alpr": 1,
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "special-land-use": 1,
     "variance": 1
@@ -1317,6 +1487,7 @@
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "special-land-use",
     "variance"
@@ -1327,13 +1498,17 @@
     "conditional use",
     "contract",
     "fiscal year",
+    "general obligation bond",
     "gunshot detection",
+    "local option sales tax",
     "multi-family",
     "multifamily",
     "procurement",
     "purchase order",
     "reappoint",
     "shotspotter",
+    "special purpose local option",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
@@ -1357,6 +1532,11 @@
      "excerpt": "… ouseholds, including garbage, trash, and sanitary waste in septic tanks and means solid waste from single-family and multifamily residences, hotels and motels, bunkhouses, campgrounds, picnic grounds, and day use recreation areas. The term inclu …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… b. An Ordinance of the Macon-Bibb County Commission to Authorize Transfers and Appropriations of 2018 SPLOST Funds to Fund Recreation, Courthouse and Road Projects as Provided Herein. (Sponsored by: Lester M. Miller, …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… rder Mayor Lester M. Miller 2. Approval of Minutes a. Approval of minutes from the May 19, 2026 FY2027 Budget Presentation (Sponsored by: Lester M. Miller, Mayor) 3. Appointments to Authorities, Boards and Committe …",
@@ -1376,7 +1556,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1421,18 +1602,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3488,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1160278,
+   "textChars": 1161474,
    "pdfSha256": "81f67141edaf6a71c94f55a386ae10db662d07f53de709fa6fa852e441910c1e",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1441,11 +1624,13 @@
     "budget",
     "contract",
     "fiscal year",
+    "general obligation bond",
     "mixed use",
     "mixed-use",
     "multi-family",
     "procurement",
     "purchase order",
+    "splost",
     "subdivision"
    ],
    "topicExcerpts": {
@@ -1464,6 +1649,11 @@
      "excerpt": "… GREEMENT (hereinafter “Agreement”) is entered into by and between Macon- Bibb County Government (“County”), a political subdivision of the State of Georgia, and New England Trauma Services, LLC (“Contractor”), a foreign limited liability corporation w …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 00,000.00 For The Completion Of The Law Enforcement Center Expansion And Upgrade Project, To Be Paid From The 2025 SPLOST Fund – Public Safety – Sheriff Buildings Line Item (Sponsored by: Lester M. Miller, Mayor) n. A Resoluti …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… LC For As-Needed Encampment Remediation Services, To Be Paid On A Per-Event Cost Basis From Parks & Beautification Budget, Contract Labor – Contractual Services Line Item; (Sponsored by: Lester M. Miller, Mayor) m. A Resolution Of The …",
@@ -1472,7 +1662,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1485,18 +1676,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3484,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1187961,
+   "textChars": 1189194,
    "pdfSha256": "60f3601f598d190e1e00efeeaae29276d11109ff2c7486c35950c059939cee14",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1505,11 +1698,13 @@
     "budget",
     "contract",
     "fiscal year",
+    "general obligation bond",
     "mixed use",
     "mixed-use",
     "multi-family",
     "procurement",
     "purchase order",
+    "splost",
     "subdivision"
    ],
    "topicExcerpts": {
@@ -1528,6 +1723,11 @@
      "excerpt": "… GREEMENT (hereinafter “Agreement”) is entered into by and between Macon- Bibb County Government (“County”), a political subdivision of the State of Georgia, and New England Trauma Services, LLC (“Contractor”), a foreign limited liability corporation w …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 0.00 For The Completion Of The Law Enforcement Center Expansion And Upgrade Project, To Be Paid From The 2025 SPLOST Fund – Public Safety – Sheriff Buildings Line Item (Sponsored by: Lester M. Miller, Mayor) c. …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… r As-Needed Encampment Remediation Services, To Be Paid On A Per-Event Cost Basis From Parks & Beautification Budget, Contract Labor – Contractual Services Line Item; (Sponsored by: Lester M. Miller, Mayor) b. A Resolut …",
@@ -1536,7 +1736,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1549,18 +1750,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3470,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1261368,
+   "textChars": 1262248,
    "pdfSha256": "2845caa40b87906d85a375b7c7574456f682c67ad1a4fd789a341cbcac3dc31a",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1571,6 +1774,7 @@
     "fiscal year",
     "procurement",
     "purchase order",
+    "splost",
     "subdivision"
    ],
    "topicExcerpts": {
@@ -1589,6 +1793,11 @@
      "excerpt": "… ate, lying and being in the City of Macon, Bibb County, Georgia in the Vineville District and being known as Lot 5 of a subdivision of Lot 53 of the Napier Property as shown by plat recorded in Plat Book 72, Folio 264, Clerk’s Office, Bibb Superior Co …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… $1,271,811.62 For Network Configuration Services For Macon-Bibb County Courthouse, To Be Paid From 2018 SPLOST Funds – Public Safety – It Upgrade – Property Line Item (Sponsored by: Lester M. Miller, Mayor, Joey Hulett, …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… Purchase Of Fire Department Uniforms On An As-Ordered Basis, To Be Paid From The Fire Department Budget (Sponsored by: Lester M. Miller, Mayor, Joey Hulett, Commissioner) d. An Ordinance Of The Macon-Bibb …",
@@ -1597,7 +1806,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1610,16 +1820,18 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3455,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 200658,
+   "textChars": 200805,
    "pdfSha256": "0d8de328f6105ec78cac72188bb90015ae8321d44f107ddd8d17d0bf778070c6",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1630,7 +1842,9 @@
     "contract",
     "fiscal year",
     "procurement",
-    "purchase order"
+    "purchase order",
+    "special purpose local option",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -1643,6 +1857,11 @@
      "excerpt": "… f. Resolution Of The Macon-Bibb County Commission To Approve A Change Order, In The Amount Of $23,551.96, To The Purchase Order For Progressive Communications, Llc, To Be Paid From The District Attorney’s Budget – Communications & Data - …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… nt With Bryx, Inc., In The Amount Of $1,256,750.00, To Upgrade The Fire Station Alert Systems, To Be Paid From The Splost 2018 Fund – Public Safety – Fire Upgrades Line Item; (Sponsored by: Lester M. Miller, Mayor) f. Resolution …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… Of $23,551.96, To The Purchase Order For Progressive Communications, Llc, To Be Paid From The District Attorney’s Budget – Communications & Data - Internet Line Item (Sponsored by: Lester M. Miller, Mayor) g. A Resolution Of The …",
@@ -1650,7 +1869,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1663,16 +1883,18 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3453,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 200918,
+   "textChars": 201065,
    "pdfSha256": "6b1d772fa070996ed4096cb9709446e40e80080ed0101607b82d1eedd7e43fb7",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1683,7 +1905,9 @@
     "contract",
     "fiscal year",
     "procurement",
-    "purchase order"
+    "purchase order",
+    "special purpose local option",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -1696,6 +1920,11 @@
      "excerpt": "… On The Region 5 Emergency Medical Services Council (Sponsored by: Lester M. Miller, Mayor) 4. Agreements, Contracts and Purchase Orders a. A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Ex …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… th Bryx, Inc., In The Amount Of $1,256,750.00, To Upgrade The Fire Station Alert Systems, To Be Paid From The Splost 2018 Fund – Public Safety – Fire Upgrades Line Item; (Sponsored by: Lester M. Miller, Mayor) d …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… 23,551.96, To The Purchase Order For Progressive Communications, Llc, To Be Paid From The District Attorney’s Budget – Communications & Data - Internet Line Item (Sponsored by: Lester M. Miller, Mayor) e. A Re …",
@@ -1703,7 +1932,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1716,13 +1946,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3430,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3189331,
+   "textChars": 3190336,
    "pdfSha256": "364104e995d82ae71e519952f51c8f5cc261290c67410c86d4da537f902b7ff1",
    "topics": {
     "alpr": 1,
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
@@ -1731,6 +1962,7 @@
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
@@ -1741,8 +1973,12 @@
     "budget",
     "contract",
     "fiscal year",
+    "local option sales tax",
     "procurement",
     "purchase order",
+    "referendum",
+    "special purpose local option",
+    "splost",
     "subdivision",
     "surveillance equipment",
     "variance"
@@ -1755,7 +1991,7 @@
     },
     "appointment": {
      "term": "appoint",
-     "excerpt": "… n on Page 5 of 1006 the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a county o …",
+     "excerpt": "… on Page 5 of 1006 the appointment, employment, compensation, hiring, disciplinary action or dismissal, or periodic evaluation or rating of a county o …",
      "context": "unknown"
     },
     "contract": {
@@ -1767,6 +2003,11 @@
      "term": "subdivision",
      "excerpt": "… INDEPENDENT CONTRACTOR AGREEMENT (“Agreement”) is entered into by and between Macon-Bibb County (“County”), a political subdivision of the State of Georgia, and Professional Paving Services, LLC, (“Contractor”) a domestic for-profit corporation with a …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… $105,720.00, To Upgrade The Security Systems At The Thomas Jackson Juvenile Justice Center, To Be Paid From The SPLOST 2018 Fund – Judicial – Courthouse – Property Line Item (Sponsored by: Lester M. Miller, Mayor) m. A Resolution O …",
+     "context": "agenda-action"
     },
     "millage-budget": {
      "term": "budget",
@@ -1782,7 +2023,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1795,13 +2037,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3428,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3290074,
+   "textChars": 3291188,
    "pdfSha256": "6ce23427f43742ca513eb4343428f753c5265da1fc88ac39ad3ed9e387b7f873",
    "topics": {
     "alpr": 1,
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
@@ -1810,6 +2053,7 @@
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
@@ -1821,9 +2065,14 @@
     "budget",
     "contract",
     "fiscal year",
+    "homestead exemption",
+    "local option sales tax",
     "millage",
     "procurement",
     "purchase order",
+    "referendum",
+    "special purpose local option",
+    "splost",
     "subdivision",
     "surveillance equipment",
     "variance"
@@ -1849,6 +2098,11 @@
      "excerpt": "… INDEPENDENT CONTRACTOR AGREEMENT (“Agreement”) is entered into by and between Macon-Bibb County (“County”), a political subdivision of the State of Georgia, and Professional Paving Services, LLC, (“Contractor”) a domestic for-profit corporation with a …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 5,720.00, To Upgrade The Security Systems At The Thomas Jackson Juvenile Justice Center, To Be Paid From The SPLOST 2018 Fund – Judicial – Courthouse – Property Line Item (Sponsored by: Lester M. Miller, Mayor) b. A …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… ibb County Fueling Station, In The Amount Of $112,418.80, To Be Paid From The Vehicle Maintenance Budget – Vehicle & Equipment Maintenance, Machinery & Equipment Line Item; (Sponsored by: Lester M. Miller, Mayor) …",
@@ -1863,7 +2117,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1876,16 +2131,18 @@
    "textSource": "agenda",
    "textSourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3392,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 69580,
+   "textChars": 69639,
    "pdfSha256": "0756ebd480ce499fca7dd80c6b8b9d86aeaddf0c3e8efd92af0159ad97305a42",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1894,7 +2151,8 @@
     "contract",
     "fiscal year",
     "procurement",
-    "purchase order"
+    "purchase order",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -1907,6 +2165,11 @@
      "excerpt": "… solution Of The Macon-Bibb County Commission To Approve A Change Order, In The Amount Of $60,000.00, To The Purchase Order For A1 Monitoring LLC, To Be Paid From The Sponsored Programs – Macon Violence Prevention – Con …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… .00, For The Resurfacing And Repair Of Pickleball Courts At Tattnall Pickleball Center, To Be Paid From The SPLOST 2018 Fund – Recreation – JDS Tennis – Property Line Item (Sponsored by: Lester M. Miller, Mayor) c. …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… Lester M. Miller, Mayor) e. An Ordinance Of The Macon-Bibb County Commission To Make A Mid- Year Budget Adjustment; To Amend The Fy 2026 Budget By Amending Revenue Lines In The Amount Of $4,986,021.00 To Recogni …",
@@ -1914,7 +2177,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   }

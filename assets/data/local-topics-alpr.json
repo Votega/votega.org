@@ -7,12 +7,6 @@
    "region": ""
   },
   {
-   "placeId": "clarke",
-   "placeName": "Athens-Clarke County",
-   "placeType": "consolidated",
-   "region": "Northeast Georgia"
-  },
-  {
    "placeId": "atkinson",
    "placeName": "Atkinson County",
    "placeType": "county",
@@ -97,12 +91,6 @@
    "region": ""
   },
   {
-   "placeId": "meriwether",
-   "placeName": "Meriwether County",
-   "placeType": "county",
-   "region": "Broader Metropolitan Statistical Area"
-  },
-  {
    "placeId": "newton",
    "placeName": "Newton County",
    "placeType": "county",
@@ -153,6 +141,27 @@
    "terms": [
     "axon enterprise",
     "surveillance camera"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-11-03",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13057",
+   "placeId": "cherokee",
+   "placeName": "Cherokee County",
+   "placeType": "county",
+   "region": "Atlanta Regional Commission",
+   "sourceType": "granicus",
+   "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&event_id=1118",
+   "tags": [],
+   "terms": [
+    "axon enterprise"
    ],
    "vendors": []
   },
@@ -328,6 +337,28 @@
    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4679&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
    "tags": [],
    "terms": [
+    "body cam"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Mayor & Commission Meetings",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-10-06",
+   "docType": "agenda",
+   "excerpt": "… Awarded Contracts: Total $997,173.26 08/21/2026 AXON ENTERPRISE INC FY27 Axon Taser and Body Cam Renewal/Upgrade Agreement 997,173.26 Police General Fund Purchas …",
+   "excerptTerm": "body cam",
+   "fips": "13059",
+   "placeId": "clarke",
+   "placeName": "Athens-Clarke County",
+   "placeType": "consolidated",
+   "region": "Northeast Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_10062026-3101",
+   "tags": [],
+   "terms": [
+    "axon enterprise",
     "body cam"
    ],
    "vendors": []
@@ -849,7 +880,7 @@
    "context": "agenda-action",
    "date": "2026-07-27",
    "docType": "agenda",
-   "excerpt": "… se persons. Police Department A. Resolution amending Resolution No. 23-197 regarding the Flock Safety agreement for product replacement. (Presenter: Captain Anthony Militello, HC …",
+   "excerpt": "… e persons. Police Department A. Resolution amending Resolution No. 23-197 regarding the Flock Safety agreement for product replacement. (Presenter: Captain Anthony Militello, HC …",
    "excerptTerm": "flock",
    "fips": "13151",
    "placeId": "henry",
@@ -1331,6 +1362,28 @@
    "vendors": []
   },
   {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": null,
+   "date": "2026-04-13",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13199",
+   "placeId": "meriwether",
+   "placeName": "Meriwether County",
+   "placeType": "county",
+   "region": "Broader Metropolitan Statistical Area",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_04132026-641",
+   "tags": [],
+   "terms": [
+    "body cam",
+    "body-worn"
+   ],
+   "vendors": []
+  },
+  {
    "body": "City Council",
    "confidence": "high",
    "context": "unknown",
@@ -1488,10 +1541,10 @@
   "consolidatedScanned": 4,
   "countiesScanned": 34,
   "emoji": "📷",
-  "generatedAt": "2026-10-30T19:36:34Z",
+  "generatedAt": "2026-10-31T02:23:05Z",
   "label": "ALPR / surveillance",
   "placesScanned": 42,
-  "placesWithMentions": 20,
+  "placesWithMentions": 22,
   "topic": "alpr",
   "universeCities": 537,
   "universeConsolidated": 9,

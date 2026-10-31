@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:34:15Z",
+  "generatedAt": "2026-10-31T01:34:33Z",
   "source": "DeKalb County (Legistar structured API)",
   "place": "DeKalb County",
   "count": 25
@@ -10,6 +10,7 @@
    "alpr",
    "data-center",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-11-05",
@@ -18,6 +19,7 @@
    "appointment": 94,
    "data-center": 37,
    "rezoning": 65,
+   "local-taxes": 26,
    "special-land-use": 49,
    "comprehensive-plan": 7,
    "development": 24,
@@ -292,14 +294,16 @@
     "contract": 47,
     "appointment": 2,
     "data-center": 2,
-    "rezoning": 2
+    "rezoning": 2,
+    "local-taxes": 2
    },
    "matchedTerms": [
     "appoint",
     "contract",
     "data center",
     "purchase order",
-    "rezon"
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
@@ -321,11 +325,17 @@
      "term": "rezon",
      "excerpt": "Commission District(s): 3 and 6 Application of Tikay Investments, LLC c/o Battle Law, P.C. to rezone properties from R-75 (Residential Medium Lot-75) zoning district to MR-1 (Medium Density Residential-1) zoning distric …",
      "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… maintenance, and repair of all card access points at County facilities. Seeking increase in contract funds to allocate SPLOST funds. Awarded to Southeastern Security Professionals, LLC.: Amount Not To Exceed: $66,299.99. Resolution",
+     "context": "agenda-action"
     }
    },
    "flags": [
     "land-use",
-    "data-center"
+    "data-center",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -614,6 +624,7 @@
     "rezoning": 4,
     "appointment": 6,
     "contract": 39,
+    "local-taxes": 2,
     "special-land-use": 1,
     "development": 1
    },
@@ -625,6 +636,7 @@
     "rezon",
     "slup",
     "special land use",
+    "splost",
     "townhome"
    ],
    "topicExcerpts": {
@@ -643,6 +655,11 @@
      "excerpt": "Purchasing & Contracting",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "Commission District(s): All Commission Districts To Approve the Use of SPLOST I, Category 2H Funding for Preliminary Design Services for a Proposed Joint Fire/Police Training Facility in an Amount …",
+     "context": "agenda-action"
+    },
     "special-land-use": {
      "term": "special land use",
      "excerpt": "Commission District(s): 4 and 7 Application of Lorraine Canada for a Special Land Use Permit (SLUP) to allow a drive through for a restaurant in the C-1 (Local Commercial) zoning district and Tier 2 of the …",
@@ -655,7 +672,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": [],
    "landUseItems": [
@@ -730,6 +748,7 @@
    "itemCount": 140,
    "topics": {
     "contract": 38,
+    "local-taxes": 1,
     "rezoning": 2,
     "special-land-use": 1,
     "appointment": 4,
@@ -743,12 +762,18 @@
     "rezon",
     "slup",
     "special land use",
+    "splost",
     "townhome"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "Purchasing & Contracting",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "Commission District(s): All Commission Districts To Approve the Use of SPLOST I, Category 2H Funding for Preliminary Design Services for a Proposed Joint Fire/Police Training Facility in an Amount …",
      "context": "agenda-action"
     },
     "rezoning": {
@@ -773,7 +798,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": [],
    "landUseItems": [
@@ -829,6 +855,7 @@
     "millage-budget": 3,
     "contract": 37,
     "data-center": 4,
+    "local-taxes": 3,
     "alpr": 1
    },
    "matchedTerms": [
@@ -841,6 +868,7 @@
     "procurement",
     "purchase order",
     "rezon",
+    "splost",
     "townhome"
    ],
    "topicExcerpts": {
@@ -874,6 +902,11 @@
      "excerpt": "… trict(s): All Commission Districts A Resolution Requiring an Independent, Third-Party Health and Environmental Study of Data Centers and Their Possible Impact on DeKalb County and Board of Commissioners Review of the Study Before DeKalb County’s Data …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "Commission District(s): All Commission Districts To Approve the Use of SPLOST I Funding for Preliminary Design and Cost Feasibility Services for a Proposed Police Special Operations/Evidence Storag …",
+     "context": "agenda-action"
+    },
     "alpr": {
      "term": "body cam",
      "excerpt": "Commission District(s): All CO - Change Order No. 6 to Contract No. 1257650 BodyWorn™ Body Camera System (Multi-Year)(Sole Source). For use by the Marshal’s Office, Police Services (PS) and Animal Enforcement Servi …",
@@ -884,7 +917,8 @@
     "land-use",
     "data-center",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -1004,6 +1038,7 @@
     "contract": 37,
     "data-center": 3,
     "development": 1,
+    "local-taxes": 3,
     "alpr": 1,
     "millage-budget": 3
    },
@@ -1016,6 +1051,7 @@
     "procurement",
     "purchase order",
     "rezon",
+    "splost",
     "townhome"
    ],
    "topicExcerpts": {
@@ -1039,6 +1075,11 @@
      "excerpt": "… tutional) zoning district to MR-1 (Medium Density Residential-1) zoning district to allow for a single-family attached (townhome) development, at 729 Old Briarcliff Road. Ordinance",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "Commission District(s): All Commission Districts To Approve the Use of SPLOST I Funding for Preliminary Design and Cost Feasibility Services for a Proposed Police Special Operations/Evidence Storag …",
+     "context": "agenda-action"
+    },
     "alpr": {
      "term": "body cam",
      "excerpt": "Commission District(s): All CO - Change Order No. 6 to Contract No. 1257650 BodyWorn™ Body Camera System (Multi-Year)(Sole Source). For use by the Marshal’s Office, Police Services (PS) and Animal Enforcement Servi …",
@@ -1054,7 +1095,8 @@
     "land-use",
     "data-center",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -1153,6 +1195,7 @@
    "topics": {
     "appointment": 6,
     "contract": 20,
+    "local-taxes": 5,
     "alpr": 1,
     "data-center": 1
    },
@@ -1160,7 +1203,8 @@
     "appoint",
     "body cam",
     "contract",
-    "data center"
+    "data center",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -1171,6 +1215,11 @@
     "contract": {
      "term": "contract",
      "excerpt": "Purchasing & Contracting",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Rescue (FR) to obtain roof maintenance, repair, and replacement services at County-owned facilities. Seeking to utilize SPLOST II funds for the roof replacement at Police and Fire Rescue Headquarters and the roof replacement, helipad membrane and …",
      "context": "agenda-action"
     },
     "alpr": {
@@ -1187,7 +1236,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -2382,6 +2432,7 @@
     "contract": 45,
     "alpr": 1,
     "rezoning": 3,
+    "local-taxes": 1,
     "data-center": 3
    },
    "matchedTerms": [
@@ -2393,7 +2444,8 @@
     "multifamily",
     "purchase order",
     "reappoint",
-    "rezon"
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -2421,6 +2473,11 @@
      "excerpt": "COMMISSION DISTRICT(S): 3 & 7 Application of Optimal Consulting, LLC to rezone property from R-75 (Residential Medium Lot-75) to RSM (Small Lot Residential Mix) zoning district to allow residential …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "Commission District(s): 4 & 6 To Allocate $500,000.00 of Category B3 - Bicycle Paths/Lanes/Multi-use Trails1 SPLOST II Funding for the Laredo Drive Bicycle Facility Resolution",
+     "context": "agenda-action"
+    },
     "data-center": {
      "term": "data center",
      "excerpt": "… trict(s): All Commission Districts A Resolution Requiring an Independent, Third-Party Health and Environmental Study of Data Centers and Their Possible Impact on DeKalb County and Board of Commissioners Review of the Study Before DeKalb County’s Data …",
@@ -2430,7 +2487,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -2552,6 +2610,7 @@
     "appointment": 3,
     "contract": 36,
     "data-center": 2,
+    "local-taxes": 1,
     "millage-budget": 4,
     "special-land-use": 1
    },
@@ -2582,6 +2641,11 @@
      "excerpt": "… The Administration And Planning Department To Update The Recommended Substitute For Text Amendment 2025-0972 Regarding Data Center Regulations. Resolution",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "ad valorem",
+     "excerpt": "Commission District(s): Commission District(s): All 2026 Ad Valorem Tax Millage Rates; Budget Revisions Resolution",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "ad valorem",
      "excerpt": "Commission District(s): Commission District(s): All 2026 Ad Valorem Tax Millage Rates; Budget Revisions Resolution",
@@ -2596,7 +2660,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -2908,6 +2973,7 @@
     "data-center": 9,
     "rezoning": 2,
     "special-land-use": 4,
+    "local-taxes": 4,
     "millage-budget": 3,
     "appointment": 2,
     "contract": 66,
@@ -2927,7 +2993,8 @@
     "multifamily",
     "purchase order",
     "rezon",
-    "special land use"
+    "special land use",
+    "splost"
    ],
    "topicExcerpts": {
     "data-center": {
@@ -2943,6 +3010,11 @@
     "special-land-use": {
      "term": "special land use",
      "excerpt": "… 7-3.39 to update the Bouldercrest-Cedar Grove-Moreland Overlay District to allow limited office uses, when subject to a Special Land Use Permit and additional criteria with Tier V of the overlay. Ordinance",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "ad valorem",
+     "excerpt": "Commission District(s): Commission District(s): All 2026 Ad Valorem Tax Millage Rates; Budget Revisions Resolution",
      "context": "agenda-action"
     },
     "millage-budget": {
@@ -2975,7 +3047,8 @@
     "land-use",
     "data-center",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -3260,6 +3333,7 @@
     "rezoning": 2,
     "special-land-use": 1,
     "contract": 62,
+    "local-taxes": 2,
     "alpr": 2,
     "appointment": 2,
     "development": 1,
@@ -3278,7 +3352,8 @@
     "multifamily",
     "purchase order",
     "rezon",
-    "special land use"
+    "special land use",
+    "splost"
    ],
    "topicExcerpts": {
     "data-center": {
@@ -3299,6 +3374,11 @@
     "contract": {
      "term": "contract",
      "excerpt": "Purchasing & Contracting",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "Commission District(s): 4 & 6 To Allocate $500,000.00 of Category B3 - Bicycle Paths/Lanes/Multi-use Trails1 SPLOST II Funding for the Laredo Drive Bicycle Facility Resolution",
      "context": "agenda-action"
     },
     "alpr": {
@@ -3326,7 +3406,8 @@
     "land-use",
     "data-center",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -3481,6 +3562,7 @@
     "appointment": 4,
     "contract": 65,
     "millage-budget": 1,
+    "local-taxes": 1,
     "development": 1
    },
    "matchedTerms": [
@@ -3490,6 +3572,7 @@
     "data center",
     "fiscal year",
     "purchase order",
+    "splost",
     "warehouse"
    ],
    "topicExcerpts": {
@@ -3513,6 +3596,11 @@
      "excerpt": "Commission District(s): All To Amend the Fiscal Year 2026 Annual Budget and Appropriate Capital Funding for Various Items. Resolution",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Rescue (FR) to obtain roof maintenance, repair, and replacement services at County-owned facilities. Seeking to utilize SPLOST II funds for the roof replacement and repairs at North DeKalb Comprehensive Health Center, East DeKalb Health Center, E …",
+     "context": "agenda-action"
+    },
     "development": {
      "term": "warehouse",
      "excerpt": "… Department of Watershed Management (DWM) to obtain construction services for renovations and installations at Roadhaven Warehouse and painting at the Scott Candler Plant. Awarded to The Home Depot, Inc.: Total Amount Not To Exceed: $1,166,690.27. Re …",
@@ -3522,7 +3610,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -3591,6 +3680,7 @@
     "data-center": 2,
     "development": 1,
     "appointment": 5,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "matchedTerms": [
@@ -3600,6 +3690,7 @@
     "data center",
     "fiscal year",
     "purchase order",
+    "splost",
     "warehouse"
    ],
    "topicExcerpts": {
@@ -3623,6 +3714,11 @@
      "excerpt": "APPOINTMENTS",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Rescue (FR) to obtain roof maintenance, repair, and replacement services at County-owned facilities. Seeking to utilize SPLOST II funds for the roof replacement and repairs at North DeKalb Comprehensive Health Center, East DeKalb Health Center, E …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "fiscal year",
      "excerpt": "Commission District(s): All To Amend the Fiscal Year 2026 Annual Budget and Appropriate Capital Funding for Various Items. Resolution",
@@ -3632,7 +3728,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {

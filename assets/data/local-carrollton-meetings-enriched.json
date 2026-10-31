@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:36:09Z",
+  "generatedAt": "2026-10-31T01:55:24Z",
   "source": "City of Carrollton (gdrive agenda/minutes PDFs, poppler+OCR)",
   "place": "City of Carrollton",
   "count": 20
@@ -9,6 +9,7 @@
   "flags": [
    "alpr",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-11-02",
@@ -16,6 +17,7 @@
    "appointment": 11,
    "rezoning": 16,
    "annexation": 6,
+   "local-taxes": 2,
    "millage-budget": 6,
    "development": 5,
    "alpr": 1,
@@ -32,7 +34,7 @@
     ]
    },
    {
-    "title": "City Council Work Session .pdf 2026-10-22",
+    "title": "City Council Work Session 2026-10-22",
     "date": "2026-10-22",
     "sourceUrl": "https://drive.google.com/file/d/1y7kmHbYzE_n3Gt1x2two9fLwvNA3PTYl/view",
     "tags": [
@@ -223,7 +225,7 @@
    "id": "2026-10-22",
    "date": "2026-10-22",
    "body": "City Council",
-   "title": "City Council Work Session .pdf 2026-10-22",
+   "title": "City Council Work Session 2026-10-22",
    "sourceUrl": "https://drive.google.com/file/d/1y7kmHbYzE_n3Gt1x2two9fLwvNA3PTYl/view",
    "textSource": "agenda",
    "textSourceUrl": "https://drive.google.com/file/d/1y7kmHbYzE_n3Gt1x2two9fLwvNA3PTYl/view",
@@ -322,11 +324,13 @@
    "pdfSha256": "6dd8dcae784e3ea6748407dfbbd71b58ef7e2ee4e973173f7e15460525908352",
    "topics": {
     "annexation": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
    "tags": [
     "annexation",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -339,6 +343,11 @@
     "annexation": {
      "term": "annexation",
      "excerpt": "… treetscape – VOTING ITEM 5–6 Annexation 75 Automation Drive – Tax Parcel 089 0895 4. & Rezoning Rezone from County to M-2 (Heavy …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… II. PLEDGE OF ALLEGIANCE III. INVOCATION IV. APPROVAL OF AGENDA ITEMS FOR CONSIDERATION 1. 2026 Millage Rate – VOTING ITEM …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -354,7 +363,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [],
    "agendaPacketTrimmed": true
@@ -391,11 +401,13 @@
    "pdfSha256": "1b6af75fb3d65db649fb55dfef603f599f817d28c8af095ade89b2459951e5c8",
    "topics": {
     "annexation": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
    "tags": [
     "annexation",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -408,6 +420,11 @@
     "annexation": {
      "term": "annexation",
      "excerpt": "… on Discussion Off Valley Drive & Pine Ridge Drive (28.77 acres total) Annexation Tax Parcels 089 0911 (26.6 acres), 089 0667 (0.548 acres), 089 0655 (0.553 5 …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… - 2. Millage Rate Discussion …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -423,7 +440,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [],
    "agendaPacketTrimmed": true
@@ -675,8 +693,8 @@
    "sourceUrl": "https://drive.google.com/file/d/1xk5P1vVjmJ8BpENCQkspZjsx14frjFcq/view",
    "textSource": "agenda",
    "textSourceUrl": "https://drive.google.com/file/d/1xk5P1vVjmJ8BpENCQkspZjsx14frjFcq/view",
-   "textMethod": "pdftotext",
-   "textChars": 1912,
+   "textMethod": "ocr",
+   "textChars": 826,
    "pdfSha256": "c0d4a9408944373c2573b5efec4d98d1b9f0a20e140e4d77b7bed9e4dfc750e1",
    "topics": {
     "appointment": 1,
@@ -690,18 +708,7 @@
     "appoint",
     "rezon"
    ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… TEM 47 – 48 6. Board Appointment: Historic Preservation Commission (2) …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… 2 – 15 400 Cottage Hill Road Rezoning From C-2 (General Commercial) to REVISED C-2 (General Commercial) – 2. Request …",
-     "context": "unknown"
-    }
-   },
+   "topicExcerpts": {},
    "flags": [
     "land-use"
    ],

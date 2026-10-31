@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:35:54Z",
+  "generatedAt": "2026-10-31T01:36:38Z",
   "source": "Carroll County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Carroll County",
   "count": 25
@@ -9,12 +9,14 @@
   "flags": [
    "data-center",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-11-05",
   "topicTotals": {
    "variance": 5,
    "contract": 9,
+   "local-taxes": 3,
    "special-land-use": 6,
    "appointment": 3,
    "millage-budget": 7,
@@ -235,18 +237,26 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3027,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3735,
+   "textChars": 3736,
    "pdfSha256": "d0861ecc4a4f503176910df5cc9fb465109560ac81c2e6628af1aea349d1df75",
    "topics": {
+    "local-taxes": 1,
     "special-land-use": 1
    },
    "tags": [
+    "local-taxes",
     "special-land-use"
    ],
    "matchedTerms": [
-    "conditional use"
+    "conditional use",
+    "tax digest"
    ],
    "topicExcerpts": {
+    "local-taxes": {
+     "term": "tax digest",
+     "excerpt": "… Construction Fund and naming of a Construction Fund Custodian; Adoption of the form of Bond; Preparation of a Tax Digest and Levy of a tax sufficient to pay the principal and interest on said Bonds; a Continuing Disclosure …",
+     "context": "public-comment"
+    },
     "special-land-use": {
      "term": "conditional use",
      "excerpt": "… ng for or against the application shall be allowed a TOTAL of five minutes to speak in rebuttal. 9.I. C-26-09-01:Conditional Use request, Zoned Agriculture, for Dog Kennels at 2199 Horsley Mill Rd. Parcel #157-0059, Land Lot 104 of the 5th …",
@@ -254,7 +264,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -349,22 +360,25 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3008,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6113,
+   "textChars": 6115,
    "pdfSha256": "82dadbc09033eebfac70a1207be931f575b5e386d92dcb4e23c6c47202e3665c",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -377,6 +391,11 @@
      "excerpt": "… 0 as a Capital Project (SPLOST) for FY 2026-2027, authorize the Chairman to negotiate and execute the contract and to take all necessary actions in connection with the project. -Brad Robinson, Deputy Chief, Carr …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… e will be taken. 11.I. Consideration to Purchase Vehicles in the amount of $466,560 as a Capital Project (SPLOST) for FY 2026-2027, authorize the Chairman to negotiate and execute the contract and to take all necessary acti …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… EGIANCE - Commissioner Fuller 5. APPROVAL OF AGENDA 6. APPROVAL OF MINUTES 6.I. Approval of Minutes for BOC Budget Work Session on July 30, 2026 6.II. Approval of Minutes for BOC Regular Meeting on August 4, 2026 7. FINANCIAL …",
@@ -384,7 +403,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -415,12 +435,13 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2987,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5230,
+   "textChars": 5232,
    "pdfSha256": "4d0fb75613c1d2dbd312a0007f90b60c63fee11da2428a6f0633e4aa64f4eeda",
    "topics": {
     "annexation": 1,
     "contract": 1,
     "data-center": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
@@ -428,6 +449,7 @@
     "annexation",
     "contract",
     "data-center",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -436,7 +458,9 @@
     "budget",
     "contract",
     "data center",
-    "rezon"
+    "homestead exemption",
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "annexation": {
@@ -454,6 +478,11 @@
      "excerpt": "… s, the issuance of Land Disturbance Permits, and the Issuance of Other Permits for Development of Any Data Center, Batter Energy Storage System, and Solar Power Farms; and for Other Lawful Purposes (ADDED) - …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ipment Consideration to Purchase a Used 2018 Sky Jack SJ86T Boom Lift for $25,000 moving from SPLOST Roads Account to the SPLOST Equipment Purchases Account, authorize the Chairman to negotiate and execute t …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… MERICA - Commissioner Chance 5. APPROVAL OF AGENDA 6. APPROVAL OF MINUTES 6.I. Approval of Minutes for Budget Work Session June 25, 2026 6.II. Approval of Minutes for BOC Regular Meeting July 7, 2026 7. SPECIAL PRESENTAT …",
@@ -468,7 +497,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -539,7 +569,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2961,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4603,
+   "textChars": 4605,
    "pdfSha256": "5d8a62eac68cc52a621c7d018886b75396255e871ec456bb82772b0349d8d401",
    "topics": {
     "annexation": 1,
@@ -694,7 +724,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2936,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6437,
+   "textChars": 6439,
    "pdfSha256": "a00145495028e0bd4ab30f50a26247f9b00a47ba1d29504588f2ea157b47261b",
    "topics": {
     "appointment": 1,
@@ -849,7 +879,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2919,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6375,
+   "textChars": 6377,
    "pdfSha256": "7826b826890bbdb4a708c718a93dfdda41095808fce396fb009d09c2a05ddf44",
    "topics": {
     "annexation": 1,
