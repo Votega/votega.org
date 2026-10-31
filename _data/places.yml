@@ -247,6 +247,11 @@ places:
         # auto-aggregate agendas/minutes (see the places.yml header).
         # Loose PDFs (lib.pdflinks). The /agenda/ page lists no files today (agendas are
         # not posted); minutes sit on their own page, hence extra_urls.
+        # The board meets monthly (schedule below) but the county has posted no minutes after
+        # Jan 8, 2026 (verified 2026-10-31: media library, minutes page, posts, calendar). The
+        # page shows a "County site not posting newer..." note so a short list does not read
+        # as a broken page. REMOVE this flag once the county catches up.
+        site_not_posting: true
         platform: pdflinks
         base_url: https://atkinsoncounty.org/
         agendas_url: "https://atkinsoncounty.org/agenda/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
