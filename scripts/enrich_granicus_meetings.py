@@ -86,7 +86,11 @@ REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
 DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 
 # Platforms this enricher handles. Legistar and the PDF platforms have their own.
-GRANICUS_PLATFORMS = {'granicus'}
+# AgendaPlus (Savannah) is here because its agendaUrl is a plain-HTML agenda page
+# (item text inline, attachments linked) that fetch_agenda_html reads as a direct
+# 2xx — the same strip-and-classify path. It was in NO enricher's platform set, so
+# Savannah never got a sidecar or flags.
+GRANICUS_PLATFORMS = {'granicus', 'agendaplus'}
 
 _HEADERS = {'User-Agent': 'votega.org/1.0 (meeting-topic-enricher)'}
 # Virtual-hosted S3 URL -> (bucket, region-or-'', key), so we can rewrite to the
