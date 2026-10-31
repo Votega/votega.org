@@ -13,7 +13,18 @@ Front-matter contract
   heading        (required)  the <h1>  (falls back to page.title)
   election_date  (required)  ISO date, e.g. 2026-07-28
   subtitle       optional    shown before the date in the meta line (e.g. "U.S. House District 13")
-  updated        optional    ISO date for a "Last updated" stamp
+  updated        optional    ISO date for a "Last updated" stamp. Editorial: use it for the
+                             date the Secretary of State certified, and it is what a certified
+                             page shows. While a page is still `upcoming`/`unofficial` the stamp
+                             instead comes from _data/results_updated.json, which
+                             scripts/build_results_json.py writes on every build, keyed by
+                             `results_data` — so it carries a TIME and moves on its own each
+                             time the numbers are rebuilt. Election night needs the time: the
+                             counts are rendered into this HTML at build time and GitHub Pages
+                             serves it with max-age=600 from its own CDN (Cloudflare does not
+                             cache it, and a Cloudflare purge would not reach GitHub's copy),
+                             so a reader can be looking at numbers up to ~10 minutes old with
+                             nothing on the page to say so.
   status         optional    unofficial (default) | certified — drives labels + notice styling
                              The status actually shown is resolved by _includes/result-status.html:
                              until the data file holds a single vote the page reads `upcoming`
@@ -120,7 +131,26 @@ Front-matter contract
   <div class="pr-meta">
     {%- if page.subtitle %}{{ page.subtitle }} &nbsp;&middot;&nbsp; {% endif -%}
     Election Date: {{ page.election_date | date: "%B %-d, %Y" }}
-    {%- if page.updated %} &nbsp;&middot;&nbsp; Last updated: {{ page.updated | date: "%B %-d, %Y" }}{% endif -%}
+    {%- comment -%}
+      The time matters in exactly one state. `unofficial` means votes are being
+      counted, so how old a number is IS the story. A certified page is a settled
+      record and keeps its hand-set certification date, unmoved by a later
+      rebuild; an `upcoming` page holds nothing but zeros, where a precise build
+      time would imply counts that do not exist yet. That gate also keeps the
+      stamp inside one DST period, so a time is never re-rendered across a
+      clock change.
+
+      `.epoch` deliberately, not the ISO string beside it: Liquid converts an
+      integer through the site `timezone`, but renders a string in whatever
+      offset the string carries, so a UTC stamp printed a 9:40pm Election Night
+      build as "November 4, 2026 at 2:40 AM ET" — tomorrow's date.
+    {%- endcomment -%}
+    {%- assign pr_built = site.data.results_updated[page.results_data] -%}
+    {%- if result_status == 'unofficial' and pr_built -%}
+      &nbsp;&middot;&nbsp; Last updated: {{ pr_built.epoch | date: "%B %-d, %Y" }} at {{ pr_built.epoch | date: "%-I:%M %p" }} ET
+    {%- elsif page.updated -%}
+      &nbsp;&middot;&nbsp; Last updated: {{ page.updated | date: "%B %-d, %Y" }}
+    {%- endif -%}
     &nbsp;&middot;&nbsp; {% include result-status-badge.html status=result_status %}
   </div>
 </div>

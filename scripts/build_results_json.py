@@ -32,9 +32,14 @@ import os
 import re
 import sys
 from collections import OrderedDict
+from datetime import datetime, timezone
 
 HERE = os.path.dirname(__file__)
 OUT_DIR = os.path.join(HERE, '..', '_data', 'election_results')
+# data_key -> {epoch, iso} build time, read by _layouts/election_results.html
+# for the "Last updated" stamp. The layout renders `epoch`; see
+# record_build_time() for why it lives here and why the integer is the one used.
+STAMP_PATH = os.path.join(HERE, '..', '_data', 'results_updated.json')
 
 # Statewide race display names, in desired order
 STATEWIDE_ORDER = [
@@ -208,6 +213,52 @@ def build_sections(contests):
     ]
 
 
+def record_build_time(data_key, now=None, stamp_path=None):
+    """Record when this data file was built, for the page's "Last updated" line.
+
+    The results data is a bare list of sections with nowhere to carry metadata,
+    and a page's `updated:` front matter is a hand-set DATE — so the stamp read
+    "November 3, 2026" from poll close to midnight however many times the
+    numbers were rebuilt, and a reader could not tell an 8:15pm count from an
+    11:40pm one. The page cannot be made genuinely live (the counts are
+    rendered into the HTML at build time, and GitHub Pages serves it with
+    max-age=600 from its own CDN, which a Cloudflare purge does not reach), so
+    saying plainly how old the numbers are is the honest alternative.
+
+    Written HERE, by the thing that changes the numbers, rather than into front
+    matter: an election-night step nobody has to remember cannot be forgotten
+    at 9pm. This is the one presentation value this script emits, and it is a
+    fact about the build rather than a choice about display — the layout still
+    decides whether to show it, and prefers a certified page's hand-set date.
+
+    Stored as EPOCH SECONDS, with the ISO string alongside only so the file can
+    be read by eye. Liquid's `date` filter converts an integer through the site
+    `timezone` (America/New_York) but renders an ISO string in whatever offset
+    the string itself carries — so a UTC string published "November 4, 2026 at
+    2:40 AM ET" for a 9:40pm Election Night build, naming TOMORROW. Verified by
+    building both forms, 2026-10-30.
+    """
+    stamp_path = stamp_path or STAMP_PATH
+    moment = (now or datetime.now(timezone.utc)).replace(microsecond=0)
+    stamp = OrderedDict([('epoch', int(moment.timestamp())),
+                         ('iso', moment.isoformat())])
+    stamps = {}
+    if os.path.exists(stamp_path):
+        try:
+            with open(stamp_path, encoding='utf-8') as fh:
+                loaded = json.load(fh)
+            if isinstance(loaded, dict):
+                stamps = loaded
+        except (OSError, ValueError) as exc:
+            # An unreadable sidecar must not cost us the results, which are
+            # already on disk by the time this runs. Re-stamping from scratch
+            # loses other pages' times; they are rewritten on their next build.
+            print(f"  WARNING: ignoring unreadable {stamp_path}: {exc}")
+    stamps[data_key] = stamp
+    write_json_atomic(stamp_path, OrderedDict(sorted(stamps.items())), indent=2)
+    return stamp
+
+
 if __name__ == '__main__':
     if len(sys.argv) != 3:
         sys.exit("Usage: python scripts/build_results_json.py <csv_path> <data_key>")
@@ -222,3 +273,4 @@ if __name__ == '__main__':
     counts = {s['id']: len(s['races']) for s in sections}
     print(f"  Races per section: {counts}")
     print(f"Wrote: {out_path}")
+    print(f"Built at: {record_build_time(data_key)['iso']}")
