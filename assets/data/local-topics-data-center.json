@@ -55,6 +55,12 @@
    "region": "Northwest Georgia"
   },
   {
+   "placeId": "lafayette",
+   "placeName": "City of LaFayette",
+   "placeType": "city",
+   "region": "Northwest Georgia"
+  },
+  {
    "placeId": "columbia",
    "placeName": "Columbia County",
    "placeType": "county",
@@ -876,6 +882,27 @@
    "vendors": []
   },
   {
+   "body": "Board of County Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-09-29",
+   "docType": "agenda",
+   "excerpt": "… __________________________________________________________ Convene Work Session 6:00 PM • Discussion regarding Data Center Ordinance. Adjourn Work Session As set forth in the Americans with Disabilities Act of 1990, Camden County d …",
+   "excerptTerm": "data center",
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_09292026-665",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "agenda-action",
@@ -1059,6 +1086,27 @@
    "region": "Metro Atlanta",
    "sourceType": "legistar",
    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4490&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of County Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-09-15",
+   "docType": "agenda",
+   "excerpt": "… ted for the items to the county codes seems to have been constructed in a more timely manner than the moratorium on the data centers and other items, and at first read seems to be inclusive of pretty much everything needed, and I'm referring to the it …",
+   "excerptTerm": "data center",
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_09152026-661",
    "tags": [],
    "terms": [
     "data center"
@@ -3001,13 +3049,13 @@
   }
  ],
  "metadata": {
-  "citiesScanned": 6,
+  "citiesScanned": 7,
   "consolidatedScanned": 4,
   "countiesScanned": 44,
   "emoji": "🏭",
-  "generatedAt": "2026-10-31T19:04:24Z",
+  "generatedAt": "2026-10-31T20:13:56Z",
   "label": "Data centers",
-  "placesScanned": 54,
+  "placesScanned": 55,
   "placesWithMentions": 31,
   "topic": "data-center",
   "universeCities": 537,

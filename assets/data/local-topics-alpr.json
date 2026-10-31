@@ -61,6 +61,12 @@
    "region": "Northwest Georgia"
   },
   {
+   "placeId": "lafayette",
+   "placeName": "City of LaFayette",
+   "placeType": "city",
+   "region": "Northwest Georgia"
+  },
+  {
    "placeId": "socialcircle",
    "placeName": "City of Social Circle",
    "placeType": "city",
@@ -1034,6 +1040,27 @@
    ]
   },
   {
+   "body": "Board of County Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-07-21",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_07212026-648",
+   "tags": [],
+   "terms": [
+    "plate reader"
+   ],
+   "vendors": []
+  },
+  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
@@ -1120,6 +1147,29 @@
    "terms": [
     "dash cam",
     "dashcam"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of County Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-07-07",
+   "docType": "agenda",
+   "excerpt": "… : 7/7/26 PURPOSE: To request that the Board of Commissioners: a. Consider the approval to purchase of two (2) License Plate Readers FACTS & ISSUES: 1. Vendor is GSA (state contract pricing) approved Contract Holder. 2. Vendor has …",
+   "excerptTerm": "license plate reader",
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_07072026-646",
+   "tags": [],
+   "terms": [
+    "license plate reader",
+    "lpr",
+    "plate reader"
    ],
    "vendors": []
   },
@@ -1761,13 +1811,13 @@
   }
  ],
  "metadata": {
-  "citiesScanned": 6,
+  "citiesScanned": 7,
   "consolidatedScanned": 4,
   "countiesScanned": 44,
   "emoji": "📷",
-  "generatedAt": "2026-10-31T19:04:24Z",
+  "generatedAt": "2026-10-31T20:13:56Z",
   "label": "ALPR / surveillance",
-  "placesScanned": 54,
+  "placesScanned": 55,
   "placesWithMentions": 27,
   "topic": "alpr",
   "universeCities": 537,
