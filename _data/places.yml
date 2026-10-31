@@ -1499,3 +1499,121 @@ places:
             # iCal feed: 2nd Monday, 7:00 p.m. (Sept 14, Oct 12, Nov 9 2026). The feed
             # gives no location; assumed to match the other boards -- confirm.
             when: "2nd Monday of every month, 7:00 p.m."
+
+  - slug: lowndes
+    name: Lowndes County
+    type: county
+    fips: "13185"
+    parentCounty: null
+    region: South Georgia
+    domains:
+      meetings:
+        # CivicPlus AgendaCenter (module 65). Two categories: the Board of
+        # Commissioners (catID 1) and the Greater Lowndes Planning Commission (2).
+        # Validated 2026-11-01: 31 meetings, 2026-01-12 to 2026-10-27, every one
+        # with an agenda or minutes link.
+        platform: civicplus
+        base_url: https://www.lowndescounty.com
+        agenda_module_id: 65
+        agendas_url: "https://www.lowndescounty.com/AgendaCenter"
+        bodies:
+          Board of Commissioners: 1
+          Greater Lowndes Planning Commission: 2
+        # From the county's Board of Commissioners page. The county notes there may
+        # be only one meeting in November and December.
+        schedule:
+          - body: Board of Commissioners (Regular Meeting)
+            when: "2nd and 4th Tuesday of every month, 5:30 p.m. (one meeting in November and December)"
+            location: "Administration Building, 2nd Floor, 327 N. Ashley St., Valdosta, GA 31601"
+          - body: Board of Commissioners (Work Session)
+            when: "Monday before each Tuesday regular meeting, 8:30 a.m."
+            location: "Administration Building, 2nd Floor, 327 N. Ashley St., Valdosta, GA 31601"
+
+  - slug: liberty
+    name: Liberty County
+    type: county
+    fips: "13179"
+    parentCounty: null
+    region: Coastal Georgia
+    domains:
+      meetings:
+        # CivicPlus AgendaCenter (module 65). Validated 2026-11-01: 181 meetings,
+        # 2023-01-03 to 2026-11-03. Elections and Tax Assessors are administrative
+        # bodies and are left out.
+        platform: civicplus
+        base_url: https://www.libertycountyga.gov
+        agenda_module_id: 65
+        agendas_url: "https://www.libertycountyga.gov/AgendaCenter"
+        exclude_bodies:
+          - Elections
+          - Tax Assessors
+        bodies:
+          Board of Commissioners: 3
+          Board of Elections: 4
+          Board of Tax Assessors: 2
+        # From the county's Board of Commissioners page.
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 6:00 p.m., and 3rd Thursday of every month, 5:00 p.m."
+            location: "Courthouse Annex, Commissioners' Board Room, 2nd Floor, 112 N. Main Street, Hinesville, GA 31313"
+
+  - slug: gordon
+    name: Gordon County
+    type: county
+    fips: "13129"
+    parentCounty: null
+    region: Northwest Georgia
+    domains:
+      meetings:
+        # CivicPlus AgendaCenter (module 65). Validated 2026-11-01: 262 meetings
+        # across six categories, 2023-01-03 to 2026-11-09. Kept: the Board of
+        # Commissioners and the Planning Commission; Elections, Historic
+        # Preservation, Committees and the Public Facilities Authority are left out.
+        platform: civicplus
+        base_url: https://www.gordoncountyga.gov
+        agenda_module_id: 65
+        agendas_url: "https://www.gordoncountyga.gov/AgendaCenter"
+        exclude_bodies:
+          - Elections
+          - Historic Preservation
+          - Committees
+          - Public Facilities
+        bodies:
+          Board of Commissioners: 3
+          Board of Elections and Registration: 8
+          Committees: 7
+          Historic Preservation Commission: 6
+          Planning Commission: 5
+          Public Facilities Authority: 10
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Tuesday of every month, 6:00 p.m. (work session 5:00 p.m.)"
+            location: "Assembly Room, Judicial Building, 101 South Piedmont Street, Calhoun"
+
+  - slug: camden
+    name: Camden County
+    type: county
+    fips: "13039"
+    parentCounty: null
+    region: Coastal Georgia
+    domains:
+      meetings:
+        # CivicPlus AgendaCenter (module 65). Validated 2026-11-01: 292 meetings,
+        # 2023-01-03 to 2026-11-03. Elections and Assessors are left out.
+        platform: civicplus
+        base_url: https://www.camdencountyga.gov
+        agenda_module_id: 65
+        agendas_url: "https://www.camdencountyga.gov/AgendaCenter"
+        exclude_bodies:
+          - Elections
+          - Assessors
+        bodies:
+          Board of County Commissioners: 1
+          Board of Assessors: 5
+          Board of Elections & Registration: 4
+          Planning Commission: 3
+        # From the county: exceptions are made and posted on the county calendar.
+        schedule:
+          - body: Board of County Commissioners
+            when: "1st and 3rd Tuesday of every month, 6:00 p.m. (exceptions are posted on the county calendar)"
+            location: "Commission Chambers, 2nd Floor, Government Services Complex, 200 East 4th Street, Woodbine"
