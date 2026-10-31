@@ -344,6 +344,7 @@ def _find_kw(low, kw):
 # filter a meeting's matchedTerms down to the vendor/capability phrases that
 # actually fired, for the sourced alprItems citations.
 ALPR_TERMS = set(TOPIC_RULES['alpr']) | set(TOPIC_WORD_RULES['alpr'])
+TAX_TERMS = set(TOPIC_RULES['local-taxes']) | set(TOPIC_WORD_RULES['local-taxes'])
 
 # Display labels for the ALPR vendor keywords, so a matched term can be shown as a
 # vendor NAME on the topic index pages (assets/scripts/topic-index.js reads the
@@ -713,6 +714,7 @@ def build_summary(enriched):
     dc_items = {}
     lu_items = {}
     alpr_items = {}
+    tax_items = {}
     flags = set()
     last = None
     land_use_meetings = 0
@@ -770,9 +772,24 @@ def build_summary(enriched):
                 entry['excerpt'] = ex['excerpt']
                 entry['excerptTerm'] = ex['excerptTerm']
             alpr_items.setdefault(key, entry)
+        # Local-tax citations (SPLOST, millage, bonds, referenda): same sourced,
+        # per-meeting shape as ALPR, with the tax terms that fired as evidence.
+        if 'local-taxes' in mtopics:
+            title = m.get('title') or m.get('body') or 'Meeting'
+            terms = sorted(set(m.get('matchedTerms') or []) & TAX_TERMS)
+            key = (m.get('date'), title)
+            entry = {
+                'title': title, 'date': m.get('date'),
+                'sourceUrl': m.get('sourceUrl'), 'terms': terms}
+            ex = _agenda_excerpt(m, 'local-taxes')
+            if ex:
+                entry['excerpt'] = ex['excerpt']
+                entry['excerptTerm'] = ex['excerptTerm']
+            tax_items.setdefault(key, entry)
     # Newest first, capped so the committed sidecar stays small.
     lu_sorted = sorted(lu_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     alpr_sorted = sorted(alpr_items.values(), key=lambda x: x.get('date') or '', reverse=True)
+    tax_sorted = sorted(tax_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     return {
         'flags': sorted(flags),
         'lastActivity': last,
@@ -782,6 +799,7 @@ def build_summary(enriched):
         'landUseMeetings': land_use_meetings,
         'alprItems': alpr_sorted[:20],
         'alprMeetings': alpr_meetings,
+        'localTaxItems': tax_sorted[:20],
     }
 
 
