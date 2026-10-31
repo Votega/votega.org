@@ -40,12 +40,29 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    # Which non-fatal generators degraded this run. The site still deploys (the
+    # fallbacks below are real), but the `report-degraded` job at the bottom turns
+    # the run red so notify-workflow-failure.yml opens an issue. Without this a
+    # failed generator printed one line into a green run and nobody was told.
+    outputs:
+      render_degraded: ${{ steps.render.outputs.degraded }}
+      entities_degraded: ${{ steps.entities.outputs.degraded }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      # Pinned, instead of whatever system Python the runner image ships: the
+      # generators below import yaml, and the share-card step needs playwright.
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: python -m pip install --quiet pyyaml==6.0.2 playwright==1.55.0
 
       # Generate compact server-render sidecars in _data/rendered/ from the large
       # runtime JSON in assets/data/. GitHub Pages builds Jekyll in safe mode, so
@@ -54,7 +71,22 @@ jobs:
       # initial HTML. Non-fatal: pages guard on presence and fall back to client
       # rendering, so a failure here must not block the deploy.
       - name: Generate server-render data
-        run: python3 scripts/build_render_data.py || echo "sidecar generation failed; pages fall back to client rendering"
+        id: render
+        run: |
+          set +e
+          python3 scripts/build_render_data.py
+          code=$?
+          if [ "$code" -ne 0 ]; then
+            echo "degraded=true" >> "$GITHUB_OUTPUT"
+            echo "::error title=Server-render data failed::build_render_data.py exited $code; pages fall back to client rendering"
+            {
+              echo "### :warning: Server-render data failed"
+              echo "\`build_render_data.py\` exited $code. Pages fall back to client rendering; the site still deployed."
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "degraded=false" >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
 
       # Persist per-entity last-modified state so an entity page's lastmod only
       # advances when its content actually changes (not on every deploy). Unique
@@ -68,9 +100,32 @@ jobs:
             entity-lastmod-
 
       # Materialize per-entity detail pages (see scripts/build_entity_pages.py).
-      # Non-fatal: on failure the legacy query-string pages still serve.
+      # Still non-fatal to the DEPLOY (the legacy query-string pages serve if clean
+      # URLs are missing), but no longer silent: the script exits nonzero when a
+      # category fails or the entity count drops >10% below the prior run, and this
+      # step records that for the `report-degraded` job. 1,300+ entity pages are the
+      # canonical URLs in the sitemap and every internal link, so a quiet partial
+      # build is a live-site problem, not a cosmetic one.
       - name: Generate entity pages
-        run: python3 scripts/build_entity_pages.py || echo "entity page generation failed; legacy ?id= pages still serve"
+        id: entities
+        run: |
+          set +e
+          python3 scripts/build_entity_pages.py 2>&1 | tee entity-build.log
+          code=${PIPESTATUS[0]}
+          summary=$(grep '^ENTITY_BUILD_SUMMARY' entity-build.log | tail -1)
+          {
+            echo "### Entity pages"
+            echo "\`${summary:-no summary line (script did not finish)}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$code" -ne 0 ]; then
+            echo "degraded=true" >> "$GITHUB_OUTPUT"
+            echo "::error title=Entity page generation degraded::build_entity_pages.py exited $code. ${summary}"
+            echo ":warning: **Degraded** (exit $code). The site still deployed, but some clean entity URLs may be missing." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "degraded=false" >> "$GITHUB_OUTPUT"
+          fi
+          rm -f entity-build.log
+          exit 0
 
       # Render a 1200x630 share card per entity into assets/img/share/ (gitignored, so
       # the PNGs exist only in the deployed site) and point each page's `share-img` at
@@ -79,7 +134,6 @@ jobs:
       # falls back to the default card, and a failed run leaves every page on it.
       - name: Generate share cards
         run: |
-          python3 -m pip install --quiet playwright
           CHROME_CHANNEL=chrome python3 scripts/build_share_cards.py || echo "share card generation failed; pages use the default card"
 
       - name: Build with Jekyll
@@ -101,3 +155,16 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # The site deploys even when a non-fatal generator degraded (see the build job),
+  # so this is the only place that failure becomes visible: it ends the run red,
+  # which is what notify-workflow-failure.yml watches for.
+  report-degraded:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    needs: [build, deploy]
+    if: ${{ always() && (needs.build.outputs.render_degraded == 'true' || needs.build.outputs.entities_degraded == 'true') }}
+    steps:
+      - name: Fail the run so the failure notifier fires
+        run: |
+          echo "::error::Deployed, but a non-fatal generator degraded (server-render data: ${{ needs.build.outputs.render_degraded }}, entity pages: ${{ needs.build.outputs.entities_degraded }}). See the build job's step summary."
+          exit 1

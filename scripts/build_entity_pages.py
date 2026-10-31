@@ -1718,6 +1718,22 @@ CATEGORY_BUILDERS = [
 ]
 
 
+# A run whose entity set is more than this share smaller than the prior run's is
+# treated as degraded, not as a real contraction: entities leave a few at a time
+# (a candidate retires, a member departs), never a tenth of the site at once.
+MAX_STATE_DROP = 0.10
+
+
+def state_regressed(prior_count: int, new_count: int) -> bool:
+    """True when new_count fell more than MAX_STATE_DROP below prior_count.
+
+    No prior (first run, cold cache) is never a regression.
+    """
+    if prior_count <= 0:
+        return False
+    return new_count < prior_count * (1 - MAX_STATE_DROP)
+
+
 def main():
     records = load("search-entities.json").get("records", [])
     os.makedirs(ENTITIES_DIR, exist_ok=True)
@@ -1739,11 +1755,13 @@ def main():
         records, load("races.json").get("races", [])))
     _DIRECTORY[:] = []  # reset the cross-builder directory accumulator
     _CARDS[:] = []
+    failed = []
     for label, builder in CATEGORY_BUILDERS:
         try:
             n = builder(records, urls, prior, new_state)
         except Exception as exc:
             print(f"  {label}: FAILED — {exc}", file=sys.stderr)
+            failed.append(label)
             continue
         print(f"  {label}: {n} pages")
         total += n
@@ -1753,15 +1771,35 @@ def main():
         total += n
     except Exception as exc:
         print(f"  Directory: FAILED — {exc}", file=sys.stderr)
+        failed.append("Directory")
+    # A category that raised contributed nothing to new_state, so writing it back
+    # would shrink the baseline the NEXT run is compared with and make today's
+    # damage look normal. Keep the prior state when this run is degraded.
+    shrank = state_regressed(len(prior), len(new_state))
+    degraded = bool(failed) or shrank
     write_json_atomic(ENTITY_URLS_PATH, urls, separators=(",", ":"))
     write_json_atomic(SERVED_ENTITY_URLS_PATH, urls, separators=(",", ":"))
     write_json_atomic(FEATURED_RACES_PATH, featured_races(_DIRECTORY), separators=(",", ":"))
-    write_json_atomic(LASTMOD_STATE_PATH, new_state, separators=(",", ":"))
+    if not degraded:
+        write_json_atomic(LASTMOD_STATE_PATH, new_state, separators=(",", ":"))
     os.makedirs(os.path.dirname(SHARE_MANIFEST_PATH), exist_ok=True)
     write_json_atomic(SHARE_MANIFEST_PATH, {"cards": _CARDS}, separators=(",", ":"))
     changed = sum(1 for k, v in new_state.items() if prior.get(k, {}).get("h") != v["h"])
     print(f"build_entity_pages: {total} pages, {sum(len(v) for v in urls.values())} URL mappings, "
           f"{changed} changed since last run")
+    # One machine-readable line for the deploy workflow's step summary.
+    print(f"ENTITY_BUILD_SUMMARY pages={total} prior_entities={len(prior)} "
+          f"entities={len(new_state)} failed={','.join(failed) or 'none'} "
+          f"degraded={'yes' if degraded else 'no'}")
+    if degraded:
+        reasons = []
+        if failed:
+            reasons.append(f"categories failed: {', '.join(failed)}")
+        if shrank:
+            reasons.append(f"entity count fell more than {int(MAX_STATE_DROP * 100)}% below the prior run")
+        print("build_entity_pages: DEGRADED run - " + "; ".join(reasons)
+              + ". Lastmod state not updated.", file=sys.stderr)
+        return 2
     return 0
 
 
