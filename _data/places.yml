@@ -1703,3 +1703,52 @@ places:
           - body: Planning Commission
             when: "3rd Monday of every month, 6:00 p.m."
             location: "Oconee County Town Hall, 7635 Macon Highway, Watkinsville, GA 30677"
+
+  - slug: tift
+    name: Tift County
+    type: county
+    fips: "13277"
+    parentCounty: null
+    region: South Georgia
+    domains:
+      meetings:
+        # Revize "resource library": a server-rendered list with no header row, one row
+        # per meeting (`11/03/26 | Commission Work Session | Agenda | Minutes`). The Revize
+        # adapter finds nothing in it; lib/htmltable.py reads it by link text instead.
+        # Validated 2026-11-01: 104 meetings, 2023-01-03 to 2026-11-03 (work sessions,
+        # regular and called sessions, public hearings), 202 documents.
+        platform: htmltable
+        base_url: https://www.tiftcounty.org
+        agendas_url: "https://www.tiftcounty.org/government/resource_library.php"
+        body_label: "Board of Commissioners"
+        # From the Board of Commissioners page: both meetings are in Room 207.
+        schedule:
+          - body: Board of Commissioners (Regular Meeting)
+            when: "2nd Monday of every month, 6:00 p.m."
+            location: "Room 207, Charles Kent Administration Building, 225 Tift Ave, Tifton, GA 31794"
+          - body: Board of Commissioners (Work Session)
+            when: "First Tuesday after the first Monday of every month, 6:00 p.m."
+            location: "Room 207, Charles Kent Administration Building, 225 Tift Ave, Tifton, GA 31794"
+
+  - slug: whitfield
+    name: Whitfield County
+    type: county
+    fips: "13313"
+    parentCounty: null
+    region: Northwest Georgia
+    domains:
+      meetings:
+        # Same Revize layout as Tift: a server-rendered, header-less list where the
+        # date and meeting type share the first cell (`10/12/26 Regular Business
+        # Meeting`) and the links read Agenda / Packet / Minutes / Video. Validated
+        # 2026-11-01: 116 meetings, 2021-01-11 to 2026-10-12, 163 documents and 80 video
+        # links. A "Packet" stands in for the agenda only when a row has no "Agenda".
+        platform: htmltable
+        base_url: https://www.whitfieldcountyga.com
+        agendas_url: "https://www.whitfieldcountyga.com/government/elected_officials/board_of_commissioners/agenda_minutes_videos.php"
+        body_label: "Board of Commissioners"
+        # From the county's Meeting Schedule page.
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd Monday of every month, 6:00 p.m."
+            location: "Whitfield County Courthouse, 205 N. Selvidge St., Dalton, GA"

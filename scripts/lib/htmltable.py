@@ -20,6 +20,13 @@ Rules, because a table like this changes without notice:
   * A table with rows but no document links anywhere is treated as a layout change
     and fails, rather than publishing meetings stripped of their links.
 
+A second mode covers tables with NO header row (Tift County's Revize "resource library":
+`11/03/26 | Commission Work Session | Agenda | Minutes ...`, one row per meeting). When
+no header-labelled table exists, rows whose first cell is a date are read instead, the
+meeting type comes from the second cell, and each link is classified by its own text
+(agenda / minutes / video). A link whose text says none of those is ignored, and two
+different documents of one kind in a row are left unlinked, never picked between.
+
 `parse_table` is pure (HTML in, meetings out) so it is tested offline against a real
 page; `fetch_htmltable_meetings` is the thin fetching wrapper.
 
@@ -37,6 +44,7 @@ from lib.http import fetch_bytes
 
 _HIDDEN_DATE = re.compile(r'^\d{8}$')
 _SLASH_DATE = re.compile(r'(\d{1,2})/(\d{1,2})/(\d{4})')
+_SLASH_DATE_2 = re.compile(r'(\d{1,2})/(\d{1,2})/(\d{2}|\d{4})')
 
 
 def _clean(s):
@@ -106,7 +114,10 @@ def _encode(base_url, href):
     """Absolute, percent-encoded URL; an already-encoded name is left alone."""
     parts = urlsplit(urljoin(base_url, href.strip()))
     path = quote(parts.path, safe="/%:@&=+$,;~()'!*")
-    return urlunsplit((parts.scheme, parts.netloc, path, parts.query, ''))
+    # Revize appends `?t=<timestamp>` to a file's URL and changes it on every edit; the
+    # bare URL serves the same file, and a stable link keeps the enrichment cache warm.
+    query = '' if re.fullmatch(r't=\d{10,}', parts.query) else parts.query
+    return urlunsplit((parts.scheme, parts.netloc, path, query, ''))
 
 
 def _iso(y, m, d):
@@ -151,6 +162,85 @@ def _col(headers, word):
     return None
 
 
+def _slug(s):
+    return re.sub(r'[^a-z0-9]+', '-', (s or '').lower()).strip('-')
+
+
+def _add_meeting(meetings, seen, body, date, label, urls):
+    """Append one meeting, or fold into an earlier same-date, same-label one when it
+    adds fields and contradicts none (older years list one meeting as two rows: an
+    agenda in one, minutes in the other)."""
+    key = (date, label)
+    host = next((m for m in seen.get(key, [])
+                 if all(not (urls[k] and m[k] and urls[k] != m[k]) for k in urls)), None)
+    if host:
+        for k, v in urls.items():
+            host[k] = host[k] or v
+        return
+    n = len(seen.setdefault(key, [])) + 1
+    stem = date + '-' + (_slug(label) or 'meeting')
+    m = {'body': body, 'date': date, 'id': stem + ('' if n == 1 else '-%d' % n),
+         'title': ('%s %s' % (_long_date(date), label)) if label else '%s Meeting' % _long_date(date)}
+    m.update(urls)
+    m['hasPreviousVersions'] = False
+    seen[key].append(m)
+    meetings.append(m)
+
+
+def _kind(text):
+    t = (text or '').lower()
+    if 'minute' in t:
+        return 'minutesUrl'
+    if 'agenda' in t:
+        return 'agendaUrl'
+    if 'packet' in t:
+        return 'packetUrl'       # an agenda only when the row has no "Agenda" link
+    if 'video' in t or 'watch' in t or 'youtube' in t or 'vimeo' in t:
+        return 'videoUrl'
+    return None
+
+
+def _parse_linktext(tables, base_url, body):
+    """Header-less mode (see module docstring). Returns (meetings, report) or None when
+    no table looks like a meetings list."""
+    meetings, skipped, seen, rows = [], [], {}, 0
+    for t in tables:
+        if t['headers']:
+            continue
+        for cells in t['rows']:
+            if len(cells) < 2:
+                continue
+            dm = _SLASH_DATE_2.match(cells[0]['text'].strip())
+            if not dm or not any(_kind(tx) for c in cells for _, tx in c['links']):
+                continue
+            rows += 1
+            y = dm.group(3)
+            date = _iso(('20' + y) if len(y) == 2 else y, dm.group(1), dm.group(2))
+            if not date:
+                skipped.append(cells[0]['text'])
+                continue
+            # The meeting type either follows the date in the same cell (Whitfield) or
+            # is the next cell (Tift).
+            rest = _clean(cells[0]['text'].strip()[dm.end():])
+            label = rest or (_clean(cells[1]['text']) if not cells[1]['links'] else '')
+            found = {}
+            for c in cells[1:]:
+                for href, tx in c['links']:
+                    k = _kind(tx)
+                    if k:
+                        found.setdefault(k, set()).add(_encode(base_url, href))
+            urls = {k: (next(iter(found[k])) if len(found.get(k, ())) == 1 else None)
+                    for k in ('agendaUrl', 'minutesUrl', 'videoUrl', 'packetUrl')}
+            if not urls['agendaUrl'] and 'agendaUrl' not in found:
+                urls['agendaUrl'] = urls['packetUrl']
+            del urls['packetUrl']
+            _add_meeting(meetings, seen, body, date, label, urls)
+    if not rows:
+        return None
+    docs = sum(1 for m in meetings for k in ('agendaUrl', 'minutesUrl') if m[k])
+    return meetings, {'rows': rows, 'skippedRows': skipped, 'documents': docs}
+
+
 def parse_table(html, base_url, body='Board of Commissioners'):
     """HTML -> (meetings, report). report: {'rows', 'skippedRows', 'documents'}.
     Raises ValueError when the page cannot be trusted (see module docstring)."""
@@ -163,7 +253,17 @@ def parse_table(html, base_url, body='Board of Commissioners'):
             table, cols = t, ci
             break
     if table is None or not table['rows']:
-        raise ValueError('no meetings table with Date and Agenda/Minutes headers found')
+        alt = _parse_linktext(p.tables, base_url, body)
+        if alt is None:
+            raise ValueError('no meetings table with Date and Agenda/Minutes headers found')
+        meetings, report = alt
+        if not meetings:
+            raise ValueError('table found but no row had a parseable date')
+        if not report['documents']:
+            raise ValueError('%d meetings but no document links - the page layout has changed'
+                             % len(meetings))
+        meetings.sort(key=lambda m: (m['date'], m['id']), reverse=True)
+        return meetings, report
 
     def link(cells, idx):
         if idx is None or idx >= len(cells):
@@ -182,23 +282,7 @@ def parse_table(html, base_url, body='Board of Commissioners'):
         urls = {'agendaUrl': link(cells, cols['agenda']),
                 'minutesUrl': link(cells, cols['minutes']),
                 'videoUrl': link(cells, cols['video'])}
-        # Older years list one meeting as two rows (agenda in one, minutes in the
-        # other). Fold a same-date row into an earlier one only when it adds fields
-        # and contradicts none; otherwise it is a second meeting that day.
-        host = next((m for m in seen.get(date, [])
-                     if all(not (urls[k] and m[k] and urls[k] != m[k]) for k in urls)), None)
-        if host:
-            for k, v in urls.items():
-                host[k] = host[k] or v
-            continue
-        n = len(seen.setdefault(date, [])) + 1
-        m = {'body': body, 'date': date,
-             'id': date + '-meeting' + ('' if n == 1 else '-%d' % n),
-             'title': '%s Meeting' % _long_date(date)}
-        m.update(urls)
-        m['hasPreviousVersions'] = False
-        seen[date].append(m)
-        meetings.append(m)
+        _add_meeting(meetings, seen, body, date, '', urls)
 
     docs = sum(1 for m in meetings for k in ('agendaUrl', 'minutesUrl') if m[k])
     report = {'rows': len(table['rows']), 'skippedRows': skipped, 'documents': docs}

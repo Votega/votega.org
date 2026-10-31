@@ -89,6 +89,30 @@ sw = {m['id']: m for m in H.parse_table(swapped, BASE)[0]}
 check(sw['2026-10-20-meeting']['agendaUrl'] == oct20['minutesUrl'],
       'swapping the headers swaps which documents are agendas (never position)')
 
+print('Header-less mode (Revize lists: Tift, Whitfield)')
+ROW = '<tr><td>%s</td>%s</tr>'
+LINK = '<td><a href="%s">%s</a></td>'
+TIFT = '<table>' + ROW % ('11/03/26', '<td>Commission Work Session</td>' + LINK % ('/a/Agenda 1.pdf?t=202610301521520', 'Agenda'))     + ROW % ('09/14/26', '<td>Commission Regular Session</td>' + LINK % ('/a/Agenda 2.pdf', 'Agenda') + LINK % ('/m/Minutes 2.pdf', 'Minutes')) + '</table>'
+WHIT = '<table>' + ROW % ('10/12/26 Regular Business Meeting', LINK % ('/a/Agenda.pdf', 'Agenda') + LINK % ('/p/Packet.pdf', 'Packet') + LINK % ('https://youtu.be/x', 'Video'))     + ROW % ('08/10/26 Regular Business Meeting', LINK % ('/p/Packet2.pdf', 'Packet'))     + ROW % ('09/29/26 Special Called Meeting - 6:00 p.m.', LINK % ('/a/A6.pdf', 'Agenda'))     + ROW % ('09/29/26 Special Called Meeting - 12:00 p.m.', LINK % ('/a/A12.pdf', 'Agenda')) + '</table>'
+tm, _ = H.parse_table(TIFT, 'https://t.example/gov/lib.php')
+tb = {m['id']: m for m in tm}
+check(tb['2026-11-03-commission-work-session']['agendaUrl'] == 'https://t.example/a/Agenda%201.pdf',
+      'two-digit year read; the ?t= cache-buster is dropped; space encoded')
+check(tb['2026-09-14-commission-regular-session']['minutesUrl'] == 'https://t.example/m/Minutes%202.pdf',
+      'links classified by their own text')
+check(tb['2026-11-03-commission-work-session']['minutesUrl'] is None, 'absent minutes stay None')
+wm, _ = H.parse_table(WHIT, 'https://w.example/x/page.php')
+wb = {m['id']: m for m in wm}
+check(wb['2026-10-12-regular-business-meeting']['agendaUrl'] == 'https://w.example/a/Agenda.pdf',
+      'an Agenda link wins over a Packet in the same row (not cancelled by it)')
+check(wb['2026-08-10-regular-business-meeting']['agendaUrl'] == 'https://w.example/p/Packet2.pdf',
+      'a Packet stands in for the agenda only when there is no Agenda link')
+check(wb['2026-10-12-regular-business-meeting']['videoUrl'] == 'https://youtu.be/x', 'video link')
+check('2026-09-29-special-called-meeting-6-00-p-m' in wb and '2026-09-29-special-called-meeting-12-00-p-m' in wb,
+      'two meetings on one date with different types stay distinct')
+check(wb['2026-10-12-regular-business-meeting']['title'] == 'October 12, 2026 Regular Business Meeting',
+      'meeting type taken from the date cell')
+
 print('Failure modes')
 check(raises(lambda: H.parse_table('<html><body><p>nothing</p></body></html>', BASE),
              'no meetings table'), 'no table -> refuse')
