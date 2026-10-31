@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-31T03:18:06.502748+00:00",
+    "generatedAt": "2026-10-31T11:26:08.173387+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,13 +24,13 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 133,
+    "count": 130,
     "windowDays": 45,
     "entityTagged": 81,
     "topicCounts": {
-      "elections": 57,
-      "courts": 15,
-      "education": 15,
+      "elections": 55,
+      "courts": 14,
+      "education": 14,
       "budget": 8,
       "surveillance": 1,
       "healthcare": 11,
@@ -39,6 +39,11 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000251": {
+      "name": "Brian Jack",
+      "url": null,
+      "bioguideId": "J000311"
+    },
     "vg-ga-p-000466": {
       "name": "David Dillie",
       "url": null,
@@ -151,11 +156,6 @@
       "url": null,
       "bioguideId": "B000490"
     },
-    "vg-ga-p-000251": {
-      "name": "Brian Jack",
-      "url": null,
-      "bioguideId": "J000311"
-    },
     "vg-ga-p-000258": {
       "name": "Earl L. \"Buddy\" Carter",
       "url": null,
@@ -163,14 +163,21 @@
       "candidateIds": [
         "challenger-buddy-carter-senate-2026"
       ]
-    },
-    "vg-ga-p-000255": {
-      "name": "Andrew S. Clyde",
-      "url": null,
-      "bioguideId": "C001116"
     }
   },
   "items": [
+    {
+      "id": "538b456b5863",
+      "title": "Jack Nicholson was scary. But Shelley Duvall delivered the real horror in 'The Shining'",
+      "url": "https://www.gpb.org/news/2026/10/31/jack-nicholson-was-scary-shelley-duvall-delivered-the-real-horror-in-the-shining",
+      "source": "GPB News",
+      "publishedAt": "2026-10-31T11:00:11+00:00",
+      "snippet": "Just in time for Halloween, NPR correspondent Brian Mann caught 'The Shining' on the big screen — and it changed how he understood the movie.",
+      "entityIds": [
+        "vg-ga-p-000251"
+      ],
+      "topics": []
+    },
     {
       "id": "17a441308026",
       "title": "Judge clears David Dillie to stay on ballot following double voting allegations",
@@ -253,32 +260,6 @@
       ]
     },
     {
-      "id": "d1dc1c954c6e",
-      "title": "Senate candidates appeal to voters in last few days of campaigning",
-      "url": "https://www.gpb.org/news/2026/10/30/senate-candidates-appeal-voters-in-last-few-days-of-campaigning",
-      "source": "GPB News",
-      "publishedAt": "2026-10-30T17:21:00+00:00",
-      "snippet": "The election is just four days away and both of Georgia’s candidates for U.S. Senate are traveling across the state making their final pitches to voters.",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "courts"
-      ]
-    },
-    {
-      "id": "9325530b1f62",
-      "title": "Friday is the last day of early voting in Georgia. Students at a college polling place weigh in",
-      "url": "https://www.gpb.org/news/2026/10/30/friday-the-last-day-of-early-voting-in-georgia-students-at-college-polling-place",
-      "source": "GPB News",
-      "publishedAt": "2026-10-30T16:21:00+00:00",
-      "snippet": "Friday is the last day to vote early in the 2026 midterms ahead of Tuesday’s Election Day. So far, more than 30% of registered voters in Georgia have already cast their ballots.",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "education"
-      ]
-    },
-    {
       "id": "831218782afc",
       "title": "What early voting can – and can’t – tell us about how Georgia’s midterm election so far",
       "url": "https://thecurrentga.org/2026/10/30/what-early-voting-can-and-cant-tell-us-about-how-georgias-midterm-election-so-far/",
@@ -289,16 +270,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "a9b5ac6cd6a9",
-      "title": "Gov. Kemp, Georgia Ports host grand opening of inland port in Gainesville",
-      "url": "https://www.gpb.org/news/2026/10/30/gov-kemp-georgia-ports-host-grand-opening-of-inland-port-in-gainesville",
-      "source": "GPB News",
-      "publishedAt": "2026-10-30T12:49:00+00:00",
-      "snippet": "The Georgia Ports Authority is celebrating the opening of a $134 million inland port in Hall County.",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "5c43686f3310",
@@ -1886,18 +1857,6 @@
       "snippet": "Washington, DC— Representatives Lucy McBath (D-GA) and GT Thompson (R-PA) introduced a bipartisan, bicameral resolution to honor the life of Connie Clery during National Campus Safety Awareness Month.",
       "entityIds": [
         "vg-ga-p-000262"
-      ],
-      "topics": []
-    },
-    {
-      "id": "d3aea21deed7",
-      "title": "Rep. Clyde Honors Winton Machine Company as Special Georgian of the Ninth",
-      "url": "http://clyde.house.gov/news/documentsingle.aspx?DocumentID=3783",
-      "source": "Rep. Andrew Clyde (GA-09, press)",
-      "publishedAt": "2026-09-16T04:00:00+00:00",
-      "snippet": "WASHINGTON, D.C. — Today, Congressman Andrew Clyde (GA-09) recognized Winton Machine of Suwanee, Georgia as a Special Georgian of the Ninth in celebration of the company’s selection as one of the five",
-      "entityIds": [
-        "vg-ga-p-000255"
       ],
       "topics": []
     }
