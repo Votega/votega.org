@@ -22,7 +22,11 @@ breadcrumb:
   official governmental site. Cities are grouped under their county, you may search to jump to a place.
 </p>
 <p id="localTopicsLink">
-  Or browse by subject: see where <a href="{{ '/local/topics/' | relative_url }}">surveillance cameras, data centers, land-use decisions, and local taxes &amp; referenda</a>
+  Or browse by subject: see where <a href="{{ '/local/topics/' | relative_url }}">{%- assign topics = site.data.topics.topics | sort: "order" -%}
+  {%- for t in topics -%}
+    {%- if forloop.first -%}{%- elsif forloop.last -%}{% if topics.size > 2 %},{% endif %} and {% else %}, {% endif -%}
+    {{- t.phrase | default: t.name | downcase -}}
+  {%- endfor -%}</a>
   are appearing on local agendas across every jurisdiction we cover.
 </p>
 

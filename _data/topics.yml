@@ -9,6 +9,9 @@
 # topic without an entry here means no page is built for it.
 #
 # Fields:
+#   phrase      lowercase noun phrase used in running prose (the /local/ intro and
+#               the topics-hub share description) — those lists build from this, so
+#               a new topic appears there with no page edits
 #   slug        identity; matches the generator topic + the data file name
 #   name        H1 / hub label
 #   emoji       legacy glyph, kept only because generate_topic_mentions.py writes it into the
@@ -22,6 +25,7 @@
 topics:
   - slug: alpr
     name: ALPR / surveillance
+    phrase: surveillance cameras
     emoji: 📷
     icon: camera
     blurb: Automated license plate readers, police body and in-car cameras, drones and gunshot detection on local agendas — Flock, Axon and other vendors.
@@ -42,6 +46,7 @@ topics:
 
   - slug: data-center
     name: Data centers
+    phrase: data centers
     emoji: 🏭
     icon: industry
     blurb: Data-center rezonings, incentives, and infrastructure on local agendas.
@@ -56,6 +61,7 @@ topics:
 
   - slug: land-use
     name: Land use
+    phrase: land-use decisions
     emoji: 🏗️
     icon: trowel-bricks
     blurb: Rezonings, variances, special-use permits, annexations, and major developments.
@@ -71,6 +77,7 @@ topics:
 
   - slug: local-taxes
     name: Local taxes & referenda
+    phrase: local taxes and referenda
     emoji: 🗳️
     icon: receipt
     blurb: SPLOST, ESPLOST, TSPLOST and other local sales taxes, millage rates, bonds, and referenda on local agendas.
