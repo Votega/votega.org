@@ -449,7 +449,7 @@ The [Local Government hub](/local/) covers Georgia counties and cities through t
 ### How agenda topic badges work
 {: #agenda-topic-badges}
 
-Some places on the hub show a small **topic badge** — *Data centers on agenda*, *Land use*, or
+Some places on the hub show a small **topic badge** — *Data centers*, *Land use*, or
 *ALPR / surveillance*. These come from automatically scanning the text of each government's
 published agendas and minutes for a fixed list of topic keywords: data-center projects; land-use
 actions (rezonings, variances, special-use permits, annexations, major developments); and

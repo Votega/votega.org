@@ -20,7 +20,7 @@ PDF has no text layer (the GA executive-orders pattern, via lib/pdf_text.py) —
 runs the SAME keyword taxonomy as the Legistar enricher (lib/meeting_topics.py:
 TOPIC_RULES → data-center, rezoning, special-land-use, …). It emits the SAME
 enriched sidecar + local-flags.json shape, so the existing UI (the place page's
-"On recent agendas" section and the /local/ hub's "Data centers on agenda" badge)
+"On recent agendas" section and the /local/ hub's "Data centers" badge)
 lights up for these places with no UI change.
 
 Git-bloat rule (see the task / CLAUDE.md data-schema notes): only DERIVED data —
