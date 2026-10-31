@@ -102,7 +102,7 @@
   --chart-peach: var(--peach-300);
   --chart-gray: var(--gray-chart);
 
-  /* Topic-watch flags on local pages (ALPR, land use, data centers). Categorical, so they avoid
+  /* Topic-watch flags on local pages (ALPR, land use, data centers, local taxes). Categorical, so they avoid
      red and green (danger and success) and every party hue. */
   --color-watch-alpr: var(--clay-700);
   --color-watch-alpr-tint: var(--clay-50);
@@ -110,6 +110,9 @@
   --color-watch-landuse: var(--teal-700);
   --color-watch-landuse-tint: var(--teal-50);
   --color-watch-landuse-line: var(--teal-200);
+  --color-watch-taxes: var(--slate-800);
+  --color-watch-taxes-tint: var(--gray-100);
+  --color-watch-taxes-line: var(--gray-300);
 
   /* Party data only. One color per party, used for that party and nothing else. */
   --color-party-d: var(--blue-party);
