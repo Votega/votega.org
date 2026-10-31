@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:36:09Z",
+  "generatedAt": "2026-10-31T01:55:49Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -9,6 +9,7 @@
   "flags": [
    "data-center",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-10-20",
@@ -21,7 +22,8 @@
    "variance": 13,
    "data-center": 4,
    "special-land-use": 8,
-   "comprehensive-plan": 3
+   "comprehensive-plan": 3,
+   "local-taxes": 5
   },
   "dataCenterItems": [
    {
@@ -363,7 +365,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3680,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4872,
+   "textChars": 4874,
    "pdfSha256": "0d98dc30f7775560e179045dd665c602255f07beb9b90e296afe8260e16c79da",
    "topics": {
     "appointment": 1,
@@ -451,7 +453,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3659,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6607,
+   "textChars": 6610,
    "pdfSha256": "98367faaf93ae26c7ae7251ad8d0765e41450700363e746df21cdd6d555cdc51",
    "topics": {
     "appointment": 1,
@@ -533,7 +535,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3633,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5444,
+   "textChars": 5446,
    "pdfSha256": "4902f1122354ad592a7dc33901f109397975f1e64c6b8fdd486f5762031c9a22",
    "topics": {
     "appointment": 1,
@@ -590,18 +592,25 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3614,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2479,
+   "textChars": 2480,
    "pdfSha256": "b0b3b7c06b0154fa366f9512ebfba95cc88ba5a1ecd8767584173d882ed37b68",
    "topics": {
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "millage"
    ],
    "topicExcerpts": {
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… ents regarding the following items after each item is presented) 1. Second Public Hearing Regarding the Proposed 2026 Millage Rates Public Comments Regarding Items Not on the Agenda – This section is for any public comments regarding items NOT …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… ents regarding the following items after each item is presented) 1. Second Public Hearing Regarding the Proposed 2026 Millage Rates Public Comments Regarding Items Not on the Agenda – This section is for any public comments regarding items NOT …",
@@ -609,7 +618,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -622,12 +632,13 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3605,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5754,
+   "textChars": 5756,
    "pdfSha256": "9ecbf89998dd2dbe88a609dcdb7d235c0801bdc0d317a17481cca7eb3efeb9fc",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
@@ -637,6 +648,7 @@
     "appointment",
     "comprehensive-plan",
     "contract",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use",
@@ -666,8 +678,13 @@
     },
     "contract": {
      "term": "contract",
-     "excerpt": "… Full-Time 16. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts Coweta County Board of Commissioners Page 2 of 3 17. …",
+     "excerpt": "… Full-Time 16. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts Coweta County Board of Commissioners Page 2 of 3 17 …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… ments regarding the following items after each item is presented) 3. Third Public Hearing Regarding the Proposed 2026 Millage Rates 4. Request to Set the 2026 Millage Rates 5. Public Hearing Regarding Petition # REZ 26-10 Filed by BAF Ente …",
+     "context": "agenda-action"
     },
     "millage-budget": {
      "term": "millage",
@@ -692,7 +709,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -737,18 +755,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3612,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5970,
+   "textChars": 5972,
    "pdfSha256": "2f2724e87e675fc5f19f9eb6949afc8bc8762f1ac4623179d37868ba3dba882d",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -775,6 +795,11 @@
      "excerpt": "… Associated with Wholesale Dealers 9. Request Acceptance of Additional Right-of-Way Along Greentop Road at Everhour Subdivision - District 3 10. Request Acceptance of Roadways, Greenway Dedication, and Deed of Open Space Restriction Asso …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… a Public Hearing Regarding the Proposed Fiscal Year 2027 Budget 5. First Public Hearing Regarding the Proposed 2026 Millage Rates Coweta County Board of Commissioners Page 1 of 3 6 …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "fiscal year",
      "excerpt": "… egarding the following items after each item is presented) 4. Continuation of a Public Hearing Regarding the Proposed Fiscal Year 2027 Budget 5. First Public Hearing Regarding the Proposed 2026 Millage Rates Coweta County Board of Commissione …",
@@ -783,7 +808,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -836,11 +862,12 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3555,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5703,
+   "textChars": 5705,
    "pdfSha256": "a3bfc7b72feabec082f31d2b03d7adedb5397c99357157994d1ac464a69968fe",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
@@ -849,6 +876,7 @@
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use",
@@ -875,6 +903,11 @@
      "excerpt": "… inutes from the Public Hearing/Regular Meeting Session Held on July 7, 2026 Consent Agenda 2. Confirm Execution of a Contract Associated with a Natural Gas Service at New Fire Station # 10 - District 1 Supplemental and Non-Agenda Items Pu …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… Community - District 3 17. Request to Schedule a Called Meeting and Set Public Hearings Regarding the Proposed 2026 Millage Rates Supplemental and Non-Agenda Items Public Comments Regarding Items Not on the Agenda – This section is for a …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "fiscal year",
      "excerpt": "… for any comments regarding the following items after each item is presented) 3. Public Hearing Regarding the Proposed Fiscal Year 2027 Budget 4. Public Hearing Regarding Petition # REZ 24-20 Filed by LDO Coweta, LLC Requesting to Rezone Property …",
@@ -898,7 +931,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -915,10 +949,12 @@
    "pdfSha256": "a07954c09d5252c6d01ed9ed6d4fe77cca3e9f983ba87da3d3d96d4252a2c720",
    "topics": {
     "data-center": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "data-center",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -933,6 +969,11 @@
      "excerpt": "… Discussion Regarding the Fiscal Year 2027 Budget and 2026 Millage Rate 2. Discussion Regarding the Coweta County Data Center Ordinance 3. Discussion Regarding the Georgia Cottage Food Law and Local Ordinances Adjournment As set forth in t …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… rder Pledge of Allegiance Invocation Regular Session 1. Discussion Regarding the Fiscal Year 2027 Budget and 2026 Millage Rate 2. Discussion Regarding the Coweta County Data Center Ordinance 3. Discussion Regarding the Georgia Cottag …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "fiscal year",
      "excerpt": "… Call to Order Meeting Called to Order Pledge of Allegiance Invocation Regular Session 1. Discussion Regarding the Fiscal Year 2027 Budget and 2026 Millage Rate 2. Discussion Regarding the Coweta County Data Center Ordinance 3. Discussion …",
@@ -942,7 +983,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -963,7 +1005,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3517,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6099,
+   "textChars": 6101,
    "pdfSha256": "ad6a3da6e7491efba2f885d073f5e7ef41c8cce14d7fd18beff5513aa1969d6c",
    "topics": {
     "appointment": 1,
@@ -1069,7 +1111,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3495,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5383,
+   "textChars": 5385,
    "pdfSha256": "d767b93085727e5b65102f11d1a152557fb1faeaead33be87266e44b12ecb84b",
    "topics": {
     "appointment": 1,
@@ -1202,7 +1244,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3467,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5841,
+   "textChars": 5843,
    "pdfSha256": "48208d6f378af4e3560babf133f86d9c06c7a8e3352a09f8b7b79cbd4734357b",
    "topics": {
     "appointment": 1,
@@ -1307,7 +1349,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3427,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6358,
+   "textChars": 6360,
    "pdfSha256": "95516db4a812d736b30572502bb7ff59821ca67bc0a36c8fd2058f1eb0300491",
    "topics": {
     "appointment": 1,
@@ -1381,7 +1423,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3346,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4878,
+   "textChars": 4880,
    "pdfSha256": "86ef2fc9a13ddce91a4a9e66653b29c0a4a243a24a6e71278180122d0b877706",
    "topics": {
     "appointment": 1,
@@ -1461,7 +1503,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3326,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7110,
+   "textChars": 7113,
    "pdfSha256": "dbc53bca206c6ebc34182343b0146bf55cfaad3374720f9fac06d565f5660fc0",
    "topics": {
     "appointment": 1,
@@ -1559,7 +1601,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3282,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3930,
+   "textChars": 3931,
    "pdfSha256": "3f08043e686b3ddc79a6aeca6274692df14f667c130d0c87d311d090926547ca",
    "topics": {
     "contract": 1,

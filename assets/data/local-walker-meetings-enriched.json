@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:36:32Z",
+  "generatedAt": "2026-10-31T02:21:54Z",
   "source": "Walker County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Walker County",
   "count": 23
@@ -9,6 +9,7 @@
   "flags": [
    "data-center",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-11-05",
@@ -16,6 +17,7 @@
    "variance": 9,
    "contract": 12,
    "data-center": 3,
+   "local-taxes": 9,
    "appointment": 6,
    "millage-budget": 13,
    "rezoning": 9
@@ -181,21 +183,24 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4287,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3557,
+   "textChars": 3558,
    "pdfSha256": "27b2eca86be22784bd7dbf7012099dc3f65641df8251f154b8a7813a72eff66b",
    "topics": {
     "contract": 1,
     "data-center": 1,
+    "local-taxes": 1,
     "variance": 1
    },
    "tags": [
     "contract",
     "data-center",
+    "local-taxes",
     "variance"
    ],
    "matchedTerms": [
     "data center",
     "purchase order",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
@@ -209,6 +214,11 @@
      "excerpt": "… .2. Resolution R-067-26 toCorrect the Effective Date in Resolution R-055-26 and Ratifying and Confirming the Data Center Moratorium 10.3. Resolution R-068-26 to Abandon a County Right-of-Way TPN: 03273 030A and TPN 03271 038 …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… amount of $87,120.00 due to a project change order for the Ivy Street Culvert Replacement Project. Funded by TSPLOST. 11. Commissioner Comments 12. Executive Session 13. Adjourn As set forth in the Americans with Disabilities Act of 1 …",
+     "context": "unknown"
+    },
     "variance": {
      "term": "variance",
      "excerpt": "… presentation by all speakers for each side shall not exceed 12 minutes per side. 7.1. Michael Camp: Requests a variance from A-1 (Agricultural) to R-2 (Residential) for property located at 3561 Hwy 337, LaFayette, GA. 30728. …",
@@ -217,7 +227,8 @@
    },
    "flags": [
     "land-use",
-    "data-center"
+    "data-center",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -238,17 +249,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4274,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6064,
+   "textChars": 6065,
    "pdfSha256": "22d6cf5222b217be3eb4c9dae88073027b10e966964292c6c3c67be85674e71f",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -258,7 +271,8 @@
     "contract",
     "millage",
     "purchase order",
-    "rezon"
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -269,6 +283,11 @@
     "contract": {
      "term": "contract",
      "excerpt": "… Rate for the Unincorporated and Incorporated Areas of Walker County 12.4. Resolution R-064-26 to Award a Contract for the Walker County Courthouse Attic Remediation and Roof Repair in the amount of $2,200,000.00 to F.H. …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… o Adopt an Enterprise Funds & Special Revenue Budget for Fiscal 2027 12.3. Resolution R-063-26 to Adopt a Millage Rate for the Unincorporated and Incorporated Areas of Walker County 12.4. Resolution R-064-26 to Award a …",
      "context": "agenda-action"
     },
     "millage-budget": {
@@ -284,7 +303,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -300,9 +320,11 @@
    "textChars": 866,
    "pdfSha256": "858905bf50ad7b2782b613d59d2e9e1898255c32e9496673f45c6fd56f6f7a13",
    "topics": {
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -311,6 +333,11 @@
     "millage"
    ],
    "topicExcerpts": {
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… rwoman Teems will Call the Budget Work Session to Order 2. Clerk to take attendance. 3. Fiscal Year 2027 Budget & Millage Rate Discussion 4. Adjourn As set forth in the Americans with Disabilities Act of 1992, Walker County does not discr …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… r County Commissioners Office, 101 S. Duke Street, LaFayette, GA. 30728 The following constitutes the agenda for the Budget Work Session of the Board of Commissioners of Walker County, Georgia to be held at 1:00 PM on August 18, 2026 …",
@@ -318,7 +345,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -331,17 +359,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3264,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6237,
+   "textChars": 6239,
    "pdfSha256": "03ca4d5886388080b30a5ed0220e2f8f5c21aae0cb0a215247bbdd0295874a37",
    "topics": {
     "contract": 1,
     "data-center": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "variance": 1
    },
    "tags": [
     "contract",
     "data-center",
+    "local-taxes",
     "millage-budget",
     "variance"
    ],
@@ -351,6 +381,7 @@
     "data center",
     "fiscal year",
     "purchase order",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
@@ -363,6 +394,11 @@
      "term": "data center",
      "excerpt": "… for Month ending May 31, 2026. 8. Public Hearing - 2027 Fiscal Year Budget 9. Public Hearing - To Extend Data Center Moratorium to 180 Days 10. Planning and Zoning 10.1. Planning & Zoning Meeting Minutes June 19, 2026 Meeting …",
      "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… se Reline, Inc. for the slip line or PVC fold-in-place liners for the Ivy Street Project. (Funded by TSPLOST) 16.10. Purchase Order 2026-00002314 in the amount of $44,811.00 to NABCO Electric Company for Emergency t …",
+     "context": "unknown"
     },
     "millage-budget": {
      "term": "budget",
@@ -378,7 +414,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -432,7 +469,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3252,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 7076,
+   "textChars": 7078,
    "pdfSha256": "be38e7438fedc32ab06132ba29088f7a2bd739891571bd7fc9a7ed6557d37807",
    "topics": {
     "appointment": 1,
@@ -469,7 +506,7 @@
     },
     "contract": {
      "term": "purchase order",
-     "excerpt": "… -054-26 to Direct the Sale of Certain County Owned Real Property. Tax Map and Parcel Number#2007 032 16.6. Purchase Order 2026-00002086 in the amount of $60,534.90 to Standby Service Solutions, LLC. for the purchase of a generator …",
+     "excerpt": "… 054-26 to Direct the Sale of Certain County Owned Real Property. Tax Map and Parcel Number#2007 032 16.6. Purchase Order 2026-00002086 in the amount of $60,534.90 to Standby Service Solutions, LLC. for the purchase of a generator …",
      "context": "unknown"
     },
     "data-center": {
@@ -645,7 +682,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3232,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5393,
+   "textChars": 5394,
    "pdfSha256": "89bfc8a5e5cccd671a4e3b7fcf866c40850c25b5dc5f3d596b8ab2353da4a376",
    "topics": {
     "contract": 1,
@@ -686,17 +723,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3227,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6962,
+   "textChars": 6964,
    "pdfSha256": "a56efa9abba4ba02d62c19ecdcad7c002ed40ee2451cd59f8cb8055ca88f2d5e",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "rezoning": 1,
     "variance": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "rezoning",
     "variance"
    ],
@@ -705,6 +744,7 @@
     "contract",
     "purchase order",
     "rezon",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
@@ -718,6 +758,11 @@
      "excerpt": "… . Resolution R-032-26 to Set Qualifying Fees for the General Primary Election 17.2. Resolution R-033-26 to Approve a Contract Between the Georgia Opioid Crisis Abatement Trust and the Walker County Sheriff’s Office 17.3. Resolution R …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ssure Compliance with the Constitution of the State of Georgia Concerning General Obligation Sales Tax Bonds (ESPLOST VII 2025) to be Issued by the Walker County Board of Education 17.4. Resolution R-035-26 to Approve Issuanc …",
+     "context": "agenda-action"
+    },
     "rezoning": {
      "term": "rezon",
      "excerpt": "… presentation by all speakers for each side shall not exceed 12 minutes per side. 12.1. Richard Mountz: Requests a rezone from C-1 (Commercial) to R3 (Residential) for property located at 1412 Happy Valley Road, Rossville, GA. …",
@@ -725,12 +770,13 @@
     },
     "variance": {
      "term": "variance",
-     "excerpt": "… d Pond Road, LaFayette, GA. 30728. Tax map and parcel number 0-496-009A. 12.3. Krista Pharr: Requests a variance for less than five acres in an A-1 (Agricultural) zone for property located at 159 Dusty Trail, LaFayette, GA. …",
+     "excerpt": "… d Pond Road, LaFayette, GA. 30728. Tax map and parcel number 0-496-009A. 12.3. Krista Pharr: Requests a variance for less than five acres in an A-1 (Agricultural) zone for property located at 159 Dusty Trail, LaFayette, GA …",
      "context": "unknown"
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -801,29 +847,39 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3211,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5575,
+   "textChars": 5576,
    "pdfSha256": "28009898a374c21b363a2c43726ab8f4dbd062ce8d50c7ffcc9e5b412b5011c4",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
    "matchedTerms": [
     "budget",
     "fiscal year",
+    "local option sales tax",
     "purchase order",
-    "rezon"
+    "rezon",
+    "special purpose local option",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "purchase order",
      "excerpt": "… 15.1. Resolution R-026-26 to Approve a Consulting Services Agreement with Atlantic Coast Consulting 15.2. Purchase Order 2026-00001363 to Jenkins Chrysler-Dodge-Jeep for $296,520.00 to purchase Seven (7) vehicles for the Walker Co …",
      "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… r-Dodge-Jeep for $296,520.00 to purchase Seven (7) vehicles for the Walker County Sheriff’s Office (SPLOST). 15.3. Purchase Order 2026-00001364 to Jacky Jones Automotive for $85,737.00 for the purchase of two (2) …",
+     "context": "unknown"
     },
     "millage-budget": {
      "term": "fiscal year",
@@ -838,7 +894,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -884,7 +941,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3192,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5238,
+   "textChars": 5239,
    "pdfSha256": "4b8f82bb27f5b68206dcdc8bbbb99ec4a06e425e40c7c82f0b400aa0634492cf",
    "topics": {
     "contract": 1,
@@ -942,26 +999,34 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3184,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 8279,
+   "textChars": 8281,
    "pdfSha256": "135a4851494d6338affed290d0a3512651483daf0e0218479c1c53aa3f06ae57",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "rezoning": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "rezoning"
    ],
    "matchedTerms": [
     "contract",
     "purchase order",
-    "rezon"
+    "rezon",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "… GA136 to the Chattooga County Line from 55 to 50MPH 14. New Business 14.1. Resolution R-014-26 to Award a Contract to Southern Clinical Services to Establish a Health and Wellness Clinic for Walker County Employees 14.2. R …",
      "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 6-0001105 for $168,743.00 to Gordian for Containment and Remediation Phase 2 of the Walker County Courthouse. (SPLOST2020 Funding) 14.6. Purchase Order 2026-0001052 for $69,134.67 to Standby Service Solutions, LLC to …",
+     "context": "unknown"
     },
     "rezoning": {
      "term": "rezon",
@@ -970,7 +1035,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -983,19 +1049,22 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3179,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4419,
+   "textChars": 4420,
    "pdfSha256": "1f1653d03164cf7efd332f89df7a609fc06f8b58cda44a83254b9a3d235065e0",
    "topics": {
     "appointment": 1,
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
     "appointment",
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
     "appoint",
     "contract",
+    "hotel-motel tax",
     "procurement",
     "purchase order",
     "reappoint"
@@ -1008,11 +1077,18 @@
     },
     "contract": {
      "term": "contract",
-     "excerpt": "… horize Acceptance If Awarded 13.4. Resolution R-004-26 to Approve an Extension of the Ambulance Service Contract with CHI Memorial Hospital EMS 14. New Business 14.1. Resolution R-005-26 to Elect a Vice Chair of the Walker Coun …",
+     "excerpt": "… horize Acceptance If Awarded 13.4. Resolution R-004-26 to Approve an Extension of the Ambulance Service Contract with CHI Memorial Hospital EMS 14. New Business 14.1. Resolution R-005-26 to Elect a Vice Chair of the Walker Cou …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "hotel-motel tax",
+     "excerpt": "… e, GA 14.6. Resolution R-010-26 to Adopt Recommendations from the Georgia Department of Community Affairs Hotel-Motel Tax Performance Review Board 14.7. Resolution R-011-26 to Contract Services with Yellowstone Landscape, LLC f …",
      "context": "agenda-action"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -1024,17 +1100,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2177,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5195,
+   "textChars": 5196,
    "pdfSha256": "b1c3df727e69b97bd7daf16dbdea564a780f8462c7f305d8b887c69fb7f56e6b",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "rezoning": 1,
     "variance": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "rezoning",
     "variance"
    ],
@@ -1044,6 +1122,7 @@
     "purchase order",
     "reappoint",
     "rezon",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
@@ -1057,6 +1136,11 @@
      "excerpt": "… Program Allocation 12.8. Georgia Department of Human Services (DHS) Coordinated Transportation System Subcontractor Agreement 13. New Business 13.1. Resolution R-081-25 to Award a Contract for Mowing, Litter Pick-up and Weed …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 6-00000564 for $30,952.00 to Stewart Signs for a Digital Message Board for the new Elections Office building (SPLOST 2020 Funds) 13.4. Purchase Order 2026-00000573 for $99,116.00 to NABCO Electric Company, Inc. for a traff …",
+     "context": "unknown"
+    },
     "rezoning": {
      "term": "rezon",
      "excerpt": "… 6OCT25 Minutes 6.2. Planning Minutes 20NOV25 Meeting 6.3. Martin Variance Request Submission 6.4. Poteet Rezone Request Submission 7. Chairwoman’s Report 8. Financial Report 8.1. Financial Presentation by Chief Financi …",
@@ -1069,7 +1153,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1082,7 +1167,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1176,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 4621,
+   "textChars": 4623,
    "pdfSha256": "4173076e39fbe988734ba74624e2cf06b5a8628f52ebbc3148508198c87bffad",
    "topics": {
     "appointment": 1,
@@ -1110,7 +1195,7 @@
     },
     "contract": {
      "term": "purchase order",
-     "excerpt": "… parcel number 0-243-032. (Planning Commission recommended this variance be Approved with conditions) 15.4. Purchase Order 2026-00000303 for $57,500.00 to Jake Marshall for Heat & Air Units and Duct Work for the Road Department and …",
+     "excerpt": "… arcel number 0-243-032. (Planning Commission recommended this variance be Approved with conditions) 15.4. Purchase Order 2026-00000303 for $57,500.00 to Jake Marshall for Heat & Air Units and Duct Work for the Road Department and …",
      "context": "unknown"
     },
     "millage-budget": {

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:35:55Z",
+  "generatedAt": "2026-10-31T01:39:49Z",
   "source": "Fayette County (revize agenda/minutes PDFs, poppler+OCR)",
   "place": "Fayette County",
   "count": 25
@@ -10,6 +10,7 @@
    "alpr",
    "data-center",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-10-22",
@@ -18,6 +19,7 @@
    "contract": 21,
    "data-center": 10,
    "development": 14,
+   "local-taxes": 20,
    "millage-budget": 21,
    "special-land-use": 10,
    "variance": 9,
@@ -241,6 +243,7 @@
     "contract": 1,
     "data-center": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "special-land-use": 1,
     "variance": 1
@@ -250,6 +253,7 @@
     "contract",
     "data-center",
     "development",
+    "local-taxes",
     "millage-budget",
     "special-land-use",
     "variance"
@@ -263,10 +267,17 @@
     "contract",
     "data center",
     "fiscal year",
+    "homestead exemption",
+    "homestead option sales tax",
+    "lhost",
     "millage",
     "procurement",
+    "referendum",
+    "rollback rate",
+    "splost",
     "subdivision",
     "task order",
+    "tax digest",
     "variance"
    ],
    "topicExcerpts": {
@@ -290,6 +301,11 @@
      "excerpt": "… School System's diesel and gasoline fueling center on Goza Road. (pages 67-71) 7. Approval of the MountBrook Subdivision Crosswalk Improvement Pilot Project and to allocate $30,000 from 17TAJ to a new project account to fund the pro …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… new project account to fund the project. (pages 72-79) 8. Approval of the October 1, 2026, Special Called Millage Rate Hearing (10:00 a.m.) Minutes. (pages 80-83) 9. Approval of the October 1, 2026, Special Called Millage Rate …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… new project account to fund the project. (pages 72-79) 8. Approval of the October 1, 2026, Special Called Millage Rate Hearing (10:00 a.m.) Minutes. (pages 80-83) 9. Approval of the October 1, 2026, Special Called Millage Rate …",
@@ -309,7 +325,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -330,25 +347,35 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda%20of%20Actions/10-15-2026%20Special%20Called%20Millage%20Rate%20Action%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 5982,
+   "textChars": 5983,
    "pdfSha256": "35aa5ee9449c8a902805c7f72c5142e0048c451770bafb76743a093620942970",
    "topics": {
     "data-center": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "data-center",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "data center",
-    "millage"
+    "homestead exemption",
+    "millage",
+    "referendum",
+    "rollback rate"
    ],
    "topicExcerpts": {
     "data-center": {
      "term": "data center",
      "excerpt": "… solution 2026-15 to levy the County's property tax. Ben Loggins, Fayetteville, stated that at night he could hear the data center and he was not happy. He stated that he realized it was not due to any Board decision. He asked when the County would …",
      "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… month at 5:00 p.m. OFFICIAL SESSION: Call to Order Chairman Lee Hearn called the October 15, 2026, Special Called Millage Rate Hearing to order at 5:00 p.m. A quorum of the Board was present. Commissioner Charles Rousseau was absent. Invo …",
+     "context": "unknown"
     },
     "millage-budget": {
      "term": "millage",
@@ -359,7 +386,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -380,13 +408,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.fayettecountyga.gov/10-08-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 252462,
+   "textChars": 252589,
    "pdfSha256": "5f24efe885c6e03d286b605f75fd27e56ac2fef8662cd98028ad5c2039178538",
    "topics": {
     "comprehensive-plan": 1,
     "contract": 1,
     "data-center": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
@@ -395,6 +424,7 @@
     "contract",
     "data-center",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -405,10 +435,12 @@
     "contract",
     "data center",
     "fiscal year",
+    "homestead exemption",
     "land use plan",
     "multi-family",
     "procurement",
     "rezon",
+    "splost",
     "subdivision",
     "task order"
    ],
@@ -433,6 +465,11 @@
      "excerpt": "… Powell, in the amount of $1,240.78 for tax year 2025. (pages 5-6) 3. Approval to add The Oaks Phase III subdivision to Fayette County's Street Light Program. (pages 7-16) 4. Approval of Georgia Power's offer to purchase three \"D …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "homestead exemption",
+     "excerpt": "… of taxes was received for tax years 2024 and 2025. The request was based on failure to apply the taxpayer's upgraded homestead exemption. Taxpayer is eligible under the refund statute for a refund for tax years 2024 and 2025. Board of Assessors recommen …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… motion passed 3-0. Commissioner Rousseau and Chairman Hearn were absent. 2. Approval to adopt final supplemental budget adjustments for the fiscal year ended June 30, 2026, and authorization to adjust and close capital projects, mo …",
@@ -447,7 +484,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -468,24 +506,35 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda%20of%20Actions/10-01-2026%20Special%20Called%2010am%20Action%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 3949,
+   "textChars": 3950,
    "pdfSha256": "18fb88ad988a29fc092e89e19a7ea2bb9359e15969c809353d2601f1f5f7032a",
    "topics": {
     "data-center": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "data-center",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "data center",
-    "millage"
+    "homestead exemption",
+    "millage",
+    "referendum",
+    "rollback rate",
+    "tax digest"
    ],
    "topicExcerpts": {
     "data-center": {
      "term": "data center",
      "excerpt": "… sed 2026 property tax millage rates and the significant impact of new personal property values associated with the QTS data center. Chief Financial Officer Sheryl Weinmann presented the 2026 tax digest, noting substantial growth driven by data cente …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… passed 4-0. Chairman Hearn was absent. PUBLIC HEARING: 1. First Public Hearing to discuss the 2026 Property Tax Millage Rate. The October 1, 2026 Special Called Millage Rate Hearing focused on the proposed 2026 property tax millage rates …",
      "context": "agenda-action"
     },
     "millage-budget": {
@@ -497,7 +546,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -518,12 +568,13 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.fayettecountyga.gov/09-24-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 174014,
+   "textChars": 174093,
    "pdfSha256": "74a1dc193631aae46b82d2a5a53340f7c343ec903a09e4eadced9b450d14bd91",
    "topics": {
     "alpr": 1,
     "comprehensive-plan": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "variance": 1
@@ -532,6 +583,7 @@
     "alpr",
     "comprehensive-plan",
     "contract",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "variance"
@@ -544,10 +596,13 @@
     "contract",
     "fiscal year",
     "future land use",
+    "homestead exemption",
+    "hotel/motel tax",
     "land use plan",
     "procurement",
     "purchase order",
     "rezon",
+    "splost",
     "surveillance equipment",
     "task order",
     "variance"
@@ -566,6 +621,11 @@
     "contract": {
      "term": "contract",
      "excerpt": "… 10, 2026, Board of Commissioners Meeting Minutes. (pages 52-56) OLD BUSINESS: NEW BUSINESS: 8. Request to award Contract #27039-S to the U.S. Department of the Interior Geological Survey (USGS) for surface water monitoring in the am …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… urface water monitoring in the amount of $284,300. (pages 57-66) 9. Request to award Quote #27022-A: 2023 SPLOST; R23AE Starr's Mill Educational Facility Building Modifications to the lowest responsive, responsible responder …",
      "context": "agenda-action"
     },
     "millage-budget": {
@@ -587,7 +647,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -600,7 +661,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.fayettecountyga.gov/09-10-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 121456,
+   "textChars": 121544,
    "pdfSha256": "7aed6a49ea29396825fbe3024d3c5a0fe92f08f2a6e68a59f1f6d00bf543f4fe",
    "topics": {
     "alpr": 1,
@@ -608,6 +669,7 @@
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
@@ -617,6 +679,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -627,7 +690,9 @@
     "contract",
     "fiscal year",
     "future land use",
+    "homestead exemption",
     "rezon",
+    "splost",
     "subdivision",
     "task order"
    ],
@@ -649,13 +714,18 @@
     },
     "contract": {
      "term": "contract",
-     "excerpt": "… to auto adjust to 325% of Medicare (rates adjust annually) from 150% of Medicare and cancel the reimbursement contract with Blue Cross/Blue Shield. (pages 31-35) Agenda September 10, 2026 Page Number 2 6. Approval to accep …",
+     "excerpt": "… to auto adjust to 325% of Medicare (rates adjust annually) from 150% of Medicare and cancel the reimbursement contract with Blue Cross/Blue Shield. (pages 31-35) Agenda September 10, 2026 Page Number 2 6. Approval to acce …",
      "context": "agenda-action"
     },
     "development": {
      "term": "subdivision",
      "excerpt": "… lity company, as successor-in-interest to the Agreement (the “Lessor”) and Fayette County, Georgia, a Georgia political subdivision acting by and through its Board of Commissioners (the “Lessee”) (collectively, the “Parties”). …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "homestead exemption",
+     "excerpt": "… vember 3, 2026. Background/History/Details: The City of Fayetteville will conduct a special election regarding a homestead exemption question pursuant to the applicable local act. The proposed Intergovernmental Agreement (IGA) between Fayette County …",
+     "context": "agenda-action"
     },
     "millage-budget": {
      "term": "fiscal year",
@@ -671,7 +741,8 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -684,7 +755,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.fayettecountyga.gov/08-27-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 410247,
+   "textChars": 410417,
    "pdfSha256": "834ee685d045b70b939f44323d7a7a36237ebdc4cd4b17d95f5b3eebd7493b2a",
    "topics": {
     "appointment": 1,
@@ -692,6 +763,7 @@
     "contract": 1,
     "data-center": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
@@ -703,6 +775,7 @@
     "contract",
     "data-center",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use",
@@ -718,11 +791,13 @@
     "data center",
     "fiscal year",
     "future land use",
+    "homestead exemption",
     "land use plan",
     "procurement",
     "purchase order",
     "reappoint",
     "rezon",
+    "splost",
     "subdivision",
     "task order",
     "variance"
@@ -753,6 +828,11 @@
      "excerpt": "… om R-70 to A-R. STAFF ASSESSMENT & RECOMMENDATION This lot is depicted as tract 2 on a recorded plat for Linda Waites Subdivision in plat book 34 page 144. This survey appears to meet or exceed all requirements of A-R zoning. The Future Land Use Map …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… the Sandy Creek Road at Ellison Road Roundabout (Project #25TAB) and reallocation of $474,661.00 from the 2017 SPLOST Project #17TAG (Intersection Safety Improvements) to Project #25TAB. (pages 62-73) 10. Request to accept …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… unds for the culvert replacement near 240 Ponderosa Drive in the amount of $63,760.00. 12. Approval of a budget transfer in the amount of $43,605.18 from 2017 SPLOST Category IV (17SAS) to 2017 SPLOST Category III Gingerca …",
@@ -777,7 +857,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -796,18 +877,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.fayettecountyga.gov/08-13-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 136640,
+   "textChars": 136884,
    "pdfSha256": "fabd535f9eab939f84102b34092c09ad5b72ba71d0f5e6f1cebc182bb9fa6168",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "comprehensive-plan",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -816,8 +899,10 @@
     "comprehensive plan",
     "contract",
     "fiscal year",
+    "homestead exemption",
     "procurement",
     "purchase order",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -836,6 +921,11 @@
      "excerpt": "… 9, 2026, Board of Commissioners Meeting Minutes. (pages 59-62) OLD BUSINESS: NEW BUSINESS: 18. Request to approve a purchase order for $194,450,98 to The Hon Company, LLC and a purchase order for $70,875.77 to Staples Contract & Commercial, LL …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… he intersection of Banks Road and Ellis Road and approval for staff to create a new project number out of 2017 SPLOST 17TAG. (pages 25-28) 6. Approval of Board of Assessors' recommendation to approve a disposition of tax refund, a …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… culvert replacement near 240 Ponderosa Drive in the amount of $63,760.00. (pages 39-40) 12. Approval of a budget transfer in the amount of $43,605.18 from 2017 SPLOST Category IV (17SAS) to 2017 SPLOST Category III Gingerca …",
@@ -844,7 +934,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -875,13 +966,14 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.fayettecountyga.gov/07-09-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 411980,
+   "textChars": 412103,
    "pdfSha256": "bea9d0d891be3dc073cc1920f4f460cf45defe602eab9ee84cec9381f9757827",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1
    },
@@ -890,6 +982,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning"
    ],
@@ -905,6 +998,7 @@
     "procurement",
     "reappoint",
     "rezon",
+    "splost",
     "subdivision",
     "task order"
    ],
@@ -921,12 +1015,17 @@
     },
     "contract": {
      "term": "contract",
-     "excerpt": "… ting Minutes. (pages 40-49) OLD BUSINESS: Agenda July 9, 2026 Page Number 2 NEW BUSINESS: 5. Request to approve Contract 26054-P; Change Order 2 for construction of the Phase II Animal Shelter Project by MEJA Construction Inc. for $1 …",
+     "excerpt": "… ing Minutes. (pages 40-49) OLD BUSINESS: Agenda July 9, 2026 Page Number 2 NEW BUSINESS: 5. Request to approve Contract 26054-P; Change Order 2 for construction of the Phase II Animal Shelter Project by MEJA Construction Inc. for $1 …",
      "context": "agenda-action"
     },
     "development": {
      "term": "subdivision",
      "excerpt": "… Agency or Political Subdivision — Permits or Any person or organization from whom you …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ll existing Self-Contained Breathing Apparatus (SCBAs) and associated components for functional use through the 2023 SPLOST. Those replacement units have been delivered and initial training has begun. The new units are scheduled to be place …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -942,7 +1041,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -955,7 +1055,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.fayettecountyga.gov/06-25-2026%20Action%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 17078,
+   "textChars": 17083,
    "pdfSha256": "ed923a9c83afcd5baa3f96d7fabc2244f1dc12333b3a26bdd1094d93489b3be8",
    "topics": {
     "appointment": 1,
@@ -1016,16 +1116,18 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.fayettecountyga.gov/06-11-2026%20Action%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 11524,
+   "textChars": 11528,
    "pdfSha256": "c119eec5b924d1207fb88c2547ae35569ebbc727decdde654524778a617758d4",
    "topics": {
     "comprehensive-plan": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "comprehensive-plan",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1033,7 +1135,9 @@
     "budget",
     "comprehensive plan",
     "contract",
-    "fiscal year"
+    "fiscal year",
+    "homestead exemption",
+    "splost"
    ],
    "topicExcerpts": {
     "comprehensive-plan": {
@@ -1046,6 +1150,11 @@
      "excerpt": "… t its June 18 meeting. If approved, Fayette County planned to approach the same vendor the following day for a separate contract so the county could piggyback and conduct a joint comprehensive plan process with Fayetteville. Staff from both governm …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… nded. The motion passed 5-0. 2. Approval to acquire all fee simple right-of-way and easements for the proposed 2017 SPLOST; Stormwater Category II, Tier II Project 391 Grant Road (25SAC) Culvert Replacement. 3. Approval to acquire …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… PROCLAMATION/RECOGNITION: PUBLIC HEARING: 1. First of two Public Hearings on Fayette County's proposed annual budget for Fiscal Year 2027 which begins on July 1, 2026, and ends June 30, 2027. Chief Financial Officer Sheryl Wei …",
@@ -1054,7 +1163,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1067,7 +1177,7 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/05-28-2026%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 7503,
+   "textChars": 7505,
    "pdfSha256": "9c57c23e551221baa8017e098bd92df4a17fa054ffa672af892796ab5361c604",
    "topics": {
     "appointment": 1,
@@ -1173,7 +1283,7 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Minutes/05-14-2026%20Minutes.pdf",
    "textMethod": "pdftotext",
-   "textChars": 13599,
+   "textChars": 13603,
    "pdfSha256": "3f4007b520acfa8a70ff33b6a195c3e98c3541f02aea6b749e22422e8a64f80d",
    "topics": {
     "appointment": 1,
@@ -1213,7 +1323,7 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/05-13-2026%20Retreat%20Minutes-tps.pdf",
    "textMethod": "pdftotext",
-   "textChars": 104103,
+   "textChars": 104127,
    "pdfSha256": "f5500b24a646524e8a3c939c1868071a482cc7fce595ece10182dd2875bfe9bd",
    "topics": {
     "appointment": 1,
@@ -1221,6 +1331,7 @@
     "contract": 1,
     "data-center": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
@@ -1229,6 +1340,7 @@
     "contract",
     "data-center",
     "development",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -1238,9 +1350,16 @@
     "contract",
     "data center",
     "fiscal year",
+    "homestead exemption",
+    "homestead option sales tax",
+    "local option sales tax",
     "millage",
     "procurement",
-    "subdivision"
+    "referendum",
+    "splost",
+    "subdivision",
+    "tax abatement",
+    "tax digest"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -1268,6 +1387,11 @@
      "excerpt": "… ncluded accessibility improvements and paving inverts at catch basins where concrete had not been installed properly in subdivision drainage structures. Mr. Keller said staff planned to work on Foxhall Farms and was also looking at Jeff Davis Plantati …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ital projects, the overall projected impact was a decrease of about $500,000 in fund balance. Revenue Trends, TAVT, and SPLOST- Ms. Weinmann reviewed revenue trends and stated that the real property digest was projected to increase by about $400 …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… egories. She explained that approximately $270,000 was non-spendable for items such as inventories, 25% of the expense budget was set aside for stabilization in case of a catastrophe, another $2 million was set aside for an additional catastrop …",
@@ -1277,7 +1401,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -1296,17 +1421,19 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/04-21-2026%20Action%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 15588,
+   "textChars": 15592,
    "pdfSha256": "9be4210ce7567e16a5f2fa1ffd527b171ca771ceed910232f0902431bd568b82",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "rezoning": 1,
     "special-land-use": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "rezoning",
     "special-land-use"
    ],
@@ -1315,6 +1442,7 @@
     "conditional use",
     "contract",
     "rezon",
+    "splost",
     "task order"
    ],
    "topicExcerpts": {
@@ -1326,6 +1454,11 @@
     "contract": {
      "term": "contract",
      "excerpt": "… the Multi-Use Recreation Center project. Commissioner Oddo seconded. The motion passed 5-0. 20. Request to award Contract #26050-B; Fayette Senior Center Addition and Renovation project to K Team Engineering & Construction in the am …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… and design services of the Sandy Creek Road and Eastin Road Intersection Improvement (GDOT PI 0021206, County SPLOST #I-2, and ARC # FA-280) and approval of Task Order 1 for a Not to Exceed (NTE) amount of $506,918.62. Vice Ch …",
      "context": "agenda-action"
     },
     "rezoning": {
@@ -1340,7 +1473,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1353,13 +1487,14 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/04-09-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 159496,
+   "textChars": 159571,
    "pdfSha256": "53296005ab315ab474831e6528612545a062d044e8422a1a5b87d6142580ae41",
    "topics": {
     "appointment": 1,
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1
@@ -1369,6 +1504,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use"
@@ -1380,9 +1516,12 @@
     "contract",
     "future land use",
     "land use plan",
+    "local option sales tax",
     "procurement",
     "reappoint",
     "rezon",
+    "special purpose local option",
+    "splost",
     "subdivision",
     "task order"
    ],
@@ -1399,12 +1538,17 @@
     },
     "contract": {
      "term": "contract",
-     "excerpt": "… -40) Agenda April 9, 2026 Page Number 2 6. Request to approve the revised Georgia Department of Transportation's Contract for Acquisition of Right-of-Way for the SR 85/SR279/Corinth Road project (GDOT PI 0017813) reflecting updated fu …",
+     "excerpt": "… 40) Agenda April 9, 2026 Page Number 2 6. Request to approve the revised Georgia Department of Transportation's Contract for Acquisition of Right-of-Way for the SR 85/SR279/Corinth Road project (GDOT PI 0017813) reflecting updated fu …",
      "context": "agenda-action"
     },
     "development": {
      "term": "subdivision",
      "excerpt": "… December 31, 2030. 10. Approval to accept the right-of-way deed and multi-use path easement for the Windsor Court subdivision per Fayette County Code, Chapter 104; ARTICLE III - Street Design Standards and Specifications; Section 104-52 …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… term beginning June 1, 2026 and expiring May 31, 2030. (pages 32-35) 5. Request to award Bid #26108-B: 2017/2023 SPLOST; Stormwater Category II, Tier II 25SAG/S26AF 140 Brandon Mill Circle Culvert Replacement to the lowest respons …",
      "context": "agenda-action"
     },
     "millage-budget": {
@@ -1425,7 +1569,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1438,7 +1583,7 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/03-26-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 438946,
+   "textChars": 439161,
    "pdfSha256": "7107fed71db087393f12cf956caff50958b856ee67a8fef6b9dc75167031ce1d",
    "topics": {
     "annexation": 1,
@@ -1447,6 +1592,7 @@
     "contract": 1,
     "data-center": 1,
     "development": 1,
+    "local-taxes": 1,
     "rezoning": 1,
     "special-land-use": 1,
     "variance": 1
@@ -1458,6 +1604,7 @@
     "contract",
     "data-center",
     "development",
+    "local-taxes",
     "rezoning",
     "special-land-use",
     "variance"
@@ -1474,6 +1621,7 @@
     "multifamily",
     "reappoint",
     "rezon",
+    "splost",
     "subdivision",
     "task order",
     "variance"
@@ -1509,6 +1657,11 @@
      "excerpt": "… , 2030. (page 187) 10. Approval to accept the right-of-way deed and multi-use path easement for the Windsor Court subdivision per Fayette County Code, Chapter 104; ARTICLE III - Street Design Standards and Specifications; Section 104-52 …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ger available as new parts from the manufacturer. SCBA Replacement was established, approved, and funded in the 2023 SPLOST to provide for the wholesale replacement of all current SCBA's and associated products. Fire & Emergency Services pla …",
+     "context": "unknown"
+    },
     "rezoning": {
      "term": "rezon",
      "excerpt": "… eration of Petition 1374-25, Joseph Reeves Akin Jr, Owner; Xavier Hill Applicant; Randy Boyd, Agent, request to rezone 3.1 acres from R-40 (Single Family) to A-R (Agricultural Residential Single Family); property located in Land Lots …",
@@ -1527,7 +1680,8 @@
    },
    "flags": [
     "land-use",
-    "data-center"
+    "data-center",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -1546,12 +1700,13 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/03-12-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 100404,
+   "textChars": 100462,
    "pdfSha256": "c2fe7837ad12c5f8890d139f976de048d2e2b24006391514000c1c174dbbe327",
    "topics": {
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1
@@ -1560,6 +1715,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use"
@@ -1571,8 +1727,10 @@
     "contract",
     "fiscal year",
     "future land use",
+    "homestead exemption",
     "land use plan",
     "rezon",
+    "splost",
     "subdivision",
     "task order"
    ],
@@ -1592,6 +1750,11 @@
      "excerpt": "… inally rezoned, the remaining acreage was to be left residential. Mr. Poholek stated they had envisioned a residential subdivision with 1-acre lots, however, with the success of the self-storage facility plans pivoted, they were now interested in pur …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "homestead exemption",
+     "excerpt": "… Haynes, for residential property parcel 07-4505-016. The request was based on erroneous removal of the taxpayer's homestead exemption. Taxpayer is eligible under the refund statute for a refund for tax year 2025. Board of Assessors recommends appro …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… uipment modifications. Chairman Hearn removed item #12 from the consent agenda. 13. Approval of Mid-Year Budget Adjustments to the fiscal year 2026 budget and approval to close completed Capital, Capital Improvement Plan ( …",
@@ -1610,7 +1773,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1623,7 +1787,7 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/02-26-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 1066649,
+   "textChars": 1067041,
    "pdfSha256": "073108bf192999fa3b4a1fd33c9f5981d05be7a1f0428f8dfe98a806b3bc7e87",
    "topics": {
     "alpr": 1,
@@ -1632,6 +1796,7 @@
     "contract": 1,
     "data-center": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
@@ -1644,6 +1809,7 @@
     "contract",
     "data-center",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use",
@@ -1664,6 +1830,7 @@
     "procurement",
     "purchase order",
     "rezon",
+    "splost",
     "subdivision",
     "surveillance equipment",
     "task order",
@@ -1687,7 +1854,7 @@
     },
     "contract": {
      "term": "contract",
-     "excerpt": "… tyBOC. Agenda February 26, 2026 Page Number 3 16. Request to approve the Georgia Department of Transportation's Contract for Acquisition of Right-of-Way for the SR 85/ SR279/Corinth Road project (GDOT PI 0017813) and Board acceptan …",
+     "excerpt": "… yBOC. Agenda February 26, 2026 Page Number 3 16. Request to approve the Georgia Department of Transportation's Contract for Acquisition of Right-of-Way for the SR 85/ SR279/Corinth Road project (GDOT PI 0017813) and Board acceptan …",
      "context": "agenda-action"
     },
     "data-center": {
@@ -1699,6 +1866,11 @@
      "term": "subdivision",
      "excerpt": "… ition RDP-022-26, Ted V. Ehrhart, Owner, applicant request approval of a Revised Development Plan, to allow the subdivision of Parcel 0508 031 into two (2) parcels, within the Coventry Estates Subdivision; property located in Land Lots …",
      "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… for variances in actual grant awards versus estimated grant amounts included in the adopted budget. 3. To close 2017 SPLOST projects that have been completed, to transfer any residual funds to projects contingency, and to use projects contin …",
+     "context": "unknown"
     },
     "millage-budget": {
      "term": "budget",
@@ -1725,7 +1897,8 @@
     "land-use",
     "data-center",
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -1744,7 +1917,7 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/02-12-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 1594070,
+   "textChars": 1594212,
    "pdfSha256": "6060a9704ed6ba3bb19f02c52dafb8d2c0ec0e9e83244ee55588129a478e20f1",
    "topics": {
     "annexation": 1,
@@ -1753,6 +1926,7 @@
     "contract": 1,
     "data-center": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
@@ -1765,6 +1939,7 @@
     "contract",
     "data-center",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use",
@@ -1786,6 +1961,7 @@
     "procurement",
     "purchase order",
     "rezon",
+    "splost",
     "subdivision",
     "task order",
     "variance"
@@ -1821,6 +1997,11 @@
      "excerpt": "… Emergency Management Agency's Disaster Mitigation Act of 2000. 14. Approval to add Windsor Court (FKA Nash Oaks) subdivision to Fayette County's Street Light Program. 15. Approval of an amendment to the existing lease at Huddleston Road t …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… dor Streetscape and Mobility LCI Implementation Project. (pages 62-63) 6. Request to establish a new 2017 SPLOST project for SR 279 and North Drive; reallocate $20,000 from Project 17TAK to the new project number; and author …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… to the Board. Responses are reserved at the discretion of the Board. CONSENT AGENDA: 1. Approval of the annual Budget Calendar for Fiscal Year 2027, which begins July 1, 2026 and ends June 30, 2027. (pages 3-4) 2. Approva …",
@@ -1845,7 +2026,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -1866,7 +2048,7 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/01-22-2026%20BOC%20Agenda%20(section%201).pdf",
    "textMethod": "pdftotext",
-   "textChars": 306511,
+   "textChars": 306775,
    "pdfSha256": "a66e2322324fc78b8257c882d381e90d6834b9bb158c27c8807609819be3b35b",
    "topics": {
     "annexation": 1,
@@ -1875,6 +2057,7 @@
     "contract": 1,
     "data-center": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "special-land-use": 1,
@@ -1887,6 +2070,7 @@
     "contract",
     "data-center",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "special-land-use",
@@ -1904,6 +2088,7 @@
     "future land use",
     "land use plan",
     "rezon",
+    "splost",
     "subdivision",
     "task order",
     "variance"
@@ -1939,6 +2124,11 @@
      "excerpt": "… ement Agency's Disaster Mitigation Act of 2000. (pages 266-459) 14. Approval to add Windsor Court (FKA Nash Oaks) subdivision to Fayette County's Street Light Program. (pages 460-463) 15. Approval of an amendment to the existing lease at H …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… f the top priority tasks outlined in the Starr's Mill Educational Facility Master Concept Plan related to 2023 SPLOST R23AE. (pages 609-617) 26. Approval of January 8, 2026, Board of Commissioners Meeting Minutes. (pages 618-625) …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "fiscal year",
      "excerpt": "… age 6 4. Presentation by Fayette County's auditing firm, Nichols, Cauley & Associates, LLC, of the results of the Fiscal Year 2025 annual audit. (page 7) PUBLIC HEARING: 5. Consideration of amendments to Chapter 110. Zoning Ordin …",
@@ -1963,7 +2153,8 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": [
     {
@@ -1982,7 +2173,7 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/01-08-2026%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 332587,
+   "textChars": 332766,
    "pdfSha256": "0f62c8a1496d91e6f5c7106e1ceeb3f8b48aed71519f5f0bffdef8fc2c084cf2",
    "topics": {
     "annexation": 1,
@@ -1990,6 +2181,7 @@
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "variance": 1
@@ -2000,6 +2192,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "variance"
@@ -2014,12 +2207,17 @@
     "contract",
     "fiscal year",
     "future land use",
+    "homestead exemption",
     "land use plan",
+    "local option sales tax",
     "millage",
     "reappoint",
     "rezon",
+    "special purpose local option",
+    "splost",
     "subdivision",
     "task order",
+    "tax digest",
     "variance"
    ],
    "topicExcerpts": {
@@ -2048,6 +2246,11 @@
      "excerpt": "… on (the \"Company\"), the receipt. and sufficiency of which are hereby acknowledged, FAYETTE COUNTY, GEORGIA, a political subdivision of the State of Georgia (the \"Undersigned\", which term shall include heirs, successors and/or assigns), whose mailing A …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… 7 for tax year(s) 2022, 2023, and 2024. (pages 119-120) 13. Approval of December 8, 2025, Special Called Millage Rate Hearing Minutes. (pages 121- 122) 14. Approval of December 11, 2025, Board of Commissioners Meeting Minutes. ( …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… 7 for tax year(s) 2022, 2023, and 2024. (pages 119-120) 13. Approval of December 8, 2025, Special Called Millage Rate Hearing Minutes. (pages 121- 122) 14. Approval of December 11, 2025, Board of Commissioners Meeting Minutes. ( …",
@@ -2066,7 +2269,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -2079,7 +2283,7 @@
    "textSource": "minutes",
    "textSourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2025/Agenda/12-11-2025%20BOC%20Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 378016,
+   "textChars": 378300,
    "pdfSha256": "e0b422e851e06188865c8432c2a41f817920f18e2217fc592fd77b52584c02b9",
    "topics": {
     "annexation": 1,
@@ -2087,6 +2291,7 @@
     "comprehensive-plan": 1,
     "contract": 1,
     "development": 1,
+    "local-taxes": 1,
     "millage-budget": 1,
     "rezoning": 1,
     "variance": 1
@@ -2097,6 +2302,7 @@
     "comprehensive-plan",
     "contract",
     "development",
+    "local-taxes",
     "millage-budget",
     "rezoning",
     "variance"
@@ -2111,6 +2317,7 @@
     "contract",
     "fiscal year",
     "future land use",
+    "homestead exemption",
     "land use plan",
     "millage",
     "mixed use",
@@ -2120,7 +2327,9 @@
     "procurement",
     "reappoint",
     "rezon",
+    "splost",
     "subdivision",
+    "tax digest",
     "townhome",
     "variance"
    ],
@@ -2150,6 +2359,11 @@
      "excerpt": "… onses are reserved at the discretion of the Board. CONSENT AGENDA: 1. Approval to add Huntcliff Manor Phase II subdivision to Fayette County's Street Light Program. (pages 4-7) 2. Approval to acquire all fee simple right-of-way and eas …",
      "context": "agenda-action"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ight Program. (pages 4-7) 2. Approval to acquire all fee simple right-of-way and easements for the proposed 2017 SPLOST; Stormwater Category IV Project 311 Friendship Church Road Culvert Replacement (17SAS). (pages 8-9) 3. …",
+     "context": "agenda-action"
+    },
     "millage-budget": {
      "term": "fiscal year",
      "excerpt": "… mmissioner Maxwell was absent. 19. Request to award Contract #2558-P, Elevated Water Storage Tank Maintenance for Fiscal Year 2026 to American Tank Maintenance, with a not-to-exceed amount of $740,691 and to transfer $54,691 to CIP 507- …",
@@ -2168,7 +2382,8 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   }

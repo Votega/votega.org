@@ -1,24 +1,26 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-30T19:35:55Z",
+  "generatedAt": "2026-10-31T01:41:12Z",
   "source": "Gwinnett County (gwinnett agenda/minutes PDFs, poppler+OCR)",
   "place": "Gwinnett County",
-  "count": 20
+  "count": 23
  },
  "summary": {
   "flags": [
    "alpr",
    "land-use",
+   "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-27",
+  "lastActivity": "2026-11-03",
   "topicTotals": {
-   "contract": 14,
+   "appointment": 11,
+   "contract": 15,
+   "local-taxes": 13,
+   "millage-budget": 8,
    "rezoning": 3,
    "variance": 3,
-   "alpr": 2,
-   "appointment": 10,
-   "millage-budget": 7
+   "alpr": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
@@ -73,6 +75,99 @@
  },
  "meetings": [
   {
+   "id": "97677",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Informal Presentation",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_97677_2026.11.03___Informal_Presentation_Agenda_1100am.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_97677_2026.11.03___Informal_Presentation_Agenda_1100am.pdf",
+   "textMethod": "ocr",
+   "textChars": 420,
+   "pdfSha256": "f9bc9ce68998dfc1eec2bb17a2d01d390036a08ea007204710d87ae14089bf2f",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "57229",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Work Session",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_57229_2026.11.03___Work_Session_Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_57229_2026.11.03___Work_Session_Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 18151,
+   "pdfSha256": "93fe5fce66561903dee9a256b67c4f626aa71dc56c83d18b1ef84c734a3f9d62",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "local-taxes": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "local-taxes",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Tuesday, November 3, 2026 - 10:00 AM Page 4 IV. New Business 1. Commissioners 2026-1276 Approval to appoint Incumbent Matthew Guifolye, Registered Fire Protection Engineer Representative; Louis Camerio, General Contra …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Tuesday, November 3, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-1274 Approval to renew BL136-23, flooring installation, repl …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… the secondary service provider, amount not to exceed $1,930,304.25. This contract is funded 94% by the 2023 SPLOST Program. (Recommendation: Approval) 2026-1346 Approval to renew BL081-23, provision of minor roo …",
+     "context": "unknown"
+    },
+    "millage-budget": {
+     "term": "budget",
+     "excerpt": "… 1334 Approval/authorization of the September 30, 2026 Monthly Financial Status Report and ratification of all budget amendments. 4. Human Resources/Adrienne McAllister 2026-1411 Award OS029-26, provision of LinkedIn l …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "millage-budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "262",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Informal Business Discussion",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_262_2026.11.03___Informal_Business_Discussion_Agenda_1200pm.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_262_2026.11.03___Informal_Business_Discussion_Agenda_1200pm.pdf",
+   "textMethod": "ocr",
+   "textChars": 389,
+   "pdfSha256": "586e97b0e3811dfbf0d0b2253cd56ca1eec6cb45766c54f54548d891d4b2867c",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
    "id": "22349",
    "date": "2026-10-27",
    "body": "Board of Commissioners",
@@ -85,11 +180,13 @@
    "pdfSha256": "b40d960318e1e1adbb3e4efe4af731461552a84ef88557a654fcaa1f05e2ce91",
    "topics": {
     "contract": 1,
+    "local-taxes": 1,
     "rezoning": 1,
     "variance": 1
    },
    "tags": [
     "contract",
+    "local-taxes",
     "rezoning",
     "variance"
    ],
@@ -97,12 +194,18 @@
     "contract",
     "purchase order",
     "rezon",
+    "splost",
     "variance"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "… thy Parks 2026-1281 Award OS030-26, provision of voice and data network services on a multi-year contract, to AT&T, Inc, using a competitively procured State of Georgia contract. The initial term of this contract s …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… eed $249,937.00. This contract is funded 80% by the Atlanta Regional Commission and 20% by the 2023 SPLOST Program. (Recommendation: Award) 2026-1358 Ratification of Plat approvals for September 1, 2026, through …",
      "context": "unknown"
     },
     "rezoning": {
@@ -117,7 +220,8 @@
     }
    },
    "flags": [
-    "land-use"
+    "land-use",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -133,22 +237,32 @@
    "textChars": 10296,
    "pdfSha256": "f3230b14685ea90becb742a3284813f306d200e16b54d27e1388ad7eb8d1a0d7",
    "topics": {
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "… nts 2026-1218 Award BL112-26, purchase of law enforcement duty gear on an annual contract (October 6, 2026 through October 5, 2027), to multiple vendors, amount not to exceed $603,342.90. (R …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… accordance with the Gwinnett County Code of Ordinances. This contract is funded by the 2023 SPLOST Program. (Recommendation: Award) 2026-1323 Award BL110-26, Gwinnett County Police aviation hangar …",
+     "context": "unknown"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -160,25 +274,35 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261020/a_41056_2026.10.20___Work_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 9039,
+   "textChars": 9042,
    "pdfSha256": "564379fdaaeb2225d652fe034a06ca9bf483338f2da7aa0fb57d7ae8bbb6c464",
    "topics": {
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "contract": {
      "term": "contract",
      "excerpt": "… Tuesday, October 20, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-1314 Approval to renew BL105-24, provision of repair and repl …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… pose of assets in accordance with the Gwinnett County Code of Ordinances. This contract is funded by the 2023 SPLOST Program. (Recommendation: Award) 2026-1323 Award BL110-26, Gwinnett County Police aviation hangar …",
+     "context": "unknown"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -190,18 +314,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261006/a_26864_2026.10.06___Business_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 9525,
+   "textChars": 9529,
    "pdfSha256": "287e48403c78f78c2075bb131dace86857ce9a1769d734a52284637f288fded0",
    "topics": {
     "alpr": 1,
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "alpr",
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -209,7 +335,8 @@
     "budget",
     "contract",
     "fiscal year",
-    "skydio"
+    "skydio",
+    "splost"
    ],
    "topicExcerpts": {
     "alpr": {
@@ -219,12 +346,17 @@
     },
     "appointment": {
      "term": "appoint",
-     "excerpt": "… pproval to accept the resignation of Bruce Johnson from the Gwinnett County Recreation Authority and appoint Monte Ortel. Term expires December 31, 2026. District Business Session Agenda Tuesday, October 6, 20 …",
+     "excerpt": "… pproval to accept the resignation of Bruce Johnson from the Gwinnett County Recreation Authority and appoint Monte Ortel. Term expires December 31, 2026. District Business Session Agenda Tuesday, October 6, 2 …",
      "context": "unknown"
     },
     "contract": {
      "term": "contract",
      "excerpt": "… 2026-1273 Approval to renew BL122-25, uniform rental and laundering services on an annual contract (November 16, 2026 through November 15, 2027), with Cintas Corporation No. 2, amount not to exceed …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ct, to Ohmshiv Construction, LLC, amount not to exceed $3,648,881.00. This project is funded by various SPLOST Programs. (Recommendation: Award) 2026-1250 Award BL105-26, Cooper Road at Moon Road a …",
      "context": "unknown"
     },
     "millage-budget": {
@@ -235,7 +367,8 @@
    },
    "flags": [
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -248,18 +381,20 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261006/a_20424_2026.10.06___Work_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 8363,
+   "textChars": 8366,
    "pdfSha256": "6c27a01498fcb19ff76ddadd3e8e49252340ed120ec6f8c5106ce8eefbc94460",
    "topics": {
     "alpr": 1,
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "alpr",
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
@@ -267,7 +402,8 @@
     "budget",
     "contract",
     "fiscal year",
-    "skydio"
+    "skydio",
+    "splost"
    ],
    "topicExcerpts": {
     "alpr": {
@@ -285,6 +421,11 @@
      "excerpt": "… a Tuesday, October 6, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-1273 Approval to renew BL122-25, uniform rental and launderi …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… s, LLC dba Allstates Coatings Company, amount not to exceed $199,861.20. This contract is funded by the 2023 SPLOST Program. (Recommendation: Approval) 4. Water Resources/Rebecca Shelton 2026-1259 Approv …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… 26-1226 Approval/authorization of the August 31, 2026 Monthly Financial Status Report and ratification of all budget amendments. 2026-1238 Approval/authorization to accept grant funding for the High Intensity Drug T …",
@@ -293,7 +434,8 @@
    },
    "flags": [
     "millage-budget",
-    "alpr"
+    "alpr",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -306,7 +448,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260922/a_67247_2026.09.22___Public_Hearing_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 3812,
+   "textChars": 3814,
    "pdfSha256": "73196ecfb16e32333293f1ea766d47184b112922b72b251de2ff4894cdc6051a",
    "topics": {
     "appointment": 1,
@@ -362,23 +504,26 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260915/a_7163_2026.09.15___Work_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 11769,
+   "textChars": 11774,
    "pdfSha256": "7abcbf2cd9bb0744fb306e7082af74381784b97bedc29addc9a7b4be393b79e5",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "award of",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -391,6 +536,11 @@
      "excerpt": "… Tuesday, September 15, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-1169 Approval to renew BL089-24, provision of inspection, ma …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… with Russell Standard Corporation, amount not to exceed $400,000.00. This contract is funded by the 2017 SPLOST Program. (Recommendation: Approval) 7. Water Resources/Rebecca Shelton 2026-1160 Approval to renew B …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… 2026-1225 Approval/authorization of the July 31, 2026 Monthly Financial Status Report and ratification of all budget amendments. Approval/authorization of a Resolution amending the FY2026 budget to reflect adjustments to reven …",
@@ -398,7 +548,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -429,23 +580,26 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260915/a_36442_2026.09.15___Business_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 13211,
+   "textChars": 13216,
    "pdfSha256": "1eccc7907151f4584810afc63e912cece3213a8a3d0f52781219fd3094a5173e",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "award of",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -458,6 +612,11 @@
      "excerpt": "… -1195 Award BL089-26, comprehensive materials and field testing and miscellaneous services on an annual contract (October 5, 2026 through October 4, 2027), to multiple vendors, amount not to exceed $4 …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… through October 4, 2026) from $3,154,500.00 to $3,455,512.44. This contract is funded 38.5% by various SPLOST Programs. (Recommendation: Award) (Water and Sewerage Authority Approved on August 31, …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "budget",
      "excerpt": "… 225 Approval/authorization of the July 31, 2026 Monthly Financial Status Report and ratification of all budget amendments. Approval/authorization of a Resolution amending the FY2026 budget to reflec …",
@@ -465,7 +624,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -496,33 +656,43 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260901/a_97298_2026.09.01___Business_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 7920,
+   "textChars": 7924,
    "pdfSha256": "3665d4083e1b1de94a3f1e7cb5fe60995a315c6141ec78f9dae7a354aa0dd602",
    "topics": {
     "appointment": 1,
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
     "appointment",
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
     "appoint",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
      "term": "appoint",
-     "excerpt": "… 2026-1203 Approval to accept the resignation of Stephen Goux from the Merit Board and appoint Celeste Goins to fill the unexpired term that expires December 31, 2026. District 2/Ku Business Sess …",
+     "excerpt": "… 2026-1203 Approval to accept the resignation of Stephen Goux from the Merit Board and appoint Celeste Goins to fill the unexpired term that expires December 31, 2026. District 2/Ku Business Ses …",
      "context": "unknown"
     },
     "contract": {
      "term": "contract",
      "excerpt": "… Departments 2026-1124 Award BL048-26, supplemental purchase of groceries on an annual contract (September 1, 2026 through August 31, 2027), to Sutherland’s Foodservice, Inc., amount not to exceed $1 …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Ohmshiv Construction, LLC, amount not to exceed $1,789,241.00. This project is funded 83.9% by the 2017 SPLOST Program and 16.1% by the Water and Sewer Renewal and Extension Fund. (Recommendation: A …",
+     "context": "unknown"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -552,19 +722,22 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260901/a_49999_2026.09.01___Work_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 7085,
+   "textChars": 7088,
    "pdfSha256": "3b24bbc78519d5702e4aa56f20cf959745ff2c2421cd128480cce70e8337ab84",
    "topics": {
     "appointment": 1,
-    "contract": 1
+    "contract": 1,
+    "local-taxes": 1
    },
    "tags": [
     "appointment",
-    "contract"
+    "contract",
+    "local-taxes"
    ],
    "matchedTerms": [
     "appoint",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -576,9 +749,16 @@
      "term": "contract",
      "excerpt": "… Tuesday, September 1, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-1129 Approval to renew BL094-24, purchase of various protein …",
      "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… hiv Construction, LLC, amount not to exceed $1,789,241.00. This project is funded 83.9% by the 2017 SPLOST Program and 16.1% by the Water and Sewer Renewal and Extension Fund. (Recommendation: Award) 9. Water …",
+     "context": "unknown"
     }
    },
-   "flags": [],
+   "flags": [
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -608,7 +788,7 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260825/a_86782_2026.08.25___AMENDED_Public_Hearing_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 7719,
+   "textChars": 7722,
    "pdfSha256": "6c351bd3424fa498935fe82d501317099d89e6d7b8a15c65cae9b10e47428124",
    "topics": {
     "contract": 1,
@@ -674,23 +854,26 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260818/a_59325_2026.08.18___Work_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 6741,
+   "textChars": 6744,
    "pdfSha256": "4bbb27af4623bd7e05e9345141fc69445b87b0bdd50f0e66e49e61ac03cc124b",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "ad valorem",
     "appoint",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -703,6 +886,11 @@
      "excerpt": "… Tuesday, August 18, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Transportation/Edgardo Aponte 2026-1038 Approval to renew BL084-25, purchase of traffi …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… er 15, 2027), with multiple vendors, amount not to exceed $1,675,000.00. This contract is funded by the 2017 SPLOST Program. (Recommendation: Approval) 2. Water Resources/Rebecca Shelton 2026-1020 Approv …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "ad valorem",
      "excerpt": "… rt/Tiana P. Garner 2026-1073 Approval of a change in the compensation of Hearing Officers who hear ad valorem property tax assessment appeals from the current rate of $175.00 per parcel and $50.00 per read-in (settled) …",
@@ -710,7 +898,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -741,23 +930,26 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260818/a_15275_2026.08.18___Business_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 7538,
+   "textChars": 7541,
    "pdfSha256": "a4da0e271d7404e4313399cc5b95d74b591a6b3905b365dc7eea30380454398a",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "ad valorem",
     "appoint",
     "budget",
-    "contract"
+    "contract",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -770,6 +962,11 @@
      "excerpt": "… roval to increase BL083-21, provision of painting and general purpose maintenance services on an annual contract for the current contract period (December 20, 2025 through December 19, 2026), with mul …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "ad valorem",
+     "excerpt": "… Garner 2026-1073 Approval of a change in the compensation of Hearing Officers who hear ad valorem property tax assessment appeals from the current rate of $175.00 per parcel and $50.00 per read-in (set …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "ad valorem",
      "excerpt": "… Garner 2026-1073 Approval of a change in the compensation of Hearing Officers who hear ad valorem property tax assessment appeals from the current rate of $175.00 per parcel and $50.00 per read-in (set …",
@@ -777,7 +974,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -790,23 +988,26 @@
    "textSource": "agenda",
    "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260804/a_73554_2026.08.04_Work_Session_Agenda.pdf",
    "textMethod": "pdftotext",
-   "textChars": 11550,
+   "textChars": 11555,
    "pdfSha256": "cb84358a3c7e70aaf33424c1762de5aabe36f268b1076caf21194f8cd51b0a8e",
    "topics": {
     "appointment": 1,
     "contract": 1,
+    "local-taxes": 1,
     "millage-budget": 1
    },
    "tags": [
     "appointment",
     "contract",
+    "local-taxes",
     "millage-budget"
    ],
    "matchedTerms": [
     "appoint",
     "contract",
     "fiscal year",
-    "millage"
+    "millage",
+    "splost"
    ],
    "topicExcerpts": {
     "appointment": {
@@ -819,6 +1020,11 @@
      "excerpt": "… Tuesday, August 4, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-0953 Approval to renew BL066-23, provision of speed limit fe …",
      "context": "unknown"
     },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… with Radarsign, LLC, amount not to exceed $136,540.00. This contract is funded 99.6% by the 2017 SPLOST Program. (Recommendation: Approval) 2026-0962 Approval to renew BL103-23, provision of sidewalk repair and …",
+     "context": "unknown"
+    },
     "millage-budget": {
      "term": "millage",
      "excerpt": "… 3. Financial Services/Russell Royal 2026-1011 Approval/authorization of a Resolution establishing the 2026 millage rates; authorizing the levy of taxes within Gwinnett County; and authorization for the Chairwoman t …",
@@ -826,7 +1032,8 @@
     }
    },
    "flags": [
-    "millage-budget"
+    "millage-budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   }
