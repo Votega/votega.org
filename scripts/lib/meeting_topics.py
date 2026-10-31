@@ -67,16 +67,25 @@ TOPIC_RULES = {
     # those taxes are caught by their spelled-out names below. Bare 'tax' is also out:
     # it fires on every fee and permit line. Measured against the corpus before
     # shipping - see scripts/score_topic_lexicon.py --topic local-taxes.
+    #
+    # MEASURED 2026-10-30 over 935 documents / 40 places: 359 match. Hits: splost 247,
+    # millage 109, ad valorem 40, referendum 32, local option sales tax 26, special
+    # purpose local option 22, homestead exemption 19, tax allocation district 17,
+    # tax digest 16, hotel/motel tax 16, tax abatement 14, general obligation bond 12,
+    # homestead option sales tax 9, flost 7. Dead across the whole corpus, so not
+    # shipped: 'education local option' and 'bond referendum' (the long ESPLOST name
+    # and any bond vote are already caught by 'special purpose local option' and
+    # 'referendum'), and the unhyphenated 'bond for title' ('bond-for-title' fired 2).
     'local-taxes':        ['splost', 'special purpose local option',
                            'local option sales tax', 'homestead option sales tax',
-                           'floating local option', 'education local option',
+                           'floating local option',
                            'millage', 'rollback rate', 'ad valorem', 'tax digest',
                            'property tax increase', 'notice of property tax',
                            'homestead exemption',
                            'hotel-motel tax', 'hotel/motel tax', 'hotel motel tax',
                            'tax allocation district', 'tax increment',
-                           'tax abatement', 'bond for title', 'bond-for-title',
-                           'general obligation bond', 'bond referendum',
+                           'tax abatement', 'bond-for-title',
+                           'general obligation bond',
                            'referendum'],
     'contract':           ['contract', 'procurement', 'task order', 'award of', 'purchase order'],
     'appointment':       ['appoint', 'reappoint'],
@@ -281,10 +290,13 @@ TOPIC_WORD_RULES = {
     # 'lpr' / 'anpr' / 'rtcc' are acronyms, so whole-word only (never inside another
     # word). 'lpr' is near-unambiguous in agendas; 'rtcc' = real-time crime center.
     'alpr': ['flock', 'alpr', 'lpr', 'anpr', 'rtcc'],
-    # 'flost' (floating LOST) is the one tax acronym not already carried by the
-    # 'splost' substring; whole-word so it cannot fire inside a longer word. TAD (tax
-    # allocation district) is omitted: it is also a first name and a car part.
-    'local-taxes': ['flost'],
+    # Tax acronyms not already carried by the 'splost' substring; whole-word so they
+    # cannot fire inside a longer word. 'lhost' (Local Homestead Option Sales Tax) and
+    # 'olost' (Other LOST, Macon-Bibb's wording) were found by reading the corpus
+    # matches: Catoosa, Meriwether and Morgan agendas call the new homestead tax
+    # "LHOST", which the spelled-out phrase misses when only the acronym is used.
+    # TAD (tax allocation district) is omitted: it is also a first name and a car part.
+    'local-taxes': ['flost', 'lhost', 'olost'],
 }
 _WORD_RE = {kw: re.compile(r'\b' + re.escape(kw) + r'\b')
             for kws in TOPIC_WORD_RULES.values() for kw in kws}
