@@ -1,6 +1,6 @@
 # January 2027 biennium rollover: decisions needed
 
-Drafted 2026-10-27. Decision doc for the team. Nothing here is built yet. Statuses: **Proposed** (a default is suggested and awaits agreement), **Open** (not yet worked through).
+Drafted 2026-10-27; D7-D11 and D13 given proposals 2026-10-30, so every decision now has one. Decision doc for the team. Nothing here is built yet. Statuses: **Proposed** (a default is suggested and awaits agreement), **Open** (not yet worked through).
 
 The 159th General Assembly convenes on **2027-01-11**, and the 120th Congress in early January. The live roster and several data files turn over, and today's design does not say what happens to the people, bills and records of the outgoing session. This doc lists what happens, what breaks, and what to decide.
 
@@ -114,20 +114,59 @@ Build the classifier and queue now against the primary and runoff data; finish a
 
 **Page behavior to fix alongside (found 2026-10-29, not yet scheduled).** The member page's "Running for…" banner (`_includes/entity/ga-legislator.html`) does not read results, so Henderson and Gooch, who lost their primaries, still show it; it appears for only 6 of the 18 members who ran for another office, because the races builder links a candidate to a roster member only for the seat's own incumbent and cross-office links are hand-added; and the seat banner ("This seat is up for election in 2026") describes the seat, not the person. The Senate 7 special election has no race record in `races.json`. Alvin Payton's candidate link was fixed on 2026-10-29 (the incumbent name rule failed on "Jr").
 
-### D7. Scope: which bienniums — Open
+### D7. Scope: which bienniums — Proposed 2026-10-30
 Keep former members for any biennium Georgia Commons covers, or only the one just ended?
 
-### D8. Site search — Open
+**Proposed: the biennium just ended (2025-2026) only, and make the scope a property of the former-members index (D3) rather than of the page builder**, so widening it later is a data change rather than a code change.
+
+Georgia Commons publishes under a per-session URL space and today covers `2025-2026` (`docs/georgia-civic-data-collaboration.md`, checked 2026-10-23), so that is the only biennium whose sponsor links this rollover can break — which is the thing D13 exists to protect. Every earlier biennium's roster already lives in `Votega/ga-legislators/sessions/`, which D1 treats as the archive, and no earlier biennium has a frozen on-site roster to build pages from. The SOAP service reaches back to 2001, so widening this stays possible; doing it now would be building for a reader nobody has asked about.
+
+Settles it: whether Georgia Commons backfills earlier sessions, and whether anyone asks for pre-2025 member pages.
+
+### D8. Site search — Proposed 2026-10-30
 Keep former members out of search, or include them labelled.
 
-### D9. Labelling for Removed and Deceased — Open
+**Proposed: keep them out — and note that the mechanism already exists and needs no new search code.**
+
+`VoteGA.entityUrls.isRetired()` (`assets/scripts/entity-urls.js`) is generic over entity type: it maps `rec.category` through `MAP_FOR_CATEGORY`, which already contains `'GA Legislator' -> 'ga-legislator'`, then looks the id up in `maps.retired[kind]`. `_includes/search.html` filters every entity record through it. So writing a `retired['ga-legislator']` bucket into `entity-urls.json` hides former members from site search the same way 256 off-ballot candidates are hidden today, with no change to the search include at all.
+
+That also collapses D4 (noindex) and this into one rule, which is the point: a former member's page keeps working for whoever already holds the link, and is not advertised. The D14 directory is the deliberate way in.
+
+**The candidate precedent carries a warning worth repeating here: hide the record, never delete it.** The page builders read `search-entities.json` back to decide which pages to generate, so dropping a record deletes the page — the opposite of what D3 is for.
+
+Not verified: that `search-entities.json` still carries a record for a member the live roster no longer lists. That depends on `generate_search_corpus.py` reading D3's index, which does not exist yet, so it is a requirement on D3 rather than a separate decision.
+
+### D9. Labelling for Removed and Deceased — Proposed 2026-10-30
 None exist today; decide the wording before one does (date and the legislature's note only).
 
-### D10. Party-unity and scorecard treatment — Open
-Scorecards are per biennium. Proposed: a frozen final scorecard for 2025-2026; the page follows the current biennium. Needs agreement on what a returning member's page shows across bienniums.
+**Proposed, following D6's principle that only the fact and the date are shown:**
+- Deceased: "Died in office, <date>."
+- Removed: "Removed from office, <date>." — plus the legislature's own note where there is one, quoted and attributed, never paraphrased.
+- No inferred reason, no link to coverage, and no euphemism ("left office").
 
-### D11. Roster and votes across the rollover — Open
-`ga-member-votes.json` (4.1 MB) is replaced at the rollover. Decide whether a returning member's page shows only the current biennium's votes with a link to the archive, or several.
+Also suppress the election framing for these two: a member who died or was removed did not lose a race, and the "This seat is up for election" banner belongs to the seat rather than the person — the same correction D5 makes.
+
+Settles it: a person reviewing the first real case. None exist today, which is exactly why the wording is worth agreeing now rather than under time pressure.
+
+### D10. Party-unity and scorecard treatment — Proposed 2026-10-30
+Scorecards are per biennium. A frozen final scorecard for 2025-2026; the page follows the current biennium. Needs agreement on what a returning member's page shows across bienniums.
+
+**Proposed: freeze a final 2025-2026 scorecard and keep the live page on the current biennium** (option 3 in D1, for this page only, as D1 already proposes).
+
+Cheaper than it looks: `assets/data/ga-party-unity.json` is 117 KB, already carries `metadata.biennium` (`"2025-2026"`) and a per-session vote count, and `ga-party-unity.html` already builds its open-data link from that biennium (`scorecardRepoUrl()`). The page is biennium-aware today, so this is a static copy plus a selector, not a redesign.
+
+**A returning member's page shows the current biennium's score with a link to the frozen one, and never an average across bienniums** — different chamber, different colleagues and a different universe of votes make a combined figure a number with no referent.
+
+### D11. Roster and votes across the rollover — Proposed 2026-10-30
+`ga-member-votes.json` (4.0 MB) is replaced at the rollover. Decide whether a returning member's page shows only the current biennium's votes with a link to the archive, or several.
+
+**Proposed: the current biennium only, with a link to the archive.**
+
+Measured 2026-10-30: `ga-member-votes.json` is 4.0 MB for one biennium — 2,418 roll calls across 246 members, already on the compact v2 schema — and every `/ga-legislators/<slug>/` page fetches the whole file. Carrying two bienniums doubles the largest download on that page for a minority of readers, and `Votega/ga-legislators/sessions/` already holds the history in a form a researcher can take away.
+
+For a **former** member, freeze their own slice at the final freeze, as D3 proposes, rather than keeping the monolith alive to serve a handful of people.
+
+Worth recording because it is the real decision underneath this one: the federal side already slices votes per member (`federal-votes/<bioguideId>.json`, about 7 KB each) and the GA side does not. Multi-biennium GA votes on a page only becomes affordable if GA votes are sliced the same way, so that is the prerequisite before anyone reopens this.
 
 ### D12. Federal side — Partly decided 2026-10-29 (checked from the code, nothing run)
 The 120th Congress convenes **January 3, 2027**, eight days before the General Assembly. What the code does at the turnover:
@@ -141,8 +180,16 @@ The 120th Congress convenes **January 3, 2027**, eight days before the General A
 
 **Still open:** whether departed federal members keep a page, the transition guard on the roster run, who curates the 120th's key votes, and whether the D6 departure labels extend to federal members.
 
-### D13. Georgia Commons — Open
+### D13. Georgia Commons — Proposed 2026-10-30
 Tell them that links to members who leave office will be preserved, or hold the sponsor-link request until D1-D4 are settled. Include the licensing questions from `docs/georgia-civic-data-collaboration.md`.
+
+**Proposed: tell them the URLs will be preserved, with two caveats, and ask the licensing questions in the same message — but do not ask them to launch the sponsor links until D3 is BUILT, not merely agreed.**
+
+D1-D4 now have proposals, and D3 keeps `/ga-legislators/<slug>/` serving for a former member, which is exactly what their sponsor links need. The two caveats to state plainly:
+1. The guarantee starts at the 2025-2026 biennium (D7), the only session they publish today.
+2. Former-member pages will be `noindex` (D4), so a link works for a reader but carries no search value for them.
+
+The ordering matters more than the message. A preserved-URL promise that 404s in January is worse for them than no link at all, and the mirror-image mistake is already recorded in `claude.md`: advertise an artifact only once it exists.
 
 ### D14. Entry points to former members and past sessions — Proposed
 - **A "Former Legislators" card on `/find-my-reps`.** The page is a hub of entry cards (Federal Representatives, Georgia State Representatives) in a two-column grid, so a third card would be a full-width strip. Name it for what is behind it (people, not sessions); it is accurate today because 11 members have already resigned. It links to a directory of former members grouped by session and chamber (name, party, district, term dates, how they left, successor, page link).
@@ -200,3 +247,7 @@ Open: the exact dates (certification and runoff dates are not verified), whether
 
 Verified from the repo and the live site: the existing 2026-08-22 roster archive and the existence-only freeze guard, the `/find-my-reps` card layout, the rollover mechanics above (code and `claude.md`), page generation at deploy, the legacy shell rendering a resigned member (checked for Dexter Sharper only), the `ga-bills.html` behavior, the archive layout in the open-data READMEs, and the counts (11 resigned; about 33 not on their own general ballot, by name match).
 Not verified: `RECURRING-TASKS.md` (missing from the repo), every generator's handling of a second biennium, the federal pages, the runoff date, and individual name matches (for example, the suspended Rep. Sharon Henderson appears on the Senate 43 ballot, which needs confirming).
+
+Added for D7-D11 and D13 on 2026-10-30, all read from the repo or the live data:
+`VoteGA.entityUrls.isRetired()` resolves the bucket from `rec.category` through `MAP_FOR_CATEGORY`, which already maps `'GA Legislator'`, so hiding former members from search needs no change to `_includes/search.html`; `ga-member-votes.json` is 4.0 MB holding 2,418 roll calls for 246 members on schema v2; `ga-party-unity.json` is 117 KB and carries `metadata.biennium` and per-session vote counts, and `ga-party-unity.html` already derives its repo link from that biennium; the federal votes are sliced per member and the GA votes are not; Georgia Commons publishes under a per-session URL space currently covering `2025-2026`.
+Still not verified for those five: that `generate_search_corpus.py` will carry a record for a member the live roster has dropped (it depends on D3's index, which does not exist), and the cost of slicing GA votes per member.
