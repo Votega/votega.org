@@ -1645,3 +1645,61 @@ places:
           - body: Board of Commissioners
             when: "3rd Tuesday of every month, 5:00 p.m."
             location: "Annex Building, Commissioners Boardroom, 200 Carl Vinson Parkway, Warner Robins"
+
+  - slug: effingham
+    name: Effingham County
+    type: county
+    fips: "13103"
+    parentCounty: null
+    region: Coastal Georgia
+    domains:
+      meetings:
+        # Municode Meetings (meetings.municode.com PublishPage), the CivicWeb front-end
+        # lib.municode paginates. The county's old CivicPlus AgendaCenter stops at
+        # 2025-05 and its Granicus "boards" site is a board-membership portal, not
+        # meetings. Validated 2026-11-01: 159 meetings, 2021-07-20 to 2026-11-03; every
+        # row is a Board of Commissioners item (regular, work session, called, retreat,
+        # each listed as a Tentative and a FINAL agenda), so one body_label covers them.
+        platform: municode
+        agendas_url: "https://meetings.municode.com/PublishPage/index?cid=EFFINGHAM&ppid=9639c19d-1d1f-4201-b8ff-163a28a35f08"
+        body_label: "Board of Commissioners"
+        # From the county's Board of Commissioners page (the 2026 schedule PDF is a
+        # scan). The 2025-26 meeting record agrees: regular meetings on the 1st and
+        # 3rd Tuesday, work sessions mostly the 3rd.
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Tuesday of every month, 5:00 p.m."
+            location: "Effingham Administration Complex, Commissioner Meeting Room, 804 S. Laurel Street, Springfield, GA 31329"
+
+  - slug: oconee
+    name: Oconee County
+    type: county
+    fips: "13219"
+    parentCounty: null
+    region: Northeast Georgia
+    domains:
+      meetings:
+        # CivicClerk portal (oconeecountyga.portal.civicclerk.com), embedded on the
+        # county's Agendas & Minutes page by JavaScript - which is why a plain fetch of
+        # that page sees only a link to the CivicPlus Agenda Center, whose archive stops
+        # at 2019-10. Validated 2026-11-01: 449 meetings across 16 bodies, 2022-11-07 to
+        # 2026-11-04. Kept: the Board of Commissioners and the Planning Commission; the
+        # advisory boards, authorities, elections, assessors and fire-station-chief
+        # meetings are left out.
+        platform: civicclerk
+        subdomain: oconeecountyga
+        agendas_url: "https://oconeecountyga.portal.civicclerk.com/"
+        include_bodies:
+          - "Board of Commissioners Meeting"
+          - "Planning Commission Meeting"
+        # Read from the 2026 portal: regular BOC meetings fall on the 1st Tuesday, with
+        # an agenda-setting meeting on the 4th (sometimes 5th) Tuesday, all at 6:00 p.m.;
+        # the Planning Commission meets the 3rd Monday at 6:00 p.m. at the same address.
+        # Confirm against the county's posted notices.
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 6:00 p.m. (agenda-setting meeting on the 4th Tuesday)"
+            location: "Oconee County Town Hall, 7635 Macon Highway, Watkinsville, GA 30677"
+          - body: Planning Commission
+            when: "3rd Monday of every month, 6:00 p.m."
+            location: "Oconee County Town Hall, 7635 Macon Highway, Watkinsville, GA 30677"
