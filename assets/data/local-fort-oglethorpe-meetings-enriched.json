@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-10-31T14:46:20Z",
+  "generatedAt": "2026-10-31T14:57:37Z",
   "source": "City of Fort Oglethorpe (wpdatatables agenda/minutes PDFs, poppler+OCR)",
   "place": "City of Fort Oglethorpe",
   "count": 25
@@ -14,15 +14,15 @@
   ],
   "lastActivity": "2026-10-26",
   "topicTotals": {
-   "contract": 10,
-   "millage-budget": 7,
-   "rezoning": 20,
+   "contract": 14,
+   "millage-budget": 8,
+   "rezoning": 24,
    "variance": 9,
    "local-taxes": 3,
-   "appointment": 3,
-   "development": 9,
-   "alpr": 1,
-   "annexation": 1
+   "appointment": 5,
+   "development": 13,
+   "alpr": 2,
+   "annexation": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
@@ -207,36 +207,34 @@
     ]
    },
    {
-    "title": "March 5, 2026 ~ Planning Advisory Board Meeting",
-    "date": "2026-03-05",
-    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/20260305-PAB-Agenda.pdf",
+    "title": "February 23, 2026 ~ Council Meeting",
+    "date": "2026-03-23",
+    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/doc00573420260220141747.pdf",
     "tags": [
-     "rezoning"
-    ]
-   },
-   {
-    "title": "February 5, 2026 Planning Advisory Board Meeting",
-    "date": "2026-02-05",
-    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/2026.1.16.-Agenda.pdf",
-    "tags": [
-     "annexation",
      "development",
      "rezoning"
     ]
    },
    {
-    "title": "January 26, 2026 ~ Council Meeting",
-    "date": "2026-01-26",
-    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/26-AGENDA-Preliminary-January-26.pdf",
+    "title": "March 23, 2025 ~ Council Meeting",
+    "date": "2026-03-23",
+    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/20260323-CCM-Agenda.pdf",
     "tags": [
      "development",
      "rezoning"
-    ],
-    "excerpt": "… 01- Second and Final Reading (Stultz) Requested rezoning of R-1 property to R-5 zoning to construct townhomes Address: 1161 Steele Road, Rossville, Georgia 30741 (MAP 0010C027) Property ow …",
-    "excerptTerm": "townhome"
+    ]
+   },
+   {
+    "title": "March 8, 2026 ~ Council Meeting",
+    "date": "2026-03-09",
+    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/20260309-Agenda.pdf",
+    "tags": [
+     "development",
+     "rezoning"
+    ]
    }
   ],
-  "landUseMeetings": 20,
+  "landUseMeetings": 24,
   "alprItems": [
    {
     "title": "April 13, 2026 ~ Council Meeting",
@@ -245,9 +243,18 @@
     "terms": [
      "axon fleet"
     ]
+   },
+   {
+    "title": "March 8, 2026 ~ Council Meeting",
+    "date": "2026-03-09",
+    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/20260309-Agenda.pdf",
+    "terms": [
+     "license plate reader",
+     "plate reader"
+    ]
    }
   ],
-  "alprMeetings": 1,
+  "alprMeetings": 2,
   "localTaxItems": [
    {
     "title": "September 14, 2026 ~ Council Meeting",
@@ -1177,14 +1184,32 @@
    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/doc00573420260220141747.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/doc00573420260220141747.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 4229,
    "pdfSha256": "9dded2d1127bb90900facab034fee694e95dfe8adfc61ef1fcb3c158d1969dc5",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "mixed use",
+    "rezon",
+    "subdivision"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "land-use"
+   ],
    "dataCenterItems": []
   },
   {
@@ -1195,14 +1220,36 @@
    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/20260323-CCM-Agenda.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/20260323-CCM-Agenda.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 3120,
    "pdfSha256": "99a1e09b4312ce2556b7bc879410e51a87f2b6bc0c7eab7d0e3aa409631f3a85",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "millage-budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "millage-budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget",
+    "contract",
+    "fiscal year",
+    "rezon",
+    "subdivision"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "land-use",
+    "millage-budget"
+   ],
    "dataCenterItems": []
   },
   {
@@ -1213,14 +1260,33 @@
    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/20260309-Agenda.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/20260309-Agenda.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 4133,
    "pdfSha256": "d3bac9af2eb83c8c9844fa6c9b95e44c202c9c4fe8eb26bd9bfc451b0dc17afb",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "alpr": 1,
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "alpr",
+    "contract",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "contract",
+    "license plate reader",
+    "plate reader",
+    "rezon",
+    "subdivision"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "land-use",
+    "alpr"
+   ],
    "dataCenterItems": []
   },
   {
@@ -1263,14 +1329,33 @@
    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/doc00553420260206150950.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/doc00553420260206150950.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 8305,
    "pdfSha256": "50ea1b3efb786e3280307bd9351ac66f835890a81835eacf0086b100635de7a1",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "annexation",
+    "contract",
+    "mixed use",
+    "rezon",
+    "subdivision",
+    "townhome"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "land-use"
+   ],
    "dataCenterItems": []
   },
   {
