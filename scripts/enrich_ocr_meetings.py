@@ -74,7 +74,7 @@ DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 # to the direct-download endpoint before fetching (the view page is HTML, not the PDF).
 OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'primegov', 'teammunicode',
                  'gwinnett', 'iqm2', 'municode', 'agendapub', 'revize', 'gdrive', 'pdflinks',
-                 'wpmedia', 'wixtable', 'wpdatatables'}
+                 'wpmedia', 'wixtable', 'wpdatatables', 'htmltable'}
 
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (meeting-topic-enricher)',

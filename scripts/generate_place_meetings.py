@@ -50,6 +50,7 @@ from lib.revize import fetch_revize_meetings  # noqa: E402
 from lib.pdflinks import fetch_pdflinks_meetings  # noqa: E402
 from lib.wpmedia import fetch_wpmedia_meetings  # noqa: E402
 from lib.wixtable import fetch_wixtable_meetings  # noqa: E402
+from lib.htmltable import fetch_htmltable_meetings  # noqa: E402
 from lib.wpdatatables import fetch_wpdatatables_meetings  # noqa: E402
 from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
@@ -62,7 +63,7 @@ OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
                      'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
                      'agendaplus', 'revize', 'gdrive', 'wpdatatables', 'pdflinks', 'wpmedia',
-                     'wixtable'}
+                     'wixtable', 'htmltable'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
@@ -147,6 +148,9 @@ def fetch_meetings(cfg):
     if platform == 'wixtable':
         return fetch_wixtable_meetings(cfg['agendas_url'],
                                        body=cfg.get('body_label', 'Board of Commissioners'))
+    if platform == 'htmltable':
+        return fetch_htmltable_meetings(cfg['agendas_url'],
+                                        body=cfg.get('body_label', 'Board of Commissioners'))
     if platform == 'wpmedia':
         return fetch_wpmedia_meetings(cfg['base_url'], cfg.get('media_bodies'),
                                       terms=cfg.get('media_terms'))
@@ -193,6 +197,8 @@ def source_url(cfg):
     if platform == 'pdflinks':
         return cfg['agendas_url']
     if platform == 'wixtable':
+        return cfg['agendas_url']
+    if platform == 'htmltable':
         return cfg['agendas_url']
     if platform == 'wpmedia':
         return cfg.get('agendas_url') or cfg['base_url']

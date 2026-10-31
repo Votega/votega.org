@@ -30,7 +30,7 @@
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
 #                        legistar | teammunicode | primegov | granicus | gwinnett | iqm2 |
 #                        municode | agendapub | agendaplus | revize | wpdatatables | pdflinks | wpmedia |
-#                        wixtable
+#                        wixtable | htmltable
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
@@ -71,6 +71,9 @@
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
 #       corecode keys:   base_url, meetings_path
+#       htmltable keys:  agendas_url (the page carrying a server-rendered Date | Agenda |
+#                        Minutes | Video table), optional body_label. Columns are found by
+#                        header text; see scripts/lib/htmltable.py.
 #       wpdatatables keys: agendas_url (the public PAGE carrying the grid).
 #                        The rows are not in that HTML — the plugin is
 #                        serverSide, so lib/wpdatatables.py reads them from
@@ -1617,3 +1620,28 @@ places:
           - body: Board of County Commissioners
             when: "1st and 3rd Tuesday of every month, 6:00 p.m. (exceptions are posted on the county calendar)"
             location: "Commission Chambers, 2nd Floor, Government Services Complex, 200 East 4th Street, Woodbine"
+
+  - slug: houston
+    name: Houston County
+    type: county
+    fips: "13153"
+    parentCounty: null
+    region: Middle Georgia
+    domains:
+      meetings:
+        # A server-rendered Date | Agenda | Minutes | Video table (the page's
+        # DataTables script only sorts it) - see scripts/lib/htmltable.py. Columns are
+        # read by header text. Validated 2026-11-01: rows back to 2012; the Oct 20,
+        # 2026 agenda, minutes and video match the links the county gave us.
+        platform: htmltable
+        base_url: https://www.houstoncountyga.gov
+        agendas_url: "https://www.houstoncountyga.gov/commissioner/meeting-minutes.cms"
+        body_label: "Board of Commissioners"
+        # From the county's 2026 meeting schedule PDF (/skins/userfiles/files/2026 Comm Mtg.pdf).
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 9:00 a.m."
+            location: "Houston County Courthouse, Commissioners Boardroom, 201 Perry Parkway, Perry"
+          - body: Board of Commissioners
+            when: "3rd Tuesday of every month, 5:00 p.m."
+            location: "Annex Building, Commissioners Boardroom, 200 Carl Vinson Parkway, Warner Robins"
