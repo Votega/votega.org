@@ -173,7 +173,11 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
         return None  # video-only / nothing to read
 
     cached = cache.get(mid)
-    if not reclassify and cached and cached.get('textSourceUrl') == url and 'tags' in cached:
+    if not reclassify and cached and cached.get('textSourceUrl') == url and 'tags' in cached \
+            and cached.get('textMethod') != 'none':
+        # A 'none' reading (a failed download or unreadable PDF) is NOT a result worth
+        # keeping: cached forever, one transient failure left Atkinson's 2025-12-19
+        # minutes untagged though the PDF has a text layer. Retry it every run.
         return cached  # unchanged agenda — keep derived tags, skip the fetch
 
     # Combined agenda packet: classify only the agenda proper, not the prior-meeting
