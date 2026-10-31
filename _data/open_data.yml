@@ -192,8 +192,9 @@ datasets:
     hosting: repo
     summary: >
       What Georgia county and city governments are discussing on their published
-      agendas and minutes — surveillance cameras (ALPR), data centers, and land
-      use — classified by keyword, with the source document for every mention,
+      agendas and minutes — surveillance cameras (ALPR), data centers, land use,
+      and local taxes and referenda (SPLOST, ESPLOST, TSPLOST, millage rates,
+      bonds) — classified by keyword, with the source document for every mention,
       plus the jurisdiction registry and per-place coverage. A quoted excerpt is
       included only when the topic surfaced as government business (an agenda item,
       motion, or public hearing) — from any source; excerpts for public comment and
@@ -204,7 +205,7 @@ datasets:
     repo_url: https://github.com/Votega/ga-local-government
     files:
       - { name: "latest.json", desc: "Start here — indexes every file, coverage, and last scan", url: "https://github.com/Votega/ga-local-government/blob/main/latest.json" }
-      - { name: "data/mentions.json", desc: "Every topic mention (ALPR, data centers, land use), with source", url: "https://github.com/Votega/ga-local-government/blob/main/data/mentions.json" }
+      - { name: "data/mentions.json", desc: "Every topic mention (ALPR, data centers, land use, local taxes), with source", url: "https://github.com/Votega/ga-local-government/blob/main/data/mentions.json" }
       - { name: "data/mentions.csv", desc: "Same, flat for spreadsheets", url: "https://github.com/Votega/ga-local-government/blob/main/data/mentions.csv" }
       - { name: "data/places.json", desc: "Jurisdiction registry — official agenda links + meeting schedule", url: "https://github.com/Votega/ga-local-government/blob/main/data/places.json" }
       - { name: "data/coverage.json", desc: "Per-place topic counts and last activity", url: "https://github.com/Votega/ga-local-government/blob/main/data/coverage.json" }
