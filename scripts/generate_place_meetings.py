@@ -51,6 +51,7 @@ from lib.pdflinks import fetch_pdflinks_meetings  # noqa: E402
 from lib.wpmedia import fetch_wpmedia_meetings  # noqa: E402
 from lib.wixtable import fetch_wixtable_meetings  # noqa: E402
 from lib.htmltable import fetch_htmltable_meetings  # noqa: E402
+from lib.sharepoint import fetch_sharepoint_meetings  # noqa: E402
 from lib.wpdatatables import fetch_wpdatatables_meetings  # noqa: E402
 from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
@@ -63,7 +64,7 @@ OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
                      'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
                      'agendaplus', 'revize', 'gdrive', 'wpdatatables', 'pdflinks', 'wpmedia',
-                     'wixtable', 'htmltable'}
+                     'wixtable', 'htmltable', 'sharepoint'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
@@ -83,7 +84,7 @@ ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammun
 # are client-rendered with no archive to walk, so there is nothing to scrape
 # even though the surrounding CMS is one we otherwise handle.
 NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'wix', 'wordpress',
-                        'governmentwindow', 'squarespace', 'sharepoint'}
+                        'governmentwindow', 'squarespace'}
 
 
 def load_registry(path):
@@ -151,6 +152,10 @@ def fetch_meetings(cfg):
     if platform == 'htmltable':
         return fetch_htmltable_meetings(cfg['agendas_url'],
                                         body=cfg.get('body_label', 'Board of Commissioners'))
+    if platform == 'sharepoint':
+        return fetch_sharepoint_meetings(cfg['share_url'], cfg['agenda_folder'],
+                                         cfg['minutes_folder'],
+                                         body=cfg.get('body_label', 'City Council'))
     if platform == 'wpmedia':
         return fetch_wpmedia_meetings(cfg['base_url'], cfg.get('media_bodies'),
                                       terms=cfg.get('media_terms'))
@@ -200,6 +205,8 @@ def source_url(cfg):
         return cfg['agendas_url']
     if platform == 'htmltable':
         return cfg['agendas_url']
+    if platform == 'sharepoint':
+        return cfg.get('agendas_url') or cfg['share_url']
     if platform == 'wpmedia':
         return cfg.get('agendas_url') or cfg['base_url']
     if platform == 'gdrive':

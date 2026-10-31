@@ -352,6 +352,10 @@
   </div>
   {% endif %}
 
+  {% if m.link_note %}
+  <p class="cm-sched-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> {{ m.link_note }}</p>
+  {% endif %}
+
   <div id="cmControls" class="cm-controls" hidden>
     <div class="cm-pills" id="cmPills"></div>
     <label class="cm-toggle"><input type="checkbox" id="cmMinutesOnly"> Minutes available only</label>

@@ -74,7 +74,7 @@ DATA_DIR = os.path.join(ROOT, 'assets', 'data')
 # to the direct-download endpoint before fetching (the view page is HTML, not the PDF).
 OCR_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'primegov', 'teammunicode',
                  'gwinnett', 'iqm2', 'municode', 'agendapub', 'revize', 'gdrive', 'pdflinks',
-                 'wpmedia', 'wixtable', 'wpdatatables', 'htmltable'}
+                 'wpmedia', 'wixtable', 'wpdatatables', 'htmltable', 'sharepoint'}
 
 _PDF_HEADERS = {
     'User-Agent': 'votega.org/1.0 (meeting-topic-enricher)',
@@ -133,16 +133,20 @@ def load_cache(slug):
 
 def text_source(meeting):
     """(url, kind) for the PDF to classify: agenda first, else minutes. Video-only
-    meetings (Covington's newest rows) yield (None, None) and are skipped."""
+    meetings (Covington's newest rows) yield (None, None) and are skipped.
+
+    A place whose public link cannot be fetched directly (SharePoint: the published
+    link is a folder share) records the real file in `agendaFileUrl` / `minutesFileUrl`;
+    that is what is read, and what the cache is keyed on."""
     if meeting.get('agendaUrl'):
-        return meeting['agendaUrl'], 'agenda'
+        return meeting.get('agendaFileUrl') or meeting['agendaUrl'], 'agenda'
     if meeting.get('minutesUrl'):
-        return meeting['minutesUrl'], 'minutes'
+        return meeting.get('minutesFileUrl') or meeting['minutesUrl'], 'minutes'
     return None, None
 
 
 def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
-                   slug=None, text_cache=None, from_text_cache=False):
+                   slug=None, text_cache=None, from_text_cache=False, session_fetch=None):
     """Classify one meeting's PDF. Returns an enriched record, or None to skip.
 
     Reuses the cached record when the agenda/minutes URL is unchanged (no
@@ -166,11 +170,18 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
     agenda text is trimmed to its head (agenda_head) so those embedded minutes don't
     tag THIS meeting with topics discussed at earlier ones. Minutes sources are left
     whole — they are already single-meeting.
+
+    `session_fetch(url) -> bytes | None` reads a file that only an authenticated-session
+    browser can download (SharePoint); it is used instead of a plain HTTP fetch when the
+    text source is the meeting's `*FileUrl`. The link written to the sidecar is still the
+    meeting's PUBLIC link, never that file URL, which a visitor cannot open.
     """
     mid = meeting.get('id')
     url, kind = text_source(meeting)
     if not url:
         return None  # video-only / nothing to read
+    public_url = meeting.get('agendaUrl' if kind == 'agenda' else 'minutesUrl') or url
+    private = url != public_url and session_fetch is not None
 
     cached = cache.get(mid)
     if not reclassify and cached and cached.get('textSourceUrl') == url and 'tags' in cached \
@@ -204,8 +215,11 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
 
         # A Google Drive view URL (Carrollton) is an HTML page, not the PDF — rewrite
         # it to the direct-download endpoint. Non-Drive URLs pass through unchanged.
-        pdf = fetch_bytes(drive_download_url(url), headers=_PDF_HEADERS,
-                          retries=3, backoff=5, label=url)
+        if private:
+            pdf = session_fetch(url)
+        else:
+            pdf = fetch_bytes(drive_download_url(url), headers=_PDF_HEADERS,
+                              retries=3, backoff=5, label=url)
         if pdf is None:
             print('    %s: PDF fetch failed (%s) — skipping' % (mid, kind))
             return cached  # keep prior derived data rather than dropping the meeting
@@ -221,7 +235,7 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
         # record whether production trims it so a scorer can reproduce this run.
         if text_cache is not None and method != 'none':
             text_cache.record(slug, mid, text, method=method, pdf_sha=pdf_sha,
-                              source_url=url, date=meeting.get('date'),
+                              source_url=public_url, date=meeting.get('date'),
                               body=meeting.get('body'), title=meeting.get('title'),
                               trimmed=trimmed)
 
@@ -250,7 +264,7 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
     topics = {tag: 1 for tag in tags}          # presence-per-meeting (one blob/meeting)
     date = meeting.get('date')
     title = (meeting.get('title') or meeting.get('body') or '').strip()
-    dc_items = ([{'title': title or 'Meeting %s' % mid, 'date': date, 'sourceUrl': url}]
+    dc_items = ([{'title': title or 'Meeting %s' % mid, 'date': date, 'sourceUrl': public_url}]
                 if 'data-center' in tags else [])
 
     if method == 'none':
@@ -261,7 +275,7 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
         'date': date,
         'body': meeting.get('body'),
         'title': title,
-        'sourceUrl': url,
+        'sourceUrl': public_url,
         'textSource': kind,
         'textSourceUrl': url,
         'textMethod': method,
@@ -286,6 +300,15 @@ def recent_meetings(meetings, since, limit):
     return dated[:limit]
 
 
+def _place_session(cfg):
+    """A lazily-opened anonymous SharePoint session for a `sharepoint` place, else None.
+    Nothing starts a browser until the first file that is not already cached is read."""
+    if cfg.get('platform') != 'sharepoint':
+        return None
+    from lib.sharepoint import SharePointSession  # noqa: PLC0415 - needs playwright
+    return SharePointSession(cfg['share_url'])
+
+
 def enrich_place(place, cfg, since, limit, reclassify=False, text_cache=None,
                  from_text_cache=False):
     """Enrich one PDF-platform place: write its sidecar, return its flag entry.
@@ -308,16 +331,23 @@ def enrich_place(place, cfg, since, limit, reclassify=False, text_cache=None,
           % (place['name'], cfg.get('platform'), len(window), len(data['meetings']), since))
 
     agenda_packet = bool(cfg.get('agenda_packet'))
+    session = None if from_text_cache else _place_session(cfg)
+    session_fetch = session.get if session is not None else None
     # Per-MEETING boundary: one malformed PDF (or a poppler/OCR surprise) costs
     # one meeting, not this place's whole window, and a meeting that raises keeps
     # its cached tags.
-    enriched, lost = run_meetings(
-        slug, window,
-        lambda m: enrich_meeting(m, cache, reclassify=reclassify,
-                                 agenda_packet=agenda_packet, slug=slug,
-                                 text_cache=text_cache,
-                                 from_text_cache=from_text_cache),
-        cache=cache)
+    try:
+        enriched, lost = run_meetings(
+            slug, window,
+            lambda m: enrich_meeting(m, cache, reclassify=reclassify,
+                                     agenda_packet=agenda_packet, slug=slug,
+                                     text_cache=text_cache,
+                                     from_text_cache=from_text_cache,
+                                     session_fetch=session_fetch),
+            cache=cache)
+    finally:
+        if session is not None:
+            session.close()
 
     # Guard like generate/validate: never overwrite a good sidecar / good flags
     # with nothing. Empty means every fetch failed and there was no prior cache.

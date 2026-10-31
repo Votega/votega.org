@@ -30,18 +30,16 @@
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
 #                        legistar | teammunicode | primegov | granicus | gwinnett | iqm2 |
 #                        municode | agendapub | agendaplus | revize | wpdatatables | pdflinks | wpmedia |
-#                        wixtable | htmltable
+#                        wixtable | htmltable | sharepoint
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
 #                          wix | wordpress | governmentwindow |
-#                          squarespace | sharepoint = the MEETING surface, not the
-#                                     CMS around it. LaFayette runs Revize but links
-#                                     out to a SharePoint folder; Rossville's
-#                                     Squarespace page carries only the current
-#                                     month's packet. Both are client-rendered with
-#                                     no archive, so use these rather than the CMS
-#                                     name — `revize` is an ADAPTER platform, and
+#                          squarespace = the MEETING surface, not the
+#                                     CMS around it. Rossville's Squarespace page
+#                                     carries only the current month's packet,
+#                                     client-rendered with no archive, so use this
+#                                     rather than the CMS name — `revize` is an ADAPTER platform, and
 #                                     labelling a PDF-less page with it makes the
 #                                     generator hard-fail the run.
 #                                     (a WordPress site whose meetings sit in a
@@ -71,6 +69,18 @@
 #       civicplus keys:  base_url (no trailing slash), agenda_module_id,
 #                        bodies (display name -> catId; see <base_url>/RSS.aspx)
 #       corecode keys:   base_url, meetings_path
+#       sharepoint keys: share_url (the "anyone with the link" folder share the city
+#                        publishes), agenda_folder and minutes_folder (subfolder names
+#                        under the folder it opens to), optional body_label, link_note.
+#                        Needs a headless browser (CHROME_CHANNEL + playwright): the
+#                        share link issues an ANONYMOUS session that lists and serves
+#                        the files, but a direct file link sent cold goes to a
+#                        Microsoft sign-in. So the published agenda/minutes links are
+#                        the folder share, and the direct file URLs ride in
+#                        agendaFileUrl / minutesFileUrl for the enricher only.
+#                        See scripts/lib/sharepoint.py.
+#       link_note        (any platform, optional) one line shown above the meeting
+#                        list, e.g. to say that document links open a folder.
 #       htmltable keys:  agendas_url (the page carrying a server-rendered Date | Agenda |
 #                        Minutes | Video table), optional body_label. Columns are found by
 #                        header text; see scripts/lib/htmltable.py.
@@ -1417,19 +1427,25 @@ places:
     region: Northwest Georgia   # optional hub grouping label
     domains:
       meetings:
-        # No scraper adapter. The CMS is Revize, but the agendas are NOT on this
-        # page — it links out to a SharePoint folder, which renders its file list
-        # client-side and exposes no anonymous listing, so lib/revize.py finds
-        # zero PDFs to harvest. Tracked as `sharepoint` (the MEETING surface)
-        # rather than `revize`, which is an ADAPTER platform: labelling it revize
-        # would make generate_place_meetings.py treat the empty result as a hard
-        # failure and break the whole run. scripts/detect_meeting_platform.py now
-        # rejects a Revize page with no agenda PDFs for exactly this reason.
-        # The city publishes no meeting schedule; `when` is left empty so the
-        # agendas link still renders (same as Rockdale).
+        # The CMS is Revize, but the agendas are not on that page: it links out to a
+        # SharePoint library shared with "anyone with the link". lib/sharepoint.py opens
+        # the share link in a headless browser (which is issued an anonymous session),
+        # lists Council Agendas and Council Minutes, and builds meetings from the file
+        # names (`0 AGENDA 10 20 26.pdf`, `MINUTES 05 22 26 SPECIAL CALLED.pdf`).
+        # Validated 2026-11-01: 15 agendas + 15 minutes, 2026 only (01/02 to 10/20).
+        # ⚠ A direct file link sent to someone with no session goes to a Microsoft
+        # sign-in, so the links we publish are the folder share (link_note says so);
+        # the enricher reads the files through its own session.
+        # The city publishes no meeting schedule on that page; the schedule below is
+        # kept as it was.
         platform: sharepoint
         base_url: https://mycityoflafayettega.org
         agendas_url: "https://mycityoflafayettega.org/government/agendas_minutes.php"
+        share_url: "https://cityoflafayettega.sharepoint.com/:f:/g/citycouncil/EuKc0m_YjoNAk4vebrFW74sBlFkBC85MhltNsyE3iZFtug?e=HTLdYH"
+        agenda_folder: "Council Agendas"
+        minutes_folder: "Council Minutes"
+        body_label: "City Council"
+        link_note: "Agenda and minutes links open the city's public document folder."
         schedule:
           - body: City Council
             when: "2nd Monday of every month, 6:30 p.m."
