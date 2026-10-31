@@ -29,7 +29,8 @@
 #   domains              per-domain adapter config; supported domain today: meetings
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
 #                        legistar | teammunicode | primegov | granicus | gwinnett | iqm2 |
-#                        municode | agendapub | agendaplus | revize | wpdatatables | pdflinks | wpmedia
+#                        municode | agendapub | agendaplus | revize | wpdatatables | pdflinks | wpmedia |
+#                        wixtable
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
@@ -137,6 +138,14 @@
 #                        so a bare-filename href lands at the domain root, NOT under the
 #                        page dir — base_url is only the fallback when no <base> exists.
 #                        Emits one body (county BOC page) — set body_label. Bartow, Fayette.
+#       wixtable keys:   agendas_url (the Wix page holding a Date | Meeting | Agenda | Minutes
+#                        table), optional body_label. The table is filled by JS and its
+#                        document links are hand-placed icon overlays with no row id, so
+#                        lib.wixtable renders the page in headless Chrome and assigns each
+#                        link to the row/column it visually sits in (needs playwright +
+#                        Chrome; the workflow installs it). Rows without a clean
+#                        `Month d, yyyy` date are skipped and logged, never guessed. Baker.
+#                        NOT the same as `wix` below, which stays a no-scraper marker.
 #       wpmedia keys:    base_url (site root), media_bodies: [{match: <regex on the file title>,
 #                        label: <body name>}, ...] (REQUIRED; first match wins, files
 #                        matching none are dropped), optional media_terms: [..] (default
@@ -297,7 +306,7 @@ places:
         # Fill when: (and optional location:) per body. No scraper adapter needed
         # for a schedule; add a platform (civicplus|corecode|civicclerk) later to
         # auto-aggregate agendas/minutes (see the places.yml header).
-        platform: wix
+        platform: wixtable
         base_url: https://www.bakercountyga.com
         agendas_url: "https://www.bakercountyga.com/minutes-and-agendas"     # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         schedule:

@@ -45,7 +45,17 @@ jobs:
       - name: Install PDF text tools
         run: sudo apt-get update && sudo apt-get install -y poppler-utils tesseract-ocr
 
+      # Wix table places (Baker): the table is filled by JavaScript and its document links
+      # are icon overlays placed by hand, so lib.wixtable renders the page and reads where
+      # each icon sits. Uses the runner's preinstalled Chrome (no browser download), the
+      # same way deploy-pages.yml draws share cards. Only places on that platform need it;
+      # a failure there is contained to that one place like any other adapter.
+      - name: Install Playwright (Wix table places)
+        run: python -m pip install --quiet playwright
+
       - name: Generate local-government meeting data
+        env:
+          CHROME_CHANNEL: chrome
         run: python scripts/generate_place_meetings.py
 
       # Validation does NOT abort the run. It used to: `exit 1` here skipped the
