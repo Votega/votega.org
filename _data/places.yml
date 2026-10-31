@@ -1348,6 +1348,7 @@ places:
     type: city
     fips: null
     parentCounty: catoosa
+    alsoIn: [walker]               # other counties the city extends into (primary = parentCounty, the county holding city hall)
     region:                         # optional hub grouping label
     domains:
       meetings:
