@@ -48,6 +48,7 @@ from lib.agendapub import fetch_agendapub_meetings  # noqa: E402
 from lib.agendaplus import fetch_agendaplus_meetings  # noqa: E402
 from lib.revize import fetch_revize_meetings  # noqa: E402
 from lib.pdflinks import fetch_pdflinks_meetings  # noqa: E402
+from lib.wpmedia import fetch_wpmedia_meetings  # noqa: E402
 from lib.wpdatatables import fetch_wpdatatables_meetings  # noqa: E402
 from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
@@ -59,7 +60,7 @@ OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 # Platforms with a scraper adapter (see fetch_meetings' dispatch below).
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
                      'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
-                     'agendaplus', 'revize', 'gdrive', 'wpdatatables', 'pdflinks'}
+                     'agendaplus', 'revize', 'gdrive', 'wpdatatables', 'pdflinks', 'wpmedia'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
@@ -141,6 +142,9 @@ def fetch_meetings(cfg):
                                        extra_urls=cfg.get('extra_urls'),
                                        body=cfg.get('body_label', 'Board of Commissioners'),
                                        year_from_order=bool(cfg.get('year_from_order')))
+    if platform == 'wpmedia':
+        return fetch_wpmedia_meetings(cfg['base_url'], cfg.get('media_bodies'),
+                                      terms=cfg.get('media_terms'))
     if platform == 'wpdatatables':
         return fetch_wpdatatables_meetings(cfg['agendas_url'],
                                            table_ids=cfg.get('table_ids'),
@@ -183,6 +187,8 @@ def source_url(cfg):
         return cfg['agendas_url']
     if platform == 'pdflinks':
         return cfg['agendas_url']
+    if platform == 'wpmedia':
+        return cfg.get('agendas_url') or cfg['base_url']
     if platform == 'gdrive':
         # The friendly city page, not the raw Drive folder — it's the stable,
         # human-facing home for these documents.

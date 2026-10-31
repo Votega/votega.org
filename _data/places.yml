@@ -29,7 +29,7 @@
 #   domains              per-domain adapter config; supported domain today: meetings
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
 #                        legistar | teammunicode | primegov | granicus | gwinnett | iqm2 |
-#                        municode | agendapub | agendaplus | revize | wpdatatables | pdflinks
+#                        municode | agendapub | agendaplus | revize | wpdatatables | pdflinks | wpmedia
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
@@ -137,6 +137,14 @@
 #                        so a bare-filename href lands at the domain root, NOT under the
 #                        page dir — base_url is only the fallback when no <base> exists.
 #                        Emits one body (county BOC page) — set body_label. Bartow, Fayette.
+#       wpmedia keys:    base_url (site root), media_bodies: [{match: <regex on the file title>,
+#                        label: <body name>}, ...] (REQUIRED; first match wins, files
+#                        matching none are dropped), optional media_terms: [..] (default
+#                        minutes/agenda/packet). For WordPress sites whose PDFs sit in the
+#                        media library with no usable list page (Rockdale): reads
+#                        /wp-json/wp/v2/media and reuses pdflinks' date rules, so
+#                        ambiguous or day-less titles are skipped, never guessed.
+#                        Read the "skipped" counts in the run log before trusting a place.
 #       pdflinks keys:   agendas_url (the page listing the PDFs), optional extra_urls: [..]
 #                        for further pages (Atkinson keeps minutes on their own page),
 #                        optional year_from_order: true for a NEWEST-FIRST list whose
@@ -656,11 +664,19 @@ places:
     region: Atlanta Regional Commission                         # optional hub grouping label
     domains:
       meetings:
-        # WordPress site; agendas/minutes/video are posted on the county's own pages
-        # (no third-party meetings API to scrape), so this is a link-only place — the
-        # three hubs below render as direct links. `custom` = identified, adapter-less.
-        platform: custom
-        base_url: https://www.rockdalecountyga.gov/
+        # WordPress site with no meeting list: the agenda page is a calendar and the
+        # minutes page hands off to an AJAX document-library plugin. Every uploaded PDF
+        # is a public media item, though, so the wpmedia adapter reads them from
+        # /wp-json/wp/v2/media. The library holds every committee's files, so `bodies`
+        # (`media_bodies`) keeps only the commissioners and the Planning Commission (first match wins;
+        # SPLOST subcommittees, KCRB, the water authority etc. are dropped).
+        platform: wpmedia
+        base_url: https://www.rockdalecountyga.gov
+        media_bodies:
+          - match: '\bBOC\b|Board of Commissioners'
+            label: Board of Commissioners
+          - match: 'Planning Commission|\bPC\b'
+            label: Planning Commission
         agendas_url: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners-meeting-agenda/"            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
         minutes_url: "https://www.rockdalecountyga.gov/boc-minutes/"
         video_url: "https://www.rockdalecountyga.gov/board-of-commissioners-meeting-videos/"
