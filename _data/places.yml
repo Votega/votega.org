@@ -400,7 +400,7 @@ places:
     type: county
     fips: "13013"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/barrow/.
@@ -435,7 +435,7 @@ places:
     type: county
     fips: "13015"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # Revize CMS. Not a meeting portal — lib.revize harvests the agenda/minutes
@@ -457,7 +457,7 @@ places:
     type: county
     fips: "13045"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    region: West Georgia   # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/carroll/.
@@ -484,7 +484,7 @@ places:
     type: county
     fips: "13057"
     parentCounty: null
-    region: Atlanta Regional Commission                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/cherokee/.
@@ -514,7 +514,7 @@ places:
     type: county
     fips: "13063"
     parentCounty: null
-    region: Atlanta Regional Commission                        # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/clayton/.
@@ -537,7 +537,7 @@ places:
     type: county
     fips: "13113"
     parentCounty: null
-    region: Atlanta Regional Commission                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # Revize CMS. lib.revize harvests the agenda/minutes PDF links off this page
@@ -562,7 +562,7 @@ places:
     type: county
     fips: "13117"
     parentCounty: null
-    region: Atlanta Regional Commission                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # CivicClerk (portal: forsythcoga.portal.civicclerk.com) — the county's own
@@ -584,7 +584,7 @@ places:
     type: county
     fips: "13135"
     parentCounty: null
-    region: Atlanta Regional Commission                          # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # Bespoke Gwinnett Liferay "BAC" portal (lib/gwinnett.py). agendas_url is the
@@ -605,7 +605,7 @@ places:
     type: county
     fips: "13217"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area
+    region: Metro Atlanta
     domains:
       meetings:
         platform: civicplus
@@ -659,7 +659,7 @@ places:
     type: city
     fips: null
     parentCounty: newton
-    region: Broader Metropolitan Statistical Area
+    region: Metro Atlanta
     domains:
       meetings:
         # CoreCode CMS: a flat council-meetings table (minutes PDFs + Vimeo
@@ -678,7 +678,7 @@ places:
     type: county
     fips: "13247"
     parentCounty: null
-    region: Atlanta Regional Commission                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # WordPress site with no meeting list: the agenda page is a calendar and the
@@ -707,7 +707,7 @@ places:
     type: city
     fips: null
     parentCounty: rockdale
-    region: Atlanta Regional Commission                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         platform: custom
@@ -726,7 +726,7 @@ places:
     type: county
     fips: "13097"
     parentCounty: null
-    region: Atlanta Regional Commission
+    region: Metro Atlanta
     domains:
       meetings:
         platform: civicclerk
@@ -751,7 +751,7 @@ places:
     type: county
     fips: "13151"
     parentCounty: null
-    region: Atlanta Regional Commission
+    region: Metro Atlanta
     domains:
       meetings:
         platform: civicclerk
@@ -768,7 +768,7 @@ places:
     type: county
     fips: "13067"
     parentCounty: null
-    region: Atlanta Regional Commission
+    region: Metro Atlanta
     domains:
       meetings:
         platform: civicclerk
@@ -793,7 +793,7 @@ places:
     type: county
     fips: "13121"
     parentCounty: null
-    region: Atlanta Regional Commission
+    region: Metro Atlanta
     domains:
       meetings:
         schedule:
@@ -811,7 +811,7 @@ places:
     fips: null
     parentCounty: fulton
     alsoIn: [dekalb]               # other counties the city extends into (primary = parentCounty, the county holding city hall)
-    region: Atlanta
+    region: Metro Atlanta
     domains:
       meetings:
         # IQM2 (Accela/Granicus Meeting Manager) Citizens portal — lib/iqm2.py reads
@@ -844,7 +844,7 @@ places:
     type: county
     fips: "13089"
     parentCounty: null
-    region: Atlanta Regional Commission
+    region: Metro Atlanta
     domains:
       meetings:
         platform: legistar
@@ -867,7 +867,7 @@ places:
     type: county
     fips: "13297"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/walton/.
@@ -897,7 +897,7 @@ places:
     type: city
     fips: null
     parentCounty: walton
-    region: Broader Metropolitan Statistical Area
+    region: Metro Atlanta
     domains:
       meetings:
         # IQM2 (Accela/Granicus Meeting Manager) Citizens portal — lib/iqm2.py reads
@@ -951,7 +951,7 @@ places:
     type: county
     fips: "13223"
     parentCounty: null
-    region: Atlanta Regional Commission
+    region: Metro Atlanta
     domains:
       meetings:
         # Municode PublishPage portal (meetings.municode.com/PublishPage) — the
@@ -971,7 +971,7 @@ places:
     type: county
     fips: "13077"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # Curated recurring schedule -> the "When they meet" note on /local/coweta/.
@@ -994,7 +994,7 @@ places:
     type: county
     fips: "13035"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area
+    region: Metro Atlanta
     domains:
       meetings:
         platform: civicclerk
@@ -1012,7 +1012,7 @@ places:
     type: county
     fips: "13073"
     parentCounty: null
-    region: Central Savannah River Area
+    region: East Georgia
     domains:
       meetings:
         # CivicClerk (portal: columbiacoga.portal.civicclerk.com). Keep the Board of
@@ -1123,7 +1123,7 @@ places:
     type: county
     fips: "13085"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area
+    region: Metro Atlanta
     domains:
       meetings:
         platform: municode
@@ -1226,7 +1226,7 @@ places:
     type: county
     fips: "13255"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    region: Metro Atlanta   # optional hub grouping label
     domains:
       meetings:
         # Granicus ViewPublisher portal. The Name cell mixes body + meeting type
@@ -1252,7 +1252,7 @@ places:
     type: county
     fips: "13199"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    region: West Georgia   # optional hub grouping label
     domains:
       meetings:
         # CivicPlus Agenda Center (real, populated — not an empty iframe shell).
@@ -1274,7 +1274,7 @@ places:
     type: county
     fips: "13211"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    region: Northeast Georgia   # optional hub grouping label
     domains:
       meetings:
         # CivicPlus Agenda Center (real, populated). Validated 2026-09-10: 194 meetings.
@@ -1296,7 +1296,7 @@ places:
     type: county
     fips: "13227"
     parentCounty: null
-    region: Broader Metropolitan Statistical Area                         # optional hub grouping label
+    region: Northwest Georgia   # optional hub grouping label
     domains:
       meetings:
         # CivicPlus Agenda Center. Newer/re-skinned front-end, but the underlying
@@ -1463,7 +1463,7 @@ places:
     fips: null
     parentCounty: fulton
     alsoIn: [coweta]               # other counties the city extends into (primary = parentCounty, the county holding city hall)
-    region: Atlanta Regional Commission
+    region: Metro Atlanta
     domains:
       meetings:
         # No scraper adapter: citypalmetto.com is a Drupal 11 site (footer: "Government
