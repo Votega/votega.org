@@ -63,9 +63,12 @@ class _Tables(HTMLParser):
         self._cell = None
         self._in_th = False
         self._a = None
+        self.base = None
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag == 'base' and a.get('href') and self.base is None:
+            self.base = a['href'].strip()
         if tag == 'table':
             self._t = {'headers': [], 'rows': []}
             self.tables.append(self._t)
@@ -246,6 +249,10 @@ def parse_table(html, base_url, body='Board of Commissioners'):
     Raises ValueError when the page cannot be trusted (see module docstring)."""
     p = _Tables()
     p.feed(html)
+    if p.base:
+        # A <base href> redirects every relative link (Whitfield's points at the site
+        # root, so `Documents/...` is NOT under the page's own folder).
+        base_url = urljoin(base_url, p.base)
     table = None
     for t in p.tables:
         ci = {k: _col(t['headers'], k) for k in ('date', 'agenda', 'minutes', 'video')}

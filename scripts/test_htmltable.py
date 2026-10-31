@@ -113,6 +113,15 @@ check('2026-09-29-special-called-meeting-6-00-p-m' in wb and '2026-09-29-special
 check(wb['2026-10-12-regular-business-meeting']['title'] == 'October 12, 2026 Regular Business Meeting',
       'meeting type taken from the date cell')
 
+print('Base href')
+BASED = ('<html><head><base href="https://w.example/" /></head><body><table>'
+         '<tr><td>10/12/26 Regular Business Meeting</td>'
+         '<td><a href="Documents/BOC/Oct 12.pdf?t=202610120846160">Agenda</a></td></tr>'
+         '</table></body></html>')
+bm, _ = H.parse_table(BASED, 'https://w.example/gov/boc/agenda.php')
+check(bm and bm[0]['agendaUrl'] == 'https://w.example/Documents/BOC/Oct%2012.pdf',
+      'relative links resolve against <base href>, not the page folder: %r' % (bm and bm[0]['agendaUrl']))
+
 print('Failure modes')
 check(raises(lambda: H.parse_table('<html><body><p>nothing</p></body></html>', BASE),
              'no meetings table'), 'no table -> refuse')
