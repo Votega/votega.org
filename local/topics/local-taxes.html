@@ -13,5 +13,5 @@ breadcrumb:
     url: /local/topics/
   - name: Local taxes & referenda
 ---
-<link rel="stylesheet" href="{{ '/assets/css/topic-index.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/topic-index.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 {% include topic-index.html %}

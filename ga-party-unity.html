@@ -235,6 +235,7 @@ members, from the same roll-call record behind each member's page.</p>
 
 <p class="pu-foot" id="pu-foot"></p>
 
+<script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
 (function () {
   var DATA_URL = 'assets/data/ga-party-unity.json';
@@ -264,7 +265,7 @@ members, from the same roll-call record behind each member's page.</p>
   var pct = function (x) { return (x * 100).toFixed(1) + '%'; };
   var letter = function (p) { return p === 'Democratic' ? 'D' : p === 'Republican' ? 'R' : 'I'; };
   var partyColor = function (p) { return p === 'Democratic' ? 'var(--color-party-d)' : p === 'Republican' ? 'var(--color-party-r)' : 'var(--color-text-muted)'; };
-  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+  var esc = VoteGA.escapeHtml;
 
   // `denom` is the sample the active metric is computed over, and so the number
   // the minimum-sample filter has to be applied to. The filter used to run on

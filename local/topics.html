@@ -40,7 +40,7 @@ breadcrumb:
   <a href="{{ '/about-the-data#agenda-topic-badges' | relative_url }}">How we match agendas &rsaquo;</a>
 </p>
 
-<link rel="stylesheet" href="{{ '/assets/css/topic-index.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/topic-index.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 <script>
   // Progressive enhancement: annotate each hub card with its current mention
   // count. Base-path aware; silent if a data file is missing.
