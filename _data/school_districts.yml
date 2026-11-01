@@ -105,6 +105,17 @@
 #
 #   Rosters, when added, are human-gated per member with a `source` — same
 #   contract as local_officials.yml and county_officers.yml.
+#
+#   CROSS-VALIDATED against an independent source: the Georgia DOR "County Ad
+#   Valorem Tax Digest Millage Rates" report (PTS-R006-OD, 2023) carries an
+#   `IND SCHOOL <CITY>` row for each independent city system, and its 21 distinct
+#   systems match these 21 exactly. That report also lists a city system under
+#   EACH county it serves, which is how the multi-county `counties` values here
+#   were confirmed — Atlanta under Fulton and DeKalb, and Bremen, Buford and
+#   Social Circle each appearing twice. When the millage parser lands (see the
+#   scope doc, phase 1a), use it to audit this file's `counties` values; it is
+#   the only source we have that encodes service area rather than office
+#   location.
 # ============================================================================
 
 cityDistricts:

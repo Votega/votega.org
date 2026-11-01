@@ -251,19 +251,64 @@ delivers "who is on my school board" — a real unmet need — at zero scraping 
 ### 4.1 The unlock: one statewide PDF per year, not 159 county scrapes
 
 Georgia DOR publishes an annual statewide report, **"Georgia County Ad Valorem
-Tax Digest Millage Rates" (PTS-R006-OD)**, listing **every taxing jurisdiction's
-M&O and bond millage — county, city *and* school lines**. PDF only, no CSV — but
-this repo already runs poppler and parses far messier PDFs than a government rate
-table.
+Tax Digest Millage Rates" (PTS-R006-OD)**, listing every taxing jurisdiction's
+M&O and bond millage. One index page carries all of it:
 
-**~8 annual PDFs → complete millage history for all 159 counties, every city and
-all 180 school districts.** One parser buys **statewide coverage on the
-highest-demand local topic**, including the 113 counties not otherwise covered.
-Nothing else in the backlog has that leverage ratio, and it makes the school-board
-work more valuable immediately, since school millage arrives in the same table.
+> https://dor.georgia.gov/local-government-services/digest-compliance/property-tax-millage-rates
+
+**Seven years, 2019–2025. PDF only — no CSV or XLS at any year.** The per-year
+URLs are inconsistent (2024 is a bare `/media/30916/download`, 2020 is
+`/document/document-document/2020/download`), so the parser must **scrape the
+index page for links rather than constructing URLs by year**.
+
+**Verified coverage (2023 report, parsed).** The table is `County | District |
+M&O | Bond`, fixed-width, 44 pages. All **159 counties** are present and **all
+159 carry a `SCHOOL` row**. City school systems appear as **`IND SCHOOL
+<CITY>`** — 26 rows covering the 21 independent systems. Cities, fire districts,
+`TAD`, `CID`, `SSD`, `BID` and `STATE` rows are all there too, so the report is
+richer than just millage — a decision is needed on which levy types to publish.
+The `Bond` column is sometimes blank rather than `0.000`, so rows are ragged.
+
+**This cross-validates `school_districts.yml` 21/21 against a fully independent
+source** (DOR, versus NCES/GOSA), and it does something the NCES dimension
+cannot: the 26-for-21 duplication is the report listing a city system **under
+each county it serves** — Atlanta under Fulton *and* DeKalb, plus Bremen, Buford
+and Social Circle twice each. So the DOR report is a **second source for the
+multi-county service areas** that §3.3(a) flags as missing upstream. Use it to
+populate and audit the `counties` field in the district registry.
 
 Supporting source: DOR's **Property Tax Administration Annual Report** for digest
 totals and context. *Unverified: whether 2024/2025 editions are posted yet.*
+
+### 4.1.1 Extraction is mixed, and the current year is the worst case
+
+This is the real cost driver, and it is not visible from the index page. Measured
+with `pdffonts` / `pdftotext` on all seven files:
+
+| Year | Size | Pages | Fonts | Extraction |
+|---|---|---|---|---|
+| 2019 | 100 KB | 43 | Type 1 / WinAnsi | **clean text** |
+| 2020 | 83 KB | 43 | Type 1 / WinAnsi | **clean text** |
+| 2021 | 8.97 MB | 44 | none | **scanned images — OCR** |
+| 2022 | 85 KB | 44 | Type 1 / WinAnsi | **clean text** |
+| 2023 | 122 KB | 44 | Type 1 / WinAnsi | **clean text** |
+| 2024 | 9.21 MB | 45 | none | **scanned images — OCR** |
+| 2025 | 2.36 MB | 46 | Type 3, custom enc, no ToUnicode | **mojibake** |
+
+So 4 of 7 years parse trivially, 2 need OCR, and **2025 — the current year, the
+one that matters most — has a text layer that `pdftotext` renders as garbage**
+(`0123045ÿ718539` for the title). The glyphs and the column geometry are intact;
+only the character mapping is lost. It needs either a reconstructed glyph map or
+OCR of rendered pages.
+
+**Correctness constraint, not just cost.** An OCR'd millage digit is a claim
+about someone's tax bill. This repo already refuses to publish OCR-derived text
+for exactly this reason — `meeting_topics.py` captures excerpts *"from the
+poppler text layer only, never OCR, because OCR text is non-deterministic."*
+That policy should extend here: do not publish an OCR-derived rate on the
+strength of a single extraction. Require two independent extractions to agree, or
+cross-check against the county's own published five-year-history advertisement,
+and leave the cell empty when they disagree.
 
 ### 4.2 The genuinely novel dataset: HB 581 opt-out status
 
@@ -307,16 +352,23 @@ is positioned to do that.
   legis.ga.gov; the `ga-legislation` pipeline can do this directly.
 - **The rollback-rate statute cite** (Taxpayer Bill of Rights) — confirm the exact
   O.C.G.A. section before putting it on a page.
-- Whether DOR has posted 2024/2025 millage reports.
-- Whether the old `etax.dor.ga.gov` digest download portal is still live (it may
-  offer machine-readable history and save the parser work entirely — worth five
-  minutes before writing it).
+- **Resolved: there is no machine-readable shortcut.** The old
+  `etax.dor.ga.gov/ptd/download/` portal is **dead** — the host still resolves
+  but resets the connection, and it fails in a browser too. No CSV or XLS exists
+  on the DOR millage page for any year, and no `data.georgia.gov` dataset was
+  found. The PDF parser is required.
+- **Worth one probe:** `sso.dor.ga.gov` is live (HTTP 200, redirects to
+  `/rtlhext/`) and reportedly exposes a county-by-county digest lookup carrying
+  Net M&O Digest and millage. It is a web interface, not a bulk download, so it
+  will not replace the parser — but it may be a **structured cross-check for the
+  OCR and Type 3 years**, which is exactly where verification is needed.
 
 ### 4.5 Phasing
 
 | Phase | Work | Est. |
 |---|---|---|
-| **1a** | DOR millage PDF parser → millage dataset in `ga-local-government`, all years, all jurisdictions | ~70–100k |
+| **1a-i** | DOR millage parser for the **4 clean-text years** (2019, 2020, 2022, 2023) → millage dataset in `ga-local-government`. Index-page link scraping, fixed-width row parse, levy-type decision. | ~50–70k |
+| **1a-ii** | The **hard three**: 2021 + 2024 (OCR) and 2025 (Type 3 glyph map or rendered OCR), with the two-extractions-must-agree rule. Ships after 1a-i proves the schema. | ~70–110k |
 | **1b** | Per-place millage history section on `/local/<slug>/` (county + city + school lines) | ~40–60k |
 | **1c** | HB 581 opt-out registry (SoS filings + agenda corroboration) | ~60–90k |
 | **1d** | Explainers: reading your assessment, the 45-day appeal, what a millage rate is | ~25–40k |
@@ -328,8 +380,11 @@ is positioned to do that.
 
 **1a → 3a → 1b → 1d**, with **3b** run before committing to 3c/3d.
 
-- **1a is the highest-leverage item in either scope**: one parser, statewide
-  coverage, highest-demand topic, and it feeds the school-board work too.
+- **1a-i is the highest-leverage item in either scope**: one parser, statewide
+  coverage, highest-demand topic, and it feeds the school-board work too. Note
+  the split — 1a-i is 4 clean years and should ship on its own; the scanned and
+  Type 3 years (1a-ii) are a separate, costlier problem and the current year sits
+  in that bucket, so plan for a gap between "we have history" and "we have 2025".
 - **3a is the lowest-risk**: YAML plus a template section, no scraping, ships on
   its own, answers "who is on my school board".
 
