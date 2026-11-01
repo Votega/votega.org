@@ -10,7 +10,11 @@ share-description: "How many Georgians have already voted in the November 3, 202
 {%- assign mp = sw.mailPipeline -%}
 {%- comment -%}Georgia's advance voting ends the Friday before a Tuesday election: four days out, derived so nothing here is a per-cycle edit.{%- endcomment -%}
 {%- assign ev_end = ev.metadata.electionDate | date: "%s" | minus: 345600 -%}
-{%- assign ev_days_left = ev.metadata.daysBeforeElection | minus: 4 -%}
+{%- comment -%}Days to election day count from the build date, not the data's as-of date (metadata.daysBeforeElection), which is only for lining up past years.{%- endcomment -%}
+{%- assign ev_el_day = ev.metadata.electionDate | date: "%s" | divided_by: 86400 -%}
+{%- assign ev_now_day = site.time | date: "%s" | divided_by: 86400 -%}
+{%- assign ev_days_out = ev_el_day | minus: ev_now_day -%}
+{%- assign ev_days_left = ev_days_out | minus: 4 -%}
 
 <style>
   .ev-stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 8px; }
@@ -256,9 +260,9 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <div class="ev-stat">
     {%- if ev_days_left > 0 %}
     <span class="n">{{ ev_days_left }}</span><span class="l">more {% if ev_days_left == 1 %}day{% else %}days{% endif %} to vote early in person</span>
-    <span class="ev-left-k">Through {{ ev_end | date: "%A, %B %-d" }}. Election day is {{ ev.metadata.electionDate | date: "%A, %B %-d" }}, {{ ev.metadata.daysBeforeElection }} days away; mail ballots have until then to arrive.</span>
+    <span class="ev-left-k">Through {{ ev_end | date: "%A, %B %-d" }}. Election day is {{ ev.metadata.electionDate | date: "%A, %B %-d" }}, {{ ev_days_out }} days away; mail ballots have until then to arrive.</span>
     {%- else %}
-    <span class="n">{{ ev.metadata.daysBeforeElection }}</span><span class="l">{% if ev.metadata.daysBeforeElection == 1 %}day{% else %}days{% endif %} to election day</span>
+    <span class="n">{{ ev_days_out }}</span><span class="l">{% if ev_days_out == 1 %}day{% else %}days{% endif %} to election day</span>
     <span class="ev-left-k">Early in-person voting ended {{ ev_end | date: "%A, %B %-d" }}. Mail ballots have until {{ ev.metadata.electionDate | date: "%A, %B %-d" }} to arrive.</span>
     {%- endif %}
     {%- assign mx = 0 -%}
