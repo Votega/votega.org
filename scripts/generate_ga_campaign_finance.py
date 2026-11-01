@@ -48,6 +48,7 @@ RACES_FILE  = "assets/data/races.json"
 MEMBERS_FILE = "assets/data/ga-members.json"
 PAGE_SIZE   = 100          # anything much larger is rejected by the WAF
 DELAY       = 1.0
+MIN_OFFICE_FILERS = 3     # fewer than this and an empty office is plausible, not a fault
 FALLBACK_CYCLE = 2026      # only used if races.json can't be read
 
 # officeId -> (label, chamber-for-join or None for statewide)
@@ -191,6 +192,25 @@ def load_scope():
     return ga_finance_scope.build_scope(read(RACES_FILE, "races"), read(MEMBERS_FILE, "members"))
 
 
+def vanished_offices(previous, filers):
+    """Offices the committed file holds filers for that this run returned none of.
+
+    An office does not empty out mid-cycle, so a zero is the API answering a 200 with
+    nothing for that office, not the Ethics Commission removing everyone. A run like
+    that used to be published: the 2026-11-01 pull returned no Attorney General rows,
+    which dropped filer 102817 and failed the ID crosswalk validator a step later with
+    "unknown peachfileFilerEntityId". Failing here names the real cause and leaves the
+    committed file untouched.
+    """
+    def counts(fs):
+        out = {}
+        for f in (fs or {}).values():
+            out[f.get("office")] = out.get(f.get("office"), 0) + 1
+        return out
+    before, after = counts(previous), counts(filers)
+    return sorted(o for o, n in before.items() if o and n >= MIN_OFFICE_FILERS and not after.get(o))
+
+
 def main():
     cycle = target_cycle()
     print(f"Target election cycle: {cycle}")
@@ -285,6 +305,20 @@ def main():
             print(f"Error: {rows_fetched} rows fetched but none belong to cycle {cycle} "
                   f"— races.json may be ahead of PeachFile; aborting rather than "
                   f"overwriting good data")
+        sys.exit(1)
+
+    # An office that had filers and now has none is a bad pull, not a real change.
+    try:
+        with open(OUTPUT_FILE, encoding="utf-8") as f:
+            previous = json.load(f).get("filers")
+    except (OSError, ValueError):
+        previous = None
+    gone = vanished_offices(previous, filers)
+    if gone:
+        print("Error: the API returned no filers for " + ", ".join(gone) + ", which the "
+              "committed file has — a bad pull, not a real change. Aborting rather than "
+              "overwriting good data; re-run, and check PeachFile if it persists.",
+              file=sys.stderr)
         sys.exit(1)
 
     # Manual resolutions for candidates the automatic join can't settle — ambiguous
