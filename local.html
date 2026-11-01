@@ -148,7 +148,7 @@ breadcrumb:
     </span>
     <span class="lh-legend-item">
       <span class="lh-flag lh-flag-stale"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span>
-      This place’s website blocks the automated method we use to collect links and topics, so its information may be out of date. Check the official source.
+      This place’s website either blocks the automated method we use to collect links and topics, or has stopped posting newer agendas and minutes, so its information may be out of date. Check the official source.
     </span>
   </div>
   <p class="lh-legend-caveat">
@@ -191,8 +191,8 @@ breadcrumb:
         {%- if county.domains.meetings %}{% if coOfficials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
         {%- unless coOfficials or county.domains.meetings %}Coming soon{% endunless %}
       </div>
-      {%- if county.domains.meetings.bot_protected %}
-      <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source."><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
+      {%- if county.domains.meetings.bot_protected or county.domains.meetings.site_not_posting %}
+      <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="{% if county.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
       {%- endif %}
     </a>
     {%- assign kids = cities | where: "parentCounty", county.slug | sort: "name" %}
@@ -212,8 +212,8 @@ breadcrumb:
           {%- if city.domains.meetings %}{% if ciOfficials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
           {%- unless ciOfficials or city.domains.meetings %}Coming soon{% endunless %}
         </div>
-        {%- if city.domains.meetings.bot_protected %}
-        <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source."><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
+        {%- if city.domains.meetings.bot_protected or city.domains.meetings.site_not_posting %}
+        <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="{% if city.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
         {%- endif %}
       </a>
       {%- endfor %}
@@ -264,8 +264,8 @@ breadcrumb:
           {%- if c2.domains.meetings %}{% if c2Officials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
           {%- unless c2Officials or c2.domains.meetings %}Coming soon{% endunless %}
         </div>
-        {%- if c2.domains.meetings.bot_protected %}
-        <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source."><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
+        {%- if c2.domains.meetings.bot_protected or c2.domains.meetings.site_not_posting %}
+        <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="{% if c2.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
         {%- endif %}
       </a>
       {%- endfor %}
