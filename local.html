@@ -187,9 +187,11 @@ breadcrumb:
       <div class="lh-name">{{ county.name }}</div>
       <div class="lh-meta"><span class="lh-badge lh-badge-county">county</span>{% if county.region %}{{ county.region }}{% endif %}</div>
       <div class="lh-domains">
+        {%- assign coSheriff = site.data.county_officers.counties | where: "id", county.slug | first %}
         {%- if coOfficials %}<i class="fa-solid fa-users" aria-hidden="true"></i> Officials{% endif %}
-        {%- if county.domains.meetings %}{% if coOfficials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
-        {%- unless coOfficials or county.domains.meetings %}Coming soon{% endunless %}
+        {%- if coSheriff %}{% if coOfficials %} &middot; {% endif %}<i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Sheriff{% endif %}
+        {%- if county.domains.meetings %}{% if coOfficials or coSheriff %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
+        {%- unless coOfficials or coSheriff or county.domains.meetings %}Coming soon{% endunless %}
       </div>
       {%- if county.domains.meetings.bot_protected or county.domains.meetings.site_not_posting %}
       <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="{% if county.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
