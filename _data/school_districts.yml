@@ -1,0 +1,259 @@
+# ============================================================================
+# SCHOOL DISTRICTS — Georgia boards of education as a DOMAIN of a place
+# ============================================================================
+# A board of education is a SEPARATELY ELECTED body with its own meetings, its
+# own millage rate and its own ESPLOST. It is not the county commission and not
+# the city council, so — exactly like county_officers.yml (sheriffs) — its
+# members are NEVER mixed into a local_officials.yml jurisdiction's `members:`
+# list. It renders as its own section on /local/<slug>/.
+#
+# See docs/LOCAL-EXPANSION-SCOPE.md for the full scope, phasing and the research
+# this file came out of.
+#
+# ----------------------------------------------------------------------------
+# THE STRUCTURE OF GEORGIA SCHOOL DISTRICTS  (the reason this file is small)
+# ----------------------------------------------------------------------------
+#   Georgia has 180 active standard school districts:
+#
+#     159 COUNTY systems — exactly one per county, always. Every county has one,
+#         no county has two. This set is perfectly derivable from the county
+#         list; it needs no hand curation and is NOT enumerated here (phase 3a
+#         generates it — see the scope doc).
+#
+#      21 CITY systems — independent city school districts, sitting inside 20
+#         counties. THIS is the irregular set, it is closed, it changes
+#         essentially never, and it is the whole content of this file.
+#
+#   So the only hand-maintained fact about Georgia's school-district geography is
+#   the 21 rows below. Everything else is mechanical.
+#
+#   Jackson County is the only county with two city systems (Commerce and
+#   Jefferson) on top of its county system, for three districts in one county.
+#
+# ----------------------------------------------------------------------------
+# DO NOT DERIVE `type` FROM THE DISTRICT NAME — IT DOES NOT WORK
+# ----------------------------------------------------------------------------
+#   Name is not a reliable signal in either direction:
+#     - COUNTY systems with city-styled names: Savannah-Chatham County,
+#       Griffin-Spalding County, Thomaston-Upson County.
+#     - CITY systems with no "City" in the name: Atlanta Public Schools,
+#       Dalton Public Schools, City Schools of Decatur.
+#   `type` is therefore curated here, not inferred.
+#
+#   (GOSA district codes DO separate cleanly today — county systems occupy
+#   601-759 and city systems 761-793 — but that is an accident of the numbering
+#   and not a documented contract, so it is a cross-check, never the source.)
+#
+# ----------------------------------------------------------------------------
+# `counties` IS A SERVICE AREA AND IT IS NOT THE SAME AS THE OFFICE'S COUNTY
+# ----------------------------------------------------------------------------
+#   The upstream NCES/GOSA dimension assigns each district ONE county: the county
+#   its LEA office sits in. That is not its boundary. Atlanta Public Schools is
+#   the clearest case — upstream it is a Fulton district, but APS serves part of
+#   DeKalb too. A city school system's boundary is also NOT the city limits, and
+#   the county system serves everything the city system does not.
+#
+#   So `counties` below is a HUMAN-CONFIRMED list of the places whose
+#   /local/<slug>/ page should show this board, and it may be longer than the
+#   upstream single-county assignment. It is a routing hint for page rendering.
+#
+#   It is NOT an answer to "which school board is mine?" — that is an ADDRESS
+#   question, and it must be routed to an attendance-zone lookup, never answered
+#   from this file. Do not build a place -> district promise on these rows.
+#
+#   FORWARD REFERENCES ARE EXPECTED AND MUST BE ALLOWED. 7 of the 20 counties
+#   with a city system are not in places.yml yet: chattooga, floyd, haralson,
+#   jackson, laurens, mitchell, toombs. validate_local_officials.py fails CI when
+#   an id has no matching place slug; a school-district validator must NOT copy
+#   that contract strictly, or these 7 break the build on day one. Warn on an
+#   unknown slug, fail only on a DUPLICATE district id or a missing required
+#   field. The renderer simply has no page to put them on until the place exists.
+#
+# ----------------------------------------------------------------------------
+# FIELDS
+# ----------------------------------------------------------------------------
+#   id                  GOSA district_code, as a STRING (zero-padding matters).
+#                       Chosen as the identity because it is the primary key of
+#                       the Georgia Civic Data `districts` dimension, so
+#                       enrollment, demographics and attendance zones join for
+#                       free. Do not invent slugs.
+#   name                District name, title case, as GOSA/NCES carries it.
+#   type                city | county  (curated — see the warning above)
+#   counties            Place slugs (places.yml) whose page shows this board.
+#   primaryPlace        Optional. The place slug this board leads on, where the
+#                       matching city is itself a place in places.yml.
+#   districtCensusId    5-digit Census school-district code. For cross-dataset
+#                       linking ONLY — it is not a county FIPS.
+#   officeCountyFips    The upstream single-county assignment (the office's
+#                       county). Recorded for provenance/cross-check; it is NOT
+#                       the service area and must not drive rendering.
+#   members             Board members, same shape as local_officials.yml. HUMAN-
+#                       GATED and deliberately ABSENT until each roster is
+#                       confirmed against a primary source — an empty or missing
+#                       members list means "not yet researched", never "no board".
+#
+# ----------------------------------------------------------------------------
+# PROVENANCE
+# ----------------------------------------------------------------------------
+#   District codes, names, Census IDs and office counties: Georgia Civic Data
+#   `districts` dimension v1.2.0 (GOSA codes; NCES Common Core of Data LEA
+#   directory, SY 2025-26), georgiacivicdata.org, CC BY 4.0, filtered to
+#   district_type = 'standard' AND active = TRUE. Nothing here is scraped.
+#
+#   Rosters, when added, are human-gated per member with a `source` — same
+#   contract as local_officials.yml and county_officers.yml.
+# ============================================================================
+
+cityDistricts:
+  - id: "761"
+    name: Atlanta Public Schools
+    type: city
+    counties: [fulton, dekalb]   # APS serves part of DeKalb; upstream lists Fulton only
+    primaryPlace: atlanta
+    districtCensusId: "00120"
+    officeCountyFips: "13121"
+
+  - id: "763"
+    name: Bremen City
+    type: city
+    counties: [haralson]
+    districtCensusId: "00510"
+    officeCountyFips: "13143"
+
+  - id: "764"
+    name: Buford City
+    type: city
+    counties: [gwinnett]
+    districtCensusId: "00600"
+    officeCountyFips: "13135"
+
+  - id: "765"
+    name: Calhoun City
+    type: city
+    counties: [gordon]
+    districtCensusId: "00720"
+    officeCountyFips: "13129"
+
+  - id: "766"
+    name: Carrollton City
+    type: city
+    counties: [carroll]
+    districtCensusId: "00870"
+    officeCountyFips: "13045"
+
+  - id: "767"
+    name: Cartersville City
+    type: city
+    counties: [bartow]
+    districtCensusId: "00900"
+    officeCountyFips: "13015"
+
+  - id: "769"
+    name: Chickamauga City
+    type: city
+    counties: [walker]
+    districtCensusId: "01140"
+    officeCountyFips: "13295"
+
+  - id: "771"
+    name: Commerce City
+    type: city
+    counties: [jackson]
+    districtCensusId: "01440"
+    officeCountyFips: "13157"
+
+  - id: "772"
+    name: Dalton Public Schools
+    type: city
+    counties: [whitfield]
+    districtCensusId: "01620"
+    officeCountyFips: "13313"
+
+  - id: "773"
+    name: City Schools of Decatur
+    type: city
+    counties: [dekalb]
+    districtCensusId: "01680"
+    officeCountyFips: "13089"
+
+  - id: "774"
+    name: Dublin City
+    type: city
+    counties: [laurens]
+    districtCensusId: "01870"
+    officeCountyFips: "13175"
+
+  - id: "776"
+    name: Gainesville City
+    type: city
+    counties: [hall]
+    districtCensusId: "02310"
+    officeCountyFips: "13139"
+
+  - id: "779"
+    name: Jefferson City
+    type: city
+    counties: [jackson]
+    districtCensusId: "03030"
+    officeCountyFips: "13157"
+
+  - id: "781"
+    name: Marietta City
+    type: city
+    counties: [cobb]
+    districtCensusId: "03510"
+    officeCountyFips: "13067"
+
+  - id: "784"
+    name: Pelham City
+    type: city
+    counties: [mitchell]
+    districtCensusId: "04080"
+    officeCountyFips: "13205"
+
+  - id: "785"
+    name: Rome City
+    type: city
+    counties: [floyd]
+    districtCensusId: "04440"
+    officeCountyFips: "13115"
+
+  - id: "786"
+    name: Social Circle City
+    type: city
+    counties: [walton]
+    districtCensusId: "04540"
+    officeCountyFips: "13297"
+
+  - id: "789"
+    name: Thomasville City
+    type: city
+    counties: [thomas]
+    districtCensusId: "04950"
+    officeCountyFips: "13275"
+
+  - id: "791"
+    name: Trion City
+    type: city
+    counties: [chattooga]
+    districtCensusId: "05130"
+    officeCountyFips: "13055"
+
+  - id: "792"
+    name: Valdosta City
+    type: city
+    counties: [lowndes]
+    districtCensusId: "05310"
+    officeCountyFips: "13185"
+
+  - id: "793"
+    name: Vidalia City
+    type: city
+    counties: [toombs]
+    districtCensusId: "05340"
+    officeCountyFips: "13279"
+
+# County systems (159, one per county) are generated in phase 3a rather than
+# enumerated here. Three carry city-styled names and must not be mistaken for
+# city systems: Savannah-Chatham County (625, Chatham), Griffin-Spalding County
+# (726, Spalding), Thomaston-Upson County (745, Upson).
