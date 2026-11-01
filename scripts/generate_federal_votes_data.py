@@ -62,7 +62,7 @@ from datetime import date, datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.http import fetch_bytes
-from lib import voteview
+from lib import voteview, senate_drop
 from lib.congress_session import current_congress, congress_years
 
 LEGISLATORS_BASE = "https://raw.githubusercontent.com/unitedstates/congress-legislators/main"
@@ -583,6 +583,28 @@ def active_years(congress):
     return [y for y in congress_years(congress) if y <= this_year]
 
 
+def report_provisional(provisional):
+    """Tell the person which Senate roll calls still come from Voteview, with the
+    exact file to save for each. Printed, and appended to the workflow summary when
+    running in Actions. Silent when nothing is outstanding. Never gates the run."""
+    if not provisional:
+        return
+    lines = [f"{len(provisional)} Senate roll call(s) are still Voteview-derived. For each, "
+             "open the URL, Save As with the same filename into scripts/data/senate-xml/, "
+             "commit, and re-run this workflow:"]
+    for vote_key in sorted(provisional):
+        m = re.fullmatch(r"S(\d+)_(\d)_(\d{5})", vote_key)
+        if m:
+            c, sess, num = (int(g) for g in m.groups())
+            lines.append(f"  - {vote_key}: {senate_drop.official_url(c, sess, num)}")
+    print("\n" + "\n".join(lines))
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        with open(summary, "a", encoding="utf-8") as fh:
+            fh.write("### Senate roll calls awaiting the official XML\n\n"
+                     + "\n".join(l.replace("  - ", "- ") for l in lines) + "\n")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -650,8 +672,10 @@ def main():
                     record(vote_key, existing_votes[vote_key], reusable_ga.get(vote_key, {}))
                     reused += 1
                     continue
-                time.sleep(XML_DELAY)
-                raw = fetch_raw(senate_vote_url(CURRENT_CONGRESS, session, number), vote_key)
+                raw = senate_drop.read_roll(CURRENT_CONGRESS, session, number)
+                if raw is None:
+                    time.sleep(XML_DELAY)
+                    raw = fetch_raw(senate_vote_url(CURRENT_CONGRESS, session, number), vote_key)
                 if not raw:
                     print(f"    {vote_key}: detail XML unavailable — skipped")
                     continue
@@ -669,16 +693,35 @@ def main():
         # Voteview, and carry everything we already hold forward untouched.
         print("  senate.gov index unreachable — falling back to Voteview for new roll calls",
               file=sys.stderr)
+        held = {k for k in existing_votes if k.startswith(f"S{CURRENT_CONGRESS}_")}
+        # Hand-saved official XML outranks Voteview and is never provisional. It
+        # replaces a provisional row for the same roll call, and covers a roll call
+        # Voteview has not published yet. An official record we already hold is
+        # immutable, so a dropped file for it is ignored.
+        dropped_keys = set()
+        for session, number in senate_drop.dropped_rolls(CURRENT_CONGRESS):
+            vote_key = senate_key(CURRENT_CONGRESS, session, number)
+            if vote_key in held and vote_key not in provisional:
+                continue
+            vote_meta, ga_votes = parse_senate_vote(
+                senate_drop.read_roll(CURRENT_CONGRESS, session, number), lis_to_bioguide)
+            if not vote_meta:
+                continue
+            record(vote_key, vote_meta, ga_votes)
+            dropped_keys.add(vote_key)
+            fetched += 1
+        if dropped_keys:
+            print(f"  {len(dropped_keys)} Senate roll call(s) from hand-saved official XML "
+                  f"({len(dropped_keys & provisional)} replacing a Voteview row)")
         vv = voteview.load_senate(CURRENT_CONGRESS)
         if vv is None:
             print("  Voteview unreachable too — Senate roll calls carried forward only",
                   file=sys.stderr)
             vv = {"rolls": {}, "casts": {}, "members": {}}
         ga_senators = sitting_ga_bioguides(members_file) or set()
-        held = {k for k in existing_votes if k.startswith(f"S{CURRENT_CONGRESS}_")}
         for session, number in sorted(vv["rolls"]):
             vote_key = senate_key(CURRENT_CONGRESS, session, number)
-            if vote_key in held:
+            if vote_key in held or vote_key in dropped_keys:
                 continue
             roll = voteview.senate_roll(vv, session, number, ga_senators)
             bill_label, bill_page = bill_fields(roll["bill_type"], roll["bill_number"])
@@ -703,10 +746,10 @@ def main():
             fetched += 1
         # Carry forward what we hold: official records as they were, earlier
         # Voteview-derived ones still marked provisional.
-        for vote_key in sorted(held):
+        for vote_key in sorted(held - dropped_keys):
             record(vote_key, existing_votes[vote_key], reusable_ga.get(vote_key, {}))
             reused += 1
-        new_provisional |= provisional & held
+        new_provisional |= (provisional & held) - dropped_keys
         print(f"  Voteview supplied {len(new_provisional - provisional)} new Senate roll call(s); "
               f"{len(new_provisional)} provisional in total")
 
@@ -799,6 +842,8 @@ def main():
     }
 
     write_json_atomic(out_file, output, separators=(",", ":"))
+
+    report_provisional(new_provisional)
 
     if UNKNOWN_RESULTS:
         print("  NOTE: result wording outside the pass/fail vocabulary, carried through verbatim: "
