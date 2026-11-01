@@ -7,13 +7,17 @@ on:
   push:
     paths:
       - '_data/local_officials.yml'
+      - '_data/county_officers.yml'
       - '_data/places.yml'
       - 'scripts/validate_local_officials.py'
+      - 'scripts/validate_county_officers.py'
   pull_request:
     paths:
       - '_data/local_officials.yml'
+      - '_data/county_officers.yml'
       - '_data/places.yml'
       - 'scripts/validate_local_officials.py'
+      - 'scripts/validate_county_officers.py'
 
 jobs:
   validate:
@@ -34,3 +38,6 @@ jobs:
 
       - name: Validate local_officials.yml
         run: python scripts/validate_local_officials.py
+
+      - name: Validate county_officers.yml
+        run: python scripts/validate_county_officers.py

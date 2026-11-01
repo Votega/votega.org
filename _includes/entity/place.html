@@ -163,6 +163,7 @@
   .po-party { font-size: 0.72rem; font-weight: 600; border-radius: 20px; padding: 0.1rem 0.55rem; align-self: flex-start; }
   .po-party.Republican { background: var(--color-party-r-tint); color: var(--color-party-r-text); }
   .po-party.Democratic { background: var(--color-party-d-tint); color: var(--color-party-d-text); }
+  .po-party.Independent { background: var(--color-party-i-tint); color: var(--color-party-i-text); }
   .po-terms { font-size: 0.84rem; color: var(--color-text); margin: 0.1rem 0 0; line-height: 1.6; }
   .po-terms .po-next { font-weight: 600; color: var(--color-link); }
   .po-tiebreak { font-size: 0.78rem; color: var(--color-text-muted); font-style: italic; margin: 0; }
@@ -273,6 +274,57 @@
           </div>
           {% endif %}
           {% if m.source != "" %}<p class="po-source"><a href="{{ m.source }}" target="_blank" rel="noopener">Source ↗</a></p>{% endif %}
+        </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{%- comment %} Constitutional officers (sheriffs) - elected countywide, NOT commission members, so
+    they live in _data/county_officers.yml and render apart from the roster above. Keyed by the
+    same place slug; a county needs no commission roster to show one. {% endcomment -%}
+{% assign co = site.data.county_officers.counties | where: "id", e.slug | first %}
+{% if co %}
+<section class="po-section" id="constitutional-officers">
+  <h2 class="po-heading">Constitutional officers</h2>
+  <p class="po-intro">
+    Officials elected countywide who do not sit on the {{ e.name }} commission.
+  </p>
+  <div class="po-grid">
+    {% for m in co.officers %}
+        {%- assign nm = m.name | default: "" | strip -%}
+        {%- assign parts = nm | split: " " -%}
+        {%- assign initials = "" -%}
+        {%- if nm != "" -%}{%- assign initials = parts.first | slice: 0 -%}{%- endif -%}
+        {%- if parts.size > 1 -%}{%- assign lastinit = parts.last | slice: 0 -%}{%- assign initials = initials | append: lastinit -%}{%- endif -%}
+        <div class="po-card{% if m.status %} is-flagged{% endif %}">
+          <span class="po-avatar po-avatar-fallback" aria-hidden="true">{{ initials | default: "?" }}</span>
+          <span class="po-role">{{ m.title | default: m.role }}</span>
+          {% if m.status %}<span class="po-status {{ m.status }}">{{ m.status }}</span>{% endif %}
+          <p class="po-name">{{ m.name }}</p>
+          {% if m.seat and m.seat != "" %}<p class="po-seat">{{ m.seat }}</p>{% endif %}
+          {% if m.party and m.party != "" and m.party != "Nonpartisan" %}
+            <span class="po-party {{ m.party }}">{{ m.party }}</span>
+          {% endif %}
+          {% if m.last_elected or m.next_election %}
+          <p class="po-terms">
+            {% if m.last_elected %}Last elected {{ m.last_elected }}{% endif %}
+            {% if m.next_election %}<br><span class="po-next">Next election {{ m.next_election }}</span>{% endif %}
+          </p>
+          {% endif %}
+          {% if m.statusNote and m.statusNote != "" %}
+          <p class="po-statusnote">{{ m.statusNote }}
+            {%- if m.statusSource and m.statusSource != "" %} <a href="{{ m.statusSource }}" target="_blank" rel="noopener">Source ↗</a>{% endif %}
+            {%- if m.statusDate %} <span class="po-statusdate">({{ m.statusDate | date: "%b %-d, %Y" }})</span>{% endif %}</p>
+          {% endif %}
+          {% if m.address and m.address != "" %}<p class="po-seat">{{ m.address }}</p>{% endif %}
+          {% if m.email or m.phone %}
+          <div class="po-contact">
+            {% if m.email and m.email != "" %}<a href="mailto:{{ m.email }}">Email</a>{% endif %}
+            {% if m.phone and m.phone != "" %}<a href="tel:{{ m.phone }}">{{ m.phone }}</a>{% endif %}
+          </div>
+          {% endif %}
+          {% if m.source and m.source != "" %}<p class="po-source"><a href="{{ m.source }}" target="_blank" rel="noopener">Source ↗</a></p>{% endif %}
         </div>
     {% endfor %}
   </div>

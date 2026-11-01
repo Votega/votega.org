@@ -1,0 +1,579 @@
+# ============================================================================
+# COUNTY CONSTITUTIONAL OFFICERS - elected countywide, NOT on the commission
+# ============================================================================
+# Sheriffs today (Probate Judge, Tax Commissioner, Clerk of Superior Court could
+# follow the same shape). Rendered on /local/<slug>/ as "Constitutional officers",
+# separately from the commission roster in local_officials.yml: these people do not
+# sit on or vote on the board, so they are never mixed into its `members:` list.
+#
+# Joined to a place by `id` == the places.yml slug (the validator enforces it). A
+# county does NOT need a commission roster to appear here.
+#
+# HUMAN-GATED, like local_officials.yml. scripts/import_sheriffs.py DRAFTS rows from
+# the Georgia Sheriffs' Association table (name, address, phone) cross-checked against
+# the SoS results for the seating election (party, last_elected). The association page
+# is hand-maintained and can lag a mid-term replacement, so confirm against the
+# sheriff's office site and record that in `source`. A blank party / last_elected means
+# the two sources disagreed or the SoS portal had no race - fill it from a primary
+# source rather than guessing. Georgia sheriffs serve four-year terms, elected in
+# presidential-year general elections (2024, then 2028).
+#
+# Per officer: name, role (Sheriff), seat, party (Republican | Democratic |
+# Independent | Nonpartisan), phone, address, last_elected, next_election, source.
+# Optional: email, full_name, status/statusNote/statusSource/statusDate (same meaning
+# as in local_officials.yml). Run scripts/validate_county_officers.py after editing.
+# ============================================================================
+
+counties:
+  - id: appling
+    name: Appling County
+    officers:
+      - name: "Mark Melton"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "912-367-8120"
+        address: "560 Barnes Street, Suite B, Baxley, GA 31513"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: atkinson
+    name: Atkinson County
+    officers:
+      - name: "David Moore"
+        role: Sheriff
+        seat: "Countywide"
+        party: Independent
+        phone: "912-422-3611"
+        address: "PO Box 157, Pearson, GA 31642"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: bacon
+    name: Bacon County
+    officers:
+      - name: "Andy Batten"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "912-632-2658"
+        address: "307 Dixon Street, Alma, GA 31510"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: baker
+    name: Baker County
+    officers:
+      - name: "Dana Meade"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "229-734-3003"
+        address: "PO Box 441, Newton, GA 39870"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: baldwin
+    name: Baldwin County
+    officers:
+      - name: "William Massee, Jr."
+        role: Sheriff
+        seat: "Countywide"
+        party: Independent
+        phone: "478-445-5823"
+        address: "PO Box 830, Milledgeville, GA 31059"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: banks
+    name: Banks County
+    officers:
+      - name: "Carlton Speed"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-677-2248"
+        address: "160 Windmill Farm Road, Homer, GA 30547"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: barrow
+    name: Barrow County
+    officers:
+      - name: "Jud Smith"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-307-3080"
+        address: "233 East Broad Street, Winder, GA 30680"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: bartow
+    name: Bartow County
+    officers:
+      - name: "Clark Millsap"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-382-5050"
+        address: "104 Zena Drive, Cartersville, GA 30121"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: carroll
+    name: Carroll County
+    officers:
+      - name: "Terry Langley"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-830-5915"
+        address: "1000 Newnan Road, Carrollton, GA 30116"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: cherokee
+    name: Cherokee County
+    officers:
+      - name: "Frank Reynolds"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "678-493-4200"
+        address: "498 Chattin Drive, Canton, GA 30115"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: clayton
+    name: Clayton County
+    officers:
+      - name: "Levon Allen"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "770-477-4469"
+        address: "9157 Tara Blvd, Jonesboro, GA 30236"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: fayette
+    name: Fayette County
+    officers:
+      - name: "Barry Babb"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-461-6353"
+        address: "155 Johnson Avenue, Fayetteville, GA 30214"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: forsyth
+    name: Forsyth County
+    officers:
+      - name: "Ron Freeman"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-781-2222"
+        address: "100 East Courthouse Square, Cumming, GA 30040"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: gwinnett
+    name: Gwinnett County
+    officers:
+      - name: "Keybo Taylor"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "770-822-3140"
+        address: "2900 University Pkwy, Lawrenceville, GA 30043"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: newton
+    name: Newton County
+    officers:
+      - name: "Ezell Brown"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "678-625-1400"
+        address: "15151 Alcovy Road NE, Covington, GA 30014"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: rockdale
+    name: Rockdale County
+    officers:
+      - name: "Eric Levett"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "770-278-8000"
+        address: "911 Chambers Drive, Conyers, GA 30012"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: douglas
+    name: Douglas County
+    officers:
+      - name: "Tim Pounds"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "770-942-2121"
+        address: "8470 Earl D. Lee Blvd, Douglasville, GA 30134"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: henry
+    name: Henry County
+    officers:
+      - name: "Reginald Scandrett"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "770-288-7101"
+        address: "120 Henry Pkwy, McDonough, GA 30253"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: cobb
+    name: Cobb County
+    officers:
+      - name: "Craig Owens"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "770-499-4611"
+        address: "185 Roswell Street, Marietta, GA 30090"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: fulton
+    name: Fulton County
+    officers:
+      - name: "Pat Labat"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "404-612-3280"
+        address: "185 Shirley C. Franklin Blvd SW, Floor 9, Atlanta, GA 30303"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: dekalb
+    name: DeKalb County
+    officers:
+      - name: "Melody Maddox"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "404-298-8111"
+        address: "4415 Memorial Drive, Decatur, GA 30032"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: walton
+    name: Walton County
+    officers:
+      - name: "Keith Brooks"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-267-6557"
+        address: "350 Georgia Avenue, Monroe, GA 30655"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: paulding
+    name: Paulding County
+    officers:
+      - name: "Ashley Henson"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-443-3010"
+        address: "180 Constitution Blvd, Dallas, GA 30132"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: coweta
+    name: Coweta County
+    officers:
+      - name: "Lenn Wood"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-253-1502"
+        address: "560 Greison Trail, Newnan, GA 30263"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: butts
+    name: Butts County
+    officers:
+      - name: "Gary Long"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-775-8216"
+        address: "835 Ernest Biles Drive, Jackson, GA 30233"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: columbia
+    name: Columbia County
+    officers:
+      - name: "Clay Whittle"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-541-1043"
+        address: "PO Box 310, Appling, GA 30802-0310"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: chatham
+    name: Chatham County
+    officers:
+      - name: "Richard Coleman"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "912-652-7600"
+        address: "PO Box 10026, Savannah, GA 31412"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: dawson
+    name: Dawson County
+    officers:
+      - name: "Jeff Johnson"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-344-3535"
+        address: "19 Tucker Avenue, Dawsonville, GA 30534"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: hall
+    name: Hall County
+    officers:
+      - name: "Gerald Couch"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-531-6900"
+        address: "2859 Browns Bridge Road, Gainesville, GA 30504"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: lumpkin
+    name: Lumpkin County
+    officers:
+      - name: "Stacy Jarrard"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-864-0414"
+        address: "385 East Main Street, Dahlonega, GA 30533"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: spalding
+    name: Spalding County
+    officers:
+      - name: "Darrell Dix"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "770-467-4282"
+        address: "PO Box 1349, Griffin, GA 30224"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: meriwether
+    name: Meriwether County
+    officers:
+      - name: "Chuck Smith"
+        role: Sheriff
+        seat: "Countywide"
+        party: Independent
+        phone: "706-672-4489"
+        address: "PO Box 476, Greenville, GA 30222"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: morgan
+    name: Morgan County
+    officers:
+      - name: "Tyler Hooks"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-342-1507"
+        address: "1380 Monticello Road, Madison, GA 30650"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: pickens
+    name: Pickens County
+    officers:
+      - name: "Donald Craig"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-253-8900"
+        address: "2985 Camp Road, Jasper, GA 30143"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: catoosa
+    name: Catoosa County
+    officers:
+      - name: "Gary Sisk"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-935-2424"
+        address: "PO Box 909, Ringgold, GA 30736"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: walker
+    name: Walker County
+    officers:
+      - name: "Steve Wilson"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-638-1909"
+        address: "PO Box 767, Lafayette, GA 30728"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: lowndes
+    name: Lowndes County
+    officers:
+      - name: "Ashley Paulk"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "229-671-2900"
+        address: "PO Box 667, Valdosta, GA 31603"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: liberty
+    name: Liberty County
+    officers:
+      - name: "Will Bowman"
+        role: Sheriff
+        seat: "Countywide"
+        party: Democratic
+        phone: "912-876-2131"
+        address: "201 South Main Street, Suite 1300, Hinesville, GA 31313"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: gordon
+    name: Gordon County
+    officers:
+      - name: "Mitch Ralston"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-629-1244"
+        address: "2700 US Hwy 41 NW, Calhoun, GA 30701"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: camden
+    name: Camden County
+    officers:
+      - name: "Kevin Chaney"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "912-510-5100"
+        address: "PO Box 699, Woodbine, GA 31569"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: houston
+    name: Houston County
+    officers:
+      - name: "Matt Moulton"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "478-542-2125"
+        address: "202 Carl Vinson Pkwy, Warner Robins, GA 31088"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: effingham
+    name: Effingham County
+    officers:
+      - name: "Jimmy McDuffie"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "912-754-3449"
+        address: "500 W 1st Street, Springfield, GA 31329"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: oconee
+    name: Oconee County
+    officers:
+      - name: "James Hale"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-769-3945"
+        address: "PO Box 563, Watkinsville, GA 30677"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: tift
+    name: Tift County
+    officers:
+      - name: "Gene Scarbrough"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "229-388-6054"
+        address: "PO Box 46, Tifton, GA 31793"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: whitfield
+    name: Whitfield County
+    officers:
+      - name: "Darren Pierce"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "706-278-1233"
+        address: "PO Box 652, Dalton, GA 30722"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
+  - id: thomas
+    name: Thomas County
+    officers:
+      - name: "Tim Watkins"
+        role: Sheriff
+        seat: "Countywide"
+        party: Republican
+        phone: "229-225-3300"
+        address: "921 Smith Avenue, Thomasville, GA 31792"
+        last_elected: 2024
+        next_election: 2028
+        source: "https://georgiasheriffs.org/resources/sheriffs-by-county/"
