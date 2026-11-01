@@ -1878,3 +1878,89 @@ places:
           - body: Board of Commissioners
             when: "2nd Tuesday of every month, 9:00 a.m., and 4th Tuesday, 6:00 p.m."
             location: "Thomas County Historic Courthouse, 3rd Floor Commission Chambers, 225 North Broad Street, Thomasville, GA"
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # HIDDEN FOUNDATION — counties registered for their SCHOOL DISTRICT only
+  # ──────────────────────────────────────────────────────────────────────────
+  # These seven counties each contain an independent CITY school system (see
+  # _data/school_districts.yml), so the school-board work needs their slugs to
+  # exist. Nothing else about them has been researched yet — no commission
+  # roster, no sheriff, no meetings adapter — so each is `hidden: true`: it
+  # stays in this registry and satisfies the officials/district cross-checks,
+  # but is omitted everywhere public (no hub card, no /local/<slug>/ page, no
+  # search entry, and the enrichers and the ga-local-government publisher all
+  # skip it).
+  #
+  # TO BRING ONE LIVE: fill its roster in local_officials.yml (and sheriff in
+  # county_officers.yml), add a `domains.meetings` block, then DELETE the
+  # `hidden: true` line. Nothing else needs touching.
+  #
+  # `domains` is omitted deliberately rather than stubbed — there is genuinely
+  # nothing recorded yet, and validate_place_meetings.py treats a place with no
+  # meetings config as schedule-only and passes it.
+  #
+  # These are the first users of the `hidden` flag, so if one of them ever shows
+  # up on the site, the bug is in a NEW consumer that forgot to check it — the
+  # existing ones (build_entity_pages, generate_search_corpus,
+  # publish_ga_local_government, the three enrichers, local.html) all do.
+  #
+  # City system per county: Chattooga→Trion · Floyd→Rome · Haralson→Bremen ·
+  # Jackson→Commerce + Jefferson · Laurens→Dublin · Mitchell→Pelham ·
+  # Toombs→Vidalia
+  # ──────────────────────────────────────────────────────────────────────────
+
+  - slug: chattooga
+    name: Chattooga County
+    type: county
+    fips: "13055"
+    parentCounty: null
+    region: Northwest Georgia
+    hidden: true
+
+  - slug: floyd
+    name: Floyd County
+    type: county
+    fips: "13115"
+    parentCounty: null
+    region: Northwest Georgia
+    hidden: true
+
+  - slug: haralson
+    name: Haralson County
+    type: county
+    fips: "13143"
+    parentCounty: null
+    region: West Georgia
+    hidden: true
+
+  - slug: jackson
+    name: Jackson County
+    type: county
+    fips: "13157"
+    parentCounty: null
+    region: Northeast Georgia
+    hidden: true
+
+  - slug: laurens
+    name: Laurens County
+    type: county
+    fips: "13175"
+    parentCounty: null
+    region: Middle Georgia
+    hidden: true
+
+  - slug: mitchell
+    name: Mitchell County
+    type: county
+    fips: "13205"
+    parentCounty: null
+    region: South Georgia
+    hidden: true
+
+  - slug: toombs
+    name: Toombs County
+    type: county
+    fips: "13279"
+    parentCounty: null
+    region: South Georgia
+    hidden: true
