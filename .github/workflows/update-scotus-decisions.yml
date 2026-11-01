@@ -30,6 +30,8 @@ jobs:
 
       - name: Generate SCOTUS decisions data
         id: generate
+        env:
+          COURTLISTENER_TOKEN: ${{ secrets.COURTLISTENER_TOKEN }}
         run: python scripts/generate_scotus_decisions.py assets/data/scotus-decisions.json
 
       # Tier 1 gates on the file contradicting itself (count, terms, duplicate

@@ -8,6 +8,9 @@ Primary source: Oyez.org API (free, no key, CORS-open).
 
 CourtListener search is used to enrich cases with opinion page links where available.
   - Search: https://www.courtlistener.com/api/rest/v4/search/?type=o&court=scotus
+  - Needs a token (COURTLISTENER_TOKEN, sent as `Authorization: Token ...`); the
+    unauthenticated search answers 401. Without one the step is skipped and links
+    already in the committed file are kept, never blanked.
 
 Output: assets/data/scotus-decisions.json
 """
@@ -34,7 +37,7 @@ OYEZ_BASE = "https://api.oyez.org"
 CL_SEARCH = "https://www.courtlistener.com/api/rest/v4/search/"
 
 
-def fetch_json(url, label=""):
+def fetch_json(url, label="", headers=None):
     """Fetch and parse JSON from a URL. Returns None on error.
 
     Delegates to lib.http; previously a single attempt with no retry against
@@ -43,7 +46,7 @@ def fetch_json(url, label=""):
     """
     return http_fetch_json(
         url,
-        headers={"Accept": "application/json"},
+        headers={"Accept": "application/json", **(headers or {})},
         label=label or url[:80],
         quiet_statuses=(404,),
     )
@@ -95,9 +98,14 @@ def build_cl_index(term):
     """
     Fetch SCOTUS opinion URLs from CourtListener search for a given term.
     Returns dict of {docket_number: courtlistener_url}.
-    CourtListener search is public (no auth needed).
+    The search API requires a token (COURTLISTENER_TOKEN).
     """
     index = {}
+    token = os.environ.get("COURTLISTENER_TOKEN", "").strip()
+    if not token:
+        print(f"  COURTLISTENER_TOKEN not set - skipping CourtListener for {term} "
+              f"(existing links are kept)")
+        return index
     # CourtListener terms roughly map: Oyez "2024" term = Oct 2024 – Jun 2025
     year = int(term)
     date_min = f"{year}-10-01"
@@ -110,7 +118,8 @@ def build_cl_index(term):
     })
     url = f"{CL_SEARCH}?{params}"
     print(f"  Fetching CourtListener index for {term} term...")
-    data = fetch_json(url, "CourtListener search")
+    data = fetch_json(url, "CourtListener search",
+                      headers={"Authorization": f"Token {token}"})
     if not data:
         return index
 
@@ -125,7 +134,7 @@ def build_cl_index(term):
     return index
 
 
-def extract_decision(detail, cl_index):
+def extract_decision(detail, cl_index, kept_links=None):
     """
     Parse an Oyez case detail dict into a clean record.
     Returns None if the case has not been decided yet.
@@ -176,7 +185,8 @@ def extract_decision(detail, cl_index):
             "justiaUrl": wo.get("justia_opinion_url") or None,
         })
 
-    cl_url = cl_index.get(docket) or cl_index.get(docket.rstrip())
+    cl_url = (cl_index.get(docket) or cl_index.get(docket.rstrip())
+              or (kept_links or {}).get((term, docket)))
 
     return {
         "id":           detail.get("ID"),
@@ -201,7 +211,20 @@ def extract_decision(detail, cl_index):
     }
 
 
+def load_kept_links():
+    """{(term, docket): courtListenerUrl} from the committed file, so a run that cannot
+    reach CourtListener (no token, outage) does not blank links it already had."""
+    try:
+        with open(OUTPUT_FILE, encoding="utf-8") as f:
+            cases = json.load(f).get("cases") or []
+    except (OSError, ValueError):
+        return {}
+    return {(c.get("term"), c.get("docketNumber")): c["courtListenerUrl"]
+            for c in cases if c.get("courtListenerUrl")}
+
+
 def main():
+    kept_links = load_kept_links()
     all_cases = []
     # What this run tried and could not get. Published in metadata so
     # validate_scotus_decisions.py can tell "Oyez failed for this case" from
@@ -241,7 +264,7 @@ def main():
                 detail_failed.append(f"{term}/{docket}")
                 continue
 
-            record = extract_decision(detail, cl_index)
+            record = extract_decision(detail, cl_index, kept_links)
             if record:
                 all_cases.append(record)
                 if i % 10 == 0 or i == len(decided_basic):
