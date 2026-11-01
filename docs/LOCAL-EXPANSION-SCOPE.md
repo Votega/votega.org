@@ -248,67 +248,58 @@ delivers "who is on my school board" — a real unmet need — at zero scraping 
 
 ## 4. Property tax & millage
 
-### 4.1 The unlock: one statewide PDF per year, not 159 county scrapes
+### 4.1 The source: DOR's Digest Consolidated Summaries (XLSX)
 
-Georgia DOR publishes an annual statewide report, **"Georgia County Ad Valorem
-Tax Digest Millage Rates" (PTS-R006-OD)**, listing every taxing jurisdiction's
-M&O and bond millage. One index page carries all of it:
+**Georgia DOR publishes the whole thing as machine-readable spreadsheets.** No
+PDF parsing, no OCR, no scraping.
 
-> https://dor.georgia.gov/local-government-services/digest-compliance/property-tax-millage-rates
+> https://dor.georgia.gov/local-government-services/digest-compliance/digest-consolidated-summaries
 
-**Seven years, 2019–2025. PDF only — no CSV or XLS at any year.** The per-year
-URLs are inconsistent (2024 is a bare `/media/30916/download`, 2020 is
-`/document/document-document/2020/download`), so the parser must **scrape the
-index page for links rather than constructing URLs by year**.
+One `.xlsx` per year, **2020–2025**, ~2.3 MB each. (Served with a `.xls`
+extension but they are real OOXML — `openpyxl` reads them once renamed, which is
+the only gotcha.)
 
-**Verified coverage (2023 report, parsed).** The table is `County | District |
-M&O | Bond`, fixed-width, 44 pages. All **159 counties** are present and **all
-159 carry a `SCHOOL` row**. City school systems appear as **`IND SCHOOL
-<CITY>`** — 26 rows covering the 21 independent systems. Cities, fire districts,
-`TAD`, `CID`, `SSD`, `BID` and `STATE` rows are all there too, so the report is
-richer than just millage — a decision is needed on which levy types to publish.
-The `Bond` column is sometimes blank rather than `0.000`, so rows are ragged.
+**Verified shape** (2025 and 2023 both downloaded and parsed): a single flat
+sheet, **~1,815 rows × 425 columns**, one row per **county × tax district**:
 
-**This cross-validates `school_districts.yml` 21/21 against a fully independent
-source** (DOR, versus NCES/GOSA), and it does something the NCES dimension
-cannot: the 26-for-21 duplication is the report listing a city system **under
-each county it serves** — Atlanta under Fulton *and* DeKalb, plus Bremen, Buford
-and Social Circle twice each. So the DOR report is a **second source for the
-multi-county service areas** that §3.3(a) flags as missing upstream. Use it to
-populate and audit the `counties` field in the district registry.
+| Col | Header |
+|---|---|
+| 1–5 | `County Name`, `County Code`, `District Name`, `District Code`, `Tax Year` |
+| 6–419 | parcels, acreage and assessed value per property class; exempt property; **state (S*) and local (L1–L9) homestead exemptions**, each split M&O / Bond |
+| 420–421 | `Total Assessed Value-M&O`, `Total Assessed Value-Bond` |
+| **422–423** | **`Millage Rate-M&O`, `Millage Rate-Bond`** |
+| **424–425** | **`Total Tax-M&O`, `Total Tax-Bond`** |
 
-Supporting source: DOR's **Property Tax Administration Annual Report** for digest
-totals and context. *Unverified: whether 2024/2025 editions are posted yet.*
+**The millage columns are populated** — 1,240 of 1,814 rows in 2025, 1,211 of
+1,782 in 2023 (the blanks are the county header row and genuine zero-levy
+districts like `STATE` and small unlevied cities). And **2025 is populated**,
+which is the year the millage PDF is unreadable.
 
-### 4.1.1 Extraction is mixed, and the current year is the worst case
+**Cross-checked against the PDF and they agree exactly.** 2023 Appling:
+`SCHOOL 12.243`, `COUNTY INCORPORATED 11.924`, `BAXLEY 4.896`,
+`COUNTY FIRE DIST 0.470` — identical in both sources.
 
-This is the real cost driver, and it is not visible from the index page. Measured
-with `pdffonts` / `pdftotext` on all seven files:
+It also carries what the PDF does **not**: `Total Tax` in dollars, the full
+property-class breakdown, and the homestead-exemption detail. One parser, one
+file per year, everything.
 
-| Year | Size | Pages | Fonts | Extraction |
-|---|---|---|---|---|
-| 2019 | 100 KB | 43 | Type 1 / WinAnsi | **clean text** |
-| 2020 | 83 KB | 43 | Type 1 / WinAnsi | **clean text** |
-| 2021 | 8.97 MB | 44 | none | **scanned images — OCR** |
-| 2022 | 85 KB | 44 | Type 1 / WinAnsi | **clean text** |
-| 2023 | 122 KB | 44 | Type 1 / WinAnsi | **clean text** |
-| 2024 | 9.21 MB | 45 | none | **scanned images — OCR** |
-| 2025 | 2.36 MB | 46 | Type 3, custom enc, no ToUnicode | **mojibake** |
+### 4.1.1 What this replaces
 
-So 4 of 7 years parse trivially, 2 need OCR, and **2025 — the current year, the
-one that matters most — has a text layer that `pdftotext` renders as garbage**
-(`0123045ÿ718539` for the title). The glyphs and the column geometry are intact;
-only the character mapping is lost. It needs either a reconstructed glyph map or
-OCR of rendered pages.
+The earlier plan to parse the **"County Ad Valorem Tax Digest Millage Rates"
+PDFs** (PTS-R006-OD, 2019–2025) is **obsolete for 2020 onward.** Those PDFs had
+a nasty profile — 2019/2020/2022/2023 clean text, **2021 and 2024 scanned
+(OCR)**, and **2025 a Type 3 font with no ToUnicode that `pdftotext` renders as
+mojibake**. All of that work disappears.
 
-**Correctness constraint, not just cost.** An OCR'd millage digit is a claim
-about someone's tax bill. This repo already refuses to publish OCR-derived text
-for exactly this reason — `meeting_topics.py` captures excerpts *"from the
-poppler text layer only, never OCR, because OCR text is non-deterministic."*
-That policy should extend here: do not publish an OCR-derived rate on the
-strength of a single extraction. Require two independent extractions to agree, or
-cross-check against the county's own published five-year-history advertisement,
-and leave the cell empty when they disagree.
+Keep the PDFs for two narrow jobs only:
+
+1. **2019** — the XLSX series starts at 2020, and the 2019 PDF is clean text. One
+   year, cheap.
+2. **Spot cross-checks** of the XLSX, which is prudent on a tax figure.
+
+**Deeper history:** `sso.dor.ga.gov/rtdc/` (§4.4.1) goes back to **1990** but
+carries no millage. So the practical coverage is **millage + tax 2019–2025**, and
+**digest/exemption detail back to 1990** if wanted.
 
 ### 4.2 The genuinely novel dataset: HB 581 opt-out status
 
@@ -332,10 +323,105 @@ being scraped, so the existing corpus can corroborate the filings — and flag a
 body that opted out without holding the required hearings. No one else in Georgia
 is positioned to do that.
 
-### 4.3 Supporting pieces
+**Now much stronger than when first scoped**, because the XLSX carries **local
+homestead exemption L1–L9 counts and exempted value per district per year**. That
+turns the registry from "who opted out" into "who opted out *and what it did to
+exempted value*". Hypothesis to test before relying on it: check a county known
+to have opted in against one known to have opted out, and confirm the floating
+exemption surfaces as an identifiable code.
 
-- **"Tax Digest and 5-Year History"** — the rollback-rate / advertised-tax-increase
-  advertisement every taxing authority must publish. Lands on agendas already held.
+### 4.3 The rollback rate — the one thing no central source has
+
+Neither the XLSX nor the PDFs nor `rtdc` carry the **rollback rate** or the
+**advertised tax increase**. Those live in the per-jurisdiction **"Current Tax
+Digest and Five-Year History of Levy"** notice.
+
+**Those are NOT centralized.** They are a *newspaper advertisement* obligation
+under **O.C.G.A. § 48-5-32**, with the tax-increase notice under **§ 48-5-32.1**
+— published by each levying authority, then posted on its own site. Confirmed
+scattered across county, city and school-district sites (Augusta, Savannah,
+Fulton, Commerce, Thomasville, Bremen, Eatonton, Walton and Murray schools, …).
+DOR's digest-compliance index lists no central archive of them.
+
+So: **do not plan to scrape 180+ sites for rates we already have.** The five-year
+notices are worth pursuing only for the rollback/increase disclosure, and the
+XLSX's own year-over-year millage series already approximates the five-year
+history for free.
+
+**The authoritative spec**, if that work is ever taken up, is DOR's *Compliance
+Guide: Advertising the Digest History and Public Hearings for Increase* (rev.
+April 2025). It also makes the requirement **auditable**: the increase ad must
+run **at least one week before each hearing**, be **at least 30 square inches**,
+and **not sit in the legal-notices section**. A body that misses those is a
+reportable finding — Murray County had to re-run an ad that came in just under
+30 square inches.
+
+### 4.4 Verify before building on it
+
+- **SB 33 "HOME Act" (2026)**, reportedly making the inflation cap mandatory
+  statewide from 2027 — **single low-quality source only.** Check against
+  legis.ga.gov; the `ga-legislation` pipeline can do this directly.
+- **Confirm the exact O.C.G.A. cite** for the rollback-rate requirement before
+  putting it on a page (§ 48-5-32 for the five-year history and § 48-5-32.1 for
+  the increase notice are from secondary sources, not read directly).
+- **Resolved: a machine-readable source exists after all.** An earlier draft of
+  this doc said no CSV or XLS existed for any year. That was true of the
+  *millage-rates* page only — the *Digest Consolidated Summaries* page serves
+  XLSX. The old `etax.dor.ga.gov/ptd/download/` portal is still dead (host
+  resolves, connection resets), but it no longer matters.
+- **Decide which districts and levy types to publish.** The XLSX includes
+  `STATE`, county incorporated/unincorporated, each city, school, fire, and
+  special districts. Richer than needed; unbounded scope if not decided.
+- **One more central file to look at:** `2023-local-exemptions-appling-worth`
+  (PDF, 23 MB) on the digest-compliance index — a statewide listing of **local**
+  exemptions, directly relevant to §4.2.
+
+### 4.4.1 `sso.dor.ga.gov` — probed: deep history, no millage
+
+`sso.dor.ga.gov/rtlhext/` is the **County Services Portal**, an authenticated
+(AWS Cognito) portal for county staff — two of its three buttons are gated. The
+third is not:
+
+> **`https://sso.dor.ga.gov/rtdc/` — "Digest Consolidation Online", public, no login.**
+
+**It carries no millage.** Each county/year page ends in a `TAX LEVIED` table
+with columns `TYPE | ASSESSED VALUE | MILLAGE | TAX` and rows `M & O` / `BOND` —
+and **the MILLAGE and TAX columns are empty**, verified for 2025, 2023 *and*
+2019, so it is structural rather than a current-year lag. It publishes the
+digest, not the levy.
+
+Its value is **reach**: **1990–2025, 36 years**, all 159 counties, plus a
+sub-county district selector, as clean HTML. For 2020–2025 the XLSX supersedes it
+entirely, so this is the **pre-2020 deep-history** source and nothing more.
+Mechanics if needed: `POST /rtdc/Digest.do` with `operation=viewConsolidation`,
+`dc_tax_yr`, `dc_txpyr_id` (3-digit county code, `001`=Appling, alphabetical),
+after a GET for the session cookie.
+
+**Parser cautions, observed across the 2019/2023/2025 responses:**
+- **Schema drifts between years.** 2019 has one "HOMESTEAD AND PROPERTY
+  EXEMPTIONS" block (with a literal `DO NOT USE CODES L1-L9 ON STATE SHEET`
+  divider); 2023 and 2025 split it into three. Match section headers, not
+  positions.
+- **Blank is not zero, and the convention changes.** 2023 writes a literal `0`;
+  2025 leaves the cell empty. Preserve the distinction.
+- **2025 may be preliminary.** Appling's 2025 class totals differ sharply from
+  2023 (Agricultural 161.0M vs 81.9M; Conservation Use V4 433 parcels /
+  9,377 acres vs 65 / 1,273). Reclassification or an incomplete filing — do not
+  present a 2025 figure as final without checking a second county.
+
+### 4.5 Phasing
+
+| Phase | Work | Est. |
+|---|---|---|
+| **1a** | Digest Consolidated Summaries XLSX → millage + tax + exemption dataset in `ga-local-government`, 2020–2025, all counties and districts. Plus the 2019 PDF for one extra year. | **~40–60k** (was ~120–180k across two PDF phases) |
+| **1b** | Per-place millage history section on `/local/<slug>/` (county + city + school lines) | ~40–60k |
+| **1c** | HB 581 opt-out registry (SoS filings + agenda corroboration + L1–L9 exemption series) | ~60–90k |
+| **1d** | Explainers: reading your assessment, the 45-day appeal, what a millage rate is | ~25–40k |
+| **1e** | Statewide millage comparison / ranking page | ~40–60k |
+| **1f** | *Optional.* `rtdc` HTML parser for pre-2020 digest history (back to 1990). No millage. | ~60–90k |
+
+### 4.6 Supporting facts
+
 - **Assessment mechanics (verified):** bills are **40% of fair market value ×
   millage**; appeals are due **within 45 days** of the notice date. Millage is set
   *after* the appeal window closes, so the notice structurally cannot tell a
@@ -344,98 +430,20 @@ is positioned to do that.
   estimated taxes, assessed values and estimated rollback rates from the 2026
   notice**, replacing them with an estimate of tax savings. *Confirm this is
   statewide before publishing it as such.*
-
-### 4.4 Verify before building on it
-
-- **SB 33 "HOME Act" (2026)**, reportedly making the inflation cap mandatory
-  statewide from 2027 — **single low-quality source only.** Check against
-  legis.ga.gov; the `ga-legislation` pipeline can do this directly.
-- **The rollback-rate statute cite** (Taxpayer Bill of Rights) — confirm the exact
-  O.C.G.A. section before putting it on a page.
-- **Resolved: there is no machine-readable shortcut.** The old
-  `etax.dor.ga.gov/ptd/download/` portal is **dead** — the host still resolves
-  but resets the connection, and it fails in a browser too. No CSV or XLS exists
-  on the DOR millage page for any year, and no `data.georgia.gov` dataset was
-  found. The PDF parser is required.
-- **Probed. `sso.dor.ga.gov` does NOT carry millage rates** — see §4.4.1. It is
-  a separate and valuable dataset, but it does not rescue the 2025 millage
-  problem. The PDF parser is still required for rates.
-
-### 4.4.1 `sso.dor.ga.gov` — probed: no millage, but a bigger prize
-
-`sso.dor.ga.gov/rtlhext/` is the **County Services Portal**, an authenticated
-(AWS Cognito) portal for county staff — two of its three buttons are gated.
-The third is not:
-
-> **`https://sso.dor.ga.gov/rtdc/` — "Digest Consolidation Online", public, no login.**
-
-**It does not answer the millage question.** Each county/year page ends in a
-`TAX LEVIED` table with columns `TYPE | ASSESSED VALUE | MILLAGE | TAX`, rows
-`M & O` and `BOND` — and **the MILLAGE and TAX columns are empty**. Verified
-empty for 2025, 2023 *and* 2019, so this is structural, not a current-year lag.
-The portal publishes the **digest**, not the levy. The millage PDFs remain the
-only source for rates, and §4.1.1 stands unchanged.
-
-**But it is a better dataset than the millage PDFs in every other respect**, and
-it should probably become its own phase:
-
-- **Public, unauthenticated, 1990–2025 — 36 years**, all 159 counties, plus a
-  third dropdown for **sub-county tax districts**.
-- **Clean structured HTML tables.** No OCR, no Type 3 mojibake. A simple POST:
-  `POST /rtdc/Digest.do` with `operation=viewConsolidation`, `dc_tax_yr=<year>`,
-  `dc_txpyr_id=<3-digit county code>` (`001`=Appling, alphabetical). Needs a
-  session cookie from a prior GET.
-- **Carries:** parcel counts, acreage and 40% values by property class;
-  Gross Digest / Net M&O Digest / Net Bond Digest; exempt property by code; and
-  **STATE HOMESTEAD EXEMPTIONS (S1–SS) and LOCAL HOMESTEAD EXEMPTIONS (L1–L9)
-  with counts and M&O/Bond values, per county, per year.**
-
-**Why that last line matters for phase 1c.** The HB 581 work is currently scoped
-as a registry of *who opted out*, sourced from SoS filings and corroborated by
-agenda hearings. This portal would add the *quantitative* side — homestead
-exemption uptake and exempted value by county and year. **Hypothesis to test,
-not a finding:** if the HB 581 floating exemption surfaces as a new or changed
-local code, this becomes a direct measure of its effect county by county. Worth
-one check against a county known to have opted in versus one known to have
-opted out, before committing to it.
-
-**Parser cautions, observed across the 2019/2023/2025 responses:**
-- **Schema drifts between years.** 2019 has one "HOMESTEAD AND PROPERTY
-  EXEMPTIONS" block (with a literal `DO NOT USE CODES L1-L9 ON STATE SHEET`
-  divider); 2023 and 2025 split it into "PROPERTY EXEMPTIONS" / "STATE HOMESTEAD
-  EXEMPTIONS" / "LOCAL HOMESTEAD EXEMPTIONS". Section headers must be matched,
-  not positions.
-- **Blank is not zero, and the convention changes.** 2023 writes a literal `0`;
-  2025 leaves the cell empty. Preserve the distinction rather than coercing.
-- **2025 may be preliminary.** Appling's 2025 class totals differ sharply from
-  2023 (Agricultural 161.0M vs 81.9M; Conservation Use V4 433 parcels /
-  9,377 acres vs 65 / 1,273). That may be reclassification or an incomplete
-  filing — do not present a 2025 figure as final without checking a second
-  county.
-
-### 4.5 Phasing
-
-| Phase | Work | Est. |
-|---|---|---|
-| **1a-i** | DOR millage parser for the **4 clean-text years** (2019, 2020, 2022, 2023) → millage dataset in `ga-local-government`. Index-page link scraping, fixed-width row parse, levy-type decision. | ~50–70k |
-| **1a-ii** | The **hard three**: 2021 + 2024 (OCR) and 2025 (Type 3 glyph map or rendered OCR), with the two-extractions-must-agree rule. Ships after 1a-i proves the schema. | ~70–110k |
-| **1b** | Per-place millage history section on `/local/<slug>/` (county + city + school lines) | ~40–60k |
-| **1c** | HB 581 opt-out registry (SoS filings + agenda corroboration) | ~60–90k |
-| **1d** | Explainers: reading your assessment, the 45-day appeal, what a millage rate is | ~25–40k |
-| **1e** | Statewide millage comparison / ranking page | ~40–60k |
-| **1f** | **(new)** `rtdc` digest parser — 36 years × 159 counties of assessed value, property class and homestead-exemption detail, from clean HTML. Independent of the millage PDFs and much lower risk; feeds 1c. | ~60–90k |
-
----
+- **Supporting source:** DOR's **Property Tax Administration Annual Report** for
+  digest totals and context.
 
 ## 5. Recommended order
 
 **1a → 3a → 1b → 1d**, with **3b** run before committing to 3c/3d.
 
-- **1a-i is the highest-leverage item in either scope**: one parser, statewide
-  coverage, highest-demand topic, and it feeds the school-board work too. Note
-  the split — 1a-i is 4 clean years and should ship on its own; the scanned and
-  Type 3 years (1a-ii) are a separate, costlier problem and the current year sits
-  in that bucket, so plan for a gap between "we have history" and "we have 2025".
+1a is now the cheapest of the four as well as the highest-leverage, so there is
+no reason to sequence it later.
+
+- **1a is the highest-leverage item in either scope**, and it got much cheaper:
+  one spreadsheet parser, statewide coverage including the current year, the
+  highest-demand topic, and it feeds the school-board work too. No OCR, no
+  mojibake, no gap between "we have history" and "we have 2025".
 - **3a is the lowest-risk**: YAML plus a template section, no scraping, ships on
   its own, answers "who is on my school board".
 
@@ -479,7 +487,11 @@ in this scope:
 - KQED, *Do voters care about down-ballot races?* — https://giving.kqed.org/news/11138329/do-voters-care-about-down-ballot-races
 
 **Property tax**
-- DOR millage rate reports (2023) — https://dor.georgia.gov/document/document/2023-georgia-county-ad-valorem-tax-digest-millage-rates/download
+- DOR **Digest Consolidated Summaries** (XLSX, 2020-2025) — https://dor.georgia.gov/local-government-services/digest-compliance/digest-consolidated-summaries
+- DOR **Summary of Ad Valorem Taxes Levied in Georgia Counties** — https://dor.georgia.gov/local-government-services/digest-compliance/summary-ad-valorem-taxes-levied-georgia-counties
+- DOR **Compliance Guide: Advertising the Digest History and Public Hearings for Increase** (rev. Apr 2025) — https://dor.georgia.gov/document/publication/compliance-guide-advertising-digest-history-and-public-hearings-increase/download
+- O.C.G.A. § 48-5-32.1 — https://law.justia.com/codes/georgia/title-48/chapter-5/article-1/section-48-5-32-1
+- DOR millage rate reports (2023, PDF; superseded) — https://dor.georgia.gov/document/document/2023-georgia-county-ad-valorem-tax-digest-millage-rates/download
 - DOR millage rate reports (2022) — https://dor.georgia.gov/document/document/2022-georgia-county-ad-valorem-tax-digest-millage-rates/download
 - DOR Property Tax Administration Annual Report — https://dor.georgia.gov/local-government-services/digest-compliance/property-tax-administration-annual-report
 - ACCG, *HB 581 opt-out guidance and model resolution* — https://accg.org/links/HB%20581%20Opt%20Out%20Guidance%20and%20Model%20Resolution.pdf
