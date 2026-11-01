@@ -99,6 +99,9 @@ breadcrumb:
   .lh-flag-lu { background: var(--color-watch-landuse-tint); color: var(--color-watch-landuse); }
   .lh-flag-alpr { background: var(--color-watch-alpr-tint); color: var(--color-watch-alpr); }
   .lh-flag-tax { background: var(--color-watch-taxes-tint); color: var(--color-watch-taxes); }
+  /* Place whose site blocks automated access: its links and topic badges are not being refreshed */
+  .lh-flag-stale { background: var(--color-surface-sunken); color: var(--color-text); border: 1px solid var(--color-warning-line); }
+  .lh-flag-stale .fa-triangle-exclamation { color: var(--color-warning); }
   /* Legend explaining the agenda flag pills above */
   .lh-legend {
     margin: 0 0 1.25rem; padding: 0.75rem 0.9rem; background: var(--color-surface-sunken);
@@ -143,6 +146,10 @@ breadcrumb:
       <span class="lh-flag lh-flag-tax"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Local taxes</span>
       A SPLOST, ESPLOST, TSPLOST, bond, or other local tax or referendum on recent agendas.
     </span>
+    <span class="lh-legend-item">
+      <span class="lh-flag lh-flag-stale"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span>
+      This place’s website blocks the automated method we use to collect links and topics, so its information may be out of date. Check the official source.
+    </span>
   </div>
   <p class="lh-legend-caveat">
     These badges come from scanning the text of the published agendas and minutes for each locality for specific topic keywords. We may not detect every variation of a topic keyword so our analysis is likely limited in scope. <strong>A badge marks discussion, not action.</strong>  A badge means the subject <em>came up</em>
@@ -184,6 +191,9 @@ breadcrumb:
         {%- if county.domains.meetings %}{% if coOfficials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
         {%- unless coOfficials or county.domains.meetings %}Coming soon{% endunless %}
       </div>
+      {%- if county.domains.meetings.bot_protected %}
+      <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source."><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
+      {%- endif %}
     </a>
     {%- assign kids = cities | where: "parentCounty", county.slug | sort: "name" %}
     {%- assign visibleKids = 0 %}
@@ -202,6 +212,9 @@ breadcrumb:
           {%- if city.domains.meetings %}{% if ciOfficials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
           {%- unless ciOfficials or city.domains.meetings %}Coming soon{% endunless %}
         </div>
+        {%- if city.domains.meetings.bot_protected %}
+        <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source."><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
+        {%- endif %}
       </a>
       {%- endfor %}
     </div>
@@ -251,6 +264,9 @@ breadcrumb:
           {%- if c2.domains.meetings %}{% if c2Officials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
           {%- unless c2Officials or c2.domains.meetings %}Coming soon{% endunless %}
         </div>
+        {%- if c2.domains.meetings.bot_protected %}
+        <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source."><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
+        {%- endif %}
       </a>
       {%- endfor %}
     </div>
@@ -381,8 +397,9 @@ breadcrumb:
         Array.prototype.forEach.call(document.querySelectorAll('.lh-card[data-slug]'), function (card) {
           var f = d.places[card.dataset.slug];
           if (!f || !f.flags || !f.flags.length) return;
-          var wrap = document.createElement('div');
-          wrap.className = 'lh-flags';
+          var wrap = card.querySelector('.lh-flags');
+          var existing = !!wrap;
+          if (!wrap) { wrap = document.createElement('div'); wrap.className = 'lh-flags'; }
           var html = '';
           // ALPR / surveillance is the headline watch topic, so it shows alongside
           // land-use / data-center rather than being crowded out by them. Key off
@@ -399,8 +416,8 @@ breadcrumb:
           if (f.flags.indexOf('local-taxes') !== -1) {
             html += '<span class="lh-flag lh-flag-tax"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Local taxes</span>';
           }
-          wrap.innerHTML = html;
-          if (wrap.children.length) card.appendChild(wrap);
+          wrap.insertAdjacentHTML('beforeend', html);
+          if (!existing && wrap.children.length) card.appendChild(wrap);
         });
       })
       .catch(function () { /* no flags file — cards render without badges */ });

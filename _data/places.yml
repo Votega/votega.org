@@ -79,6 +79,10 @@
 #                        the folder share, and the direct file URLs ride in
 #                        agendaFileUrl / minutesFileUrl for the enricher only.
 #                        See scripts/lib/sharepoint.py.
+#       bot_protected    (any platform, optional) true when the site 403s every non-browser
+#                        client. Validation skips link liveness for it, and the hub card and the
+#                        place page show a "may be stale" notice telling visitors to check the
+#                        official source. Remove it the moment the 403s stop.
 #       link_note        (any platform, optional) one line shown above the meeting
 #                        list, e.g. to say that document links open a folder.
 #       nimblecal keys:  calendar_url (a nimbleCMS events page whose JSON feed carries each

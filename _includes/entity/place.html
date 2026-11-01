@@ -343,6 +343,15 @@
   </div>
   {% endif %}
 
+  {% if m.bot_protected %}
+  <div class="cm-notposting" role="note">
+    <span class="cm-notposting-badge"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> This information may be out of date</span>
+    <p>This {{ place.type | default: 'government' }}'s website blocks the automated method we use to pull in agenda and minutes links and to tag topics, so what's shown here is not being refreshed and may be stale. Please check the
+    {% assign bp_url = m.agendas_url | default: m.base_url %}{% if bp_url and bp_url != "" %}<a href="{{ bp_url }}" target="_blank" rel="noopener">official site</a>{% else %}official site{% endif %}
+    for the latest agendas, minutes and meeting information.</p>
+  </div>
+  {% endif %}
+
   {% if m.site_not_posting %}
   <div class="cm-notposting" role="note">
     <span class="cm-notposting-badge"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> County site not posting newer agendas or minutes</span>
