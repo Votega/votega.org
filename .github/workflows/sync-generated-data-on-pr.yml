@@ -14,6 +14,7 @@ permissions:
 jobs:
   sync-data:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 20
     steps:
       - name: Checkout PR branch
         uses: actions/checkout@v4

@@ -15,9 +15,14 @@ on:
                            # means changing the name: too — and notify-workflow-failure.yml
                            # with it, in the same commit.
 
+concurrency:
+  group: update-curated-ga-bills
+  cancel-in-progress: false
+
 jobs:
   update-data:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository

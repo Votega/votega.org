@@ -40,6 +40,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 60
     # Which non-fatal generators degraded this run. The site still deploys (the
     # fallbacks below are real), but the `report-degraded` job at the bottom turns
     # the run red so notify-workflow-failure.yml opens an issue. Without this a
@@ -150,6 +151,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 15
     needs: build
     steps:
       - name: Deploy to GitHub Pages
@@ -161,6 +163,7 @@ jobs:
   # which is what notify-workflow-failure.yml watches for.
   report-degraded:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 5
     needs: [build, deploy]
     if: ${{ always() && (needs.build.outputs.render_degraded == 'true' || needs.build.outputs.entities_degraded == 'true') }}
     steps:

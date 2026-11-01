@@ -17,9 +17,14 @@ on:
   schedule:
     - cron: '0 7 * * *'  # daily at 07:00 UTC (one hour after Congress workflow)
 
+concurrency:
+  group: update-ga-members
+  cancel-in-progress: false
+
 jobs:
   update-data:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository

@@ -30,6 +30,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository

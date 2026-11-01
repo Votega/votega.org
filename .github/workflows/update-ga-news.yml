@@ -10,9 +10,14 @@ on:
     # Every 3 hours, on the hour.
     - cron: '0 */3 * * *'
 
+concurrency:
+  group: update-ga-news
+  cancel-in-progress: false
+
 jobs:
   update-data:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository

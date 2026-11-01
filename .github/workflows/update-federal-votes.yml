@@ -15,9 +15,14 @@ on:
     # Weekly on Sundays at 09:00 UTC
     - cron: '0 9 * * 0'
 
+concurrency:
+  group: update-federal-votes
+  cancel-in-progress: false
+
 jobs:
   update-data:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repository

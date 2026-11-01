@@ -11,9 +11,14 @@ on:
     # whitehouse.gov half of this file is what twice-daily buys.
     - cron: '0 13,23 * * *'
 
+concurrency:
+  group: update-presidential-executive-orders
+  cancel-in-progress: false
+
 jobs:
   update-executive-orders:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 45
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 

@@ -13,9 +13,14 @@ on:
   schedule:
     - cron: '15 9 * * 0'
 
+concurrency:
+  group: build-id-crosswalk
+  cancel-in-progress: false
+
 jobs:
   build-id-crosswalk:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 15
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 

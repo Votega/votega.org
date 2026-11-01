@@ -23,9 +23,14 @@ on:
   schedule:
     - cron: '40 8 * * 1,4'  # Mondays & Thursdays 08:40 UTC (offset from other update-* jobs)
 
+concurrency:
+  group: update-local-government
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 120
 
     steps:
       - name: Checkout repository

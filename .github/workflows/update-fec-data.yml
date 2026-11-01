@@ -18,9 +18,14 @@ on:
   schedule:
     - cron: '0 8 * * 0' # weekly on Sunday at 08:00 UTC
 
+concurrency:
+  group: update-fec-data
+  cancel-in-progress: false
+
 jobs:
   update-fec-data:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 60
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 

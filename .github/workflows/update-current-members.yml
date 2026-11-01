@@ -9,9 +9,14 @@ on:
   schedule:
     - cron: '0 6 * * *' # daily at 06:00 UTC
 
+concurrency:
+  group: update-current-members
+  cancel-in-progress: false
+
 jobs:
   update-data:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 60
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 

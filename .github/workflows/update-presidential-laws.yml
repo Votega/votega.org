@@ -14,9 +14,14 @@ on:
     # Weekly on Sundays at 09:45 UTC (after federal-votes and vp-tie-votes workflows)
     - cron: '45 9 * * 0'
 
+concurrency:
+  group: update-presidential-laws
+  cancel-in-progress: false
+
 jobs:
   update-data:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository

@@ -16,9 +16,14 @@ on:
     - cron: '15 8 * * *'   # 08:15 UTC — early sweep (offset from curated-ga-bills at 08:00)
     - cron: '0 22 * * *'   # 22:00 UTC (~18:00 ET) — catches today's GA business-day postings
 
+concurrency:
+  group: update-ga-executive-orders
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 30
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
