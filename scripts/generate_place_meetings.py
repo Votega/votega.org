@@ -53,6 +53,7 @@ from lib.wixtable import fetch_wixtable_meetings  # noqa: E402
 from lib.htmltable import fetch_htmltable_meetings  # noqa: E402
 from lib.sharepoint import fetch_sharepoint_meetings  # noqa: E402
 from lib.nimblecal import fetch_nimblecal_meetings  # noqa: E402
+from lib.packetarchive import fetch_packetarchive_meetings  # noqa: E402
 from lib.wpdatatables import fetch_wpdatatables_meetings  # noqa: E402
 from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
@@ -65,7 +66,7 @@ OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
                      'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
                      'agendaplus', 'revize', 'gdrive', 'wpdatatables', 'pdflinks', 'wpmedia',
-                     'wixtable', 'htmltable', 'sharepoint', 'nimblecal'}
+                     'wixtable', 'htmltable', 'sharepoint', 'nimblecal', 'packetarchive'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
@@ -98,8 +99,10 @@ def _norm(name):
     return ' '.join((name or '').lower().split())
 
 
-def fetch_meetings(cfg):
-    """Dispatch on platform. Returns (meetings, bodies_seen) or (None, None)."""
+def fetch_meetings(cfg, previous=None):
+    """Dispatch on platform. Returns (meetings, bodies_seen) or (None, None).
+    `previous` is the last published meeting list, passed only to platforms that
+    keep history the source itself discards (packetarchive)."""
     platform = cfg.get('platform')
     if platform == 'civicplus':
         # Only paginate history for the categories this place actually publishes —
@@ -157,6 +160,11 @@ def fetch_meetings(cfg):
             body_labels=cfg.get('body_labels'), exclude=cfg.get('exclude_calendars'),
             include=cfg.get('include_calendars'), minutes_url=cfg.get('minutes_url'),
             minutes_body=cfg.get('minutes_body', 'Board of Commissioners'))
+    if platform == 'packetarchive':
+        return fetch_packetarchive_meetings(
+            cfg['agendas_url'], body=cfg.get('body_label', 'City Council'),
+            meeting_nth=cfg.get('meeting_nth'), meeting_weekday=cfg.get('meeting_weekday'),
+            previous=previous)
     if platform == 'htmltable':
         return fetch_htmltable_meetings(cfg['agendas_url'],
                                         body=cfg.get('body_label', 'Board of Commissioners'))
@@ -212,6 +220,8 @@ def source_url(cfg):
     if platform == 'wixtable':
         return cfg['agendas_url']
     if platform == 'htmltable':
+        return cfg['agendas_url']
+    if platform == 'packetarchive':
         return cfg['agendas_url']
     if platform == 'nimblecal':
         return cfg['calendar_url']
@@ -330,6 +340,16 @@ def _merge_type_grouped(meetings):
     return [merged[k] for k in order]
 
 
+def load_previous(slug):
+    """The last published meeting list for a place, or [] (first run / unreadable)."""
+    path = os.path.join(OUT_DIR, 'local-%s-meetings.json' % slug)
+    try:
+        with open(path, encoding='utf-8') as f:
+            return json.load(f).get('meetings') or []
+    except (OSError, ValueError):
+        return []
+
+
 def build_place(place):
     """Fetch + normalize one place's meetings. Returns the output dict, or None."""
     slug = place['slug']
@@ -347,7 +367,7 @@ def build_place(place):
 
     print('Fetching meetings for %s (%s)...' % (place['name'], cfg.get('platform')))
     try:
-        meetings, bodies_seen = fetch_meetings(cfg)
+        meetings, bodies_seen = fetch_meetings(cfg, previous=load_previous(slug))
     except (ValueError, KeyError) as e:
         # Unknown platform or missing required key for this platform — a config
         # error in one place must not abort the whole weekly run for every other.

@@ -79,7 +79,12 @@
 
     function meetingRow(m, showChip) {
       var links = [
-        m.agendaUrl && '<a href="' + esc(m.agendaUrl) + '" target="_blank" rel="noopener">Agenda</a>',
+        m.agendaUrl && '<a href="' + esc(m.agendaUrl) + '" target="_blank" rel="noopener">' +
+          (m.agendaOriginalUrl ? 'Agenda (archived copy)' : 'Agenda') + '</a>',
+        // The city still serves this packet, but only until it replaces it: also link the
+        // Internet Archive copy so the record outlives the city's link.
+        (m.agendaArchiveUrl && m.agendaUrl && !m.agendaOriginalUrl && m.agendaArchiveUrl !== m.agendaUrl) &&
+          '<a href="' + esc(m.agendaArchiveUrl) + '" target="_blank" rel="noopener">Archived copy</a>',
         m.minutesUrl && '<a href="' + esc(m.minutesUrl) + '" target="_blank" rel="noopener">Minutes</a>',
         m.videoUrl && '<a href="' + esc(m.videoUrl) + '" target="_blank" rel="noopener">▶ Video</a>'
       ].filter(Boolean).join('');

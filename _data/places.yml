@@ -30,16 +30,16 @@
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
 #                        legistar | teammunicode | primegov | granicus | gwinnett | iqm2 |
 #                        municode | agendapub | agendaplus | revize | wpdatatables | pdflinks | wpmedia |
-#                        wixtable | htmltable | sharepoint | nimblecal
+#                        wixtable | htmltable | sharepoint | nimblecal | packetarchive
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
 #                          wix | wordpress | governmentwindow |
 #                          squarespace = the MEETING surface, not the
 #                                     CMS around it. Rossville's Squarespace page
-#                                     carries only the current month's packet,
-#                                     client-rendered with no archive, so use this
-#                                     rather than the CMS name — `revize` is an ADAPTER platform, and
+#                                     carries only the current month's packet. Use
+#                                     `packetarchive` to keep a history of it; use this
+#                                     for a page with nothing to record, rather than the CMS name — `revize` is an ADAPTER platform, and
 #                                     labelling a PDF-less page with it makes the
 #                                     generator hard-fail the run.
 #                                     (a WordPress site whose meetings sit in a
@@ -85,6 +85,14 @@
 #                        official source. Remove it the moment the 403s stop.
 #       link_note        (any platform, optional) one line shown above the meeting
 #                        list, e.g. to say that document links open a folder.
+#       packetarchive keys: agendas_url (a page that shows ONLY the current meeting
+#                        packet and replaces it each cycle — Rossville), body_label,
+#                        meeting_nth + meeting_weekday (usual day, Monday=0; used only
+#                        when the packet's own text names no date). Each packet is
+#                        hashed and sent to the Wayback Machine once; earlier months are
+#                        carried forward from the committed file, pointing at the archive
+#                        copy once the city's link is replaced. History starts at the
+#                        first run and nothing is back-filled. See lib/packetarchive.py.
 #       nimblecal keys:  calendar_url (a nimbleCMS events page whose JSON feed carries each
 #                        meeting's agenda PDF), optional minutes_url (a file browser of
 #                        minutes, merged onto the board's meeting by date), minutes_body (the
@@ -1469,13 +1477,17 @@ places:
     region: Northwest Georgia   # optional hub grouping label
     domains:
       meetings:
-        # No scraper adapter: a Squarespace page carrying a single "Download
-        # Meeting Agenda" link to the CURRENT month's packet
-        # (/s/Agenda-Packet-October-2026.pdf). There is no archive to walk — last
-        # month's packet is simply replaced — so there is nothing for an adapter
-        # to collect, and a link harvester would publish exactly one meeting that
-        # silently changes identity every month.
-        platform: squarespace
+        # A Squarespace page carrying a single "Download Meeting Agenda" link to
+        # the CURRENT month's packet (/s/Agenda-Packet-October-2026.pdf, a 302 to
+        # a Squarespace CDN file). The city replaces it each month, so
+        # `packetarchive` records each packet as it appears: hashes it, asks the
+        # Wayback Machine to keep a copy, and carries the earlier months forward
+        # (lib/packetarchive.py). History starts at the first run — a packet
+        # posted and replaced between two runs is a permanent gap.
+        platform: packetarchive
+        meeting_nth: 2          # usual day, used only when the packet's text names none
+        meeting_weekday: 0      # Monday
+        body_label: City Council
         base_url: https://www.rossvillega.gov
         agendas_url: "https://www.rossvillega.gov/mayor-city-council"
         schedule:
