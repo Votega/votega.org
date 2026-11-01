@@ -30,6 +30,8 @@ from lib.http import fetch_json as http_fetch_json
 
 TERMS       = ["2024", "2025", "2026"]   # Terms to include; add new term each October
 API_DELAY   = 0.25
+CL_MAX_PAGES = 5           # per term; a term is ~60 opinions, one page
+CL_PAGE_DELAY = 13         # seconds between pages: 5 requests/minute limit
 
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/scotus-decisions.json"
 
@@ -118,17 +120,26 @@ def build_cl_index(term):
     })
     url = f"{CL_SEARCH}?{params}"
     print(f"  Fetching CourtListener index for {term} term...")
-    data = fetch_json(url, "CourtListener search",
-                      headers={"Authorization": f"Token {token}"})
-    if not data:
-        return index
-
-    for result in (data.get("results") or []):
-        docket = (result.get("docketNumber") or "").strip()
-        abs_url = result.get("absolute_url") or ""
-        if docket and abs_url:
-            cl_url = f"https://www.courtlistener.com{abs_url}"
-            index[docket] = cl_url
+    # Follow the cursor (`next` is a full URL) so a term with more than one page of
+    # opinions keeps its links. Capped, and spaced to stay under the 5 requests/minute
+    # limit on a free token; a failed later page keeps what earlier pages gave.
+    for page in range(CL_MAX_PAGES):
+        if page:
+            time.sleep(CL_PAGE_DELAY)
+        data = fetch_json(url, "CourtListener search",
+                          headers={"Authorization": f"Token {token}"})
+        if not data:
+            break
+        for result in (data.get("results") or []):
+            docket = (result.get("docketNumber") or "").strip()
+            abs_url = result.get("absolute_url") or ""
+            if docket and abs_url:
+                index[docket] = f"https://www.courtlistener.com{abs_url}"
+        url = data.get("next")
+        if not url:
+            break
+    else:
+        print(f"  CourtListener: stopped at {CL_MAX_PAGES} pages; later opinions not indexed")
 
     print(f"  CourtListener: {len(index)} opinions indexed")
     return index
