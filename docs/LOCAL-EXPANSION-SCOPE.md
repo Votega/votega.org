@@ -357,11 +357,61 @@ is positioned to do that.
   but resets the connection, and it fails in a browser too. No CSV or XLS exists
   on the DOR millage page for any year, and no `data.georgia.gov` dataset was
   found. The PDF parser is required.
-- **Worth one probe:** `sso.dor.ga.gov` is live (HTTP 200, redirects to
-  `/rtlhext/`) and reportedly exposes a county-by-county digest lookup carrying
-  Net M&O Digest and millage. It is a web interface, not a bulk download, so it
-  will not replace the parser — but it may be a **structured cross-check for the
-  OCR and Type 3 years**, which is exactly where verification is needed.
+- **Probed. `sso.dor.ga.gov` does NOT carry millage rates** — see §4.4.1. It is
+  a separate and valuable dataset, but it does not rescue the 2025 millage
+  problem. The PDF parser is still required for rates.
+
+### 4.4.1 `sso.dor.ga.gov` — probed: no millage, but a bigger prize
+
+`sso.dor.ga.gov/rtlhext/` is the **County Services Portal**, an authenticated
+(AWS Cognito) portal for county staff — two of its three buttons are gated.
+The third is not:
+
+> **`https://sso.dor.ga.gov/rtdc/` — "Digest Consolidation Online", public, no login.**
+
+**It does not answer the millage question.** Each county/year page ends in a
+`TAX LEVIED` table with columns `TYPE | ASSESSED VALUE | MILLAGE | TAX`, rows
+`M & O` and `BOND` — and **the MILLAGE and TAX columns are empty**. Verified
+empty for 2025, 2023 *and* 2019, so this is structural, not a current-year lag.
+The portal publishes the **digest**, not the levy. The millage PDFs remain the
+only source for rates, and §4.1.1 stands unchanged.
+
+**But it is a better dataset than the millage PDFs in every other respect**, and
+it should probably become its own phase:
+
+- **Public, unauthenticated, 1990–2025 — 36 years**, all 159 counties, plus a
+  third dropdown for **sub-county tax districts**.
+- **Clean structured HTML tables.** No OCR, no Type 3 mojibake. A simple POST:
+  `POST /rtdc/Digest.do` with `operation=viewConsolidation`, `dc_tax_yr=<year>`,
+  `dc_txpyr_id=<3-digit county code>` (`001`=Appling, alphabetical). Needs a
+  session cookie from a prior GET.
+- **Carries:** parcel counts, acreage and 40% values by property class;
+  Gross Digest / Net M&O Digest / Net Bond Digest; exempt property by code; and
+  **STATE HOMESTEAD EXEMPTIONS (S1–SS) and LOCAL HOMESTEAD EXEMPTIONS (L1–L9)
+  with counts and M&O/Bond values, per county, per year.**
+
+**Why that last line matters for phase 1c.** The HB 581 work is currently scoped
+as a registry of *who opted out*, sourced from SoS filings and corroborated by
+agenda hearings. This portal would add the *quantitative* side — homestead
+exemption uptake and exempted value by county and year. **Hypothesis to test,
+not a finding:** if the HB 581 floating exemption surfaces as a new or changed
+local code, this becomes a direct measure of its effect county by county. Worth
+one check against a county known to have opted in versus one known to have
+opted out, before committing to it.
+
+**Parser cautions, observed across the 2019/2023/2025 responses:**
+- **Schema drifts between years.** 2019 has one "HOMESTEAD AND PROPERTY
+  EXEMPTIONS" block (with a literal `DO NOT USE CODES L1-L9 ON STATE SHEET`
+  divider); 2023 and 2025 split it into "PROPERTY EXEMPTIONS" / "STATE HOMESTEAD
+  EXEMPTIONS" / "LOCAL HOMESTEAD EXEMPTIONS". Section headers must be matched,
+  not positions.
+- **Blank is not zero, and the convention changes.** 2023 writes a literal `0`;
+  2025 leaves the cell empty. Preserve the distinction rather than coercing.
+- **2025 may be preliminary.** Appling's 2025 class totals differ sharply from
+  2023 (Agricultural 161.0M vs 81.9M; Conservation Use V4 433 parcels /
+  9,377 acres vs 65 / 1,273). That may be reclassification or an incomplete
+  filing — do not present a 2025 figure as final without checking a second
+  county.
 
 ### 4.5 Phasing
 
@@ -373,6 +423,7 @@ is positioned to do that.
 | **1c** | HB 581 opt-out registry (SoS filings + agenda corroboration) | ~60–90k |
 | **1d** | Explainers: reading your assessment, the 45-day appeal, what a millage rate is | ~25–40k |
 | **1e** | Statewide millage comparison / ranking page | ~40–60k |
+| **1f** | **(new)** `rtdc` digest parser — 36 years × 159 counties of assessed value, property class and homestead-exemption detail, from clean HTML. Independent of the millage PDFs and much lower risk; feeds 1c. | ~60–90k |
 
 ---
 
