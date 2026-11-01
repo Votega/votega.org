@@ -2,8 +2,8 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId, executiveId (statewide executives, from ga-executive.json) and ballotpediaId; ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-10-27T00:13:31+00:00",
-  "count": 756,
+  "generatedAt": "2026-11-01T16:46:54+00:00",
+  "count": 758,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
    "legis.ga.gov (General Assembly web services) — legisGaGovId, the primary key for state legislators",
@@ -25,13 +25,13 @@
    "unresolved": "no lookup has populated this identifier yet; a null here is NOT a claim that none exists"
   },
   "coverage": {
-   "people": 756,
+   "people": 758,
    "officeholders": 276,
-   "candidateOnly": 480,
+   "candidateOnly": 482,
    "withVgId": 679,
-   "unkeyed": 77,
-   "withAnyFiling": 651,
-   "candidacies": 716,
+   "unkeyed": 79,
+   "withAnyFiling": 652,
+   "candidacies": 718,
    "ambiguous": []
   }
  },
@@ -87,17 +87,19 @@
      "peachfileFilerEntityId": "101994",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-106-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-106-2026-d-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -1594,17 +1596,19 @@
      "peachfileFilerEntityId": "102973",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-50-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-50-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -2054,21 +2058,19 @@
      "peachfileFilerEntityId": "102817",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py",
-      "scope": "office-sought",
-      "note": "matched against Attorney General, the office sought in this cycle"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "challenger-robert-strickland-ag-2026"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py",
-     "scope": "office-sought",
-     "note": "matched against Attorney General, the office sought in this cycle"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "challenger-robert-strickland-ag-2026"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -2140,17 +2142,19 @@
      "peachfileFilerEntityId": "102340",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-112-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-112-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -2387,9 +2391,10 @@
      "peachfileFilerEntityId": "101091",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "challenger-burt-jones-gov-2026"
      }
     }
    ],
@@ -2468,17 +2473,19 @@
      "peachfileFilerEntityId": "103153",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-158-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-158-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -2852,17 +2859,19 @@
      "peachfileFilerEntityId": "100878",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-24-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-24-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -4681,7 +4690,9 @@
     "govtrackId": null,
     "openSecretsId": null,
     "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
+    "peachfileFilerEntityIds": [
+     "101102"
+    ],
     "votegaCandidateIds": [
      "ga-house-69-2026-d-2"
     ]
@@ -4702,20 +4713,20 @@
      "isIncumbent": true,
      "withdrawn": false,
      "disqualified": false,
-     "peachfileFilerEntityId": null,
+     "peachfileFilerEntityId": "101102",
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "seat+surname",
-      "confidence": "no-match",
-      "note": "no filing matched this person's seat or the office they seek"
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
      "method": "seat+surname",
-     "confidence": "no-match",
-     "note": "no filing matched this person's seat or the office they seek"
+     "confidence": "high",
+     "source": "scripts/lib/ga_match.py"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -5584,17 +5595,19 @@
      "peachfileFilerEntityId": "102934",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-49-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-49-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -5660,7 +5673,7 @@
       "primary"
      ],
      "isIncumbent": true,
-     "withdrawn": true,
+     "withdrawn": false,
      "disqualified": false,
      "peachfileFilerEntityId": "101691",
      "fecCandidateId": null,
@@ -5747,17 +5760,19 @@
      "peachfileFilerEntityId": "101402",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-37-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-37-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -7062,17 +7077,19 @@
      "peachfileFilerEntityId": "102943",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-36-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-36-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -7282,17 +7299,19 @@
      "peachfileFilerEntityId": "101046",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-119-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-119-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -11280,17 +11299,19 @@
      "peachfileFilerEntityId": "100965",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-127-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-127-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -11444,17 +11465,19 @@
      "peachfileFilerEntityId": "102967",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-16-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-16-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -12345,17 +12368,19 @@
      "peachfileFilerEntityId": "100872",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-23-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-23-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -14041,17 +14066,19 @@
      "peachfileFilerEntityId": "100586",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-29-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-29-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -15189,17 +15216,19 @@
      "peachfileFilerEntityId": "101193",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-8-2026-r-2"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-8-2026-r-2"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -15987,17 +16016,19 @@
      "peachfileFilerEntityId": "101272",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-110-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-110-2026-d-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -17550,17 +17581,19 @@
      "peachfileFilerEntityId": "103788",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-180-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-180-2026-r-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -17716,17 +17749,19 @@
      "peachfileFilerEntityId": "100802",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-145-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-145-2026-d-1"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -18164,17 +18199,19 @@
      "peachfileFilerEntityId": "103732",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-25-2026-r-2"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-25-2026-r-2"
     },
     "ocdPersonId": {
      "method": "authoritative",
@@ -20896,7 +20933,7 @@
   {
    "vgId": "vg-ga-p-000272",
    "name": {
-    "full": "Barbara Rivera Holmes",
+    "full": "Bárbara Rivera Holmes",
     "first": null,
     "last": null
    },
@@ -22754,7 +22791,7 @@
   {
    "vgId": "vg-ga-p-000308",
    "name": {
-    "full": "Gregory \"Greg\" Dolezal",
+    "full": "Greg Dolezal",
     "first": null,
     "last": null
    },
@@ -22985,7 +23022,7 @@
   {
    "vgId": "vg-ga-p-000312",
    "name": {
-    "full": "James \"Jim\" Duffie",
+    "full": "Jim Duffie",
     "first": null,
     "last": null
    },
@@ -23026,7 +23063,7 @@
      "peachfileFilerEntityId": null,
      "fecCandidateId": "H6GA04194",
      "filingProvenance": {
-      "method": "district+surname",
+      "method": "name-exact",
       "confidence": "high",
       "source": "FEC candidate index"
      }
@@ -23034,7 +23071,7 @@
    ],
    "provenance": {
     "fecCandidateIds": {
-     "method": "district+surname",
+     "method": "name-exact",
      "confidence": "high",
      "source": "FEC candidate index"
     }
@@ -23614,7 +23651,7 @@
   {
    "vgId": "vg-ga-p-000323",
    "name": {
-    "full": "John A. Cowan Jr.",
+    "full": "John Cowan",
     "first": null,
     "last": null
    },
@@ -23656,7 +23693,7 @@
      "peachfileFilerEntityId": null,
      "fecCandidateId": "H0GA14048",
      "filingProvenance": {
-      "method": "district+surname",
+      "method": "name-exact",
       "confidence": "high",
       "source": "FEC candidate index"
      }
@@ -23664,7 +23701,7 @@
    ],
    "provenance": {
     "fecCandidateIds": {
-     "method": "district+surname",
+     "method": "name-exact",
      "confidence": "high",
      "source": "FEC candidate index"
     }
@@ -24250,7 +24287,7 @@
   {
    "vgId": "vg-ga-p-000335",
    "name": {
-    "full": "Keisha R. Lance Bottoms",
+    "full": "Keisha Lance Bottoms",
     "first": null,
     "last": null
    },
@@ -24419,63 +24456,6 @@
      "method": "name-exact",
      "confidence": "high",
      "source": "FEC candidate index"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000338",
-   "name": {
-    "full": "Kelvin D. King",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "rosterId": null,
-    "executiveId": null,
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "ballotpediaId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "103261"
-    ],
-    "votegaCandidateIds": [
-     "challenger-kelvin-king-sos-2026"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-secretary-of-state-2026",
-     "candidateId": "challenger-kelvin-king-sos-2026",
-     "cycle": 2026,
-     "level": "state-executive",
-     "office": "Secretary of State",
-     "district": null,
-     "party": "Republican",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "103261",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
     }
    }
   },
@@ -24826,7 +24806,7 @@
   {
    "vgId": "vg-ga-p-000345",
    "name": {
-    "full": "Benjamin Matthew Day",
+    "full": "Matt Day",
     "first": null,
     "last": null
    },
@@ -24867,7 +24847,7 @@
      "peachfileFilerEntityId": null,
      "fecCandidateId": "H6GA01182",
      "filingProvenance": {
-      "method": "district+surname",
+      "method": "name-exact",
       "confidence": "high",
       "source": "FEC candidate index"
      }
@@ -24875,7 +24855,7 @@
    ],
    "provenance": {
     "fecCandidateIds": {
-     "method": "district+surname",
+     "method": "name-exact",
      "confidence": "high",
      "source": "FEC candidate index"
     }
@@ -25039,17 +25019,19 @@
      "peachfileFilerEntityId": "100007",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "challenger-michael-tillery-ltgov-2026"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "challenger-michael-tillery-ltgov-2026"
     }
    }
   },
@@ -25384,17 +25366,19 @@
      "peachfileFilerEntityId": "100029",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "challenger-nikki-porcher-laborcom-2026"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "challenger-nikki-porcher-laborcom-2026"
     }
    }
   },
@@ -27804,17 +27788,19 @@
      "peachfileFilerEntityId": "100393",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-109-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-109-2026-d-1"
     }
    }
   },
@@ -27919,17 +27905,19 @@
      "peachfileFilerEntityId": "102414",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-109-2026-d-3"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-109-2026-d-3"
     }
    }
   },
@@ -28457,7 +28445,7 @@
   {
    "vgId": "vg-ga-p-000411",
    "name": {
-    "full": "Darius L Francis",
+    "full": "Darius L. Francis",
     "first": null,
     "last": null
    },
@@ -28976,7 +28964,7 @@
   {
    "vgId": "vg-ga-p-000420",
    "name": {
-    "full": "Mary Suzanna Karatassos",
+    "full": "Suzanna Karatassos",
     "first": null,
     "last": null
    },
@@ -29015,63 +29003,6 @@
      "withdrawn": false,
      "disqualified": false,
      "peachfileFilerEntityId": "103754",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000421",
-   "name": {
-    "full": "Chad Paton",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "rosterId": null,
-    "executiveId": null,
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "ballotpediaId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "100076"
-    ],
-    "votegaCandidateIds": [
-     "ga-house-120-2026-r-1"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-house-120-2026",
-     "candidateId": "ga-house-120-2026-r-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 120,
-     "party": "Republican",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "100076",
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "seat+surname",
@@ -29149,7 +29080,7 @@
   {
    "vgId": "vg-ga-p-000423",
    "name": {
-    "full": "Mack \"dutch\" Guest Iv",
+    "full": "Mack \"Dutch\" Guest IV",
     "first": null,
     "last": null
    },
@@ -29499,7 +29430,7 @@
   {
    "vgId": "vg-ga-p-000429",
    "name": {
-    "full": "Tyrone A Evans",
+    "full": "Tyrone A. Evans",
     "first": null,
     "last": null
    },
@@ -29598,24 +29529,26 @@
      "peachfileFilerEntityId": "100442",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-128-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-128-2026-r-1"
     }
    }
   },
   {
    "vgId": "vg-ga-p-000431",
    "name": {
-    "full": "Vincent Mendes III",
+    "full": "Vincent Mendes",
     "first": null,
     "last": null
    },
@@ -30305,7 +30238,7 @@
   {
    "vgId": "vg-ga-p-000443",
    "name": {
-    "full": "Marquese K Averett",
+    "full": "Marquese \"Skinny\" Averett",
     "first": null,
     "last": null
    },
@@ -30363,7 +30296,7 @@
   {
    "vgId": "vg-ga-p-000444",
    "name": {
-    "full": "Edward Kvietkus Jr",
+    "full": "Edward Kvietkus",
     "first": null,
     "last": null
    },
@@ -30462,17 +30395,19 @@
      "peachfileFilerEntityId": "104051",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-141-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-141-2026-r-1"
     }
    }
   },
@@ -30865,17 +30800,19 @@
      "peachfileFilerEntityId": "100165",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-149-2026-d-2"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-149-2026-d-2"
     }
    }
   },
@@ -31056,7 +30993,7 @@
   {
    "vgId": "vg-ga-p-000456",
    "name": {
-    "full": "James E. Wolfe",
+    "full": "Ethan Wolfe",
     "first": null,
     "last": null
    },
@@ -31921,7 +31858,7 @@
   {
    "vgId": "vg-ga-p-000471",
    "name": {
-    "full": "Miquan Green",
+    "full": "MiQuan Green",
     "first": null,
     "last": null
    },
@@ -33637,17 +33574,19 @@
      "peachfileFilerEntityId": "103592",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-27-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-27-2026-d-1"
     }
    }
   },
@@ -34232,7 +34171,7 @@
   {
    "vgId": "vg-ga-p-000514",
    "name": {
-    "full": "Luc Noiset",
+    "full": "Luc \"Luke\" Noiset",
     "first": null,
     "last": null
    },
@@ -35327,7 +35266,7 @@
   {
    "vgId": "vg-ga-p-000534",
    "name": {
-    "full": "Derek Keith Gettmann",
+    "full": "Keith Gettmann",
     "first": null,
     "last": null
    },
@@ -35960,7 +35899,7 @@
   {
    "vgId": "vg-ga-p-000545",
    "name": {
-    "full": "Torrey D Balam",
+    "full": "Torrey Balam",
     "first": null,
     "last": null
    },
@@ -36018,7 +35957,7 @@
   {
    "vgId": "vg-ga-p-000546",
    "name": {
-    "full": "Sully Sullivan",
+    "full": "Devonta \"Sully\" Sullivan",
     "first": null,
     "last": null
    },
@@ -36059,17 +35998,19 @@
      "peachfileFilerEntityId": "104109",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-59-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-59-2026-r-1"
     }
    }
   },
@@ -36232,17 +36173,19 @@
      "peachfileFilerEntityId": "104009",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-62-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-62-2026-d-1"
     }
    }
   },
@@ -36912,8 +36855,7 @@
      "district": 70,
      "party": "Democrat",
      "phases": [
-      "primary",
-      "general"
+      "primary"
      ],
      "isIncumbent": false,
      "withdrawn": false,
@@ -36970,7 +36912,8 @@
      "district": 70,
      "party": "Democrat",
      "phases": [
-      "primary"
+      "primary",
+      "general"
      ],
      "isIncumbent": false,
      "withdrawn": false,
@@ -37325,17 +37268,19 @@
      "peachfileFilerEntityId": "105329",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-8-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-8-2026-d-1"
     }
    }
   },
@@ -37631,7 +37576,7 @@
   {
    "vgId": "vg-ga-p-000575",
    "name": {
-    "full": "Timothy J Burson",
+    "full": "Timothy J. Burson",
     "first": null,
     "last": null
    },
@@ -38018,17 +37963,19 @@
      "peachfileFilerEntityId": "104279",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-90-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-90-2026-d-1"
     }
    }
   },
@@ -39981,63 +39928,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000617",
-   "name": {
-    "full": "Tamara Johnson-Shealey",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "rosterId": null,
-    "executiveId": null,
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "ballotpediaId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "100711"
-    ],
-    "votegaCandidateIds": [
-     "ga-senate-14-2026-r-3"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-senate-14-2026",
-     "candidateId": "ga-senate-14-2026-r-3",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia State Senate",
-     "district": 14,
-     "party": "Republican",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "100711",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000618",
    "name": {
     "full": "Alyssa Williams",
@@ -40541,17 +40431,19 @@
      "peachfileFilerEntityId": "101110",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-19-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-19-2026-r-1"
     }
    }
   },
@@ -40713,17 +40605,19 @@
      "peachfileFilerEntityId": "103924",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-21-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-21-2026-d-1"
     }
    }
   },
@@ -40885,24 +40779,26 @@
      "peachfileFilerEntityId": "104850",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-24-2026-d-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-24-2026-d-1"
     }
    }
   },
   {
    "vgId": "vg-ga-p-000633",
    "name": {
-    "full": "Lorraine Thomas",
+    "full": "Lorraine V Thomas",
     "first": null,
     "last": null
    },
@@ -41173,17 +41069,19 @@
      "peachfileFilerEntityId": "100028",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-27-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-27-2026-r-1"
     }
    }
   },
@@ -41634,17 +41532,19 @@
      "peachfileFilerEntityId": "104709",
      "fecCandidateId": null,
      "filingProvenance": {
-      "method": "seat+surname",
+      "method": "reviewed",
       "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-36-2026-r-1"
      }
     }
    ],
    "provenance": {
     "peachfileFilerEntityIds": {
-     "method": "seat+surname",
+     "method": "reviewed",
      "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-36-2026-r-1"
     }
    }
   },
@@ -41939,7 +41839,7 @@
   {
    "vgId": "vg-ga-p-000651",
    "name": {
-    "full": "Melina Mast",
+    "full": "Melina R. Mast",
     "first": null,
     "last": null
    },
@@ -42112,7 +42012,7 @@
   {
    "vgId": "vg-ga-p-000654",
    "name": {
-    "full": "Eric Lee",
+    "full": "Eric W. Lee, Sr.",
     "first": null,
     "last": null
    },
@@ -42343,7 +42243,7 @@
   {
    "vgId": "vg-ga-p-000658",
    "name": {
-    "full": "Anthony \"Scott\" Tippetts",
+    "full": "Scott Tippetts",
     "first": null,
     "last": null
    },
@@ -42573,7 +42473,7 @@
   {
    "vgId": "vg-ga-p-000662",
    "name": {
-    "full": "Marc Mcmain",
+    "full": "Marc McMain",
     "first": null,
     "last": null
    },
@@ -43885,7 +43785,7 @@
      "phases": [
       "primary"
      ],
-     "isIncumbent": false,
+     "isIncumbent": true,
      "withdrawn": false,
      "disqualified": false,
      "peachfileFilerEntityId": "105191",
@@ -44514,6 +44414,186 @@
    }
   },
   {
+   "vgId": "vg-ga-p-000700",
+   "name": {
+    "full": "Elvia Davila",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [
+     "104068"
+    ],
+    "votegaCandidateIds": [
+     "ga-house-108-2026-r-1"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-108-2026",
+     "candidateId": "ga-house-108-2026-r-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 108,
+     "party": "Republican",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "104068",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "reviewed",
+      "confidence": "high",
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-108-2026-r-1"
+     }
+    }
+   ],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "reviewed",
+     "confidence": "high",
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-108-2026-r-1"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000701",
+   "name": {
+    "full": "Nathaniel Hicks Jr",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [
+     "106455"
+    ],
+    "votegaCandidateIds": [
+     "ga-house-167-2026-d-2"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-167-2026",
+     "candidateId": "ga-house-167-2026-d-2",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 167,
+     "party": "Democrat",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "106455",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "reviewed",
+      "confidence": "high",
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-house-167-2026-d-2"
+     }
+    }
+   ],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "reviewed",
+     "confidence": "high",
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-house-167-2026-d-2"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000702",
+   "name": {
+    "full": "Jeff Lowe",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [
+     "105966"
+    ],
+    "votegaCandidateIds": [
+     "ga-senate-29-2026-d-1"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-senate-29-2026",
+     "candidateId": "ga-senate-29-2026-d-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia State Senate",
+     "district": 29,
+     "party": "Democrat",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "105966",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "reviewed",
+      "confidence": "high",
+      "source": "assets/data/ga-campaign-finance-overrides.json",
+      "key": "ga-senate-29-2026-d-1"
+     }
+    }
+   ],
+   "provenance": {
+    "peachfileFilerEntityIds": {
+     "method": "reviewed",
+     "confidence": "high",
+     "source": "assets/data/ga-campaign-finance-overrides.json",
+     "key": "ga-senate-29-2026-d-1"
+    }
+   }
+  },
+  {
    "vgId": null,
    "name": {
     "full": "Alisha Adams Johnson",
@@ -44761,7 +44841,7 @@
      "district": null,
      "party": "Republican",
      "phases": [
-      "general"
+      "primary"
      ],
      "isIncumbent": true,
      "withdrawn": false,
@@ -44988,6 +45068,59 @@
       "confidence": "confirmed-none",
       "source": "assets/data/ga-campaign-finance-overrides.json",
       "key": "ga-house-122-2026-r-1"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Chad Paton",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "ga-house-120-2026-r-1"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-120-2026",
+     "candidateId": "ga-house-120-2026-r-1",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 120,
+     "party": "Republican",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
      }
     }
    ],
@@ -45700,62 +45833,6 @@
   {
    "vgId": null,
    "name": {
-    "full": "Elvia Davila",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "rosterId": null,
-    "executiveId": null,
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "ballotpediaId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "ga-house-108-2026-r-1"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-house-108-2026",
-     "candidateId": "ga-house-108-2026-r-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 108,
-     "party": "Republican",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "reviewed",
-      "confidence": "confirmed-none",
-      "source": "assets/data/ga-campaign-finance-overrides.json",
-      "key": "ga-house-108-2026-r-1"
-     }
-    }
-   ],
-   "provenance": {
-    "vgId": {
-     "method": "unkeyed",
-     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
-    }
-   }
-  },
-  {
-   "vgId": null,
-   "name": {
     "full": "Fred \"Bubba\" Longgrear",
     "first": null,
     "last": null
@@ -46190,62 +46267,6 @@
   {
    "vgId": null,
    "name": {
-    "full": "Jeff Lowe",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "rosterId": null,
-    "executiveId": null,
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "ballotpediaId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "ga-senate-29-2026-d-1"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-senate-29-2026",
-     "candidateId": "ga-senate-29-2026-d-1",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia State Senate",
-     "district": 29,
-     "party": "Democrat",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "reviewed",
-      "confidence": "confirmed-none",
-      "source": "assets/data/ga-campaign-finance-overrides.json",
-      "key": "ga-senate-29-2026-d-1"
-     }
-    }
-   ],
-   "provenance": {
-    "vgId": {
-     "method": "unkeyed",
-     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
-    }
-   }
-  },
-  {
-   "vgId": null,
-   "name": {
     "full": "Jennifer Hutchison",
     "first": null,
     "last": null
@@ -46558,8 +46579,8 @@
       "method": "district+surname",
       "confidence": "ambiguous",
       "candidates": [
-       "H6GA08153",
-       "H6GA08146"
+       "H6GA08146",
+       "H6GA08153"
       ]
      }
     }
@@ -46630,6 +46651,59 @@
   {
    "vgId": null,
    "name": {
+    "full": "Kelvin D. King",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "challenger-kelvin-king-sos-2026"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-secretary-of-state-2026",
+     "candidateId": "challenger-kelvin-king-sos-2026",
+     "cycle": 2026,
+     "level": "state-executive",
+     "office": "Secretary of State",
+     "district": null,
+     "party": "Republican",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
     "full": "Klaus Stefan Buck",
     "first": null,
     "last": null
@@ -46672,6 +46746,60 @@
       "confidence": "confirmed-none",
       "source": "assets/data/ga-campaign-finance-overrides.json",
       "key": "ga-senate-27-2026-r-2"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Laurie Elyse Baio",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "da-atlantic-2026-r-3"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "da-atlantic-2026",
+     "candidateId": "da-atlantic-2026-r-3",
+     "cycle": 2026,
+     "level": "local",
+     "office": "District Attorney",
+     "district": null,
+     "party": "Republican",
+     "phases": [
+      "general"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "out-of-scope",
+      "confidence": null,
+      "note": "no campaign finance source covers GA local offices"
      }
     }
    ],
@@ -47611,62 +47739,6 @@
   {
    "vgId": null,
    "name": {
-    "full": "Nathaniel Hicks Jr",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "rosterId": null,
-    "executiveId": null,
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "ballotpediaId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [],
-    "votegaCandidateIds": [
-     "ga-house-167-2026-d-2"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-house-167-2026",
-     "candidateId": "ga-house-167-2026-d-2",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 167,
-     "party": "Democrat",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": null,
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "reviewed",
-      "confidence": "confirmed-none",
-      "source": "assets/data/ga-campaign-finance-overrides.json",
-      "key": "ga-house-167-2026-d-2"
-     }
-    }
-   ],
-   "provenance": {
-    "vgId": {
-     "method": "unkeyed",
-     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
-    }
-   }
-  },
-  {
-   "vgId": null,
-   "name": {
     "full": "Ngozi Orabueze",
     "first": null,
     "last": null
@@ -47931,6 +48003,60 @@
       "confidence": "confirmed-none",
       "source": "assets/data/ga-campaign-finance-overrides.json",
       "key": "ga-house-128-2026-d-1"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Richard Eugene Braun, Jr.",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "da-atlantic-2026-r-2"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "da-atlantic-2026",
+     "candidateId": "da-atlantic-2026-r-2",
+     "cycle": 2026,
+     "level": "local",
+     "office": "District Attorney",
+     "district": null,
+     "party": "Republican",
+     "phases": [
+      "general"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "out-of-scope",
+      "confidence": null,
+      "note": "no campaign finance source covers GA local offices"
      }
     }
    ],
@@ -48215,6 +48341,59 @@
   {
    "vgId": null,
    "name": {
+    "full": "Tamara Johnson-Shealey",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "ga-senate-14-2026-r-3"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-senate-14-2026",
+     "candidateId": "ga-senate-14-2026-r-3",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia State Senate",
+     "district": 14,
+     "party": "Republican",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
     "full": "Tamyko Green",
     "first": null,
     "last": null
@@ -48325,7 +48504,7 @@
   {
    "vgId": null,
    "name": {
-    "full": "Timoria Mcqueen Saba",
+    "full": "Timoria McQueen Saba",
     "first": null,
     "last": null
    },
