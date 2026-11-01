@@ -283,6 +283,29 @@ It also carries what the PDF does **not**: `Total Tax` in dollars, the full
 property-class breakdown, and the homestead-exemption detail. One parser, one
 file per year, everything.
 
+### 4.1.2 Join on the district CODE, never the district name
+
+Verified across the 2023 and 2025 files, and this is the single most important
+parser rule:
+
+- **`(County Code, District Code)` is stable.** 1,768 of ~1,800 pairs appear in
+  both years.
+- **`District Name` drifts for 15% of them** — 274 pairs share a code but carry a
+  different name — and the drift is **not a consistent transform**. Only 2 of the
+  274 differ by a clean `<County> - ` prefix. It moves in *both* directions
+  (Appling's school district is `SCHOOL` in 2023 and `Appling County - SCHOOL` in
+  2025; Newton's is `Newton County - Newton School` in 2023 and `SCHOOL` in 2025),
+  and wording and casing change too (`COUNTY WIDE LIBRARY` →
+  `Countywide Library`).
+
+So: **key every record on `(County Code, District Code, Tax Year)`** and treat
+the name as a display label, resolved from the most recent year a code appears.
+A name-based join would silently split 15% of the series into fragments.
+
+- **Districts also come and go.** 14 code pairs exist only in 2023 and 46 only in
+  2025 — annexations, new fire and special districts. The district registry must
+  be a **union across years with first-seen / last-seen**, not a single snapshot.
+
 ### 4.1.1 What this replaces
 
 The earlier plan to parse the **"County Ad Valorem Tax Digest Millage Rates"
