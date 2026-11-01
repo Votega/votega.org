@@ -7,11 +7,16 @@
 **Goal:** Let a human-saved copy of the Senate's official roll-call XML feed the
 federal vote pipeline, so the site's Senate record comes from the official
 source rather than from Voteview, while senate.gov refuses automated clients.
+The three sources work as one loop: Voteview detects what exists upstream and
+tells the human what to save, the saved official file replaces it and is diffed
+against it, and a small curated layer covers the one fact Voteview cannot carry.
 
 **Architecture:** Both Senate generators resolve each Senate URL through a
 lookup that checks a committed directory of hand-saved XML first and falls
 through to HTTP, then to Voteview. Parsing is untouched: a dropped file is the
-same bytes `fetch_raw` would have returned.
+same bytes `fetch_raw` would have returned. Each run then reports which roll
+calls are still provisional (with the exact URLs to save) and which dropped
+files disagreed with their Voteview counterpart.
 
 **Tech Stack:** Python 3 standard library only (`run-script-tests.yml` installs
 no pip packages).
@@ -79,6 +84,9 @@ is the sanctioned path, not a workaround.
 - The existing reuse layer still governs: a roll call already in the committed
   JSON and not provisional is never re-read from any source.
 - No new pip dependencies.
+- Every Senate record carries its own `source` (`official` | `voteview` |
+  `curated`). The metadata list `senateRollsFromVoteview` stays, for
+  compatibility, but is no longer the only place provenance lives.
 
 ## Scope
 
@@ -115,6 +123,31 @@ the provisional set.
   what to name the file, that `Save As` or view-source is required because
   copying from the browser's XML tree view yields rendered text, not XML.
 
+### Task 6: Provisional report (Voteview tells the human what to drop)
+At the end of each run, list every roll call still sourced from Voteview with
+its official XML URL and the filename to save it under, e.g. "257: save
+`https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00257.xml`
+as `vote_119_2_00257.xml`". Written to the workflow summary; when the list is
+non-empty and older than N days, open or update a single tracking issue. This is
+the answer to the known cost below: a missed week becomes a visible to-do, not
+a silent gap. Never gates the commit (tier 2: it reports what the world can do).
+
+### Task 7: Reconciliation diff (the official file audits Voteview)
+When a dropped file replaces a provisional Voteview row (Task 4), compare the
+two on tally, date and result and log every difference in
+`metadata.senateReconciliation`. CLAUDE.md records 4 of 915 differing today, so
+this measures how far the fallback can be trusted during a long gap. Report
+only; the official value always wins.
+
+### Task 8: Curated VP tie-break layer (deferred, build on first need)
+Voteview does not record the VP's vote and the inferred-tie rule cannot see a
+VP Nay. A tiny overrides file in the style of `ga-members-overrides.json`, e.g.
+`{"S119_2_00260": {"vpVote": "Nay", "_note": "verified at senate.gov/..."}}`,
+would let a tie-break week cost one line instead of one saved XML. Every entry
+needs a `_note` (as with `id-crosswalk-overrides.json`). Do not build until a
+tie-break arrives that inference gets wrong; a dropped XML (Task 3) supersedes
+the entry for that roll call.
+
 ## Out of scope
 
 - Any CREC/govinfo work.
@@ -122,6 +155,10 @@ the provisional set.
   votes are ever needed, and there are currently **zero** outstanding (the
   Senate's last roll call was 2026-09-30, vote 256, which we hold).
 - Removing Voteview.
+- A browser console snippet that bulk-fetches the missing XML from inside a
+  senate.gov tab. It is the same human-in-a-browser path, but it is still bulk
+  automation against a WAF-protected tree, so it is a judgment call rather than
+  an obviously sanctioned one. At single-digit weekly volume, Save As is enough.
 - Contacting the Senate webmaster (worth doing in parallel; the broken links on
   XML_Availability.htm are concrete, reportable bugs alongside the WAF block).
 
@@ -131,13 +168,17 @@ the provisional set.
 - A dropped file never lands in the provisional set.
 - The `if indexes[1]:` guard does not mis-route when only a local index exists.
 - No behaviour change at all when the drop directory is empty or missing.
+- The provisional report lists exactly the roll calls whose `source` is
+  `voteview`, and is empty (and silent) when none are outstanding.
+- The reconciliation diff never changes a published value, only reports.
 
 ## Known costs
 
 - Converts an automated weekly job into a manual chore on weeks the Senate
   votes. Volume is low (0 outstanding today; typically single digits per week in
-  session), but a missed week leaves a gap that only the Voteview backstop
-  would reveal.
+  session). A missed week leaves Voteview-sourced rows in place, which Task 6
+  now surfaces as a dated to-do rather than leaving it to memory.
 - Repo growth: ~10-30 KB per roll call.
 
-**Estimated effort:** ~30-50k tokens.
+**Estimated effort:** ~30-50k tokens for Tasks 1-5; Tasks 6-7 add roughly 10-15k.
+Task 8 is deferred.
