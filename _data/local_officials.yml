@@ -4042,49 +4042,171 @@ jurisdictions:
   # Left commented because the validator rejects a jurisdiction with no members.
   # --------------------------------------------------------------------------
 
-  # - id: thomas                    # must equal the places.yml slug
-  #   name: Thomas County
-  #   type: county
-  #   county: Thomas
-  #   body: Board of Commissioners
-  #   partisan: true
-  #   official_url: https://thomascountyboc.org/about-us/county-commissioners
-  #   board_size: 8                 # the county site lists Districts 1-8 (the Chairman holds District 4)
-  #   related_pages:
-  #     - { }
-  #   notes: ""
-  #   members:
-  #     - name: ""
-  #       role: Chair               # Chair | Vice Chair | Commissioner
-  #       seat: ""                  # "District 4"
-  #       party: Republican         # Republican | Democratic | Independent
-  #       email: ""
-  #       phone: ""
-  #       last_elected:
-  #       term_end:
-  #       next_election:
-  #       voting: true
-  #       source: ""                # REQUIRED - primary-source URL
+  - id: thomas                    # must equal the places.yml slug
+    name: Thomas County
+     type: county
+     county: Thomas
+     body: Board of Commissioners
+     partisan: true
+     official_url: https://thomascountyboc.org/about-us/county-commissioners
+     board_size: 8                 # the county site lists Districts 1-8 (the Chairman holds District 4)
+    related_pages:
+       - { }
+    notes: ""
+    members:
+       - name: "Rev. Jeremy Rich"
+         role: Commissioner               # Chair | Vice Chair | Commissioner
+         seat: "District 1"                  # "District 4"
+         party:         # Republican | Democratic | Independent
+         email: ""
+         phone: ""
+         last_elected: 2022
+         term_end: 2026
+         next_election: 
+         voting: true
+         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+       - name: "Moses Gross"
+         role: Commissioner               # Chair | Vice Chair | Commissioner
+         seat: "District 2"                  # "District 4"
+         party:         # Republican | Democratic | Independent
+         email: ""
+         phone: ""
+         last_elected: 2024
+         term_end: 2028
+         next_election: 
+         voting: true
+         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+       - name: "Kenneth Hickey"
+         role: Commissioner               # Chair | Vice Chair | Commissioner
+         seat: "District 3"                  # "District 4"
+         party:         # Republican | Democratic | Independent
+         email: ""
+         phone: ""
+         last_elected: 2022
+         term_end: 2026
+         next_election: 
+         voting: true
+         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+       - name: "Mark NeSmith"
+         role: Chair               # Chair | Vice Chair | Commissioner
+         seat: "District 4"                  # "District 4"
+         party:         # Republican | Democratic | Independent
+         email: ""
+         phone: ""
+         last_elected: 2024
+         term_end: 2028
+         next_election: 
+         voting: true
+         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+       - name: "Donnie Bagget"
+         role: Vice Chair               # Chair | Vice Chair | Commissioner
+         seat: "District 5"                  # "District 4"
+         party:         # Republican | Democratic | Independent
+         email: ""
+         phone: ""
+         last_elected: 2022
+         term_end: 2026
+         next_election: 
+         voting: true
+         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+       - name: "Vacant"
+         role: Commissioner              # Chair | Vice Chair | Commissioner
+         seat: "District 6"                  # "District 4"
+         party:         # Republican | Democratic | Independent
+         email: ""
+         phone: ""
+         last_elected: 2024
+         term_end: 2028
+         next_election: 
+         voting: true
+         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+       - name: "Phillip Brown"
+         role: Commissioner              # Chair | Vice Chair | Commissioner
+         seat: "District 7"                  # "District 4"
+         party:         # Republican | Democratic | Independent
+         email: ""
+         phone: ""
+         last_elected: 2022
+         term_end: 2026
+         next_election: 
+         voting: true
+         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+       - name: "Zippy Vonier"
+         role: Commissioner               # Chair | Vice Chair | Commissioner
+         seat: "District 8"                  # "District 4"
+         party:         # Republican | Democratic | Independent
+         email: ""
+         phone: ""
+         last_elected: 2024
+         term_end: 2028
+         next_election:
+         voting: true
+         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
 
-  # - id: thomasville               # must equal the places.yml slug
-  #   name: City of Thomasville
-  #   type: city
-  #   county: Thomas
-  #   body: City Council
-  #   partisan: false
-  #   official_url: https://thomasville.org/about-the-thomasville-city-council
-  #   related_pages:
-  #     - { }
-  #   notes: ""
-  #   members:
-  #     - name: ""
-  #       role: Mayor               # Mayor | Mayor Pro Tem | Council Member
-  #       seat: ""
-  #       party: Nonpartisan
-  #       email: ""
-  #       phone: ""
-  #       last_elected:
-  #       term_end:
-  #       next_election:
-  #       voting: true
-  #       source: ""                # REQUIRED - primary-source URL
+
+  - id: thomasville               # must equal the places.yml slug
+    name: City of Thomasville
+    type: city
+    county: Thomas
+    body: City Council
+    partisan: false
+    official_url: https://thomasville.org/about-the-thomasville-city-council
+    related_pages:
+       - { }
+    notes: ""
+    members:
+      - name: "Scott Chastain"
+        role: Mayor               # Mayor | Mayor Pro Tem | Council Member
+        seat: "District 2, Post 2"
+        party: Nonpartisan
+        email: "scott.chastain@thomasville.org"
+        phone: ""
+        last_elected:
+        term_end: 2029
+        next_election: 
+        voting: true
+        source: "https://thomasville.org/about-the-thomasville-city-council"                # REQUIRED - primary-source URL
+      - name: "Lucinda Brown"
+        role: Mayor Pro Tem               # Mayor | Mayor Pro Tem | Council Member
+        seat: "District 1, Post 1"
+        party: Nonpartisan
+        email: "lucinda.brown@thomasville.org"
+        phone: ""
+        last_elected: 2023
+        term_end: 2027
+        next_election: 
+        voting: true
+        source: "https://thomasville.org/about-the-thomasville-city-council"                # REQUIRED - primary-source URL
+      - name: "Todd Mobley"
+        role: Council Member               # Mayor | Mayor Pro Tem | Council Member
+        seat: "At Large"
+        party: Nonpartisan
+        email: "todd.mobley@thomasville.org"
+        phone: ""
+        last_elected: 2025
+        term_end: 2029
+        next_election: 
+        voting: true
+        source: "https://thomasville.org/about-the-thomasville-city-council"                # REQUIRED - primary-source URL
+      - name: "Terry Scott"
+        role: Council Member               # Mayor | Mayor Pro Tem | Council Member
+        seat: "District 1, Post 2"
+        party: Nonpartisan
+        email: "terry.scott@thomasville.org"
+        phone: ""
+        last_elected: 2025
+        term_end: 2029
+        next_election: 
+        voting: true
+        source: "https://thomasville.org/about-the-thomasville-city-council"                # REQUIRED - primary-source URL
+      - name: "Royal O. Baker III"
+        role: Council Member               # Mayor | Mayor Pro Tem | Council Member
+        seat: "District 2, Post 1"
+        party: Nonpartisan
+        email: "royal.baker@thomasville.org"
+        phone: ""
+        last_elected: 2023
+        term_end: 2027
+        next_election: 
+        voting: true
+        source: "https://thomasville.org/about-the-thomasville-city-council"                # REQUIRED - primary-source URL
