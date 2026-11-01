@@ -28,6 +28,7 @@ permissions:
 jobs:
   record:
     runs-on: ubuntu-24.04  # pinned through the 2026 general
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

@@ -27,6 +27,10 @@ import urllib.request
 # and NOTICE.md are appended last, a mid-run failure would leave them unwritten.
 _RETRYABLE_STATUSES = frozenset({429, 500, 502, 503, 504})
 _MAX_ATTEMPTS = 5
+# urlopen has no timeout by default, so one stalled connection hung the publish for
+# as long as the job was allowed to run. Per-socket-operation, not total: generous
+# enough for a multi-MB contents-API PUT.
+_TIMEOUT_SECONDS = 120
 
 
 def _urlopen_retry(req):
@@ -38,12 +42,13 @@ def _urlopen_retry(req):
     """
     for attempt in range(_MAX_ATTEMPTS):
         try:
-            with urllib.request.urlopen(req) as resp:
+            with urllib.request.urlopen(req, timeout=_TIMEOUT_SECONDS) as resp:
                 return resp.read()
         except urllib.error.HTTPError as e:
             if e.code not in _RETRYABLE_STATUSES or attempt == _MAX_ATTEMPTS - 1:
                 raise
-        except urllib.error.URLError:
+        except (urllib.error.URLError, TimeoutError):
+            # A read timeout surfaces as a bare TimeoutError rather than a URLError.
             if attempt == _MAX_ATTEMPTS - 1:
                 raise
         time.sleep(2 ** attempt)

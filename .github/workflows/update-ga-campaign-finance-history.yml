@@ -14,9 +14,14 @@ on:
   schedule:
     - cron: '30 9 1 1,4,7,10 *'   # 09:30 UTC on the 1st, quarterly
 
+concurrency:
+  group: update-ga-campaign-finance-history
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repository

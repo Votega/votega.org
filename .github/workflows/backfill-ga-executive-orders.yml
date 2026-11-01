@@ -29,9 +29,14 @@ on:
         required: true
         default: false
 
+concurrency:
+  group: backfill-ga-executive-orders
+  cancel-in-progress: false
+
 jobs:
   backfill:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 90
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 

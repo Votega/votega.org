@@ -18,9 +18,14 @@ on:
   schedule:
     - cron: '0 11 * * 0'  # weekly, Sunday 11:00 UTC (after the Sunday data jobs)
 
+concurrency:
+  group: update-candidate-images
+  cancel-in-progress: false
+
 jobs:
   cache-portraits:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
