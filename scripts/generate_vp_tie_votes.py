@@ -25,7 +25,7 @@ import urllib.error
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
-from lib import voteview
+from lib import voteview, senate_drop
 from lib.http import fetch_bytes
 from lib.congress_session import current_congress
 from generate_federal_votes_data import pass_fail
@@ -310,8 +310,10 @@ def main():
                 session=session,
                 vote_number=padded,
             )
-            time.sleep(XML_DELAY)
-            raw = fetch_raw(url, f"vote_{CURRENT_CONGRESS}_{session}_{padded}.xml")
+            raw = senate_drop.read_roll(CURRENT_CONGRESS, session, int(padded))
+            if raw is None:
+                time.sleep(XML_DELAY)
+                raw = fetch_raw(url, f"vote_{CURRENT_CONGRESS}_{session}_{padded}.xml")
             if not raw:
                 continue
 
@@ -329,7 +331,29 @@ def main():
         print("  senate.gov unreachable — keeping committed votes, adding from Voteview",
               file=sys.stderr)
         all_votes = list(existing)
-        known = {(v["session"], v["voteNumber"]) for v in all_votes}
+        # Hand-saved official XML outranks Voteview. Its verdict is final either way:
+        # a roll call with no <tie_breaker> was NOT a tie-break, so Voteview's
+        # inference for it is dropped too, and the roll call is never re-inferred.
+        inferred = set(fallback_votes)
+        official = {}
+        for session, number in senate_drop.dropped_rolls(CURRENT_CONGRESS):
+            padded = f"{number:05d}"
+            if any((v["session"], v["voteNumber"]) == (session, padded)
+                   and f"{session}-{padded}" not in inferred for v in all_votes):
+                continue  # an official record we already hold is immutable
+            official[(session, padded)] = parse_vote_detail(
+                senate_drop.read_roll(CURRENT_CONGRESS, session, number),
+                CURRENT_CONGRESS, session, padded)
+        if official:
+            all_votes = [v for v in all_votes
+                         if (v["session"], v["voteNumber"]) not in official]
+            official_ids = {f"{s_}-{n_}" for s_, n_ in official}
+            fallback_votes = [f for f in fallback_votes if f not in official_ids]
+            for key, vote in sorted(official.items()):
+                if vote:
+                    print(f"    VP tie-breaker (official XML): vote {key[1]} — {vote['question'][:60]}")
+                    all_votes.append(vote)
+        known = {(v["session"], v["voteNumber"]) for v in all_votes} | set(official)
         for vote in voteview_tie_breaks(CURRENT_CONGRESS, known):
             print(f"    VP tie-breaker (Voteview): vote {vote['voteNumber']} — {vote['question'][:60]}")
             all_votes.append(vote)
