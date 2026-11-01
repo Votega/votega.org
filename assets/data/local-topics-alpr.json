@@ -73,6 +73,12 @@
    "region": "Metro Atlanta"
   },
   {
+   "placeId": "thomasville",
+   "placeName": "City of Thomasville",
+   "placeType": "city",
+   "region": "South Georgia"
+  },
+  {
    "placeId": "cobb",
    "placeName": "Cobb County",
    "placeType": "county",
@@ -167,6 +173,12 @@
    "placeName": "Walton County",
    "placeType": "county",
    "region": "Metro Atlanta"
+  },
+  {
+   "placeId": "whitfield",
+   "placeName": "Whitfield County",
+   "placeType": "county",
+   "region": "Northwest Georgia"
   }
  ],
  "mentions": [
@@ -499,6 +511,27 @@
    "terms": [
     "body cam",
     "surveillance equipment"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": null,
+   "date": "2026-09-22",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13275",
+   "placeId": "thomas",
+   "placeName": "Thomas County",
+   "placeType": "county",
+   "region": "South Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://thomascountyboc.org/uploads/files/7d/07/7d075b7db424d42479eb708c152cf335.pdf",
+   "tags": [],
+   "terms": [
+    "in-car camera"
    ],
    "vendors": []
   },
@@ -1811,14 +1844,14 @@
   }
  ],
  "metadata": {
-  "citiesScanned": 7,
+  "citiesScanned": 8,
   "consolidatedScanned": 4,
-  "countiesScanned": 44,
+  "countiesScanned": 46,
   "emoji": "📷",
-  "generatedAt": "2026-10-31T20:13:56Z",
+  "generatedAt": "2026-11-01T03:28:58Z",
   "label": "ALPR / surveillance",
-  "placesScanned": 55,
-  "placesWithMentions": 27,
+  "placesScanned": 58,
+  "placesWithMentions": 28,
   "topic": "alpr",
   "universeCities": 537,
   "universeConsolidated": 9,

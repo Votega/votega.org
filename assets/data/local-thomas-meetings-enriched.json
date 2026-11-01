@@ -1,22 +1,93 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-01T02:13:14Z",
+  "generatedAt": "2026-11-01T03:28:58Z",
   "source": "Thomas County (nimblecal agenda/minutes PDFs, poppler+OCR)",
   "place": "Thomas County",
-  "count": 40
+  "count": 25
  },
  "summary": {
-  "flags": [],
+  "flags": [
+   "alpr",
+   "land-use",
+   "local-taxes",
+   "millage-budget"
+  ],
   "lastActivity": "2026-11-03",
   "topicTotals": {
-   "appointment": 1
+   "contract": 5,
+   "local-taxes": 4,
+   "millage-budget": 6,
+   "comprehensive-plan": 1,
+   "development": 1,
+   "rezoning": 1,
+   "special-land-use": 1,
+   "alpr": 1,
+   "appointment": 2
   },
   "dataCenterItems": [],
-  "landUseItems": [],
-  "landUseMeetings": 0,
-  "alprItems": [],
-  "alprMeetings": 0,
-  "localTaxItems": []
+  "landUseItems": [
+   {
+    "title": "Commissioners' Board Meeting",
+    "date": "2026-10-13",
+    "sourceUrl": "https://thomascountyboc.org/uploads/files/73/6b/736b3c59b7b3af88a30519d95234862f.pdf",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning",
+     "special-land-use"
+    ]
+   }
+  ],
+  "landUseMeetings": 1,
+  "alprItems": [
+   {
+    "title": "Commission Board Meeting",
+    "date": "2026-09-22",
+    "sourceUrl": "https://thomascountyboc.org/uploads/files/7d/07/7d075b7db424d42479eb708c152cf335.pdf",
+    "terms": [
+     "in-car camera"
+    ]
+   }
+  ],
+  "alprMeetings": 1,
+  "localTaxItems": [
+   {
+    "title": "Purchasing Committee",
+    "date": "2026-11-03",
+    "sourceUrl": "https://thomascountyboc.org/uploads/files/03/3a/033a308ceedbe955262981a1d6de3a85.pdf",
+    "terms": [
+     "splost"
+    ]
+   },
+   {
+    "title": "Public Works Committee",
+    "date": "2026-10-21",
+    "sourceUrl": "https://thomascountyboc.org/uploads/files/b1/a0/b1a0d4ab202c48e5dc88bfb887b4c5bb.pdf",
+    "terms": [
+     "splost"
+    ]
+   },
+   {
+    "title": "Commissioners' Board Meeting",
+    "date": "2026-10-13",
+    "sourceUrl": "https://thomascountyboc.org/uploads/files/73/6b/736b3c59b7b3af88a30519d95234862f.pdf",
+    "terms": [
+     "ad valorem",
+     "flost",
+     "millage",
+     "splost",
+     "tax digest"
+    ]
+   },
+   {
+    "title": "Commission Board Meeting",
+    "date": "2026-08-25",
+    "sourceUrl": "https://thomascountyboc.org/uploads/files/f7/95/f7950836fd4ce5e12282d4bdaceb4380.pdf",
+    "terms": [
+     "millage"
+    ]
+   }
+  ]
  },
  "meetings": [
   {
@@ -27,14 +98,29 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/03/3a/033a308ceedbe955262981a1d6de3a85.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/03/3a/033a308ceedbe955262981a1d6de3a85.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 11367,
    "pdfSha256": "a13cbef40994c54a00528958d1c4001234edd5a9df2e291ee01a06b471a1f02a",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "contract": 1,
+    "local-taxes": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "contract",
+    "local-taxes",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "contract",
+    "splost"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "millage-budget",
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -63,14 +149,26 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/b1/a0/b1a0d4ab202c48e5dc88bfb887b4c5bb.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/b1/a0/b1a0d4ab202c48e5dc88bfb887b4c5bb.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 12658,
    "pdfSha256": "55b3a2fb40c61a07ddd95d120a0cc7c73b909460f554c2fa101fb5dcd1cc09ce",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "local-taxes": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "local-taxes",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "splost"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "millage-budget",
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -81,14 +179,22 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/a8/b2/a8b2d80ba2d125b077d74559058a16f0.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/a8/b2/a8b2d80ba2d125b077d74559058a16f0.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 22586,
    "pdfSha256": "6d1c1a7f5a1a35a5f645bef48ef8f30d41c04e8febf25a7e27c188bfc71078f6",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "millage-budget": 1
+   },
+   "tags": [
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "millage-budget"
+   ],
    "dataCenterItems": []
   },
   {
@@ -99,14 +205,49 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/73/6b/736b3c59b7b3af88a30519d95234862f.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/73/6b/736b3c59b7b3af88a30519d95234862f.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 38116,
    "pdfSha256": "84b997f60f3393480f2656421b3753902f3e99eb6a21b2c26781d41c9cf378cc",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1,
+    "millage-budget": 1,
+    "rezoning": 1,
+    "special-land-use": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "contract",
+    "development",
+    "local-taxes",
+    "millage-budget",
+    "rezoning",
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "ad valorem",
+    "budget",
+    "comprehensive plan",
+    "conditional use",
+    "contract",
+    "fiscal year",
+    "flost",
+    "millage",
+    "mixed use",
+    "purchase order",
+    "rezon",
+    "splost",
+    "subdivision",
+    "tax digest"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "land-use",
+    "millage-budget",
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -117,12 +258,18 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/d9/ed/d9ede83d08c2135a405bbb0360df083e.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/d9/ed/d9ede83d08c2135a405bbb0360df083e.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 478,
    "pdfSha256": "f8d8469f123859a0ab379dd9b3cf2f1431956d93c0e0fd2620411182ee9bfd32",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "contract": 1
+   },
+   "tags": [
+    "contract"
+   ],
+   "matchedTerms": [
+    "contract"
+   ],
    "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
@@ -135,8 +282,8 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/96/2e/962edef5d0660815c7eedc3cd2e078c0.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/96/2e/962edef5d0660815c7eedc3cd2e078c0.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 567,
    "pdfSha256": "4b08b799f779afc172ef5cb3b930e30b6ac98cd120b9a0fec6a121e800905f5c",
    "topics": {},
    "tags": [],
@@ -153,14 +300,29 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/7d/07/7d075b7db424d42479eb708c152cf335.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/7d/07/7d075b7db424d42479eb708c152cf335.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 1193,
    "pdfSha256": "1e7e0209a29bcc86820187d04e200629f6a6cd1fb41d73ef8dd089f32ac0474d",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "alpr": 1,
+    "contract": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "alpr",
+    "contract",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "budget",
+    "in-car camera",
+    "purchase order"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "millage-budget",
+    "alpr"
+   ],
    "dataCenterItems": []
   },
   {
@@ -207,8 +369,8 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/d1/e4/d1e477140a06a62d48076201d39c613f.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/d1/e4/d1e477140a06a62d48076201d39c613f.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 390,
    "pdfSha256": "cef43fd9273177875b305f91780af934b6e56c68c4366e7b96c6d52c51e2dc4d",
    "topics": {},
    "tags": [],
@@ -243,8 +405,8 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/57/f8/57f84ee219ed3160e4308abcf00d56d7.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/57/f8/57f84ee219ed3160e4308abcf00d56d7.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 473,
    "pdfSha256": "3f7e4ac151b248cdc70ddf52c4654da4c690d21c6004f190aea4f97ef6eadc0b",
    "topics": {},
    "tags": [],
@@ -279,14 +441,28 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/f7/95/f7950836fd4ce5e12282d4bdaceb4380.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/f7/95/f7950836fd4ce5e12282d4bdaceb4380.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 1250,
    "pdfSha256": "cd64719375643c8de008a1dcd996a8831e5ce856b814a6e03da4aed5905a3f48",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "appointment": 1,
+    "local-taxes": 1,
+    "millage-budget": 1
+   },
+   "tags": [
+    "appointment",
+    "local-taxes",
+    "millage-budget"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "millage"
+   ],
    "topicExcerpts": {},
-   "flags": [],
+   "flags": [
+    "millage-budget",
+    "local-taxes"
+   ],
    "dataCenterItems": []
   },
   {
@@ -315,8 +491,8 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/4b/29/4b29cfe5e030e860edb2fe450f352e99.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/4b/29/4b29cfe5e030e860edb2fe450f352e99.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 371,
    "pdfSha256": "217bc8c063d98fd9c611067248992d32ed3602b67d97a003f5f438035b76d6b4",
    "topics": {},
    "tags": [],
@@ -351,8 +527,8 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/32/bf/32bffc5c6d72a19803e976863eccb6fd.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/32/bf/32bffc5c6d72a19803e976863eccb6fd.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 302,
    "pdfSha256": "ba0fab9deeb7c7e4cac8686bad9b4d55f5059afdd403128961f25f957021c5ba",
    "topics": {},
    "tags": [],
@@ -387,12 +563,21 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/fe/a8/fea8eaa614a78fafa76be938e4b8e14c.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/fe/a8/fea8eaa614a78fafa76be938e4b8e14c.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 522,
    "pdfSha256": "e20033b9fb94bd9246f79b9aa07bc6238452689cb1eabee6c83012b79b79cdf0",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
+   "topics": {
+    "appointment": 1,
+    "contract": 1
+   },
+   "tags": [
+    "appointment",
+    "contract"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract"
+   ],
    "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
@@ -423,8 +608,8 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/ff/5f/ff5f15d3fafcf37c7c540160646d0293.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/ff/5f/ff5f15d3fafcf37c7c540160646d0293.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 334,
    "pdfSha256": "165d6688440836846ba718a44dfa383639dbee59d8de0da9cdbc549729b4b6d5",
    "topics": {},
    "tags": [],
@@ -459,291 +644,9 @@
    "sourceUrl": "https://thomascountyboc.org/uploads/files/73/ae/73aeb8934766ee917d15a35dd240560a.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://thomascountyboc.org/uploads/files/73/ae/73aeb8934766ee917d15a35dd240560a.pdf",
-   "textMethod": "none",
-   "textChars": 0,
+   "textMethod": "ocr",
+   "textChars": 336,
    "pdfSha256": "a2f30a540c1cc28c84d0b0f6b6a6b2c2b0e52b02da8592f30a54c74f969279dd",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-07-14-board-of-commissioners",
-   "date": "2026-07-14",
-   "body": "Board of Commissioners",
-   "title": "Commissioners' Board Meeting",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/61/04/6104ecf7ba946ae7cfc65728919e4a22.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/61/04/6104ecf7ba946ae7cfc65728919e4a22.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "18d98684a83e60a3825854606c5762114f06ba725e2551c1c5bf3c67f14c0287",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-07-07-purchasing-committee",
-   "date": "2026-07-07",
-   "body": "Purchasing Committee",
-   "title": "Purchasing Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/76/89/7689ce017d7d315d089a14f1fb81546a.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/76/89/7689ce017d7d315d089a14f1fb81546a.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "caefbb3c85e2251bd8a65ecaaf3958c94a3767a45ca6ace40ad725379ced1294",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-07-02-public-property",
-   "date": "2026-07-02",
-   "body": "Public Property",
-   "title": "Public Property Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/0b/c6/0bc600948803125ed78df3eb9b697e25.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/0b/c6/0bc600948803125ed78df3eb9b697e25.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "02fda95c14ebc9ff18115d4475e5cf7a39ddbdc608663c51145df942b475fb09",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-07-01-board-of-commissioners",
-   "date": "2026-07-01",
-   "body": "Board of Commissioners",
-   "title": "Special Called Meeting",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/45/03/45037f804ffbfb04720f7dc0f12ad0fc.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/45/03/45037f804ffbfb04720f7dc0f12ad0fc.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "bd6bcdf44df7fc4443cc91cb336287a6c4d6446f1659fca86fb174071bf26b47",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-06-29-finance-committee",
-   "date": "2026-06-29",
-   "body": "Finance Committee",
-   "title": "Finance Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/f4/54/f4547d02268842da3a88c8e65fd2f0f9.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/f4/54/f4547d02268842da3a88c8e65fd2f0f9.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "cedf3d3cbe5a852884e4e5889cb01be2b226623d9fea7ed05b91ad986102e2ee",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-06-23-board-of-commissioners",
-   "date": "2026-06-23",
-   "body": "Board of Commissioners",
-   "title": "Commission Board Meeting",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/e3/a6/e3a68dfe75addc62e6255c0d1072ebbb.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/e3/a6/e3a68dfe75addc62e6255c0d1072ebbb.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 2000,
-   "pdfSha256": "ccdf1c66bceebf24bd9359d10f9f777c72cad47cdd6d955ba214a878f7e3077a",
-   "topics": {
-    "appointment": 1
-   },
-   "tags": [
-    "appointment"
-   ],
-   "matchedTerms": [
-    "appoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… to the section of road as a public road shall cease. H. New Business i. Consideration of appointment to Thomas County Library Advisory Board - Marchelle Walden I. Old Business i. Conside …",
-     "context": "unknown"
-    }
-   },
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-06-17-public-works-committee",
-   "date": "2026-06-17",
-   "body": "Public Works Committee",
-   "title": "Public Works Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/11/4b/114b831c229a641cc799a8bd3fc83380.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/11/4b/114b831c229a641cc799a8bd3fc83380.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "3128f1bbf710346909cc2f91145cccd7d50ac1515b0312d15e6fb0b3cdc70a3e",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-06-16-emergency-services",
-   "date": "2026-06-16",
-   "body": "Emergency Services",
-   "title": "Emergency Services Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/02/68/0268ff64ee37a4b3d448c4d400cf7676.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/02/68/0268ff64ee37a4b3d448c4d400cf7676.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "60b02e6ac561b62245aefa796e88fb47ba2275a213ac892702b0993f74e6d0c0",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-06-09-board-of-commissioners",
-   "date": "2026-06-09",
-   "body": "Board of Commissioners",
-   "title": "Commissioners' Board Meeting",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/dd/8c/dd8c66868b754990ca1fdc36518658b6.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/dd/8c/dd8c66868b754990ca1fdc36518658b6.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "cdc328fda4106e623e286af4a28a936755616cbf62a1c96c742017027aed78de",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-06-04-public-property",
-   "date": "2026-06-04",
-   "body": "Public Property",
-   "title": "Public Property Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/03/83/0383bf3309b8c4f86959e7b078ff2c4a.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/03/83/0383bf3309b8c4f86959e7b078ff2c4a.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "e28457c087c95744f75e2277be01e6e196e9d99f89bd649dd163fd33a024b839",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-06-02-purchasing-committee",
-   "date": "2026-06-02",
-   "body": "Purchasing Committee",
-   "title": "Purchasing Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/b3/62/b36298fef477024125ef8916cf1f5b4a.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/b3/62/b36298fef477024125ef8916cf1f5b4a.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "d2b9e5112138802c1d5157755b6578df6cf9f494725ff15ed7c2029b67553dde",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-05-28-board-of-commissioners",
-   "date": "2026-05-28",
-   "body": "Board of Commissioners",
-   "title": "Thomas County Pre-Hazard Mitigation Plan - Called Meeting",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/d8/45/d84542f2f321f0fd378a075f08e80e92.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/d8/45/d84542f2f321f0fd378a075f08e80e92.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "1ae2a45b9f77b609bca86959bafb226a5d2793ea45e3f75f8a25a40b4875af07",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-05-26-board-of-commissioners",
-   "date": "2026-05-26",
-   "body": "Board of Commissioners",
-   "title": "Commission Board Meeting",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/77/54/775479a1e21635a9cf989f5633d894d5.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/77/54/775479a1e21635a9cf989f5633d894d5.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "590220661a678f4c2eb78bac30474aa0b354d44d7c079238bb610198541e75fa",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-05-20-public-works-committee",
-   "date": "2026-05-20",
-   "body": "Public Works Committee",
-   "title": "Public Works Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/71/b7/71b7d0baac2ef3d908bcf4d1e1d01e60.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/71/b7/71b7d0baac2ef3d908bcf4d1e1d01e60.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "95e6453859a111473d47ac942652611bc8c92892a6799b86995479e0581cb538",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-05-19-emergency-services",
-   "date": "2026-05-19",
-   "body": "Emergency Services",
-   "title": "Emergency Services Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/04/1a/041afcb70c44f65923f6f7260b7ded23.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/04/1a/041afcb70c44f65923f6f7260b7ded23.pdf",
-   "textMethod": "none",
-   "textChars": 0,
-   "pdfSha256": "32e5ff04163faa5c2f448df3b0e1736d7ab2461cdec46e5e530fbb6e715876e0",
    "topics": {},
    "tags": [],
    "matchedTerms": [],
