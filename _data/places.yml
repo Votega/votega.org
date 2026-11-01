@@ -645,6 +645,19 @@ places:
         platform: civicplus
         base_url: https://www.newtoncountyga.gov
         agenda_module_id: 65
+        # The Agenda Center and its PDFs 403 us, but the RSS feed answers (checked
+        # 2026-11-01). It is recent-only (a couple of items), so while the site is blocked
+        # the run tops the committed file up from it (lib/civicplus_rss.py) instead of
+        # leaving it frozen. Items whose title carries no meeting date, or matches no
+        # rule below, are skipped and logged, never guessed.
+        rss_url: "https://www.newtoncountyga.gov/RSSFeed.aspx?ModID=65&CID=All-0"
+        rss_bodies:
+          - {match: "boc", label: "Board of Commissioners"}
+          - {match: "board of commissioners", label: "Board of Commissioners"}
+          - {match: "planning commission", label: "Planning Commission"}
+          - {match: " pc ", label: "Planning Commission"}
+          - {match: "bza", label: "Board of Zoning Appeals"}
+          - {match: "zoning appeals", label: "Board of Zoning Appeals"}
         # Cloudflare bot protection went up on this origin between 2026-10-01 and
         # 2026-10-05: EVERY path (AgendaCenter, the agenda PDFs, even robots.txt)
         # returns 403 to any non-browser client, from any IP, regardless of

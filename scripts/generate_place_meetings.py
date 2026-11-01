@@ -55,6 +55,8 @@ from lib.sharepoint import fetch_sharepoint_meetings  # noqa: E402
 from lib.nimblecal import fetch_nimblecal_meetings  # noqa: E402
 from lib.packetarchive import fetch_packetarchive_meetings  # noqa: E402
 from lib.drupalviews import fetch_drupalviews_meetings  # noqa: E402
+from lib.civicplus_rss import supplement as rss_supplement  # noqa: E402
+from lib.http import fetch_bytes  # noqa: E402
 from lib.wpdatatables import fetch_wpdatatables_meetings  # noqa: E402
 from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
@@ -356,6 +358,45 @@ def load_previous(slug):
         return []
 
 
+def rss_topup(place, cfg):
+    """Add feed-announced agendas to the committed file. Returns the payload to write, or
+    None when nothing was added (the file is then left untouched, like any blocked place).
+    generatedAt is deliberately NOT refreshed: the full record is exactly as old as before,
+    and the feed only added the newest items."""
+    slug = place['slug']
+    path = os.path.join(OUT_DIR, 'local-%s-meetings.json' % slug)
+    try:
+        with open(path, encoding='utf-8') as f:
+            payload = json.load(f)
+    except (OSError, ValueError):
+        print('  ERROR: no committed file to top up for %s' % slug)
+        return None
+    raw = fetch_bytes(cfg['rss_url'], headers={'User-Agent': 'Mozilla/5.0 (votega.org meeting-list)'})
+    if not raw:
+        print('  ERROR: RSS feed for %s could not be read' % slug)
+        return None
+    try:
+        meetings, added, skipped = rss_supplement(
+            payload.get('meetings') or [], raw.decode('utf-8', 'replace'),
+            cfg['base_url'], cfg.get('rss_bodies'))
+    except ValueError as e:
+        print('  ERROR: RSS feed for %s: %s' % (slug, e))
+        return None
+    for title, why in skipped:
+        print('  feed item skipped (%s): %s' % (why, title))
+    if not added:
+        print('  RSS feed: nothing new for %s' % slug)
+        return None
+    print('  RSS feed: added %d meeting(s) for %s' % (len(added), slug))
+    md = dict(payload.get('metadata') or {})
+    md['count'] = len(meetings)
+    md['supplementedAt'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    md['supplementedFrom'] = cfg['rss_url']
+    payload.update({'metadata': md, 'meetings': meetings,
+                    'bodies': sorted({m['body'] for m in meetings})})
+    return payload
+
+
 def build_place(place, saved_pages=None):
     """Fetch + normalize one place's meetings. Returns the output dict, or None."""
     slug = place['slug']
@@ -383,6 +424,10 @@ def build_place(place, saved_pages=None):
         print('  ERROR: bad meetings config for %s: %s' % (slug, e))
         return None
 
+    if meetings is None and cfg.get('rss_url') and saved_pages is None:
+        # The site blocks us but its RSS feed answers: top the committed file up with
+        # whatever the feed announces, never replacing it (lib/civicplus_rss.py).
+        return rss_topup(place, cfg)
     if meetings is None:
         print('  ERROR: could not fetch meetings source for %s' % slug)
         return None
