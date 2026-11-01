@@ -4205,3 +4205,723 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://thomasville.org/about-the-thomasville-city-council"                # REQUIRED - primary-source URL
+
+  # --- SoS-drafted rosters (2024 seating election only; NOT yet confirmed, see each `source`) ---
+
+  - id: camden
+    name: Camden County
+    type: county
+    county: Camden
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    official_url: "https://www.camdencountyga.gov/80/Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Robbie Cheek"
+        role: Chair
+        seat: "District 1"
+        party: 
+        email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-1-Commissioner-79"
+        phone: "912-674-3119"
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.camdencountyga.gov/ImageRepository/Document?documentID=17656"
+        source: "https://www.camdencountyga.gov/130/District-1"   # SoS results — CONFIRM before merge
+      - name: "Martin Turner"
+        role: Vice Chair
+        seat: "District 2"
+        party: 
+        email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-2-Commissioner-80"
+        phone: "912-552-4291"
+        last_elected: 2022
+        term_end: 2026        # last_elected + term_years (default 4) — verify
+        next_election: 2026
+        voting: true
+        photo: "https://www.camdencountyga.gov/ImageRepository/Document?documentID=17655"
+        source: "https://www.camdencountyga.gov/131/District-2"   # SoS results — CONFIRM before merge
+      - name: "Cody Smith"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-3-Commissioner-81"
+        phone: "912-676-7168"
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.camdencountyga.gov/ImageRepository/Document?documentID=17653"
+        source: "https://www.camdencountyga.gov/132/District-3"   # SoS results — CONFIRM before merge
+      - name: "Jim Goodman"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-4-Commissioner-82"
+        phone: "912-674-1285"
+        last_elected: 2022
+        term_end: 2026         # last_elected + term_years (default 4) — verify
+        next_election: 2026
+        voting: true
+        photo: "https://www.camdencountyga.gov/ImageRepository/Document?documentID=17654"
+        source: "https://www.camdencountyga.gov/133/District-4"   # SoS results — CONFIRM before merge
+      - name: "Ben Casey"
+        full_name: "Ben L. Casey"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 5"
+        party: 
+        email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-5-Commissioner-83"
+        phone: "912-552-4703"
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.camdencountyga.gov/ImageRepository/Document?documentID=17652"
+        source: "https://www.camdencountyga.gov/134/District-5"   # SoS results — CONFIRM before merge
+
+  - id: effingham
+    name: Effingham County
+    type: county
+    county: Effingham
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    official_url: "https://www.effinghamcounty.org/384/County-Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Damon Rahn"
+        full_name: "Damon M. Rahn"   # authoritative full name (matching); site shows `name`
+        role: Chair
+        title: Chairman At Large
+        seat: "At-large"
+        party: 
+        email: "drahn@effinghamcounty.org"
+        phone: "912-667-1619"
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.effinghamcounty.org/ImageRepository/Document?documentID=8312"
+        source: "https://www.effinghamcounty.org/m/directory/employee?eid=90"   # SoS results — CONFIRM before merge
+      - name: "Forrest Floyd"
+        full_name: "Frank Forrest Floyd"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "ffloyd@effinghamcounty.org"
+        phone: "912-429-3753"
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.effinghamcounty.org/ImageRepository/Document?documentID=8313"
+        source: "https://www.effinghamcounty.org/m/directory/employee?eid=91"   # SoS results — CONFIRM before merge
+      - name: "Roger Burdette"
+        role: Commissioner
+        seat: "District 2"
+        party: 
+        email: "RBurdette@effinghamcounty.org"
+        phone: "912-663-1692"
+        last_elected: 2022
+        term_end: 2026         # last_elected + term_years (default 4) — verify
+        next_election: 2026
+        voting: true
+        photo: "https://www.effinghamcounty.org/ImageRepository/Document?documentID=7111"
+        source: "https://www.effinghamcounty.org/m/directory/employee?eid=92"   # SoS results — CONFIRM before merge
+      - name: "Jamie DeLoach"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "jamiedeloachdistrict3@gmail.com"
+        phone: "912-655-9423"
+        last_elected: 2022
+        term_end: 2026         # last_elected + term_years (default 4) — verify
+        next_election: 2026
+        voting: true
+        photo: "https://www.effinghamcounty.org/ImageRepository/Document?documentID=8314"
+        source: "https://www.effinghamcounty.org/m/directory/employee?eid=93"   # SoS results — CONFIRM before merge
+      - name: "Beth Helmly"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "bhelmly@effinghamcounty.org"
+        phone: "912-429-8570"
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.effinghamcounty.org/ImageRepository/Document?documentID=8311"
+        source: "https://www.effinghamcounty.org/m/directory/employee?eid=94"   # SoS results — CONFIRM before merge
+      - name: "Phil Kieffer"
+        role: Commissioner
+        seat: "District 5"
+        party: 
+        email: "philkiefferdistrict5@gmail.com"
+        phone: "912-667-7977"
+        last_elected: 2022
+        term_end: 2026         # last_elected + term_years (default 4) — verify
+        next_election: 2026
+        voting: true
+        photo: "https://www.effinghamcounty.org/ImageRepository/Document?documentID=7116"
+        source: "https://www.effinghamcounty.org/m/directory/employee?eid=95"   # SoS results — CONFIRM before merge
+
+  - id: gordon
+    name: Gordon County
+    type: county
+    county: Gordon
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    official_url: "https://www.gordoncountyga.gov/185/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "M. “Bud” Owens"
+        full_name: "M. L. “Bud” Owens"   # authoritative full name (matching); site shows `name`
+        role: Chair
+        seat: "District 1"
+        party: 
+        email: "bud.owens@gordoncountyga.gov"
+        phone: "706-629-3795"
+        last_elected: 
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.gordoncountyga.gov/ImageRepository/Document?documentID=800"
+        source: "https://www.gordoncountyga.gov/185/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+      - name: "Chad Steward"
+        role: Commissioner
+        seat: "District 2"
+        party: 
+        email: "chad.steward@gordoncountyga.gov"
+        phone: "706-629-3795"
+        last_elected: 
+        term_end: 2026         # last_elected + term_years (default 4) — verify
+        next_election: 2026
+        voting: true
+        photo: "https://www.gordoncountyga.gov/ImageRepository/Document?documentID=801"
+        source: "https://www.gordoncountyga.gov/185/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+      - name: "Randy Abernathy"
+        role: Commissioner
+        seat: "District 3"
+        party:
+        email: "randy.abernathy@gordoncountyga.gov"
+        phone: "706-629-3795"
+        last_elected: 
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.gordoncountyga.gov/ImageRepository/Document?documentID=804"
+        source: "https://www.gordoncountyga.gov/185/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+      - name: "Kurt Sutherland"
+        role: Commissioner
+        seat: "District 4"
+        party:
+        email: "kurt.sutherland@gordoncountyga.gov"
+        phone: "706-629-3795"
+        last_elected: 
+        term_end: 2026         # last_elected + term_years (default 4) — verify
+        next_election: 2026
+        voting: true
+        photo: "https://www.gordoncountyga.gov/ImageRepository/Document?documentID=803"
+        source: "https://www.gordoncountyga.gov/185/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+      - name: "Kevin Cunningham"
+        full_name: "Kevin L. Cunningham"   # authoritative full name (matching); site shows `name`
+        role: Vice Chair
+        seat: "District 5"
+        party: 
+        email: "kevin.cunningham@gordoncountyga.gov"
+        phone: "706-629-3795"
+        last_elected: 
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.gordoncountyga.gov/ImageRepository/Document?documentID=802"
+        source: "https://www.gordoncountyga.gov/185/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+
+  - id: houston
+    name: Houston County
+    type: county
+    county: Houston
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    official_url: "https://www.houstoncountyga.gov/commissioner/contact-information.cms"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Dan Perdue"
+        role: Chair
+        seat: "Post 1"
+        party: 
+        email: "Chairman@houstoncountyga.gov"
+        phone: ""
+        last_elected: 
+        term_end:        # last_elected + term_years (default 4) — verify
+        next_election: 
+        voting: false
+        tie_break_only: true
+        photo: "https://www.houstoncountyga.gov/skins/userfiles/images/Houston%20County%20Commissioners%20Feb2023-24.jpg"
+        source: "https://www.houstoncountyga.gov/commissioner/contact-information.cms" 
+      - name: "Shane Gottwals"
+        role: Commissioner
+        seat: "Post 2"
+        party: 
+        email: "post2@houstoncountyga.gov"
+        phone: ""
+        last_elected: 
+        term_end:        # last_elected + term_years (default 4) — verify
+        next_election: 
+        voting: true
+        photo: "https://www.houstoncountyga.gov/skins/userfiles/images/Houston%20County%20Commissioners%20Feb2023-19.jpg"
+        source: "https://www.houstoncountyga.gov/commissioner/contact-information.cms"   
+      - name: "Gail Robinson"
+        role: Commissioner
+        seat: "Post 3"
+        party: 
+        email: "post3@houstoncountyga.gov"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.houstoncountyga.gov/skins/userfiles/images/Houston%20County%20Commissioners%20Feb2023-17.jpg"
+        source: "https://www.houstoncountyga.gov/commissioner/contact-information.cms"   
+      - name: "Tal Talton"
+        role: Commissioner
+        seat: "Post 4"
+        party: 
+        email: "post4@houstoncountyga.gov"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.houstoncountyga.gov/skins/userfiles/images/Houston%20County%20Commissioners%20Feb2023-20.jpg"
+        source: "https://www.houstoncountyga.gov/commissioner/contact-information.cms"   
+      - name: "Mark Byrd"
+        role: Commissioner
+        seat: "Post 5"
+        party: 
+        email: "post5@houstoncountyga.gov"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.houstoncountyga.gov/skins/userfiles/images/Houston%20County%20Commissioners%20Feb2023-18.jpg"
+        source: "https://www.houstoncountyga.gov/commissioner/contact-information.cms"  
+
+  - id: liberty
+    name: Liberty County
+    type: county
+    county: Liberty
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    official_url: "https://www.libertycountyga.gov/325/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Donald Lovette"
+        full_name: "Donald L. Lovette"   # authoritative full name (matching); site shows `name`
+        role: Chair
+        seat: "At-large"
+        party: 
+        email: "donald.lovette@libertycountyga.com"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=515"
+        source: "https://www.libertycountyga.gov/326/Donald-Lovette"   
+      - name: "Marion Stevens, Sr."
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "marion.stevens@libertycountyga.com"
+        phone: ""
+        last_elected: 
+        term_end:        
+        next_election: 
+        voting: true
+        photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=516"
+        source: "https://www.libertycountyga.gov/327/Marion-Stevens-Sr"
+      - name: "Justin L. Frasier"
+        role: Commissioner
+        seat: "District 2"
+        party: 
+        email: "justin.frasier@libertycountyga.com"
+        phone: ""
+        last_elected: 
+        term_end:        
+        next_election: 
+        voting: true
+        photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=517"
+        source: "https://www.libertycountyga.gov/328/Justin-L-Frasier"
+      - name: "Connie Thrift"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "connie.thrift@libertycountyga.com"
+        phone: ""
+        last_elected: 
+        term_end:        
+        next_election: 
+        voting: true
+        photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=2917"
+        source: "https://www.libertycountyga.gov/329/Connie-Thrift"
+      - name: "Timothy Blount"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "timmy.blount@libertycountyga.com"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=2355"
+        source: "https://www.libertycountyga.gov/460/Timothy-Blount"   
+      - name: "Gary Gilliard"
+        role: Commissioner
+        seat: "District 5"
+        party: 
+        email: "gary.gilliard@libertycountyga.com"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=520"
+        source: "https://www.libertycountyga.gov/332/Gary-Gilliard"   
+      - name: "Eddie Walden"
+        full_name: "Eddie J. Walden"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 6"
+        party: 
+        email: "eddie.walden@libertycountyga.com"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=521"
+        source: "https://www.libertycountyga.gov/333/Eddie-J-Walden"  
+
+  - id: lowndes
+    name: Lowndes County
+    type: county
+    county: Lowndes
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    official_url: "https://www.lowndescounty.com/181/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Bill Slaughter"
+        role: Chair
+        title: Chairman
+        seat: "At-large"
+        party: 
+        email: "commissioner@lowndescounty.com"
+        phone: "229-671-2442"
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.lowndescounty.com/images/CityDirectory/19/Chairman%20Slaughter.jpg"
+        source: "https://www.lowndescounty.com/328/Chairman"   
+      - name: "Joyce Evans"
+        full_name: "Joyce E. Evans"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "commissioner@lowndescounty.com"
+        phone: "229-671-2442"
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.lowndescounty.com/images/CityDirectory/19/Commissioner%20Evans.jpg"
+        source: "https://www.lowndescounty.com/329/District-1"   
+      - name: "Scott Orenstein"
+        full_name: "Scott \"Scottie\" Orenstein"
+        role: Commissioner
+        seat: "District 2"
+        party: 
+        email: "commissioner@lowndescounty.com"
+        phone: "229-671-2442"
+        last_elected: 
+        term_end:
+        next_election:
+        voting: true
+        photo: "https://www.lowndescounty.com/images/CityDirectory/19/Commissioner%20Orenstein.jpg"
+        source: "https://www.lowndescounty.com/330/District-2"
+      - name: "Mark Wisenbaker"
+        full_name: "Tally M. \"Mark\" Wisenbaker"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "commissioner@lowndescounty.com"
+        phone: "229-671-2442"
+        last_elected: 
+        term_end:
+        next_election:
+        voting: true
+        photo: "https://www.lowndescounty.com/images/CityDirectory/19/Commissioner%20Wisenbaker.jpg"
+        source: "https://www.lowndescounty.com/331/District-3"
+      - name: "Demarcus Marshall"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "commissioner@lowndescounty.com"
+        phone: "229-671-2442"
+        last_elected: 
+        term_end:
+        next_election:
+        voting: true
+        photo: "https://www.lowndescounty.com/images/CityDirectory/19/Commissioner%20Marshall.jpg"
+        source: "https://www.lowndescounty.com/332/District-4"  
+      - name: "Michael Smith"
+        role: Commissioner
+        seat: "District 5"
+        party: 
+        email: "commissioner@lowndescounty.com"
+        phone: "229-671-2442"
+        last_elected: 2024
+        term_end: 2028         # last_elected + term_years (default 4) — verify
+        next_election: 2028
+        voting: true
+        photo: "https://www.lowndescounty.com/ImageRepository/Document?documentID=4315"
+        source: "https://www.lowndescounty.com/333/District-5"  
+
+  - id: oconee
+    name: Oconee County
+    type: county
+    county: Oconee
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    official_url: "https://www.oconeecountyga.gov/507/Board-of-Commissioners"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "John Daniell"
+        full_name: "John E. Daniell"   # authoritative full name (matching); site shows `name`
+        role: Chair
+        title: County Commission Chairman
+        seat: "At-large"
+        party: 
+        email: "jdaniell@oconee.ga.us"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         
+        next_election: 2028
+        voting: true
+        photo: "https://www.oconeecountyga.gov/ImageRepository/Document?documentID=4383"
+        source: "https://www.oconeecountyga.gov/507/Board-of-Commissioners"   
+      - name: "Mark Thomas"
+        full_name: "Mark H. Thomas"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "Post 1"
+        party: 
+        email: "mthomas@oconee.ga.us"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         
+        next_election: 2028
+        voting: true
+        photo: "https://www.oconeecountyga.gov/ImageRepository/Document?documentID=4381"
+        source: "https://www.oconeecountyga.gov/910/Mark-Thomas"   
+      - name: "Chuck Horton"
+        role: Commissioner
+        seat: "Post 2"
+        party: 
+        email: "chorton@oconee.ga.us"
+        phone: ""
+        last_elected: 
+        term_end:        
+        next_election:
+        voting: true
+        photo: "https://www.oconeecountyga.gov/ImageRepository/Document?documentID=4379"
+        source: "https://www.oconeecountyga.gov/913/Chuck-Horton"
+      - name: "Amrey Harden"
+        role: Commissioner
+        seat: "Post 3"
+        party: 
+        email: "aharden@oconee.ga.us"
+        phone: ""
+        last_elected: 
+        term_end:        
+        next_election:
+        voting: true
+        photo: "https://www.oconeecountyga.gov/ImageRepository/Document?documentID=11255"
+        source: "https://www.oconeecountyga.gov/913/Amrey-Harden"
+      - name: "Mark Saxon"
+        full_name: "Mark T. Saxon"   # authoritative full name (matching); site shows `name`
+        role: Commissioner
+        seat: "Post 4"
+        party: 
+        email: "msaxon@oconee.ga.us"
+        phone: ""
+        last_elected: 2024
+        term_end: 2028         
+        next_election: 2028
+        voting: true
+        photo: "https://www.oconeecountyga.gov/ImageRepository/Document?documentID=4380"
+        source: "https://www.oconeecountyga.gov/913/Mark-Saxon"   
+
+  - id: tift
+    name: Tift County
+    type: county
+    county: Tift
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    official_url: "https://www.tiftcounty.org/county_commissionersgovernment/county_commissioners/index.php"            # TODO: county government site
+    related_pages:
+    members:
+      - name: "Donnie Hester"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "donnie.hester@tiftcounty.org"
+        phone: "229-402-3795"
+        last_elected: 
+        term_end:        
+        next_election: 
+        voting: true
+        photo: "https://www.tiftcounty.org/Hester%20-%20Copy%20(3).jpg"
+        source: "https://www.tiftcounty.org/county_commissioners/commissioner_donnie_hester.php"  
+      - name: "Melissa Hughes"
+        role: Vice Chair
+        seat: "District 2"
+        party: 
+        email: "melissa.hughes@tiftcounty.org"
+        phone: "229-326-0241"
+        last_elected: 
+        term_end:          
+        next_election: 
+        voting: true
+        photo: "https://www.tiftcounty.org/Hughes%20-%20Copy%20(3).jpg?t=202407191036110"
+        source: "https://www.tiftcounty.org/county_commissioners/county_commissionersgovernment/commissioner_melissa_hughes.php"  
+      - name: "Paul Webb"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "paul.webb@tiftcounty.org"
+        phone: "229-322-2160"
+        last_elected: 
+        term_end:        
+        next_election: 
+        voting: true
+        photo: "https://www.tiftcounty.org/Webb%20-%20Copy%20(4).jpg"
+        source: "https://www.tiftcounty.org/county_commissioners/commissioner_paul_webb.php"
+      - name: "Stan Stalnaker"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "stan.stalnaker@tiftcounty.org"
+        phone: "229-472-3564"
+        last_elected: 
+        term_end:        
+        next_election: 
+        voting: true
+        photo: "https://www.tiftcounty.org/Stalnaker%20-%20Copy%20(3).jpg"
+        source: "https://www.tiftcounty.org/county_commissioners/commissioner_stan_stalnaker.php"
+      - name: "Tyler Riddle"
+        role: Commissioner
+        seat: "District 5"
+        party: 
+        email: "tyler.riddle@tiftcounty.org"
+        phone: "229-402-8096"
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: true
+        photo: "https://www.tiftcounty.org/Commissioner%20Pictures/TA4_4075%20(1)%20-%20Copy%20-%20Copy%20(4)%20-%20Copy%20-%20Copy.JPG?t=202510291206400"
+        source: "https://www.tiftcounty.org/county_commissioners/commissioner_tyler_riddle.php"  
+      - name: "Greg Wood"
+        role: Commissioner
+        seat: "District 6"
+        party: 
+        email: "greg.wood@tiftcounty.org"
+        phone: "229-472-3094"
+        last_elected: 
+        term_end:        
+        next_election:
+        voting: true
+        photo: "https://www.tiftcounty.org/Wood%20-%20Copy%20(3).jpg"
+        source: "https://www.tiftcounty.org/county_commissioners/commissioner_greg_wood.php"   
+
+  - id: whitfield
+    name: Whitfield County
+    type: county
+    county: Whitfield
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    official_url: "https://www.whitfieldcountyga.com/government/elected_officials/board_of_commissioners/index.php"    
+    related_pages:
+    members:
+      - name: "Jevin Jensen"
+        full_name: "Jevin S. Jensen"   # authoritative full name (matching); site shows `name`
+        role: Chair
+        title: County Commission Chairman
+        seat: "At-large"
+        party: 
+        email: "jjensen@whitfieldcountyga.com"
+        phone: "706-275-7500"
+        last_elected: 2024
+        term_end: 2028         
+        next_election: 2028
+        voting: true
+        photo: "https://www.whitfieldcountyga.com/bus-directory/Government/Elected%20Officials/Board%20Of%20Commissioners/008%20-%20Copy.jpg?t=202405011524200"
+        source: "https://www.whitfieldcountyga.com/business_detail_T5_R2.php"   
+      - name: "Barry Robbins"
+        role: Commissioner
+        seat: "District 1"
+        party: 
+        email: "brobbins@whitfieldcountyga.com"
+        phone: "706-275-7500"
+        last_elected: 
+        term_end:        
+        next_election:
+        voting: true
+        photo: "https://www.whitfieldcountyga.com/bus-directory/Government/Elected%20Officials/Board%20Of%20Commissioners/011%20-%20Copy.jpg?t=202405011522110"
+        source: "https://www.whitfieldcountyga.com/business_detail_T5_R4.php"
+      - name: "Robby Staten"
+        role: Commissioner
+        seat: "District 2"
+        party: 
+        email: "rstaten@whitfieldcountyga.com"
+        phone: "706-275-7500"
+        last_elected: 2024
+        term_end: 2028       
+        next_election: 2028
+        voting: true
+        photo: "https://www.whitfieldcountyga.com/bus-directory/Government/Elected%20Officials/Board%20Of%20Commissioners/015%20-%20Copy.jpg?t=202405011523160"
+        source: "https://www.whitfieldcountyga.com/business_detail_T5_R5.php"   
+      - name: "John Thomas"
+        role: Commissioner
+        seat: "District 3"
+        party: 
+        email: "jthomas@whitfieldcountyga.com"
+        phone: "706-275-7500"
+        last_elected: 
+        term_end:        
+        next_election:
+        voting: true
+        photo: "https://www.whitfieldcountyga.com/bus-directory/Government/Elected%20Officials/Board%20Of%20Commissioners/001%20-%20Copy%20-%20Copy%20-%20Copy.jpg?t=202503281540520"
+        source: "https://www.whitfieldcountyga.com/business_detail_T5_R8.php"
+      - name: "Greg Jones"
+        role: Commissioner
+        seat: "District 4"
+        party: 
+        email: "gjones@whitfieldcountyga.com"
+        phone: "706-275-7500"
+        last_elected: 2024
+        term_end: 2028         
+        next_election: 2028
+        voting: true
+        photo: "https://www.whitfieldcountyga.com/bus-directory/Government/Elected%20Officials/Board%20Of%20Commissioners/018%20-%20Copy.jpg?t=202405011525420"
+        source: "https://www.whitfieldcountyga.com/business_detail_T5_R11.php"   
