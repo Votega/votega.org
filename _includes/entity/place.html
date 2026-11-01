@@ -403,7 +403,7 @@
     {% assign meet_url = m.agendas_url | default: m.base_url %}
     <p class="cm-sched-note">
       Schedules are provided as a guide and can change — holidays and special called
-      meetings may differ.{% if multi_links %} Confirm on the county's official site.{% elsif meet_url and meet_url != "" %} Confirm on the
+      meetings may differ.{% if m.calendar_url and m.calendar_url != "" %} Meeting locations change: <a href="{{ m.calendar_url }}" target="_blank" rel="noopener">check the official source</a>.{% elsif multi_links %} Confirm on the county's official site.{% elsif meet_url and meet_url != "" %} Confirm on the
       <a href="{{ meet_url }}" target="_blank" rel="noopener">official site</a>.{% else %} Confirm on the county's official site.{% endif %}
     </p>
     {% endif %}

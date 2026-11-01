@@ -59,6 +59,9 @@
 #       agendas_url      the direct agenda (or combined agenda/minutes) hub. Also
 #                        the "Confirm on the official site" link under the schedule,
 #                        and the fallback source link. Prefer it over base_url.
+#       calendar_url     the place's own meetings calendar, for a place whose meeting
+#                        LOCATION changes: the schedule note then reads "Meeting
+#                        locations change: check the official source" and links it.
 #       minutes_url      separate minutes hub, when the county splits them out.
 #       video_url        separate meeting-video/recordings hub.
 #                        When minutes_url or video_url is set, the page shows an
@@ -1833,6 +1836,16 @@ places:
         base_url: https://thomasville.org/
         agendas_url: "https://thomasville.org/city-council/agendas-and-minutes/archived-council-meeting-minutes"
         body_label: "City Council"
+        # Schedule as the city states it (2026-11-01). Council 6:00 p.m., workshop
+        # 4:00 p.m. (both from the city). No location is
+        # listed because it changes: `calendar_url` makes the page say so and link the
+        # city's calendar instead.
+        calendar_url: "https://thomasville.org/public-meetings-events-calendar"
+        schedule:
+          - body: City Council
+            when: "2nd and 4th Monday of each month, 6:00 p.m., unless otherwise posted"
+          - body: City Council Workshop
+            when: "1st and 3rd Wednesday of each month, 4:00 p.m., unless otherwise posted"
 
   - slug: thomas
     name: Thomas County
