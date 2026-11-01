@@ -356,9 +356,10 @@
 <section id="cmMeetings">
   <h2 class="po-heading" style="margin-top: 2rem;">Public meetings</h2>
   <p class="place-intro">
-    Public meeting agendas, minutes, and video for {{ e.name }}, aggregated from the
+    {% assign intro_place = site.data.places.places | where: "slug", e.slug | first -%}
+    Public meeting {% if intro_place.domains.meetings.no_agendas %}minutes and video{% else %}agendas, minutes, and video{% endif %} for {{ e.name }}, aggregated from the
     government's official website. Each link opens the document or recording on that
-    site. Minutes appear once a meeting has been held and approved.
+    site. Minutes appear once a meeting has been held and approved.{% if intro_place.domains.meetings.no_agendas %} {{ e.name }} does not publish meeting agendas online.{% endif %}
   </p>
 
   {%- comment %} "When they meet" — curated recurring schedule from _data/places.yml

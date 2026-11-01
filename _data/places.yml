@@ -717,6 +717,8 @@ places:
         platform: corecode
         base_url: https://www.cityofcovington.org
         meetings_path: "/index.php?section=Council-Meetings"
+        # Site publishes no agendas; the page intro lists only minutes and video.
+        no_agendas: true
         # Fill `when:` to show a "When they meet" note (see Newton for the shape).
         schedule:
           - body: City Council
