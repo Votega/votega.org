@@ -4036,3 +4036,55 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.socialcirclega.gov/departments/mayor-and-council"
+
+  # --------------------------------------------------------------------------
+  # STUBS - uncomment and fill in once the roster is confirmed against its source.
+  # Left commented because the validator rejects a jurisdiction with no members.
+  # --------------------------------------------------------------------------
+
+  # - id: thomas                    # must equal the places.yml slug
+  #   name: Thomas County
+  #   type: county
+  #   county: Thomas
+  #   body: Board of Commissioners
+  #   partisan: true
+  #   official_url: https://thomascountyboc.org/about-us/county-commissioners
+  #   board_size: 8                 # the county site lists Districts 1-8 (the Chairman holds District 4)
+  #   related_pages:
+  #     - { }
+  #   notes: ""
+  #   members:
+  #     - name: ""
+  #       role: Chair               # Chair | Vice Chair | Commissioner
+  #       seat: ""                  # "District 4"
+  #       party: Republican         # Republican | Democratic | Independent
+  #       email: ""
+  #       phone: ""
+  #       last_elected:
+  #       term_end:
+  #       next_election:
+  #       voting: true
+  #       source: ""                # REQUIRED - primary-source URL
+
+  # - id: thomasville               # must equal the places.yml slug
+  #   name: City of Thomasville
+  #   type: city
+  #   county: Thomas
+  #   body: City Council
+  #   partisan: false
+  #   official_url: https://thomasville.org/about-the-thomasville-city-council
+  #   related_pages:
+  #     - { }
+  #   notes: ""
+  #   members:
+  #     - name: ""
+  #       role: Mayor               # Mayor | Mayor Pro Tem | Council Member
+  #       seat: ""
+  #       party: Nonpartisan
+  #       email: ""
+  #       phone: ""
+  #       last_elected:
+  #       term_end:
+  #       next_election:
+  #       voting: true
+  #       source: ""                # REQUIRED - primary-source URL
