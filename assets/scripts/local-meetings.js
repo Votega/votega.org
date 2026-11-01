@@ -85,6 +85,7 @@
         // Internet Archive copy so the record outlives the city's link.
         (m.agendaArchiveUrl && m.agendaUrl && !m.agendaOriginalUrl && m.agendaArchiveUrl !== m.agendaUrl) &&
           '<a href="' + esc(m.agendaArchiveUrl) + '" target="_blank" rel="noopener">Archived copy</a>',
+        m.agendaPacketUrl && '<a href="' + esc(m.agendaPacketUrl) + '" target="_blank" rel="noopener">Packet</a>',
         m.minutesUrl && '<a href="' + esc(m.minutesUrl) + '" target="_blank" rel="noopener">Minutes</a>',
         m.videoUrl && '<a href="' + esc(m.videoUrl) + '" target="_blank" rel="noopener">▶ Video</a>'
       ].filter(Boolean).join('');

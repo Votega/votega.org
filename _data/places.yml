@@ -30,7 +30,7 @@
 #     meetings.platform  ADAPTER (scraped): civicplus | corecode | civicclerk |
 #                        legistar | teammunicode | primegov | granicus | gwinnett | iqm2 |
 #                        municode | agendapub | agendaplus | revize | wpdatatables | pdflinks | wpmedia |
-#                        wixtable | htmltable | sharepoint | nimblecal | packetarchive
+#                        wixtable | htmltable | sharepoint | nimblecal | packetarchive | drupalviews
 #                        NO-SCRAPER (recorded for provenance, skipped silently — the
 #                        schedule / agendas_url still render, nothing is scraped):
 #                          unknown  = platform not yet identified ("look into later")
@@ -85,6 +85,12 @@
 #                        official source. Remove it the moment the 403s stop.
 #       link_note        (any platform, optional) one line shown above the meeting
 #                        list, e.g. to say that document links open a folder.
+#       drupalviews keys:  agendas_url (the "Upcoming Meetings" view), recent_url (optional,
+#                        the past-meetings view), body_label, body_paths ({first URL path
+#                        segment of a meeting's detail page: body name}). A table whose
+#                        columns are read by header text. Can also be fed pages saved from
+#                        a browser (generate_place_meetings.py --slug X --from-file F.htm)
+#                        for a bot-protected site. See scripts/lib/drupalviews.py.
 #       packetarchive keys: agendas_url (a page that shows ONLY the current meeting
 #                        packet and replaces it each cycle — Rossville), body_label,
 #                        meeting_nth + meeting_weekday (usual day, Monday=0; used only
@@ -1504,24 +1510,27 @@ places:
     region: Metro Atlanta
     domains:
       meetings:
-        # No scraper adapter: citypalmetto.com is a Drupal 11 site (footer: "Government
-        # Websites by CivicPlus" -- CivicPlus's Drupal CMS, NOT the Agenda Center
-        # product, so `platform: civicplus` would be wrong: there is no /AgendaCenter)
-        # with a native "Upcoming Meetings" view at /meetings (+ /meetings/recent),
-        # filterable by department and board. Each row links a detail page
-        # (/citycouncil/meeting/<slug>, /bc/meeting/<slug>, ...) carrying the agenda
-        # and agenda-packet files, served as Drupal media entities at /media/<id>
-        # (e.g. /media/3766 agenda, /media/3771 agenda packet; ids are not
-        # per-meeting-sequential, so an adapter must read them off the detail page).
-        # No third-party portal is embedded, so none of
-        # detect_meeting_platform.py's signatures match; it would need a dedicated
-        # adapter for that view. Tracked as `unknown` so the schedule + agendas_url
-        # render on /local/palmetto/ while nothing scrapes.
-        # The origin sits behind a Cloudflare challenge (403 "Just a moment..." to any
-        # non-browser client, 2026-10-19), so `bot_protected` stops link liveness from
-        # hard-failing the run. Remove it if the 403s stop.
-        platform: unknown
+        # citypalmetto.com is a Drupal 11 site (footer: "Government Websites by
+        # CivicPlus" -- CivicPlus's Drupal CMS, NOT the Agenda Center product, so
+        # `platform: civicplus` would be wrong: there is no /AgendaCenter) with a
+        # native "Upcoming Meetings" view at /meetings (+ /meetings/recent). Each row
+        # carries the agenda and agenda-packet PDFs as Drupal media (/media/<id>) and
+        # a detail page (/citycouncil/meeting/<slug>). `drupalviews` parses that table
+        # (lib/drupalviews.py).
+        # ⚠ The origin sits behind a Cloudflare challenge (403 "Just a moment..." to
+        # any non-browser client, 2026-10-19), so the scheduled run cannot read it and
+        # leaves the file unchanged. Until the city allowlists us the data is fed from
+        # a real browser: save /meetings (and /meetings/recent) with Ctrl+S, then
+        #   python scripts/generate_place_meetings.py --slug palmetto --from-file "<page>.htm" [--from-file "<recent>.htm"]
+        # Saved pages are snapshots, so earlier records are kept. `bot_protected`
+        # stays on while this is manual: it keeps link liveness from hard-failing the
+        # run and the hub shows the "may be stale" notice, which is still true.
+        platform: drupalviews
         bot_protected: true
+        body_label: City Council
+        body_paths:
+          citycouncil: City Council
+        recent_url: "https://www.citypalmetto.com/meetings/recent"
         agendas_url: "https://www.citypalmetto.com/meetings"
         schedule:
           - body: City Council

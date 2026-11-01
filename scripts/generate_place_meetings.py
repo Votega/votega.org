@@ -54,6 +54,7 @@ from lib.htmltable import fetch_htmltable_meetings  # noqa: E402
 from lib.sharepoint import fetch_sharepoint_meetings  # noqa: E402
 from lib.nimblecal import fetch_nimblecal_meetings  # noqa: E402
 from lib.packetarchive import fetch_packetarchive_meetings  # noqa: E402
+from lib.drupalviews import fetch_drupalviews_meetings  # noqa: E402
 from lib.wpdatatables import fetch_wpdatatables_meetings  # noqa: E402
 from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
@@ -66,7 +67,7 @@ OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
                      'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
                      'agendaplus', 'revize', 'gdrive', 'wpdatatables', 'pdflinks', 'wpmedia',
-                     'wixtable', 'htmltable', 'sharepoint', 'nimblecal', 'packetarchive'}
+                     'wixtable', 'htmltable', 'sharepoint', 'nimblecal', 'packetarchive', 'drupalviews'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
@@ -160,6 +161,11 @@ def fetch_meetings(cfg, previous=None):
             body_labels=cfg.get('body_labels'), exclude=cfg.get('exclude_calendars'),
             include=cfg.get('include_calendars'), minutes_url=cfg.get('minutes_url'),
             minutes_body=cfg.get('minutes_body', 'Board of Commissioners'))
+    if platform == 'drupalviews':
+        return fetch_drupalviews_meetings(
+            cfg['agendas_url'], recent_url=cfg.get('recent_url'), body_paths=cfg.get('body_paths'),
+            body=cfg.get('body_label', 'City Council'), pages=cfg.get('_saved_pages'),
+            previous=previous)
     if platform == 'packetarchive':
         return fetch_packetarchive_meetings(
             cfg['agendas_url'], body=cfg.get('body_label', 'City Council'),
@@ -221,7 +227,7 @@ def source_url(cfg):
         return cfg['agendas_url']
     if platform == 'htmltable':
         return cfg['agendas_url']
-    if platform == 'packetarchive':
+    if platform in ('packetarchive', 'drupalviews'):
         return cfg['agendas_url']
     if platform == 'nimblecal':
         return cfg['calendar_url']
@@ -350,7 +356,7 @@ def load_previous(slug):
         return []
 
 
-def build_place(place):
+def build_place(place, saved_pages=None):
     """Fetch + normalize one place's meetings. Returns the output dict, or None."""
     slug = place['slug']
     cfg = (place.get('domains') or {}).get('meetings')
@@ -365,6 +371,9 @@ def build_place(place):
         # fetch_meetings and is reported as an unknown platform.
         return 'skip'
 
+    if saved_pages is not None:
+        # Pages a person saved from a real browser, for a place whose origin blocks us.
+        cfg = dict(cfg, _saved_pages=saved_pages)
     print('Fetching meetings for %s (%s)...' % (place['name'], cfg.get('platform')))
     try:
         meetings, bodies_seen = fetch_meetings(cfg, previous=load_previous(slug))
@@ -427,7 +436,12 @@ def main():
                     help='exit non-zero if any place failed (default: warn and continue, '
                          'so one broken/transiently-down source does not block committing '
                          'every other place\'s good data)')
+    ap.add_argument('--from-file', action='append', metavar='HTML',
+                    help='build --slug from page(s) saved in a browser instead of fetching '
+                         '(for a bot-protected place; repeatable). Earlier records are kept.')
     args = ap.parse_args()
+    if args.from_file and not args.slug:
+        sys.exit('--from-file needs --slug')
 
     places = load_registry(args.registry)
     if args.slug:
@@ -439,7 +453,14 @@ def main():
     blocked = []
     built = 0
     for place in places:
-        payload = build_place(place)
+        saved = None
+        if args.from_file:
+            base = ((place.get('domains') or {}).get('meetings') or {}).get('agendas_url')
+            saved = []
+            for path in args.from_file:
+                with open(path, 'rb') as f:
+                    saved.append((base, f.read().decode('utf-8', 'replace')))
+        payload = build_place(place, saved_pages=saved)
         if payload == 'skip':
             continue
         if payload is None:
