@@ -1768,3 +1768,24 @@ places:
           - body: Board of Commissioners
             when: "2nd Monday of every month, 6:00 p.m."
             location: "Whitfield County Courthouse, 205 N. Selvidge St., Dalton, GA"
+
+  - slug: thomasville
+    name: City of Thomasville
+    type: city
+    fips: null
+    parentCounty: thomas
+    parentCountyName: Thomas
+    region: South Georgia
+    domains:
+      meetings:
+        # The city keeps one page of approved council minutes per year, linked by file
+        # name (`10.12.2026 City Council Meeting Minutes APVD SIGNED.pdf`), 2017 to now;
+        # lib.pdflinks reads the date from the name. The main Agendas and Minutes page
+        # only carries a hashed-name link to the CURRENT agenda and the latest minutes,
+        # so no agendas are listed and the archive is the whole record (validated
+        # 2026-11-01: 210 meetings, 2017-2026; 3 file names with no readable date are
+        # skipped, never guessed).
+        platform: pdflinks
+        base_url: https://thomasville.org/
+        agendas_url: "https://thomasville.org/city-council/agendas-and-minutes/archived-council-meeting-minutes"
+        body_label: "City Council"

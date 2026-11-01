@@ -235,6 +235,8 @@ def _stable_url(page_url, href):
 def _title(text, body, iso):
     """The link text minus its generic Agenda/Minutes label, when something
     meaningful is left ("Call Meeting", "Public Hearing"); else '<body> <date>'."""
+    if re.search(r'(?i)\.pdf\s*$', text or ''):
+        text = ''   # link text that is just the file name (Thomasville) is not a title
     t = re.sub(r'(?i)\b(agendas?|minutes?|combined|packet)\b', ' ', text or '')
     t = re.sub(r'[\s\-–—:]+$|^[\s\-–—:]+', '', re.sub(r'\s+', ' ', t)).strip()
     if len(re.findall(r'[A-Za-z]', t)) >= 4 and len(t) <= 60:
