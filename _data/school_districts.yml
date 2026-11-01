@@ -61,13 +61,16 @@
 #   question, and it must be routed to an attendance-zone lookup, never answered
 #   from this file. Do not build a place -> district promise on these rows.
 #
-#   FORWARD REFERENCES ARE EXPECTED AND MUST BE ALLOWED. 7 of the 20 counties
-#   with a city system are not in places.yml yet: chattooga, floyd, haralson,
-#   jackson, laurens, mitchell, toombs. validate_local_officials.py fails CI when
-#   an id has no matching place slug; a school-district validator must NOT copy
-#   that contract strictly, or these 7 break the build on day one. Warn on an
-#   unknown slug, fail only on a DUPLICATE district id or a missing required
-#   field. The renderer simply has no page to put them on until the place exists.
+#   EVERY SLUG BELOW RESOLVES. The 7 counties with a city system that were not
+#   in places.yml (chattooga, floyd, haralson, jackson, laurens, mitchell,
+#   toombs) are now registered there as `hidden: true` placeholders, so a
+#   school-district validator CAN use the same strict slug cross-check
+#   validate_local_officials.py uses. Keep it strict — an unresolvable slug here
+#   is a typo, not a forward reference.
+#
+#   But a resolvable slug is NOT a visible place. A hidden place has no
+#   /local/<slug>/ page, so the renderer must skip a board whose every listed
+#   place is hidden rather than linking into a 404.
 #
 # ----------------------------------------------------------------------------
 # FIELDS

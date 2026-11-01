@@ -161,12 +161,21 @@ the upstream assignment is a planning approximation, not a boundary truth. The
 `counties` field in `school_districts.yml` is therefore a human-confirmed
 rendering hint and may be longer than the upstream assignment.
 
-**(a-ii) Forward references are expected.** 7 of the 20 counties with a city
-system are not in `places.yml` yet — **chattooga, floyd, haralson, jackson,
-laurens, mitchell, toombs**. `validate_local_officials.py` fails CI when an id
-has no matching place slug; the school-district validator **must not copy that
-contract strictly**, or those 7 rows break the build the day it lands. Warn on an
-unknown slug; fail only on a duplicate district id or a missing required field.
+**(a-ii) Forward references — found, then resolved.** 7 of the 20 counties with
+a city system were missing from `places.yml` (**chattooga, floyd, haralson,
+jackson, laurens, mitchell, toombs**), which would have broken a validator that
+copied `validate_local_officials.py`'s strict slug cross-check. They are now
+registered as `hidden: true` placeholders, so **every slug in the district
+registry resolves and the validator can stay strict** — an unresolvable slug is a
+typo, not a forward reference.
+
+The remaining subtlety: a resolvable slug is not a *visible* place. A hidden
+place emits no `/local/<slug>/` page, so the renderer must skip a board whose
+every listed place is hidden rather than linking into a 404. These 7 are also the
+**first users of the `hidden` flag** — `build_entity_pages.py`,
+`generate_search_corpus.py`, `publish_ga_local_government.py`, the three
+enrichers and `local.html` all check it at the top of their places loop (verified),
+so if one ever surfaces publicly the bug is in a new consumer that forgot.
 
 Corollary: **"which school board is mine?" is an address question, not a place
 question.** A city system's boundary is not the city limits, and the county
@@ -225,7 +234,7 @@ curriculum/media policy, school construction**. One new `schools` topic in
 
 | Phase | Work | Est. |
 |---|---|---|
-| **3a** | County systems generated into `school_districts.yml`; validator (slug cross-check, like `validate_local_officials.py`); board section in `_includes/entity/place.html`; publish machine-readable copy to `ga-local-government`. **Officials only, no scraping.** | ~50–70k |
+| **3a** | County systems generated into `school_districts.yml`; validator (strict slug cross-check, like `validate_local_officials.py`); board section in `_includes/entity/place.html`; publish machine-readable copy to `ga-local-government`. **Officials only, no scraping.** | ~50–70k |
 | **3b** | Platform census via `detect_meeting_platform.py` across covered districts. **Gates 3c/3d.** | ~20–30k |
 | **3c** | Simbli adapter | ~60–90k |
 | **3d** | BoardDocs adapter | ~60–90k |
