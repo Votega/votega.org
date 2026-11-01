@@ -46,11 +46,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # validate_races.py reads the pre-push races.json from history
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+
+      - name: Validate races.json
+        # Absolute checks always; change checks against the pre-push commit on a
+        # push. Put [races-structure-change] in a commit message to allow a
+        # deliberate structural change (see scripts/validate_races.py).
+        run: |
+          BASE=""
+          if [ "${{ github.event_name }}" = "push" ]; then BASE='${{ github.event.before }}'; fi
+          python3 scripts/validate_races.py ${BASE:+--base "$BASE"}
 
       - name: Rebuild the ballot preview
         id: generate
