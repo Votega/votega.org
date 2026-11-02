@@ -101,7 +101,14 @@ def test_manual_review_workflow_options_are_windowed_datasets():
     manual = set()
     with open(rdc.TABLE, encoding="utf-8") as f:
         for line in f:
-            m = re.match(r"^  ([A-Za-z0-9_.-]+):.*review:\s*manual", line)
+            # Strip quoted strings BEFORE matching. A dataset's `note:` is prose
+            # and may legitimately mention a field name — ga-early-vote's archive
+            # note says "Next cycle: restore window_days + review: manual." —
+            # which the bare pattern read as the field itself, so a de-windowed
+            # dataset still counted as review: manual. This test is stdlib-only
+            # (no pyyaml in CI), hence regex rather than a real parse.
+            bare = re.sub(r'"[^"]*"|\'[^\']*\'', "", line)
+            m = re.match(r"^  ([A-Za-z0-9_.-]+):.*review:\s*manual", bare)
             if m:
                 manual.add(m.group(1))
     assert set(opts) == manual, (opts, manual)
