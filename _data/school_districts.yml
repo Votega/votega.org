@@ -99,6 +99,10 @@
 # ROLE VOCABULARY FOR BOARD MEMBERS  (validate_school_districts.py enforces it)
 # ----------------------------------------------------------------------------
 #   role:  Chair | Vice Chair | Board Member | Superintendent
+#   party: Nonpartisan   — the ONLY valid value. Georgia school board seats are
+#          nonpartisan (confirmed 2026-11-02), so `partisan: true` on a district
+#          and any other party label on a member are both validation ERRORS: they
+#          would be false claims about an election.
 #
 #   The commission vocabulary in local_officials.yml does not fit a school board —
 #   it has no "Board Member" — so these four are the school-board set. Use `title`
