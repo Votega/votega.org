@@ -856,6 +856,7 @@ places:
         # Commissioners through Legistar — clean single body, no scoping needed.
         platform: legistar
         client: fulton
+        detail_links: true   # minutes/video are only on the MeetingDetail page, null in the API
 
   - slug: atlanta
     name: City of Atlanta

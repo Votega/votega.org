@@ -27,9 +27,11 @@ Import from a generator in scripts/:
 """
 
 import datetime as dt
-from urllib.parse import quote
+import html
+import re
+from urllib.parse import quote, urljoin
 
-from lib.http import fetch_json
+from lib.http import fetch_bytes, fetch_json
 
 
 def api_base(client):
@@ -67,6 +69,70 @@ def _event_to_meeting(e):
     }
 
 
+# The Web API leaves EventMinutesFile / EventVideoPath null for some clients even
+# when the meeting-detail page links them (Fulton: minutes "Final" in the API,
+# the file only on the page; video only via a JS popup). `detail_links: true` in
+# the registry reads those two links off EventInSiteURL.
+_DETAIL_MINUTES_RE = re.compile(
+    r'<a id="[^"]*hypMinutes"[^>]*\shref="([^"#][^"]*)"', re.I)
+_DETAIL_VIDEO_RE = re.compile(
+    r'<a id="[^"]*hypVideo"[^>]*onclick="[^"]*?window\.open\(&#39;'
+    r'(Video\.aspx\?.*?)&#39;', re.I)
+DETAIL_RECHECK_DAYS = 90   # minutes get approved weeks later; older meetings are checked once
+
+
+def parse_detail_links(page_html, page_url):
+    """(minutesUrl, videoUrl) off a Legistar MeetingDetail page; None where the
+    page shows the link greyed out / absent."""
+    m = _DETAIL_MINUTES_RE.search(page_html)
+    v = _DETAIL_VIDEO_RE.search(page_html)
+    minutes = urljoin(page_url, html.unescape(m.group(1))) if m else None
+    video = urljoin(page_url, html.unescape(v.group(1))) if v else None
+    return minutes, video
+
+
+def _fetch_detail_links(url, timeout=40):
+    body = fetch_bytes(url, timeout=timeout, label='legistar detail')
+    if not body:
+        return None
+    return parse_detail_links(body.decode('utf-8', 'replace'), url)
+
+
+def apply_detail_links(meetings, site_urls, previous=None, today=None,
+                       fetch=_fetch_detail_links):
+    """Fill missing minutesUrl/videoUrl from detail pages, in place.
+
+    Incremental: a meeting older than DETAIL_RECHECK_DAYS that `previous` marks
+    `detailChecked` was checked on an earlier run and is carried forward untouched, so
+    a steady-state run fetches only recent and brand-new meetings. A failed page
+    leaves the record as the API gave it (never overwrites with nothing).
+    Returns the number of pages fetched."""
+    today = today or dt.date.today()
+    prev = {str(m.get('id')): m for m in (previous or [])}
+    cutoff = (today - dt.timedelta(days=DETAIL_RECHECK_DAYS)).isoformat()
+    fetched = 0
+    for m in meetings:
+        if m['date'] > today.isoformat():
+            continue
+        old = prev.get(m['id'])
+        if old and old.get('detailChecked') and m['date'] < cutoff:
+            for k in ('minutesUrl', 'videoUrl'):
+                m[k] = m[k] or old.get(k)
+            m['detailChecked'] = True
+            continue
+        url = site_urls.get(m['id'])
+        if not url or (m['minutesUrl'] and m['videoUrl']):
+            continue
+        got = fetch(url)
+        fetched += 1
+        if not got:
+            continue
+        m['detailChecked'] = True
+        m['minutesUrl'] = m['minutesUrl'] or got[0]
+        m['videoUrl'] = m['videoUrl'] or got[1]
+    return fetched
+
+
 def fetch_events(client, since, timeout=40):
     """Raw Event rows (dicts) since `since` (YYYY-MM-DD), newest first — includes
     EventInSiteURL for sourcing. Used by the enrichment prototype."""
@@ -93,7 +159,8 @@ def fetch_rollcalls(client, event_item_id, timeout=40):
     return data if isinstance(data, list) else []
 
 
-def fetch_legistar_meetings(client, years=4, timeout=40, page_size=1000, max_pages=20):
+def fetch_legistar_meetings(client, years=4, timeout=40, page_size=1000, max_pages=20,
+                            detail_links=False, previous=None):
     """Fetch and normalize a Legistar client's meetings.
 
     Windowed to the last `years` years and paged with $top/$skip (Legistar caps a
@@ -107,6 +174,7 @@ def fetch_legistar_meetings(client, years=4, timeout=40, page_size=1000, max_pag
     base = api_base(client)
 
     meetings, seen, bodies = [], set(), set()
+    site_urls = {}
     skip = 0
     for _ in range(max_pages):
         url = ('%s/Events?%%24orderby=%s&%%24filter=%s&%%24top=%d&%%24skip=%d'
@@ -126,11 +194,17 @@ def fetch_legistar_meetings(client, years=4, timeout=40, page_size=1000, max_pag
                 continue
             seen.add(key)
             meetings.append(m)
+            if e.get('EventInSiteURL'):
+                site_urls[m['id']] = e['EventInSiteURL']
             bodies.add(m['body'])
 
         if len(data) < page_size:
             break
         skip += page_size
+
+    if detail_links:
+        n = apply_detail_links(meetings, site_urls, previous)
+        print('  legistar %s: read %d meeting-detail page(s) for minutes/video' % (client, n))
 
     meetings.sort(key=lambda x: (x['date'], x['id']), reverse=True)
     return meetings, sorted(bodies)
