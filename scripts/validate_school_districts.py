@@ -23,9 +23,14 @@ into the Georgia Civic Data dimension. So the structural checks are strict.
     as hidden placeholders. An unresolvable slug is a typo, not a forward
     reference. A county system carries NO `counties` — it is 1:1 with its county
     via countyFips — so one is an error.
-  * SCHOOL BOARD SEATS ARE NONPARTISAN in Georgia (confirmed 2026-11-02). So
-    `party` must be Nonpartisan and `partisan` must not be true. A partisan label
-    on a nonpartisan seat is a factual error about an election.
+  * PARTISANSHIP IS PER DISTRICT, NOT STATEWIDE. Georgia school board elections
+    are NOT uniformly nonpartisan: every county with a 2024 BOE contest in the
+    Secretary of State's results carries party labels — Cobb, Jackson, Newton,
+    Thomas and Whitfield all return Dem/Rep, none nonpartisan. So the rule
+    mirrors local_officials.yml: a district declares `partisan`, and `party` must
+    agree with it. Nonpartisan is required when `partisan: false`; a real party is
+    allowed only when it is not false. Forcing every seat to Nonpartisan would
+    have made the file unable to hold the actual election results.
   * A SUPERINTENDENT IS NOT AN ELECTED SEAT. Georgia local superintendents are
     hired by the board — the same situation as a City Manager, which
     local_officials.yml documents and keeps out of its elected roster. So a
@@ -51,9 +56,12 @@ EXPECTED_CITY = 21
 VALID_TYPES = {"city", "county"}
 VALID_ROLES = {"Chair", "Vice Chair", "Board Member", "Superintendent"}
 APPOINTED_ROLES = {"Superintendent"}
-# Georgia school board seats are nonpartisan, so this is a set of one. It stays a
-# set so a future partisan body is a one-line change rather than a rewrite.
-VALID_PARTIES = {"Nonpartisan"}
+# Same vocabulary as local_officials.yml. Which values are LEGAL for a given
+# member depends on its district's `partisan` flag — see validate_member.
+VALID_PARTIES = {"Republican", "Democratic", "Independent", "Nonpartisan"}
+# What a nonpartisan body may record. `Independent` is for a member holding a
+# PARTISAN seat with no party, so it is not allowed on a nonpartisan board.
+NONPARTISAN_ONLY = {"Nonpartisan"}
 PRESIDING_ROLES = {"Chair"}
 
 REQUIRED_MEMBER = ("name", "role", "seat", "source")
@@ -72,7 +80,7 @@ def _blank(v):
     return v is None or (isinstance(v, str) and not v.strip())
 
 
-def validate_member(where, m, errors, warnings):
+def validate_member(where, m, errors, warnings, partisan=None):
     if not isinstance(m, dict):
         errors.append("%s: member is not a mapping" % where)
         return False
@@ -87,10 +95,15 @@ def validate_member(where, m, errors, warnings):
                       % (where, role, sorted(VALID_ROLES)))
 
     party = m.get("party")
-    if not _blank(party) and party not in VALID_PARTIES:
-        errors.append("%s: party %r — Georgia school board seats are nonpartisan, "
-                      "so the only valid value is %r"
-                      % (where, party, sorted(VALID_PARTIES)[0]))
+    if not _blank(party):
+        if party not in VALID_PARTIES:
+            errors.append("%s: party %r is not in the vocabulary %s"
+                          % (where, party, sorted(VALID_PARTIES)))
+        elif partisan is False and party not in NONPARTISAN_ONLY:
+            errors.append("%s: party %r, but the district declares "
+                          "`partisan: false`. Set the district partisan or record "
+                          "the member Nonpartisan — one of the two is wrong."
+                          % (where, party))
 
     src = m.get("source")
     if not _blank(src) and not str(src).startswith(("http://", "https://")):
@@ -172,9 +185,9 @@ def validate_district(kind, d, idx, places, seen_ids, errors, warnings):
         if not _blank(pp) and pp not in places:
             errors.append("%s: primaryPlace %r is not in places.yml" % (where, pp))
 
-    if d.get("partisan") is True:
-        errors.append("%s: Georgia school board seats are nonpartisan; `partisan: "
-                      "true` is a factual error about the election" % where)
+    partisan = d.get("partisan")
+    if partisan is not None and not isinstance(partisan, bool):
+        errors.append("%s: partisan must be true or false, got %r" % (where, partisan))
 
     for key in ("board_size", "term_years"):
         v = d.get(key)
@@ -200,7 +213,8 @@ def validate_district(kind, d, idx, places, seen_ids, errors, warnings):
     for i, m in enumerate(members):
         mwhere = "%s member[%d] %s" % (where, i, (m or {}).get("name", "?")
                                        if isinstance(m, dict) else "?")
-        appointed = validate_member(mwhere, m, errors, warnings)
+        appointed = validate_member(mwhere, m, errors, warnings,
+                                    partisan=d.get("partisan"))
         if isinstance(m, dict):
             if not appointed:
                 elected += 1
