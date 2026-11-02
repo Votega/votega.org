@@ -38,11 +38,11 @@ datasets:
   # by hand when reviewed (Actions > "Record data review", or scripts/record_data_checked.py).
   scotus-decisions:          { window_days: 90, cadence: "weekly job, few changes", note: "SCOTUS decisions (generated)" }
   ga-congress-trades:        { window_days: 90, cadence: "weekly (Sun) job; filings are irregular", note: "stock trade disclosures (generated)" }
-  ga-early-vote:             { window_days: 3,  review: manual, note: "manual SoS file drop through Oct 30, then run scripts/generate_ga_early_vote.py" }
   ga-ballot-measures:        { window_days: 90, review: manual, note: "curated by hand; record a review when you verify it against the SoS and General Assembly" }
   ga-election-calendar:      { window_days: 90, review: manual, note: "curated by hand from the SoS calendar; record a review when you verify it" }
 
   # --- Never flagged: hand-maintained / event-driven ---
+  ga-early-vote:             { never: true, note: "2026 general early-vote archive; early voting is closed and the file is final (generate_ga_early_vote.py --final). Next cycle: restore window_days + review: manual." }
   ga-executive:              { never: true, note: "13 statewide elected officials; changes after an election or a mid-term vacancy. Stamp removed from the page." }
   supreme-court:             { never: true, note: "justice roster; changes only on a vacancy. Stamp removed from the page." }
   executive:                 { never: true, note: "federal executive roster (_data/executive.json); changes with an administration." }

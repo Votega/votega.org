@@ -596,7 +596,7 @@ def check_output(data, prev=None, today=None):
         warnings.append(f"unrecognized ballot status codes (counted as 'pending'): {q['unknownStatuses']}")
     if q.get("duplicateRecords"):
         warnings.append(f"{q['duplicateRecords']:,} repeat records for the same voter were merged (best status kept)")
-    if (today - as_of).days > 2:
+    if (today - as_of).days > 2 and not md.get("final"):
         warnings.append(f"the file runs through {as_of}, {(today - as_of).days} days ago: refresh the download")
     empty = [c["name"] for c in data["counties"] if c["ballots"] == 0]
     if empty:
@@ -710,6 +710,9 @@ def main(argv=None):
                          "estimated citizen adults and the bachelor's share. Skipped, with a warning, if the file is missing")
     ap.add_argument("--prior-active", action="append", default=[],
                     help="YEAR=N statewide active voters on that election day (SoS turnout dashboard)")
+    ap.add_argument("--final", action="store_true",
+                    help="mark this file as the last one for the election: the page switches to archive wording and the "
+                         "'file is N days old' warning is skipped")
     ap.add_argument("--out", default=OUT)
     ap.add_argument("--out-county-daily", default=None,
                     help="county-by-day file for the published dataset (default: beside --out, -county-daily.json)")
@@ -860,6 +863,7 @@ def main(argv=None):
             "source": "Georgia Secretary of State absentee ballot file and active voter registration table",
             "electionDate": a.election_date,
             "asOf": as_of.isoformat(),
+            **({"final": True} if a.final else {}),
             "daysBeforeElection": days_before,
             "count": len(counties),
             "comparisons": prior_meta,

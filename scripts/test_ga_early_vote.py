@@ -371,6 +371,15 @@ def test_check_output_point_must_match_headline_when_same_day():
     assert any("comparison point" in e for e in errs), errs
 
 
+def test_final_file_skips_the_stale_download_warning():
+    import datetime as dt
+    stale = dt.date(2026, 11, 20)
+    _, warns = _check(_out(), today=stale)
+    assert any("refresh the download" in w for w in warns), warns
+    _, warns = _check(_out(**{"metadata.final": True}), today=stale)
+    assert not any("refresh the download" in w for w in warns), warns
+
+
 def test_validate_flags_ballots_above_active():
     cur = {"X": {"inPerson": 5, "mail": 0, "pipeline": {k: 0 for k in g.PIPELINE_ORDER}}}
     reg = {"X": {"name": "X", "active": 3, "total": 3}}

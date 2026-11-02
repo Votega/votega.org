@@ -55,6 +55,8 @@ the repository and unzip each one into its own directory.
      --prior-active 2022=6961501 --prior-active 2024=7267985
    ```
 
+   **Final refresh (2026 general, after election day):** download the absentee file again, add `--final --as-of 2026-11-03` to the command above, then run the `Publish early-vote data` workflow once. `--final` marks the file as the last one (`metadata.final`), so the page uses archive wording and the stale-download warning is skipped; `ga-early-vote` is `never: true` in `_data/data_freshness.yml`, so it is not flagged as stale.
+
    `--prior-active` is the statewide active-voter count on each past election day, from the SoS turnout
    dashboard (the Data Hub for that election). It does not change.
 

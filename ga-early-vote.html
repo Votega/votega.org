@@ -2,7 +2,7 @@
 layout: page
 title: Georgia Early Vote Turnout by County
 permalink: /ga-early-vote/
-share-description: "How many Georgians have already voted in the November 3, 2026 general election, how the pace compares with 2022 and 2024, and where mail ballots stand, county by county."
+share-description: "How Georgians voted early in the November 3, 2026 general election, how the pace compared with 2022 and 2024, and where mail ballots stood, county by county."
 ---
 {%- assign ev = site.data.early_vote["ga-general-2026"] -%}
 {%- assign sw = ev.statewide -%}
@@ -15,6 +15,9 @@ share-description: "How many Georgians have already voted in the November 3, 202
 {%- assign ev_now_day = site.time | date: "%s" | divided_by: 86400 -%}
 {%- assign ev_days_out = ev_el_day | minus: ev_now_day -%}
 {%- assign ev_days_left = ev_days_out | minus: 4 -%}
+{%- comment -%}Archive mode: early voting has closed (by the build date) or the file is marked final (metadata.final, set by generate_ga_early_vote.py --final). Nothing then counts down, and the live-countdown script is not emitted.{%- endcomment -%}
+{%- assign ev_archived = false -%}
+{%- if ev_days_left < 0 or ev.metadata.final %}{% assign ev_archived = true %}{% endif -%}
 
 <style>
   .ev-stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 8px; }
@@ -156,12 +159,16 @@ share-description: "How many Georgians have already voted in the November 3, 202
   table.ev th button { all: inherit; cursor: pointer; font-weight: 700; }
   table.ev th[aria-sort="ascending"] button::after { content: " \25B2"; font-size: .7em; }
   table.ev th[aria-sort="descending"] button::after { content: " \25BC"; font-size: .7em; }
+  .ev-archive { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: 8px; padding: 10px 14px; font-size: .9rem; margin: 0 0 12px; }
   .ev-note { font-size: .85rem; color: var(--color-text-muted); margin-top: 12px; }
 </style>
 
 {% if ev %}
+{% if ev_archived -%}
+<p class="ev-archive"><i class="fa-solid fa-box-archive" aria-hidden="true"></i> <strong>Archive.</strong> Early voting for this election is closed. This page keeps the {% if ev.metadata.final %}final{% else %}latest{% endif %} count of early in-person and accepted mail ballots, through {{ ev.metadata.asOf | date: "%B %-d, %Y" }}. Mail ballots received after that, and certified results, may differ.</p>
+{%- endif %}
 <p>
-  Ballots already cast in Georgia's November 3, 2026 general election, as of
+  Ballots cast in Georgia's November 3, 2026 general election{% if ev_archived %} through{% else %}, as of{% endif %}
   <strong>{{ ev.metadata.asOf | date: "%B %-d, %Y" }}</strong>, compared with past elections at the same number of
   days before election day:
   {%- for y in ev.metadata.comparisons %} {{ y[0] }} at {{ y[1].daysBefore }} days out{% unless forloop.last %};{% endunless %}{% endfor %}.
@@ -259,7 +266,10 @@ share-description: "How many Georgians have already voted in the November 3, 202
   </div>
   <div class="ev-stat">
     <span id="ev-days-stat" style="display:contents" data-election="{{ ev.metadata.electionDate }}" data-end="{{ ev_end | date: '%A, %B %-d' }}" data-election-label="{{ ev.metadata.electionDate | date: '%A, %B %-d' }}">
-    {%- if ev_days_left > 0 %}
+    {%- if ev_archived %}
+    <span class="n">Closed</span><span class="l">early in-person voting ended {{ ev_end | date: "%A, %B %-d" }}</span>
+    <span class="ev-left-k">Election day was {{ ev.metadata.electionDate | date: "%A, %B %-d" }}. Counts here run through {{ ev.metadata.asOf | date: "%B %-d" }}.</span>
+    {%- elsif ev_days_left > 0 %}
     <span class="n">{{ ev_days_left }}</span><span class="l">more {% if ev_days_left == 1 %}day{% else %}days{% endif %} to vote early in person</span>
     <span class="ev-left-k">Through {{ ev_end | date: "%A, %B %-d" }}. Election day is {{ ev.metadata.electionDate | date: "%A, %B %-d" }}, {{ ev_days_out }} days away; mail ballots have until then to arrive.</span>
     {%- else %}
@@ -278,7 +288,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
       {%- assign es = sw.earlyShare[yk].pct -%}{%- assign esc = sw.earlyShare[yk].contest -%}
       {% include ev-bars.html ya=yk va=es mx=mx unit="%" point=esc %}
       {%- endif %}{% endfor %}
-      <span class="ev-vis"><span class="ev-grow-n">Most Georgians vote before election day, so much of the electorate is already counted here. This year's share is not known until the votes are in.</span></span>
+      <span class="ev-vis"><span class="ev-grow-n">Most Georgians vote before election day, so much of the electorate is already counted here. This year's share {% if ev_archived %}will be known once results are certified{% else %}is not known until the votes are in{% endif %}.</span></span>
     </span>
     {%- endif %}
   </div>
@@ -296,7 +306,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
       {%- assign mv = metro.prior[yk] -%}{%- capture dayl %}at {{ y[1].daysBefore }} days out{% endcapture -%}
       {% include ev-bars.html ya=yk va=mv mx=mx unit="%" point=dayl %}
       {%- endif %}{% endfor %}
-      {%- capture dayl %}so far, at {{ ev.metadata.daysBeforeElection }} days out{% endcapture -%}
+      {%- capture dayl %}{% if ev_archived %}through {{ ev.metadata.asOf | date: "%B %-d" }}{% else %}so far{% endif %}, at {{ ev.metadata.daysBeforeElection }} days out{% endcapture -%}
       {% include ev-bars.html ya=cur_year va=metro.pct mx=mx unit="%" point=dayl cls="ev-bar-now" %}
       <span class="ev-vis"><span class="ev-grow-n">Each year is that year's own share at its own stage, not a like-for-like pair. Metro counties cast {{ metro.inPersonPct }}% of this year's early in-person ballots but {{ metro.mailPct }}% of its mail ballots.</span></span>
     </span>
@@ -333,12 +343,12 @@ share-description: "How many Georgians have already voted in the November 3, 202
   {%- for y in ev.metadata.comparisons %}{% if y[1].lastCompleteDate %}
   <p class="ev-note" style="margin-top:4px">{{ y[0] }} stops at {{ y[1].lastCompleteDate | date: "%B %-d" }} ({{ y[1].lastCompleteDaysBefore }} days before election day): the Secretary of State's {{ y[0] }} absentee file is missing most ballots from some large counties after that day, so later days are not drawn.</p>
   {%- endif %}{% endfor %}
-  <p class="ev-note" style="margin-top:4px">Days are counted back from election day, so a given day lines up across years but not always by weekday. Mail ballots keep arriving through election day; early in-person voting {% if ev_days_left > 0 %}ends{% else %}ended{% endif %} {{ ev_end | date: "%A, %B %-d" }}.</p>
+  <p class="ev-note" style="margin-top:4px">Days are counted back from election day, so a given day lines up across years but not always by weekday. Mail ballots {% if ev_archived %}kept arriving{% else %}keep arriving{% endif %} through election day; early in-person voting {% if ev_archived or ev_days_left <= 0 %}ended{% else %}ends{% endif %} {{ ev_end | date: "%A, %B %-d" }}.</p>
 </div>
 
 {%- if ev.counties[0].adultPct %}
 <h2 class="ev-h2">Turnout and education, county by county</h2>
-<p class="ev-sub">Each dot is a county: the share of its adults 25 and over with a bachelor&rsquo;s degree, against the share who have already voted. Switch the measure to see the same counties against their citizen adults or against their registered voters &mdash; the two disagree most where students and soldiers live. Diamonds voted Republican and circles Democratic in {{ lean_last }}. Tap or hover a dot to read it.</p>
+<p class="ev-sub">Each dot is a county: the share of its adults 25 and over with a bachelor&rsquo;s degree, against the share who {% if ev_archived %}voted early{% else %}have already voted{% endif %}. Switch the measure to see the same counties against their citizen adults or against their registered voters &mdash; the two disagree most where students and soldiers live. Diamonds voted Republican and circles Democratic in {{ lean_last }}. Tap or hover a dot to read it.</p>
 <div class="ev-chart">
   <div class="ev-toggles">
     <div class="ev-seg" role="group" aria-label="Turnout measure" id="sc-ymode">
@@ -437,12 +447,12 @@ share-description: "How many Georgians have already voted in the November 3, 202
   <div><i class="p-outstanding"></i><span><b data-n="{{ mp.outstanding }}">{{ mp.outstanding }}</b> outstanding<small>sent to the voter, not yet returned</small></span></div>
   <div><i class="p-pending"></i><span><b data-n="{{ mp.other }}">{{ mp.other }}</b> pending<small>on record with no status yet</small></span></div>
   <div><i class="p-cancelled"></i><span><b data-n="{{ mp.cancelled }}">{{ mp.cancelled }}</b> cancelled or spoiled<small>the voter voted another way, or the ballot was replaced</small></span></div>
-  <div><i class="p-rejected"></i><span><b data-n="{{ mp.rejected }}">{{ mp.rejected }}</b> rejected<small>{% assign returned = mp.accepted | plus: mp.rejected %}{{ mp.rejected | times: 100.0 | divided_by: returned | round: 2 }}% of returned ballots so far</small></span></div>
+  <div><i class="p-rejected"></i><span><b data-n="{{ mp.rejected }}">{{ mp.rejected }}</b> rejected<small>{% assign returned = mp.accepted | plus: mp.rejected %}{{ mp.rejected | times: 100.0 | divided_by: returned | round: 2 }}% of returned ballots{% if ev_archived %} through {{ ev.metadata.asOf | date: "%B %-d" }}{% else %} so far{% endif %}</small></span></div>
 </div>
 {%- assign live_mail = mp.accepted | plus: mp.rejected | plus: mp.outstanding -%}
 <p class="ev-flag"><i class="fa-solid fa-envelope" aria-hidden="true"></i>
-  <span><strong><span data-n="{{ mp.outstanding }}">{{ mp.outstanding }}</span> mail ballots are still out</strong> &mdash; sent to voters and not yet returned, {{ mp.outstanding | times: 100.0 | divided_by: live_mail | round: 0 }}% of the mail ballots in play.
-  A mail ballot has to <em>reach</em> the county election office by the time polls close on {{ ev.metadata.electionDate | date: "%A, %B %-d" }}; a postmark by election day is not enough. The table below shows how many are still out in each county.</span></p>
+  <span><strong><span data-n="{{ mp.outstanding }}">{{ mp.outstanding }}</span> mail ballots {% if ev_archived %}were still out{% else %}are still out{% endif %}</strong> &mdash; sent to voters and not yet returned{% if ev_archived %} as of {{ ev.metadata.asOf | date: "%B %-d" }}{% endif %}, {{ mp.outstanding | times: 100.0 | divided_by: live_mail | round: 0 }}% of the mail ballots in play.
+  A mail ballot {% if ev_archived %}had{% else %}has{% endif %} to <em>reach</em> the county election office by the time polls close on {{ ev.metadata.electionDate | date: "%A, %B %-d" }}; a postmark by election day is not enough. The table below shows how many {% if ev_archived %}were{% else %}are{% endif %} still out in each county.</span></p>
 
 <p class="ev-sub">
   Rejection is decided during review, and some ballots are fixed afterward, so the rejected count is expected to move.
@@ -494,7 +504,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
 
 <p class="ev-note">
   Source: Georgia Secretary of State absentee and early voting file and active voter registration table.
-  Counts run through the end of {{ ev.metadata.asOf | date: "%B %-d" }}; the Secretary of State's own dashboard updates more often and may show higher totals. Early in-person voting {% if ev_days_left > 0 %}ends{% else %}ended{% endif %} {{ ev_end | date: "%A, %B %-d" }}.
+  Counts run through the end of {{ ev.metadata.asOf | date: "%B %-d" }}; {% if ev_archived %}mail ballots received later and the certified results may differ{% else %}the Secretary of State's own dashboard updates more often and may show higher totals{% endif %}. Early in-person voting {% if ev_archived or ev_days_left <= 0 %}ended{% else %}ends{% endif %} {{ ev_end | date: "%A, %B %-d" }}.
   Data generated {{ ev.metadata.generatedAt | date: "%B %-d, %Y" }}.
 </p>
 {% else %}
@@ -586,7 +596,9 @@ share-description: "How many Georgians have already voted in the November 3, 202
   var DAILY = {{ ev.daily | jsonify }};
   var NOW = '{{ cur_year }}';
   var SAME = {{ ev.metadata.daysBeforeElection }};
+  var ARCHIVED = {{ ev_archived }};
   var AS_OF = '{{ ev.metadata.asOf | date: "%B %-d" }}';
+  var NOW_NOTE = ARCHIVED ? 'through ' + AS_OF : 'so far';
   var CMP = {{ ev.metadata.comparisons | jsonify }};  // per past year: the day it is compared at, and where its file stops being complete
   function endDay(y) { return y === NOW ? SAME : ((CMP[y] && CMP[y].lastCompleteDaysBefore) || 0); }
   function pointDay(y) { return y === NOW ? SAME : CMP[y].daysBefore; }
@@ -619,14 +631,14 @@ share-description: "How many Georgians have already voted in the November 3, 202
     var here = mine.pts.filter(function (pt) { return pt[0] === SAME; })[0];
     var out = ['<svg class="ev-spark" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Running total of accepted ballots from ' + X0 +
       ' days before election day onwards, for ' + years.join(', ') + '. ' + NOW + ' stands at ' + (here ? fmt(here[1]) : '') +
-      ' with ' + SAME + ' days to go.">'];
+      (ARCHIVED ? ' at ' + SAME + ' days before election day.">' : ' with ' + SAME + ' days to go.">')];
     out.push('<line class="spark-base" x1="' + px(X0) + '" y1="' + py(0) + '" x2="' + px(0) + '" y2="' + py(0) + '"/>');
     out.push('<line class="spark-now" x1="' + px(SAME) + '" y1="' + py(max) + '" x2="' + px(SAME) + '" y2="' + py(0) + '"/>');
     ser.forEach(function (s) {
       if (!s.pts.length) return;
       var d = s.pts.map(function (pt, i) { return (i ? 'L' : 'M') + px(pt[0]) + ' ' + py(pt[1]); }).join(' ');
       var end = s.pts[s.pts.length - 1];
-      var note = s.y === NOW ? 'so far' : (CMP[s.y] && CMP[s.y].lastCompleteDate ? 'file ends ' + shortDate(CMP[s.y].lastCompleteDate) : 'through election day');
+      var note = s.y === NOW ? NOW_NOTE : (CMP[s.y] && CMP[s.y].lastCompleteDate ? 'file ends ' + shortDate(CMP[s.y].lastCompleteDate) : 'through election day');
       out.push('<path class="ln ' + (s.y === NOW ? 'now s-now' : 's-' + s.y) + '" d="' + d + '"><title>' + s.y + ': ' +
         fmt(end[1]) + ' by ' + end[0] + ' days out (' + note + ')</title></path>');
     });
@@ -635,7 +647,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
     out.push('<text x="' + px(0) + '" y="' + (H - 3) + '" text-anchor="end">election day</text>');
     out.push('</svg>');
     out.push('<span class="ev-spark-k">' + years.map(function (y) {
-      var note = y === NOW ? 'so far' : (CMP[y] && CMP[y].lastCompleteDate ? 'to ' + shortDate(CMP[y].lastCompleteDate) : 'to election day');
+      var note = y === NOW ? NOW_NOTE : (CMP[y] && CMP[y].lastCompleteDate ? 'to ' + shortDate(CMP[y].lastCompleteDate) : 'to election day');
       return '<span><i class="' + (y === NOW ? 's-now' : 's-' + y) + '"></i>' + y + ' <small>' + note + '</small></span>';
     }).join('') + '</span>');
     box.innerHTML = out.join('');
@@ -651,7 +663,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
   var NS = 'http://www.w3.org/2000/svg';
 
   document.getElementById('ev-legend').innerHTML = years.map(function (y) {
-    return '<span><i class="' + cls(y) + '"></i>' + y + ' <small>' + kind(y) + (y === NOW ? ', so far' : (CMP[y] && CMP[y].lastCompleteDate ? ', through ' + shortDate(CMP[y].lastCompleteDate) : '')) + '</small></span>';
+    return '<span><i class="' + cls(y) + '"></i>' + y + ' <small>' + kind(y) + (y === NOW ? ', ' + NOW_NOTE : (CMP[y] && CMP[y].lastCompleteDate ? ', through ' + shortDate(CMP[y].lastCompleteDate) : '')) + '</small></span>';
   }).join('');
 
   // value series per year: {daysBefore: n}; running totals include everything before the left edge
@@ -839,7 +851,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
     return e;
   });
   document.getElementById('sc-note').textContent = 'Across the ' + n + ' counties, a larger college-educated share goes with ' +
-    (r >= 0 ? 'higher' : 'lower') + ' early and mail turnout so far, measured against ' + MODES[mode].den +
+    (r >= 0 ? 'higher' : 'lower') + ' early and mail turnout ' + NOW_NOTE + ', measured against ' + MODES[mode].den +
     ' (correlation ' + r.toFixed(2) + '). The dashed line is the straight-line fit.';
   sel = null;
   out.textContent = 'Hover or tap a dot to read a county.';
@@ -873,6 +885,7 @@ share-description: "How many Georgians have already voted in the November 3, 202
   render();
 })();
 </script>
+{% unless ev_archived %}
 <script>
 // Keep "days to election day" current between site builds, using the viewer's Eastern-time date.
 (function () {
@@ -894,3 +907,4 @@ share-description: "How many Georgians have already voted in the November 3, 202
   } catch (e) {}
 })();
 </script>
+{% endunless %}
