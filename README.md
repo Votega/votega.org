@@ -43,9 +43,12 @@ curl -s https://api.github.com/repos/Votega/ga-local-government/contents/data \
 curl -s https://raw.githubusercontent.com/Votega/ga-local-government/main/data/millage/manifest.json
 ```
 
-A manifest carries `generatedAt` (when the **data** was produced) separately from
-`publishedAt` (when we last mirrored it). They are not the same thing: a yearly
-dataset beside a twice-weekly one is not as fresh as whichever job ran last.
+A manifest's `generatedAt` is when the **data** was produced — not when we last
+mirrored it, which the repository's own git history already records. A yearly
+dataset sitting beside a twice-weekly one is not as fresh as whichever job ran
+last, and no single repository-wide timestamp could say so. Manifests carry no
+wall-clock time, so an unchanged dataset republishes byte-for-byte identically
+instead of adding a commit that says nothing changed.
 
 Full methodology and update schedules: [votega.org/about-the-data](https://www.votega.org/about-the-data)
 

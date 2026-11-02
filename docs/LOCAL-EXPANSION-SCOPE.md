@@ -683,8 +683,11 @@ listed the millage paths statically inside the mentions publisher's
 so naming another dataset's files there told consumers a monthly dataset was as
 fresh as a twice-weekly run. It has been replaced by a per-dataset manifest
 convention — `lib/sibling_publish.add_dataset_manifest` writes
-`data/<dataset>/manifest.json`, one writer per path, carrying `generatedAt` (the
-data's own timestamp) separately from `publishedAt`. All six publishers targeting
+`data/<dataset>/manifest.json`, one writer per path, carrying `generatedAt` — the
+data's own timestamp, and **no wall-clock time at all**, so an unchanged dataset
+republishes byte-identically rather than churning the sibling repo (an earlier
+draft stamped a `publishedAt`, which broke `test_publish_early_vote`'s
+byte-identity check — and that check was right). All six publishers targeting
 a shared repo now emit one: `agenda-mentions`, `millage`, `races`, `early-vote`,
 `bills`, `ballot-measures`. `ga-legislation`'s `latest.json` keeps its existing
 meaning as a bills pointer and is untouched.
