@@ -152,6 +152,16 @@ jobs:
             ${{ (inputs.reclassify == true || inputs.reclassify == 'true') && '--reclassify' || '' }}
 
       # Per-topic mention feeds for the /local/topics/<topic>/ index pages.
+      # Recorded motions and named votes (CivicClerk + Legistar places) ->
+      # assets/data/local-<slug>-votes.json. Incremental: a meeting already read and
+      # older than 60 days is carried forward from the committed file, so a normal
+      # run re-reads only recent meetings. continue-on-error like the enrichers: one
+      # portal being down must not discard the other places' data.
+      - name: Generate recorded votes (CivicClerk + Legistar)
+        id: votes
+        continue-on-error: true
+        run: python scripts/generate_meeting_votes.py
+
       # Reads the enriched sidecars above + _data/places.yml and shares the ONE
       # taxonomy in scripts/lib/meeting_topics.py — no re-fetch, no second keyword
       # list. Must run AFTER enrichment so it sees this run's fresh classifications.
@@ -165,7 +175,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/data/local-*-meetings.json \
                   assets/data/local-*-meetings-enriched.json \
-                  assets/data/local-flags.json \
+                  assets/data/local-flags.json                   assets/data/local-*-votes.json \
                   assets/data/local-topics-*.json
           if git diff --cached --quiet; then
             echo "No local-government meeting changes"
@@ -204,7 +214,8 @@ jobs:
           steps.validate.outcome == 'failure' ||
           steps.enrich-legistar.outcome == 'failure' ||
           steps.enrich-ocr.outcome == 'failure' ||
-          steps.enrich-granicus.outcome == 'failure'
+          steps.enrich-granicus.outcome == 'failure' ||
+          steps.votes.outcome == 'failure'
         run: |
           echo "::error::a validation or enrichment step failed - see the" \
             "annotations above. The failing place(s) were quarantined, or left" \
