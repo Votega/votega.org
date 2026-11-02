@@ -278,61 +278,57 @@ those is a URL lookup per district, not a technical problem.
 
 #### Two findings that change the 3c/3d estimates
 
-**CORRECTION (2026-11-02): Simbli is NOT scrapable, and 3c is blocked.** The
-sentence that stood here — "Simbli is plainly scrapable… `simbli.eboardsolutions.com/`
-fetches fine" — was wrong. It was based on a byte count, not on the content. That
-6,650-byte response was itself an **Imperva/Incapsula** challenge page.
+**Simbli is scrapable, and the config key is right there.** Every Simbli link on
+a district site — including policy-manual links — carries the same `S=<id>`
+district key, so the detector extracts it without needing the meetings page.
 
-Verified when 3c was started:
+**A false alarm, recorded so it is not repeated.** Starting 3c I briefly
+concluded Simbli was blocked by Imperva/Incapsula and wrote that here. It was
+wrong, twice over:
 
-- **Every path on `simbli.eboardsolutions.com` is behind Incapsula**, including
-  `/robots.txt` — so the site's own stated crawl policy cannot even be read. The
-  meeting listing returns a ~1 KB Incapsula frame with an incident ID, to both
-  `curl` and the project's own `lib.http.fetch_bytes`.
-- **District websites are fetchable** (no Incapsula) **but host no agenda
-  documents.** Bulloch, Walton and Henry were checked: 53–140 KB of HTML, zero
-  self-hosted PDFs, and nothing but outbound Simbli links. So the documents exist
-  only behind the bot protection; re-targeting the adapter at the district's own
-  site — which would have been the clean answer — does not work for these.
+- The first check looked at a **byte count** and called a 6,650-byte response
+  "fetches fine". It was an Incapsula challenge page.
+- The correction then tested `'ncapsula' in html`, which matches the Incapsula
+  **script tag injected into normally-served pages too** — so every page looked
+  blocked. On top of that, one district returned a genuine transient challenge,
+  and one id I tested (`S=3920`) was a number I had invented, so its error page
+  was not a block at all.
 
-Getting past Incapsula means circumventing an active bot-protection system. That
-is a different proposition from reading a public page, it is an operator
-decision rather than an implementation detail, and it is not built here. (An
-attempt to probe it with a spoofed browser User-Agent was correctly refused by
-this environment's own guardrails.)
+What is actually true, measured with a content check (does the page contain a
+meeting grid?): **the project's own `lib.http.fetch_bytes` retrieves the listing
+at ~150 KB with all 50 meetings.** Four of five real district ids served on the
+first attempt and the fifth served on a retry, so **transient challenges happen
+and the adapter needs a retry**, which is all. The lesson for any future adapter:
+assert on *content*, never on response size or an injected-marker substring.
 
-**So the Simbli `S=<id>` the detector extracts is still useful — it identifies
-the district and gives a human a direct link — but it is not an adapter config
-yet.** The detector's `_simbli` extractor already says so in its docstring.
+**The listing's mechanics, confirmed from the page and its own JavaScript:**
 
-**The routes that remain open, in the order worth trying:**
+Each row of `SB_MeetingListing.aspx?S=<district>` carries everything needed:
 
-1. **Ask eBOARDsolutions / GSBA for access** — a feed, an API, or allowlisting a
-   named crawler. Simbli is owned by a subsidiary of the Georgia School Boards
-   Association, the content is public record, and VoteGA is nonpartisan civic
-   infrastructure with a published methodology. This is the cheapest path to
-   *all* Simbli districts at once and should be tried before any engineering.
-2. **Georgia Open Records Act requests** to districts for agendas and minutes.
-   Lawful and certain, but per-district and slow; some districts would simply
-   email them.
-3. **Finish the census first.** 8 districts matched no signature and 17 were
-   never tested (§3.5.1). If some of those self-host their packets, they are
-   buildable today with the existing `pdflinks` / `htmltable` adapters and do not
-   need Simbli at all. This is the only option that needs no permission and no
-   third party, so it is the sensible immediate move.
-4. **A headless browser.** Technically possible — the SharePoint and Wix adapters
-   already use Playwright — but it is still circumventing the anti-bot system,
-   just with a real browser, and raises terms-of-service questions that are the
-   operator's to answer, not the adapter's.
+```html
+<td><span title='11/03/2026 - 08:30 AM'>11/03/2026 - 08:30 AM</span></td>
+<td><a onclick='ViewMeeting("4122","140227","1","0","P",event)'>Regular Session …</a></td>
+<td><a onclick='ViewMinutes("4122","140227","UNPUBLISHED","0","P","0",event)'>UnPublished</a></td>
+```
 
-**Consequence for the rest of phase 3:** 3a's board-roster section and 3e's topic
-rules are unaffected — they need no scraping. 3c and 3d are both blocked on
-access rather than on effort, so the school-board work should proceed as
-**officials and topics only** until route 1 or 3 opens a document source.
+- the **date and time** from the span,
+- the **title** from the anchor text,
+- the **district id** and a **meeting id** from the `ViewMeeting` arguments,
+- a **status flag** (`"1"`) and the **minutes state** (`UNPUBLISHED` / published).
 
-But **some districts use a vanity path with no id** — Walton's link is
-`simbli.eboardsolutions.com/walton`. The 3c adapter must accept both an `S=` id
-and a vanity slug, or it will silently miss those districts.
+`SB_MeetingListingJS.js` resolves those to real URLs:
+**`/SB_Meetings/ViewMeeting.aspx?S=<district>&MID=<meeting>`** for the agenda,
+and `/Meetings/PrintMinutes.aspx` for minutes. Its own guard is
+`meetingStatus == "1" && isLoggedInUser == "0"`, i.e. **published meetings are
+viewable without an account** — so no login is involved.
+
+The anchors are `href="javascript:void(0)"`, so a naive link scraper finds
+nothing; the URLs have to be built from the `onclick` arguments. That is the
+actual work in 3c, and it is ordinary parsing.
+
+**Still true from 3b:** some districts use a vanity path with no id — Walton's
+link is `simbli.eboardsolutions.com/walton` — so the adapter must accept both a
+vanity slug and an `S=` id, or it will silently miss those districts.
 
 **BoardDocs will need a headless browser, which 3d's estimate did not assume.**
 `go.boarddocs.com` answers **403 via CloudFront** to both `curl` and the repo's
@@ -364,7 +360,7 @@ curriculum/media policy, school construction**. One new `schools` topic in
 |---|---|---|
 | **3a** | County systems generated into `school_districts.yml`; validator (strict slug cross-check, like `validate_local_officials.py`); board section in `_includes/entity/place.html`; publish machine-readable copy to `ga-local-government`. **Officials only, no scraping.** | ~50–70k |
 | **3b** | ~~Platform census~~ **DONE** — see §3.5.1. Verdict: build Simbli, defer BoardDocs. | **done** |
-| **3c** | ~~Simbli adapter~~ **BLOCKED** — Simbli is behind Imperva/Incapsula; see the correction in §3.5.1. Not an effort problem. | blocked |
+| **3c** | Simbli adapter. Mechanics confirmed (§3.5.1): parse the listing's `onclick` args into `ViewMeeting.aspx?S=&MID=` URLs; needs a fetch retry for transient challenges. | ~60–90k |
 | **3d** | BoardDocs adapter | ~60–90k |
 | **3e** | `schools` topic rules + per-district page wiring | ~40–60k |
 
