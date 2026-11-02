@@ -126,7 +126,9 @@ def fetch_meetings(cfg, previous=None):
     if platform == 'civicclerk':
         return fetch_civicclerk_meetings(cfg['subdomain'])
     if platform == 'legistar':
-        return fetch_legistar_meetings(cfg['client'])
+        return fetch_legistar_meetings(cfg['client'],
+                                       detail_links=bool(cfg.get('detail_links')),
+                                       previous=previous)
     if platform == 'teammunicode':
         return fetch_teammunicode_meetings(cfg['base_url'].rstrip('/'),
                                            meetings_path=cfg.get('meetings_path', '/meetings'),
