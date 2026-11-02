@@ -345,6 +345,11 @@
 </div>
 {% endif %}
 
+{%- comment %} Property tax — server-rendered from _data/millage.json, between the
+    people and the meetings: it is the most-searched local-government topic and it
+    needs to be in the crawled HTML. Renders nothing when the place has no view. {% endcomment -%}
+{% include entity/millage.html %}
+
 {%- comment %} "On recent agendas" — subject areas + data-center watch, loaded
     client-side from the enrichment sidecar. Hidden unless that file exists
     (Legistar places today). {% endcomment -%}

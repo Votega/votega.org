@@ -510,11 +510,89 @@ after a GET for the session cookie.
 | Phase | Work | Est. |
 |---|---|---|
 | **1a** | ~~Digest Consolidated Summaries XLSX → millage dataset, 2020–2025~~ **DONE** — see §4.1.0. Remaining: the 2019 PDF for one extra year, and publishing into `ga-local-government`. | **done** (~40–60k est.) |
-| **1b** | Per-place millage history section on `/local/<slug>/` (county + city + school lines) | ~40–60k |
+| **1b** | ~~Per-place millage history section on `/local/<slug>/`~~ **DONE** — see §4.5.1. Remaining: a workflow to refresh it when DOR publishes. | **done** (~40–60k est.) |
 | **1c** | HB 581 opt-out registry (SoS filings + agenda corroboration + L1–L9 exemption series) | ~60–90k |
 | **1d** | Explainers: reading your assessment, the 45-day appeal, what a millage rate is | ~25–40k |
 | **1e** | Statewide millage comparison / ranking page | ~40–60k |
 | **1f** | *Optional.* `rtdc` HTML parser for pre-2020 digest history (back to 1990). No millage. | ~60–90k |
+
+### 4.5.1 Phase 1b: BUILT
+
+| File | Role |
+|---|---|
+| `scripts/lib/millage.py` | statewide dataset → one place's levy lines (stdlib only) |
+| `scripts/build_millage_places.py` | bakes `_data/millage.json`, 62 places |
+| `_includes/entity/millage.html` | the rendered section |
+| `scripts/test_millage_view.py` | 40 offline invariants |
+| `scripts/fixtures/millage-places.json` | 10 real places |
+
+**Server-rendered, not fetched.** Property tax is the highest-search-intent topic
+in `/local/`, so the figures are in the HTML a crawler sees — the same reasoning
+that keeps officials server-rendered while meetings load client-side. The data
+goes in `_data/` so Liquid can read it; `_data` already holds generated files
+(`executive.json`, `featured_races.json`, `results_updated.json`).
+
+**Verified by a real Jekyll build** (`build_entity_pages.py` then `jekyll build`):
+the section renders on Covington (city), Newton (county) and Columbus-Muscogee.
+62 of 62 visible places have a view; 61 show a combined rate for every year.
+
+**What the section shows.** One row per government that levies on the resident,
+one column per year, plus a combined total:
+
+> Covington 2025: County (inside a city) 8.567 + County school district 15.500 +
+> City of Covington 6.406 = **30.473 mills** — down from 39.890 in 2020.
+
+Every other district in the county sits in a `<details>`, so the page is complete
+without implying a resident pays all of it.
+
+#### The five modelling rules, each a bug that reached the page first
+
+1. **A city and its county show different county rates.** An owner inside a city
+   pays the county's INCORPORATED rate; one outside pays the UNINCORPORATED rate.
+   This is the most common way such a table is wrong.
+2. **A city school district replaces the county system.** Atlanta residents pay
+   Atlanta Public Schools, not Fulton County Schools. Listing both would
+   double-count ~17 mills.
+3. **The county line is a fallback chain, not a lookup.** Consolidated
+   governments have no incorporated/unincorporated split — Macon-Bibb and
+   Athens-Clarke publish only an incorporated line, Columbus-Muscogee only a
+   countywide one — and Echols County has no incorporated municipality at all.
+   Before the chain, Macon-Bibb showed no county rate.
+4. **One line is ONE district.** Five counties levy their general rate through
+   several same-kind districts (Carroll files `COUNTY INC - CARROLLTON`,
+   `- BREMEN`, `- OTHER`; Fayette has five). Blending them put Carroll's
+   `OTHER` rate on Carrollton's page. A city page now prefers the county's
+   variant named for that city.
+5. **Special-purpose beats territorial in classification.** `COUNTY UNINC FIRE
+   DISTRICT` (Hall), `SSD UNINCORPORATED` (Henry) and `COUNTY UNINC DEVELOPMENT
+   SVC` (Hall) all contain "UNINCORPORATED" but are fire/SSD/development
+   districts. Matched in the wrong order they were read as the county's general
+   levy and added to the resident's rate.
+
+#### The state line is excluded, deliberately
+
+Across all 953 state rows in 2020–2025, **every one that reports a rate reports
+0.000 — not one is non-zero — and 126 report nothing at all.** Including it added
+zero while voiding the combined rate for whole county-years under the
+all-components-present rule (Carrollton 2025 was exactly that). The page states
+the state rate is zero instead.
+
+#### The combined rate is conservative, and says when it cannot be given
+
+Emitted only for a year where **every** line reports a rate; a partial sum would
+understate a tax bill. It excludes all special districts, because whether one
+applies depends on the parcel. Where no combined rate is possible the view
+carries a reason rather than a blank — Columbus-Muscogee splits its county levy
+across urban, rural and Fort Benning service districts at different rates, so no
+single county figure exists to add, and inventing one would be a wrong claim
+about someone's taxes.
+
+#### Still to wire
+
+`_data/millage.json` is a committed snapshot. It needs a workflow that reruns
+`generate_ga_millage.py` then `build_millage_places.py` when DOR publishes a new
+year (annually, around the turn of the year), in the shape of the existing
+`update-*.yml` jobs. Until then the figures are correct but frozen at 2025.
 
 ### 4.6 Supporting facts
 

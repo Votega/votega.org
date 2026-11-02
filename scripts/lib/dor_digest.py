@@ -118,17 +118,37 @@ CODE_TYPES = {
 # as a city school before any generic SCHOOL rule could claim it.
 NAME_TYPES = (
     ('city_school',           re.compile(r'\bIND\b.*\bSCHOOL|\bSCHOOLS?\b.*\bCITY\b|\bCITY\b.*\bSCHOOLS?\b|^\w+ SCHOOLS$')),
-    ('county_unincorporated', re.compile(r'COUNTY\s+UNINC')),
-    ('county_incorporated',   re.compile(r'COUNTY\s+INC\b|COUNTY\s+INCORPORAT')),
+    # A county URBAN/RURAL SERVICE DISTRICT is the county's own levy on part of
+    # its territory, not a city. Columbus-Muscogee is the case that matters: the
+    # consolidated government's countywide row carries NO rate, and its actual
+    # levy sits in 'COUNTY USD 1 - URBAN', 'COUNTY USD 2 - RURAL' and
+    # 'COUNTY USD 4 - FTBENNING'. Classified as a city, those became phantom
+    # municipalities and Muscogee showed no county rate at all.
+    ('county_service_district',
+                              re.compile(r'COUNTY\s+USD\b|\bUSD\s*\d|URBAN\s+SVC|URBAN\s+SERVICE')),
+
+    # ---- SPECIAL-PURPOSE DISTRICTS COME FIRST, BEFORE THE COUNTY PATTERNS ----
+    # Several special districts carry 'COUNTY' or 'UNINCORPORATED' in their name:
+    # 'COUNTY UNINC FIRE DISTRICT' (Hall), 'SSD UNINCORPORATED' (Henry),
+    # 'COUNTY UNINC DEVELOPMENT SVC' (Hall). Matched after the county rules they
+    # would be read as the county's own general levy and blended into the rate a
+    # resident is told they pay. What a district IS beats where it applies.
     ('fire',                  re.compile(r'\bFIRE\b')),
-    ('library',               re.compile(r'\bLIBRAR')),
-    ('recreation',            re.compile(r'\bRECREATION\b')),
+    ('ssd',                   re.compile(r'\bSSD\b')),
     ('tad',                   re.compile(r'\bTAD\b')),
     ('cid',                   re.compile(r'\bCID\b')),
     ('bid',                   re.compile(r'\bBID\b')),
-    ('ssd',                   re.compile(r'\bSSD\b')),
     ('hospital',              re.compile(r'\bHOSPITAL\b')),
-    ('development_authority', re.compile(r'\bDEV(ELOPMENT)?\s+AUTH')),
+    ('library',               re.compile(r'\bLIBRAR')),
+    ('recreation',            re.compile(r'\bRECREATION\b')),
+    ('development_authority', re.compile(r'\bDEV(ELOPMENT)?\s+AUTH|\bECON(OMIC)?\s+DEV|\bDEVELOPMENT\s+SVC')),
+
+    # ---- THEN the county's own general levies ----
+    # 'UNINCORPORATED' on its own, once the '<County> County - ' prefix is gone.
+    # Barrow files its unincorporated levy as 'Barrow County - UnIncorporated',
+    # which the COUNTY-prefixed pattern alone does not catch.
+    ('county_unincorporated', re.compile(r'COUNTY\s+UNINC|\bUNINCORPORAT')),
+    ('county_incorporated',   re.compile(r'COUNTY\s+INC\b|COUNTY\s+INCORPORAT')),
     ('countywide',            re.compile(r'^COUNTY\s*WIDE$|^COUNTYWIDE$')),
 )
 
@@ -261,6 +281,40 @@ def key(rec):
     """The stable, unique identity of a record (rules 1 and 4)."""
     return (rec['countyCode'], rec['districtCode'], rec['taxYear'],
             rec.get('occurrence', 1))
+
+
+def canonical_county_names(recs):
+    """{countyCode: canonical name} — the modal name, longest wins a tie.
+
+    WHY: DOR's own county names are not clean. 26 of the 159 county codes carry a
+    truncated or suffixed name in at least one year — code 2 is 'ATKINSON' in
+    2020-2025 but also 'ATKINS' in 2023-2025 and 'ATKINS SO' in 2024; code 32 is
+    'CLINCH', 'CLINCH COUNTY' and 'CLINCH COUNTY TAX'; others carry two-letter
+    tails ('HEARD KA', 'JONES SO', 'GREENE NW', 'CHARLT TB') that look like an
+    internal DOR marker. The truncation is per-ROW, not per-year: a single year
+    can hold both spellings for the same county.
+
+    Across the full 2020-2025 dataset that produces 191 distinct county names for
+    159 codes, so countyName is unusable as a join key or a display label. The
+    code is the identity; this gives the one name to show for it.
+
+    Needs the WHOLE dataset, so it is applied by the generator after every
+    workbook is read, not inside parse().
+    """
+    counts = {}
+    for r in recs:
+        cc = r.get('countyCode')
+        name = (r.get('countyName') or '').strip()
+        if not cc or not name:
+            continue
+        counts.setdefault(cc, {})
+        counts[cc][name] = counts[cc].get(name, 0) + 1
+    out = {}
+    for cc, names in counts.items():
+        # Most rows wins; a tie goes to the longest name, which is the unabbreviated
+        # one in every observed case. Alphabetical last, so the result is stable.
+        out[cc] = sorted(names.items(), key=lambda kv: (-kv[1], -len(kv[0]), kv[0]))[0][0]
+    return out
 
 
 def duplicate_groups(recs):
