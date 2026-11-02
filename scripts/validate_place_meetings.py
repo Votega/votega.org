@@ -173,7 +173,10 @@ def check_place(place, min_meetings, sample, network):
         # documents yet — it is surfaced as a scheduled meeting, not an error.
         date = m.get('date') or ''
         is_upcoming = DATE_RE.match(date) and date >= _TODAY
-        if not (m.get('agendaUrl') or m.get('minutesUrl') or m.get('videoUrl')) \
+        # Addenda/notices (otherUrls) and a stand-alone packet are artifacts too:
+        # a CivicClerk meeting may carry only those.
+        if not (m.get('agendaUrl') or m.get('minutesUrl') or m.get('videoUrl')
+                or m.get('agendaPacketUrl') or m.get('otherUrls')) \
                 and not is_upcoming:
             errors.append('%s: no agenda, minutes, or video URL' % where)
 
