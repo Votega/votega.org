@@ -1,8 +1,78 @@
 # /local/ expansion scope — property tax & school boards
 
-**Status:** scope, not yet built. Decisions recorded; implementation phased below.
-**Date:** 2026-11-01
+**Status:** mostly built. See **Where this stands** immediately below; the
+phased detail is further down and still accurate.
+**Scoped:** 2026-11-01 · **Last updated:** 2026-11-02
 **Scope owner:** Justin Mays
+
+---
+
+## Where this stands (read this first)
+
+Everything below this section is the original scope plus findings recorded as the
+work happened. This block is the resume point.
+
+### Shipped and on `main`
+
+| | |
+|---|---|
+| **1a** millage parser | DOR Digest Consolidated Summaries XLSX → **12,186 rows, 2019–2025, all 159 counties**. 2019 bridged from the one clean-text PDF. |
+| **1b** per-place section | **Property tax rates** on all 62 visible place pages, server-rendered, 7 columns, 61/62 with a combined rate (Muscogee cannot have one — §4.5.1). |
+| **1d** explainer | `/property-tax/` — mills, the 45-day appeal, the rollback rate and the three advertised hearings. Every statutory claim verified from DOR or the Code. |
+| publish + refresh | `update-ga-millage.yml` monthly → `ga-local-government`, via `publish_ga_millage.py`. First run succeeded. |
+| **3a** registry | `_data/school_districts.yml` — all **180 districts** (159 county + 21 city), `validate_school_districts.py` + 52 invariants in CI. |
+| **3a** drafter | `draft_school_boards.py` — **77 districts / 215 members** drafted from SoS results, 0 errors. |
+| **3b** census | Detector gained a Simbli fingerprint. **15 of 23 reachable districts are Simbli, 0 BoardDocs.** |
+| infrastructure | Per-dataset manifests (`data/<dataset>/manifest.json`) across all 6 co-tenant publishers; `test_no_third_party_imports.py` guard; `claude.md` scaling section re-measured. |
+
+### Next actions, highest value first
+
+1. **Board section in `_includes/entity/place.html`** — the last piece of 3a.
+   One board renders open; **two or more render collapsed** with member names in
+   the summary, so DeKalb (DeKalb County + City Schools of Decatur + part of APS)
+   and Jackson (county + Commerce + Jefferson) do not stack three rosters.
+2. **Publish the district registry** to `ga-local-government` (decision 2:
+   registry lives in this repo, machine-readable copy published).
+3. **`/local/<slug>/taxes/` URL split** — owner liked the idea; capacity is a
+   non-issue (~4 MB for 68 pages). Property tax is 78% of a place page's content
+   and has the highest search intent, so it is competing with officials for the
+   page title today.
+4. **Inline-`<script>` refactor** — the live REVISIT item in `claude.md`.
+   ~130 MB of a 312 MB site; first question to answer is whether the 177 KB
+   legislator / 126 KB candidate blocks are per-page templated or identical.
+5. **3c Simbli adapter** — unblocked. Parse the listing's `onclick` args into
+   `ViewMeeting.aspx?S=&MID=` URLs; needs a fetch retry (transient Incapsula
+   challenges) and must accept vanity slugs (`/walton`, no `S=` id).
+6. **1c** HB 581 opt-out registry · **1e** statewide millage comparison.
+7. **3b loose ends** — 8 districts matched no signature, 17 never tested, 10
+   blocked by the dev container's egress proxy. Re-running from CI would firm up
+   the zero-BoardDocs result.
+
+### Owner is doing
+
+Adding board rosters to `_data/school_districts.yml`, one district per PR, using
+`draft_school_boards.py` output as the starting point.
+
+### Hard-won facts not to re-derive
+
+- **Join on `(countyCode, districtCode, taxYear, occurrence)`**, never on a name.
+  District names drift for ~15% of districts between years; DOR also abbreviates
+  county names per row (191 names for 159 codes).
+- **Assert on CONTENT, never on response size or an injected-marker substring.**
+  Both of my wrong calls about Simbli came from that (a byte count, then
+  `'ncapsula' in html` matching Incapsula's script tag on *served* pages).
+- **`scripts/test_*.py` must be stdlib-only** — CI installs no pip packages. Use
+  the `try: import yaml / except ImportError: sys.modules[...] = stub` pattern.
+  `test_no_third_party_imports.py` enforces this.
+- **No wall-clock time in a published artifact**, or every scheduled run
+  republishes and churns the sibling repo.
+- **Georgia school boards may be partisan OR nonpartisan, per district, by law**
+  ([Ballotpedia](https://ballotpedia.org/Party_labels_in_Georgia_school_board_elections)).
+  71 of 77 drafted districts are partisan. Do not assume either way.
+- **A Superintendent is hired by the board, not elected** — `voting: false`
+  required, never counted against `board_size`.
+
+---
 
 This document scopes two additions to the `/local/` section:
 

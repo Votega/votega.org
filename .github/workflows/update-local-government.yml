@@ -183,8 +183,69 @@ jobs:
             git commit -m "Update local-government meeting data ($(date -u '+%Y-%m-%d'))"
             pushed=0
             for attempt in 1 2 3; do
-              if git pull --rebase origin main && git push; then pushed=1; break; fi
-              echo "Push attempt $attempt failed, retrying..."
+              git fetch origin main || { sleep 5; continue; }
+
+              if git rebase origin/main; then
+                if git push; then pushed=1; break; fi
+                echo "Push attempt $attempt failed (push rejected), retrying..."
+                sleep 5
+                continue
+              fi
+
+              # ---- Rebase conflicted. ----------------------------------------
+              # This happens when ANOTHER run of this workflow pushed while this
+              # one was working: both regenerate the same files from live
+              # scrapes, so every local-*.json conflicts. Run 63 on 2026-11-02
+              # failed exactly this way — it checked out at 18:47, a manual
+              # dispatch pushed at 19:02, and the rebase then conflicted on ~90
+              # files. The old loop retried `git pull --rebase` WITHOUT aborting,
+              # so attempts 2 and 3 were guaranteed to fail with "Pulling is not
+              # possible because you have unmerged files" — 10 seconds of noise
+              # and a misleading final error.
+              #
+              # For THESE files a conflict has a correct resolution: take ours.
+              # The enriched sidecar is NOT a cumulative cache — enrich_place()
+              # rebuilds it from `recent_meetings(..., since, limit)` and FULLY
+              # REPLACES the file, so it is a rolling window (--months 12
+              # --limit 25), not an accumulation. Its "cache" only avoids
+              # re-downloading an unchanged agenda. So either side is a complete,
+              # valid window and ours is the fresher scrape.
+              # local-flags.json merges per-place by design ("merge, never
+              # replace" in write_flags_file) and local-topics-*.json is derived
+              # wholesale from the sidecars, so neither accumulates either.
+              #
+              # Known, accepted: a place that FAILED in this run wrote nothing,
+              # so taking ours can revert that one place to the base checkout —
+              # one cycle stale, self-healing next run, and identical to what
+              # already happens when a place is quarantined.
+              #
+              # Scoped deliberately to assets/data/local-*.json. A conflict
+              # anywhere else means something unexpected, and must fail loudly
+              # rather than be resolved by rule.
+              unexpected=$(git diff --name-only --diff-filter=U \
+                           | grep -v '^assets/data/local-.*\.json$' || true)
+              if [ -n "$unexpected" ]; then
+                echo "::error::rebase conflicted outside the generated local data:"
+                echo "$unexpected"
+                git rebase --abort || true
+                break
+              fi
+
+              conflicted=$(git diff --name-only --diff-filter=U)
+              echo "::warning::rebase conflicted on $(echo "$conflicted" | wc -l)" \
+                "generated file(s) — another run of this workflow pushed while" \
+                "this one was working. Taking this run's freshly scraped version."
+              # During a rebase "ours" is the upstream being replayed onto, so
+              # THEIR side is our commit. Hence --theirs here, not --ours.
+              echo "$conflicted" | xargs -r git checkout --theirs --
+              echo "$conflicted" | xargs -r git add --
+              if GIT_EDITOR=true git rebase --continue; then
+                if git push; then pushed=1; break; fi
+                echo "Push attempt $attempt failed after resolving, retrying..."
+              else
+                echo "could not continue the rebase; aborting to a clean tree"
+                git rebase --abort || true
+              fi
               sleep 5
             done
             if [ "$pushed" -ne 1 ]; then

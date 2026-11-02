@@ -94,7 +94,26 @@ jobs:
             git commit -m "Update GA millage data ($(date -u '+%Y-%m-%d'))"
             pushed=0
             for attempt in 1 2 3; do
-              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              git fetch origin main || { sleep 5; continue; }
+              if git rebase origin/main && git push; then pushed=1; break; fi
+              # ABORT BEFORE RETRYING. The old loop re-ran `git pull --rebase`
+              # with a conflicted tree still in place, so every attempt after the
+              # first failed with "Pulling is not possible because you have
+              # unmerged files" — guaranteed noise and a misleading final error.
+              # (update-local-government.yml failed exactly that way on
+              # 2026-11-02.) Aborting means a retry starts from a clean tree and
+              # can actually succeed, e.g. when the first failure was a push race
+              # rather than a conflict.
+              #
+              # No auto-resolution here, unlike the local-government workflow.
+              # This job runs MONTHLY against a single generated file, so two runs
+              # should never collide — if _data/millage.json genuinely conflicts,
+              # something unexpected happened and a human should look rather than
+              # have a rule pick a winner.
+              if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
+                echo "::warning::rebase conflicted; aborting to a clean tree"
+                git rebase --abort || true
+              fi
               echo "Push attempt $attempt failed, retrying..."
               sleep 5
             done
