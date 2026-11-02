@@ -60,7 +60,8 @@ def _event_to_meeting(subdomain, e):
         return None
 
     files = e.get('publishedFiles') or []
-    agenda_url = minutes_url = None
+    agenda_url = minutes_url = packet_url = None
+    other = []
     for f in files:
         t = (f.get('type') or '').strip().lower()
         fid = f.get('fileId')
@@ -70,7 +71,17 @@ def _event_to_meeting(subdomain, e):
             agenda_url = _file_url(subdomain, fid)
         elif t == 'minutes' and minutes_url is None:
             minutes_url = _file_url(subdomain, fid)
-    # Fall back to an "Agenda Packet" when no plain Agenda was published.
+        elif t == 'agenda packet' and packet_url is None:
+            packet_url = _file_url(subdomain, fid)
+        elif t not in ('agenda', 'minutes', 'agenda packet'):
+            # Addenda, notices, "Other" uploads (Butts): labelled by the file's
+            # own name, since the type is just "Other".
+            other.append({'label': (f.get('name') or f.get('type') or 'Document').strip(),
+                          'url': _file_url(subdomain, fid)})
+    # No plain Agenda: the packet stands in as the agenda (and is not repeated as
+    # a separate "Packet" link).
+    if agenda_url is None and packet_url is not None:
+        agenda_url, packet_url = packet_url, None
     if agenda_url is None:
         for f in files:
             if (f.get('type') or '').strip().lower().startswith('agenda') and f.get('fileId'):
@@ -78,10 +89,10 @@ def _event_to_meeting(subdomain, e):
                 break
 
     video_url = _video_url(e.get('youtubeVideoId'))
-    if not (agenda_url or minutes_url or video_url):
+    if not (agenda_url or minutes_url or video_url or other):
         return None
 
-    return {
+    m = {
         'body': body,
         'date': date,
         'id': str(e.get('id')),
@@ -91,6 +102,11 @@ def _event_to_meeting(subdomain, e):
         'videoUrl': video_url,
         'hasPreviousVersions': False,
     }
+    if packet_url:
+        m['agendaPacketUrl'] = packet_url
+    if other:
+        m['otherUrls'] = other
+    return m
 
 
 def fetch_civicclerk_meetings(subdomain, years=4, timeout=30, max_pages=80):

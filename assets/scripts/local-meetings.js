@@ -87,6 +87,10 @@
           '<a href="' + esc(m.agendaArchiveUrl) + '" target="_blank" rel="noopener">Archived copy</a>',
         m.agendaPacketUrl && '<a href="' + esc(m.agendaPacketUrl) + '" target="_blank" rel="noopener">Packet</a>',
         m.minutesUrl && '<a href="' + esc(m.minutesUrl) + '" target="_blank" rel="noopener">Minutes</a>',
+        // Addenda / notices the source files under "Other", labelled by the file's own name.
+        (m.otherUrls || []).map(function (o) {
+          return '<a href="' + esc(o.url) + '" target="_blank" rel="noopener">' + esc(o.label) + '</a>';
+        }).join(''),
         m.videoUrl && '<a href="' + esc(m.videoUrl) + '" target="_blank" rel="noopener">▶ Video</a>'
       ].filter(Boolean).join('');
       var chip = showChip ? '<span class="cm-body-chip">' + esc(m.body) + '</span>' : '';

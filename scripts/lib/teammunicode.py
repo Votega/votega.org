@@ -23,6 +23,7 @@ Import from a generator in scripts/ (sys.path[0] is scripts/):
     from lib.teammunicode import fetch_teammunicode_meetings
 """
 
+import html
 import re
 import time
 from datetime import date, timezone, datetime
@@ -51,8 +52,11 @@ def _cell(row, field):
     m = re.search(r'views-field-%s[^>]*>(.*?)</td>' % re.escape(field), row, re.S | re.I)
     if not m:
         return None
-    h = _HREF_RE.search(m.group(1))
-    return h.group(1) if h else None
+    hrefs = [html.unescape(h) for h in _HREF_RE.findall(m.group(1))]
+    # A cell can hold an HTML view AND the PDF (Columbus: "Agenda (HTML)" then
+    # "Agenda (PDF)"); the PDF is the stable, citable document.
+    return next((h for h in hrefs if h.lower().split('?')[0].endswith('.pdf')),
+                hrefs[0] if hrefs else None)
 
 
 def _parse_row(row):
