@@ -535,7 +535,13 @@ minutes page are reachable anonymously. The platform's own JS says they are — 
 anonymous branch builds exactly those URLs, gated on `meetingStatus == "1"` and
 `minutesStatus == "PUBLISHED"` — and the adapter emits a URL only when those hold.
 But every attempt to fetch one from this container was blocked, so the JS is the
-evidence, not a fetch. Confirm from CI.
+evidence, not a fetch. **Retried 14 times against each of an agenda and its
+minutes page on 2026-11-02; every single attempt was a block.** Confirm from CI
+and do not spend more attempts from a dev container.
+
+(The meeting picked for that test was Newton's `Special Called Meeting - Millage
+Rate`, 2026-07-27 — an incidental but useful signal for 3e: board agendas carry
+exactly the tax-and-budget items the topic enrichment is built to surface.)
 
 **The vanity-path branch is likewise unverified live.** Some districts link only
 `simbli.eboardsolutions.com/<slug>` with no `S=` key, so `resolve_district_id`
