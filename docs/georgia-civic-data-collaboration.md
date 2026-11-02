@@ -8,6 +8,13 @@ VoteGA knows who represents Georgians and how they voted. Georgia Civic Data (GC
 
 Ground rules: records only (votes, bills, outcomes as published); nonpartisan; no ratings. AI-written text is always labelled as such and is never presented as part of the record.
 
+## First Meeting - 11/2/26
+- VoteGA to provide links to legislative member pages for Georgia Commons (sponsors pages). 
+- VoteGA to consume and display GA Commons plain language summary and link back to GA Commons for bill plain language summary. 
+- Nonprofit formation exploration (Shane). 
+- VoteGA /local/ as an area of collaboration, Georgia Commons will be exploring more local-based items and might be able to leverage some of VoteGA's prior work. 
+
+
 ## What is already done (merged to `main` and published)
 
 - **`Votega/ga-district-information` 2.0.0.** Every county code is the 5-digit FIPS (`13013`), the form GCD and the Census use. Added `data/district-counties.csv` (district to counties, with share of the district, share of the county and `coverage` full/partial), `data/county-codes.csv` (5-digit FIPS, the 3-digit suffix used before 2.0.0, name, slug), and a `coverage` column on `county-districts.csv`. Catalogued on `/open-data`; sibling README updated. Source files (`scripts/data/ga-tract-districts.json`, `assets/data/ga-zip-districts.json`) now carry 5-digit codes too. Test: `scripts/test_publish_ga_district_information.py`.
