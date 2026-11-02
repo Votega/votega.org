@@ -56,18 +56,20 @@ calls = []
 def fake(url, **kw):
     calls.append(url)
     if url.endswith('/Votes'):
-        return VOTES
+        return [] if '/EventItems/11/' in url else VOTES
     if '/EventItems' in url:
         return [{'EventItemId': 9, 'EventItemActionName': 'Approved',
                  'EventItemTitle': 'T', 'EventItemMatterFile': '26-1',
                  'EventItemPassedFlagName': 'Pass'},
-                {'EventItemId': 10, 'EventItemActionName': None, 'EventItemTitle': 'Heading'}]
+                {'EventItemId': 10, 'EventItemActionName': None, 'EventItemTitle': 'Heading'},
+                {'EventItemId': 11, 'EventItemActionName': 'Accepted to the BOC agenda',
+                 'EventItemTitle': 'Clerical'}]
     return EVENTS
 
 
 first = fetch_votes('c', previous=None, months=12, today=TODAY, fetch=fake)
 check('events read', [x['id'] for x in first], ['2', '1'])
-check('only acted items kept', [len(x['items']) for x in first], [1, 1])
+check('clerical action with no names or result dropped', [len(x['items']) for x in first], [1, 1])
 check('reference is the file number', first[0]['items'][0]['reference'], '26-1')
 
 calls.clear()

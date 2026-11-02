@@ -24,6 +24,13 @@ from lib.legistar import api_base
 from lib.meeting_votes import bucket, clean_text, result_from_flag
 
 RECHECK_DAYS = 60
+# An acted item with no names and no Pass/Fail is usually clerical bookkeeping
+# ("Accepted to the BOC agenda and assigned", "Read into the record": 900 of
+# DeKalb's 2,800). Kept only when the action is a decision a voter would care
+# about, even if the source recorded no names for it.
+_DECISION_RE = re.compile(
+    r'^(approv|adopt|den|pass|fail|defer|hold|held|table|withdr|reject|postpone|continu)',
+    re.I)
 _DISTRICT_RE = re.compile(r'^\s*Commission District\(s\):\s*([^\r\n]*)[\r\n]+(.*)$', re.S)
 
 
@@ -70,13 +77,17 @@ def read_event(client, event, fetch=fetch_json, timeout=40):
                       timeout=timeout, label='%s item %s votes' % (client, it['EventItemId']))
         if not isinstance(votes, list):
             return None
+        motion = motion_from(it, votes)
+        if not (motion['result'] or motion['yes'] or motion['no'] or motion['abstain']
+                or _DECISION_RE.match(motion['motion'] or '')):
+            continue
         district, name = split_title(it.get('EventItemTitle'))
         out.append({
             'outline': clean_text(it.get('EventItemAgendaNumber')),
             'name': name,
             'reference': clean_text(it.get('EventItemMatterFile')),
             'district': district,
-            'motions': [motion_from(it, votes)],
+            'motions': [motion],
         })
     return out
 
