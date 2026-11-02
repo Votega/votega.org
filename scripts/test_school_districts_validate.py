@@ -129,15 +129,34 @@ both = county(board_size=1, members=[member(), member(name='B', seat='District 2
 check(not [x for x in run(counties=[both])[0] if 'board_size' in x],
       'a Superintendent is not counted against board_size')
 
-print('\nSeats are nonpartisan')
-check('nonpartisan' in errs(counties=[county(members=[member(party='Republican')])]).lower(),
-      'party: Republican on a school board seat is an error')
-check(not errs(counties=[county(members=[member(party='Nonpartisan')])]),
-      'party: Nonpartisan passes')
-check(V.VALID_PARTIES == {'Nonpartisan'}, 'the party vocabulary is exactly {Nonpartisan}')
-check('partisan' in errs(counties=[county(partisan=True)]),
-      '`partisan: true` on a district is an error')
-check(not errs(counties=[county(partisan=False)]), '`partisan: false` passes')
+print('\nPartisanship is per district, not statewide')
+# Measured 2026-11-02: every county with a 2024 BOE contest in the SoS results
+# carries party labels (Cobb, Jackson, Newton, Thomas, Whitfield — all Dem/Rep).
+# So a party must be RECORDABLE; what is checked is that it agrees with the
+# district's own `partisan` flag.
+check(not errs(counties=[county(partisan=True,
+                                members=[member(party='Republican')])]),
+      'a real party on a district declaring partisan: true passes — the file must '
+      'be able to hold the actual election results')
+check('partisan: false' in errs(counties=[county(partisan=False,
+                                                 members=[member(party='Democratic')])]),
+      'a real party on a district declaring partisan: false is an error, and the '
+      'message says one of the two is wrong')
+check(not errs(counties=[county(partisan=False,
+                                members=[member(party='Nonpartisan')])]),
+      'Nonpartisan on a nonpartisan district passes')
+check('partisan: false' in errs(counties=[county(partisan=False,
+                                                 members=[member(party='Independent')])]),
+      'Independent means a partisan seat with no party, so it is not valid on a '
+      'nonpartisan board')
+check('vocabulary' in errs(counties=[county(members=[member(party='Whig')])]),
+      'a party outside the vocabulary is an error')
+check(V.VALID_PARTIES == {'Republican', 'Democratic', 'Independent', 'Nonpartisan'},
+      'the vocabulary matches local_officials.yml')
+check('must be true or false' in errs(counties=[county(partisan='yes')]),
+      'a non-boolean partisan is an error')
+check(not errs(counties=[county(partisan=True)]) and not errs(counties=[county(partisan=False)]),
+      'both boolean values are legal on a district')
 
 print('\nIds are the join key')
 check('duplicate district id' in errs(counties=[county(), county(countyFips='13001')]),
