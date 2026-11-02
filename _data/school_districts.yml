@@ -111,11 +111,19 @@
 #   `IND SCHOOL <CITY>` row for each independent city system, and its 21 distinct
 #   systems match these 21 exactly. That report also lists a city system under
 #   EACH county it serves, which is how the multi-county `counties` values here
-#   were confirmed — Atlanta under Fulton and DeKalb, and Bremen, Buford and
-#   Social Circle each appearing twice. When the millage parser lands (see the
-#   scope doc, phase 1a), use it to audit this file's `counties` values; it is
-#   the only source we have that encodes service area rather than office
-#   location.
+#   were confirmed.
+#
+#   AUDITED 2026-11-02 against the millage dataset the phase-1a parser now builds
+#   (scripts/generate_ga_millage.py, DOR Digest Consolidated Summaries 2020-2025,
+#   districtType == city_school). It found exactly these 21 systems, and
+#   CORRECTED FOUR of the `counties` lists below, each of which had been recorded
+#   as single-county: Bremen (+carroll), Buford (+hall), Social Circle (+newton)
+#   and Vidalia (+montgomery). Atlanta's fulton+dekalb was already right. The
+#   five multi-county systems are therefore Atlanta, Bremen, Buford, Social
+#   Circle and Vidalia.
+#
+#   Re-run that audit whenever a new DOR year is published — this is the only
+#   source we have that encodes service area rather than office location.
 # ============================================================================
 
 cityDistricts:
@@ -130,14 +138,16 @@ cityDistricts:
   - id: "763"
     name: Bremen City
     type: city
-    counties: [haralson]
+    # DOR lists Bremen's levy under Carroll AND Haralson (Haralson at 40%).
+    counties: [haralson, carroll]
     districtCensusId: "00510"
     officeCountyFips: "13143"
 
   - id: "764"
     name: Buford City
     type: city
-    counties: [gwinnett]
+    # DOR lists Buford's levy under Gwinnett AND Hall.
+    counties: [gwinnett, hall]
     districtCensusId: "00600"
     officeCountyFips: "13135"
 
@@ -235,7 +245,8 @@ cityDistricts:
   - id: "786"
     name: Social Circle City
     type: city
-    counties: [walton]
+    # DOR lists Social Circle's levy under Walton AND Newton.
+    counties: [walton, newton]
     districtCensusId: "04540"
     officeCountyFips: "13297"
 
@@ -263,7 +274,8 @@ cityDistricts:
   - id: "793"
     name: Vidalia City
     type: city
-    counties: [toombs]
+    # DOR lists Vidalia's levy under Toombs AND Montgomery.
+    counties: [toombs, montgomery]
     districtCensusId: "05340"
     officeCountyFips: "13279"
 

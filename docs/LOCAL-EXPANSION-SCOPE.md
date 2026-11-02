@@ -161,6 +161,16 @@ the upstream assignment is a planning approximation, not a boundary truth. The
 `counties` field in `school_districts.yml` is therefore a human-confirmed
 rendering hint and may be longer than the upstream assignment.
 
+**(a-iii) The audit ran, and it corrected four entries.** §4.1.0's millage
+dataset was used to audit `school_districts.yml` as this doc said it should be.
+It found **exactly the same 21 city systems** — independent confirmation — but
+**four of the `counties` lists were wrong**, each recorded as single-county when
+DOR shows the system levying in two: **Bremen** (+Carroll), **Buford** (+Hall),
+**Social Circle** (+Newton) and **Vidalia** (+Montgomery). Atlanta's
+Fulton+DeKalb was already right. So there are **five** multi-county systems, not
+one. Montgomery County was added to `places.yml` as a hidden placeholder to carry
+the new reference. Re-run the audit whenever DOR publishes a new year.
+
 **(a-ii) Forward references — found, then resolved.** 7 of the 20 counties with
 a city system were missing from `places.yml` (**chattooga, floyd, haralson,
 jackson, laurens, mitchell, toombs**), which would have broken a validator that
@@ -283,6 +293,36 @@ It also carries what the PDF does **not**: `Total Tax` in dollars, the full
 property-class breakdown, and the homestead-exemption detail. One parser, one
 file per year, everything.
 
+### 4.1.0 Status: BUILT
+
+Phase 1a is implemented and passing (2026-11-02):
+
+| File | Role |
+|---|---|
+| `scripts/lib/xlsx.py` | minimal stdlib `.xlsx` reader (zipfile + ElementTree) |
+| `scripts/lib/dor_digest.py` | workbook → tidy records, district classification |
+| `scripts/generate_ga_millage.py` | discover, download, build `ga-millage.json` + `.csv` |
+| `scripts/test_dor_digest.py` | 53 offline invariants over two real-data fixtures |
+| `scripts/fixtures/dor-digest-{2023,2025}.xlsx` | six counties, all 425 columns |
+
+**Built output:** 10,643 rows, 2020–2025, **all 159 counties**, 0 unclassified
+districts. 1.6 MB JSON / 891 KB CSV. Per year: 1,725 / 1,752 / 1,772 / 1,782 /
+1,798 / 1,814.
+
+**Cross-checked against the PDF and all four spot values agree exactly** (2023
+Appling: SCHOOL 12.243, COUNTY INCORPORATED 11.924, BAXLEY 4.896, COUNTY FIRE
+DIST 0.470).
+
+**No third-party imports anywhere in the chain.** `run-script-tests.yml`
+installs no pip packages by design, so an `openpyxl`-based reader could never be
+tested in CI — which is why `lib/xlsx.py` exists. It handles the four traps that
+silently corrupt a naive reader: sparse rows (the Nth `<c>` is not column N, so
+every cell's own ref is the only safe index), shared strings, rich-text runs, and
+inline strings.
+
+Not yet done: publishing into `ga-local-government` (that repo is not attached to
+this session) and the per-place slices, which are 1b.
+
 ### 4.1.2 Join on the district CODE, never the district name
 
 Verified across the 2023 and 2025 files, and this is the single most important
@@ -305,6 +345,39 @@ A name-based join would silently split 15% of the series into fragments.
 - **Districts also come and go.** 14 code pairs exist only in 2023 and 46 only in
   2025 — annexations, new fire and special districts. The district registry must
   be a **union across years with first-seen / last-seen**, not a single snapshot.
+
+**And the key is *almost* unique — the one exception is real.** Across all six
+years exactly one `(county, district, year)` repeats: **Cherokee 2022 district 18,
+`HOLLY SPRINGS FIRE`**, listed once at $898,991,358 assessed / $2,682,590.21 tax
+and once at $8,264,691 / $24,661.84, both at 2.984 mills. Summing them would be
+inventing a tax figure and dropping one would lose money, so both rows are
+published with an **`occurrence` ordinal** that keeps the identity unique and the
+anomaly visible, and the generator prints the group on every run. Every other row
+in six years is occurrence 1. The uniqueness guard found this, which is the whole
+reason it exists.
+
+**One coverage caveat:** DOR publishes the 2020 workbook as
+`2020-digest-excluding-charlton`. All 159 counties do appear in it, but treat 2020
+Charlton figures with suspicion.
+
+### 4.1.3 District type is derived, and only codes 0–3 are trustworthy
+
+Verified across all 159 counties in 2025: **code 1 = STATE** (158 rows, zero
+off-pattern), **code 2 = county SCHOOL system** (158, zero off-pattern), **code
+3 = COUNTY INCORPORATED** (154). Above that, codes are per-county arbitrary —
+**code 15 is `COUNTY UNINCORPORATED` in 24 counties and a city in others**, with
+100 distinct names. So 0–3 classify by code and everything else by name.
+
+The 16 derived types, with statewide counts across 2020–2025: `city` 3,769 ·
+`county_incorporated` 993 · `countywide` 953 · `state` 953 · `school` 953 ·
+`county_unincorporated` 944 · `tad` 640 · `fire` 418 · `ssd` 336 · `cid` 215 ·
+`city_school` 156 · `development_authority` 125 · `recreation` 67 · `hospital`
+57 · `bid` 40 · `library` 24. An unmatched row is reported as `unclassified`
+rather than guessed into a bucket; there are currently none.
+
+**Code 0 is not always empty.** Every county has a code-0 countywide roll-up row
+and the millage is usually blank — but 2 of 159 carry a rate in 2025, so the row
+is classified and kept, never dropped as a header.
 
 ### 4.1.1 What this replaces
 
@@ -436,7 +509,7 @@ after a GET for the session cookie.
 
 | Phase | Work | Est. |
 |---|---|---|
-| **1a** | Digest Consolidated Summaries XLSX → millage + tax + exemption dataset in `ga-local-government`, 2020–2025, all counties and districts. Plus the 2019 PDF for one extra year. | **~40–60k** (was ~120–180k across two PDF phases) |
+| **1a** | ~~Digest Consolidated Summaries XLSX → millage dataset, 2020–2025~~ **DONE** — see §4.1.0. Remaining: the 2019 PDF for one extra year, and publishing into `ga-local-government`. | **done** (~40–60k est.) |
 | **1b** | Per-place millage history section on `/local/<slug>/` (county + city + school lines) | ~40–60k |
 | **1c** | HB 581 opt-out registry (SoS filings + agenda corroboration + L1–L9 exemption series) | ~60–90k |
 | **1d** | Explainers: reading your assessment, the 45-day appeal, what a millage rate is | ~25–40k |

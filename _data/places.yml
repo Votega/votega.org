@@ -1964,3 +1964,14 @@ places:
     parentCounty: null
     region: South Georgia
     hidden: true
+
+  # Added 2026-11-02 for the same reason as the seven above: the phase-1a millage
+  # audit found Vidalia City Schools levying in MONTGOMERY as well as Toombs, so
+  # _data/school_districts.yml now references this slug. Hidden until researched.
+  - slug: montgomery
+    name: Montgomery County
+    type: county
+    fips: "13209"
+    parentCounty: null
+    region: South Georgia
+    hidden: true
