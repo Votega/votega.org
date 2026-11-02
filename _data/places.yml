@@ -906,6 +906,7 @@ places:
             when: "2nd and 4th Tuesday of each month, 9:00 a.m."
             location: "Room A1201, 178 Sams Street, Decatur"
         client: dekalbcountyga
+        detail_links: true   # minutes/video can be only on the MeetingDetail page, null in the API
         # Fold the Board of Commissioners' meeting variants (Committee of the
         # Whole, Special Called, Zoning) into one body; keep Planning Commission.
         # All are legislative/land-use — nothing administrative to drop.
