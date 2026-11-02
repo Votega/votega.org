@@ -229,6 +229,77 @@ today. **"Plausibly" must become a number before the adapters are funded:** run
 counties first. That census gates phases 3c/3d, and if Simbli dominates as the
 GSBA ownership suggests, the BoardDocs adapter may be deferrable.
 
+### 3.5.1 Phase 3b: the platform census — RESULT
+
+Run 2026-11-02 with `scripts/detect_meeting_platform.py`, which gained a
+**Simbli fingerprint** for this (BoardDocs was already in it, under the
+adapter-less `_NO_SCRAPER` list).
+
+**Verdict: build the Simbli adapter (3c). Defer BoardDocs (3d).**
+
+| Result | Districts |
+|---|---|
+| **Simbli** | **15** |
+| no signature matched | 8 |
+| not fetchable *from this container* | 10 |
+| **BoardDocs** | **0** |
+
+Of the 23 districts that returned a page, **15 are Simbli and none are
+BoardDocs.** Two spot checks outside the sweep agree: Bulloch (`S=4020`) and
+**Fulton (`S=36031609`) — the district that migrated *off* BoardDocs**, which is
+now confirmed landed.
+
+#### What was and was not tested
+
+The sweep covered the school districts of the **33** currently-visible places
+whose domain follows the `<county>.k12.ga.us` convention. **17 did not resolve**
+and were not tested — overwhelmingly the metro districts on custom domains
+(Cobb, Fulton, DeKalb, Chatham, Bibb, Hall, Richmond, Columbia, Houston,
+Whitfield, Carroll, Fayette, Oconee, Tift, Gordon, Walker, Bacon). Finishing
+those is a URL lookup per district, not a technical problem.
+
+#### Three caveats that limit the conclusion
+
+1. **The 10 unfetchable districts are this container's fault, not theirs.** The
+   errors were `Tunnel connection failed: 502 Bad Gateway` and
+   `Connection reset by peer`, and the agent proxy's own
+   `__agentproxy/status` endpoint lists those exact hosts under
+   `recentRelayFailures` (`connect_rejected`, `ws_closed_mid_exchange`). They
+   should be re-run from CI or an ordinary network before being treated as
+   anything. Do not record them as district-side blocks.
+2. **"No signature matched" is not "not Simbli".** The detector follows agenda
+   links up to three hops; a district homepage that does not surface its
+   board-meetings page within that will come back clean. Each of those 8 wants
+   one look at its actual board page.
+3. **Zero BoardDocs hits is not proof of zero BoardDocs.** 27 of the 50 places
+   were either untested or unfetchable, and Fulton's migration shows districts
+   move. Historical meetings may also still sit on BoardDocs after a district
+   switches.
+
+#### Two findings that change the 3c/3d estimates
+
+**Simbli is plainly scrapable, and the config key is right there.** Every Simbli
+link on a district site — including policy-manual links — carries the same
+`S=<id>` district key, so the detector extracts it without needing the meetings
+page. `https://simbli.eboardsolutions.com/` fetches fine.
+
+But **some districts use a vanity path with no id** — Walton's link is
+`simbli.eboardsolutions.com/walton`. The 3c adapter must accept both an `S=` id
+and a vanity slug, or it will silently miss those districts.
+
+**BoardDocs will need a headless browser, which 3d's estimate did not assume.**
+`go.boarddocs.com` answers **403 via CloudFront** to both `curl` and the repo's
+own `lib.http.fetch_bytes`. Detection still works, because it reads the outbound
+`go.boarddocs.com/ga/<slug>/` link from the district's own HTML rather than
+fetching the portal — but *scraping* it would need the Playwright path the
+SharePoint and Wix adapters already use. That pushes 3d above its ~60–90k
+estimate and reinforces deferring it.
+
+(Incidentally `lib.http.fetch_bytes` returns `None` on a 403 rather than raising,
+so a caller doing `len(...)` gets a `TypeError` instead of a clear error. The
+detector wraps its own fetch so it reports cleanly; worth tidying if anything
+else grows a dependency on that function.)
+
 ### 3.6 Topic work is nearly free
 
 `meeting_topics.py` is corpus-agnostic. Pointing the existing classifier at board
@@ -245,7 +316,7 @@ curriculum/media policy, school construction**. One new `schools` topic in
 | Phase | Work | Est. |
 |---|---|---|
 | **3a** | County systems generated into `school_districts.yml`; validator (strict slug cross-check, like `validate_local_officials.py`); board section in `_includes/entity/place.html`; publish machine-readable copy to `ga-local-government`. **Officials only, no scraping.** | ~50–70k |
-| **3b** | Platform census via `detect_meeting_platform.py` across covered districts. **Gates 3c/3d.** | ~20–30k |
+| **3b** | ~~Platform census~~ **DONE** — see §3.5.1. Verdict: build Simbli, defer BoardDocs. | **done** |
 | **3c** | Simbli adapter | ~60–90k |
 | **3d** | BoardDocs adapter | ~60–90k |
 | **3e** | `schools` topic rules + per-district page wiring | ~40–60k |
