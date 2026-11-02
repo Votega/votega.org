@@ -20,6 +20,10 @@ What is pinned, and why:
     the mirror ran. Conflating them is the bug above.
   * A MANIFEST CANNOT ADVERTISE A FILE THE RUN DID NOT BUILD — that is a 404 for
     a consumer, so it is refused at build time.
+  * NOTHING HERE IMPORTS A PUBLISHER. CI installs no pip packages, and one
+    publisher imports pyyaml at module level — importing it made this suite pass
+    locally and fail in CI. The publishers are read with `ast` instead, which
+    also checks the slug each one actually passes rather than a list written here.
   * ONE DATASET, ONE MANIFEST. A second manifest for the same slug is refused
     rather than silently overwriting the first.
 
@@ -120,44 +124,94 @@ check(json.loads(fresh(source='Somewhere else')[0]
       'and is overridable, which millage needs: its source is DOR, not agendas')
 
 print('\nEvery co-tenant publisher writes its own manifest and nobody else\'s')
-import publish_ga_local_government as MENTIONS  # noqa: E402
-import publish_ga_millage as MILLAGE  # noqa: E402
-import publish_races as RACES  # noqa: E402
-import publish_early_vote as EARLY  # noqa: E402
-import publish_ga_bills as BILLS  # noqa: E402
-import publish_ga_ballot_measures as MEASURES  # noqa: E402
+# Read the publishers with `ast` rather than importing them. CI installs no pip
+# packages (run-script-tests.yml), and publish_ga_local_government.py imports
+# pyyaml at module level — importing it here passed locally and failed in CI with
+# ModuleNotFoundError, which is exactly the gap this suite is supposed to be
+# immune to. Parsing the committed file is also a STRONGER check: it reads the
+# dataset slug each publisher actually passes to add_dataset_manifest, instead of
+# trusting a list written here.
+import ast  # noqa: E402
 
-co_tenants = {
-    'Votega/ga-local-government': [(MENTIONS, 'agenda-mentions'), (MILLAGE, 'millage')],
-    'Votega/ga-races-elections': [(RACES, 'races'), (EARLY, 'early-vote')],
-    'Votega/ga-legislation': [(BILLS, 'bills'), (MEASURES, 'ballot-measures')],
-}
-for repo, mods in co_tenants.items():
-    for mod, _ in mods:
-        check(mod.REPO == repo, '%s targets %s' % (mod.__name__, repo))
-    slugs = [s for _, s in mods]
+
+def _module_const(tree, name):
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            for tgt in node.targets:
+                if isinstance(tgt, ast.Name) and tgt.id == name:
+                    if isinstance(node.value, ast.Constant):
+                        return node.value.value
+    return None
+
+
+def _manifest_slugs(tree, src):
+    """The dataset slug(s) passed to add_dataset_manifest in this module."""
+    out = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        fn = node.func
+        fname = getattr(fn, 'id', None) or getattr(fn, 'attr', None)
+        if fname != 'add_dataset_manifest':
+            continue
+        # (artifacts, repo, dataset, *, ...) — the slug is the third positional.
+        if len(node.args) >= 3 and isinstance(node.args[2], ast.Constant):
+            out.append(node.args[2].value)
+        elif len(node.args) >= 3 and isinstance(node.args[2], ast.Name):
+            out.append(_module_const(tree, node.args[2].id))
+        else:
+            out.append(None)
+    return out
+
+
+PUBLISHERS = ('publish_ga_local_government', 'publish_ga_millage',
+              'publish_races', 'publish_early_vote',
+              'publish_ga_bills', 'publish_ga_ballot_measures')
+INFO = {}
+for name in PUBLISHERS:
+    src = open(os.path.join(HERE, name + '.py'), encoding='utf-8').read()
+    tree = ast.parse(src)
+    INFO[name] = {'src': src, 'repo': _module_const(tree, 'REPO'),
+                  'slugs': _manifest_slugs(tree, src)}
+
+for name, info in INFO.items():
+    check(info['repo'], '%s declares a REPO' % name)
+    check(len(info['slugs']) == 1 and info['slugs'][0],
+          '%s emits exactly one dataset manifest, with a literal slug: %r'
+          % (name, info['slugs']))
+
+by_repo = {}
+for name, info in INFO.items():
+    by_repo.setdefault(info['repo'], []).append((name, info['slugs'][0]))
+
+for repo, members in sorted(by_repo.items()):
+    if len(members) < 2:
+        continue
+    slugs = [s for _, s in members]
     check(len(set(slugs)) == len(slugs),
-          '%s: its publishers use distinct dataset slugs %r' % (repo, slugs))
+          '%s is written by %d publishers and they use distinct slugs %r'
+          % (repo, len(members), slugs))
     paths = [SP.manifest_path(s) for s in slugs]
     check(len(set(paths)) == len(paths),
           '%s: and therefore distinct manifest paths' % repo)
 
-check('latest.json' not in open(os.path.join(HERE, 'publish_ga_millage.py')).read()
-      or '"latest.json"' not in open(os.path.join(HERE, 'publish_ga_millage.py')).read(),
-      'the millage publisher still does not write latest.json')
-mentions_src = open(os.path.join(HERE, 'publish_ga_local_government.py')).read()
+check(sorted(by_repo) == ['Votega/ga-legislation', 'Votega/ga-local-government',
+                          'Votega/ga-races-elections'],
+      'the three shared repos are the ones covered here: %r' % sorted(by_repo))
+
+check('"latest.json"' not in INFO['publish_ga_millage']['src'],
+      'the millage publisher does not write latest.json')
+mentions_src = INFO['publish_ga_local_government']['src']
 check('"millage": "data/millage.json"' not in mentions_src,
       "the mentions publisher no longer lists millage's files in its own "
       'latest.json — the regression this suite exists for')
 check('data/*/manifest.json' in mentions_src,
       'it points consumers at the manifest convention instead')
-bills_src = open(os.path.join(HERE, 'publish_ga_bills.py')).read()
-check('artifacts["latest.json"]' in bills_src,
+check('artifacts["latest.json"]' in INFO['publish_ga_bills']['src'],
       "ga-legislation's latest.json is UNCHANGED: it is a bills pointer "
       '(biennium, currentSession, sessions[]), not a repo index, so it keeps its '
       'own meaning and no consumer of it breaks')
-measures_src = open(os.path.join(HERE, 'publish_ga_ballot_measures.py')).read()
-check('"latest.json"' not in measures_src,
+check('"latest.json"' not in INFO['publish_ga_ballot_measures']['src'],
       'and the ballot-measures publisher still does not write it')
 
 print('\nThe shared pre-publish gates still accept a manifest build')
