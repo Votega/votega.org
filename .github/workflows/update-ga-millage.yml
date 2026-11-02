@@ -1,0 +1,117 @@
+name: Update GA millage data (monthly)
+
+permissions:
+  contents: write
+
+# MONTHLY, not daily or weekly, and not annually either.
+#
+# The source is DOR's Tax Digest Consolidated Summaries — one spreadsheet per tax
+# year, so the data only changes when DOR posts a new year. That happens once a
+# year, but NOT on a fixed date: the 2024 workbook's own sheet is named
+# "2024 Digest Status 2.7.2024" (Feb) and the 2025 one "2025 Digest Export 4.6.26"
+# (Apr). Polling monthly picks a new year up within a few weeks of publication
+# without guessing the month; a yearly cron would miss it by up to eleven.
+#
+# Each run re-downloads every year's workbook (~14MB total) because the cache
+# lives in RUNNER_TEMP, which is fresh per run. That is cheap monthly and keeps
+# the job stateless — a corrected reissue of an OLD year is picked up too, which
+# a "only fetch years we don't have" cache would silently miss.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '50 9 9 * *'  # 9th of the month, 09:50 UTC (offset from other update-* jobs)
+
+concurrency:
+  group: update-ga-millage
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # The workbooks are read by scripts/lib/xlsx.py, which is zipfile +
+      # ElementTree — no openpyxl, no pandas. pyyaml is only for places.yml in
+      # build_millage_places.py.
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      # Writes to RUNNER_TEMP, NOT assets/data: the statewide file is ~1.8MB and
+      # deliberately not committed to this repo (it goes to ga-local-government
+      # below). Only the small per-place reduction lands in the tree.
+      - name: Build the statewide millage dataset
+        run: |
+          python scripts/generate_ga_millage.py \
+            --out "$RUNNER_TEMP/millage" \
+            --cache "$RUNNER_TEMP/dor-cache"
+
+      - name: Build the per-place reduction
+        run: |
+          python scripts/build_millage_places.py \
+            --input "$RUNNER_TEMP/millage/ga-millage.json"
+
+      # A floor, not an exact count: DOR adds and removes tax districts every
+      # year, so the check is that the reduction still covers every visible place
+      # rather than that it is byte-identical to last month.
+      - name: Check the reduction still covers every visible place
+        run: |
+          python - <<'PY'
+          import json, sys, yaml
+          places = yaml.safe_load(open('_data/places.yml'))['places']
+          visible = {p['slug'] for p in places if not p.get('hidden')}
+          built = set(json.load(open('_data/millage.json'))['places'])
+          missing = sorted(visible - built)
+          print('%d visible places, %d with a millage view' % (len(visible), len(built)))
+          if missing:
+              print('::error::no millage view for: %s' % ', '.join(missing))
+              sys.exit(1)
+          PY
+
+      - name: Commit if changed
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _data/millage.json
+          if git diff --cached --quiet; then
+            echo "No millage changes"
+          else
+            git commit -m "Update GA millage data ($(date -u '+%Y-%m-%d'))"
+            pushed=0
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push; then pushed=1; break; fi
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
+            if [ "$pushed" -ne 1 ]; then
+              echo "::error::Push failed after 3 attempts - generated data was NOT committed"
+              exit 1
+            fi
+          fi
+
+      # Mirror the statewide dataset to the public open-data repo
+      # Votega/ga-local-government. INLINE for the same reason the sibling job
+      # does it inline: the commit above is a github-actions[bot] commit, which
+      # does not fire push-triggered workflows.
+      #
+      # This is an UPSERT of only the paths it names (lib.sibling_publish PUTs
+      # each artifact through the Contents API), so it leaves the twice-weekly
+      # agenda-mention data in that repo untouched, and it deliberately does not
+      # write latest.json, which belongs to publish_ga_local_government.py.
+      #
+      # publish_or_dry_run FAILS LOUDLY if the token is empty in CI rather than
+      # dry-running green — the behaviour added after GA_LOCAL_GOVERNMENT_TOKEN
+      # went empty and that repo silently went stale for three weeks (2026-09).
+      - name: Publish ga-local-government open-data (millage)
+        env:
+          GA_LOCAL_GOVERNMENT_TOKEN: ${{ secrets.GA_LOCAL_GOVERNMENT_TOKEN }}
+        run: python scripts/publish_ga_millage.py --input "$RUNNER_TEMP/millage"

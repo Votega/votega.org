@@ -347,6 +347,16 @@ def main():
             "schema": "data/mentions.schema.json",
             "coverage": "data/coverage.json",
             "keywords": "data/keywords.json",
+            # Published on a different cadence by publish_ga_millage.py (monthly,
+            # from update-ga-millage.yml) because the millage source only changes
+            # when DOR posts a new tax year. Listed here anyway so this repo has
+            # ONE discoverable index: the paths are stable regardless of which
+            # job ran last. That publisher deliberately does not write
+            # latest.json, so these two never fight over it.
+            "millage": "data/millage.json",
+            "millageCsv": "data/millage.csv",
+            "millageSchema": "data/millage.schema.json",
+            "millagePlaces": "data/millage-places.json",
         },
     }
 

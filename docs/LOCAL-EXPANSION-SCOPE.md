@@ -587,12 +587,49 @@ across urban, rural and Fort Benning service districts at different rates, so no
 single county figure exists to add, and inventing one would be a wrong claim
 about someone's taxes.
 
-#### Still to wire
+#### Wired up (2026-11-02)
 
-`_data/millage.json` is a committed snapshot. It needs a workflow that reruns
-`generate_ga_millage.py` then `build_millage_places.py` when DOR publishes a new
-year (annually, around the turn of the year), in the shape of the existing
-`update-*.yml` jobs. Until then the figures are correct but frozen at 2025.
+`.github/workflows/update-ga-millage.yml` — **monthly**, 9th at 09:50 UTC, plus
+manual dispatch. It regenerates the statewide dataset, rebuilds
+`_data/millage.json`, checks every visible place still has a view, commits if
+changed, and mirrors the open data.
+
+**Monthly, not annually.** DOR posts one workbook per tax year, but not on a
+fixed date: the 2024 sheet is named `2024 Digest Status 2.7.2024` (February) and
+the 2025 one `2025 Digest Export 4.6.26` (April). A yearly cron could miss a new
+year by eleven months; monthly catches it within weeks. Each run re-downloads
+every year (~14MB) because the cache is in `RUNNER_TEMP` — cheap at this cadence,
+and it means a *corrected reissue of an old year* is picked up too, which a
+"only fetch years we lack" cache would silently miss.
+
+**No new secret or repo access needed.** `scripts/publish_ga_millage.py` reuses
+the existing `GA_LOCAL_GOVERNMENT_TOKEN` and the existing
+`Votega/ga-local-government` repo, per decision 1.
+
+**Why a second publisher rather than extending `publish_ga_local_government.py`:**
+that one runs twice weekly, because a county can reskin its site any time.
+Millage changes once a year and rebuilding it costs a 14MB download, so bolting
+it on would do that ~100 times a year for nothing. Splitting is safe because
+`lib.sibling_publish._publish` PUTs each artifact path through the Contents API
+individually — an upsert, not a tree replace — so the millage job leaves the
+agenda-mention data untouched. It therefore must **not** write `latest.json`,
+which the mentions publisher owns; that index lists the millage paths statically
+instead, since they are stable whichever job ran last.
+
+Published artifacts: `data/millage.json`, `data/millage.csv`,
+`data/millage.schema.json` (closed schema, every field documented, with the
+join warnings in the field notes), `data/millage-places.json` (the per-place
+reduction) and `MILLAGE.md`.
+
+**Guards.** `min_items` refuses a build with fewer than 1,500 rows — below one
+year of the workbook, so a gutted transform is caught while DOR dropping a year
+is not mistaken for corruption. The workflow is registered in
+`notify-workflow-failure.yml` (the repo's own
+`validate_workflow_triggers.py` enforces that). `publish_or_dry_run` fails
+loudly rather than dry-running green if the token is empty in CI — the behaviour
+added after that token went empty and the repo silently went stale for three
+weeks in 2026-09. `assets/data/ga-millage.{json,csv}` are gitignored so a local
+run with default paths cannot commit the 1.8MB file.
 
 ### 4.6 Supporting facts
 
