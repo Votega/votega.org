@@ -316,14 +316,18 @@
         render();
 
         // Votes load after the list is up, so a slow or absent file never delays it.
-        fetch(getBasePath() + 'assets/data/local-' + slug + '-votes.json')
-          .then(function (res) { return res.ok ? res.json() : null; })
-          .then(function (vd) {
-            if (!vd || !vd.meetings) return;
-            vd.meetings.forEach(function (vm) { if (vm.items && vm.items.length) VOTES[vm.id] = vm; });
-            render();
-          })
-          .catch(function () { /* no votes file for this place */ });
+        // Only CivicClerk and Legistar places have a votes file; skip the request (a console
+        // 404) for the rest. metadata.source reads "<Place> (<platform>)".
+        if (/\((civicclerk|legistar)\)/.test((data.metadata || {}).source || '')) {
+          fetch(getBasePath() + 'assets/data/local-' + slug + '-votes.json')
+            .then(function (res) { return res.ok ? res.json() : null; })
+            .then(function (vd) {
+              if (!vd || !vd.meetings) return;
+              vd.meetings.forEach(function (vm) { if (vm.items && vm.items.length) VOTES[vm.id] = vm; });
+              render();
+            })
+            .catch(function () { /* no votes file for this place */ });
+        }
 
         if (sourceEl) {
           var meta = data.metadata || {};
