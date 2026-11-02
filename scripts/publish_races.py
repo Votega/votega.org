@@ -23,7 +23,8 @@ import os
 import sys
 from collections import Counter
 
-from lib.sibling_publish import build_json, publish_or_dry_run, min_items
+from lib.sibling_publish import (add_dataset_manifest, build_json,
+                                 min_items, publish_or_dry_run)
 
 REPO = "Votega/ga-races-elections"
 TOKEN_ENV = "GA_RACES_TOKEN"
@@ -295,6 +296,33 @@ def build_artifacts():
             f"{folder}/races.schema.json": build_json(schema(f"{folder}/races.schema.json")),
             f"{folder}/RACES.md": races_md(cycle_doc),
         })
+
+    # One manifest per dataset, at a path only this publisher writes. This repo
+    # is also written by publish_early_vote.py, from a different workflow on a
+    # different schedule, and neither can safely describe the other (see
+    # lib.sibling_publish.add_dataset_manifest). Before this, ga-races-elections
+    # had two publishers and no machine-readable index at all.
+    files = [{"path": path,
+              "description": {"races.json": "Every race and candidate in the cycle.",
+                              "races.csv": "Races as a spreadsheet.",
+                              "candidates.csv": "Candidates as a spreadsheet.",
+                              "races.schema.json": "JSON Schema for one race.",
+                              "RACES.md": "Human-readable overview."}.get(
+                                  path.rsplit("/", 1)[-1], "")}
+             for path in sorted(out)]
+    add_dataset_manifest(
+        out, REPO, "races",
+        title="Georgia races and candidates",
+        description=("Every Georgia race on the ballot and the candidates who "
+                     "qualified for it, by election cycle, as the Secretary of "
+                     "State publishes them."),
+        # The source file's own stamp, not this mirror's clock.
+        generated_at=doc.get("updatedAt") or "",
+        update_cadence="As the Secretary of State publishes qualifying and ballot changes.",
+        row_count=len(races),
+        coverage={"cycles": sorted(by_cycle), "races": len(races)},
+        files=files,
+    )
     return out
 
 

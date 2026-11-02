@@ -606,6 +606,18 @@ and it means a *corrected reissue of an old year* is picked up too, which a
 the existing `GA_LOCAL_GOVERNMENT_TOKEN` and the existing
 `Votega/ga-local-government` repo, per decision 1.
 
+**Dataset discovery (revised 2026-11-02).** An earlier version of this wiring
+listed the millage paths statically inside the mentions publisher's
+`latest.json`. That was wrong: `latest.json` is stamped with *that* job's clock,
+so naming another dataset's files there told consumers a monthly dataset was as
+fresh as a twice-weekly run. It has been replaced by a per-dataset manifest
+convention — `lib/sibling_publish.add_dataset_manifest` writes
+`data/<dataset>/manifest.json`, one writer per path, carrying `generatedAt` (the
+data's own timestamp) separately from `publishedAt`. All six publishers targeting
+a shared repo now emit one: `agenda-mentions`, `millage`, `races`, `early-vote`,
+`bills`, `ballot-measures`. `ga-legislation`'s `latest.json` keeps its existing
+meaning as a bills pointer and is untouched.
+
 **Why a second publisher rather than extending `publish_ga_local_government.py`:**
 that one runs twice weekly, because a county can reskin its site any time.
 Millage changes once a year and rebuilding it costs a 14MB download, so bolting

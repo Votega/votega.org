@@ -28,7 +28,8 @@ import sys
 import datetime as dt
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.sibling_publish import build_json, publish_or_dry_run, min_items  # noqa: E402
+from lib.sibling_publish import (add_dataset_manifest, build_json,  # noqa: E402
+                                 min_items, publish_or_dry_run)
 import generate_ga_early_vote as gen  # noqa: E402  (key(): the county-name normalizer)
 
 REPO = "Votega/ga-races-elections"
@@ -299,6 +300,40 @@ def build_artifacts(totals, daily, fips_by_key, dictionary=None):
     }
     if dictionary:
         artifacts[f"{folder}/source-data-dictionary.md"] = dictionary
+
+    # One manifest per dataset, at a path only this publisher writes. This repo
+    # is also written by publish_races.py, from a different workflow on a
+    # different schedule — see lib.sibling_publish.add_dataset_manifest for why
+    # neither may describe the other.
+    labels = {
+        "county-totals.json": "Per-county early and mail ballot totals so far.",
+        "county-totals.csv": "The same totals as a spreadsheet.",
+        "county-by-day.json": "Accepted ballots per county per day before election day.",
+        "county-by-day.csv": "The same daily rows as a spreadsheet.",
+        "county-totals.schema.json": "JSON Schema for a county-totals row.",
+        "county-by-day.schema.json": "JSON Schema for a county-by-day row.",
+        "README.md": "Human-readable overview.",
+        "source-data-dictionary.md": "The Secretary of State's own field definitions.",
+    }
+    add_dataset_manifest(
+        artifacts, REPO, "early-vote",
+        title="Georgia early voting turnout",
+        description=("County-level counts of accepted early in-person and mail "
+                     "ballots for the current general election, with the mail "
+                     "pipeline and comparisons against past elections at the same "
+                     "point before election day."),
+        # The Secretary of State file's own generation stamp, not this mirror's
+        # clock — and asOf, which is the last full day actually counted.
+        generated_at=md.get("generatedAt") or "",
+        update_cadence="Whenever the Secretary of State posts a new file, during early voting.",
+        schema_version=SCHEMA_VERSION,
+        row_count=len(counties),
+        coverage={"election": {"date": md["electionDate"], "year": int(cur)},
+                  "asOf": as_of, "comparisons": comps, "counties": len(counties)},
+        files=[{"path": p, "description": labels.get(p.rsplit("/", 1)[-1], "")}
+               for p in sorted(artifacts)],
+        extra={"asOf": as_of},
+    )
     return artifacts
 
 

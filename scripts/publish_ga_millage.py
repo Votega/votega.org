@@ -17,8 +17,11 @@ Splitting is safe because lib.sibling_publish._publish PUTs each artifact path
 through the GitHub Contents API individually — it is an upsert, not a tree
 replace — so this publisher touches only the paths it names and leaves the
 agenda-mention data alone. For the same reason it must NOT write `latest.json`:
-that index belongs to the mentions publisher, which lists these files statically
-(their paths are stable regardless of which job ran last).
+that index belongs to the mentions publisher. Instead this publisher writes its
+OWN manifest at data/millage/manifest.json — one dataset, one manifest, one
+writer — which is the convention lib.sibling_publish.add_dataset_manifest
+documents. A consumer finds every dataset in the repo by listing
+data/*/manifest.json.
 
 The shared LICENSE/NOTICE.md are injected by publish_or_dry_run, byte-identical
 to the other publisher's, which is the documented intent.
@@ -32,12 +35,17 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.sibling_publish import (build_json, min_items,  # noqa: E402
-                                 publish_or_dry_run)
+from lib.sibling_publish import (add_dataset_manifest, build_json,  # noqa: E402
+                                 min_items, publish_or_dry_run)
 
 REPO = "Votega/ga-local-government"
 TOKEN_ENV = "GA_LOCAL_GOVERNMENT_TOKEN"
 SCHEMA_VERSION = "1.0.0"
+DATASET = "millage"
+SOURCE = ("Georgia Department of Revenue, Local Government Services — Tax Digest "
+          "Consolidated Summaries "
+          "(https://dor.georgia.gov/local-government-services/digest-compliance/"
+          "digest-consolidated-summaries)")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_IN = os.path.join(ROOT, "assets", "data")
@@ -150,6 +158,12 @@ def summary_md(meta, rows, fields):
         "| `data/millage.csv` | the same rows as a spreadsheet |",
         "| `data/millage.schema.json` | JSON Schema for one row, with field notes |",
         "| `data/millage-places.json` | the per-place reduction votega.org renders |",
+        "| `data/millage/manifest.json` | this dataset's manifest: files, counts, source, freshness |",
+        "",
+        "This repository carries more than one dataset. Each describes itself in",
+        "`data/<dataset>/manifest.json`, so listing `data/*/manifest.json` tells you what",
+        "is here. A manifest's `generatedAt` is when the DATA was produced;",
+        "`publishedAt` is when it was last mirrored. They are not the same.",
         "",
         "## Reading it correctly",
         "",
@@ -214,6 +228,35 @@ def main():
     else:
         print("note: %s not found — publishing without the per-place reduction"
               % args.places)
+
+    add_dataset_manifest(
+        artifacts, REPO, DATASET,
+        title="Georgia property tax millage rates",
+        description=("Every taxing jurisdiction's millage rate, tax levied and "
+                     "assessed value, by county and tax district, for each "
+                     "published tax year."),
+        # The DATA's timestamp, from the generator — not this mirror's clock.
+        generated_at=meta.get("generatedAt") or "",
+        update_cadence=("Polled monthly; the source changes once a year, when DOR "
+                        "publishes a new tax year's workbook."),
+        schema_version=SCHEMA_VERSION,
+        row_count=len(rows),
+        source=SOURCE,
+        coverage={"taxYears": meta.get("years") or [],
+                  "counties": len({r[fields.index("countyCode")] for r in rows})},
+        files=[
+            {"path": "data/millage.json",
+             "description": "Every row, columnar: field names once, rows as arrays."},
+            {"path": "data/millage.csv",
+             "description": "The same rows as a spreadsheet."},
+            {"path": "data/millage.schema.json",
+             "description": "JSON Schema for one row, with per-field notes."},
+            {"path": "MILLAGE.md",
+             "description": "How to read the dataset, and its known source quirks."},
+        ] + ([{"path": "data/millage-places.json",
+               "description": "Per-place reduction rendered on votega.org."}]
+             if "data/millage-places.json" in artifacts else []),
+    )
 
     publish_or_dry_run(REPO, artifacts, TOKEN_ENV,
                        validate=min_items("data/millage.json", "rows",

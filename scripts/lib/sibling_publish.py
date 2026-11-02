@@ -14,8 +14,10 @@ to GPL-3.0 while /open-data promised attribution-only reuse; emitting them from 
 means the license is stated once and cannot diverge again.
 """
 import base64
+import datetime
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.request
@@ -150,6 +152,128 @@ def license_artifacts(repo):
 def build_json(obj):
     """Serialize an object to indented UTF-8 JSON bytes (human-readable on GitHub)."""
     return json.dumps(obj, ensure_ascii=False, indent=1).encode()
+
+
+# ---------------------------------------------------------------------------
+# Dataset manifests
+# ---------------------------------------------------------------------------
+# WHY THESE EXIST
+#
+# Three sibling repos are written by TWO publishers each — ga-legislation
+# (bills + ballot measures), ga-local-government (agenda mentions + millage) and
+# ga-races-elections (races + early vote) — and the publishers run from different
+# workflows on different schedules. There was no safe way for one of them to
+# describe the repo as a whole:
+#
+#   * `latest.json` means different things in different repos. In ga-legislation
+#     it is a BILLS pointer (biennium, currentSession, sessions[]); in
+#     ga-local-government it is a REPO INDEX (description, coverage, files{}).
+#     Same filename, different scope, so "just add your files to latest.json" is
+#     not a convention, it is a collision.
+#   * ga-races-elections has two publishers and no index at all.
+#   * A publisher cannot merge itself into a shared index without a lost update.
+#     _put_content reads the SHA then PUTs, and its 409/422 retry RE-READS THE
+#     SHA AND OVERWRITES rather than re-merging — so two overlapping runs would
+#     silently drop one publisher's entry. Concurrency groups are per-workflow
+#     and do not protect two different workflows from each other.
+#   * Listing another dataset's paths statically cannot carry its FRESHNESS. A
+#     repo index stamped with the publishing job's own clock tells a consumer
+#     that every dataset it names is as fresh as the one that just ran, which for
+#     a monthly dataset beside a twice-weekly one is simply false.
+#
+# So: one manifest per dataset, at a path only that dataset's publisher writes.
+# Single writer per path means no race, no read-modify-write, and no publisher
+# needs to know another exists. A consumer discovers everything in a repo by
+# listing `data/*/manifest.json`. The human-readable index stays whatever
+# SUMMARY.md / MILLAGE.md / RACES.md the publisher already writes.
+#
+# `generatedAt` is the DATA's own timestamp and is required; `publishedAt` is
+# when this mirror ran. Conflating the two is the bug this whole shape exists to
+# prevent.
+
+MANIFEST_SCHEMA_VERSION = "1.0.0"
+
+_DATASET_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+
+
+def manifest_path(dataset):
+    """Where a dataset's manifest lives. One writer per path, by construction."""
+    if not _DATASET_RE.match(dataset or ""):
+        raise ValueError(
+            f"dataset must be a lowercase slug (a-z, 0-9, hyphen), got {dataset!r}"
+        )
+    return f"data/{dataset}/manifest.json"
+
+
+def add_dataset_manifest(artifacts, repo, dataset, *, title, description,
+                         generated_at, files, source=None, row_count=None,
+                         schema_version=None, update_cadence=None,
+                         coverage=None, extra=None):
+    """Add this dataset's manifest to `artifacts` and return its remote path.
+
+    `files` is the dataset's published paths — each a string, or a
+    {"path": ..., "description": ...} dict. EVERY path must already be in
+    `artifacts`: a manifest that advertises a file this run did not publish is a
+    404 for a consumer, so it is refused here rather than discovered later.
+
+    `generated_at` is when the DATA was produced (its source metadata's own
+    timestamp), not when this mirror ran. It is required and must be non-empty,
+    because a manifest whose only timestamp is the publish time is the exact
+    thing this helper replaces.
+    """
+    path = manifest_path(dataset)
+    if path in artifacts:
+        raise ValueError(
+            f"refusing to build two manifests for {dataset!r}: {path} is already "
+            "in this artifact set. One dataset, one manifest, one writer."
+        )
+    if not (generated_at or "").strip():
+        raise ValueError(
+            f"{dataset!r}: generated_at is required and must be the DATA's own "
+            "timestamp. A manifest carrying only a publish time tells consumers "
+            "every dataset in the repo is as fresh as the job that ran last."
+        )
+
+    entries, missing = [], []
+    for f in files:
+        spec = {"path": f} if isinstance(f, str) else dict(f)
+        fp = spec.get("path")
+        if fp not in artifacts:
+            missing.append(fp)
+            continue
+        spec["bytes"] = len(artifacts[fp])
+        entries.append(spec)
+    if missing:
+        raise ValueError(
+            f"refusing to publish {dataset!r}: its manifest lists file(s) this run "
+            f"did not build, which would 404 for consumers: {missing}"
+        )
+    if not entries:
+        raise ValueError(f"refusing to publish {dataset!r}: its manifest lists no files")
+
+    doc = {
+        "manifestSchemaVersion": MANIFEST_SCHEMA_VERSION,
+        "dataset": dataset,
+        "title": title,
+        "description": description,
+        "repo": repo,
+        "publisher": "VoteGA.org",
+        "generatedAt": generated_at,
+        "publishedAt": datetime.datetime.now(datetime.timezone.utc)
+                               .strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "updateCadence": update_cadence,
+        "schemaVersion": schema_version,
+        "rowCount": row_count,
+        "source": source or REPO_SOURCES.get(repo),
+        "license": {"name": LICENSE_NAME, "spdx": LICENSE_SPDX, "url": LICENSE_URL},
+        "files": sorted(entries, key=lambda e: e["path"]),
+    }
+    if coverage:
+        doc["coverage"] = coverage
+    if extra:
+        doc.update(extra)
+    artifacts[path] = build_json(doc)
+    return path
 
 
 def _assert_artifacts_sane(artifacts):

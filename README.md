@@ -30,6 +30,23 @@ no signup, no rate limit.
 [Oyez](https://api.oyez.org/) · [gov.georgia.gov](https://gov.georgia.gov/) · [Georgia Secretary of State](https://sos.ga.gov/) ·
 Georgia county & municipal governments (published agendas & minutes)
 
+**Several repositories carry more than one dataset,** each on its own refresh
+schedule. Every dataset describes itself in `data/<dataset>/manifest.json`, so
+listing `data/*/manifest.json` tells you what a repository holds:
+
+```bash
+# What datasets does ga-local-government carry, and how fresh is each?
+curl -s https://api.github.com/repos/Votega/ga-local-government/contents/data \
+  | python3 -c 'import json,sys; print(*[d["name"] for d in json.load(sys.stdin) if d["type"]=="dir"], sep="\n")'
+
+# One dataset's manifest: files, row count, source, licence, and BOTH timestamps
+curl -s https://raw.githubusercontent.com/Votega/ga-local-government/main/data/millage/manifest.json
+```
+
+A manifest carries `generatedAt` (when the **data** was produced) separately from
+`publishedAt` (when we last mirrored it). They are not the same thing: a yearly
+dataset beside a twice-weekly one is not as fresh as whichever job ran last.
+
 Full methodology and update schedules: [votega.org/about-the-data](https://www.votega.org/about-the-data)
 
 ---

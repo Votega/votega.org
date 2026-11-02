@@ -84,10 +84,17 @@ def test_every_row_of_the_real_dataset_has_a_join_key():
 
 def test_everything_is_published_under_the_cycle_folder_and_nothing_at_the_root():
     arts = pr.build_artifacts()
-    assert sorted(arts) == ["races/2026/RACES.md", "races/2026/candidates.csv", "races/2026/races.csv",
-                            "races/2026/races.json", "races/2026/races.schema.json"]
+    # The DATA files, which is what this test is about. data/<dataset>/manifest.json
+    # is excluded on purpose: it is the repo-wide dataset-discovery convention
+    # (lib.sibling_publish.add_dataset_manifest), it is not cycle-scoped, and it is
+    # not a race file. Scoping here rather than widening the lists below keeps the
+    # original intent — no data file may drift back to the repo root — intact.
+    data = sorted(p for p in arts if p.startswith("races/"))
+    assert data == ["races/2026/RACES.md", "races/2026/candidates.csv", "races/2026/races.csv",
+                    "races/2026/races.json", "races/2026/races.schema.json"]
     assert not any("/" not in p for p in arts), "a data file at the repo root would resurrect the old layout"
-    assert set(pr.LEGACY_ROOT_FILES) == {p.rsplit("/", 1)[1] for p in arts}, "the cleanup list must name exactly the moved files"
+    assert set(pr.LEGACY_ROOT_FILES) == {p.rsplit("/", 1)[1] for p in data}, "the cleanup list must name exactly the moved files"
+    assert "data/races/manifest.json" in arts, "the dataset manifest must still be published"
 
 
 def test_schema_id_is_the_path_it_is_published_at_and_covers_every_level():
@@ -131,7 +138,9 @@ def test_a_file_with_two_cycles_gets_a_folder_per_cycle_holding_only_that_cycle(
             arts = pr.build_artifacts()
         finally:
             pr.SRC_RACES = saved
-    assert sorted({p.split("/")[1] for p in arts}) == ["2026", "2028"]
+    # Cycle folders only — the dataset manifest lives at data/races/manifest.json
+    # and is deliberately not partitioned by cycle (it describes the dataset).
+    assert sorted({p.split("/")[1] for p in arts if p.startswith("races/")}) == ["2026", "2028"]
     r26 = json.loads(arts["races/2026/races.json"])["races"]
     r28 = json.loads(arts["races/2028/races.json"])["races"]
     assert len(r26) == len(doc["races"]) and {r["cycle"] for r in r26} == {2026}
