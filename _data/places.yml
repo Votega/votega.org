@@ -1110,15 +1110,22 @@ places:
     region: West Georgia
     domains:
       meetings:
-        # Consolidated Columbus government on Legistar (client: columbus). Keep the
-        # City Council + Zoning Committee (land use). The municodemeetings.com
-        # variant serves dead document links for Columbus, so Legistar is the source.
-        platform: legistar
-        client: columbus
-        agendas_url: "https://columbus.legistar.com/Calendar.aspx"
+        # Columbus-Muscogee County, GA, on Municode Meetings (lib/teammunicode.py).
+        # NOT Legistar: the `columbus` Legistar client is Columbus, OHIO (Columbus City
+        # Council, Rm 231 at 90 W Broad St) and was published here as Georgia data until
+        # 2026-11-02. Same variant as Augusta: table at the site root, short front page.
+        platform: teammunicode
+        base_url: "https://columbus-ga.municodemeetings.com"
+        meetings_path: "/"
+        max_pages: 4
+        agendas_url: "https://columbus-ga.municodemeetings.com/"
+        # `body` is the meeting title here (rows carry no section code). "TEST Council" and
+        # other non-council rows match no rule and are dropped.
         body_map:
-          - { match: "Columbus City Council", label: "City Council" }
-          - { match: "Zoning", label: "Zoning Committee" }
+          - { match: "Budget Review", label: "Budget Review Committee" }
+          - { match: "Council Agenda", label: "City Council" }
+          - { match: "Council Consent", label: "City Council" }
+          - { match: "Special Called", label: "City Council" }
         schedule:
           - body: City Council
             when: "2nd Tuesday of every month, 9:00 a.m."
