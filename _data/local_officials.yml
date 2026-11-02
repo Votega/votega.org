@@ -2734,7 +2734,7 @@ jurisdictions:
     name: Columbus-Muscogee County
     type: consolidated
     county: Columbus-Muscogee
-    body: Board of Commissioners
+    body: City Council
     partisan: false
     term_years: 4
     board_size: 10
@@ -2742,6 +2742,20 @@ jurisdictions:
     official_url: "https://columbusga.gov/council"
     related_pages:
     members:
+      # Added from https://columbusga.gov/mayor (name only). Term, contact and the
+      # mayor's vote/tie-break rule are NOT verified, so `voting` is left unset.
+      - name: "Skip Henderson"
+        full_name: "B.H. \"Skip\" Henderson III"
+        role: Mayor
+        seat: At-large
+        party: 
+        email: 
+        phone: 
+        last_elected: 
+        term_end: 
+        next_election: 
+        voting: 
+        source: "https://columbusga.gov/mayor"
       - name: "Simi Barnes"
         role: Council Member
         seat: "District 1"
