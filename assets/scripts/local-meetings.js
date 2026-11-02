@@ -76,6 +76,48 @@
     var state = { body: 'all', year: 'all', minutesOnly: false, limit: PAGE_SIZE };
     var ALL = [];
     var BODIES = [];
+    // Recorded votes by meeting id (local-<slug>-votes.json). Only CivicClerk and Legistar
+    // places that publish them have the file; a missing file just means no vote panels.
+    var VOTES = {};
+
+    var VOTE_COLS = [['yes', 'Yes'], ['no', 'No'], ['abstain', 'Abstain'], ['absent', 'Absent']];
+
+    function motionHtml(mo) {
+      var chip = '';
+      if (mo.result === 'passed') {
+        chip = '<span class="cmv-result cmv-passed"><i class="fa-solid fa-check" aria-hidden="true"></i> Passed</span>';
+      } else if (mo.result === 'failed') {
+        chip = '<span class="cmv-result cmv-failed"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Failed</span>';
+      }
+      var by = [];
+      if (mo.movedBy) by.push('Moved by ' + esc(mo.movedBy));
+      if (mo.secondedBy) by.push('seconded by ' + esc(mo.secondedBy));
+      var tally = VOTE_COLS.filter(function (c) { return (mo[c[0]] || []).length; })
+        .map(function (c) { return c[1] + ' ' + mo[c[0]].length; }).join(' · ');
+      var who = VOTE_COLS.filter(function (c) { return (mo[c[0]] || []).length; })
+        .map(function (c) { return '<li><strong>' + c[1] + ':</strong> ' + mo[c[0]].map(esc).join(', ') + '</li>'; }).join('');
+      return '<div class="cmv-motion">' +
+        '<span class="cmv-action">' + esc(mo.motion || 'Action') + '</span> ' + chip +
+        (by.length ? '<span class="cmv-by">' + by.join(', ') + '</span>' : '') +
+        (tally ? '<span class="cmv-tally">' + tally + '</span>' : '') +
+        (who ? '<details class="cmv-who"><summary>How each member voted</summary><ul>' + who + '</ul></details>' : '') +
+        '</div>';
+    }
+
+    function votesHtml(m) {
+      var v = VOTES[m.id];
+      if (!v || !v.items || !v.items.length) return '';
+      return '<details class="cm-votes"><summary><i class="fa-solid fa-gavel" aria-hidden="true"></i> Recorded votes (' +
+        v.items.length + ')</summary>' +
+        v.items.map(function (it) {
+          var head = [it.outline, it.name].filter(Boolean).map(esc).join(' ');
+          var meta = [it.reference && 'Ref. ' + esc(it.reference), it.district && 'District ' + esc(it.district)]
+            .filter(Boolean).join(' · ');
+          return '<div class="cmv-item"><div class="cmv-name">' + (head || 'Agenda item') + '</div>' +
+            (meta ? '<div class="cmv-meta">' + meta + '</div>' : '') +
+            it.motions.map(motionHtml).join('') + '</div>';
+        }).join('') + '</details>';
+    }
 
     function meetingRow(m, showChip) {
       var links = [
@@ -97,7 +139,7 @@
       return '<li class="cm-row">' +
         '<span class="cm-date">' + fmtDate(m.date) + '</span>' + chip +
         '<span class="cm-title">' + esc(m.title || m.body || 'Meeting') + '</span>' +
-        '<span class="cm-links">' + links + '</span></li>';
+        '<span class="cm-links">' + links + '</span>' + votesHtml(m) + '</li>';
     }
 
     function section(title, rows, showChip, upcoming, limit) {
@@ -272,6 +314,16 @@
         }
         global.addEventListener('hashchange', function () { applyHash(); render(); });
         render();
+
+        // Votes load after the list is up, so a slow or absent file never delays it.
+        fetch(getBasePath() + 'assets/data/local-' + slug + '-votes.json')
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (vd) {
+            if (!vd || !vd.meetings) return;
+            vd.meetings.forEach(function (vm) { if (vm.items && vm.items.length) VOTES[vm.id] = vm; });
+            render();
+          })
+          .catch(function () { /* no votes file for this place */ });
 
         if (sourceEl) {
           var meta = data.metadata || {};
