@@ -156,11 +156,15 @@ def _simbli(m, page, blob=None):
     key, including the policy-manual links, so the id is read from whichever one
     appears — more robust than insisting on the meetings URL.
 
-    NOTE: there is no lib/simbli.py adapter yet (scope doc phase 3c). Until there
-    is, this hit is informational: it tells you the district IS scrapable, and
-    hands you the district_id an adapter would need. Do not paste `platform:
-    simbli` into places.yml before the adapter exists — validate_place_meetings
-    would reject it as an unrecognised platform, which is the correct behaviour.
+    The adapter now exists: lib/simbli.py parses the listing and builds the
+    agenda/minutes URLs from its `onclick` arguments. `district_id` below is
+    exactly what `fetch_simbli_meetings` takes.
+
+    It is NOT wired into places.yml, and `platform: simbli` there would still be
+    rejected by validate_place_meetings — correctly. Simbli serves SCHOOL BOARDS,
+    which are not places: a board is a district in _data/school_districts.yml,
+    joined to a place but not one. Wiring board meetings to a surface is scope
+    doc phase 3e.
     """
     blob = blob or page or ''
     sid = re.search(r'[?&]S=(\d+)', blob, re.I)

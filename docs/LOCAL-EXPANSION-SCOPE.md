@@ -24,6 +24,7 @@ work happened. This block is the resume point.
 | **3a** drafter | `draft_school_boards.py` — **77 districts / 215 members** drafted from SoS results, 0 errors. |
 | **3a** board section | `_includes/entity/school-boards.html` — collapsible panel per board, wired into `place.html`. **Renders nothing until a roster is human-confirmed**, verified on a full Jekyll build: 0 of 1,484 pages carry the section today. |
 | **3b** census | Detector gained a Simbli fingerprint. **15 of 23 reachable districts are Simbli, 0 BoardDocs.** |
+| **3c** Simbli adapter | `scripts/lib/simbli.py` + 60 pinned invariants on a real captured listing. **Verified live end to end: 50 real Newton meetings parsed through the adapter's own retry.** Not wired to a surface — that is 3e. |
 | infrastructure | Per-dataset manifests (`data/<dataset>/manifest.json`) across all 6 co-tenant publishers; `test_no_third_party_imports.py` guard; `claude.md` scaling section re-measured. |
 
 ### Next actions, highest value first
@@ -40,9 +41,11 @@ work happened. This block is the resume point.
 4. **Inline-`<script>` refactor** — the live REVISIT item in `claude.md`.
    ~130 MB of a 312 MB site; first question to answer is whether the 177 KB
    legislator / 126 KB candidate blocks are per-page templated or identical.
-5. **3c Simbli adapter** — unblocked. Parse the listing's `onclick` args into
-   `ViewMeeting.aspx?S=&MID=` URLs; needs a fetch retry (transient Incapsula
-   challenges) and must accept vanity slugs (`/walton`, no `S=` id).
+5. **3e** wire board meetings to a surface — the adapter (3c) is built and
+   verified; nothing reads it yet. Needs a district→Simbli-id mapping (the
+   detector already extracts the id) and a decision on where board meetings
+   render: a section on `/local/<slug>/` beside the board roster, or their own
+   page per district.
 6. **1c** HB 581 opt-out registry · **1e** statewide millage comparison.
 7. **3b loose ends** — 8 districts matched no signature, 17 never tested, 10
    blocked by the dev container's egress proxy. Re-running from CI would firm up
@@ -366,11 +369,19 @@ wrong, twice over:
 
 - The first check looked at a **byte count** and called a 6,650-byte response
   "fetches fine". It was an Incapsula challenge page.
-- The correction then tested `'ncapsula' in html`, which matches the Incapsula
-  **script tag injected into normally-served pages too** — so every page looked
+- The correction then tested `'ncapsula' in html` and concluded every page was
   blocked. On top of that, one district returned a genuine transient challenge,
   and one id I tested (`S=3920`) was a number I had invented, so its error page
   was not a block at all.
+
+  > **Partly corrected while building 3c.** I wrote that the marker matched
+  > *normally-served* pages too. Measured against a captured 150 KB served
+  > listing, it does not: that page contains no `_Incapsula_Resource` reference
+  > and the block page does, so the marker would in fact have separated these
+  > two. The substring test was wrong for a plainer reason — it asks about the
+  > vendor's infrastructure rather than about what the response IS, and the
+  > answer is the vendor's to change. The conclusion stands; the stated reason
+  > for it was overspecified.
 
 What is actually true, measured with a content check (does the page contain a
 meeting grid?): **the project's own `lib.http.fetch_bytes` retrieves the listing
@@ -399,6 +410,13 @@ Each row of `SB_MeetingListing.aspx?S=<district>` carries everything needed:
 and `/Meetings/PrintMinutes.aspx` for minutes. Its own guard is
 `meetingStatus == "1" && isLoggedInUser == "0"`, i.e. **published meetings are
 viewable without an account** — so no login is involved.
+
+> **CORRECTED while building 3c.** The minutes URL above is wrong. That file
+> contains TWO `ViewMinutes` definitions: an older one, commented out, that opens
+> `/Meetings/PrintMinutes.aspx`, and immediately below it the live one, which
+> opens **`/SB_Meetings/ViewMeeting.aspx?S=…&MID=…&T=1`** — the agenda URL plus
+> `&T=1`. The first reading took the dead copy. `lib/simbli.py` uses the live
+> shape and `test_simbli.py` pins it.
 
 The anchors are `href="javascript:void(0)"`, so a naive link scraper finds
 nothing; the URLs have to be built from the `onclick` arguments. That is the
@@ -471,6 +489,72 @@ above.
 **Verified end to end:** a drafted Newton block pasted into the registry parses
 and passes `validate_school_districts.py` with zero errors and zero warnings.
 
+### 3.5.3 Phase 3c: the Simbli adapter — RESULT
+
+`scripts/lib/simbli.py`, 60 invariants in `scripts/test_simbli.py`, fixtures in
+`scripts/fixtures/simbli-*.html`. **Verified live end to end**, not only against
+the fixture: a run through `fetch_simbli_meetings('4122')` fetched and parsed all
+**50 real Newton County meetings**, with agenda URLs on every row and minutes on
+the published ones.
+
+**What a listing gives you.** 50 rows, no pagination controls, spanning roughly a
+year each side of today (Newton: 2025-12-16 → 2026-11-03). There is no archive to
+walk, so that window is what the platform offers and the adapter does not try to
+page past it. Every Newton row's meeting type was "Board Meeting".
+
+**`body` is not taken from the grid.** The fourth column is a meeting TYPE, and
+the output schema's `body` names the governing body, so it defaults to
+`Board of Education` and is overridable per district. The type survives as the
+title's fallback for a row with empty anchor text.
+
+**A real bug the live data exposed.** Newton held two meetings on 2026-10-27, at
+5:30 PM and 7:00 PM, and **their meeting ids sort the opposite way from their
+times** — so sorting by `(date, id)` put the evening session above the afternoon
+one. The adapter parses the 12-hour time into a 24-hour sort key, and the fixture
+was deliberately cut to include that pair so the ordering is pinned by real rows.
+
+**A blocked district raises; it does not report an empty board.** `fetch_listing`
+retries and then raises `SimbliBlocked`. This matters more than it looks: the
+silent-failure mode here is recording "this board has no meetings", which is a
+false statement about a government body. A fetcher-level failure (lib.http
+already exhausted its own policy) returns `None` instead, which callers treat as
+"no data this run".
+
+**Egress reputation, measured 2026-11-02 from the dev container: 1 of 12 probes
+served the listing, 11 were Incapsula block pages.** Earlier the same day it was
+4 of 5. That is this container's IP, not the districts — but it means a CI run
+needs the retry budget, and **the per-district success rate from a CI runner is
+still UNVERIFIED.** Worth measuring before 3e commits to a schedule.
+
+**`is_listing` asks one question: does the response contain a meeting grid?** Not
+its size (the first wrong call about this platform read a 6,650-byte challenge
+page as a good fetch), and not a vendor marker (see the correction in §3.5.1).
+
+**Still unverified:** that an individual `ViewMeeting.aspx` agenda and its `&T=1`
+minutes page are reachable anonymously. The platform's own JS says they are — its
+anonymous branch builds exactly those URLs, gated on `meetingStatus == "1"` and
+`minutesStatus == "PUBLISHED"` — and the adapter emits a URL only when those hold.
+But every attempt to fetch one from this container was blocked, so the JS is the
+evidence, not a fetch. **Retried 14 times against each of an agenda and its
+minutes page on 2026-11-02; every single attempt was a block.** Confirm from CI
+and do not spend more attempts from a dev container.
+
+(The meeting picked for that test was Newton's `Special Called Meeting - Millage
+Rate`, 2026-07-27 — an incidental but useful signal for 3e: board agendas carry
+exactly the tax-and-budget items the topic enrichment is built to surface.)
+
+**The vanity-path branch is likewise unverified live.** Some districts link only
+`simbli.eboardsolutions.com/<slug>` with no `S=` key, so `resolve_district_id`
+fetches that path and reads the key out of whatever comes back — every Simbli
+link on a district's pages carries the same `S=<id>`, including policy links.
+Exercised by its test; never reached a live vanity path through the blocks.
+
+**Not wired to anything.** Simbli serves school boards, and a board is a district
+in `_data/school_districts.yml`, not a place — so `platform: simbli` in
+`places.yml` is still correctly rejected by `validate_place_meetings`. Surfacing
+board meetings is 3e, and it needs a district→Simbli-id mapping plus a decision
+on where they render.
+
 ### 3.6 Topic work is nearly free
 
 `meeting_topics.py` is corpus-agnostic. Pointing the existing classifier at board
@@ -488,7 +572,7 @@ curriculum/media policy, school construction**. One new `schools` topic in
 |---|---|---|
 | **3a** | County systems scaffolded (180 districts) · validator + 52 invariants in CI · **SoS drafter: 77 districts / 215 members** · board section shipped (`_includes/entity/school-boards.html`). Remaining: confirmed rosters, and publishing the registry to `ga-local-government`. | done but for rosters |
 | **3b** | ~~Platform census~~ **DONE** — see §3.5.1. Verdict: build Simbli, defer BoardDocs. | **done** |
-| **3c** | Simbli adapter. Mechanics confirmed (§3.5.1): parse the listing's `onclick` args into `ViewMeeting.aspx?S=&MID=` URLs; needs a fetch retry for transient challenges. | ~60–90k |
+| **3c** | ~~Simbli adapter~~ **DONE** — `lib/simbli.py`, see §3.5.3. Verified live: 50 real meetings parsed. | **done** |
 | **3d** | BoardDocs adapter | ~60–90k |
 | **3e** | `schools` topic rules + per-district page wiring | ~40–60k |
 
