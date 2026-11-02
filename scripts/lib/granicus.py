@@ -48,6 +48,10 @@ _DATE_CELL_RE = re.compile(r'headers="Date[^"]*"[^>]*>(.*?)</td>', re.S | re.I)
 _NUM_DATE_RE = re.compile(r'\b(\d{1,2})\s*/\s*(\d{1,2})\s*/\s*(\d{4})\b')
 _AGENDA_RE = re.compile(r'(//[^"\']*AgendaViewer\.php\?[^"\']+)', re.I)
 _MINUTES_RE = re.compile(r'(//[^"\']*MinutesViewer\.php\?[^"\']+)', re.I)
+# Newer portals (Spalding) link minutes to an absolute document-service URL
+# instead: https://<client>.granicus.com/services/minutes/reports/<uuid>/attachment
+_MINUTES_SVC_RE = re.compile(
+    r'(https?://[^"\']*/services/minutes/reports/[^"\']+)', re.I)
 _VIDEO_RE = re.compile(r'(//[^"\']*MediaPlayer\.php\?[^"\']+)', re.I)
 _CLIP_RE = re.compile(r'clip_id=(\d+)', re.I)
 _EVENT_RE = re.compile(r'event_id=(\d+)', re.I)
@@ -122,7 +126,7 @@ def _parse_row(row, scheme):
         return None
 
     agenda = _AGENDA_RE.search(row)
-    minutes = _MINUTES_RE.search(row)
+    minutes = _MINUTES_RE.search(row) or _MINUTES_SVC_RE.search(row)
     video = _VIDEO_RE.search(row)
     agenda_url = _abs(scheme, agenda.group(1)) if agenda else None
     minutes_url = _abs(scheme, minutes.group(1)) if minutes else None
