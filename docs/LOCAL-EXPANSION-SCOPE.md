@@ -343,6 +343,56 @@ so a caller doing `len(...)` gets a `TypeError` instead of a clear error. The
 detector wraps its own fetch so it reports cleanly; worth tidying if anything
 else grows a dependency on that function.)
 
+### 3.5.2 Phase 3a: the roster drafter
+
+`scripts/draft_school_boards.py` turns Secretary of State results into reviewable
+draft blocks, the same "assisted" contract `generate_local_officials.py` uses: it
+prints YAML to paste and never writes the data file.
+
+**Statewide run: 77 districts drafted, 215 members, 0 errors.** 82 counties have
+no 2024 board contest — Georgia boards are 4-year staggered and the API only
+carries local offices from ~2024, so that is expected, not a failure.
+
+`generate_local_officials.py` deliberately skips these contests (its
+`_SKIP_OFFICE` excludes `board of education|boe|school|superintendent`) because it
+drafts county commissions. This is the other half, reusing its SoS helpers.
+
+**Partisanship is derived, and only in the direction the evidence supports.**
+Georgia law lets each district choose partisan or nonpartisan school-board
+elections, so the SoS results reveal which mode was used. A party label proves a
+partisan ballot → `partisan: true` is emitted with its evidence. **Absence proves
+nothing** — an unopposed candidate with no recorded party looks identical — so
+that emits a *commented* `# partisan: false` for the curator to confirm. Result:
+71 partisan, 6 suggested nonpartisan.
+
+**What it refuses to infer:**
+
+- **no Superintendent, ever** — they are hired by the board, so they cannot come
+  from election results
+- **no role above Board Member** — a chair is chosen by the board from among its
+  members, not elected as chair by voters
+- **no term dates** — set per district with no machine source, emitted blank with
+  the reason
+- **a sub-50% leader is flagged, not drafted as the winner** — Georgia's majority
+  rule sends it to a runoff the portal does not carry (1 case statewide)
+- **a party label that is neither Rep nor Dem is not guessed.** `map_party()`
+  funnels those to "Nonpartisan", which on a ballot that *did* print a label is
+  wrong — an independent belongs under `Independent`. So the raw abbreviation is
+  shown and the party left for the curator (1 case: Talbot's `Ind`).
+
+**Three real office shapes, all handled:** `County BOE - District 2` (Cobb,
+Jackson, Newton, Whitfield), `Board of Education - District 4` (Thomas), and
+`County Board of Education - District 5` (Talbot).
+
+**Two bugs the statewide run exposed**, both now fixed and pinned by tests:
+two-word counties were silently lost because the registry key stripped the
+hyphen (`benhill`) while `slug_of()` keeps it (`ben-hill`) — Ben Hill and Jeff
+Davis, the latter a real 3-member partisan board; and the unmapped-party guess
+above.
+
+**Verified end to end:** a drafted Newton block pasted into the registry parses
+and passes `validate_school_districts.py` with zero errors and zero warnings.
+
 ### 3.6 Topic work is nearly free
 
 `meeting_topics.py` is corpus-agnostic. Pointing the existing classifier at board
@@ -358,7 +408,7 @@ curriculum/media policy, school construction**. One new `schools` topic in
 
 | Phase | Work | Est. |
 |---|---|---|
-| **3a** | County systems generated into `school_districts.yml`; validator (strict slug cross-check, like `validate_local_officials.py`); board section in `_includes/entity/place.html`; publish machine-readable copy to `ga-local-government`. **Officials only, no scraping.** | ~50–70k |
+| **3a** | County systems scaffolded (180 districts) · validator + 52 invariants in CI · **SoS drafter: 77 districts / 215 members**. Remaining: the board section in `_includes/entity/place.html`, and publishing the registry to `ga-local-government`. | mostly done |
 | **3b** | ~~Platform census~~ **DONE** — see §3.5.1. Verdict: build Simbli, defer BoardDocs. | **done** |
 | **3c** | Simbli adapter. Mechanics confirmed (§3.5.1): parse the listing's `onclick` args into `ViewMeeting.aspx?S=&MID=` URLs; needs a fetch retry for transient challenges. | ~60–90k |
 | **3d** | BoardDocs adapter | ~60–90k |

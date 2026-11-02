@@ -23,14 +23,16 @@ into the Georgia Civic Data dimension. So the structural checks are strict.
     as hidden placeholders. An unresolvable slug is a typo, not a forward
     reference. A county system carries NO `counties` — it is 1:1 with its county
     via countyFips — so one is an error.
-  * PARTISANSHIP IS PER DISTRICT, NOT STATEWIDE. Georgia school board elections
-    are NOT uniformly nonpartisan: every county with a 2024 BOE contest in the
-    Secretary of State's results carries party labels — Cobb, Jackson, Newton,
-    Thomas and Whitfield all return Dem/Rep, none nonpartisan. So the rule
-    mirrors local_officials.yml: a district declares `partisan`, and `party` must
-    agree with it. Nonpartisan is required when `partisan: false`; a real party is
-    allowed only when it is not false. Forcing every seat to Nonpartisan would
-    have made the file unable to hold the actual election results.
+  * PARTISANSHIP IS PER DISTRICT, BY LAW. Georgia permits a school board to be
+    elected either in partisan elections (party primaries nominate; nominees'
+    labels appear on the ballot) or in nonpartisan ones (no primaries, no labels)
+    — https://ballotpedia.org/Party_labels_in_Georgia_school_board_elections.
+    So the rule mirrors local_officials.yml: a district declares `partisan`, and
+    `party` must agree with it. Nonpartisan is required when `partisan: false`;
+    a real party is allowed only when it is not false. Forcing every seat to
+    Nonpartisan, as an earlier revision of this file did, made it unable to hold
+    the actual results — every county with a 2024 BOE contest in the SoS data
+    carries party labels.
   * A SUPERINTENDENT IS NOT AN ELECTED SEAT. Georgia local superintendents are
     hired by the board — the same situation as a City Manager, which
     local_officials.yml documents and keeps out of its elected roster. So a

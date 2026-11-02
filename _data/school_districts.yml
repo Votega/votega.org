@@ -101,15 +101,25 @@
 #   role:  Chair | Vice Chair | Board Member | Superintendent
 #   party: Republican | Democratic | Independent | Nonpartisan
 #
-#   ⚠ GEORGIA SCHOOL BOARD ELECTIONS ARE NOT UNIFORMLY NONPARTISAN. Measured
-#   2026-11-02 against the Secretary of State's 2024 general results: EVERY county
-#   with a BOE contest returned party labels — Cobb, Jackson, Newton, Thomas and
-#   Whitfield are all Dem/Rep, none nonpartisan. So partisanship is declared PER
-#   DISTRICT with `partisan: true|false`, exactly as local_officials.yml does it,
-#   and `party` must agree: Nonpartisan is required when `partisan: false`, and a
-#   real party is allowed only when it is not false. `Independent` means a member
-#   holding a partisan seat with no party, so it is not valid on a nonpartisan
-#   board. Check your district's own ballot rather than assuming either way.
+#   ⚠ GEORGIA LAW ALLOWS EITHER MODE, CHOSEN PER DISTRICT. State law permits a
+#   school board to be elected in PARTISAN elections (party primaries nominate,
+#   and nominees' party labels appear on the ballot) or in NONPARTISAN elections
+#   (no primaries, no party labels).
+#     https://ballotpedia.org/Party_labels_in_Georgia_school_board_elections
+#   So `partisan` is a real per-district fact, not a workaround. Borne out by the
+#   Secretary of State's 2024 general results: every county with a BOE contest
+#   there returned party labels — Cobb, Jackson, Newton, Thomas and Whitfield are
+#   all Dem/Rep — while three of eight counties sampled had no 2024 contest at all.
+#
+#   `party` must AGREE with the district's flag, exactly as local_officials.yml
+#   does it: Nonpartisan is required when `partisan: false`, and a real party is
+#   allowed only when it is not false. `Independent` means a member holding a
+#   partisan seat with no party, so it is not valid on a nonpartisan board.
+#
+#   HOW TO TELL WHICH MODE A DISTRICT USES: look at its contest in the SoS
+#   results. Party labels on the candidates means a partisan election; their
+#   absence means a nonpartisan one. scripts/draft_school_boards.py derives this
+#   and emits a `partisan:` suggestion with the evidence it used.
 #
 #   The commission vocabulary in local_officials.yml does not fit a school board —
 #   it has no "Board Member" — so these four are the school-board set. Use `title`
