@@ -54,12 +54,12 @@ def raises(fn, needle):
 FIELDS = ['taxYear', 'countyCode', 'countyName', 'countyNameAsFiled',
           'districtCode', 'districtName', 'districtType', 'occurrence',
           'millageMO', 'millageBond', 'totalTaxMO', 'totalTaxBond',
-          'assessedValueMO', 'assessedValueBond']
+          'assessedValueMO', 'assessedValueBond', 'dataSource']
 
 
-def row(year=2025, cc='1', dc='2', mill=11.273, bond=None):
+def row(year=2025, cc='1', dc='2', mill=11.273, bond=None, src='digest-xlsx'):
     return [year, cc, 'APPLING', 'APPLING', dc, 'SCHOOL', 'school', 1,
-            mill, bond, 17514571.76, None, 1539813328.0, None]
+            mill, bond, 17514571.76, None, 1539813328.0, None, src]
 
 
 def dataset(n):
@@ -146,6 +146,24 @@ check('not a join key' in schema['properties']['countyName']['description'].lowe
       'and that the county name is a label, not a key')
 check(schema['additionalProperties'] is False,
       'the schema is closed, so a silently added column fails a consumer loudly')
+
+print('\n2019 comes from a different source, and says so')
+md2 = arts['MILLAGE.md'].decode('utf-8')
+check('dataSource' in json.loads(arts['data/millage.schema.json'])['properties'],
+      'dataSource is a published, documented field')
+desc = json.loads(arts['data/millage.schema.json'])['properties']['dataSource']['description']
+check('millage-pdf' in desc and 'MILLAGE ONLY' in desc,
+      "the schema warns that 2019's null tax and value mean 'absent from the "
+      "source', not 'reported none': %r" % desc[:60])
+pdf_row = row(year=2019, mill=14.102, src='millage-pdf')
+pdf_row[FIELDS.index('totalTaxMO')] = None
+pdf_row[FIELDS.index('assessedValueMO')] = None
+text19 = P.rows_csv(FIELDS, [pdf_row]).decode('utf-8')
+import csv as _c0, io as _i0  # noqa: E402
+p19 = list(_c0.DictReader(_i0.StringIO(text19)))[0]
+check(p19['dataSource'] == 'millage-pdf' and p19['totalTaxMO'] == ''
+      and p19['millageMO'] == '14.102',
+      'a 2019 row carries its millage and an empty tax column, tagged millage-pdf')
 
 print('\nCSV round-trip')
 import csv as _csv  # noqa: E402

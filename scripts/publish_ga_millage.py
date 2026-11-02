@@ -83,6 +83,13 @@ FIELD_DOC = {
     "totalTaxBond": "Total bond tax levied, in dollars.",
     "assessedValueMO": "Net M&O assessed value (40% of fair market value).",
     "assessedValueBond": "Net bond assessed value.",
+    "dataSource": ("Which DOR source the row came from: 'digest-xlsx' for the "
+                   "machine-readable Tax Digest Consolidated Summaries (2020 "
+                   "onward), or 'millage-pdf' for the 2019 millage-rate PDF. "
+                   "2019 carries MILLAGE ONLY — its totalTax and assessedValue "
+                   "are null because the source has no such columns, NOT because "
+                   "a jurisdiction reported none. Filter on this before summing "
+                   "tax or assessed value by year."),
 }
 
 NUMERIC = {"taxYear", "occurrence", "millageMO", "millageBond", "totalTaxMO",

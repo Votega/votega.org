@@ -464,9 +464,35 @@ Keep the PDFs for two narrow jobs only:
    year, cheap.
 2. **Spot cross-checks** of the XLSX, which is prudent on a tax figure.
 
+**2019 is in, from the PDF (added 2026-11-02).** `scripts/lib/dor_millage_pdf.py`
+bridges the one year the workbooks miss. The hard part is that the PDF has
+**neither a county nor a district code**, and the published key is
+`(countyCode, districtCode, taxYear, occurrence)` — so codes are borrowed from
+the adjacent workbook year by **exact normalised name**, and the match rate was
+measured rather than assumed: **1,458 of 1,474 rows carrying a rate, 98.9%, with
+zero ambiguity.** Adjacent-year drift is far below the 15% two-year drift that
+motivated §4.1.2's rule, which is why this works — and why the reference year
+must stay 2020.
+
+A row that does not resolve is **dropped and reported, never given an invented
+code**: 17 of them, all real 2019-only sub-districts (Henry's per-city
+`COUNTY INC - <CITY>` lines, Cherokee fire sub-districts, a DeKalb annexation,
+Muscogee downtown service districts), none of them a line a place page shows.
+
+Row counts reconcile: 1,560 PDF rows = 1,543 kept + 17 dropped, and
+1,560 + the 159 countywide roll-up rows the workbooks synthesise + ~6 districts
+genuinely added in 2020 ≈ 2020's 1,725.
+
+**2019 carries millage ONLY** — no tax levied, no assessed value, and no
+countywide roll-up. Since a null elsewhere in this dataset means "the
+jurisdiction reported none", every row now carries **`dataSource`**
+(`digest-xlsx` or `millage-pdf`) so that null cannot be misread. Anything summing
+tax or assessed value by year must filter on it.
+
 **Deeper history:** `sso.dor.ga.gov/rtdc/` (§4.4.1) goes back to **1990** but
-carries no millage. So the practical coverage is **millage + tax 2019–2025**, and
-**digest/exemption detail back to 1990** if wanted.
+carries no millage. So the practical coverage is **millage 2019–2025, tax and
+assessed value 2020–2025**, and **digest/exemption detail back to 1990** if
+wanted.
 
 ### 4.2 The genuinely novel dataset: HB 581 opt-out status
 

@@ -45,6 +45,12 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
 
+      # pdftotext reads the 2019 millage PDF, the one tax year DOR does not
+      # publish as a workbook (lib/dor_millage_pdf.py). Without poppler the run
+      # still succeeds but silently drops 2019, so it is installed, not optional.
+      - name: Install PDF text tools
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
       # Writes to RUNNER_TEMP, NOT assets/data: the statewide file is ~1.8MB and
       # deliberately not committed to this repo (it goes to ga-local-government
       # below). Only the small per-place reduction lands in the tree.

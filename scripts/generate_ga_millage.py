@@ -45,17 +45,32 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib import dor_digest as D  # noqa: E402
+from lib import dor_millage_pdf as PDF  # noqa: E402
 from lib.xlsx import XlsxError  # noqa: E402
 
 INDEX = ('https://dor.georgia.gov/local-government-services/'
          'digest-compliance/digest-consolidated-summaries')
+
+# The machine-readable workbooks start at 2020. ONE earlier year is obtainable:
+# the 2019 millage-rate PDF, which lives on a DIFFERENT index page and has a
+# clean text layer. 2021 and 2024 are scanned and 2025 is Type 3 mojibake, so
+# this is deliberately 2019 and nothing else — see lib/dor_millage_pdf.py.
+PDF_INDEX = ('https://dor.georgia.gov/local-government-services/'
+             'digest-compliance/property-tax-millage-rates')
+PDF_YEARS = (2019,)
 SOURCE_NAME = 'Georgia Department of Revenue — Tax Digest Consolidated Summaries'
 UA = 'VoteGA/1.0 (+https://www.votega.org; nonpartisan civic data)'
 
 FIELDS = ['taxYear', 'countyCode', 'countyName', 'countyNameAsFiled',
           'districtCode', 'districtName', 'districtType', 'occurrence',
           'millageMO', 'millageBond', 'totalTaxMO', 'totalTaxBond',
-          'assessedValueMO', 'assessedValueBond']
+          'assessedValueMO', 'assessedValueBond', 'dataSource']
+
+# Which source a row came from. 2019 carries MILLAGE ONLY — no tax levied, no
+# assessed value — and a null in this dataset otherwise means "the jurisdiction
+# reported none". Without this field that null would read as a reported zero,
+# so anything summing tax or value by year must filter on it.
+SOURCE_XLSX = 'digest-xlsx'
 
 # A link on the index page whose text names a tax year. The "(Current Year)"
 # heading sits beside the newest link rather than in it, so the year in the link
@@ -119,11 +134,18 @@ def main():
     ap.add_argument('--cache', default=None, help='where downloads are kept')
     ap.add_argument('--list', action='store_true', help='print the discovered links and exit')
     ap.add_argument('--year', type=int, action='append', help='limit to this year (repeatable)')
+    ap.add_argument('--no-pdf', action='store_true',
+                    help='skip the 2019 millage PDF (workbook years only)')
     args = ap.parse_args()
 
+    pdf_paths = {}
     if args.from_dir:
         books = workbooks_from_dir(args.from_dir)
         urls = {}
+        for y in PDF_YEARS:
+            cand = os.path.join(args.from_dir, '%d.pdf' % y)
+            if os.path.exists(cand):
+                pdf_paths[y] = cand
     else:
         urls = discover()
         if args.list:
@@ -141,6 +163,16 @@ def main():
                 with open(dest, 'wb') as fh:
                     fh.write(blob)
             books[y] = dest
+        if not args.no_pdf:
+            for y, u in sorted(discover(fetch(PDF_INDEX).decode('utf-8', 'replace')).items()):
+                if y not in PDF_YEARS:
+                    continue
+                dest = os.path.join(cache, 'millage-%d.pdf' % y)
+                if not os.path.exists(dest):
+                    print('fetching the %d millage PDF ...' % y, flush=True)
+                    with open(dest, 'wb') as fh:
+                        fh.write(fetch(u))
+                pdf_paths[y] = dest
 
     if args.year:
         books = {y: p for y, p in books.items() if y in set(args.year)}
@@ -165,6 +197,41 @@ def main():
             types[r['districtType']] = types.get(r['districtType'], 0) + 1
         per_year[year] = len(recs)
         rows.extend(recs)
+
+    # Every workbook row is tagged before the PDF year joins them.
+    for r in rows:
+        r['dataSource'] = SOURCE_XLSX
+
+    # 2019, from the millage PDF, keyed with district codes borrowed from the
+    # nearest workbook year. Skipped silently when that reference year is not in
+    # this run (--year 2023, say), because the codes cannot be resolved without
+    # it — and skipped, never guessed.
+    if pdf_paths and not args.no_pdf:
+        reference = [r for r in rows if r['taxYear'] == PDF.REFERENCE_YEAR]
+        if not reference:
+            print('note: %d is not in this run, so the %s PDF year(s) cannot be '
+                  'keyed and were skipped' % (PDF.REFERENCE_YEAR,
+                                              ', '.join(str(y) for y in sorted(pdf_paths))))
+        else:
+            for year, path in sorted(pdf_paths.items()):
+                if year in per_year:
+                    continue  # a workbook for that year wins over the PDF
+                try:
+                    recs, unresolved = PDF.parse(path, reference, year=year)
+                except PDF.MillagePdfError as exc:
+                    raise SystemExit('ERROR: %s\nNothing was written.' % exc)
+                for r in recs:
+                    types[r['districtType']] = types.get(r['districtType'], 0) + 1
+                per_year[year] = len(recs)
+                rows.extend(recs)
+                print('%d: %d rows from the millage PDF (millage only; no tax or '
+                      'assessed value in that source)' % (year, len(recs)))
+                if unresolved:
+                    print('  %d row(s) dropped — their district name does not '
+                          'resolve to a %d district code, so they cannot be keyed:'
+                          % (len(unresolved), PDF.REFERENCE_YEAR))
+                    for county, dist in unresolved[:20]:
+                        print('    %-16s %s' % (county, dist))
 
     # DOR's county names are dirty (see dor_digest.canonical_county_names): 191
     # distinct names for 159 codes. Publish one canonical name per code and keep
