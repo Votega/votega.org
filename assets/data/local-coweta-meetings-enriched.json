@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T03:42:30Z",
+  "generatedAt": "2026-11-02T11:37:17Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -12,13 +12,13 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-20",
+  "lastActivity": "2026-11-03",
   "topicTotals": {
-   "appointment": 13,
+   "appointment": 14,
    "contract": 14,
    "development": 7,
-   "millage-budget": 16,
    "rezoning": 9,
+   "millage-budget": 16,
    "variance": 13,
    "data-center": 4,
    "special-land-use": 8,
@@ -42,6 +42,17 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
+    "date": "2026-11-03",
+    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3718,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning"
+    ],
+    "excerpt": "… Page 1 of 3 5. Public Hearing Regarding Petition # REZ 26-09 Filed by Coop Dev, LLC to Rezone Property Located at 5439 Lower Fayettville Road, Sharpsburg - District 1 - WITHDRAWN BY APPLICANT REPRESENTATIVE …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
     "date": "2026-10-20",
@@ -224,17 +235,6 @@
     ],
     "excerpt": "… Associated with Previous Petition # CONDUSE 25-01 Filed by Paige Dockweiler Requesting a Neighborhood Agricultural Conditional Use Permit for Property Located at 9210 Highway 16, Senoia - District 1 11. Request Direction from the Board Regarding …",
     "excerptTerm": "conditional use"
-   },
-   {
-    "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-    "date": "2026-04-07",
-    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3282,plainText=false)",
-    "tags": [
-     "development",
-     "rezoning"
-    ],
-    "excerpt": "… , Newnan - District 3 4. Public Hearing Regarding Petition # REZ 24-19 Filed by Atlas Development, LLC Requesting to Rezone Property Located at Welcome to Sargent Road and Wagers Mill Road, Newnan - District 2 Coweta County Board of C …",
-    "excerptTerm": "rezon"
    }
   ],
   "landUseMeetings": 22,
@@ -292,6 +292,62 @@
   ]
  },
  "meetings": [
+  {
+   "id": "1098",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3718,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3718,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 5944,
+   "pdfSha256": "8c9cc412692fcc90174a46d3d6f986c4332c3017d90c7fce9b5966f82f822daf",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "rezon",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… f Open Space Restriction Associated with Ellerbe Subdivision, Phase 2 - District 3 Unfinished Business 12. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts 13. Request Approval/ …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ed Business 12. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts 13. Request Approval/Execution of an Agreement with Smart Communications Associated with Offender Tablet Services …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Cott - District 1 9. Request Acceptance of Roadways and Deed of Open Space Restriction Associated with Longbow Subdivision - District 1 10. Request Acceptance of Roadways and Right-of-Way Located at Talley Meadows Subdivision - District 2 1 …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Page 1 of 3 5. Public Hearing Regarding Petition # REZ 26-09 Filed by Coop Dev, LLC to Rezone Property Located at 5439 Lower Fayettville Road, Sharpsburg - District 1 - WITHDRAWN BY APPLICANT REPRESENTATIVE …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1097",
    "date": "2026-10-20",
@@ -1639,54 +1695,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1069",
-   "date": "2026-04-07",
-   "body": "Board of Commissioners",
-   "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3282,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3282,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 3931,
-   "pdfSha256": "3f08043e686b3ddc79a6aeca6274692df14f667c130d0c87d311d090926547ca",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "contract",
-    "rezon",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… of Open Space Restriction Associated with Whistle Ridge Subdivision, Phase 1 - District 3 New Business Bids and Contracts 6. Request Approval of a Software Agreement with Nitorco, Inc. Associated with the Tax Commissioner's Office …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… est Acceptance of Roadways, Greenway Dedication, and Deed of Open Space Restriction Associated with Whistle Ridge Subdivision, Phase 1 - District 3 New Business Bids and Contracts 6. Request Approval of a Software Agreement with Nitorco, In …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… , Newnan - District 3 4. Public Hearing Regarding Petition # REZ 24-19 Filed by Atlas Development, LLC Requesting to Rezone Property Located at Welcome to Sargent Road and Wagers Mill Road, Newnan - District 2 Coweta County Board of C …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }
