@@ -14,7 +14,6 @@ to GPL-3.0 while /open-data promised attribution-only reuse; emitting them from 
 means the license is stated once and cannot diverge again.
 """
 import base64
-import datetime
 import json
 import os
 import re
@@ -187,9 +186,14 @@ def build_json(obj):
 # listing `data/*/manifest.json`. The human-readable index stays whatever
 # SUMMARY.md / MILLAGE.md / RACES.md the publisher already writes.
 #
-# `generatedAt` is the DATA's own timestamp and is required; `publishedAt` is
-# when this mirror ran. Conflating the two is the bug this whole shape exists to
-# prevent.
+# `generatedAt` is the DATA's own timestamp and is required. There is deliberately
+# NO "publishedAt": NO WALL-CLOCK TIME MAY REACH A PUBLISHED ARTIFACT. An earlier
+# draft stamped one, which broke test_publish_early_vote's
+# test_two_builds_are_byte_identical — and that test is right about why. A byte
+# that moves on every run means every scheduled run PUTs the file again, so the
+# sibling repo accumulates commits that say nothing changed. publish_ga_bills
+# dodges the same trap by using the source timestamp in its latest.json. When the
+# mirror last ran is already recorded — in the sibling repo's git history.
 
 MANIFEST_SCHEMA_VERSION = "1.0.0"
 
@@ -259,8 +263,6 @@ def add_dataset_manifest(artifacts, repo, dataset, *, title, description,
         "repo": repo,
         "publisher": "VoteGA.org",
         "generatedAt": generated_at,
-        "publishedAt": datetime.datetime.now(datetime.timezone.utc)
-                               .strftime("%Y-%m-%dT%H:%M:%SZ"),
         "updateCadence": update_cadence,
         "schemaVersion": schema_version,
         "rowCount": row_count,

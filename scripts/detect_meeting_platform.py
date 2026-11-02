@@ -147,7 +147,38 @@ def _teammunicode(m, page, blob=None):
     return cfg
 
 
+def _simbli(m, page, blob=None):
+    """Simbli (eBOARDsolutions) — the board-governance platform of the Georgia
+    School Boards Association, so its penetration among GA school districts is
+    unusually high.
+
+    Every Simbli link on a district's site carries the same `S=<id>` district
+    key, including the policy-manual links, so the id is read from whichever one
+    appears — more robust than insisting on the meetings URL.
+
+    NOTE: there is no lib/simbli.py adapter yet (scope doc phase 3c). Until there
+    is, this hit is informational: it tells you the district IS scrapable, and
+    hands you the district_id an adapter would need. Do not paste `platform:
+    simbli` into places.yml before the adapter exists — validate_place_meetings
+    would reject it as an unrecognised platform, which is the correct behaviour.
+    """
+    blob = blob or page or ''
+    sid = re.search(r'[?&]S=(\d+)', blob, re.I)
+    cfg = {'platform': 'simbli'}
+    if sid:
+        cfg['district_id'] = sid.group(1)
+        cfg['agendas_url'] = ('https://simbli.eboardsolutions.com/SB_Meetings/'
+                              'SB_MeetingListing.aspx?S=%s' % sid.group(1))
+    else:
+        cfg['agendas_url'] = m.group(0)
+    return cfg
+
+
 SIGNATURES = [
+    # Simbli first among the school-board platforms: it is a real portal, and a
+    # district CMS (Revize, WordPress, wpDataTables) that merely links out to it
+    # must not win over it — the same precedence rule the county portals follow.
+    ('simbli', re.compile(r'https?://simbli\.eboardsolutions\.com[^"\'\s<>]*', re.I), _simbli),
     ('municode', re.compile(r'https?:\\?/\\?/meetings\.municode\.com/PublishPage/[^"\'\s<>]+', re.I), _municode),
     ('civicclerk', re.compile(r'([a-z0-9][a-z0-9-]*)\.(?:portal|api)\.civicclerk\.com', re.I), _civicclerk),
     ('legistar', re.compile(r'([a-z0-9][a-z0-9-]*)\.legistar\.com', re.I), _legistar),

@@ -16,8 +16,13 @@ What is pinned, and why:
     silently drop one publisher's entry.
   * CO-TENANT PUBLISHERS SHARE NO PATH except LICENSE and NOTICE.md, which are
     byte-identical by design. Any other overlap means one job clobbers the other.
-  * generatedAt IS THE DATA'S OWN TIMESTAMP and is required. publishedAt is when
-    the mirror ran. Conflating them is the bug above.
+  * generatedAt IS THE DATA'S OWN TIMESTAMP and is required.
+  * NO WALL-CLOCK TIME MAY REACH A MANIFEST, so two builds of unchanged data are
+    byte-identical. An earlier draft stamped a publishedAt, which broke
+    test_publish_early_vote's test_two_builds_are_byte_identical — and that test
+    is right about why: a byte that moves every run means every scheduled run
+    PUTs the file again, filling the sibling repo with commits that record
+    nothing. When the mirror last ran is already in that repo's git history.
   * A MANIFEST CANNOT ADVERTISE A FILE THE RUN DID NOT BUILD — that is a 404 for
     a consumer, so it is refused at build time.
   * NOTHING HERE IMPORTS A PUBLISHER. CI installs no pip packages, and one
@@ -75,13 +80,22 @@ for bad in ('Millage', 'mill age', '-millage', 'millage/x', '', None):
 else:
     check(True, 'a non-slug dataset name is refused, so paths cannot collide by accident')
 
-print('\nThe data timestamp and the publish timestamp are separate')
+print('\nThe data timestamp, and no other')
 arts, path = fresh()
 doc = json.loads(arts[path])
 check(doc['generatedAt'] == '2026-01-02T03:04:05Z',
       "generatedAt is the DATA's own stamp, passed in by the publisher")
-check(doc['publishedAt'] != doc['generatedAt'] and doc['publishedAt'].endswith('Z'),
-      'publishedAt is when the mirror ran, and is not the same field')
+import time  # noqa: E402
+_a, _p = fresh()
+time.sleep(1.1)
+_b, _ = fresh()
+check(_a[_p] == _b[_p],
+      'two builds of unchanged data are BYTE-IDENTICAL across a second boundary — '
+      'no wall-clock time reaches a manifest, or every scheduled run would '
+      'republish and churn the sibling repo (this is why there is no publishedAt)')
+check(b'publishedAt' not in _a[_p] and b'"20' not in _a[_p].replace(
+          b'"2026-01-02T03:04:05Z"', b''),
+      'the only timestamp in a manifest is the generatedAt the publisher passed in')
 check(raises(lambda: fresh(generated_at=''), 'generated_at is required'),
       'an empty data timestamp is refused — this is the regression guard: a '
       'manifest whose only stamp is the publish time is what the old '
