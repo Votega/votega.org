@@ -1,8 +1,15 @@
 name: Validate local officials
 
-# Officials is the hand-curated, no-API domain, so this validator is its only
-# automated guard. It also cross-checks _data/places.yml (jurisdiction id must
-# equal a place slug), so a change to EITHER file re-runs it.
+# Officials is the hand-curated, no-API domain, so these validators are its only
+# automated guard. They also cross-check _data/places.yml (a jurisdiction id, and
+# a city school system's `counties` slugs, must resolve to a place slug), so a
+# change to ANY of these files re-runs the job.
+#
+# school_districts.yml rides here rather than in its own workflow because it is
+# the same domain and the same cross-check: hand-curated rosters keyed on
+# places.yml. Its validator additionally enforces that Georgia school board seats
+# are nonpartisan and that a Superintendent — who is HIRED BY THE BOARD, not
+# elected — carries voting:false.
 on:
   push:
     paths:
@@ -11,6 +18,8 @@ on:
       - '_data/places.yml'
       - 'scripts/validate_local_officials.py'
       - 'scripts/validate_county_officers.py'
+      - '_data/school_districts.yml'
+      - 'scripts/validate_school_districts.py'
   pull_request:
     paths:
       - '_data/local_officials.yml'
@@ -18,6 +27,8 @@ on:
       - '_data/places.yml'
       - 'scripts/validate_local_officials.py'
       - 'scripts/validate_county_officers.py'
+      - '_data/school_districts.yml'
+      - 'scripts/validate_school_districts.py'
 
 jobs:
   validate:
@@ -41,3 +52,6 @@ jobs:
 
       - name: Validate county_officers.yml
         run: python scripts/validate_county_officers.py
+
+      - name: Validate school_districts.yml
+        run: python scripts/validate_school_districts.py

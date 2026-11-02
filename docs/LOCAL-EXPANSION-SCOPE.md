@@ -278,14 +278,57 @@ those is a URL lookup per district, not a technical problem.
 
 #### Two findings that change the 3c/3d estimates
 
-**Simbli is plainly scrapable, and the config key is right there.** Every Simbli
-link on a district site — including policy-manual links — carries the same
-`S=<id>` district key, so the detector extracts it without needing the meetings
-page. `https://simbli.eboardsolutions.com/` fetches fine.
+**Simbli is scrapable, and the config key is right there.** Every Simbli link on
+a district site — including policy-manual links — carries the same `S=<id>`
+district key, so the detector extracts it without needing the meetings page.
 
-But **some districts use a vanity path with no id** — Walton's link is
-`simbli.eboardsolutions.com/walton`. The 3c adapter must accept both an `S=` id
-and a vanity slug, or it will silently miss those districts.
+**A false alarm, recorded so it is not repeated.** Starting 3c I briefly
+concluded Simbli was blocked by Imperva/Incapsula and wrote that here. It was
+wrong, twice over:
+
+- The first check looked at a **byte count** and called a 6,650-byte response
+  "fetches fine". It was an Incapsula challenge page.
+- The correction then tested `'ncapsula' in html`, which matches the Incapsula
+  **script tag injected into normally-served pages too** — so every page looked
+  blocked. On top of that, one district returned a genuine transient challenge,
+  and one id I tested (`S=3920`) was a number I had invented, so its error page
+  was not a block at all.
+
+What is actually true, measured with a content check (does the page contain a
+meeting grid?): **the project's own `lib.http.fetch_bytes` retrieves the listing
+at ~150 KB with all 50 meetings.** Four of five real district ids served on the
+first attempt and the fifth served on a retry, so **transient challenges happen
+and the adapter needs a retry**, which is all. The lesson for any future adapter:
+assert on *content*, never on response size or an injected-marker substring.
+
+**The listing's mechanics, confirmed from the page and its own JavaScript:**
+
+Each row of `SB_MeetingListing.aspx?S=<district>` carries everything needed:
+
+```html
+<td><span title='11/03/2026 - 08:30 AM'>11/03/2026 - 08:30 AM</span></td>
+<td><a onclick='ViewMeeting("4122","140227","1","0","P",event)'>Regular Session …</a></td>
+<td><a onclick='ViewMinutes("4122","140227","UNPUBLISHED","0","P","0",event)'>UnPublished</a></td>
+```
+
+- the **date and time** from the span,
+- the **title** from the anchor text,
+- the **district id** and a **meeting id** from the `ViewMeeting` arguments,
+- a **status flag** (`"1"`) and the **minutes state** (`UNPUBLISHED` / published).
+
+`SB_MeetingListingJS.js` resolves those to real URLs:
+**`/SB_Meetings/ViewMeeting.aspx?S=<district>&MID=<meeting>`** for the agenda,
+and `/Meetings/PrintMinutes.aspx` for minutes. Its own guard is
+`meetingStatus == "1" && isLoggedInUser == "0"`, i.e. **published meetings are
+viewable without an account** — so no login is involved.
+
+The anchors are `href="javascript:void(0)"`, so a naive link scraper finds
+nothing; the URLs have to be built from the `onclick` arguments. That is the
+actual work in 3c, and it is ordinary parsing.
+
+**Still true from 3b:** some districts use a vanity path with no id — Walton's
+link is `simbli.eboardsolutions.com/walton` — so the adapter must accept both a
+vanity slug and an `S=` id, or it will silently miss those districts.
 
 **BoardDocs will need a headless browser, which 3d's estimate did not assume.**
 `go.boarddocs.com` answers **403 via CloudFront** to both `curl` and the repo's
@@ -317,7 +360,7 @@ curriculum/media policy, school construction**. One new `schools` topic in
 |---|---|---|
 | **3a** | County systems generated into `school_districts.yml`; validator (strict slug cross-check, like `validate_local_officials.py`); board section in `_includes/entity/place.html`; publish machine-readable copy to `ga-local-government`. **Officials only, no scraping.** | ~50–70k |
 | **3b** | ~~Platform census~~ **DONE** — see §3.5.1. Verdict: build Simbli, defer BoardDocs. | **done** |
-| **3c** | Simbli adapter | ~60–90k |
+| **3c** | Simbli adapter. Mechanics confirmed (§3.5.1): parse the listing's `onclick` args into `ViewMeeting.aspx?S=&MID=` URLs; needs a fetch retry for transient challenges. | ~60–90k |
 | **3d** | BoardDocs adapter | ~60–90k |
 | **3e** | `schools` topic rules + per-district page wiring | ~40–60k |
 
