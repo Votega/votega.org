@@ -1,0 +1,244 @@
+{%- comment %}
+  School boards for one place, SERVER-RENDERED from _data/school_districts.yml
+  (docs/LOCAL-EXPANSION-SCOPE.md phase 3a).
+
+  A board of education is a separately elected body — not the commission, not the
+  council — so it gets its own section rather than being folded into the
+  Officials grid, exactly like county_officers.yml (sheriffs).
+
+  RENDERS NOTHING until a roster is human-confirmed. The registry's contract is
+  that a missing `members` key means "not yet researched", never "no board", so a
+  district without one is skipped and the whole section disappears when no board
+  on this page has a roster. That is the normal state for every district today.
+
+  HOW A PLACE RESOLVES TO BOARDS
+    County / consolidated place: its own county system (countyFips == the place's
+    fips, 1:1 by definition) plus every city system whose `counties` lists this
+    slug.
+    City place: the same set for the COUNTY IT SITS IN, because a city resident is
+    in either the county system or an independent city system and both are worth
+    showing. The city's own system, where `primaryPlace` names this place, leads.
+
+  This is a ROUTING HINT, NOT AN ANSWER to "which board is mine?" — that is an
+  address question answered by attendance zones, so the multi-board case carries
+  an explicit caveat instead of implying a choice.
+
+  Member ordering and card markup mirror the Officials domain and reuse its
+  .po-* classes, which place.html defines on the same page.
+{% endcomment -%}
+{%- assign sb_place = site.data.places.places | where: "slug", e.slug | first -%}
+{%- comment %} Cities carry no fips in places.yml, which is what separates the two
+    cases cleanly — no name matching anywhere. {% endcomment -%}
+{%- if sb_place.fips -%}
+  {%- assign sb_ctx_slug = e.slug -%}
+  {%- assign sb_ctx_fips = sb_place.fips -%}
+  {%- assign sb_ctx_name = e.name -%}
+  {%- assign sb_is_city = false -%}
+{%- else -%}
+  {%- assign sb_parent = site.data.places.places | where: "slug", e.parentCountySlug | first -%}
+  {%- assign sb_ctx_slug = sb_parent.slug -%}
+  {%- assign sb_ctx_fips = sb_parent.fips -%}
+  {%- assign sb_ctx_name = sb_parent.name -%}
+  {%- assign sb_is_city = true -%}
+{%- endif -%}
+
+{%- assign sb_all_city = site.data.school_districts.cityDistricts -%}
+{%- assign sb_county = site.data.school_districts.countyDistricts | where: "countyFips", sb_ctx_fips -%}
+{%- comment %} `counties` is a list, so `where` cannot filter it — collect with the
+    one-element concat pattern used for the officials ordering. {% endcomment -%}
+{%- assign sb_lead = "" | split: "" -%}
+{%- assign sb_other = "" | split: "" -%}
+{%- for d in sb_all_city -%}
+  {%- if d.counties contains sb_ctx_slug -%}
+    {%- assign sb_one = sb_all_city | where: "id", d.id -%}
+    {%- if d.primaryPlace and d.primaryPlace == e.slug -%}
+      {%- assign sb_lead = sb_lead | concat: sb_one -%}
+    {%- else -%}
+      {%- assign sb_other = sb_other | concat: sb_one -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign sb_other = sb_other | sort: "name" -%}
+{%- assign sb_boards = sb_lead | concat: sb_county | concat: sb_other -%}
+
+{%- comment %} Keep only the boards whose roster is confirmed. {% endcomment -%}
+{%- assign sb_shown = "" | split: "" -%}
+{%- for d in sb_boards -%}
+  {%- if d.members -%}
+    {%- assign sb_size = d.members | size -%}
+    {%- if sb_size > 0 -%}
+      {%- assign sb_one = sb_boards | where: "id", d.id -%}
+      {%- assign sb_shown = sb_shown | concat: sb_one -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if sb_shown.size > 0 -%}
+{%- comment %} The heading, the intro and the caveat count EVERY system that serves
+    this place, not just the ones with a roster. Counting only what is displayed
+    would let a page showing one of two systems read as if that one served the
+    whole place. The boards still missing a roster are named at the foot of the
+    section instead of being silently absent. {% endcomment -%}
+{%- assign sb_total = sb_boards | size -%}
+{%- assign sb_role_order = "Chair,Vice Chair,Board Member,Superintendent" | split: "," -%}
+<section class="po-section" id="school-boards">
+  <h2 class="po-heading">School board{% if sb_total > 1 %}s{% endif %}</h2>
+  <p class="po-intro">
+    {% if sb_total > 1 %}The boards of education that serve{% else %}The board of education that serves{% endif %}
+    {% if sb_is_city %}{{ e.name }}, in {{ sb_ctx_name }}{% else %}{{ e.name }}{% endif %}.
+    A school board is elected separately from the {% if sb_is_city %}city council{% else %}commission{% endif %},
+    sets its own millage rate and holds its own meetings.
+  </p>
+
+  {%- if sb_total > 1 %}
+  <p class="sb-caveat" role="note">
+    More than one system operates here, and the boundary of an independent city
+    system is not the city limits. Which board serves a particular home is an
+    address question, settled by school attendance zones &mdash; not by which of
+    these is listed first.
+  </p>
+  {%- endif %}
+
+  {%- for d in sb_shown %}
+  {%- comment %} Canonical role order, then anything outside the vocabulary so a
+      member is never silently dropped (same guard as the officials grid).
+      Computed before the summary because the summary lists the names. {% endcomment -%}
+  {%- assign sb_ordered = "" | split: "" -%}
+  {%- for role in sb_role_order -%}
+    {%- assign sb_chunk = d.members | where: "role", role -%}
+    {%- assign sb_ordered = sb_ordered | concat: sb_chunk -%}
+  {%- endfor -%}
+  {%- for m in d.members -%}
+    {%- unless sb_role_order contains m.role -%}
+      {%- assign sb_chunk = d.members | where: "role", m.role -%}
+      {%- assign sb_ordered = sb_ordered | concat: sb_chunk -%}
+    {%- endunless -%}
+  {%- endfor -%}
+  {%- assign sb_ordered = sb_ordered | uniq -%}
+  {%- comment %} The names go in the summary so a collapsed panel still answers
+      "who is on this board?" without a click. Elected seats only — the
+      superintendent was not chosen by voters. {% endcomment -%}
+  {%- assign sb_names = "" | split: "" -%}
+  {%- for m in sb_ordered -%}
+    {%- if m.voting != false and m.name and m.name != "" -%}
+      {%- assign sb_one_name = m.name | split: "~~" -%}
+      {%- assign sb_names = sb_names | concat: sb_one_name -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- comment %} A single board opens; two or more stay collapsed so a page with
+      three systems (DeKalb, Jackson) reads as three headers rather than three
+      stacked rosters, and so no board is implicitly presented as the main one.
+      {% endcomment -%}
+  <details class="sb-board"{% if sb_shown.size == 1 %} open{% endif %}>
+    <summary class="sb-summary">
+      <span class="sb-name">{{ d.name }}</span>
+      <span class="sb-kind">{% if d.type == 'city' %}City system{% else %}County system{% endif %}</span>
+      <span class="sb-count">{{ sb_names.size }} elected seat{% if sb_names.size != 1 %}s{% endif %}</span>
+      {%- if sb_names.size > 0 %}
+      <span class="sb-members">{{ sb_names | join: ", " }}</span>
+      {%- endif %}
+    </summary>
+
+    {%- if d.official_url and d.official_url != "" %}
+    <p class="po-meta"><a href="{{ d.official_url }}" target="_blank" rel="noopener">Board site &#8599;</a></p>
+    {%- endif %}
+
+    <div class="po-grid">
+      {%- for m in sb_ordered %}
+      <div class="po-card{% if m.role == 'Chair' %} is-presiding{% endif %}{% if m.status %} is-flagged{% endif %}">
+        <span class="po-role">{{ m.title | default: m.role }}</span>
+        {%- if m.status %}<span class="po-status {{ m.status }}">{{ m.status }}</span>{% endif %}
+        <p class="po-name">{% if m.name and m.name != "" %}{{ m.name }}{% else %}<span class="muted">Name TBD</span>{% endif %}</p>
+        {%- if m.seat and m.seat != "" %}<p class="po-seat">{{ m.seat }}</p>{% endif %}
+        {%- if d.partisan and m.party and m.party != "" and m.party != "Nonpartisan" %}
+        <span class="po-party {{ m.party }}">{{ m.party }}</span>
+        {%- endif %}
+        {%- comment %} A superintendent is HIRED BY THE BOARD. Saying so on the card
+            is the whole reason the role is allowed in an elected-officials file. {% endcomment -%}
+        {%- if m.voting == false %}
+        <p class="sb-appointed">Hired by the board, not elected</p>
+        {%- else %}
+          {%- if m.last_elected or m.next_election %}
+          <p class="po-terms">
+            {%- if m.last_elected %}Last elected {{ m.last_elected }}{% endif %}
+            {%- if m.next_election %}<br><span class="po-next">Next election {{ m.next_election }}</span>{% endif %}
+            {%- if m.term_end %}<br>Term ends {{ m.term_end }}{% endif %}
+          </p>
+          {%- endif %}
+        {%- endif %}
+        {%- if m.statusNote and m.statusNote != "" %}
+        <p class="po-statusnote">{{ m.statusNote }}</p>
+        {%- endif %}
+        {%- if m.email or m.phone %}
+        <div class="po-contact">
+          {%- if m.email and m.email != "" %}<a href="mailto:{{ m.email }}">Email</a>{% endif %}
+          {%- if m.phone and m.phone != "" %}<a href="tel:{{ m.phone }}">{{ m.phone }}</a>{% endif %}
+        </div>
+        {%- endif %}
+        {%- if m.source and m.source != "" %}<p class="po-source"><a href="{{ m.source }}" target="_blank" rel="noopener">Source &#8599;</a></p>{% endif %}
+      </div>
+      {%- endfor %}
+    </div>
+  </details>
+  {%- endfor %}
+
+  {%- comment %} Name the systems that serve this place but have no confirmed
+      roster yet, so the list above never reads as complete. `split` with an
+      absent separator is how Liquid makes a one-element array to concat.
+      {% endcomment -%}
+  {%- assign sb_pending = "" | split: "" -%}
+  {%- for d in sb_boards -%}
+    {%- unless d.members -%}
+      {%- assign sb_one_name = d.name | split: "~~" -%}
+      {%- assign sb_pending = sb_pending | concat: sb_one_name -%}
+    {%- endunless -%}
+  {%- endfor -%}
+  {%- if sb_pending.size > 0 %}
+  <p class="sb-pending">
+    Also serving this area: {{ sb_pending | join: ", " }}. We have not confirmed
+    {% if sb_pending.size > 1 %}those boards' rosters{% else %}that board's roster{% endif %}
+    against a primary source yet, so
+    {% if sb_pending.size > 1 %}they are{% else %}it is{% endif %} not listed above.
+  </p>
+  {%- endif %}
+</section>
+
+<style>
+  /* One collapsible panel per board. Cards reuse the .po-* classes above. */
+  .sb-caveat {
+    background: var(--color-surface-sunken); border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent); border-radius: 6px;
+    padding: 0.7rem 0.9rem; margin: 0 0 1rem; font-size: 0.88rem;
+    color: var(--color-text); line-height: 1.5;
+  }
+  .sb-board { border: 1px solid var(--color-border); border-radius: 10px; margin: 0 0 0.75rem; background: var(--color-surface-raised); }
+  .sb-board[open] { background: var(--color-surface); }
+  .sb-summary {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 0.75rem;
+    padding: 0.85rem 1rem; cursor: pointer; list-style: none;
+  }
+  .sb-summary::-webkit-details-marker { display: none; }
+  /* Own marker so the row stays a flex line in every browser. */
+  .sb-summary::before {
+    content: "\25B8"; color: var(--color-text-muted); font-size: 0.9em;
+    transition: transform 0.12s ease-out; flex: none;
+  }
+  .sb-board[open] > .sb-summary::before { transform: rotate(90deg); }
+  .sb-summary:hover { background: var(--color-surface-tint); border-radius: 10px; }
+  .sb-name { font-size: 1.02rem; font-weight: 700; color: var(--color-text); }
+  .sb-kind {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+    color: var(--color-link); background: var(--color-surface-tint); border-radius: 20px; padding: 0.15rem 0.6rem;
+  }
+  .sb-count { font-size: 0.85rem; color: var(--color-text-secondary); margin-left: auto; }
+  /* Member names on their own line under the board name, so a collapsed panel
+     still says who is on the board. */
+  .sb-members { flex-basis: 100%; font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.45; }
+  .sb-board > .po-grid, .sb-board > .po-meta { margin: 0 1rem 1rem; }
+  .sb-appointed { font-size: 0.82rem; color: var(--color-text-muted); font-style: italic; margin: 0; }
+  .sb-pending { font-size: 0.86rem; color: var(--color-text-secondary); margin: 0.75rem 0 0; line-height: 1.5; }
+  @media (prefers-reduced-motion: reduce) {
+    .sb-summary::before { transition: none; }
+  }
+</style>
+{%- endif -%}
