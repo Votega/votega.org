@@ -52,9 +52,10 @@ INDEX = ('https://dor.georgia.gov/local-government-services/'
 SOURCE_NAME = 'Georgia Department of Revenue — Tax Digest Consolidated Summaries'
 UA = 'VoteGA/1.0 (+https://www.votega.org; nonpartisan civic data)'
 
-FIELDS = ['taxYear', 'countyCode', 'countyName', 'districtCode', 'districtName',
-          'districtType', 'occurrence', 'millageMO', 'millageBond',
-          'totalTaxMO', 'totalTaxBond', 'assessedValueMO', 'assessedValueBond']
+FIELDS = ['taxYear', 'countyCode', 'countyName', 'countyNameAsFiled',
+          'districtCode', 'districtName', 'districtType', 'occurrence',
+          'millageMO', 'millageBond', 'totalTaxMO', 'totalTaxBond',
+          'assessedValueMO', 'assessedValueBond']
 
 # A link on the index page whose text names a tax year. The "(Current Year)"
 # heading sits beside the newest link rather than in it, so the year in the link
@@ -165,6 +166,27 @@ def main():
         per_year[year] = len(recs)
         rows.extend(recs)
 
+    # DOR's county names are dirty (see dor_digest.canonical_county_names): 191
+    # distinct names for 159 codes. Publish one canonical name per code and keep
+    # what the workbook actually said beside it, so nothing is silently rewritten.
+    canon = D.canonical_county_names(rows)
+    renamed = 0
+    for r in rows:
+        filed = r['countyName']
+        r['countyNameAsFiled'] = filed
+        r['countyName'] = canon.get(r['countyCode'], filed)
+        if r['countyName'] != filed:
+            renamed += 1
+    if renamed:
+        odd = sorted({(r['countyCode'], r['countyNameAsFiled'], r['countyName'])
+                      for r in rows if r['countyName'] != r['countyNameAsFiled']})
+        print('\nNOTE: %d row(s) carried an abbreviated or suffixed county name; '
+              'countyName is canonicalised and countyNameAsFiled keeps the original.'
+              % renamed)
+        print('      %d code(s) affected, e.g. %s'
+              % (len({o[0] for o in odd}),
+                 ', '.join('%s->%s' % (o[1], o[2]) for o in odd[:6])))
+
     rows.sort(key=lambda r: (r['taxYear'] or 0, r['countyName'],
                              int(r['districtCode'] or 0), r['occurrence']))
 
@@ -207,6 +229,10 @@ def main():
                 'between years for ~15% of districts and must not be used to join.',
                 'A null millage means the jurisdiction reported none; 0 means it '
                 'levied zero. They are different facts.',
+                'countyName is canonical per countyCode; countyNameAsFiled is '
+                "what that year's workbook said. DOR abbreviates some county "
+                "names per row ('ATKINS', 'BENHIL', 'CHARLT TB'), giving 191 "
+                'distinct names for 159 codes, so never join on a county name.',
                 'districtType is derived: codes 0-3 are statewide-stable '
                 '(countywide/state/school/county_incorporated), everything above '
                 'is classified from the district name.',

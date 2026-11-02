@@ -1,0 +1,144 @@
+{%- comment %}
+  Property tax rates for one place, SERVER-RENDERED from _data/millage.json
+  (built by scripts/build_millage_places.py from the DOR digest workbooks — see
+  docs/LOCAL-EXPANSION-SCOPE.md phase 1b). No fetch and no JS: property tax is
+  the highest-search-intent topic in /local/, so the figures belong in the HTML a
+  crawler sees, and the table is a few hundred bytes.
+
+  Renders nothing at all when the place has no view, so a place added to
+  places.yml before the next data run simply omits the section.
+
+  `values` arrays are year-aligned to `years`, because Liquid cannot look a hash
+  up by a number. A null is an explicit gap, printed as an en dash.
+{% endcomment -%}
+{%- assign mv = site.data.millage.places[e.slug] -%}
+{%- if mv -%}
+<section id="millage">
+  <h2 class="po-heading" style="margin-top: 2rem;">Property tax rates</h2>
+
+  <p class="place-intro">
+    What {{ e.name }} property owners are charged, in mills, by each government
+    that levies on them. One mill is $1 of tax per $1,000 of assessed value, and
+    Georgia assesses at 40% of fair market value — so a mill costs about $0.40
+    per $1,000 of market value. Rates are maintenance-and-operations (M&amp;O).
+  </p>
+
+  {%- if mv.latestCombined %}
+  <p class="mi-headline">
+    <strong>{{ mv.latestCombinedText }} mills</strong> combined in {{ mv.latestYear }}
+    &mdash; the sum of the {{ mv.lines | size }} levies below.
+  </p>
+  {%- elsif mv.combinedNote %}
+  <p class="mi-note">{{ mv.combinedNote }}</p>
+  {%- endif %}
+
+  <div class="mi-scroll">
+    <table class="mi-table">
+      <caption class="sr-only">Millage rates by levying government and tax year for {{ e.name }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">Levied by</th>
+          {%- for y in mv.years %}<th scope="col" class="n">{{ y }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for ln in mv.lines %}
+        <tr>
+          <th scope="row">{{ ln.label }}<span class="mi-dist">{{ ln.districtName }}</span></th>
+          {%- for v in ln.valuesText %}<td class="n">{{ v }}</td>{% endfor %}
+        </tr>
+        {%- endfor %}
+        {%- if mv.latestCombined %}
+        <tr class="mi-total">
+          <th scope="row">Combined</th>
+          {%- for v in mv.combinedValuesText %}<td class="n">{{ v }}</td>{% endfor %}
+        </tr>
+        {%- endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="mi-caveat">
+    <strong>This is not your tax bill.</strong> The combined figure adds only the
+    levies above. It leaves out every special district &mdash; fire, hospital,
+    library, recreation, tax allocation and community improvement districts
+    &mdash; because whether one applies depends on the parcel, not the city. It
+    also takes no account of homestead or other exemptions, which reduce the
+    value the rate is applied to.
+    {%- if mv.stateRateIsZero %} Georgia's <em>state</em> property tax rate has been
+    zero throughout these years, so it adds nothing and is not listed.{% endif %}
+    {%- if mv.combinedNote and mv.latestCombined %} {{ mv.combinedNote }}{% endif %}
+  </p>
+
+  {%- if mv.other and mv.other != empty %}
+  <details class="mi-other">
+    <summary>Every other district levying in {{ mv.countyName }} County ({{ mv.other | size }})</summary>
+    <p class="mi-note">
+      Cities, service districts and special districts in the same county. A
+      property owner pays only the ones their parcel sits in.
+    </p>
+    <div class="mi-scroll">
+      <table class="mi-table">
+        <thead>
+          <tr>
+            <th scope="col">District</th><th scope="col">Kind</th>
+            {%- for y in mv.years %}<th scope="col" class="n">{{ y }}</th>{% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {%- for o in mv.other %}
+          <tr>
+            <th scope="row">{{ o.label }}</th>
+            <td class="mi-kind">{{ o.typeLabel }}</td>
+            {%- for v in o.valuesText %}<td class="n">{{ v }}</td>{% endfor %}
+          </tr>
+          {%- endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+  {%- endif %}
+
+  <p class="mi-source">
+    Source:
+    <a href="{{ site.data.millage.metadata.sourceIndex }}" rel="nofollow noopener">Georgia Department of Revenue &mdash; Tax Digest Consolidated Summaries</a>.
+    Rates as filed by each taxing authority. Millage for a year is set after that
+    year's assessment notices go out, so a notice cannot show the final bill.
+    <a href="{{ '/about-the-data' | relative_url }}">How we handle this data &rsaquo;</a>
+  </p>
+</section>
+
+<style>
+  #millage .mi-headline {
+    margin: 0.75rem 0 1rem; padding: 0.6rem 0.9rem; font-size: 1.05rem;
+    background: var(--color-surface-tint); border-left: 4px solid var(--color-accent);
+    border-radius: 6px; color: var(--color-text);
+  }
+  /* .sr-only is NOT global in this repo — search.html defines its own copy — so
+     the table caption gets a scoped definition rather than relying on one. */
+  #millage .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
+  }
+  #millage .mi-scroll { overflow-x: auto; margin: 0 0 0.75rem; }
+  #millage .mi-table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+  #millage .mi-table caption { text-align: left; }
+  #millage .mi-table th, #millage .mi-table td {
+    padding: 0.35rem 0.6rem; border-bottom: 1px solid var(--color-border-subtle); text-align: left;
+  }
+  #millage .mi-table thead th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--color-text-muted); }
+  #millage .mi-table td.n, #millage .mi-table th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  #millage .mi-table tbody th[scope="row"] { font-weight: 600; color: var(--color-text); }
+  #millage .mi-dist { display: block; font-weight: 400; font-size: 0.75rem; color: var(--color-text-muted); }
+  #millage .mi-total th, #millage .mi-total td {
+    border-top: 2px solid var(--color-border); font-weight: 700; color: var(--color-text);
+  }
+  #millage .mi-kind { font-size: 0.8rem; color: var(--color-text-secondary); white-space: nowrap; }
+  #millage .mi-caveat, #millage .mi-note, #millage .mi-source {
+    font-size: 0.82rem; color: var(--color-text-secondary); margin: 0.5rem 0 0;
+  }
+  #millage .mi-caveat strong { color: var(--color-text); }
+  #millage .mi-other { margin-top: 1rem; }
+  #millage .mi-other summary { cursor: pointer; font-size: 0.9rem; color: var(--color-link); }
+</style>
+{%- endif -%}

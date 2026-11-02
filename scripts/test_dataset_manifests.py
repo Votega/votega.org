@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+"""Invariants of the dataset-manifest convention (lib/sibling_publish). No network.
+
+Three sibling repos are written by TWO publishers each, from different workflows
+on different schedules. This suite pins the arrangement that lets them coexist,
+and it is a REGRESSION TEST for a real bug: the millage publisher's paths were
+briefly listed inside publish_ga_local_government.py's latest.json, a document
+stamped with that job's own clock — so a consumer would have read a twice-weekly
+run's freshness and applied it to monthly data.
+
+What is pinned, and why:
+  * NO PUBLISHER DESCRIBES ANOTHER'S DATA. Each writes only its own
+    data/<dataset>/manifest.json. A shared, merged index is impossible to write
+    safely: _put_content reads the SHA then PUTs, and its 409/422 retry re-reads
+    the SHA and OVERWRITES rather than re-merging, so two overlapping runs would
+    silently drop one publisher's entry.
+  * CO-TENANT PUBLISHERS SHARE NO PATH except LICENSE and NOTICE.md, which are
+    byte-identical by design. Any other overlap means one job clobbers the other.
+  * generatedAt IS THE DATA'S OWN TIMESTAMP and is required. publishedAt is when
+    the mirror ran. Conflating them is the bug above.
+  * A MANIFEST CANNOT ADVERTISE A FILE THE RUN DID NOT BUILD — that is a 404 for
+    a consumer, so it is refused at build time.
+  * ONE DATASET, ONE MANIFEST. A second manifest for the same slug is refused
+    rather than silently overwriting the first.
+
+Run: python scripts/test_dataset_manifests.py
+"""
+
+import json
+import os
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from lib import sibling_publish as SP  # noqa: E402
+
+failures = []
+
+
+def check(cond, msg):
+    print('  %s  %s' % ('ok  ' if cond else 'FAIL', msg))
+    if not cond:
+        failures.append(msg)
+
+
+def raises(fn, needle):
+    try:
+        fn()
+    except Exception as exc:                      # noqa: BLE001
+        return needle.lower() in str(exc).lower()
+    return False
+
+
+def fresh(**kw):
+    """A minimal valid manifest build."""
+    arts = {'data/x.json': b'{"a":1}', 'X.md': b'# x'}
+    opts = dict(title='T', description='D', generated_at='2026-01-02T03:04:05Z',
+                files=['data/x.json', 'X.md'])
+    opts.update(kw)
+    path = SP.add_dataset_manifest(arts, 'Votega/ga-local-government', 'demo', **opts)
+    return arts, path
+
+
+print('The manifest path is derived, one writer per path')
+check(SP.manifest_path('millage') == 'data/millage/manifest.json',
+      'manifest_path("millage") -> data/millage/manifest.json')
+for bad in ('Millage', 'mill age', '-millage', 'millage/x', '', None):
+    if not raises(lambda b=bad: SP.manifest_path(b), 'lowercase slug'):
+        check(False, 'a bad dataset slug %r was accepted' % (bad,))
+        break
+else:
+    check(True, 'a non-slug dataset name is refused, so paths cannot collide by accident')
+
+print('\nThe data timestamp and the publish timestamp are separate')
+arts, path = fresh()
+doc = json.loads(arts[path])
+check(doc['generatedAt'] == '2026-01-02T03:04:05Z',
+      "generatedAt is the DATA's own stamp, passed in by the publisher")
+check(doc['publishedAt'] != doc['generatedAt'] and doc['publishedAt'].endswith('Z'),
+      'publishedAt is when the mirror ran, and is not the same field')
+check(raises(lambda: fresh(generated_at=''), 'generated_at is required'),
+      'an empty data timestamp is refused — this is the regression guard: a '
+      'manifest whose only stamp is the publish time is what the old '
+      'static-paths-in-latest.json approach effectively produced')
+check(raises(lambda: fresh(generated_at='   '), 'generated_at is required'),
+      'whitespace does not satisfy it either')
+
+print('\nA manifest cannot advertise a file that was not built')
+check(raises(lambda: fresh(files=['data/x.json', 'data/ghost.json']), 'did not build'),
+      'listing an unpublished path is refused, not discovered as a 404 later')
+check(raises(lambda: fresh(files=[]), 'lists no files'),
+      'a manifest with no files is refused')
+check(all('bytes' in f for f in doc['files']),
+      'each listed file carries its byte size, taken from the artifact itself')
+check([f['path'] for f in doc['files']] == sorted(f['path'] for f in doc['files']),
+      'files are sorted, so the manifest is byte-stable across runs')
+
+print('\nOne dataset, one manifest')
+arts2 = {'data/x.json': b'{}'}
+SP.add_dataset_manifest(arts2, 'Votega/ga-local-government', 'demo', title='T',
+                        description='D', generated_at='2026-01-01T00:00:00Z',
+                        files=['data/x.json'])
+check(raises(lambda: SP.add_dataset_manifest(
+          arts2, 'Votega/ga-local-government', 'demo', title='T2',
+          description='D2', generated_at='2026-01-01T00:00:00Z',
+          files=['data/x.json']), 'two manifests'),
+      'a second manifest for the same dataset is refused, not silently merged')
+
+print('\nLicense and reuse terms are carried in every manifest')
+check(doc['license']['spdx'] == SP.LICENSE_SPDX and doc['license']['url'] == SP.LICENSE_URL,
+      'the manifest states the same licence the published LICENSE/NOTICE do')
+check(doc['repo'] == 'Votega/ga-local-government' and doc['publisher'] == 'VoteGA.org',
+      'it names its repo and publisher')
+check(doc['manifestSchemaVersion'] == SP.MANIFEST_SCHEMA_VERSION,
+      'and its own schema version, so the shape can evolve')
+check(doc['source'],
+      'source defaults to the repo\'s registered upstream when not given')
+check(json.loads(fresh(source='Somewhere else')[0]
+                 ['data/demo/manifest.json'])['source'] == 'Somewhere else',
+      'and is overridable, which millage needs: its source is DOR, not agendas')
+
+print('\nEvery co-tenant publisher writes its own manifest and nobody else\'s')
+import publish_ga_local_government as MENTIONS  # noqa: E402
+import publish_ga_millage as MILLAGE  # noqa: E402
+import publish_races as RACES  # noqa: E402
+import publish_early_vote as EARLY  # noqa: E402
+import publish_ga_bills as BILLS  # noqa: E402
+import publish_ga_ballot_measures as MEASURES  # noqa: E402
+
+co_tenants = {
+    'Votega/ga-local-government': [(MENTIONS, 'agenda-mentions'), (MILLAGE, 'millage')],
+    'Votega/ga-races-elections': [(RACES, 'races'), (EARLY, 'early-vote')],
+    'Votega/ga-legislation': [(BILLS, 'bills'), (MEASURES, 'ballot-measures')],
+}
+for repo, mods in co_tenants.items():
+    for mod, _ in mods:
+        check(mod.REPO == repo, '%s targets %s' % (mod.__name__, repo))
+    slugs = [s for _, s in mods]
+    check(len(set(slugs)) == len(slugs),
+          '%s: its publishers use distinct dataset slugs %r' % (repo, slugs))
+    paths = [SP.manifest_path(s) for s in slugs]
+    check(len(set(paths)) == len(paths),
+          '%s: and therefore distinct manifest paths' % repo)
+
+check('latest.json' not in open(os.path.join(HERE, 'publish_ga_millage.py')).read()
+      or '"latest.json"' not in open(os.path.join(HERE, 'publish_ga_millage.py')).read(),
+      'the millage publisher still does not write latest.json')
+mentions_src = open(os.path.join(HERE, 'publish_ga_local_government.py')).read()
+check('"millage": "data/millage.json"' not in mentions_src,
+      "the mentions publisher no longer lists millage's files in its own "
+      'latest.json — the regression this suite exists for')
+check('data/*/manifest.json' in mentions_src,
+      'it points consumers at the manifest convention instead')
+bills_src = open(os.path.join(HERE, 'publish_ga_bills.py')).read()
+check('artifacts["latest.json"]' in bills_src,
+      "ga-legislation's latest.json is UNCHANGED: it is a bills pointer "
+      '(biennium, currentSession, sessions[]), not a repo index, so it keeps its '
+      'own meaning and no consumer of it breaks')
+measures_src = open(os.path.join(HERE, 'publish_ga_ballot_measures.py')).read()
+check('"latest.json"' not in measures_src,
+      'and the ballot-measures publisher still does not write it')
+
+print('\nThe shared pre-publish gates still accept a manifest build')
+SP._assert_artifacts_sane(dict(arts))
+check(True, 'a manifest is valid JSON and non-empty, so it clears the universal gate')
+
+if failures:
+    print('\n%d check(s) FAILED' % len(failures))
+    sys.exit(1)
+print('\nAll dataset-manifest invariants hold.')

@@ -45,12 +45,15 @@ from datetime import datetime, timezone
 import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
-from lib.sibling_publish import build_json, publish_or_dry_run, min_items  # noqa: E402
+from lib.sibling_publish import (add_dataset_manifest, build_json,  # noqa: E402
+                                 manifest_path, min_items,
+                                 publish_or_dry_run)
 from lib import meeting_topics as mt  # noqa: E402
 
 REPO = "Votega/ga-local-government"
 TOKEN_ENV = "GA_LOCAL_GOVERNMENT_TOKEN"
 SCHEMA_VERSION = "1.0.0"
+DATASET = "agenda-mentions"
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLACES_YML = os.path.join(ROOT, "_data", "places.yml")
@@ -263,6 +266,15 @@ def summary_md(reg, all_mentions, cov_rows, scanned_n, universe, last_scan):
         "",
         "Published by [VoteGA.org](https://votega.org). Start with `latest.json`.",
         "",
+        "**This repository carries more than one dataset.** `latest.json` and the files",
+        "it names are the agenda-mention dataset, refreshed twice weekly. Property tax",
+        "millage rates are published here too, on their own annual cadence. Each dataset",
+        "describes itself in `data/<dataset>/manifest.json`, so listing",
+        "`data/*/manifest.json` tells you what is here. A manifest's `generatedAt` is",
+        "when the DATA was produced; `publishedAt` is when it was last mirrored — they",
+        "are not the same, which is why no single file in this repo claims to state the",
+        "freshness of all of it.",
+        "",
         "## Coverage",
         "",
         "- **%d** jurisdictions scanned, of Georgia's %d counties and ~%d cities."
@@ -348,6 +360,15 @@ def main():
             "coverage": "data/coverage.json",
             "keywords": "data/keywords.json",
         },
+        # This repo also carries the millage dataset, published separately by
+        # publish_ga_millage.py on its own schedule. It is NOT listed in this
+        # document: latest.json is stamped with THIS job's clock, so naming
+        # another dataset's files here would tell a consumer that monthly data is
+        # as fresh as a twice-weekly run. Each dataset describes itself in
+        # data/<dataset>/manifest.json instead — list data/*/manifest.json to
+        # discover everything here.
+        "datasetManifests": "data/*/manifest.json",
+        "manifest": manifest_path(DATASET),
     }
 
     meta = {"generatedAt": now, "publisher": "VoteGA.org", "schemaVersion": SCHEMA_VERSION}
@@ -367,6 +388,40 @@ def main():
         artifacts["data/mentions-%s.json" % t] = build_json(
             {"metadata": {**meta, "topic": t, "count": len(per_topic[t])},
              "mentions": per_topic[t]})
+
+    # One manifest per dataset, at a path only this publisher writes. The
+    # millage publisher writes data/millage/manifest.json on its own schedule and
+    # the two never touch each other's paths — see add_dataset_manifest.
+    add_dataset_manifest(
+        artifacts, REPO, DATASET,
+        title="Georgia local-government agenda topic mentions",
+        description=("Where ALPR/surveillance, data centers, land use and local "
+                     "taxes appear on Georgia county and city agendas and "
+                     "minutes, with the source document for every mention, plus "
+                     "the jurisdiction registry and per-place coverage."),
+        # The timestamp of the newest SCAN, not of this publish: the mentions are
+        # only as fresh as the enrichment run that produced them.
+        generated_at=max((feeds[t]["metadata"].get("generatedAt") or ""
+                          for t in TOPICS), default="") or now,
+        update_cadence="Twice weekly (Mondays and Thursdays).",
+        schema_version=SCHEMA_VERSION,
+        row_count=len(all_mentions),
+        coverage={"placesScanned": scanned_n, "universeCounties": universe[0],
+                  "universeCities": universe[1], "lastScan": last_scan},
+        files=[
+            {"path": "latest.json",
+             "description": "This dataset's own index: topics, coverage and files."},
+            {"path": "data/places.json", "description": "Jurisdiction registry."},
+            {"path": "data/mentions.json", "description": "Every mention."},
+            {"path": "data/mentions.csv", "description": "Every mention, as a spreadsheet."},
+            {"path": "data/mentions.schema.json", "description": "JSON Schema for one mention."},
+            {"path": "data/coverage.json", "description": "Per-place coverage."},
+            {"path": "data/keywords.json", "description": "The matching lexicon."},
+            {"path": "SUMMARY.md", "description": "Human-readable overview."},
+        ] + [{"path": "data/mentions-%s.json" % t,
+              "description": "Mentions for the %s topic." % TOPIC_LABEL[t]}
+             for t in TOPICS],
+    )
 
     publish_or_dry_run(REPO, artifacts, TOKEN_ENV,
                        validate=min_items("data/places.json", "places"))

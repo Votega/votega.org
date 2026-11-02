@@ -17,7 +17,8 @@ import io
 import json
 import os
 
-from lib.sibling_publish import build_json, publish_or_dry_run, min_items
+from lib.sibling_publish import (add_dataset_manifest, build_json,
+                                 min_items, publish_or_dry_run)
 import validate_ga_ballot_measures
 
 REPO = "Votega/ga-legislation"
@@ -103,6 +104,24 @@ def build_artifacts():
         artifacts[f"{base}/measures.csv"] = measures_csv(subset)
         artifacts[f"{base}/measures.md"] = measures_md(
             subset, meta, f"Georgia Ballot Measures — {cyc}", "measures.json", "measures.csv")
+
+    # This repo's latest.json belongs to publish_ga_bills.py and is a BILLS
+    # pointer, so it has never described ballot measures and must not start:
+    # it is stamped with that job's clock, on a different schedule. This dataset
+    # describes itself instead. See lib.sibling_publish.add_dataset_manifest.
+    add_dataset_manifest(
+        artifacts, REPO, "ballot-measures",
+        title="Georgia ballot measures",
+        description=("Every statewide constitutional amendment and statewide "
+                     "referendum put to Georgia voters, with its ballot "
+                     "question, cycle and outcome."),
+        # The source file's own stamp, not this mirror's clock.
+        generated_at=meta.get("generatedAt") or "",
+        update_cadence="As the General Assembly refers measures and results are certified.",
+        row_count=len(measures),
+        coverage={"cycles": sorted(cycles), "measures": len(measures)},
+        files=[{"path": k, "description": ""} for k in sorted(artifacts)],
+    )
 
     return artifacts
 

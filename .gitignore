@@ -128,3 +128,10 @@ assets/img/share/
 .share-cards/
 docs/HANDOFF-INDEXING-VERIFICATION-PROMPT.md
 docs/audits/2026-10-26-tech-debt-audit.md
+
+# The statewide millage dataset (scripts/generate_ga_millage.py). ~1.8MB, and it
+# belongs in the ga-local-government open-data repo, not here — only the small
+# _data/millage.json reduction is committed. update-ga-millage.yml writes these
+# to RUNNER_TEMP; this guards a local run that uses the default --out.
+assets/data/ga-millage.json
+assets/data/ga-millage.csv

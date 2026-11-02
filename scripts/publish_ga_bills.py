@@ -19,7 +19,7 @@ from collections import Counter
 
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              session_name, session_slug, tag_session)
-from lib.sibling_publish import build_json, publish_or_dry_run
+from lib.sibling_publish import add_dataset_manifest, build_json, publish_or_dry_run
 import validate_ga_bills
 
 REPO = "Votega/ga-legislation"
@@ -195,6 +195,29 @@ def build_artifacts():
         "billCount": len(all_bills),
         "sessions": sorted(sessions_index, key=lambda s: s["slug"]),
     })
+
+    # latest.json above is a BILLS pointer (biennium, currentSession, sessions[]),
+    # not a repo index — this repo also carries ballot measures, published
+    # separately. So it stays exactly as it is, and the dataset describes itself
+    # in data/bills/manifest.json instead. See
+    # lib.sibling_publish.add_dataset_manifest for why no publisher here may
+    # describe another's data.
+    add_dataset_manifest(
+        artifacts, REPO, "bills",
+        title="Georgia General Assembly bills",
+        description=("Every bill of the biennium with its sponsors, subjects, "
+                     "status and roll-call votes, plus archived past sessions."),
+        # The source file's own stamp, not this mirror's clock.
+        generated_at=meta.get("generatedAt") or "",
+        update_cadence="Weekly while the General Assembly is in session.",
+        row_count=len(all_bills),
+        coverage={"biennium": BIENNIUM, "activeSession": active_slug,
+                  "sessions": sorted(s["slug"] for s in sessions_index)},
+        files=[{"path": "latest.json",
+                "description": "Biennium pointer: the session in progress and the archive."}]
+              + [{"path": k, "description": ""} for k in sorted(artifacts)
+                 if k != "latest.json"],
+    )
     return artifacts
 
 
