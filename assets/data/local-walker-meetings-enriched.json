@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-01T16:58:00Z",
+  "generatedAt": "2026-11-02T03:42:30Z",
   "source": "Walker County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Walker County",
-  "count": 23
+  "count": 22
  },
  "summary": {
   "flags": [
@@ -14,12 +14,12 @@
   ],
   "lastActivity": "2026-11-05",
   "topicTotals": {
-   "variance": 9,
-   "contract": 12,
+   "variance": 8,
+   "contract": 11,
    "data-center": 3,
    "local-taxes": 9,
-   "appointment": 6,
-   "millage-budget": 13,
+   "appointment": 5,
+   "millage-budget": 12,
    "rezoning": 9
   },
   "dataCenterItems": [
@@ -109,17 +109,9 @@
      "rezoning",
      "variance"
     ]
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2025-11-06",
-    "sourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1176,plainText=false)",
-    "tags": [
-     "variance"
-    ]
    }
   ],
-  "landUseMeetings": 13,
+  "landUseMeetings": 12,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
@@ -1238,63 +1230,6 @@
    "flags": [
     "land-use",
     "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "3",
-   "date": "2025-11-06",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1176,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1176,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4623,
-   "pdfSha256": "4173076e39fbe988734ba74624e2cf06b5a8628f52ebbc3148508198c87bffad",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1,
-    "variance": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "millage-budget",
-    "variance"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "purchase order",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… horize the Creation, Maintenance and Management of Electronic Meeting Minutes 14.2. Resolution R-072-25 to Appoint a Deputy Clerk of the Governing Authority of Walker County 14.3. Resolution R-073-25 to Amend the FY2026 bu …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "purchase order",
-     "excerpt": "… arcel number 0-243-032. (Planning Commission recommended this variance be Approved with conditions) 15.4. Purchase Order 2026-00000303 for $57,500.00 to Jake Marshall for Heat & Air Units and Duct Work for the Road Department and …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… nt a Deputy Clerk of the Governing Authority of Walker County 14.3. Resolution R-073-25 to Amend the FY2026 budget to redefine line items related to Public Works Projects and the Highway and Streets Division, allowin …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… 11.2. Agenda for Walker County Planning Commission Meeting from 16OCT2025 11.3. Joseph Lloyd requests a setback variance for a property located at 957 Durham Road, Rising Fawn, GA. 30738. Tax map & parcel number 0-004- 014 …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
    ],
    "dataCenterItems": []
   }
