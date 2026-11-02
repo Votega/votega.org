@@ -16,9 +16,14 @@
 #   Georgia has 180 active standard school districts:
 #
 #     159 COUNTY systems — exactly one per county, always. Every county has one,
-#         no county has two. This set is perfectly derivable from the county
-#         list; it needs no hand curation and is NOT enumerated here (phase 3a
-#         generates it — see the scope doc).
+#         no county has two. Enumerated under `countyDistricts` below, generated
+#         2026-11-02 from the Georgia Civic Data districts dimension.
+#
+#         A county system carries NO `counties` list, unlike a city system: it is
+#         1:1 with its county by definition, so the place it renders on is
+#         derived from `countyFips`. Only the irregular city systems need an
+#         explicit list. That also means adding a county to places.yml later
+#         requires no edit here.
 #
 #      21 CITY systems — independent city school districts, sitting inside 20
 #         counties. THIS is the irregular set, it is closed, it changes
@@ -90,6 +95,31 @@
 #   officeCountyFips    The upstream single-county assignment (the office's
 #                       county). Recorded for provenance/cross-check; it is NOT
 #                       the service area and must not drive rendering.
+# ----------------------------------------------------------------------------
+# ROLE VOCABULARY FOR BOARD MEMBERS  (validate_school_districts.py enforces it)
+# ----------------------------------------------------------------------------
+#   role:  Chair | Vice Chair | Board Member | Superintendent
+#
+#   The commission vocabulary in local_officials.yml does not fit a school board —
+#   it has no "Board Member" — so these four are the school-board set. Use `title`
+#   for a district's own wording when it differs ("Board President", "Chairman"),
+#   exactly as local_officials.yml does: `role` stays canonical because the UI
+#   sorts and the presiding check key on it, `title` is display only.
+#
+#   ⚠ SUPERINTENDENT IS NOT AN ELECTED SEAT. Georgia local superintendents are
+#   HIRED BY THE BOARD, not elected — the same situation as a City Manager, which
+#   local_officials.yml documents and deliberately keeps out of its elected
+#   roster. The role is available here because a reader looking at a board page
+#   reasonably expects to see who the superintendent is, but a Superintendent row
+#   MUST carry:
+#       voting: false
+#       last_elected:        (blank — there was no election)
+#       next_election:       (blank)
+#   and must never be counted against `board_size`. The validator enforces the
+#   first and warns on the others. Recording an appointed officer as an elected
+#   one would misrepresent who voters actually chose.
+#
+# ----------------------------------------------------------------------------
 #   members             Board members, same shape as local_officials.yml. HUMAN-
 #                       GATED and deliberately ABSENT until each roster is
 #                       confirmed against a primary source — an empty or missing
@@ -279,7 +309,993 @@ cityDistricts:
     districtCensusId: "05340"
     officeCountyFips: "13279"
 
-# County systems (159, one per county) are generated in phase 3a rather than
-# enumerated here. Three carry city-styled names and must not be mistaken for
-# city systems: Savannah-Chatham County (625, Chatham), Griffin-Spalding County
-# (726, Spalding), Thomaston-Upson County (745, Upson).
+# ============================================================================
+# COUNTY SYSTEMS — 159, exactly one per county
+# ============================================================================
+# Generated 2026-11-02 from the Georgia Civic Data `districts` dimension v1.2.0
+# (GOSA codes; NCES CCD LEA directory SY 2025-26), filtered to
+# district_type='standard' AND active=TRUE, minus the 21 city systems above.
+# Sorted by district name. Regenerate rather than hand-edit if GOSA changes a
+# code; the ids are the join key to everything else.
+#
+# ⚠ THREE CARRY CITY-STYLED NAMES and are COUNTY systems, not city ones:
+#   Savannah-Chatham County (625, Chatham) · Griffin-Spalding County (726,
+#   Spalding) · Thomaston-Upson County (745, Upson).
+# This is why `type` is curated rather than inferred from the name.
+#
+# TO ADD A ROSTER: append `members:` to a district, following the role
+# vocabulary and the Superintendent caveat documented in the header. Only
+# name / role / seat / source are required per member; everything else can be
+# filled later. One district per PR.
+#
+#   - id: "707"
+#     name: Newton County
+#     ...
+#     board_size: 5
+#     term_years: 4
+#     partisan: false
+#     official_url: "https://www.newton.k12.ga.us/board"
+#     members:
+#       - name: Jane Doe
+#         role: Chair
+#         seat: District 1
+#         party: Nonpartisan
+#         last_elected: 2024
+#         next_election: 2028
+#         source: "https://www.newton.k12.ga.us/board/members"
+# ============================================================================
+
+countyDistricts:
+  - id: "601"
+    name: Appling County
+    type: county
+    countyFips: "13001"
+    districtCensusId: "00060"
+
+  - id: "602"
+    name: Atkinson County
+    type: county
+    countyFips: "13003"
+    districtCensusId: "00090"
+
+  - id: "603"
+    name: Bacon County
+    type: county
+    countyFips: "13005"
+    districtCensusId: "00150"
+
+  - id: "604"
+    name: Baker County
+    type: county
+    countyFips: "13007"
+    districtCensusId: "00180"
+
+  - id: "605"
+    name: Baldwin County
+    type: county
+    countyFips: "13009"
+    districtCensusId: "00210"
+
+  - id: "606"
+    name: Banks County
+    type: county
+    countyFips: "13011"
+    districtCensusId: "00240"
+
+  - id: "607"
+    name: Barrow County
+    type: county
+    countyFips: "13013"
+    districtCensusId: "00290"
+
+  - id: "608"
+    name: Bartow County
+    type: county
+    countyFips: "13015"
+    districtCensusId: "00330"
+
+  - id: "609"
+    name: Ben Hill County
+    type: county
+    countyFips: "13017"
+    districtCensusId: "00360"
+
+  - id: "610"
+    name: Berrien County
+    type: county
+    countyFips: "13019"
+    districtCensusId: "00390"
+
+  - id: "611"
+    name: Bibb County
+    type: county
+    countyFips: "13021"
+    districtCensusId: "00420"
+
+  - id: "612"
+    name: Bleckley County
+    type: county
+    countyFips: "13023"
+    districtCensusId: "00440"
+
+  - id: "613"
+    name: Brantley County
+    type: county
+    countyFips: "13025"
+    districtCensusId: "00480"
+
+  - id: "614"
+    name: Brooks County
+    type: county
+    countyFips: "13027"
+    districtCensusId: "00540"
+
+  - id: "615"
+    name: Bryan County
+    type: county
+    countyFips: "13029"
+    districtCensusId: "00570"
+
+  - id: "616"
+    name: Bulloch County
+    type: county
+    countyFips: "13031"
+    districtCensusId: "00630"
+
+  - id: "617"
+    name: Burke County
+    type: county
+    countyFips: "13033"
+    districtCensusId: "00660"
+
+  - id: "618"
+    name: Butts County
+    type: county
+    countyFips: "13035"
+    districtCensusId: "00690"
+
+  - id: "619"
+    name: Calhoun County
+    type: county
+    countyFips: "13037"
+    districtCensusId: "00750"
+
+  - id: "620"
+    name: Camden County
+    type: county
+    countyFips: "13039"
+    districtCensusId: "00780"
+
+  - id: "621"
+    name: Candler County
+    type: county
+    countyFips: "13043"
+    districtCensusId: "00810"
+
+  - id: "622"
+    name: Carroll County
+    type: county
+    countyFips: "13045"
+    districtCensusId: "00840"
+
+  - id: "623"
+    name: Catoosa County
+    type: county
+    countyFips: "13047"
+    districtCensusId: "00930"
+
+  - id: "624"
+    name: Charlton County
+    type: county
+    countyFips: "13049"
+    districtCensusId: "00990"
+
+  - id: "626"
+    name: Chattahoochee County
+    type: county
+    countyFips: "13053"
+    districtCensusId: "01050"
+
+  - id: "627"
+    name: Chattooga County
+    type: county
+    countyFips: "13055"
+    districtCensusId: "01080"
+
+  - id: "628"
+    name: Cherokee County
+    type: county
+    countyFips: "13057"
+    districtCensusId: "01110"
+
+  - id: "629"
+    name: Clarke County
+    type: county
+    countyFips: "13059"
+    districtCensusId: "01170"
+
+  - id: "630"
+    name: Clay County
+    type: county
+    countyFips: "13061"
+    districtCensusId: "01200"
+
+  - id: "631"
+    name: Clayton County
+    type: county
+    countyFips: "13063"
+    districtCensusId: "01230"
+
+  - id: "632"
+    name: Clinch County
+    type: county
+    countyFips: "13065"
+    districtCensusId: "01260"
+
+  - id: "633"
+    name: Cobb County
+    type: county
+    countyFips: "13067"
+    districtCensusId: "01290"
+
+  - id: "634"
+    name: Coffee County
+    type: county
+    countyFips: "13069"
+    districtCensusId: "01350"
+
+  - id: "635"
+    name: Colquitt County
+    type: county
+    countyFips: "13071"
+    districtCensusId: "01380"
+
+  - id: "636"
+    name: Columbia County
+    type: county
+    countyFips: "13073"
+    districtCensusId: "01410"
+
+  - id: "637"
+    name: Cook County
+    type: county
+    countyFips: "13075"
+    districtCensusId: "01470"
+
+  - id: "638"
+    name: Coweta County
+    type: county
+    countyFips: "13077"
+    districtCensusId: "01500"
+
+  - id: "639"
+    name: Crawford County
+    type: county
+    countyFips: "13079"
+    districtCensusId: "01530"
+
+  - id: "640"
+    name: Crisp County
+    type: county
+    countyFips: "13081"
+    districtCensusId: "01560"
+
+  - id: "641"
+    name: Dade County
+    type: county
+    countyFips: "13083"
+    districtCensusId: "01590"
+
+  - id: "642"
+    name: Dawson County
+    type: county
+    countyFips: "13085"
+    districtCensusId: "01650"
+
+  - id: "644"
+    name: DeKalb County
+    type: county
+    countyFips: "13089"
+    districtCensusId: "01740"
+
+  - id: "643"
+    name: Decatur County
+    type: county
+    countyFips: "13087"
+    districtCensusId: "01710"
+
+  - id: "645"
+    name: Dodge County
+    type: county
+    countyFips: "13091"
+    districtCensusId: "01770"
+
+  - id: "646"
+    name: Dooly County
+    type: county
+    countyFips: "13093"
+    districtCensusId: "01800"
+
+  - id: "647"
+    name: Dougherty County
+    type: county
+    countyFips: "13095"
+    districtCensusId: "01830"
+
+  - id: "648"
+    name: Douglas County
+    type: county
+    countyFips: "13097"
+    districtCensusId: "01860"
+
+  - id: "649"
+    name: Early County
+    type: county
+    countyFips: "13099"
+    districtCensusId: "01920"
+
+  - id: "650"
+    name: Echols County
+    type: county
+    countyFips: "13101"
+    districtCensusId: "01950"
+
+  - id: "651"
+    name: Effingham County
+    type: county
+    countyFips: "13103"
+    districtCensusId: "01980"
+
+  - id: "652"
+    name: Elbert County
+    type: county
+    countyFips: "13105"
+    districtCensusId: "02010"
+
+  - id: "653"
+    name: Emanuel County
+    type: county
+    countyFips: "13107"
+    districtCensusId: "02040"
+
+  - id: "654"
+    name: Evans County
+    type: county
+    countyFips: "13109"
+    districtCensusId: "02070"
+
+  - id: "655"
+    name: Fannin County
+    type: county
+    countyFips: "13111"
+    districtCensusId: "02100"
+
+  - id: "656"
+    name: Fayette County
+    type: county
+    countyFips: "13113"
+    districtCensusId: "02130"
+
+  - id: "657"
+    name: Floyd County
+    type: county
+    countyFips: "13115"
+    districtCensusId: "02190"
+
+  - id: "658"
+    name: Forsyth County
+    type: county
+    countyFips: "13117"
+    districtCensusId: "02220"
+
+  - id: "659"
+    name: Franklin County
+    type: county
+    countyFips: "13119"
+    districtCensusId: "02250"
+
+  - id: "660"
+    name: Fulton County
+    type: county
+    countyFips: "13121"
+    districtCensusId: "02280"
+
+  - id: "661"
+    name: Gilmer County
+    type: county
+    countyFips: "13123"
+    districtCensusId: "02340"
+
+  - id: "662"
+    name: Glascock County
+    type: county
+    countyFips: "13125"
+    districtCensusId: "02370"
+
+  - id: "663"
+    name: Glynn County
+    type: county
+    countyFips: "13127"
+    districtCensusId: "02400"
+
+  - id: "664"
+    name: Gordon County
+    type: county
+    countyFips: "13129"
+    districtCensusId: "02430"
+
+  - id: "665"
+    name: Grady County
+    type: county
+    countyFips: "13131"
+    districtCensusId: "02460"
+
+  - id: "666"
+    name: Greene County
+    type: county
+    countyFips: "13133"
+    districtCensusId: "02490"
+
+  - id: "726"
+    name: Griffin-Spalding County
+    type: county
+    countyFips: "13255"
+    districtCensusId: "02520"
+
+  - id: "667"
+    name: Gwinnett County
+    type: county
+    countyFips: "13135"
+    districtCensusId: "02550"
+
+  - id: "668"
+    name: Habersham County
+    type: county
+    countyFips: "13137"
+    districtCensusId: "02580"
+
+  - id: "669"
+    name: Hall County
+    type: county
+    countyFips: "13139"
+    districtCensusId: "02610"
+
+  - id: "670"
+    name: Hancock County
+    type: county
+    countyFips: "13141"
+    districtCensusId: "02640"
+
+  - id: "671"
+    name: Haralson County
+    type: county
+    countyFips: "13143"
+    districtCensusId: "02670"
+
+  - id: "672"
+    name: Harris County
+    type: county
+    countyFips: "13145"
+    districtCensusId: "02700"
+
+  - id: "673"
+    name: Hart County
+    type: county
+    countyFips: "13147"
+    districtCensusId: "02730"
+
+  - id: "674"
+    name: Heard County
+    type: county
+    countyFips: "13149"
+    districtCensusId: "02790"
+
+  - id: "675"
+    name: Henry County
+    type: county
+    countyFips: "13151"
+    districtCensusId: "02820"
+
+  - id: "676"
+    name: Houston County
+    type: county
+    countyFips: "13153"
+    districtCensusId: "02880"
+
+  - id: "677"
+    name: Irwin County
+    type: county
+    countyFips: "13155"
+    districtCensusId: "02910"
+
+  - id: "678"
+    name: Jackson County
+    type: county
+    countyFips: "13157"
+    districtCensusId: "02940"
+
+  - id: "679"
+    name: Jasper County
+    type: county
+    countyFips: "13159"
+    districtCensusId: "02970"
+
+  - id: "680"
+    name: Jeff Davis County
+    type: county
+    countyFips: "13161"
+    districtCensusId: "03000"
+
+  - id: "681"
+    name: Jefferson County
+    type: county
+    countyFips: "13163"
+    districtCensusId: "03060"
+
+  - id: "682"
+    name: Jenkins County
+    type: county
+    countyFips: "13165"
+    districtCensusId: "03090"
+
+  - id: "683"
+    name: Johnson County
+    type: county
+    countyFips: "13167"
+    districtCensusId: "03120"
+
+  - id: "684"
+    name: Jones County
+    type: county
+    countyFips: "13169"
+    districtCensusId: "03150"
+
+  - id: "685"
+    name: Lamar County
+    type: county
+    countyFips: "13171"
+    districtCensusId: "03210"
+
+  - id: "686"
+    name: Lanier County
+    type: county
+    countyFips: "13173"
+    districtCensusId: "03240"
+
+  - id: "687"
+    name: Laurens County
+    type: county
+    countyFips: "13175"
+    districtCensusId: "01890"
+
+  - id: "688"
+    name: Lee County
+    type: county
+    countyFips: "13177"
+    districtCensusId: "03270"
+
+  - id: "689"
+    name: Liberty County
+    type: county
+    countyFips: "13179"
+    districtCensusId: "03300"
+
+  - id: "690"
+    name: Lincoln County
+    type: county
+    countyFips: "13181"
+    districtCensusId: "03330"
+
+  - id: "691"
+    name: Long County
+    type: county
+    countyFips: "13183"
+    districtCensusId: "03360"
+
+  - id: "692"
+    name: Lowndes County
+    type: county
+    countyFips: "13185"
+    districtCensusId: "03390"
+
+  - id: "693"
+    name: Lumpkin County
+    type: county
+    countyFips: "13187"
+    districtCensusId: "03420"
+
+  - id: "694"
+    name: Macon County
+    type: county
+    countyFips: "13193"
+    districtCensusId: "03450"
+
+  - id: "695"
+    name: Madison County
+    type: county
+    countyFips: "13195"
+    districtCensusId: "03480"
+
+  - id: "696"
+    name: Marion County
+    type: county
+    countyFips: "13197"
+    districtCensusId: "03540"
+
+  - id: "697"
+    name: McDuffie County
+    type: county
+    countyFips: "13189"
+    districtCensusId: "03570"
+
+  - id: "698"
+    name: McIntosh County
+    type: county
+    countyFips: "13191"
+    districtCensusId: "03600"
+
+  - id: "699"
+    name: Meriwether County
+    type: county
+    countyFips: "13199"
+    districtCensusId: "03630"
+
+  - id: "700"
+    name: Miller County
+    type: county
+    countyFips: "13201"
+    districtCensusId: "03660"
+
+  - id: "701"
+    name: Mitchell County
+    type: county
+    countyFips: "13205"
+    districtCensusId: "03690"
+
+  - id: "702"
+    name: Monroe County
+    type: county
+    countyFips: "13207"
+    districtCensusId: "03720"
+
+  - id: "703"
+    name: Montgomery County
+    type: county
+    countyFips: "13209"
+    districtCensusId: "03750"
+
+  - id: "704"
+    name: Morgan County
+    type: county
+    countyFips: "13211"
+    districtCensusId: "03780"
+
+  - id: "705"
+    name: Murray County
+    type: county
+    countyFips: "13213"
+    districtCensusId: "03840"
+
+  - id: "706"
+    name: Muscogee County
+    type: county
+    countyFips: "13215"
+    districtCensusId: "03870"
+
+  - id: "707"
+    name: Newton County
+    type: county
+    countyFips: "13217"
+    districtCensusId: "03930"
+
+  - id: "708"
+    name: Oconee County
+    type: county
+    countyFips: "13219"
+    districtCensusId: "03960"
+
+  - id: "709"
+    name: Oglethorpe County
+    type: county
+    countyFips: "13221"
+    districtCensusId: "03990"
+
+  - id: "710"
+    name: Paulding County
+    type: county
+    countyFips: "13223"
+    districtCensusId: "04020"
+
+  - id: "711"
+    name: Peach County
+    type: county
+    countyFips: "13225"
+    districtCensusId: "04050"
+
+  - id: "712"
+    name: Pickens County
+    type: county
+    countyFips: "13227"
+    districtCensusId: "04110"
+
+  - id: "713"
+    name: Pierce County
+    type: county
+    countyFips: "13229"
+    districtCensusId: "04140"
+
+  - id: "714"
+    name: Pike County
+    type: county
+    countyFips: "13231"
+    districtCensusId: "04170"
+
+  - id: "715"
+    name: Polk County
+    type: county
+    countyFips: "13233"
+    districtCensusId: "04200"
+
+  - id: "716"
+    name: Pulaski County
+    type: county
+    countyFips: "13235"
+    districtCensusId: "04220"
+
+  - id: "717"
+    name: Putnam County
+    type: county
+    countyFips: "13237"
+    districtCensusId: "04260"
+
+  - id: "718"
+    name: Quitman County
+    type: county
+    countyFips: "13239"
+    districtCensusId: "04290"
+
+  - id: "719"
+    name: Rabun County
+    type: county
+    countyFips: "13241"
+    districtCensusId: "04320"
+
+  - id: "720"
+    name: Randolph County
+    type: county
+    countyFips: "13243"
+    districtCensusId: "04350"
+
+  - id: "721"
+    name: Richmond County
+    type: county
+    countyFips: "13245"
+    districtCensusId: "04380"
+
+  - id: "722"
+    name: Rockdale County
+    type: county
+    countyFips: "13247"
+    districtCensusId: "04410"
+
+  - id: "625"
+    name: Savannah-Chatham County
+    type: county
+    countyFips: "13051"
+    districtCensusId: "01020"
+
+  - id: "723"
+    name: Schley County
+    type: county
+    countyFips: "13249"
+    districtCensusId: "04470"
+
+  - id: "724"
+    name: Screven County
+    type: county
+    countyFips: "13251"
+    districtCensusId: "04500"
+
+  - id: "725"
+    name: Seminole County
+    type: county
+    countyFips: "13253"
+    districtCensusId: "04530"
+
+  - id: "727"
+    name: Stephens County
+    type: county
+    countyFips: "13257"
+    districtCensusId: "04560"
+
+  - id: "728"
+    name: Stewart County
+    type: county
+    countyFips: "13259"
+    districtCensusId: "04590"
+
+  - id: "729"
+    name: Sumter County
+    type: county
+    countyFips: "13261"
+    districtCensusId: "04620"
+
+  - id: "730"
+    name: Talbot County
+    type: county
+    countyFips: "13263"
+    districtCensusId: "04650"
+
+  - id: "731"
+    name: Taliaferro County
+    type: county
+    countyFips: "13265"
+    districtCensusId: "04680"
+
+  - id: "732"
+    name: Tattnall County
+    type: county
+    countyFips: "13267"
+    districtCensusId: "04770"
+
+  - id: "733"
+    name: Taylor County
+    type: county
+    countyFips: "13269"
+    districtCensusId: "04800"
+
+  - id: "734"
+    name: Telfair County
+    type: county
+    countyFips: "13271"
+    districtCensusId: "04830"
+
+  - id: "735"
+    name: Terrell County
+    type: county
+    countyFips: "13273"
+    districtCensusId: "04860"
+
+  - id: "736"
+    name: Thomas County
+    type: county
+    countyFips: "13275"
+    districtCensusId: "04890"
+
+  - id: "745"
+    name: Thomaston-Upson County
+    type: county
+    countyFips: "13293"
+    districtCensusId: "05280"
+
+  - id: "737"
+    name: Tift County
+    type: county
+    countyFips: "13277"
+    districtCensusId: "04980"
+
+  - id: "738"
+    name: Toombs County
+    type: county
+    countyFips: "13279"
+    districtCensusId: "05040"
+
+  - id: "739"
+    name: Towns County
+    type: county
+    countyFips: "13281"
+    districtCensusId: "05070"
+
+  - id: "740"
+    name: Treutlen County
+    type: county
+    countyFips: "13283"
+    districtCensusId: "05100"
+
+  - id: "741"
+    name: Troup County
+    type: county
+    countyFips: "13285"
+    districtCensusId: "00001"
+
+  - id: "742"
+    name: Turner County
+    type: county
+    countyFips: "13287"
+    districtCensusId: "05190"
+
+  - id: "743"
+    name: Twiggs County
+    type: county
+    countyFips: "13289"
+    districtCensusId: "05220"
+
+  - id: "744"
+    name: Union County
+    type: county
+    countyFips: "13291"
+    districtCensusId: "05250"
+
+  - id: "746"
+    name: Walker County
+    type: county
+    countyFips: "13295"
+    districtCensusId: "05370"
+
+  - id: "747"
+    name: Walton County
+    type: county
+    countyFips: "13297"
+    districtCensusId: "05390"
+
+  - id: "748"
+    name: Ware County
+    type: county
+    countyFips: "13299"
+    districtCensusId: "05430"
+
+  - id: "749"
+    name: Warren County
+    type: county
+    countyFips: "13301"
+    districtCensusId: "05460"
+
+  - id: "750"
+    name: Washington County
+    type: county
+    countyFips: "13303"
+    districtCensusId: "05490"
+
+  - id: "751"
+    name: Wayne County
+    type: county
+    countyFips: "13305"
+    districtCensusId: "05550"
+
+  - id: "752"
+    name: Webster County
+    type: county
+    countyFips: "13307"
+    districtCensusId: "05580"
+
+  - id: "753"
+    name: Wheeler County
+    type: county
+    countyFips: "13309"
+    districtCensusId: "05640"
+
+  - id: "754"
+    name: White County
+    type: county
+    countyFips: "13311"
+    districtCensusId: "05670"
+
+  - id: "755"
+    name: Whitfield County
+    type: county
+    countyFips: "13313"
+    districtCensusId: "05700"
+
+  - id: "756"
+    name: Wilcox County
+    type: county
+    countyFips: "13315"
+    districtCensusId: "05730"
+
+  - id: "757"
+    name: Wilkes County
+    type: county
+    countyFips: "13317"
+    districtCensusId: "05760"
+
+  - id: "758"
+    name: Wilkinson County
+    type: county
+    countyFips: "13319"
+    districtCensusId: "05790"
+
+  - id: "759"
+    name: Worth County
+    type: county
+    countyFips: "13321"
+    districtCensusId: "05850"
