@@ -278,10 +278,57 @@ those is a URL lookup per district, not a technical problem.
 
 #### Two findings that change the 3c/3d estimates
 
-**Simbli is plainly scrapable, and the config key is right there.** Every Simbli
-link on a district site — including policy-manual links — carries the same
-`S=<id>` district key, so the detector extracts it without needing the meetings
-page. `https://simbli.eboardsolutions.com/` fetches fine.
+**CORRECTION (2026-11-02): Simbli is NOT scrapable, and 3c is blocked.** The
+sentence that stood here — "Simbli is plainly scrapable… `simbli.eboardsolutions.com/`
+fetches fine" — was wrong. It was based on a byte count, not on the content. That
+6,650-byte response was itself an **Imperva/Incapsula** challenge page.
+
+Verified when 3c was started:
+
+- **Every path on `simbli.eboardsolutions.com` is behind Incapsula**, including
+  `/robots.txt` — so the site's own stated crawl policy cannot even be read. The
+  meeting listing returns a ~1 KB Incapsula frame with an incident ID, to both
+  `curl` and the project's own `lib.http.fetch_bytes`.
+- **District websites are fetchable** (no Incapsula) **but host no agenda
+  documents.** Bulloch, Walton and Henry were checked: 53–140 KB of HTML, zero
+  self-hosted PDFs, and nothing but outbound Simbli links. So the documents exist
+  only behind the bot protection; re-targeting the adapter at the district's own
+  site — which would have been the clean answer — does not work for these.
+
+Getting past Incapsula means circumventing an active bot-protection system. That
+is a different proposition from reading a public page, it is an operator
+decision rather than an implementation detail, and it is not built here. (An
+attempt to probe it with a spoofed browser User-Agent was correctly refused by
+this environment's own guardrails.)
+
+**So the Simbli `S=<id>` the detector extracts is still useful — it identifies
+the district and gives a human a direct link — but it is not an adapter config
+yet.** The detector's `_simbli` extractor already says so in its docstring.
+
+**The routes that remain open, in the order worth trying:**
+
+1. **Ask eBOARDsolutions / GSBA for access** — a feed, an API, or allowlisting a
+   named crawler. Simbli is owned by a subsidiary of the Georgia School Boards
+   Association, the content is public record, and VoteGA is nonpartisan civic
+   infrastructure with a published methodology. This is the cheapest path to
+   *all* Simbli districts at once and should be tried before any engineering.
+2. **Georgia Open Records Act requests** to districts for agendas and minutes.
+   Lawful and certain, but per-district and slow; some districts would simply
+   email them.
+3. **Finish the census first.** 8 districts matched no signature and 17 were
+   never tested (§3.5.1). If some of those self-host their packets, they are
+   buildable today with the existing `pdflinks` / `htmltable` adapters and do not
+   need Simbli at all. This is the only option that needs no permission and no
+   third party, so it is the sensible immediate move.
+4. **A headless browser.** Technically possible — the SharePoint and Wix adapters
+   already use Playwright — but it is still circumventing the anti-bot system,
+   just with a real browser, and raises terms-of-service questions that are the
+   operator's to answer, not the adapter's.
+
+**Consequence for the rest of phase 3:** 3a's board-roster section and 3e's topic
+rules are unaffected — they need no scraping. 3c and 3d are both blocked on
+access rather than on effort, so the school-board work should proceed as
+**officials and topics only** until route 1 or 3 opens a document source.
 
 But **some districts use a vanity path with no id** — Walton's link is
 `simbli.eboardsolutions.com/walton`. The 3c adapter must accept both an `S=` id
@@ -317,7 +364,7 @@ curriculum/media policy, school construction**. One new `schools` topic in
 |---|---|---|
 | **3a** | County systems generated into `school_districts.yml`; validator (strict slug cross-check, like `validate_local_officials.py`); board section in `_includes/entity/place.html`; publish machine-readable copy to `ga-local-government`. **Officials only, no scraping.** | ~50–70k |
 | **3b** | ~~Platform census~~ **DONE** — see §3.5.1. Verdict: build Simbli, defer BoardDocs. | **done** |
-| **3c** | Simbli adapter | ~60–90k |
+| **3c** | ~~Simbli adapter~~ **BLOCKED** — Simbli is behind Imperva/Incapsula; see the correction in §3.5.1. Not an effort problem. | blocked |
 | **3d** | BoardDocs adapter | ~60–90k |
 | **3e** | `schools` topic rules + per-district page wiring | ~40–60k |
 
