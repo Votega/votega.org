@@ -346,6 +346,11 @@
 </section>
 {% endif %}
 
+{%- comment %} School boards — a separately elected body, so its own section rather
+    than rows in the officials grid. Server-rendered from _data/school_districts.yml
+    and renders NOTHING until a roster is human-confirmed. {% endcomment -%}
+{% include entity/school-boards.html %}
+
 {%- comment %} Stale-data notice for a place whose site blocks our fetcher (registry
     `bot_protected`). Sits right after officials and above the topic summaries, because
     those summaries are exactly what is not being refreshed. {% endcomment -%}

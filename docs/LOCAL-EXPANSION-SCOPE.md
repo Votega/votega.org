@@ -22,15 +22,15 @@ work happened. This block is the resume point.
 | publish + refresh | `update-ga-millage.yml` monthly → `ga-local-government`, via `publish_ga_millage.py`. First run succeeded. |
 | **3a** registry | `_data/school_districts.yml` — all **180 districts** (159 county + 21 city), `validate_school_districts.py` + 52 invariants in CI. |
 | **3a** drafter | `draft_school_boards.py` — **77 districts / 215 members** drafted from SoS results, 0 errors. |
+| **3a** board section | `_includes/entity/school-boards.html` — collapsible panel per board, wired into `place.html`. **Renders nothing until a roster is human-confirmed**, verified on a full Jekyll build: 0 of 1,484 pages carry the section today. |
 | **3b** census | Detector gained a Simbli fingerprint. **15 of 23 reachable districts are Simbli, 0 BoardDocs.** |
 | infrastructure | Per-dataset manifests (`data/<dataset>/manifest.json`) across all 6 co-tenant publishers; `test_no_third_party_imports.py` guard; `claude.md` scaling section re-measured. |
 
 ### Next actions, highest value first
 
-1. **Board section in `_includes/entity/place.html`** — the last piece of 3a.
-   One board renders open; **two or more render collapsed** with member names in
-   the summary, so DeKalb (DeKalb County + City Schools of Decatur + part of APS)
-   and Jackson (county + Commerce + Jefferson) do not stack three rosters.
+1. **Board rosters** — the renderer is in place and gated, so every district the
+   owner confirms turns on by itself. Drafter output in `draft_school_boards.py`
+   is the starting point; nothing displays until `members:` lands.
 2. **Publish the district registry** to `ga-local-government` (decision 2:
    registry lives in this repo, machine-readable copy published).
 3. **`/local/<slug>/taxes/` URL split** — owner liked the idea; capacity is a
@@ -71,6 +71,14 @@ Adding board rosters to `_data/school_districts.yml`, one district per PR, using
   71 of 77 drafted districts are partisan. Do not assume either way.
 - **A Superintendent is hired by the board, not elected** — `voting: false`
   required, never counted against `board_size`.
+- **A city place carries no `fips` in `places.yml`; a county or consolidated one
+  does.** That is what the board renderer branches on — no name matching. A city
+  place resolves to the boards of the county it sits in, with its own system
+  (`primaryPlace`) leading. 22 visible places resolve to more than one board.
+- **`primaryPlace` was set on only 1 of 21 city systems** (Atlanta). Carrollton,
+  Social Circle and Thomasville are the other three whose city is itself a place
+  in `places.yml`; they are now set. The remaining 17 city systems have no
+  matching city place, so they render on their county pages only.
 
 ---
 
@@ -478,7 +486,7 @@ curriculum/media policy, school construction**. One new `schools` topic in
 
 | Phase | Work | Est. |
 |---|---|---|
-| **3a** | County systems scaffolded (180 districts) · validator + 52 invariants in CI · **SoS drafter: 77 districts / 215 members**. Remaining: the board section in `_includes/entity/place.html`, and publishing the registry to `ga-local-government`. | mostly done |
+| **3a** | County systems scaffolded (180 districts) · validator + 52 invariants in CI · **SoS drafter: 77 districts / 215 members** · board section shipped (`_includes/entity/school-boards.html`). Remaining: confirmed rosters, and publishing the registry to `ga-local-government`. | done but for rosters |
 | **3b** | ~~Platform census~~ **DONE** — see §3.5.1. Verdict: build Simbli, defer BoardDocs. | **done** |
 | **3c** | Simbli adapter. Mechanics confirmed (§3.5.1): parse the listing's `onclick` args into `ViewMeeting.aspx?S=&MID=` URLs; needs a fetch retry for transient challenges. | ~60–90k |
 | **3d** | BoardDocs adapter | ~60–90k |
