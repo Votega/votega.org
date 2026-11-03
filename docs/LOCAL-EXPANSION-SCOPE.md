@@ -95,7 +95,7 @@ Adding board rosters to `_data/school_districts.yml`, one district per PR, using
   are added.
 - **`millage-budget` must never be ranked against the narrow subjects**, until it
   is retired and replaced (`docs/BUDGET-TOPIC-SCOPE.md`), which removes this
-  special case.** Its
+  special case. Its
   lexicon includes `budget` and `fiscal year`, which appear on nearly every agenda,
   so it outscores them everywhere (Fulton: millage-budget 36, local-taxes 19). It
   is a vocabulary-wide tag, not a watch topic. It carries a count for consistency
