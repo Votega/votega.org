@@ -1,7 +1,9 @@
 # Budgets as a `/local/` topic — scope
 
-**Status:** scoped, not started.
-**Scoped:** 2026-11-03 · **Scope owner:** Justin Mays
+**Status:** phase 0 measured on a 40-place corpus — the lexicon holds. See
+**Phase 0 results** below before reading the rest; §2.3's earlier hit counts are
+superseded.
+**Scoped:** 2026-11-03 · **Last updated:** 2026-11-03 · **Scope owner:** Justin Mays
 **Parent:** `docs/LOCAL-EXPANSION-SCOPE.md` (the `/local/` expansion this continues)
 
 ---
@@ -18,6 +20,105 @@ earns a page — the fifth alongside ALPR, data centers, land use and local taxe
 | 1 | **A topic page like the other four.** Narrowed lexicon, mentions feed, `/local/topics/budgets/`, per-place section. Not a predictive "budget season" tracker — that idea is recorded under *Deliberately not in scope* and stays open. |
 | 2 | **Site only for now.** `ga-local-government` keeps its four-topic schema until the lexicon has been observed across several enrichment runs. Publishing a fifth feed is a later, separate change. |
 | 3 | **`millage-budget` is retired, not kept beside `budget`.** Its millage keywords already live in `local-taxes`, so nothing is lost, and retiring it removes a tag that fires on 59 of 59 places, has no page, and needs a special-case exclusion in the hub card's ranking. |
+
+---
+
+## Phase 0 results — measured 2026-11-03
+
+Run on the full-text corpus from `populate-meeting-text-cache.yml` run #3
+(**935 documents, 40 places, 54.5 MB**), read through the repo's own `TextCache`.
+This replaces the excerpt-window estimates in §2.3, which were a biased floor.
+
+### The lexicon holds
+
+| | documents |
+|---|---|
+| Old `millage-budget` rule | 433 |
+| **Candidate `budget` rule** | **284**, across 38 places |
+| Kept from the old rule | 284 |
+| Dropped | 149 |
+| Found that the old rule missed | 0 |
+
+The candidate is a strict subset, as expected — every pattern contains the word
+*budget*, which the old rule also matched. **The whole value is precision: 433 → 284,
+a 34% cut, with the budget decisions kept.**
+
+### Precision: 1% of spans, 0% of documents
+
+Measured at **match level**, not document level. A document-level probe cannot
+attribute the match — a document containing "budgeted" somewhere *and* a real budget
+amendment elsewhere is correctly flagged, and counting it as a leak overstates the
+problem badly (that probe reported an alarming "85% leak" for exactly this reason).
+
+Of **2,354 spans** that fired across the corpus, **29 (1%)** sit inside a
+money-plumbing construct (`paid from the … budget`, `construction budget`). **No
+document had only noise spans**, so the false-positive rate at document level is
+**0 of 284**.
+
+Hand-read samples bear this out — 26 random matched spans read, all budget business:
+
+> Paulding — "discuss action to **adopt the FY 2027 budget**"
+> Walker — "approval of minutes for the special called **budget work session**"
+> Atlanta — "to **amend the FY 2027 budget** by adding to anticipations and appropriations"
+> Muscogee — "to authorize **the amendment of the 2025 capital improvements budget**"
+> Columbia — "May 05, 2026 **budget public hearing**"
+
+The two marginal cases are small budget resolutions for vehicle replacement
+(Forsyth) — real budget amendments, just minor ones.
+
+### Dropped documents are dropped correctly
+
+> Banks — "2026 **millage rate** adoption resolution" — belongs to local-taxes, which keeps the `millage` keyword ✓
+> Coweta — "acceptance of the **fiscal year** 2025 emergency management performance grant" — a grant ✓
+> Fulton — "monetary transfers among **budget funds** per board resolution" — arguably budget business; a real, minor loss
+
+### The proximity rule earns its place
+
+| | documents |
+|---|---|
+| Phrases only | 37 |
+| **Proximity only** | **58** |
+| Both | 189 |
+
+Proximity adds **58 documents (+26%)** over phrases alone — lower than the 43%
+estimated from excerpts, and still decisive. The additions are the canonical
+phrasings fixed phrases structurally cannot reach: *"amend the FY 2027 budget"*,
+*"adopt the FY 2027 budget"*, *"amendment of the 2025 capital improvements budget"*.
+
+### What is still untested
+
+**The corpus covers 40 of the 62 visible places.** Missing: atkinson, baker, camden,
+conyers, effingham, fort-oglethorpe, gordon, houston, lafayette, liberty, lowndes,
+milledgeville, newton, oconee, palmetto, rockdale, rossville, **savannah**, thomas,
+thomasville, tift, whitfield.
+
+**Savannah's absence matters specifically.** Its agenda template carries
+"HEARINGS (Alcohol, Public, Zoning, and Budget)" on *every* meeting, and that string
+would trip the proximity rule's `hearing … budget`. The boilerplate probe reported
+CLEAN only because Savannah is not in this corpus — that is an untested risk, not a
+cleared one. **It must be re-run against a corpus that includes Savannah before
+Phase 1 ships**, and a negative test pinned for it.
+
+Run #4 of the workflow is in flight and restores from this cache, so it should
+broaden coverage; re-run the measurement against its artifact.
+
+### Lexicon changes this run justifies
+
+Only three terms still earn nothing, down from nine on the excerpt corpus —
+confirming the earlier counts were a floor:
+`tentative budget`, `public hearing on the budget`, `adoption of the budget`.
+
+Terms the full corpus rescued, which the excerpt measurement would have wrongly
+dropped: `annual budget` (26), `operating budget` (27), `capital budget` (15),
+`budget ordinance` (14), `budget transfer` (13), `budget calendar` (8),
+`recommended budget` (4), `balanced budget` (4), `budget retreat` (2),
+`amendment to the budget` (2), `adopt the budget` (2), `budget message` (2),
+`draft budget` (1).
+
+**`approved budget` is resolved.** §2.3 flagged it as a false positive to solve. At
+span level it is 1% of matches and never the only match in a document, so it needs no
+special handling — dropping `approv` from the proximity verbs would cost more than it
+saves.
 
 ---
 
@@ -186,9 +287,9 @@ a harder case, because its vocabulary is ordinary English rather than vendor nam
 
 ## 4. Phases
 
-**Phase 0 — measure.** Populate the text cache, score the candidate lexicon, read
-every WOULD NEWLY MATCH quote. Tune until precision holds on a hand-read sample.
-Nothing ships. *This phase decides whether the rest is worth doing.*
+**Phase 0 — measure. DONE for 40 places; see Phase 0 results above.** Precision
+holds (1% of spans, 0 of 284 documents). Outstanding before Phase 1: re-run against a
+corpus that includes Savannah, whose agenda boilerplate is the one untested risk.
 
 **Phase 1 — the lexicon and the proximity mechanism.** Add `budget` to `TOPIC_RULES`
 with the phrases, add the proximity rule type, teach `classify`, `matched_terms` and
