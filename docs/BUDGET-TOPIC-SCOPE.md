@@ -337,10 +337,23 @@ above.** Precision holds once the boilerplate exclusion is applied. Outstanding:
 scan the 21 unmeasured places for their own repeating agenda boilerplate before
 Phase 2 puts counts on cards.
 
-**Phase 1 — the lexicon, the proximity mechanism and the exclusion mechanism.** Add
-`budget` to `TOPIC_RULES` with the phrases, add **both** new rule types — proximity
-and exclusion — and teach `classify`, `matched_terms` and `_tag_matches` about them.
-The exclusion is not optional: without it Savannah reads 18 instead of 3. Retire `millage-budget` (§5). Tests: proximity matching, the
+**Phase 1 — the lexicon, the proximity mechanism and the exclusion mechanism. DONE.**
+`budget` is in `TOPIC_RULES` with 26 phrases and no bare `budget` keyword;
+`TOPIC_PROXIMITY_RULES` and `TOPIC_EXCLUDE_RULES` are the two new rule types, combined
+in one place by `topic_spans()` so `classify`, `matched_terms` and the excerpt finder
+cannot disagree. `millage-budget` is retired and `tax rate` moved to `local-taxes`.
+
+Verified against the 975-document corpus: the shipped engine reproduces the Phase 0
+measurement exactly — **287 documents across 39 places, Savannah 3 of 40** — and
+Savannah's excerpts quote real budget items rather than the boilerplate. Diffing the
+old module against the new over every corpus document, the change **adds one document
+to `local-taxes` (`hall/1901`, a hotel-motel excise rate — the `tax rate` move) and
+removes nothing from any existing topic.**
+
+`scripts/test_meeting_topics_budget.py` pins the decisions that must fire, the money
+plumbing that must not, and Savannah's boilerplate, including the check that the
+boilerplate still trips a proximity rule *before* the exclusion — without it the
+exclusion test would pass even if proximity had silently died. Retire `millage-budget` (§5). Tests: proximity matching, the
 `budgeted` exclusion, the FY-token cases, and a regression pinning that each noise
 sample quoted in §1 does **not** match.
 

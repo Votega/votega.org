@@ -51,6 +51,17 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
 
+      # lib/sharepoint.py drives a real browser to open an anonymous SharePoint
+      # share link, and imports Playwright lazily so the parser tests need no
+      # browser. Without it every document for a `sharepoint` place (LaFayette, the
+      # only one) failed this job with ModuleNotFoundError and was skipped — so that
+      # place could never enter the corpus at all. Chromium only: nothing here uses
+      # another engine, and the other two cost minutes per run.
+      - name: Install Playwright (SharePoint places only)
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
       # Same tools as update-local-government.yml: pdftotext does the work,
       # tesseract is the scanned-PDF fallback so image-only agendas still classify.
       - name: Install PDF text tools

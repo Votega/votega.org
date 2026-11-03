@@ -445,10 +445,11 @@ breadcrumb:
     // almost everywhere. Ranking does: the top two vary by place, and the count
     // itself carries the signal the presence flag lost.
     //
-    // millageCount is deliberately NOT ranked here. Its lexicon includes "budget"
-    // and "fiscal year", which appear on nearly every agenda, so it outscores the
-    // narrow subjects everywhere (Fulton: millage-budget 36, local-taxes 19). It is
-    // a vocabulary-wide tag, not a watch topic, and carries no pill of its own.
+    // There is no special case here any more. The old millage-budget tag had to be
+    // excluded from ranking — its bare "budget" / "fiscal year" keywords put it on
+    // 59 of 59 places — and it has been replaced by the narrow `budget` topic, which
+    // ranks like any other (docs/BUDGET-TOPIC-SCOPE.md). Its pill joins this list in
+    // phase 2, once the topic has a page to link to.
     var TOPIC_PILLS = [
       { key: 'alprCount', flag: null, cls: 'lh-flag-alpr', icon: 'fa-camera', label: 'ALPR' },
       { key: 'dataCenterCount', flag: null, cls: 'lh-flag-dc', icon: 'fa-industry', label: 'Data centers' },

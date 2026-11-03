@@ -56,9 +56,13 @@ TOPIC_RULES = {
     'development':        ['apartment', 'subdivision', 'warehouse', 'mixed use',
                            'mixed-use', 'townhome', 'multifamily', 'multi-family'],
     'comprehensive-plan': ['comprehensive plan', 'future land use', 'land use plan'],
-    'millage-budget':     ['millage', 'ad valorem', 'tax rate', 'budget', 'fiscal year'],
+    # 'budget' lives at the bottom of this dict, with the proximity and exclusion
+    # rules it needs. It replaces the old 'millage-budget', whose bare 'budget' and
+    # 'fiscal year' keywords matched nearly every agenda and put the tag on 59 of 59
+    # flagged places — see docs/BUDGET-TOPIC-SCOPE.md.
     # Taxes and ballot questions a resident pays or votes on. Separate from
-    # 'millage-budget', whose bare 'budget' / 'fiscal year' match nearly every agenda.
+    # 'budget': this is what a resident PAYS or VOTES ON, that is what the government
+    # SPENDS.
     # Georgia's local-option sales taxes are known by acronym: SPLOST (special purpose),
     # ESPLOST (education), TSPLOST (transportation), FLOST (floating), HOST (homestead
     # option), LOST (local option). 'splost' as a substring carries splost / esplost /
@@ -80,6 +84,11 @@ TOPIC_RULES = {
                            'local option sales tax', 'homestead option sales tax',
                            'floating local option',
                            'millage', 'rollback rate', 'ad valorem', 'tax digest',
+                           # Moved from the retired 'millage-budget'. Measured over
+                           # the 975-document corpus: 17 documents carry it and 16
+                           # already match another keyword here, so it adds one — a
+                           # hotel-motel excise rate, which this topic already names.
+                           'tax rate',
                            'property tax increase', 'notice of property tax',
                            'homestead exemption',
                            'hotel-motel tax', 'hotel/motel tax', 'hotel motel tax',
@@ -298,6 +307,74 @@ TOPIC_WORD_RULES = {
     # TAD (tax allocation district) is omitted: it is also a first name and a car part.
     'local-taxes': ['flost', 'lhost', 'olost'],
 }
+
+# ── Budget: phrases only, plus proximity, minus boilerplate ───────────────────
+# The topic a resident can act on is the government DECIDING a budget: the proposed
+# budget, its hearing, its adoption, its amendments. The word alone is not that —
+# every agenda says "budget" about some purchase — so this lexicon carries NO bare
+# 'budget' keyword. Two consequences, both measured (docs/BUDGET-TOPIC-SCOPE.md):
+#
+#   'budgeted' never fires. It is the single largest false-positive source
+#   ("Budgeted: Yes", "budgeted amount", "Budgeted Purchases of $25,000 or Greater"),
+#   and no phrase here contains it.
+#
+#   Fixed phrases alone are not enough, because Georgia agendas put the fiscal year
+#   BETWEEN the verb and the noun — "adopt FY2027 Budget", "public hearing (FY27
+#   budget)", "amend the FY 2026 budget". No fixed phrase reaches those, which is
+#   what TOPIC_PROXIMITY_RULES below is for: measured, it adds 25% more documents.
+TOPIC_RULES['budget'] = [
+    'proposed budget', 'draft budget', 'tentative budget', 'recommended budget',
+    'budget hearing', 'budget public hearing', 'public hearing on the budget',
+    'budget work session', 'budget workshop', 'budget retreat', 'budget presentation',
+    'budget amendment', 'amend the budget', 'amendment to the budget',
+    'budget resolution', 'adopt the budget', 'adoption of the budget',
+    'budget adoption', 'budget ordinance', 'budget message', 'budget calendar',
+    'budget transfer', 'operating budget', 'capital budget', 'balanced budget',
+    'annual budget',
+]
+
+# A decision word within a short span of the word 'budget', with no sentence break
+# between, so the match stays inside one agenda item. This is the rule type that
+# reaches the FY-token phrasings fixed phrases cannot.
+_BUDGET_DECISION = (r'adopt\w*|amend\w*|propos\w*|hearing|work ?session|workshop'
+                    r'|public comment')
+TOPIC_PROXIMITY_RULES = {
+    'budget': [
+        ('decision-then-budget', r'(?:%s)[^.;:\n]{0,45}\bbudget\b' % _BUDGET_DECISION),
+        ('budget-then-decision', r'\bbudget\b[^.;:\n]{0,45}(?:%s)' % _BUDGET_DECISION),
+    ],
+}
+
+# A span matching one of these is DISCARDED, even though a keyword or proximity rule
+# fired on it. This is the only negative rule type in the taxonomy, and it exists
+# because a place's agenda TEMPLATE can manufacture a topic:
+#
+#   Savannah prints "PUBLIC COMMENTS ARE ACCEPTED ONLY FOR HEARINGS (Alcohol,
+#   Public, Zoning, and Budget)" on EVERY meeting. That trips 'hearing … budget'.
+#   Measured over Savannah's 40 documents: 18 flagged, and 15 of those flagged by
+#   the boilerplate ALONE — the card would have read "Budgets 18" where 3 are real.
+#
+# The rule is written generically (budget as the last item of a parenthesised comma
+# list is a category menu, never a decision) rather than hardcoding that wording.
+# Measured over the whole 975-document corpus it removes exactly those 15 Savannah
+# documents and changes no other place's count.
+TOPIC_EXCLUDE_RULES = {
+    'budget': [
+        ('category-list', r'\([^)]{0,80}?,[^)]{0,40}?\band\s+budget\b[^)]{0,10}\)'),
+        ('funding-source', r'(?:included in|paid from|charged to)\b[^.;:\n]{0,40}'
+                           r'\bbudget\b'),
+    ],
+}
+
+_PROX_RE = {tag: [(name, re.compile(pat)) for name, pat in rules]
+            for tag, rules in TOPIC_PROXIMITY_RULES.items()}
+_EXCLUDE_RE = {tag: [(name, re.compile(pat)) for name, pat in rules]
+               for tag, rules in TOPIC_EXCLUDE_RULES.items()}
+# Tags that cannot use the plain keyword path, because they carry a proximity rule,
+# an exclusion rule, or both.
+_RULED_TAGS = frozenset(TOPIC_PROXIMITY_RULES) | frozenset(TOPIC_EXCLUDE_RULES)
+# How much text either side of a candidate span an exclusion rule gets to see.
+_EXCLUDE_BEFORE, _EXCLUDE_AFTER = 70, 40
 _WORD_RE = {kw: re.compile(r'\b' + re.escape(kw) + r'\b')
             for kws in TOPIC_WORD_RULES.values() for kw in kws}
 
@@ -340,13 +417,60 @@ def _find_kw(low, kw):
     i = low.find(kw)
     return (i, i + len(kw)) if i != -1 else None
 
+
+def _all_kw_spans(low, kw):
+    """EVERY (start, end) of `kw` in `low`, not just the first.
+
+    _find_kw stops at the first hit, which is fine when a tag only needs to know
+    that it fired. A tag with an exclusion rule needs all of them: Savannah's
+    boilerplate sits in the page header, so the FIRST hit in the document is the
+    excluded one and the real budget item is further down."""
+    rx = _PHRASE_RE.get(kw)
+    if rx is not None:
+        return [(m.start(), m.end()) for m in rx.finditer(low)]
+    out, i = [], low.find(kw)
+    while i != -1:
+        out.append((i, i + len(kw)))
+        i = low.find(kw, i + 1)
+    return out
+
+
+def _is_excluded(low, start, end, tag):
+    """True when an exclusion rule matches the text around this span."""
+    rules = _EXCLUDE_RE.get(tag)
+    if not rules:
+        return False
+    ctx = low[max(0, start - _EXCLUDE_BEFORE):end + _EXCLUDE_AFTER]
+    return any(rx.search(ctx) for _, rx in rules)
+
+
+def topic_spans(low, tag):
+    """Sorted (start, end, label) of every surviving hit for `tag` in lowercased
+    `low` — keyword, word-rule and proximity hits, minus anything an exclusion rule
+    rejects. `label` is the keyword, or the proximity rule's name.
+
+    This is the one place the three rule types are combined, so classify(),
+    matched_terms() and the excerpt finder cannot disagree about what fired."""
+    spans = []
+    for kw in TOPIC_RULES.get(tag, []):
+        spans += [(a, b, kw) for a, b in _all_kw_spans(low, kw)]
+    for kw in TOPIC_WORD_RULES.get(tag, []):
+        spans += [(m.start(), m.end(), kw) for m in _WORD_RE[kw].finditer(low)]
+    for name, rx in _PROX_RE.get(tag, ()):
+        spans += [(m.start(), m.end(), name) for m in rx.finditer(low)]
+    if tag in _EXCLUDE_RE:
+        spans = [x for x in spans if not _is_excluded(low, x[0], x[1], tag)]
+    return sorted(spans)
+
 # Every keyword (substring + word-rule) that counts as ALPR evidence — used to
 # filter a meeting's matchedTerms down to the vendor/capability phrases that
 # actually fired, for the sourced alprItems citations.
 ALPR_TERMS = set(TOPIC_RULES['alpr']) | set(TOPIC_WORD_RULES['alpr'])
 TAX_TERMS = set(TOPIC_RULES['local-taxes']) | set(TOPIC_WORD_RULES['local-taxes'])
-MILLAGE_TERMS = (set(TOPIC_RULES['millage-budget'])
-                 | set(TOPIC_WORD_RULES.get('millage-budget') or ()))
+# Budget evidence: the phrases, plus the proximity rules' names, since a proximity
+# hit is evidence too and matched_terms records it under its rule name.
+BUDGET_TERMS = (set(TOPIC_RULES['budget'])
+                | {name for name, _ in TOPIC_PROXIMITY_RULES['budget']})
 
 # Display labels for the ALPR vendor keywords, so a matched term can be shown as a
 # vendor NAME on the topic index pages (assets/scripts/topic-index.js reads the
@@ -455,7 +579,14 @@ def _snip(text, start, end):
 
 def _tag_matches(low, tag):
     """All (start, end, keyword) hits for a tag's keywords, over lowercased text.
-    Offsets are valid in the original text too (lower() preserves length here)."""
+    Offsets are valid in the original text too (lower() preserves length here).
+
+    A ruled tag goes through topic_spans(), so an excerpt is never quoted from a
+    span the classifier excluded — otherwise Savannah's every-meeting boilerplate,
+    which sits at the top of the page and would win _best_hit's earliest-hit rule,
+    would be published as the quote for a topic it did not earn."""
+    if tag in _RULED_TAGS:
+        return topic_spans(low, tag)
     hits = []
     for kw in TOPIC_RULES.get(tag, []):
         span = _find_kw(low, kw)
@@ -636,12 +767,17 @@ def agenda_head(text):
 
 
 def classify(text):
-    """Return the sorted list of subject tags whose keywords appear in `text`."""
+    """Return the sorted list of subject tags whose keywords appear in `text`.
+
+    Tags carrying a proximity or exclusion rule go through topic_spans(); every
+    other tag keeps the original first-hit keyword path unchanged, so adding the
+    new rule types cannot move an existing topic's verdict."""
     t = (text or '').lower()
     tags = {tag for tag, kws in TOPIC_RULES.items()
-            if any(_find_kw(t, k) for k in kws)}
+            if tag not in _RULED_TAGS and any(_find_kw(t, k) for k in kws)}
     tags |= {tag for tag, kws in TOPIC_WORD_RULES.items()
-             if any(_WORD_RE[k].search(t) for k in kws)}
+             if tag not in _RULED_TAGS and any(_WORD_RE[k].search(t) for k in kws)}
+    tags |= {tag for tag in _RULED_TAGS if topic_spans(t, tag)}
     return sorted(tags)
 
 
@@ -653,8 +789,13 @@ def matched_terms(text):
     human auditor) see *why* a place is flagged without re-reading the PDF.
     """
     t = (text or '').lower()
-    terms = {k for kws in TOPIC_RULES.values() for k in kws if _find_kw(t, k)}
+    terms = {k for tag, kws in TOPIC_RULES.items() if tag not in _RULED_TAGS
+             for k in kws if _find_kw(t, k)}
     terms |= {k for k, rx in _WORD_RE.items() if rx.search(t)}
+    # A ruled tag contributes only the hits that SURVIVED its exclusions, so the
+    # evidence list never names a keyword the classifier threw away.
+    for tag in _RULED_TAGS:
+        terms |= {label for _, _, label in topic_spans(t, tag)}
     return sorted(terms)
 
 
@@ -662,7 +803,7 @@ def topic_flags(topics):
     """Per-meeting/-place flags from a {tag: count} (or tag-iterable) of topics.
 
     Identical rule for both enrichers: any land-use subject → 'land-use';
-    'data-center', 'millage-budget' and 'alpr' surface as their own flags.
+    'data-center', 'budget' and 'alpr' surface as their own flags.
     """
     present = set(topics)
     flags = []
@@ -670,8 +811,8 @@ def topic_flags(topics):
         flags.append('land-use')
     if 'data-center' in present:
         flags.append('data-center')
-    if 'millage-budget' in present:
-        flags.append('millage-budget')
+    if 'budget' in present:
+        flags.append('budget')
     if 'alpr' in present:
         flags.append('alpr')
     if 'local-taxes' in present:
@@ -717,7 +858,7 @@ def build_summary(enriched):
     lu_items = {}
     alpr_items = {}
     tax_items = {}
-    millage_meetings = set()
+    budget_items = {}
     flags = set()
     last = None
     land_use_meetings = 0
@@ -789,20 +930,27 @@ def build_summary(enriched):
                 entry['excerpt'] = ex['excerpt']
                 entry['excerptTerm'] = ex['excerptTerm']
             tax_items.setdefault(key, entry)
-        # Millage / budget: COUNTED but not listed. Unlike the subjects above it
-        # has no page and no pill, so a sourced list would be ~197 KB across the 59
-        # committed sidecars that nothing reads, rewritten twice weekly. Its real
-        # millage content is not lost: 'millage' and 'ad valorem' are in the
-        # local-taxes lexicon too, so those meetings carry the local-taxes tag and
-        # reach the Local taxes & referenda page. Measured over the sidecars, the
-        # meetings this tag adds on its own are 209 'budget' and 55 'fiscal year'
-        # against 5 'millage' — it marks budget business, not millage.
-        if 'millage-budget' in mtopics:
-            millage_meetings.add((m.get('date'), m.get('title') or m.get('body') or 'Meeting'))
+        # Budget citations: the same sourced, per-meeting shape as ALPR and taxes.
+        # The retired millage-budget tag was counted but never listed, because
+        # nothing read the list; budget earns one because it has a page.
+        if 'budget' in mtopics:
+            title = m.get('title') or m.get('body') or 'Meeting'
+            terms = sorted(set(m.get('matchedTerms') or []) & BUDGET_TERMS)
+            key = (m.get('date'), title)
+            entry = {
+                'title': title, 'date': m.get('date'),
+                'sourceUrl': m.get('sourceUrl'), 'terms': terms}
+            ex = _agenda_excerpt(m, 'budget')
+            if ex:
+                entry['excerpt'] = ex['excerpt']
+                entry['excerptTerm'] = ex['excerptTerm']
+            budget_items.setdefault(key, entry)
     # Newest first, capped so the committed sidecar stays small.
     lu_sorted = sorted(lu_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     alpr_sorted = sorted(alpr_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     tax_sorted = sorted(tax_items.values(), key=lambda x: x.get('date') or '', reverse=True)
+    budget_sorted = sorted(budget_items.values(),
+                           key=lambda x: x.get('date') or '', reverse=True)
     # Citation counts come from the FULL dicts, not from the lists below: those are
     # sliced to 20 for sidecar size, so counting them saturates at 20 and a place
     # with 35 land-use meetings reports the same number as one with 20.
@@ -817,7 +965,8 @@ def build_summary(enriched):
         'alprMeetings': alpr_meetings,
         'localTaxItems': tax_sorted[:20],
         'localTaxCitations': len(tax_items),
-        'millageCitations': len(millage_meetings),
+        'budgetItems': budget_sorted[:20],
+        'budgetCitations': len(budget_items),
         'landUseCitations': len(lu_items),
         'alprCitations': len(alpr_items),
         'dataCenterCitations': len(dc_items),
@@ -837,12 +986,11 @@ def flag_entry(summary):
     which stop at 20. Each count falls back to the old capped length so a sidecar
     written before this change still reads.
 
-`millageCount` has no `*Items` list behind it, by design — see
-    build_summary(). It is emitted for consistency but must NOT be ranked against
-    the others: the millage-budget lexicon includes 'budget' and 'fiscal year', which
-    appear on nearly every agenda, so it outscores the narrow subjects everywhere
-    (Fulton: millage-budget 36, local-taxes 19). It is a vocabulary-wide tag, not
-    a watch topic, and it carries no pill of its own.
+    `budgetCount` replaces the retired `millageCount`. That tag could never be
+    ranked against the others — its bare 'budget' and 'fiscal year' keywords put it
+    on 59 of 59 flagged places — so the hub card carried a special case to exclude
+    it. 'budget' is narrow enough to rank like any other topic, and that special
+    case is gone with it.
     """
     def count(key, items_key):
         n = summary.get(key)
@@ -853,7 +1001,7 @@ def flag_entry(summary):
         'landUseCount': count('landUseCitations', 'landUseItems'),
         'alprCount': count('alprCitations', 'alprItems'),
         'localTaxesCount': count('localTaxCitations', 'localTaxItems'),
-        'millageCount': summary.get('millageCitations') or 0,
+        'budgetCount': count('budgetCitations', 'budgetItems'),
         'lastActivity': summary['lastActivity'],
     }
 

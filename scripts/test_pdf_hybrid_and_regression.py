@@ -185,7 +185,7 @@ check('a longer re-read is never a regression',
 check('a shorter reading that matched MORE is not a regression',
       text_regressed('1154', {'tags': [], 'textChars': 49960, 'textMethod': 'html'},
                      7137, 'pdftotext',
-                     ['alpr', 'appointment', 'contract', 'millage-budget']), False)
+                     ['alpr', 'appointment', 'contract', 'budget']), False)
 check('a shorter reading that keeps every prior finding is not a regression',
       text_regressed('x', TAGGED, 1000, 'pdftotext',
                      ['rezoning', 'variance', 'contract', 'alpr']), False)
