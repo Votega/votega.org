@@ -11,9 +11,8 @@ What is pinned here:
   2. A count is the number of distinct citing meetings and is NOT clipped by the
      20-item slice on the `*Items` lists.
   3. A sidecar written before the counts existed still reads (capped fallback).
-  4. millage-budget gets a count for consistency but is NOT comparable with the
-     narrow subjects — 'budget' and 'fiscal year' are in its lexicon, so it
-     outscores them nearly everywhere. The card must not rank on it.
+  4. `budget` replaced the retired `millage-budget` and is narrow enough to rank
+     like any other topic, so the hub card's special case for it is gone.
 
 Stdlib only: CI installs no pip packages.
 """
@@ -24,7 +23,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from lib.meeting_topics import (  # noqa: E402
-    MILLAGE_TERMS, TOPIC_RULES, build_summary, flag_entry)
+    TOPIC_RULES, build_summary, flag_entry)
 
 failures = []
 
@@ -55,10 +54,10 @@ entry = flag_entry(build_summary([
     meeting(1, {'data-center': 1}, ['data center'], ['land-use', 'data-center']),
     meeting(2, {'alpr': 1}, ['flock'], ['alpr']),
     meeting(3, {'local-taxes': 1}, ['splost'], ['local-taxes']),
-    meeting(4, {'millage-budget': 1}, ['millage'], ['millage-budget']),
+    meeting(4, {'budget': 1}, ['proposed budget'], ['budget']),
 ]))
 for key in ('landUseCount', 'dataCenterCount', 'alprCount',
-            'localTaxesCount', 'millageCount'):
+            'localTaxesCount', 'budgetCount'):
     check("%s present" % key, key in entry, True)
 
 # ---------------------------------------------------------------------------
@@ -77,15 +76,11 @@ summary = build_summary(taxes)
 check("localTaxItems is capped at 20", len(summary['localTaxItems']), 20)
 check("localTaxesCount is not capped", flag_entry(summary)['localTaxesCount'], 23)
 
-millage = [meeting(i, {'millage-budget': 1}, ['millage'], ['millage-budget'])
-           for i in range(22)]
-summary = build_summary(millage)
-check("millageCount is not capped", flag_entry(summary)['millageCount'], 22)
-# Counted, never listed: this tag has no page and no pill, so a sourced list would
-# be ~197 KB across the committed sidecars that nothing reads, rewritten twice
-# weekly. Its real millage content still reaches the Local taxes page, because
-# 'millage' and 'ad valorem' are in the local-taxes lexicon too.
-check("millage carries no items list", 'millageItems' in summary, False)
+budget = [meeting(i, {'budget': 1}, ['proposed budget'], ['budget'])
+          for i in range(22)]
+summary = build_summary(budget)
+check("budgetItems is capped at 20", len(summary['budgetItems']), 20)
+check("budgetCount is not capped", flag_entry(summary)['budgetCount'], 22)
 
 # ---------------------------------------------------------------------------
 print("A meeting cited twice for one subject counts once")
@@ -127,29 +122,17 @@ legacy = {
 entry = flag_entry(legacy)
 check("landUseCount falls back to the item count", entry['landUseCount'], 3)
 check("localTaxesCount falls back to the item count", entry['localTaxesCount'], 2)
-check("a sidecar with no millage count reads zero", entry['millageCount'], 0)
+check("a sidecar with no budget count reads zero", entry['budgetCount'], 0)
 
 # ---------------------------------------------------------------------------
-print("millage-budget is a broad tag and must not be ranked with the others")
+print("The retired millage-budget tag leaves no count behind")
 
-# This is the reason the card ranks only the four pill-bearing subjects. If these
-# two terms ever leave the lexicon, the card's exclusion of millage can be
-# revisited — so the test names them rather than leaving it to a comment.
-for term in ('budget', 'fiscal year'):
-    check("%r is in the millage-budget lexicon" % term,
-          term in TOPIC_RULES['millage-budget'], True)
-    check("%r is a millage evidence term" % term, term in MILLAGE_TERMS, True)
-
-# A place whose agendas merely say "budget" every month outscores a real
-# land-use fight, which is why millage carries a count but never a pill.
-broad = build_summary(
-    [meeting(i, {'millage-budget': 1}, ['budget'], ['millage-budget'])
-     for i in range(12)]
-    + [meeting(50 + i, {'rezoning': 1}, ['rezoning'], ['land-use'])
-       for i in range(3)])
-entry = flag_entry(broad)
-check("millage outscores land use on an ordinary place",
-      entry['millageCount'] > entry['landUseCount'], True)
+check("millage-budget is gone from the taxonomy",
+      'millage-budget' in TOPIC_RULES, False)
+entry = flag_entry(build_summary(
+    [meeting(0, {'budget': 1}, ['proposed budget'], ['budget'])]))
+check("no millageCount is emitted", 'millageCount' in entry, False)
+check("budgetCount replaces it", 'budgetCount' in entry, True)
 
 # ---------------------------------------------------------------------------
 if failures:

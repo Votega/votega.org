@@ -85,13 +85,19 @@ for bad in ('lost', 'most', 'host', 'tax'):
     if not ok:
         failures.append('keyword ' + bad)
 
-# Flag wiring, and no collateral effect on the existing millage-budget tag.
+# Flag wiring. The old millage-budget tag is retired (docs/BUDGET-TOPIC-SCOPE.md);
+# its millage keywords live here, so a millage item must land on THIS topic. That
+# is the invariant that made retiring the other tag safe.
 if topic_flags(['local-taxes']) != ['local-taxes']:
     failures.append('flag')
     print('  FAIL flag')
-if 'millage-budget' not in classify('adopt the millage rate'):
-    failures.append('millage-budget regression')
-    print('  FAIL millage-budget regression')
+if 'local-taxes' not in classify('adopt the 2026 millage rate'):
+    failures.append('millage lands on local-taxes')
+    print('  FAIL millage lands on local-taxes')
+# 'tax rate' moved here from the retired tag, so it must fire here too.
+if 'local-taxes' not in classify('amend the excise tax rate on rooms and lodgings'):
+    failures.append('tax rate lands on local-taxes')
+    print('  FAIL tax rate lands on local-taxes')
 
 if failures:
     print('\n%d FAILED' % len(failures))
