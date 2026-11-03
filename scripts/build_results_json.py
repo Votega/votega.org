@@ -128,6 +128,73 @@ def detect_delimiter(path):
     return '\t' if sample.count('\t') > sample.count(',') else ','
 
 
+PARTY_SUFFIX = {'rep': 'Rep', 'dem': 'Dem'}
+PARTY_SUFFIX_RE = re.compile(r'\((?:rep|dem|republican|democrat(?:ic)?)\w*\)', re.IGNORECASE)
+
+
+def normalize_mixed_party(contest):
+    """A GENERAL-election contest holds both parties under ONE Contest ID — make it read that way.
+
+    In a primary export each party runs its own contest ("US Senate - Rep" /
+    US2R, "US Senate - Dem" / US2D), so a contest IS a party and the card's
+    party badge and bar colors come straight off the first row. A general
+    export does not work that way: Ossoff and Collins share one contest ID,
+    with the Party column distinguishing them row by row.
+
+    Read naively, the contest took the party of whichever row the Secretary of
+    State happened to list first, so the US Senate card would have been badged
+    (and bar-colored) REPUBLICAN with the Democrat inside it — on every federal,
+    statewide and legislative race on the November ballot. The primary pages
+    never caught it because a primary contest genuinely has one party.
+
+    So: a contest whose rows carry more than one party becomes non-partisan
+    (`np`, the neutral card the layout already renders for jungle specials and
+    ballot questions) and each candidate keeps their own party as a "(Dem)" /
+    "(Rep)" suffix on the ballot name. That is the convention this script's
+    docstring already documents for jungle contests, and it is safe for the two
+    places that match these names: both `nameKeys()` in
+    _layouts/election_results.html and `normalize()` in scripts/lib/race_winners.py
+    strip parenthetical suffixes before matching, so candidate-page links and
+    winner proposals are unaffected.
+    """
+    seen = {c.get('party') for c in contest['candidates']} - {'np'}
+    if len(seen) < 2:
+        return
+    contest['party'] = 'np'
+    for cand in contest['candidates']:
+        suffix = PARTY_SUFFIX.get(cand.get('party'))
+        if suffix and not PARTY_SUFFIX_RE.search(cand['name']):
+            cand['name'] = f"{cand['name']} ({suffix})"
+
+
+def backfill_total_votes(contest):
+    """No "Total Votes" row? Sum the candidates rather than report nothing.
+
+    `contest.totalVotes` is not cosmetic: ResultsContest.status() returns
+    'no-results' for any contest with a falsy totalVotes, so a contest without
+    it renders "Awaiting Results" with the counts hidden — no percentages, no
+    bars — however many votes its candidate rows carry. The certified primary
+    exports all carry a per-contest "Total Votes" row (554 of them in the May
+    export), which is why this has never bitten.
+
+    Election night is the night it would. The unofficial feed is a different
+    export from the certified one, and a missing summary row would have failed
+    SILENTLY and uniformly: every race on the page reading "Awaiting Results"
+    at 9pm while the file on disk held the whole count, with nothing to
+    distinguish it from votes not yet reported.
+
+    Summing the candidate rows is also the right denominator, not just a
+    fallback: Georgia's majority test (50% + 1, or a December runoff) runs on
+    votes cast for candidates, which is what these rows are. A real "Total
+    Votes" row always wins — this only fills a zero.
+    """
+    if contest['totalVotes']:
+        return
+    summed = sum(c['votes'] for c in contest['candidates'])
+    if summed:
+        contest['totalVotes'] = summed
+
+
 def parse_csv(path):
     contests = OrderedDict()
     delimiter = detect_delimiter(path)
@@ -153,9 +220,14 @@ def parse_csv(path):
                 }
             name, incumbent = parse_candidate_name(ballot_name)
             contests[contest_id]['candidates'].append(
-                {'name': name, 'votes': total, 'incumbent': incumbent})
+                {'name': name, 'votes': total, 'incumbent': incumbent,
+                 'party': party_from_csv(party_str)})
 
     for c in contests.values():
+        normalize_mixed_party(c)
+        backfill_total_votes(c)
+        for cand in c['candidates']:
+            cand.pop('party', None)
         c['candidates'].sort(key=lambda x: x['votes'], reverse=True)
     return contests
 
