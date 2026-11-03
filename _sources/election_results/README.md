@@ -31,3 +31,18 @@ python scripts/build_results_json.py _sources/election_results/<file>.csv <data-
 | `ga-primary-runoff-results.csv`         | Jun 16 2026 primary runoff         | `ga-primary-runoff-results.json` |
 | `ga-special-2026-results-official.csv`  | Jul 28 2026 CD-13 special          | `ga-special-2026-results.json` |
 | `ga-special-2026-runoff-results.csv`    | Aug 25 2026 CD-13 special runoff   | `ga-special-2026-runoff-results.json` |
+
+## Election night
+
+Don't do it by hand. The **Publish election results** workflow
+(`.github/workflows/publish-results.yml`) runs this whole sequence from the
+Actions tab or the GitHub mobile app — fetch the export, rebuild, validate,
+commit, deploy — and verifies the deploy started, which a push from a workflow
+does not do on its own (see that file's header). Leave its `fill_missing` input
+ON while results are unofficial: the data file is rebuilt wholesale, so an
+export carrying only the contests that have reported would otherwise delete
+every other race from the page instead of leaving it "Awaiting Results".
+
+Unofficial exports are not committed here by default (`commit_csv: false`): a
+200KB file rewritten every twenty minutes is churn, and the JSON it built is
+the served artifact. Commit the certified export, once, with `commit_csv: true`.

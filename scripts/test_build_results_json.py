@@ -121,6 +121,49 @@ check('no duplicate suffix appended',
       [x['name'] for x in c['candidates']] == ['John Roe (Rep)', 'Jane Doe (Dem)'],
       str([x['name'] for x in c['candidates']]))
 
+print('Carry-forward: a partial export must not delete the rest of the ballot')
+BASELINE = [
+    {'id': 'statewide', 'label': 'Executive / Statewide', 'races': [
+        {'office': 'US Senate', 'contests': [
+            {'party': 'rep', 'totalVotes': 0, 'candidates': [{'name': 'Mike Collins', 'votes': 0, 'incumbent': False}]},
+            {'party': 'dem', 'totalVotes': 0, 'candidates': [{'name': 'Jon Ossoff', 'votes': 0, 'incumbent': True}]}]},
+        {'office': 'Governor', 'contests': [
+            {'party': 'np', 'totalVotes': 0, 'candidates': [{'name': 'Rick Jackson', 'votes': 0, 'incumbent': False}]}]},
+        {'office': 'Attorney General', 'contests': [
+            {'party': 'np', 'totalVotes': 0, 'candidates': [{'name': 'Someone', 'votes': 0, 'incumbent': False}]}]},
+    ]},
+    {'id': 'us-house', 'label': 'U.S. House', 'races': []},
+    {'id': 'state-senate', 'label': 'GA State Senate', 'races': []},
+    {'id': 'state-house', 'label': 'GA State House', 'races': []},
+    {'id': 'courts', 'label': 'Courts', 'races': []},
+    {'id': 'measures', 'label': 'Ballot Questions', 'races': []},
+]
+
+import copy
+sections = brj.build_sections(parse([
+    'Governor,GOV,Keisha Lance Bottoms,1,DEM,900',
+    'Governor,GOV,Rick Jackson,2,REP,950',
+    'Commissioner of Labor,LAB,New Person,3,REP,10',
+]))
+carried = brj.fill_missing_races(sections, copy.deepcopy(BASELINE))
+statewide = [s for s in sections if s['id'] == 'statewide'][0]
+offices = [r['office'] for r in statewide['races']]
+check('races absent from the export are carried forward', carried == 2, str(carried))
+check('baseline race order is the spine, new races appended',
+      offices == ['US Senate', 'Governor', 'Attorney General', 'Commissioner of Labor'],
+      str(offices))
+gov = [r for r in statewide['races'] if r['office'] == 'Governor'][0]
+check('a reported race is REPLACED by the export, not merged with the baseline',
+      len(gov['contests']) == 1 and gov['contests'][0]['totalVotes'] == 1850)
+sen = [r for r in statewide['races'] if r['office'] == 'US Senate'][0]
+check('a carried-forward race keeps its zeros (still reads Awaiting Results)',
+      all((c['totalVotes'] or 0) == 0 for c in sen['contests']))
+check('carry-forward never invents votes',
+      sum(x['votes'] for c in sen['contests'] for x in c['candidates']) == 0)
+
+sections = brj.build_sections(parse(['Governor,GOV,Rick Jackson,1,REP,950']))
+check('an empty baseline carries nothing', brj.fill_missing_races(sections, []) == 0)
+
 if FAILURES:
     print(f'\n{len(FAILURES)} check(s) failed: {", ".join(FAILURES)}')
     sys.exit(1)

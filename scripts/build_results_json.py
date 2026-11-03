@@ -285,6 +285,60 @@ def build_sections(contests):
     ]
 
 
+def _office_key(name):
+    return re.sub(r'[^a-z0-9]', '', (name or '').lower())
+
+
+def fill_missing_races(sections, baseline):
+    """Carry forward races the new export does not mention, so the ballot never shrinks.
+
+    `_data/election_results/<key>.json` is rebuilt WHOLESALE from one CSV, and
+    the page renders exactly what that file holds. Before any vote is counted
+    the file is the generated placeholder listing all 274 races on the November
+    ballot, every one reading "Awaiting Results" — which is the promise the
+    results page makes: a race missing from the page is a gap on our side, not
+    a race with no returns.
+
+    An export that carries only the contests that have reported would therefore
+    DELETE the rest of the ballot from the page: at 8:15pm, with a dozen
+    counties in, a reader looking for their State House district would find no
+    card at all, and nothing anywhere to say the race exists. The certified
+    exports we have all carry every contest, so this has never happened — but
+    it is the unofficial feed's shape that decides it, and the failure is
+    silent and total for whichever races are absent.
+
+    So the baseline (whatever is committed now, placeholder or an earlier
+    count) is the SPINE: its race order is kept, each race replaced by the new
+    export's version where the export has one, and any race the export adds is
+    appended. Votes therefore only ever come from the CSV — a carried-forward
+    race keeps its zeros and keeps reading "Awaiting Results" — while the list
+    of races is the union, in canonical order.
+
+    Off by default: a certified rebuild should be exactly what the Secretary of
+    State certified, nothing carried over. The election-night publish path
+    (.github/workflows/publish-results.yml) turns it on.
+    """
+    by_id = {s['id']: s for s in baseline if isinstance(s, dict) and 'id' in s}
+    carried = 0
+    for section in sections:
+        base = by_id.get(section['id'], {}).get('races') or []
+        if not base:
+            continue
+        fresh = {_office_key(r['office']): r for r in section['races']}
+        merged, used = [], set()
+        for race in base:
+            key = _office_key(race['office'])
+            used.add(key)
+            if key in fresh:
+                merged.append(fresh[key])
+            else:
+                merged.append(race)
+                carried += 1
+        merged.extend(r for r in section['races'] if _office_key(r['office']) not in used)
+        section['races'] = merged
+    return carried
+
+
 def record_build_time(data_key, now=None, stamp_path=None):
     """Record when this data file was built, for the page's "Last updated" line.
 
@@ -332,13 +386,28 @@ def record_build_time(data_key, now=None, stamp_path=None):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        sys.exit("Usage: python scripts/build_results_json.py <csv_path> <data_key>")
-    csv_path, data_key = sys.argv[1], sys.argv[2]
+    USAGE = ("Usage: python scripts/build_results_json.py <csv_path> <data_key> "
+             "[--fill-missing-from <json_path>]")
+    args = sys.argv[1:]
+    fill_from = None
+    if '--fill-missing-from' in args:
+        i = args.index('--fill-missing-from')
+        if i + 1 >= len(args):
+            sys.exit(USAGE)
+        fill_from = args[i + 1]
+        del args[i:i + 2]
+    if len(args) != 2:
+        sys.exit(USAGE)
+    csv_path, data_key = args
     print(f"Parsing CSV: {csv_path}")
     contests = parse_csv(csv_path)
     print(f"  {len(contests)} contest(s) parsed")
     sections = build_sections(contests)
+    if fill_from:
+        with open(fill_from, encoding='utf-8') as fh:
+            baseline = json.load(fh)
+        carried = fill_missing_races(sections, baseline)
+        print(f"  Carried forward {carried} race(s) the export did not mention, from {fill_from}")
     os.makedirs(OUT_DIR, exist_ok=True)
     out_path = os.path.join(OUT_DIR, f"{data_key}.json")
     write_json_atomic(out_path, sections, separators=(',', ':'))
