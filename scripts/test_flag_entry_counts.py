@@ -80,8 +80,12 @@ check("localTaxesCount is not capped", flag_entry(summary)['localTaxesCount'], 2
 millage = [meeting(i, {'millage-budget': 1}, ['millage'], ['millage-budget'])
            for i in range(22)]
 summary = build_summary(millage)
-check("millageItems is capped at 20", len(summary['millageItems']), 20)
 check("millageCount is not capped", flag_entry(summary)['millageCount'], 22)
+# Counted, never listed: this tag has no page and no pill, so a sourced list would
+# be ~197 KB across the committed sidecars that nothing reads, rewritten twice
+# weekly. Its real millage content still reaches the Local taxes page, because
+# 'millage' and 'ad valorem' are in the local-taxes lexicon too.
+check("millage carries no items list", 'millageItems' in summary, False)
 
 # ---------------------------------------------------------------------------
 print("A meeting cited twice for one subject counts once")
@@ -123,7 +127,7 @@ legacy = {
 entry = flag_entry(legacy)
 check("landUseCount falls back to the item count", entry['landUseCount'], 3)
 check("localTaxesCount falls back to the item count", entry['localTaxesCount'], 2)
-check("a missing items list counts zero", entry['millageCount'], 0)
+check("a sidecar with no millage count reads zero", entry['millageCount'], 0)
 
 # ---------------------------------------------------------------------------
 print("millage-budget is a broad tag and must not be ranked with the others")

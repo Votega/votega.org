@@ -717,7 +717,7 @@ def build_summary(enriched):
     lu_items = {}
     alpr_items = {}
     tax_items = {}
-    millage_items = {}
+    millage_meetings = set()
     flags = set()
     last = None
     land_use_meetings = 0
@@ -789,28 +789,20 @@ def build_summary(enriched):
                 entry['excerpt'] = ex['excerpt']
                 entry['excerptTerm'] = ex['excerptTerm']
             tax_items.setdefault(key, entry)
-        # Millage / budget citations: same sourced, per-meeting shape again. This
-        # tag's lexicon is deliberately broad ('budget', 'fiscal year'), so its
-        # count is large nearly everywhere and is NOT comparable with the narrow
-        # subjects above — see the note on flag_entry() before ranking on it.
+        # Millage / budget: COUNTED but not listed. Unlike the subjects above it
+        # has no page and no pill, so a sourced list would be ~197 KB across the 59
+        # committed sidecars that nothing reads, rewritten twice weekly. Its real
+        # millage content is not lost: 'millage' and 'ad valorem' are in the
+        # local-taxes lexicon too, so those meetings carry the local-taxes tag and
+        # reach the Local taxes & referenda page. Measured over the sidecars, the
+        # meetings this tag adds on its own are 209 'budget' and 55 'fiscal year'
+        # against 5 'millage' — it marks budget business, not millage.
         if 'millage-budget' in mtopics:
-            title = m.get('title') or m.get('body') or 'Meeting'
-            terms = sorted(set(m.get('matchedTerms') or []) & MILLAGE_TERMS)
-            key = (m.get('date'), title)
-            entry = {
-                'title': title, 'date': m.get('date'),
-                'sourceUrl': m.get('sourceUrl'), 'terms': terms}
-            ex = _agenda_excerpt(m, 'millage-budget')
-            if ex:
-                entry['excerpt'] = ex['excerpt']
-                entry['excerptTerm'] = ex['excerptTerm']
-            millage_items.setdefault(key, entry)
+            millage_meetings.add((m.get('date'), m.get('title') or m.get('body') or 'Meeting'))
     # Newest first, capped so the committed sidecar stays small.
     lu_sorted = sorted(lu_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     alpr_sorted = sorted(alpr_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     tax_sorted = sorted(tax_items.values(), key=lambda x: x.get('date') or '', reverse=True)
-    millage_sorted = sorted(millage_items.values(),
-                            key=lambda x: x.get('date') or '', reverse=True)
     # Citation counts come from the FULL dicts, not from the lists below: those are
     # sliced to 20 for sidecar size, so counting them saturates at 20 and a place
     # with 35 land-use meetings reports the same number as one with 20.
@@ -825,8 +817,7 @@ def build_summary(enriched):
         'alprMeetings': alpr_meetings,
         'localTaxItems': tax_sorted[:20],
         'localTaxCitations': len(tax_items),
-        'millageItems': millage_sorted[:20],
-        'millageCitations': len(millage_items),
+        'millageCitations': len(millage_meetings),
         'landUseCitations': len(lu_items),
         'alprCitations': len(alpr_items),
         'dataCenterCitations': len(dc_items),
@@ -846,8 +837,9 @@ def flag_entry(summary):
     which stop at 20. Each count falls back to the old capped length so a sidecar
     written before this change still reads.
 
-    `millageCount` is emitted for consistency but must NOT be ranked against the
-    others: the millage-budget lexicon includes 'budget' and 'fiscal year', which
+`millageCount` has no `*Items` list behind it, by design — see
+    build_summary(). It is emitted for consistency but must NOT be ranked against
+    the others: the millage-budget lexicon includes 'budget' and 'fiscal year', which
     appear on nearly every agenda, so it outscores the narrow subjects everywhere
     (Fulton: millage-budget 36, local-taxes 19). It is a vocabulary-wide tag, not
     a watch topic, and it carries no pill of its own.
@@ -861,7 +853,7 @@ def flag_entry(summary):
         'landUseCount': count('landUseCitations', 'landUseItems'),
         'alprCount': count('alprCitations', 'alprItems'),
         'localTaxesCount': count('localTaxCitations', 'localTaxItems'),
-        'millageCount': count('millageCitations', 'millageItems'),
+        'millageCount': summary.get('millageCitations') or 0,
         'lastActivity': summary['lastActivity'],
     }
 
