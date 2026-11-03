@@ -1,8 +1,9 @@
 # Budgets as a `/local/` topic — scope
 
-**Status:** phase 0 measured on a 40-place corpus — the lexicon holds. See
-**Phase 0 results** below before reading the rest; §2.3's earlier hit counts are
-superseded.
+**Status:** phase 0 complete on a 41-place corpus including Savannah. The lexicon
+holds, and the one open risk turned out to be real: a boilerplate exclusion rule is
+now **required**, not optional. See **Phase 0 results** below; §2.1 and §2.3 are
+superseded by it.
 **Scoped:** 2026-11-03 · **Last updated:** 2026-11-03 · **Scope owner:** Justin Mays
 **Parent:** `docs/LOCAL-EXPANSION-SCOPE.md` (the `/local/` expansion this continues)
 
@@ -25,23 +26,26 @@ earns a page — the fifth alongside ALPR, data centers, land use and local taxe
 
 ## Phase 0 results — measured 2026-11-03
 
-Run on the full-text corpus from `populate-meeting-text-cache.yml` run #3
-(**935 documents, 40 places, 54.5 MB**), read through the repo's own `TextCache`.
-This replaces the excerpt-window estimates in §2.3, which were a biased floor.
+Run on the full-text corpus from `populate-meeting-text-cache.yml` run #5
+(**975 documents, 41 places, 54.8 MB**), read through the repo's own `TextCache`.
+Run #5 was a targeted `slug: savannah` dispatch on top of run #3's cache, taken
+because Savannah is the one place whose agenda template could break the design, and
+it is not reachable by the full run's first step (it is `agendaplus`, handled by the
+Granicus enricher). This replaces the excerpt-window estimates in §2.3, which were a
+biased floor.
 
 ### The lexicon holds
 
 | | documents |
 |---|---|
-| Old `millage-budget` rule | 433 |
-| **Candidate `budget` rule** | **284**, across 38 places |
-| Kept from the old rule | 284 |
-| Dropped | 149 |
+| Old `millage-budget` rule | 455 |
+| Candidate, no exclusion rule | 302 |
+| **Candidate + boilerplate exclusion** | **287**, across 39 places |
 | Found that the old rule missed | 0 |
 
 The candidate is a strict subset, as expected — every pattern contains the word
-*budget*, which the old rule also matched. **The whole value is precision: 433 → 284,
-a 34% cut, with the budget decisions kept.**
+*budget*, which the old rule also matched. **The whole value is precision: 455 → 287,
+a 37% cut, with the budget decisions kept.**
 
 ### Precision: 1% of spans, 0% of documents
 
@@ -50,10 +54,8 @@ attribute the match — a document containing "budgeted" somewhere *and* a real 
 amendment elsewhere is correctly flagged, and counting it as a leak overstates the
 problem badly (that probe reported an alarming "85% leak" for exactly this reason).
 
-Of **2,354 spans** that fired across the corpus, **29 (1%)** sit inside a
-money-plumbing construct (`paid from the … budget`, `construction budget`). **No
-document had only noise spans**, so the false-positive rate at document level is
-**0 of 284**.
+Of **2,379 spans** that fired across the corpus, **22 (0.9%)** are excluded as
+boilerplate or money plumbing. Outside Savannah, no document had only noise spans.
 
 Hand-read samples bear this out — 26 random matched spans read, all budget business:
 
@@ -78,35 +80,78 @@ The two marginal cases are small budget resolutions for vehicle replacement
 |---|---|
 | Phrases only | 37 |
 | **Proximity only** | **58** |
-| Both | 189 |
+| Both | 192 |
 
-Proximity adds **58 documents (+26%)** over phrases alone — lower than the 43%
+Proximity adds **58 documents (+25%)** over phrases alone — lower than the 43%
 estimated from excerpts, and still decisive. The additions are the canonical
 phrasings fixed phrases structurally cannot reach: *"amend the FY 2027 budget"*,
 *"adopt the FY 2027 budget"*, *"amendment of the 2025 capital improvements budget"*.
 
+### The Savannah risk was real — and it is the most important finding here
+
+Savannah's agenda template carries
+`PUBLIC COMMENTS ARE ACCEPTED ONLY FOR HEARINGS (Alcohol, Public, Zoning, and Budget)`
+on every meeting, which trips the proximity rule's `hearing … budget`. Measured on
+its 40 documents:
+
+| | documents |
+|---|---|
+| Contain the boilerplate | 18 |
+| Flagged by the candidate rule | 18 |
+| **Flagged ONLY because of the boilerplate** | **15** |
+| Genuinely budget business | 3 |
+
+**Savannah would have shown `Budgets 18` on its hub card when 3 are real** — the
+worst possible failure for a change whose whole purpose was to make the card's
+numbers mean something. An earlier probe reported this pattern CLEAN purely because
+Savannah was absent from the corpus; absence read as evidence of safety.
+
+#### The fix, and what it costs
+
+A span is rejected when `budget` is the last item of a parenthesised comma list — a
+category menu, never a decision. Written generically rather than hardcoding
+Savannah's wording:
+
+```
+\([^)]{0,80}?,[^)]{0,40}?\band\s+budget\b[^)]{0,10}\)
+```
+
+It is **surgical**: it removes exactly 15 documents across the whole corpus, all of
+them Savannah boilerplate, and changes **no other place's count at all**. Savannah
+goes 18 → 3.
+
+#### This changes the design: §2.1 is wrong
+
+§2.1 concluded that a phrase-only lexicon "needs no new machinery". That was correct
+about `budgeted` and wrong in general. **Phase 1 now needs two new rule types in the
+taxonomy, not one** — proximity *and* exclusion — and the exclusion is what makes the
+counts trustworthy on the hub card.
+
 ### What is still untested
 
-**The corpus covers 40 of the 62 visible places.** Missing: atkinson, baker, camden,
-conyers, effingham, fort-oglethorpe, gordon, houston, lafayette, liberty, lowndes,
-milledgeville, newton, oconee, palmetto, rockdale, rossville, **savannah**, thomas,
+**The corpus covers 41 of the 62 visible places.** Still missing: atkinson, baker,
+camden, conyers, effingham, fort-oglethorpe, gordon, houston, **lafayette**, liberty,
+lowndes, milledgeville, newton, oconee, palmetto, rockdale, rossville, thomas,
 thomasville, tift, whitfield.
 
-**Savannah's absence matters specifically.** Its agenda template carries
-"HEARINGS (Alcohol, Public, Zoning, and Budget)" on *every* meeting, and that string
-would trip the proximity rule's `hearing … budget`. The boilerplate probe reported
-CLEAN only because Savannah is not in this corpus — that is an untested risk, not a
-cleared one. **It must be re-run against a corpus that includes Savannah before
-Phase 1 ships**, and a negative test pinned for it.
+**Lafayette cannot be fetched by this workflow at all.** It is the one `sharepoint`
+place, `lib/sharepoint.py` imports Playwright, and the workflow installs only
+`pyyaml` — so every run fails it with `ModuleNotFoundError: No module named
+'playwright'` and skips it. That is a permanent hole in the corpus, not a transient
+failure, and it is worth fixing independently of this scope.
 
-Run #4 of the workflow is in flight and restores from this cache, so it should
-broaden coverage; re-run the measurement against its artifact.
+**Savannah taught the general lesson: a place's agenda template can manufacture a
+topic.** The remaining 21 places have not been checked for their own boilerplate.
+Before Phase 2 puts counts on cards, each should be scanned for a string that repeats
+across most of its meetings.
 
 ### Lexicon changes this run justifies
 
 Only three terms still earn nothing, down from nine on the excerpt corpus —
 confirming the earlier counts were a floor:
 `tentative budget`, `public hearing on the budget`, `adoption of the budget`.
+They stay for now: all three are ordinary phrasings that 21 unmeasured places may
+well use.
 
 Terms the full corpus rescued, which the excerpt measurement would have wrongly
 dropped: `annual budget` (26), `operating budget` (27), `capital budget` (15),
@@ -287,13 +332,15 @@ a harder case, because its vocabulary is ordinary English rather than vendor nam
 
 ## 4. Phases
 
-**Phase 0 — measure. DONE for 40 places; see Phase 0 results above.** Precision
-holds (1% of spans, 0 of 284 documents). Outstanding before Phase 1: re-run against a
-corpus that includes Savannah, whose agenda boilerplate is the one untested risk.
+**Phase 0 — measure. DONE for 41 places including Savannah; see Phase 0 results
+above.** Precision holds once the boilerplate exclusion is applied. Outstanding:
+scan the 21 unmeasured places for their own repeating agenda boilerplate before
+Phase 2 puts counts on cards.
 
-**Phase 1 — the lexicon and the proximity mechanism.** Add `budget` to `TOPIC_RULES`
-with the phrases, add the proximity rule type, teach `classify`, `matched_terms` and
-`_tag_matches` about it. Retire `millage-budget` (§5). Tests: proximity matching, the
+**Phase 1 — the lexicon, the proximity mechanism and the exclusion mechanism.** Add
+`budget` to `TOPIC_RULES` with the phrases, add **both** new rule types — proximity
+and exclusion — and teach `classify`, `matched_terms` and `_tag_matches` about them.
+The exclusion is not optional: without it Savannah reads 18 instead of 3. Retire `millage-budget` (§5). Tests: proximity matching, the
 `budgeted` exclusion, the FY-token cases, and a regression pinning that each noise
 sample quoted in §1 does **not** match.
 
