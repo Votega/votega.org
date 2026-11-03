@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-02T21:05:05.687675+00:00",
+    "generatedAt": "2026-11-03T04:36:36.304971+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -26,12 +26,12 @@
     ],
     "count": 127,
     "windowDays": 45,
-    "entityTagged": 76,
+    "entityTagged": 77,
     "topicCounts": {
-      "elections": 55,
-      "budget": 8,
+      "elections": 56,
       "healthcare": 13,
-      "courts": 14,
+      "budget": 8,
+      "courts": 13,
       "education": 11,
       "surveillance": 1,
       "ethics": 5
@@ -39,6 +39,20 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
+      ]
+    },
+    "vg-ga-p-000335": {
+      "name": "Keisha Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
@@ -78,20 +92,6 @@
       "url": null,
       "candidateIds": [
         "challenger-penny-brown-reynolds-sos-2026"
-      ]
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
-      ]
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
       ]
     },
     "vg-ga-p-000262": {
@@ -167,13 +167,41 @@
   },
   "items": [
     {
+      "id": "5da377f73a0f",
+      "title": "Georgia Today: Poll workers; Open enrollment cost spikes; Atlanta Dream lose final",
+      "url": "https://www.gpb.org/news/2026/11/02/georgia-today-poll-workers-open-enrollment-cost-spikes-atlanta-dream-lose-final",
+      "source": "GPB News",
+      "publishedAt": "2026-11-02T21:14:06+00:00",
+      "snippet": "On today's Nov. 2 edition: Election Day is tomorrow — who's watching the polls; Georgians see a spike in health insurance costs; and the Atlanta Dream basketball team lost game 7 in the WNBA finals.",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "healthcare"
+      ]
+    },
+    {
       "id": "4fe1fdae7e0f",
       "title": "GPB evening headlines for November 2, 2026",
       "url": "https://www.gpb.org/news/2026/11/02/gpb-evening-headlines-for-november-2-2026",
       "source": "GPB News",
       "publishedAt": "2026-11-02T20:32:10+00:00",
-      "snippet": "Tomorrow is election day and Georgia's gubernatorial candidates are making their final pitches to voters as polling shows the race effectively tied.\nGeorgia's top elections official says tomorrow's mi",
+      "snippet": "Tomorrow is Election Day and Georgia's gubernatorial candidates are making their final pitches to voters as polling shows the race effectively tied.\nGeorgia's top elections official says tomorrow's mi",
       "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "99ca8350d8b0",
+      "title": "Race for Georgia governor draws more than $150 million in final three months",
+      "url": "https://capitol-beat.org/2026/11/race-for-georgia-governor-draws-more-than-150-million-in-final-three-months/?utm_source=rss&utm_medium=rss&utm_campaign=race-for-georgia-governor-draws-more-than-150-million-in-final-three-months",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-02T20:32:03+00:00",
+      "snippet": "ATLANTA — The price of everything has been rising, including the cost of becoming governor in Georgia. Since Aug. 1, former Atlanta Mayor Keisha Lance Bottoms and businessman Rick Jackson raised more ",
+      "entityIds": [
+        "vg-ga-p-000368",
+        "vg-ga-p-000335"
+      ],
       "topics": [
         "elections"
       ]
@@ -886,18 +914,6 @@
       "source": "Georgia Recorder",
       "publishedAt": "2026-10-20T21:00:37+00:00",
       "snippet": "This coverage is made possible through a partnership between WABE and Grist, a nonprofit environmental media organization. Two seats on the Georgia Public Service Commission are on the ballot in this ",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "c65146233042",
-      "title": "Georgia early voting tops 1 million ballots",
-      "url": "https://capitol-beat.org/2026/10/georgia-early-voting-tops-1-million-ballots/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-early-voting-tops-1-million-ballots",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-20T20:44:20+00:00",
-      "snippet": "ATLANTA — A record number of Georgia voters have cast early ballots in person for a midterm election, surpassing 1 million on Tuesday. “We continue to break records each day of early voting,” Secretar",
       "entityIds": [],
       "topics": [
         "elections"
@@ -1706,19 +1722,6 @@
       ],
       "topics": [
         "courts"
-      ]
-    },
-    {
-      "id": "478997f2ba31",
-      "title": "Justices sound skeptical of Georgia agency’s decision to remove children from their home",
-      "url": "https://georgiarecorder.com/2026/09/25/justices-sound-skeptical-of-georgia-agencys-decision-to-remove-children-from-their-home/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-25T08:00:28+00:00",
-      "snippet": "Note: This story involves the subject of suicide. If you or someone you know may be experiencing a mental health crisis, contact the 988 Suicide and Crisis Lifeline by dialing or texting “988.” Georgi",
-      "entityIds": [],
-      "topics": [
-        "courts",
-        "healthcare"
       ]
     },
     {
