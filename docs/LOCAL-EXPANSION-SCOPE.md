@@ -46,8 +46,12 @@ work happened. This block is the resume point.
    detector already extracts the id) and a decision on where board meetings
    render: a section on `/local/<slug>/` beside the board roster, or their own
    page per district.
-6. **1c** HB 581 opt-out registry · **1e** statewide millage comparison.
-7. **3b loose ends** — 8 districts matched no signature, 17 never tested, 10
+6. **Budgets as a fifth topic** — `millage-budget` fires on 59 of 59 places and
+   has no page; 40% of what it flags is noise ("to be paid from the facilities
+   management budget"). Scoped in `docs/BUDGET-TOPIC-SCOPE.md`: retire the tag,
+   replace it with a narrower `budget` topic that earns a page.
+7. **1c** HB 581 opt-out registry · **1e** statewide millage comparison.
+8. **3b loose ends** — 8 districts matched no signature, 17 never tested, 10
    blocked by the dev container's egress proxy. Re-running from CI would firm up
    the zero-BoardDocs result.
 
@@ -89,7 +93,9 @@ Adding board rosters to `_data/school_districts.yml`, one district per PR, using
   21 land use / 14 data centers / 12 ALPR / 2 local taxes). The hub computes the
   medians client-side from `local-flags.json` itself, so they recalibrate as places
   are added.
-- **`millage-budget` must never be ranked against the narrow subjects.** Its
+- **`millage-budget` must never be ranked against the narrow subjects**, until it
+  is retired and replaced (`docs/BUDGET-TOPIC-SCOPE.md`), which removes this
+  special case.** Its
   lexicon includes `budget` and `fiscal year`, which appear on nearly every agenda,
   so it outscores them everywhere (Fulton: millage-budget 36, local-taxes 19). It
   is a vocabulary-wide tag, not a watch topic. It carries a count for consistency
