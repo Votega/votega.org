@@ -48,14 +48,23 @@ breadcrumb:
   .lh-card.city { border-left-color: var(--color-success); }
   .lh-name { font-size: 1.05rem; font-weight: 700; color: var(--color-text); margin-bottom: 0.35rem; }
   .lh-child .lh-name { font-size: 0.98rem; }
-  .lh-meta { font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: 0.5rem; }
-  .lh-badge {
-    display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.03em; border-radius: 4px; padding: 0.1rem 0.4rem; margin-right: 0.3rem;
+  /* Meta line: region, then the inventory row. No county/city badge — the card's
+     left-border colour, its nesting under the parent county and its name size all
+     already say which it is, so the badge was the loudest element on the card and
+     the only one carrying nothing. */
+  .lh-meta {
+    font-size: 0.78rem; color: var(--color-text-muted); margin-bottom: 0;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.5rem;
   }
-  .lh-badge-county { background: var(--color-surface-tint); color: var(--color-link); }
-  .lh-badge-city { background: var(--color-success-tint); color: var(--color-success); }
-  .lh-domains { font-size: 0.8rem; color: var(--color-text); }
+  .lh-meta-sep { color: var(--color-border); }
+  /* Inventory: four FIXED slots — officials, sheriff, meetings, school board.
+     Filled means the data is on the place's page, faint means not yet, so a gap
+     is visible (it is invisible today) and the cards line up for comparison. The
+     glyphs replace the "Officials · Sheriff · Meetings" text, which repeated on
+     nearly every one of the 62 cards. */
+  .lh-have { display: inline-flex; gap: 0.42rem; align-items: center; }
+  .lh-have i { font-size: 0.82rem; color: var(--color-link); }
+  .lh-have i.off { color: var(--color-border); }
   /* Cities nested beneath their county */
   .lh-children {
     margin: 0.7rem 0 0 1.25rem; padding-left: 1rem; border-left: 2px solid var(--color-border-subtle);
@@ -93,20 +102,37 @@ breadcrumb:
   .lh-note { margin: 0.5rem 0 0; font-size: 0.82rem; color: var(--color-text-muted); }
   .lh-request { margin: 1rem 0 0; text-align: center; font-size: 1.2rem; font-weight: 600; color: var(--color-text); }
   /* Flag pill injected onto a card when a place has a hot topic on recent agendas */
-  .lh-flags { margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
-  .lh-flag { font-size: 0.7rem; font-weight: 700; border-radius: 999px; padding: 0.12rem 0.5rem; }
+  .lh-flags { margin-top: 0.45rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .lh-flag {
+    font-size: 0.7rem; font-weight: 600; border-radius: 999px; padding: 0.12rem 0.5rem;
+    display: inline-flex; align-items: baseline; gap: 0.3rem;
+  }
+  /* The citation count carries the signal the presence flag lost: "Land use 13"
+     and "Land use 3" are different facts; two identical pills were not. */
+  .lh-flag b { font-weight: 600; opacity: 0.75; font-variant-numeric: tabular-nums; }
   .lh-flag-dc { background: var(--color-warning-tint); color: var(--color-warning); }
   .lh-flag-lu { background: var(--color-watch-landuse-tint); color: var(--color-watch-landuse); }
   .lh-flag-alpr { background: var(--color-watch-alpr-tint); color: var(--color-watch-alpr); }
   .lh-flag-tax { background: var(--color-watch-taxes-tint); color: var(--color-watch-taxes); }
-  /* Place whose site blocks automated access: its links and topic badges are not being refreshed */
+  /* Place whose site blocks automated access, or has stopped posting: its links and
+     topic badges are not being refreshed. Three places of 62 carry this, so on a
+     card it is a corner mark rather than a row of its own; the legend below keeps
+     the full pill, where it is being explained. */
   .lh-flag-stale { background: var(--color-surface-sunken); color: var(--color-text); border: 1px solid var(--color-warning-line); }
   .lh-flag-stale .fa-triangle-exclamation { color: var(--color-warning); }
+  .lh-card { position: relative; }
+  .lh-stale-mark {
+    position: absolute; top: 0.7rem; right: 0.8rem; font-size: 0.8rem;
+    color: var(--color-warning); line-height: 1;
+  }
+  .lh-name { padding-right: 1.5rem; }
   /* Legend explaining the agenda flag pills above */
   .lh-legend {
     margin: 0 0 1.25rem; padding: 0.75rem 0.9rem; background: var(--color-surface-sunken);
     border: 1px solid var(--color-border-subtle); border-radius: 8px; font-size: 0.82rem; color: var(--color-text-secondary);
   }
+  .lh-legend > summary { cursor: pointer; color: var(--color-text); }
+  .lh-legend[open] > summary { margin-bottom: 0.5rem; }
   .lh-legend-title { font-weight: 700; color: var(--color-text); margin-right: 0.15rem; }
   .lh-legend-items { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 0.5rem; }
   .lh-legend-item { display: flex; align-items: baseline; gap: 0.4rem; flex: 1 1 18rem; }
@@ -126,9 +152,9 @@ breadcrumb:
 </div>
 <nav class="lh-az" id="lhAz" aria-label="Jump to counties starting with a letter"></nav>
 
-<div class="lh-legend" aria-label="What the agenda badges mean">
-  <span class="lh-legend-title">What the badges mean.</span>
-  Some places show a badge when we detect certain topics on their recent published meeting agendas:
+<details class="lh-legend">
+  <summary><span class="lh-legend-title">What the badges mean.</span>
+  A card shows up to two topics from its recent published meeting agendas, with the number of meetings citing each.</summary>
   <div class="lh-legend-items">
     <span class="lh-legend-item">
       <span class="lh-flag lh-flag-dc"><i class="fa-solid fa-industry" aria-hidden="true"></i> Data centers</span>
@@ -158,7 +184,7 @@ breadcrumb:
     down. Click through to the source to find the linked agenda/minutes to get the actual context. Our badges are meant to help you focus your search to specific official agendas/minutes. 
     <a href="{{ '/about-the-data#agenda-topic-badges' | relative_url }}">How we match agendas &rsaquo;</a>
   </p>
-</div>
+</details>
 
 {%- comment %} ---- Card renderer (county or city). Sets domain indicators from the
     same sources the entity pages use: officials by slug in local_officials.yml,
@@ -184,18 +210,22 @@ breadcrumb:
   <section class="lh-group">
     <a class="lh-card lh-county county" href="{{ '/local/' | append: county.slug | append: '/' | relative_url }}"
        data-name="{{ county.name | downcase }}" data-slug="{{ county.slug }}">
-      <div class="lh-name">{{ county.name }}</div>
-      <div class="lh-meta"><span class="lh-badge lh-badge-county">county</span>{% if county.region %}{{ county.region }}{% endif %}</div>
-      <div class="lh-domains">
-        {%- assign coSheriff = site.data.county_officers.counties | where: "id", county.slug | first %}
-        {%- if coOfficials %}<i class="fa-solid fa-users" aria-hidden="true"></i> Officials{% endif %}
-        {%- if coSheriff %}{% if coOfficials %} &middot; {% endif %}<i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Sheriff{% endif %}
-        {%- if county.domains.meetings %}{% if coOfficials or coSheriff %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
-        {%- unless coOfficials or coSheriff or county.domains.meetings %}Coming soon{% endunless %}
-      </div>
+      {%- assign coSheriff = site.data.county_officers.counties | where: "id", county.slug | first %}
+      {%- include local/board-roster.html ctxslug=county.slug ctxfips=county.fips %}
       {%- if county.domains.meetings.bot_protected or county.domains.meetings.site_not_posting %}
-      <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="{% if county.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
+      <i class="fa-solid fa-triangle-exclamation lh-stale-mark" title="{% if county.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"
+         aria-label="Data may be stale"></i>
       {%- endif %}
+      <div class="lh-name">{{ county.name }}</div>
+      <div class="lh-meta">
+        {%- if county.region %}{{ county.region }}<span class="lh-meta-sep">&middot;</span>{% endif %}
+        <span class="lh-have" aria-label="What this page has">
+          <i class="fa-solid fa-users{% unless coOfficials %} off{% endunless %}" title="{% if coOfficials %}Officials{% else %}Officials — not yet{% endif %}" aria-hidden="true"></i>
+          <i class="fa-solid fa-shield-halved{% unless coSheriff %} off{% endunless %}" title="{% if coSheriff %}Sheriff{% else %}coSheriffRIFFLABEL{% endif %}" aria-hidden="true"></i>
+          <i class="fa-solid fa-calendar-days{% unless county.domains.meetings %} off{% endunless %}" title="{% if county.domains.meetings %}Meetings, agendas and minutes{% else %}Meetings — not yet{% endif %}" aria-hidden="true"></i>
+          <i class="fa-solid fa-graduation-cap{% unless lh_has_board %} off{% endunless %}" title="{% if lh_has_board %}School board{% else %}School board — roster not yet confirmed{% endif %}" aria-hidden="true"></i>
+        </span>
+      </div>
     </a>
     {%- assign kids = cities | where: "parentCounty", county.slug | sort: "name" %}
     {%- assign visibleKids = 0 %}
@@ -207,16 +237,23 @@ breadcrumb:
       {%- assign ciOfficials = site.data.local_officials.jurisdictions | where: "id", city.slug | first %}
       <a class="lh-card lh-child city" href="{{ '/local/' | append: city.slug | append: '/' | relative_url }}"
          data-name="{{ city.name | downcase }}" data-slug="{{ city.slug }}">
+        {%- comment %} A city sits in its county's school systems, so the board slot
+            resolves against the PARENT county, matching entity/school-boards.html. {% endcomment -%}
+        {%- include local/board-roster.html ctxslug=county.slug ctxfips=county.fips %}
+      {%- if city.domains.meetings.bot_protected or city.domains.meetings.site_not_posting %}
+      <i class="fa-solid fa-triangle-exclamation lh-stale-mark" title="{% if city.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"
+         aria-label="Data may be stale"></i>
+      {%- endif %}
         <div class="lh-name">{{ city.name }}</div>
-        <div class="lh-meta"><span class="lh-badge lh-badge-city">city</span>{% if city.region %}{{ city.region }}{% endif %}</div>
-        <div class="lh-domains">
-          {%- if ciOfficials %}<i class="fa-solid fa-users" aria-hidden="true"></i> Officials{% endif %}
-          {%- if city.domains.meetings %}{% if ciOfficials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
-          {%- unless ciOfficials or city.domains.meetings %}Coming soon{% endunless %}
+        <div class="lh-meta">
+          {%- if city.region %}{{ city.region }}<span class="lh-meta-sep">&middot;</span>{% endif %}
+        <span class="lh-have" aria-label="What this page has">
+          <i class="fa-solid fa-users{% unless ciOfficials %} off{% endunless %}" title="{% if ciOfficials %}Officials{% else %}Officials — not yet{% endif %}" aria-hidden="true"></i>
+          <i class="fa-solid fa-shield-halved{% unless false %} off{% endunless %}" title="{% if false %}Sheriff{% else %}falseRIFFLABEL{% endif %}" aria-hidden="true"></i>
+          <i class="fa-solid fa-calendar-days{% unless city.domains.meetings %} off{% endunless %}" title="{% if city.domains.meetings %}Meetings, agendas and minutes{% else %}Meetings — not yet{% endif %}" aria-hidden="true"></i>
+          <i class="fa-solid fa-graduation-cap{% unless lh_has_board %} off{% endunless %}" title="{% if lh_has_board %}School board{% else %}School board — roster not yet confirmed{% endif %}" aria-hidden="true"></i>
+        </span>
         </div>
-        {%- if city.domains.meetings.bot_protected or city.domains.meetings.site_not_posting %}
-        <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="{% if city.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
-        {%- endif %}
       </a>
       {%- endfor %}
     </div>
@@ -259,16 +296,23 @@ breadcrumb:
       {%- assign c2Officials = site.data.local_officials.jurisdictions | where: "id", c2.slug | first %}
       <a class="lh-card lh-child city" href="{{ '/local/' | append: c2.slug | append: '/' | relative_url }}"
          data-name="{{ c2.name | downcase }}" data-slug="{{ c2.slug }}">
+        {%- comment %} This city's parent county is not in places.yml, so there is no
+            fips to resolve a board against: the slot stays faint. {% endcomment -%}
+        {%- assign lh_has_board = false %}
+      {%- if c2.domains.meetings.bot_protected or c2.domains.meetings.site_not_posting %}
+      <i class="fa-solid fa-triangle-exclamation lh-stale-mark" title="{% if c2.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"
+         aria-label="Data may be stale"></i>
+      {%- endif %}
         <div class="lh-name">{{ c2.name }}</div>
-        <div class="lh-meta"><span class="lh-badge lh-badge-city">city</span>{% if c2.region %}{{ c2.region }}{% endif %}</div>
-        <div class="lh-domains">
-          {%- if c2Officials %}<i class="fa-solid fa-users" aria-hidden="true"></i> Officials{% endif %}
-          {%- if c2.domains.meetings %}{% if c2Officials %} &middot; {% endif %}<i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Meetings{% endif %}
-          {%- unless c2Officials or c2.domains.meetings %}Coming soon{% endunless %}
+        <div class="lh-meta">
+          {%- if c2.region %}{{ c2.region }}<span class="lh-meta-sep">&middot;</span>{% endif %}
+        <span class="lh-have" aria-label="What this page has">
+          <i class="fa-solid fa-users{% unless c2Officials %} off{% endunless %}" title="{% if c2Officials %}Officials{% else %}Officials — not yet{% endif %}" aria-hidden="true"></i>
+          <i class="fa-solid fa-shield-halved{% unless false %} off{% endunless %}" title="{% if false %}Sheriff{% else %}falseRIFFLABEL{% endif %}" aria-hidden="true"></i>
+          <i class="fa-solid fa-calendar-days{% unless c2.domains.meetings %} off{% endunless %}" title="{% if c2.domains.meetings %}Meetings, agendas and minutes{% else %}Meetings — not yet{% endif %}" aria-hidden="true"></i>
+          <i class="fa-solid fa-graduation-cap{% unless lh_has_board %} off{% endunless %}" title="{% if lh_has_board %}School board{% else %}School board — roster not yet confirmed{% endif %}" aria-hidden="true"></i>
+        </span>
         </div>
-        {%- if c2.domains.meetings.bot_protected or c2.domains.meetings.site_not_posting %}
-        <div class="lh-flags"><span class="lh-flag lh-flag-stale" title="{% if c2.domains.meetings.bot_protected %}We can’t update this place automatically, so its agendas, minutes and topic badges may be out of date. Check the official source.{% else %}This place’s website has stopped linking newer agendas and minutes, so what’s shown here may be out of date. Check the official source.{% endif %}"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Data may be stale</span></div>
-        {%- endif %}
       </a>
       {%- endfor %}
     </div>
@@ -390,38 +434,100 @@ breadcrumb:
     apply();
     if (location.hash.length > 1) jumpTo(decodeURIComponent(location.hash.slice(1)));
 
-    // Hot-topic flags: badge cards whose place has an ALPR / data-center / land-use / local-taxes
-    // item on recent agendas (enrichment sidecar local-flags.json; base-path aware).
+    // Topic pills: at most TWO per card, the place's busiest subjects, each with the
+    // number of recent meetings citing it (local-flags.json, base-path aware).
+    //
+    // WHY RANK RATHER THAN LIST. Presence does not discriminate. Measured over the
+    // 59 flagged places: local-taxes is on 56 of them and land-use-or-data-center on
+    // 56, so two of the three pills a card used to show were on nearly every card
+    // and told a visitor nothing. A count threshold does not fix it either —
+    // landUseCount >= 5 still fires on 45 of 59, because land use is genuinely busy
+    // almost everywhere. Ranking does: the top two vary by place, and the count
+    // itself carries the signal the presence flag lost.
+    //
+    // millageCount is deliberately NOT ranked here. Its lexicon includes "budget"
+    // and "fiscal year", which appear on nearly every agenda, so it outscores the
+    // narrow subjects everywhere (Fulton: millage-budget 36, local-taxes 19). It is
+    // a vocabulary-wide tag, not a watch topic, and carries no pill of its own.
+    var TOPIC_PILLS = [
+      { key: 'alprCount', flag: null, cls: 'lh-flag-alpr', icon: 'fa-camera', label: 'ALPR' },
+      { key: 'dataCenterCount', flag: null, cls: 'lh-flag-dc', icon: 'fa-industry', label: 'Data centers' },
+      { key: 'landUseCount', flag: 'land-use', cls: 'lh-flag-lu', icon: 'fa-trowel-bricks', label: 'Land use' },
+      { key: 'localTaxesCount', flag: 'local-taxes', cls: 'lh-flag-tax', icon: 'fa-receipt', label: 'Local taxes' }
+    ];
+    var MAX_PILLS = 2;
+
+    // Ranking by the RAW count does not work either: land use is busy nearly
+    // everywhere, so it led 48 of 59 cards and the uniformity simply moved from the
+    // pill to the label. Each topic is therefore scored against its own statewide
+    // median (over the places citing it at all), so a pill earns its slot by being
+    // busy FOR THAT SUBJECT — which spreads the leading pill across land use, data
+    // centers and ALPR instead of one of them. The medians are computed here from
+    // the file itself, so they recalibrate as places and agendas are added, and the
+    // number shown on the pill stays the real count: only the ordering is scaled.
+    function topicMedians(places) {
+      var med = {};
+      TOPIC_PILLS.forEach(function (t) {
+        var v = [];
+        for (var slug in places) {
+          if (!Object.prototype.hasOwnProperty.call(places, slug)) continue;
+          var n = places[slug][t.key];
+          if (typeof n === 'number' && n > 0) v.push(n);
+        }
+        v.sort(function (a, b) { return a - b; });
+        med[t.key] = v.length ? v[Math.floor(v.length / 2)] : 1;
+        if (!med[t.key]) med[t.key] = 1;
+      });
+      return med;
+    }
+
+    function rankedPills(f, med) {
+      var flags = f.flags || [];
+      return TOPIC_PILLS
+        .map(function (t) {
+          var n = f[t.key];
+          if (typeof n === 'number') return { t: t, n: n, measured: true, score: n / (med[t.key] || 1) };
+          // A sidecar written before this topic had a count carries the flag and no
+          // number. Show the pill, but WITHOUT a figure — inventing one would put a
+          // number on the page that nothing measured — and sort it after every
+          // measured pill, so a known count always wins the slot.
+          var present = t.flag && flags.indexOf(t.flag) !== -1;
+          return { t: t, n: present ? 1 : 0, measured: false, score: 0 };
+        })
+        .filter(function (x) { return x.n > 0; })
+        .sort(function (a, b) {
+          if (a.measured !== b.measured) return a.measured ? -1 : 1;
+          if (b.score !== a.score) return b.score - a.score;
+          // Stable tie-break, so two places with the same counts order the same way.
+          return TOPIC_PILLS.indexOf(a.t) - TOPIC_PILLS.indexOf(b.t);
+        })
+        .slice(0, MAX_PILLS);
+    }
+
     fetch(getBasePath() + 'assets/data/local-flags.json')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
         if (!d || !d.places) return;
+        var med = topicMedians(d.places);
         Array.prototype.forEach.call(document.querySelectorAll('.lh-card[data-slug]'), function (card) {
           var f = d.places[card.dataset.slug];
-          if (!f || !f.flags || !f.flags.length) return;
-          var wrap = card.querySelector('.lh-flags');
-          var existing = !!wrap;
-          if (!wrap) { wrap = document.createElement('div'); wrap.className = 'lh-flags'; }
-          var html = '';
-          // ALPR / surveillance is the headline watch topic, so it shows alongside
-          // land-use / data-center rather than being crowded out by them. Key off
-          // the citation count (like data centers) so the badge never appears
-          // without ALPR items behind it on the place page.
-          if (f.alprCount > 0) {
-            html += '<span class="lh-flag lh-flag-alpr"><i class="fa-solid fa-camera" aria-hidden="true"></i> ALPR / surveillance</span>';
-          }
-          if (f.dataCenterCount > 0) {
-            html += '<span class="lh-flag lh-flag-dc"><i class="fa-solid fa-industry" aria-hidden="true"></i> Data centers</span>';
-          } else if (f.flags.indexOf('land-use') !== -1) {
-            html += '<span class="lh-flag lh-flag-lu"><i class="fa-solid fa-trowel-bricks" aria-hidden="true"></i> Land use</span>';
-          }
-          if (f.flags.indexOf('local-taxes') !== -1) {
-            html += '<span class="lh-flag lh-flag-tax"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Local taxes</span>';
-          }
-          wrap.insertAdjacentHTML('beforeend', html);
-          if (!existing && wrap.children.length) card.appendChild(wrap);
+          if (!f) return;
+          var pills = rankedPills(f, med);
+          if (!pills.length) return;
+          var wrap = document.createElement('div');
+          wrap.className = 'lh-flags';
+          wrap.innerHTML = pills.map(function (x) {
+            return '<span class="lh-flag ' + x.t.cls + '">'
+              + '<i class="fa-solid ' + x.t.icon + '" aria-hidden="true"></i> '
+              + x.t.label + (x.measured ? ' <b>' + x.n + '</b>' : '') + '</span>';
+          }).join('');
+          wrap.setAttribute('aria-label', pills.map(function (x) {
+            if (!x.measured) return x.t.label + ': on recent agendas';
+            return x.t.label + ': ' + x.n + (x.n === 1 ? ' recent meeting' : ' recent meetings');
+          }).join(', '));
+          card.appendChild(wrap);
         });
       })
-      .catch(function () { /* no flags file — cards render without badges */ });
+      .catch(function () { /* no flags file — cards render without pills */ });
   })();
 </script>
