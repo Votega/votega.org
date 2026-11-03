@@ -1,0 +1,248 @@
+name: Publish election results
+
+# ELECTION NIGHT. One button: fetch the Secretary of State's export, rebuild the
+# results data, refuse it if it looks wrong, commit it, and deploy the site.
+#
+# WHY THIS EXISTS. Publishing a count was a local-checkout job — download the
+# CSV, run scripts/build_results_json.py, commit, push — and the push had to come
+# from a person: deploy-pages.yml fires on `push` to main, and GitHub does not
+# raise a `push` event for commits authored by GITHUB_TOKEN (the recursion guard
+# documented at the top of deploy-pages.yml), while its two crons are 13:00 and
+# 23:00 UTC — 6pm ET, BEFORE polls close. So on the one night of the cycle where
+# the numbers change every twenty minutes, every refresh needed a laptop.
+#
+# This workflow does the same sequence from the Actions tab (or the GitHub mobile
+# app), and dispatches deploy-pages.yml explicitly afterwards rather than relying
+# on a push event that will not come. `workflow_dispatch` is the documented
+# exception to the recursion guard, and the run is VERIFIED rather than assumed:
+# if no deploy run appears, this run fails and says to press the button by hand,
+# because a silent non-deploy is the failure mode that would cost the night.
+#
+# Dispatch-only, so it needs no entry in notify-workflow-failure.yml, which
+# watches scheduled workflows (see scripts/validate_workflow_triggers.py).
+
+on:
+  workflow_dispatch:
+    inputs:
+      csv_url:
+        description: 'URL of the SoS "Total Votes Results" CSV/TSV export. Leave blank to rebuild from csv_path.'
+        required: false
+        type: string
+      csv_path:
+        description: 'Repo path of an already-committed export (e.g. _sources/election_results/ga-general-2026-results-official.csv). Used when csv_url is blank.'
+        required: false
+        type: string
+      data_key:
+        description: 'Which results page to rebuild.'
+        required: true
+        default: ga-general-2026-results
+        type: choice
+        options:
+          - ga-general-2026-results
+          - ga-general-2026-runoff-results
+          - ga-special-2026-results
+          - ga-special-2026-runoff-results
+          - ga-primary-results
+          - ga-primary-runoff-results
+      fill_missing:
+        description: 'Keep races the export does not mention (they stay "Awaiting Results"). Leave ON for unofficial counts; turn OFF for a certified rebuild, which should be exactly what was certified.'
+        required: true
+        default: true
+        type: boolean
+      commit_csv:
+        description: 'Also commit the downloaded export under _sources/election_results/. Off for unofficial counts (a 200KB file churning every 20 minutes); ON for the certified one you want kept.'
+        required: true
+        default: false
+        type: boolean
+      allow_decrease:
+        description: 'Publish even though the vote total went DOWN. Only for a genuine revision — otherwise this is a partial export overwriting a fuller one.'
+        required: true
+        default: false
+        type: boolean
+      allow_zero:
+        description: 'Publish a file with no votes at all. Only to deliberately reset a page to "Awaiting Results".'
+        required: true
+        default: false
+        type: boolean
+      deploy:
+        description: 'Deploy the site afterwards. Off commits the data without publishing it.'
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write   # commits the rebuilt results data to main
+  actions: write    # dispatches deploy-pages.yml
+
+# Serialized: two overlapping runs would race on the same file and on main.
+# Not cancel-in-progress — a run that has already committed must finish
+# dispatching the deploy.
+concurrency:
+  group: publish-results
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'   # stdlib only, like every scripts/ test
+
+      # Fail here rather than three steps later with a confusing parse error.
+      - name: Resolve the export
+        id: source
+        env:
+          CSV_URL: ${{ inputs.csv_url }}
+          CSV_PATH: ${{ inputs.csv_path }}
+          DATA_KEY: ${{ inputs.data_key }}
+        run: |
+          set -euo pipefail
+          if [ -n "$CSV_URL" ] && [ -n "$CSV_PATH" ]; then
+            echo "::error::Give either csv_url or csv_path, not both."
+            exit 1
+          fi
+          dest="$RUNNER_TEMP/$DATA_KEY-export.csv"
+          if [ -n "$CSV_URL" ]; then
+            # --fail so an error page is a failure, not a 2KB "CSV" of HTML.
+            curl --fail --location --silent --show-error --max-time 120 \
+                 --retry 3 --retry-delay 2 --output "$dest" "$CSV_URL"
+            # An HTML error page can still arrive with HTTP 200 (a login wall,
+            # a CDN interstitial). Refuse anything that does not look tabular.
+            if head -c 512 "$dest" | grep -qiE '<!doctype|<html'; then
+              echo "::error::The download is HTML, not a CSV export. Check the URL points at the file itself."
+              exit 1
+            fi
+            if ! head -1 "$dest" | grep -qiE 'office name'; then
+              echo "::error::The first line is not a SoS results header (no 'Office Name' column): $(head -c 200 "$dest")"
+              exit 1
+            fi
+          elif [ -n "$CSV_PATH" ]; then
+            if [ ! -f "$CSV_PATH" ]; then
+              echo "::error::No such file in the repo: $CSV_PATH"
+              exit 1
+            fi
+            cp "$CSV_PATH" "$dest"
+          else
+            echo "::error::Nothing to build from: set csv_url (election night) or csv_path (rebuild)."
+            exit 1
+          fi
+          echo "csv=$dest" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Export"
+            echo "- Source: ${CSV_URL:-$CSV_PATH}"
+            echo "- Size: $(wc -c < "$dest" | tr -d ' ') bytes, $(( $(wc -l < "$dest") )) lines"
+            echo "- SHA256: \`$(sha256sum "$dest" | cut -d' ' -f1)\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # The committed file is the baseline the builder carries races forward
+      # from, so it is copied before being overwritten.
+      - name: Rebuild the results data
+        env:
+          CSV: ${{ steps.source.outputs.csv }}
+          DATA_KEY: ${{ inputs.data_key }}
+          FILL: ${{ inputs.fill_missing }}
+        run: |
+          set -euo pipefail
+          args=("$CSV" "$DATA_KEY")
+          committed="_data/election_results/$DATA_KEY.json"
+          if [ "$FILL" = "true" ] && [ -f "$committed" ]; then
+            cp "$committed" "$RUNNER_TEMP/baseline.json"
+            args+=(--fill-missing-from "$RUNNER_TEMP/baseline.json")
+          fi
+          python scripts/build_results_json.py "${args[@]}"
+
+      # The gate. Refuses an empty export, a shrinking ballot, counts going
+      # backwards, and structural damage — see the script's header for why each
+      # of those is the quiet failure rather than the loud one.
+      - name: Validate before publishing
+        env:
+          DATA_KEY: ${{ inputs.data_key }}
+          ALLOW_DECREASE: ${{ inputs.allow_decrease }}
+          ALLOW_ZERO: ${{ inputs.allow_zero }}
+        run: |
+          set -euo pipefail
+          flags=()
+          [ "$ALLOW_DECREASE" = "true" ] && flags+=(--allow-decrease)
+          [ "$ALLOW_ZERO" = "true" ] && flags+=(--allow-zero)
+          python scripts/validate_results_build.py "$DATA_KEY" \
+            --baseline-ref HEAD "${flags[@]}" \
+            --summary-out "$RUNNER_TEMP/results-summary.md"
+          cat "$RUNNER_TEMP/results-summary.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit and push
+        id: commit
+        env:
+          DATA_KEY: ${{ inputs.data_key }}
+          CSV: ${{ steps.source.outputs.csv }}
+          COMMIT_CSV: ${{ inputs.commit_csv }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ "$COMMIT_CSV" = "true" ]; then
+            mkdir -p _sources/election_results
+            cp "$CSV" "_sources/election_results/$DATA_KEY-export.csv"
+            git add -f "_sources/election_results/$DATA_KEY-export.csv"
+          fi
+          git add -f "_data/election_results/$DATA_KEY.json" _data/results_updated.json
+          if git diff --cached --quiet; then
+            echo "No change in the results data — nothing to commit."
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            echo "- No change in the numbers; nothing committed." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git commit -m "Publish $DATA_KEY results"
+          pushed=0
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then pushed=1; break; fi
+            echo "Push attempt $attempt failed, retrying..."
+            sleep $((attempt * 2))
+          done
+          if [ "$pushed" -ne 1 ]; then
+            echo "::error::Push failed after 4 attempts — the results were NOT published."
+            exit 1
+          fi
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      # deploy-pages.yml does not see this commit (GITHUB_TOKEN raises no `push`
+      # event), so it is dispatched here, against main, which checks out the tip
+      # that now includes the commit above.
+      - name: Deploy the site
+        if: ${{ inputs.deploy && steps.commit.outputs.committed == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          before=$(gh run list --workflow deploy-pages.yml --limit 1 --json databaseId \
+                     --jq '.[0].databaseId // 0')
+          gh workflow run deploy-pages.yml --ref main
+          # Verify, don't assume: if the dispatch raised no run, the site simply
+          # would not update and the only symptom would be a stale page.
+          for _ in $(seq 1 12); do
+            sleep 5
+            id=$(gh run list --workflow deploy-pages.yml --limit 1 --json databaseId \
+                   --jq '.[0].databaseId // 0')
+            if [ "$id" != "$before" ]; then
+              url=$(gh run list --workflow deploy-pages.yml --limit 1 --json url --jq '.[0].url')
+              echo "Deploy run started: $url"
+              echo "- :rocket: [Deploy run]($url) started. Allow a few minutes for the build, then up to 10 more for GitHub Pages' CDN (\`max-age=600\`) — the page's \"last updated\" time is what tells a reader how current the numbers they see are." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          done
+          echo "::error::Results are committed, but no deploy run appeared within 60s. Run 'Build and deploy Jekyll site to Pages' manually from the Actions tab — the site is NOT updated yet."
+          echo "- :x: **Committed, but the deploy did not start.** Run *Build and deploy Jekyll site to Pages* by hand." >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Note when no deploy was asked for
+        if: ${{ !inputs.deploy && steps.commit.outputs.committed == 'true' }}
+        run: |
+          echo "- :pause_button: Committed without deploying (deploy input was off). The site still shows the previous numbers." >> "$GITHUB_STEP_SUMMARY"

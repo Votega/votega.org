@@ -128,6 +128,73 @@ def detect_delimiter(path):
     return '\t' if sample.count('\t') > sample.count(',') else ','
 
 
+PARTY_SUFFIX = {'rep': 'Rep', 'dem': 'Dem'}
+PARTY_SUFFIX_RE = re.compile(r'\((?:rep|dem|republican|democrat(?:ic)?)\w*\)', re.IGNORECASE)
+
+
+def normalize_mixed_party(contest):
+    """A GENERAL-election contest holds both parties under ONE Contest ID — make it read that way.
+
+    In a primary export each party runs its own contest ("US Senate - Rep" /
+    US2R, "US Senate - Dem" / US2D), so a contest IS a party and the card's
+    party badge and bar colors come straight off the first row. A general
+    export does not work that way: Ossoff and Collins share one contest ID,
+    with the Party column distinguishing them row by row.
+
+    Read naively, the contest took the party of whichever row the Secretary of
+    State happened to list first, so the US Senate card would have been badged
+    (and bar-colored) REPUBLICAN with the Democrat inside it — on every federal,
+    statewide and legislative race on the November ballot. The primary pages
+    never caught it because a primary contest genuinely has one party.
+
+    So: a contest whose rows carry more than one party becomes non-partisan
+    (`np`, the neutral card the layout already renders for jungle specials and
+    ballot questions) and each candidate keeps their own party as a "(Dem)" /
+    "(Rep)" suffix on the ballot name. That is the convention this script's
+    docstring already documents for jungle contests, and it is safe for the two
+    places that match these names: both `nameKeys()` in
+    _layouts/election_results.html and `normalize()` in scripts/lib/race_winners.py
+    strip parenthetical suffixes before matching, so candidate-page links and
+    winner proposals are unaffected.
+    """
+    seen = {c.get('party') for c in contest['candidates']} - {'np'}
+    if len(seen) < 2:
+        return
+    contest['party'] = 'np'
+    for cand in contest['candidates']:
+        suffix = PARTY_SUFFIX.get(cand.get('party'))
+        if suffix and not PARTY_SUFFIX_RE.search(cand['name']):
+            cand['name'] = f"{cand['name']} ({suffix})"
+
+
+def backfill_total_votes(contest):
+    """No "Total Votes" row? Sum the candidates rather than report nothing.
+
+    `contest.totalVotes` is not cosmetic: ResultsContest.status() returns
+    'no-results' for any contest with a falsy totalVotes, so a contest without
+    it renders "Awaiting Results" with the counts hidden — no percentages, no
+    bars — however many votes its candidate rows carry. The certified primary
+    exports all carry a per-contest "Total Votes" row (554 of them in the May
+    export), which is why this has never bitten.
+
+    Election night is the night it would. The unofficial feed is a different
+    export from the certified one, and a missing summary row would have failed
+    SILENTLY and uniformly: every race on the page reading "Awaiting Results"
+    at 9pm while the file on disk held the whole count, with nothing to
+    distinguish it from votes not yet reported.
+
+    Summing the candidate rows is also the right denominator, not just a
+    fallback: Georgia's majority test (50% + 1, or a December runoff) runs on
+    votes cast for candidates, which is what these rows are. A real "Total
+    Votes" row always wins — this only fills a zero.
+    """
+    if contest['totalVotes']:
+        return
+    summed = sum(c['votes'] for c in contest['candidates'])
+    if summed:
+        contest['totalVotes'] = summed
+
+
 def parse_csv(path):
     contests = OrderedDict()
     delimiter = detect_delimiter(path)
@@ -153,9 +220,14 @@ def parse_csv(path):
                 }
             name, incumbent = parse_candidate_name(ballot_name)
             contests[contest_id]['candidates'].append(
-                {'name': name, 'votes': total, 'incumbent': incumbent})
+                {'name': name, 'votes': total, 'incumbent': incumbent,
+                 'party': party_from_csv(party_str)})
 
     for c in contests.values():
+        normalize_mixed_party(c)
+        backfill_total_votes(c)
+        for cand in c['candidates']:
+            cand.pop('party', None)
         c['candidates'].sort(key=lambda x: x['votes'], reverse=True)
     return contests
 
@@ -213,6 +285,60 @@ def build_sections(contests):
     ]
 
 
+def _office_key(name):
+    return re.sub(r'[^a-z0-9]', '', (name or '').lower())
+
+
+def fill_missing_races(sections, baseline):
+    """Carry forward races the new export does not mention, so the ballot never shrinks.
+
+    `_data/election_results/<key>.json` is rebuilt WHOLESALE from one CSV, and
+    the page renders exactly what that file holds. Before any vote is counted
+    the file is the generated placeholder listing all 274 races on the November
+    ballot, every one reading "Awaiting Results" — which is the promise the
+    results page makes: a race missing from the page is a gap on our side, not
+    a race with no returns.
+
+    An export that carries only the contests that have reported would therefore
+    DELETE the rest of the ballot from the page: at 8:15pm, with a dozen
+    counties in, a reader looking for their State House district would find no
+    card at all, and nothing anywhere to say the race exists. The certified
+    exports we have all carry every contest, so this has never happened — but
+    it is the unofficial feed's shape that decides it, and the failure is
+    silent and total for whichever races are absent.
+
+    So the baseline (whatever is committed now, placeholder or an earlier
+    count) is the SPINE: its race order is kept, each race replaced by the new
+    export's version where the export has one, and any race the export adds is
+    appended. Votes therefore only ever come from the CSV — a carried-forward
+    race keeps its zeros and keeps reading "Awaiting Results" — while the list
+    of races is the union, in canonical order.
+
+    Off by default: a certified rebuild should be exactly what the Secretary of
+    State certified, nothing carried over. The election-night publish path
+    (.github/workflows/publish-results.yml) turns it on.
+    """
+    by_id = {s['id']: s for s in baseline if isinstance(s, dict) and 'id' in s}
+    carried = 0
+    for section in sections:
+        base = by_id.get(section['id'], {}).get('races') or []
+        if not base:
+            continue
+        fresh = {_office_key(r['office']): r for r in section['races']}
+        merged, used = [], set()
+        for race in base:
+            key = _office_key(race['office'])
+            used.add(key)
+            if key in fresh:
+                merged.append(fresh[key])
+            else:
+                merged.append(race)
+                carried += 1
+        merged.extend(r for r in section['races'] if _office_key(r['office']) not in used)
+        section['races'] = merged
+    return carried
+
+
 def record_build_time(data_key, now=None, stamp_path=None):
     """Record when this data file was built, for the page's "Last updated" line.
 
@@ -260,13 +386,28 @@ def record_build_time(data_key, now=None, stamp_path=None):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        sys.exit("Usage: python scripts/build_results_json.py <csv_path> <data_key>")
-    csv_path, data_key = sys.argv[1], sys.argv[2]
+    USAGE = ("Usage: python scripts/build_results_json.py <csv_path> <data_key> "
+             "[--fill-missing-from <json_path>]")
+    args = sys.argv[1:]
+    fill_from = None
+    if '--fill-missing-from' in args:
+        i = args.index('--fill-missing-from')
+        if i + 1 >= len(args):
+            sys.exit(USAGE)
+        fill_from = args[i + 1]
+        del args[i:i + 2]
+    if len(args) != 2:
+        sys.exit(USAGE)
+    csv_path, data_key = args
     print(f"Parsing CSV: {csv_path}")
     contests = parse_csv(csv_path)
     print(f"  {len(contests)} contest(s) parsed")
     sections = build_sections(contests)
+    if fill_from:
+        with open(fill_from, encoding='utf-8') as fh:
+            baseline = json.load(fh)
+        carried = fill_missing_races(sections, baseline)
+        print(f"  Carried forward {carried} race(s) the export did not mention, from {fill_from}")
     os.makedirs(OUT_DIR, exist_ok=True)
     out_path = os.path.join(OUT_DIR, f"{data_key}.json")
     write_json_atomic(out_path, sections, separators=(',', ':'))
