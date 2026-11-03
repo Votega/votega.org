@@ -345,6 +345,8 @@ def _find_kw(low, kw):
 # actually fired, for the sourced alprItems citations.
 ALPR_TERMS = set(TOPIC_RULES['alpr']) | set(TOPIC_WORD_RULES['alpr'])
 TAX_TERMS = set(TOPIC_RULES['local-taxes']) | set(TOPIC_WORD_RULES['local-taxes'])
+MILLAGE_TERMS = (set(TOPIC_RULES['millage-budget'])
+                 | set(TOPIC_WORD_RULES.get('millage-budget') or ()))
 
 # Display labels for the ALPR vendor keywords, so a matched term can be shown as a
 # vendor NAME on the topic index pages (assets/scripts/topic-index.js reads the
@@ -715,6 +717,7 @@ def build_summary(enriched):
     lu_items = {}
     alpr_items = {}
     tax_items = {}
+    millage_items = {}
     flags = set()
     last = None
     land_use_meetings = 0
@@ -786,10 +789,31 @@ def build_summary(enriched):
                 entry['excerpt'] = ex['excerpt']
                 entry['excerptTerm'] = ex['excerptTerm']
             tax_items.setdefault(key, entry)
+        # Millage / budget citations: same sourced, per-meeting shape again. This
+        # tag's lexicon is deliberately broad ('budget', 'fiscal year'), so its
+        # count is large nearly everywhere and is NOT comparable with the narrow
+        # subjects above — see the note on flag_entry() before ranking on it.
+        if 'millage-budget' in mtopics:
+            title = m.get('title') or m.get('body') or 'Meeting'
+            terms = sorted(set(m.get('matchedTerms') or []) & MILLAGE_TERMS)
+            key = (m.get('date'), title)
+            entry = {
+                'title': title, 'date': m.get('date'),
+                'sourceUrl': m.get('sourceUrl'), 'terms': terms}
+            ex = _agenda_excerpt(m, 'millage-budget')
+            if ex:
+                entry['excerpt'] = ex['excerpt']
+                entry['excerptTerm'] = ex['excerptTerm']
+            millage_items.setdefault(key, entry)
     # Newest first, capped so the committed sidecar stays small.
     lu_sorted = sorted(lu_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     alpr_sorted = sorted(alpr_items.values(), key=lambda x: x.get('date') or '', reverse=True)
     tax_sorted = sorted(tax_items.values(), key=lambda x: x.get('date') or '', reverse=True)
+    millage_sorted = sorted(millage_items.values(),
+                            key=lambda x: x.get('date') or '', reverse=True)
+    # Citation counts come from the FULL dicts, not from the lists below: those are
+    # sliced to 20 for sidecar size, so counting them saturates at 20 and a place
+    # with 35 land-use meetings reports the same number as one with 20.
     return {
         'flags': sorted(flags),
         'lastActivity': last,
@@ -800,16 +824,44 @@ def build_summary(enriched):
         'alprItems': alpr_sorted[:20],
         'alprMeetings': alpr_meetings,
         'localTaxItems': tax_sorted[:20],
+        'localTaxCitations': len(tax_items),
+        'millageItems': millage_sorted[:20],
+        'millageCitations': len(millage_items),
+        'landUseCitations': len(lu_items),
+        'alprCitations': len(alpr_items),
+        'dataCenterCitations': len(dc_items),
     }
 
 
 def flag_entry(summary):
-    """The compact per-place record written into the hub file local-flags.json."""
+    """The compact per-place record written into the hub file local-flags.json.
+
+    One count per topic, so the /local/ cards can RANK a place's topics instead of
+    just listing them. Presence alone does not discriminate: local-taxes is on 56
+    of 59 flagged places and land-use-or-data-center on 56, so two of the three
+    pills a card used to show were on nearly every card.
+
+    Every count is the number of distinct meetings citing the subject, taken from
+    the unsliced collections in build_summary() — never from the `*Items` lists,
+    which stop at 20. Each count falls back to the old capped length so a sidecar
+    written before this change still reads.
+
+    `millageCount` is emitted for consistency but must NOT be ranked against the
+    others: the millage-budget lexicon includes 'budget' and 'fiscal year', which
+    appear on nearly every agenda, so it outscores the narrow subjects everywhere
+    (Fulton: millage-budget 36, local-taxes 19). It is a vocabulary-wide tag, not
+    a watch topic, and it carries no pill of its own.
+    """
+    def count(key, items_key):
+        n = summary.get(key)
+        return n if n is not None else len(summary.get(items_key) or [])
     return {
         'flags': summary['flags'],
-        'dataCenterCount': len(summary['dataCenterItems']),
-        'landUseCount': len(summary.get('landUseItems') or []),
-        'alprCount': len(summary.get('alprItems') or []),
+        'dataCenterCount': count('dataCenterCitations', 'dataCenterItems'),
+        'landUseCount': count('landUseCitations', 'landUseItems'),
+        'alprCount': count('alprCitations', 'alprItems'),
+        'localTaxesCount': count('localTaxCitations', 'localTaxItems'),
+        'millageCount': count('millageCitations', 'millageItems'),
         'lastActivity': summary['lastActivity'],
     }
 

@@ -78,6 +78,27 @@ Adding board rosters to `_data/school_districts.yml`, one district per PR, using
   does.** That is what the board renderer branches on — no name matching. A city
   place resolves to the boards of the county it sits in, with its own system
   (`primaryPlace`) leading. 22 visible places resolve to more than one board.
+- **A topic badge's PRESENCE does not discriminate, and no count threshold fixes
+  it.** Measured over the 59 flagged places: `local-taxes` is on 56 and
+  land-use-or-data-center on 56, so two of the three pills a `/local/` card showed
+  were on nearly every card. Gating on a raw count fails too — `landUseCount >= 5`
+  still fires on 45 of 59, because land use is genuinely busy almost everywhere.
+  Ranking on the raw count just moves the problem: land use then leads 48 of 59
+  cards. What works is scoring each topic against **its own statewide median**, so
+  a pill earns its slot by being busy *for that subject* (leading pill then spreads
+  21 land use / 14 data centers / 12 ALPR / 2 local taxes). The hub computes the
+  medians client-side from `local-flags.json` itself, so they recalibrate as places
+  are added.
+- **`millage-budget` must never be ranked against the narrow subjects.** Its
+  lexicon includes `budget` and `fiscal year`, which appear on nearly every agenda,
+  so it outscores them everywhere (Fulton: millage-budget 36, local-taxes 19). It
+  is a vocabulary-wide tag, not a watch topic. It carries a count for consistency
+  and no pill. `scripts/test_flag_entry_counts.py` pins both terms, so if they ever
+  leave the lexicon the exclusion can be revisited.
+- **A `*Count` in `local-flags.json` must not be computed from a `*Items` list** —
+  those are sliced to 20 for sidecar size, so counting them saturates and a place
+  with 35 land-use meetings reported the same number as one with 20. The counts
+  come from the unsliced collections in `build_summary`.
 - **`primaryPlace` was set on only 1 of 21 city systems** (Atlanta). Carrollton,
   Social Circle and Thomasville are the other three whose city is itself a place
   in `places.yml`; they are now set. The remaining 17 city systems have no

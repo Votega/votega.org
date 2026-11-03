@@ -1,0 +1,30 @@
+{%- comment %}
+  Sets `lh_has_board` — whether a confirmed school-board roster renders on this
+  place's page — for one /local/ hub card's inventory row.
+
+  It mirrors the resolution in entity/school-boards.html rather than guessing:
+  a place resolves to its county system (countyFips == the county's fips, 1:1 by
+  definition) plus every city system whose `counties` lists that county's slug,
+  and a city place resolves to the set for the COUNTY IT SITS IN.
+
+  The test is `members`, not the district's existence. Every place in Georgia has
+  a board; the registry's contract is that a missing `members` key means "not yet
+  researched", so the section renders nothing until a roster is human-confirmed.
+  The card's icon has to agree with that or it promises a panel that is not there.
+
+  Params: ctxslug — the COUNTY's slug (a city passes its parent's)
+          ctxfips — the COUNTY's fips (blank for a county not in places.yml)
+{% endcomment -%}
+{%- assign lh_has_board = false -%}
+{%- if include.ctxfips and include.ctxfips != "" -%}
+  {%- assign lh_cd = site.data.school_districts.countyDistricts | where: "countyFips", include.ctxfips | first -%}
+  {%- if lh_cd.members -%}{%- assign lh_has_board = true -%}{%- endif -%}
+  {%- unless lh_has_board -%}
+    {%- for d in site.data.school_districts.cityDistricts -%}
+      {%- if d.counties contains include.ctxslug and d.members -%}
+        {%- assign lh_has_board = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endunless -%}
+{%- endif -%}
