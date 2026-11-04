@@ -223,6 +223,9 @@ breadcrumb:
           <i class="fa-solid fa-users{% unless coOfficials %} off{% endunless %}" title="{% if coOfficials %}Officials{% else %}Officials — not yet{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-shield-halved{% unless coSheriff %} off{% endunless %}" title="{% if coSheriff %}Sheriff{% else %}coSheriffRIFFLABEL{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-calendar-days{% unless county.domains.meetings %} off{% endunless %}" title="{% if county.domains.meetings %}Meetings, agendas and minutes{% else %}Meetings — not yet{% endif %}" aria-hidden="true"></i>
+          {%- if site.data.local_votes.places[county.slug].status == 'available' %}
+          <i class="fa-solid fa-gavel" title="Recorded votes by meeting" aria-hidden="true"></i>
+          {%- endif %}
           <i class="fa-solid fa-graduation-cap{% unless lh_has_board %} off{% endunless %}" title="{% if lh_has_board %}School board{% else %}School board — roster not yet confirmed{% endif %}" aria-hidden="true"></i>
         </span>
       </div>
@@ -251,6 +254,9 @@ breadcrumb:
           <i class="fa-solid fa-users{% unless ciOfficials %} off{% endunless %}" title="{% if ciOfficials %}Officials{% else %}Officials — not yet{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-shield-halved{% unless false %} off{% endunless %}" title="{% if false %}Sheriff{% else %}falseRIFFLABEL{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-calendar-days{% unless city.domains.meetings %} off{% endunless %}" title="{% if city.domains.meetings %}Meetings, agendas and minutes{% else %}Meetings — not yet{% endif %}" aria-hidden="true"></i>
+          {%- if site.data.local_votes.places[city.slug].status == 'available' %}
+          <i class="fa-solid fa-gavel" title="Recorded votes by meeting" aria-hidden="true"></i>
+          {%- endif %}
           <i class="fa-solid fa-graduation-cap{% unless lh_has_board %} off{% endunless %}" title="{% if lh_has_board %}School board{% else %}School board — roster not yet confirmed{% endif %}" aria-hidden="true"></i>
         </span>
         </div>
@@ -310,6 +316,9 @@ breadcrumb:
           <i class="fa-solid fa-users{% unless c2Officials %} off{% endunless %}" title="{% if c2Officials %}Officials{% else %}Officials — not yet{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-shield-halved{% unless false %} off{% endunless %}" title="{% if false %}Sheriff{% else %}falseRIFFLABEL{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-calendar-days{% unless c2.domains.meetings %} off{% endunless %}" title="{% if c2.domains.meetings %}Meetings, agendas and minutes{% else %}Meetings — not yet{% endif %}" aria-hidden="true"></i>
+          {%- if site.data.local_votes.places[c2.slug].status == 'available' %}
+          <i class="fa-solid fa-gavel" title="Recorded votes by meeting" aria-hidden="true"></i>
+          {%- endif %}
           <i class="fa-solid fa-graduation-cap{% unless lh_has_board %} off{% endunless %}" title="{% if lh_has_board %}School board{% else %}School board — roster not yet confirmed{% endif %}" aria-hidden="true"></i>
         </span>
         </div>
