@@ -1,30 +1,33 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T20:22:02Z",
+  "generatedAt": "2026-11-04T10:42:55Z",
   "source": "City of Covington (corecode agenda/minutes PDFs, poppler+OCR)",
   "place": "City of Covington",
-  "count": 18
+  "count": 21
  },
  "summary": {
   "flags": [
    "alpr",
+   "budget",
    "data-center",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-09-01",
+  "lastActivity": "2026-10-19",
   "topicTotals": {
+   "development": 6,
+   "variance": 1,
+   "appointment": 14,
+   "alpr": 4,
+   "budget": 1,
+   "comprehensive-plan": 4,
+   "contract": 13,
+   "local-taxes": 3,
+   "rezoning": 6,
    "annexation": 2,
-   "appointment": 12,
-   "contract": 12,
    "data-center": 10,
-   "millage-budget": 11,
-   "alpr": 3,
-   "comprehensive-plan": 3,
-   "local-taxes": 2,
-   "rezoning": 5,
-   "development": 4
+   "millage-budget": 11
   },
   "dataCenterItems": [
    {
@@ -36,6 +39,29 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "City Council Meeting",
+    "date": "2026-10-19",
+    "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_1019_Minutes.pdf",
+    "tags": [
+     "development",
+     "variance"
+    ],
+    "excerpt": "… U26-0005, to allow for an Auto Rental business in CM zoning district on Hwy 142 NE, with conditions and requested variance. Motion carried unanimously. CoC10192026 …",
+    "excerptTerm": "variance"
+   },
+   {
+    "title": "City Council Meeting",
+    "date": "2026-09-21",
+    "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0921_Minutes.pdf",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning"
+    ],
+    "excerpt": "… W. Motion carried unanimously. ****** A public hearing was held at 7:10 PM concerning a City Initiated Future Land Use Map amendment and rezoning. Charles Hicks was in attendance to state the property owner is in favor of the FL …",
+    "excerptTerm": "future land use"
+   },
    {
     "title": "City Council Meeting",
     "date": "2026-06-15",
@@ -69,8 +95,18 @@
     "excerptTerm": "mixed-use"
    }
   ],
-  "landUseMeetings": 13,
+  "landUseMeetings": 15,
   "alprItems": [
+   {
+    "title": "City Council Meeting",
+    "date": "2026-09-21",
+    "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0921_Minutes.pdf",
+    "terms": [
+     "flock"
+    ],
+    "excerpt": "… Motion carried unanimously. ****** Rosie Crawford thanked the City for checking on her property, discussed Flock camera issues, and thanked council for appointments to the CRB. Diane Gaither-Howard discussed issues with …",
+    "excerptTerm": "flock"
+   },
    {
     "title": "City Council Meeting",
     "date": "2026-08-03",
@@ -105,8 +141,18 @@
     "excerptTerm": "flock"
    }
   ],
-  "alprMeetings": 3,
+  "alprMeetings": 4,
   "localTaxItems": [
+   {
+    "title": "City Council Meeting",
+    "date": "2026-09-21",
+    "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0921_Minutes.pdf",
+    "terms": [
+     "tax digest"
+    ],
+    "excerpt": "… y Council Member Davis to approve a resolution amending the FY 2027 Budget to reflect recent changes in the final tax digest and liability insurance renewal. Motion carried unanimously. CoC09212026 …",
+    "excerptTerm": "tax digest"
+   },
    {
     "title": "City Council Meeting",
     "date": "2026-08-03",
@@ -128,9 +174,187 @@
     "excerpt": "… of the Mayor and Council of the City of Covington, Georgia to request that the Georgia General Assembly approve a Homestead Exemption from Ad Valorem Taxes levied by the City of Covington. Motion carried unanimously. ****** May …",
     "excerptTerm": "homestead exemption"
    }
-  ]
+  ],
+  "localTaxCitations": 3,
+  "budgetItems": [
+   {
+    "title": "City Council Meeting",
+    "date": "2026-09-21",
+    "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0921_Minutes.pdf",
+    "terms": [
+     "decision-then-budget"
+    ],
+    "excerpt": "… ****** 12. Motion made by Council Member Henderson, seconded by Council Member Davis to approve a resolution amending the FY 2027 Budget to reflect recent changes in the final tax digest and liability insurance renewal. Motion carried unanimou …",
+    "excerptTerm": "decision-then-budget"
+   }
+  ],
+  "budgetCitations": 1,
+  "landUseCitations": 5,
+  "alprCitations": 4,
+  "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "20261019",
+   "date": "2026-10-19",
+   "body": "City Council",
+   "title": "City Council Meeting",
+   "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_1019_Minutes.pdf",
+   "textSource": "minutes",
+   "textSourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_1019_Minutes.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 11710,
+   "pdfSha256": "3443ff8a69c1df408b0c08d53ffa3559f09171214f2f05f8c5e328a33be0ba70",
+   "topics": {
+    "development": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… earing was held at 7:32 PM regarding a Special Use Permit request, PSU26-0008, to allow for a Self-Storage – Mini Warehouse in CM zoning district at 9133 Access Rd. Applicant attorney John Nix spoke in favor of the permit. 13. Motion …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… U26-0005, to allow for an Auto Rental business in CM zoning district on Hwy 142 NE, with conditions and requested variance. Motion carried unanimously. CoC10192026 …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "20261005",
+   "date": "2026-10-05",
+   "body": "City Council",
+   "title": "City Council Meeting",
+   "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_1005_Minutes.pdf",
+   "textSource": "minutes",
+   "textSourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_1005_Minutes.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 11883,
+   "pdfSha256": "f641b75fb30a2af5e4b3a983bfa4535b3158524c27e592bd76441b8e4114c14f",
+   "topics": {
+    "appointment": 1
+   },
+   "tags": [
+    "appointment"
+   ],
+   "matchedTerms": [
+    "appoint"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… r Davis voted opposed. ****** Rosie Crawford inquired about the status of CRB board since all board member appointments have been made. She asked for the council’s full support of the board. Diane Gaither-Howard confirmed …",
+     "context": "unknown"
+    }
+   },
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "20260921",
+   "date": "2026-09-21",
+   "body": "City Council",
+   "title": "City Council Meeting",
+   "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0921_Minutes.pdf",
+   "textSource": "minutes",
+   "textSourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0921_Minutes.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 16381,
+   "pdfSha256": "bc1c852230525c28fb2ef781f96c4ed3ae4236b4fca020887f75791c231bba4a",
+   "topics": {
+    "alpr": 1,
+    "appointment": 1,
+    "budget": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "alpr",
+    "appointment",
+    "budget",
+    "comprehensive-plan",
+    "contract",
+    "development",
+    "local-taxes",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "decision-then-budget",
+    "flock",
+    "future land use",
+    "mixed-use",
+    "rezon",
+    "tax digest"
+   ],
+   "topicExcerpts": {
+    "alpr": {
+     "term": "flock",
+     "excerpt": "… Motion carried unanimously. ****** Rosie Crawford thanked the City for checking on her property, discussed Flock camera issues, and thanked council for appointments to the CRB. Diane Gaither-Howard discussed issues with …",
+     "context": "agenda-action"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… osed. ****** 15. Motion made by Council Member Rutberg, seconded by Council Member Turner to approve the appointment of Kharmin Beam to the Covington Development Authority (CDA). Motion carried unanimously. ****** 16. …",
+     "context": "agenda-action"
+    },
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "… ****** 12. Motion made by Council Member Henderson, seconded by Council Member Davis to approve a resolution amending the FY 2027 Budget to reflect recent changes in the final tax digest and liability insurance renewal. Motion carried unanimou …",
+     "context": "agenda-action"
+    },
+    "comprehensive-plan": {
+     "term": "future land use",
+     "excerpt": "… W. Motion carried unanimously. ****** A public hearing was held at 7:10 PM concerning a City Initiated Future Land Use Map amendment and rezoning. Charles Hicks was in attendance to state the property owner is in favor of the FL …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… $188,776.50 GA Sewer & Storm $229,765.00 Lewis Contracting Services, LLC $260,770.00 Coggins Construction Company LLC $289,980.02 …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "mixed-use",
+     "excerpt": "… Use Map amendment from IND (Industrial) to COM (Commercial) and rezone from M2 (Heavy Industrial) to CM (Corridor Mixed-Use) property located on Hazelbrand Road case number PR26-0004. Motion carried unanimously. ****** 9. Mo …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "tax digest",
+     "excerpt": "… y Council Member Davis to approve a resolution amending the FY 2027 Budget to reflect recent changes in the final tax digest and liability insurance renewal. Motion carried unanimously. CoC09212026 …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ****** A public hearing was held at 7:10 PM concerning a City Initiated Future Land Use Map amendment and rezoning. Charles Hicks was in attendance to state the property owner is in favor of the FLUM amendment and rezoning. 8 …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget",
+    "alpr",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "20260901",
    "date": "2026-09-01",

@@ -1,12 +1,13 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T20:22:03Z",
+  "generatedAt": "2026-11-04T10:43:04Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 22
  },
  "summary": {
   "flags": [
+   "budget",
    "land-use",
    "local-taxes",
    "millage-budget"
@@ -16,16 +17,17 @@
    "development": 9,
    "variance": 3,
    "appointment": 4,
+   "budget": 1,
    "contract": 7,
    "local-taxes": 6,
-   "millage-budget": 5
+   "millage-budget": 4
   },
   "dataCenterItems": [],
   "landUseItems": [
    {
     "title": "Planning Commission Regular Meeting",
     "date": "2026-11-09",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4417,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4457,plainText=false)",
     "tags": [
      "development",
      "variance"
@@ -111,7 +113,7 @@
    {
     "title": "Lumpkin County Board of Commissioners Work Session",
     "date": "2026-11-03",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4451,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4453,plainText=false)",
     "terms": [
      "splost"
     ],
@@ -162,20 +164,35 @@
     "excerpt": "… Establishing & Adopting the 2027 Budget (Finance Director Abby Branan) 2. 2026-54 Resolution Establishing 2026 Ad Valorem Tax Millage Rate (Finance Director Abby Branan) • ADJOURNMENT",
     "excerptTerm": "ad valorem"
    }
-  ]
+  ],
+  "localTaxCitations": 6,
+  "budgetItems": [
+   {
+    "title": "Lumpkin County Board of Commissioners Work Session",
+    "date": "2026-11-03",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4453,plainText=false)",
+    "terms": [
+     "budget calendar"
+    ]
+   }
+  ],
+  "budgetCitations": 1,
+  "landUseCitations": 9,
+  "alprCitations": 0,
+  "dataCenterCitations": 0
  },
  "meetings": [
   {
-   "id": "1156",
+   "id": "1425",
    "date": "2026-11-09",
    "body": "Planning Commission",
    "title": "Planning Commission Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4417,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4457,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4417,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4457,plainText=false)",
    "textMethod": "pdftotext",
    "textChars": 828,
-   "pdfSha256": "859312a8255c78307508bab1a8438a26bc79f0ffe32f7489a7eccab7fd234dc1",
+   "pdfSha256": "3a13df59ebdb29eb64080ab1ee7bac289d58014ef3d8c4ae645c8f7e4c973d73",
    "topics": {
     "development": 1,
     "variance": 1
@@ -210,27 +227,27 @@
    "date": "2026-11-03",
    "body": "Board of Commissioners",
    "title": "Lumpkin County Board of Commissioners Work Session",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4451,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4453,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4451,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4453,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 3706,
-   "pdfSha256": "9667e86e447966d319e37883a1c1cfcfabfed9589c769f817ceb4d57bd703339",
+   "textChars": 3837,
+   "pdfSha256": "aced5ff5cb179844ecd5c18d622a33d4e72cac9399679995e8c140da325f312c",
    "topics": {
     "appointment": 1,
+    "budget": 1,
     "contract": 1,
-    "local-taxes": 1,
-    "millage-budget": 1
+    "local-taxes": 1
    },
    "tags": [
     "appointment",
+    "budget",
     "contract",
-    "local-taxes",
-    "millage-budget"
+    "local-taxes"
    ],
    "matchedTerms": [
     "appoint",
-    "budget",
+    "budget calendar",
     "contract",
     "reappoint",
     "splost"
@@ -239,6 +256,11 @@
     "appointment": {
      "term": "reappoint",
      "excerpt": "… ideration of the Lumpkin County 2027 Budget Calendar for FY 2028 Budget (Finance Director Abby Branan) 11. 2026-62 Reappoint Members to Lumpkin County Building Committee - Wayne Marshall to Seat 8, Charles Trammell to Seat 9, and Matt Cain …",
+     "context": "unknown"
+    },
+    "budget": {
+     "term": "budget calendar",
+     "excerpt": "… hedule (Community & Employee Services Director Alicia Davis) 10. 2026-61 Consideration of the Lumpkin County 2027 Budget Calendar for FY 2028 Budget (Finance Director Abby Branan) 11. 2026-62 Reappoint Members to Lumpkin County Building Committ …",
      "context": "unknown"
     },
     "contract": {
@@ -250,15 +272,10 @@
      "term": "splost",
      "excerpt": "… Members of the Lumpkin County Board of Commissioners (District 3 Commissioner Nathan Davis) 16. 2026-67 IGA for TSPLOST Distribution Regular Meeting 17. 2026-68 TSPLOST Resolution Call for Election Regular Meeting 18. 2026-69 Resolution …",
      "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… hedule (Community & Employee Services Director Alicia Davis) 10. 2026-61 Consideration of the Lumpkin County 2027 Budget Calendar for FY 2028 Budget (Finance Director Abby Branan) 11. 2026-62 Reappoint Members to Lumpkin County Buildin …",
-     "context": "unknown"
     }
    },
    "flags": [
-    "millage-budget",
+    "budget",
     "local-taxes"
    ],
    "dataCenterItems": []
@@ -268,12 +285,12 @@
    "date": "2026-10-27",
    "body": "Board of Commissioners",
    "title": "Board of Commissioners Special Called Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4427,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4459,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4427,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4459,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 496,
-   "pdfSha256": "5e2a2bdc27b2b7ea5849c098cf49eaeb9cdbe5c962fd2b3e33671e0d1014967d",
+   "textChars": 533,
+   "pdfSha256": "7af2153c9246d7b561e82808dd8ded941db66518b224aeb157d01c21b0d67162",
    "topics": {},
    "tags": [],
    "matchedTerms": [],

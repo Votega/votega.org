@@ -1,23 +1,25 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T20:22:01Z",
+  "generatedAt": "2026-11-04T10:42:53Z",
   "source": "Gwinnett County (gwinnett agenda/minutes PDFs, poppler+OCR)",
   "place": "Gwinnett County",
-  "count": 23
+  "count": 25
  },
  "summary": {
   "flags": [
    "alpr",
+   "budget",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-11-03",
   "topicTotals": {
-   "appointment": 11,
-   "contract": 15,
-   "local-taxes": 13,
+   "appointment": 12,
+   "contract": 16,
+   "local-taxes": 15,
    "millage-budget": 8,
+   "budget": 1,
    "rezoning": 3,
    "variance": 3,
    "alpr": 2
@@ -77,6 +79,14 @@
     "title": "Work Session",
     "date": "2026-11-03",
     "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_57229_2026.11.03___Work_Session_Agenda.pdf",
+    "terms": [
+     "splost"
+    ]
+   },
+   {
+    "title": "Business Session",
+    "date": "2026-11-03",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_51979_2026.11.03___Business_Session_Agenda.pdf",
     "terms": [
      "splost"
     ]
@@ -179,8 +189,34 @@
      "millage",
      "splost"
     ]
+   },
+   {
+    "title": "Special Meeting",
+    "date": "2026-08-04",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260804/a_25070_2026.08.04___Special_Called_Meeting_Agenda_2026_Proposed_Millage_Rate_1100am.pdf",
+    "terms": [
+     "millage"
+    ],
+    "excerpt": "… Call To Order II. Opening Remarks by Chairwoman III. Approval of Agenda IV. Public Hearing on 2026 Proposed Millage Rate V. Adjournment",
+    "excerptTerm": "millage"
    }
-  ]
+  ],
+  "localTaxCitations": 15,
+  "budgetItems": [
+   {
+    "title": "Business Session",
+    "date": "2026-11-03",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_51979_2026.11.03___Business_Session_Agenda.pdf",
+    "terms": [
+     "budget amendment",
+     "budget-then-decision"
+    ]
+   }
+  ],
+  "budgetCitations": 1,
+  "landUseCitations": 3,
+  "alprCitations": 2,
+  "dataCenterCitations": 0
  },
  "meetings": [
   {
@@ -254,6 +290,64 @@
    },
    "flags": [
     "millage-budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "51979",
+   "date": "2026-11-03",
+   "body": "Board of Commissioners",
+   "title": "Business Session",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_51979_2026.11.03___Business_Session_Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261103/a_51979_2026.11.03___Business_Session_Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 20478,
+   "pdfSha256": "35c6f86d9e58babeb032b61a612e85e7f607029e6871a4904e11330eea097b12",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget amendment",
+    "budget-then-decision",
+    "contract",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… M Page 2 VI. Consent Agenda A. New Business 1. Commissioners 2026-1276 Approval to appoint Incumbent Matthew Guifolye, Registered Fire Protection Engineer Representative; Louis Camerio, General …",
+     "context": "unknown"
+    },
+    "budget": {
+     "term": "budget amendment",
+     "excerpt": "… pproval/authorization of the September 30, 2026 Monthly Financial Status Report and ratification of all budget amendments. Business Session Agenda Tuesday, November 3, 2026 - 2:00 PM Page 5 VI. Consent Agenda A. New Business …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ew Guifolye, Registered Fire Protection Engineer Representative; Louis Camerio, General Contractor Representative; and William Peltier, Registered Structural Engineer Representative to the Board of Co …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… e provider, amount not to exceed $1,930,304.25. This contract is funded 94% by the 2023 SPLOST Program. (Recommendation: Approval) 2026-1346 Approval to renew BL081-23, provision of minor roof repa …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "budget",
     "local-taxes"
    ],
    "dataCenterItems": []
@@ -1142,6 +1236,38 @@
    },
    "flags": [
     "millage-budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "25070",
+   "date": "2026-08-04",
+   "body": "Board of Commissioners",
+   "title": "Special Meeting",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260804/a_25070_2026.08.04___Special_Called_Meeting_Agenda_2026_Proposed_Millage_Rate_1100am.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260804/a_25070_2026.08.04___Special_Called_Meeting_Agenda_2026_Proposed_Millage_Rate_1100am.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 292,
+   "pdfSha256": "0fc98404a191f740e07f6d67dbbeb26d4157dd6ce1802282a9c2b92c8186111a",
+   "topics": {
+    "local-taxes": 1
+   },
+   "tags": [
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "millage"
+   ],
+   "topicExcerpts": {
+    "local-taxes": {
+     "term": "millage",
+     "excerpt": "… Call To Order II. Opening Remarks by Chairwoman III. Approval of Agenda IV. Public Hearing on 2026 Proposed Millage Rate V. Adjournment",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
     "local-taxes"
    ],
    "dataCenterItems": []

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T20:22:01Z",
+  "generatedAt": "2026-11-04T10:42:52Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -8,25 +8,38 @@
  "summary": {
   "flags": [
    "alpr",
+   "budget",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-20",
+  "lastActivity": "2026-11-05",
   "topicTotals": {
-   "alpr": 1,
-   "contract": 24,
-   "development": 12,
-   "local-taxes": 14,
-   "millage-budget": 21,
+   "alpr": 2,
+   "budget": 1,
+   "contract": 25,
+   "development": 13,
+   "local-taxes": 15,
    "rezoning": 18,
+   "special-land-use": 6,
+   "variance": 12,
+   "millage-budget": 21,
    "comprehensive-plan": 6,
-   "variance": 11,
-   "appointment": 7,
-   "special-land-use": 5
+   "appointment": 7
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-11-05",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5398,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning",
+     "special-land-use",
+     "variance"
+    ]
+   },
    {
     "title": "Board of Commissioners Work Session",
     "date": "2026-10-20",
@@ -215,22 +228,18 @@
     "tags": [
      "rezoning"
     ]
-   },
-   {
-    "title": "Board of Commissioners Regular Meeting",
-    "date": "2026-05-07",
-    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5092,plainText=false)",
-    "tags": [
-     "development",
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "… (1) Public Hearing and possible vote regarding an Alternate Design for Teresa Curry with the following variance to: 1. Increase the maximum percentage of accent materials per vertical wall plane from 25% to 46% (UDC 2 …",
-    "excerptTerm": "variance"
    }
   ],
   "landUseMeetings": 21,
   "alprItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-11-05",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5398,plainText=false)",
+    "terms": [
+     "dashcam"
+    ]
+   },
    {
     "title": "Board of Commissioners Work Session",
     "date": "2026-10-20",
@@ -240,8 +249,16 @@
     ]
    }
   ],
-  "alprMeetings": 1,
+  "alprMeetings": 2,
   "localTaxItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-11-05",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5398,plainText=false)",
+    "terms": [
+     "splost"
+    ]
+   },
    {
     "title": "Board of Commissioners Work Session",
     "date": "2026-10-20",
@@ -356,9 +373,119 @@
      "splost"
     ]
    }
-  ]
+  ],
+  "localTaxCitations": 15,
+  "budgetItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-11-05",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5398,plainText=false)",
+    "terms": [
+     "budget resolution"
+    ],
+    "excerpt": "… ount; $70,808.00 - Local Participation/Match, with approval of the associated budget resolution - Project Manager (Ibrahim), Department of Capital Projects (S) Board approval o …",
+    "excerptTerm": "budget resolution"
+   }
+  ],
+  "budgetCitations": 1,
+  "landUseCitations": 21,
+  "alprCitations": 2,
+  "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "461",
+   "date": "2026-11-05",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5398,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5398,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 16806,
+   "pdfSha256": "e62f7b0538fd6bb903a39c38aaa63ee1fb3465d2b30571f05eb7f8ac629c3ccf",
+   "topics": {
+    "alpr": 1,
+    "budget": 1,
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "alpr",
+    "budget",
+    "contract",
+    "development",
+    "local-taxes",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "award of",
+    "budget resolution",
+    "conditional use",
+    "contract",
+    "dashcam",
+    "rezon",
+    "splost",
+    "task order",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "alpr": {
+     "term": "dashcam",
+     "excerpt": "… Subscription Service agreement with Ford Motor Company for a no-charge trial of on-board vehicle dashcams - Director, Department of Fleet and Environmental Services (B) Board approval …",
+     "context": "unknown"
+    },
+    "budget": {
+     "term": "budget resolution",
+     "excerpt": "… ount; $70,808.00 - Local Participation/Match, with approval of the associated budget resolution - Project Manager (Ibrahim), Department of Capital Projects (S) Board approval o …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Department of Fleet and Environmental Services (B) Board approval of the FY27 Professional Services Contract with University of Georgia Extension as approved in the Forsyth County 2027 budget - …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… ditional Construction Administration in the amount of $11,760.00 for the Water & Sewer Maintenance Warehouse project - Vertical Capital Projects Manager, Department of Capital Projects (R) …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… As-Needed Agreement for Volkert, Inc. in an amount not to exceed $141,365.00 for SPLOST IX Transportation Bundle 7, Holtzclaw Road at Chattahoochee Road (PE148) Roundabout Project – Tran …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… County - CFO, Department of Finance (T) Board postponement of a Board-generated rezoning for ZA4163, Tipton Development LLC, to the November 24, 2026 Work Session. In accordance …",
+     "context": "unknown"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… eatment facilities\" and otherwise modify the zoning requirements for \"clinics\" to require such uses to be conditional use permits as opposed to permitted as of right - County Attorney (3) Board approval of nuisance a …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… e vote regarding a request made by Andrew Martin with Martin Associates Home Builders Inc. for a lot-size variance of 0.10 acres in order for an A1 lot to be 0.90 acres rather than the required 1 acre (UDC 15, Table …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget",
+    "alpr",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "439",
    "date": "2026-10-20",
@@ -1948,38 +2075,6 @@
    "flags": [
     "land-use",
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "466",
-   "date": "2026-04-28",
-   "body": "Board of Commissioners",
-   "title": "Special Called Public Hearing",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5049,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5049,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 964,
-   "pdfSha256": "3bee6b0e1483a4eccd71f8692511e4d2488ebc481b1b9abf04f799a1ce370960",
-   "topics": {
-    "rezoning": 1
-   },
-   "tags": [
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… izing an Extension of a Moratorium prohibiting Forsyth County from receiving applications for Residential Rezonings as defined in UDC Chapter 11 and 20(B), except for applications seeking to rezone to th …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

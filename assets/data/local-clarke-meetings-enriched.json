@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T20:22:03Z",
+  "generatedAt": "2026-11-04T10:43:03Z",
   "source": "Athens-Clarke County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Athens-Clarke County",
   "count": 25
@@ -15,12 +15,12 @@
   ],
   "lastActivity": "2026-11-18",
   "topicTotals": {
-   "appointment": 2,
-   "comprehensive-plan": 6,
-   "contract": 5,
-   "development": 5,
-   "local-taxes": 7,
+   "development": 6,
    "rezoning": 6,
+   "appointment": 2,
+   "comprehensive-plan": 5,
+   "contract": 5,
+   "local-taxes": 7,
    "alpr": 1,
    "data-center": 1,
    "millage-budget": 3,
@@ -35,6 +35,17 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "November Planning Commission",
+    "date": "2026-11-05",
+    "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_11052026-3132",
+    "tags": [
+     "development",
+     "rezoning"
+    ],
+    "excerpt": "… B. Thurman Owner: Greg Waddell, Hodges on Milledge Request: Rezone from C-O (Commercial-Office) to RM-2 (Multi-family Residential). Tax ID: 122D4 E001 OTHER BUSINESS 1. Planning Commission Chair’s Report …",
+    "excerptTerm": "multi-family"
+   },
    {
     "title": "Mayor &amp; Commission Regular Session agenda - November 4, 2026",
     "date": "2026-11-04",
@@ -85,17 +96,6 @@
      "development",
      "rezoning"
     ]
-   },
-   {
-    "title": "September Planning Commission",
-    "date": "2026-09-03",
-    "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09032026-3039",
-    "tags": [
-     "comprehensive-plan",
-     "rezoning"
-    ],
-    "excerpt": "… tal-PWE One LLC, CRE Capital-PWE Two LLC, IHI Pine Wood Estates Request: Rezone from AR to C-G and Future Land Use change from Neighborhood Center to Major Corridor Tax ID: 211 019E 3. 3650, 3653, 3700, 3702, 37 …",
-    "excerptTerm": "future land use"
    }
   ],
   "landUseMeetings": 7,
@@ -176,7 +176,13 @@
      "splost"
     ]
    }
-  ]
+  ],
+  "localTaxCitations": 7,
+  "budgetItems": [],
+  "budgetCitations": 0,
+  "landUseCitations": 6,
+  "alprCitations": 1,
+  "dataCenterCitations": 1
  },
  "meetings": [
   {
@@ -195,6 +201,64 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "3133",
+   "date": "2026-11-05",
+   "body": "Planning Commission",
+   "title": "2026.11.05 Planning Commission Subcommittee on Zoning Reform for Affordable Homeownership",
+   "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_11052026-3133",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_11052026-3133",
+   "textMethod": "pdftotext",
+   "textChars": 1170,
+   "pdfSha256": "95240fc61204b1fea934b0bd196467270e51db82aad37ae9eb3d5f6f7da42970",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "3132",
+   "date": "2026-11-05",
+   "body": "Planning Commission",
+   "title": "November Planning Commission",
+   "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_11052026-3132",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_11052026-3132",
+   "textMethod": "pdftotext",
+   "textChars": 2273,
+   "pdfSha256": "b1c90d0f46b9dbe18fda0520e2e6e380c068a0c47dd24d6acef8a1d9e423eac4",
+   "topics": {
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "multi-family",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "multi-family",
+     "excerpt": "… B. Thurman Owner: Greg Waddell, Hodges on Milledge Request: Rezone from C-O (Commercial-Office) to RM-2 (Multi-family Residential). Tax ID: 122D4 E001 OTHER BUSINESS 1. Planning Commission Chair’s Report …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 1. 3650, 3653, 3700, 3702, 3704, 3706, 3708, 3710 Atlanta Hwy. – PD-2026-07-1456 and ZONE-2026-07-1457 Type II – Rezone Petitioner: Athens-Clarke County Owner: Leaven Group LLC Request: Remove Planned Development and Esta …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
    "dataCenterItems": []
   },
   {
@@ -983,64 +1047,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "3070",
-   "date": "2026-09-03",
-   "body": "Mayor & Commission Meetings",
-   "title": "Legislative Review Committee - September 3, 2026",
-   "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09032026-3070",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09032026-3070",
-   "textMethod": "pdftotext",
-   "textChars": 1434,
-   "pdfSha256": "1bf19688c288409ce66b462972bafd6bef71a3fa469955bab99b1f88ababeac4",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "3039",
-   "date": "2026-09-03",
-   "body": "Planning Commission",
-   "title": "September Planning Commission",
-   "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09032026-3039",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09032026-3039",
-   "textMethod": "pdftotext",
-   "textChars": 2806,
-   "pdfSha256": "e5bc4fe718b8b9d6f6bb61105dfea29b3f0424236148c2a4c3e8cebcfd809fb1",
-   "topics": {
-    "comprehensive-plan": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "comprehensive-plan",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "future land use",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "comprehensive-plan": {
-     "term": "future land use",
-     "excerpt": "… tal-PWE One LLC, CRE Capital-PWE Two LLC, IHI Pine Wood Estates Request: Rezone from AR to C-G and Future Land Use change from Neighborhood Center to Major Corridor Tax ID: 211 019E 3. 3650, 3653, 3700, 3702, 37 …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… Westclox Special District Overlay Tax ID: 112 003, 112 003C 2. 1295 US 29 Hwy N – ZONE-2026-06-1099 Type I - Rezone Petitioner: Jeff Carter Owner: GTV LLC, CW2 PWE LLC, CRE Capital-PWE One LLC, CRE Capital-PWE …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]

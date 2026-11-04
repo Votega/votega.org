@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T20:22:03Z",
+  "generatedAt": "2026-11-04T10:43:05Z",
   "source": "Pickens County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Pickens County",
   "count": 25
@@ -11,18 +11,28 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-19",
+  "lastActivity": "2026-11-09",
   "topicTotals": {
+   "rezoning": 17,
    "appointment": 5,
    "local-taxes": 7,
    "millage-budget": 5,
-   "rezoning": 17,
    "contract": 2,
-   "special-land-use": 4,
-   "development": 2
+   "special-land-use": 3,
+   "development": 1
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission Meeting Agenda",
+    "date": "2026-11-09",
+    "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_11092026-199",
+    "tags": [
+     "rezoning"
+    ],
+    "excerpt": "… IANCE II. READING AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS IV. NEW BUSINESS A. REZONES: • RZ-191238 – Kelly & Lisa Teal 78 Biguns Blvd, Talking Rock …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Commissioners Work Session and Regular Meeting Agenda",
     "date": "2026-10-19",
@@ -170,18 +180,6 @@
     ],
     "excerpt": "… LLEGIANCE II. READING AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS: IV. NEW BUSINESS: A. Rezones and Conditional Uses: RZ – 191110 - Jordan Deeney on behalf of Sean Catlett …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Planning Commission Meeting Agenda",
-    "date": "2026-02-09",
-    "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_02092026-174",
-    "tags": [
-     "development",
-     "rezoning",
-     "special-land-use"
-    ],
-    "excerpt": "… Parcel # 055D 107 SU- 191103 LANDRoCo dba R4 Investments Major Subdivision 145.988-acres Parcel # 055D 107 RZ-19110 …",
-    "excerptTerm": "subdivision"
    }
   ],
   "landUseMeetings": 17,
@@ -246,9 +244,47 @@
      "tax digest"
     ]
    }
-  ]
+  ],
+  "localTaxCitations": 7,
+  "budgetItems": [],
+  "budgetCitations": 0,
+  "landUseCitations": 17,
+  "alprCitations": 0,
+  "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "199",
+   "date": "2026-11-09",
+   "body": "Planning Commission",
+   "title": "Planning Commission Meeting Agenda",
+   "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_11092026-199",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_11092026-199",
+   "textMethod": "pdftotext",
+   "textChars": 918,
+   "pdfSha256": "199395aa430ec0836d587fb04e7a4dd69e3c881c749f604745a9a98501ca8641",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… IANCE II. READING AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS IV. NEW BUSINESS A. REZONES: • RZ-191238 – Kelly & Lisa Teal 78 Biguns Blvd, Talking Rock …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "198",
    "date": "2026-10-19",
@@ -1112,54 +1148,6 @@
     }
    },
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "174",
-   "date": "2026-02-09",
-   "body": "Planning Commission",
-   "title": "Planning Commission Meeting Agenda",
-   "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_02092026-174",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_02092026-174",
-   "textMethod": "pdftotext",
-   "textChars": 1235,
-   "pdfSha256": "4e9f5605a156083125871c52238eb9887e159b38254e4f6396af6fe5707ccd2d",
-   "topics": {
-    "development": 1,
-    "rezoning": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "development",
-    "rezoning",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "conditional use",
-    "rezon",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… Parcel # 055D 107 SU- 191103 LANDRoCo dba R4 Investments Major Subdivision 145.988-acres Parcel # 055D 107 RZ-19110 …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… READING AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS: IV. NEW BUSINESS: A. Rezones and Conditional Uses: RZ – 191101 LANDRoCo dba R4 Investments AG …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… G AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS: IV. NEW BUSINESS: A. Rezones and Conditional Uses: RZ – 191101 LANDRoCo dba R4 Investments AG to SA / ER/ RR …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]

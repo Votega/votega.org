@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T20:21:59Z",
+  "generatedAt": "2026-11-04T10:42:50Z",
   "source": "DeKalb County (Legistar structured API)",
   "place": "DeKalb County",
   "count": 25
@@ -8,10 +8,10 @@
  "summary": {
   "flags": [
    "alpr",
+   "budget",
    "data-center",
    "land-use",
-   "local-taxes",
-   "millage-budget"
+   "local-taxes"
   ],
   "lastActivity": "2026-11-05",
   "topicTotals": {
@@ -23,8 +23,8 @@
    "special-land-use": 49,
    "comprehensive-plan": 7,
    "development": 24,
-   "millage-budget": 19,
-   "alpr": 10
+   "alpr": 10,
+   "budget": 2
   },
   "dataCenterItems": [
    {
@@ -408,7 +408,36 @@
     "excerpt": "… Rescue (FR) to obtain roof maintenance, repair, and replacement services at County-owned facilities. Seeking to utilize SPLOST II funds for the roof replacement and repairs at North DeKalb Comprehensive Health Center, East DeKalb Health Center, E …",
     "excerptTerm": "splost"
    }
-  ]
+  ],
+  "localTaxCitations": 12,
+  "budgetItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-06-09",
+    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4478&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+    "terms": [
+     "annual budget",
+     "decision-then-budget"
+    ],
+    "excerpt": "Commission District(s): All To Amend the Fiscal Year 2026 Annual Budget and Appropriate Capital Funding for Various Items. Resolution",
+    "excerptTerm": "decision-then-budget"
+   },
+   {
+    "title": "Committee of the Whole",
+    "date": "2026-06-02",
+    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4476&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+    "terms": [
+     "annual budget",
+     "decision-then-budget"
+    ],
+    "excerpt": "Commission District(s): All To Amend the Fiscal Year 2026 Annual Budget and Appropriate Capital Funding for Various Items. Resolution",
+    "excerptTerm": "decision-then-budget"
+   }
+  ],
+  "budgetCitations": 2,
+  "landUseCitations": 8,
+  "alprCitations": 8,
+  "dataCenterCitations": 9
  },
  "meetings": [
   {
@@ -979,7 +1008,6 @@
     "rezoning": 2,
     "development": 1,
     "appointment": 1,
-    "millage-budget": 3,
     "contract": 37,
     "data-center": 4,
     "local-taxes": 3,
@@ -988,10 +1016,8 @@
    "matchedTerms": [
     "appoint",
     "body cam",
-    "budget",
     "contract",
     "data center",
-    "fiscal year",
     "procurement",
     "purchase order",
     "rezon",
@@ -1012,11 +1038,6 @@
     "appointment": {
      "term": "appoint",
      "excerpt": "APPOINTMENTS",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "Commission District(s): All Commissions Districts Fiscal Year 2025 Assistance to Firefighters Grant Resolution",
      "context": "agenda-action"
     },
     "contract": {
@@ -1043,7 +1064,6 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget",
     "alpr",
     "local-taxes"
    ],
@@ -1166,15 +1186,12 @@
     "data-center": 3,
     "development": 1,
     "local-taxes": 3,
-    "alpr": 1,
-    "millage-budget": 3
+    "alpr": 1
    },
    "matchedTerms": [
     "body cam",
-    "budget",
     "contract",
     "data center",
-    "fiscal year",
     "procurement",
     "purchase order",
     "rezon",
@@ -1211,17 +1228,11 @@
      "term": "body cam",
      "excerpt": "Commission District(s): All CO - Change Order No. 6 to Contract No. 1257650 BodyWorn™ Body Camera System (Multi-Year)(Sole Source). For use by the Marshal’s Office, Police Services (PS) and Animal Enforcement Servi …",
      "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Budget (OMB)",
-     "context": "agenda-action"
     }
    },
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget",
     "alpr",
     "local-taxes"
    ],
@@ -1612,12 +1623,10 @@
     "rezoning": 1,
     "appointment": 9,
     "contract": 30,
-    "millage-budget": 1,
     "data-center": 1
    },
    "matchedTerms": [
     "appoint",
-    "budget",
     "contract",
     "data center",
     "procurement",
@@ -1641,11 +1650,6 @@
      "excerpt": "… ion expansion, remote patient monitoring, and other initiatives to strengthen the DeKalb County healthcare ecosystem. A contract will be developed and executed in a form acceptable to the County Attorney or his designee. Awarded to: Mosaic Health C …",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Commission District(s): All CO - Change Order No. 3 to Purchase Order No. 1360924 Budget Rental Agreement for Undercover Vehicles with DeKalb County (Emergency). For use by Public Works - Fleet Management to …",
-     "context": "agenda-action"
-    },
     "data-center": {
      "term": "data center",
      "excerpt": "… trict(s): All Commission Districts A Resolution Requiring an Independent, Third-Party Health and Environmental Study of Data Centers and Their Possible Impact on DeKalb County and Board of Commissioners Review of the Study Before DeKalb County’s Data …",
@@ -1654,8 +1658,7 @@
    },
    "flags": [
     "land-use",
-    "data-center",
-    "millage-budget"
+    "data-center"
    ],
    "dataCenterItems": [
     {
@@ -1703,12 +1706,10 @@
     "rezoning": 1,
     "appointment": 9,
     "contract": 30,
-    "data-center": 1,
-    "millage-budget": 1
+    "data-center": 1
    },
    "matchedTerms": [
     "appoint",
-    "budget",
     "contract",
     "data center",
     "procurement",
@@ -1736,17 +1737,11 @@
      "term": "data center",
      "excerpt": "… trict(s): All Commission Districts A Resolution Requiring an Independent, Third-Party Health and Environmental Study of Data Centers and Their Possible Impact on DeKalb County and Board of Commissioners Review of the Study Before DeKalb County’s Data …",
      "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Commission District(s): All CO - Change Order No. 3 to Purchase Order No. 1360924 Budget Rental Agreement for Undercover Vehicles with DeKalb County (Emergency). For use by Public Works - Fleet Management to …",
-     "context": "agenda-action"
     }
    },
    "flags": [
     "land-use",
-    "data-center",
-    "millage-budget"
+    "data-center"
    ],
    "dataCenterItems": [
     {
@@ -1794,12 +1789,10 @@
     "contract": 30,
     "rezoning": 1,
     "appointment": 9,
-    "data-center": 1,
-    "millage-budget": 1
+    "data-center": 1
    },
    "matchedTerms": [
     "appoint",
-    "budget",
     "contract",
     "data center",
     "procurement",
@@ -1827,17 +1820,11 @@
      "term": "data center",
      "excerpt": "… trict(s): All Commission Districts A Resolution Requiring an Independent, Third-Party Health and Environmental Study of Data Centers and Their Possible Impact on DeKalb County and Board of Commissioners Review of the Study Before DeKalb County’s Data …",
      "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Commission District(s): All CO - Change Order No. 3 to Purchase Order No. 1360924 Budget Rental Agreement for Undercover Vehicles with DeKalb County (Emergency). For use by Public Works - Fleet Management to …",
-     "context": "agenda-action"
     }
    },
    "flags": [
     "land-use",
-    "data-center",
-    "millage-budget"
+    "data-center"
    ],
    "dataCenterItems": [
     {
@@ -2738,16 +2725,13 @@
     "contract": 36,
     "data-center": 2,
     "local-taxes": 1,
-    "millage-budget": 4,
     "special-land-use": 1
    },
    "matchedTerms": [
     "ad valorem",
     "appoint",
-    "budget",
     "contract",
     "data center",
-    "fiscal year",
     "land use permit",
     "millage",
     "special land use"
@@ -2773,11 +2757,6 @@
      "excerpt": "Commission District(s): Commission District(s): All 2026 Ad Valorem Tax Millage Rates; Budget Revisions Resolution",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "ad valorem",
-     "excerpt": "Commission District(s): Commission District(s): All 2026 Ad Valorem Tax Millage Rates; Budget Revisions Resolution",
-     "context": "agenda-action"
-    },
     "special-land-use": {
      "term": "special land use",
      "excerpt": "… 7-3.39 to update the Bouldercrest-Cedar Grove-Moreland Overlay District to allow limited office uses, when subject to a Special Land Use Permit and additional criteria with Tier V of the overlay. Ordinance",
@@ -2787,7 +2766,6 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget",
     "local-taxes"
    ],
    "dataCenterItems": [
@@ -3101,7 +3079,6 @@
     "rezoning": 2,
     "special-land-use": 4,
     "local-taxes": 4,
-    "millage-budget": 3,
     "appointment": 2,
     "contract": 66,
     "development": 2,
@@ -3112,7 +3089,6 @@
     "appoint",
     "axon enterprise",
     "body cam",
-    "budget",
     "contract",
     "data center",
     "land use permit",
@@ -3144,11 +3120,6 @@
      "excerpt": "Commission District(s): Commission District(s): All 2026 Ad Valorem Tax Millage Rates; Budget Revisions Resolution",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "ad valorem",
-     "excerpt": "Commission District(s): Commission District(s): All 2026 Ad Valorem Tax Millage Rates; Budget Revisions Resolution",
-     "context": "agenda-action"
-    },
     "appointment": {
      "term": "appoint",
      "excerpt": "APPOINTMENTS",
@@ -3173,7 +3144,6 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget",
     "alpr",
     "local-taxes"
    ],
@@ -3463,15 +3433,13 @@
     "local-taxes": 2,
     "alpr": 2,
     "appointment": 2,
-    "development": 1,
-    "millage-budget": 1
+    "development": 1
    },
    "matchedTerms": [
     "ad valorem",
     "appoint",
     "axon enterprise",
     "body cam",
-    "budget",
     "contract",
     "data center",
     "land use permit",
@@ -3522,17 +3490,11 @@
      "term": "multifamily",
      "excerpt": "… implementation of the DeKalb County Housing Investment Bond Program by approving the creation and implementation of the Multifamily Acquisition Fund, DeKalb Housing Catalyst Multifamily Gap Financing Program, DeKalb HomeStart Down Payment Assistance P …",
      "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "ad valorem",
-     "excerpt": "Commission District(s): Commission District(s): All 2026 Ad Valorem Tax Millage Rates; Budget Revisions Resolution",
-     "context": "agenda-action"
     }
    },
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget",
     "alpr",
     "local-taxes"
    ],
@@ -3688,16 +3650,16 @@
     "data-center": 2,
     "appointment": 4,
     "contract": 65,
-    "millage-budget": 1,
+    "budget": 1,
     "local-taxes": 1,
     "development": 1
    },
    "matchedTerms": [
+    "annual budget",
     "appoint",
-    "budget",
     "contract",
     "data center",
-    "fiscal year",
+    "decision-then-budget",
     "purchase order",
     "splost",
     "warehouse"
@@ -3718,8 +3680,8 @@
      "excerpt": "Purchasing & Contracting",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "fiscal year",
+    "budget": {
+     "term": "decision-then-budget",
      "excerpt": "Commission District(s): All To Amend the Fiscal Year 2026 Annual Budget and Appropriate Capital Funding for Various Items. Resolution",
      "context": "agenda-action"
     },
@@ -3737,7 +3699,7 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget",
+    "budget",
     "local-taxes"
    ],
    "dataCenterItems": [
@@ -3808,14 +3770,14 @@
     "development": 1,
     "appointment": 5,
     "local-taxes": 1,
-    "millage-budget": 1
+    "budget": 1
    },
    "matchedTerms": [
+    "annual budget",
     "appoint",
-    "budget",
     "contract",
     "data center",
-    "fiscal year",
+    "decision-then-budget",
     "purchase order",
     "splost",
     "warehouse"
@@ -3846,8 +3808,8 @@
      "excerpt": "… Rescue (FR) to obtain roof maintenance, repair, and replacement services at County-owned facilities. Seeking to utilize SPLOST II funds for the roof replacement and repairs at North DeKalb Comprehensive Health Center, East DeKalb Health Center, E …",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "fiscal year",
+    "budget": {
+     "term": "decision-then-budget",
      "excerpt": "Commission District(s): All To Amend the Fiscal Year 2026 Annual Budget and Appropriate Capital Funding for Various Items. Resolution",
      "context": "agenda-action"
     }
@@ -3855,7 +3817,7 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget",
+    "budget",
     "local-taxes"
    ],
    "dataCenterItems": [

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T20:22:01Z",
+  "generatedAt": "2026-11-04T10:42:52Z",
   "source": "Carroll County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Carroll County",
   "count": 25
@@ -12,19 +12,26 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-05",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
+   "data-center": 3,
+   "rezoning": 6,
+   "special-land-use": 7,
    "variance": 5,
-   "contract": 9,
+   "contract": 8,
    "local-taxes": 3,
-   "special-land-use": 6,
    "appointment": 3,
-   "millage-budget": 7,
-   "annexation": 3,
-   "data-center": 2,
-   "rezoning": 5
+   "millage-budget": 6,
+   "annexation": 3
   },
   "dataCenterItems": [
+   {
+    "title": "Planning & Zoning Commission",
+    "date": "2026-11-17",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3042,plainText=false)",
+    "excerpt": "… ing for the Proposed Amendments to the Zoning Ordinance to regulate solar farms, battery energy storage facilities, and data centers. 6. Business Session 7. Adjournment",
+    "excerptTerm": "data center"
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-08-04",
@@ -143,7 +150,7 @@
     "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 14,
+  "landUseMeetings": 15,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
@@ -176,9 +183,72 @@
     "excerpt": "… ipment Consideration to Purchase a Used 2018 Sky Jack SJ86T Boom Lift for $25,000 moving from SPLOST Roads Account to the SPLOST Equipment Purchases Account, authorize the Chairman to negotiate and execute t …",
     "excerptTerm": "splost"
    }
-  ]
+  ],
+  "localTaxCitations": 3,
+  "budgetItems": [],
+  "budgetCitations": 0,
+  "landUseCitations": 12,
+  "alprCitations": 0,
+  "dataCenterCitations": 2
  },
  "meetings": [
+  {
+   "id": "903",
+   "date": "2026-11-17",
+   "body": "Planning & Zoning",
+   "title": "Planning & Zoning Commission",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3042,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3042,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1611,
+   "pdfSha256": "5525979440581f7a0061c477367771899daf62f58b345193008410077b0506c7",
+   "topics": {
+    "data-center": 1,
+    "rezoning": 1,
+    "special-land-use": 1
+   },
+   "tags": [
+    "data-center",
+    "rezoning",
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "data center",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… ing for the Proposed Amendments to the Zoning Ordinance to regulate solar farms, battery energy storage facilities, and data centers. 6. Business Session 7. Adjournment",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Land Lot 219 of the 3rd District. Owner/Applicant: William Blair/Mike Holder. Commission District 5. 5.II. Z-26-11-01: Rezoning request for 1.5 acres from Agriculture to Commercial for a special events facility at 320 N Hwy 113. Parcel #089-088 …",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… o The applicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. C-26-11-01: Conditional Use request, zoned Agriculture, for a commercial recreation area (West GA Speedway) at 1936 Sammy Dukes Rd. Parcel #199-001 …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Planning & Zoning Commission",
+     "date": "2026-11-17",
+     "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3042,plainText=false)",
+     "excerpt": "… ing for the Proposed Amendments to the Zoning Ordinance to regulate solar farms, battery energy storage facilities, and data centers. 6. Business Session 7. Adjournment",
+     "excerptTerm": "data center"
+    }
+   ]
+  },
   {
    "id": "764",
    "date": "2026-11-05",
@@ -1061,46 +1131,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "843",
-   "date": "2026-04-15",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Budget Work Session",
-   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2897,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2897,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 809,
-   "pdfSha256": "d0f96e59f91b26df95c849bc0471fd23b377ed85a50b6cc2dbbffca215263f98",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… UDGET WORK SESSION 1.I. Discussion of the FY 2026-2027 Proposed Budget, including capital projects and contracts Persons with special needs relating to handicapped accessibility, disability, or foreign language shall contact the …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Room 9:00 AM WORK SESSION 1. FY 2026-2027 BUDGET WORK SESSION 1.I. Discussion of the FY 2026-2027 Proposed Budget, including capital projects and contr …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

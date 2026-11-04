@@ -184,44 +184,22 @@
  "mentions": [
   {
    "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-11-06",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-05",
    "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1750&Inline=True",
-   "tags": [],
-   "terms": [
-    "axon enterprise",
-    "surveillance camera"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-11-03",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13057",
-   "placeId": "cherokee",
-   "placeName": "Cherokee County",
+   "excerpt": "… Subscription Service agreement with Ford Motor Company for a no-charge trial of on-board vehicle dashcams - Director, Department of Fleet and Environmental Services (B) Board approval …",
+   "excerptTerm": "dashcam",
+   "fips": "13117",
+   "placeId": "forsyth",
+   "placeName": "Forsyth County",
    "placeType": "county",
    "region": "Metro Atlanta",
-   "sourceType": "granicus",
-   "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&event_id=1118",
+   "sourceType": "ocr",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5398,plainText=false)",
    "tags": [],
    "terms": [
-    "axon enterprise"
+    "dashcam"
    ],
    "vendors": []
   },
@@ -596,6 +574,29 @@
    "region": "West Georgia",
    "sourceType": "ocr",
    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-47091c946fc6435c9996e70b8bad63e1.pdf",
+   "tags": [],
+   "terms": [
+    "flock"
+   ],
+   "vendors": [
+    "Flock Safety"
+   ]
+  },
+  {
+   "body": "City Council",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-09-21",
+   "docType": "minutes",
+   "excerpt": "… Motion carried unanimously. ****** Rosie Crawford thanked the City for checking on her property, discussed Flock camera issues, and thanked council for appointments to the CRB. Diane Gaither-Howard discussed issues with …",
+   "excerptTerm": "flock",
+   "fips": null,
+   "placeId": "covington",
+   "placeName": "City of Covington",
+   "placeType": "city",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0921_Minutes.pdf",
    "tags": [],
    "terms": [
     "flock"
@@ -1722,27 +1723,6 @@
    "vendors": []
   },
   {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-03-13",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1732&Inline=True",
-   "tags": [],
-   "terms": [
-    "axon enterprise"
-   ],
-   "vendors": []
-  },
-  {
    "body": "City Council",
    "confidence": "high",
    "context": null,
@@ -1811,29 +1791,6 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "unknown",
-   "date": "2026-01-09",
-   "docType": "agenda",
-   "excerpt": "… p, unserviceable equipment and vehicles that cannot be economically repaired H. Annual renewal Police Flock Group, Inc. $60,000 Restricted Court of the lease DBA Flock Safety, …",
-   "excerptTerm": "flock",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1727&Inline=True",
-   "tags": [],
-   "terms": [
-    "flock"
-   ],
-   "vendors": [
-    "Flock Safety"
-   ]
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
    "context": null,
    "date": "2026-01-06",
    "docType": "agenda",
@@ -1853,6 +1810,27 @@
    "vendors": [
     "Flock Safety"
    ]
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2025-12-19",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1725&Inline=True",
+   "tags": [],
+   "terms": [
+    "axon enterprise"
+   ],
+   "vendors": []
   },
   {
    "body": "City Council",
@@ -1883,7 +1861,7 @@
   "consolidatedScanned": 4,
   "countiesScanned": 46,
   "emoji": "📷",
-  "generatedAt": "2026-11-02T20:36:45Z",
+  "generatedAt": "2026-11-04T10:55:50Z",
   "label": "ALPR / surveillance",
   "placesScanned": 59,
   "placesWithMentions": 29,

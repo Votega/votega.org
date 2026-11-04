@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-02T20:21:50Z",
+  "generatedAt": "2026-11-04T10:42:41Z",
   "source": "Fulton County (Legistar structured API)",
   "place": "Fulton County",
   "count": 21
@@ -8,16 +8,16 @@
  "summary": {
   "flags": [
    "alpr",
+   "budget",
    "data-center",
    "land-use",
-   "local-taxes",
-   "millage-budget"
+   "local-taxes"
   ],
   "lastActivity": "2026-11-04",
   "topicTotals": {
    "contract": 197,
    "local-taxes": 19,
-   "millage-budget": 36,
+   "budget": 3,
    "development": 70,
    "appointment": 50,
    "data-center": 4,
@@ -301,7 +301,48 @@
     "excerpt": "Discussion: a. TSPLOST · Reviewed TSPLOST 1 and TSPLOST 2 Collections · Discussed the TSPLOST 3 Projections (GSU) · Reviewed the TSPLOST 3 Sch …",
     "excerptTerm": "splost"
    }
-  ]
+  ],
+  "localTaxCitations": 12,
+  "budgetItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-11-04",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6399&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "terms": [
+     "budget-then-decision",
+     "decision-then-budget",
+     "proposed budget"
+    ],
+    "excerpt": "… sts; to remove the 5% cap placed on all Fulton County departments for the 2027 budget; to require that all departmental budget requests are disclosed in the proposed budget; and for other purposes. (Barrett) (MOTION TO APPROVE FAILED ON 10/21/26) Commissioners Action Item",
+    "excerptTerm": "budget-then-decision"
+   },
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-10-21",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6398&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "terms": [
+     "budget-then-decision",
+     "decision-then-budget",
+     "proposed budget"
+    ],
+    "excerpt": "… sts; to remove the 5% cap placed on all Fulton County departments for the 2027 budget; to require that all departmental budget requests are disclosed in the proposed budget; and for other purposes. (Barrett) (MOTION TO APPROVE FAILED ON 10/21/26) Commissioners Action Item",
+    "excerptTerm": "budget-then-decision"
+   },
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-08-05",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6391&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "terms": [
+     "annual budget"
+    ],
+    "excerpt": "… Fulton County Board of Commissioners, to re-establish a Budget Commission to assist in the development of the County's annual budget; to provide for its purpose, composition, selection, eligibility, and duties; to amend Section 2-261 of the Fulton Coun …",
+    "excerptTerm": "annual budget"
+   }
+  ],
+  "budgetCitations": 3,
+  "landUseCitations": 11,
+  "alprCitations": 1,
+  "dataCenterCitations": 3
  },
  "meetings": [
   {
@@ -313,15 +354,17 @@
    "topics": {
     "contract": 15,
     "local-taxes": 1,
-    "millage-budget": 3,
+    "budget": 1,
     "development": 1
    },
    "matchedTerms": [
-    "budget",
+    "budget-then-decision",
     "contract",
+    "decision-then-budget",
     "millage",
     "multifamily",
-    "procurement"
+    "procurement",
+    "proposed budget"
    ],
    "topicExcerpts": {
     "contract": {
@@ -334,9 +377,9 @@
      "excerpt": "Request approval of the Fulton County, Georgia Supplemental Tax Resolution adopting the 2026 Millage Rate for the Fulton County School Board. CM Action Item - Open & Responsible Government",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "millage",
-     "excerpt": "Request approval of the Fulton County, Georgia Supplemental Tax Resolution adopting the 2026 Millage Rate for the Fulton County School Board. CM Action Item - Open & Responsible Government",
+    "budget": {
+     "term": "budget-then-decision",
+     "excerpt": "… sts; to remove the 5% cap placed on all Fulton County departments for the 2027 budget; to require that all departmental budget requests are disclosed in the proposed budget; and for other purposes. (Barrett) (MOTION TO APPROVE FAILED ON 10/21/26) Commissioners Action Item",
      "context": "agenda-action"
     },
     "development": {
@@ -347,7 +390,7 @@
    },
    "flags": [
     "land-use",
-    "millage-budget",
+    "budget",
     "local-taxes"
    ],
    "dataCenterItems": [],
@@ -375,16 +418,17 @@
     "appointment": 2,
     "development": 5,
     "contract": 17,
-    "millage-budget": 5,
+    "budget": 1,
     "local-taxes": 1
    },
    "matchedTerms": [
     "appoint",
     "award of",
-    "budget",
+    "budget-then-decision",
     "contract",
-    "fiscal year",
+    "decision-then-budget",
     "procurement",
+    "proposed budget",
     "subdivision",
     "tax allocation district",
     "townhome"
@@ -405,9 +449,9 @@
      "excerpt": "Request approval to renew existing contracts - Department of Real Estate and Asset Management, 24ITBC143872C-JH, Janitorial Supplies and Equipment in a total amoun …",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… (2) “Ending the HIV Epidemic” grant-funded subrecipient agreements for HIV care and support services to be provided in Fiscal Year 2026 through FY2029 (8/1/2026 - 2/28/2030) in a total amount not to exceed $2,235,180.00, pursuant to the Health Resour …",
+    "budget": {
+     "term": "budget-then-decision",
+     "excerpt": "… sts; to remove the 5% cap placed on all Fulton County departments for the 2027 budget; to require that all departmental budget requests are disclosed in the proposed budget; and for other purposes. (Barrett) (MOTION TO APPROVE FAILED ON 10/21/26) Commissioners Action Item",
      "context": "agenda-action"
     },
     "local-taxes": {
@@ -418,7 +462,7 @@
    },
    "flags": [
     "land-use",
-    "millage-budget",
+    "budget",
     "local-taxes"
    ],
    "dataCenterItems": [],
@@ -487,26 +531,18 @@
    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6397&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
    "itemCount": 124,
    "topics": {
-    "millage-budget": 5,
     "contract": 33,
     "development": 4,
     "local-taxes": 4
    },
    "matchedTerms": [
-    "budget",
     "contract",
-    "fiscal year",
     "general obligation bond",
     "millage",
     "subdivision",
     "task order"
    ],
    "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… sity's online degree programs. This partnership supplements the current Employee Education Assistance policy and has no budgetary impact to the County. (APPROVED UPON ADOPTION OF THE CONSENT AGENDA) Consent - Open & Responsible Government",
-     "context": "agenda-action"
-    },
     "contract": {
      "term": "contract",
      "excerpt": "Request approval to renew existing contracts - Department of Real Estate and Asset Management, 25ITB1319085C-JNJ, Locks, Doors and Hardware Countywide in the total …",
@@ -525,7 +561,6 @@
    },
    "flags": [
     "land-use",
-    "millage-budget",
     "local-taxes"
    ],
    "dataCenterItems": [],
@@ -584,23 +619,16 @@
    "itemCount": 16,
    "topics": {
     "local-taxes": 1,
-    "millage-budget": 1,
     "contract": 2
    },
    "matchedTerms": [
     "contract",
-    "fiscal year",
     "millage"
    ],
    "topicExcerpts": {
     "local-taxes": {
      "term": "millage",
      "excerpt": "Fiscal Year 2026 General Fund Millage Rate Public Hearing. (CONDUCTED) 2 Speakers: Dorothy Simpson (Property/Tax Parcels); Devin Barrington-Ward (Atlanta Cit …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "Fiscal Year 2026 General Fund Millage Rate Public Hearing. (CONDUCTED) 2 Speakers: Dorothy Simpson (Property/Tax Parcels); Devin Ba …",
      "context": "agenda-action"
     },
     "contract": {
@@ -610,7 +638,6 @@
     }
    },
    "flags": [
-    "millage-budget",
     "local-taxes"
    ],
    "dataCenterItems": [],
@@ -624,23 +651,16 @@
    "itemCount": 16,
    "topics": {
     "local-taxes": 1,
-    "millage-budget": 1,
     "contract": 1
    },
    "matchedTerms": [
     "contract",
-    "fiscal year",
     "millage"
    ],
    "topicExcerpts": {
     "local-taxes": {
      "term": "millage",
      "excerpt": "Fiscal Year 2026 General Fund Millage Rate Public Hearing. (CONDUCTED) 2 Speakers on Zoom: Kevin Muldowney (Property Tax); Zane Placie (Millage Rate) Public …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "Fiscal Year 2026 General Fund Millage Rate Public Hearing. (CONDUCTED) 2 Speakers on Zoom: Kevin Muldowney (Property Tax); Zane Pla …",
      "context": "agenda-action"
     },
     "contract": {
@@ -650,7 +670,6 @@
     }
    },
    "flags": [
-    "millage-budget",
     "local-taxes"
    ],
    "dataCenterItems": [],
@@ -665,13 +684,10 @@
    "topics": {
     "contract": 25,
     "development": 2,
-    "millage-budget": 4,
     "local-taxes": 2
    },
    "matchedTerms": [
-    "budget",
     "contract",
-    "fiscal year",
     "millage",
     "multifamily",
     "procurement",
@@ -689,11 +705,6 @@
      "excerpt": "… ntenance, and Land Use Agreement for Private Improvement (Indemnification Agreement) between Fulton County, a political subdivision of the State of Georgia, and City of Alpharetta, for the purpose of granting conditional approval to allow stormwater i …",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ions); Janet Hill (Deed Fraud); Eric Tatum (Campaign Transparency); Robby Caban (Animal Services); Margie McCloud (2026 Budget); George Pond (Atlanta-Fulton Jail Merger); Brandon Pink (Fulton Jail); Maria Gaudio (District 1 Representative); Carme …",
-     "context": "agenda-action"
-    },
     "local-taxes": {
      "term": "millage",
      "excerpt": "Request approval of a Resolution setting proposed 2026 Millage Rates for the General Fund at 8.87 mills in accordance with O.C.G.A. § 48-5-32.1; authorizing advertisement of the prop …",
@@ -702,7 +713,6 @@
    },
    "flags": [
     "land-use",
-    "millage-budget",
     "local-taxes"
    ],
    "dataCenterItems": [],
@@ -738,7 +748,6 @@
    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6394&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
    "itemCount": 66,
    "topics": {
-    "millage-budget": 2,
     "development": 4,
     "contract": 9,
     "appointment": 4,
@@ -746,7 +755,6 @@
    },
    "matchedTerms": [
     "appoint",
-    "budget",
     "contract",
     "multifamily",
     "reappoint",
@@ -754,11 +762,6 @@
     "tax digest"
    ],
    "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Intra Fund Borrowings report is being provided to meet the quarterly reporting requirement for monetary transfers among budget funds per Board Resolution #09-1262. (APPROVED UPON ADOPTION OF THE CONSENT AGENDA) Consent - Open & Responsible Govern …",
-     "context": "agenda-action"
-    },
     "development": {
      "term": "subdivision",
      "excerpt": "Request approval of a Water Vault Easement Dedication of 1,330 square feet to Fulton County, a political subdivision of the State of Georgia, from Brookside A Owner (GA), LLC, for the purpose of constructing the Brookside Village Phase …",
@@ -782,7 +785,6 @@
    },
    "flags": [
     "land-use",
-    "millage-budget",
     "local-taxes"
    ],
    "dataCenterItems": [],
@@ -842,15 +844,12 @@
    "topics": {
     "appointment": 1,
     "development": 11,
-    "contract": 20,
-    "millage-budget": 3
+    "contract": 20
    },
    "matchedTerms": [
     "apartment",
     "appoint",
-    "budget",
     "contract",
-    "fiscal year",
     "procurement",
     "subdivision",
     "warehouse"
@@ -870,16 +869,10 @@
      "term": "contract",
      "excerpt": "Request approval to distribute $142,430.00 in available FY2026 Contracts for Services (CFS) program funds among the 200 approved FY2026 CFS awardees. Funds have been identified and are availa …",
      "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… approved FY2026 CFS awardees. Funds have been identified and are available in the Department of Arts & Culture's FY2026 budget. (APPROVED UPON ADOPTION OF THE CONSENT AGENDA) Consent - Arts and Libraries",
-     "context": "agenda-action"
     }
    },
    "flags": [
-    "land-use",
-    "millage-budget"
+    "land-use"
    ],
    "dataCenterItems": [],
    "landUseItems": [
@@ -1018,11 +1011,11 @@
     "local-taxes": 2,
     "development": 3,
     "data-center": 2,
-    "millage-budget": 1
+    "budget": 1
    },
    "matchedTerms": [
+    "annual budget",
     "appoint",
-    "budget",
     "contract",
     "data center",
     "local option sales tax",
@@ -1059,16 +1052,16 @@
      "excerpt": "Discussion: Data Centers: 2026 growth in assessed value (Ellis) (DISCUSSED) HEARD AFTER ITEM #26-0461 Commissioners Presentation/Discussion",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Request approval of a Resolution by the Fulton County Board of Commissioners, to re-establish a Budget Commission to assist in the development of the County's annual budget; to provide for its purpose, composition, selecti …",
+    "budget": {
+     "term": "annual budget",
+     "excerpt": "… Fulton County Board of Commissioners, to re-establish a Budget Commission to assist in the development of the County's annual budget; to provide for its purpose, composition, selection, eligibility, and duties; to amend Section 2-261 of the Fulton Coun …",
      "context": "agenda-action"
     }
    },
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget",
+    "budget",
     "local-taxes"
    ],
    "dataCenterItems": [
@@ -1183,13 +1176,11 @@
    "topics": {
     "development": 7,
     "contract": 14,
-    "millage-budget": 3,
     "appointment": 7,
     "local-taxes": 2
    },
    "matchedTerms": [
     "appoint",
-    "budget",
     "contract",
     "multifamily",
     "procurement",
@@ -1208,11 +1199,6 @@
      "excerpt": "Request approval of a Contract Item Agreement (CIA) between Fulton County and the Georgia Department of Transportation (GDOT) for the resurfacing of S …",
      "context": "agenda-action"
     },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Presentation, review, and approval of July 15, 2026, Budget Soundings and Resolution. (PRESENTED/APPROVED) CM Action Item - Open & Responsible Government",
-     "context": "agenda-action"
-    },
     "appointment": {
      "term": "appoint",
      "excerpt": "… ssion, shall be designated or elected at a regular January meeting for one (1) year or until their successors have been appointed and qualified. Trustee Positions #4 and #5 are members of the Board of Trustees by virtue of their County position; h …",
@@ -1226,7 +1212,6 @@
    },
    "flags": [
     "land-use",
-    "millage-budget",
     "local-taxes"
    ],
    "dataCenterItems": [],
@@ -1319,12 +1304,10 @@
    "topics": {
     "appointment": 6,
     "development": 7,
-    "contract": 13,
-    "millage-budget": 1
+    "contract": 13
    },
    "matchedTerms": [
     "appoint",
-    "budget",
     "contract",
     "multifamily",
     "reappoint",
@@ -1345,16 +1328,10 @@
      "term": "contract",
      "excerpt": "Report: Contracts approved by the County Manager for the period May 13, 2026 - June 9, 2026. (APPROVED UPON ADOPTION OF THE CONSENT AGEN …",
      "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "Presentation, review, and approval of June 17, 2026, Budget Soundings and Resolution. (PRESENTED/APPROVED) CM Action Item - Open & Responsible Government",
-     "context": "agenda-action"
     }
    },
    "flags": [
-    "land-use",
-    "millage-budget"
+    "land-use"
    ],
    "dataCenterItems": [],
    "landUseItems": [
@@ -1470,7 +1447,6 @@
    "itemCount": 67,
    "topics": {
     "appointment": 6,
-    "millage-budget": 2,
     "development": 4,
     "contract": 8,
     "data-center": 1,
@@ -1478,7 +1454,6 @@
    },
    "matchedTerms": [
     "appoint",
-    "budget",
     "contract",
     "data center",
     "multifamily",
@@ -1491,11 +1466,6 @@
     "appointment": {
      "term": "appoint",
      "excerpt": "… ission on Disability Affairs shall consist of a total of sixteen (16) members to serve staggered two (2) year terms and appointed as follows: Each member of the Board of Commissioners shall appoint two (2) members; one of them said appointees shal …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… a Fund Borrowings reporting is being provided to meet the quarterly reporting requirement for monetary transfers amount budget funds per Board Resolution #09-1262. Consent - Open & Responsible Government",
      "context": "agenda-action"
     },
     "development": {
@@ -1522,7 +1492,6 @@
    "flags": [
     "land-use",
     "data-center",
-    "millage-budget",
     "local-taxes"
    ],
    "dataCenterItems": [
@@ -1602,15 +1571,12 @@
    "topics": {
     "appointment": 6,
     "development": 1,
-    "contract": 7,
-    "millage-budget": 1
+    "contract": 7
    },
    "matchedTerms": [
     "appoint",
     "award of",
-    "budget",
     "contract",
-    "fiscal year",
     "procurement",
     "reappoint",
     "warehouse"
@@ -1630,16 +1596,10 @@
      "term": "contract",
      "excerpt": "Report: Contracts approved by the County Manager for the period March 7, 2026 - May 8, 2026. (APPROVED UPON ADOPTION OF THE CONSENT AGEN …",
      "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "Request approval of a Resolution directing the County Manager and Chief Financial Officer to redirect funds from the fiscal year 2026 budget of the Superior Court to the Magistrate Court in the amount of the unobligated portion of the $780,000.00 p …",
-     "context": "agenda-action"
     }
    },
    "flags": [
-    "land-use",
-    "millage-budget"
+    "land-use"
    ],
    "dataCenterItems": [],
    "landUseItems": [
@@ -1678,12 +1638,10 @@
    "topics": {
     "appointment": 4,
     "development": 5,
-    "contract": 7,
-    "millage-budget": 2
+    "contract": 7
    },
    "matchedTerms": [
     "appoint",
-    "budget",
     "contract",
     "multifamily",
     "reappoint",
@@ -1704,16 +1662,10 @@
      "term": "contract",
      "excerpt": "… 00 with Hogan Construction Group, LLC/The Collaborative Firm, LLC (Joint Venture) (Atlanta, GA), to modify the existing contract scope of work and for the associated additional cost required to complete the design-build services for the renovation …",
      "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… 5,000.00 with Segal Consulting to provide Benefits Consulting Services (including: premium rate development, healthcare budget, claims analysis, plan design/cost share analysis, education/training, regulatory compliance, technical assistance) for …",
-     "context": "agenda-action"
     }
    },
    "flags": [
-    "land-use",
-    "millage-budget"
+    "land-use"
    ],
    "dataCenterItems": [],
    "landUseItems": [
@@ -1961,16 +1913,13 @@
    "topics": {
     "appointment": 4,
     "development": 9,
-    "millage-budget": 2,
     "data-center": 1,
     "contract": 9
    },
    "matchedTerms": [
     "appoint",
-    "budget",
     "contract",
     "data center",
-    "fiscal year",
     "reappoint",
     "subdivision"
    ],
@@ -1983,11 +1932,6 @@
     "development": {
      "term": "subdivision",
      "excerpt": "… val of Sanitary Sewer System Ownership, Operation, Maintenance, and Repair Agreement between Fulton County, a political subdivision of the State of Georgia, and Arkan Homes, LLC, for the purpose of granting Fulton County legal access to extend and mai …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… r the Emergency Medical Dispatch (EMD) Program for the Department of Emergency Services in the amount of $41,200.00 for fiscal year 2026. The fee shall increase by a factor of three percent (3%) annually for each Renewal Term. Effective upon BOC appro …",
      "context": "agenda-action"
     },
     "data-center": {
@@ -2003,8 +1947,7 @@
    },
    "flags": [
     "land-use",
-    "data-center",
-    "millage-budget"
+    "data-center"
    ],
    "dataCenterItems": [
     {
