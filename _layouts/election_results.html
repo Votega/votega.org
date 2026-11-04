@@ -167,6 +167,18 @@ Front-matter contract
     {%- if result_status == 'unofficial' and pr_built -%}
       &nbsp;&middot;&nbsp; Last updated: {{ pr_built.epoch | date: "%B %-d, %Y" }} at {{ pr_built.epoch | date: "%-I:%M %p" }} ET
       {%- comment -%}
+        "Last updated" is the Secretary of State's own timestamp on the data, so it
+        stands still while the feed does. "Last checked" is when our workflow last
+        fetched it, so a quiet feed does not read as a stalled page. Shown only
+        when it is meaningfully later than the update time.
+      {%- endcomment -%}
+      {%- if pr_built.checkedEpoch -%}
+        {%- assign pr_gap = pr_built.checkedEpoch | minus: pr_built.epoch -%}
+        {%- if pr_gap > 120 -%}
+          &nbsp;&middot;&nbsp; Last checked: {{ pr_built.checkedEpoch | date: "%B %-d" }} at {{ pr_built.checkedEpoch | date: "%-I:%M %p" }} ET
+        {%- endif -%}
+      {%- endif -%}
+      {%- comment -%}
         COUNTIES, not precincts and not a percentage. The Secretary of State's
         feed carries no precinct counts at all — `precinctsReporting` is null on
         every contest — so the familiar "% of precincts reporting" cannot be

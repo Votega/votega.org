@@ -118,6 +118,14 @@ def builder_cases():
         check("a known moment stamps the expected iso",
               known['iso'], '2026-11-04T02:40:00+00:00')
 
+        # "Last checked": opt-in, and independent of the feed's own time.
+        later = datetime.datetime(2026, 11, 4, 3, 0, tzinfo=datetime.timezone.utc)
+        chk = B.record_build_time('scratch-key', now=fixed,
+                                  checked=later, stamp_path=path)
+        check("a checked time is recorded beside the feed time",
+              (chk['epoch'], chk['checkedEpoch']), (known['epoch'], known['epoch'] + 1200))
+        d2 = load(path); d2.pop('scratch-key'); json.dump(d2, open(path, 'w', encoding='utf-8'))
+
         # A second page's build must not blank the first.
         B.record_build_time('ga-primary-results', stamp_path=path)
         data = load(path)

@@ -694,7 +694,7 @@ def fill_missing_races(sections, baseline):
     return carried
 
 
-def record_build_time(data_key, now=None, stamp_path=None, counties=None):
+def record_build_time(data_key, now=None, stamp_path=None, counties=None, checked=None):
     """Record when this data file was built, for the page's "Last updated" line.
 
     The results data is a bare list of sections with nowhere to carry metadata,
@@ -725,6 +725,16 @@ def record_build_time(data_key, now=None, stamp_path=None, counties=None):
         moment = moment.replace(tzinfo=timezone.utc)
     stamp = OrderedDict([('epoch', int(moment.timestamp())),
                          ('iso', moment.isoformat())])
+    # When WE last looked, as distinct from when the numbers last changed.
+    # `epoch` is the Secretary of State's own timestamp, so a run that finds the
+    # feed unchanged leaves it where it was -- correctly, but a reader sees an
+    # old time and cannot tell a quiet feed from a page that stopped updating.
+    # `checkedEpoch` moves on every run, and the layout prints it as "Last
+    # checked". Optional: omitted unless the caller passes `checked`.
+    if checked is not None:
+        if checked.tzinfo is None:
+            checked = checked.replace(tzinfo=timezone.utc)
+        stamp['checkedEpoch'] = int(checked.replace(microsecond=0).timestamp())
     # Set or CLEARED every build, never left behind: a rebuild from the XLSX
     # export carries no county section, and a figure from an hour ago standing
     # beside numbers from a minute ago is worse than no figure.
@@ -787,7 +797,8 @@ if __name__ == '__main__':
             moment = datetime.fromisoformat(str(source_time).replace('Z', '+00:00'))
         except ValueError:
             print(f"  WARNING: unreadable createdAt {source_time!r}; stamping the build time")
-    stamp = record_build_time(data_key, now=moment, counties=counties)
+    stamp = record_build_time(data_key, now=moment, counties=counties,
+                              checked=datetime.now(timezone.utc))
     print(f"Data built at: {stamp['iso']}" + (' (from the feed)' if moment else ' (local build time)'))
     if counties:
         print(f"  Counties reporting: {counties['reporting']} of {counties['total']}")
