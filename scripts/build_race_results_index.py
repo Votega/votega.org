@@ -71,7 +71,11 @@ def discover_elections():
     elections = []
     for path in sorted(glob.glob(os.path.join(ROOT, '*.html'))):
         with open(path, encoding='utf-8') as f:
-            head = f.read(4000)
+            # Whole file, not a prefix: the general-election stub carries per-office
+            # notes in its front matter, so its closing `---` sits past any fixed
+            # prefix and the stub silently failed to match (the election was skipped
+            # with no message).
+            head = f.read()
         m = FRONT_MATTER.match(head)
         if not m:
             continue
@@ -333,13 +337,25 @@ def find_by_surname(race, by_surname, report=None):
 
 
 def slim(contests):
-    return [{
-        'party': c.get('party', 'np'),
-        'totalVotes': c.get('totalVotes', 0),
-        'candidates': [{'name': cd['name'], 'votes': cd.get('votes', 0),
-                        'incumbent': bool(cd.get('incumbent'))}
-                       for cd in c.get('candidates', [])],
-    } for c in contests if c.get('totalVotes')]
+    out = []
+    for c in contests:
+        if not c.get('totalVotes'):
+            continue
+        row = {
+            'party': c.get('party', 'np'),
+            'totalVotes': c.get('totalVotes', 0),
+            'candidates': [{'name': cd['name'], 'votes': cd.get('votes', 0),
+                            'incumbent': bool(cd.get('incumbent'))}
+                           for cd in c.get('candidates', [])],
+        }
+        # A general-election contest holds both parties under one contest id
+        # (party 'np'), so the panel must be told it is partisan or it would
+        # label a Senate race "Nonpartisan". Omitted when false, to keep the
+        # primary rounds' rows unchanged.
+        if c.get('multiParty'):
+            row['multiParty'] = True
+        out.append(row)
+    return out
 
 
 def main():

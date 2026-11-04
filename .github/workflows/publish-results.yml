@@ -172,6 +172,16 @@ jobs:
             --summary-out "$RUNNER_TEMP/results-summary.md"
           cat "$RUNNER_TEMP/results-summary.md" >> "$GITHUB_STEP_SUMMARY"
 
+      # The race pages' Results / Earlier This Cycle tab reads this index, which
+      # is a build-time join of races.json to the results data. Rebuilt here, after
+      # the gate, so the tallies on a race page move with the results page instead
+      # of waiting for someone to remember to run it by hand.
+      - name: Rebuild the race-page results index
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet pyyaml==6.0.2
+          python scripts/build_race_results_index.py
+
       - name: Commit and push
         id: commit
         env:
@@ -189,7 +199,8 @@ jobs:
             cp "$CSV" "_sources/election_results/$DATA_KEY-export.$ext"
             git add -f "_sources/election_results/$DATA_KEY-export.$ext"
           fi
-          git add -f "_data/election_results/$DATA_KEY.json" _data/results_updated.json
+          git add -f "_data/election_results/$DATA_KEY.json" _data/results_updated.json \
+                     assets/data/race-results-index.json
           if git diff --cached --quiet; then
             echo "No change in the results data — nothing to commit."
             echo "committed=false" >> "$GITHUB_OUTPUT"
