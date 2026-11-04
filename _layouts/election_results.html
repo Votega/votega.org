@@ -392,6 +392,20 @@ function pct(v,t){ return ResultsContest.percent(v,t); }
 function fmt(n){ return (n||0).toLocaleString(); }
 const partyLabel = ResultsContest.partyLabel;
 
+// The party badge, which must not say "Nonpartisan" about a partisan race.
+// A primary contest IS a party, and the badge names it. A GENERAL-election
+// contest holds both parties under one contest id, so it renders as the neutral
+// card — but calling it nonpartisan would state something false about every race
+// on the November ballot, and the parties are already on the candidates, as the
+// "(Dem)" / "(Rep)" suffix the Secretary of State's own ballot names carry. So
+// the badge is dropped there, and kept for a contest that really is one party's,
+// or really is nonpartisan (a judicial race, a jungle special).
+function partyBadge(contest, p, section){
+  if (section === 'measures') return `<span class="party-badge np">Ballot Question</span>`;
+  if (contest && contest.multiParty) return '';
+  return `<span class="party-badge ${p}">${partyLabel(p)}</span>`;
+}
+
 function badgeText(kind, section, yesLeads){
   const L = CFG.labels;
   // A ballot question is passed or defeated, never elected. Without this the
@@ -472,11 +486,12 @@ function renderContest(c, office, candidateIndex, section){
   const noteHtml = note
     ? `<div class="race-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>${note.label ? `<span class="race-note-label">${escHtml(note.label)}.</span> ` : ''}${escHtml(note.text)}</span></div>`
     : '';
-  return `<div class="race-card ${p} ${cardCls}" data-party="${p}" data-office="${escHtml(office.toLowerCase())}" data-cands="${escHtml(candSearch)}">
+  const partyKeys = (c.multiParty && (c.parties || []).length) ? c.parties.join(' ') : p;
+  return `<div class="race-card ${p} ${cardCls}" data-party="${p}" data-parties="${escHtml(partyKeys)}" data-office="${escHtml(office.toLowerCase())}" data-cands="${escHtml(candSearch)}">
     <div class="race-header">
       <span class="race-title">${escHtml(office)}</span>
       <div class="race-meta">
-        <span class="party-badge ${p}">${section === 'measures' ? 'Ballot Question' : partyLabel(p)}</span>
+        ${partyBadge(c, p, section)}
         <span class="status-badge ${status}">${badgeText(status, section, yesLeads)}</span>
       </div>
     </div>
@@ -543,7 +558,12 @@ function applyFilter(f){
   const activePanel=document.querySelector('.tab-panel.active');
   if(!activePanel) return;
   activePanel.querySelectorAll('.race-card').forEach(card=>{
-    const partyOk=f==='all'||card.dataset.party===f;
+    // A general-election card carries BOTH parties (data-parties="rep dem"), so
+    // "Republican" means "has a Republican on the ballot" rather than "is a
+    // Republican primary". Without this, every card on the general page was
+    // data-party="np" and both party filters hid all 274 races.
+    const cardParties=(card.dataset.parties||card.dataset.party||'').split(' ');
+    const partyOk=f==='all'||cardParties.indexOf(f)!==-1;
     const textOk=!q||(card.dataset.office||'').includes(q)||(card.dataset.cands||'').includes(q);
     card.style.display=(partyOk&&textOk)?'':'none';
   });
