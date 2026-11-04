@@ -232,6 +232,25 @@
             }
           ],
           "description": "Certified vote outcome. Null until results are certified after the election."
+        },
+        "unofficialResults": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": ["yesPercent", "passing", "asOf"],
+              "additionalProperties": false,
+              "properties": {
+                "yesPercent": { "type": "number", "minimum": 0, "maximum": 100, "description": "Percent voting yes in the unofficial count." },
+                "noPercent": { "type": ["number", "null"], "minimum": 0, "maximum": 100, "description": "Percent voting no. If omitted, consumers derive it as 100 - yesPercent." },
+                "passing": { "type": "boolean", "description": "Whether yes currently leads. Not a terminal outcome." },
+                "totalVotes": { "type": ["integer", "null"], "minimum": 0, "description": "Votes counted so far on the measure." },
+                "asOf": { "type": "string", "description": "Date (YYYY-MM-DD) the unofficial count was taken." },
+                "source": { "type": ["string", "null"], "description": "Attribution for the unofficial count." }
+              }
+            }
+          ],
+          "description": "Unofficial vote count, shown while status is still `certified` (on the ballot). Never changes status; the terminal `passed`/`failed` status and `results` are recorded only after certification, and this should then be cleared to null."
         }
       },
       "allOf": [

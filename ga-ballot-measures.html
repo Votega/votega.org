@@ -197,6 +197,27 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
 
   function escHtml(value) { return VoteGA.escapeHtml(value); }
 
+  // Unofficial count: shown only while the measure has no certified result, and
+  // labelled as unofficial so it is never read as a recorded outcome.
+  function renderUnofficial(u) {
+    if (!u || u.yesPercent == null) return '';
+    const yes = u.yesPercent;
+    const no = u.noPercent != null ? u.noPercent : (100 - yes);
+    const asOf = u.asOf ? new Date(u.asOf + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+    return `
+      <div class="measure-results">
+        <strong><i class="fa-solid fa-clock" aria-hidden="true"></i> Unofficial result: ${u.passing ? 'Leading (would pass)' : 'Trailing (would fail)'}</strong>
+        <div class="result-bar">
+          <div class="result-yes" style="width:${yes}%"></div>
+          <div class="result-no" style="width:${no}%"></div>
+        </div>
+        <span style="color:var(--color-success);">Yes ${yes}%</span> &nbsp;·&nbsp;
+        <span style="color:var(--color-danger);">No ${no}%</span>
+        ${u.totalVotes != null ? ` &nbsp;·&nbsp; ${u.totalVotes.toLocaleString('en-US')} votes counted` : ''}
+        <div class="measure-status-note">Unofficial${asOf ? ' as of ' + escHtml(asOf) : ''} and not certified. The measure is not marked passed or failed until results are certified.</div>
+      </div>`;
+  }
+
   function renderResults(results) {
     if (!results || results.yesPercent == null) return '';
     const yes = results.yesPercent;
@@ -300,6 +321,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
         ${oppositionHtml}
         ${sourcesHtml}
         ${renderResults(m.results)}
+        ${m.results ? '' : renderUnofficial(m.unofficialResults)}
         ${footerParts.length ? `<div class="measure-footer">${footerParts.join('')}</div>` : ''}
       </div>`;
   }
