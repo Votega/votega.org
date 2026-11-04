@@ -4,13 +4,14 @@
   Updates", so the elections journey — half the site — was reachable only from a
   navbar dropdown. See CODEBASE-REVIEW-2026-08-18.md finding 4.10.
 
-  Two peer cards share a flex row (#electionCards):
+  Two peer cards share a flex row (#electionCards). RESULTS COME FIRST, in DOM
+  order and so in the tab order, for screen readers, and stacked on a phone: on
+  the night and the days after, "who won" is what the homepage is being visited
+  for, and a counted election was below the fold of the forward-looking strip.
+  The order needs no undoing — the results card ages out by itself after
+  RESULTS_WINDOW_DAYS and the Next Election card is alone in the row again.
 
-  - Next Election (left) is driven by ga-election-calendar.json: it shows the
-    soonest election dated today-or-later and hides itself once none remains, so
-    it never needs hand-editing as a cycle advances.
-
-  - Latest Results (right) is driven by election-status.json — the live status
+  - Latest Results (first) is driven by election-status.json — the live status
     overlay Jekyll rebuilds from each results page's own front matter AND the
     votes in its data file. It surfaces the most recent election that has
     actually been counted, within a 30-day window after election day (see
@@ -26,6 +27,13 @@
   has anything to show.
 {%- endcomment -%}
 <div class="election-cards" id="electionCards" hidden>
+  <a class="results-card" id="latestResultsCard" href="{{ '/results' | relative_url }}" hidden aria-labelledby="latestResultsHeading">
+    <p class="results-card-label" id="latestResultsHeading">Latest Results</p>
+    <p class="results-card-name" id="latestResultsName"></p>
+    <p class="results-card-meta" id="latestResultsMeta"></p>
+    <span class="results-card-cta">See full results &rarr;</span>
+  </a>
+
   <section id="nextElectionStrip" class="next-election" hidden aria-labelledby="nextElectionHeading">
     <div class="next-election-main">
       <p class="next-election-label" id="nextElectionHeading">Next Election</p>
@@ -40,13 +48,6 @@
       <a class="next-election-link" id="nextElectionEarlyVote" href="{{ '/ga-early-vote/' | relative_url }}" hidden>Early vote turnout</a>
     </div>
   </section>
-
-  <a class="results-card" id="latestResultsCard" href="{{ '/results' | relative_url }}" hidden aria-labelledby="latestResultsHeading">
-    <p class="results-card-label" id="latestResultsHeading">Latest Results</p>
-    <p class="results-card-name" id="latestResultsName"></p>
-    <p class="results-card-meta" id="latestResultsMeta"></p>
-    <span class="results-card-cta">See full results &rarr;</span>
-  </a>
 </div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -157,11 +158,24 @@
     const name = byDate[counted.date] || 'Georgia Election Results';
     const certified = counted.status === 'certified';
     const label = certified ? 'Certified' : 'Unofficial';
+    // How fresh the numbers are, while they are still moving. A certified page
+    // is a settled record and keeps its hand-set date, so the time is shown
+    // only before certification — the same rule the results page itself uses
+    // for its "last updated" stamp. Pinned to Eastern because that is the
+    // election being reported, not the reader's location: a visitor in
+    // California must not be told a 9:40pm Georgia count happened at 6:40pm.
+    let freshness = '';
+    if (!certified && counted.dataBuilt) {
+      const when = new Date(counted.dataBuilt * 1000)
+        .toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit',
+                                       timeZone: 'America/New_York' });
+      freshness = ` <span class="results-card-fresh">&middot; Updated ${esc(when)} ET</span>`;
+    }
 
     RESULTS.href = basePath().replace(/\/$/, '') + counted.url;
     document.getElementById('latestResultsName').textContent = name;
     document.getElementById('latestResultsMeta').innerHTML =
-      `${esc(fmtShort(counted.date))} <span class="results-card-status ${certified ? 'certified' : 'unofficial'}">${esc(label)}</span>`;
+      `${esc(fmtShort(counted.date))} <span class="results-card-status ${certified ? 'certified' : 'unofficial'}">${esc(label)}</span>${freshness}`;
     RESULTS.setAttribute('aria-label',
       `Latest results: ${name}, ${fmtLong(counted.date)}, ${label.toLowerCase()}`);
     reveal(RESULTS);

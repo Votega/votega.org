@@ -32,7 +32,17 @@ sitemap: false
       "advances": {{ stub.runoff_advances | default: 2 }},
       "date": {{ stub.election_date | date: "%Y-%m-%d" | jsonify }},
       "url": {{ stub.url | jsonify }},
-      "updated": {{ stub.updated | date: "%Y-%m-%d" | jsonify }}
+      "updated": {{ stub.updated | date: "%Y-%m-%d" | jsonify }},
+      {%- comment -%}
+        When the NUMBERS were last built, as epoch seconds, from the sidecar
+        scripts/build_results_json.py writes (and, for the JSON feed, straight
+        from the Secretary of State's own createdAt). `updated` above is a
+        hand-set DATE on the page's front matter and stands still all night;
+        this moves every time a count is published, which is what lets the home
+        page say how current the figures behind the card are. 0 when the page
+        has never been built from an export.
+      {%- endcomment -%}
+      "dataBuilt": {{ site.data.results_updated[stub.results_data].epoch | default: 0 }}
     }{% unless forloop.last %},{% endunless %}
     {%- endfor %}
   }
