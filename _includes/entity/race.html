@@ -780,6 +780,17 @@
   // ── Earlier-this-cycle results ──────────────────────────────────────────────
   // Rendered from assets/data/race-results-index.json. Percentages are computed
   // here rather than stored so they always agree with the vote counts shown.
+  // A general-election contest holds both parties under one contest id, with the
+  // party in the ballot name's "(Dem)" / "(Rep)" suffix; a bar class comes from that.
+  function candidateParty(name) {
+    const m = /\((Dem|Rep)\)\s*$/.exec(name || '');
+    return m ? (m[1] === 'Dem' ? 'dem' : 'rep') : '';
+  }
+  // The suffix is how the Secretary of State prints the ballot name; the row shows the name only.
+  function displayName(name) {
+    return String(name || '').replace(/\s*\((Dem|Rep)\)\s*$/, '');
+  }
+
   function renderPriorResults(rounds) {
     const partyLabel = ResultsContest.partyLabel;
 
@@ -816,20 +827,20 @@
           return `
             <div class="prior-cand">
               <div class="prior-cand-top">
-                <span class="prior-name">${i < marks ? `<span class="prior-lead" title="${escapeHtml(advanceTip)}">✓</span>` : ''}${escapeHtml(c.name)}${c.incumbent ? ' <span class="prior-inc">(I)</span>' : ''}</span>
+                <span class="prior-name">${i < marks ? `<span class="prior-lead" title="${escapeHtml(advanceTip)}">✓</span>` : ''}${escapeHtml(contest.multiParty ? displayName(c.name) : c.name)}${contest.multiParty && candidateParty(c.name) ? ` <span class="prior-inc">(${candidateParty(c.name) === 'dem' ? 'D' : 'R'})</span>` : ''}${c.incumbent ? ' <span class="prior-inc">(I)</span>' : ''}</span>
                 <span class="prior-figures">
                   <span class="prior-votes">${votes.toLocaleString()}</span>
                   <span class="prior-pct">${ResultsContest.percentText(contest, c, contestStatus)}</span>
                 </span>
               </div>
-              <div class="prior-bar"><div class="prior-bar-fill ${contest.party}" style="width:${ResultsContest.barWidth(contest, c, contestStatus)}%"></div></div>
+              <div class="prior-bar"><div class="prior-bar-fill ${contest.multiParty ? candidateParty(c.name) : contest.party}" style="width:${ResultsContest.barWidth(contest, c, contestStatus)}%"></div></div>
             </div>`;
         }).join('');
 
         return `
           <div class="prior-contest">
             <div class="prior-contest-head">
-              <span class="party-pill ${contest.party}">${partyLabel(contest.party)}</span>
+              ${contest.multiParty ? '' : `<span class="party-pill ${contest.party}">${partyLabel(contest.party)}</span>`}
               ${uncontested ? '<span class="prior-uncontested">Unopposed</span>' : ''}
               <span class="prior-total">${total.toLocaleString()} votes</span>
             </div>
@@ -944,8 +955,15 @@
     // so a race with no reliable match simply has no entry and no tab.
     const priorRounds = PRIOR_RESULTS[race.id];
     if (priorRounds && priorRounds.length) {
-      panels.push({ id: 'panel-prior', label: 'Earlier This Cycle',
-        html: renderPriorResults(priorRounds) });
+      // Once the election this page is about has counted votes, its round leads
+      // the panel and the tab is named for what it now holds. Matching is on the
+      // election DATE, never a results key, so the next cycle needs no change. The
+      // panel id stays `panel-prior` so existing #panel-prior links keep working.
+      const currentDate = phase && phase.electionDate;
+      const isCurrent = r => currentDate && r.date === currentDate;
+      const ordered = [...priorRounds.filter(isCurrent), ...priorRounds.filter(r => !isCurrent(r))];
+      panels.push({ id: 'panel-prior', label: priorRounds.some(isCurrent) ? 'Results' : 'Earlier This Cycle',
+        html: renderPriorResults(ordered) });
     }
 
     document.title = `${raceTitle} — ${race.cycle} Elections`;
