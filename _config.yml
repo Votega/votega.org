@@ -172,6 +172,14 @@ post_search: true
 # itself from ga-election-calendar.json.
 home_next_election: false
 
+# An optional link to a post, shown inside the home page's "Latest Results" card
+# (see _includes/next-election-strip.html). The card ages out by itself 30 days
+# after election day, and this link goes with it; clear `url` (or delete the key)
+# to take it down sooner. Point it at the post for the election the card is showing.
+home_results_post:
+  url: /2026-11-04-georgia-general-assembly-majority-unofficial-results/
+  label: What the unofficial results mean for the General Assembly
+
 # Add a button in the footer to edit the current page. Only works if your website is hosted on GitHub
 edit_page_button: false
 

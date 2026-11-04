@@ -29,12 +29,21 @@
   has anything to show.
 {%- endcomment -%}
 <div class="election-cards" id="electionCards" hidden>
-  <a class="results-card" id="latestResultsCard" href="{{ '/results' | relative_url }}" hidden aria-labelledby="latestResultsHeading">
+  {%- comment -%}
+    The card is a div, not an <a>, so it can hold a second link (an optional
+    companion post, site.home_results_post) without nesting links. The "See full
+    results" link is stretched over the whole card (.results-card-main::after), so
+    the card still clicks through as one target; the companion link sits above it.
+  {%- endcomment -%}
+  <div class="results-card" id="latestResultsCard" hidden>
     <p class="results-card-label" id="latestResultsHeading">Latest Results</p>
     <p class="results-card-name" id="latestResultsName"></p>
     <p class="results-card-meta" id="latestResultsMeta"></p>
-    <span class="results-card-cta">See full results &rarr;</span>
-  </a>
+    {%- if site.home_results_post and site.home_results_post.url %}
+    <a class="results-card-more" href="{{ site.home_results_post.url | relative_url }}"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i> {{ site.home_results_post.label }}</a>
+    {%- endif %}
+    <a class="results-card-cta results-card-main" id="latestResultsLink" href="{{ '/results' | relative_url }}">See full results &rarr;</a>
+  </div>
 
 {%- if site.home_next_election -%}
   <section id="nextElectionStrip" class="next-election" hidden aria-labelledby="nextElectionHeading">
@@ -190,13 +199,14 @@
                   `${esc(String(counted.countiesTotal))} counties reporting</p>`;
     }
 
-    RESULTS.href = basePath().replace(/\/$/, '') + counted.url;
+    const RESULTS_LINK = document.getElementById('latestResultsLink');
+    RESULTS_LINK.href = basePath().replace(/\/$/, '') + counted.url;
     document.getElementById('latestResultsName').textContent = name;
     document.getElementById('latestResultsMeta').innerHTML =
       `${esc(fmtShort(counted.date))} <span class="results-card-status ${certified ? 'certified' : 'unofficial'}">${esc(label)}</span>${freshness}`;
     const META = document.getElementById('latestResultsMeta');
     if (reporting) META.insertAdjacentHTML('afterend', reporting);
-    RESULTS.setAttribute('aria-label',
+    RESULTS_LINK.setAttribute('aria-label',
       `Latest results: ${name}, ${fmtLong(counted.date)}, ${label.toLowerCase()}`);
     reveal(RESULTS);
   }

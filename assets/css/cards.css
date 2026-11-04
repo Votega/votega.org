@@ -235,8 +235,9 @@ layout: null
   text-decoration: none;
   color: inherit;
 }
+.results-card { position: relative; }
 .results-card:hover,
-.results-card:focus {
+.results-card:focus-within {
   text-decoration: none;
   color: inherit;
   border-color: var(--color-success);
@@ -299,6 +300,23 @@ layout: null
   font-weight: 600;
   color: var(--color-success);
 }
+/* The "See full results" link covers the whole card, so the card is one click target. */
+.results-card-main { text-decoration: none; }
+.results-card-main::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }
+.results-card-main:hover, .results-card-main:focus { text-decoration: none; color: var(--color-success); }
+/* Optional companion link (site.home_results_post), above the stretched link. */
+.results-card-more {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  margin-top: 0.15rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.results-card-more:hover, .results-card-more:focus { color: var(--color-link); }
 
 @media (max-width: 600px) {
   .next-election { padding: 1.1rem 1.15rem; }
