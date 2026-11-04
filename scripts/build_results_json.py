@@ -353,6 +353,49 @@ def is_json_export(path):
         return False
 
 
+def county_reporting(payload):
+    """How many of Georgia's 159 counties have reported anything yet.
+
+    WHAT THE FEED DOES NOT HAVE: precincts. `precinctsParticipating` and
+    `precinctsReporting` are null on every contest, all night, so the "X% of
+    precincts reporting" line every broadcaster runs cannot be built from this
+    source at all. The statewide `reportingStatuses` is no better — it still
+    read "Not Reported" for all four voting groups with more than a million
+    votes already counted, so it is not maintained.
+
+    WHAT IT DOES HAVE: per-county status. Each of the 159 entries in
+    `localResults` carries its own four groups (Election Day, Advance Voting,
+    Absentee by Mail, Provisional), each Not Reported / Partially Reported /
+    Fully Reported / Election Night Complete. A county counts as reporting once
+    any group has moved off "Not Reported", or once any vote is counted in it —
+    the union, because the two disagree slightly in both directions at the
+    edges: measured at 1:16am, 109 counties by status and 107 by votes, the two
+    extra being Quitman and Taliaferro, which had marked a group reported before
+    any vote landed.
+
+    COUNTIES ARE NOT VOTES, and the page says counties for that reason. Fulton
+    alone holds more voters than the fifty smallest counties together, so
+    two-thirds of counties reporting is not two-thirds of the vote counted, and
+    a percentage here would be read as exactly that. Returns None when the
+    source carries no county section at all (the XLSX export does not), so a
+    stale figure is never left standing beside fresh numbers.
+    """
+    locals_ = (payload or {}).get('localResults')
+    if not isinstance(locals_, list) or not locals_:
+        return None
+    reporting = 0
+    for county in locals_:
+        statuses = county.get('reportingStatuses') or []
+        if any((rs.get('status') or 'Not Reported') != 'Not Reported' for rs in statuses):
+            reporting += 1
+            continue
+        if any((opt.get('voteCount') or 0) > 0
+               for item in (county.get('ballotItems') or [])
+               for opt in (item.get('ballotOptions') or [])):
+            reporting += 1
+    return {'reporting': reporting, 'total': len(locals_)}
+
+
 def contests_from_json(path):
     """The feed's ballotItems, in the shape parse_csv produces."""
     with open(path, encoding='utf-8') as fh:
@@ -393,7 +436,7 @@ def contests_from_json(path):
         for cand in c['candidates']:
             cand.pop('party', None)
         c['candidates'].sort(key=lambda x: x['votes'], reverse=True)
-    return contests, payload.get('createdAt')
+    return contests, payload.get('createdAt'), county_reporting(payload)
 
 
 def parse_csv(path):
@@ -442,13 +485,13 @@ def parse_csv(path):
 def parse_export(path):
     """Parse whichever form the Secretary of State published.
 
-    Returns (contests, source_time) where source_time is the feed's own
-    `createdAt` when it has one, else None.
+    Returns (contests, source_time, counties): the feed's own `createdAt` and
+    its county reporting counts where it has them, else None for each.
     """
     if is_json_export(path):
         print('  Reading the JSON results feed')
         return contests_from_json(path)
-    return parse_csv(path), None
+    return parse_csv(path), None, None
 
 
 def _contests_for_office(contest_list):
@@ -651,7 +694,7 @@ def fill_missing_races(sections, baseline):
     return carried
 
 
-def record_build_time(data_key, now=None, stamp_path=None):
+def record_build_time(data_key, now=None, stamp_path=None, counties=None):
     """Record when this data file was built, for the page's "Last updated" line.
 
     The results data is a bare list of sections with nowhere to carry metadata,
@@ -682,6 +725,12 @@ def record_build_time(data_key, now=None, stamp_path=None):
         moment = moment.replace(tzinfo=timezone.utc)
     stamp = OrderedDict([('epoch', int(moment.timestamp())),
                          ('iso', moment.isoformat())])
+    # Set or CLEARED every build, never left behind: a rebuild from the XLSX
+    # export carries no county section, and a figure from an hour ago standing
+    # beside numbers from a minute ago is worse than no figure.
+    if counties:
+        stamp['counties'] = OrderedDict([('reporting', counties['reporting']),
+                                         ('total', counties['total'])])
     stamps = {}
     if os.path.exists(stamp_path):
         try:
@@ -714,7 +763,7 @@ if __name__ == '__main__':
         sys.exit(USAGE)
     csv_path, data_key = args
     print(f"Parsing export: {csv_path}")
-    contests, source_time = parse_export(csv_path)
+    contests, source_time, counties = parse_export(csv_path)
     print(f"  {len(contests)} contest(s) parsed")
     sections = build_sections(contests)
     if fill_from:
@@ -738,5 +787,7 @@ if __name__ == '__main__':
             moment = datetime.fromisoformat(str(source_time).replace('Z', '+00:00'))
         except ValueError:
             print(f"  WARNING: unreadable createdAt {source_time!r}; stamping the build time")
-    stamp = record_build_time(data_key, now=moment)
+    stamp = record_build_time(data_key, now=moment, counties=counties)
     print(f"Data built at: {stamp['iso']}" + (' (from the feed)' if moment else ' (local build time)'))
+    if counties:
+        print(f"  Counties reporting: {counties['reporting']} of {counties['total']}")

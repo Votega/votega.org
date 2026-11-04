@@ -276,6 +276,13 @@ layout: null
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
+/* How many counties have reported, shown only while unofficial. */
+.results-card-reporting {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--neutral, #6b6b6b);
+}
+
 /* The build time of the numbers behind the card, shown only while unofficial. */
 .results-card-fresh {
   display: inline-block;

@@ -148,6 +148,23 @@ Front-matter contract
     {%- assign pr_built = site.data.results_updated[page.results_data] -%}
     {%- if result_status == 'unofficial' and pr_built -%}
       &nbsp;&middot;&nbsp; Last updated: {{ pr_built.epoch | date: "%B %-d, %Y" }} at {{ pr_built.epoch | date: "%-I:%M %p" }} ET
+      {%- comment -%}
+        COUNTIES, not precincts and not a percentage. The Secretary of State's
+        feed carries no precinct counts at all — `precinctsReporting` is null on
+        every contest — so the familiar "% of precincts reporting" cannot be
+        built from this source. Counties it does carry, per county, and that is
+        what is shown.
+
+        Deliberately a count rather than a share: Fulton alone holds more voters
+        than the fifty smallest counties together, so "69% of counties" would be
+        read as "69% of the vote is in", which is not what it measures and not
+        something this data can tell anyone. Shown only while unofficial, like
+        the stamp it sits beside — once certified, every county has reported and
+        the line says nothing.
+      {%- endcomment -%}
+      {%- if pr_built.counties and pr_built.counties.total > 0 -%}
+        &nbsp;&middot;&nbsp; {{ pr_built.counties.reporting }} of {{ pr_built.counties.total }} counties reporting
+      {%- endif -%}
     {%- elsif page.updated -%}
       &nbsp;&middot;&nbsp; Last updated: {{ page.updated | date: "%B %-d, %Y" }}
     {%- endif -%}
