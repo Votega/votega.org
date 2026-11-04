@@ -181,11 +181,21 @@
                                        timeZone: 'America/New_York' });
       freshness = ` <span class="results-card-fresh">&middot; Updated ${esc(when)} ET</span>`;
     }
+    // Counties, not precincts: the Secretary of State's feed carries no
+    // precinct counts. A count rather than a percentage, because counties are
+    // wildly unequal in size and a share would be read as a share of the vote.
+    let reporting = '';
+    if (!certified && counted.countiesTotal > 0) {
+      reporting = `<p class="results-card-reporting">${esc(String(counted.countiesReporting))} of ` +
+                  `${esc(String(counted.countiesTotal))} counties reporting</p>`;
+    }
 
     RESULTS.href = basePath().replace(/\/$/, '') + counted.url;
     document.getElementById('latestResultsName').textContent = name;
     document.getElementById('latestResultsMeta').innerHTML =
       `${esc(fmtShort(counted.date))} <span class="results-card-status ${certified ? 'certified' : 'unofficial'}">${esc(label)}</span>${freshness}`;
+    const META = document.getElementById('latestResultsMeta');
+    if (reporting) META.insertAdjacentHTML('afterend', reporting);
     RESULTS.setAttribute('aria-label',
       `Latest results: ${name}, ${fmtLong(counted.date)}, ${label.toLowerCase()}`);
     reveal(RESULTS);

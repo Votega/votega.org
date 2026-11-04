@@ -42,7 +42,15 @@ sitemap: false
         page say how current the figures behind the card are. 0 when the page
         has never been built from an export.
       {%- endcomment -%}
-      "dataBuilt": {{ site.data.results_updated[stub.results_data].epoch | default: 0 }}
+      "dataBuilt": {{ site.data.results_updated[stub.results_data].epoch | default: 0 }},
+      {%- assign pr_counties = site.data.results_updated[stub.results_data].counties -%}
+      {%- comment -%}
+        Counties reporting, for the home page card. 0/0 when the source carried
+        no county section (the XLSX export does not), which the card reads as
+        "say nothing" rather than "nothing is reporting".
+      {%- endcomment -%}
+      "countiesReporting": {{ pr_counties.reporting | default: 0 }},
+      "countiesTotal": {{ pr_counties.total | default: 0 }}
     }{% unless forloop.last %},{% endunless %}
     {%- endfor %}
   }

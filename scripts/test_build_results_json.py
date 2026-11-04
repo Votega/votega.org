@@ -331,7 +331,7 @@ with tempfile.TemporaryDirectory() as d:
     with open(feed, 'w', encoding='utf-8') as fh:
         json.dump(FEED, fh)
     check('is_json_export recognizes the feed', brj.is_json_export(feed))
-    contests, created = brj.parse_export(feed)
+    contests, created, _counties = brj.parse_export(feed)
     check("the feed's own createdAt is returned for the stamp",
           created == '2026-11-04T00:14:40.337107Z', str(created))
     sen = contests['US2']
@@ -378,6 +378,62 @@ check('an uncontested race keeps its real party badge',
 measure = [s for s in sections if s['id'] == 'measures'][0]['races'][0]['contests'][0]
 check('a ballot question is not flagged multiParty (it badges Ballot Question)',
       'multiParty' not in measure and measure['party'] == 'np')
+
+print('Counties reporting: the only reporting figure this feed can support')
+COUNTY_FEED = {
+    'electionDate': '2026-11-03', 'createdAt': '2026-11-04T01:16:05Z',
+    'results': {'ballotItems': [
+        {'id': 'US2', 'name': 'US Senate', 'ballotOptions': [
+            {'name': 'A (Dem)', 'voteCount': 10, 'politicalParty': 'Dem'},
+            {'name': 'B (Rep)', 'voteCount': 9, 'politicalParty': 'Rep'}]}]},
+    'localResults': [
+        # Reported, and has votes.
+        {'id': '001', 'name': 'Appling County',
+         'reportingStatuses': [{'groupName': 'Advance Voting', 'status': 'Partially Reported'}],
+         'ballotItems': [{'ballotOptions': [{'voteCount': 10}]}]},
+        # Status moved but no vote landed yet — Quitman and Taliaferro did
+        # exactly this at 1:16am, so it counts as reporting.
+        {'id': '002', 'name': 'Quitman County',
+         'reportingStatuses': [{'groupName': 'Advance Voting', 'status': 'Fully Reported'}],
+         'ballotItems': [{'ballotOptions': [{'voteCount': 0}]}]},
+        # Votes but every group still "Not Reported" — also reporting.
+        {'id': '003', 'name': 'Bibb County',
+         'reportingStatuses': [{'groupName': 'Advance Voting', 'status': 'Not Reported'}],
+         'ballotItems': [{'ballotOptions': [{'voteCount': 5}]}]},
+        # Nothing at all.
+        {'id': '004', 'name': 'Echols County',
+         'reportingStatuses': [{'groupName': 'Advance Voting', 'status': 'Not Reported'}],
+         'ballotItems': [{'ballotOptions': [{'voteCount': 0}]}]},
+    ],
+}
+with tempfile.TemporaryDirectory() as d:
+    feed = os.path.join(d, 'counties.json')
+    with open(feed, 'w', encoding='utf-8') as fh:
+        json.dump(COUNTY_FEED, fh)
+    _, _, counties = brj.parse_export(feed)
+    check('a county counts as reporting by status OR by votes',
+          counties == {'reporting': 3, 'total': 4}, str(counties))
+
+    # The XLSX export has no county section at all.
+    nocounty = os.path.join(d, 'nocounty.json')
+    with open(nocounty, 'w', encoding='utf-8') as fh:
+        json.dump({'electionDate': '2026-11-03',
+                   'results': COUNTY_FEED['results']}, fh)
+    _, _, none_counties = brj.parse_export(nocounty)
+    check('no county section yields None, not a zero', none_counties is None, str(none_counties))
+
+    # A stale figure must never outlive the build that produced it.
+    stamp = os.path.join(d, 'results_updated.json')
+    brj.record_build_time('k', stamp_path=stamp, counties={'reporting': 3, 'total': 4})
+    with open(stamp, encoding='utf-8') as fh:
+        first = json.load(fh)
+    brj.record_build_time('k', stamp_path=stamp, counties=None)
+    with open(stamp, encoding='utf-8') as fh:
+        second = json.load(fh)
+    check('the figure is recorded when the feed has it',
+          first['k']['counties'] == {'reporting': 3, 'total': 4}, str(first['k']))
+    check('and cleared by a build whose source has none',
+          'counties' not in second['k'], str(second['k']))
 
 if FAILURES:
     print(f'\n{len(FAILURES)} check(s) failed: {", ".join(FAILURES)}')
