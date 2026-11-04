@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-04T10:10:23.740371+00:00",
+    "generatedAt": "2026-11-04T19:05:18.955393+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,9 +24,9 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 125,
+    "count": 127,
     "windowDays": 45,
-    "entityTagged": 85,
+    "entityTagged": 87,
     "topicCounts": {
       "elections": 58,
       "budget": 7,
@@ -39,10 +39,47 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000008": {
+      "name": "Ben Watson",
+      "url": null,
+      "ocdPersonId": "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c",
+      "rosterId": "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c",
+      "candidateIds": [
+        "ga-senate-1-2026-r-1"
+      ]
+    },
+    "vg-ga-p-000602": {
+      "name": "Corey Foreman",
+      "url": null,
+      "candidateIds": [
+        "ga-senate-1-2026-d-2"
+      ]
+    },
+    "vg-ga-p-000267": {
+      "name": "Amanda Hollowell",
+      "url": null,
+      "candidateIds": [
+        "challenger-amanda-hollowell-ga01-2026"
+      ]
+    },
+    "vg-ga-p-000319": {
+      "name": "James \"Jim\" Kingston",
+      "url": null,
+      "candidateIds": [
+        "challenger-jim-kingston-ga01-2026"
+      ]
+    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
+    },
+    "vg-ga-p-000335": {
+      "name": "Keisha Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
     },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
@@ -116,13 +153,6 @@
       "url": null,
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
-      ]
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
       ]
     },
     "vg-ga-p-000263": {
@@ -203,6 +233,83 @@
   },
   "items": [
     {
+      "id": "01565366cf3a",
+      "title": "Democrats to take control of Georgia Public Service Commission",
+      "url": "https://www.gpb.org/news/2026/11/04/democrats-take-control-of-georgia-public-service-commission",
+      "source": "GPB News",
+      "publishedAt": "2026-11-04T18:05:00+00:00",
+      "snippet": "The five-member elected commission has a huge role in determining how much Georgians pay on their electric and natural gas bills, as well as where that energy comes from.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "05d846372caf",
+      "title": "‘It was unthinkable.’ Democratic strategist speaks on Georgia's election results",
+      "url": "https://www.gpb.org/news/2026/11/04/it-was-unthinkable-democratic-strategist-speaks-on-georgias-election-results",
+      "source": "GPB News",
+      "publishedAt": "2026-11-04T15:37:00+00:00",
+      "snippet": "Democratic strategist Fred Hicks examines Georgia Democrats' historic election sweep and the challenges facing the party as it prepares to govern.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "c432c70d99b5",
+      "title": "Ben Watson defeats Corey Foreman to retain GA-1 Senate seat",
+      "url": "https://thecurrentga.org/2026/11/04/ben-watson-defeats-corey-foreman-to-retain-ga-1-senate-seat/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-04T15:29:03+00:00",
+      "snippet": "Republican incumbent Ben Watson defeated Democratic challenger Corey Foreman to retain his Georgia State Senate seat in the Ga-1 district.\nThe Current is an inclusive nonprofit, non-partisan news orga",
+      "entityIds": [
+        "vg-ga-p-000008",
+        "vg-ga-p-000602"
+      ],
+      "topics": []
+    },
+    {
+      "id": "fd3371cee662",
+      "title": "Jim Kingston defeats Hollowell in tight Coastal Georgia election",
+      "url": "https://thecurrentga.org/2026/11/04/jim-kingston-defeats-hollowell-in-tight-coastal-georgia-election/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-04T13:02:22+00:00",
+      "snippet": "Republican Jim Kingston defeated Democratic challenger Amanda Hollowell to win an open U.S. House seat in Coastal Georgia with approximately 51.4% of the vote.\nThe Current is an inclusive nonprofit, n",
+      "entityIds": [
+        "vg-ga-p-000267",
+        "vg-ga-p-000319"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "21fc9d5f826d",
+      "title": "GPB morning headlines for November 4, 2026",
+      "url": "https://www.gpb.org/news/2026/11/04/gpb-morning-headlines-for-november-4-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-04T12:19:51+00:00",
+      "snippet": "Keisha Lance Bottoms will be Georgia’s next governor, and the first Black female governor in the United States; Democratic candidates swept races across Georgia Tuesday night. Sen. Jon Ossoff was amon",
+      "entityIds": [
+        "vg-ga-p-000264",
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "866700f27345",
+      "title": "Democrats win majority of governorships for the first time in 16 years",
+      "url": "https://georgiarecorder.com/2026/11/04/repub/democrats-set-to-win-majority-of-governorships-for-the-first-time-in-16-years/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-04T07:25:30+00:00",
+      "snippet": "Democrats have won the majority of governor’s offices for the first time in 16 years after the GOP racked up major losses across the country. Democrats flipped governorships in Georgia, Iowa, Nevada, ",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "eb80c68a7692",
       "title": "Democrats flip statewide offices up and down the ballot in Georgia; state House is in play",
       "url": "https://georgiarecorder.com/2026/11/04/democrats-flip-statewide-offices-up-and-down-the-ballot-in-georgia-state-house-is-in-play/",
@@ -211,20 +318,6 @@
       "snippet": "Tuesday night was a clean sweep for Georgia Democrats, with voters electing Democrats to every statewide office that was on the ballot.  Voters reelected U.S. Sen. Jon Ossoff by a wide margin and elec",
       "entityIds": [
         "vg-ga-p-000264"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "cdf9491e3aa8",
-      "title": "Troy Jackson wins Maine Senate race over Susan Collins, in major coup for Democrats",
-      "url": "https://www.gpb.org/news/2026/11/04/troy-jackson-wins-maine-senate-race-over-susan-collins-in-major-coup-for-democrats",
-      "source": "GPB News",
-      "publishedAt": "2026-11-04T06:02:31+00:00",
-      "snippet": "The result is a crucial victory for Democrats in their push to retake the Senate majority, flipping a seat that Collins has held for nearly 30 years.",
-      "entityIds": [
-        "vg-ga-p-000253"
       ],
       "topics": [
         "elections"
@@ -394,30 +487,6 @@
         "vg-ga-p-000253",
         "vg-ga-p-000264"
       ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "5caf51fba485",
-      "title": "General Election results, 2026",
-      "url": "https://thecurrentga.org/2026/11/03/general-election-results-2026/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-03T23:59:47+00:00",
-      "snippet": "Statewide races, Coastal Georgia counties local races, national balance of power\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth watchdog journalism for Savann",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "ef1494abfc15",
-      "title": "General Election 2026: Georgia results",
-      "url": "https://thecurrentga.org/2026/11/03/general-election-2026-georgia-results/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-03T23:59:17+00:00",
-      "snippet": "A new governor and more 2026 Georgia election results\nThe Current is an inclusive nonprofit, non-partisan news organization providing in-depth watchdog journalism for Savannah and Coastal Georgia’s co",
-      "entityIds": [],
       "topics": [
         "elections"
       ]
@@ -1670,18 +1739,6 @@
       "topics": [
         "ethics",
         "healthcare"
-      ]
-    },
-    {
-      "id": "023ee3fd1bc9",
-      "title": "Debate over data center growth in Georgia heats up race for governor",
-      "url": "https://georgiarecorder.com/2026/09/29/debate-over-data-center-growth-in-georgia-heats-up-race-for-governor/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-09-29T08:00:01+00:00",
-      "snippet": "As Georgia becomes a national leader in new data center construction, debate over how to regulate the booming industry has become a hot issue in the race for governor. The two candidates have proposed",
-      "entityIds": [],
-      "topics": [
-        "elections"
       ]
     },
     {
