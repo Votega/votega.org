@@ -13,6 +13,10 @@ What a RIGHT file looks like, by content rather than by name:
     the SoS actually publishes; the CSVs under _sources/election_results/ are
     that sheet saved out by hand, which is why four elections shipped before
     anyone needed to know the difference.
+  * Or the JSON feed at the Secretary of State's stable URL
+    (https://results.sos.ga.gov/cdn/results/Georgia/export-<date><name>.json),
+    which is the form the publish workflow can fetch on its own — the workbook's
+    download name carries a fresh GUID every time and cannot be fetched twice.
   * Or a CSV/TSV whose header carries an "Office Name" column.
 
 What a WRONG file looks like, and why each is worth a gate rather than a parse
@@ -57,6 +61,16 @@ def check(path):
             return fail('the download is a zip but not an XLSX workbook '
                         '(no xl/workbook.xml).')
         print('Export is an XLSX workbook.')
+        return 0
+
+    stripped = head.lstrip()
+    if stripped[:1] == b'{':
+        # Only the opening of the file is read: the feed is ~46MB, and parsing it
+        # to validate it is the builder's job a step later.
+        if b'"results"' not in head and b'"electionDate"' not in head:
+            return fail('the download is JSON but does not look like the results feed '
+                        '(no electionDate or results key in its first 4KB).')
+        print('Export is the JSON results feed.')
         return 0
 
     lowered = head.lower()
