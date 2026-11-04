@@ -25,11 +25,11 @@ on:
   workflow_dispatch:
     inputs:
       csv_url:
-        description: 'URL of the SoS "Total Votes Results" CSV/TSV export. Leave blank to rebuild from csv_path.'
+        description: 'URL of the SoS "Total Votes Results" export — the .xlsx workbook as published, or a CSV/TSV of its first sheet. Leave blank to rebuild from csv_path.'
         required: false
         type: string
       csv_path:
-        description: 'Repo path of an already-committed export (e.g. _sources/election_results/ga-general-2026-results-official.csv). Used when csv_url is blank.'
+        description: 'Repo path of an already-committed export, .xlsx or .csv (e.g. _sources/election_results/ga-general-2026-results-official.csv). Use this when the export has no stable URL: commit the file, then run this. Used when csv_url is blank.'
         required: false
         type: string
       data_key:
@@ -110,21 +110,11 @@ jobs:
             echo "::error::Give either csv_url or csv_path, not both."
             exit 1
           fi
-          dest="$RUNNER_TEMP/$DATA_KEY-export.csv"
+          dest="$RUNNER_TEMP/$DATA_KEY-export"
           if [ -n "$CSV_URL" ]; then
-            # --fail so an error page is a failure, not a 2KB "CSV" of HTML.
+            # --fail so an error page is a failure, not a 2KB "export" of HTML.
             curl --fail --location --silent --show-error --max-time 120 \
                  --retry 3 --retry-delay 2 --output "$dest" "$CSV_URL"
-            # An HTML error page can still arrive with HTTP 200 (a login wall,
-            # a CDN interstitial). Refuse anything that does not look tabular.
-            if head -c 512 "$dest" | grep -qiE '<!doctype|<html'; then
-              echo "::error::The download is HTML, not a CSV export. Check the URL points at the file itself."
-              exit 1
-            fi
-            if ! head -1 "$dest" | grep -qiE 'office name'; then
-              echo "::error::The first line is not a SoS results header (no 'Office Name' column): $(head -c 200 "$dest")"
-              exit 1
-            fi
           elif [ -n "$CSV_PATH" ]; then
             if [ ! -f "$CSV_PATH" ]; then
               echo "::error::No such file in the repo: $CSV_PATH"
@@ -135,11 +125,15 @@ jobs:
             echo "::error::Nothing to build from: set csv_url (election night) or csv_path (rebuild)."
             exit 1
           fi
+          # WHAT ARRIVED, by content rather than by name — an HTML login wall,
+          # a truncated download or the wrong workbook is refused HERE, while
+          # the page still holds the right numbers. See that script's header.
+          python scripts/check_export_shape.py "$dest"
           echo "csv=$dest" >> "$GITHUB_OUTPUT"
           {
             echo "### Export"
             echo "- Source: ${CSV_URL:-$CSV_PATH}"
-            echo "- Size: $(wc -c < "$dest" | tr -d ' ') bytes, $(( $(wc -l < "$dest") )) lines"
+            echo "- Size: $(wc -c < "$dest" | tr -d ' ') bytes"
             echo "- SHA256: \`$(sha256sum "$dest" | cut -d' ' -f1)\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -190,8 +184,10 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if [ "$COMMIT_CSV" = "true" ]; then
             mkdir -p _sources/election_results
-            cp "$CSV" "_sources/election_results/$DATA_KEY-export.csv"
-            git add -f "_sources/election_results/$DATA_KEY-export.csv"
+            ext=csv
+            head -c 4 "$CSV" | grep -q 'PK' && ext=xlsx
+            cp "$CSV" "_sources/election_results/$DATA_KEY-export.$ext"
+            git add -f "_sources/election_results/$DATA_KEY-export.$ext"
           fi
           git add -f "_data/election_results/$DATA_KEY.json" _data/results_updated.json
           if git diff --cached --quiet; then

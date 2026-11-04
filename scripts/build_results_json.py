@@ -27,11 +27,13 @@ non-partisan card with party labels on each candidate.
 
 import csv
 import json
+import zipfile
+import xml.etree.ElementTree as ET
 from lib.atomic_io import write_json_atomic
 import os
 import re
 import sys
-from collections import OrderedDict
+from collections import Counter, OrderedDict
 from datetime import datetime, timezone
 
 HERE = os.path.dirname(__file__)
@@ -121,11 +123,127 @@ def party_from_csv(party_str):
     return {'REP': 'rep', 'DEM': 'dem'}.get(p, 'np')
 
 
+# --- Reading the export ------------------------------------------------------
+# The Secretary of State's "Total Votes Results" export is an XLSX WORKBOOK, not
+# a CSV: three sheets ("Total Votes", "Total Votes by Group", "County Results"),
+# of which the first has exactly the six columns this script has always parsed.
+# The CSVs in _sources/election_results/ are that sheet saved out by hand, which
+# is why four elections shipped without this mattering — and why election night
+# would have been the first time anyone discovered it, with the file in hand and
+# polls closed.
+#
+# Read with the standard library (zipfile + ElementTree) rather than openpyxl,
+# because everything under scripts/ runs on a bare runner with no pip install
+# (see .github/workflows/run-script-tests.yml) and the publish path must not be
+# the one thing that needs a dependency installed at 9pm.
+XLSX_NS = {
+    'main': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+    'rel': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+    'pkgrel': 'http://schemas.openxmlformats.org/package/2006/relationships',
+}
+RESULTS_SHEET = 'Total Votes'
+
+
+def _col_index(ref):
+    """'C7' -> 2. Cells are addressed, not ordered: a blank cell is simply absent
+    from the XML, so reading cells in document order shifts every later column
+    left and silently puts vote totals in the Party column."""
+    letters = ''.join(ch for ch in ref if ch.isalpha())
+    n = 0
+    for ch in letters:
+        n = n * 26 + (ord(ch.upper()) - 64)
+    return n - 1
+
+
+def _shared_strings(zf):
+    try:
+        root = ET.fromstring(zf.read('xl/sharedStrings.xml'))
+    except KeyError:
+        return []
+    out = []
+    for si in root.findall('main:si', XLSX_NS):
+        out.append(''.join(t.text or '' for t in si.iter(f'{{{XLSX_NS["main"]}}}t')))
+    return out
+
+
+def _sheet_part(zf, want):
+    """Resolve a sheet NAME to its part path. Sheet order in the zip is not the
+    workbook's tab order, so picking 'sheet1.xml' is a guess; the county sheet
+    has the same first columns and would parse into plausible nonsense."""
+    wb = ET.fromstring(zf.read('xl/workbook.xml'))
+    rels = ET.fromstring(zf.read('xl/_rels/workbook.xml.rels'))
+    target = {r.get('Id'): r.get('Target') for r in rels.findall('pkgrel:Relationship', XLSX_NS)}
+    sheets = []
+    for sh in wb.findall('main:sheets/main:sheet', XLSX_NS):
+        rid = sh.get(f'{{{XLSX_NS["rel"]}}}id')
+        sheets.append((sh.get('name'), target.get(rid)))
+    for name, part in sheets:
+        if (name or '').strip().lower() == want.strip().lower() and part:
+            break
+    else:
+        name, part = sheets[0] if sheets else (None, None)
+        if not part:
+            raise ValueError('workbook has no readable sheet')
+        print(f"  WARNING: no '{want}' sheet; reading '{name}' instead")
+    if part.startswith('/'):
+        return part.lstrip('/')
+    return part if part.startswith('xl/') else f'xl/{part}'
+
+
+def rows_from_xlsx(path, sheet=RESULTS_SHEET):
+    with zipfile.ZipFile(path) as zf:
+        strings = _shared_strings(zf)
+        part = _sheet_part(zf, sheet)
+        root = ET.fromstring(zf.read(part))
+        for row in root.iter(f'{{{XLSX_NS["main"]}}}row'):
+            cells = {}
+            for c in row.findall('main:c', XLSX_NS):
+                ref = c.get('r') or ''
+                idx = _col_index(ref) if ref else len(cells)
+                if c.get('t') == 's':
+                    v = c.find('main:v', XLSX_NS)
+                    try:
+                        text = strings[int(v.text)] if v is not None and v.text else ''
+                    except (ValueError, IndexError):
+                        text = ''
+                elif c.get('t') == 'inlineStr':
+                    is_el = c.find('main:is', XLSX_NS)
+                    text = ''.join(t.text or '' for t in is_el.iter(f'{{{XLSX_NS["main"]}}}t')) if is_el is not None else ''
+                else:
+                    v = c.find('main:v', XLSX_NS)
+                    text = (v.text or '') if v is not None else ''
+                cells[idx] = text.strip()
+            if not cells:
+                continue
+            width = max(cells) + 1
+            yield [cells.get(i, '') for i in range(width)]
+
+
 def detect_delimiter(path):
     """Sniff delimiter — handles both tab-separated exports and comma CSV."""
     with open(path, newline='', encoding='utf-8-sig') as f:
         sample = f.read(4096)
     return '\t' if sample.count('\t') > sample.count(',') else ','
+
+
+def is_xlsx(path):
+    """By content, not extension: an export saved with the wrong suffix is the
+    kind of thing that happens once, at speed, on a deadline."""
+    try:
+        with open(path, 'rb') as fh:
+            return fh.read(4) == b'PK\x03\x04' and zipfile.is_zipfile(path)
+    except OSError:
+        return False
+
+
+def read_rows(path):
+    """Every row of the export, as lists of strings, whatever it was saved as."""
+    if is_xlsx(path):
+        print(f"  Reading XLSX sheet '{RESULTS_SHEET}'")
+        yield from rows_from_xlsx(path)
+        return
+    with open(path, newline='', encoding='utf-8-sig') as f:
+        yield from csv.reader(f, delimiter=detect_delimiter(path))
 
 
 PARTY_SUFFIX = {'rep': 'Rep', 'dem': 'Dem'}
@@ -196,32 +314,37 @@ def backfill_total_votes(contest):
 
 
 def parse_csv(path):
+    """Parse the export — CSV, TSV or the Secretary of State's XLSX workbook."""
     contests = OrderedDict()
-    delimiter = detect_delimiter(path)
-    with open(path, newline='', encoding='utf-8-sig') as f:
-        reader = csv.reader(f, delimiter=delimiter)
-        next(reader)  # header
-        for row in reader:
-            if len(row) < 6:
-                continue
-            office_name, contest_id, ballot_name = row[0].strip(), row[1].strip(), row[2].strip()
-            party_str, total_str = row[4].strip(), row[5].strip()
-            total = int(total_str) if total_str else 0
+    rows = read_rows(path)
+    for _ in rows:  # header
+        break
+    for row in rows:
+        if len(row) < 6:
+            continue
+        office_name, contest_id, ballot_name = row[0].strip(), row[1].strip(), row[2].strip()
+        party_str, total_str = row[4].strip(), row[5].strip()
+        if not office_name:
+            continue
+        try:
+            total = int(float(total_str)) if total_str else 0
+        except ValueError:
+            total = 0
 
-            if ballot_name.lower() == 'total votes':
-                if contest_id in contests:
-                    contests[contest_id]['totalVotes'] = total
-                continue
+        if ballot_name.lower() == 'total votes':
+            if contest_id in contests:
+                contests[contest_id]['totalVotes'] = total
+            continue
 
-            if contest_id not in contests:
-                contests[contest_id] = {
-                    'office_name': office_name, 'party': party_from_csv(party_str),
-                    'candidates': [], 'totalVotes': 0,
-                }
-            name, incumbent = parse_candidate_name(ballot_name)
-            contests[contest_id]['candidates'].append(
-                {'name': name, 'votes': total, 'incumbent': incumbent,
-                 'party': party_from_csv(party_str)})
+        if contest_id not in contests:
+            contests[contest_id] = {
+                'office_name': office_name, 'party': party_from_csv(party_str),
+                'candidates': [], 'totalVotes': 0,
+            }
+        name, incumbent = parse_candidate_name(ballot_name)
+        contests[contest_id]['candidates'].append(
+            {'name': name, 'votes': total, 'incumbent': incumbent,
+             'party': party_from_csv(party_str)})
 
     for c in contests.values():
         normalize_mixed_party(c)
@@ -239,9 +362,63 @@ def _contests_for_office(contest_list):
             for c in contest_list]
 
 
+OFFICE_QUALIFIER_RE = re.compile(r'\s*\([^)]*\)\s*$')
+
+
+# A trailing parenthetical that is an ELECTION TYPE, not a seat. Judicial offices
+# identify the seat the same way — "Supreme Court of Georgia (Bethel)", and ninety
+# Superior Court seats named for their incumbent — so only this vocabulary is ever
+# dropped. Measured: with any parenthetical fair game, rebuilding the published May
+# primary changed 174 contests, merging three Supreme Court seats into one card;
+# restricted to these words, it changes nothing.
+OFFICE_QUALIFIER_WORDS = {'special', 'primary', 'runoff', 'general', 'election'}
+
+
+def office_qualifier_map(displays):
+    """Decide, for one section's office names, which trailing parenthetical to drop.
+
+    WHY DROP ANY. The general export names one contest "District Attorney -
+    Atlantic Judicial Circuit (Special Primary)" where every other source for it
+    — the generated placeholder, and the `race_notes` key in
+    ga-general-2026-results.html carrying the explanation of why a general ballot
+    has a party primary on it — calls it "District Attorney - Atlantic Judicial
+    Circuit". Left alone, that contest arrives under a name nothing else matches:
+    a SECOND card for the same race (the placeholder's, stuck on "Awaiting
+    Results") and the note silently absent from the card that most needs it.
+
+    TWO GUARDS, because the parenthetical is usually load-bearing:
+
+      1. It must be an election type (OFFICE_QUALIFIER_WORDS) — never a name. A
+         judge's seat and an unexpired-term note are information; "(Special
+         Primary)" beside "District Attorney - Atlantic Judicial Circuit" is not.
+      2. Exactly one office name in the section may map to the stripped form. Two
+         or more means the qualifier is the only thing telling those races apart —
+         a special election for a seat that is also on the regular ballot — and
+         merging them would add unrelated candidates into one total.
+
+    Returns {display: canonical}.
+    """
+    def bare_of(display):
+        m = OFFICE_QUALIFIER_RE.search(display)
+        if not m:
+            return display
+        inside = m.group(0).strip().strip('()')
+        words = {w for w in re.split(r'[^a-z]+', inside.lower()) if w}
+        if not words or not words <= OFFICE_QUALIFIER_WORDS:
+            return display  # a seat, a person, a term — not ours to drop
+        return OFFICE_QUALIFIER_RE.sub('', display).strip() or display
+
+    stripped = {d: bare_of(d) for d in displays}
+    counts = Counter(stripped.values())
+    return {d: (bare if counts[bare] == 1 else d) for d, bare in stripped.items()}
+
+
 def build_sections(contests):
     buckets = {k: OrderedDict() for k in
                ('statewide', 'us-house', 'state-senate', 'state-house', 'courts', 'measures')}
+    # Two passes: a name is only safe to tidy once every name the export uses
+    # for that section is known (see strip_office_qualifier).
+    staged = []
     for contest in contests.values():
         section = classify(contest['office_name'])
         if section is None:
@@ -260,7 +437,19 @@ def build_sections(contests):
             else:
                 m = re.search(r'District\s+(\d+)', base, re.IGNORECASE)
                 display = f"District {m.group(1)}" if m else base
-        buckets[section].setdefault(display, []).append(contest)
+        staged.append((section, display, contest))
+
+    seen = {}
+    for section, display, _ in staged:
+        seen.setdefault(section, set()).add(display)
+    canon = {sec: office_qualifier_map(names) for sec, names in seen.items()}
+    announced = set()
+    for section, display, contest in staged:
+        canonical = canon[section][display]
+        if canonical != display and (section, display) not in announced:
+            announced.add((section, display))
+            print(f"  Office name tidied: {display!r} -> {canonical!r}")
+        buckets[section].setdefault(canonical, []).append(contest)
 
     def races_from(bucket, keys):
         return [{'office': name, 'contests': _contests_for_office(bucket[name])} for name in keys]
@@ -325,6 +514,26 @@ def fill_missing_races(sections, baseline):
         if not base:
             continue
         fresh = {_office_key(r['office']): r for r in section['races']}
+        # TWO NAMING AUTHORITIES, NOT A PARTIAL REPORT. The ballot questions are
+        # the case: the placeholder titles them from our own ga-ballot-measures
+        # data ("Constitutional Amendment — Authorize Creation of Next
+        # Generation 9-1-1 Fund Amendment") while the Secretary of State titles
+        # them by ballot position ("Proposed Constitutional Amendment 1"), and
+        # nothing in our data records which amendment got which number. Matched
+        # by name they are six different races, so carrying forward would have
+        # doubled the section: three cards with counts and three stuck on
+        # "Awaiting Results" beside them.
+        #
+        # The signature is specific — NO baseline race matched, and the export
+        # is not short of races — which a partial report cannot produce: an
+        # export with 2 of 180 State House races still matches both of them.
+        # The export wins, and says so loudly.
+        if fresh and not (set(fresh) & {_office_key(r['office']) for r in base}) \
+                and len(section['races']) >= len(base):
+            print(f"  NOTE: '{section['id']}' renamed wholesale by the export "
+                  f"({len(base)} baseline race(s) dropped, {len(section['races'])} kept) "
+                  "— the export's names win; nothing carried forward")
+            continue
         merged, used = [], set()
         for race in base:
             key = _office_key(race['office'])
