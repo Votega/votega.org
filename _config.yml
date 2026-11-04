@@ -157,6 +157,21 @@ feed_show_tags: true
 # Add a search button to the navbar
 post_search: true
 
+# Home page: show the forward-looking "Next Election" card beside Latest Results.
+#
+# OFF while the November 3 count is being reported. The home page leads with
+# results in that window (see _includes/next-election-strip.html), and the
+# December 1 runoff card sat beside them advertising an election whose line-up
+# tonight's count is still deciding — several statewide races only go to a
+# runoff at all if no one clears 50%.
+#
+# TURN IT BACK ON once the results are certified. Early voting for the runoff
+# starts November 23, so this must be back before then even if certification
+# slips: the card is the only route to the sample ballot and the races list
+# outside the navbar dropdown. Nothing else needs changing — the card populates
+# itself from ga-election-calendar.json.
+home_next_election: false
+
 # Add a button in the footer to edit the current page. Only works if your website is hosted on GitHub
 edit_page_button: false
 

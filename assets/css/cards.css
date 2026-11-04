@@ -211,14 +211,19 @@ layout: null
 .next-election[hidden],
 .results-card[hidden] { display: none; }
 /* The strip already carries its own top margin for standalone use; inside the
-   row the container owns the spacing so the two cards' tops align. */
-.election-cards .next-election { flex: 1 1 22rem; margin-top: 0; }
+   row the container owns the spacing so the two cards' tops align.
+
+   It is also the NARROWER of the two while both are showing: the results card
+   leads the row after an election (see _includes/next-election-strip.html), and
+   a lead card that is the smaller of the pair reads as the secondary one. Both
+   still grow, so whichever card is alone in the row fills it. */
+.election-cards .next-election { flex: 1 1 18rem; margin-top: 0; }
 
 /* Latest Results: a single clickable card in the "results" green, distinct from
    the clay forward-looking strip. Status (unofficial/certified) rides a pill so
    the green identity stays constant. */
 .results-card {
-  flex: 1 1 15rem;
+  flex: 1 1 22rem;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -270,6 +275,13 @@ layout: null
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+/* The build time of the numbers behind the card, shown only while unofficial. */
+.results-card-fresh {
+  display: inline-block;
+  font-size: 0.82rem;
+  color: var(--neutral, #6b6b6b);
+  white-space: nowrap;
 }
 .results-card-status.certified { background: var(--color-success-tint); color: var(--color-success); }
 .results-card-status.unofficial { background: var(--color-warning-tint); color: var(--color-warning); }
