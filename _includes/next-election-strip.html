@@ -4,7 +4,9 @@
   Updates", so the elections journey — half the site — was reachable only from a
   navbar dropdown. See CODEBASE-REVIEW-2026-08-18.md finding 4.10.
 
-  Two peer cards share a flex row (#electionCards). RESULTS COME FIRST, in DOM
+  Two peer cards share a flex row (#electionCards), and the second of them can
+  be switched off for a window with `home_next_election` in _config.yml — see
+  that key for why it is off now and what turns it back on. RESULTS COME FIRST, in DOM
   order and so in the tab order, for screen readers, and stacked on a phone: on
   the night and the days after, "who won" is what the homepage is being visited
   for, and a counted election was below the fold of the forward-looking strip.
@@ -34,6 +36,7 @@
     <span class="results-card-cta">See full results &rarr;</span>
   </a>
 
+{%- if site.home_next_election -%}
   <section id="nextElectionStrip" class="next-election" hidden aria-labelledby="nextElectionHeading">
     <div class="next-election-main">
       <p class="next-election-label" id="nextElectionHeading">Next Election</p>
@@ -48,6 +51,7 @@
       <a class="next-election-link" id="nextElectionEarlyVote" href="{{ '/ga-early-vote/' | relative_url }}" hidden>Early vote turnout</a>
     </div>
   </section>
+{%- endif -%}
 </div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -97,6 +101,12 @@
 
   // --- Next Election (calendar) -------------------------------------------
   function renderNext(data) {
+    // The card can be switched off for a window (site.home_next_election), so
+    // the element may not be on the page at all. The calendar is still fetched
+    // and still read, because the results card takes its election's NAME from
+    // it — dropping the fetch would leave that card reading the generic
+    // fallback label.
+    if (!STRIP) return;
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const next = (data.elections || [])
       .filter(e => e.date && parseLocalDate(e.date) >= today)
