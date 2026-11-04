@@ -29,6 +29,7 @@ Exits 0 on success, 1 on any failure.
 import os
 import sys
 import tempfile
+import zipfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_results_json as brj  # noqa: E402
@@ -163,6 +164,149 @@ check('carry-forward never invents votes',
 
 sections = brj.build_sections(parse(['Governor,GOV,Rick Jackson,1,REP,950']))
 check('an empty baseline carries nothing', brj.fill_missing_races(sections, []) == 0)
+
+print("XLSX: the shape the Secretary of State actually publishes")
+
+
+def make_xlsx(path, sheets):
+    """A minimal real workbook, built with the standard library.
+
+    Written by hand rather than with openpyxl on purpose: these suites run on a
+    bare runner with no pip install (.github/workflows/run-script-tests.yml), and
+    a test that needs a dependency to prove the no-dependency reader works would
+    prove nothing about election night. Every value is an inline string, which
+    is valid XLSX and exercises a path the SoS file does not — its own shared
+    strings are covered by the fixtures in _sources/election_results/.
+    """
+    def esc(v):
+        return (str(v).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'))
+
+    def col(i):
+        name = ''
+        i += 1
+        while i:
+            i, rem = divmod(i - 1, 26)
+            name = chr(65 + rem) + name
+        return name
+
+    with zipfile.ZipFile(path, 'w') as zf:
+        zf.writestr('[Content_Types].xml',
+                    '<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"/>')
+        rels = ''.join(
+            f'<Relationship Id="rId{n}" Target="worksheets/sheet{n}.xml" '
+            'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet"/>'
+            for n in range(1, len(sheets) + 1))
+        zf.writestr('xl/_rels/workbook.xml.rels',
+                    '<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+                    + rels + '</Relationships>')
+        tabs = ''.join(
+            f'<sheet name="{esc(name)}" sheetId="{n}" r:id="rId{n}"/>'
+            for n, (name, _) in enumerate(sheets, start=1))
+        zf.writestr('xl/workbook.xml',
+                    '<?xml version="1.0"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
+                    'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+                    f'<sheets>{tabs}</sheets></workbook>')
+        for n, (_, rows) in enumerate(sheets, start=1):
+            body = ''
+            for ri, row in enumerate(rows, start=1):
+                cells = ''.join(
+                    f'<c r="{col(ci)}{ri}" t="inlineStr"><is><t>{esc(v)}</t></is></c>'
+                    for ci, v in enumerate(row) if v != '')
+                body += f'<row r="{ri}">{cells}</row>'
+            zf.writestr(f'xl/worksheets/sheet{n}.xml',
+                        '<?xml version="1.0"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+                        f'<sheetData>{body}</sheetData></worksheet>')
+
+
+HEAD = ['Office Name', 'Contest ID', 'Ballot Name', 'Choice ID', 'Party', 'Total']
+with tempfile.TemporaryDirectory() as d:
+    book = os.path.join(d, 'export.xlsx')
+    make_xlsx(book, [
+        # The real workbook's first sheet is NOT the only one with these columns:
+        # "County Results" repeats them per county. Reading by position would
+        # parse plausible nonsense, so the sheet is resolved by NAME.
+        ('County Results', [['County'] + HEAD,
+                            ['Appling County', 'US Senate', 'US2', 'Mike Collins (Rep)', '1', 'Rep', '7']]),
+        ('Total Votes', [HEAD,
+                         ['US Senate', 'US2', 'Mike Collins (Rep)', '1', 'Rep', '1100'],
+                         # A blank Choice ID mid-row: cells are ADDRESSED in XLSX,
+                         # and a reader that takes them in document order shifts
+                         # every later column left, putting votes in Party.
+                         ['US Senate', 'US2', 'Jon Ossoff (I) (Dem)', '2', 'Dem', '1200'],
+                         ['US Senate', 'US2', 'Total Votes', '', '', '2300']]),
+    ])
+    check('is_xlsx detects a workbook by content, not extension', brj.is_xlsx(book))
+    rows = list(brj.read_rows(book))
+    check('the named results sheet is the one read, not the first in the zip',
+          rows[0][:6] == HEAD, str(rows[0][:6]))
+    c = one(brj.parse_csv(book))
+    names = [x['name'] for x in c['candidates']]
+    check('a blank cell does not shift the later columns',
+          c['totalVotes'] == 2300 and [x['votes'] for x in c['candidates']] == [1200, 1100],
+          f'{c["totalVotes"]} / {[x["votes"] for x in c["candidates"]]}')
+    check('an export that already suffixes the party is not double-suffixed',
+          names == ['Jon Ossoff (Dem)', 'Mike Collins (Rep)'], str(names))
+    check('(I) is still read as incumbency through the party suffix',
+          c['candidates'][0]['incumbent'] is True)
+
+print('Office names: a trailing qualifier the rest of the site does not use')
+sections = brj.build_sections(parse([
+    'District Attorney - Atlantic Judicial Circuit (Special Primary),SDA5,Laurie E. Baio,48,,10',
+]))
+courts = [s for s in sections if s['id'] == 'courts'][0]
+check('the qualifier is dropped so the name matches races.json and race_notes',
+      [r['office'] for r in courts['races']] == ['District Attorney - Atlantic Judicial Circuit'],
+      str([r['office'] for r in courts['races']]))
+
+# The guard that makes the strip safe: here the qualifier is the ONLY difference,
+# so dropping it would merge a special election into the regular race's card and
+# add the two sets of candidates together.
+sections = brj.build_sections(parse([
+    'District Attorney - Southern Judicial Circuit,SDA9,Pat Regular,1,DEM,10',
+    'District Attorney - Southern Judicial Circuit (Special),SDA9S,Sam Special,2,REP,20',
+]))
+courts = [s for s in sections if s['id'] == 'courts'][0]
+offices = sorted(r['office'] for r in courts['races'])
+check('a qualifier that is the only thing telling two races apart is KEPT',
+      offices == ['District Attorney - Southern Judicial Circuit',
+                  'District Attorney - Southern Judicial Circuit (Special)'],
+      str(offices))
+
+sections = brj.build_sections(parse([
+    'State House of Representatives - District 51,SHD51,Aaron Baker,1,DEM,10',
+    'State House of Representatives - District 51 (Special),SHD51S,Jane Doe,2,REP,20',
+]))
+house = [s for s in sections if s['id'] == 'state-house'][0]
+check('a special legislative race stays its own card',
+      len(house['races']) == 2, str([r['office'] for r in house['races']]))
+
+print('Carry-forward: a wholesale rename is not a partial report')
+measures_baseline = [{'id': 'measures', 'label': 'Ballot Questions', 'races': [
+    {'office': 'Constitutional Amendment \u2014 Authorize Creation of Next Generation 9-1-1 Fund Amendment',
+     'contests': [{'party': 'np', 'totalVotes': 0, 'candidates': [
+         {'name': 'Yes', 'votes': 0, 'incumbent': False}]}]},
+]}]
+sections = brj.build_sections(parse([
+    'Proposed Constitutional Amendment 1,SQ1,Yes,1,,500',
+    'Proposed Constitutional Amendment 1,SQ1,No,2,,400',
+]))
+carried = brj.fill_missing_races(sections, measures_baseline)
+measures = [s for s in sections if s['id'] == 'measures'][0]
+check('the export\'s names win when no baseline name matches and it is no shorter',
+      carried == 0 and len(measures['races']) == 1,
+      f'carried {carried}, {[r["office"] for r in measures["races"]]}')
+
+# The distinction that makes the rule safe: 1 reported race out of 3 is a
+# partial report, not a rename, even though nothing it reports is new.
+partial_baseline = [{'id': 'state-house', 'label': 'GA State House', 'races': [
+    {'office': f'District {n}', 'contests': [
+        {'party': 'np', 'totalVotes': 0, 'candidates': [{'name': 'X', 'votes': 0, 'incumbent': False}]}]}
+    for n in (1, 2, 3)]}]
+sections = brj.build_sections(parse([
+    'State House of Representatives - District 99,SHD99,New Person,1,DEM,10',
+]))
+carried = brj.fill_missing_races(sections, partial_baseline)
+check('a short export still carries the baseline forward', carried == 3, str(carried))
 
 if FAILURES:
     print(f'\n{len(FAILURES)} check(s) failed: {", ".join(FAILURES)}')

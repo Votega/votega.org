@@ -144,6 +144,32 @@ def main(argv):
                      f'(delta **{now["votes"] - was["votes"]:+,} votes**, '
                      f'{now["races"] - was["races"]:+d} races).')
         dropped = was['offices'] - now['offices']
+        # A section the export RENAMED WHOLESALE is not a section that lost
+        # races. The ballot questions are the live case: the placeholder titles
+        # them from our ga-ballot-measures data, the Secretary of State titles
+        # them by ballot position ("Proposed Constitutional Amendment 1"), and
+        # the two sets share no name. build_results_json.fill_missing_races
+        # deliberately lets the export win there, so flagging it as a shrink
+        # would refuse every publish of the night for doing the right thing.
+        # Same test as the builder's, for the same reason: every baseline race
+        # in the section gone AND the export no shorter than the baseline, which
+        # a partial report cannot produce.
+        by_section_now = {}
+        by_section_was = {}
+        for sec, off in now['offices']:
+            by_section_now.setdefault(sec, set()).add(off)
+        for sec, off in was['offices']:
+            by_section_was.setdefault(sec, set()).add(off)
+        renamed = set()
+        for sec, old_offs in by_section_was.items():
+            new_offs = by_section_now.get(sec, set())
+            if new_offs and not (new_offs & old_offs) and len(new_offs) >= len(old_offs):
+                renamed.add(sec)
+                warnings.append(
+                    f"section '{sec}' was renamed wholesale by the export "
+                    f'({len(old_offs)} old name(s) replaced by {len(new_offs)} new one(s)) — '
+                    "the export's names are being used; check the page for duplicate cards")
+        dropped = {(sec, off) for sec, off in dropped if sec not in renamed}
         if dropped:
             sample = ', '.join(f'{sec}/{off}' for sec, off in sorted(dropped)[:5])
             errors.append(

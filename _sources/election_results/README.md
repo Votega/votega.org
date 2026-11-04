@@ -34,6 +34,10 @@ python scripts/build_results_json.py _sources/election_results/<file>.csv <data-
 
 ## Election night
 
+The export is an **XLSX workbook**, not a CSV — three sheets, of which `Total Votes`
+is the one parsed (the CSVs above are that sheet saved out by hand). The builder
+reads either, by content rather than file extension.
+
 Don't do it by hand. The **Publish election results** workflow
 (`.github/workflows/publish-results.yml`) runs this whole sequence from the
 Actions tab or the GitHub mobile app — fetch the export, rebuild, validate,
