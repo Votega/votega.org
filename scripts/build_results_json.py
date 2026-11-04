@@ -313,6 +313,78 @@ def backfill_total_votes(contest):
         contest['totalVotes'] = summed
 
 
+# --- The JSON feed ------------------------------------------------------------
+# https://results.sos.ga.gov/cdn/results/Georgia/export-<MMDDYYYY><Name>.json
+#
+# The same results as the XLSX, at a STABLE URL — which is the whole difference
+# on election night: the workbook is a generated download with a fresh GUID in
+# its name every time, so it can only be fetched by hand, while this can be
+# fetched by the publish workflow on a button press. It also carries `createdAt`,
+# the moment the Secretary of State built the data, which is a better answer to
+# "how old are these numbers" than the moment we built the page from them.
+#
+# Two differences from the workbook, both handled rather than assumed away:
+#   * No per-contest "Total Votes" row — the candidate rows are summed, which is
+#     backfill_total_votes()'s job and the right denominator anyway.
+#   * It can be SHORT A RACE. Measured on the 11:17pm feed: 273 contests against
+#     the workbook's 274, missing District Attorney - Waycross Judicial Circuit.
+#     That is exactly what --fill-missing-from is for, and why the election-night
+#     workflow leaves it on: the race keeps reading "Awaiting Results" instead of
+#     disappearing from the page.
+JSON_MARKER_KEYS = {'electionDate', 'results'}
+
+
+def is_json_export(path):
+    try:
+        with open(path, 'rb') as fh:
+            return fh.read(64).lstrip()[:1] == b'{'
+    except OSError:
+        return False
+
+
+def contests_from_json(path):
+    """The feed's ballotItems, in the shape parse_csv produces."""
+    with open(path, encoding='utf-8') as fh:
+        payload = json.load(fh)
+    results = payload.get('results') or {}
+    items = results.get('ballotItems') or []
+    if not items:
+        raise ValueError('the JSON export carries no results.ballotItems')
+    contests = OrderedDict()
+    for item in items:
+        contest_id = str(item.get('id') or '').strip()
+        office_name = (item.get('name') or '').strip()
+        if not contest_id or not office_name:
+            continue
+        options = item.get('ballotOptions') or []
+        candidates = []
+        for opt in options:
+            name, incumbent = parse_candidate_name((opt.get('name') or '').strip())
+            if not name:
+                continue
+            candidates.append({
+                'name': name,
+                'votes': int(opt.get('voteCount') or 0),
+                'incumbent': incumbent,
+                'party': party_from_csv(opt.get('politicalParty')),
+            })
+        if not candidates:
+            continue
+        contests[contest_id] = {
+            'office_name': office_name,
+            'party': candidates[0]['party'],
+            'candidates': candidates,
+            'totalVotes': 0,  # summed by backfill_total_votes
+        }
+    for c in contests.values():
+        normalize_mixed_party(c)
+        backfill_total_votes(c)
+        for cand in c['candidates']:
+            cand.pop('party', None)
+        c['candidates'].sort(key=lambda x: x['votes'], reverse=True)
+    return contests, payload.get('createdAt')
+
+
 def parse_csv(path):
     """Parse the export — CSV, TSV or the Secretary of State's XLSX workbook."""
     contests = OrderedDict()
@@ -353,6 +425,19 @@ def parse_csv(path):
             cand.pop('party', None)
         c['candidates'].sort(key=lambda x: x['votes'], reverse=True)
     return contests
+
+
+
+def parse_export(path):
+    """Parse whichever form the Secretary of State published.
+
+    Returns (contests, source_time) where source_time is the feed's own
+    `createdAt` when it has one, else None.
+    """
+    if is_json_export(path):
+        print('  Reading the JSON results feed')
+        return contests_from_json(path)
+    return parse_csv(path), None
 
 
 def _contests_for_office(contest_list):
@@ -575,6 +660,8 @@ def record_build_time(data_key, now=None, stamp_path=None):
     """
     stamp_path = stamp_path or STAMP_PATH
     moment = (now or datetime.now(timezone.utc)).replace(microsecond=0)
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=timezone.utc)
     stamp = OrderedDict([('epoch', int(moment.timestamp())),
                          ('iso', moment.isoformat())])
     stamps = {}
@@ -608,8 +695,8 @@ if __name__ == '__main__':
     if len(args) != 2:
         sys.exit(USAGE)
     csv_path, data_key = args
-    print(f"Parsing CSV: {csv_path}")
-    contests = parse_csv(csv_path)
+    print(f"Parsing export: {csv_path}")
+    contests, source_time = parse_export(csv_path)
     print(f"  {len(contests)} contest(s) parsed")
     sections = build_sections(contests)
     if fill_from:
@@ -623,4 +710,15 @@ if __name__ == '__main__':
     counts = {s['id']: len(s['races']) for s in sections}
     print(f"  Races per section: {counts}")
     print(f"Wrote: {out_path}")
-    print(f"Built at: {record_build_time(data_key)['iso']}")
+    # Prefer the SECRETARY OF STATE'S timestamp over ours. The stamp answers
+    # "how old are these numbers", and the honest answer is when the data was
+    # built, not when we fetched it — a feed that stops updating would
+    # otherwise keep looking fresh every time the page was rebuilt.
+    moment = None
+    if source_time:
+        try:
+            moment = datetime.fromisoformat(str(source_time).replace('Z', '+00:00'))
+        except ValueError:
+            print(f"  WARNING: unreadable createdAt {source_time!r}; stamping the build time")
+    stamp = record_build_time(data_key, now=moment)
+    print(f"Data built at: {stamp['iso']}" + (' (from the feed)' if moment else ' (local build time)'))

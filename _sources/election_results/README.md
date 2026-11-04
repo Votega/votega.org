@@ -34,9 +34,23 @@ python scripts/build_results_json.py _sources/election_results/<file>.csv <data-
 
 ## Election night
 
-The export is an **XLSX workbook**, not a CSV — three sheets, of which `Total Votes`
-is the one parsed (the CSVs above are that sheet saved out by hand). The builder
-reads either, by content rather than file extension.
+Use the **JSON feed**, which lives at a stable URL all night:
+
+```
+https://results.sos.ga.gov/cdn/results/Georgia/export-11032026GeneralAndSpecialElection.json
+```
+
+That is what the publish workflow can fetch on its own. The XLSX workbook the
+results site offers is the same data, but its download name carries a fresh GUID
+every time, so it can only be fetched by hand — three sheets, of which
+`Total Votes` is the one parsed (the CSVs above are that sheet saved out by
+hand). The builder reads all three forms, by content rather than file extension,
+and prefers the feed's own `createdAt` for the page's "last updated" stamp.
+
+The feed can be short a race: on the 11:17pm run it carried 273 contests against
+the workbook's 274, missing District Attorney - Waycross Judicial Circuit. That
+is why `fill_missing` stays on — the race keeps reading "Awaiting Results"
+instead of disappearing.
 
 Don't do it by hand. The **Publish election results** workflow
 (`.github/workflows/publish-results.yml`) runs this whole sequence from the

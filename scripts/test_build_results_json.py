@@ -26,6 +26,7 @@ Usage:
 Exits 0 on success, 1 on any failure.
 """
 
+import json
 import os
 import sys
 import tempfile
@@ -307,6 +308,56 @@ sections = brj.build_sections(parse([
 ]))
 carried = brj.fill_missing_races(sections, partial_baseline)
 check('a short export still carries the baseline forward', carried == 3, str(carried))
+
+print('JSON feed: the form with a stable URL')
+FEED = {
+    'electionDate': '2026-11-03',
+    'createdAt': '2026-11-04T00:14:40.337107Z',
+    'results': {'name': 'Georgia', 'ballotItems': [
+        {'type': 'State', 'id': 'US2', 'name': 'US Senate', 'contestType': 'Candidate',
+         'ballotOptions': [
+             {'id': '1', 'name': 'Mike Collins (Rep)', 'voteCount': 231911, 'politicalParty': 'Rep'},
+             {'id': '2', 'name': 'Jon Ossoff (I) (Dem)', 'voteCount': 563565, 'politicalParty': 'Dem'},
+         ]},
+        {'type': 'State', 'id': 'SQ1', 'name': 'Proposed Constitutional Amendment 1',
+         'contestType': 'Candidate', 'ballotOptions': [
+             {'id': '32', 'name': 'Yes', 'voteCount': 300, 'politicalParty': None},
+             {'id': '33', 'name': 'No', 'voteCount': 200, 'politicalParty': None},
+         ]},
+    ]},
+}
+with tempfile.TemporaryDirectory() as d:
+    feed = os.path.join(d, 'export.json')
+    with open(feed, 'w', encoding='utf-8') as fh:
+        json.dump(FEED, fh)
+    check('is_json_export recognizes the feed', brj.is_json_export(feed))
+    contests, created = brj.parse_export(feed)
+    check("the feed's own createdAt is returned for the stamp",
+          created == '2026-11-04T00:14:40.337107Z', str(created))
+    sen = contests['US2']
+    names = [x['name'] for x in sen['candidates']]
+    check('both parties under one ballot item become one neutral contest',
+          sen['party'] == 'np', sen['party'])
+    check('candidates keep their own party and are sorted by votes',
+          names == ['Jon Ossoff (Dem)', 'Mike Collins (Rep)'], str(names))
+    check('(I) is read as incumbency, not kept in the name',
+          sen['candidates'][0]['incumbent'] is True)
+    # The feed has no per-contest "Total Votes" row at all.
+    check('the total is summed from the ballot options',
+          sen['totalVotes'] == 795476, str(sen['totalVotes']))
+    measure = contests['SQ1']
+    check('a ballot question stays np with bare option names',
+          measure['party'] == 'np'
+          and [x['name'] for x in measure['candidates']] == ['Yes', 'No'])
+
+    empty = os.path.join(d, 'empty.json')
+    with open(empty, 'w', encoding='utf-8') as fh:
+        json.dump({'electionDate': '2026-11-03', 'results': {'ballotItems': []}}, fh)
+    try:
+        brj.parse_export(empty)
+        check('a feed with no ballotItems is refused', False, 'no error raised')
+    except ValueError:
+        check('a feed with no ballotItems is refused', True)
 
 if FAILURES:
     print(f'\n{len(FAILURES)} check(s) failed: {", ".join(FAILURES)}')
