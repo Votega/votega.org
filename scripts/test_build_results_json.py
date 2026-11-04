@@ -359,6 +359,26 @@ with tempfile.TemporaryDirectory() as d:
     except ValueError:
         check('a feed with no ballotItems is refused', True)
 
+print('The badge: a general contest is not a nonpartisan race')
+sections = brj.build_sections(parse([
+    'US Senate,US2,Jon Ossoff (I) (Dem),1,DEM,1200',
+    'US Senate,US2,Mike Collins (Rep),2,REP,1100',
+    'State House of Representatives - District 7,SHD7,Solo Democrat,3,DEM,900',
+    'Proposed Constitutional Amendment 1,SQ1,Yes,4,,500',
+    'Proposed Constitutional Amendment 1,SQ1,No,5,,400',
+]))
+sen = [s for s in sections if s['id'] == 'statewide'][0]['races'][0]['contests'][0]
+check('a two-party contest is flagged multiParty', sen.get('multiParty') is True)
+check('and lists its parties, Republican first for the filter',
+      sen.get('parties') == ['rep', 'dem'], str(sen.get('parties')))
+solo = [s for s in sections if s['id'] == 'state-house'][0]['races'][0]['contests'][0]
+check('an uncontested race keeps its real party badge',
+      solo['party'] == 'dem' and 'multiParty' not in solo,
+      f"{solo['party']}, multiParty={solo.get('multiParty')}")
+measure = [s for s in sections if s['id'] == 'measures'][0]['races'][0]['contests'][0]
+check('a ballot question is not flagged multiParty (it badges Ballot Question)',
+      'multiParty' not in measure and measure['party'] == 'np')
+
 if FAILURES:
     print(f'\n{len(FAILURES)} check(s) failed: {", ".join(FAILURES)}')
     sys.exit(1)

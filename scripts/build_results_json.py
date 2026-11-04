@@ -279,6 +279,17 @@ def normalize_mixed_party(contest):
     if len(seen) < 2:
         return
     contest['party'] = 'np'
+    # WHAT 'np' MEANS HERE, which the page has to say differently. A contest with
+    # one party is a primary and the card's party badge describes it exactly. A
+    # general-election contest has no single party, so it renders as the neutral
+    # card — but it is NOT a nonpartisan race, and labelling 274 D-versus-R
+    # contests "Nonpartisan" states something false about every race on the
+    # ballot. These two fields let the layout tell the difference: drop the badge
+    # where the parties are on the candidates instead, and let the Republican and
+    # Democrat filters match a card that has one of each on it.
+    contest['multiParty'] = True
+    order = {'rep': 0, 'dem': 1}
+    contest['parties'] = sorted(seen, key=lambda p: (order.get(p, 2), p))
     for cand in contest['candidates']:
         suffix = PARTY_SUFFIX.get(cand.get('party'))
         if suffix and not PARTY_SUFFIX_RE.search(cand['name']):
@@ -443,8 +454,15 @@ def parse_export(path):
 def _contests_for_office(contest_list):
     order = {'rep': 0, 'dem': 1, 'np': 2}
     contest_list = sorted(contest_list, key=lambda c: order.get(c['party'], 3))
-    return [{'party': c['party'], 'totalVotes': c['totalVotes'], 'candidates': c['candidates']}
-            for c in contest_list]
+    out = []
+    for c in contest_list:
+        entry = {'party': c['party'], 'totalVotes': c['totalVotes'],
+                 'candidates': c['candidates']}
+        if c.get('multiParty'):
+            entry['multiParty'] = True
+            entry['parties'] = c.get('parties') or []
+        out.append(entry)
+    return out
 
 
 OFFICE_QUALIFIER_RE = re.compile(r'\s*\([^)]*\)\s*$')
