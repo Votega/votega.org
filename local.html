@@ -120,6 +120,7 @@ breadcrumb:
      the full pill, where it is being explained. */
   .lh-flag-stale { background: var(--color-surface-sunken); color: var(--color-text); border: 1px solid var(--color-warning-line); }
   .lh-flag-stale .fa-triangle-exclamation { color: var(--color-warning); }
+  .lh-flag-votes { background: var(--color-surface-sunken); color: var(--color-link); border: 1px solid var(--color-border); }
   .lh-card { position: relative; }
   .lh-stale-mark {
     position: absolute; top: 0.7rem; right: 0.8rem; font-size: 0.8rem;
@@ -173,6 +174,10 @@ breadcrumb:
       A SPLOST, ESPLOST, TSPLOST, bond, or other local tax or referendum on recent agendas.
     </span>
     <span class="lh-legend-item">
+      <span class="lh-flag lh-flag-votes"><i class="fa-solid fa-gavel" aria-hidden="true"></i></span>
+      Recorded votes: we can read this place’s motions and who voted how, meeting by meeting, from its meeting portal. No gavel doesn’t mean a place doesn’t record votes, only that we can’t read them yet.
+    </span>
+    <span class="lh-legend-item">
       <span class="lh-flag lh-flag-stale"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>
       This place’s website either blocks the automated method we use to collect links and topics, or has stopped posting newer agendas and minutes, so its information may be out of date. Check the official source.
     </span>
@@ -223,6 +228,9 @@ breadcrumb:
           <i class="fa-solid fa-users{% unless coOfficials %} off{% endunless %}" title="{% if coOfficials %}Officials{% else %}Officials — not yet{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-shield-halved{% unless coSheriff %} off{% endunless %}" title="{% if coSheriff %}Sheriff{% else %}coSheriffRIFFLABEL{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-calendar-days{% unless county.domains.meetings %} off{% endunless %}" title="{% if county.domains.meetings %}Meetings, agendas and minutes{% else %}Meetings — not yet{% endif %}" aria-hidden="true"></i>
+          {%- if site.data.local_votes.places[county.slug].status == 'available' %}
+          <i class="fa-solid fa-gavel" title="Recorded votes by meeting" aria-hidden="true"></i>
+          {%- endif %}
           <i class="fa-solid fa-graduation-cap{% unless lh_has_board %} off{% endunless %}" title="{% if lh_has_board %}School board{% else %}School board — roster not yet confirmed{% endif %}" aria-hidden="true"></i>
         </span>
       </div>
@@ -251,6 +259,9 @@ breadcrumb:
           <i class="fa-solid fa-users{% unless ciOfficials %} off{% endunless %}" title="{% if ciOfficials %}Officials{% else %}Officials — not yet{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-shield-halved{% unless false %} off{% endunless %}" title="{% if false %}Sheriff{% else %}falseRIFFLABEL{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-calendar-days{% unless city.domains.meetings %} off{% endunless %}" title="{% if city.domains.meetings %}Meetings, agendas and minutes{% else %}Meetings — not yet{% endif %}" aria-hidden="true"></i>
+          {%- if site.data.local_votes.places[city.slug].status == 'available' %}
+          <i class="fa-solid fa-gavel" title="Recorded votes by meeting" aria-hidden="true"></i>
+          {%- endif %}
           <i class="fa-solid fa-graduation-cap{% unless lh_has_board %} off{% endunless %}" title="{% if lh_has_board %}School board{% else %}School board — roster not yet confirmed{% endif %}" aria-hidden="true"></i>
         </span>
         </div>
@@ -310,6 +321,9 @@ breadcrumb:
           <i class="fa-solid fa-users{% unless c2Officials %} off{% endunless %}" title="{% if c2Officials %}Officials{% else %}Officials — not yet{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-shield-halved{% unless false %} off{% endunless %}" title="{% if false %}Sheriff{% else %}falseRIFFLABEL{% endif %}" aria-hidden="true"></i>
           <i class="fa-solid fa-calendar-days{% unless c2.domains.meetings %} off{% endunless %}" title="{% if c2.domains.meetings %}Meetings, agendas and minutes{% else %}Meetings — not yet{% endif %}" aria-hidden="true"></i>
+          {%- if site.data.local_votes.places[c2.slug].status == 'available' %}
+          <i class="fa-solid fa-gavel" title="Recorded votes by meeting" aria-hidden="true"></i>
+          {%- endif %}
           <i class="fa-solid fa-graduation-cap{% unless lh_has_board %} off{% endunless %}" title="{% if lh_has_board %}School board{% else %}School board — roster not yet confirmed{% endif %}" aria-hidden="true"></i>
         </span>
         </div>

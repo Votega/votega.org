@@ -27,10 +27,12 @@ import yaml  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
 from lib.civicclerk_votes import fetch_votes as fetch_civicclerk  # noqa: E402
 from lib.legistar_votes import fetch_votes as fetch_legistar  # noqa: E402
+from lib.votes_index import build_index  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
 DATA = os.path.join(ROOT, 'assets', 'data')
+INDEX_PATH = os.path.join(ROOT, '_data', 'local_votes.json')
 
 
 def out_path(slug):
@@ -93,8 +95,24 @@ def main():
             continue
         if not build(p['slug'], cfg, args.years):
             failed += 1
+    write_index(places)
     if failed:
         sys.exit(1)
+
+
+def write_index(places):
+    """Refresh _data/local_votes.json from the files on disk (see lib/votes_index).
+    Runs even after a failed portal read: the index describes the files that
+    exist, and a place left as-is keeps its entry. Rewritten only on a change."""
+    index = build_index(places, DATA)
+    previous = None
+    if os.path.exists(INDEX_PATH):
+        with open(INDEX_PATH, encoding='utf-8') as f:
+            previous = json.load(f)
+    if previous == index:
+        return
+    write_json_atomic(INDEX_PATH, index, indent=2)
+    print('wrote %s (%d places)' % (os.path.relpath(INDEX_PATH, ROOT), len(index['places'])))
 
 
 if __name__ == '__main__':

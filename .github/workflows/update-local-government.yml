@@ -176,6 +176,7 @@ jobs:
           git add assets/data/local-*-meetings.json \
                   assets/data/local-*-meetings-enriched.json \
                   assets/data/local-flags.json                   assets/data/local-*-votes.json \
+                  _data/local_votes.json \
                   assets/data/local-topics-*.json
           if git diff --cached --quiet; then
             echo "No local-government meeting changes"

@@ -76,8 +76,36 @@ def load_places():
         return (yaml.safe_load(fh) or {}).get("places", [])
 
 
+VOTES_INDEX = os.path.join(ROOT, "_data", "local_votes.json")
+
+
+def load_votes_index():
+    """_data/local_votes.json (written by generate_meeting_votes.py), or {}."""
+    if not os.path.exists(VOTES_INDEX):
+        return {}
+    with open(VOTES_INDEX, encoding="utf-8") as fh:
+        return (json.load(fh) or {}).get("places", {})
+
+
+def recorded_votes(slug, platform, votes_index):
+    """Whether this place's recorded votes can be pulled, so a researcher knows
+    where to dig. "available": we read them (the votes themselves are not in this
+    dataset). "not-published": the platform has a vote reader but the portal
+    records none. "no-reader": no reader exists for the platform, which says
+    nothing about whether the place records votes."""
+    v = votes_index.get(slug)
+    if v:
+        entry = {"status": v["status"]}
+        if v["status"] == "available":
+            entry.update({"firstMeeting": v.get("firstMeeting"),
+                          "lastMeeting": v.get("lastMeeting")})
+        return entry
+    return {"status": "no-reader"}
+
+
 def registry(places):
     """Public directory of the jurisdictions we cover, from places.yml."""
+    votes_index = load_votes_index()
     out = []
     for p in places:
         if p.get("hidden"):
@@ -95,6 +123,7 @@ def registry(places):
             "fips": str(p.get("fips") or "") or None,
             "region": p.get("region") or None,
             "platform": meetings.get("platform"),
+            "recordedVotes": recorded_votes(p["slug"], meetings.get("platform"), votes_index),
             "links": {k: meetings[k] for k in LINK_FIELDS if meetings.get(k)},
             "schedule": [
                 {"body": s.get("body"), "when": s.get("when") or None,

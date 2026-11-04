@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "source": "Derived from assets/data/local-<slug>-votes.json by scripts/generate_meeting_votes.py",
+    "note": "Only places on a platform with a vote reader (CivicClerk, Legistar) appear. \"not-published\" means the reader exists but the place's portal records no votes."
+  },
+  "places": {
+    "bibb": {
+      "platform": "civicclerk",
+      "status": "available",
+      "meetings": 305,
+      "meetingsWithVotes": 203,
+      "firstMeeting": "2024-11-05",
+      "lastMeeting": "2026-10-20"
+    },
+    "butts": {
+      "platform": "civicclerk",
+      "status": "not-published"
+    },
+    "carroll": {
+      "platform": "civicclerk",
+      "status": "available",
+      "meetings": 95,
+      "meetingsWithVotes": 30,
+      "firstMeeting": "2024-11-05",
+      "lastMeeting": "2026-10-29"
+    },
+    "cobb": {
+      "platform": "civicclerk",
+      "status": "not-published"
+    },
+    "columbia": {
+      "platform": "civicclerk",
+      "status": "not-published"
+    },
+    "coweta": {
+      "platform": "civicclerk",
+      "status": "available",
+      "meetings": 172,
+      "meetingsWithVotes": 165,
+      "firstMeeting": "2024-11-05",
+      "lastMeeting": "2026-10-22"
+    },
+    "dekalb": {
+      "platform": "legistar",
+      "status": "available",
+      "meetings": 69,
+      "meetingsWithVotes": 41,
+      "firstMeeting": "2025-11-04",
+      "lastMeeting": "2026-10-27"
+    },
+    "douglas": {
+      "platform": "civicclerk",
+      "status": "available",
+      "meetings": 145,
+      "meetingsWithVotes": 72,
+      "firstMeeting": "2024-11-18",
+      "lastMeeting": "2026-11-02"
+    },
+    "forsyth": {
+      "platform": "civicclerk",
+      "status": "available",
+      "meetings": 94,
+      "meetingsWithVotes": 14,
+      "firstMeeting": "2024-11-07",
+      "lastMeeting": "2026-10-20"
+    },
+    "fulton": {
+      "platform": "legistar",
+      "status": "available",
+      "meetings": 29,
+      "meetingsWithVotes": 26,
+      "firstMeeting": "2025-11-05",
+      "lastMeeting": "2026-10-21"
+    },
+    "henry": {
+      "platform": "civicclerk",
+      "status": "not-published"
+    },
+    "lumpkin": {
+      "platform": "civicclerk",
+      "status": "available",
+      "meetings": 291,
+      "meetingsWithVotes": 35,
+      "firstMeeting": "2024-11-05",
+      "lastMeeting": "2026-10-29"
+    },
+    "oconee": {
+      "platform": "civicclerk",
+      "status": "not-published"
+    },
+    "walker": {
+      "platform": "civicclerk",
+      "status": "available",
+      "meetings": 59,
+      "meetingsWithVotes": 14,
+      "firstMeeting": "2024-11-14",
+      "lastMeeting": "2026-10-20"
+    }
+  }
+}
