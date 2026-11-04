@@ -47,6 +47,9 @@ Front-matter contract
                              its own the moment the first vote lands — no front-matter edit.
                              Beaten by `notice` if both are set.
   empty_section_text optional message for a section tab with no races
+  district_lookup optional   true = show an address/ZIP box on the U.S. House, State Senate and
+                             State House tabs that narrows each to the voter's own district.
+                             Needs those sections' contests to be named "District N".
 {%- endcomment -%}
 {%- include result-status.html stub=page -%}
 <style>
@@ -124,6 +127,21 @@ Front-matter contract
   .pr-crosslink { font-size: .83rem; margin-bottom: .75rem; }
   .pr-related { background: var(--color-surface-tint); border: 1px solid var(--color-border); border-left: 4px solid var(--color-accent); border-radius: 6px; padding: .6rem 1rem; font-size: .82rem; color: var(--color-text); margin-bottom: 1rem; }
   .pr-related .pr-related-link { display: inline-block; margin-top: .3rem; font-weight: 600; }
+
+  /* District lookup (district_lookup: true). Shown only on the three district tabs. */
+  .pr-lookup { display: none; margin-bottom: 1rem; }
+  .pr-lookup.visible { display: block; }
+  .pr-lookup > label { display: block; margin-bottom: .3rem; font-size: .88rem; font-weight: 600; color: var(--color-text); }
+  .pr-lookup-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .pr-lookup-row input { flex: 1; min-width: 240px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+  .pr-lookup-row button { flex: 0 0 auto; padding: 8px 16px; font-size: .95rem; font-weight: 600; color: var(--color-on-accent); background: var(--color-accent-strong); border: none; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+  .pr-lookup-row button:disabled { opacity: .6; cursor: default; }
+  .pr-lookup-hint { font-size: .78rem; color: var(--color-text-secondary); margin: .4rem 0 0; }
+  .pr-lookup-msg { font-size: .85rem; margin-top: .35rem; color: var(--color-text-secondary); }
+  .pr-lookup-msg.error { color: var(--color-danger); }
+  .pr-lookup-banner { display: none; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; margin-top: .6rem; padding: .5rem .75rem; background: var(--color-surface-tint); border: 1px solid var(--color-border); border-left: 4px solid var(--color-accent); border-radius: 6px; font-size: .85rem; color: var(--color-text); }
+  .pr-lookup-banner.visible { display: flex; }
+  .pr-lookup-banner button { border: 1px solid var(--border); background: var(--card-bg); padding: .25rem .8rem; border-radius: 20px; cursor: pointer; font-size: .8rem; color: var(--neutral); }
 </style>
 
 <div class="pr-page-header">
@@ -222,6 +240,19 @@ Front-matter contract
   <button class="tab-btn" data-tab="measures">Ballot Questions</button>
 </div>
 
+{%- if page.district_lookup -%}
+<div class="pr-lookup" id="districtLookup">
+  <label for="lookupInput">Find your districts: enter your address or ZIP code</label>
+  <div class="pr-lookup-row">
+    <input type="text" id="lookupInput" placeholder="123 Peachtree St NE, Atlanta, GA 30303 — or just 30303" autocomplete="street-address" />
+    <button type="button" id="lookupBtn">Find my districts</button>
+  </div>
+  <div class="pr-lookup-hint">A street address is sent only to the U.S. Census geocoder to look up your districts. A ZIP alone shows every district touching it. VoteGA does not store any personal information.</div>
+  <div class="pr-lookup-msg" id="lookupMsg" role="status"></div>
+  <div class="pr-lookup-banner" id="lookupBanner"></div>
+</div>
+{%- endif -%}
+
 <div class="pr-filter-bar">
   <button class="filter-btn active" data-filter="all">All Races</button>
   <button class="filter-btn rep" data-filter="rep">&#x25A0; Republican</button>
@@ -241,6 +272,12 @@ Front-matter contract
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/results-contest.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- if page.district_lookup %}
+<script src="{{ '/assets/scripts/voter-location.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/address-lookup.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/zip-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- endif %}
 <script>
 // `|| []` guards the case where the keyed results file didn't build: Liquid's
 // jsonify emits `null`, and SECTIONS.forEach below would otherwise throw and
@@ -265,7 +302,12 @@ const CFG = {
   // matter. NOT in the results data: that file is rebuilt wholesale from the
   // SoS CSV on election night and would drop them. See officeNote().
   raceNotes: {{ page.race_notes | default: nil | jsonify }},
+  districtLookup: {{ page.district_lookup | default: false | jsonify }},
 };
+
+// Which sections are district-numbered, and which voter-location field names
+// the district for each. Contests there are named "District N".
+const DISTRICT_KEY = { 'us-house': 'usHouse', 'state-senate': 'stateSenate', 'state-house': 'stateHouse' };
 
 
 function escHtml(value) { return VoteGA.escapeHtml(value); }
@@ -504,7 +546,9 @@ function renderContest(c, office, candidateIndex, section){
     ? `<div class="race-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>${note.label ? `<span class="race-note-label">${escHtml(note.label)}.</span> ` : ''}${escHtml(note.text)}</span></div>`
     : '';
   const partyKeys = (c.multiParty && (c.parties || []).length) ? c.parties.join(' ') : p;
-  return `<div class="race-card ${p} ${cardCls}" data-party="${p}" data-parties="${escHtml(partyKeys)}" data-office="${escHtml(office.toLowerCase())}" data-cands="${escHtml(candSearch)}">
+  const distMatch = DISTRICT_KEY[section] ? /^District\s+(\d+)$/i.exec(office) : null;
+  const distAttr = distMatch ? ` data-district="${Number(distMatch[1])}"` : '';
+  return `<div class="race-card ${p} ${cardCls}"${distAttr} data-party="${p}" data-parties="${escHtml(partyKeys)}" data-office="${escHtml(office.toLowerCase())}" data-cands="${escHtml(candSearch)}">
     <div class="race-header">
       <span class="race-title">${escHtml(office)}</span>
       <div class="race-meta">
@@ -524,7 +568,7 @@ buildCandidateIndex().then(candidateIndex => {
 // notice and hide the now-meaningless tab, filter, and search chrome rather
 // than rendering a page of blank, hidden tabs.
 if (!SECTIONS.length) {
-  document.querySelectorAll('#tabBar, .pr-filter-bar, .search-row')
+  document.querySelectorAll('#tabBar, .pr-filter-bar, .search-row, #districtLookup')
     .forEach(el => { el.style.display = 'none'; });
   const host = document.getElementById('tab-statewide');
   if (host) {
@@ -569,12 +613,21 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 });
 
 let curFilter='all';
+// Districts the voter's address (one each) or ZIP (every district touching it)
+// resolved to: { usHouse:[n…], stateSenate:[…], stateHouse:[…] }, or null. A
+// chamber with no entry is left unfiltered, never emptied.
+let districtFilter = null;
 function applyFilter(f){
   curFilter=f;
   const q=(document.getElementById('searchBox').value||'').toLowerCase().trim();
   const activePanel=document.querySelector('.tab-panel.active');
   if(!activePanel) return;
+  const dKey = DISTRICT_KEY[activePanel.id.replace('tab-','')];
+  const wanted = dKey && districtFilter && (districtFilter[dKey]||[]).length
+    ? districtFilter[dKey].map(String) : null;
   activePanel.querySelectorAll('.race-card').forEach(card=>{
+    const distOk = !wanted || !card.dataset.district || wanted.indexOf(card.dataset.district)!==-1;
+    if(!distOk){ card.style.display='none'; return; }
     // A general-election card carries BOTH parties (data-parties="rep dem"), so
     // "Republican" means "has a Republican on the ballot" rather than "is a
     // Republican primary". Without this, every card on the general page was
@@ -598,6 +651,7 @@ function activateTab(tabName, pushHistory){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   panel.classList.add('active');
+  syncLookupVisibility(tabName);
   applyFilter(curFilter);
   if (pushHistory && window.location.hash.slice(1) !== tabName) {
     history.pushState(null, '', '#' + tabName);
@@ -627,6 +681,122 @@ document.querySelectorAll('.filter-btn').forEach(btn=>{
 });
 
 document.getElementById('searchBox').addEventListener('input',()=>applyFilter(curFilter));
+
+// ---- District lookup (district_lookup: true) --------------------------------
+// The address box shows only on the three district tabs: statewide races,
+// courts and ballot questions are the same for every voter, so it would
+// narrow nothing there.
+function syncLookupVisibility(tabName){
+  const box = document.getElementById('districtLookup');
+  if (box) box.classList.toggle('visible', !!DISTRICT_KEY[tabName]);
+}
+
+if (CFG.districtLookup && window.AddressLookup && document.getElementById('lookupInput')) {
+  const lookupInput = document.getElementById('lookupInput');
+  const lookupBtn   = document.getElementById('lookupBtn');
+  const lookupMsg   = document.getElementById('lookupMsg');
+  const lookupBanner = document.getElementById('lookupBanner');
+  const bannerNote = 'Statewide races, courts and ballot questions are the same for every voter.';
+
+  function setMsg(text, isError){
+    lookupMsg.textContent = text || '';
+    lookupMsg.classList.toggle('error', !!isError);
+  }
+
+  function renderBanner(label, zip){
+    if (!districtFilter) { lookupBanner.classList.remove('visible'); lookupBanner.innerHTML=''; return; }
+    lookupBanner.innerHTML =
+      `<span>${zip
+        ? `Showing districts touching ZIP <strong>${escHtml(zip)}</strong>. A ZIP can span several; enter your full address to narrow this to yours.`
+        : `Showing your districts: <strong>${escHtml(label)}</strong>.`} ${bannerNote}</span>`
+      + `<button type="button" id="lookupClear">Clear</button>`;
+    lookupBanner.classList.add('visible');
+    document.getElementById('lookupClear').addEventListener('click', () => {
+      districtFilter = null;
+      if (window.VoterLocation) window.VoterLocation.clear();
+      lookupInput.value = '';
+      setMsg('');
+      renderBanner();
+      applyFilter(curFilter);
+    });
+  }
+
+  // From an exact location: one district per chamber, null where the geocoder
+  // gave none (that chamber then stays unfiltered).
+  function applyLocation(loc){
+    const f = {};
+    const parts = [];
+    if (loc.usHouse != null)     { f.usHouse = [loc.usHouse];         parts.push(`U.S. House ${loc.usHouse}`); }
+    if (loc.stateSenate != null) { f.stateSenate = [loc.stateSenate]; parts.push(`State Senate ${loc.stateSenate}`); }
+    if (loc.stateHouse != null)  { f.stateHouse = [loc.stateHouse];   parts.push(`State House ${loc.stateHouse}`); }
+    if (!parts.length) { districtFilter = null; renderBanner(); applyFilter(curFilter); return false; }
+    districtFilter = f;
+    renderBanner(parts.join(' · '));
+    applyFilter(curFilter);
+    return true;
+  }
+
+  const lookup = window.AddressLookup.createAddressLookup({
+    input: lookupInput,
+    button: lookupBtn,
+    subject: 'your districts',
+    fallbackPhrase: 'browse the district tabs below',
+    eventName: 'results_lookup',
+    eventParams: { page: 'results' },
+    setStatus: (message, isError) => setMsg(message, isError),
+    setBusy: (busy) => {
+      lookupBtn.disabled = busy;
+      lookupBtn.textContent = busy ? 'Looking up…' : 'Find my districts';
+    },
+    // A bare ZIP narrows to the districts touching it. The table is fetched
+    // only now, so visitors who never use the box never download it.
+    onZip: async (zip) => {
+      const next = ' Enter your full street address instead.';
+      const stop = (message, outcome) => {
+        districtFilter = null;
+        renderBanner(); applyFilter(curFilter);
+        setMsg(message + next, true);
+        return outcome;
+      };
+      let found;
+      try {
+        found = window.ZipDistricts.lookup(zip, await window.ZipDistricts.load(getBasePath()));
+      } catch (err) {
+        console.error('election_results: ZIP table', err);
+        return stop('ZIP code data couldn’t be loaded right now.', 'zip_error');
+      }
+      if (found.status === 'unknown') return stop(`ZIP ${zip} isn’t in our list of Georgia ZIP codes.`, 'zip_unknown');
+      if (found.status !== 'ok')      return stop(`ZIP ${zip} is a PO box ZIP, which doesn’t map to any district.`, 'zip_no_districts');
+      if (window.VoterLocation) window.VoterLocation.clear();   // a ZIP is not a location; never resurrect an older one
+      districtFilter = { usHouse: found.usHouse, stateSenate: found.stateSenate, stateHouse: found.stateHouse };
+      setMsg('');
+      renderBanner('', zip);
+      applyFilter(curFilter);
+      return 'zip';
+    },
+    onResolve: (loc) => {
+      if (!applyLocation(loc)) {
+        setMsg('That address was found, but no districts came back for it. Browse the district tabs below.', true);
+        return 'no_districts';
+      }
+      setMsg('');
+    },
+  });
+
+  lookupBtn.addEventListener('click', () => lookup.run());
+  lookupInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); lookup.run(); } });
+
+  // Carry over an address resolved earlier this visit (sample ballot, elections).
+  const stored = window.VoterLocation ? window.VoterLocation.load() : null;
+  if (stored && stored.source === 'address') applyLocation(stored);
+}
+
+// Initial tab was activated before the lookup block above defined its state;
+// re-sync so the box and any carried-over filter apply to it.
+{
+  const cur = document.querySelector('.tab-btn.active');
+  if (cur) { syncLookupVisibility(cur.dataset.tab); applyFilter(curFilter); }
+}
 
 }); // buildCandidateIndex().then(...)
 </script>
