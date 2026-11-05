@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-04T10:42:52Z",
+  "generatedAt": "2026-11-05T16:56:22Z",
   "source": "Carroll County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Carroll County",
   "count": 25
@@ -12,12 +12,12 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-12-10",
   "topicTotals": {
+   "variance": 6,
    "data-center": 3,
-   "rezoning": 6,
-   "special-land-use": 7,
-   "variance": 5,
+   "rezoning": 5,
+   "special-land-use": 6,
    "contract": 8,
    "local-taxes": 3,
    "appointment": 3,
@@ -41,6 +41,14 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Appeals",
+    "date": "2026-12-10",
+    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3048,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
    {
     "title": "Board of Appeals",
     "date": "2026-11-05",
@@ -137,17 +145,6 @@
     ],
     "excerpt": "… Carroll County Sheriff's Office of Emergency Management 11. BUSINESS SESSION 11.I. Request for Annexation into the City of Mount Zion Consideration of Notice of Proposed Annexation of Parcel #037 0108 located at 1620 …",
     "excerptTerm": "annexation"
-   },
-   {
-    "title": "Planning & Zoning Commission",
-    "date": "2026-04-21",
-    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2879,plainText=false)",
-    "tags": [
-     "rezoning",
-     "special-land-use"
-    ],
-    "excerpt": "… licant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-04-01 and C-26-04-01: Rezoning request with a Conditional Use to rezone 1 acre from Agriculture to Industrial for bulk storage of propane at 2904 S …",
-    "excerptTerm": "rezon"
    }
   ],
   "landUseMeetings": 15,
@@ -192,6 +189,38 @@
   "dataCenterCitations": 2
  },
  "meetings": [
+  {
+   "id": "765",
+   "date": "2026-12-10",
+   "body": "Board of Appeals",
+   "title": "Board of Appeals",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3048,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3048,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1301,
+   "pdfSha256": "db01b37b2cf43ec88cdb1003f88deb64c1b82281dcb53b1cc52e56cd65ba18ba",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… plicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-12-01: Road Frontage Variance, zoned Agriculture, to split off 4.19 acres with no road frontage from 25.83 acres. This property is located at 300 Tho …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "903",
    "date": "2026-11-17",
@@ -1091,46 +1120,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "768",
-   "date": "2026-04-21",
-   "body": "Planning & Zoning",
-   "title": "Planning & Zoning Commission",
-   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2879,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2879,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1013,
-   "pdfSha256": "3e8921cc967a72bdcc010823bd7ba5efd2028e113fbe9090b15a680649dc0d11",
-   "topics": {
-    "rezoning": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "rezoning",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "conditional use",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… licant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-04-01 and C-26-04-01: Rezoning request with a Conditional Use to rezone 1 acre from Agriculture to Industrial for bulk storage of propane at 2904 S …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… owed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-04-01 and C-26-04-01: Rezoning request with a Conditional Use to rezone 1 acre from Agriculture to Industrial for bulk storage of propane at 2904 S Hwy 27. Parcel #092-0126, Land Lo …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

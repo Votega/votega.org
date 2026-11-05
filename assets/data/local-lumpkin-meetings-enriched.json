@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-04T10:43:04Z",
+  "generatedAt": "2026-11-05T16:56:26Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
-  "count": 22
+  "count": 23
  },
  "summary": {
   "flags": [
@@ -12,14 +12,14 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-09",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
-   "development": 9,
+   "appointment": 5,
+   "budget": 3,
+   "contract": 8,
+   "local-taxes": 9,
+   "development": 8,
    "variance": 3,
-   "appointment": 4,
-   "budget": 1,
-   "contract": 7,
-   "local-taxes": 6,
    "millage-budget": 4
   },
   "dataCenterItems": [],
@@ -96,20 +96,38 @@
     "tags": [
      "development"
     ]
-   },
-   {
-    "title": "Land Use & Development Regulations Review Committee",
-    "date": "2026-08-31",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4274,plainText=false)",
-    "tags": [
-     "development"
-    ]
    }
   ],
-  "landUseMeetings": 9,
+  "landUseMeetings": 8,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
+   {
+    "title": "Lumpkin County Board of Commissioners Regular Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+    "terms": [
+     "splost"
+    ]
+   },
+   {
+    "title": "Lumpkin County Board of Commissioners Work Session II",
+    "date": "2026-11-17",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… Members of the Lumpkin County Board of Commissioners (District 3 Commissioner Nathan Davis) 16. 2026-67 IGA for TSPLOST Distribution 17. 2026-68 TSPLOST Resolution Call for Election 18. 2026-69 Resolution Requesting Georgia Department of …",
+    "excerptTerm": "splost"
+   },
+   {
+    "title": "BOC & City Council Joint Special Called Meeting",
+    "date": "2026-11-12",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4465,plainText=false)",
+    "terms": [
+     "splost"
+    ]
+   },
    {
     "title": "Lumpkin County Board of Commissioners Work Session",
     "date": "2026-11-03",
@@ -165,8 +183,24 @@
     "excerptTerm": "ad valorem"
    }
   ],
-  "localTaxCitations": 6,
+  "localTaxCitations": 9,
   "budgetItems": [
+   {
+    "title": "Lumpkin County Board of Commissioners Regular Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+    "terms": [
+     "budget calendar"
+    ]
+   },
+   {
+    "title": "Lumpkin County Board of Commissioners Work Session II",
+    "date": "2026-11-17",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+    "terms": [
+     "budget calendar"
+    ]
+   },
    {
     "title": "Lumpkin County Board of Commissioners Work Session",
     "date": "2026-11-03",
@@ -176,12 +210,160 @@
     ]
    }
   ],
-  "budgetCitations": 1,
-  "landUseCitations": 9,
+  "budgetCitations": 3,
+  "landUseCitations": 8,
   "alprCitations": 0,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "1122",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "Lumpkin County Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 3984,
+   "pdfSha256": "efb0a5ff05ec1aa8b749dd869c49d0b7840f9e85f45fd717c0e4a3f9edf8ac44",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget calendar",
+    "contract",
+    "reappoint",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… ideration of the Lumpkin County 2027 Budget Calendar for FY 2028 Budget (Finance Director Abby Branan) 11. 2026-62 Reappoint Members to Lumpkin County Building Committee - Wayne Marshall to Seat 8, Charles Trammell to Seat 9, and Matt Cain …",
+     "context": "public-comment"
+    },
+    "budget": {
+     "term": "budget calendar",
+     "excerpt": "… hedule (Community & Employee Services Director Alicia Davis) 10. 2026-61 Consideration of the Lumpkin County 2027 Budget Calendar for FY 2028 Budget (Finance Director Abby Branan) 11. 2026-62 Reappoint Members to Lumpkin County Building Committ …",
+     "context": "public-comment"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… e 9 & Auraria Road • REPORTS Department reports can be viewed on www.lumpkincounty.gov • ELECTED OFFICIALS • CONTRACTS/AGREEMENTS 19. 2026-091 Halls Mill Enterprises LLC d/b/a Chestatee River Adventures c/o Rhett Stringer – Canoe …",
+     "context": "public-comment"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Members of the Lumpkin County Board of Commissioners (District 3 Commissioner Nathan Davis) 16. 2026-67 IGA for TSPLOST Distribution 17. 2026-68 TSPLOST Resolution Call for Election 18. 2026-69 Resolution Requesting Georgia Department of …",
+     "context": "public-comment"
+    }
+   },
+   "flags": [
+    "budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1110",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "Lumpkin County Board of Commissioners Work Session II",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 3808,
+   "pdfSha256": "6549e82133e491013a0356445ba70e3964530124b582707e3478eafbc609e505",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget calendar",
+    "contract",
+    "reappoint",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… ideration of the Lumpkin County 2027 Budget Calendar for FY 2028 Budget (Finance Director Abby Branan) 11. 2026-62 Reappoint Members to Lumpkin County Building Committee - Wayne Marshall to Seat 8, Charles Trammell to Seat 9, and Matt Cain …",
+     "context": "unknown"
+    },
+    "budget": {
+     "term": "budget calendar",
+     "excerpt": "… hedule (Community & Employee Services Director Alicia Davis) 10. 2026-61 Consideration of the Lumpkin County 2027 Budget Calendar for FY 2028 Budget (Finance Director Abby Branan) 11. 2026-62 Reappoint Members to Lumpkin County Building Committ …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… a Department of Transportation (GDOT) to Expedite Intersection Improvements at State Route 9 & Auraria Road • CONTRACTS/AGREEMENTS 19. 2026-091 Halls Mill Enterprises LLC d/b/a Chestatee River Adventures c/o Rhett Stringer – Canoe L …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Members of the Lumpkin County Board of Commissioners (District 3 Commissioner Nathan Davis) 16. 2026-67 IGA for TSPLOST Distribution 17. 2026-68 TSPLOST Resolution Call for Election 18. 2026-69 Resolution Requesting Georgia Department of …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1421",
+   "date": "2026-11-12",
+   "body": "Board of Commissioners",
+   "title": "BOC & City Council Joint Special Called Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4465,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4465,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 641,
+   "pdfSha256": "781970a4ef7a53eeb71d0416979252a8cccda012cc9303f0c0295a165274663f",
+   "topics": {
+    "local-taxes": 1
+   },
+   "tags": [
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "splost"
+   ],
+   "topicExcerpts": {
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 26 4:00 PM • CALL TO ORDER • OTHER ITEMS 1. Discuss Possible Joint TSPLOST Projects & Rate of Tax • ADJOURNMENT",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1425",
    "date": "2026-11-09",
@@ -902,76 +1084,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1096",
-   "date": "2026-09-01",
-   "body": "Board of Commissioners",
-   "title": "Lumpkin County Board of Commissioners Work Session",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4302,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4302,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1948,
-   "pdfSha256": "f2d1ea2f00c838e385b30cd30ffb0a1da13ba3289c3651689955097dc540b57f",
-   "topics": {
-    "appointment": 1,
-    "contract": 1
-   },
-   "tags": [
-    "appointment",
-    "contract"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… 8, 2026 5:30 PM 6. Board of Commissioners - Regular Meeting - August 18, 2026 6:00 PM • RESOLUTIONS 7. 2026-50 Appoint Member to Airport Authority - Alan Redmon to Seat B, of an unexpired term ending 02/19/2029 8. 2026-51 Update t …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Schedule (Finance Director Abby Branan) 9. 2026-52 September Surplus Property (Finance Director Abby Branan) • CONTRACTS/AGREEMENTS 10. 2026-082 GDOT 5311 Rural Transportation Grant Application (Public Works Director Chris Thomas) 1 …",
-     "context": "unknown"
-    }
-   },
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1308",
-   "date": "2026-08-31",
-   "body": "Land Use & Development Regulations Review Committee",
-   "title": "Land Use & Development Regulations Review Committee",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4274,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4274,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 666,
-   "pdfSha256": "b471f6d155fbf5407b09f2c515f26a4f0ed930c602d7aee0660e7f3c288e0f2e",
-   "topics": {
-    "development": 1
-   },
-   "tags": [
-    "development"
-   ],
-   "matchedTerms": [
-    "multifamily"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "multifamily",
-     "excerpt": "… Review the character areas and development categories, Chapter 27 chapter 3 3. Review Chapter 26 Article XXI Multifamily Housing • PUBLIC COMMENTS • ADJOURNMENT",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

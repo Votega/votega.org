@@ -13,12 +13,6 @@
    "region": "South Georgia"
   },
   {
-   "placeId": "rossville",
-   "placeName": "City of Rossville",
-   "placeType": "city",
-   "region": "Northwest Georgia"
-  },
-  {
    "placeId": "tift",
    "placeName": "Tift County",
    "placeType": "county",
@@ -26,6 +20,29 @@
   }
  ],
  "mentions": [
+  {
+   "body": "Board of Appeals",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-12-10",
+   "docType": "agenda",
+   "excerpt": "… plicant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. V-26-12-01: Road Frontage Variance, zoned Agriculture, to split off 4.19 acres with no road frontage from 25.83 acres. This property is located at 300 Tho …",
+   "excerptTerm": "variance",
+   "fips": "13045",
+   "placeId": "carroll",
+   "placeName": "Carroll County",
+   "placeType": "county",
+   "region": "West Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3048,plainText=false)",
+   "tags": [
+    "variance"
+   ],
+   "terms": [
+    "variance"
+   ],
+   "vendors": []
+  },
   {
    "body": "Board of Zoning Appeals",
    "confidence": "high",
@@ -140,6 +157,29 @@
    ],
    "terms": [
     "rezon"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "City Council",
+   "confidence": "high",
+   "context": null,
+   "date": "2026-11-09",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": null,
+   "placeId": "rossville",
+   "placeName": "City of Rossville",
+   "placeType": "city",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.rossvillega.gov/s/Agenda-Packet-November-2026.pdf",
+   "tags": [
+    "development"
+   ],
+   "terms": [
+    "apartment"
    ],
    "vendors": []
   },
@@ -263,7 +303,7 @@
    "placeType": "county",
    "region": "Northwest Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4291,plainText=false)",
+   "sourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4293,plainText=false)",
    "tags": [
     "variance"
    ],
@@ -336,7 +376,7 @@
    "context": "agenda-action",
    "date": "2026-11-05",
    "docType": "agenda",
-   "excerpt": "Commission District(s): 3 and 6 Application of Tikay Investments, LLC c/o Battle Law, P.C. to rezone properties from R-75 (Residential Medium Lot-75) zoning district to MR-1 (Medium Density Residential-1) zoning distric …",
+   "excerpt": "Commission District(s): 3 & 6 Application of Tikay Investments, LLC c/o Battle Law, P.C. to rezone properties from R-75 (Residential Medium Lot-75) zoning district to MR-1 (Medium Density Residential-1) zoning distric …",
    "excerptTerm": "rezon",
    "fips": "13089",
    "placeId": "dekalb",
@@ -603,7 +643,7 @@
    "context": "agenda-action",
    "date": "2026-11-03",
    "docType": "agenda",
-   "excerpt": "… e reasonable accommodations for those persons. and the request is for a single-family conservation subdivision. District III (Presenter: Alexius Jones, Planner II)(Exhibit 15) B. SU-26-01 (Publi …",
+   "excerpt": "… e 7th District. The property consists of 22.02 +/- acres and the request is for a single-family conservation subdivision. District III (Presenter: Alexius Jones, Planner II)(Exhibit 15) Vice Chair Anglyn made a motion …",
    "excerptTerm": "subdivision",
    "fips": "13151",
    "placeId": "henry",
@@ -611,7 +651,7 @@
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2688,plainText=false)",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2689,plainText=false)",
    "tags": [
     "development",
     "rezoning"
@@ -661,7 +701,7 @@
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3724,plainText=false)",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3737,plainText=false)",
    "tags": [
     "development",
     "rezoning"
@@ -686,7 +726,7 @@
    "placeType": "county",
    "region": "East Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13906,plainText=false)",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13916,plainText=false)",
    "tags": [
     "rezoning",
     "variance"
@@ -722,6 +762,31 @@
     "rezon",
     "slup",
     "warehouse"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-03",
+   "docType": "agenda",
+   "excerpt": "… ive Session, and Regular Meeting Minutes from October 20, 2026. 8. PUBLIC HEARING 8.1 Case #26-11-037 - Holly Springs Deannexation/Rezoning Board-Initiated - Twin Lakes Drive (District 2). Conduct a public hearing to consider Case #26-11-037 - Holly …",
+   "excerptTerm": "annexation",
+   "fips": "13057",
+   "placeId": "cherokee",
+   "placeName": "Cherokee County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "granicus",
+   "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1636",
+   "tags": [
+    "annexation",
+    "rezoning"
+   ],
+   "terms": [
+    "annexation",
+    "rezon"
    ],
    "vendors": []
   },
@@ -6310,29 +6375,6 @@
    "vendors": []
   },
   {
-   "body": "Land Use & Development Regulations Review Committee",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-08-31",
-   "docType": "agenda",
-   "excerpt": "… Review the character areas and development categories, Chapter 27 chapter 3 3. Review Chapter 26 Article XXI Multifamily Housing • PUBLIC COMMENTS • ADJOURNMENT",
-   "excerptTerm": "multifamily",
-   "fips": "13187",
-   "placeId": "lumpkin",
-   "placeName": "Lumpkin County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4274,plainText=false)",
-   "tags": [
-    "development"
-   ],
-   "terms": [
-    "multifamily"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Greater Lowndes Planning Commission",
    "confidence": "high",
    "context": "agenda-action",
@@ -9368,35 +9410,6 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-07-23",
-   "docType": "agenda",
-   "excerpt": "… ision. Commission District 1. Other Business - Planning and Zoning 22 Introduction of the Hall County Forward 2045 Comprehensive Plan Update. 2 of 4 Public Hearing …",
-   "excerptTerm": "comprehensive plan",
-   "fips": "13139",
-   "placeId": "hall",
-   "placeName": "Hall County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-327-vm-20260723130310185640.pdf",
-   "tags": [
-    "comprehensive-plan",
-    "development",
-    "rezoning",
-    "variance"
-   ],
-   "terms": [
-    "comprehensive plan",
-    "rezon",
-    "subdivision",
-    "variance"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
    "context": "unknown",
    "date": "2026-07-23",
    "docType": "agenda",
@@ -10882,33 +10895,6 @@
     "variance"
    ],
    "terms": [
-    "variance"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Planning Commission",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-07-07",
-   "docType": "agenda",
-   "excerpt": "… Co., LLC (BOC Dist. 4). Applicant is requesting to rezone 2.0 +/- acres from R-40 to R-20 for a four-lot single family subdivision. 2.2 Case #26-07-014 - E. Benson Chambers for M&A Backyard Solutions (BOC Dist. 1). Applicant is requesting a Special U …",
-   "excerptTerm": "subdivision",
-   "fips": "13057",
-   "placeId": "cherokee",
-   "placeName": "Cherokee County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "granicus",
-   "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1571",
-   "tags": [
-    "development",
-    "rezoning",
-    "variance"
-   ],
-   "terms": [
-    "rezon",
-    "subdivision",
     "variance"
    ],
    "vendors": []
@@ -14858,31 +14844,6 @@
    "vendors": []
   },
   {
-   "body": "Planning & Zoning",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-04-21",
-   "docType": "agenda",
-   "excerpt": "… licant shall then be allowed a TOTAL of two minutes to speak in rebuttal. 5. Requests 5.I. Z-26-04-01 and C-26-04-01: Rezoning request with a Conditional Use to rezone 1 acre from Agriculture to Industrial for bulk storage of propane at 2904 S …",
-   "excerptTerm": "rezon",
-   "fips": "13045",
-   "placeId": "carroll",
-   "placeName": "Carroll County",
-   "placeType": "county",
-   "region": "West Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2879,plainText=false)",
-   "tags": [
-    "rezoning",
-    "special-land-use"
-   ],
-   "terms": [
-    "conditional use",
-    "rezon"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
@@ -17579,10 +17540,10 @@
   "consolidatedScanned": 4,
   "countiesScanned": 46,
   "emoji": "🏗️",
-  "generatedAt": "2026-11-04T10:55:50Z",
+  "generatedAt": "2026-11-05T17:12:37Z",
   "label": "Land use",
   "placesScanned": 59,
-  "placesWithMentions": 55,
+  "placesWithMentions": 56,
   "topic": "land-use",
   "universeCities": 537,
   "universeConsolidated": 9,

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-04T10:42:56Z",
+  "generatedAt": "2026-11-05T16:56:24Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -12,13 +12,13 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-03",
+  "lastActivity": "2026-11-05",
   "topicTotals": {
    "appointment": 14,
    "contract": 14,
    "development": 7,
    "rezoning": 9,
-   "millage-budget": 16,
+   "millage-budget": 15,
    "variance": 13,
    "data-center": 4,
    "special-land-use": 8,
@@ -45,7 +45,7 @@
    {
     "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
     "date": "2026-11-03",
-    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3724,plainText=false)",
+    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3737,plainText=false)",
     "tags": [
      "development",
      "rezoning"
@@ -299,16 +299,34 @@
  },
  "meetings": [
   {
+   "id": "1162",
+   "date": "2026-11-05",
+   "body": "Board of Commissioners",
+   "title": "Coweta County Board of Commissioners - Called Meeting/Board Retreat",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3731,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3731,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1814,
+   "pdfSha256": "e417d05fb32e2d6e1792cb587a24113120efd59009226ccaa0affb8cf8e1c263",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
    "id": "1098",
    "date": "2026-11-03",
    "body": "Board of Commissioners",
    "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3724,plainText=false)",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3737,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3724,plainText=false)",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3737,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 5955,
-   "pdfSha256": "60cfc80751d27df3b9782c5914bc7b0a6ce7fa8dc48396921c2d85a8fda6ebdb",
+   "textChars": 6006,
+   "pdfSha256": "a67e66c1017256a717fab4264c0fc29344694c608191e9141790519959d0ed6d",
    "topics": {
     "appointment": 1,
     "contract": 1,
@@ -1668,38 +1686,6 @@
    },
    "flags": [
     "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1070",
-   "date": "2026-04-14",
-   "body": "Board of Commissioners",
-   "title": "Coweta County Board of Commissioners - Work Session",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3284,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3284,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1880,
-   "pdfSha256": "17d01b8bfcdc545930da9e3c7a31ecaa5ddef270432bbee5d4b31deb6edc3deb",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Order Meeting Called to Order Pledge of Allegiance Invocation Regular Session 1. Discussion Regarding the FY 2027 Budget 2. Discussion Regarding the Quality Development Corridor District Ordinance 3. Discussion Regarding the Bicente …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
     "millage-budget"
    ],
    "dataCenterItems": []

@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-04T10:43:05Z",
+  "generatedAt": "2026-11-05T16:57:44Z",
   "source": "City of Rossville (packetarchive agenda/minutes PDFs, poppler+OCR)",
   "place": "City of Rossville",
-  "count": 1
+  "count": 2
  },
  "summary": {
   "flags": [
@@ -13,16 +13,22 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-12",
+  "lastActivity": "2026-11-09",
   "topicTotals": {
+   "appointment": 2,
+   "contract": 2,
+   "data-center": 2,
+   "development": 1,
+   "local-taxes": 2,
    "alpr": 1,
-   "appointment": 1,
-   "contract": 1,
-   "data-center": 1,
-   "local-taxes": 1,
    "millage-budget": 1
   },
   "dataCenterItems": [
+   {
+    "title": "November 9, 2026 City Council Meeting",
+    "date": "2026-11-09",
+    "sourceUrl": "https://www.rossvillega.gov/s/Agenda-Packet-November-2026.pdf"
+   },
    {
     "title": "October 12, 2026 City Council Meeting",
     "date": "2026-10-12",
@@ -30,7 +36,7 @@
    }
   ],
   "landUseItems": [],
-  "landUseMeetings": 1,
+  "landUseMeetings": 2,
   "alprItems": [
    {
     "title": "October 12, 2026 City Council Meeting",
@@ -44,6 +50,14 @@
   "alprMeetings": 1,
   "localTaxItems": [
    {
+    "title": "November 9, 2026 City Council Meeting",
+    "date": "2026-11-09",
+    "sourceUrl": "https://www.rossvillega.gov/s/Agenda-Packet-November-2026.pdf",
+    "terms": [
+     "splost"
+    ]
+   },
+   {
     "title": "October 12, 2026 City Council Meeting",
     "date": "2026-10-12",
     "sourceUrl": "https://www.rossvillega.gov/s/Agenda-Packet-October-2026.pdf",
@@ -54,14 +68,60 @@
     ]
    }
   ],
-  "localTaxCitations": 1,
+  "localTaxCitations": 2,
   "budgetItems": [],
   "budgetCitations": 0,
   "landUseCitations": 0,
   "alprCitations": 1,
-  "dataCenterCitations": 1
+  "dataCenterCitations": 2
  },
  "meetings": [
+  {
+   "id": "2026-11-city-council",
+   "date": "2026-11-09",
+   "body": "City Council",
+   "title": "November 9, 2026 City Council Meeting",
+   "sourceUrl": "https://www.rossvillega.gov/s/Agenda-Packet-November-2026.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://static1.squarespace.com/static/60f35413670cec307f56614e/t/6aeb9771950e9737e1ea6cc6/1793824625337/Agenda+Packet+November+2026.pdf",
+   "textMethod": "ocr",
+   "textChars": 54552,
+   "pdfSha256": "ef50364c5b4e57a369e95a2efccee03d1adc963278d654b6c1d9fc233f6941c5",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "data-center": 1,
+    "development": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "data-center",
+    "development",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "apartment",
+    "appoint",
+    "contract",
+    "data center",
+    "splost"
+   ],
+   "topicExcerpts": {},
+   "flags": [
+    "land-use",
+    "data-center",
+    "local-taxes"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "November 9, 2026 City Council Meeting",
+     "date": "2026-11-09",
+     "sourceUrl": "https://www.rossvillega.gov/s/Agenda-Packet-November-2026.pdf"
+    }
+   ]
+  },
   {
    "id": "2026-10-city-council",
    "date": "2026-10-12",

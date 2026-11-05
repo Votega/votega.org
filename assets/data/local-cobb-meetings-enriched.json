@@ -1,12 +1,13 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-04T10:42:55Z",
+  "generatedAt": "2026-11-05T16:56:23Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
  },
  "summary": {
   "flags": [
+   "budget",
    "data-center",
    "land-use",
    "local-taxes",
@@ -15,15 +16,16 @@
   "lastActivity": "2026-12-09",
   "topicTotals": {
    "variance": 8,
+   "appointment": 6,
+   "budget": 1,
+   "contract": 10,
+   "local-taxes": 6,
    "development": 4,
    "rezoning": 5,
    "special-land-use": 6,
    "annexation": 4,
-   "appointment": 5,
-   "contract": 9,
-   "local-taxes": 5,
    "millage-budget": 6,
-   "data-center": 3
+   "data-center": 2
   },
   "dataCenterItems": [
    {
@@ -32,11 +34,6 @@
     "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10282,plainText=false)",
     "excerpt": "… under the Cobb County Solicitor General's Office. 5. To provide a presentation and discussion on data centers and their impacts. PUBLIC HEARING 6. To conduct the first public hearing on the proposed amendments to Part …",
     "excerptTerm": "data center"
-   },
-   {
-    "title": "BOC Work Session",
-    "date": "2026-07-28",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10080,plainText=false)"
    }
   ],
   "landUseItems": [
@@ -182,10 +179,20 @@
     "excerptTerm": "slup"
    }
   ],
-  "landUseMeetings": 17,
+  "landUseMeetings": 16,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
+   {
+    "title": "BOC Regular Meeting",
+    "date": "2026-11-10",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10325,plainText=false)",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… . 33. To approve Change Orders (final) to contracts for completed resurfacing projects in the 2022 SPLOST Transportation Improvements Program Fund. 34. To approve Change Orders (final) to construction contracts for c …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "BOC Regular Meeting",
     "date": "2026-10-27",
@@ -237,12 +244,25 @@
     "excerptTerm": "splost"
    }
   ],
-  "localTaxCitations": 5,
-  "budgetItems": [],
-  "budgetCitations": 0,
+  "localTaxCitations": 6,
+  "budgetItems": [
+   {
+    "title": "BOC Regular Meeting",
+    "date": "2026-11-10",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10325,plainText=false)",
+    "terms": [
+     "budget amendment",
+     "budget-then-decision",
+     "decision-then-budget"
+    ],
+    "excerpt": "… Butcher Shop. 22. To approve the boundaries of the Battery Open Container District. Finance 23. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. 24. To approve the allocation and transfer of …",
+    "excerptTerm": "decision-then-budget"
+   }
+  ],
+  "budgetCitations": 1,
   "landUseCitations": 14,
   "alprCitations": 0,
-  "dataCenterCitations": 2
+  "dataCenterCitations": 1
  },
  "meetings": [
   {
@@ -342,6 +362,66 @@
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1192",
+   "date": "2026-11-10",
+   "body": "Board of Commissioners",
+   "title": "BOC Regular Meeting",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10325,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10325,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 8816,
+   "pdfSha256": "439152016dd9d4fe910d1233dacd6239466206c3b8426665a53a08f67abcb32e",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget amendment",
+    "budget-then-decision",
+    "contract",
+    "decision-then-budget",
+    "reappoint",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Council under the Victims of Crime Act Grant Program to support the Juvenile Court of Cobb County, Court Appointed Special Advocate Program. State Court Clerk 10. To authorize the collection and appropriation of passport p …",
+     "context": "agenda-action"
+    },
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "… Butcher Shop. 22. To approve the boundaries of the Battery Open Container District. Finance 23. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. 24. To approve the allocation and transfer of …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ENDA Page 2 of 5 Superior Court Administration 8. To approve a contract with Georgia Probation Management, Inc. to provide misdemeanor probation services for the Superior Court. …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… . 33. To approve Change Orders (final) to contracts for completed resurfacing projects in the 2022 SPLOST Transportation Improvements Program Fund. 34. To approve Change Orders (final) to construction contracts for c …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "budget",
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1253,45 +1333,6 @@
     "land-use"
    ],
    "dataCenterItems": []
-  },
-  {
-   "id": "1237",
-   "date": "2026-07-28",
-   "body": "Board of Commissioners",
-   "title": "BOC Work Session",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10080,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10080,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 438,
-   "pdfSha256": "b798e2a8f6efbda8b71272b1c4965c993729874c3f111cd7bd530b827cff5740",
-   "topics": {
-    "data-center": 1
-   },
-   "tags": [
-    "data-center"
-   ],
-   "matchedTerms": [
-    "data center"
-   ],
-   "topicExcerpts": {
-    "data-center": {
-     "term": "data center",
-     "excerpt": "… 2. To present information and updates regarding housing in Cobb County. 3. To present information regarding data centers. ADJOURNMENT",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "data-center"
-   ],
-   "dataCenterItems": [
-    {
-     "title": "BOC Work Session",
-     "date": "2026-07-28",
-     "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10080,plainText=false)"
-    }
-   ]
   }
  ]
 }
