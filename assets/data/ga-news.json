@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-06T01:17:47.085058+00:00",
+    "generatedAt": "2026-11-06T10:08:08.559318+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,12 +24,12 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 123,
+    "count": 124,
     "windowDays": 45,
-    "entityTagged": 85,
+    "entityTagged": 87,
     "topicCounts": {
+      "elections": 53,
       "education": 11,
-      "elections": 52,
       "budget": 7,
       "healthcare": 10,
       "courts": 8,
@@ -39,6 +39,11 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
     "vg-ga-p-000335": {
       "name": "Keisha Lance Bottoms",
       "url": null,
@@ -80,11 +85,6 @@
       "candidateIds": [
         "ga-senate-1-2026-d-2"
       ]
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
     },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
@@ -228,6 +228,20 @@
   },
   "items": [
     {
+      "id": "b4d83b4377a4",
+      "title": "Georgia Democrats ride national blue wave into power in history-making election",
+      "url": "https://georgiarecorder.com/2026/11/06/georgia-democrats-ride-national-blue-wave-into-power-in-history-making-election/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-06T09:00:13+00:00",
+      "snippet": "Within an hour of polls closing Tuesday, it was clear that Democrats had made a strong showing and that U.S. Sen. Jon Ossoff would be re-elected by a large margin. But what unfolded after that far exc",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
       "id": "e03192888f1e",
       "title": "Marine education event looks at life in Wilmington River",
       "url": "https://thecurrentga.org/2026/11/05/marine-education-event-looks-at-life-in-wilmington-river/",
@@ -274,16 +288,6 @@
       "topics": []
     },
     {
-      "id": "a3db4676b8b3",
-      "title": "Heavy rains cause flash flooding, water rescues on Georgia-Tennessee border",
-      "url": "https://www.gpb.org/news/2026/11/05/heavy-rains-cause-flash-flooding-water-rescues-on-georgia-tennessee-border",
-      "source": "GPB News",
-      "publishedAt": "2026-11-05T15:51:46+00:00",
-      "snippet": "Thunderstorms with heavy rain have caused record flooding in two towns straddling the Georgia-Tennessee border.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "74b3d2028552",
       "title": "Georgia Democrats flip every statewide office, but appear to fall short in the Senate",
       "url": "https://capitol-beat.org/2026/11/georgia-democrats-flip-every-statewide-office-but-appear-to-fall-short-in-the-senate/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-democrats-flip-every-statewide-office-but-appear-to-fall-short-in-the-senate",
@@ -304,6 +308,22 @@
       "source": "Georgia Recorder",
       "publishedAt": "2026-11-05T00:20:41+00:00",
       "snippet": "Outgoing Republican Gov. Brian Kemp announced Wednesday that he would not call a special session to push new political maps and curb the executive powers of future state leaders after the Democratic s",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "4d4bb674e32e",
+      "title": "Declaring a State of Emergency for Severe Flooding",
+      "url": "https://gov.georgia.gov/document/2026-executive-order/11052601/download",
+      "source": "Gov. Brian Kemp (executive orders)",
+      "publishedAt": "2026-11-05T00:00:00+00:00",
+      "snippet": "From Wednesday, November 4, through Thursday, November 5, 2026, heavy showers and thunderstorms moved over North Georgia, with some areas receiving up to ten inches of rainfall; and The National…",
+      "category": "State of Emergency",
+      "orderNumber": "11.05.26.01",
+      "archiveUrl": null,
+      "sha256": "a7f6455b55ac6a3f84e027dd29155da8daea90150c501d5ccff86231483015a1",
       "entityIds": [
         "vg-ga-p-000024"
       ],
@@ -1689,9 +1709,9 @@
       ]
     },
     {
-      "id": "bab5d8f59fcd",
+      "id": "af6f45b3c894",
       "title": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!",
-      "url": "https://bishop.house.gov/node/8471",
+      "url": "http://bishop.house.gov/node/8471",
       "source": "Rep. Sanford Bishop (GA-02, press)",
       "publishedAt": "2026-09-28T20:56:13+00:00",
       "snippet": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!\n\n  \n    \n      Image or Video    \n                  \n\n  \n  \n  \n    \n      Image    \n        ",
