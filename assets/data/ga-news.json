@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-06T10:08:08.559318+00:00",
+    "generatedAt": "2026-11-06T18:41:35.041801+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,13 +24,13 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 124,
+    "count": 122,
     "windowDays": 45,
-    "entityTagged": 87,
+    "entityTagged": 84,
     "topicCounts": {
       "elections": 53,
+      "budget": 8,
       "education": 11,
-      "budget": 7,
       "healthcare": 10,
       "courts": 8,
       "surveillance": 1,
@@ -39,10 +39,20 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
+    },
+    "vg-ga-p-000256": {
+      "name": "Rick W. Allen",
+      "url": null,
+      "bioguideId": "A000372"
     },
     "vg-ga-p-000335": {
       "name": "Keisha Lance Bottoms",
@@ -50,11 +60,6 @@
       "candidateIds": [
         "challenger-keisha-bottoms-gov-2026"
       ]
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
     "vg-ga-p-000267": {
       "name": "Amanda Hollowell",
@@ -128,31 +133,6 @@
         "challenger-shelia-edwards-psc5-2026"
       ]
     },
-    "vg-ga-p-000030": {
-      "name": "Burt Jones",
-      "url": null,
-      "ocdPersonId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
-      "rosterId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
-      "candidateIds": [
-        "challenger-burt-jones-gov-2026"
-      ]
-    },
-    "vg-ga-p-000308": {
-      "name": "Greg Dolezal",
-      "url": null,
-      "candidateIds": [
-        "challenger-greg-dolezal-ltgov-2026"
-      ]
-    },
-    "vg-ga-p-000115": {
-      "name": "Josh McLaurin",
-      "url": null,
-      "ocdPersonId": "ocd-person/b83b0486-773f-4979-a1ce-e2f7f3e6d7e1",
-      "rosterId": "ocd-person/b83b0486-773f-4979-a1ce-e2f7f3e6d7e1",
-      "candidateIds": [
-        "challenger-josh-mclaurin-ltgov-2026"
-      ]
-    },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
@@ -182,6 +162,15 @@
       "url": null,
       "bioguideId": "M001208"
     },
+    "vg-ga-p-000030": {
+      "name": "Burt Jones",
+      "url": null,
+      "ocdPersonId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
+      "rosterId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
+      "candidateIds": [
+        "challenger-burt-jones-gov-2026"
+      ]
+    },
     "vg-ga-p-000111": {
       "name": "Jon Burns",
       "url": null,
@@ -207,26 +196,61 @@
         "challenger-brad-raffensperger-gov-2026"
       ]
     },
-    "vg-ga-p-000256": {
-      "name": "Rick W. Allen",
-      "url": null,
-      "bioguideId": "A000372"
-    },
     "vg-ga-p-000261": {
       "name": "Sanford D. Bishop",
       "url": null,
       "bioguideId": "B000490"
-    },
-    "vg-ga-p-000258": {
-      "name": "Earl L. \"Buddy\" Carter",
-      "url": null,
-      "bioguideId": "C001103",
-      "candidateIds": [
-        "challenger-buddy-carter-senate-2026"
-      ]
     }
   },
   "items": [
+    {
+      "id": "689c08adbb94",
+      "title": "A federal board is releasing records of civil rights cold cases. Congress could let that work end",
+      "url": "https://www.gpb.org/news/2026/11/06/federal-board-releasing-records-of-civil-rights-cold-cases-congress-could-let-work",
+      "source": "GPB News",
+      "publishedAt": "2026-11-06T16:22:00+00:00",
+      "snippet": "Two Georgia researchers helping release government records related to civil rights era cold cases fear their work could end in January unless Congress votes to extend the board's tenure.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "9b8df7ddb0e9",
+      "title": "Changes to federal preservation act could threaten Georgia historic findings",
+      "url": "https://thecurrentga.org/2026/11/06/changes-to-federal-preservation-act-could-threaten-georgia-historic-findings/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-06T13:57:49+00:00",
+      "snippet": "Archaeologists and historic preservationists in Georgia expressed deep concern over a federal bill, the Bipartisan American Affordability and Jobs Act, which is scheduled to undergo a Senate vote next",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "3022f36ef250",
+      "title": "GPB morning headlines for November 6, 2026",
+      "url": "https://www.gpb.org/news/2026/11/06/gpb-morning-headlines-for-november-6-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-06T13:48:03+00:00",
+      "snippet": "The Dooly County Sheriff’s Office and law enforcement partners including the GBI and FBI have arrested eight people in connection with an Oct. 4 mass shooting at a homecoming party in Vienna; Georgian",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "efbf53469a7a",
+      "title": "Kemp declines special session to limit executive powers, redraw maps",
+      "url": "https://thecurrentga.org/2026/11/06/gov-kemp-declines-special-session-to-limit-executive-powers-redraw-maps/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-06T13:27:13+00:00",
+      "snippet": "Outgoing Governor Brian Kemp announced he will not call a special session to redraw political maps or curb executive powers but didn't rule out meet for budget issues\nThe Current is an inclusive nonpr",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
     {
       "id": "b4d83b4377a4",
       "title": "Georgia Democrats ride national blue wave into power in history-making election",
@@ -254,37 +278,15 @@
       ]
     },
     {
-      "id": "3b8f5a624878",
-      "title": "Atlanta regional leaders tackle economic mobility issues with 'Opportunity Rising' program",
-      "url": "https://www.gpb.org/news/2026/11/05/atlanta-regional-leaders-tackle-economic-mobility-issues-opportunity-rising-program",
-      "source": "GPB News",
-      "publishedAt": "2026-11-05T20:58:00+00:00",
-      "snippet": "The new coalition will support existing programs focused on bringing jobs, housing and transportation to areas that need it most.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "30c4f16ad87d",
-      "title": "GPB evening headlines for November 5, 2026",
-      "url": "https://www.gpb.org/news/2026/11/05/gpb-evening-headlines-for-november-5-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-05T20:46:58+00:00",
-      "snippet": "Thunderstorms have caused record flooding in two towns straddling the Georgia-Tennessee border.\nGov.-elect Keisha Lance Bottoms spent the day after her historic win looking to the future.\nThe Atlanta ",
+      "id": "50e97b945b65",
+      "title": "Congressman Allen Announces 2027 Spring Internship Program",
+      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7449",
+      "source": "Rep. Rick Allen (GA-12, press)",
+      "publishedAt": "2026-11-05T05:00:00+00:00",
+      "snippet": "Today, Congressman Rick W. Allen (GA-12) announced his office is seeking applicants for the 2027 Spring Internship Program, to be offered in his Washington, D.C. office.\n\nThis program is open to colle",
       "entityIds": [
-        "vg-ga-p-000335"
+        "vg-ga-p-000256"
       ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "22cbaa133d11",
-      "title": "Georgia Today: North Georgia flooding; Georgia House of Representatives; Melanoma trials",
-      "url": "https://www.gpb.org/news/2026/11/05/georgia-today-north-georgia-flooding-georgia-house-of-representatives-melanoma",
-      "source": "GPB News",
-      "publishedAt": "2026-11-05T19:59:09+00:00",
-      "snippet": "On the Nov. 5 edition: Flooding devastates communities on the Georgia-Tennessee border; Democrats prepare to take control of the Georgia House of Representatives; and researchers at Emory test a new w",
-      "entityIds": [],
       "topics": []
     },
     {
@@ -490,22 +492,6 @@
         "vg-ga-p-000373"
       ],
       "topics": []
-    },
-    {
-      "id": "7379c027878e",
-      "title": "Democrat Josh McLaurin defeats Greg Dolezal in Georgia lieutenant governor race",
-      "url": "https://thecurrentga.org/2026/11/03/democrat-josh-mclaurin-defeats-greg-dolezal-in-georgia-lieutenant-governor-race/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-04T04:31:34+00:00",
-      "snippet": "Democrat Josh McLaurin defeated Republican Greg Dolezal in the election for Georgia lieutenant governor, succeeding incumbent Burt Jones.\nThe Current is an inclusive nonprofit, non-partisan news organ",
-      "entityIds": [
-        "vg-ga-p-000030",
-        "vg-ga-p-000308",
-        "vg-ga-p-000115"
-      ],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "cd8a4ee1268f",
@@ -1213,18 +1199,6 @@
       ]
     },
     {
-      "id": "50e97b945b65",
-      "title": "Congressman Rick Allen's Retire through Ownership Act Signed into Law by President Trump",
-      "url": "http://allen.house.gov/news/documentsingle.aspx?DocumentID=7417",
-      "source": "Rep. Rick Allen (GA-12, press)",
-      "publishedAt": "2026-10-16T04:00:00+00:00",
-      "snippet": "Yesterday, President Donald J. Trump signed S. 2403, the Retire through Ownership Act, into law. Congressman Rick W. Allen (GA-12) introduced the House version of this bill last year, which would prov",
-      "entityIds": [
-        "vg-ga-p-000256"
-      ],
-      "topics": []
-    },
-    {
       "id": "2c202af3abaf",
       "title": "Lieutenant governor’s race heats up as candidates spar over public safety, healthcare, Trump",
       "url": "https://georgiarecorder.com/2026/10/15/lieutenant-governors-race-heats-up-as-candidates-spar-over-public-safety-healthcare-trump/",
@@ -1840,30 +1814,6 @@
         "ethics",
         "healthcare"
       ]
-    },
-    {
-      "id": "fea757ac2ac7",
-      "title": "RELEASE: Carter welcomes new 14-day red snapper season following efforts to expand fishing access",
-      "url": "http://buddycarter.house.gov/news/documentsingle.aspx?DocumentID=16654",
-      "source": "Rep. Buddy Carter (GA-01, press)",
-      "publishedAt": "2026-09-22T17:48:36+00:00",
-      "snippet": "For Immediate Release\n                                    \n                                    \n                                    \n                                    \n                              ",
-      "entityIds": [
-        "vg-ga-p-000258"
-      ],
-      "topics": []
-    },
-    {
-      "id": "4041aeefefdc",
-      "title": "Carr Secures New Conviction for Shooting Death at Athens Apartment Complex",
-      "url": "https://law.georgia.gov/press-releases/2026-09-22/carr-secures-new-conviction-shooting-death-athens-apartment-complex",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-09-22T12:00:00+00:00",
-      "snippet": "ATHENS, GA – Georgia Attorney General Chris Carr today announced that his Gang Prosecution Unit has secured the conviction of Zyquavious Thomas, 18, of Athens, in connection with the May 27, 2024, fat",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
     }
   ]
 }
