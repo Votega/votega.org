@@ -81,6 +81,13 @@
 #                 it for confidence). The site always displays `name` (the short
 #                 form), so full_name never appears on a page — e.g.
 #                 name: "Lisa Cupid"  +  full_name: "Lisa N. Cupid".
+#     vote_roll_names : every spelling of this member's name that appears in the
+#                 place's roll calls (assets/data/local-<id>-votes.json), when it
+#                 differs from `name` — e.g. name: "LaDena Bolton, PhD" +
+#                 vote_roll_names: ["LaDena Bolton"]. `name` is NOT stripped of its
+#                 credential (it is the member's own styling). Used only by
+#                 validate_local_officials.py, which fails if a roll-call name from an
+#                 elected body resolves to no member or to more than one.
 #     term_provenance : how term_end / next_election were established —
 #                 verified | assumed | unknown. DORMANT: nothing renders or exports it
 #                 yet; it exists so provenance can be recorded one member at a time.
@@ -1029,6 +1036,7 @@ jurisdictions:
     # ---- PHASE 1 — ROSTER --------------------------------------------------
     members:
       - name: "Lorraine Cochran-Johnson"
+        vote_roll_names: []
         role: Chair               # countywide-elected board chair
         title: Chief Executive Officer   # verbatim office title (DeKalb has a CEO form of govt)
         seat: At-large
@@ -1038,12 +1046,13 @@ jurisdictions:
         last_elected:
         term_end: 2028
         next_election: 2027
-        voting: true           # verify: many GA chairs vote only to break ties
+        voting: false          # verified against roll calls in local-dekalb-votes.json: the CEO is executive, not a Board member
         tie_break_only: false
         photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/Chief%20Executive%20Officer%20%28CEO%29.jpg.avif?itok=FYaML8e2"
         source: "https://dekalbcountyga.gov/government/chief-executive-officer"
         notes: ""
       - name: "Robert Patrick"
+        vote_roll_names: ["Robert Patrick"]
         role: Commissioner
         seat: "District 1"                    # e.g. "District 1"
         party: 
@@ -1058,6 +1067,7 @@ jurisdictions:
         source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/robert-patrick"
         notes: ""
       - name: "Michelle Long Spears"
+        vote_roll_names: ["Michelle Long Spears"]
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
         party: 
@@ -1072,6 +1082,7 @@ jurisdictions:
         source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/michelle-long-spears"
         notes: ""
       - name: "Nicole Massiah"
+        vote_roll_names: ["Nicole Massiah"]
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
         party: 
@@ -1086,6 +1097,7 @@ jurisdictions:
         source: "https://dekalbcountyga.gov/index%2ephp/government/board-of-commissioners/districts/nicole-massiah"
         notes: ""
       - name: "Chakira Johnson"
+        vote_roll_names: ["Chakira Johnson"]
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
         party: 
@@ -1100,6 +1112,7 @@ jurisdictions:
         source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/chakira-johnson"
         notes: ""
       - name: "Mereda Davis Johnson"
+        vote_roll_names: ["Mereda Davis Johnson"]
         role: Commissioner
         seat: "District 5"                    # e.g. "District 1"
         party: 
@@ -1114,6 +1127,7 @@ jurisdictions:
         source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/mareda-davis-johnson"
         notes: ""
       - name: "Ted Terry"
+        vote_roll_names: ["Ted Terry"]
         role: Commissioner
         seat: "Super District 6"                    # e.g. "District 1"
         party: 
@@ -1128,6 +1142,7 @@ jurisdictions:
         source: "https://dekalbcountyga.gov/government/board-of-commissioners/districts/ted-terry"
         notes: ""
       - name: "LaDena Bolton, PhD"
+        vote_roll_names: ["LaDena Bolton"]
         role: Commissioner
         seat: "Super District 7"                    # e.g. "District 1"
         party: 

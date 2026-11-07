@@ -10,6 +10,7 @@ push that touches the file.
 Exit code 0 = valid. Exit code 1 = one or more errors (details printed to stdout).
 """
 
+import json
 import sys
 from datetime import date, datetime
 
@@ -129,6 +130,11 @@ def validate_member(juris_id, index, member, partisan):
     full_name = member.get("full_name")
     if full_name is not None and (not isinstance(full_name, str) or not full_name.strip()):
         err(context, f"full_name must be a non-empty string when present, got: {full_name!r}")
+
+    vrn = member.get("vote_roll_names")
+    if vrn is not None and (not isinstance(vrn, list)
+                            or not all(isinstance(x, str) and x.strip() for x in vrn)):
+        err(context, f"vote_roll_names must be a list of non-empty strings when present, got: {vrn!r}")
 
     party = member.get("party")
     if party in (None, ""):
@@ -298,6 +304,75 @@ def cross_check_places(jurisdictions):
             err(jid, f"type {jtype!r} disagrees with place type {ptype!r} in {PLACES_PATH}")
 
 
+# Bodies whose roll calls are attributed to roster members. An ALLOWLIST on purpose:
+# a body we have not reviewed (e.g. DeKalb's appointed Planning Commission) is
+# ignored until a human adds it here, never silently attributed.
+ELECTED_BODIES = {
+    "Board of Commissioners",
+    "Board of Commissioners - Zoning Meeting",
+    "Special Called Meeting",
+    "Committee of the Whole",
+}
+VOTES_PATH = "assets/data/local-{}-votes.json"
+# Jurisdictions whose roll-call names have been reconciled with the roster. Only
+# these FAIL on a mismatch; every other place with a votes file just warns, so
+# onboarding a place is a deliberate step (add its id here once its roster and
+# vote_roll_names agree) and an unreconciled place cannot break CI.
+VOTE_CHECK_ENFORCED = {"dekalb"}
+
+
+def cross_check_votes(jurisdictions):
+    """Every name in an elected body's roll calls must resolve to exactly one
+    roster member (by `name` or `vote_roll_names`); a voting member who never
+    appears in any roll call is flagged (the bug class of DeKalb's CEO)."""
+    for juris in jurisdictions:
+        if not isinstance(juris, dict):
+            continue
+        jid = juris.get("id")
+        path = VOTES_PATH.format(jid)
+        try:
+            with open(path, encoding="utf-8") as f:
+                votes = json.load(f)
+        except FileNotFoundError:
+            warn(jid or "?", f"{path} not found — skipping roll-call name check")
+            continue
+        except ValueError as e:
+            err(jid or "?", f"{path} is not valid JSON: {e}")
+            continue
+
+        resolves = {}
+        for m in juris.get("members") or []:
+            if not isinstance(m, dict) or not m.get("name"):
+                continue
+            for n in [m["name"]] + list(m.get("vote_roll_names") or []):
+                resolves.setdefault(n, set()).add(m["name"])
+
+        seen = set()
+        for meeting in votes.get("meetings") or []:
+            if meeting.get("body") not in ELECTED_BODIES:
+                continue
+            for item in meeting.get("items") or []:
+                for mo in item.get("motions") or []:
+                    for key in ("yes", "no", "abstain", "absent"):
+                        seen.update(mo.get(key) or [])
+
+        report = err if jid in VOTE_CHECK_ENFORCED else warn
+        for n in sorted(seen):
+            who = resolves.get(n, set())
+            if not who:
+                report(jid, f"roll-call name {n!r} in {path} matches no roster member — "
+                         f"add it to that member's vote_roll_names")
+            elif len(who) > 1:
+                report(jid, f"roll-call name {n!r} matches more than one member: {sorted(who)}")
+
+        for m in juris.get("members") or []:
+            if not isinstance(m, dict) or m.get("voting") is not True or m.get("status"):
+                continue
+            names = {m.get("name")} | set(m.get("vote_roll_names") or [])
+            if not names & seen:
+                warn(jid, f"{m.get('name')!r} is voting:true but appears in no elected-body roll call")
+
+
 def main():
     try:
         with open(DATA_PATH, encoding="utf-8") as f:
@@ -326,6 +401,7 @@ def main():
         validate_jurisdiction(i, juris, seen_ids)
 
     cross_check_places(jurisdictions)
+    cross_check_votes(jurisdictions)
 
     if warnings:
         print(f"{len(warnings)} warning(s):")

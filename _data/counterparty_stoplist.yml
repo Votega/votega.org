@@ -1,0 +1,38 @@
+# Counterparty stoplist — read by scripts/generate_local_counterparties.py.
+# `prefix`: drop any extracted name that STARTS with it (case-insensitive).
+# `pattern`: drop any extracted name that CONTAINS it (case-insensitive).
+# Every entry says why, so the list stays attributable.
+stoplist:
+  # --- sentence fragments the suffix pass over-captures ---
+  - {prefix: "Ordinance", reason: "sentence fragment, not an entity"}
+  - {prefix: "Resolution", reason: "sentence fragment, not an entity"}
+  - {prefix: "Chapter", reason: "sentence fragment, not an entity"}
+  - {prefix: "Article", reason: "sentence fragment, not an entity"}
+  - {prefix: "Establish", reason: "sentence fragment, not an entity"}
+  - {prefix: "Award", reason: "sentence fragment, not an entity"}
+  - {prefix: "Urge", reason: "sentence fragment, not an entity"}
+  - {prefix: "Amend", reason: "sentence fragment, not an entity"}
+  - {prefix: "Approve", reason: "sentence fragment, not an entity"}
+  - {prefix: "Authorize", reason: "sentence fragment, not an entity"}
+  - {prefix: "Adopt", reason: "sentence fragment, not an entity"}
+  - {prefix: "Accept", reason: "sentence fragment, not an entity"}
+  - {prefix: "Ratify", reason: "sentence fragment, not an entity"}
+  - {prefix: "Request", reason: "sentence fragment, not an entity"}
+  - {prefix: "Nuisance", reason: "sentence fragment, not an entity"}
+  - {prefix: "Georgia,", reason: "place name left over from an address, not an entity"}
+  - {prefix: "Atlanta,", reason: "place name left over from an address, not an entity"}
+  # --- government bodies ---
+  - {prefix: "Department", reason: "government body"}
+  - {prefix: "Office of", reason: "government body"}
+  - {prefix: "Board of", reason: "the board itself or a sibling board"}
+  - {prefix: "County of", reason: "government body"}
+  - {pattern: "Department of Housing and Urban Development", reason: "federal agency"}
+  - {pattern: "DeKalb County", reason: "the county itself"}
+  - {pattern: "State of Georgia", reason: "state government"}
+  # --- purchasing cooperatives and intermediaries, not donors or contract parties ---
+  - {pattern: "OMNIA Partners", reason: "cooperative purchasing consortium, not a party to the contract"}
+  - {pattern: "Sourcewell", reason: "cooperative purchasing consortium"}
+  - {pattern: "NASPO", reason: "cooperative purchasing consortium"}
+  - {pattern: "NJPA", reason: "cooperative purchasing consortium"}
+  - {pattern: "E&I Cooperative", reason: "cooperative purchasing consortium"}
+  - {pattern: "GSA", reason: "federal purchasing schedule"}
