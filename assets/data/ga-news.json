@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-06T18:41:35.041801+00:00",
+    "generatedAt": "2026-11-07T00:31:26.576193+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,25 +24,40 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 122,
+    "count": 126,
     "windowDays": 45,
-    "entityTagged": 84,
+    "entityTagged": 86,
     "topicCounts": {
-      "elections": 53,
-      "budget": 8,
+      "elections": 56,
+      "healthcare": 12,
+      "budget": 9,
+      "courts": 9,
       "education": 11,
-      "healthcare": 10,
-      "courts": 8,
       "surveillance": 1,
       "ethics": 4
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000335": {
+      "name": "Keisha Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
       "url": null,
       "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
     },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
@@ -53,13 +68,6 @@
       "name": "Rick W. Allen",
       "url": null,
       "bioguideId": "A000372"
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
     },
     "vg-ga-p-000267": {
       "name": "Amanda Hollowell",
@@ -126,13 +134,6 @@
       "name": "Peter Hubbard",
       "url": null
     },
-    "vg-ga-p-000373": {
-      "name": "Shelia Edwards",
-      "url": null,
-      "candidateIds": [
-        "challenger-shelia-edwards-psc5-2026"
-      ]
-    },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
@@ -180,14 +181,6 @@
         "ga-house-159-2026-r-1"
       ]
     },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
-    },
     "vg-ga-p-000021": {
       "name": "Brad Raffensperger",
       "url": null,
@@ -204,16 +197,102 @@
   },
   "items": [
     {
-      "id": "689c08adbb94",
-      "title": "A federal board is releasing records of civil rights cold cases. Congress could let that work end",
-      "url": "https://www.gpb.org/news/2026/11/06/federal-board-releasing-records-of-civil-rights-cold-cases-congress-could-let-work",
+      "id": "8d0f28198a46",
+      "title": "Bottoms to focus on healthcare and other affordability issues",
+      "url": "https://capitol-beat.org/2026/11/bottoms-to-focus-on-healthcare-and-other-affordability-issues/?utm_source=rss&utm_medium=rss&utm_campaign=bottoms-to-focus-on-healthcare-and-other-affordability-issues",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-06T22:27:20+00:00",
+      "snippet": "ATLANTA — In her first news conference after Election Day, Georgia’s governor-elect, Democrat Keisha Lance Bottoms, said she will be focus on the cost of living, access to healthcare and funding for p",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "b4381aca230b",
+      "title": "Georgia Today: Giant pandas debut; North Georgia flooding; State budget concerns",
+      "url": "https://www.gpb.org/news/2026/11/06/georgia-today-giant-pandas-debut-north-georgia-flooding-state-budget-concerns",
       "source": "GPB News",
-      "publishedAt": "2026-11-06T16:22:00+00:00",
-      "snippet": "Two Georgia researchers helping release government records related to civil rights era cold cases fear their work could end in January unless Congress votes to extend the board's tenure.",
+      "publishedAt": "2026-11-06T21:15:43+00:00",
+      "snippet": "On the November 6 edition: Flooding in North Georgia has left one town in a state of emergency; Keisha Lance-Bottoms' first hurdle as governor could be budget issues; And the giant pandas have finally",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "25a007ed18ed",
+      "title": "Georgia helped inspire Medicaid work rules. Its own rules could soon end.",
+      "url": "https://thecurrentga.org/2026/11/06/georgia-helped-inspire-medicaid-work-rules-its-own-rules-could-soon-end/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-06T21:10:13+00:00",
+      "snippet": "Georgia's limited Medicaid expansion program, Pathways to Coverage, is set to expire at the end of the year unless renewed by the incoming governor during a pivotal election cycle.\nThe Current is an i",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "3415f0e9f19d",
+      "title": "Bottoms announces transition team as ascendent Georgia Democrats prepare to run state government",
+      "url": "https://georgiarecorder.com/2026/11/06/bottoms-announces-transition-team-as-ascendent-georgia-democrats-prepare-to-run-state-government/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-06T20:55:15+00:00",
+      "snippet": "Governor-elect Keisha Lance Bottoms didn’t have long to celebrate Tuesday’s historic win.   The former Atlanta mayor became the first Georgia Democrat to be elected governor in decades, winning by mor",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "e1f062c4c32f",
+      "title": "'Devastating': Cleanup efforts are underway in McCaysville after deadly overnight flooding",
+      "url": "https://www.gpb.org/news/2026/11/06/devastating-cleanup-efforts-are-underway-in-mccaysville-after-deadly-overnight",
+      "source": "GPB News",
+      "publishedAt": "2026-11-06T20:54:00+00:00",
+      "snippet": "Cleanup is just beginning after catastrophic flooding in North Georgia this week.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "253fbd75e4b2",
+      "title": "Women put their stamp on Georgia election",
+      "url": "https://capitol-beat.org/2026/11/women-put-their-stamp-on-georgia-election/?utm_source=rss&utm_medium=rss&utm_campaign=women-put-their-stamp-on-georgia-election",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-06T20:51:50+00:00",
+      "snippet": "ATLANTA — Women won big in Georgia on Election Day. Eight women, all of them Black Democrats, expect to be sworn in to statewide office in January after defeating Republicans on Tuesday. The unofficia",
       "entityIds": [],
       "topics": [
         "elections"
       ]
+    },
+    {
+      "id": "6cd01bbbe0cd",
+      "title": "Rome International Film Festival kicks off with Ray McKinnon, Danny McBride and more",
+      "url": "https://www.gpb.org/news/2026/11/06/rome-international-film-festival-kicks-off-ray-mckinnon-danny-mcbride-and-more",
+      "source": "GPB News",
+      "publishedAt": "2026-11-06T20:41:00+00:00",
+      "snippet": "The 23rd annual Rome International Film Festival is back in Northwest Georgia from Nov. 5 to Nov. 8, 2026. GPB’s Kristi York Wooten explores the lineup, fall foliage and cultural activities on tap.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "a7b903a04bcb",
+      "title": "Lovable bamboo-binging bears are back! Zoo Atlanta debuts new giant panda duo in upgraded habitats",
+      "url": "https://www.gpb.org/news/2026/11/06/lovable-bamboo-binging-bears-are-back-zoo-atlanta-debuts-new-giant-panda-duo-in",
+      "source": "GPB News",
+      "publishedAt": "2026-11-06T20:13:00+00:00",
+      "snippet": "Giant pandas Fu Shuang and Ping Ping arrived in Atlanta in September and now the public can visit them.",
+      "entityIds": [],
+      "topics": []
     },
     {
       "id": "9b8df7ddb0e9",
@@ -228,16 +307,6 @@
       ]
     },
     {
-      "id": "3022f36ef250",
-      "title": "GPB morning headlines for November 6, 2026",
-      "url": "https://www.gpb.org/news/2026/11/06/gpb-morning-headlines-for-november-6-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-06T13:48:03+00:00",
-      "snippet": "The Dooly County Sheriff’s Office and law enforcement partners including the GBI and FBI have arrested eight people in connection with an Oct. 4 mass shooting at a homecoming party in Vienna; Georgian",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "efbf53469a7a",
       "title": "Kemp declines special session to limit executive powers, redraw maps",
       "url": "https://thecurrentga.org/2026/11/06/gov-kemp-declines-special-session-to-limit-executive-powers-redraw-maps/",
@@ -250,6 +319,32 @@
       "topics": [
         "budget"
       ]
+    },
+    {
+      "id": "07346bc876fa",
+      "title": "Gov. Kemp Announces Three Judicial Appointments",
+      "url": "https://gov.georgia.gov/press-releases/2026-11-06/gov-kemp-announces-three-judicial-appointments",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-11-06T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced the following judicial appointments: the Honorable Paul K. Cook to the Superior Court of the Middle Judicial Circuit, filling the vacancy created by th",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "b5c318b9aaba",
+      "title": "Carr’s Gang Prosecution Unit Secures New Murder Conviction in Athens",
+      "url": "https://law.georgia.gov/press-releases/2026-11-06/carrs-gang-prosecution-unit-secures-new-murder-conviction-athens",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-06T12:00:00+00:00",
+      "snippet": "ATHENS, GA – Georgia Attorney General Chris Carr today announced that his Gang Prosecution Unit has secured the conviction of Keanthony Sorrells, 17, in connection with the May 27, 2024, fatal shootin",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
     },
     {
       "id": "b4d83b4377a4",
@@ -479,19 +574,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "8b7d289faddf",
-      "title": "Democrats flip control of Georgia utility commission for first time in decades",
-      "url": "https://thecurrentga.org/2026/11/03/democrats-flip-control-of-georgia-utility-commission-for-first-time-in-decades/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-04T04:39:42+00:00",
-      "snippet": "Democrats gained majority control of Georgia's Public Service Commission for the first time in 30 years following victories by Peter Hubbard and Shelia Edwards.\nThe Current is an inclusive nonprofit, ",
-      "entityIds": [
-        "vg-ga-p-000697",
-        "vg-ga-p-000373"
-      ],
-      "topics": []
     },
     {
       "id": "cd8a4ee1268f",
@@ -819,16 +901,6 @@
       ]
     },
     {
-      "id": "490950daac9a",
-      "title": "Audi to build first U.S. plant in Georgia",
-      "url": "https://capitol-beat.org/2026/10/audi-to-build-first-u-s-plant-in-georgia/?utm_source=rss&utm_medium=rss&utm_campaign=audi-to-build-first-u-s-plant-in-georgia",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-25T01:27:20+00:00",
-      "snippet": "ATLANTA — Georgia residents who are in the market for an Audi will eventually be able to buy one made locally. The German company announced on Saturday that it plans to build its first U.S. manufactur",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "454d0dd52047",
       "title": "Gov. Kemp: Audi AG Selects Georgia to Invest $4 Billion in First US Manufacturing Facility",
       "url": "https://gov.georgia.gov/press-releases/2026-10-24/gov-kemp-audi-ag-selects-georgia-invest-4-billion-first-us-manufacturing",
@@ -869,18 +941,6 @@
       "sha256": "188ca63807f9f56d22ecf51c11bcb93cb04bfdc9edc666079543d710b91d5d49",
       "entityIds": [
         "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
-      "id": "5b04754b053e",
-      "title": "Georgia attorney general: kratom products should be presumed illegal",
-      "url": "https://capitol-beat.org/2026/10/georgia-attorney-general-kratom-products-should-be-presumed-illegal/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-attorney-general-kratom-products-should-be-presumed-illegal",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-23T21:59:35+00:00",
-      "snippet": "ATLANTA — Amid a debate about the safety of kratom and how much to regulate it, Georgia Attorney General Chris Carr advised lawmakers on Friday to treat all products derived from the substance as ille",
-      "entityIds": [
-        "vg-ga-p-000039"
       ],
       "topics": []
     },
@@ -1329,18 +1389,6 @@
       "topics": [
         "courts"
       ]
-    },
-    {
-      "id": "5e7c92e6ed0c",
-      "title": "Gov. Kemp: VDL Groep Adds 120 New Jobs in Hall County",
-      "url": "https://gov.georgia.gov/press-releases/2026-10-13/gov-kemp-vdl-groep-adds-120-new-jobs-hall-county",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-10-13T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that VDL Groep (VDL), a global Dutch mechanical engineering and equipment manufacturer, will invest an estimated $77 million over the next several year",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
     },
     {
       "id": "6cf0e9a25c37",
