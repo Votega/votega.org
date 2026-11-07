@@ -154,6 +154,23 @@ jobs:
           fi
           python scripts/build_results_json.py "${args[@]}"
 
+      # The General Assembly projection post reads its seat counts, flip counts
+      # and close-race list from this file. Regenerated here, with the numbers
+      # it describes, because the alternative is what happened on November 7:
+      # House district 154 crossed to a Republican and the post went on saying
+      # 93-87 with a flip that had stopped being one. Non-fatal — results are
+      # worth publishing even if the projection cannot be rebuilt — but loud.
+      - name: Rebuild the General Assembly projection
+        if: ${{ inputs.data_key == 'ga-general-2026-results' }}
+        run: |
+          set -uo pipefail
+          if python scripts/build_projected_majority.py; then
+            echo "- Projection rebuilt from these counts." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning title=Projection not rebuilt::build_projected_majority.py failed; the General Assembly post keeps its previous figures while the results below are published."
+            echo "- :warning: Projection NOT rebuilt; the General Assembly post keeps its previous figures." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       # The gate. Refuses an empty export, a shrinking ballot, counts going
       # backwards, and structural damage — see the script's header for why each
       # of those is the quiet failure rather than the loud one.
@@ -199,7 +216,8 @@ jobs:
             cp "$CSV" "_sources/election_results/$DATA_KEY-export.$ext"
             git add -f "_sources/election_results/$DATA_KEY-export.$ext"
           fi
-          git add -f "_data/election_results/$DATA_KEY.json" _data/results_updated.json \
+          git add -f "_data/election_results/$DATA_KEY.json" _data/results_updated.json
+          [ -f _data/projected_majority_2026.json ] && git add -f _data/projected_majority_2026.json \
                      assets/data/race-results-index.json
           if git diff --cached --quiet; then
             echo "No change in the results data — nothing to commit."
