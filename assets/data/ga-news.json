@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-07T17:10:58.252846+00:00",
+    "generatedAt": "2026-11-07T21:14:49.925230+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,13 +24,13 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 125,
+    "count": 123,
     "windowDays": 45,
-    "entityTagged": 84,
+    "entityTagged": 83,
     "topicCounts": {
       "elections": 57,
+      "budget": 9,
       "healthcare": 11,
-      "budget": 8,
       "courts": 9,
       "education": 11,
       "surveillance": 1,
@@ -39,6 +39,22 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000459": {
+      "name": "Harry James",
+      "url": null,
+      "candidateIds": [
+        "ga-house-154-2026-d-1"
+      ]
+    },
+    "vg-ga-p-000088": {
+      "name": "Gerald Greene",
+      "url": null,
+      "ocdPersonId": "ocd-person/570a213a-a475-4fd3-ac36-23e1bd1190be",
+      "rosterId": "ocd-person/570a213a-a475-4fd3-ac36-23e1bd1190be",
+      "candidateIds": [
+        "ga-house-154-2026-r-1"
+      ]
+    },
     "vg-ga-p-000335": {
       "name": "Keisha Lance Bottoms",
       "url": null,
@@ -83,35 +99,12 @@
         "challenger-jim-kingston-ga01-2026"
       ]
     },
-    "vg-ga-p-000008": {
-      "name": "Ben Watson",
-      "url": null,
-      "ocdPersonId": "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c",
-      "rosterId": "ocd-person/fd2717f1-6294-4601-a027-8fc41195372c",
-      "candidateIds": [
-        "ga-senate-1-2026-r-1"
-      ]
-    },
-    "vg-ga-p-000602": {
-      "name": "Corey Foreman",
-      "url": null,
-      "candidateIds": [
-        "ga-senate-1-2026-d-2"
-      ]
-    },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
       "url": null,
       "bioguideId": "C001129",
       "candidateIds": [
         "challenger-mike-collins-senate-2026"
-      ]
-    },
-    "vg-ga-p-000466": {
-      "name": "David Dillie",
-      "url": null,
-      "candidateIds": [
-        "ga-house-161-2026-d-1"
       ]
     },
     "vg-ga-p-000697": {
@@ -180,6 +173,46 @@
     }
   },
   "items": [
+    {
+      "id": "27d446877594",
+      "title": "Homeowners fight high HOA fees as Georgia drafts new oversight regulations",
+      "url": "https://thecurrentga.org/2026/11/07/homeowners-fight-high-hoa-fees-as-georgia-drafts-new-oversight-regulations/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-07T18:45:17+00:00",
+      "snippet": "Georgia state officials held public hearings this week to refine implementation details for Senate Bill 406, a new law designed to protect homeowners from excessive HOA fees and predatory foreclosure ",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "3b8e37e734aa",
+      "title": "Found memory card narrows Democrats state House margin",
+      "url": "https://thecurrentga.org/2026/11/07/found-memory-card-narrows-democrats-state-house-margin/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-07T18:06:49+00:00",
+      "snippet": "A missing election machine memory card in Seminole County reversed the apparent outcome of a Georgia state House race, placing Republican Rep. Gerald Greene ahead of Democrat Harry James by 262 votes.",
+      "entityIds": [
+        "vg-ga-p-000459",
+        "vg-ga-p-000088"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "7c3899aed3cb",
+      "title": "Keisha Lance Bottoms names transition team ahead of taking office",
+      "url": "https://thecurrentga.org/2026/11/07/keisha-lance-bottoms-names-transition-team-ahead-of-taking-office/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-07T17:49:49+00:00",
+      "snippet": "Newly elected Georgia Governor Keisha Lance Bottoms unveiled her transition team and outlined plans to address the state's budgetary challenges and cost of living ahead of her January inauguration.\nTh",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections",
+        "budget"
+      ]
+    },
     {
       "id": "c239850d2d97",
       "title": "Bottoms faces task of bridging divide between metro Atlanta, rural Georgia",
@@ -283,26 +316,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "6cd01bbbe0cd",
-      "title": "Rome International Film Festival kicks off with Ray McKinnon, Danny McBride and more",
-      "url": "https://www.gpb.org/news/2026/11/06/rome-international-film-festival-kicks-off-ray-mckinnon-danny-mcbride-and-more",
-      "source": "GPB News",
-      "publishedAt": "2026-11-06T20:41:00+00:00",
-      "snippet": "The 23rd annual Rome International Film Festival is back in Northwest Georgia from Nov. 5 to Nov. 8, 2026. GPB’s Kristi York Wooten explores the lineup, fall foliage and cultural activities on tap.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "a7b903a04bcb",
-      "title": "Lovable bamboo-binging bears are back! Zoo Atlanta debuts new giant panda duo in upgraded habitats",
-      "url": "https://www.gpb.org/news/2026/11/06/lovable-bamboo-binging-bears-are-back-zoo-atlanta-debuts-new-giant-panda-duo-in",
-      "source": "GPB News",
-      "publishedAt": "2026-11-06T20:13:00+00:00",
-      "snippet": "Giant pandas Fu Shuang and Ping Ping arrived in Atlanta in September and now the public can visit them.",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "9b8df7ddb0e9",
@@ -464,34 +477,6 @@
       ]
     },
     {
-      "id": "c432c70d99b5",
-      "title": "Ben Watson defeats Corey Foreman to retain GA-1 Senate seat",
-      "url": "https://thecurrentga.org/2026/11/04/ben-watson-defeats-corey-foreman-to-retain-ga-1-senate-seat/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-04T15:29:03+00:00",
-      "snippet": "Republican incumbent Ben Watson defeated Democratic challenger Corey Foreman to retain his Georgia State Senate seat in the Ga-1 district.\nThe Current is an inclusive nonprofit, non-partisan news orga",
-      "entityIds": [
-        "vg-ga-p-000008",
-        "vg-ga-p-000602"
-      ],
-      "topics": []
-    },
-    {
-      "id": "fd3371cee662",
-      "title": "Jim Kingston defeats Hollowell in tight Coastal Georgia election",
-      "url": "https://thecurrentga.org/2026/11/04/jim-kingston-defeats-hollowell-in-tight-coastal-georgia-election/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-04T13:02:22+00:00",
-      "snippet": "Republican Jim Kingston defeated Democratic challenger Amanda Hollowell to win an open U.S. House seat in Coastal Georgia with approximately 51.4% of the vote.\nThe Current is an inclusive nonprofit, n",
-      "entityIds": [
-        "vg-ga-p-000267",
-        "vg-ga-p-000319"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "866700f27345",
       "title": "Democrats win majority of governorships for the first time in 16 years",
       "url": "https://georgiarecorder.com/2026/11/04/repub/democrats-set-to-win-majority-of-governorships-for-the-first-time-in-16-years/",
@@ -537,20 +522,6 @@
       "entityIds": [
         "vg-ga-p-000253",
         "vg-ga-p-000264"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "7c3ef975d9d8",
-      "title": "David Dillie wins House District 161 election amid anger over data center",
-      "url": "https://thecurrentga.org/2026/11/04/david-dillie-wins-house-district-161-election-amid-local-unrest-over-data-center/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-04T05:30:48+00:00",
-      "snippet": "Democrat David Dillie won Georgia's House District 161 seat, unseating the Republican incumbent amid anger over the planned $20 billion OpenAI data center in Effingham County.\nThe Current is an inclus",
-      "entityIds": [
-        "vg-ga-p-000466"
       ],
       "topics": [
         "elections"
@@ -1712,9 +1683,9 @@
       ]
     },
     {
-      "id": "af6f45b3c894",
+      "id": "bab5d8f59fcd",
       "title": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!",
-      "url": "http://bishop.house.gov/node/8471",
+      "url": "https://bishop.house.gov/node/8471",
       "source": "Rep. Sanford Bishop (GA-02, press)",
       "publishedAt": "2026-09-28T20:56:13+00:00",
       "snippet": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!\n\n  \n    \n      Image or Video    \n                  \n\n  \n  \n  \n    \n      Image    \n        ",
